@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-02-26T15:10:30.267Z" agent="5.0 (X11)" etag="Z4408eFRRh8B0eTwDOPY" version="14.4.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-02-27T11:22:11.907Z" agent="5.0 (X11)" etag="DI0xaQAlu43LCtJA2b3G" version="14.4.3" type="github">
   <diagram id="QmHcQ-5RaDjDtTa8d-uc" name="Page-1">
     <mxGraphModel dx="1350" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -161,7 +161,7 @@
           <mxGeometry x="75" y="620" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="vts17N3uvWWT5DIk61w_-36" value="Human tendency to fix objects under work statically (cryogenic / vise)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="180" y="780" width="120" height="60" as="geometry" />
+          <mxGeometry x="240" y="790" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="vts17N3uvWWT5DIk61w_-37" value="Time complexity might be a wrong intuition" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="15" y="710" width="120" height="60" as="geometry" />
@@ -172,7 +172,7 @@
             <mxPoint x="135" y="590" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vts17N3uvWWT5DIk61w_-39" value="" style="shape=link;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="vts17N3uvWWT5DIk61w_-35" target="vts17N3uvWWT5DIk61w_-36">
+        <mxCell id="vts17N3uvWWT5DIk61w_-39" value="" style="shape=link;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="vts17N3uvWWT5DIk61w_-35" target="vts17N3uvWWT5DIk61w_-36">
           <mxGeometry width="100" relative="1" as="geometry">
             <mxPoint x="85" y="730" as="sourcePoint" />
             <mxPoint x="185" y="730" as="targetPoint" />
@@ -275,6 +275,15 @@
           <mxGeometry width="100" relative="1" as="geometry">
             <mxPoint x="370" y="150" as="sourcePoint" />
             <mxPoint x="470" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vts17N3uvWWT5DIk61w_-60" value="Information logistics" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="95" y="820" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vts17N3uvWWT5DIk61w_-61" value="" style="shape=link;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="vts17N3uvWWT5DIk61w_-35" target="vts17N3uvWWT5DIk61w_-60">
+          <mxGeometry width="100" relative="1" as="geometry">
+            <mxPoint x="130" y="750" as="sourcePoint" />
+            <mxPoint x="230" y="750" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
