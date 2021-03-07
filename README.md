@@ -22,6 +22,20 @@ A manifesto for temporal computing where memory indexing is replaced by temporal
 - Find a best alternative out of alternative signals.
 - Predict the future signal.
 
+## Relation to Quantum Computing
+
+In quantum computing the computation formalism is generally defined based on memories and gates. The memories have states which can be represented as complex numbers, and the gates operate on these states to produce new states. The operations are represented by matrix multiplications.
+
+While state superpositions allow computational speed up compared to classical computing, in a way computing all the simultaneous state computational circuits simultaneously, and utilizing entanglement, constructive and destructive interference to make the alternatives fall into measurable consensus state, time dimension is not represented at all.
+
+The formalism is spatial in nature, and defines way different memories are spatially separate and the relations between those spatially discrete states. Interestingly anti-causal phenomena can happen in quantum circuits.
+
+However, complex numbers in principle can represent time-domain phenomena such as frequencies and phases in signals, so maybe analogous formalism could be used in neural computation, where something analogous to constructive and destructive interference can happen in neuronal connectivity in excitatory and inhibitory synaptic connections. The complex algebra might allow us to represent relative temporal characteristics of signals and how they interact.
+
+We still need to define the formalism in a way which relates state to state evolution through operations. Instead of discrete memories I suggest we might consider representing the state as a mixture of signals, forming a reservoir computing -kind of a pool of dynamic interaction. Additionally, the fundamental computing operations should be causal in kind so that it matters which precondition triggers first, and these operations should have a tendency to "collapse" out the future alternatives which were made counterfactual.
+
+Note that the state here is a single global spatial location (or region), and computation happens in the causal time dimension interactions within it. When we have formalism defined for one region, we can look into how to expand it (continuously?) into imperfectly connected sets of regions, which might form either discrete units (unrealistic?) or a continuum of units which blend into each other continuously.
+
 ## References
 
 - [Sleep Sort](https://rosettacode.org/wiki/Sorting_algorithms/Sleep_sort): "Basically if you transform set L into the time domain, when collecting it back you get it back sorted.", "the time and space complexity for Sleep sort are O(1)."
