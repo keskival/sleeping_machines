@@ -36,6 +36,10 @@ We still need to define the formalism in a way which relates state to state evol
 
 Note that the state here is a single global spatial location (or region), and computation happens in the causal time dimension interactions within it. When we have formalism defined for one region, we can look into how to expand it (continuously?) into imperfectly connected sets of regions, which might form either discrete units (unrealistic?) or a continuum of units which blend into each other continuously.
 
+## Relation to Neural Controlled Differential Equations
+
+Controlled differential equations have a natural relationship with time and sparse signals. It is unclear to me if causality can be strictly incorporated into these formalisms so that the control for example always depends only on the past signal values. Additionally, as it currently is, controlled differential equations and even neural controlled differential equations don't seem to have appropriate focus on parallel reservoir computing where multiple branches of computations compete with each others in time, and where the numbers of parallel branches on-going could be abstracted as a continuous distribution over states in a reservoir instead of explicitly defining micro-level functions.
+
 ## References
 
 - [Sleep Sort](https://rosettacode.org/wiki/Sorting_algorithms/Sleep_sort): "Basically if you transform set L into the time domain, when collecting it back you get it back sorted.", "the time and space complexity for Sleep sort are O(1)."
@@ -45,4 +49,4 @@ Note that the state here is a single global spatial location (or region), and co
 - [Learning and Memory](http://michaeldmann.net/mann18.html): Explains how learning works on biology in-depth detail in the synapses.
 - [A Memory without a Brain](https://www.tum.de/nc/en/about-tum/news/press-releases/details/36462/)
 - [Quantum Parallelism](https://www.sciencedirect.com/topics/mathematics/quantum-parallelism): "Like most factorization algorithms, Shor's algorithm reduces the factorization problem to the problem of finding the period of a function, but uses quantum parallelism to find a superposition of all values of the function in one step.", "In 1996 Grover described a quantum algorithm for searching an unsorted database D containing N items in a time of order N; on a classical computer, the search requires a time of order N."
-- [https://www.maths.ox.ac.uk/node/38559]("Neural controlled differential equations are actually the continuous-time limit of recurrent neural networks.")
+- [Machine Learning With Neural Controlled Differential Equations](https://www.maths.ox.ac.uk/node/38559): "Neural controlled differential equations are actually the continuous-time limit of recurrent neural networks."
