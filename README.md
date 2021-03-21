@@ -65,7 +65,7 @@ The pool of future potential events needs to have the following operators define
 2. Apply `m + t` to `f` to produce `f'`.
 
 The state needs to have the following operators defined:
-1. Apply `m` to `s` to produce `s'`.
+1. Apply `m + t` to `s` to produce `s'`.
 
 ## References
 
