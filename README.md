@@ -57,12 +57,12 @@ The beef is in how the iterative weaving operator `W` is defined. It can be defi
 1. Slice the next infinitesimal time slice of all the future potential event probability distributions in `f` so that we get the independent probability for each potential event at this next time slice. Note that event probabilities are causally dependent over successive time slices, but independent within a time slice.
 2. Sample the set of modulations to apply, `m subset_of f`, where `x in m`.
 3. Combine these modulations with the trivial modulation `t`.
-4. Apply these modulations to `f` so that latency probability distributions of different events shift to produce `f'`, which also cancels all `m` in `f'` so that `f' intersection m = 0`.
+4. Apply these modulations conditioned by `s` to `f` so that latency probability distributions of different events shift to produce `f'`, which also cancels all `m` in `f'` so that `f' intersection m = 0`.
 5. Apply the state transformations related to these modulations to `s` to produce `s'`.
 
 The pool of future potential events needs to have the following operators defined:
 1. Sample `m` from `f`.
-2. Apply `m + t` to `f` to produce `f'`.
+2. Apply `m + t` conditioned by `s` to `f` to produce `f'`.
 
 The state needs to have the following operators defined:
 1. Apply `m + t` to `s` to produce `s'`.
