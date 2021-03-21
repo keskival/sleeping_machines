@@ -48,9 +48,24 @@ Let's represent the future as a pool of potential events, every event having an 
 
 Let's represent the operation of rolling the time forward one infinitesimal step as some iterative operator `W` which weaves the future potential events into the present state representation. In specific:
 
-`s', f' = W(s, f)`, where `s` is the state before weaving, `s'` is the state after weaving, `f` is the pool of future potential events, and `f'` is modulated pool of future potential events. `W` is stochastic, and samples the latency distributions in `f` so that some subset of `f` is picked to be applied, and that subset applies to `f` to produce `f'` and to `s` to produce `s'`.
+`s', f' = W(s, f)`, where `s` is the state before weaving, `s'` is the state after weaving, `f` is the pool of future potential events, and `f'` is a next time slice modulated pool of future potential events. `W` operator is stochastic, and samples the latency distributions in `f` so that some subset of `f` is picked to be applied, and that subset applies to `f` to produce `f'` and to `s` to produce `s'`.
 
-When `x in f` applies, it needs to be self-canceling, so that it removes itself from the pool of future potential events. Every time step also needs to modulate the `f` to take an infinitesimal time step forward, we call that a trivial modulation `t`. The trivial modulation simply reduces the expected latencies of all future potential events uniformly. In general, `x in f` can reduce or increase latencies of future potential events in a non-uniform fashion. Causality cannot be broken, so expected latencies cannot be negative.
+When `x in f` applies, it needs to be self-canceling, so that it removes itself from the pool of future potential events. Every time step also needs to modulate the `f` to take an infinitesimal time step forward, we call that a trivial modulation `t`. The trivial modulation simply reduces the expected latencies of all future potential events uniformly. In general, `x in f` can increase or decrease latencies of future potential events in a non-uniform fashion. Causality cannot be broken, so expected latencies cannot be negative.
+
+The beef is in how the iterative weaving operator `W` is defined. It can be defined as follows:
+
+1. Slice the next infinitesimal time slice of all the future potential event probability distributions in `f` so that we get the independent probability for each potential event at this next time slice. Note that event probabilities are causally dependent over successive time slices, but independent within a time slice.
+2. Sample the set of modulations to apply, `m subset_of f`, where `x in m`.
+3. Combine these modulations with the trivial modulation `t`.
+4. Apply these modulations to `f` so that latency probability distributions of different events shift to produce `f'`, which also cancels all `m` in `f'` so that `f' intersection m = 0`.
+5. Apply the state transformations related to these modulations to `s` to produce `s'`.
+
+The pool of future potential events needs to have the following operators defined:
+1. Sample `m` from `f`.
+2. Apply `m + t` to `f` to produce `f'`.
+
+The state needs to have the following operators defined:
+1. Apply `m` to `s` to produce `s'`.
 
 ## References
 
