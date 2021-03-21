@@ -20,7 +20,7 @@ A manifesto for temporal computing where memory indexing is replaced by temporal
 ## Computational Challenges
 
 - Find a best alternative out of alternative signals.
-- Predict the future signal.
+- Predict the future signal.D
 
 ## Relation to Quantum Computing
 
@@ -39,6 +39,18 @@ Note that the state here is a single global spatial location (or region), and co
 ## Relation to Neural Controlled Differential Equations
 
 Controlled differential equations have a natural relationship with time and sparse signals. It is unclear to me if causality can be strictly incorporated into these formalisms so that the control for example always depends only on the past signal values. Additionally, as it currently is, controlled differential equations and even neural controlled differential equations don't seem to have appropriate focus on parallel reservoir computing where multiple branches of computations compete with each others in time, and where the numbers of parallel branches on-going could be abstracted as a continuous distribution over states in a reservoir instead of explicitly defining micro-level functions.
+
+## Some Initial Thoughts
+
+Let's divide the time into causal split, where the past and the present is represented as a state.
+
+Let's represent the future as a pool of potential events, every event having an associated distribution of latency from the current time.
+
+Let's represent the operation of rolling the time forward one infinitesimal step as some iterative operator `W` which weaves the future potential events into the present state representation. In specific:
+
+`s', f' = W(s, f)`, where `s` is the state before weaving, `s'` is the state after weaving, `f` is the pool of future potential events, and `f'` is modulated pool of future potential events. `W` is stochastic, and samples the latency distributions in `f` so that some subset of `f` is picked to be applied, and that subset applies to `f` to produce `f'` and to `s` to produce `s'`.
+
+When `x in f` applies, it needs to be self-canceling, so that it removes itself from the pool of future potential events. Every time step also needs to modulate the `f` to take an infinitesimal time step forward, we call that a trivial modulation `t`. The trivial modulation simply reduces the expected latencies of all future potential events uniformly. In general, `x in f` can reduce or increase latencies of future potential events in a non-uniform fashion. Causality cannot be broken, so expected latencies cannot be negative.
 
 ## References
 
