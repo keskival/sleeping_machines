@@ -69,7 +69,7 @@ The state needs to have the following operators defined:
 
 ## Wild Ideas
 
-- What if neurons which roughly integrate and fire actually integrate confidence in some interpretation of the world, and fire as soon as the confidence for this achieves large enough value. Populations of neurons would then listen to signals from the external world, each increasing and decreasing its own internal confidence, and compete in which neuron fires its own subsymbol first, thus broadcasting this opinion of truth which the other neurons then need to take into account in their own continuously integrated confidences.
+- What if neurons which roughly integrate and fire actually integrate confidence in some interpretation of the world, and fire as soon as the confidence for this achieves large enough value? Populations of neurons would then listen to signals from the external world, each increasing and decreasing its own internal confidence, and compete in which neuron fires its own subsymbol first, thus broadcasting this opinion of truth which the other neurons then need to take into account in their own continuously integrated confidences.
 
 ## References
 
