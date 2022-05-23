@@ -20,7 +20,7 @@ A manifesto for temporal computing where memory indexing is replaced by temporal
 ## Computational Challenges
 
 - Find a best alternative out of alternative signals.
-- Predict the future signal.D
+- Predict the future signal.
 
 ## Relation to Quantum Computing
 
