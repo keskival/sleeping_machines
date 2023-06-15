@@ -88,6 +88,8 @@ The state needs to have the following operators defined:
 - ["Why would the brain maintain different delays with such precision if spike timing were not important?"](https://www.izhikevich.org/publications/spnet.pdf)
 - ["We show how the brain achieves this feat: Different sounds are responded to with different neural populations. And, each sound is time-stamped with how much time has gone by since it entered the ear. This allows the listener to know both the order and the identity of the sounds that someone is saying to correctly figure out what words the person is saying.”](https://www.nyu.edu/about/news-publications/news/2022/november/our-brains--time-stamp--sounds-to-process-the-words-we-hear.html)
 - ["Neurons in the brain exhibit two types of sparsity; they are sparsely interconnected and sparsely active. These two types of sparsity, called weight sparsity and activation sparsity, when combined, offer the potential to reduce the computational cost of neural networks by two orders of magnitude."](https://iopscience.iop.org/article/10.1088/2634-4386/ac7c8a)
+- ["...we define an implementation of neural computation that can both decompile computations from existing neural connectivity and compile distributed programs as new connections."](https://www.nature.com/articles/s42256-023-00668-8)
+
 
 ## Repository
 
