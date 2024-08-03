@@ -79,9 +79,12 @@ Sleeping Machines
 @article{keskival2021sleeping,
   title={Sleeping Machines},
   author={Keski-Valkama, Tero},
-  year={2021}
+  year={2021},
+  doi={10.5281/zenodo.13207423}
 }
 ```
+
+[![DOI](https://zenodo.org/badge/342583401.svg)](https://zenodo.org/doi/10.5281/zenodo.13207423)
 
 ## References
 
