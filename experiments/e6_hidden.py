@@ -145,6 +145,9 @@ class Config:
     margin: float = 0.1      # also learn when correct but a competitor came within this Δ
     homeo: float = 0.001     # hidden adaptive threshold rate
     init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
+    lateral: int = 0         # output race on relative evidence: each spike also inhibits all outputs by the mean weight
+    theta_out: float = 1.0   # output threshold
+    lr_decay: float = 1.0    # learning rates multiplied by this after every epoch
     scaling: int = 0         # subtractive synaptic scaling (constant summed weight per node)
     zero_sum: int = 0        # normalise competitor credit so the output signal sums to zero
     batch: int = 32
@@ -171,7 +174,8 @@ class RaceNet:
             mu2 = 1.0 / (cfg.init_frac * mean_spikes)
             self.W2 = np.zeros((k, d_in + 1), np.float32)
             self.W2[:, :d_in] = rng.normal(mu2, mu2, (k, d_in))
-        self.th2 = np.ones(k, np.float32)
+        self.th2 = np.full(k, cfg.theta_out, np.float32)
+        self.lr_mult = 1.0
         self.work = {"synops": 0, "plasticity": 0, "hidden_spikes": 0, "input_spikes": 0, "samples": 0}
 
     # Forward: one race per layer ------------------------------------------------
@@ -194,7 +198,7 @@ class RaceNet:
             idx2 = np.where(idx2 == self.h, self.h, idx2)
         else:
             t2, idx2 = t, idx
-        cum2 = integrate(t2, idx2, self.W2)
+        cum2 = integrate(t2, idx2, self.w_out())
         T2, over2 = crossing_times(t2, cum2, self.th2)
         winner = np.where(np.isfinite(T2).any(1), race_order(T2, over2)[:, 0], -1)
         t_dec = np.where(winner >= 0, T2.min(1), HORIZON)
@@ -205,6 +209,15 @@ class RaceNet:
         self.work["synops"] += int(n_before2.sum())
         st.update(t2=t2, idx2=idx2, winner=winner, freeze2=freeze2, snap2=snap2)
         return st
+
+    def w_out(self):
+        """Effective output weights. With lateral inhibition every incoming spike also
+        subtracts the mean weight from all outputs, so the race runs on relative evidence."""
+        if not self.cfg.lateral:
+            return self.W2
+        W = self.W2 - self.W2.mean(0, keepdims=True)
+        W[:, -1] = 0
+        return W
 
     # Teaching event -------------------------------------------------------------
 
@@ -225,7 +238,7 @@ class RaceNet:
         s *= update[:, None]
 
         mask2 = st["t2"][:, None, :] <= st["freeze2"][:, :, None]
-        self._apply(self.W2, st["idx2"], cfg.eta_out * s, mask2, self.W2.shape[1] - 1)
+        self._apply(self.W2, st["idx2"], cfg.eta_out * self.lr_mult * s, mask2, self.W2.shape[1] - 1)
 
         if not self.h or cfg.variant == "frozen_hidden":
             return
@@ -244,7 +257,7 @@ class RaceNet:
         else:
             elig1 = np.where(fired, 1.0, np.exp(-st["snap1"] / cfg.sigma))
             elig1 *= elig1 >= 0.05
-        coef = cfg.eta_hid * delta * elig1
+        coef = cfg.eta_hid * self.lr_mult * delta * elig1
         mask1 = st["t_in"][:, None, :] <= st["freeze1"][:, :, None]
         self._apply(self.W1, st["idx_in"], coef, mask1, self.d)
         if cfg.homeo:
@@ -300,6 +313,7 @@ def train(cfg, xtr, ytr, xte, yte, log_every=0):
             if log_every and j % log_every == 0:
                 print(f"  ep {ep} batch {j} ({time.time() - t0:.0f}s)", flush=True)
         work_train = dict(net.work)
+        net.lr_mult *= cfg.lr_decay
         acc = evaluate(net, xte, yte)
         curve.append(acc)
         print(f"{cfg.variant} epoch {ep + 1}: test {acc:.4f} ({time.time() - t0:.0f}s)", flush=True)
@@ -355,6 +369,7 @@ def event_forward(net, times_row):
     h, k = net.h, net.k
     v1, v2 = np.zeros(h), np.zeros(k)
     group_fired = np.zeros(h // cfg.group, int)
+    W2e = net.w_out()
     inhibited = np.zeros(h, bool)
     done = {}
 
@@ -377,7 +392,7 @@ def event_forward(net, times_row):
     def hidden(ns):
         if "winner" in done:
             return
-        v2[:] += net.W2[:, ns].sum(1)
+        v2[:] += W2e[:, ns].sum(1)
         over = v2 - net.th2
         if (over >= 0).any():
             done["winner"] = int(np.argmax(np.where(over >= 0, over, -np.inf)))
