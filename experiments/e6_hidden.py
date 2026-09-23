@@ -145,6 +145,7 @@ class Config:
     margin: float = 0.1      # also learn when correct but a competitor came within this Δ
     homeo: float = 0.001     # hidden adaptive threshold rate
     init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
+    hid_frac: float = 0.0    # same for hidden nodes only (0 = use init_frac)
     lateral: int = 0         # output race on relative evidence: each spike also inhibits all outputs by the mean weight
     theta_out: float = 1.0   # output threshold
     lr_decay: float = 1.0    # learning rates multiplied by this after every epoch
@@ -161,7 +162,7 @@ class RaceNet:
         h = cfg.hidden if cfg.variant != "single_layer" else 0
         self.h = h
         if h:
-            mu = 1.0 / (cfg.init_frac * mean_spikes)
+            mu = 1.0 / ((cfg.hid_frac or cfg.init_frac) * mean_spikes)
             self.W1 = np.zeros((h, d_in + 1), np.float32)
             self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in))
             self.th1 = np.ones(h, np.float32)
