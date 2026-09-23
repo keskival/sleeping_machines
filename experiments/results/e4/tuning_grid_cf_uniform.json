@@ -1,0 +1,142 @@
+[
+ {
+  "rule": "cf_uniform",
+  "eta": 0.001,
+  "sigma": 0.15,
+  "homeo": 0.0,
+  "acc": 0.28733333333333333
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.001,
+  "sigma": 0.15,
+  "homeo": 0.003,
+  "acc": 0.298
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.001,
+  "sigma": 0.15,
+  "homeo": 0.01,
+  "acc": 0.29
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.001,
+  "sigma": 0.15,
+  "homeo": 0.05,
+  "acc": 0.2786666666666667
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.003,
+  "sigma": 0.15,
+  "homeo": 0.0,
+  "acc": 0.48833333333333334
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.003,
+  "sigma": 0.15,
+  "homeo": 0.003,
+  "acc": 0.492
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.003,
+  "sigma": 0.15,
+  "homeo": 0.01,
+  "acc": 0.48699999999999993
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.003,
+  "sigma": 0.15,
+  "homeo": 0.05,
+  "acc": 0.4606666666666667
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.01,
+  "sigma": 0.15,
+  "homeo": 0.0,
+  "acc": 0.3443333333333333
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.01,
+  "sigma": 0.15,
+  "homeo": 0.003,
+  "acc": 0.3496666666666666
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.01,
+  "sigma": 0.15,
+  "homeo": 0.01,
+  "acc": 0.3466666666666667
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.01,
+  "sigma": 0.15,
+  "homeo": 0.05,
+  "acc": 0.331
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.03,
+  "sigma": 0.15,
+  "homeo": 0.0,
+  "acc": 0.15333333333333335
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.03,
+  "sigma": 0.15,
+  "homeo": 0.003,
+  "acc": 0.15100000000000002
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.03,
+  "sigma": 0.15,
+  "homeo": 0.01,
+  "acc": 0.1476666666666667
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.03,
+  "sigma": 0.15,
+  "homeo": 0.05,
+  "acc": 0.12366666666666666
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.1,
+  "sigma": 0.15,
+  "homeo": 0.0,
+  "acc": 0.04766666666666667
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.1,
+  "sigma": 0.15,
+  "homeo": 0.003,
+  "acc": 0.10066666666666668
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.1,
+  "sigma": 0.15,
+  "homeo": 0.01,
+  "acc": 0.12266666666666666
+ },
+ {
+  "rule": "cf_uniform",
+  "eta": 0.1,
+  "sigma": 0.15,
+  "homeo": 0.05,
+  "acc": 0.12833333333333333
+ }
+]

@@ -1,0 +1,172 @@
+cf_margin     eta=0.001 sigma=0.05  homeo=0.0   acc=0.502
+cf_margin     eta=0.001 sigma=0.05  homeo=0.003 acc=0.523
+cf_margin     eta=0.001 sigma=0.05  homeo=0.01  acc=0.530
+cf_margin     eta=0.001 sigma=0.05  homeo=0.05  acc=0.494
+cf_margin     eta=0.001 sigma=0.15  homeo=0.0   acc=0.234
+cf_margin     eta=0.001 sigma=0.15  homeo=0.003 acc=0.480
+cf_margin     eta=0.001 sigma=0.15  homeo=0.01  acc=0.531
+cf_margin     eta=0.001 sigma=0.15  homeo=0.05  acc=0.426
+cf_margin     eta=0.001 sigma=0.4   homeo=0.0   acc=0.000
+cf_margin     eta=0.001 sigma=0.4   homeo=0.003 acc=0.138
+cf_margin     eta=0.001 sigma=0.4   homeo=0.01  acc=0.266
+cf_margin     eta=0.001 sigma=0.4   homeo=0.05  acc=0.215
+cf_margin     eta=0.003 sigma=0.05  homeo=0.0   acc=0.821
+cf_margin     eta=0.003 sigma=0.05  homeo=0.003 acc=0.821
+cf_margin     eta=0.003 sigma=0.05  homeo=0.01  acc=0.817
+cf_margin     eta=0.003 sigma=0.05  homeo=0.05  acc=0.761
+cf_margin     eta=0.003 sigma=0.15  homeo=0.0   acc=0.746
+cf_margin     eta=0.003 sigma=0.15  homeo=0.003 acc=0.813
+cf_margin     eta=0.003 sigma=0.15  homeo=0.01  acc=0.807
+cf_margin     eta=0.003 sigma=0.15  homeo=0.05  acc=0.585
+cf_margin     eta=0.003 sigma=0.4   homeo=0.0   acc=0.360
+cf_margin     eta=0.003 sigma=0.4   homeo=0.003 acc=0.718
+cf_margin     eta=0.003 sigma=0.4   homeo=0.01  acc=0.672
+cf_margin     eta=0.003 sigma=0.4   homeo=0.05  acc=0.282
+cf_margin     eta=0.01  sigma=0.05  homeo=0.0   acc=0.909
+cf_margin     eta=0.01  sigma=0.05  homeo=0.003 acc=0.904
+cf_margin     eta=0.01  sigma=0.05  homeo=0.01  acc=0.903
+cf_margin     eta=0.01  sigma=0.05  homeo=0.05  acc=0.848
+cf_margin     eta=0.01  sigma=0.15  homeo=0.0   acc=0.906
+cf_margin     eta=0.01  sigma=0.15  homeo=0.003 acc=0.912
+cf_margin     eta=0.01  sigma=0.15  homeo=0.01  acc=0.909
+cf_margin     eta=0.01  sigma=0.15  homeo=0.05  acc=0.512
+cf_margin     eta=0.01  sigma=0.4   homeo=0.0   acc=0.828
+cf_margin     eta=0.01  sigma=0.4   homeo=0.003 acc=0.883
+cf_margin     eta=0.01  sigma=0.4   homeo=0.01  acc=0.879
+cf_margin     eta=0.01  sigma=0.4   homeo=0.05  acc=0.187
+cf_margin     eta=0.03  sigma=0.05  homeo=0.0   acc=0.856
+cf_margin     eta=0.03  sigma=0.05  homeo=0.003 acc=0.855
+cf_margin     eta=0.03  sigma=0.05  homeo=0.01  acc=0.823
+cf_margin     eta=0.03  sigma=0.05  homeo=0.05  acc=0.617
+cf_margin     eta=0.03  sigma=0.15  homeo=0.0   acc=0.923
+cf_margin     eta=0.03  sigma=0.15  homeo=0.003 acc=0.922
+cf_margin     eta=0.03  sigma=0.15  homeo=0.01  acc=0.900
+cf_margin     eta=0.03  sigma=0.15  homeo=0.05  acc=0.241
+cf_margin     eta=0.03  sigma=0.4   homeo=0.0   acc=0.910
+cf_margin     eta=0.03  sigma=0.4   homeo=0.003 acc=0.916
+cf_margin     eta=0.03  sigma=0.4   homeo=0.01  acc=0.879
+cf_margin     eta=0.03  sigma=0.4   homeo=0.05  acc=0.163
+cf_margin     eta=0.1   sigma=0.05  homeo=0.0   acc=0.150
+cf_margin     eta=0.1   sigma=0.05  homeo=0.003 acc=0.152
+cf_margin     eta=0.1   sigma=0.05  homeo=0.01  acc=0.146
+cf_margin     eta=0.1   sigma=0.05  homeo=0.05  acc=0.151
+cf_margin     eta=0.1   sigma=0.15  homeo=0.0   acc=0.150
+cf_margin     eta=0.1   sigma=0.15  homeo=0.003 acc=0.149
+cf_margin     eta=0.1   sigma=0.15  homeo=0.01  acc=0.153
+cf_margin     eta=0.1   sigma=0.15  homeo=0.05  acc=0.152
+cf_margin     eta=0.1   sigma=0.4   homeo=0.0   acc=0.160
+cf_margin     eta=0.1   sigma=0.4   homeo=0.003 acc=0.156
+cf_margin     eta=0.1   sigma=0.4   homeo=0.01  acc=0.147
+cf_margin     eta=0.1   sigma=0.4   homeo=0.05  acc=0.155
+cf_uniform    eta=0.001 sigma=0.15  homeo=0.0   acc=0.000
+cf_uniform    eta=0.001 sigma=0.15  homeo=0.003 acc=0.000
+cf_uniform    eta=0.001 sigma=0.15  homeo=0.01  acc=0.000
+cf_uniform    eta=0.001 sigma=0.15  homeo=0.05  acc=0.000
+cf_uniform    eta=0.003 sigma=0.15  homeo=0.0   acc=0.000
+cf_uniform    eta=0.003 sigma=0.15  homeo=0.003 acc=0.000
+cf_uniform    eta=0.003 sigma=0.15  homeo=0.01  acc=0.000
+cf_uniform    eta=0.003 sigma=0.15  homeo=0.05  acc=0.000
+cf_uniform    eta=0.01  sigma=0.15  homeo=0.0   acc=0.000
+cf_uniform    eta=0.01  sigma=0.15  homeo=0.003 acc=0.000
+cf_uniform    eta=0.01  sigma=0.15  homeo=0.01  acc=0.000
+cf_uniform    eta=0.01  sigma=0.15  homeo=0.05  acc=0.000
+cf_uniform    eta=0.03  sigma=0.15  homeo=0.0   acc=0.000
+cf_uniform    eta=0.03  sigma=0.15  homeo=0.003 acc=0.000
+cf_uniform    eta=0.03  sigma=0.15  homeo=0.01  acc=0.000
+cf_uniform    eta=0.03  sigma=0.15  homeo=0.05  acc=0.000
+cf_uniform    eta=0.1   sigma=0.15  homeo=0.0   acc=0.000
+cf_uniform    eta=0.1   sigma=0.15  homeo=0.003 acc=0.000
+cf_uniform    eta=0.1   sigma=0.15  homeo=0.01  acc=0.000
+cf_uniform    eta=0.1   sigma=0.15  homeo=0.05  acc=0.000
+cf_winner     eta=0.001 sigma=0.15  homeo=0.0   acc=0.369
+cf_winner     eta=0.001 sigma=0.15  homeo=0.003 acc=0.368
+cf_winner     eta=0.001 sigma=0.15  homeo=0.01  acc=0.367
+cf_winner     eta=0.001 sigma=0.15  homeo=0.05  acc=0.346
+cf_winner     eta=0.003 sigma=0.15  homeo=0.0   acc=0.676
+cf_winner     eta=0.003 sigma=0.15  homeo=0.003 acc=0.672
+cf_winner     eta=0.003 sigma=0.15  homeo=0.01  acc=0.665
+cf_winner     eta=0.003 sigma=0.15  homeo=0.05  acc=0.632
+cf_winner     eta=0.01  sigma=0.15  homeo=0.0   acc=0.714
+cf_winner     eta=0.01  sigma=0.15  homeo=0.003 acc=0.715
+cf_winner     eta=0.01  sigma=0.15  homeo=0.01  acc=0.700
+cf_winner     eta=0.01  sigma=0.15  homeo=0.05  acc=0.658
+cf_winner     eta=0.03  sigma=0.15  homeo=0.0   acc=0.310
+cf_winner     eta=0.03  sigma=0.15  homeo=0.003 acc=0.320
+cf_winner     eta=0.03  sigma=0.15  homeo=0.01  acc=0.309
+cf_winner     eta=0.03  sigma=0.15  homeo=0.05  acc=0.275
+cf_winner     eta=0.1   sigma=0.15  homeo=0.0   acc=0.149
+cf_winner     eta=0.1   sigma=0.15  homeo=0.003 acc=0.142
+cf_winner     eta=0.1   sigma=0.15  homeo=0.01  acc=0.137
+cf_winner     eta=0.1   sigma=0.15  homeo=0.05  acc=0.128
+fired_only    eta=0.001 sigma=0.15  homeo=0.0   acc=0.037
+fired_only    eta=0.001 sigma=0.15  homeo=0.003 acc=0.038
+fired_only    eta=0.001 sigma=0.15  homeo=0.01  acc=0.037
+fired_only    eta=0.001 sigma=0.15  homeo=0.05  acc=0.040
+fired_only    eta=0.003 sigma=0.15  homeo=0.0   acc=0.005
+fired_only    eta=0.003 sigma=0.15  homeo=0.003 acc=0.017
+fired_only    eta=0.003 sigma=0.15  homeo=0.01  acc=0.034
+fired_only    eta=0.003 sigma=0.15  homeo=0.05  acc=0.056
+fired_only    eta=0.01  sigma=0.15  homeo=0.0   acc=0.000
+fired_only    eta=0.01  sigma=0.15  homeo=0.003 acc=0.009
+fired_only    eta=0.01  sigma=0.15  homeo=0.01  acc=0.012
+fired_only    eta=0.01  sigma=0.15  homeo=0.05  acc=0.003
+fired_only    eta=0.03  sigma=0.15  homeo=0.0   acc=0.000
+fired_only    eta=0.03  sigma=0.15  homeo=0.003 acc=0.002
+fired_only    eta=0.03  sigma=0.15  homeo=0.01  acc=0.000
+fired_only    eta=0.03  sigma=0.15  homeo=0.05  acc=0.000
+fired_only    eta=0.1   sigma=0.15  homeo=0.0   acc=0.001
+fired_only    eta=0.1   sigma=0.15  homeo=0.003 acc=0.001
+fired_only    eta=0.1   sigma=0.15  homeo=0.01  acc=0.000
+fired_only    eta=0.1   sigma=0.15  homeo=0.05  acc=0.000
+fired_reward  eta=0.001 sigma=0.15  homeo=0.0   acc=0.057
+fired_reward  eta=0.001 sigma=0.15  homeo=0.003 acc=0.056
+fired_reward  eta=0.001 sigma=0.15  homeo=0.01  acc=0.054
+fired_reward  eta=0.001 sigma=0.15  homeo=0.05  acc=0.046
+fired_reward  eta=0.003 sigma=0.15  homeo=0.0   acc=0.098
+fired_reward  eta=0.003 sigma=0.15  homeo=0.003 acc=0.122
+fired_reward  eta=0.003 sigma=0.15  homeo=0.01  acc=0.149
+fired_reward  eta=0.003 sigma=0.15  homeo=0.05  acc=0.139
+fired_reward  eta=0.01  sigma=0.15  homeo=0.0   acc=0.200
+fired_reward  eta=0.01  sigma=0.15  homeo=0.003 acc=0.377
+fired_reward  eta=0.01  sigma=0.15  homeo=0.01  acc=0.405
+fired_reward  eta=0.01  sigma=0.15  homeo=0.05  acc=0.277
+fired_reward  eta=0.03  sigma=0.15  homeo=0.0   acc=0.201
+fired_reward  eta=0.03  sigma=0.15  homeo=0.003 acc=0.289
+fired_reward  eta=0.03  sigma=0.15  homeo=0.01  acc=0.361
+fired_reward  eta=0.03  sigma=0.15  homeo=0.05  acc=0.213
+fired_reward  eta=0.1   sigma=0.15  homeo=0.0   acc=0.036
+fired_reward  eta=0.1   sigma=0.15  homeo=0.003 acc=0.077
+fired_reward  eta=0.1   sigma=0.15  homeo=0.01  acc=0.107
+fired_reward  eta=0.1   sigma=0.15  homeo=0.05  acc=0.074
+{
+  "cf_margin": {
+    "eta": 0.03,
+    "sigma": 0.15,
+    "homeo": 0.0,
+    "acc": 0.9233333333333333
+  },
+  "cf_uniform": {
+    "eta": 0.001,
+    "sigma": 0.15,
+    "homeo": 0.0,
+    "acc": 0.0
+  },
+  "cf_winner": {
+    "eta": 0.01,
+    "sigma": 0.15,
+    "homeo": 0.003,
+    "acc": 0.7153333333333333
+  },
+  "fired_only": {
+    "eta": 0.003,
+    "sigma": 0.15,
+    "homeo": 0.05,
+    "acc": 0.05566666666666667
+  },
+  "fired_reward": {
+    "eta": 0.01,
+    "sigma": 0.15,
+    "homeo": 0.01,
+    "acc": 0.4046666666666667
+  }
+}
