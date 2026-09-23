@@ -137,15 +137,47 @@ def e6(D):
     runs = [r for r in D["e6"]["runs"] if r["kind"] == "final" and r["variant"] in NAMES]
     if not runs:
         return
-    runs.sort(key=lambda r: r["acc"])
-    fig, ax = plt.subplots(figsize=(7.6, .45 * len(runs) + 1.2))
-    labels = [NAMES[r["variant"]] + (f" · {r['winners']} winners" if r["winners"] > 1 else "") + f"  ({len(r['curve'])} ep)" for r in runs]
-    ax.barh(labels, [r["acc"] for r in runs], color=[COLORS[r["variant"]] for r in runs], height=.6)
+    has2 = any(r["round"] == 2 for r in runs)
+    runs.sort(key=lambda r: ((r["round"] == 2) or r["variant"] == "mlp", r["acc"]))
+    def label(r):
+        return NAMES[r["variant"]] + ("" if r["variant"] == "mlp" or r["round"] == 2 else "  · round 1")
+    fig, ax = plt.subplots(figsize=(7.8, .42 * len(runs) + 1.3))
     for i, r in enumerate(runs):
+        faded = has2 and r["round"] == 1 and r["variant"] != "mlp"
+        ax.barh(i, r["acc"], color=COLORS[r["variant"]], alpha=.45 if faded else 1, height=.62)
         ax.annotate(f"{r['acc']:.3f}", (r["acc"], i), xytext=(5, 0), textcoords="offset points", va="center", fontsize=9, color=INK2)
-    ax.set_xlim(0, 1.08); ax.grid(axis="y", visible=False); ax.set_xlabel("MNIST test accuracy")
-    ax.set_title("E6 · Latency-coded MNIST, 60k training images")
+    ax.set_yticks(range(len(runs))); ax.set_yticklabels([label(r) for r in runs])
+    ax.axvline(0.922, color=MUTED, ls=":", lw=1); ax.annotate("linear classifier 0.922", (0.922, len(runs) - .4), xytext=(-4, 0),
+                                                            textcoords="offset points", ha="right", fontsize=8, color=MUTED)
+    ax.set_xlim(0, 1.08); ax.grid(axis="y", visible=False); ax.set_xlabel("MNIST test accuracy after the last epoch")
+    ax.set_title("E6 · Latency-coded MNIST, 60k training images, 10 epochs")
     fig.savefig(os.path.join(FIG, "e6_mnist.png")); plt.close(fig)
+
+
+def e5(D):
+    E = D.get("e5")
+    if not E:
+        return
+    R = E["rows"]; ks = [r["k"] for r in R]
+    fig, axes = plt.subplots(1, 3, figsize=(12, 3.8))
+    for ax, key, title in [(axes[0], "inference", "Inference work per input"), (axes[1], "learning", "Learning work per teaching event")]:
+        race = [r["race"]["inference_synops" if key == "inference" else "learning_updates"] for r in R]
+        sparse = [r["sparse"]["inference_synops" if key == "inference" else "learning_updates"] for r in R]
+        dense = [r["dense"]["inference_macs" if key == "inference" else "learning_macs"] for r in R]
+        ax.plot(ks, dense, color=REF, ls="--", marker="o", ms=4, lw=2, label="dense softmax")
+        ax.plot(ks, sparse, color=S2, marker="o", ms=4, lw=2, mec="white", label="sparse softmax")
+        ax.plot(ks, race, color=S1, marker="o", ms=5, lw=2.6, mec="white", label="race")
+        ax.set_xscale("log"); ax.set_yscale("log"); ax.set_xticks(ks); ax.set_xticklabels([f"{k:,}" for k in ks])
+        ax.set_xlabel("number of classes K (log)"); ax.set_ylabel("operations (log)"); ax.set_title(title)
+        ax.legend(loc="upper left", fontsize=8.5)
+    ax = axes[2]
+    ax.errorbar(ks, [r["sparse"]["acc"] for r in R], yerr=[r["sparse"]["acc_ci"] for r in R], color=S2, marker="o", lw=2, mec="white", label="sparse softmax")
+    ax.errorbar(ks, [r["race"]["acc"] for r in R], yerr=[r["race"]["acc_ci"] for r in R], color=S1, marker="o", lw=2.6, mec="white", label="race")
+    ax.set_xscale("log"); ax.set_xticks(ks); ax.set_xticklabels([f"{k:,}" for k in ks]); ax.set_ylim(0, 1.02)
+    ax.set_xlabel("number of classes K (log)"); ax.set_ylabel("test accuracy"); ax.set_title("Accuracy"); ax.legend(loc="lower left", fontsize=8.5)
+    fig.suptitle("E5 · Capacity scaling on shared sparse connectivity (3 seeds)", x=.01, ha="left", fontweight="bold", color=INK)
+    fig.tight_layout()
+    fig.savefig(os.path.join(FIG, "e5_capacity.png")); plt.close(fig)
 
 
 def energy(D):
@@ -173,5 +205,5 @@ def energy(D):
 if __name__ == "__main__":
     os.makedirs(FIG, exist_ok=True)
     D = json.load(open(os.path.join(ROOT, "report", "data.json")))
-    race_diagram(); e4(D); e2(D); e6(D); energy(D)
+    race_diagram(); e4(D); e2(D); e5(D); e6(D); energy(D)
     print("figures:", sorted(os.listdir(FIG)))

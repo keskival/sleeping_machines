@@ -42,11 +42,18 @@ def e6():
     for path in sorted(glob.glob(os.path.join(RES, "e6", "mnist_*_s0.json"))):
         name = os.path.basename(path)[6:-8]
         r = json.load(open(path))
-        kind = "pilot" if "pilot" in name else ("tuning" if "_sl" in name else "final")
-        runs.append({"name": name, "kind": kind, "variant": r["config"]["variant"],
-                     "hidden": r["config"]["hidden"], "winners": r["config"]["winners"],
-                     "train_samples": 6000 if kind == "pilot" else 60000,
-                     "acc": r["test_acc"], "curve": r["curve"], "val": r.get("val", 0)})
+        kind = "pilot" if "pilot" in name else ("tuning" if name.endswith("_sl") or name.endswith("v2sl") else "final")
+        if kind == "final" and r.get("val"):
+            kind = "tuning"
+        cfg = r["config"]
+        runs.append({"name": name, "kind": kind, "variant": cfg["variant"], "round": 2 if name.endswith("_v2") else 1,
+                     "hidden": 0 if cfg["variant"] == "single_layer" else cfg["hidden"],
+                     "winners": cfg["winners"], "lateral": cfg.get("lateral", 0), "lr_decay": cfg.get("lr_decay", 1.0),
+                     "hid_frac": cfg.get("hid_frac", 0.0), "train_samples": 6000 if kind == "pilot" else 60000,
+                     "acc": r["test_acc"], "peak": max(r["curve"]), "peak_epoch": int(np.argmax(r["curve"])) + 1,
+                     "curve": r["curve"], "val": r.get("val", 0),
+                     "synops": r["inference_work_per_sample"].get("synops"),
+                     "macs": r["inference_work_per_sample"].get("macs")})
     xor = []
     for path in sorted(glob.glob(os.path.join(RES, "e6", "xor_*_smoke_s0.json"))):
         r = json.load(open(path))
@@ -54,9 +61,32 @@ def e6():
     return {"runs": runs, "xor": xor}
 
 
+def e5():
+    path = os.path.join(RES, "e5", "rows.json")
+    if not os.path.exists(path):
+        return None
+    d = json.load(open(path))
+    out = []
+    for k in sorted({r["k"] for r in d["rows"]}):
+        rs = [r for r in d["rows"] if r["k"] == k]
+        row = {"k": k, "m": rs[0]["m"]}
+        for model in ("race", "sparse"):
+            row[model] = {
+                "acc": float(np.mean([r[model]["acc"] for r in rs])), "acc_ci": ci95([r[model]["acc"] for r in rs]),
+                "inference_synops": float(np.mean([r[model]["inference_per_sample"]["synops"] for r in rs])),
+                "learning_updates": float(np.mean([r[model]["train_per_episode"]["plasticity"] for r in rs])),
+                "rewired": float(np.mean([r[model]["train_per_episode"]["rewired"] for r in rs]))}
+        row["race"]["inputs_used"] = float(np.mean([r["race"]["inference_per_sample"]["inputs_used"]
+                                                    / r["race"]["inference_per_sample"]["inputs"] for r in rs]))
+        row["dense"] = {"inference_macs": rs[0]["dense"]["inference_per_sample"]["macs"],
+                        "learning_macs": rs[0]["dense"]["train_per_episode"]["macs"]}
+        out.append(row)
+    return {"config": d["config"], "rows": out}
+
+
 if __name__ == "__main__":
     energy = json.load(open(os.path.join(RES, "energy.json")))
-    data = {"e4": e4(), "e2": energy["e2"], "e6": e6(), "energy": {
+    data = {"e4": e4(), "e2": energy["e2"], "e5": e5(), "e6": e6(), "energy": {
         "profiles": energy["profiles"], "e4": energy["e4"], "e6": energy["e6"]}}
     os.makedirs(REPORT, exist_ok=True)
     blob = json.dumps(data, separators=(",", ":"))
