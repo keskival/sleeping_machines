@@ -1,0 +1,384 @@
+#!/usr/bin/env python3
+"""E6: counterfactual race learning (CRL) through a hidden layer.
+
+See experiments/E6_HIDDEN_LAYERS_DESIGN.md.
+
+Network: input spikes -> hidden k-winner races in groups -> K-way output race.
+Neurons are non-leaky integrate-to-threshold with one spike each, so the event
+simulation has an exact closed form: sort the input spikes by time, accumulate
+weights, and take the first threshold crossing. `test_equivalence` checks this
+against the discrete-event engine.
+
+    python experiments/e6_hidden.py xor  --variant crl_fa
+    python experiments/e6_hidden.py mnist --variant crl_fa --epochs 3
+"""
+import argparse
+import gzip
+import json
+import os
+import sys
+import time
+import urllib.request
+from dataclasses import dataclass, asdict
+
+import numpy as np
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from sleeping_machines.sim import Engine  # noqa: E402
+
+OUT = os.path.join(os.path.dirname(__file__), "results", "e6")
+DATA = os.path.join(os.path.dirname(__file__), "..", "data")
+HORIZON = 1.0
+
+VARIANTS = ("crl_sym", "crl_fa", "crl_sign", "crl_fired_only", "frozen_hidden", "single_layer")
+
+
+# ── Spike encodings ───────────────────────────────────────────────────────────
+
+def to_events(times):
+    """Dense (B, D) spike times with inf for silence -> time-sorted (times, idx), padded.
+    Padding points at a dummy input D whose weights are kept at zero."""
+    b, d = times.shape
+    s = int(np.isfinite(times).sum(1).max())
+    order = np.argsort(times, axis=1, kind="stable")[:, :s]
+    t = np.take_along_axis(times, order, 1)
+    idx = np.where(np.isfinite(t), order, d)
+    return t.astype(np.float32), idx
+
+
+def mnist(split):
+    os.makedirs(DATA, exist_ok=True)
+    base = "https://storage.googleapis.com/cvdf-datasets/mnist/"
+    names = {"train": ("train-images-idx3-ubyte.gz", "train-labels-idx1-ubyte.gz"),
+             "test": ("t10k-images-idx3-ubyte.gz", "t10k-labels-idx1-ubyte.gz")}[split]
+    arrays = []
+    for name, offset in zip(names, (16, 8)):
+        path = os.path.join(DATA, name)
+        if not os.path.exists(path):
+            urllib.request.urlretrieve(base + name, path)
+        with gzip.open(path) as f:
+            arrays.append(np.frombuffer(f.read(), np.uint8, offset=offset))
+    x = arrays[0].reshape(-1, 784).astype(np.float32) / 255
+    return x, arrays[1].astype(np.int64)
+
+
+def latency_code(x, cutoff=0.1):
+    """Brighter pixel -> earlier spike; pixels below cutoff stay silent."""
+    return np.where(x > cutoff, (1 - x) * 0.999, np.inf).astype(np.float32)
+
+
+def xor_in_time(n, rng, per_group=16, groups=4):
+    """Label = XOR(group 0 early, group 1 early). Groups 2.. are timing distractors."""
+    early = rng.random((n, groups)) < 0.5
+    y = (early[:, 0] ^ early[:, 1]).astype(np.int64)
+    lo = np.where(early, 0.0, 0.6)[:, :, None]
+    t = lo + rng.uniform(0, 0.4, (n, groups, per_group))
+    t = np.where(rng.random(t.shape) < 0.8, t, np.inf)
+    return t.reshape(n, -1).astype(np.float32), y
+
+
+# ── Closed-form race dynamics ─────────────────────────────────────────────────
+
+def integrate(t, idx, W):
+    """Cumulative potential of every node after each input event: (B, N, S)."""
+    return np.cumsum(np.transpose(W[:, idx], (1, 0, 2)), axis=2)
+
+
+def crossing_times(t, cum, theta):
+    """First threshold crossing per node, and the overshoot at that instant.
+
+    Simultaneous input events are integrated together: the threshold is only
+    checked after the last event of each equal-time run."""
+    last_of_run = np.ones_like(t, bool)
+    last_of_run[:, :-1] = t[:, 1:] != t[:, :-1]
+    crossed = (cum >= theta[None, :, None]) & (last_of_run & np.isfinite(t))[:, None, :]
+    first = crossed.argmax(2)
+    tc = np.take_along_axis(np.broadcast_to(t[:, None, :], cum.shape), first[:, :, None], 2)[:, :, 0]
+    over = np.take_along_axis(cum, first[:, :, None], 2)[:, :, 0] - theta[None, :]
+    has = crossed.any(2)
+    return np.where(has, tc, np.inf), np.where(has, over, -np.inf)
+
+
+def race_order(T, over):
+    """Rank along the last axis: earlier crossing first; at the same instant,
+    larger overshoot first (two stable sorts, fully vectorised)."""
+    o1 = np.argsort(-over, axis=-1, kind="stable")
+    o2 = np.argsort(np.take_along_axis(T, o1, -1), axis=-1, kind="stable")
+    return np.take_along_axis(o1, o2, -1)
+
+
+def potential_at(t, cum, when):
+    """Potential of each node at time `when` (B, N): sum of inputs with t <= when."""
+    b, n, s = cum.shape
+    count = (t[:, None, :] <= when[:, :, None]).sum(2)
+    v = np.take_along_axis(cum, np.clip(count - 1, 0, s - 1)[:, :, None], 2)[:, :, 0]
+    return np.where(count > 0, v, 0.0), count
+
+
+def group_race(T, over, groups, winners):
+    """Within each group the first `winners` crossings fire; the rest are cancelled
+    at the instant the last winner fires (or at the horizon if too few crossed)."""
+    b, n = T.shape
+    size = n // groups
+    g, o = T.reshape(b, groups, size), over.reshape(b, groups, size)
+    order = race_order(g, o)
+    rank = np.empty_like(order)
+    np.put_along_axis(rank, order, np.arange(size)[None, None, :].repeat(b, 0).repeat(groups, 1), 2)
+    fired = (rank < winners) & np.isfinite(g)
+    kth = np.take_along_axis(g, order[:, :, winners - 1:winners], 2)[:, :, 0]
+    cancel = np.where(np.isfinite(kth), kth, HORIZON)
+    freeze = np.where(fired, g, cancel[:, :, None])
+    return fired.reshape(b, n), freeze.reshape(b, n)
+
+
+# ── Network ───────────────────────────────────────────────────────────────────
+
+@dataclass
+class Config:
+    variant: str = "crl_fa"
+    hidden: int = 1000
+    group: int = 10          # hidden nodes per competition group
+    winners: int = 1         # hidden winners per group
+    eta_out: float = 0.01
+    eta_hid: float = 0.003
+    sigma: float = 0.15
+    margin: float = 0.1      # also learn when correct but a competitor came within this Δ
+    homeo: float = 0.001     # hidden adaptive threshold rate
+    init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
+    batch: int = 32
+    epochs: int = 3
+    seed: int = 0
+
+
+class RaceNet:
+    def __init__(self, cfg, d_in, k, mean_spikes, rng):
+        self.cfg, self.k, self.d = cfg, k, d_in
+        h = cfg.hidden if cfg.variant != "single_layer" else 0
+        self.h = h
+        if h:
+            mu = 1.0 / (cfg.init_frac * mean_spikes)
+            self.W1 = np.zeros((h, d_in + 1), np.float32)
+            self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in))
+            self.th1 = np.ones(h, np.float32)
+            fired_per_sample = h // cfg.group * cfg.winners
+            mu2 = 1.0 / (cfg.init_frac * fired_per_sample)
+            self.W2 = np.zeros((k, h + 1), np.float32)
+            self.W2[:, :h] = rng.normal(mu2, mu2, (k, h))
+            self.B = rng.normal(0, mu2, (k, h)).astype(np.float32)   # fixed feedback for crl_fa
+        else:
+            mu2 = 1.0 / (cfg.init_frac * mean_spikes)
+            self.W2 = np.zeros((k, d_in + 1), np.float32)
+            self.W2[:, :d_in] = rng.normal(mu2, mu2, (k, d_in))
+        self.th2 = np.ones(k, np.float32)
+        self.work = {"synops": 0, "plasticity": 0, "hidden_spikes": 0, "input_spikes": 0, "samples": 0}
+
+    # Forward: one race per layer ------------------------------------------------
+
+    def forward(self, t, idx):
+        cfg, st = self.cfg, {}
+        st["t_in"], st["idx_in"] = t, idx
+        self.work["input_spikes"] += int(np.isfinite(t).sum())
+        self.work["samples"] += len(t)
+        if self.h:
+            cum1 = integrate(t, idx, self.W1)
+            T1, over1 = crossing_times(t, cum1, self.th1)
+            fired, freeze1 = group_race(T1, over1, self.h // cfg.group, cfg.winners)
+            v1, n_before = potential_at(t, cum1, freeze1)
+            st.update(fired=fired, freeze1=freeze1, snap1=np.clip((self.th1 - v1) / self.th1, 0, None))
+            self.work["synops"] += int(n_before.sum())          # inputs after inhibition are not integrated
+            self.work["hidden_spikes"] += int(fired.sum())
+            h_times = np.where(fired, freeze1, np.inf)
+            t2, idx2 = to_events(h_times)
+            idx2 = np.where(idx2 == self.h, self.h, idx2)
+        else:
+            t2, idx2 = t, idx
+        cum2 = integrate(t2, idx2, self.W2)
+        T2, over2 = crossing_times(t2, cum2, self.th2)
+        winner = np.where(np.isfinite(T2).any(1), race_order(T2, over2)[:, 0], -1)
+        t_dec = np.where(winner >= 0, T2.min(1), HORIZON)
+        freeze2 = np.repeat(t_dec[:, None], self.k, 1)
+        v2, n_before2 = potential_at(t2, cum2, freeze2)
+        snap2 = np.clip((self.th2 - v2) / self.th2, 0, None)
+        snap2[winner >= 0, winner[winner >= 0]] = 0
+        self.work["synops"] += int(n_before2.sum())
+        st.update(t2=t2, idx2=idx2, winner=winner, freeze2=freeze2, snap2=snap2)
+        return st
+
+    # Teaching event -------------------------------------------------------------
+
+    def teach(self, st, y):
+        cfg = self.cfg
+        b = len(y)
+        rows = np.arange(b)
+        snap2 = st["snap2"]
+        elig2 = np.exp(-snap2 / cfg.sigma)
+        rival = snap2.copy()
+        rival[rows, y] = np.inf
+        update = (st["winner"] != y) | (rival.min(1) < cfg.margin)
+        s = -elig2 * (elig2 >= 0.05)                       # competitors, near-miss weighted
+        s[rows, y] = 1.0
+        s *= update[:, None]
+
+        mask2 = st["t2"][:, None, :] <= st["freeze2"][:, :, None]
+        self._apply(self.W2, st["idx2"], cfg.eta_out * s, mask2, self.W2.shape[1] - 1)
+
+        if not self.h or cfg.variant == "frozen_hidden":
+            return
+        if cfg.variant == "crl_sym":
+            B = self.W2[:, :self.h]
+        elif cfg.variant == "crl_sign":
+            B = np.sign(self.W2[:, :self.h])
+        else:
+            B = self.B
+        delta = s @ B                                      # feedback events o -> h
+        fired = st["fired"]
+        if cfg.variant == "crl_fired_only":
+            elig1 = fired.astype(np.float32)
+        else:
+            elig1 = np.where(fired, 1.0, np.exp(-st["snap1"] / cfg.sigma))
+            elig1 *= elig1 >= 0.05
+        coef = cfg.eta_hid * delta * elig1
+        mask1 = st["t_in"][:, None, :] <= st["freeze1"][:, :, None]
+        self._apply(self.W1, st["idx_in"], coef, mask1, self.d)
+        if cfg.homeo:
+            target_rate = cfg.winners / cfg.group
+            self.th1 += cfg.homeo * (fired.mean(0) - target_rate)
+            np.maximum(self.th1, 0.05, out=self.th1)
+
+    def _apply(self, W, idx, coef, mask, dummy):
+        """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample."""
+        for bi in range(len(idx)):
+            active = np.flatnonzero(coef[bi])
+            if not len(active):
+                continue
+            upd = coef[bi, active, None] * mask[bi, active]
+            W[np.ix_(active, idx[bi])] += upd
+            self.work["plasticity"] += int(mask[bi, active].sum())
+        W[:, dummy] = 0
+
+
+def evaluate(net, times, y, batch=250):
+    correct = 0
+    for i in range(0, len(y), batch):
+        t, idx = to_events(times[i:i + batch])
+        correct += int((net.forward(t, idx)["winner"] == y[i:i + batch]).sum())
+    return correct / len(y)
+
+
+def train(cfg, xtr, ytr, xte, yte, log_every=0):
+    rng = np.random.default_rng(cfg.seed)
+    mean_spikes = float(np.isfinite(xtr).sum(1).mean())
+    net = RaceNet(cfg, xtr.shape[1], int(ytr.max()) + 1, mean_spikes, rng)
+    curve = []
+    for ep in range(cfg.epochs):
+        perm = rng.permutation(len(ytr))
+        t0 = time.time()
+        for j, i in enumerate(range(0, len(perm), cfg.batch)):
+            ii = perm[i:i + cfg.batch]
+            t, idx = to_events(xtr[ii])
+            net.teach(net.forward(t, idx), ytr[ii])
+            if log_every and j % log_every == 0:
+                print(f"  ep {ep} batch {j} ({time.time() - t0:.0f}s)", flush=True)
+        work_train = dict(net.work)
+        acc = evaluate(net, xte, yte)
+        curve.append(acc)
+        print(f"{cfg.variant} epoch {ep + 1}: test {acc:.4f} ({time.time() - t0:.0f}s)", flush=True)
+    net.work = {k: 0 for k in net.work}
+    evaluate(net, xte, yte)
+    per_sample = {k: v / net.work["samples"] for k, v in net.work.items() if k != "samples"}
+    return {"config": asdict(cfg), "curve": curve, "test_acc": curve[-1],
+            "inference_work_per_sample": per_sample, "train_work": work_train}
+
+
+# ── Equivalence with the event engine ─────────────────────────────────────────
+
+def event_forward(net, times_row):
+    """Run one sample through the same network on the discrete-event engine.
+    Events at the same instant are delivered as one batch (same semantics as the
+    closed form); simultaneous crossings are resolved by overshoot."""
+    e = Engine()
+    cfg = net.cfg
+    h, k = net.h, net.k
+    v1, v2 = np.zeros(h), np.zeros(k)
+    group_fired = np.zeros(h // cfg.group, int)
+    inhibited = np.zeros(h, bool)
+    done = {}
+
+    def inputs(chans):
+        live = np.flatnonzero(~inhibited)
+        v1[live] += net.W1[np.ix_(live, chans)].sum(1)
+        over = v1[live] - net.th1[live]
+        spikes = []
+        for n in live[over >= 0][np.argsort(-over[over >= 0], kind="stable")]:
+            g = n // cfg.group
+            if group_fired[g] < cfg.winners:
+                group_fired[g] += 1
+                inhibited[n] = True
+                spikes.append(int(n))
+                if group_fired[g] == cfg.winners:
+                    inhibited[g * cfg.group:(g + 1) * cfg.group] = True
+        if spikes:
+            e.schedule(0.0, "hidden", spikes)
+
+    def hidden(ns):
+        if "winner" in done:
+            return
+        v2[:] += net.W2[:, ns].sum(1)
+        over = v2 - net.th2
+        if (over >= 0).any():
+            done["winner"] = int(np.argmax(np.where(over >= 0, over, -np.inf)))
+
+    e.on("in", inputs)
+    e.on("hidden", hidden)
+    active = np.flatnonzero(np.isfinite(times_row))
+    for tval in np.unique(times_row[active]):
+        e.schedule(float(tval), "in", active[times_row[active] == tval])
+    e.run()
+    return done.get("winner", -1)
+
+
+def test_equivalence(net, times, n=200):
+    t, idx = to_events(times[:n])
+    closed = net.forward(t, idx)["winner"]
+    events = np.array([event_forward(net, times[i]) for i in range(n)])
+    return float((closed == events).mean())
+
+
+# ── Entry points ──────────────────────────────────────────────────────────────
+
+def load(task, n_val):
+    if task == "xor":
+        rng = np.random.default_rng(0)
+        xtr, ytr = xor_in_time(8000, rng)
+        xte, yte = xor_in_time(2000, rng)
+        return xtr, ytr, xte, yte
+    x, y = mnist("train")
+    xt, yt = mnist("test")
+    if n_val:                      # tuning uses the last n_val training images as validation
+        return latency_code(x[:-n_val]), y[:-n_val], latency_code(x[-n_val:]), y[-n_val:]
+    return latency_code(x), y, latency_code(xt), yt
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("task", choices=("xor", "mnist"))
+    ap.add_argument("--variant", default="crl_fa", choices=VARIANTS)
+    ap.add_argument("--val", type=int, default=0, help="hold out N training samples as validation")
+    ap.add_argument("--train-limit", type=int, default=0)
+    ap.add_argument("--tag", default="")
+    ap.add_argument("--log-every", type=int, default=0)
+    for f, v in asdict(Config()).items():
+        if f != "variant":
+            ap.add_argument("--" + f.replace("_", "-"), type=type(v), default=v)
+    a = ap.parse_args()
+    cfg = Config(**{f: getattr(a, f) for f in asdict(Config())})
+    xtr, ytr, xte, yte = load(a.task, a.val)
+    if a.train_limit:
+        xtr, ytr = xtr[:a.train_limit], ytr[:a.train_limit]
+    res = train(cfg, xtr, ytr, xte, yte, a.log_every)
+    res["task"], res["val"] = a.task, a.val
+    os.makedirs(OUT, exist_ok=True)
+    name = f"{a.task}_{cfg.variant}{'_' + a.tag if a.tag else ''}_s{cfg.seed}.json"
+    with open(os.path.join(OUT, name), "w") as f:
+        json.dump(res, f, indent=1)
+    print(json.dumps({k: res[k] for k in ("test_acc", "inference_work_per_sample")}, indent=1))
