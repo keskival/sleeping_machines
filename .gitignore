@@ -1,1 +1,3 @@
 data/
+experiments/results/e2/rows.json
+experiments/__pycache__/

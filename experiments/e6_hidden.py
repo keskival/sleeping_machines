@@ -30,7 +30,7 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e6")
 DATA = os.path.join(os.path.dirname(__file__), "..", "data")
 HORIZON = 1.0
 
-VARIANTS = ("crl_sym", "crl_fa", "crl_sign", "crl_fired_only", "frozen_hidden", "single_layer")
+VARIANTS = ("crl_sym", "crl_fa", "crl_sign", "crl_fired_only", "frozen_hidden", "single_layer", "mlp")
 
 
 # ── Spike encodings ───────────────────────────────────────────────────────────
@@ -139,12 +139,14 @@ class Config:
     hidden: int = 1000
     group: int = 10          # hidden nodes per competition group
     winners: int = 1         # hidden winners per group
-    eta_out: float = 0.01
+    eta_out: float = 0.003
     eta_hid: float = 0.003
     sigma: float = 0.15
     margin: float = 0.1      # also learn when correct but a competitor came within this Δ
     homeo: float = 0.001     # hidden adaptive threshold rate
     init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
+    scaling: int = 0         # subtractive synaptic scaling (constant summed weight per node)
+    zero_sum: int = 0        # normalise competitor credit so the output signal sums to zero
     batch: int = 32
     epochs: int = 3
     seed: int = 0
@@ -216,6 +218,9 @@ class RaceNet:
         rival[rows, y] = np.inf
         update = (st["winner"] != y) | (rival.min(1) < cfg.margin)
         s = -elig2 * (elig2 >= 0.05)                       # competitors, near-miss weighted
+        s[rows, y] = 0.0
+        if cfg.zero_sum:                                   # competitors share a total of -1
+            s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
         s *= update[:, None]
 
@@ -224,10 +229,12 @@ class RaceNet:
 
         if not self.h or cfg.variant == "frozen_hidden":
             return
-        if cfg.variant == "crl_sym":
-            B = self.W2[:, :self.h]
-        elif cfg.variant == "crl_sign":
-            B = np.sign(self.W2[:, :self.h])
+        if cfg.variant in ("crl_sym", "crl_sign"):
+            # Class-specific part only: the common component would push every hidden
+            # node the same way whenever the output signal does not sum to zero.
+            B = self.W2[:, :self.h] - self.W2[:, :self.h].mean(0, keepdims=True)
+            if cfg.variant == "crl_sign":
+                B = np.sign(B) * np.abs(B).mean()
         else:
             B = self.B
         delta = s @ B                                      # feedback events o -> h
@@ -246,22 +253,35 @@ class RaceNet:
             np.maximum(self.th1, 0.05, out=self.th1)
 
     def _apply(self, W, idx, coef, mask, dummy):
-        """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample."""
+        """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample.
+
+        With `scaling`, each node's summed weight is held constant (subtractive
+        synaptic scaling). It is applied as one per-node scalar, equivalent to
+        feedforward inhibition per incoming spike, and counted as one update per node."""
+        added = np.zeros(W.shape[0], np.float32)
         for bi in range(len(idx)):
             active = np.flatnonzero(coef[bi])
             if not len(active):
                 continue
             upd = coef[bi, active, None] * mask[bi, active]
             W[np.ix_(active, idx[bi])] += upd
+            added[active] += upd.sum(1)
             self.work["plasticity"] += int(mask[bi, active].sum())
+        if self.cfg.scaling:
+            nz = np.flatnonzero(added)
+            W[nz, :dummy] -= added[nz, None] / dummy
+            self.work["plasticity"] += len(nz)
         W[:, dummy] = 0
 
 
-def evaluate(net, times, y, batch=250):
+def evaluate(net, times, y, batch=250, count=False):
+    saved = dict(net.work)
     correct = 0
     for i in range(0, len(y), batch):
         t, idx = to_events(times[i:i + batch])
         correct += int((net.forward(t, idx)["winner"] == y[i:i + batch]).sum())
+    if not count:
+        net.work = saved                     # evaluation is not part of the training bill
     return correct / len(y)
 
 
@@ -284,10 +304,44 @@ def train(cfg, xtr, ytr, xte, yte, log_every=0):
         curve.append(acc)
         print(f"{cfg.variant} epoch {ep + 1}: test {acc:.4f} ({time.time() - t0:.0f}s)", flush=True)
     net.work = {k: 0 for k in net.work}
-    evaluate(net, xte, yte)
+    evaluate(net, xte, yte, count=True)
     per_sample = {k: v / net.work["samples"] for k, v in net.work.items() if k != "samples"}
     return {"config": asdict(cfg), "curve": curve, "test_acc": curve[-1],
             "inference_work_per_sample": per_sample, "train_work": work_train}
+
+
+def train_mlp(cfg, xtr, ytr, xte, yte, lr=0.05):
+    """Dense reference: one ReLU hidden layer, softmax output, plain SGD with backprop.
+    Input is spike-derived intensity (1 - t for spiking pixels, 0 otherwise)."""
+    rng = np.random.default_rng(cfg.seed)
+    def feats(t):
+        return np.where(np.isfinite(t), 1 - t, 0).astype(np.float32)
+    ftr, fte = feats(xtr), feats(xte)
+    d, h, k = ftr.shape[1], cfg.hidden, int(ytr.max()) + 1
+    W1 = rng.normal(0, np.sqrt(2 / d), (d, h)).astype(np.float32)
+    W2 = rng.normal(0, np.sqrt(1 / h), (h, k)).astype(np.float32)
+    b1, b2 = np.zeros(h, np.float32), np.zeros(k, np.float32)
+    curve = []
+    for ep in range(cfg.epochs):
+        perm = rng.permutation(len(ytr))
+        for i in range(0, len(perm), cfg.batch):
+            ii = perm[i:i + cfg.batch]
+            x = ftr[ii]
+            a1 = np.maximum(x @ W1 + b1, 0)
+            z = a1 @ W2 + b2
+            p = np.exp(z - z.max(1, keepdims=True)); p /= p.sum(1, keepdims=True)
+            p[np.arange(len(ii)), ytr[ii]] -= 1
+            p /= len(ii)
+            g1 = (p @ W2.T) * (a1 > 0)
+            W2 -= lr * a1.T @ p; b2 -= lr * p.sum(0)
+            W1 -= lr * x.T @ g1; b1 -= lr * g1.sum(0)
+        acc = float(((np.maximum(fte @ W1 + b1, 0) @ W2 + b2).argmax(1) == yte).mean())
+        curve.append(acc)
+        print(f"mlp epoch {ep + 1}: test {acc:.4f}", flush=True)
+    macs = d * h + h * k
+    return {"config": asdict(cfg), "curve": curve, "test_acc": curve[-1],
+            "inference_work_per_sample": {"macs": macs},
+            "train_work": {"macs": 3 * macs * cfg.epochs * len(ytr)}}
 
 
 # ── Equivalence with the event engine ─────────────────────────────────────────
@@ -375,7 +429,8 @@ if __name__ == "__main__":
     xtr, ytr, xte, yte = load(a.task, a.val)
     if a.train_limit:
         xtr, ytr = xtr[:a.train_limit], ytr[:a.train_limit]
-    res = train(cfg, xtr, ytr, xte, yte, a.log_every)
+    res = train(cfg, xtr, ytr, xte, yte, a.log_every) \
+        if cfg.variant != "mlp" else train_mlp(cfg, xtr, ytr, xte, yte)
     res["task"], res["val"] = a.task, a.val
     os.makedirs(OUT, exist_ok=True)
     name = f"{a.task}_{cfg.variant}{'_' + a.tag if a.tag else ''}_s{cfg.seed}.json"
