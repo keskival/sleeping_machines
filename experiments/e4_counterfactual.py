@@ -159,7 +159,7 @@ class RaceLayer:
                         elig = 1.0 / (self.task.k - 1)   # balanced: total depression = potentiation
                     else:
                         elig = np.exp(-self.snapshot[k] / p.sigma)
-                    if elig >= p.eps:
+                    if p.rule == "cf_uniform" or elig >= p.eps:
                         update(k, -elig)
 
 
@@ -243,7 +243,7 @@ def pool_map(jobs, procs):
 
 
 def tune(a):
-    """Pick eta (and sigma) per rule on tuning seeds 100-102 at K=32."""
+    """Pick eta, sigma and homeostasis per (rule, K) on tuning seeds 100-102."""
     grid = []
     for rule in a.rules:
         for eta in (0.001, 0.003, 0.01, 0.03, 0.1):
@@ -251,29 +251,29 @@ def tune(a):
             for sigma in sigmas:
                 for homeo in (0.0, 0.003, 0.01, 0.05):
                     grid.append((rule, eta, sigma, homeo))
-    jobs = [("race", {"k": 32}, {"rule": r, "eta": e, "sigma": s, "homeo": h}, seed, a.train, a.test)
-            for r, e, s, h in grid for seed in (100, 101, 102)]
+    jobs = [("race", {"k": k}, {"rule": r, "eta": e, "sigma": s, "homeo": h}, seed, a.train, a.test)
+            for k in a.ks for r, e, s, h in grid for seed in (100, 101, 102)]
     results = pool_map(jobs, a.procs)
     scores = {}
-    for (kind, _, p_kw, seed, *_), r in results:
-        key = (p_kw["rule"], p_kw["eta"], p_kw["sigma"], p_kw["homeo"])
+    for (kind, t_kw, p_kw, seed, *_), r in results:
+        key = (p_kw["rule"], t_kw["k"], p_kw["eta"], p_kw["sigma"], p_kw["homeo"])
         scores.setdefault(key, []).append(r["test_acc"])
-    best = load_tuned() if os.path.exists(os.path.join(OUT, "tuned.json")) else {}
-    best = {r: v for r, v in best.items() if r not in a.rules}
-    table = [{"rule": r, "eta": e, "sigma": s, "homeo": h, "acc": float(np.mean(v))}
-             for (r, e, s, h), v in sorted(scores.items())]
+    table = [{"rule": r, "k": k, "eta": e, "sigma": s, "homeo": h, "acc": float(np.mean(v))}
+             for (r, k, e, s, h), v in sorted(scores.items())]
+    path = os.path.join(OUT, "tuned.json")
+    best = load_tuned() if os.path.exists(path) else {}
+    for rule in a.rules:
+        best[rule] = {}
+        for k in a.ks:
+            top = max((x for x in table if x["rule"] == rule and x["k"] == k), key=lambda x: x["acc"])
+            best[rule][str(k)] = {x: top[x] for x in ("eta", "sigma", "homeo", "acc")}
     os.makedirs(OUT, exist_ok=True)
-    with open(os.path.join(OUT, f"tuning_grid_{'_'.join(a.rules)}.json" if len(a.rules) < len(RULES) else "tuning_grid.json"), "w") as f:
+    with open(os.path.join(OUT, "tuning_grid_per_k.json"), "w") as f:
         json.dump(table, f, indent=1)
-    for (rule, eta, sigma, homeo), accs in sorted(scores.items()):
-        m = float(np.mean(accs))
-        print(f"{rule:13s} eta={eta:<5} sigma={sigma:<5} homeo={homeo:<5} acc={m:.3f}")
-        if rule not in best or m > best[rule]["acc"]:
-            best[rule] = {"eta": eta, "sigma": sigma, "homeo": homeo, "acc": m}
-    os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "tuned.json"), "w") as f:
         json.dump(best, f, indent=2)
-    print(json.dumps(best, indent=2))
+    for rule in a.rules:
+        print(rule, {k: round(v["acc"], 3) for k, v in best[rule].items()})
 
 
 def load_tuned():
@@ -281,8 +281,8 @@ def load_tuned():
         return json.load(f)
 
 
-def tuned_params(tuned, rule, **overrides):
-    t = tuned[rule]
+def tuned_params(tuned, rule, k, **overrides):
+    t = tuned[rule][str(k)]
     return {"rule": rule, "eta": t["eta"], "sigma": t["sigma"], "homeo": t["homeo"], **overrides}
 
 
@@ -293,7 +293,7 @@ def main(a):
         for seed in range(a.seeds):
             jobs.append(("softmax", {"k": k}, {}, seed, a.train, a.test))
             for rule in RULES:
-                jobs.append(("race", {"k": k}, tuned_params(tuned, rule), seed, a.train, a.test))
+                jobs.append(("race", {"k": k}, tuned_params(tuned, rule, k), seed, a.train, a.test))
     results = pool_map(jobs, a.procs)
     rows = [{"kind": kind, "k": tk["k"], "rule": pk.get("rule", "softmax"), "seed": seed, **r}
             for (kind, tk, pk, seed, *_), r in results]
@@ -329,7 +329,7 @@ def delay(a):
     for gap in (5.0, 0.2):                   # 5.0 = sleep until taught; 0.2 = next race intervenes
         for d in (0.05, 0.15, 0.5, 1.0, 2.0, 4.0):
             for seed in range(a.seeds):
-                p = tuned_params(tuned, "cf_margin", teach_delay=d, gap=gap, tau=1.0)
+                p = tuned_params(tuned, "cf_margin", 32, teach_delay=d, gap=gap, tau=1.0)
                 jobs.append(("race", {"k": 32}, p, seed, a.train, a.test))
     results = pool_map(jobs, a.procs)
     rows = [{"gap": pk["gap"], "delay": pk["teach_delay"], "seed": seed, "test_acc": r["test_acc"]}
