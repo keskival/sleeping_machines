@@ -71,6 +71,10 @@ The state needs to have the following operators defined:
 
 - What if neurons which roughly integrate and fire actually integrate confidence in some interpretation of the world, and fire as soon as the confidence for this achieves large enough value? Populations of neurons would then listen to signals from the external world, each increasing and decreasing its own internal confidence, and compete in which neuron fires its own subsymbol first, thus broadcasting this opinion of truth which the other neurons then need to take into account in their own continuously integrated confidences.
 
+## Experiments
+
+The first preregistered experiments on the core ideas (event races, cancellation, learning from the traces of cancelled events, and energy estimates from measured operation counts) are written up in **[REPORT.md](REPORT.md)**. Code is under `sleeping_machines/` and `experiments/`; the earlier v2/v3 experiments are kept in `legacy/`.
+
 ## Citing
 
 Sleeping Machines
@@ -105,6 +109,54 @@ Sleeping Machines
 - ["Neurons in the brain exhibit two types of sparsity; they are sparsely interconnected and sparsely active. These two types of sparsity, called weight sparsity and activation sparsity, when combined, offer the potential to reduce the computational cost of neural networks by two orders of magnitude."](https://iopscience.iop.org/article/10.1088/2634-4386/ac7c8a)
 - ["...we define an implementation of neural computation that can both decompile computations from existing neural connectivity and compile distributed programs as new connections."](https://www.nature.com/articles/s42256-023-00668-8)
 
+
+## Related Prior Art
+
+Existing work that the ideas above overlap with or build on, grouped by the idea it bears on. Any claim of novelty has to be made against these.
+
+**Computing with delays and races**
+- Madhavan, Sherwood & Strukov (2014). *Race logic: a hardware acceleration for dynamic programming algorithms.* ISCA 2014. Encodes values as arrival times and computes shortest paths and sequence alignment by racing signals through delay elements: the closest existing form of "time replaces addressing".
+- Alur & Dill (1994). *A theory of timed automata.* Theoretical Computer Science 126. The standard formalism for computation with clocks and timing constraints.
+- Maass (1997). *Networks of spiking neurons: the third generation of neural network models.* Neural Networks 10. Computational power of networks whose values are spike times.
+- Maass (2000). *On the computational power of winner-take-all.* Neural Computation 12. A single winner-take-all race is computationally as powerful as a layer of threshold gates.
+- Izhikevich (2006). *Polychronization: computation with spikes.* Neural Computation 18. Precise axonal delays create reproducible time-locked firing groups.
+- Thorpe, Delorme & Van Rullen (2001). *Spike-based strategies for rapid processing.* Neural Networks 14. Rank-order and first-spike codes: information in which neuron fires first.
+
+**Decisions as races between accumulators**
+- Wald (1945). *Sequential tests of statistical hypotheses.* Annals of Mathematical Statistics 16. Optimal stopping on accumulated evidence.
+- Baum & Veeravalli (1994). *A sequential procedure for multihypothesis testing.* IEEE Transactions on Information Theory 40. The MSPRT used as the reference in E2.
+- Ratcliff (1978). *A theory of memory retrieval.* Psychological Review 85. The drift-diffusion model of decision time.
+- Usher & McClelland (2001). *The time course of perceptual choice: the leaky, competing accumulator model.* Psychological Review 108. Competing accumulators with mutual inhibition, very close to the "integrate confidence and fire first" idea.
+- Bogacz, Brown, Moehlis, Holmes & Cohen (2006). *The physics of optimal decision making.* Psychological Review 113. When accumulator races implement optimal sequential tests.
+
+**Learning from spike timing**
+- Bohte, Kok & La Poutré (2002). *Error-backpropagation in temporally encoded networks of spiking neurons.* Neurocomputing 48. SpikeProp: gradient descent on spike times.
+- Gütig & Sompolinsky (2006). *The tempotron: a neuron that learns spike timing-based decisions.* Nature Neuroscience 9.
+- Mostafa (2018). *Supervised learning based on temporal coding in spiking neural networks.* IEEE TNNLS 29. Exact gradients for time-to-first-spike networks.
+- Comsa et al. (2020). *Temporal coding in spiking neural networks with alpha synaptic function.* ICASSP 2020.
+- Göltz et al. (2021). *Fast and energy-efficient neuromorphic deep learning with first-spike times.* Nature Machine Intelligence 3.
+- Kheradpisheh & Masquelier (2020). *Temporal backpropagation for spiking neural networks with one spike per neuron.* International Journal of Neural Systems 30.
+- Hammouamri, Khalfaoui-Hassani & Masquelier (2024). *Learning delays in spiking neural networks using dilated convolutions with learnable spacings.* ICLR 2024. Learned delays; state of the art on spiking speech benchmarks.
+
+**Local and delayed credit assignment**
+- Frey & Morris (1997). *Synaptic tagging and long-term potentiation.* Nature 385. Synapses keep a tag that a later signal can convert into lasting change.
+- Izhikevich (2007). *Solving the distal reward problem through linkage of STDP and dopamine signaling.* Cerebral Cortex 17. Eligibility traces bridging a delay to reward.
+- Frémaux & Gerstner (2016). *Neuromodulated spike-timing-dependent plasticity, and theory of three-factor learning rules.* Frontiers in Neural Circuits 9.
+- Gerstner, Lehmann, Liakoni, Corneil & Brea (2018). *Eligibility traces and plasticity on behavioral time scales.* Frontiers in Neural Circuits 12.
+- Zenke & Ganguli (2018). *SuperSpike: supervised learning in multilayer spiking neural networks.* Neural Computation 30.
+- Neftci, Mostafa & Zenke (2019). *Surrogate gradient learning in spiking neural networks.* IEEE Signal Processing Magazine 36. The counterfactual distance-to-threshold trace plays a similar role, stored once per event.
+- Bellec et al. (2020). *A solution to the learning dilemma for recurrent networks of spiking neurons.* Nature Communications 11. e-prop: online, local eligibility-based learning.
+- Lillicrap, Cownden, Tweed & Akerman (2016). *Random synaptic feedback weights support error backpropagation for deep learning.* Nature Communications 7. Feedback alignment, used for hidden-layer credit in E6.
+- Diehl & Cook (2015). *Unsupervised learning of digit recognition using spike-timing-dependent plasticity.* Frontiers in Computational Neuroscience 9.
+- Mozafari et al. (2018). *First-spike-based visual categorization using reward-modulated STDP.* IEEE TNNLS 29.
+
+**Event-driven hardware, simulation and energy**
+- Brette et al. (2007). *Simulation of networks of spiking neurons: a review of tools and strategies.* Journal of Computational Neuroscience 23. Clock-driven vs event-driven simulation.
+- Merolla et al. (2014). *A million spiking-neuron integrated circuit with a scalable communication network and interface.* Science 345. TrueNorth.
+- Furber, Galluppi, Temple & Plana (2014). *The SpiNNaker project.* Proceedings of the IEEE 102.
+- Davies et al. (2018). *Loihi: a neuromorphic manycore processor with on-chip learning.* IEEE Micro 38. Source of the measured per-operation energies used in the report.
+- Horowitz (2014). *Computing's energy problem (and what we can do about it).* ISSCC 2014. Source of the 45 nm arithmetic and memory energies used in the report.
+- Cramer, Stradmann, Schemmel & Zenke (2022). *The Heidelberg spiking data sets for the systematic evaluation of spiking neural networks.* IEEE TNNLS 33. Spiking Heidelberg Digits, the planned timing-dependent benchmark.
 
 ## Repository
 
