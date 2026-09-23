@@ -25,9 +25,9 @@ def e6():
     out = {"race": [], "dense": []}
     for path in sorted(glob.glob(os.path.join(RES, "e6", "mnist_*_s0.json"))):
         name = os.path.basename(path)[6:-8]
-        if any(tag in name for tag in ("pilot", "_sl", "check", "timing")):
-            continue
         r = json.load(open(path))
+        if r.get("val") or any(tag in name for tag in ("pilot", "check", "timing")):
+            continue                           # tuning runs on the validation split are not results
         cfg = r["config"]
         inf, tr = r["inference_work_per_sample"], r["train_work"]
         if cfg["variant"] == "mlp":
@@ -40,7 +40,8 @@ def e6():
         n_trained = cfg["epochs"] * TRAIN_SAMPLES
         clocked = dict(inf_counts, neuron_steps=(h + 10) * CLOCK_STEPS)
         clocked_tr = dict(tr_counts, neuron_steps=(h + 10) * CLOCK_STEPS * n_trained)
-        row = {"name": name, "variant": cfg["variant"], "hidden": h, "winners": cfg["winners"],
+        row = {"name": name, "variant": cfg["variant"], "round": 2 if name.endswith("_v2") else 1,
+               "hidden": h, "winners": cfg["winners"],
                "acc": r["test_acc"], "curve": r["curve"], "counts_inference": inf_counts,
                "counts_training": tr_counts,
                "inference_J": {p: energy_joules(inf_counts, p) for p in EVENT_PROFILES},
