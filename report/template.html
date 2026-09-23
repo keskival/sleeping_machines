@@ -1,0 +1,667 @@
+<title>Sleeping Machines Lab Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap">
+<style>
+:root {
+  --ground: #f3f4f6;
+  --surface: #ffffff;
+  --ink: #13161b;
+  --ink-2: #4a515c;
+  --muted: #7d848e;
+  --hair: #e1e4e9;
+  --axis: #c4c9d1;
+  --accent: #2a78d6;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
+  --ref: #6b7280;
+  --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
+  --good-ink: #006300; --warn-ink: #7a5300; --crit-ink: #a52626;
+  --tag-bg: #eef0f3;
+  --shadow: 0 1px 2px rgba(19, 22, 27, .05), 0 4px 16px rgba(19, 22, 27, .04);
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0e1013; --surface: #16191d; --ink: #f1f3f6; --ink-2: #b7bec8; --muted: #858c96;
+    --hair: #262a31; --axis: #3a3f47; --accent: #3987e5;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+    --ref: #9aa1ab; --good-ink: #3fcf3f; --warn-ink: #f2c14e; --crit-ink: #ff7b7b; --tag-bg: #1f2328;
+    --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0e1013; --surface: #16191d; --ink: #f1f3f6; --ink-2: #b7bec8; --muted: #858c96;
+  --hair: #262a31; --axis: #3a3f47; --accent: #3987e5;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+  --ref: #9aa1ab; --good-ink: #3fcf3f; --warn-ink: #f2c14e; --crit-ink: #ff7b7b; --tag-bg: #1f2328;
+  --shadow: none;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ground); color: var(--ink); font-family: var(--body);
+  font-size: 17px; line-height: 1.6; padding-inline: 20px; padding-block: 0 64px;
+}
+.page { max-width: 1000px; margin: 0 auto; }
+.prose { max-width: 680px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.12; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(40px, 7vw, 68px); font-weight: 780; font-stretch: 78%; letter-spacing: -.01em; }
+h2 { font-size: clamp(26px, 3.6vw, 34px); font-weight: 720; font-stretch: 85%; margin-bottom: 12px; }
+h3 { font-size: 19px; font-weight: 650; font-stretch: 95%; margin: 28px 0 6px; }
+p { margin: 0 0 14px; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+header.top { padding-block: 56px 28px; display: grid; gap: 18px; }
+.lede { font-size: 20px; line-height: 1.55; color: var(--ink-2); max-width: 680px; }
+.lede strong { color: var(--ink); font-weight: 600; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--mono); font-size: 13px; }
+nav.toc a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--hair); }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-color: var(--accent); }
+section { padding-block: 44px 8px; border-top: 1px solid var(--hair); margin-top: 36px; }
+.figure {
+  background: var(--surface); border-radius: 10px; box-shadow: var(--shadow);
+  border: 1px solid var(--hair); padding: 18px 18px 12px; margin: 22px 0; position: relative;
+}
+.figure .ftitle { font-family: var(--display); font-weight: 650; font-size: 16px; font-stretch: 95%; }
+.figure .fsub { font-family: var(--body); font-size: 14px; color: var(--ink-2); margin: 2px 0 8px; }
+.figure svg { display: block; width: 100%; height: auto; overflow: visible; }
+.figure svg text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.figure svg .dlabel { font-size: 11.5px; fill: var(--ink-2); font-weight: 500; }
+.figure svg .dlabel.strong { fill: var(--ink); }
+.figure svg .grid { stroke: var(--hair); stroke-width: 1; }
+.figure svg .axis { stroke: var(--axis); stroke-width: 1; }
+.figure svg .axis-title { fill: var(--ink-2); font-size: 11.5px; }
+.figs2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 20px; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--hair); box-shadow: 0 6px 24px rgba(0, 0, 0, .12); border-radius: 8px;
+  padding: 8px 10px; font-family: var(--mono); font-size: 12px; line-height: 1.5; min-width: 150px; z-index: 5;
+}
+.tip .tt { font-weight: 500; margin-bottom: 2px; color: var(--ink-2); }
+.tip .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.tip .sw { width: 10px; height: 3px; border-radius: 2px; display: inline-block; margin-right: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin: 4px 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.dash { background: repeating-linear-gradient(90deg, var(--ref) 0 4px, transparent 4px 7px) !important; }
+details.data { margin-top: 6px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+details.data summary { cursor: pointer; color: var(--muted); padding: 4px 0; }
+details.data summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+th { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--muted); letter-spacing: .03em; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.score td { font-size: 15px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px;
+  padding: 2px 9px 2px 7px; border-radius: 999px; background: var(--tag-bg); white-space: nowrap; font-weight: 500;
+}
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+.pill.good { color: var(--good-ink); } .pill.good::before { background: var(--good); }
+.pill.warn { color: var(--warn-ink); } .pill.warn::before { background: var(--warn); }
+.pill.crit { color: var(--crit-ink); } .pill.crit::before { background: var(--crit); }
+.pill.pend { color: var(--ink-2); } .pill.pend::before { background: transparent; border: 1.5px solid var(--muted); }
+.callout {
+  border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 20px 0; color: var(--ink-2);
+  max-width: 680px;
+}
+.callout strong { color: var(--ink); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 18px 0; }
+.stat { background: var(--surface); border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px; }
+.stat .v { font-family: var(--display); font-size: 30px; font-weight: 720; font-stretch: 85%; line-height: 1.1; }
+.stat .l { font-size: 13.5px; color: var(--ink-2); line-height: 1.4; margin-top: 4px; }
+.hero-fig { margin-top: 8px; }
+ul.tight { margin: 0 0 14px; padding-left: 20px; } ul.tight li { margin-bottom: 6px; }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+@media (max-width: 560px) {
+  body { font-size: 16px; padding-inline: 16px; }
+  .figure { padding: 14px 12px 10px; }
+  .lede { font-size: 18px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .race-anim .lane-fill { transition: none; }
+}
+</style>
+
+<div class="page">
+  <header class="top">
+    <div class="eyebrow">Sleeping Machines · experiment log · 23 September 2026</div>
+    <h1>Computing with races, cancellations and near misses</h1>
+    <p class="lede">Sleeping Machines proposes that computation can happen in <strong>time rather than memory</strong>: candidate events race, the first to fire cancels the rest, and the cancelled ones keep a <strong>trace of how close they came</strong> for a teaching signal to use later. This log reports what the first preregistered experiments show, including the parts that did not work.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#idea">The idea</a><a href="#scorecard">Scorecard</a><a href="#e4">E4 · Counterfactual credit</a>
+      <a href="#e2">E2 · Adaptive decisions</a><a href="#e6">E6 · Hidden layers</a><a href="#energy">Energy</a><a href="#next">Next</a>
+    </nav>
+  </header>
+
+  <section id="idea" style="border-top:0;margin-top:0;padding-top:8px">
+    <div class="figure hero-fig">
+      <div class="ftitle">One race, one winner, two counterfactual traces</div>
+      <div class="fsub">Three output nodes integrate the same input spikes. B reaches threshold first and fires; its inhibition cancels A and C, whose distance to threshold Δ is frozen. When the teaching event arrives and names C, only the cancelled node's frozen record makes it possible to credit C.</div>
+      <div id="racefig"></div>
+    </div>
+    <div class="prose">
+      <p>The ingredients, as the experiments implement them:</p>
+      <ul class="tight">
+        <li><strong>Time instead of addressing.</strong> A value is <em>when</em> something happens. Nothing is looked up; events are scheduled.</li>
+        <li><strong>The future is part of the state.</strong> Pending events live in a pool and can be cancelled before they fire. The simulator has no global clock; it jumps from event to event and counts every operation.</li>
+        <li><strong>Decisions are races.</strong> Accumulators integrate evidence; the first to reach threshold decides and inhibits the rest.</li>
+        <li><strong>Losers leave traces.</strong> A cancelled node keeps Δ, its distance to threshold at the moment of cancellation. A later teaching event can credit near misses, not just the node that fired.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="scorecard">
+    <div class="eyebrow">Predictions written before the evaluation runs</div>
+    <h2>Scorecard</h2>
+    <div class="prose"><p>Each experiment's predictions and falsification criteria were written down before its evaluation seeds were run (<code>experiments/E*_PREREGISTRATION.md</code>). Two amendments were made after tuning and before evaluation; both are recorded there.</p></div>
+    <div class="figure tablewrap"><table class="score" id="scoretable"></table></div>
+  </section>
+
+  <section id="e4">
+    <div class="eyebrow">E4 · single racing layer · 10 held-out seeds · 6,000 teaching events</div>
+    <h2>A cancelled node can be taught</h2>
+    <div class="prose">
+      <p>K output nodes race over sparse spike patterns; a teaching event arrives after the race. Rules that only credit nodes that fired (the STDP / reward-modulated family) can only punish a wrong winner. The counterfactual rules can also promote the target, which usually never fired. <code>cf_margin</code> additionally depresses only competitors that came close.</p>
+    </div>
+    <div class="figure">
+      <div class="ftitle">Test accuracy as the number of classes grows</div>
+      <div class="fsub">Mean over 10 seeds; bars in the table are 95% confidence intervals. The dashed line is a non-local, non-event reference: softmax regression trained by SGD on the same samples.</div>
+      <div class="legend" id="e4legend"></div>
+      <div id="e4acc"></div>
+      <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e4acc-t"></div></details>
+    </div>
+    <div class="figs2">
+      <div class="figure">
+        <div class="ftitle">Accuracy vs plasticity work at K = 128</div>
+        <div class="fsub">Synaptic weight updates during training (log scale). Up and to the left is better.</div>
+        <div id="e4work"></div>
+        <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e4work-t"></div></details>
+      </div>
+      <div class="figure">
+        <div class="ftitle">Does credit survive a delayed teacher?</div>
+        <div class="fsub"><code>cf_margin</code>, K = 32, trace time constant τ = 1. Teaching delay on a log scale.</div>
+        <div class="legend" id="e4dlegend"></div>
+        <div id="e4delay"></div>
+        <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e4delay-t"></div></details>
+      </div>
+    </div>
+    <div class="callout"><strong>Reading.</strong> At K = 128 the reward-modulated rule is at chance while <code>cf_margin</code> reaches 0.79 with 6% of the plasticity updates of the balanced uniform rule and 9× fewer than softmax. It still trails the global-gradient reference by 13 points, and that gap grows with K. Credit survives delays up to about τ when nothing happens in between; if another race happens first, the frozen record is overwritten and learning degrades.</div>
+  </section>
+
+  <section id="e2">
+    <div class="eyebrow">E2 · Poisson evidence race · 4 classes · 5 seeds × 2,000 trials</div>
+    <h2>Races decide as fast as the evidence allows</h2>
+    <div class="prose">
+      <p>Evidence arrives as Poisson spikes whose coherence (how strongly they favour the right answer) varies unpredictably between trials. The race stops at its first fire event and cancels all pending input events. It is compared with a clocked decoder that counts for a fixed time, and with the multi-hypothesis sequential probability ratio test (MSPRT), which knows the exact likelihoods.</p>
+    </div>
+    <div class="figs2">
+      <div class="figure">
+        <div class="ftitle">Speed–accuracy frontier</div>
+        <div class="fsub">Each point is one threshold, deadline or confidence level, averaged over all trials.</div>
+        <div class="legend" id="e2legend"></div>
+        <div id="e2front"></div>
+        <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e2front-t"></div></details>
+      </div>
+      <div class="figure">
+        <div class="ftitle">Decision time follows difficulty</div>
+        <div class="fsub">Race (θ = 15) and fixed-time (T = 1) at similar overall accuracy (0.79 vs 0.74). Coherence on a log scale.</div>
+        <div class="legend" id="e2clegend"></div>
+        <div id="e2coh"></div>
+        <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e2coh-t"></div></details>
+      </div>
+    </div>
+    <div class="callout"><strong>Reading.</strong> The race dominates fixed-time decoding at every matched decision time and tracks the MSPRT reference, using nothing but additions and a threshold. Easy trials finish in 0.29 s, hard ones in 1.69 s, with no controller deciding when to stop. Only 26% of the input events due before the deadline are ever processed.</div>
+  </section>
+
+  <section id="e6">
+    <div class="eyebrow">E6 · hidden layers · latency-coded MNIST</div>
+    <h2>Hidden layers: credit flows, but depth does not pay yet</h2>
+    <div class="prose">
+      <p>Counterfactual race learning (CRL) sends the output error back as events to a hidden layer of competing groups. Hidden nodes that fired, <em>and</em> hidden nodes that were cancelled close to threshold, are updated from their locally stored traces. For these non-leaky single-spike neurons the exact gradient is zero almost everywhere, so the frozen Δ plays the role a surrogate gradient plays in conventional spiking-network training. A batched closed-form solver agrees with the discrete-event engine on 100% of decisions.</p>
+    </div>
+    <div class="figure">
+      <div class="ftitle" id="e6title">MNIST test accuracy by learning rule</div>
+      <div class="fsub" id="e6sub"></div>
+      <div id="e6bars"></div>
+      <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e6bars-t"></div></details>
+    </div>
+    <div class="callout" id="e6callout"></div>
+  </section>
+
+  <section id="energy">
+    <div class="eyebrow">Measured operation counts × published per-operation energies</div>
+    <h2>Energy: modest gains at matched accuracy, so far</h2>
+    <div class="prose">
+      <p>The simulators count every synaptic event, spike, plasticity update and multiply-accumulate. Those counts are priced on hardware profiles built from published figures: 45 nm digital logic and SRAM (Horowitz, ISSCC 2014) and measured Loihi energies (Davies et al., IEEE Micro 2018). The "suitable architecture" is an idealized event-driven, near-memory design: because spikes are binary, a synaptic event is an <strong>8-bit weight fetch plus an addition</strong>, with no multiply and no clock. These are order-of-magnitude estimates, not measurements of a chip.</p>
+    </div>
+    <div class="stats" id="energystats"></div>
+    <div class="figure">
+      <div class="ftitle">Training energy per teaching event, E4</div>
+      <div class="fsub">Local event rules on three event-hardware profiles vs softmax regression trained on dense fp16 hardware, unbatched and with weight traffic shared by a batch of 256. Log scale.</div>
+      <div id="e4energy"></div>
+      <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e4energy-t"></div></details>
+    </div>
+    <div class="figure tablewrap" id="e6energy-wrap">
+      <div class="ftitle">MNIST: event networks vs the cheapest dense model that is at least as accurate</div>
+      <div class="fsub">Inference energy per image and total training energy. Dense training is counted only up to the first epoch that reaches the event network's accuracy.</div>
+      <table id="e6energy"></table>
+    </div>
+    <div class="callout" id="energycallout"></div>
+    <h3>Energy per operation used</h3>
+    <div class="figure tablewrap"><table id="profiles"></table></div>
+  </section>
+
+  <section id="next">
+    <h2>What comes next</h2>
+    <div class="prose">
+      <ul class="tight">
+        <li><strong>Make depth pay (E6).</strong> Diagnose why a single racing layer still matches the hidden-layer network: latency-coded MNIST lets races decide on the first instant of saturated pixels, which caps the evidence any layer sees. Next steps are several spikes per hidden node, a decision threshold that learns, and learned delays (the timing counterfactual in the design).</li>
+        <li><strong>Dormant capacity (E5).</strong> The orders-of-magnitude energy argument only applies when most of a large network stays silent for any given input. That scaling has to be measured, not assumed, against sparse (mixture-of-experts style) dense baselines.</li>
+        <li><strong>A benchmark where timing matters.</strong> Spiking Heidelberg Digits (spoken digits as cochlear spikes), where learned delays are state of the art. It needs the GPU, which the current container cannot see.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Reproduce: <code>python experiments/e4_counterfactual.py tune|main|delay</code> · <code>python experiments/e2_race_decisions.py</code> · <code>python experiments/e6_hidden.py mnist --variant crl_sym</code> · <code>python experiments/energy_report.py &amp;&amp; python experiments/build_report.py</code><br>
+    Repository: github.com/keskival/sleeping_machines · Earlier ChatGPT-designed v2/v3 experiments are preserved under <code>legacy/</code>.
+  </footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const fmt = (v, d = 3) => (v == null || !isFinite(v)) ? "—" : Number(v).toFixed(d);
+const sci = v => v >= 1e6 ? (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + "M" : v >= 1e3 ? (v / 1e3).toFixed(v >= 1e4 ? 0 : 1) + "k" : String(Math.round(v));
+const nJ = j => j == null ? "—" : j < 1e-6 ? (j * 1e9).toFixed(j < 1e-8 ? 2 : 1) + " nJ" : j < 1e-3 ? (j * 1e6).toFixed(1) + " µJ" : j < 1 ? (j * 1e3).toFixed(1) + " mJ" : j.toFixed(1) + " J";
+
+const RULES = {
+  cf_margin: { label: "cf_margin", color: "--s1", strong: true },
+  cf_winner: { label: "cf_winner", color: "--s2" },
+  cf_uniform: { label: "cf_uniform", color: "--s3" },
+  fired_reward: { label: "fired_reward", color: "--s4" },
+  fired_only: { label: "fired_only", color: "--s5" },
+  softmax: { label: "softmax (reference)", color: "--ref", dash: true },
+};
+
+function scale(domain, range, log) {
+  const [d0, d1] = log ? domain.map(Math.log10) : domain;
+  const f = v => range[0] + ((log ? Math.log10(v) : v) - d0) / (d1 - d0) * (range[1] - range[0]);
+  f.inv = p => { const u = d0 + (p - range[0]) / (range[1] - range[0]) * (d1 - d0); return log ? 10 ** u : u; };
+  return f;
+}
+
+function legend(target, series) {
+  const box = document.getElementById(target);
+  box.innerHTML = series.map(s => `<span><i class="${s.dash ? "dash" : ""}" style="background:var(${s.color})"></i>${s.name}</span>`).join("");
+}
+
+function table(target, head, rows) {
+  document.getElementById(target).innerHTML = `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+/* Declutter end labels: keep order, push apart to a minimum gap, stay inside [lo, hi]. */
+function spread(items, gap, lo, hi) {
+  items.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < items.length; i++) if (items[i].y - items[i - 1].y < gap) items[i].y = items[i - 1].y + gap;
+  const over = items.length ? items[items.length - 1].y - hi : 0;
+  if (over > 0) for (let i = items.length - 1; i >= 0; i--) {
+    items[i].y -= over;
+    if (i > 0 && items[i].y - items[i - 1].y < gap) items[i - 1].y = items[i].y - gap;
+  }
+  items.forEach(it => it.y = Math.max(lo, it.y));
+  return items;
+}
+
+/* Line chart with markers, direct end labels, crosshair tooltip. */
+function lineChart(id, series, o) {
+  const host = document.getElementById(id);
+  const W = o.width || 760, H = o.height || 320, m = { t: 14, r: o.labelRoom ?? 130, b: 46, l: 50 };
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria });
+  host.appendChild(svg);
+  const x = scale(o.x.domain, [m.l, W - m.r], o.x.log), y = scale(o.y.domain, [H - m.b, m.t]);
+  for (const t of o.y.ticks) {
+    el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid" }, svg);
+    el("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end" }, svg).textContent = o.y.fmt ? o.y.fmt(t) : t;
+  }
+  el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, class: "axis" }, svg);
+  for (const t of o.x.ticks) el("text", { x: x(t), y: H - m.b + 18, "text-anchor": "middle" }, svg).textContent = o.x.fmt ? o.x.fmt(t) : t;
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 8, "text-anchor": "middle", class: "axis-title" }, svg).textContent = o.x.title;
+  el("text", { x: 12, y: m.t + (H - m.b - m.t) / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 12 ${m.t + (H - m.b - m.t) / 2})` }, svg).textContent = o.y.title;
+  const ends = [];
+  for (const s of series) {
+    const c = css(s.color);
+    const d = s.points.map((p, i) => `${i ? "L" : "M"}${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`).join("");
+    el("path", { d, fill: "none", stroke: c, "stroke-width": s.strong ? 2.5 : 2, "stroke-dasharray": s.dash ? "5 4" : "", "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+    if (!s.noMarkers) for (const p of s.points) el("circle", { cx: x(p.x), cy: y(p.y), r: s.strong ? 4.5 : 3.5, fill: c, stroke: css("--surface"), "stroke-width": 2 }, svg);
+    const last = s.points[s.points.length - 1];
+    if (o.labelRoom !== 0) ends.push({ y: y(last.y), x: x(last.x), s });
+  }
+  spread(ends, 14, m.t + 4, H - m.b).forEach(e => {
+    const t = el("text", { x: e.x + 10, y: e.y + 4, class: "dlabel" + (e.s.strong ? " strong" : "") }, svg);
+    t.textContent = e.s.name;
+  });
+  crosshair(host, svg, series, x, y, o, m, W, H);
+}
+
+function crosshair(host, svg, series, x, y, o, m, W, H) {
+  const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; host.style.position = "relative"; host.appendChild(tip);
+  const line = el("line", { y1: m.t, y2: H - m.b, stroke: css("--axis"), "stroke-width": 1, visibility: "hidden" }, svg);
+  const hit = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent" }, svg);
+  const xs = [...new Set(series.flatMap(s => s.points.map(p => p.x)))].sort((a, b) => a - b);
+  const snap = o.snapX !== false;
+  hit.addEventListener("pointermove", ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+    let rows, px, title;
+    if (snap) {
+      const xv = xs.reduce((a, b) => Math.abs(x(b) - loc.x) < Math.abs(x(a) - loc.x) ? b : a);
+      px = x(xv); title = o.tipTitle ? o.tipTitle(xv) : `${o.x.title}: ${xv}`;
+      rows = series.map(s => ({ s, p: s.points.find(p => p.x === xv) })).filter(r => r.p);
+    } else {
+      let best = null;
+      for (const s of series) for (const p of s.points) {
+        const dd = (x(p.x) - loc.x) ** 2 + (y(p.y) - loc.y) ** 2;
+        if (!best || dd < best.dd) best = { s, p, dd };
+      }
+      px = x(best.p.x); rows = [best]; title = best.s.name;
+    }
+    line.setAttribute("x1", px); line.setAttribute("x2", px); line.setAttribute("visibility", "visible");
+    rows.sort((a, b) => b.p.y - a.p.y);
+    tip.innerHTML = `<div class="tt">${title}</div>` + rows.map(r => `<div class="row"><span><span class="sw" style="background:${css(r.s.color)}"></span>${snap ? r.s.name : ""}</span><span>${o.tipFmt ? o.tipFmt(r.p) : fmt(r.p.y)}</span></div>`).join("");
+    tip.hidden = false;
+    const hb = host.getBoundingClientRect(), sb = svg.getBoundingClientRect();
+    const left = (px / W) * sb.width + (sb.left - hb.left);
+    tip.style.left = Math.min(Math.max(left + 12, 0), hb.width - tip.offsetWidth - 4) + "px";
+    tip.style.top = Math.max(0, (ev.clientY - hb.top) - tip.offsetHeight - 12) + "px";
+  });
+  hit.addEventListener("pointerleave", () => { tip.hidden = true; line.setAttribute("visibility", "hidden"); });
+}
+
+/* Labelled scatter (one point per entity). */
+function scatter(id, pts, o) {
+  const host = document.getElementById(id);
+  const W = 420, H = 300, m = { t: 14, r: 20, b: 46, l: 48 };
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria }); host.appendChild(svg);
+  const x = scale(o.x.domain, [m.l, W - m.r], o.x.log), y = scale(o.y.domain, [H - m.b, m.t]);
+  for (const t of o.y.ticks) {
+    el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "grid" }, svg);
+    el("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end" }, svg).textContent = o.y.fmt ? o.y.fmt(t) : t;
+  }
+  el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, class: "axis" }, svg);
+  for (const t of o.x.ticks) el("text", { x: x(t), y: H - m.b + 18, "text-anchor": "middle" }, svg).textContent = o.x.fmt(t);
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 8, "text-anchor": "middle", class: "axis-title" }, svg).textContent = o.x.title;
+  el("text", { x: 12, y: m.t + (H - m.b - m.t) / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 12 ${m.t + (H - m.b - m.t) / 2})` }, svg).textContent = o.y.title;
+  const labels = [];
+  for (const p of pts) {
+    el("circle", { cx: x(p.x), cy: y(p.y), r: p.strong ? 6 : 5, fill: css(p.color), stroke: css("--surface"), "stroke-width": 2 }, svg);
+    labels.push({ y: y(p.y), x: x(p.x), p });
+  }
+  spread(labels, 14, m.t + 4, H - m.b - 4).forEach(l => {
+    const right = l.x < W * 0.62;
+    el("text", { x: l.x + (right ? 10 : -10), y: l.y + 4, "text-anchor": right ? "start" : "end", class: "dlabel" + (l.p.strong ? " strong" : "") }, svg).textContent = l.p.name;
+  });
+  const series = pts.map(p => ({ name: p.name, color: p.color, points: [{ x: p.x, y: p.y }] }));
+  crosshair(host, svg, series, x, y, Object.assign({ snapX: false }, o), m, W, H);
+}
+
+/* Horizontal bars (log or linear), direct value labels. */
+function hbars(id, rows, o) {
+  const host = document.getElementById(id);
+  const W = 760, rowH = 30, m = { t: 6, r: 90, b: 40, l: o.labelW || 250 };
+  const H = m.t + m.b + rows.length * rowH;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria }); host.appendChild(svg);
+  const x = scale(o.domain, [m.l, W - m.r], o.log);
+  for (const t of o.ticks) {
+    el("line", { x1: x(t), x2: x(t), y1: m.t, y2: H - m.b, class: "grid" }, svg);
+    el("text", { x: x(t), y: H - m.b + 16, "text-anchor": "middle" }, svg).textContent = o.tickFmt(t);
+  }
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle", class: "axis-title" }, svg).textContent = o.title;
+  const base = o.log ? x(o.domain[0]) : x(0);
+  const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; host.style.position = "relative"; host.appendChild(tip);
+  rows.forEach((r, i) => {
+    const yy = m.t + i * rowH + 6, h = rowH - 12;
+    if (r.group) el("text", { x: 0, y: yy + h / 2 + 4, class: "axis-title" }, svg).textContent = "";
+    const t = el("text", { x: m.l - 10, y: yy + h / 2 + 4, "text-anchor": "end", class: "dlabel" + (r.strong ? " strong" : "") }, svg);
+    t.textContent = r.name;
+    const w = Math.max(2, x(Math.max(r.v, o.domain[0])) - base);
+    const bar = el("rect", { x: base, y: yy, width: w, height: h, rx: 3, fill: css(r.color), opacity: r.muted ? .55 : 1 }, svg);
+    el("text", { x: base + w + 6, y: yy + h / 2 + 4, class: "dlabel" }, svg).textContent = o.valFmt(r.v);
+    const hitR = el("rect", { x: 0, y: yy - 4, width: W, height: rowH, fill: "transparent" }, svg);
+    hitR.addEventListener("pointermove", ev => {
+      tip.innerHTML = `<div class="tt">${r.name}</div>${r.tip || o.valFmt(r.v)}`; tip.hidden = false;
+      const hb = host.getBoundingClientRect();
+      tip.style.left = Math.min(ev.clientX - hb.left + 12, hb.width - tip.offsetWidth - 4) + "px";
+      tip.style.top = Math.max(0, ev.clientY - hb.top - tip.offsetHeight - 10) + "px";
+      bar.setAttribute("stroke", css("--ink")); bar.setAttribute("stroke-width", 1);
+    });
+    hitR.addEventListener("pointerleave", () => { tip.hidden = true; bar.removeAttribute("stroke"); });
+  });
+}
+
+/* ── Hero: one race ─────────────────────────────────────────────────────── */
+function raceFigure() {
+  const host = document.getElementById("racefig");
+  const W = 760, H = 250, m = { l: 70, r: 150, t: 22, b: 36 };
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Three nodes race to threshold; B fires, A and C are cancelled and keep their distance to threshold." }); host.appendChild(svg);
+  const lanes = [
+    { n: "A", pts: [0, .10, .22, .30, .38, .45], color: "--s2", delta: .55 },
+    { n: "B", pts: [0, .18, .40, .58, .80, 1.0], color: "--s1", fires: true },
+    { n: "C", pts: [0, .14, .30, .52, .66, .78], color: "--s3", delta: .22, target: true },
+  ];
+  const laneH = (H - m.t - m.b) / 3;
+  const tFire = 5;
+  const xs = i => m.l + i * ((W - m.l - m.r) / 7);
+  lanes.forEach((ln, j) => {
+    const top = m.t + j * laneH + 6, bot = top + laneH - 16;
+    const yv = v => bot - v * (bot - top);
+    el("line", { x1: m.l, x2: W - m.r + 10, y1: yv(1), y2: yv(1), stroke: css("--axis"), "stroke-dasharray": "3 4" }, svg);
+    el("line", { x1: m.l, x2: W - m.r + 10, y1: bot, y2: bot, class: "axis" }, svg);
+    el("text", { x: m.l - 14, y: (top + bot) / 2 + 5, "text-anchor": "end", class: "dlabel strong", "font-size": 15 }, svg).textContent = ln.n;
+    const d = ln.pts.map((v, i) => `${i ? "L" : "M"}${xs(i)},${yv(v)}`).join("");
+    el("path", { d, fill: "none", stroke: css(ln.color), "stroke-width": 2.5, "stroke-linejoin": "round" }, svg);
+    const endX = xs(tFire), endY = yv(ln.pts[tFire]);
+    if (ln.fires) {
+      el("line", { x1: endX, x2: endX, y1: yv(1) - 12, y2: yv(1) - 1, stroke: css(ln.color), "stroke-width": 3, "stroke-linecap": "round" }, svg);
+      el("text", { x: endX + 10, y: yv(1) - 2, class: "dlabel strong" }, svg).textContent = "fires → inhibits A, C";
+    } else {
+      el("circle", { cx: endX, cy: endY, r: 4.5, fill: css("--surface"), stroke: css(ln.color), "stroke-width": 2 }, svg);
+      el("line", { x1: endX + 12, x2: endX + 12, y1: yv(1), y2: endY, stroke: css("--ink-2"), "stroke-width": 1.25 }, svg);
+      el("line", { x1: endX + 8, x2: endX + 16, y1: yv(1), y2: yv(1), stroke: css("--ink-2"), "stroke-width": 1.25 }, svg);
+      el("line", { x1: endX + 8, x2: endX + 16, y1: endY, y2: endY, stroke: css("--ink-2"), "stroke-width": 1.25 }, svg);
+      el("text", { x: endX + 22, y: (yv(1) + endY) / 2 + 4, class: "dlabel" }, svg).textContent = `cancelled · Δ = ${ln.delta.toFixed(2)} kept`;
+      if (ln.target) el("text", { x: endX + 22, y: (yv(1) + endY) / 2 + 20, class: "dlabel strong" }, svg).textContent = "teacher later says: C  → promote C";
+    }
+    for (let i = 1; i < tFire; i++) el("circle", { cx: xs(i), cy: bot + 7, r: 1.8, fill: css("--muted") }, svg);
+  });
+  el("line", { x1: xs(tFire), x2: xs(tFire), y1: m.t, y2: H - m.b + 4, stroke: css("--ink-2"), "stroke-dasharray": "2 3" }, svg);
+  el("text", { x: m.l, y: H - 10, class: "axis-title" }, svg).textContent = "input spikes arrive → potentials rise; dashed line = threshold θ; the race ends at B's fire event";
+}
+
+/* ── Scorecard ──────────────────────────────────────────────────────────── */
+function scorecard() {
+  const e4 = t => DATA.e4.table.find(r => r.rule === t.r && r.k === t.k)?.acc;
+  const rows = [
+    ["E4 · P1", "At K = 3, rules that credit only the fired node learn almost as well as counterfactual ones.", "warn", "Partly", `fired rules learn (${fmt(e4({ r: "fired_reward", k: 3 }), 2)}) but trail cf_margin (${fmt(e4({ r: "cf_margin", k: 3 }), 2)}) by 20 points`],
+    ["E4 · P2", "As K grows, fired-only rules collapse while counterfactual rules keep learning.", "good", "Supported", `K = 128: fired_reward ${fmt(e4({ r: "fired_reward", k: 128 }), 3)} vs cf_winner ${fmt(e4({ r: "cf_winner", k: 128 }), 3)}; the gap to softmax also grows`],
+    ["E4 · P3", "Near-miss weighting matches uniform credit with under 25% of the plasticity updates.", "good", "Supported", "0.79 vs 0.40 accuracy with 6% of the updates, after two fixes to the uniform baseline"],
+    ["E4 · P4", "Credit survives teaching delays up to about τ; an intervening race erases it.", "good", "Supported", "0.91 at D = τ in quiet conditions; 0.12 at D = 2 when races intervene"],
+    ["E2 · P1", "The race's speed–accuracy frontier lies above fixed-time decoding.", "good", "Supported", "higher accuracy at every matched decision time"],
+    ["E2 · P2", "Decision time falls monotonically as the evidence gets stronger.", "good", "Supported", "1.69 s → 0.29 s across coherence 0.05 → 0.8"],
+    ["E2 · P3", "The race needs under 20% more time than MSPRT at equal accuracy.", "good", "Supported", "no extra time needed in this setting"],
+    ["E6 · 6a", "A hidden layer trained by CRL solves XOR-in-time; a single layer cannot.", "good", "Supported", "single layer 0.59, frozen hidden 0.63, CRL 0.92; too easy to separate CRL from its fired-only ablation"],
+    ["E6 · 6b", "Latency-coded MNIST at 97% or better with local, event-driven learning.", "crit", "Not yet", "hidden-layer CRL has not beaten a single racing layer yet; see E6"],
+  ];
+  document.getElementById("scoretable").innerHTML = `<thead><tr><th>Test</th><th>Prediction</th><th>Verdict</th><th>Evidence</th></tr></thead><tbody>` +
+    rows.map(r => `<tr><td class="mono" style="white-space:nowrap">${r[0]}</td><td>${r[1]}</td><td><span class="pill ${r[2]}">${r[3]}</span></td><td style="color:var(--ink-2);font-size:14px">${r[4]}</td></tr>`).join("") + "</tbody>";
+}
+
+/* ── E4 ─────────────────────────────────────────────────────────────────── */
+function e4charts() {
+  const order = ["cf_margin", "cf_winner", "cf_uniform", "fired_reward", "fired_only", "softmax"];
+  const ks = DATA.e4.ks;
+  const series = order.map(r => ({
+    name: RULES[r].label, color: RULES[r].color, dash: RULES[r].dash, strong: RULES[r].strong,
+    points: ks.map(k => { const row = DATA.e4.table.find(t => t.rule === r && t.k === k); return { x: k, y: row.acc, ci: row.ci }; }),
+  }));
+  legend("e4legend", series);
+  lineChart("e4acc", series, {
+    aria: "Test accuracy versus number of classes for six learning rules",
+    x: { domain: [2.5, 150], log: true, ticks: ks, title: "number of classes K (log scale)" },
+    y: { domain: [0, 1], ticks: [0, .25, .5, .75, 1], title: "test accuracy" },
+    tipTitle: k => `K = ${k}`, tipFmt: p => `${fmt(p.y)} ±${fmt(p.ci)}`,
+  });
+  table("e4acc-t", ["rule", ...ks.map(k => `K=${k}`)], order.map(r => [RULES[r].label, ...ks.map(k => { const t = DATA.e4.table.find(x => x.rule === r && x.k === k); return `${fmt(t.acc)} ±${fmt(t.ci)}`; })]));
+
+  const pts = order.map(r => { const t = DATA.e4.table.find(x => x.rule === r && x.k === 128); return { name: RULES[r].label.replace(" (reference)", ""), x: t.plasticity, y: t.acc, color: RULES[r].color, strong: RULES[r].strong }; });
+  scatter("e4work", pts, {
+    aria: "Accuracy versus plasticity updates at K equals 128",
+    x: { domain: [5e4, 1e8], log: true, ticks: [1e5, 1e6, 1e7, 1e8], fmt: sci, title: "weight updates during training (log)" },
+    y: { domain: [0, 1], ticks: [0, .25, .5, .75, 1], title: "test accuracy" },
+    tipFmt: p => `acc ${fmt(p.y)} · ${sci(p.x)} updates`,
+  });
+  table("e4work-t", ["rule", "accuracy", "weight updates"], pts.map(p => [p.name, fmt(p.y), sci(p.x)]));
+
+  const dl = [{ gap: 5, name: "quiet until taught", color: "--s1", strong: true }, { gap: .2, name: "next race intervenes", color: "--s2" }];
+  const dseries = dl.map(g => ({ name: g.name, color: g.color, strong: g.strong, points: DATA.e4.delay.filter(r => r.gap === g.gap).map(r => ({ x: r.delay, y: r.acc, ci: r.ci })) }));
+  legend("e4dlegend", dseries);
+  lineChart("e4delay", dseries, {
+    width: 440, height: 300, labelRoom: 0, aria: "Accuracy versus teaching delay",
+    x: { domain: [.04, 5], log: true, ticks: [.05, .15, .5, 1, 2, 4], title: "teaching delay D (log scale; τ = 1)" },
+    y: { domain: [0, 1], ticks: [0, .25, .5, .75, 1], title: "test accuracy" },
+    tipTitle: d => `D = ${d}`, tipFmt: p => `${fmt(p.y)} ±${fmt(p.ci)}`,
+  });
+  const delays = [...new Set(DATA.e4.delay.map(r => r.delay))];
+  table("e4delay-t", ["condition", ...delays.map(d => `D=${d}`)], dl.map(g => [g.name, ...delays.map(d => fmt(DATA.e4.delay.find(r => r.gap === g.gap && r.delay === d).acc))]));
+}
+
+/* ── E2 ─────────────────────────────────────────────────────────────────── */
+function e2charts() {
+  const D = DATA.e2;
+  const series = [
+    { name: "race", color: "--s1", strong: true, points: D.race.map(r => ({ x: r.time, y: r.acc, p: r.param })) },
+    { name: "fixed-time", color: "--s2", points: D.fixed_time.map(r => ({ x: r.time, y: r.acc, p: r.param })) },
+    { name: "MSPRT (reference)", color: "--ref", dash: true, points: D.msprt.map(r => ({ x: r.time, y: r.acc, p: r.param })).sort((a, b) => a.x - b.x) },
+  ];
+  legend("e2legend", series);
+  lineChart("e2front", series, {
+    width: 440, height: 300, labelRoom: 0, snapX: false, aria: "Accuracy versus mean decision time",
+    x: { domain: [.004, 4.5], log: true, ticks: [.01, .1, 1, 4], title: "mean decision time, s (log)" },
+    y: { domain: [.25, .9], ticks: [.3, .5, .7, .9], title: "accuracy" },
+    tipFmt: p => `acc ${fmt(p.y)} at ${fmt(p.x, 2)} s`,
+  });
+  table("e2front-t", ["decoder · setting", "accuracy", "time (s)", "events"], [
+    ...D.race.map(r => [`race θ=${r.param}`, fmt(r.acc), fmt(r.time, 2), fmt(r.events, 0)]),
+    ...D.fixed_time.map(r => [`fixed T=${r.param}`, fmt(r.acc), fmt(r.time, 2), fmt(r.events, 0)]),
+    ...D.msprt.map(r => [`MSPRT α=${r.param}`, fmt(r.acc), fmt(r.time, 2), fmt(r.events, 0)]),
+  ]);
+  const pick = (arr, p) => arr.find(r => r.param === p);
+  const cs = Object.keys(pick(D.race, 15).by_coherence).map(Number);
+  const cseries = [
+    { name: "race θ = 15", color: "--s1", strong: true, points: cs.map(c => ({ x: c, y: pick(D.race, 15).by_coherence[c].time, a: pick(D.race, 15).by_coherence[c].acc })) },
+    { name: "fixed-time T = 1", color: "--s2", points: cs.map(c => ({ x: c, y: 1.0, a: pick(D.fixed_time, 1).by_coherence[c].acc })) },
+  ];
+  legend("e2clegend", cseries);
+  lineChart("e2coh", cseries, {
+    width: 440, height: 300, labelRoom: 0, aria: "Decision time versus coherence",
+    x: { domain: [.04, 1], log: true, ticks: cs, title: "coherence (evidence strength, log)" },
+    y: { domain: [0, 2], ticks: [0, .5, 1, 1.5, 2], title: "mean decision time, s" },
+    tipTitle: c => `coherence ${c}`, tipFmt: p => `${fmt(p.y, 2)} s · acc ${fmt(p.a, 2)}`,
+  });
+  table("e2coh-t", ["decoder", ...cs.map(c => `c=${c}`)], cseries.map(s => [s.name, ...s.points.map(p => `${fmt(p.y, 2)} s / ${fmt(p.a, 2)}`)]));
+}
+
+/* ── E6 ─────────────────────────────────────────────────────────────────── */
+const E6NAMES = {
+  mlp: "dense MLP, backprop (reference)", single_layer: "single racing layer", frozen_hidden: "frozen random hidden layer",
+  crl_fired_only: "CRL · fired-only hidden credit", crl_fa: "CRL · feedback alignment", crl_sym: "CRL · symmetric feedback", crl_sign: "CRL · sign feedback",
+};
+const E6COLOR = { mlp: "--ref", single_layer: "--s2", frozen_hidden: "--s5", crl_fired_only: "--s4", crl_fa: "--s3", crl_sym: "--s1", crl_sign: "--s1" };
+function e6chart() {
+  const runs = DATA.e6.runs;
+  const finals = runs.filter(r => r.kind === "final");
+  const hiddenFinal = finals.filter(r => r.variant.startsWith("crl") || r.variant === "frozen_hidden");
+  const usePilot = hiddenFinal.length < 3;
+  const chosen = usePilot ? runs.filter(r => r.name.endsWith("pilot2") || r.name === "single_layer_pilot") : finals;
+  const sl = finals.find(r => r.variant === "single_layer");
+  const rows = chosen.map(r => ({
+    name: E6NAMES[r.variant] + (r.winners > 1 ? ` · ${r.winners} winners` : ""), v: r.acc, color: E6COLOR[r.variant],
+    strong: r.variant === "crl_sym", tip: `${r.hidden || "—"} hidden · ${r.train_samples.toLocaleString()} training images · ${r.curve.length} epochs`,
+  })).sort((a, b) => b.v - a.v);
+  document.getElementById("e6sub").textContent = usePilot
+    ? "Pilot runs (6,000 training images, 3 epochs, 500 hidden, validation split). Full 60,000-image, 1,000-hidden runs are still in progress."
+    : "60,000 training images, 10 epochs, test set. Hyperparameters were chosen on a validation split in pilot runs.";
+  hbars("e6bars", rows, { aria: "MNIST accuracy by learning rule", domain: [0, 1], ticks: [0, .25, .5, .75, 1], tickFmt: t => t, valFmt: v => fmt(v), title: "accuracy", labelW: 270 });
+  table("e6bars-t", ["rule", "accuracy", "epochs", "training images"], chosen.map(r => [E6NAMES[r.variant] + (r.winners > 1 ? ` · ${r.winners} winners` : ""), fmt(r.acc), r.curve.length, r.train_samples.toLocaleString()]));
+  const best = rows.find(r => r.name.startsWith("CRL"));
+  document.getElementById("e6callout").innerHTML = `<strong>Reading.</strong> Credit reaches the hidden layer: CRL beats a frozen random hidden layer, and counterfactual hidden credit beats fired-only hidden credit. But a single racing layer${sl ? ` (${fmt(sl.acc)} on the test set)` : ""} still matches the best hidden-layer network${best ? ` (${fmt(best.v)})` : ""}, and a plain linear classifier reaches 0.92. One diagnosed cause: in latency-coded MNIST all saturated pixels spike at t = 0, so races are decided on that first instant (median decision time 0.004–0.012 of the window). Depth cannot help if the decision is taken before most of the evidence arrives.`;
+}
+
+/* ── Energy ─────────────────────────────────────────────────────────────── */
+function energy() {
+  const E = DATA.energy;
+  const at = (rule, k) => E.e4.find(r => r.rule === rule && r.k === k);
+  const cf = at("cf_margin", 128), sm = at("softmax", 128);
+  const ratioU = sm.training_J_per_episode.dense_fp16_train / cf.training_J_per_episode.event_ideal;
+  const ratioB = sm.training_J_per_episode.dense_fp16_train_batched / cf.training_J_per_episode.event_ideal;
+  const slr = E.e6.race.find(r => r.variant === "single_layer");
+  document.getElementById("energystats").innerHTML = [
+    [nJ(cf.training_J_per_episode.event_ideal), "per teaching event, cf_margin at K = 128 on idealized event hardware"],
+    [`${ratioU.toFixed(1)}×`, `less than dense fp16 softmax training (unbatched); ${ratioB.toFixed(1)}× with batch-256 weight sharing`],
+    slr ? [nJ(slr.inference_J.event_ideal), `per MNIST image, single racing layer (${Math.round(slr.counts_inference.synops)} synaptic events, accuracy ${fmt(slr.acc, 2)})`] : null,
+  ].filter(Boolean).map(s => `<div class="stat"><div class="v">${s[0]}</div><div class="l">${s[1]}</div></div>`).join("");
+
+  const rows = [];
+  for (const rule of ["cf_margin", "fired_reward"]) {
+    const r = at(rule, 128);
+    rows.push({ name: `${rule} · ideal event`, v: r.training_J_per_episode.event_ideal, color: rule === "cf_margin" ? "--s1" : "--s4", strong: rule === "cf_margin", tip: `acc ${fmt(r.acc)}` });
+    rows.push({ name: `${rule} · event, shared SRAM`, v: r.training_J_per_episode.event_shared_sram, color: rule === "cf_margin" ? "--s1" : "--s4", muted: true, tip: `acc ${fmt(r.acc)}` });
+    rows.push({ name: `${rule} · Loihi (measured ops)`, v: r.training_J_per_episode.loihi, color: rule === "cf_margin" ? "--s1" : "--s4", muted: true, tip: `acc ${fmt(r.acc)}` });
+  }
+  rows.push({ name: "softmax · dense fp16", v: sm.training_J_per_episode.dense_fp16_train, color: "--ref", tip: `acc ${fmt(sm.acc)}` });
+  rows.push({ name: "softmax · dense fp16, batch 256", v: sm.training_J_per_episode.dense_fp16_train_batched, color: "--ref", muted: true, tip: `acc ${fmt(sm.acc)}` });
+  hbars("e4energy", rows, { aria: "Training energy per teaching event", log: true, domain: [1e-9, 3e-7], ticks: [1e-9, 1e-8, 1e-7], tickFmt: nJ, valFmt: nJ, title: "energy per teaching event, K = 128 (log)", labelW: 260 });
+  table("e4energy-t", ["rule · hardware", "energy / event", "accuracy"], rows.map(r => [r.name, nJ(r.v), r.tip.replace("acc ", "")]));
+
+  const head = "<thead><tr><th>event network</th><th class='num'>accuracy</th><th class='num'>inference · ideal event</th><th>cheapest dense model at ≥ accuracy</th><th class='num'>inference · dense int8</th><th class='num'>training · ideal event</th><th class='num'>training · dense fp16 (batched)</th></tr></thead>";
+  const body = E.e6.race.map(r => {
+    const mm = r.matched;
+    const d = mm ? E.e6.dense.find(x => x.name === mm.dense) : null;
+    return `<tr><td>${E6NAMES[r.variant] || r.variant}</td><td class="num">${fmt(r.acc)}</td><td class="num">${nJ(r.inference_J.event_ideal)}</td>` +
+      (d ? `<td>${d.name} (${fmt(d.acc)})</td><td class="num">${nJ(d.inference_J.dense_int8)} (${mm.inference_ratio_vs_int8_batch1.toFixed(1)}×)</td><td class="num">${nJ(r.training_J.event_ideal)}</td><td class="num">${nJ(d.training_J.dense_fp16_train * mm.dense_epochs_to_match / d.curve.length)} (${nJ(d.training_J.dense_fp16_train_batched * mm.dense_epochs_to_match / d.curve.length)})</td>`
+        : `<td colspan="4" style="color:var(--muted)">dense frontier not yet computed</td>`) + "</tr>";
+  }).join("");
+  document.getElementById("e6energy").innerHTML = head + "<tbody>" + body + "</tbody>";
+
+  document.getElementById("energycallout").innerHTML = `<strong>Reading.</strong> On these tasks the event approach is cheaper by single-digit factors, not orders of magnitude, and the advantage over dense hardware mostly disappears once dense training shares weight traffic across a batch. On today's neuromorphic silicon (Loihi's measured ≈24 pJ per synaptic event) it is more expensive than an idealized dense accelerator. The large gains claimed for event computing require work that tracks <em>activity</em> while the network's capacity grows, which is the scaling experiment (E5) still to be run.`;
+
+  document.getElementById("profiles").innerHTML = "<thead><tr><th>profile</th><th class='num'>MAC</th><th class='num'>synaptic event</th><th class='num'>spike</th><th class='num'>weight update</th><th class='num'>clocked neuron step</th></tr></thead><tbody>" +
+    E.profiles.map(p => `<tr><td>${p.description}</td>${["mac", "synop", "spike", "plasticity", "neuron_step"].map(k => `<td class="num">${p[k] ? p[k].toFixed(p[k] < 1 ? 2 : 1) + " pJ" : "—"}</td>`).join("")}</tr>`).join("") + "</tbody>";
+}
+
+function render() {
+  for (const id of ["racefig", "e4acc", "e4work", "e4delay", "e2front", "e2coh", "e6bars", "e4energy"]) {
+    const n = document.getElementById(id); [...n.querySelectorAll("svg,.tip")].forEach(c => c.remove());
+  }
+  raceFigure(); scorecard(); e4charts(); e2charts(); e6chart(); energy();
+}
+render();
+new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+</script>
