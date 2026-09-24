@@ -79,9 +79,13 @@ def xor_in_time(n, rng, per_group=16, groups=4):
 
 # ── Closed-form race dynamics ─────────────────────────────────────────────────
 
-def integrate(t, idx, W):
-    """Cumulative potential of every node after each input event: (B, N, S)."""
-    return np.cumsum(np.transpose(W[:, idx], (1, 0, 2)), axis=2)
+def integrate(t, idx, W, weighted=False):
+    """Cumulative potential of every node after each input event: (B, N, S).
+    With `weighted`, accumulate weight x input time instead (the ramp offset B)."""
+    w = np.transpose(W[:, idx], (1, 0, 2))
+    if weighted:
+        w = w * t[:, None, :]
+    return np.cumsum(w, axis=2)
 
 
 def crossing_times(t, cum, theta):
@@ -97,6 +101,47 @@ def crossing_times(t, cum, theta):
     over = np.take_along_axis(cum, first[:, :, None], 2)[:, :, 0] - theta[None, :]
     has = crossed.any(2)
     return np.where(has, tc, np.inf), np.where(has, over, -np.inf)
+
+
+def ramp_crossing(t, A, Bc, theta):
+    """Current-based (ramp) synapses: after the inputs up to t_s, v(t) = A_s t - B_s.
+    The node crosses at t* = (theta + B_s) / A_s if that falls before the next input
+    (or the horizon). Returns first crossing times and the slope there (tie-break)."""
+    last_of_run = np.ones_like(t, bool)
+    last_of_run[:, :-1] = t[:, 1:] != t[:, :-1]
+    t_next = np.full_like(t, HORIZON)
+    t_next[:, :-1] = np.where(np.isfinite(t[:, 1:]), t[:, 1:], HORIZON)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        tstar = np.where(A > 0, (theta[None, :, None] + Bc) / A, np.inf)
+    valid = ((last_of_run & np.isfinite(t))[:, None, :] & (A > 0)
+             & (tstar < np.minimum(t_next, HORIZON)[:, None, :]) & (tstar >= t[:, None, :] - 1e-9))
+    first = valid.argmax(2)
+    has = valid.any(2)
+    T = np.take_along_axis(tstar, first[:, :, None], 2)[:, :, 0]
+    slope = np.take_along_axis(A, first[:, :, None], 2)[:, :, 0]
+    T = np.maximum(T, np.take_along_axis(np.broadcast_to(t[:, None, :], A.shape), first[:, :, None], 2)[:, :, 0])
+    return np.where(has, T, np.inf), np.where(has, slope, -np.inf)
+
+
+def ramp_potential_at(t, A, Bc, when):
+    """v(when) = A_s when - B_s using the inputs that arrived by `when`."""
+    b, n, s = A.shape
+    count = (t[:, None, :] <= when[:, :, None]).sum(2)
+    idx = np.clip(count - 1, 0, s - 1)[:, :, None]
+    v = np.take_along_axis(A, idx, 2)[:, :, 0] * when - np.take_along_axis(Bc, idx, 2)[:, :, 0]
+    return np.where(count > 0, v, 0.0), count
+
+
+def layer_race(t, idx, W, theta, psp):
+    """Integrate one layer; returns crossing times, tie-break key and a potential-at function."""
+    if psp == "ramp":
+        A = integrate(t, idx, W)
+        Bc = integrate(np.where(np.isfinite(t), t, 0), idx, W, weighted=True)
+        T, key = ramp_crossing(t, A, Bc, theta)
+        return T, key, lambda when: ramp_potential_at(t, A, Bc, when)
+    cum = integrate(t, idx, W)
+    T, key = crossing_times(t, cum, theta)
+    return T, key, lambda when: potential_at(t, cum, when)
 
 
 def race_order(T, over):
@@ -151,6 +196,8 @@ class Config:
     lateral: int = 0         # output race on relative evidence: each spike also inhibits all outputs by the mean weight
     theta_out: float = 1.0   # output threshold
     lr_decay: float = 1.0    # learning rates multiplied by this after every epoch
+    deadline: int = 0        # collapse the output threshold at the horizon so the leader fires
+    psp: str = "step"        # "step": each spike adds w at once; "ramp": it injects a constant current w
     scaling: int = 0         # subtractive synaptic scaling (constant summed weight per node)
     zero_sum: int = 0        # normalise competitor credit so the output signal sums to zero
     batch: int = 32
@@ -160,6 +207,8 @@ class Config:
 
 class RaceNet:
     def __init__(self, cfg, d_in, k, mean_spikes, rng, rates=None):
+        """mean_spikes / rates: expected drive per sample and per input (spike counts
+        for step synapses, charge sum(H - t) for ramp synapses)."""
         self.cfg, self.k, self.d = cfg, k, d_in
         h = cfg.hidden if cfg.variant != "single_layer" else 0
         self.h = h
@@ -176,7 +225,7 @@ class RaceNet:
                 mu = 1.0 / ((cfg.hid_frac or cfg.init_frac) * mean_spikes)
                 self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in))
             self.th1 = np.ones(h, np.float32)
-            fired_per_sample = h // cfg.group * cfg.winners
+            fired_per_sample = h // cfg.group * cfg.winners * (0.5 if cfg.psp == "ramp" else 1.0)
             mu2 = 1.0 / (cfg.init_frac * fired_per_sample)
             self.W2 = np.zeros((k, h + 1), np.float32)
             self.W2[:, :h] = rng.normal(mu2, mu2, (k, h))
@@ -197,10 +246,9 @@ class RaceNet:
         self.work["input_spikes"] += int(np.isfinite(t).sum())
         self.work["samples"] += len(t)
         if self.h:
-            cum1 = integrate(t, idx, self.W1)
-            T1, over1 = crossing_times(t, cum1, self.th1)
+            T1, over1, v_at1 = layer_race(t, idx, self.W1, self.th1, cfg.psp)
             fired, freeze1 = group_race(T1, over1, self.h // cfg.group, cfg.winners)
-            v1, n_before = potential_at(t, cum1, freeze1)
+            v1, n_before = v_at1(freeze1)
             st.update(fired=fired, freeze1=freeze1, snap1=np.clip((self.th1 - v1) / self.th1, 0, None))
             if self.M1 is None:
                 self.work["synops"] += int(n_before.sum())      # inputs after inhibition are not integrated
@@ -213,16 +261,18 @@ class RaceNet:
             idx2 = np.where(idx2 == self.h, self.h, idx2)
         else:
             t2, idx2 = t, idx
-        cum2 = integrate(t2, idx2, self.w_out())
-        T2, over2 = crossing_times(t2, cum2, self.th2)
+        T2, over2, v_at2 = layer_race(t2, idx2, self.w_out(), self.th2, cfg.psp)
         winner = np.where(np.isfinite(T2).any(1), race_order(T2, over2)[:, 0], -1)
         t_dec = np.where(winner >= 0, T2.min(1), HORIZON)
         freeze2 = np.repeat(t_dec[:, None], self.k, 1)
-        v2, n_before2 = potential_at(t2, cum2, freeze2)
+        v2, n_before2 = v_at2(freeze2)
+        urgent = winner < 0
+        if cfg.deadline:            # collapsing bound: at the horizon the leading output fires
+            winner = np.where(urgent, v2.argmax(1), winner)
         snap2 = np.clip((self.th2 - v2) / self.th2, 0, None)
         snap2[winner >= 0, winner[winner >= 0]] = 0
         self.work["synops"] += int(n_before2.sum())
-        st.update(t2=t2, idx2=idx2, winner=winner, freeze2=freeze2, snap2=snap2)
+        st.update(t2=t2, idx2=idx2, winner=winner, freeze2=freeze2, snap2=snap2, urgent=urgent)
         return st
 
     def w_out(self):
@@ -244,7 +294,8 @@ class RaceNet:
         elig2 = np.exp(-snap2 / cfg.sigma)
         rival = snap2.copy()
         rival[rows, y] = np.inf
-        update = (st["winner"] != y) | (rival.min(1) < cfg.margin)
+        # a decision forced by the deadline is uncertain, like a close call: it still teaches
+        update = (st["winner"] != y) | (rival.min(1) < cfg.margin) | st["urgent"]
         s = -elig2 * (elig2 >= 0.05)                       # competitors, near-miss weighted
         s[rows, y] = 0.0
         if cfg.zero_sum:                                   # competitors share a total of -1
@@ -252,7 +303,7 @@ class RaceNet:
         s[rows, y] = 1.0
         s *= update[:, None]
 
-        mask2 = st["t2"][:, None, :] <= st["freeze2"][:, :, None]
+        mask2 = self._elig(st["t2"], st["freeze2"])
         self._apply(self.W2, st["idx2"], cfg.eta_out * self.lr_mult * s, mask2, self.W2.shape[1] - 1)
 
         if not self.h or cfg.variant == "frozen_hidden":
@@ -273,12 +324,19 @@ class RaceNet:
             elig1 = np.where(fired, 1.0, np.exp(-st["snap1"] / cfg.sigma))
             elig1 *= elig1 >= 0.05
         coef = cfg.eta_hid * self.lr_mult * delta * elig1
-        mask1 = st["t_in"][:, None, :] <= st["freeze1"][:, :, None]
+        mask1 = self._elig(st["t_in"], st["freeze1"])
         self._apply(self.W1, st["idx_in"], coef, mask1, self.d, self.M1)
         if cfg.homeo:
             target_rate = cfg.winners / cfg.group
             self.th1 += cfg.homeo * (fired.mean(0) - target_rate)
             np.maximum(self.th1, 0.05, out=self.th1)
+
+    def _elig(self, t, freeze):
+        """Presynaptic eligibility at the node's fire/cancel time: 1 for step synapses
+        that had arrived; for ramp synapses the charge they had injected, freeze - t."""
+        if self.cfg.psp == "ramp":
+            return np.clip(freeze[:, :, None] - np.where(np.isfinite(t), t, np.inf)[:, None, :], 0, None)
+        return t[:, None, :] <= freeze[:, :, None]
 
     def _apply(self, W, idx, coef, mask, dummy, exists=None):
         """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample.
@@ -293,11 +351,11 @@ class RaceNet:
                 continue
             m = mask[bi, active]
             if exists is not None:
-                m = m & exists[np.ix_(active, idx[bi])]
+                m = m * exists[np.ix_(active, idx[bi])]
             upd = coef[bi, active, None] * m
             W[np.ix_(active, idx[bi])] += upd
             added[active] += upd.sum(1)
-            self.work["plasticity"] += int(m.sum())
+            self.work["plasticity"] += int((m > 0).sum())
         if self.cfg.scaling:
             nz = np.flatnonzero(added)
             W[nz, :dummy] -= added[nz, None] / dummy
@@ -331,8 +389,11 @@ def evaluate(net, times, y, batch=250, count=False):
 
 def train(cfg, xtr, ytr, xte, yte, log_every=0):
     rng = np.random.default_rng(cfg.seed)
-    mean_spikes = float(np.isfinite(xtr).sum(1).mean())
-    rates = np.isfinite(xtr).mean(0)
+    if cfg.psp == "ramp":
+        drive = np.where(np.isfinite(xtr), HORIZON - xtr, 0).mean(0)
+    else:
+        drive = np.isfinite(xtr).mean(0)
+    mean_spikes, rates = float(drive.sum()), drive
     net = RaceNet(cfg, xtr.shape[1], int(ytr.max()) + 1, mean_spikes, rng, rates)
     curve = []
     for ep in range(cfg.epochs):
@@ -435,13 +496,82 @@ def event_forward(net, times_row):
     for tval in np.unique(times_row[active]):
         e.schedule(float(tval), "in", active[times_row[active] == tval])
     e.run()
+    if "winner" not in done and cfg.deadline:
+        return int(np.argmax(v2))
+    return done.get("winner", -1)
+
+
+def event_forward_ramp(net, times_row):
+    """Ramp synapses on the event engine. Every input changes a node's slope, so its
+    predicted fire event is cancelled and rescheduled: the pending-future-event pool
+    in action. Simultaneous inputs are delivered as one batch."""
+    e = Engine()
+    cfg = net.cfg
+    h, k = net.h, net.k
+    A1, B1, A2, B2 = np.zeros(h), np.zeros(h), np.zeros(k), np.zeros(k)
+    W2e = net.w_out()
+    group_fired = np.zeros(h // cfg.group, int)
+    inhibited = np.zeros(h, bool)
+    pend1, pend2, done = {}, {}, {}
+
+    def predict(A, B, th, n):
+        return (th[n] + B[n]) / A[n] if A[n] > 0 else np.inf
+
+    def reschedule(pend, n, tstar, kind):
+        if n in pend:
+            e.cancel(pend.pop(n))
+        if np.isfinite(tstar) and tstar < HORIZON:
+            pend[n] = e.schedule(max(tstar - e.now, 0.0), kind, int(n))
+
+    def inputs(chans):
+        live = np.flatnonzero(~inhibited)
+        dw = net.W1[np.ix_(live, chans)].sum(1)
+        A1[live] += dw
+        B1[live] += dw * e.now
+        for n in live:
+            reschedule(pend1, n, predict(A1, B1, net.th1, n), "hfire")
+
+    def hfire(n):
+        pend1.pop(n, None)
+        g = n // cfg.group
+        if inhibited[n]:
+            return
+        inhibited[n] = True
+        group_fired[g] += 1
+        if group_fired[g] == cfg.winners:
+            for m in range(g * cfg.group, (g + 1) * cfg.group):
+                inhibited[m] = True
+                if m in pend1:
+                    e.cancel(pend1.pop(m))
+        if "winner" in done:
+            return
+        A2[:] += W2e[:, n]
+        B2[:] += W2e[:, n] * e.now
+        for o in range(k):
+            reschedule(pend2, o, predict(A2, B2, net.th2, o), "ofire")
+
+    def ofire(o):
+        if "winner" not in done:
+            done["winner"] = int(o)
+            for ev in pend2.values():
+                e.cancel(ev)
+            pend2.clear()
+
+    e.on("in", inputs); e.on("hfire", hfire); e.on("ofire", ofire)
+    active = np.flatnonzero(np.isfinite(times_row))
+    for tval in np.unique(times_row[active]):
+        e.schedule(float(tval), "in", active[times_row[active] == tval])
+    e.run(until=HORIZON)
+    if "winner" not in done and cfg.deadline:
+        return int(np.argmax(A2 * HORIZON - B2))
     return done.get("winner", -1)
 
 
 def test_equivalence(net, times, n=200):
     t, idx = to_events(times[:n])
     closed = net.forward(t, idx)["winner"]
-    events = np.array([event_forward(net, times[i]) for i in range(n)])
+    ref = event_forward_ramp if net.cfg.psp == "ramp" else event_forward
+    events = np.array([ref(net, times[i]) for i in range(n)])
     return float((closed == events).mean())
 
 

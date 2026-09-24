@@ -64,3 +64,17 @@ local structural rule: when a teaching event names the target, the target
 connects to the active inputs it lacks, replacing its weakest synapses.
 Rewiring counts as learning work. Dense softmax work is counted analytically
 (K × active inputs), not trained.
+
+## Round 2 (2026-09-24, exploratory; after the preregistered evaluation)
+
+A diagnosis (`e5_diagnose.py`) showed the race's accuracy gap was entirely in
+its readout: the race-trained weights read out by argmax scored 0.953 at K =
+1024 (sparse softmax 0.980), while the race itself scored 0.812, with 7.5% of
+inputs timing out undecided. Round 2 adds a collapsing bound: at the end of the
+input window the threshold collapses and the leading node fires. A decision
+forced this way still counts as uncertain and triggers learning, like a close
+call. β was re-chosen on tuning seed 100 (0.15; 0.892 vs 0.890 at 0.1).
+A leader-margin stopping rule (fire when ahead of the runner-up by a margin)
+was also tried on the tuning seed and did worse (0.59-0.68) at the settings
+tuned for the threshold race; it was not pursued. Round 2 is not
+preregistered and is reported as exploratory.

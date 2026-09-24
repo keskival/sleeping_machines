@@ -68,17 +68,19 @@ def sample(protos, m, rng):
     return target, ch[order], t[order]
 
 
-def race_episode(net, ch, t, theta, sigma, beta=0.0):
+def race_episode(net, ch, t, theta, sigma, beta=0.0, deadline=False):
     """First-to-threshold race over the reached synapses. Returns winner, decision
     index (number of input spikes integrated), touched nodes and their Δ.
 
     With beta > 0 the threshold rises by beta per input spike: global inhibition
     shared by all nodes (one counter, O(1) per spike), so the race runs on
-    relative rather than absolute evidence."""
+    relative rather than absolute evidence. With `deadline`, a node that has not
+    fired by the end of the input window is not left undecided: the threshold
+    collapses at the deadline event and the leading node fires (an urgency signal)."""
     syn = net.gather(ch)
     lens = np.array([len(s) for s in syn])
     if lens.sum() == 0:
-        return None, len(ch), np.zeros(0, np.int64), np.zeros(0), 0
+        return None, len(ch), np.zeros(0, np.int64), np.zeros(0), 0, True
     ids = np.concatenate(syn)
     spike = np.repeat(np.arange(len(ch)), lens)
     nodes, w = ids // FANIN, net.w.flat[ids]
@@ -96,8 +98,12 @@ def race_episode(net, ch, t, theta, sigma, beta=0.0):
         cand = first[uniq]                          # first crossing per node
         j = cand[np.lexsort((-(cum[cand] - th[cand]), spike_s[cand]))[0]]
         winner, dec = int(nodes_s[j]), int(spike_s[j])
-    else:
+    urgent = not crossed.any()                                      # decided (if at all) only by the deadline
+    if urgent:
         winner, dec = None, len(ch) - 1
+        if deadline:
+            ends = np.r_[starts[1:], len(cum)] - 1                 # final potential of every reached node
+            winner = int(nodes_s[ends[np.argmax(cum[ends])]])
     before = spike_s <= dec
     synops = int(before.sum())
     touched, inv = np.unique(nodes_s[before], return_inverse=True)
@@ -106,7 +112,7 @@ def race_episode(net, ch, t, theta, sigma, beta=0.0):
     delta = np.clip((th_dec - v) / th_dec, 0, None)
     if winner is not None:
         delta[touched == winner] = 0
-    return winner, dec, touched, delta, synops
+    return winner, dec, touched, delta, synops, urgent
 
 
 def run(args):
@@ -125,10 +131,11 @@ def run(args):
     n_train = a.train_per_class * k
     for _ in range(n_train):
         y, ch, t = sample(protos, m, rng)
-        winner, dec, touched, delta, synops = race_episode(net, ch, t, a.theta, a.sigma, a.beta)
+        winner, dec, touched, delta, synops, urgent = race_episode(net, ch, t, a.theta, a.sigma, a.beta, a.deadline)
         work["synops"] += synops; work["inputs"] += len(ch); work["inputs_used"] += dec + 1
         rivals = delta[touched != y]
-        if winner == y and not (len(rivals) and rivals.min() < a.margin):
+        # a decision forced by the deadline is uncertain, like a close call: it still teaches
+        if winner == y and not urgent and not (len(rivals) and rivals.min() < a.margin):
             continue
         x = np.exp(-(1.0 + a.teach_delay - t) / a.tau)       # presynaptic traces at teaching time
         xs = dict(zip(ch.tolist(), x.tolist()))
@@ -144,7 +151,7 @@ def run(args):
     correct, inf = 0, {"synops": 0, "inputs": 0, "inputs_used": 0}
     for _ in range(a.test):
         y, ch, t = sample(protos, m, test_rng)
-        winner, dec, _, _, synops = race_episode(net, ch, t, a.theta, a.sigma, a.beta)
+        winner, dec, _, _, synops, _ = race_episode(net, ch, t, a.theta, a.sigma, a.beta, a.deadline)
         correct += winner == y
         inf["synops"] += synops; inf["inputs"] += len(ch); inf["inputs_used"] += dec + 1
     out["race"] = {"acc": correct / a.test, "train_per_episode": {q: v / n_train for q, v in work.items()},
@@ -222,7 +229,7 @@ def main(a):
     jobs = [(k, s, a) for k in a.ks for s in range(a.seeds)]
     with Pool(a.procs) as pool:
         rows = pool.map(run, jobs, chunksize=1)
-    with open(os.path.join(OUT, "rows.json"), "w") as f:
+    with open(os.path.join(OUT, f"rows{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"config": {q: v for q, v in vars(a).items()}, "rows": rows}, f, indent=1)
     print(f"{'K':>6} {'model':7} {'acc':>6} {'inf work':>10} {'learn work':>11} {'inputs used':>12}")
     for k in a.ks:
@@ -250,6 +257,8 @@ if __name__ == "__main__":
     ap.add_argument("--w0", type=float, default=0.005)
     ap.add_argument("--beta", type=float, default=0.0)
     ap.add_argument("--margin", type=float, default=0.0)
+    ap.add_argument("--deadline", type=int, default=0, help="collapse the threshold at the end of the input window")
+    ap.add_argument("--tag", default="", help="suffix for the results file")
     ap.add_argument("--lr", type=float, default=0.5)
     ap.add_argument("--procs", type=int, default=2)
     ap.add_argument("--models", nargs="+", default=["race", "sparse"])
