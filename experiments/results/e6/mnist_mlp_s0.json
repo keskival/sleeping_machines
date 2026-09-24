@@ -1,0 +1,40 @@
+{
+ "config": {
+  "variant": "mlp",
+  "hidden": 1000,
+  "group": 10,
+  "winners": 1,
+  "eta_out": 0.003,
+  "eta_hid": 0.003,
+  "sigma": 0.15,
+  "margin": 0.1,
+  "homeo": 0.001,
+  "init_frac": 0.3,
+  "scaling": 0,
+  "zero_sum": 0,
+  "batch": 32,
+  "epochs": 10,
+  "seed": 0
+ },
+ "curve": [
+  0.9391,
+  0.9562,
+  0.9648,
+  0.9693,
+  0.9716,
+  0.9756,
+  0.9747,
+  0.9765,
+  0.9764,
+  0.9783
+ ],
+ "test_acc": 0.9783,
+ "inference_work_per_sample": {
+  "macs": 794000
+ },
+ "train_work": {
+  "macs": 1429200000000
+ },
+ "task": "mnist",
+ "val": 0
+}

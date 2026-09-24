@@ -1,0 +1,19 @@
+crl_sym epoch 1: test 0.6448 (525s)
+crl_sym epoch 2: test 0.6373 (467s)
+crl_sym epoch 3: test 0.6428 (407s)
+crl_sym epoch 4: test 0.6778 (484s)
+crl_sym epoch 5: test 0.6879 (436s)
+crl_sym epoch 6: test 0.6786 (391s)
+crl_sym epoch 7: test 0.6963 (373s)
+crl_sym epoch 8: test 0.6876 (280s)
+crl_sym epoch 9: test 0.7010 (215s)
+crl_sym epoch 10: test 0.7041 (194s)
+{
+ "test_acc": 0.7041,
+ "inference_work_per_sample": {
+  "synops": 30655.1081,
+  "plasticity": 0.0,
+  "hidden_spikes": 300.0,
+  "input_spikes": 137.6882
+ }
+}

@@ -1,0 +1,498 @@
+{
+ "config": {
+  "ks": [
+   256,
+   1024,
+   4096,
+   16384
+  ],
+  "seeds": 3,
+  "train_per_class": 8,
+  "test": 2000,
+  "theta": 1.0,
+  "eta": 0.1,
+  "sigma": 0.15,
+  "tau": 1.0,
+  "teach_delay": 0.05,
+  "w0": 0.005,
+  "beta": 0.06,
+  "margin": 0.3,
+  "lr": 0.5,
+  "procs": 2,
+  "models": [
+   "race",
+   "sparse"
+  ],
+  "tune": false
+ },
+ "rows": [
+  {
+   "k": 256,
+   "m": 256,
+   "seed": 0,
+   "race": {
+    "acc": 0.8295,
+    "train_per_episode": {
+     "synops": 1019.48046875,
+     "plasticity": 53.99169921875,
+     "rewired": 7.27783203125,
+     "inputs": 20.56103515625,
+     "inputs_used": 15.8525390625
+    },
+    "inference_per_sample": {
+     "synops": 633.2945,
+     "inputs": 20.715,
+     "inputs_used": 9.845
+    }
+   },
+   "sparse": {
+    "acc": 0.989,
+    "train_per_episode": {
+     "synops": 1348.72265625,
+     "plasticity": 1348.72265625,
+     "rewired": 8.98779296875
+    },
+    "inference_per_sample": {
+     "synops": 1346.7635
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 5427.2
+    },
+    "train_per_episode": {
+     "macs": 10854.4
+    }
+   }
+  },
+  {
+   "k": 256,
+   "m": 256,
+   "seed": 1,
+   "race": {
+    "acc": 0.8275,
+    "train_per_episode": {
+     "synops": 1014.56005859375,
+     "plasticity": 54.666015625,
+     "rewired": 7.3291015625,
+     "inputs": 20.5673828125,
+     "inputs_used": 15.78125
+    },
+    "inference_per_sample": {
+     "synops": 628.4275,
+     "inputs": 20.5455,
+     "inputs_used": 9.756
+    }
+   },
+   "sparse": {
+    "acc": 0.984,
+    "train_per_episode": {
+     "synops": 1350.21630859375,
+     "plasticity": 1350.21630859375,
+     "rewired": 8.92626953125
+    },
+    "inference_per_sample": {
+     "synops": 1337.4855
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 5427.2
+    },
+    "train_per_episode": {
+     "macs": 10854.4
+    }
+   }
+  },
+  {
+   "k": 256,
+   "m": 256,
+   "seed": 2,
+   "race": {
+    "acc": 0.811,
+    "train_per_episode": {
+     "synops": 1027.18798828125,
+     "plasticity": 52.24267578125,
+     "rewired": 7.16015625,
+     "inputs": 20.642578125,
+     "inputs_used": 15.98486328125
+    },
+    "inference_per_sample": {
+     "synops": 631.537,
+     "inputs": 20.5135,
+     "inputs_used": 9.8335
+    }
+   },
+   "sparse": {
+    "acc": 0.9915,
+    "train_per_episode": {
+     "synops": 1350.46240234375,
+     "plasticity": 1350.46240234375,
+     "rewired": 9.0078125
+    },
+    "inference_per_sample": {
+     "synops": 1340.715
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 5427.2
+    },
+    "train_per_episode": {
+     "macs": 10854.4
+    }
+   }
+  },
+  {
+   "k": 1024,
+   "m": 256,
+   "seed": 0,
+   "race": {
+    "acc": 0.8425,
+    "train_per_episode": {
+     "synops": 4233.75244140625,
+     "plasticity": 134.7939453125,
+     "rewired": 8.1231689453125,
+     "inputs": 20.5819091796875,
+     "inputs_used": 16.5159912109375
+    },
+    "inference_per_sample": {
+     "synops": 3157.381,
+     "inputs": 20.663,
+     "inputs_used": 12.3265
+    }
+   },
+   "sparse": {
+    "acc": 0.978,
+    "train_per_episode": {
+     "synops": 5322.3011474609375,
+     "plasticity": 5322.3011474609375,
+     "rewired": 8.9521484375
+    },
+    "inference_per_sample": {
+     "synops": 5323.2055
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 21708.8
+    },
+    "train_per_episode": {
+     "macs": 43417.6
+    }
+   }
+  },
+  {
+   "k": 1024,
+   "m": 256,
+   "seed": 1,
+   "race": {
+    "acc": 0.8515,
+    "train_per_episode": {
+     "synops": 4241.567626953125,
+     "plasticity": 134.5947265625,
+     "rewired": 8.115234375,
+     "inputs": 20.5869140625,
+     "inputs_used": 16.5511474609375
+    },
+    "inference_per_sample": {
+     "synops": 3154.209,
+     "inputs": 20.5995,
+     "inputs_used": 12.315
+    }
+   },
+   "sparse": {
+    "acc": 0.977,
+    "train_per_episode": {
+     "synops": 5326.7357177734375,
+     "plasticity": 5326.7357177734375,
+     "rewired": 8.9254150390625
+    },
+    "inference_per_sample": {
+     "synops": 5306.664
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 21708.8
+    },
+    "train_per_episode": {
+     "macs": 43417.6
+    }
+   }
+  },
+  {
+   "k": 1024,
+   "m": 256,
+   "seed": 2,
+   "race": {
+    "acc": 0.801,
+    "train_per_episode": {
+     "synops": 4246.204833984375,
+     "plasticity": 137.2615966796875,
+     "rewired": 8.18994140625,
+     "inputs": 20.6058349609375,
+     "inputs_used": 16.5753173828125
+    },
+    "inference_per_sample": {
+     "synops": 3098.6365,
+     "inputs": 20.522,
+     "inputs_used": 12.1035
+    }
+   },
+   "sparse": {
+    "acc": 0.9855,
+    "train_per_episode": {
+     "synops": 5326.919189453125,
+     "plasticity": 5326.919189453125,
+     "rewired": 8.95458984375
+    },
+    "inference_per_sample": {
+     "synops": 5279.492
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 21708.8
+    },
+    "train_per_episode": {
+     "macs": 43417.6
+    }
+   }
+  },
+  {
+   "k": 4096,
+   "m": 1024,
+   "seed": 0,
+   "race": {
+    "acc": 0.8755,
+    "train_per_episode": {
+     "synops": 4445.606781005859,
+     "plasticity": 10.1488037109375,
+     "rewired": 6.400238037109375,
+     "inputs": 21.04364013671875,
+     "inputs_used": 17.341217041015625
+    },
+    "inference_per_sample": {
+     "synops": 3613.0715,
+     "inputs": 21.0645,
+     "inputs_used": 14.087
+    }
+   },
+   "sparse": {
+    "acc": 0.999,
+    "train_per_episode": {
+     "synops": 5441.400817871094,
+     "plasticity": 5441.400817871094,
+     "rewired": 11.2427978515625
+    },
+    "inference_per_sample": {
+     "synops": 5407.666
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 86835.2
+    },
+    "train_per_episode": {
+     "macs": 173670.4
+    }
+   }
+  },
+  {
+   "k": 4096,
+   "m": 1024,
+   "seed": 1,
+   "race": {
+    "acc": 0.8875,
+    "train_per_episode": {
+     "synops": 4441.788391113281,
+     "plasticity": 10.02557373046875,
+     "rewired": 6.348907470703125,
+     "inputs": 21.041656494140625,
+     "inputs_used": 17.32012939453125
+    },
+    "inference_per_sample": {
+     "synops": 3628.148,
+     "inputs": 21.0435,
+     "inputs_used": 14.157
+    }
+   },
+   "sparse": {
+    "acc": 0.9975,
+    "train_per_episode": {
+     "synops": 5434.954315185547,
+     "plasticity": 5434.954315185547,
+     "rewired": 11.2476806640625
+    },
+    "inference_per_sample": {
+     "synops": 5403.675
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 86835.2
+    },
+    "train_per_episode": {
+     "macs": 173670.4
+    }
+   }
+  },
+  {
+   "k": 4096,
+   "m": 1024,
+   "seed": 2,
+   "race": {
+    "acc": 0.8675,
+    "train_per_episode": {
+     "synops": 4438.096588134766,
+     "plasticity": 10.05859375,
+     "rewired": 6.353240966796875,
+     "inputs": 21.052581787109375,
+     "inputs_used": 17.3094482421875
+    },
+    "inference_per_sample": {
+     "synops": 3652.5405,
+     "inputs": 20.9955,
+     "inputs_used": 14.2385
+    }
+   },
+   "sparse": {
+    "acc": 0.995,
+    "train_per_episode": {
+     "synops": 5435.535583496094,
+     "plasticity": 5435.535583496094,
+     "rewired": 11.227874755859375
+    },
+    "inference_per_sample": {
+     "synops": 5393.4525
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 86835.2
+    },
+    "train_per_episode": {
+     "macs": 173670.4
+    }
+   }
+  },
+  {
+   "k": 16384,
+   "m": 4096,
+   "seed": 0,
+   "race": {
+    "acc": 0.884,
+    "train_per_episode": {
+     "synops": 4478.206336975098,
+     "plasticity": 9.809593200683594,
+     "rewired": 6.648994445800781,
+     "inputs": 21.162445068359375,
+     "inputs_used": 17.46520233154297
+    },
+    "inference_per_sample": {
+     "synops": 3665.029,
+     "inputs": 21.17,
+     "inputs_used": 14.287
+    }
+   },
+   "sparse": {
+    "acc": 0.9995,
+    "train_per_episode": {
+     "synops": 5467.938835144043,
+     "plasticity": 5467.938835144043,
+     "rewired": 11.824539184570312
+    },
+    "inference_per_sample": {
+     "synops": 5438.449
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 347340.8
+    },
+    "train_per_episode": {
+     "macs": 694681.6
+    }
+   }
+  },
+  {
+   "k": 16384,
+   "m": 4096,
+   "seed": 1,
+   "race": {
+    "acc": 0.864,
+    "train_per_episode": {
+     "synops": 4482.576118469238,
+     "plasticity": 9.812698364257812,
+     "rewired": 6.65045166015625,
+     "inputs": 21.162986755371094,
+     "inputs_used": 17.48046875
+    },
+    "inference_per_sample": {
+     "synops": 3729.994,
+     "inputs": 21.085,
+     "inputs_used": 14.5385
+    }
+   },
+   "sparse": {
+    "acc": 0.997,
+    "train_per_episode": {
+     "synops": 5468.5932693481445,
+     "plasticity": 5468.5932693481445,
+     "rewired": 11.823570251464844
+    },
+    "inference_per_sample": {
+     "synops": 5416.1645
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 347340.8
+    },
+    "train_per_episode": {
+     "macs": 694681.6
+    }
+   }
+  },
+  {
+   "k": 16384,
+   "m": 4096,
+   "seed": 2,
+   "race": {
+    "acc": 0.866,
+    "train_per_episode": {
+     "synops": 4482.814903259277,
+     "plasticity": 9.826675415039062,
+     "rewired": 6.654487609863281,
+     "inputs": 21.15953826904297,
+     "inputs_used": 17.48291015625
+    },
+    "inference_per_sample": {
+     "synops": 3729.369,
+     "inputs": 21.1205,
+     "inputs_used": 14.541
+    }
+   },
+   "sparse": {
+    "acc": 0.998,
+    "train_per_episode": {
+     "synops": 5472.017562866211,
+     "plasticity": 5472.017562866211,
+     "rewired": 11.821220397949219
+    },
+    "inference_per_sample": {
+     "synops": 5422.2835
+    }
+   },
+   "dense": {
+    "inference_per_sample": {
+     "macs": 347340.8
+    },
+    "train_per_episode": {
+     "macs": 694681.6
+    }
+   }
+  }
+ ]
+}

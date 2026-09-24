@@ -1,0 +1,40 @@
+{
+ "config": {
+  "variant": "crl_fired_only",
+  "hidden": 500,
+  "group": 10,
+  "winners": 1,
+  "eta_out": 0.003,
+  "eta_hid": 0.003,
+  "sigma": 0.15,
+  "margin": 0.1,
+  "homeo": 0.001,
+  "init_frac": 0.3,
+  "scaling": 0,
+  "zero_sum": 0,
+  "batch": 32,
+  "epochs": 3,
+  "seed": 0
+ },
+ "curve": [
+  0.686,
+  0.7533,
+  0.7794
+ ],
+ "test_acc": 0.7794,
+ "inference_work_per_sample": {
+  "synops": 26075.437,
+  "plasticity": 0.0,
+  "hidden_spikes": 49.9998,
+  "input_spikes": 135.5039
+ },
+ "train_work": {
+  "synops": 1012505710,
+  "plasticity": 25923740,
+  "hidden_spikes": 1899981,
+  "input_spikes": 5181523,
+  "samples": 38000
+ },
+ "task": "mnist",
+ "val": 10000
+}

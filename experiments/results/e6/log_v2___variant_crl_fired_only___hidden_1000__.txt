@@ -1,0 +1,19 @@
+crl_fired_only epoch 1: test 0.8921 (379s)
+crl_fired_only epoch 2: test 0.8974 (347s)
+crl_fired_only epoch 3: test 0.9009 (291s)
+crl_fired_only epoch 4: test 0.9051 (296s)
+crl_fired_only epoch 5: test 0.8997 (341s)
+crl_fired_only epoch 6: test 0.9003 (366s)
+crl_fired_only epoch 7: test 0.9010 (304s)
+crl_fired_only epoch 8: test 0.9002 (304s)
+crl_fired_only epoch 9: test 0.9003 (315s)
+crl_fired_only epoch 10: test 0.8992 (259s)
+{
+ "test_acc": 0.8992,
+ "inference_work_per_sample": {
+  "synops": 66261.4322,
+  "plasticity": 0.0,
+  "hidden_spikes": 299.1772,
+  "input_spikes": 137.6882
+ }
+}

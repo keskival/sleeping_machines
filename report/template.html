@@ -282,7 +282,7 @@ footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--hair);
     </div>
     <div class="figure tablewrap" id="e6energy-wrap">
       <div class="ftitle">MNIST: event networks vs the cheapest dense model that is at least as accurate</div>
-      <div class="fsub">Inference energy per image and total training energy. Dense training is counted only up to the first epoch that reaches the event network's accuracy.</div>
+      <div class="fsub">Inference energy per image and total training energy. The ratio in brackets is dense ÷ event: above 1 the event network is cheaper. Dense training is counted only up to the first epoch that reaches the event network's accuracy.</div>
       <table id="e6energy"></table>
     </div>
     <div class="callout" id="energycallout"></div>
@@ -655,10 +655,10 @@ function e6chart() {
   hbars("e6bars", rows, { aria: "MNIST accuracy by learning rule", domain: [0, 1], ticks: [0, .25, .5, .75, 1], tickFmt: t => t, valFmt: v => fmt(v), title: "test accuracy after the last epoch", labelW: 300 });
   table("e6bars-t", ["model", "final", "best (epoch)", "synaptic events / image"], finals.map(r => [label(r), fmt(r.acc), `${fmt(r.peak)} (${r.peak_epoch})`, r.synops ? Math.round(r.synops).toLocaleString() : (r.macs ? r.macs.toLocaleString() + " MACs" : "—")]));
   const r2 = finals.filter(r => r.round === 2);
-  const best = [...r2].filter(r => r.variant.startsWith("crl")).sort((a, b) => b.acc - a.acc)[0];
-  const fo = r2.find(r => r.variant === "crl_fired_only"), fz = r2.find(r => r.variant === "frozen_hidden"), sl = r2.find(r => r.variant === "single_layer");
+  const get = v => r2.find(r => r.variant === v);
+  const fa = get("crl_fa"), fo = get("crl_fired_only"), fz = get("frozen_hidden"), sl = get("single_layer"), sy = get("crl_sym");
   const mlp = finals.find(r => r.variant === "mlp");
-  document.getElementById("e6callout").innerHTML = best ? `<strong>Reading.</strong> With the round-2 fixes, CRL reaches <strong>${fmt(best.acc)}</strong> on the MNIST test set (${E6NAMES[best.variant]}), against ${fz ? fmt(fz.acc) : "—"} for a frozen random hidden layer${sl ? ` and ${fmt(sl.acc)} for a single racing layer` : ""}. Counterfactual hidden credit is ${fo ? (best.acc - fo.acc >= .005 ? `ahead of fired-only credit by ${((best.acc - fo.acc) * 100).toFixed(1)} points` : `level with fired-only credit (${fmt(fo.acc)})`) : "untested"}. A plain linear classifier gets 0.922 and the dense MLP ${mlp ? fmt(mlp.acc) : "0.978"}, so the event network is not competitive with dense training yet. Diagnosis that led to round 2: every hidden group used to pick its winner from the saturated pixels at t≈0; a linear readout of the hidden spikes scored only 3 points above the race, so the representation, not the readout, was the limit.`
+  document.getElementById("e6callout").innerHTML = fa ? `<strong>Reading.</strong> Round 2 lifted hidden-layer CRL from a best of 0.883 to <strong>${fmt(fa.peak)}</strong> (feedback alignment, epoch ${fa.peak_epoch}), and a frozen random hidden layer to ${fmt(fz.acc)}, so hidden learning adds about 7 points. But after 10 epochs CRL ends at ${fmt(fa.acc)} with feedback alignment and ${fmt(fo.acc)} with fired-only hidden credit: <strong>counterfactual hidden credit did not beat fired-only credit</strong>, and the improved single racing layer (lateral inhibition, ${fmt(sl.acc)}) matches the hidden-layer networks. Symmetric feedback became unstable with three winners per group (${fmt(sy.acc)}). A linear classifier gets 0.922 and the dense MLP ${fmt(mlp.acc)}. The diagnosis that led to round 2: every hidden group used to pick its winner from the saturated pixels at t≈0, and a linear readout of the hidden spikes scored only 3 points above the race, so the representation, not the readout, was the limit.`
     : `<strong>Reading.</strong> Round-2 runs are still in progress.`;
 }
 
@@ -709,7 +709,7 @@ function energy() {
   const cf = at("cf_margin", 128), sm = at("softmax", 128);
   const ratioU = sm.training_J_per_episode.dense_fp16_train / cf.training_J_per_episode.event_ideal;
   const ratioB = sm.training_J_per_episode.dense_fp16_train_batched / cf.training_J_per_episode.event_ideal;
-  const slr = E.e6.race.find(r => r.variant === "single_layer");
+  const slr = E.e6.race.find(r => r.variant === "single_layer" && r.round === 2) || E.e6.race.find(r => r.variant === "single_layer");
   document.getElementById("energystats").innerHTML = [
     [nJ(cf.training_J_per_episode.event_ideal), "per teaching event, cf_margin at K = 128 on idealized event hardware"],
     [`${ratioU.toFixed(1)}×`, `less than dense fp16 softmax training (unbatched); ${ratioB.toFixed(1)}× with batch-256 weight sharing`],
@@ -729,16 +729,16 @@ function energy() {
   table("e4energy-t", ["rule · hardware", "energy / event", "accuracy"], rows.map(r => [r.name, nJ(r.v), r.tip.replace("acc ", "")]));
 
   const head = "<thead><tr><th>event network</th><th class='num'>accuracy</th><th class='num'>inference · ideal event</th><th>cheapest dense model at ≥ accuracy</th><th class='num'>inference · dense int8</th><th class='num'>training · ideal event</th><th class='num'>training · dense fp16 (batched)</th></tr></thead>";
-  const body = E.e6.race.map(r => {
+  const body = [...E.e6.race].sort((a, b) => b.round - a.round || b.acc - a.acc).map(r => {
     const mm = r.matched;
     const d = mm ? E.e6.dense.find(x => x.name === mm.dense) : null;
-    return `<tr><td>${E6NAMES[r.variant] || r.variant}</td><td class="num">${fmt(r.acc)}</td><td class="num">${nJ(r.inference_J.event_ideal)}</td>` +
+    return `<tr><td>${(E6NAMES[r.variant] || r.variant) + (r.round === 1 ? " · round 1" : "")}</td><td class="num">${fmt(r.acc)}</td><td class="num">${nJ(r.inference_J.event_ideal)}</td>` +
       (d ? `<td>${d.name} (${fmt(d.acc)})</td><td class="num">${nJ(d.inference_J.dense_int8)} (${mm.inference_ratio_vs_int8_batch1.toFixed(1)}×)</td><td class="num">${nJ(r.training_J.event_ideal)}</td><td class="num">${nJ(d.training_J.dense_fp16_train * mm.dense_epochs_to_match / d.curve.length)} (${nJ(d.training_J.dense_fp16_train_batched * mm.dense_epochs_to_match / d.curve.length)})</td>`
         : `<td colspan="4" style="color:var(--muted)">dense frontier not yet computed</td>`) + "</tr>";
   }).join("");
   document.getElementById("e6energy").innerHTML = head + "<tbody>" + body + "</tbody>";
 
-  document.getElementById("energycallout").innerHTML = `<strong>Reading.</strong> On these tasks the event approach is cheaper by single-digit factors, not orders of magnitude, and the advantage over dense hardware mostly disappears once dense training shares weight traffic across a batch. On today's neuromorphic silicon (Loihi's measured ≈24 pJ per synaptic event) it is more expensive than an idealized dense accelerator. The large gains claimed for event computing require work that tracks <em>activity</em> while the network's capacity grows, which is the scaling experiment (E5) still to be run.`;
+  document.getElementById("energycallout").innerHTML = `<strong>Reading.</strong> Where the event networks are competitive in accuracy, their energy advantage is a small factor: about 6.5× cheaper than unbatched dense training in E4, and the single racing layer on MNIST about 2.4× cheaper per image than the cheapest dense model that is at least as accurate. Both advantages disappear against dense hardware that shares weight traffic across a batch. The hidden-layer CRL networks are about 30× <em>more</em> expensive than a small linear classifier of equal accuracy, because every hidden node listens to every pixel; on today's neuromorphic silicon (Loihi, ≈24 pJ per synaptic event) every comparison is worse. E5 shows where large savings do appear, against dense models whose work grows with capacity, and that most of that saving comes from sparsity, which a sparse dense model shares.`;
 
   document.getElementById("profiles").innerHTML = "<thead><tr><th>profile</th><th class='num'>MAC</th><th class='num'>synaptic event</th><th class='num'>spike</th><th class='num'>weight update</th><th class='num'>clocked neuron step</th></tr></thead><tbody>" +
     E.profiles.map(p => `<tr><td>${p.description}</td>${["mac", "synop", "spike", "plasticity", "neuron_step"].map(k => `<td class="num">${p[k] ? p[k].toFixed(p[k] < 1 ? 2 : 1) + " pJ" : "—"}</td>`).join("")}</tr>`).join("") + "</tbody>";
