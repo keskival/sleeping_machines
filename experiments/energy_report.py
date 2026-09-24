@@ -21,6 +21,12 @@ CLOCK_STEPS = 256          # timesteps a clocked simulation needs to resolve an 
 TRAIN_SAMPLES = 60000
 
 
+def run_round(name):
+    """E6 rounds. 1: first full-data runs; 2: higher hidden threshold, 3 winners per
+    group, LR decay (tag v2); 3: ramp synapses and collapsing bound (tags r3, r3patch)."""
+    return 3 if "_r3" in name else 2 if name.endswith("_v2") else 1
+
+
 def e6():
     out = {"race": [], "dense": []}
     for path in sorted(glob.glob(os.path.join(RES, "e6", "mnist_*_s0.json"))):
@@ -40,7 +46,7 @@ def e6():
         n_trained = cfg["epochs"] * TRAIN_SAMPLES
         clocked = dict(inf_counts, neuron_steps=(h + 10) * CLOCK_STEPS)
         clocked_tr = dict(tr_counts, neuron_steps=(h + 10) * CLOCK_STEPS * n_trained)
-        row = {"name": name, "variant": cfg["variant"], "round": 2 if name.endswith("_v2") else 1,
+        row = {"name": name, "variant": cfg["variant"], "round": run_round(name), "patch": cfg.get("patch", 0),
                "hidden": h, "winners": cfg["winners"],
                "acc": r["test_acc"], "curve": r["curve"], "counts_inference": inf_counts,
                "counts_training": tr_counts,

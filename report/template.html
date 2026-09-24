@@ -259,7 +259,7 @@ footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--hair);
     </div>
     <div class="figure">
       <div class="ftitle">Accuracy at each capacity</div>
-      <div class="fsub">Mean over 3 seeds; about 8 training examples per class.</div>
+      <div class="fsub">Mean over 3 seeds; about 8 training examples per class. Round 2 (exploratory, after a diagnosis) adds a collapsing bound at the end of the input window.</div>
       <div class="legend" id="e5alegend"></div>
       <div id="e5acc"></div>
       <details class="data"><summary>Show data table</summary><div class="tablewrap" id="e5-t"></div></details>
@@ -537,8 +537,8 @@ function scorecard() {
     ["E2 · P3", "The race needs under 20% more time than MSPRT at equal accuracy.", "good", "Supported", "no extra time needed in this setting"],
     ["E6 · 6a", "A hidden layer trained by CRL solves XOR-in-time; a single layer cannot.", "good", "Supported", "single layer 0.59, frozen hidden 0.63, CRL 0.92; too easy to separate CRL from its fired-only ablation"],
   ];
-  const r2 = DATA.e6.runs.filter(r => r.kind === "final" && r.round === 2 && r.variant.startsWith("crl"));
-  const best6 = r2.length ? Math.max(...r2.map(r => r.acc)) : null;
+  const e6f = DATA.e6.runs.filter(r => r.kind === "final" && r.variant.startsWith("crl"));
+  const best6 = e6f.length ? Math.max(...e6f.map(r => r.acc)) : null;
   rows.push(["E6 · 6b", "Latency-coded MNIST at 97% or better with local, event-driven learning.", "crit", "Not met", best6 ? `best ${fmt(best6)} (dense MLP 0.978, linear 0.922)` : "runs in progress"]);
   const E5 = DATA.e5;
   if (E5) {
@@ -551,6 +551,10 @@ function scorecard() {
     rows.push(["E5 · P2", "Early termination saves 1.5–3× inference work over sparse softmax.", infMin >= 1.5 ? "good" : "crit", infMin >= 1.5 ? "Supported" : "Not supported", `only ${infMin.toFixed(2)}× at worst`]);
     rows.push(["E5 · P3", "The race needs at least 3× fewer weight updates than sparse softmax.", learnMin >= 3 ? "good" : "crit", learnMin >= 3 ? "Supported" : "Not supported", `${learnMin.toFixed(0)}× fewer at worst`]);
     rows.push(["E5 · P4", "Race accuracy within 10 points of sparse softmax at every K.", gap <= .10 ? "good" : "crit", gap <= .10 ? "Supported" : "Not supported", `largest gap ${(gap * 100).toFixed(0)} points`]);
+    if (E5.round2) {
+      const g2 = Math.max(...E5.round2.rows.map(r => r.sparse.acc - r.race.acc));
+      rows.push(["E5 · round 2", "Exploratory, after diagnosis: a collapsing bound closes the readout gap.", g2 <= .10 ? "good" : "warn", g2 <= .10 ? "Within 10 points" : "Narrowed", `largest gap ${(g2 * 100).toFixed(0)} points (was ${(gap * 100).toFixed(0)}); not preregistered`]);
+    }
   }
   document.getElementById("scoretable").innerHTML = `<thead><tr><th>Test</th><th>Prediction</th><th>Verdict</th><th>Evidence</th></tr></thead><tbody>` +
     rows.map(r => `<tr><td class="mono" style="white-space:nowrap">${r[0]}</td><td>${r[1]}</td><td><span class="pill ${r[2]}">${r[3]}</span></td><td style="color:var(--ink-2);font-size:14px">${r[4]}</td></tr>`).join("") + "</tbody>";
@@ -637,35 +641,47 @@ const E6NAMES = {
   crl_fired_only: "CRL · fired-only hidden credit", crl_fa: "CRL · feedback alignment", crl_sym: "CRL · symmetric feedback", crl_sign: "CRL · sign feedback",
 };
 const E6COLOR = { mlp: "--ref", single_layer: "--s2", frozen_hidden: "--s5", crl_fired_only: "--s4", crl_fa: "--s3", crl_sym: "--s1", crl_sign: "--s1" };
+function e6label(r, latest) {
+  const base = E6NAMES[r.variant] + (r.patch ? ` · ${r.patch}×${r.patch} patches, ${r.hidden} hidden` : "");
+  return base + (r.variant === "mlp" || r.round === latest ? "" : ` · round ${r.round}`);
+}
+
 function e6chart() {
   const finals = DATA.e6.runs.filter(r => r.kind === "final" && E6NAMES[r.variant]);
-  const hasR2 = finals.some(r => r.round === 2);
-  const label = r => E6NAMES[r.variant] + (r.variant === "mlp" ? "" : (r.round === 2 ? "" : " · round 1"));
-  const rows = finals
-    .sort((a, b) => (b.round === 2) - (a.round === 2) || b.acc - a.acc)
-    .map(r => ({
-      name: label(r), v: r.acc, color: E6COLOR[r.variant], muted: hasR2 && r.round === 1 && r.variant !== "mlp",
-      strong: r.round === 2 && r.variant === "crl_fa",
+  const latest = Math.max(...finals.map(r => r.round));
+  const sorted = [...finals].sort((a, b) =>
+    (b.round === latest || b.variant === "mlp") - (a.round === latest || a.variant === "mlp") || b.round - a.round || b.acc - a.acc);
+  const rows = sorted.map(r => ({
+      name: e6label(r, latest), v: r.acc, color: E6COLOR[r.variant],
+      muted: r.round !== latest && r.variant !== "mlp", strong: r.round === latest && r.variant === "crl_fa" && !r.patch,
       tip: `final ${fmt(r.acc)} · best ${fmt(r.peak)} (epoch ${r.peak_epoch}) · ${r.curve.length} epochs` +
-        (r.hidden ? ` · ${r.hidden} hidden, ${r.winners} winner(s)/group` : ""),
+        (r.hidden ? ` · ${r.hidden} hidden, ${r.winners} winner(s)/group` : "") + (r.synops ? ` · ${Math.round(r.synops).toLocaleString()} synaptic events/image` : ""),
     }));
-  document.getElementById("e6sub").textContent = hasR2
-    ? "60,000 training images, 10 epochs, test set, accuracy after the last epoch. Round 2 adds a higher hidden threshold, 3 winners per group and learning-rate decay (chosen on a validation split); round 1 bars are faded."
-    : "60,000 training images, 10 epochs, test set.";
-  hbars("e6bars", rows, { aria: "MNIST accuracy by learning rule", domain: [0, 1], ticks: [0, .25, .5, .75, 1], tickFmt: t => t, valFmt: v => fmt(v), title: "test accuracy after the last epoch", labelW: 300 });
-  table("e6bars-t", ["model", "final", "best (epoch)", "synaptic events / image"], finals.map(r => [label(r), fmt(r.acc), `${fmt(r.peak)} (${r.peak_epoch})`, r.synops ? Math.round(r.synops).toLocaleString() : (r.macs ? r.macs.toLocaleString() + " MACs" : "—")]));
-  const r2 = finals.filter(r => r.round === 2);
-  const get = v => r2.find(r => r.variant === v);
-  const fa = get("crl_fa"), fo = get("crl_fired_only"), fz = get("frozen_hidden"), sl = get("single_layer"), sy = get("crl_sym");
+  document.getElementById("e6sub").textContent = "60,000 training images, 10 epochs, test set, accuracy after the last epoch. " +
+    "Round 2: higher hidden threshold, 3 winners per group, learning-rate decay. Round 3 adds ramp (current-based) synapses and a collapsing-bound readout. Earlier rounds are faded.";
+  hbars("e6bars", rows, { aria: "MNIST accuracy by learning rule and round", domain: [0, 1], ticks: [0, .25, .5, .75, 1], tickFmt: t => t, valFmt: v => fmt(v), title: "test accuracy after the last epoch", labelW: 360 });
+  table("e6bars-t", ["model", "final", "best (epoch)", "synaptic events / image"], sorted.map(f =>
+    [e6label(f, latest), fmt(f.acc), `${fmt(f.peak)} (${f.peak_epoch})`, f.synops ? Math.round(f.synops).toLocaleString() : (f.macs ? f.macs.toLocaleString() + " MACs" : "—")]));
+  const cur = finals.filter(r => r.round === latest);
+  const get = (v, patch = 0) => cur.find(r => r.variant === v && (r.patch || 0) === patch);
+  const fa = get("crl_fa"), fo = get("crl_fired_only"), fz = get("frozen_hidden"), sl = get("single_layer");
+  const pt = cur.find(r => r.patch);
   const mlp = finals.find(r => r.variant === "mlp");
-  document.getElementById("e6callout").innerHTML = fa ? `<strong>Reading.</strong> Round 2 lifted hidden-layer CRL from a best of 0.883 to <strong>${fmt(fa.peak)}</strong> (feedback alignment, epoch ${fa.peak_epoch}), and a frozen random hidden layer to ${fmt(fz.acc)}, so hidden learning adds about 7 points. But after 10 epochs CRL ends at ${fmt(fa.acc)} with feedback alignment and ${fmt(fo.acc)} with fired-only hidden credit: <strong>counterfactual hidden credit did not beat fired-only credit</strong>, and the improved single racing layer (lateral inhibition, ${fmt(sl.acc)}) matches the hidden-layer networks. Symmetric feedback became unstable with three winners per group (${fmt(sy.acc)}). A linear classifier gets 0.922 and the dense MLP ${fmt(mlp.acc)}. The diagnosis that led to round 2: every hidden group used to pick its winner from the saturated pixels at t≈0, and a linear readout of the hidden spikes scored only 3 points above the race, so the representation, not the readout, was the limit.`
-    : `<strong>Reading.</strong> Round-2 runs are still in progress.`;
+  const pts = n => `${Math.abs(n * 100).toFixed(1)} points`;
+  const parts = [];
+  if (fa && fz) parts.push(`In round ${latest}, hidden-layer CRL reaches <strong>${fmt(fa.acc)}</strong> (best ${fmt(fa.peak)}) against ${fmt(fz.acc)} for a frozen random hidden layer, so hidden learning adds ${pts(fa.acc - fz.acc)}.`);
+  if (fa && fo) parts.push(fa.acc - fo.acc > 0.003 ? `Counterfactual hidden credit beats fired-only credit (${fmt(fo.acc)}) by ${pts(fa.acc - fo.acc)}.` : `Counterfactual hidden credit is level with fired-only credit (${fmt(fo.acc)}).`);
+  if (fa && sl) parts.push(fa.acc > sl.acc + 0.003 ? `The hidden layer now beats a single racing layer (${fmt(sl.acc)}) by ${pts(fa.acc - sl.acc)}.` : `A single racing layer reaches ${fmt(sl.acc)}, so depth ${fa.acc >= sl.acc ? "only just" : "still does not"} pay.`);
+  if (pt) parts.push(`Local receptive fields (${pt.patch}×${pt.patch} patches, ${pt.hidden} hidden) reach ${fmt(pt.acc)} with ${Math.round(pt.synops).toLocaleString()} synaptic events per image${fa && fa.synops ? `, ${(fa.synops / pt.synops).toFixed(1)}× fewer than the fully connected network` : ""}.`);
+  parts.push(`For reference, a linear classifier gets 0.922 and the dense MLP ${mlp ? fmt(mlp.acc) : "0.978"}.`);
+  document.getElementById("e6callout").innerHTML = `<strong>Reading.</strong> ` + parts.join(" ");
 }
 
 /* ── E5 ─────────────────────────────────────────────────────────────────── */
 function e5charts() {
-  const E = DATA.e5;
-  if (!E) { document.getElementById("e5").hidden = true; return; }
+  const E1 = DATA.e5;
+  if (!E1) { document.getElementById("e5").hidden = true; return; }
+  const E = E1.round2 || E1;
   const ks = E.rows.map(r => r.k);
   const mk = (name, color, pick, extra = {}) => ({ name, color, ...extra, points: E.rows.map(r => ({ x: r.k, y: pick(r) })) });
   const inf = [
@@ -685,9 +701,10 @@ function e5charts() {
   legend("e5ilegend", inf); lineChart("e5inf", inf, opts("operations per input"));
   legend("e5llegend", learn); lineChart("e5learn", learn, opts("operations per teaching event"));
   const acc = [
-    { name: "race", color: "--s1", strong: true, points: E.rows.map(r => ({ x: r.k, y: r.race.acc, ci: r.race.acc_ci })) },
+    { name: E1.round2 ? "race, collapsing bound" : "race", color: "--s1", strong: true, points: E.rows.map(r => ({ x: r.k, y: r.race.acc, ci: r.race.acc_ci })) },
     { name: "sparse softmax", color: "--s2", points: E.rows.map(r => ({ x: r.k, y: r.sparse.acc, ci: r.sparse.acc_ci })) },
   ];
+  if (E1.round2) acc.push({ name: "race, round 1 (preregistered)", color: "--ref", dash: true, points: E1.rows.map(r => ({ x: r.k, y: r.race.acc, ci: r.race.acc_ci })) });
   legend("e5alegend", acc);
   lineChart("e5acc", acc, { aria: "Accuracy versus number of classes", labelRoom: 120,
     x: { domain: [200, 20000], log: true, ticks: ks, fmt: sci, title: "number of classes K (log)" },
@@ -696,10 +713,11 @@ function e5charts() {
   table("e5-t", ["K", "race acc", "sparse acc", "race inference", "sparse inference", "dense inference", "race learning", "sparse learning", "inputs used by race"],
     E.rows.map(r => [r.k.toLocaleString(), fmt(r.race.acc), fmt(r.sparse.acc), sci(r.race.inference_synops), sci(r.sparse.inference_synops), sci(r.dense.inference_macs), sci(r.race.learning_updates), sci(r.sparse.learning_updates), (r.race.inputs_used * 100).toFixed(0) + "%"]));
   const lo = E.rows[0], hi = E.rows[E.rows.length - 1];
+  const gap1 = Math.max(...E1.rows.map(r => r.sparse.acc - r.race.acc));
   const infRatio = E.rows.map(r => r.sparse.inference_synops / r.race.inference_synops);
   const learnRatio = E.rows.map(r => r.sparse.learning_updates / r.race.learning_updates);
   const gap = Math.max(...E.rows.map(r => r.sparse.acc - r.race.acc));
-  document.getElementById("e5callout").innerHTML = `<strong>Reading.</strong> From K = ${lo.k.toLocaleString()} to ${hi.k.toLocaleString()} dense work grows ${Math.round(hi.dense.inference_macs / lo.dense.inference_macs)}×, while race and sparse-softmax inference work grow ${(hi.race.inference_synops / lo.race.inference_synops).toFixed(1)}× and ${(hi.sparse.inference_synops / lo.sparse.inference_synops).toFixed(1)}× (the input code is held at constant fan-out once K ≥ 1,024). Early termination saves only ${Math.min(...infRatio).toFixed(2)}–${Math.max(...infRatio).toFixed(2)}× at inference, because the race still integrates most inputs before deciding. Learning is where the race differs: ${Math.min(...learnRatio).toFixed(0)}–${Math.max(...learnRatio).toFixed(0)}× fewer weight updates than sparse softmax, since it learns only from errors and close calls and only touches near misses. The price is accuracy: up to ${(gap * 100).toFixed(0)} points below sparse softmax.`;
+  document.getElementById("e5callout").innerHTML = `<strong>Reading.</strong> From K = ${lo.k.toLocaleString()} to ${hi.k.toLocaleString()} dense work grows ${Math.round(hi.dense.inference_macs / lo.dense.inference_macs)}×, while race and sparse-softmax inference work grow ${(hi.race.inference_synops / lo.race.inference_synops).toFixed(1)}× and ${(hi.sparse.inference_synops / lo.sparse.inference_synops).toFixed(1)}× (the input code is held at constant fan-out once K ≥ 1,024). Early termination saves only ${Math.min(...infRatio).toFixed(2)}–${Math.max(...infRatio).toFixed(2)}× at inference, because the race still integrates most inputs before deciding. Learning is where the race differs: ${Math.min(...learnRatio).toFixed(0)}–${Math.max(...learnRatio).toFixed(0)}× fewer weight updates than sparse softmax, since it learns only from errors and close calls and only touches near misses. ${E1.round2 ? `The preregistered race lost up to ${(gap1 * 100).toFixed(0)} points of accuracy to sparse softmax; a diagnosis showed the race-trained weights were nearly as good as the softmax's and the loss was in the readout, mostly inputs that timed out undecided. With a collapsing bound (exploratory round 2) the gap is at most ${(gap * 100).toFixed(0)} points.` : `The price is accuracy: up to ${(gap * 100).toFixed(0)} points below sparse softmax.`}`;
 }
 
 /* ── Energy ─────────────────────────────────────────────────────────────── */
@@ -732,7 +750,8 @@ function energy() {
   const body = [...E.e6.race].sort((a, b) => b.round - a.round || b.acc - a.acc).map(r => {
     const mm = r.matched;
     const d = mm ? E.e6.dense.find(x => x.name === mm.dense) : null;
-    return `<tr><td>${(E6NAMES[r.variant] || r.variant) + (r.round === 1 ? " · round 1" : "")}</td><td class="num">${fmt(r.acc)}</td><td class="num">${nJ(r.inference_J.event_ideal)}</td>` +
+    const latestE = Math.max(...E.e6.race.map(x => x.round));
+    return `<tr><td>${e6label(r, latestE)}</td><td class="num">${fmt(r.acc)}</td><td class="num">${nJ(r.inference_J.event_ideal)}</td>` +
       (d ? `<td>${d.name} (${fmt(d.acc)})</td><td class="num">${nJ(d.inference_J.dense_int8)} (${mm.inference_ratio_vs_int8_batch1.toFixed(1)}×)</td><td class="num">${nJ(r.training_J.event_ideal)}</td><td class="num">${nJ(d.training_J.dense_fp16_train * mm.dense_epochs_to_match / d.curve.length)} (${nJ(d.training_J.dense_fp16_train_batched * mm.dense_epochs_to_match / d.curve.length)})</td>`
         : `<td colspan="4" style="color:var(--muted)">dense frontier not yet computed</td>`) + "</tr>";
   }).join("");

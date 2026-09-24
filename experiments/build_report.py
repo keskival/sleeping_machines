@@ -6,6 +6,8 @@ import os
 
 import numpy as np
 
+from energy_report import run_round
+
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 RES = os.path.join(ROOT, "experiments", "results")
 REPORT = os.path.join(ROOT, "report")
@@ -46,7 +48,8 @@ def e6():
         if kind == "final" and r.get("val"):
             kind = "tuning"
         cfg = r["config"]
-        runs.append({"name": name, "kind": kind, "variant": cfg["variant"], "round": 2 if name.endswith("_v2") else 1,
+        runs.append({"name": name, "kind": kind, "variant": cfg["variant"], "round": run_round(name),
+                     "patch": cfg.get("patch", 0), "psp": cfg.get("psp", "step"), "deadline": cfg.get("deadline", 0),
                      "hidden": 0 if cfg["variant"] == "single_layer" else cfg["hidden"],
                      "winners": cfg["winners"], "lateral": cfg.get("lateral", 0), "lr_decay": cfg.get("lr_decay", 1.0),
                      "hid_frac": cfg.get("hid_frac", 0.0), "train_samples": 6000 if kind == "pilot" else 60000,
@@ -61,10 +64,7 @@ def e6():
     return {"runs": runs, "xor": xor}
 
 
-def e5():
-    path = os.path.join(RES, "e5", "rows.json")
-    if not os.path.exists(path):
-        return None
+def e5_rows(path):
     d = json.load(open(path))
     out = []
     for k in sorted({r["k"] for r in d["rows"]}):
@@ -82,6 +82,17 @@ def e5():
                         "learning_macs": rs[0]["dense"]["train_per_episode"]["macs"]}
         out.append(row)
     return {"config": d["config"], "rows": out}
+
+
+def e5():
+    """Round 1 is the preregistered run; round 2 (exploratory) adds the collapsing bound."""
+    r1, r2 = (os.path.join(RES, "e5", f) for f in ("rows.json", "rows_r2.json"))
+    if not os.path.exists(r1):
+        return None
+    out = e5_rows(r1)
+    if os.path.exists(r2):
+        out["round2"] = e5_rows(r2)
+    return out
 
 
 if __name__ == "__main__":
