@@ -1,0 +1,19 @@
+single_layer epoch 1: test 0.8859 (6s)
+single_layer epoch 2: test 0.8958 (7s)
+single_layer epoch 3: test 0.8942 (7s)
+single_layer epoch 4: test 0.8939 (7s)
+single_layer epoch 5: test 0.8977 (6s)
+single_layer epoch 6: test 0.8936 (7s)
+single_layer epoch 7: test 0.8979 (6s)
+single_layer epoch 8: test 0.8975 (8s)
+single_layer epoch 9: test 0.8980 (8s)
+single_layer epoch 10: test 0.8961 (7s)
+{
+ "test_acc": 0.8961,
+ "inference_work_per_sample": {
+  "synops": 775.328,
+  "plasticity": 0.0,
+  "hidden_spikes": 0.0,
+  "input_spikes": 137.6882
+ }
+}

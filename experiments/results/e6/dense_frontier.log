@@ -1,0 +1,56 @@
+linear 0.9218
+mlp epoch 1: test 0.9177
+mlp epoch 2: test 0.9301
+mlp epoch 3: test 0.9349
+mlp epoch 4: test 0.9392
+mlp epoch 5: test 0.9420
+mlp epoch 6: test 0.9459
+mlp epoch 7: test 0.9502
+mlp epoch 8: test 0.9483
+mlp epoch 9: test 0.9506
+mlp epoch 10: test 0.9505
+mlp 16 0.9505
+mlp epoch 1: test 0.9236
+mlp epoch 2: test 0.9399
+mlp epoch 3: test 0.9478
+mlp epoch 4: test 0.9550
+mlp epoch 5: test 0.9571
+mlp epoch 6: test 0.9604
+mlp epoch 7: test 0.9625
+mlp epoch 8: test 0.9639
+mlp epoch 9: test 0.9646
+mlp epoch 10: test 0.9666
+mlp 32 0.9666
+mlp epoch 1: test 0.9281
+mlp epoch 2: test 0.9433
+mlp epoch 3: test 0.9526
+mlp epoch 4: test 0.9599
+mlp epoch 5: test 0.9643
+mlp epoch 6: test 0.9656
+mlp epoch 7: test 0.9693
+mlp epoch 8: test 0.9670
+mlp epoch 9: test 0.9713
+mlp epoch 10: test 0.9721
+mlp 64 0.9721
+mlp epoch 1: test 0.9332
+mlp epoch 2: test 0.9499
+mlp epoch 3: test 0.9627
+mlp epoch 4: test 0.9662
+mlp epoch 5: test 0.9685
+mlp epoch 6: test 0.9716
+mlp epoch 7: test 0.9733
+mlp epoch 8: test 0.9738
+mlp epoch 9: test 0.9746
+mlp epoch 10: test 0.9752
+mlp 128 0.9752
+mlp epoch 1: test 0.9345
+mlp epoch 2: test 0.9518
+mlp epoch 3: test 0.9613
+mlp epoch 4: test 0.9680
+mlp epoch 5: test 0.9711
+mlp epoch 6: test 0.9735
+mlp epoch 7: test 0.9747
+mlp epoch 8: test 0.9770
+mlp epoch 9: test 0.9774
+mlp epoch 10: test 0.9777
+mlp 256 0.9777

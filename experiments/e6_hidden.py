@@ -146,6 +146,8 @@ class Config:
     homeo: float = 0.001     # hidden adaptive threshold rate
     init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
     hid_frac: float = 0.0    # same for hidden nodes only (0 = use init_frac)
+    patch: int = 0           # local receptive fields: each hidden group sees a patch x patch window (0 = whole image)
+    stride: int = 4          # spacing of patch positions; groups are assigned to positions round-robin
     lateral: int = 0         # output race on relative evidence: each spike also inhibits all outputs by the mean weight
     theta_out: float = 1.0   # output threshold
     lr_decay: float = 1.0    # learning rates multiplied by this after every epoch
@@ -157,14 +159,22 @@ class Config:
 
 
 class RaceNet:
-    def __init__(self, cfg, d_in, k, mean_spikes, rng):
+    def __init__(self, cfg, d_in, k, mean_spikes, rng, rates=None):
         self.cfg, self.k, self.d = cfg, k, d_in
         h = cfg.hidden if cfg.variant != "single_layer" else 0
         self.h = h
+        self.M1 = None
         if h:
-            mu = 1.0 / ((cfg.hid_frac or cfg.init_frac) * mean_spikes)
             self.W1 = np.zeros((h, d_in + 1), np.float32)
-            self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in))
+            if cfg.patch:
+                self.M1 = patch_mask(h, cfg.group, cfg.patch, cfg.stride)
+                rates = np.full(d_in, mean_spikes / d_in) if rates is None else rates
+                expected = self.M1[:, :d_in] @ rates                  # expected input spikes per node
+                mu = (1.0 / ((cfg.hid_frac or cfg.init_frac) * np.maximum(expected, 1.0)))[:, None]
+                self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in)) * self.M1[:, :d_in]
+            else:
+                mu = 1.0 / ((cfg.hid_frac or cfg.init_frac) * mean_spikes)
+                self.W1[:, :d_in] = rng.normal(mu, mu, (h, d_in))
             self.th1 = np.ones(h, np.float32)
             fired_per_sample = h // cfg.group * cfg.winners
             mu2 = 1.0 / (cfg.init_frac * fired_per_sample)
@@ -192,7 +202,11 @@ class RaceNet:
             fired, freeze1 = group_race(T1, over1, self.h // cfg.group, cfg.winners)
             v1, n_before = potential_at(t, cum1, freeze1)
             st.update(fired=fired, freeze1=freeze1, snap1=np.clip((self.th1 - v1) / self.th1, 0, None))
-            self.work["synops"] += int(n_before.sum())          # inputs after inhibition are not integrated
+            if self.M1 is None:
+                self.work["synops"] += int(n_before.sum())      # inputs after inhibition are not integrated
+            else:                                               # only existing synapses carry events
+                before = t[:, None, :] <= freeze1[:, :, None]
+                self.work["synops"] += int((np.transpose(self.M1[:, idx], (1, 0, 2)) & before).sum())
             self.work["hidden_spikes"] += int(fired.sum())
             h_times = np.where(fired, freeze1, np.inf)
             t2, idx2 = to_events(h_times)
@@ -260,13 +274,13 @@ class RaceNet:
             elig1 *= elig1 >= 0.05
         coef = cfg.eta_hid * self.lr_mult * delta * elig1
         mask1 = st["t_in"][:, None, :] <= st["freeze1"][:, :, None]
-        self._apply(self.W1, st["idx_in"], coef, mask1, self.d)
+        self._apply(self.W1, st["idx_in"], coef, mask1, self.d, self.M1)
         if cfg.homeo:
             target_rate = cfg.winners / cfg.group
             self.th1 += cfg.homeo * (fired.mean(0) - target_rate)
             np.maximum(self.th1, 0.05, out=self.th1)
 
-    def _apply(self, W, idx, coef, mask, dummy):
+    def _apply(self, W, idx, coef, mask, dummy, exists=None):
         """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample.
 
         With `scaling`, each node's summed weight is held constant (subtractive
@@ -277,15 +291,31 @@ class RaceNet:
             active = np.flatnonzero(coef[bi])
             if not len(active):
                 continue
-            upd = coef[bi, active, None] * mask[bi, active]
+            m = mask[bi, active]
+            if exists is not None:
+                m = m & exists[np.ix_(active, idx[bi])]
+            upd = coef[bi, active, None] * m
             W[np.ix_(active, idx[bi])] += upd
             added[active] += upd.sum(1)
-            self.work["plasticity"] += int(mask[bi, active].sum())
+            self.work["plasticity"] += int(m.sum())
         if self.cfg.scaling:
             nz = np.flatnonzero(added)
             W[nz, :dummy] -= added[nz, None] / dummy
             self.work["plasticity"] += len(nz)
         W[:, dummy] = 0
+
+
+def patch_mask(h, group, patch, stride, side=28):
+    """Hidden-to-input connectivity: group g sees the patch at position g mod n_positions."""
+    starts = range(0, side - patch + 1, stride)
+    positions = [(r, c) for r in starts for c in starts]
+    M = np.zeros((h, side * side + 1), bool)
+    for g in range(h // group):
+        r, c = positions[g % len(positions)]
+        win = np.zeros((side, side), bool)
+        win[r:r + patch, c:c + patch] = True
+        M[g * group:(g + 1) * group, :side * side] = win.ravel()
+    return M
 
 
 def evaluate(net, times, y, batch=250, count=False):
@@ -302,7 +332,8 @@ def evaluate(net, times, y, batch=250, count=False):
 def train(cfg, xtr, ytr, xte, yte, log_every=0):
     rng = np.random.default_rng(cfg.seed)
     mean_spikes = float(np.isfinite(xtr).sum(1).mean())
-    net = RaceNet(cfg, xtr.shape[1], int(ytr.max()) + 1, mean_spikes, rng)
+    rates = np.isfinite(xtr).mean(0)
+    net = RaceNet(cfg, xtr.shape[1], int(ytr.max()) + 1, mean_spikes, rng, rates)
     curve = []
     for ep in range(cfg.epochs):
         perm = rng.permutation(len(ytr))

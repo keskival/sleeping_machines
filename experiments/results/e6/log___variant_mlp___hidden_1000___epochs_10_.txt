@@ -1,0 +1,16 @@
+mlp epoch 1: test 0.9391
+mlp epoch 2: test 0.9562
+mlp epoch 3: test 0.9648
+mlp epoch 4: test 0.9693
+mlp epoch 5: test 0.9716
+mlp epoch 6: test 0.9756
+mlp epoch 7: test 0.9747
+mlp epoch 8: test 0.9765
+mlp epoch 9: test 0.9764
+mlp epoch 10: test 0.9783
+{
+ "test_acc": 0.9783,
+ "inference_work_per_sample": {
+  "macs": 794000
+ }
+}

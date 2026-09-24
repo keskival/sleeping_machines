@@ -1,0 +1,19 @@
+frozen_hidden epoch 1: test 0.7603 (387s)
+frozen_hidden epoch 2: test 0.7729 (438s)
+frozen_hidden epoch 3: test 0.7593 (388s)
+frozen_hidden epoch 4: test 0.7598 (288s)
+frozen_hidden epoch 5: test 0.7587 (239s)
+frozen_hidden epoch 6: test 0.7451 (233s)
+frozen_hidden epoch 7: test 0.7466 (231s)
+frozen_hidden epoch 8: test 0.7396 (225s)
+frozen_hidden epoch 9: test 0.7416 (233s)
+frozen_hidden epoch 10: test 0.7395 (237s)
+{
+ "test_acc": 0.7395,
+ "inference_work_per_sample": {
+  "synops": 56918.514,
+  "plasticity": 0.0,
+  "hidden_spikes": 100.0,
+  "input_spikes": 137.6882
+ }
+}
