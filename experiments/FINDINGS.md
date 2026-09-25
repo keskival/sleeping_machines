@@ -5,6 +5,15 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M23 (debug size) — sort-free near-miss selection and the two-channel neuron (user's ideas).**
+Depth 3, width 200, 5k images, 1 epoch, one seed. Continuous residue weighting 0.649; hard Δ
+window (binary) 0.584; sampled binary eligibility (Bernoulli(exp(−Δ/σ))) 0.548; fired-only 0.525;
+**two-channel shadow neuron, window 0.4: 0.698** (window 0.05/0.15: 0.62). *Learned (tentatively):*
+letting losers keep integrating and emit shadow spikes into a separate learning channel, with
+closeness selected by time rather than by sorting or weighting, is at least as good as the
+residue machinery at depth. It is the straight-through pattern with a real counterfactual backward
+path, and the substrate-natural form of the idea (THEORY §20). Full runs queued.
+
 **M20 — beams as asynchronous shadow events.** One discrete-event pass computes the factual
 history plus one branch per hidden-group collapse ("the group's last winner does not fire"), with
 shadow continuation of the group's members and per-branch output deltas. Over 50 samples (small

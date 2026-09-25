@@ -75,6 +75,19 @@ e14_d4_crl_fa_s0 experiments/e14_depth.py --depth 4 --variant crl_fa --width 400
 e14_d4_crl_fired_only_s0 experiments/e14_depth.py --depth 4 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
 e14_d5_crl_fa_s0 experiments/e14_depth.py --depth 5 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
 e14_d5_crl_fired_only_s0 experiments/e14_depth.py --depth 5 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+# M23: two-channel shadow neuron (losers emit shadow spikes into a learning channel) and sort-free eligibility
+m23_shadow_w04_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 1 --variant crl_shadow --window 0.4 --seed 0
+m23_shadow_w04_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 2 --variant crl_shadow --window 0.4 --seed 0
+m23_shadow_w04_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_shadow --window 0.4 --seed 0
+m23_shadow_w015_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_shadow --window 0.15 --seed 0
+m23_stoch_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_stoch --seed 0
+m23_window_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_window --seed 0
+m23_shadow_w04_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 1 --variant crl_shadow --window 0.4 --seed 1
+m23_shadow_w04_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 2 --variant crl_shadow --window 0.4 --seed 1
+m23_shadow_w04_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_shadow --window 0.4 --seed 1
+m23_shadow_w015_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_shadow --window 0.15 --seed 1
+m23_stoch_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_stoch --seed 1
+m23_window_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_window --seed 1
 # M22: gradient-aligned feedback under round-3 settings, and the template-mechanism diagnostics
 m22_crl_sym_s0 experiments/m18_repair.py --rule crl_sym --seed 0 --tag m22
 m22_crl_sign_s0 experiments/m18_repair.py --rule crl_sign --seed 0 --tag m22

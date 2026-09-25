@@ -760,6 +760,33 @@ router quality (share of inputs routed to the expert with the lowest loss), and 
 step. The claim to test is that (c) gives better routers than (a–b) at far less compute than
 (d).
 
+## 20. The two-channel neuron: counterfactuals as a second kind of spike
+
+The residue machinery (store Δ, compare, weight by exp(−Δ/σ)) can be replaced by ordinary
+event mechanics that fit the substrate:
+
+- **Factual channel.** The neuron races as before; inhibition stops its factual potential.
+- **Shadow channel.** The same neuron keeps integrating, uninhibited, and emits a *shadow
+  spike* when it would have crossed. Time orders the near misses for free (the race is a
+  sleep sort); a window after the group's decision bounds the cost.
+- **Downstream.** Real spikes drive the race; shadow spikes drive a separate compartment that
+  never affects the decision, so the counterfactual forward pass of the losers propagates
+  layer by layer *as spikes*, along exactly the paths fired-only credit cannot see.
+
+Eligibility becomes binary and time-selected: fired, or shadow-fired within the window.
+
+**Relation to MoE and straight-through.** Weighted (soft) MoE keeps losing experts in the
+forward pass with small gates, so gradients reach them, but they perturb the output and all
+experts run. The two-channel neuron separates the roles: losers contribute zero to the decision
+and fully to learning. This is the straight-through pattern (hard forward, soft backward), except
+the backward path is the real counterfactual continuation of the losers rather than a surrogate
+derivative, and it is sparse (near misses only). Biological analogues to credit: burst
+multiplexing (Payeur et al. 2021) and segregated-dendrite learning (Guerguiev et al. 2017).
+
+**Debug evidence (depth 3, 5k images, 1 epoch, one seed):** shadow neuron with window 0.4:
+0.698; residue weighting: 0.649; shadow window 0.05/0.15: 0.62; hard Δ window: 0.584; sampled
+binary eligibility: 0.548; fired-only: 0.525. **(test M23)**, queued at full size with 2 seeds.
+
 ## Tests
 
 | | Claim | Test |
@@ -782,6 +809,7 @@ step. The claim to test is that (c) gives better routers than (a–b) at far les
 | **M16** | knowing the exact unravelling V_n(τ) makes local learning clearly better | oracle proximal-projection learner vs crl_fa, fired-only, M13 (small nets) |
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
+| **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
 | **M20** | shadow events in the event engine reproduce the batch beam exactly, asynchronously | equality with M19 per sample; extra events and per-node branch state vs beam width |
