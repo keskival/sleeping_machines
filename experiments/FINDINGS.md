@@ -20,6 +20,13 @@ existing routing and reduces exploration (balance 0.88 vs 0.97). Routing is a ba
 improve when pulled (THEORY §15, §19); a useful routing term must value an alternative's
 *learning potential*, not just its present loss. *Next:* an optimistic or lookahead variant
 (the alternative's loss after one hypothetical update), before any MoE claim.
+**Follow-up (lookahead, 10 seeds):** valuing the alternative after one hypothetical step on the
+input removes the harm: 0.864 ± 0.018 (95% CI) vs gate + load balancing 0.866 ± 0.012 (paired
+difference −0.002 ± 0.022, 6/10 wins), gate 0.855 ± 0.017, dense top-2 0.738 ± 0.021. At 3 seeds
+it had looked like a win (0.865 vs 0.843); 10 seeds show a tie, at twice the expert compute.
+*Learned:* the myopia diagnosis is right (lookahead fixes it), but on this task the counterfactual
+routing gradient does not beat the standard remedy. No MoE claim.
+
 
 **E15 (debug size) — credit percolation with local layer-by-layer feedback.** Depth 3, width
 200, 5k images, 1 epoch. Reach per layer (input side → output side): fan-in 16 counterfactual

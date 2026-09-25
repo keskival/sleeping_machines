@@ -114,8 +114,13 @@ class MoE:
             Lc = -np.log(np.maximum(p[rows, y], 1e-9))
             for j in range(1, a.shadow + 1):
                 alt = order[:, j]
-                pa = softmax(g[rows, alt][:, None] * self.logits(x, alt))
+                ga = g[rows, alt][:, None]
+                ua = self.logits(x, alt)
+                pa = softmax(ga * ua)
                 self.runs += n
+                if a.lookahead:                                      # the alternative's loss after one step
+                    step = lr * (x * x).sum(1, keepdims=True) * ga   # on this input: u' = u − lr·|x|²·g·(p − 1_y)
+                    pa = softmax(ga * (ua - step * (pa - onehot)))
                 La = -np.log(np.maximum(pa[rows, y], 1e-9))
                 z = (s[rows, c] - s[rows, alt]) / a.sigma
                 rho = np.exp(-z) / (1 + np.exp(-z)) ** 2 / a.sigma   # logistic density at the margin
@@ -158,7 +163,7 @@ def main(a):
               f"balance {bal:.3f} ({time.time() - t0:.0f}s)", flush=True)
     res = {"config": vars(a), "curve": curve, **curve[-1], "expert_runs_per_sample": m.runs / (a.epochs * len(ytr))}
     os.makedirs(OUT, exist_ok=True)
-    with open(os.path.join(OUT, f"moe_{a.task}_{a.router}_m{a.shadow}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
+    with open(os.path.join(OUT, f"moe_{a.task}_{a.router}_m{a.shadow}{'_look' if a.lookahead else ''}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
 
 
@@ -166,6 +171,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--router", default="boundary", choices=("gate", "gate_lb", "boundary", "top2"))
     ap.add_argument("--shadow", type=int, default=1, help="near-miss experts run in shadow (boundary)")
+    ap.add_argument("--lookahead", type=int, default=0, help="value alternatives after one hypothetical step")
     ap.add_argument("--sigma", type=float, default=1.0, help="routing noise scale for the boundary density")
     ap.add_argument("--lb", type=float, default=0.01, help="load-balancing coefficient (gate_lb)")
     ap.add_argument("--experts", type=int, default=8)
