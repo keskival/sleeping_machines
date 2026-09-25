@@ -357,6 +357,140 @@ suffices when the nearest boundary is within reach; linking or recruiting when i
 (§9, item 5). **(test M15)**: on the E10 new-class stream, a learner that picks the
 cheapest operator vs weight updates alone.
 
+## 12. Knowing the whole unravelling: value messages over time
+
+Each neuron knows its own pending future (its strand), but not what the rest of the
+network would do under each of its alternatives. Suppose it did.
+
+### 12.1 The value of one's own futures
+
+For node n, let **V_n(τ)** be the outcome (the loss, or simply right or wrong with a
+time margin) if n spikes at time τ, where τ = ∞ means "does not spike". Everything
+else responds as the network's own dynamics dictate:
+- in n's group, a new winner cancels the current last winner, and a removed winner lets
+  the next strand fire at its own projected time;
+- downstream, every node's crossing time moves.
+
+The realised history is one point, V_n(τ₀); the counterfactuals are the rest of the
+curve. V_n is piecewise constant or smooth, with jumps where the downstream order
+changes. Those jumps are what gradients cannot see.
+
+### 12.2 The optimal local update
+
+Given V_n, the best move is to reach the best region of V_n at the smallest weight
+change. "Fire by c" and "not before c" are half-spaces (§11.1), so the cost of reaching
+a region is an exact distance d_n(c). The locally optimal update is a proximal step
+over the node's own futures:
+
+    τ* = argmin_τ  V_n(τ) + λ · d_n(τ),   then project w_n onto the half-space for τ*.
+
+This can jump across a flip, which no gradient step can. With exact V_n per node,
+updating one node at a time (the one with the best gain per unit distance: minimal
+disturbance) is safe. Updating many at once needs care, because their effects interact.
+
+### 12.3 Messages: deadlines with values, sent backwards
+
+V_n can be computed without trial runs. A downstream node j that receives n's spike at
+τ crosses at T_j(τ) = (θ + B_j + w_jn τ)/(A_j + w_jn) while τ < T_j, and is unaffected
+otherwise: a linear-fractional, monotone map. The output race's result as a function
+of τ therefore changes only at a few breakpoints, solvable in closed form from each
+output node's own (A, B, w). So the message from the output layer to hidden node n is a
+short list of
+
+    (deadline c, before/after, value change δ)
+
+and the backward pass is itself a set of events in reverse time: "fire before c and
+the loss drops by δ". Deeper layers compose the messages through the same monotone
+time maps, keeping the breakpoints nearest the realised point: a **beam of futures**.
+Nodes too far from any breakpoint receive nothing. The backward pass is as sparse as
+the near misses.
+
+Compared with backprop:
+
+| | backprop / EventProp | unravelled messages |
+|---|---|---|
+| message | a slope at the realised point | a function of one's own spike time (breakpoints + values) |
+| sees flips | no | yes (they are the breakpoints) |
+| update | small step along the slope | projection onto the best reachable half-space |
+| sparsity | every node on the path | nodes with a breakpoint within reach |
+
+What is exact and what is approximate: V_n is exact for one node varying with
+everything else responding, i.e. exact in magnitude and first-order in the *number* of
+nodes that change (§6). Coalitions of nodes that matter only together would need
+messages to groups, which is where the k-winner groups are a natural unit.
+
+### 12.4 Tests
+
+- **M16 (value of the information).** With V_n computed exactly by re-running the
+  downstream race for candidate spike times (an oracle, on small networks), learn by the
+  proximal projection of 12.2. Compare with crl_fa, fired-only and the M13 output
+  projection. If the oracle learner is not clearly better, messages are not worth
+  building, and we learn that local information already suffices.
+- **M17 (messages equal the oracle).** Compute V_n from output-node breakpoints (12.3)
+  and check it equals the oracle on every sample. Then measure message size (breakpoints
+  per node) and sparsity (nodes reached).
+
+## 13. The deeper frame: learning as history repair
+
+Sections 2–12 keep translating the race into existing vocabularies: losses, gradients,
+likelihoods, value functions. Start instead from what the machine does.
+
+**Inference produces a history.** The output is not a number but a causal record. Each
+spike was *enabled* by the spikes that brought its node to threshold, and it *cancelled*
+the strands it inhibited. Every event has causes, which are events.
+
+**Every collapse is a branch point.** At each collapse the history could have gone
+another way. The residues say, locally, how close it came.
+
+**Teaching says the history went wrong.** Not "a smooth function missed by x", but "the
+wrong future happened".
+
+So learning is **repair of a causal history**: find the branch point where the history
+should have gone the other way (the *pivotal collapse*), change that one tie by the
+smallest change that flips it, and leave everything else alone. Credit assignment becomes
+a question of actual causation ("but for this event, would the outcome differ?"), not of
+sensitivity (how much does the loss move per unit of weight?).
+
+### 13.1 The repair protocol
+
+A repair request is an event travelling *backwards along the causal links* of the
+history. A node receiving "you should have fired before c" (or "not before c") can:
+
+1. **fix it itself**: reschedule its own strand, at the half-space distance d_n(c) (§11.1);
+2. **delegate to a cause**: "I would reach threshold by c if input h came earlier, or if
+   near-miss h had fired", which is a request to h with a new deadline;
+3. **delegate to a canceller**: "I would have existed if my group's last winner m had
+   fired later", which is a request to m.
+
+Each option comes back with a cost; the cheapest wins and is applied. The whole unravelling
+is never collected anywhere. It is **negotiated** along the history, through events that
+happened or nearly did, and the search stops where repair becomes cheap. Nodes far from
+every branch point never hear of it.
+
+### 13.2 What changes
+
+- **Minimal disturbance by construction.** One pivotal repair per mistake, not a small
+  push to everything that contributed. Most of the network, and most of what it has
+  learnt, is untouched, which bears directly on forgetting (E10).
+- **Structure is part of the repair.** "No node can be moved cheaply enough" is an answer
+  too; the request then becomes *recruit* or *link* (§11.3).
+- **Messages carry deadlines, not slopes.** Deadlines compose along causal links (a later
+  crossing needs an earlier cause), so the backward pass is itself a set of timed events.
+- **Exact at the pivot.** The repair is exact for the chosen branch point (a
+  projection), and verified: the machine can re-run the repaired history, because
+  replaying one race is cheap.
+
+### 13.3 First test
+
+**M18**: on the small network (14×14 MNIST, 60 hidden nodes), a repair learner restricted to
+single-event repairs (the output node itself, or one hidden node that is a cause or a
+canceller), choosing the cheapest repair that is **verified** by re-running the race,
+against crl_fa, fired-only and the M13 projection. Measures: accuracy, repairs per
+mistake, weights touched per mistake, and (on a class-blocked stream) forgetting. If
+single-event repair already rivals the gradient-like rules while touching far fewer
+weights, the protocol is worth building out: multi-step delegation, recruitment as
+a repair, messages instead of verification by re-running.
+
 ## Tests
 
 | | Claim | Test |
@@ -376,6 +510,9 @@ cheapest operator vs weight updates alone.
 | **M13** | half-space projection (rescheduling) learns event order in one shot, with a mistake bound | E4 single layer, then E6; mistakes, accuracy, updates vs the near-miss rule |
 | **M14** | sleep that resolves the near-miss ledger beats data replay at equal storage | E10 streams |
 | **M15** | choosing the cheapest structural operator beats weight updates alone | E10 new-class stream |
+| **M16** | knowing the exact unravelling V_n(τ) makes local learning clearly better | oracle proximal-projection learner vs crl_fa, fired-only, M13 (small nets) |
+| **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
+| **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
 
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
