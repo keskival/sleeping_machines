@@ -5,6 +5,15 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E14 (debug size) — counterfactual credit with depth.** User's hypothesis: the
+counterfactual part matters only beyond one hidden layer. 5k images, 1 epoch, width 200,
+one seed: gap (counterfactual − fired-only) +2.2 at depth 1, +1.9 at depth 2, **+19.3 at
+depth 3** (0.630 vs 0.437). Share of hidden nodes receiving credit: counterfactual 29% / 44–62%
+/ 54–78% by depth, fired-only 17% / 24% / 27–29%. *Learned (tentatively):* fired-only credit
+collapses with depth because it cannot reach nodes whose influence runs through events that did
+not happen; counterfactual credit keeps deep race networks trainable. Accuracy still falls with
+depth at this training length. Full runs (2 seeds, 3 epochs, width 400, plus frozen) queued next.
+
 **E13a (debug size) — reward only.** On 2k images, 2 epochs: near-miss guess 0.30,
 reward-modulated winner-only 0.19, pool policy gradient 0.15, supervised reference 0.59.
 *Learned (tentatively):* spreading credit over the close calls when wrong roughly doubles
