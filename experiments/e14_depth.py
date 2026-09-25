@@ -66,6 +66,7 @@ class DeepRaceNet:
         self.time_sigma = 0.1
         self.group_conserve = False
         self.pivot_top = False
+        self.share_jac = False
         self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
         self.info_capacity = False
         self.counts = [np.full((h, k), 1.0) for h in widths]
@@ -175,12 +176,16 @@ class DeepRaceNet:
                     # pivotal credit (THEORY §26): the first-order jump of the decision. A spike (real or
                     # projected) matters only if it arrives before its consumer decides; its effect is carried
                     # back through the real forward weights (reciprocal synapses), not a random projection.
+                    def jac(Wm):                                # ∂T_consumer/∂t_input = w/A: the evidence share (§22.1, §24)
+                        if not self.share_jac:
+                            return Wm
+                        return Wm / np.maximum(np.abs(Wm).sum(1, keepdims=True), 1e-9)
                     if carried is None:
-                        delta = s @ self.Wo[:, :self.dims[l + 1]]
+                        delta = s @ jac(self.Wo[:, :self.dims[l + 1]])
                         deadline = st["t_dec"][:, None]
                     else:
                         Wn = self.W[l + 1][:, :self.dims[l + 1]]
-                        delta = carried @ Wn
+                        delta = carried @ jac(Wn)
                         deadline = st["layers"][l + 1]["freeze"].max(1, keepdims=True)
                     # arriving before the consumer decides is itself a boundary: a late spike gets the credit it
                     # would have had in time, weighted by its time residue (how much earlier it had to be)
@@ -296,6 +301,7 @@ def main(a):
     net.info_capacity = bool(a.info_capacity)
     net.group_conserve = bool(a.group_conserve)
     net.pivot_top = bool(a.pivot_top)
+    net.share_jac = bool(a.share_jac)
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -332,7 +338,7 @@ def main(a):
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
-                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
     with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
@@ -356,6 +362,7 @@ if __name__ == "__main__":
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
+    ap.add_argument("--share-jac", type=int, default=0, help="pivotal credit through evidence shares w/A (exact Jacobian)")
     ap.add_argument("--pivot-top", type=int, default=0, help="pivotal credit only for the top hidden layer")
     ap.add_argument("--group-conserve", type=int, default=0, help="§22.3 in hidden races: zero-sum credit per group")
     ap.add_argument("--info-capacity", type=int, default=0, help="§25: learnt capacities from I(fires; class)")

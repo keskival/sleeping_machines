@@ -12,7 +12,9 @@ with random feedback deeper ("pivot at the top"): depth 2 0.896 vs 0.880, depth 
 Failures on the way, each informative: (a) arrival gating created dead-late units (fixed by a
 time-residue weight); (b) pivotal credit through real hidden-to-hidden weights collapses at
 depth 3 (0.10); (c) zero-sum credit within hidden groups breaks even the working rule (0.87 →
-0.10), refuting my explanation of (b). Leads; full-length runs queued.
+0.10), refuting my explanation of (b); (d) the exact race Jacobian (evidence shares w/A, a
+conservative backward flow) does not fix (b) either (depth 3 0.096; depth 2 0.865, worse than
+pivot at the top). The deep path's instability is open. Leads; full-length runs queued.
 
 **M23 at full length (2 seeds, width 400, 3 epochs) — the debug lead did not hold.** Depth 3:
 shadow neuron window 0.4: 0.916 / 0.916; window 0.15: 0.920 / 0.924; sampled binary 0.925 /
