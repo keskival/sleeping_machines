@@ -1,0 +1,28 @@
+{
+ "config": {
+  "epochs": 5,
+  "margin": 0.1,
+  "batch": 32,
+  "cap": 0.01,
+  "c_min": 0.3,
+  "val": 10000,
+  "seed": 0,
+  "tag": "c3_m1"
+ },
+ "curve": [
+  0.8945,
+  0.9045,
+  0.902,
+  0.9085,
+  0.9028
+ ],
+ "test_acc": 0.9028,
+ "corrections_per_epoch": [
+  27317,
+  22328,
+  21329,
+  20962,
+  20440
+ ],
+ "plasticity_total": 13571937
+}

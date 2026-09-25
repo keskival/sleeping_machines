@@ -1,0 +1,22 @@
+{
+ "config": {
+  "rule": "crl_fired_only",
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.782,
+  0.83,
+  0.823
+ ],
+ "acc": 0.823,
+ "repairs": null,
+ "plasticity": 6756978
+}

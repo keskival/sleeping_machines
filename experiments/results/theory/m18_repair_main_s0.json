@@ -1,0 +1,28 @@
+{
+ "config": {
+  "rule": "repair",
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.6845,
+  0.7285,
+  0.749
+ ],
+ "acc": 0.749,
+ "repairs": {
+  "output": 5710,
+  "hidden_fire": 1361,
+  "hidden_silence": 2756,
+  "none": 33,
+  "weights_touched": 271561
+ },
+ "plasticity": 0
+}

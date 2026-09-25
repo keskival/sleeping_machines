@@ -9,3 +9,29 @@
 13:25:56 start m3_sig01
 13:36:11 done m3_sig01 (exit 0)
 13:36:11 start m3_sig10
+13:46:31 done m3_sig10 (exit 0)
+13:46:31 start m13_base_nearmiss
+13:46:56 done m13_base_nearmiss (exit 0)
+13:46:56 start m13_c3_m1
+13:47:26 done m13_c3_m1 (exit 0)
+13:47:26 start m13_c2_m1
+13:47:56 done m13_c2_m1 (exit 0)
+13:47:56 start m13_c5_m1
+13:48:27 done m13_c5_m1 (exit 0)
+13:48:27 start m13_c3_m05
+13:48:57 done m13_c3_m05 (exit 0)
+13:48:57 start m13_c3_m2
+13:49:27 done m13_c3_m2 (exit 0)
+13:49:27 start m13_c3_cap03
+13:49:57 done m13_c3_cap03 (exit 0)
+13:49:57 start m13_c3_b1
+13:51:42 done m13_c3_b1 (exit 0)
+13:51:42 start m18_repair_s0
+13:52:22 done m18_repair_s0 (exit 0)
+13:52:22 start m18_output_only_s0
+13:53:07 done m18_output_only_s0 (exit 0)
+13:53:07 start m18_crl_fa_s0
+13:53:37 done m18_crl_fa_s0 (exit 0)
+13:53:37 start m18_crl_fired_only_s0
+13:54:07 done m18_crl_fired_only_s0 (exit 0)
+13:54:07 start m18_frozen_hidden_s0

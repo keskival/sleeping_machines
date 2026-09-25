@@ -1,0 +1,7 @@
+# 2026-09-25T13:46:56+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.3 --margin 0.1 --tag c3_m1
+projection epoch 1: test 0.8945  corrections 27317  (6s)
+projection epoch 2: test 0.9045  corrections 22328  (11s)
+projection epoch 3: test 0.9020  corrections 21329  (16s)
+projection epoch 4: test 0.9085  corrections 20962  (22s)
+projection epoch 5: test 0.9028  corrections 20440  (27s)
+EXIT 0
