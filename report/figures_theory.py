@@ -197,7 +197,69 @@ def fig_tree():
     return fig
 
 
-FIGS = {"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
+def fig_depth():
+    """E14: accuracy vs depth per credit type, and the share of hidden nodes that receive credit."""
+    runs = [load(p) for p in glob.glob(os.path.join(RES, "e14", "d*_main_s*.json"))]
+    if not runs:
+        return None
+    style = {"crl_fa": ("counterfactual credit", BLUE), "crl_fired_only": ("fired-only credit", ORANGE),
+             "crl_drtp": ("label templates (DRTP)", AQUA), "frozen_hidden": ("frozen hidden", GRAY)}
+    fig, axes = plt.subplots(1, 2, figsize=(6.8, 2.8))
+    for v, (name, c) in style.items():
+        pts = {}
+        for r in runs:
+            if r["config"]["variant"] == v:
+                pts.setdefault(r["config"]["depth"], []).append(r)
+        if not pts:
+            continue
+        ds = sorted(pts)
+        acc = [np.mean([r["acc"] for r in pts[d]]) for d in ds]
+        axes[0].plot(ds, acc, "o-", color=c, label=name)
+        if v != "frozen_hidden":
+            reach = [np.mean([np.mean([x for x in r["credit_reach"] if x is not None]) for r in pts[d]]) for d in ds]
+            axes[1].plot(ds, reach, "o-", color=c)
+    axes[0].set_xlabel("hidden layers")
+    axes[0].set_ylabel("validation accuracy")
+    axes[0].set_xticks([1, 2, 3])
+    axes[0].legend(fontsize=7, loc="lower left")
+    axes[0].set_title("accuracy", fontsize=8.5)
+    axes[1].set_xlabel("hidden layers")
+    axes[1].set_ylabel("share of hidden nodes credited")
+    axes[1].set_xticks([1, 2, 3])
+    axes[1].set_ylim(0, 1)
+    axes[1].set_title("credit reach", fontsize=8.5)
+    n = len({r["config"]["seed"] for r in runs})
+    fig.suptitle(f"E14 · counterfactual credit keeps deep race networks trainable ({n} seed(s))", x=0.02,
+                 ha="left", fontsize=9.5, fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
+def fig_bandit():
+    """E13a: reward-only learning, accuracy per rule."""
+    runs = [load(p) for p in glob.glob(os.path.join(RES, "e13", "bandit_*_main_s*.json"))]
+    if not runs:
+        return None
+    names = {"supervised": "labels (reference)", "nearmiss": "near-miss guess", "rstdp": "reward-modulated",
+             "pool_pg": "pool policy gradient"}
+    rules = sorted({r["config"]["rule"] for r in runs}, key=lambda k: -np.mean(
+        [r["acc"] for r in runs if r["config"]["rule"] == k]))
+    fig, ax = plt.subplots(figsize=(5.4, 2.4))
+    for i, k in enumerate(rules):
+        xs = [r["acc"] for r in runs if r["config"]["rule"] == k]
+        ax.barh(i, np.mean(xs), color=GRAY if k == "supervised" else BLUE, height=0.6)
+        ax.plot(xs, [i] * len(xs), "o", color=INK, ms=3)
+        ax.text(np.mean(xs) + 0.01, i, f"{np.mean(xs):.3f}", va="center", fontsize=7.5)
+    ax.set_yticks(range(len(rules)), [names.get(k, k) for k in rules])
+    ax.invert_yaxis()
+    ax.set_xlim(0, 1)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("held-out accuracy (reward only, except the reference)")
+    ax.set_title("E13a · learning from reward alone")
+    return fig
+
+
+FIGS = {"e14_depth": fig_depth, "e13_bandit": fig_bandit,"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
         "m13_projection": fig_projection, "m18_repair": fig_repair, "history_tree": fig_tree}
 
 
