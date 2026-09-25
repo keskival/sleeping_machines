@@ -311,7 +311,12 @@ class RaceNet:
             s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
         s *= update[:, None]
+        self.apply_signal(st, s)
 
+    def apply_signal(self, st, s):
+        """Deliver an output teaching signal s (samples × outputs): +1 pulls an output
+        earlier, negative values push it later. Hidden credit follows from s."""
+        cfg = self.cfg
         mask2 = self._elig(st["t2"], st["freeze2"])
         self._apply(self.W2, st["idx2"], cfg.eta_out * self.lr_mult * s, mask2, self.W2.shape[1] - 1)
 
