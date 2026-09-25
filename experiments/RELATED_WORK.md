@@ -16,6 +16,8 @@ anything about novelty.
 | gradients through event order; path-local AD gradients (§14) | Differentiable discrete event simulation for queueing networks (Che et al. 2024) | close, from the simulation side; warns that naive softmin smoothing drifts |
 | speculative events (§10, §14.6) | Time Warp / speculative distributed simulation of SNNs (SIGSIM 2022) | speculation for parallel simulation, not for learning |
 | random-feedback hidden credit that works without following the gradient (FINDINGS: alignment puzzle) | feedback alignment (Lillicrap et al. 2016); direct feedback alignment (Nøkland 2016); direct random target projection, DRTP (Frenkel et al. 2021) | our crl_fa is DFA-like; the "template mechanism" hypothesis is essentially DRTP's; tested as variant crl_drtp |
+| credit percolation / trainability threshold (§17) | percolation views of dropout and sparsity (e.g. arXiv 2512.13853); dead neurons and threshold annealing in SNNs; signal propagation / edge of chaos in dense nets | related; a credit-reachability threshold on event graphs moved by near-miss edges was not found |
+| router blind spot in sparse MoE (§17.5) | gradient blocking in top-k routing; SparseMixer (Liu et al. 2023, arXiv 2310.00811); dense backpropagation with default expert outputs (OpenReview 9g285TLTM8); ProbMoE (arXiv 2606.01509) | problem well known; residue-based credit to unselected experts, without running them, is closest in aim to dense backprop with default outputs; the mechanism differs |
 | targets passed down to hidden units | target-based spiking learning (e.g. arXiv 2002.05619); target propagation | related |
 
 ## Not found in these searches
@@ -37,6 +39,12 @@ anything about novelty.
 - Present §11.1's half-space property as a known fact we use, not a discovery.
 
 ## Sources
+
+- https://arxiv.org/pdf/2310.00811 (SparseMixer)
+- https://openreview.net/pdf?id=9g285TLTM8 (dense backpropagation for MoE routing)
+- https://arxiv.org/html/2606.01509v1 (ProbMoE)
+- https://arxiv.org/html/2512.13853v1 (dropout from a percolation perspective)
+- https://arxiv.org/abs/2201.11915 (dead neurons vs sparsity in binarized SNNs)
 
 - https://www.nature.com/articles/s41598-021-91786-z (EventProp)
 - https://iopscience.iop.org/article/10.1088/2634-4386/ada852 (loss shaping)
