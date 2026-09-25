@@ -62,6 +62,8 @@ class DeepRaceNet:
     def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0, fanin_in=0):
         self.cfg, self.k, self.feedback = cfg, k, feedback
         self.rng, self.window, self.nonneg, self.eg = rng, 0.15, False, 0.0
+        self.homeo_mode, self.homeo_rate = "linear", 0.001
+        self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
@@ -183,7 +185,14 @@ class DeepRaceNet:
                 self._apply(self.W[l], L["idx"], coef, mask, self.dims[l], self.M[l])
             if self.nonneg:                                    # no inhibitory weights: a monotone network
                 np.maximum(self.W[l], 0, out=self.W[l])
-            self.th[l] += cfg.homeo * (L["fired"].mean(0) - cfg.winners / cfg.group)
+            target = cfg.winners / cfg.group
+            if self.homeo_mode == "sinkhorn":
+                # M29 (THEORY §25): thresholds are dual potentials of a balanced-usage constraint;
+                # the Sinkhorn dual step is a log-ratio of usage to capacity (running usage estimate)
+                self.usage[l] += 0.02 * (L["fired"].mean(0) - self.usage[l])
+                self.th[l] += self.homeo_rate * np.log(np.maximum(self.usage[l], 1e-3) / target)
+            else:
+                self.th[l] += cfg.homeo * (L["fired"].mean(0) - target)
             np.maximum(self.th[l], 0.05, out=self.th[l])
 
 
@@ -233,6 +242,7 @@ def main(a):
     net.window = a.window
     net.nonneg = bool(a.nonneg)
     net.eg = a.eg
+    net.homeo_mode, net.homeo_rate = a.homeo_mode, a.homeo_rate
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -248,7 +258,17 @@ def main(a):
         curve.append(evaluate(net, tte, yte))
         print(f"depth {a.depth} {a.variant} epoch {ep + 1}: {curve[-1]:.4f} ({time.time() - t0:.0f}s)", flush=True)
     res_diag = code_diagnostics(net, tte)
-    res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag,
+    # balance of hidden usage (normalised entropy of how often each node fires), per layer
+    res_balance = []
+    for L in res_diag:
+        pass
+    t_b, i_b = to_events(tte[:200])
+    for L in net.forward(t_b, i_b)["layers"]:
+        u = L["fired"].mean(0)
+        q = u / max(u.sum(), 1e-9)
+        nz = q[q > 0]
+        res_balance.append(float(-(nz * np.log(nz)).sum() / np.log(len(q))))
+    res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag, "usage_balance": res_balance,
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
     os.makedirs(OUT, exist_ok=True)
@@ -273,6 +293,8 @@ if __name__ == "__main__":
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
+    ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
+    ap.add_argument("--homeo-rate", type=float, default=0.001, help="step of the Sinkhorn (log-ratio) threshold update")
     ap.add_argument("--eg", type=float, default=0.0, help="M28: multiplicative simplex updates with this scale (0 = additive)")
     ap.add_argument("--val", type=int, default=0)
     ap.add_argument("--train-limit", type=int, default=0)
