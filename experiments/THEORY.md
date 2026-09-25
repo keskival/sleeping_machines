@@ -18,7 +18,10 @@ before publication):
 | online eligibility traces | e-prop (Bellec et al. 2020) |
 
 Sections 1–5 restate these in our setting only as far as needed. Section 9 is what
-is ours.
+is ours. See RELATED_WORK.md: race logic and space-time algebra (the forward
+mechanism), spike discontinuity estimation (near-threshold causal credit), the
+EventProp spike creation/deletion work, and Madaline Rule II are the closest prior
+work, and §11.1's linearity in the weights is a known property that we exploit.
 
 ## 1. The state is a pool of possible futures
 
