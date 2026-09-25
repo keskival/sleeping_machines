@@ -742,7 +742,17 @@ this general picture:
 4. **Asynchronous shadows.** Near-miss routes can be executed as tagged shadow events,
    where hardware allows it.
 
-**E16 (designed):** an ordinary, non-spiking MoE with top-1 routing on a small task; router
+**Correction after E16 (myopia).** The boundary term is exact for the *current* alternatives.
+When the alternatives themselves learn from what is routed to them (experts, hidden nodes), an
+unchosen alternative's present loss understates its potential, so the term reinforces existing
+routes and suppresses exploration. In E16 it helped early and hurt later. A routing gradient for
+learning systems must value an alternative's learning potential: for example its loss after one
+hypothetical update on the input (lookahead), or an optimism bonus (as in bandits). This also
+suggests why near-miss credit works in races where it *trains the near-miss node itself* (E6,
+E14): there the counterfactual signal goes to the alternative, making it learn, instead of only
+steering the router toward or away from it.
+
+**E16 (run; see FINDINGS):** an ordinary, non-spiking MoE with top-1 routing on a small task; router
 trained by (a) the standard gate-value gradient, (b) a straight-through estimator,
 (c) the boundary term with the top-m near-miss experts executed in shadow (m = 1, 2) and the
 rest approximated, (d) dense top-2 as a reference. Measures: accuracy, expert load balance,

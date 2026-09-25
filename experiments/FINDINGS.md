@@ -5,6 +5,22 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E16 — counterfactual routing gradient in an ordinary MoE (numpy; 8 linear experts; top-1).**
+A first version showed a dramatic gain for the boundary term. That was an artifact: my gate
+baseline did not implement the exact Switch-style gradient. With exact gradients, on MNIST every
+router collapses to one expert (a single linear classifier already reaches ~0.89, so routing is
+irrelevant there). On a synthetic task that *needs* routing (8 clusters, each with its own linear
+labelling), 3 seeds, 20 epochs: gate + load balancing 0.843 ± 0.015; gate 0.816 ± 0.010;
+boundary with 1 shadow expert 0.757 ± 0.029 (σ 0.3: 0.769; σ 3: 0.639); dense top-2 0.716;
+boundary with 2 shadows 0.661. The boundary term helped early (5 epochs: 0.695 vs 0.652) and hurt
+later. *Learned:* the counterfactual routing gradient is exact for the *current* experts but
+**myopic**: an expert that is not routed an input is not learning from it, so its current loss
+understates what it could become. Mostly the alternative is worse, so the term reinforces the
+existing routing and reduces exploration (balance 0.88 vs 0.97). Routing is a bandit whose arms
+improve when pulled (THEORY §15, §19); a useful routing term must value an alternative's
+*learning potential*, not just its present loss. *Next:* an optimistic or lookahead variant
+(the alternative's loss after one hypothetical update), before any MoE claim.
+
 **E15 (debug size) — credit percolation with local layer-by-layer feedback.** Depth 3, width
 200, 5k images, 1 epoch. Reach per layer (input side → output side): fan-in 16 counterfactual
 0.68/0.51/0.51, fired-only 0.25/0.24/0.21 (above threshold, no decay, as predicted); fan-in 2
