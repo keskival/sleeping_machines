@@ -221,7 +221,7 @@ def fig_depth():
     axes[0].set_xlabel("hidden layers")
     axes[0].set_ylabel("validation accuracy")
     axes[0].set_xticks([1, 2, 3])
-    axes[0].legend(fontsize=7, loc="lower left")
+    axes[0].legend(fontsize=7, loc="upper right")
     axes[0].set_title("accuracy", fontsize=8.5)
     axes[1].set_xlabel("hidden layers")
     axes[1].set_ylabel("share of hidden nodes credited")
@@ -229,7 +229,8 @@ def fig_depth():
     axes[1].set_ylim(0, 1)
     axes[1].set_title("credit reach", fontsize=8.5)
     n = len({r["config"]["seed"] for r in runs})
-    fig.suptitle(f"E14 · counterfactual credit keeps deep race networks trainable ({n} seed(s))", x=0.02,
+    fig.suptitle(f"E14 · the advantage of counterfactual credit grows with depth ({n} seed{'s' if n > 1 else ''})",
+                 x=0.02,
                  ha="left", fontsize=9.5, fontweight="bold")
     fig.tight_layout()
     return fig
