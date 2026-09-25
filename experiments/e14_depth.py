@@ -63,6 +63,9 @@ class DeepRaceNet:
         self.cfg, self.k, self.feedback = cfg, k, feedback
         self.rng, self.window, self.nonneg, self.eg = rng, 0.15, False, 0.0
         self.homeo_mode, self.homeo_rate = "linear", 0.001
+        self.time_sigma = 0.1
+        self.group_conserve = False
+        self.pivot_top = False
         self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
         self.info_capacity = False
         self.counts = [np.full((h, k), 1.0) for h in widths]
@@ -116,7 +119,8 @@ class DeepRaceNet:
             else:                                               # only existing synapses carry events
                 before = t[:, None, :] <= freeze[:, :, None]
                 self.work["synops"] += int((np.transpose(self.M[l][:, idx], (1, 0, 2)) & before).sum())
-            L = dict(t=t, idx=idx, fired=fired, freeze=freeze, snap=np.clip((self.th[l] - v) / self.th[l], 0, None))
+            L = dict(t=t, idx=idx, fired=fired, freeze=freeze, snap=np.clip((self.th[l] - v) / self.th[l], 0, None),
+                     T=np.where(fired, freeze, T))
             if shadow:
                 # the shadow compartment is never inhibited: it integrates real and shadow inputs and
                 # emits a shadow spike when it would have crossed; only near misses (within the window
@@ -139,7 +143,8 @@ class DeepRaceNet:
             winner = np.where(urgent, v2.argmax(1), winner)
         snap2 = np.clip((self.tho - v2) / self.tho, 0, None)
         snap2[winner >= 0, winner[winner >= 0]] = 0
-        return dict(layers=layers, t2=t, idx2=idx, freeze2=freeze2, snap2=snap2, winner=winner, urgent=urgent)
+        return dict(layers=layers, t2=t, idx2=idx, freeze2=freeze2, snap2=snap2, winner=winner, urgent=urgent,
+                    t_dec=t_dec)
 
     def teach(self, st, y):
         cfg = self.cfg
@@ -164,6 +169,25 @@ class DeepRaceNet:
             if cfg.variant != "frozen_hidden":
                 if cfg.variant == "crl_drtp":                 # random projection of the label alone
                     delta = np.eye(self.k, dtype=np.float32)[y] @ self.B[l]
+                elif cfg.variant == "crl_pivot" and carried is not None and self.pivot_top:
+                    delta = s @ self.B[l]                      # deeper layers: random feedback (pivot at the top)
+                elif cfg.variant == "crl_pivot":
+                    # pivotal credit (THEORY §26): the first-order jump of the decision. A spike (real or
+                    # projected) matters only if it arrives before its consumer decides; its effect is carried
+                    # back through the real forward weights (reciprocal synapses), not a random projection.
+                    if carried is None:
+                        delta = s @ self.Wo[:, :self.dims[l + 1]]
+                        deadline = st["t_dec"][:, None]
+                    else:
+                        Wn = self.W[l + 1][:, :self.dims[l + 1]]
+                        delta = carried @ Wn
+                        deadline = st["layers"][l + 1]["freeze"].max(1, keepdims=True)
+                    # arriving before the consumer decides is itself a boundary: a late spike gets the credit it
+                    # would have had in time, weighted by its time residue (how much earlier it had to be)
+                    late = np.clip(L["T"] - deadline, 0, None)
+                    delta = delta * np.exp(-late / self.time_sigma)
+                    ref = np.sqrt((s @ self.B[l]) ** 2).mean() if l < len(self.B) else 1.0
+                    delta = delta * (ref / max(np.sqrt((delta ** 2).mean()), 1e-12))   # DFA-comparable scale
                 elif self.feedback == "local" and carried is not None:
                     delta = carried @ self.R[l + 1]            # only across synapses that exist
                 else:
@@ -180,8 +204,17 @@ class DeepRaceNet:
                 else:
                     elig = np.where(L["fired"], 1.0, np.exp(-L["snap"] / cfg.sigma))
                     elig *= elig >= 0.05
-                coef = cfg.eta_hid * delta * elig
-                carried = delta * elig                         # credit passes only through eligible nodes
+                credit = delta * elig
+                if self.group_conserve:
+                    # §22.3 applied to hidden races: each group is a collapse, so its credit sums to zero:
+                    # pushing one member earlier means pushing its rivals in the group later
+                    b_, h_ = credit.shape
+                    g = credit.reshape(b_, h_ // cfg.group, cfg.group)
+                    e_ = (elig.reshape(b_, h_ // cfg.group, cfg.group) > 0)
+                    mean = (g * e_).sum(2, keepdims=True) / np.maximum(e_.sum(2, keepdims=True), 1)
+                    credit = ((g - mean) * e_).reshape(b_, h_)
+                coef = cfg.eta_hid * credit
+                carried = credit                               # credit passes only through eligible nodes
                 self.reach[l][0] += int((coef != 0).sum())
                 self.reach[l][1] += coef.size
                 mask = self._elig(L["t"], L["freeze"])
@@ -261,6 +294,8 @@ def main(a):
     net.eg = a.eg
     net.homeo_mode, net.homeo_rate = a.homeo_mode, a.homeo_rate
     net.info_capacity = bool(a.info_capacity)
+    net.group_conserve = bool(a.group_conserve)
+    net.pivot_top = bool(a.pivot_top)
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -268,6 +303,10 @@ def main(a):
     curve = []
     t0 = time.time()
     for ep in range(a.epochs):
+        if a.anneal:                                            # continuation from a wide tree to the race
+            frac = ep / max(a.epochs - 1, 1)
+            net.cfg = type(cfg)(**{**vars(cfg), "sigma": float(np.exp((1 - frac) * np.log(a.anneal)
+                                                                    + frac * np.log(a.sigma)))})
         perm = rng.permutation(len(ytr))
         for i in range(0, len(perm), 32):
             ii = perm[i:i + 32]
@@ -293,7 +332,7 @@ def main(a):
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
-                                             ("zs", a.zero_sum or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
     with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
@@ -305,7 +344,8 @@ if __name__ == "__main__":
     ap.add_argument("--depth", type=int, default=2)
     ap.add_argument("--width", type=int, default=400)
     ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden", "crl_drtp",
-                                                             "crl_stoch", "crl_window", "crl_shadow"))
+                                                             "crl_stoch", "crl_window", "crl_shadow", "crl_pivot"))
+    ap.add_argument("--anneal", type=float, default=0.0, help="§21.7: start σ at this value, anneal to --sigma")
     ap.add_argument("--window", type=float, default=0.15, help="near-miss window (crl_window: in Δ; crl_shadow: time)")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--feedback", default="dfa", choices=("dfa", "local"),
@@ -316,6 +356,8 @@ if __name__ == "__main__":
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
+    ap.add_argument("--pivot-top", type=int, default=0, help="pivotal credit only for the top hidden layer")
+    ap.add_argument("--group-conserve", type=int, default=0, help="§22.3 in hidden races: zero-sum credit per group")
     ap.add_argument("--info-capacity", type=int, default=0, help="§25: learnt capacities from I(fires; class)")
     ap.add_argument("--homeo-rate", type=float, default=0.001, help="step of the Sinkhorn (log-ratio) threshold update")
     ap.add_argument("--eg", type=float, default=0.0, help="M28: multiplicative simplex updates with this scale (0 = additive)")

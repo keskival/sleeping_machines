@@ -105,6 +105,13 @@ cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --dept
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
+# §26 pivotal credit (top hidden layer), full length; compare with cons_fa_* (same settings, random feedback)
+pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
+pivot_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 0
+pivot_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 3 --seed 0
+pivot_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 1
+pivot_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 1
+pivot_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 3 --seed 1
 # Round 4: best-so-far combination (depth 2, shadow neuron, credit conservation) dense vs sparse fan-in
 r4_dense experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --tag r4dense
 r4_sparse_32_8 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --fanin-in 32 --fanin 8 --tag r4s32

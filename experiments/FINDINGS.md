@@ -5,6 +5,15 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**Pivotal credit (THEORY §26; debug, 10k images, 2 epochs, output conservation on).** Computing
+the first-order jump through the real output weights, gated by arrival before the decision, for
+the top hidden layer: depth 1 0.921 (0.925 with group conservation) vs 0.895 random feedback;
+with random feedback deeper ("pivot at the top"): depth 2 0.896 vs 0.880, depth 3 0.876 vs 0.870.
+Failures on the way, each informative: (a) arrival gating created dead-late units (fixed by a
+time-residue weight); (b) pivotal credit through real hidden-to-hidden weights collapses at
+depth 3 (0.10); (c) zero-sum credit within hidden groups breaks even the working rule (0.87 →
+0.10), refuting my explanation of (b). Leads; full-length runs queued.
+
 **M23 at full length (2 seeds, width 400, 3 epochs) — the debug lead did not hold.** Depth 3:
 shadow neuron window 0.4: 0.916 / 0.916; window 0.15: 0.920 / 0.924; sampled binary 0.925 /
 0.921; **hard binary window 0.928 / 0.931**; residue weighting (E14) 0.924. Depth 1 shadow 0.951
