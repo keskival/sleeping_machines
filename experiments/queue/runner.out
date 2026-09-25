@@ -105,3 +105,23 @@
 16:01:28 start e14_d3_crl_fired_only_s0
 16:12:48 done e14_d3_crl_fired_only_s0 (exit 0)
 16:12:48 start e14_d3_frozen_hidden_s0
+16:23:13 done e14_d3_frozen_hidden_s0 (exit 0)
+16:23:14 start e14_d1_crl_fa_s1
+16:28:59 done e14_d1_crl_fa_s1 (exit 0)
+16:28:59 start e14_d1_crl_fired_only_s1
+16:33:59 done e14_d1_crl_fired_only_s1 (exit 0)
+16:33:59 start e14_d1_frozen_hidden_s1
+16:38:34 done e14_d1_frozen_hidden_s1 (exit 0)
+16:38:34 start e14_d2_crl_fa_s1
+16:46:45 done e14_d2_crl_fa_s1 (exit 0)
+16:46:45 start e14_d2_crl_fired_only_s1
+16:54:35 done e14_d2_crl_fired_only_s1 (exit 0)
+16:54:35 start e14_d2_frozen_hidden_s1
+17:01:40 done e14_d2_frozen_hidden_s1 (exit 0)
+17:01:40 start e14_d3_crl_fa_s1
+17:12:56 done e14_d3_crl_fa_s1 (exit 0)
+17:12:56 start e14_d3_crl_fired_only_s1
+17:24:06 done e14_d3_crl_fired_only_s1 (exit 0)
+17:24:06 start e14_d3_frozen_hidden_s1
+17:34:01 done e14_d3_frozen_hidden_s1 (exit 0)
+17:34:01 start e14_d4_crl_fa_s0

@@ -313,8 +313,8 @@ def promising_page(st, W):
         "<b>Learning by repairing history</b> (top left, 3 seeds): fix each mistake at its pivotal branch point "
         "with the smallest change. Within ~2 points of gradient-like rules while changing <b>31× fewer weights</b>, "
         "which matters for continual learning (less interference) and for hardware (fewer writes).",
-        "<b>Counterfactual credit pays with depth</b> (top right, full length): no gain with one hidden layer, "
-        "+0.6 points with two, +1.7 with three. Near-miss nodes influence the output only through events that did "
+        "<b>Counterfactual credit pays with depth</b> (top right, full length, 2 seeds): no gain with one hidden "
+        "layer, +1.2 points with two and +1.5 with three, positive for both seeds. Near-miss nodes influence the output only through events that did "
         "not happen, which fired-only credit cannot see.",
         "<b>Shadow spikes and credit conservation</b> (bottom left, debug): letting losing neurons keep integrating "
         "and emit shadow spikes into a separate learning channel, and conserving credit at each race (as the "
