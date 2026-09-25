@@ -44,6 +44,7 @@ events and errors**, **capacity that sleeps**, and **time as a resource**.
 | **E9** | Can hidden layers be made cheaper than an equally accurate dense model? | **viability gate for depth** | small |
 | **E10** | Does recruiting sleeping nodes and consolidating in sleep beat replay at forgetting? | continual-learning claim; the project's name | small |
 | **E11** | Does exact spike-time credit make hidden learning beat the fired-only ablation? | **gate for local deep learning** | small |
+| **E14** | Does counterfactual credit dominate with depth? (depth 1–3 × credit type) | whether depth is where the idea pays | small |
 | **E13** | Races as policies: bandit feedback, reward rate, value as latency | whether RL is the natural home | small |
 | E12 | Extreme classification (10⁴–10⁶ labels) against sparse softmax and hashing | the most industrially relevant claim | medium; needs a dataset and a memory check |
 
