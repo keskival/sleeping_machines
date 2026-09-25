@@ -41,6 +41,21 @@ between predicted and realised time-to-reward.
 - **Prediction:** convergence to the optimal policy, with work proportional to the states
   whose timing changed (event-driven value updates) rather than to all states.
 
+## E13d — a world model trained by the world, and counterfactual actions through it
+
+A world model is supervised learning whose labels the world supplies: the model races over
+predicted next events, and the event that actually arrives is the teacher. All the supervised
+machinery (near-miss credit, repair, tags, asking when unsure) applies, with no human labels;
+the E7 stream learner is its training ground.
+
+- **Counterfactual actions:** a shadow branch for an action not taken runs through the world
+  model, which supplies the outcome the network could not otherwise know.
+- **Sleep as planning:** replaying imagined branches through the model (Dyna-style) in E10's
+  sleep phase consolidates model and policy together.
+- **Test:** gridworlds first. Model-based races with shadow branches vs model-free E13a/c
+  learners, at equal environment experience. Measures: experience needed to reach the optimal
+  policy; work per decision including shadow branches.
+
 ## Protocol
 
 Validation pilots, then 5 seeds. Small models, one job at a time through `run_queue.sh`.
