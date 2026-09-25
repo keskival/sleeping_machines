@@ -1,0 +1,23 @@
+# 2026-09-25T12:54:30+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant single_layer --epochs 10 --tag r3
+single_layer epoch 1: test 0.8783 (5s)
+single_layer epoch 2: test 0.9044 (6s)
+single_layer epoch 3: test 0.8955 (6s)
+single_layer epoch 4: test 0.9023 (6s)
+single_layer epoch 5: test 0.9134 (5s)
+single_layer epoch 6: test 0.9124 (5s)
+single_layer epoch 7: test 0.9152 (5s)
+single_layer epoch 8: test 0.9161 (5s)
+single_layer epoch 9: test 0.9167 (5s)
+single_layer epoch 10: test 0.9209 (5s)
+{
+ "test_acc": 0.9209,
+ "inference_work_per_sample": {
+  "synops": 1145.583,
+  "plasticity": 0.0,
+  "hidden_spikes": 0.0,
+  "input_spikes": 137.6882,
+  "feedback": 0.0,
+  "homeo": 0.0
+ }
+}
+EXIT 0

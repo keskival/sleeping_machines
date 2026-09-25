@@ -80,3 +80,12 @@ accurate dense model, at batch 1 and batched.
 Pilots on the validation split, one seed, 3 epochs at the round-3 settings.
 Confirmatory: test set, 10 epochs, 3 seeds for the chosen configuration and each
 single-mechanism ablation. Run through `run_queue.sh`, one at a time.
+
+## Pilot finding, 2026-09-25 (before any confirmatory run)
+
+**P1 is falsified.** Cascade counter on a network trained on 3k images (crl_fa, round-3
+settings), evaluated on 1000 validation images: 112,614 hidden+output synaptic events
+per image without cascade, 112,532 with it (0.07% saving). Hidden groups finish their
+races before the output decides, because the output needs their spikes. The cost sits
+*before* the decision, so fan-in (P2) and routing (P3) are the only levers. Cascade stays
+in the design (it is free and correct) but is no longer expected to contribute.
