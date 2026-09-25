@@ -15,6 +15,7 @@ anything about novelty.
 | minimal single-unit repair (§13, M18) | Madaline Rule II (Widrow et al. 1988), minimal disturbance | close in spirit; new: time, half-space costs, delegation to causes and cancellers |
 | gradients through event order; path-local AD gradients (§14) | Differentiable discrete event simulation for queueing networks (Che et al. 2024) | close, from the simulation side; warns that naive softmin smoothing drifts |
 | speculative events (§10, §14.6) | Time Warp / speculative distributed simulation of SNNs (SIGSIM 2022) | speculation for parallel simulation, not for learning |
+| random-feedback hidden credit that works without following the gradient (FINDINGS: alignment puzzle) | feedback alignment (Lillicrap et al. 2016); direct feedback alignment (Nøkland 2016); direct random target projection, DRTP (Frenkel et al. 2021) | our crl_fa is DFA-like; the "template mechanism" hypothesis is essentially DRTP's; tested as variant crl_drtp |
 | targets passed down to hidden units | target-based spiking learning (e.g. arXiv 2002.05619); target propagation | related |
 
 ## Not found in these searches

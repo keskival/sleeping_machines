@@ -5,6 +5,13 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**DRTP control (debug size).** Hidden credit from a random projection of the label alone
+(direct random target projection), the pure form of the template mechanism: one hidden layer
+0.54 vs 0.59 for counterfactual credit (close, consistent with templates); **depth 3: 0.20 vs
+0.63**. *Learned (tentatively):* in shallow nets our hidden credit behaves much like label
+templates, but at depth the error-gated, near-miss structure is what keeps race networks
+trainable. That is the distinctive part of the idea. Full runs (M22, E14 with crl_drtp) queued.
+
 **M3 against a smooth race-margin objective, and along training.** Output rule +0.82 against
 the margin objective. Hidden credit: random feedback −0.10, fired-only −0.17, true-weight
 feedback +0.28, sign feedback +0.31 (seed 0; reliability 0.79). Along training (error

@@ -30,7 +30,7 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e6")
 DATA = os.path.join(os.path.dirname(__file__), "..", "data")
 HORIZON = 1.0
 
-VARIANTS = ("crl_sym", "crl_fa", "crl_sign", "crl_fired_only", "frozen_hidden", "single_layer", "mlp")
+VARIANTS = ("crl_sym", "crl_fa", "crl_sign", "crl_fired_only", "crl_drtp", "frozen_hidden", "single_layer", "mlp")
 
 
 # ── Spike encodings ───────────────────────────────────────────────────────────
@@ -314,6 +314,7 @@ class RaceNet:
             s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
         s *= update[:, None]
+        st["target"] = y
         self.apply_signal(st, s)
 
     def apply_signal(self, st, s):
@@ -333,7 +334,12 @@ class RaceNet:
                 B = np.sign(B) * np.abs(B).mean()
         else:
             B = self.B
-        delta = s @ B                                      # feedback events o -> h
+        if cfg.variant == "crl_drtp":                      # DRTP: a random projection of the label alone,
+            onehot = np.zeros_like(s)                      # on every sample (Frenkel et al. 2021)
+            onehot[np.arange(len(s)), st["target"]] = 1.0
+            delta = onehot @ B
+        else:
+            delta = s @ B                                  # feedback events o -> h
         fired = st["fired"]
         if cfg.variant == "crl_fired_only":
             elig1 = fired.astype(np.float32)
