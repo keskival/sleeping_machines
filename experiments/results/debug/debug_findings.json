@@ -1,0 +1,12 @@
+{
+ "_note": "Single-seed debug runs (small data, 1 epoch), recorded from FINDINGS.md 2026-09-25. Exploratory evidence only.",
+ "conservation_depth3": {"setting": "depth 3, width 200, 5k images, 1 epoch",
+   "residue weighting": [0.649, 0.746], "shadow neuron": [0.698, 0.782]},
+ "sparse_fanin": {"setting": "E9 single hidden layer, 3k images, 1 epoch",
+   "dense": {"synops": 113878, "acc": 0.792}, "fan-in 32": {"synops": 8101, "acc": 0.817}},
+ "sparse_deep": {"setting": "depth 2, shadow + conservation, 3k images, 1 epoch",
+   "dense": {"synops": 89183, "acc": 0.799}, "fan-in 32/8": {"synops": 4044, "acc": 0.715}},
+ "depth3_variants": {"setting": "depth 3, width 200, 5k images, 1 epoch",
+   "fired-only": 0.525, "sampled binary": 0.548, "hard window": 0.584, "residue weighting": 0.649,
+   "shadow neuron": 0.698, "residue + conservation": 0.746, "shadow + conservation": 0.782}
+}

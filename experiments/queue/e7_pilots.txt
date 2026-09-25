@@ -105,6 +105,10 @@ cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --dept
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
+# Round 4: best-so-far combination (depth 2, shadow neuron, credit conservation) dense vs sparse fan-in
+r4_dense experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --tag r4dense
+r4_sparse_32_8 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --fanin-in 32 --fanin 8 --tag r4s32
+r4_sparse_64_16 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --fanin-in 64 --fanin 16 --tag r4s64
 # M22: gradient-aligned feedback under round-3 settings, and the template-mechanism diagnostics
 m22_crl_sym_s0 experiments/m18_repair.py --rule crl_sym --seed 0 --tag m22
 m22_crl_sign_s0 experiments/m18_repair.py --rule crl_sign --seed 0 --tag m22

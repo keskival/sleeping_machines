@@ -35,7 +35,7 @@ class DeepRaceNet:
     _apply = RaceNet._apply
     _elig = RaceNet._elig
 
-    def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0):
+    def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0, fanin_in=0):
         self.cfg, self.k, self.feedback = cfg, k, feedback
         self.rng, self.window, self.nonneg = rng, 0.15, False
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
@@ -43,11 +43,13 @@ class DeepRaceNet:
         for l, h in enumerate(widths):
             W = np.zeros((h, dims[l] + 1), np.float32)
             M = None
-            if fanin and l > 0:                                    # sparse hidden-to-hidden connectivity
+            f = fanin if l > 0 else fanin_in                       # sparse connectivity (inputs: fanin_in)
+            if f:
                 M = np.zeros((h, dims[l] + 1), bool)
+                live = np.flatnonzero(drive > 0) if l == 0 else np.arange(dims[l])
                 for n in range(h):
-                    M[n, rng.choice(dims[l], min(fanin, dims[l]), replace=False)] = True
-                expected_l = expected * min(fanin, dims[l]) / dims[l]
+                    M[n, rng.choice(live, min(f, len(live)), replace=False)] = True
+                expected_l = expected * min(f, len(live)) / len(live)
             else:
                 expected_l = expected
             mu = 1.0 / (cfg.hid_frac * expected_l)
@@ -80,7 +82,11 @@ class DeepRaceNet:
             T, over, v_at = layer_race(t, idx, W, self.th[l], "ramp")
             fired, freeze = group_race(T, over, W.shape[0] // cfg.group, cfg.winners)
             v, n_before = v_at(freeze)
-            self.work["synops"] += int(n_before.sum())
+            if self.M[l] is None:
+                self.work["synops"] += int(n_before.sum())
+            else:                                               # only existing synapses carry events
+                before = t[:, None, :] <= freeze[:, :, None]
+                self.work["synops"] += int((np.transpose(self.M[l][:, idx], (1, 0, 2)) & before).sum())
             L = dict(t=t, idx=idx, fired=fired, freeze=freeze, snap=np.clip((self.th[l] - v) / self.th[l], 0, None))
             if shadow:
                 # the shadow compartment is never inhibited: it integrates real and shadow inputs and
@@ -161,7 +167,7 @@ def code_diagnostics(net, times):
     """Early-evidence monopoly check (THEORY §18): per hidden layer, the mean absolute
     correlation between nodes' firing across samples (redundancy), and the share of the
     layer's input events integrated before its nodes froze (evidence used)."""
-    t, idx = to_events(times)
+    t, idx = to_events(times[:200])                      # small batch: arrays are samples × nodes × events
     st = net.forward(t, idx)
     out = []
     for L in st["layers"]:
@@ -199,7 +205,7 @@ def main(a):
     ttr, tte = latency_code(xtr), latency_code(xte)
     drive = np.where(np.isfinite(ttr), HORIZON - ttr, 0).mean(0)
     rng = np.random.default_rng(a.seed)
-    net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin)
+    net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in)
     net.window = a.window
     net.nonneg = bool(a.nonneg)
     if net.nonneg:
@@ -216,7 +222,7 @@ def main(a):
             net.teach(net.forward(t, idx), ytr[ii])
         curve.append(evaluate(net, tte, yte))
         print(f"depth {a.depth} {a.variant} epoch {ep + 1}: {curve[-1]:.4f} ({time.time() - t0:.0f}s)", flush=True)
-    res_diag = code_diagnostics(net, tte[:1000])
+    res_diag = code_diagnostics(net, tte)
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag,
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
@@ -238,6 +244,7 @@ if __name__ == "__main__":
     ap.add_argument("--feedback", default="dfa", choices=("dfa", "local"),
                     help="E15: dfa = output error to every layer; local = layer by layer along existing synapses")
     ap.add_argument("--fanin", type=int, default=0, help="E15: hidden-to-hidden fan-in (0 = dense)")
+    ap.add_argument("--fanin-in", type=int, default=0, help="input-to-first-hidden fan-in (0 = dense)")
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
