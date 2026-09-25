@@ -1,0 +1,13 @@
+     K model      acc   inf work  learn work  inputs used
+   256 race     0.951     1038.4        21.4         0.78
+   256 sparse   0.988     1341.7      1349.8          nan
+   256 dense      nan     5427.2     10854.4          nan
+  1024 race     0.906     4118.3        29.0         0.78
+  1024 sparse   0.980     5303.1      5325.3          nan
+  1024 dense      nan    21708.8     43417.6          nan
+  4096 race     0.992     4214.4        18.1         0.78
+  4096 sparse   0.997     5401.6      5437.3          nan
+  4096 dense      nan    86835.2    173670.4          nan
+ 16384 race     0.998     4224.7        17.7         0.78
+ 16384 sparse   0.998     5425.6      5469.5          nan
+ 16384 dense      nan   347340.8    694681.6          nan

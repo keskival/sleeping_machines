@@ -1,0 +1,32 @@
+# E6 control missing from round 3 (full test set, preregistered protocol of round 3)
+e6_single_layer_r3 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant single_layer --epochs 10 --tag r3
+# Stage 0: does one frame per update match minibatches? (validation split, one pass, 3 seeds)
+s0_b32_s0 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 0
+s0_b1_s0  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 0
+s0_b32_s1 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 1
+s0_b1_s1  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 1
+s0_b32_s2 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 2
+s0_b1_s2  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 2
+# E7 pilots, validation split, seed 0
+p_ep_full     experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --tag p_ep_full
+p_ep_prior2   experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --prior 0.2 --tag p_ep_prior2
+p_ep_prior4   experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --prior 0.4 --tag p_ep_prior4
+p_ep10_base   experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --tag p_ep10_base
+p_ep10_carry  experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --carry 1 --tag p_ep10_carry
+p_ep10_cont1  experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --continuity 0.001 --tag p_ep10_cont1
+p_ep10_cont3  experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --continuity 0.003 --tag p_ep10_cont3
+p_ep10_cc     experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --carry 1 --continuity 0.001 --tag p_ep10_cc
+p_ep10_ask    experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --label-rate 0.1 --carry 1 --labels ask --tag p_ep10_ask
+p_sh10_carry  experiments/e7_stream.py race --val 10000 --frames 10000 --order shuffled --label-rate 0.1 --carry 1 --tag p_sh10_carry
+p_sh10_cont1  experiments/e7_stream.py race --val 10000 --frames 10000 --order shuffled --label-rate 0.1 --continuity 0.001 --tag p_sh10_cont1
+p_d2_tags     experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --delay 2 --tag p_d2_tags
+p_d2_notags   experiments/e7_stream.py race --val 10000 --frames 10000 --order episodes --delay 2 --tags 0 --tag p_d2_notags
+p_bl_base     experiments/e7_stream.py race --val 10000 --frames 10000 --order blocked --length 1 --tag p_bl_base
+p_bl_cons10   experiments/e7_stream.py race --val 10000 --frames 10000 --order blocked --length 1 --consolidation 10 --tag p_bl_cons10
+p_bl_cons100  experiments/e7_stream.py race --val 10000 --frames 10000 --order blocked --length 1 --consolidation 100 --tag p_bl_cons100
+p_iid_full    experiments/e7_stream.py race --val 10000 --frames 10000 --order iid --tag p_iid_full
+m_iid_full    experiments/e7_stream.py mlp --val 10000 --frames 10000 --order iid --tag p_iid_full
+m_ep10_carry  experiments/e7_stream.py mlp --val 10000 --frames 10000 --order episodes --label-rate 0.1 --carry 1 --tag p_ep10_carry
+m_ep10_ask    experiments/e7_stream.py mlp --val 10000 --frames 10000 --order episodes --label-rate 0.1 --carry 1 --labels ask --tag p_ep10_ask
+m_bl_base     experiments/e7_stream.py mlp --val 10000 --frames 10000 --order blocked --length 1 --tag p_bl_base
+m_bl_replay   experiments/e7_stream.py mlp --val 10000 --frames 10000 --order blocked --length 1 --replay 1000 --tag p_bl_replay

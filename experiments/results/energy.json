@@ -76,9 +76,62 @@
  "e6": {
   "race": [
    {
+    "name": "crl_fa_r3",
+    "variant": "crl_fa",
+    "round": 3,
+    "patch": 0,
+    "hidden": 1000,
+    "winners": 3,
+    "acc": 0.9591,
+    "curve": [
+     0.9391,
+     0.9496,
+     0.9511,
+     0.9551,
+     0.9582,
+     0.9586,
+     0.96,
+     0.9595,
+     0.9596,
+     0.9591
+    ],
+    "counts_inference": {
+     "synops": 108204.8593,
+     "spikes": 436.6773
+    },
+    "counts_training": {
+     "synops": 65209072378,
+     "spikes": 260257155,
+     "plasticity": 4367868197
+    },
+    "inference_J": {
+     "event_ideal": 1.4153967168999998e-07,
+     "event_shared_sram": 1.360154370715e-06,
+     "loihi": 2.55516305003e-06,
+     "clocked_snn": 1.46019567169e-06
+    },
+    "training_J": {
+     "event_ideal": 0.09656140834966,
+     "event_shared_sram": 0.92922127849966,
+     "loihi": 2.0639891918033,
+     "clocked_snn": 0.88775500834966
+    },
+    "matched": {
+     "dense": "MLP 32 hidden (backprop)",
+     "dense_acc": 0.9662,
+     "dense_epochs_to_match": 6,
+     "inference_ratio_vs_int8_batch1": 0.2782428384195725,
+     "inference_ratio_vs_int8_batched": 0.05472997363570472,
+     "training_ratio_vs_fp16": 1.152697520700483,
+     "training_ratio_vs_fp16_batched": 0.42910480641975735,
+     "break_even_synop_pj_batch1": 0.3617156899454442
+    }
+   },
+   {
     "name": "crl_fa",
     "variant": "crl_fa",
     "round": 1,
+    "patch": 0,
     "hidden": 1000,
     "winners": 1,
     "acc": 0.8587,
@@ -130,6 +183,7 @@
     "name": "crl_fa_v2",
     "variant": "crl_fa",
     "round": 2,
+    "patch": 0,
     "hidden": 1000,
     "winners": 3,
     "acc": 0.8889,
@@ -178,9 +232,62 @@
     }
    },
    {
+    "name": "crl_fired_only_r3",
+    "variant": "crl_fired_only",
+    "round": 3,
+    "patch": 0,
+    "hidden": 1000,
+    "winners": 3,
+    "acc": 0.9607,
+    "curve": [
+     0.9359,
+     0.946,
+     0.9551,
+     0.9527,
+     0.9579,
+     0.9605,
+     0.9595,
+     0.9599,
+     0.9613,
+     0.9607
+    ],
+    "counts_inference": {
+     "synops": 108119.0906,
+     "spikes": 436.592
+    },
+    "counts_training": {
+     "synops": 65207989510,
+     "spikes": 260173568,
+     "plasticity": 1328115234
+    },
+    "inference_J": {
+     "event_ideal": 1.4142800178000002e-07,
+     "event_shared_sram": 1.35907754703e-06,
+     "loihi": 2.55313861016e-06,
+     "clocked_snn": 1.46008400178e-06
+    },
+    "training_J": {
+     "event_ideal": 0.08871727080272,
+     "event_shared_sram": 0.8529702662592199,
+     "loihi": 1.699192988004,
+     "clocked_snn": 0.8799108708027199
+    },
+    "matched": {
+     "dense": "MLP 32 hidden (backprop)",
+     "dense_acc": 0.9662,
+     "dense_epochs_to_match": 7,
+     "inference_ratio_vs_int8_batch1": 0.27846253573787855,
+     "inference_ratio_vs_int8_batched": 0.05477318778815882,
+     "training_ratio_vs_fp16": 1.463718516417873,
+     "training_ratio_vs_fp16_batched": 0.544885921381025,
+     "break_even_synop_pj_batch1": 0.3620012964592422
+    }
+   },
+   {
     "name": "crl_fired_only",
     "variant": "crl_fired_only",
     "round": 1,
+    "patch": 0,
     "hidden": 1000,
     "winners": 1,
     "acc": 0.84,
@@ -232,6 +339,7 @@
     "name": "crl_fired_only_v2",
     "variant": "crl_fired_only",
     "round": 2,
+    "patch": 0,
     "hidden": 1000,
     "winners": 3,
     "acc": 0.8992,
@@ -283,6 +391,7 @@
     "name": "crl_sym",
     "variant": "crl_sym",
     "round": 1,
+    "patch": 0,
     "hidden": 1000,
     "winners": 1,
     "acc": 0.8038,
@@ -334,6 +443,7 @@
     "name": "crl_sym_v2",
     "variant": "crl_sym",
     "round": 2,
+    "patch": 0,
     "hidden": 1000,
     "winners": 3,
     "acc": 0.7041,
@@ -382,9 +492,62 @@
     }
    },
    {
+    "name": "frozen_hidden_r3",
+    "variant": "frozen_hidden",
+    "round": 3,
+    "patch": 0,
+    "hidden": 1000,
+    "winners": 3,
+    "acc": 0.895,
+    "curve": [
+     0.8862,
+     0.8886,
+     0.8911,
+     0.8941,
+     0.8951,
+     0.8958,
+     0.8944,
+     0.895,
+     0.8955,
+     0.895
+    ],
+    "counts_inference": {
+     "synops": 119045.7117,
+     "spikes": 419.5229
+    },
+    "counts_training": {
+     "synops": 70947508380,
+     "spikes": 249686060,
+     "plasticity": 74704249
+    },
+    "inference_J": {
+     "event_ideal": 1.5559847101e-07,
+     "event_shared_sram": 1.496121296335e-06,
+     "loihi": 2.81094712627e-06,
+     "clocked_snn": 1.47425447101e-06
+    },
+    "training_J": {
+     "event_ideal": 0.09292386997641999,
+     "event_shared_sram": 0.89351324303392,
+     "loihi": 1.684199608858,
+     "clocked_snn": 0.88411746997642
+    },
+    "matched": {
+     "dense": "linear, 14x14 input",
+     "dense_acc": 0.9154,
+     "dense_epochs_to_match": 2,
+     "inference_ratio_vs_int8_batch1": 0.019524613450762982,
+     "inference_ratio_vs_int8_batched": 0.0038404639108670646,
+     "training_ratio_vs_fp16": 0.02067595764670089,
+     "training_ratio_vs_fp16_batched": 0.007644416760115086,
+     "break_even_synop_pj_batch1": 0.02538199748599188
+    }
+   },
+   {
     "name": "frozen_hidden",
     "variant": "frozen_hidden",
     "round": 1,
+    "patch": 0,
     "hidden": 1000,
     "winners": 1,
     "acc": 0.7395,
@@ -436,6 +599,7 @@
     "name": "frozen_hidden_v2",
     "variant": "frozen_hidden",
     "round": 2,
+    "patch": 0,
     "hidden": 1000,
     "winners": 3,
     "acc": 0.8313,
@@ -487,6 +651,7 @@
     "name": "single_layer",
     "variant": "single_layer",
     "round": 1,
+    "patch": 0,
     "hidden": 0,
     "winners": 1,
     "acc": 0.8239,
@@ -538,6 +703,7 @@
     "name": "single_layer_v2",
     "variant": "single_layer",
     "round": 2,
+    "patch": 0,
     "hidden": 0,
     "winners": 1,
     "acc": 0.8961,

@@ -1,3 +1,4 @@
 numpy>=2.0
 matplotlib>=3.8
 pytest>=8.0
+reportlab>=4.0

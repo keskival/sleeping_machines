@@ -1,0 +1,19 @@
+crl_fa epoch 1: test 0.9391 (403s)
+crl_fa epoch 2: test 0.9496 (381s)
+crl_fa epoch 3: test 0.9511 (378s)
+crl_fa epoch 4: test 0.9551 (378s)
+crl_fa epoch 5: test 0.9582 (375s)
+crl_fa epoch 6: test 0.9586 (373s)
+crl_fa epoch 7: test 0.9600 (374s)
+crl_fa epoch 8: test 0.9595 (375s)
+crl_fa epoch 9: test 0.9596 (373s)
+crl_fa epoch 10: test 0.9591 (374s)
+{
+ "test_acc": 0.9591,
+ "inference_work_per_sample": {
+  "synops": 108204.8593,
+  "plasticity": 0.0,
+  "hidden_spikes": 297.9891,
+  "input_spikes": 137.6882
+ }
+}
