@@ -1,0 +1,79 @@
+# 2026-09-25T13:15:35+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 2 --tag main
+{
+ "config": {
+  "check": "m3",
+  "hidden": 60,
+  "train": 5000,
+  "pretrain": 3,
+  "samples": 300,
+  "draws": 16,
+  "sigma": 0.03,
+  "coords": 200,
+  "rel_eps": 0.3,
+  "seed": 2,
+  "tag": "main"
+ },
+ "base_error": 0.20697916666666666,
+ "fd_seconds": 617.0,
+ "fd_split_cosine": {
+  "W1": 0.798256965166614,
+  "W2": 0.9538908594916484
+ },
+ "grad_nonzero_frac": {
+  "W1": 0.26,
+  "W2": 0.585
+ },
+ "rules": {
+  "crl_fired_only": {
+   "W1": {
+    "cosine": 0.11835768657489418,
+    "update_nonzero_frac": 0.315
+   },
+   "W2": {
+    "cosine": 0.7336435055011044,
+    "update_nonzero_frac": 0.66
+   }
+  },
+  "crl_fa": {
+   "W1": {
+    "cosine": 0.2335190203384611,
+    "update_nonzero_frac": 0.505
+   },
+   "W2": {
+    "cosine": 0.7336435055011044,
+    "update_nonzero_frac": 0.66
+   }
+  },
+  "crl_sym": {
+   "W1": {
+    "cosine": 0.36150261084538265,
+    "update_nonzero_frac": 0.505
+   },
+   "W2": {
+    "cosine": 0.7336435055011044,
+    "update_nonzero_frac": 0.66
+   }
+  },
+  "crl_sign": {
+   "W1": {
+    "cosine": 0.135914188999929,
+    "update_nonzero_frac": 0.505
+   },
+   "W2": {
+    "cosine": 0.7336435055011044,
+    "update_nonzero_frac": 0.66
+   }
+  },
+  "frozen_hidden": {
+   "W1": {
+    "cosine": null,
+    "update_nonzero_frac": 0.0
+   },
+   "W2": {
+    "cosine": 0.7336435055011044,
+    "update_nonzero_frac": 0.66
+   }
+  }
+ }
+}
+EXIT 0

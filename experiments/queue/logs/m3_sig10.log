@@ -1,0 +1,1 @@
+# 2026-09-25T13:36:11+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --sigma 0.1 --tag sig10
