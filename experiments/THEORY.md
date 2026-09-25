@@ -1051,6 +1051,32 @@ because they carry more useful evidence (as strict load balancing costs quality 
 capacities, the OT marginals, should be learnt, e.g. by maximising the information the code
 carries about the label under an activity budget (a rate–distortion view of the hidden layer).
 
+## 26. Pivotal credit: computing the jump instead of projecting it
+
+The boundary term (§4) weights an alternative by how likely its flip was, ρ(Δ), *and* by how
+much the flip would change the outcome, the jump. Our hidden credit has the first and replaces
+the second by a random feedback projection, which knows nothing about which way a flip would
+push the decision (hence M3's weak alignment). The jump is computable locally:
+
+    δ_n = Σ_o s_o · w_on · [n's spike, real or projected, arrives before the output decides]
+
+(the real output weights carried back along the same synapses), weighted by ρ(Δ_n) for near
+misses. Refinements forced by experiment:
+
+1. **Arrival is itself a boundary.** Gating by arrival (the weaving constraint, §21.9) creates
+   *dead-late* units: a node too late to matter gets no credit and never learns to be earlier.
+   The fix is the boundary term on the arrival surface: a late spike gets its in-time credit
+   weighted by its time residue, e^{−(T − t_dec)/σ_t}.
+2. **Deeper paths fail.** Passing pivotal credit between hidden layers through their real
+   weights collapses at depth 3 (0.10). Conserving credit within hidden groups (zero-sum per
+   group) does not fix it and also breaks the working rule (0.87 → 0.10): deep layers need a net
+   push to stay active. *Open:* why real-weight credit between hidden layers is unstable here
+   (moving targets as weights change, correlated credit across nodes).
+3. **Pivot at the top works.** Pivotal credit for the top hidden layer (exact jump through the
+   output) with random feedback deeper: debug (10k images, 2 epochs, output conservation on):
+   depth 1 0.921 vs 0.895; depth 2 0.896 vs 0.880; depth 3 0.876 vs 0.870. A lead; full-length
+   runs queued.
+
 ## Tests
 
 | | Claim | Test |
