@@ -39,7 +39,7 @@ def to_events(times):
     """Dense (B, D) spike times with inf for silence -> time-sorted (times, idx), padded.
     Padding points at a dummy input D whose weights are kept at zero."""
     b, d = times.shape
-    s = int(np.isfinite(times).sum(1).max())
+    s = max(int(np.isfinite(times).sum(1).max()), 1)     # keep one padding slot when nothing spiked
     order = np.argsort(times, axis=1, kind="stable")[:, :s]
     t = np.take_along_axis(times, order, 1)
     idx = np.where(np.isfinite(t), order, d)
@@ -236,7 +236,8 @@ class RaceNet:
             self.W2[:, :d_in] = rng.normal(mu2, mu2, (k, d_in))
         self.th2 = np.full(k, cfg.theta_out, np.float32)
         self.lr_mult = 1.0
-        self.work = {"synops": 0, "plasticity": 0, "hidden_spikes": 0, "input_spikes": 0, "samples": 0}
+        self.work = {"synops": 0, "plasticity": 0, "hidden_spikes": 0, "input_spikes": 0, "samples": 0,
+                     "feedback": 0, "homeo": 0}
 
     # Forward: one race per layer ------------------------------------------------
 
@@ -324,11 +325,14 @@ class RaceNet:
             elig1 = np.where(fired, 1.0, np.exp(-st["snap1"] / cfg.sigma))
             elig1 *= elig1 >= 0.05
         coef = cfg.eta_hid * self.lr_mult * delta * elig1
+        # feedback events: each output with a nonzero signal reaches only eligible hidden nodes
+        self.work["feedback"] += int(((s != 0).sum(1) * (elig1 != 0).sum(1)).sum())
         mask1 = self._elig(st["t_in"], st["freeze1"])
         self._apply(self.W1, st["idx_in"], coef, mask1, self.d, self.M1)
         if cfg.homeo:
             target_rate = cfg.winners / cfg.group
             self.th1 += cfg.homeo * (fired.mean(0) - target_rate)
+            self.work["homeo"] += int(fired.sum())      # the steady drift is applied lazily, at firing
             np.maximum(self.th1, 0.05, out=self.th1)
 
     def _elig(self, t, freeze):
