@@ -5,6 +5,14 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**Formal consequences, checked (THEORY §22).** (1) Time-shift equivariance is exact: uniform
+input delays of 0.05 and 0.2 leave all 300 decisions and hidden firing sets unchanged, times
+shifted to within 2·10⁻⁷. (2) Weight norm is urgency: ×1.5 fires 0.084 earlier. (3) **Credit
+conservation**, predicted by the dequantized-min derivative: normalising competitor credit
+raises depth-3 accuracy 0.649 → 0.746 (residue weighting) and 0.698 → 0.782 (shadow neuron)
+(debug size, one seed): the largest single gain at depth. (4) Monotone (non-negative-weight)
+networks lose almost nothing (0.848 vs 0.852 at depth 1; 0.745 vs 0.746 at depth 3). Full runs queued.
+
 **M23 (debug size) — sort-free near-miss selection and the two-channel neuron (user's ideas).**
 Depth 3, width 200, 5k images, 1 epoch, one seed. Continuous residue weighting 0.649; hard Δ
 window (binary) 0.584; sampled binary eligibility (Bernoulli(exp(−Δ/σ))) 0.548; fired-only 0.525;
