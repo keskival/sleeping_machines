@@ -31,6 +31,10 @@ m18_output_only_s2 experiments/m18_repair.py --rule output_only --seed 2 --tag m
 m18_crl_fa_s2 experiments/m18_repair.py --rule crl_fa --seed 2 --tag main
 m18_crl_fired_only_s2 experiments/m18_repair.py --rule crl_fired_only --seed 2 --tag main
 m18_frozen_hidden_s2 experiments/m18_repair.py --rule frozen_hidden --seed 2 --tag main
+# M19 (THEORY 14): greedy exact path gradient vs fork terms vs holistic, alignment with the true gradient
+m19_s0 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --tag main
+m19_s1 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 1 --tag main
+m19_s2 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 2 --tag main
 # Stage 0: does one frame per update match minibatches? (validation split, one pass, 3 seeds)
 s0_b32_s0 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 0
 s0_b1_s0  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 0
