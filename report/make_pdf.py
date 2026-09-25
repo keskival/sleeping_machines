@@ -287,7 +287,99 @@ def footer(canvas, doc):
     canvas.restoreState()
 
 
+def png(name, width_mm):
+    from reportlab.lib.utils import ImageReader
+    path = os.path.join(ROOT, "report", "figures", name + ".png")
+    if not os.path.exists(path):
+        return None
+    w, h = ImageReader(path).getSize()
+    return Image(path, width=width_mm * mm, height=width_mm * mm * h / w)
+
+
+def e13_summary():
+    rows = {}
+    for p in glob.glob(os.path.join(RES, "e13", "bandit_*_main_s*.json")):
+        r = load(p)
+        rows.setdefault(r["config"]["rule"], []).append(r["acc"])
+    return {k: (float(np.mean(v)), float(np.std(v)), len(v)) for k, v in rows.items()}
+
+
+def theory_pages(st, W):
+    s = [Paragraph("Theory: collapsing futures, trees of histories, repair", st["h1"]),
+         Paragraph("At any moment the network holds a pool of pending futures: each unfired node's projected "
+                   "firing time. A firing collapses the pool: one future becomes history and inhibition cancels its "
+                   "competitors, each leaving a residue (how close it came). Because the order of events depends on "
+                   "the weights, the network's computation is a <b>tree of possible histories</b>, and a small weight "
+                   "change can move it to another branch. In a dense network the tree has one branch, so the "
+                   "derivative along it is the whole story. Here it is not.", st["body"])]
+    img = png("history_tree", W)
+    if img:
+        s.append(img)
+    s += bullets([
+        "<b>Greedy backprop</b> (EventProp in our setting) follows the realised branch only, and misses how the "
+        "weights move the forks.",
+        "<b>Holistic backprop</b> sums over the close calls, weighted by their probability. Branches are cheap here: "
+        "a fork changes only events downstream of it, and cancellation ends it early. They can run "
+        "asynchronously as <i>shadow events</i> in the same event queue.",
+        "<b>History repair</b> takes the cheapest branch that gives the right answer and changes just that tie. "
+        "Credit becomes a causal question (would the outcome differ but for this event?) rather than a sensitivity.",
+        "Known ingredients (EventProp, perturbed argmax, surrogate gradients, race logic, Madaline Rule II, spike "
+        "discontinuity estimation) are credited in experiments/RELATED_WORK.md; the tree-of-histories reading and "
+        "cancellation residues as its sufficient statistic were not found in prior work.",
+    ], st)
+    s.append(PageBreak())
+    s += [Paragraph("Checking the theory", st["h1"])]
+    for name, text in (
+            ("m3_alignment", "M3 measures, on a small network, whether each rule's update points along the true "
+                             "gradient of expected error (estimated by finite differences under timing noise). The "
+                             "output rule does; hidden credit barely does, for every feedback type."),
+            ("m3_blind_spot", "Most hidden weights have no gradient at all along the realised history. Widening the "
+                              "tree (more timing noise) enlarges the set that gets any signal: the blind spot that "
+                              "greedy backprop cannot see.")):
+        img = png(name, W * 0.92)
+        if img:
+            s += [img, Paragraph(text, st["body"])]
+    s += [Paragraph("A correction", st["h2"]),
+          Paragraph("From M3 we first concluded that the hidden layer learns mainly by its own competition, not from "
+                    "labels. M21 contradicted this: a label-free competitive hidden layer ends far below a frozen "
+                    "random one (0.47 vs 0.66), while label-driven hidden credit adds 16 points. Labels matter to the "
+                    "hidden layer even though their alignment with the gradient of expected error is weak, an open "
+                    "puzzle we are now testing.", st["body"])]
+    s.append(PageBreak())
+    s += [Paragraph("New learning rules", st["h1"])]
+    img = png("m18_repair", W * 0.92)
+    if img:
+        s += [img, Paragraph("History repair on a small network (14×14 MNIST, 60 hidden nodes, 3 seeds): each "
+                             "mistake is fixed by the cheapest verified single-event change, either rescheduling "
+                             "the output or one hidden node. With thin-margin repairs it reaches 0.80 against 0.82 for "
+                             "the gradient-like rules, while changing 31× fewer weights. Label-free hidden learning "
+                             "(grey, bottom right) is the worst of all.", st["body"])]
+    img = png("m13_projection", W * 0.62)
+    if img:
+        s += [img, Paragraph("Learning by rescheduling: \u201cfires by time c\u201d is a half-space in the weights, so a "
+                             "mistake can be fixed by an exact projection with no learning rate. It ties the "
+                             "near-miss rule: a valid reformulation, not an improvement, and it is now the geometric "
+                             "core of history repair.", st["body"])]
+    e13 = e13_summary()
+    if e13:
+        names = {"supervised": "supervised (reference)", "nearmiss": "near-miss guess", "rstdp": "reward-modulated",
+                 "pool_pg": "pool policy gradient"}
+        rows = [["rule (reward only)", "held-out accuracy", "seeds"]] + [
+            [names.get(k, k), f"{m:.3f} ± {sd:.3f}", str(n)] for k, (m, sd, n) in sorted(e13.items(),
+                                                                                          key=lambda kv: -kv[1][0])]
+        s += [Paragraph("Reinforcement learning: reward only (E13a)", st["h2"]), table(rows, [70, 50, 20], st)]
+    else:
+        s += [Paragraph("Reinforcement learning: reward only (E13a)", st["h2"]),
+              Paragraph("In a first small test, crediting the near misses when wrong reached 0.30, against 0.19 for "
+                        "reward-modulated (winner only) learning and 0.59 with labels. Full runs are queued.",
+                        st["body"])]
+    s.append(PageBreak())
+    return s
+
+
 def build():
+    import figures_theory
+    figures_theory.main()
     d = load(os.path.join(ROOT, "report", "data.json"))
     runs = e6_runs()
     st = styles()
@@ -322,14 +414,15 @@ def build():
         "In round 2 its accuracy also caught up (0.998 vs 0.998 at 16k classes).",
         f"<b>Local, event-driven learning reaches about 96% on MNIST (E6, round 3, one seed).</b> "
         f"Counterfactual credit {pct(r3['crl_fa'])}, fired-only {pct(r3['crl_fired_only'])}, against "
-        f"{pct(r3['frozen_hidden'])} for a frozen random hidden layer: learning in the hidden layer adds about "
-        f"6 points.",
+        f"{pct(r3['frozen_hidden'])} for a frozen random hidden layer and {pct(r3['single_layer'])} for a single "
+        f"racing layer: depth adds about 4 points, hidden learning about 6.",
     ], st)
     s += [Paragraph("What does not (yet)", st["h2"])]
     s += bullets([
         "<b>The counterfactual part of hidden credit adds nothing measurable</b> over the fired-only ablation "
-        f"({pct(r3['crl_fa'])} vs {pct(r3['crl_fired_only'])}). The single-layer control under the round-3 "
-        f"settings is {pct(r3['single_layer']) if r3['single_layer'] else 'still queued'}.",
+        f"({pct(r3['crl_fa'])} vs {pct(r3['crl_fired_only'])}). A direct check (M3) finds hidden updates only "
+        "weakly aligned with the true gradient, although label-driven hidden learning is clearly useful.",
+        "<b>Stopping hidden work at the decision saves nothing</b> (0.07%): the cost sits before the decision.",
         "<b>Energy.</b> Only the single racing layer is cheaper than an equally accurate dense model (about 2.4× "
         "at inference). The hidden-layer networks use about 108k synaptic events per image, about 4× the "
         "multiply-accumulates of a 32-unit MLP that is as accurate.",
@@ -339,8 +432,12 @@ def build():
     s += bullets([
         "Learning cost that scales with <i>errors and activity</i> rather than with model size (E4, E5), which is "
         "exactly what a learner living in a stream needs.",
-        "<b>E7</b>, designed and queued: the race network learning from one causal stream with no epochs or "
-        "batches, scarce and late labels, labels it asks for itself, and state carried across frames.",
+        "<b>History repair</b> (learning = fixing the pivotal branch point of the event history) comes within "
+        "~2.3 points of gradient-like rules while changing <b>31× fewer weights</b> (small network, 3 seeds).",
+        "<b>Reward-only learning:</b> crediting the near misses when wrong about doubles what the standard "
+        "reward-modulated spiking rule reaches in a first small test; full runs queued.",
+        "<b>A theory of learning over the tree of possible event histories</b> (greedy backprop, holistic "
+        "backprop and repair as three readings of one tree), and <b>E7</b>: learning from one causal stream.",
     ], st)
     s.append(PageBreak())
 
@@ -377,8 +474,8 @@ def build():
         "Hidden learning matters: the frozen random hidden layer stays at 0.895.",
         "Which hidden credit does not matter yet: fired-only ≈ counterfactual. Symmetric feedback was worst in "
         "rounds 1–2 and was not carried forward.",
-        f"A wider hidden layer (2000 nodes): {pct(h2000) if h2000 else 'running, result pending'}. The round-3 single-layer control is queued; "
-        "until it is in, part of the round-3 gain may come from the new synapse model rather than from depth.",
+        f"A wider hidden layer (2000 nodes): {pct(h2000) if h2000 else 'pending'}, no gain. The single-layer "
+        f"control reaches {pct(r3['single_layer'])}: the new synapse model gave ~2.5 points, depth ~4 more.",
     ], st)
     s += [Paragraph("Energy, measured by counting", st["h2"]), fig_image(fig_energy(), W),
           Paragraph("Operation counts priced with published per-operation energies (45 nm logic and SRAM; measured "
@@ -388,6 +485,8 @@ def build():
                     "100 input events in each of 1000 nodes before inhibition stops them, and that swamps the savings. "
                     "Against batched dense hardware every advantage disappears.", st["body"])]
     s.append(PageBreak())
+
+    s += theory_pages(st, W)
 
     s += [Paragraph("E7 · a learner that lives in a causal stream", st["h1"]),
           Paragraph("Everything above trained the way clocked hardware likes: minibatches, IID epochs, a global "
