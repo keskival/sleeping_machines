@@ -304,6 +304,37 @@ def e13_summary():
     return {k: (float(np.mean(v)), float(np.std(v)), len(v)) for k, v in rows.items()}
 
 
+def promising_page(st, W):
+    s = [Paragraph("Most promising so far", st["h1"])]
+    img = png("promising", W)
+    if img:
+        s.append(img)
+    s += bullets([
+        "<b>Learning by repairing history</b> (top left, 3 seeds): fix each mistake at its pivotal branch point "
+        "with the smallest change. Within ~2 points of gradient-like rules while changing <b>31× fewer weights</b>, "
+        "which matters for continual learning (less interference) and for hardware (fewer writes).",
+        "<b>Counterfactual credit pays with depth</b> (top right, full length): no gain with one hidden layer, "
+        "+0.6 points with two, +1.7 with three. Near-miss nodes influence the output only through events that did "
+        "not happen, which fired-only credit cannot see.",
+        "<b>Shadow spikes and credit conservation</b> (bottom left, debug): letting losing neurons keep integrating "
+        "and emit shadow spikes into a separate learning channel, and conserving credit at each race (as the "
+        "theory's soft-minimum derivative requires), lift depth-3 accuracy from 0.65 to 0.78 in a short run. "
+        "Full runs are queued.",
+        "<b>Sparse connectivity</b> (bottom right, debug): 14–22× fewer synaptic events per image. In one layer it "
+        "even raised accuracy; with two layers it cost accuracy in a very short run. Full runs are queued. For "
+        "scale, the MLP that matched round-3 accuracy (0.96) needs ~25k multiply-accumulates; sparse race networks "
+        "at 4–8k events would win at inference if they hold accuracy.",
+        "<b>Theory that predicts:</b> reading the network's unrealised futures as a dequantized tropical computation "
+        "predicted credit conservation (confirmed in debug) and exact time-shift invariance (confirmed); its "
+        "asynchronous form (shadow events) reproduces batch computation exactly (M20).",
+    ], st)
+    s.append(Paragraph("Evidence levels: \u201c3 seeds\u201d and \u201cfull length\u201d results are confirmatory-grade "
+                       "within their setting; \u201cdebug\u201d results are single short runs, reported as leads.",
+                       st["small"]))
+    s.append(PageBreak())
+    return s
+
+
 def theory_pages(st, W):
     s = [Paragraph("Theory: collapsing futures, trees of histories, repair", st["h1"]),
          Paragraph("At any moment the network holds a pool of pending futures: each unfired node's projected "
@@ -440,7 +471,7 @@ def build():
         "multiply-accumulates of a 32-unit MLP that is as accurate.",
         "<b>Statistics.</b> All E6 numbers are single seeds.",
     ], st)
-    s += [Paragraph("What looks promising", st["h2"])]
+    s += [Paragraph("What looks promising (details on the next page)", st["h2"])]
     s += bullets([
         "Learning cost that scales with <i>errors and activity</i> rather than with model size (E4, E5), which is "
         "exactly what a learner living in a stream needs.",
@@ -452,6 +483,7 @@ def build():
         "backprop and repair as three readings of one tree), and <b>E7</b>: learning from one causal stream.",
     ], st)
     s.append(PageBreak())
+    s += promising_page(st, W)
 
     s += [Paragraph("The idea", st["h1"]),
           Image(os.path.join(ROOT, "report", "figures", "race.png"), width=W * mm, height=W * mm * 500 / 1080),

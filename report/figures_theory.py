@@ -260,7 +260,89 @@ def fig_bandit():
     return fig
 
 
-FIGS = {"e14_depth": fig_depth, "e13_bandit": fig_bandit,"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
+def fig_promising():
+    """The most promising results on one page, each labelled with its evidence level."""
+    dbg_path = os.path.join(RES, "debug", "debug_findings.json")
+    dbg = load(dbg_path) if os.path.exists(dbg_path) else None
+    fig, axes = plt.subplots(2, 2, figsize=(7.0, 5.6))
+
+    # (a) repair: accuracy vs weights changed
+    ax = axes[0, 0]
+    runs = [load(p) for p in glob.glob(os.path.join(RES, "theory", "m18_*_s[0-9].json"))]
+    pick = {("crl_fa", "main"): ("gradient-like credit", ORANGE),
+            ("repair", "homeothin"): ("history repair", BLUE), ("frozen_hidden", "main"): ("frozen hidden", GRAY)}
+    for (rule, tag), (name, c) in pick.items():
+        pts = [((r["repairs"]["weights_touched"] if r["repairs"] else r["plasticity"]), r["acc"]) for r in runs
+               if r["config"]["rule"] == rule and r["config"]["tag"] == tag]
+        if pts:
+            x, y = zip(*pts)
+            ax.plot(x, y, "o", color=c, ms=6)
+            ax.annotate(name, (np.mean(x), np.mean(y)), xytext=(0, 9), textcoords="offset points", ha="center",
+                        fontsize=7.5, color=MUTED)
+    ax.set_xscale("log")
+    ax.set_xlim(1e5, 4e7)
+    ax.set_ylim(0.6, 0.87)
+    ax.set_xlabel("weights changed in training (log)")
+    ax.set_ylabel("accuracy")
+    ax.set_title("Learning by repair: 31× fewer changes\n(3 seeds, small network)", fontsize=8.5)
+
+    # (b) depth gap
+    ax = axes[0, 1]
+    e14 = [load(p) for p in glob.glob(os.path.join(RES, "e14", "d*_main_s*.json"))]
+    gap = {}
+    for d in (1, 2, 3, 4, 5):
+        a = [r["acc"] for r in e14 if r["config"]["depth"] == d and r["config"]["variant"] == "crl_fa"]
+        b = [r["acc"] for r in e14 if r["config"]["depth"] == d and r["config"]["variant"] == "crl_fired_only"]
+        if a and b:
+            gap[d] = 100 * (np.mean(a) - np.mean(b))
+    if gap:
+        ds = sorted(gap)
+        ax.bar(ds, [gap[d] for d in ds], color=BLUE, width=0.55)
+        for d in ds:
+            ax.text(d, max(gap[d], 0) + 0.08, f"{gap[d]:+.1f}", ha="center", fontsize=7.5)
+        ax.axhline(0, color=INK, lw=0.8)
+        ax.set_xticks(ds)
+    ax.set_xlabel("hidden layers")
+    ax.set_ylabel("points: counterfactual − fired-only")
+    ax.set_title("Counterfactual credit pays with depth\n(full length, seed 0)", fontsize=8.5)
+
+    # (c) depth-3 ladder (debug)
+    ax = axes[1, 0]
+    if dbg:
+        lad = dbg["depth3_variants"]
+        names = ["fired-only", "residue weighting", "shadow neuron", "residue + conservation",
+                 "shadow + conservation"]
+        vals = [lad[n] for n in names]
+        cols = [GRAY, ORANGE, AQUA, ORANGE, AQUA]
+        for i, (n, v, c) in enumerate(zip(names, vals, cols)):
+            ax.barh(i, v, color=c, alpha=0.55 if "conservation" not in n else 0.95, height=0.6)
+            ax.text(v + 0.005, i, f"{v:.3f}", va="center", fontsize=7.5)
+        ax.set_yticks(range(len(names)), names, fontsize=7.5)
+        ax.invert_yaxis()
+        ax.set_xlim(0.45, 0.85)
+        ax.grid(axis="y", visible=False)
+    ax.set_xlabel("accuracy, depth 3")
+    ax.set_title("Shadow spikes + credit conservation\n(debug: 1 seed, 1 epoch; full runs queued)", fontsize=8.5)
+
+    # (d) sparse fan-in: events vs accuracy (debug)
+    ax = axes[1, 1]
+    if dbg:
+        for key, c in (("sparse_fanin", BLUE), ("sparse_deep", AQUA)):
+            blk = dbg[key]
+            pts = [(v["synops"], v["acc"], k) for k, v in blk.items() if isinstance(v, dict)]
+            xs, ys, labels = zip(*pts)
+            ax.plot(xs, ys, "o-", color=c, ms=6)
+            for x_, y_, l_ in pts:
+                ax.annotate(l_, (x_, y_), xytext=(4, 4), textcoords="offset points", fontsize=7, color=MUTED)
+    ax.set_xscale("log")
+    ax.set_xlabel("synaptic events per image (log)")
+    ax.set_ylabel("accuracy")
+    ax.set_title("Sparse fan-in: 14–22× fewer events\n(debug; blue 1 layer, green 2 layers)", fontsize=8.5)
+    fig.tight_layout()
+    return fig
+
+
+FIGS = {"promising": fig_promising,"e14_depth": fig_depth, "e13_bandit": fig_bandit,"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
         "m13_projection": fig_projection, "m18_repair": fig_repair, "history_tree": fig_tree}
 
 
