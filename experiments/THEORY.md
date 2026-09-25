@@ -988,6 +988,26 @@ dequantization is the ħ → 0 limit of this picture).
 4. **Renormalisation.** How the effective temperature flows from layer to layer (§22.5): a
    coarse-graining flow that would give the per-layer σ schedule.
 
+## 24. Simplex coordinates: a true description, a wrong learning geometry
+
+Write a node's non-negative weights as w = ρ·u, with urgency ρ = Σw and evidence mix u = w/ρ on
+the simplex. Within a piece, T = θ/ρ + Σ u_i t_i: the neuron is exactly linear in u, and ρ acts
+only through θ/ρ. This explains why non-negative networks lose nothing (§22.2): the simplex view
+is exact for them.
+
+It suggested mirror descent on the simplex (multiplicative, exponentiated-gradient updates of u,
+additive updates of ρ). **Tested (M28, debug): it fails**, near chance at depth 1 and 3 for scales
+1–20 (best 0.31 vs 0.85 additive). Diagnosis: multiplicative updates cannot grow a weight that is
+near zero, and never one that is zero (~16% of initial weights are clamped to zero); but learning
+must *recruit* evidence that currently contributes little: an output node must come to listen to
+hidden nodes it barely hears. The additive rule places its update on the synapses whose inputs
+actually arrived, whatever their current size, which is recruitment.
+
+*Lesson:* the simplex is the right *description* and the wrong *learning geometry* wherever
+the needed evidence is absent. Absent evidence is recruited additively or structurally (synapse
+growth, E9; structure first, §11.3). A hybrid (multiplicative refinement of present evidence,
+additive recruitment of absent evidence) is possible but not the bottleneck now.
+
 ## Tests
 
 | | Claim | Test |
