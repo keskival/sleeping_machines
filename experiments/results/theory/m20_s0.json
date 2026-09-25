@@ -1,0 +1,13 @@
+{
+ "samples": 50,
+ "factual_agreement": 1.0,
+ "branches_per_sample": 6.0,
+ "branch_agreement": 1.0,
+ "work_per_sample": {
+  "scheduled": 611.0,
+  "fired": 62.54,
+  "cancelled": 548.46,
+  "shadow_output_updates": 506.0,
+  "shadow_hidden_updates": 80.64
+ }
+}
