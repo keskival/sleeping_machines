@@ -617,6 +617,19 @@ and basal-ganglia action selection as a race.
 
 Design: E13_RL.md.
 
+## 16. Depth: why counterfactual credit should matter more in deeper networks
+
+With one hidden layer the output reads hidden spikes directly, so the nodes that matter most
+are the ones that fired, and fired-only credit already reaches most of the signal. In deeper
+networks a near-miss node in layer l affects the output only through nodes in layer l+1 that
+its spike *would have* tipped over threshold: a path made of events that did not happen,
+invisible to any credit that follows realised spikes. Along the realised history, credit must
+pass through a fired node at every layer, so the share of weights reachable by pathwise credit
+should shrink roughly multiplicatively with depth, while residues keep reaching near-miss nodes
+at every layer. Prediction: the gap between counterfactual and fired-only credit grows with
+depth, from nothing at one hidden layer (E6 r3, M18). **(test: E14)** A debug run supports it
+(+19 points at depth 3); full runs are queued.
+
 ## Tests
 
 | | Claim | Test |
