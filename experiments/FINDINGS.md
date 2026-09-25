@@ -5,6 +5,12 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M29 — homeostasis as Sinkhorn (debug, depth 3).** Log-ratio (Sinkhorn dual) threshold updates
+balance hidden usage better than the linear rule (0.95–0.98 vs 0.89–0.93) but accuracy drops as
+balance is forced (0.741 / 0.612 / 0.562 vs 0.746). *Learned:* thresholds really act as prices on
+a capacity constraint (THEORY §25), but equal capacities are the wrong target; capacities should
+be learnt.
+
 **E14 complete (2 seeds, width 400, 3 epochs, validation).** Counterfactual vs fired-only vs
 frozen: depth 1 0.949 / 0.947 / 0.873 (gap +0.2; seeds −0.1, +0.4); depth 2 0.942 / 0.930 / 0.708
 (gap **+1.2**, both seeds +1.2); depth 3 0.924 / 0.909 / 0.565 (gap **+1.5**; seeds +1.2, +1.7).

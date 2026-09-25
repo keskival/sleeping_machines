@@ -1008,6 +1008,32 @@ the needed evidence is absent. Absent evidence is recruited additively or struct
 growth, E9; structure first, §11.3). A hybrid (multiplicative refinement of present evidence,
 additive recruitment of absent evidence) is possible but not the bottleneck now.
 
+## 25. Races are auctions: thresholds as prices, a layer as entropic optimal transport
+
+Homeostasis has been an add-on. It follows from the same formalism.
+
+1. **Thresholds are Lagrange multipliers.** Homeostasis enforces a constraint: each node wins
+   with the same long-run frequency (k per group). Minimising loss under that constraint, the
+   dual update is "raise the multiplier of an over-used node": θ ← θ + η(rate − target), exactly
+   the homeostatic rule. Thresholds are dual variables; the target rate is a node's capacity.
+2. **A race is an auction.** Nodes bid by arrival time, the earliest wins, and thresholds act as
+   prices that rise on over-demanded nodes until demand balances: Bertsekas' auction algorithm
+   for assignment.
+3. **At σ > 0 it is entropic optimal transport.** Assigning inputs to nodes with capacities,
+   minimising total crossing time, is optimal transport; its dequantized version is entropic OT,
+   solved by Sinkhorn, with thresholds as dual potentials. A k-winner race layer with homeostasis
+   performs an online, asynchronous, time-coded Sinkhorn. (Credits: Sinkhorn/balanced routing in
+   MoE, e.g. BASE layers; the "conscience" mechanism of competitive learning.)
+
+**Tested (M29, debug, depth 3):** Sinkhorn's log-ratio dual step θ ← θ + η log(rate/target)
+balances usage better than the linear rule, as predicted (normalised usage entropy up to 0.98 vs
+0.89–0.93), but accuracy falls as balance is enforced harder (0.741 / 0.612 / 0.562 at rates
+0.001 / 0.005 / 0.02, vs 0.746 linear). *Lesson:* the structure is right (thresholds are prices on
+a capacity constraint), but equal capacities are the wrong target: some nodes should win more
+because they carry more useful evidence (as strict load balancing costs quality in MoE). The
+capacities, the OT marginals, should be learnt, e.g. by maximising the information the code
+carries about the label under an activity budget (a rate–distortion view of the hidden layer).
+
 ## Tests
 
 | | Claim | Test |
