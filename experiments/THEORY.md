@@ -1072,6 +1072,10 @@ misses. Refinements forced by experiment:
    group) does not fix it and also breaks the working rule (0.87 → 0.10): deep layers need a net
    push to stay active. *Open:* why real-weight credit between hidden layers is unstable here
    (moving targets as weights change, correlated credit across nodes).
+   *Tested and refuted:* using the exact race Jacobian ∂T/∂t_i = w_i/A (evidence shares, which
+   make the backward pass a conservative flow) instead of raw weights: depth 1 0.918, depth 2
+   0.865 (worse than pivot at the top), depth 3 still collapses (0.096). The formal fix is right
+   but is not what is breaking.
 3. **Pivot at the top works.** Pivotal credit for the top hidden layer (exact jump through the
    output) with random feedback deeper: debug (10k images, 2 epochs, output conservation on):
    depth 1 0.921 vs 0.895; depth 2 0.896 vs 0.880; depth 3 0.876 vs 0.870. A lead; full-length
