@@ -237,7 +237,7 @@ class RaceNet:
         self.th2 = np.full(k, cfg.theta_out, np.float32)
         self.lr_mult = 1.0
         self.work = {"synops": 0, "plasticity": 0, "hidden_spikes": 0, "input_spikes": 0, "samples": 0,
-                     "feedback": 0, "homeo": 0}
+                     "feedback": 0, "homeo": 0, "synops_cascade": 0}
 
     # Forward: one race per layer ------------------------------------------------
 
@@ -273,6 +273,14 @@ class RaceNet:
         snap2 = np.clip((self.th2 - v2) / self.th2, 0, None)
         snap2[winner >= 0, winner[winner >= 0]] = 0
         self.work["synops"] += int(n_before2.sum())
+        if self.h:
+            # E9 cascade: the output decision cancels all pending work below it. Hidden events
+            # after t_dec cannot change the decision, so this is what the same pass would cost.
+            stop = np.minimum(freeze1, t_dec[:, None])
+            before = t[:, None, :] <= stop[:, :, None]
+            if self.M1 is not None:
+                before &= np.transpose(self.M1[:, idx], (1, 0, 2))
+            self.work["synops_cascade"] += int(before.sum()) + int(n_before2.sum())
         st.update(t2=t2, idx2=idx2, winner=winner, freeze2=freeze2, snap2=snap2, urgent=urgent)
         return st
 

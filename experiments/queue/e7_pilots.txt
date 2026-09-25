@@ -1,5 +1,20 @@
 # E6 control missing from round 3 (full test set, preregistered protocol of round 3)
 e6_single_layer_r3 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant single_layer --epochs 10 --tag r3
+# Theory check M3 (THEORY.md): which rule follows the true gradient of expected error?
+m3_s0 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --tag main
+m3_s1 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 1 --tag main
+m3_s2 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 2 --tag main
+m3_sig01 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --sigma 0.01 --tag sig01
+m3_sig10 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --sigma 0.1 --tag sig10
+# M13 (THEORY 11.1): learning by half-space projection vs the near-miss rule, single layer, validation
+m13_base_nearmiss experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant single_layer --val 10000 --epochs 5 --tag m13base
+m13_c3_m1 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.3 --margin 0.1 --tag c3_m1
+m13_c2_m1 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.2 --margin 0.1 --tag c2_m1
+m13_c5_m1 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.5 --margin 0.1 --tag c5_m1
+m13_c3_m05 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.3 --margin 0.05 --tag c3_m05
+m13_c3_m2 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.3 --margin 0.2 --tag c3_m2
+m13_c3_cap03 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.03 --c-min 0.3 --margin 0.1 --tag c3_cap03
+m13_c3_b1 experiments/m13_projection.py --val 10000 --epochs 5 --batch 1 --cap 0.01 --c-min 0.3 --margin 0.1 --tag c3_b1
 # Stage 0: does one frame per update match minibatches? (validation split, one pass, 3 seeds)
 s0_b32_s0 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 0
 s0_b1_s0  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 0

@@ -237,6 +237,126 @@ that:
    from the residues, so the rule can tell when its own first-order expansion is
    unreliable, and fall back (e.g. to a smaller step, or to recruitment). **(test M4)**
 
+## 10. Using the futures that never happen
+
+The pool of pending strands is computed anyway: it is what the event scheduler needs.
+At a collapse, every competing strand has a projected crossing time
+τ_n = t_c + (θ − v_n)/A_n, obtained from quantities already present. Today we keep only
+Δ. The pool is worth more than that.
+
+1. **A full likelihood for the price of a race.** A cross-entropy loss normally
+   requires every class's score. Here the pool gives every competitor a projected time
+   at the moment of collapse, so the noisy-race likelihood of §5,
+   −log softmax(−τ/σ)_y, is available **without running any loser to completion**.
+   Its gradient is local (∂τ/∂w_i = (t_i − τ)/A). This replaces the hand-built
+   near-miss rule with the gradient of a proper likelihood, with the same sparsity.
+   **(test M9)**
+
+2. **Anytime probabilistic output.** At any time t before the collapse, softmax(−τ(t)/σ)
+   is a distribution over outcomes that sharpens as evidence arrives. If it is calibrated,
+   the network gives a confidence with every decision, can be interrupted at any moment
+   and still answer, and its "decide now" rule is a threshold on its own confidence.
+   **(test M10)**
+
+3. **Knowing what one doesn't know.** The shape of the pool is a diagnostic:
+   - one strand far ahead: confident;
+   - several close: ambiguous, so ask for a label (E7 "ask" uses a cruder version);
+   - none near threshold: novel, so recruit (E10, M8).
+
+   All three come from one object, instead of three separate heuristics.
+
+4. **Speculation across layers.** A hidden strand that is almost certain to fire
+   (large lead, steep slope) can send its spike downstream *before* it crosses:
+   speculative execution, as in processors. If it is then cancelled, the downstream work is
+   rolled back (counted). In deep event networks latency adds up layer by layer, and
+   speculation trades a little rollback work for overlapping the layers. **(test M11)**
+
+5. **Self-supervision from revisions.** Every input event revises strands. How far
+   a strand moves when evidence arrives is a prediction error that needs no label: a
+   local, unsupervised learning signal (predict your own crossing time better). It fits
+   E7's continuity learning, and it can also say where to look next: sample the input
+   that would move the leading strands most. **(test M12)**
+
+6. **Exact expectations instead of sampling.** Stochastic spiking networks estimate
+   expected gradients by sampling spikes. With the pool, the first-order expectation
+   over alternatives is a sum over projected strands with known probabilities (a
+   Rao-Blackwellised estimator): the boundary term of §4 is evaluated analytically, not
+   sampled. That means lower-variance gradients at no extra forward work.
+
+## 11. Beyond gradients: learning by rescheduling
+
+Sections 2–10 translate the race into the language of losses and gradients, which
+makes claims checkable, but it also pulls every idea back toward existing methods. The race
+has structure that gradient language does not see. Three departures follow.
+
+### 11.1 Timing constraints are half-spaces
+
+For ramp synapses, "node n has fired by time c" means v_n(c) ≥ θ, i.e.
+
+    Σ_i w_ni (c − t_i) ≥ θ     (sum over inputs with t_i < c)
+
+**This is linear in the weights.** For each deadline c and each input history, the
+weights that make n fire in time form a half-space, with normal given by the
+*charges* (c − t_i). Whether an event happens before another is therefore not a soft
+quantity to be pushed by a loss. It is membership in a convex set.
+
+So the teaching event "the answer should have been y, not b" becomes a pair of
+constraints at a meeting time c between the two crossings:
+
+    y:  Σ w_yi (c − t_i) ≥ θ + μ        (fire before c, with margin)
+    b:  Σ w_bi (c − t_i) ≤ θ − μ        (not before c)
+
+and the update is the **exact projection** of each node's weights onto its half-space:
+the smallest change that reorders the two events, in closed form, touching only the
+two nodes involved. There is no loss, no learning rate (the step is set by
+the violation), and no approximation within the history's cell. The meeting time c is
+a free choice: halfway between the two crossings, or at the decision time.
+
+Consequences to test:
+
+- **One-shot correction.** One projection fixes the order for that input, exactly.
+- **A perceptron-style theory in time.** If some weights order every training example
+  correctly with margin μ, projections onto these half-spaces converge in a bounded number
+  of mistakes (the classical argument for projections onto separable half-spaces). That
+  would be a convergence guarantee for learning *event orders*, stated in time.
+- **Hidden layers by target times.** A hidden node's contribution is also a deadline:
+  "spike before c_h, so that the output race goes the right way." Output constraints turn
+  into deadline constraints on hidden spikes (via the same half-spaces one layer up), and
+  each hidden node projects onto its own. Credit becomes **deadlines passed down**, not
+  gradients passed back.
+
+**(test M13)**: projection learning vs the current rule, on E4 (single layer, K up to
+128) and then E6. Measures: mistakes to convergence, accuracy, number of weight updates.
+
+### 11.2 Dreaming the paths not taken
+
+Each collapse leaves residues: the futures that almost happened. Over waking time these
+form a **ledger of near misses**: input history, rival, distance. In sleep (E10), the
+machine does not replay raw data. It **re-runs the near misses** from the ledger with its
+current weights and resolves them: applies the reordering constraints of 11.1 wherever
+the order is still wrong or the margin too thin, and drops ledger entries that are now
+settled. Learning in sleep is about alternatives that never happened, not stored
+experience. This is the literal meaning of the project's name.
+
+**(test M14)**: sleep on the ledger vs sleep on replayed data vs no sleep, at equal
+storage, on class-blocked streams.
+
+### 11.3 Structure before weights
+
+In a race machine the decisive facts are *which* events can trigger which, and in what
+order. Weights only tune the timing. So the primary learning operators should be
+structural:
+- **create a strand** (recruit: a new node for a history no existing strand reaches);
+- **link** (a synapse from an event that should have mattered);
+- **cut** (a synapse whose events never change an order);
+- **reschedule** (11.1).
+
+Gradient methods have only the last kind, and only approximately. A learner that can
+choose among all four decides for each mistake which one is cheapest. Rescheduling
+suffices when the nearest boundary is within reach; linking or recruiting when it is not
+(§9, item 5). **(test M15)**: on the E10 new-class stream, a learner that picks the
+cheapest operator vs weight updates alone.
+
 ## Tests
 
 | | Claim | Test |
@@ -249,6 +369,13 @@ that:
 | **M6** | the rival's side of a cancellation boundary adds useful signal | add the coupled rival term to crl_fa; small-net gradient check, then accuracy |
 | **M7** | shadow continuation trades work for gradient bias | continue cancelled strands for s ∈ {0, 0.1, 0.3, ∞} of the window; bias vs M3's exact gradient, and extra work |
 | **M8** | ρ(Δ_min) ≈ 0 predicts errors gradients cannot fix; recruiting there beats a fixed novelty threshold | E10 with the ρ-triggered switch vs the δ-threshold trigger |
+| **M9** | cross-entropy over projected times trains at least as well as the near-miss rule, with the same sparsity | output layer first (E4 setting), then E6 |
+| **M10** | softmax(−τ(t)/σ) is calibrated at the decision and before it | expected calibration error over time; accuracy of early-stopped decisions |
+| **M11** | speculative spikes cut multi-layer latency for little rollback work | latency vs rollback work as the speculation threshold varies |
+| **M12** | strand-revision error is a useful unsupervised signal | E7 with the revision loss vs continuity learning, at 10% labels |
+| **M13** | half-space projection (rescheduling) learns event order in one shot, with a mistake bound | E4 single layer, then E6; mistakes, accuracy, updates vs the near-miss rule |
+| **M14** | sleep that resolves the near-miss ledger beats data replay at equal storage | E10 streams |
+| **M15** | choosing the cheapest structural operator beats weight updates alone | E10 new-class stream |
 
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
