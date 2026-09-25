@@ -783,6 +783,18 @@ the backward path is the real counterfactual continuation of the losers rather t
 derivative, and it is sparse (near misses only). Biological analogues to credit: burst
 multiplexing (Payeur et al. 2021) and segregated-dendrite learning (Guerguiev et al. 2017).
 
+**The analogy is for understanding, not a destination.** The choices follow from the
+substrate (asynchronous, sparse), not from MoE practice:
+
+| | sparse / weighted MoE (synchronous, dense hardware) | race substrate (asynchronous, sparse) |
+|---|---|---|
+| selection | compare scores, softmax normalisation | first to arrive wins; time orders |
+| losers in the forward pass | small gate weights, every expert runs | contribute nothing to the decision |
+| credit to losers | gradient through small weights, all of them | shadow spikes, near misses within a time window only |
+| cost of the counterfactual | ∝ number of experts | ∝ near misses in the window; ends when the window closes |
+| normalisation | global (softmax over all options) | none; each node sees only its own inputs and events |
+| learning signal | dense, continuous | binary, event-triggered, local |
+
 **Debug evidence (depth 3, 5k images, 1 epoch, one seed):** shadow neuron with window 0.4:
 0.698; residue weighting: 0.649; shadow window 0.05/0.15: 0.62; hard Δ window: 0.584; sampled
 binary eligibility: 0.548; fired-only: 0.525. **(test M23)**, queued at full size with 2 seeds.
