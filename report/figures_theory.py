@@ -323,7 +323,7 @@ def fig_promising():
         ax.set_xlim(0.45, 0.85)
         ax.grid(axis="y", visible=False)
     ax.set_xlabel("accuracy, depth 3")
-    ax.set_title("Shadow spikes + credit conservation\n(debug: 1 seed, 1 epoch; full runs queued)", fontsize=8.5)
+    ax.set_title("Depth 3 variants (debug: 1 seed, 1 epoch)\nshadow lead did NOT hold at full length", fontsize=8.5)
 
     # (d) sparse fan-in: events vs accuracy (debug)
     ax = axes[1, 1]
@@ -350,7 +350,7 @@ def fig_principles():
          [("credit conserved at each race", "lead"), ("near-miss weight = soft-min derivative", "confirmed"),
           ("asynchronous branches exact (M20)", "confirmed")]),  # the soft-min identity is exact maths
         ("P2  Weaving closes the past",
-         [("shadow (unwoven) beats residue (woven)", "lead"), ("collapse = optimal stopping (E2)", "confirmed")]),
+         [("shadow (unwoven) beats residue (woven)", "negative"), ("collapse = optimal stopping (E2)", "confirmed")]),
         ("P3  A race neuron is a weighted\nmean of input times",
          [("exact time-shift equivariance", "confirmed"), ("non-negative nets suffice", "lead"),
           ("multiplicative learning", "negative")]),

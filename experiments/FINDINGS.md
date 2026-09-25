@@ -5,6 +5,20 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M23 at full length (2 seeds, width 400, 3 epochs) — the debug lead did not hold.** Depth 3:
+shadow neuron window 0.4: 0.916 / 0.916; window 0.15: 0.920 / 0.924; sampled binary 0.925 /
+0.921; **hard binary window 0.928 / 0.931**; residue weighting (E14) 0.924. Depth 1 shadow 0.951
+(vs 0.949), depth 2 shadow 0.930 (vs 0.942). *Learned:* the shadow neuron's 5-point debug lead
+reversed with full training (and it costs twice the forward compute); weighting-free, sort-free
+selection by a hard window is as good or slightly better than continuous weighting at depth 3.
+Debug leads from 1-epoch runs are unreliable for rankings; confirm at full length before
+presenting them. (Bug found here: result filenames omitted the window, so the w0.4 depth-3 files
+were overwritten; values recovered from logs; filenames now include every varied setting.)
+
+**E14 depths 4–5 (seed 0).** Counterfactual vs fired-only: depth 4 0.910 vs 0.891 (+1.9),
+depth 5 0.897 vs 0.872 (+2.5). With depths 1–3 (+0.2, +1.2, +1.5, 2 seeds) the gap grows
+monotonically with depth.
+
 **M30 — learnt capacities (debug, depth 3).** Target firing rates proportional to each node's
 information about the label: 0.733 (linear) and 0.736 (log-ratio) vs 0.746 with equal targets.
 *Learned:* no gain from this simple version; the capacity structure holds but this choice of
