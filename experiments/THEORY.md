@@ -886,7 +886,32 @@ the past: once an event is woven at t_c, nothing arriving later can influence it
   rules (§7, E13b); a world model (E13d) could supply the prior over future inputs that decides
   whether waiting is worth it.
 
-### 21.10 Tests
+### 21.10 Layers: one layer's outputs are the next layer's unknown future
+
+For every layer but the first, the "future inputs" of §21.9 are the upstream layer's pending
+strands, not yet woven themselves. The pool is therefore nested: layer l's pool is conditional on
+layer l−1's weaving, which has not happened yet.
+
+1. **Weaving spreads as a front.** A layer weaves only on upstream events already woven; the
+   determined region grows through the network as a causal front, and the output decision is a
+   stopping time composed through the layers.
+2. **The network carries its own forecast.** A hidden layer's prior over inputs still to come
+   is available locally: the upstream pool's projected times. Only the first layer faces an
+   external unknown, so "is waiting worth it?" can be answered inside the network except at
+   the input.
+3. **Speculation across layers.** A downstream node can weave early on near-certain upstream
+   strands (large lead, steep slope) before they fire, and roll back if they do not (§10.4),
+   overlapping layers instead of paying depth × weaving delay.
+4. **Unwoven uncertainty propagates as shadow spikes.** An upstream shadow spike is an input
+   that might have arrived; feeding it into the downstream shadow compartment (as M23 does)
+   propagates the upstream layer's unwoven futures through the downstream one. The two-channel
+   neuron composes across layers into exactly this conditional structure.
+5. **The backward pass respects weaving order.** A downstream event's adjoint reaches only
+   upstream events woven before it through the factual channel; the "might have been" part
+   returns through the shadow channel. Recombination happens where different upstream branches
+   lead to the same downstream woven event.
+
+### 21.11 Tests
 
 - **M24a.** The near-miss weights used by the rules equal ⊕_σ derivatives on real samples (up
   to the first-order truncation).
