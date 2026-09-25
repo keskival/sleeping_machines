@@ -1,0 +1,79 @@
+{
+ "config": {
+  "check": "m3",
+  "objective": "margin",
+  "sigma_o": 0.05,
+  "hidden": 60,
+  "train": 5000,
+  "pretrain": 3,
+  "samples": 300,
+  "draws": 16,
+  "sigma": 0.03,
+  "coords": 200,
+  "rel_eps": 0.3,
+  "seed": 1,
+  "tag": "margin"
+ },
+ "base_error": -0.19136590510606766,
+ "fd_seconds": 622.3,
+ "fd_split_cosine": {
+  "W1": 0.8827652102447332,
+  "W2": 0.9936729712742416
+ },
+ "grad_nonzero_frac": {
+  "W1": 0.335,
+  "W2": 0.58
+ },
+ "rules": {
+  "crl_fired_only": {
+   "W1": {
+    "cosine": 0.08855643060504884,
+    "update_nonzero_frac": 0.305
+   },
+   "W2": {
+    "cosine": 0.7903620422849472,
+    "update_nonzero_frac": 0.56
+   }
+  },
+  "crl_fa": {
+   "W1": {
+    "cosine": 0.20601460999590332,
+    "update_nonzero_frac": 0.42
+   },
+   "W2": {
+    "cosine": 0.7903620422849472,
+    "update_nonzero_frac": 0.56
+   }
+  },
+  "crl_sym": {
+   "W1": {
+    "cosine": 0.3096467621710542,
+    "update_nonzero_frac": 0.42
+   },
+   "W2": {
+    "cosine": 0.7903620422849472,
+    "update_nonzero_frac": 0.56
+   }
+  },
+  "crl_sign": {
+   "W1": {
+    "cosine": 0.3444033568199965,
+    "update_nonzero_frac": 0.4
+   },
+   "W2": {
+    "cosine": 0.7903620422849472,
+    "update_nonzero_frac": 0.56
+   }
+  },
+  "frozen_hidden": {
+   "W1": {
+    "cosine": null,
+    "update_nonzero_frac": 0.0
+   },
+   "W2": {
+    "cosine": 0.7903620422849472,
+    "update_nonzero_frac": 0.56
+   }
+  }
+ }
+}

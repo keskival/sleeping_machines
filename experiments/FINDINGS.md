@@ -5,6 +5,13 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E14 full length, seed 0 (width 400, 3 epochs, validation).** Counterfactual vs fired-only:
+depth 1 0.945 vs 0.946 (−0.1), depth 2 0.940 vs 0.933 (+0.6), depth 3 0.926 vs 0.909 (+1.7);
+frozen hidden 0.875 (d1), 0.712 (d2). *Learned:* the gap grows steadily with depth as predicted
+(§16), but at full training it is ~2 points at depth 3, not the ~19 of the 1-epoch debug run:
+longer training lets fired-only credit partly catch up. Seed 1 and depths 4–5 pending; credit
+conservation (+8–10 in debug) is queued on top of this.
+
 **Formal consequences, checked (THEORY §22).** (1) Time-shift equivariance is exact: uniform
 input delays of 0.05 and 0.2 leave all 300 decisions and hidden firing sets unchanged, times
 shifted to within 2·10⁻⁷. (2) Weight norm is urgency: ×1.5 fires 0.084 earlier. (3) **Credit

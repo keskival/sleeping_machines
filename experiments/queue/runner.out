@@ -99,3 +99,9 @@
 15:33:36 start e14_d2_crl_fired_only_s0
 15:42:07 done e14_d2_crl_fired_only_s0 (exit 0)
 15:42:07 start e14_d2_frozen_hidden_s0
+15:49:22 done e14_d2_frozen_hidden_s0 (exit 0)
+15:49:22 start e14_d3_crl_fa_s0
+16:01:28 done e14_d3_crl_fa_s0 (exit 0)
+16:01:28 start e14_d3_crl_fired_only_s0
+16:12:48 done e14_d3_crl_fired_only_s0 (exit 0)
+16:12:48 start e14_d3_frozen_hidden_s0
