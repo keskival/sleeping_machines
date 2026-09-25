@@ -37,7 +37,7 @@ class DeepRaceNet:
 
     def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0):
         self.cfg, self.k, self.feedback = cfg, k, feedback
-        self.rng, self.window = rng, 0.15
+        self.rng, self.window, self.nonneg = rng, 0.15, False
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
@@ -114,10 +114,15 @@ class DeepRaceNet:
         rival[rows, y] = np.inf
         update = (st["winner"] != y) | (rival.min(1) < cfg.margin) | st["urgent"]
         s = -elig2 * (elig2 >= 0.05)
+        s[rows, y] = 0.0
+        if cfg.zero_sum:                                   # credit conserved at the collapse (THEORY §22)
+            s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
         s *= update[:, None]
         mask2 = self._elig(st["t2"], st["freeze2"])
         self._apply(self.Wo, st["idx2"], cfg.eta_out * s, mask2, self.Wo.shape[1] - 1)
+        if self.nonneg:
+            np.maximum(self.Wo, 0, out=self.Wo)
         carried = None                                             # local feedback, from the top layer down
         for l in reversed(range(len(st["layers"]))):
             L = st["layers"][l]
@@ -146,6 +151,8 @@ class DeepRaceNet:
                 self.reach[l][1] += coef.size
                 mask = self._elig(L["t"], L["freeze"])
                 self._apply(self.W[l], L["idx"], coef, mask, self.dims[l], self.M[l])
+            if self.nonneg:                                    # no inhibitory weights: a monotone network
+                np.maximum(self.W[l], 0, out=self.W[l])
             self.th[l] += cfg.homeo * (L["fired"].mean(0) - cfg.winners / cfg.group)
             np.maximum(self.th[l], 0.05, out=self.th[l])
 
@@ -181,7 +188,7 @@ def evaluate(net, times, y, batch=250):
 
 def main(a):
     cfg = Config(variant=a.variant, winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
-                 homeo=0.001, sigma=a.sigma, seed=a.seed)
+                 homeo=0.001, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
     x, y = mnist("train")
     if a.val:
         xtr, ytr, xte, yte = x[:-a.val], y[:-a.val], x[-a.val:], y[-a.val:]
@@ -194,6 +201,11 @@ def main(a):
     rng = np.random.default_rng(a.seed)
     net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin)
     net.window = a.window
+    net.nonneg = bool(a.nonneg)
+    if net.nonneg:
+        for W in net.W:
+            np.maximum(W, 0, out=W)
+        np.maximum(net.Wo, 0, out=net.Wo)
     curve = []
     t0 = time.time()
     for ep in range(a.epochs):
@@ -227,6 +239,8 @@ if __name__ == "__main__":
                     help="E15: dfa = output error to every layer; local = layer by layer along existing synapses")
     ap.add_argument("--fanin", type=int, default=0, help="E15: hidden-to-hidden fan-in (0 = dense)")
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
+    ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
+    ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--val", type=int, default=0)
     ap.add_argument("--train-limit", type=int, default=0)
     ap.add_argument("--seed", type=int, default=0)

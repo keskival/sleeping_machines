@@ -88,6 +88,23 @@ m23_shadow_w04_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3
 m23_shadow_w015_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_shadow --window 0.15 --seed 1
 m23_stoch_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_stoch --seed 1
 m23_window_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_window --seed 1
+# §22.3 credit conservation (zero-sum) at depth, and the monotone (non-negative) network
+cons_fa_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_fa --zero-sum 1 --seed 0 --tag cons
+cons_shadow_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --tag cons
+cons_fa_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_fa --zero-sum 1 --seed 0 --tag cons
+cons_shadow_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --tag cons
+cons_fa_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 0 --tag cons
+cons_shadow_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 0 --tag cons
+cons_fo_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 0 --tag cons
+nonneg_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 0 --tag nonneg
+cons_fa_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+cons_shadow_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+cons_fa_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+cons_shadow_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
+nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
 # M22: gradient-aligned feedback under round-3 settings, and the template-mechanism diagnostics
 m22_crl_sym_s0 experiments/m18_repair.py --rule crl_sym --seed 0 --tag m22
 m22_crl_sign_s0 experiments/m18_repair.py --rule crl_sign --seed 0 --tag m22

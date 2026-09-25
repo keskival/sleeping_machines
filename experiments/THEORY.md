@@ -919,6 +919,75 @@ layer l−1's weaving, which has not happened yet.
   soft (σ > 0) objective, better as the beam grows.
 - **M24c.** Annealed σ (dequantization continuation) trains at least as well as a fixed σ at depth.
 
+## 22. Induced consequences
+
+### 22.1 A race neuron computes a weighted mean of its input times
+
+Within one piece (fixed set of arrived inputs), a ramp neuron fires at
+T = θ/A + Σ_i (w_i/A) t_i with Σ w_i/A = 1: a weighted mean of input times plus an offset, and
+the race then takes a minimum. The network alternates means and minimums: a *mean–min* network,
+the timing analogue of max-affine (ReLU) networks.
+
+- **Time-shift equivariance (exact).** Delay every input by c and every firing time moves by c;
+  decisions are unchanged. Checked: shifts of 0.05 and 0.2 left all 300 test decisions and all
+  hidden firing sets unchanged, firing times shifted by c to within 2·10⁻⁷ (the deadline is the
+  only thing that breaks it).
+- **Magnitude is urgency, direction is evidence.** Scaling a node's weights by α changes only
+  θ/(αA): the norm sets how early a node tends to fire, the direction sets which evidence it
+  averages. Checked: ×1.5 weights fire 0.084 earlier on average. Homeostasis acts on urgency,
+  credit on direction; learning rules could treat them separately.
+
+### 22.2 Is the network linear?
+
+Piecewise linear in input times, like a ReLU network is piecewise linear in its inputs (and
+nonlinear in the weights through w_i/A). The nonlinearities are built in: the minimum (first to
+fire), k-winner cancellation (existence), causal truncation (inputs after the crossing are
+ignored), and fire-or-not within the window. With only non-negative weights each firing time is a
+convex average, so every output time is monotone in every input time; but the *decision* compares
+outputs, and comparisons of monotone functions carve non-monotone regions. Checked: clamping all
+weights non-negative costs almost nothing (depth 1: 0.848 vs 0.852; depth 3: 0.745 vs 0.746,
+debug size). Excitation-only race networks suffice here: unsigned weights, Dale-compatible.
+
+### 22.3 Credit is conserved at every collapse
+
+∂(⊕_σ)/∂ is a softmax, so the credit a collapse sends to its competitors sums to 1: credit flows
+through the forest like a current, split at races, neither created nor destroyed. The near-miss
+rule as used violates this (competitor credit unnormalised). **Prediction confirmed (debug,
+depth 3):** normalising competitor credit to −1 raises residue weighting 0.649 → 0.746 and the
+shadow neuron 0.698 → 0.782, the largest single gain at depth so far.
+
+### 22.4 The pool's revisions are a free learning signal
+
+Under a correct model of future inputs, the pool's projected outcome probabilities form a
+martingale during one inference. Systematic drift means miscalibration, so the difference between
+the pool's prediction now and after more input is a label-free temporal-difference error inside a
+trial. Training on it should teach the network to anticipate its own collapse: earlier decisions
+at the same accuracy. (Derived form of §10.5.) **(test M25)**
+
+### 22.5 Timing noise accumulates with depth
+
+Jitter propagates and adds across layers, so the effective temperature at the output grows with
+depth, while percolation (§17) wants σ large enough for credit to reach deep layers. That implies
+a per-layer σ schedule rather than one global σ. **(test M26)**
+
+## 23. Tools for aggregate behaviour (from statistical physics)
+
+The system is classical; the fitting toolkit is the Wick-rotated side of quantum mechanics:
+statistical mechanics and Euclidean path integrals, histories weighted by e^{−cost/σ} (Maslov
+dequantization is the ħ → 0 limit of this picture).
+
+1. **Laplace (semiclassical) expansion.** As σ → 0 the sum over histories is dominated by the
+   minimal path, corrections by nearby paths: our hierarchy (realised path, single flips,
+   interacting flips), with an error estimate for truncating at first order.
+2. **Fluctuation–dissipation.** The response of an average to a parameter equals a covariance:
+   ∇E[L] = Cov(L, ∂cost/∂w)/σ. The substrate's own timing noise can estimate gradients by
+   observation: noise as a resource, suited to asynchronous analogue hardware. **(test M27)**
+3. **Mean-field and cavity methods.** Macroscopic quantities of large random race networks
+   (firing fractions, credit reach, the percolation threshold of §17, capacity); §17's recursion
+   is already a mean-field equation.
+4. **Renormalisation.** How the effective temperature flows from layer to layer (§22.5): a
+   coarse-graining flow that would give the per-layer σ schedule.
+
 ## Tests
 
 | | Claim | Test |
@@ -942,6 +1011,9 @@ layer l−1's weaving, which has not happened yet.
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
 | **M24** | the pool is a dequantized tropical computation: near-miss weights = ⊕_σ derivatives; inside–outside on the beam = soft-objective gradient; annealing helps at depth | small nets, M19/M20 machinery |
+| **M25** | intra-trial martingale (TD) consistency of the pool trains earlier decisions at equal accuracy | output race, then E14 |
+| **M26** | a per-layer σ schedule beats a global σ at depth | E14, depth 3 |
+| **M27** | gradients estimated from the substrate's own timing noise (fluctuation–dissipation) | small nets vs M3's finite differences |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
