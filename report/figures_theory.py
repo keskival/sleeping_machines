@@ -343,7 +343,45 @@ def fig_promising():
     return fig
 
 
-FIGS = {"promising": fig_promising,"e14_depth": fig_depth, "e13_bandit": fig_bandit,"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
+def fig_principles():
+    """The five principles, what each predicts, and how far each is established."""
+    rows = [
+        ("P1  Inference is tropical;\nunrealised futures are\nits dequantization",
+         [("credit conserved at each race", "lead"), ("near-miss weight = soft-min derivative", "confirmed"),
+          ("asynchronous branches exact (M20)", "confirmed")]),  # the soft-min identity is exact maths
+        ("P2  Weaving closes the past",
+         [("shadow (unwoven) beats residue (woven)", "lead"), ("collapse = optimal stopping (E2)", "confirmed")]),
+        ("P3  A race neuron is a weighted\nmean of input times",
+         [("exact time-shift equivariance", "confirmed"), ("non-negative nets suffice", "lead"),
+          ("multiplicative learning", "negative")]),
+        ("P4  Credit must reach what\ndid not happen",
+         [("counterfactual gain grows with depth", "confirmed"), ("blind spot 75–85% (M3)", "confirmed"),
+          ("myopic routing gradient (E16)", "negative")]),
+        ("P5  Thresholds are prices",
+         [("balance via log-ratio update", "confirmed"), ("equal capacities help accuracy", "negative")]),
+    ]
+    col = {"confirmed": AQUA, "lead": YELLOW, "negative": ORANGE}
+    fig, ax = plt.subplots(figsize=(7.0, 5.2))
+    ax.set_axis_off()
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, len(rows) * 2 + 0.6)
+    for i, (name, items) in enumerate(rows):
+        y = len(rows) * 2 - i * 2 - 0.4
+        ax.add_patch(plt.Rectangle((0.1, y - 0.75), 3.9, 1.5, facecolor="#eef3fb", edgecolor=BLUE, lw=1.2))
+        ax.text(0.25, y, name, va="center", fontsize=7.6, color=INK, fontweight="bold")
+        for j, (txt, status) in enumerate(items):
+            yy = y + 0.5 - j * 0.5
+            ax.annotate("", xy=(4.6, yy), xytext=(4.0, y), arrowprops=dict(arrowstyle="->", color=GRAY, lw=0.8))
+            ax.scatter([4.75], [yy], s=40, color=col[status], zorder=3)
+            ax.text(4.95, yy, txt, va="center", fontsize=7.3, color=INK)
+    labels = {"confirmed": "confirmed (exact or multi-seed)", "lead": "lead (debug run)", "negative": "tested, negative"}
+    for k, (lab, c) in enumerate(col.items()):
+        ax.scatter([0.3 + 3.3 * k], [0.3], s=40, color=c)
+        ax.text(0.5 + 3.3 * k, 0.3, labels[lab], va="center", fontsize=7.2, color=MUTED)
+    return fig
+
+
+FIGS = {"principles": fig_principles,"promising": fig_promising,"e14_depth": fig_depth, "e13_bandit": fig_bandit,"m3_alignment": fig_alignment, "m3_blind_spot": fig_blind_spot, "e6_ladder": fig_ladder,
         "m13_projection": fig_projection, "m18_repair": fig_repair, "history_tree": fig_tree}
 
 

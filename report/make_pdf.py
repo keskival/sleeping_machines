@@ -336,7 +336,15 @@ def promising_page(st, W):
 
 
 def theory_pages(st, W):
-    s = [Paragraph("Theory: collapsing futures, trees of histories, repair", st["h1"]),
+    s = [Paragraph("The theory in five principles", st["h1"]),
+         Paragraph("The theory note (experiments/THEORY.md) has grown to some twenty-five sections. They reduce to "
+                   "five principles; each result follows from one of them. Colours give the evidence status.",
+                   st["body"])]
+    img = png("principles", W)
+    if img:
+        s.append(img)
+    s.append(PageBreak())
+    s += [Paragraph("Theory: collapsing futures, trees of histories, repair", st["h1"]),
          Paragraph("At any moment the network holds a pool of pending futures: each unfired node's projected "
                    "firing time. A firing collapses the pool: one future becomes history and inhibition cancels its "
                    "competitors, each leaving a residue (how close it came). Because the order of events depends on "
