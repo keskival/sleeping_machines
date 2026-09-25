@@ -73,7 +73,26 @@ class Repairer:
         net, cfg = self.net, self.net.cfg
         t, idx = to_events(x_t[None])
         st = net.forward(t, idx)
+        if self.homeo and net.h:                               # label-free, every sample (as E7)
+            net.th1 += cfg.homeo * (st["fired"][0] - cfg.winners / cfg.group)
+            np.maximum(net.th1, 0.05, out=net.th1)
         if st["winner"][0] == y:
+            if not self.thin:
+                return
+            rival = st["snap2"][0].copy()
+            rival[y] = np.inf
+            if rival.min() >= cfg.margin:
+                return
+            b = int(rival.argmin())                           # a thin margin: widen it at the output only
+            q2 = np.zeros(net.h)
+            h_t = np.where(st["fired"][0], st["freeze1"][0], np.inf)
+            c = st["freeze2"][0, 0]
+            ok = np.isfinite(h_t) & (h_t < c)
+            q2[ok] = c - h_t[ok]
+            touched = self.project(net.W2, y, q2, net.th2[y] * (1 + self.mu), True)
+            touched += self.project(net.W2, b, q2, net.th2[b] * (1 - self.mu), False)
+            self.stats["weights_touched"] += touched
+            self.stats["thin"] = self.stats.get("thin", 0) + 1
             return
         b = st["winner"][0]
         fired, freeze1 = st["fired"][0], st["freeze1"][0]
@@ -161,6 +180,7 @@ def main(a):
     xte, yte = small_mnist(a.test, offset=50000)
     net = make_net(cfg, xtr, a.seed)
     rep = Repairer(net, a.cap, a.margin, a.candidates)
+    rep.homeo, rep.thin = a.homeo, a.thin
     rng = np.random.default_rng(a.seed)
     curve = []
     t0 = time.time()
@@ -198,6 +218,8 @@ if __name__ == "__main__":
     ap.add_argument("--cap", type=float, default=0.05)
     ap.add_argument("--margin", type=float, default=0.1)
     ap.add_argument("--candidates", type=int, default=10)
+    ap.add_argument("--homeo", type=int, default=0, help="run hidden homeostasis on every sample")
+    ap.add_argument("--thin", type=int, default=0, help="also widen thin margins on correct samples")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--tag", default="")
     main(ap.parse_args())

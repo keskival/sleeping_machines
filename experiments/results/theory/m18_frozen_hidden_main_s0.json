@@ -1,0 +1,22 @@
+{
+ "config": {
+  "rule": "frozen_hidden",
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.565,
+  0.6255,
+  0.6565
+ ],
+ "acc": 0.6565,
+ "repairs": null,
+ "plasticity": 1400996
+}
