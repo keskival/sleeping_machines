@@ -5,6 +5,11 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M30 — learnt capacities (debug, depth 3).** Target firing rates proportional to each node's
+information about the label: 0.733 (linear) and 0.736 (log-ratio) vs 0.746 with equal targets.
+*Learned:* no gain from this simple version; the capacity structure holds but this choice of
+capacities is not the missing piece.
+
 **M29 — homeostasis as Sinkhorn (debug, depth 3).** Log-ratio (Sinkhorn dual) threshold updates
 balance hidden usage better than the linear rule (0.95–0.98 vs 0.89–0.93) but accuracy drops as
 balance is forced (0.741 / 0.612 / 0.562 vs 0.746). *Learned:* thresholds really act as prices on

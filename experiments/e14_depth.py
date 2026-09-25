@@ -64,6 +64,9 @@ class DeepRaceNet:
         self.rng, self.window, self.nonneg, self.eg = rng, 0.15, False, 0.0
         self.homeo_mode, self.homeo_rate = "linear", 0.001
         self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
+        self.info_capacity = False
+        self.counts = [np.full((h, k), 1.0) for h in widths]
+        self.ycount = [np.full(k, 10.0) for _ in widths]
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
@@ -186,6 +189,20 @@ class DeepRaceNet:
             if self.nonneg:                                    # no inhibitory weights: a monotone network
                 np.maximum(self.W[l], 0, out=self.W[l])
             target = cfg.winners / cfg.group
+            if self.info_capacity:
+                # §25: learnt capacities: a node's target rate grows with the information its firing
+                # carries about the label, I(fires; class), from running class-conditional counts
+                cnt = self.counts[l]
+                cnt *= 0.999
+                np.add.at(cnt, (np.arange(cnt.shape[0])[None, :].repeat(len(y), 0), y[:, None].repeat(cnt.shape[0], 1)),
+                          L["fired"].astype(np.float64))
+                self.ycount[l] = 0.999 * self.ycount[l] + np.bincount(y, minlength=self.k)
+                p_y = self.ycount[l] / self.ycount[l].sum()
+                p_f_y = np.clip(cnt / np.maximum(self.ycount[l][None, :], 1e-9), 1e-4, 1 - 1e-4)
+                p_f = (p_f_y * p_y[None, :]).sum(1, keepdims=True)
+                h = lambda q: -(q * np.log(q) + (1 - q) * np.log(1 - q))   # noqa: E731
+                info = h(p_f[:, 0]) - (h(p_f_y) * p_y[None, :]).sum(1)
+                target = target * np.clip(info / max(info.mean(), 1e-9), 0.25, 2.5)
             if self.homeo_mode == "sinkhorn":
                 # M29 (THEORY §25): thresholds are dual potentials of a balanced-usage constraint;
                 # the Sinkhorn dual step is a log-ratio of usage to capacity (running usage estimate)
@@ -243,6 +260,7 @@ def main(a):
     net.nonneg = bool(a.nonneg)
     net.eg = a.eg
     net.homeo_mode, net.homeo_rate = a.homeo_mode, a.homeo_rate
+    net.info_capacity = bool(a.info_capacity)
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -294,6 +312,7 @@ if __name__ == "__main__":
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
+    ap.add_argument("--info-capacity", type=int, default=0, help="§25: learnt capacities from I(fires; class)")
     ap.add_argument("--homeo-rate", type=float, default=0.001, help="step of the Sinkhorn (log-ratio) threshold update")
     ap.add_argument("--eg", type=float, default=0.0, help="M28: multiplicative simplex updates with this scale (0 = additive)")
     ap.add_argument("--val", type=int, default=0)
