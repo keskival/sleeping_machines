@@ -167,6 +167,30 @@ class Repairer:
             self.stats["output" if touched else "none"] += 1
 
 
+def competitive_step(net, x_t, y, eta):
+    """M21: the hidden layer learns without labels (winners move toward the charge pattern that
+    made them fire, rows keep their summed weight, homeostasis every sample); the output layer
+    learns from the label with the usual near-miss rule."""
+    cfg = net.cfg
+    t, idx = to_events(x_t[None])
+    st = net.forward(t, idx)
+    fired, freeze1 = st["fired"][0], st["freeze1"][0]
+    for h in np.flatnonzero(fired):
+        q = charges(t[0], idx[0], freeze1[h], net.d)
+        if q.sum() <= 0:
+            continue
+        row = net.W1[h, :net.d]
+        total = row.sum()
+        row += eta * (q / q.sum() * total - row)              # move toward the input that won
+        net.work["plasticity"] += int((q > 0).sum())
+    net.th1 += cfg.homeo * (fired - cfg.winners / cfg.group)
+    np.maximum(net.th1, 0.05, out=net.th1)
+    saved = net.cfg
+    net.cfg = type(saved)(**{**vars(saved), "variant": "frozen_hidden"})
+    net.teach(st, np.array([y]))                              # output layer only
+    net.cfg = saved
+
+
 def accuracy(net, times, y):
     t, idx = to_events(times)
     return float((net.forward(t, idx)["winner"] == y).mean())
@@ -175,7 +199,8 @@ def accuracy(net, times, y):
 def main(a):
     cfg = Config(hidden=a.hidden, group=10, winners=3, hid_frac=0.6, psp="ramp", deadline=1,
                  eta_out=0.01, eta_hid=0.01, homeo=0.001 / 32, batch=1,
-                 variant={"repair": "crl_fa", "output_only": "frozen_hidden"}.get(a.rule, a.rule), seed=a.seed)
+                 variant={"repair": "crl_fa", "output_only": "frozen_hidden",
+                          "unsup_hidden": "crl_fa"}.get(a.rule, a.rule), seed=a.seed)
     xtr, ytr = small_mnist(a.train)
     xte, yte = small_mnist(a.test, offset=50000)
     net = make_net(cfg, xtr, a.seed)
@@ -189,6 +214,8 @@ def main(a):
         for i in rng.permutation(len(ytr)):
             if a.rule == "repair":
                 rep.repair(xtr[i], ytr[i])
+            elif a.rule == "unsup_hidden":
+                competitive_step(net, xtr[i], ytr[i], a.eta_unsup)
             elif a.rule == "output_only":
                 rep.R = 0                                   # never consider hidden repairs
                 rep.repair(xtr[i], ytr[i])
@@ -210,7 +237,8 @@ def main(a):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--rule", default="repair",
-                    choices=("repair", "output_only", "crl_fa", "crl_fired_only", "frozen_hidden"))
+                    choices=("repair", "output_only", "crl_fa", "crl_fired_only", "frozen_hidden", "unsup_hidden"))
+    ap.add_argument("--eta-unsup", type=float, default=0.02, help="M21 competitive learning rate")
     ap.add_argument("--hidden", type=int, default=60)
     ap.add_argument("--train", type=int, default=10000)
     ap.add_argument("--test", type=int, default=2000)
