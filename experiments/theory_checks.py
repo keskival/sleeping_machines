@@ -22,7 +22,7 @@ from dataclasses import replace
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from e6_hidden import Config, RaceNet, latency_code, mnist, to_events  # noqa: E402
+from e6_hidden import Config, RaceNet, layer_race, latency_code, mnist, to_events  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(__file__), "results", "theory")
 
@@ -62,6 +62,90 @@ def rule_update(net, variant, t, idx, y):
     d1, d2 = net.W1 - W1, net.W2 - W2
     net.W1, net.W2, net.th1, net.cfg = W1, W2, th1, saved
     return d1, d2
+
+
+# ── M19: greedy vs holistic gradients (THEORY §14) ────────────────────────────
+
+def ramp_time_grad(t_in, idx_in, w_row, T, d):
+    """∂T/∂w for a ramp node crossing at T: −(T − t_i)/A for inputs that arrived before T."""
+    g = np.zeros(d + 1)
+    ok = np.isfinite(t_in) & (t_in < T)
+    A = float(w_row[idx_in[ok]].sum())
+    if A <= 0:
+        return g, A
+    g[idx_in[ok]] = -(T - t_in[ok]) / A
+    return g, A
+
+
+def soft_race(net, h_times, y, sigma_o):
+    """Output crossing times (extrapolated when no crossing), loss −log softmax(−T/σ)_y, ∂L/∂T."""
+    k, h = net.W2.shape[0], net.h
+    spk = np.flatnonzero(np.isfinite(h_times))
+    order = spk[np.argsort(h_times[spk])]
+    T = np.full(k, 3.0)
+    for o in range(k):
+        A = B = 0.0
+        for j in order:                                       # add inputs until the crossing comes first
+            if A > 0 and (net.th2[o] + B) / A <= h_times[j]:
+                break
+            A, B = A + net.W2[o, j], B + net.W2[o, j] * h_times[j]
+        if A > 0:                                             # crossing, or its extrapolation past the horizon
+            T[o] = min((net.th2[o] + B) / A, 3.0)
+    moving = T < 3.0                                          # a capped time does not move with the weights
+    z = -T / sigma_o
+    p = np.exp(z - z.max()); p /= p.sum()
+    L = float(-np.log(p[y] + 1e-12))
+    dT = (np.eye(k)[y] - p) / sigma_o * moving
+    return T, L, dT
+
+
+def holistic_gradients(net, times, ys, sigma_o, sigma_fs):
+    """Greedy exact path gradient and fork (existence-flip) terms, summed over samples."""
+    d, h, size = net.d, net.h, net.cfg.group
+    G2 = np.zeros_like(net.W2)
+    G1_greedy = np.zeros_like(net.W1)
+    G1_fork = {s: np.zeros_like(net.W1) for s in sigma_fs}
+    for b in range(len(ys)):
+        t, idx = to_events(times[b:b + 1])
+        st = net.forward(t, idx)
+        fired, freeze1 = st["fired"][0], st["freeze1"][0]
+        h_times = np.where(fired, freeze1, np.inf)
+        T1, _, _ = layer_race(t, idx, net.W1, net.th1, "ramp")
+        T1 = T1[0]
+        T, L, dT = soft_race(net, h_times, ys[b], sigma_o)
+        # output weights and hidden spike times (pathwise)
+        dt_h = np.zeros(h)
+        for o in range(net.W2.shape[0]):
+            ok = np.isfinite(h_times) & (h_times < T[o])
+            A = float(net.W2[o, :h][ok].sum())
+            if A <= 0:
+                continue
+            G2[o, :h][ok] += dT[o] * (-(T[o] - h_times[ok]) / A)
+            dt_h[ok] += dT[o] * net.W2[o, :h][ok] / A
+        for j in np.flatnonzero(fired):
+            g, _ = ramp_time_grad(t[0], idx[0], net.W1[j], h_times[j], d)
+            G1_greedy[j] += dt_h[j] * g
+        # forks: in each group, the last winner m and the next strand n swap
+        for grp in range(h // size):
+            ids = np.arange(grp * size, (grp + 1) * size)
+            f = ids[fired[ids]]
+            cand = ids[~fired[ids] & np.isfinite(T1[ids])]
+            if not len(f) or not len(cand):
+                continue
+            m = f[np.argmax(freeze1[f])]
+            n = cand[np.argmin(T1[cand])]
+            swapped = h_times.copy()
+            swapped[m], swapped[n] = np.inf, T1[n]
+            _, L_swap, _ = soft_race(net, swapped, ys[b], sigma_o)
+            gap = T1[n] - freeze1[m]
+            g_n, _ = ramp_time_grad(t[0], idx[0], net.W1[n], T1[n], d)
+            g_m, _ = ramp_time_grad(t[0], idx[0], net.W1[m], freeze1[m], d)
+            for s in sigma_fs:
+                pr = 1.0 / (1.0 + np.exp(gap / s))
+                dp_dgap = -pr * (1 - pr) / s
+                G1_fork[s][n] += (L_swap - L) * dp_dgap * g_n          # ∂gap/∂w_n = ∂T1_n/∂w_n
+                G1_fork[s][m] -= (L_swap - L) * dp_dgap * g_m          # ∂gap/∂w_m = −∂t_m/∂w_m
+    return G1_greedy, G1_fork, G2
 
 
 def m3(a):
@@ -124,8 +208,25 @@ def m3(a):
             u = -d[coords[name][:, 0], coords[name][:, 1]]      # an update descends: compare −Δw with ∇
             row[name] = {"cosine": cos(u, grad[name]), "update_nonzero_frac": float((u != 0).mean())}
         res["rules"][variant] = row
+    if a.check == "m19":
+        g1, forks, g2 = holistic_gradients(net, ct, cy, a.sigma_o, (0.01, 0.03, 0.1))
+        on = lambda G, name: G[coords[name][:, 0], coords[name][:, 1]]   # noqa: E731
+        hol = {"greedy_W1": {"cosine": cos(on(g1, "W1"), grad["W1"]),
+                             "nonzero_frac": float((on(g1, "W1") != 0).mean())},
+               "greedy_W2": {"cosine": cos(on(g2, "W2"), grad["W2"]),
+                             "nonzero_frac": float((on(g2, "W2") != 0).mean())}}
+        for sf, gf in forks.items():
+            u = on(gf, "W1")
+            hol[f"fork_W1_s{sf}"] = {"cosine": cos(u, grad["W1"]), "nonzero_frac": float((u != 0).mean())}
+            # the two terms are on different scales; report the best mix and the equal-norm mix
+            a1, a2 = on(g1, "W1"), u
+            if np.linalg.norm(a1) and np.linalg.norm(a2):
+                mix = a1 / np.linalg.norm(a1) + a2 / np.linalg.norm(a2)
+                hol[f"holistic_W1_s{sf}"] = {"cosine": cos(mix, grad["W1"]),
+                                             "nonzero_frac": float((mix != 0).mean())}
+        res["holistic"] = hol
     os.makedirs(OUT, exist_ok=True)
-    path = os.path.join(OUT, f"m3_{a.tag or 'run'}_s{a.seed}.json")
+    path = os.path.join(OUT, f"{a.check}_{a.tag or 'run'}_s{a.seed}.json")
     with open(path, "w") as f:
         json.dump(res, f, indent=1)
     print(json.dumps(res, indent=1), flush=True)
@@ -133,7 +234,8 @@ def m3(a):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("check", choices=("m3",))
+    ap.add_argument("check", choices=("m3", "m19"))
+    ap.add_argument("--sigma-o", type=float, default=0.05, help="output race temperature (M19)")
     ap.add_argument("--hidden", type=int, default=60)
     ap.add_argument("--train", type=int, default=5000)
     ap.add_argument("--pretrain", type=int, default=1)
