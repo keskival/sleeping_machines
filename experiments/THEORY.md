@@ -548,6 +548,35 @@ High σ gives a wide tree, a smooth landscape and a signal to every weight; σ �
 deterministic race. Training from wide to narrow is a principled schedule, replacing the
 hand-set σ we use now.
 
+### 14.7 Beams computed asynchronously: shadow events
+
+The beam needs no separate pass and no barrier. Branches live in the same event queue as
+the factual computation:
+
+1. **Fork.** At a collapse whose runner-up came close, the runner-up's spike is also
+   scheduled as a *shadow event*, tagged with a branch id and the branch probability.
+2. **Propagate.** Shadow events travel at the same simulated times through the same
+   nodes. A node keeps a per-branch delta on top of its factual state. Integration is
+   linear (A and B add), so the branch potential is exactly factual + delta, at O(1) per
+   shadow input. Shadow spikes can cancel within their branch.
+3. **End or resolve.** A branch whose delta stops changing anything (cancelled or absorbed)
+   ends and costs nothing further. One that reaches the output resolves at about the same
+   time as the factual decision.
+4. **Learn.** Each resolved branch sends its loss difference, addressed by tag, to the
+   nodes that forked it. **Their collapse residue is exactly the record waiting for that
+   message.** The teacher may arrive before or after, and learning completes when both have.
+
+What makes this possible: linear integration (branches are additive deltas, not copies),
+light cones (only nodes downstream of a fork see its shadows) and cancellation (branches
+end early). A dense synchronous network has none of the three.
+
+Limits: interacting forks multiply (first order treats them independently; tags cap the
+count); shadow events cost like real ones, so forking needs a probability threshold and
+branches with little possible effect are dropped; hardware needs a few tag bits per event
+and per-branch deltas, only inside active light cones. Side benefit: at decision time the
+machine knows what the close calls would have led to, which is a calibrated confidence and
+a learning signal before any teacher arrives.
+
 ### 14.6 Test
 
 **M19**: on the M3 network, forks at hidden groups (swap the last winner with the next strand
@@ -579,6 +608,7 @@ per sample, gradient alignment with M3's finite-difference estimate.
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
+| **M20** | shadow events in the event engine reproduce the batch beam exactly, asynchronously | equality with M19 per sample; extra events and per-node branch state vs beam width |
 
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
