@@ -192,6 +192,8 @@ class Config:
     init_frac: float = 0.3   # nodes reach θ after about this fraction of their inputs at init
     hid_frac: float = 0.0    # same for hidden nodes only (0 = use init_frac)
     patch: int = 0           # local receptive fields: each hidden group sees a patch x patch window (0 = whole image)
+    fanin: int = 0           # E9: each hidden node has this many input synapses, drawn from active inputs (0 = all)
+    grow: int = 0            # E9: synapses a node may swap per sample (weakest out, an active input it lacks in)
     stride: int = 4          # spacing of patch positions; groups are assigned to positions round-robin
     lateral: int = 0         # output race on relative evidence: each spike also inhibits all outputs by the mean weight
     theta_out: float = 1.0   # output threshold
@@ -215,8 +217,9 @@ class RaceNet:
         self.M1 = None
         if h:
             self.W1 = np.zeros((h, d_in + 1), np.float32)
-            if cfg.patch:
-                self.M1 = patch_mask(h, cfg.group, cfg.patch, cfg.stride)
+            if cfg.patch or cfg.fanin:
+                self.M1 = (patch_mask(h, cfg.group, cfg.patch, cfg.stride) if cfg.patch
+                           else sparse_mask(h, d_in, cfg.fanin, rates, rng))
                 rates = np.full(d_in, mean_spikes / d_in) if rates is None else rates
                 expected = self.M1[:, :d_in] @ rates                  # expected input spikes per node
                 mu = (1.0 / ((cfg.hid_frac or cfg.init_frac) * np.maximum(expected, 1.0)))[:, None]
@@ -342,6 +345,8 @@ class RaceNet:
         self.work["feedback"] += int(((s != 0).sum(1) * (elig1 != 0).sum(1)).sum())
         mask1 = self._elig(st["t_in"], st["freeze1"])
         self._apply(self.W1, st["idx_in"], coef, mask1, self.d, self.M1)
+        if cfg.grow and cfg.fanin:
+            self._grow(st, coef)
         if cfg.homeo:
             target_rate = cfg.winners / cfg.group
             self.th1 += cfg.homeo * (fired.mean(0) - target_rate)
@@ -354,6 +359,26 @@ class RaceNet:
         if self.cfg.psp == "ramp":
             return np.clip(freeze[:, :, None] - np.where(np.isfinite(t), t, np.inf)[:, None, :], 0, None)
         return t[:, None, :] <= freeze[:, :, None]
+
+    def _grow(self, st, coef):
+        """E9 growth (the E5 rule): a hidden node told to fire earlier connects to the active input it
+        lacks that had injected the most charge, and drops its weakest synapse; fan-in stays fixed."""
+        W, M, d = self.W1, self.M1, self.d
+        for b in range(len(coef)):
+            t, idx = st["t_in"][b], st["idx_in"][b]
+            for n in np.flatnonzero(coef[b] > 0):
+                arrived = np.isfinite(t) & (t < st["freeze1"][b, n])
+                cand = idx[arrived]
+                lacking = cand[~M[n, cand]]
+                if not len(lacking):
+                    continue
+                charge = st["freeze1"][b, n] - t[arrived][~M[n, cand]]
+                for new in lacking[np.argsort(-charge)[:self.cfg.grow]]:
+                    have = np.flatnonzero(M[n, :d])
+                    old = have[np.argmin(W[n, have])]
+                    M[n, old], M[n, new] = False, True
+                    W[n, new], W[n, old] = W[n, have].mean(), 0.0
+                    self.work["rewire"] = self.work.get("rewire", 0) + 1
 
     def _apply(self, W, idx, coef, mask, dummy, exists=None):
         """W[n, idx[b, s]] += coef[b, n] * mask[b, n, s]; each input spikes once per sample.
@@ -378,6 +403,16 @@ class RaceNet:
             W[nz, :dummy] -= added[nz, None] / dummy
             self.work["plasticity"] += len(nz)
         W[:, dummy] = 0
+
+
+def sparse_mask(h, d_in, fanin, rates, rng):
+    """E9: each hidden node connects to `fanin` inputs chosen at random among inputs that are
+    ever active (plus a dummy column that stays False)."""
+    M = np.zeros((h, d_in + 1), bool)
+    live = np.flatnonzero(rates > 0) if rates is not None else np.arange(d_in)
+    for n in range(h):
+        M[n, rng.choice(live, min(fanin, len(live)), replace=False)] = True
+    return M
 
 
 def patch_mask(h, group, patch, stride, side=28):
