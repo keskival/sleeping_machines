@@ -588,6 +588,35 @@ events: greedy (B = 1), sum-product with B ∈ {4, 16}, min-sum repair on the sa
 annealed σ schedule. Measures: accuracy, fraction of samples giving any signal, extra events
 per sample, gradient alignment with M3's finite-difference estimate.
 
+## 15. Reinforcement learning may be the natural home
+
+A race is an action selection: the first strand to collapse is the chosen action, and its
+time is the reaction time. Much of the formalism maps onto reinforcement learning directly.
+
+1. **The race is a policy.** Under timing noise, P(action) = softmax(−τ/σ) over the pool (§5),
+   so π and ∇log π are read off the pool analytically, with no sampling variance.
+   σ is exploration.
+2. **Evaluative feedback needs counterfactual credit.** Rewards say how good, not what was
+   right. Reward-modulated STDP credits only what fired and collapses as the action count grows
+   (E4); residues give graded credit to unchosen actions.
+3. **Delayed reward.** Tags over collapses (E7) are eligibility traces, as in TD(λ), counted per
+   event rather than per tick.
+4. **Time costs are native.** Faster decisions give more decisions per unit time, so the race
+   trades accuracy against reward rate: average-reward RL over actions with durations
+   (semi-Markov decision processes). E2's frontier is already a reward-rate curve.
+5. **Value as latency.** A race computes a minimum over arrival times. With delays along paths
+   that is min-plus algebra, the Bellman optimality operator for shortest paths (race logic
+   already solves dynamic programming this way). Values can be *earliness*: better states fire
+   sooner, the race chooses, and a temporal-difference error is literally a timing error.
+
+Limits: shadow branches can play out the network's internal alternatives, not the world's
+response to an action not taken; that needs a model or a critic. History repair becomes "the
+cheapest branch that raises expected reward", which needs a critic. Prior work to credit:
+reinforcement-learning drift-diffusion models of choice (e.g. Pedersen, Frank & Biele 2017)
+and basal-ganglia action selection as a race.
+
+Design: E13_RL.md.
+
 ## Tests
 
 | | Claim | Test |
