@@ -5,6 +5,15 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M21 (debug size) — can the hidden layer learn without labels?** A label-free competitive
+rule (winners move toward their input, rows normalised, homeostasis) with the same output
+learning reached 0.29 (η 0.02) and 0.20 (η 0.1) on 2k images, *below* a frozen random hidden
+layer (0.33); fired-only credit, which uses labels, reached 0.56. *Learned:* this **contradicts**
+the M3 reading below. Label information in the hidden update matters a lot, even though its
+alignment with the true gradient, measured at one late snapshot, is weak. Likely reconciliation:
+weak local alignment that is consistent over training (M3 measures one point on a pretrained
+network). *Next:* M21 at full size (queued); measure alignment along training, not only after it.
+
 **M18 — history repair, full size (small network, 10k images, 3 epochs, seed 0).**
 Repair 0.749 vs counterfactual credit 0.818 and fired-only 0.823, while changing 46× fewer
 weights (0.27M vs 12.6M). Hidden repairs add ~9 points over output-only repair (0.655).
@@ -29,8 +38,9 @@ queued.
 0.74–0.80 hidden, 0.95–0.99 output).** Output rule: +0.36 to +0.73. Hidden rules: random
 feedback ≈ +0.05, fired-only ≈ −0.01, true-weight feedback ≈ +0.21, sign feedback ≈ +0.17.
 Only 13–25% of hidden weights have any nonzero true gradient, rising with timing noise.
-*Learned:* hidden credit carries little gradient information, which is why counterfactual and
-fired-only credit tie; the hidden layer's gain comes from its own competition and homeostasis.
+*Learned:* at this snapshot, hidden credit carries little gradient information, which fits
+counterfactual and fired-only credit tying. (An earlier reading, that the hidden layer's gain
+comes from its own competition and homeostasis, is contradicted by M21 above.)
 The zero-gradient majority is the blind spot that motivates the tree-of-histories view (§14).
 
 **E9 P1 — cascade.** Only 0.07% of work happens after the output decides. *Learned:* the cost
