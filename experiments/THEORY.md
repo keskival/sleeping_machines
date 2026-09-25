@@ -630,6 +630,78 @@ at every layer. Prediction: the gap between counterfactual and fired-only credit
 depth, from nothing at one hidden layer (E6 r3, M18). **(test: E14)** A debug run supports it
 (+19 points at depth 3); full runs are queued.
 
+## 17. Credit percolation: a trainability phase transition for event networks
+
+### 17.1 Setting
+
+Suppose credit travels only along the network's own event graph: backwards across
+synapses that exist, layer by layer, as event hardware without global wiring would do it
+(and as exact event gradients do). A node in layer l+1 that holds credit can pass it to
+the upstream nodes that fed it, and an upstream node can carry it further only if it is
+**eligible**: it fired, or (with counterfactual credit) it came within reach of firing.
+
+### 17.2 Branching ratio
+
+Let layer l have N_l nodes, each layer-(l+1) node have fan-in F from layer l, and let p_l
+be the eligible fraction of layer l. A credited node reaches about F·p_l eligible parents.
+Each parent has fan-out about F·N_{l+1}/N_l, so the expected number of credited nodes in
+layer l per credited node in layer l+1, the **branching ratio**, is about
+
+    b_l ≈ F · p_l        (more precisely, the chance that an eligible parent is reached
+                          saturates at 1 − exp(−F·ρ_{l+1}) for credited density ρ_{l+1}).
+
+The credited density ρ_l obeys ρ_l = p_l · (1 − exp(−F · ρ_{l+1} · N_{l+1}/N_l)), a
+percolation recursion. It has a nonzero fixed point only when F · p · N_{l+1}/N_l > 1.
+Below that, ρ decays geometrically with depth and deep layers receive no credit;
+above it, ρ settles at a depth-independent level.
+
+### 17.3 What sets the knobs
+
+| knob | effect on b | consequence |
+|---|---|---|
+| fired-only credit | p = p_f (≈ winners/group) | may sit below threshold |
+| counterfactual credit | p = p_f + p_near(σ) | raises b; can cross the threshold |
+| temperature σ | p_near grows with σ | a **critical σ\*** for deep trainability |
+| sparse fan-in F (E9) | b ∝ F | energy saving and deep trainability trade off, with a computable boundary |
+| direct feedback (DFA, E14) | bypasses the graph | no percolation decay; failures there are dead nodes, not reach |
+
+### 17.4 Relation to known work
+
+Dense networks have an analogous theory for gradient *magnitudes* (signal propagation,
+edge of chaos, dynamical isometry). Dead units in sparse and spiking networks are known.
+The new object here is a **reachability threshold on a sparse event graph**, with
+counterfactual (near-miss) edges as the parameter that moves it, and σ as a control
+parameter with a critical value. To be checked against the literature before claiming
+novelty.
+
+### 17.5 The same condition in sparse mixture-of-experts training
+
+A top-1 mixture-of-experts router gets no gradient toward the experts it did not pick: the
+router's blind spot. In race terms, the k winners of a group are the top-k experts and the
+residues are the unselected experts' margins. Two consequences:
+
+1. **The trainability condition is the same branching ratio.** Credit reaches the routing
+   decision only if more than the best match is eligible (k > 1, or near misses counted). In
+   stacked MoE layers the reachable set compounds with depth as in 17.2.
+2. **Near-miss credit for routers.** The residue boundary term (§4) applied to routing
+   credits unselected experts from their margins without running them, since unselected
+   experts never execute. Known remedies (noisy top-k gating, top-2 routing, gradient
+   estimators for sparse routing such as SparseMixer) run more experts or estimate the
+   gradient differently; where the residue view stands relative to them is to be checked.
+   E9's routing race is an MoE, and the natural test: first-to-fire top-1 routing, router
+   trained with vs without near-miss credit.
+
+### 17.6 Predictions (E15)
+
+- **P1.** With layer-by-layer event feedback, credited density decays geometrically with
+  depth when F·p < 1 and stays flat when F·p > 1.
+- **P2.** At fixed F and depth, counterfactual credit crosses the threshold where fired-only
+  credit does not; accuracy follows reach.
+- **P3.** Sweeping σ reveals a critical σ\* below which deep layers stop learning, near where
+  the measured F·(p_f + p_near(σ)) crosses 1.
+- **P4.** Sparse fan-in that is safe with DFA (E9, E14) can become untrainable with local
+  feedback; the boundary follows F·p ≈ 1.
+
 ## Tests
 
 | | Claim | Test |
@@ -652,6 +724,7 @@ depth, from nothing at one hidden layer (E6 r3, M18). **(test: E14)** A debug ru
 | **M16** | knowing the exact unravelling V_n(τ) makes local learning clearly better | oracle proximal-projection learner vs crl_fa, fired-only, M13 (small nets) |
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
+| **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
 | **M20** | shadow events in the event engine reproduce the batch beam exactly, asynchronously | equality with M19 per sample; extra events and per-node branch state vs beam width |
 

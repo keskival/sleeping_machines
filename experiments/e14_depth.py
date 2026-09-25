@@ -35,15 +35,29 @@ class DeepRaceNet:
     _apply = RaceNet._apply
     _elig = RaceNet._elig
 
-    def __init__(self, cfg, widths, d_in, k, drive, rng):
-        self.cfg, self.k = cfg, k
-        self.W, self.th, self.B, dims = [], [], [], [d_in] + list(widths)
+    def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0):
+        self.cfg, self.k, self.feedback = cfg, k, feedback
+        self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
             W = np.zeros((h, dims[l] + 1), np.float32)
-            mu = 1.0 / (cfg.hid_frac * expected)
+            M = None
+            if fanin and l > 0:                                    # sparse hidden-to-hidden connectivity
+                M = np.zeros((h, dims[l] + 1), bool)
+                for n in range(h):
+                    M[n, rng.choice(dims[l], min(fanin, dims[l]), replace=False)] = True
+                expected_l = expected * min(fanin, dims[l]) / dims[l]
+            else:
+                expected_l = expected
+            mu = 1.0 / (cfg.hid_frac * expected_l)
             W[:, :dims[l]] = rng.normal(mu, mu, (h, dims[l]))
+            if M is not None:
+                W *= M
             self.W.append(W)
+            self.M.append(M)
+            # local feedback runs backwards along existing synapses, through fixed random weights
+            R = rng.normal(0, 1.0, (h, dims[l])).astype(np.float32) / np.sqrt(max(fanin or dims[l], 1))
+            self.R.append(R * (M[:, :dims[l]] if M is not None else 1.0))
             self.th.append(np.ones(h, np.float32))
             expected = h // cfg.group * cfg.winners * 0.5          # charge from the next layer's input spikes
         mu2 = 1.0 / (cfg.init_frac * expected)
@@ -92,10 +106,14 @@ class DeepRaceNet:
         s *= update[:, None]
         mask2 = self._elig(st["t2"], st["freeze2"])
         self._apply(self.Wo, st["idx2"], cfg.eta_out * s, mask2, self.Wo.shape[1] - 1)
-        for l, L in enumerate(st["layers"]):
+        carried = None                                             # local feedback, from the top layer down
+        for l in reversed(range(len(st["layers"]))):
+            L = st["layers"][l]
             if cfg.variant != "frozen_hidden":
                 if cfg.variant == "crl_drtp":                 # random projection of the label alone
                     delta = np.eye(self.k, dtype=np.float32)[y] @ self.B[l]
+                elif self.feedback == "local" and carried is not None:
+                    delta = carried @ self.R[l + 1]            # only across synapses that exist
                 else:
                     delta = s @ self.B[l]
                 if cfg.variant == "crl_fired_only":
@@ -104,10 +122,11 @@ class DeepRaceNet:
                     elig = np.where(L["fired"], 1.0, np.exp(-L["snap"] / cfg.sigma))
                     elig *= elig >= 0.05
                 coef = cfg.eta_hid * delta * elig
+                carried = delta * elig                         # credit passes only through eligible nodes
                 self.reach[l][0] += int((coef != 0).sum())
                 self.reach[l][1] += coef.size
                 mask = self._elig(L["t"], L["freeze"])
-                self._apply(self.W[l], L["idx"], coef, mask, self.dims[l])
+                self._apply(self.W[l], L["idx"], coef, mask, self.dims[l], self.M[l])
             self.th[l] += cfg.homeo * (L["fired"].mean(0) - cfg.winners / cfg.group)
             np.maximum(self.th[l], 0.05, out=self.th[l])
 
@@ -122,7 +141,7 @@ def evaluate(net, times, y, batch=250):
 
 def main(a):
     cfg = Config(variant=a.variant, winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
-                 homeo=0.001, seed=a.seed)
+                 homeo=0.001, sigma=a.sigma, seed=a.seed)
     x, y = mnist("train")
     if a.val:
         xtr, ytr, xte, yte = x[:-a.val], y[:-a.val], x[-a.val:], y[-a.val:]
@@ -133,7 +152,7 @@ def main(a):
     ttr, tte = latency_code(xtr), latency_code(xte)
     drive = np.where(np.isfinite(ttr), HORIZON - ttr, 0).mean(0)
     rng = np.random.default_rng(a.seed)
-    net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng)
+    net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin)
     curve = []
     t0 = time.time()
     for ep in range(a.epochs):
@@ -148,7 +167,9 @@ def main(a):
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
     os.makedirs(OUT, exist_ok=True)
-    with open(os.path.join(OUT, f"d{a.depth}_{a.variant}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_{a.variant}_{a.feedback}_f{a.fanin}_sg{a.sigma}_{a.tag or 'run'}"
+                                f"_s{a.seed}.json" if a.feedback != "dfa" or a.fanin or a.sigma != 0.15 else
+                                f"d{a.depth}_{a.variant}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
 
 
@@ -158,6 +179,10 @@ if __name__ == "__main__":
     ap.add_argument("--width", type=int, default=400)
     ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden", "crl_drtp"))
     ap.add_argument("--epochs", type=int, default=3)
+    ap.add_argument("--feedback", default="dfa", choices=("dfa", "local"),
+                    help="E15: dfa = output error to every layer; local = layer by layer along existing synapses")
+    ap.add_argument("--fanin", type=int, default=0, help="E15: hidden-to-hidden fan-in (0 = dense)")
+    ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--val", type=int, default=0)
     ap.add_argument("--train-limit", type=int, default=0)
     ap.add_argument("--seed", type=int, default=0)

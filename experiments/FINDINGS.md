@@ -5,6 +5,18 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E15 (debug size) — credit percolation with local layer-by-layer feedback.** Depth 3, width
+200, 5k images, 1 epoch. Reach per layer (input side → output side): fan-in 16 counterfactual
+0.68/0.51/0.51, fired-only 0.25/0.24/0.21 (above threshold, no decay, as predicted); fan-in 2
+fired-only 0.11/0.13/0.18 (decays toward the input, as predicted), counterfactual
+0.20/0.16/0.23 (noisy). No clean transition yet at this size; the full sweep is queued.
+**Surprise:** sparse hidden-to-hidden connectivity raises deep accuracy (≈0.79 at fan-in 2
+vs 0.68 at 16), matching the E9 fan-in result: sparsity seems to help race networks in its
+own right, plausibly because dense layers are decided by a few very early spikes.
+**Link (user):** the same branching condition governs router training in sparse MoE (top-1
+routers get no gradient toward unselected experts); residue-based near-miss credit could train
+routers without running unselected experts (THEORY §17.5).
+
 **E9 sparse fan-in (debug size).** 3k images, 1 epoch, validation: fan-in 32 gives 8.1k
 synaptic events per image vs 113.9k dense (14× fewer), with *higher* accuracy (0.817 vs
 0.792). For scale: the MLP that matched round-3 accuracy (32 hidden units) needs ~25k
