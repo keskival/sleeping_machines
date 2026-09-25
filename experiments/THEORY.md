@@ -491,6 +491,71 @@ single-event repair already rivals the gradient-like rules while touching far fe
 weights, the protocol is worth building out: multi-step delegation, recruitment as
 a repair, messages instead of verification by re-running.
 
+## 14. Backprop through the unravelled future
+
+### 14.1 Why greedy backprop suffices in dense models, and not here
+
+In a dense network the computation graph is fixed: the same units compute in the same
+order for every input and every weight setting, and only values change. The tree of
+possible histories has one branch, so the derivative along it is the whole story, and
+greedy and holistic coincide.
+
+In an asynchronous race **the graph depends on the weights**: which events happen, their
+order, and who cancels whom. A small weight change can swap two events and send the
+computation down another branch. The true dependence of the outcome on the weights
+runs through the *tree of histories*. Backprop along the realised path sees one leaf and
+ignores how the tree itself moves. M3 measures the cost: in about 80% of hidden-weight
+coordinates the realised-path gradient is exactly zero, while the expected error
+depends on them.
+
+### 14.2 The holistic objective
+
+Let each collapse be a fork whose branch probabilities come from the pool: the
+competitors' projected times at temperature σ (§5, §10). A forward pass then defines a
+distribution over histories h, P_w(h), and the objective is
+
+    J(w) = Σ_h P_w(h) L(h),
+    ∇J = Σ_h P_w(h) [ ∇_w L(h)  +  L(h) ∇_w log P_w(h) ].
+
+The first term is backprop inside each branch. The second term, how the weights move
+the forks, is exactly what greedy backprop drops. Because every fork's probabilities
+are explicit functions of projected times (which are explicit in w), ∇ log P is analytic:
+there is no sampling and no score-function variance.
+
+### 14.3 Why it is affordable here
+
+A fork changes only the events causally downstream of it (its **light cone**), and
+cancellation cuts the cone short. Branches share everything else. In a dense network
+every unit depends on every unit before it, so every fork would touch everything. In a
+sparse race a beam of B branches costs about B × (events in the cone), not B × the network.
+**The asynchrony that breaks greedy backprop is also what makes holistic backprop cheap.**
+
+### 14.4 One tree, three ways to read it
+
+| aggregation over the history tree | learning rule |
+|---|---|
+| one leaf (the realised path) | greedy backprop (EventProp) |
+| sum over branches, weighted by probability (sum-product) | holistic backprop: ∇ of expected loss |
+| minimum over branches, weighted by cost (min-sum) | history repair (§13): cheapest branch that is right |
+
+Borrowed tool: semiring computation over trees (as in weighted automata and parsing). What is
+new is the object: the learning rule is **a choice of semiring over the network's own
+tree of possible event histories**, and the beam width is the knob between greedy and holistic.
+
+### 14.5 Temperature as continuation
+
+High σ gives a wide tree, a smooth landscape and a signal to every weight; σ → 0 recovers the
+deterministic race. Training from wide to narrow is a principled schedule, replacing the
+hand-set σ we use now.
+
+### 14.6 Test
+
+**M19**: on the M3 network, forks at hidden groups (swap the last winner with the next strand
+in line, probability from their time gap) and at the output race. Compare, at matched extra
+events: greedy (B = 1), sum-product with B ∈ {4, 16}, min-sum repair on the same beam, and an
+annealed σ schedule. Measures: accuracy, fraction of samples giving any signal, extra events
+per sample, gradient alignment with M3's finite-difference estimate.
+
 ## Tests
 
 | | Claim | Test |
@@ -513,6 +578,7 @@ a repair, messages instead of verification by re-running.
 | **M16** | knowing the exact unravelling V_n(τ) makes local learning clearly better | oracle proximal-projection learner vs crl_fa, fired-only, M13 (small nets) |
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
+| **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
 
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
