@@ -290,9 +290,13 @@ def main(a):
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
     os.makedirs(OUT, exist_ok=True)
-    with open(os.path.join(OUT, f"d{a.depth}_{a.variant}_{a.feedback}_f{a.fanin}_sg{a.sigma}_{a.tag or 'run'}"
-                                f"_s{a.seed}.json" if a.feedback != "dfa" or a.fanin or a.sigma != 0.15 else
-                                f"d{a.depth}_{a.variant}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
+    extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
+                                             ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
+                                             ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
+                                             ("zs", a.zero_sum or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("hm", a.homeo_mode if a.homeo_mode != "linear" else "")) if v != "")
+    # every setting that varies is in the name, so runs never overwrite each other
+    with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
 
 
