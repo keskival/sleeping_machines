@@ -1,0 +1,23 @@
+{
+ "config": {
+  "depth": 2,
+  "width": 400,
+  "variant": "crl_fa",
+  "epochs": 3,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.9108,
+  0.9259,
+  0.9395
+ ],
+ "acc": 0.9395,
+ "credit_reach": [
+  0.14985523333333334,
+  0.1715904
+ ],
+ "synops_per_sample": 86279.19248333333
+}

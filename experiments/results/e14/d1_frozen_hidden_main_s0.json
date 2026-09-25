@@ -1,0 +1,22 @@
+{
+ "config": {
+  "depth": 1,
+  "width": 400,
+  "variant": "frozen_hidden",
+  "epochs": 3,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.865,
+  0.8738,
+  0.8748
+ ],
+ "acc": 0.8748,
+ "credit_reach": [
+  null
+ ],
+ "synops_per_sample": 46878.3182
+}
