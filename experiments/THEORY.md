@@ -3,6 +3,23 @@
 Written 2026-09-25. A working note: every claim marked **(test Mk)** is checked
 numerically (table at the end) before later experiments rely on it.
 
+## Synthesis: the principles so far (read this first)
+
+Twenty-odd sections reduce to five principles. Each result elsewhere in this note follows from
+one of them; the evidence column says how far each is established.
+
+| # | principle | what follows | evidence |
+|---|---|---|---|
+| P1 | **Inference is tropical; the unrealised futures are its dequantization.** A race computes minimums over event times (min-plus); at temperature σ the pool of possible histories is a recombining forest weighted by e^{−cost/σ} (§21). | near-miss weighting = derivative of the soft minimum (§21.6); credit is conserved at each collapse (§22.3); holistic backprop = inside–outside (§21, §14); shadow spikes = first-order term (§20) | conservation: large gains at depth (debug, full runs queued); M20: asynchronous branches exact |
+| P2 | **Weaving closes the past.** Collapses are stopping times; later inputs cannot affect them (§21.9–21.10). | woven vs unwoven counterfactuals (residues vs shadows); when to collapse = optimal stopping (E2); layers forecast each other's inputs | shadow neuron best at depth (debug); E2 tracks MSPRT |
+| P3 | **A race neuron is a weighted mean in time.** Within a piece T = θ/ρ + Σ u_i t_i (§22.1, §24). | exact time-shift equivariance; urgency (ρ) vs evidence (u); piecewise linear, monotone nets suffice (§22.2); but learning must recruit absent evidence additively (§24) | equivariance exact; non-negative nets lose nothing; multiplicative learning fails |
+| P4 | **Credit must reach what did not happen.** Along the realised history, credit reaches only nodes that fired; the rest is a blind spot that compounds with depth (§14, §16, §17). | counterfactual credit matters from depth 2; percolation threshold for local feedback; routing networks have the same boundary term (§19) | E14: +1.2 / +1.5 at depths 2 / 3, 2 seeds; M3 blind spot 75–85% of hidden weights |
+| P5 | **Thresholds are prices.** Homeostasis is the dual update of a capacity constraint; a race layer with homeostasis is an online entropic optimal-transport solver (§25). | the target rate is a capacity; log-ratio updates balance faster | balance confirmed; equal capacities hurt accuracy; learnt capacities not yet found |
+
+Negative results that shaped these: the routing gradient is myopic when alternatives learn
+(E16, §19); multiplicative simplex learning cannot recruit (§24); stricter balance hurts (§25);
+label-free hidden learning hurts (M21); stopping hidden work at the decision saves nothing (E9).
+
 ## 0. What we build on (and do not re-derive)
 
 Much of the machinery below exists. We use it and cite it (references to verify
