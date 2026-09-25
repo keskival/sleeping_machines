@@ -1,0 +1,31 @@
+{
+ "config": {
+  "rule": "repair",
+  "eta_unsup": 0.02,
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "homeo": 1,
+  "thin": 0,
+  "seed": 0,
+  "tag": "homeo"
+ },
+ "curve": [
+  0.6245,
+  0.7735,
+  0.7635
+ ],
+ "acc": 0.7635,
+ "repairs": {
+  "output": 5839,
+  "hidden_fire": 1301,
+  "hidden_silence": 2730,
+  "none": 22,
+  "weights_touched": 276562
+ },
+ "plasticity": 0
+}

@@ -143,18 +143,24 @@ def fig_repair():
     runs = [load(p) for p in glob.glob(os.path.join(RES, "theory", "m18_*_main_s*.json"))]
     if not runs:
         return None
-    style = {"repair": ("history repair", BLUE), "output_only": ("output-only repair", AQUA),
-             "crl_fa": ("counterfactual credit", ORANGE), "crl_fired_only": ("fired-only credit", YELLOW),
-             "frozen_hidden": ("frozen hidden", GRAY)}
-    fig, ax = plt.subplots(figsize=(5.4, 3.0))
-    for rule, (name, c) in style.items():
+    runs = [load(p) for p in glob.glob(os.path.join(RES, "theory", "m18_*_s[0-9].json"))]
+    style = {("repair", "main"): ("repair", BLUE), ("repair", "homeothin"): ("repair + thin margins", "#174a8c"),
+             ("output_only", "main"): ("output-only repair", AQUA),
+             ("crl_fa", "main"): ("counterfactual credit", ORANGE),
+             ("crl_fired_only", "main"): ("fired-only credit", YELLOW),
+             ("frozen_hidden", "main"): ("frozen hidden", GRAY),
+             ("unsup_hidden", "main"): ("label-free hidden", GRAY)}
+    fig, ax = plt.subplots(figsize=(5.8, 3.2))
+    for (rule, tag), (name, c) in style.items():
         pts = [(r["repairs"]["weights_touched"] if r["repairs"] else r["plasticity"], r["acc"])
-               for r in runs if r["config"]["rule"] == rule]
+               for r in runs if r["config"]["rule"] == rule and r["config"]["tag"] == tag]
         if pts:
             x, y = zip(*pts)
             ax.plot(x, y, "o", color=c, ms=6, alpha=0.85)
-            ax.annotate(name, (np.mean(x), np.mean(y)), xytext=(7, 0), textcoords="offset points", fontsize=8,
-                        color=MUTED, va="center")
+            dx, dy, ha = {"fired-only credit": (-8, -12, "right"),
+                          "counterfactual credit": (-8, 12, "right")}.get(name, (7, 0, "left"))
+            ax.annotate(name, (np.mean(x), np.mean(y)), xytext=(dx, dy), textcoords="offset points", fontsize=8,
+                        color=MUTED, va="center", ha=ha)
     ax.set_xscale("log")
     ax.set_xlabel("weights changed during training (log)")
     ax.set_ylabel("held-out accuracy")

@@ -1,0 +1,25 @@
+{
+ "config": {
+  "rule": "crl_fa",
+  "eta_unsup": 0.02,
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "homeo": 0,
+  "thin": 0,
+  "seed": 1,
+  "tag": "main"
+ },
+ "curve": [
+  0.7615,
+  0.801,
+  0.816
+ ],
+ "acc": 0.816,
+ "repairs": null,
+ "plasticity": 11585104
+}

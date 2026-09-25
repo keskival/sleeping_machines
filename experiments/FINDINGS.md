@@ -5,6 +5,32 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M18 / M18b / M21 — 3 seeds (small network, 10k images, 3 epochs).**
+
+| rule | accuracy | weights changed |
+|---|---|---|
+| counterfactual credit | 0.821 ± 0.006 | 12.1M |
+| fired-only credit | 0.818 ± 0.005 | 6.8M |
+| repair + homeostasis + thin margins | 0.798 ± 0.014 | 0.40M |
+| repair | 0.767 ± 0.021 | 0.27M |
+| repair + homeostasis | 0.756 ± 0.020 | 0.28M |
+| output-only repair | 0.661 ± 0.005 | 0.40M |
+| frozen hidden | 0.659 ± 0.010 | 1.4M |
+| label-free competitive hidden (M21) | 0.467 ± 0.022 | 13.5M |
+
+*Learned:* history repair comes within ~2.3 points of the gradient-like rules while changing
+31× fewer weights; widening thin margins gave ~3 points, homeostasis nothing. Label-free
+competitive learning makes the hidden layer much worse than leaving it random: labels are
+essential for the hidden layer.
+
+**Puzzle.** Label-driven hidden credit is worth +16 points (fired-only 0.818 vs frozen 0.659),
+yet its alignment with the gradient of expected 0/1 error is ≈ 0 even at initialisation (M3 at
+0 pretraining epochs: +0.03 random feedback, +0.00 fired-only; estimate reliability 0.77). So
+its usefulness is not captured by alignment with that gradient. Candidate explanation: the
+0/1-error gradient is dominated by the few samples on a decision boundary, while the rules
+improve a smoother objective that pays off later. M19 (smooth loss) and alignment against a
+smooth objective should tell.
+
 **M21 (debug size) — can the hidden layer learn without labels?** A label-free competitive
 rule (winners move toward their input, rows normalised, homeostasis) with the same output
 learning reached 0.29 (η 0.02) and 0.20 (η 0.1) on 2k images, *below* a frozen random hidden

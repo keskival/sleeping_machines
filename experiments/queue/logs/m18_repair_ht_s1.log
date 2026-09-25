@@ -1,0 +1,5 @@
+# 2026-09-25T14:02:03+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule repair --homeo 1 --thin 1 --seed 1 --tag homeothin
+repair epoch 1: held-out 0.7420  (14s)  {'output': 2718, 'hidden_fire': 366, 'hidden_silence': 1170, 'none': 4, 'weights_touched': 190132, 'thin': 2096}
+repair epoch 2: held-out 0.7720  (25s)  {'output': 4136, 'hidden_fire': 717, 'hidden_silence': 1725, 'none': 5, 'weights_touched': 287953, 'thin': 3740}
+repair epoch 3: held-out 0.8125  (35s)  {'output': 5312, 'hidden_fire': 1032, 'hidden_silence': 2170, 'none': 10, 'weights_touched': 369429, 'thin': 5155}
+EXIT 0

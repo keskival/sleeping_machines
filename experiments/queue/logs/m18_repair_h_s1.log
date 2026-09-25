@@ -1,0 +1,5 @@
+# 2026-09-25T14:01:23+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule repair --homeo 1 --seed 1 --tag homeo
+repair epoch 1: held-out 0.6805  (15s)  {'output': 2755, 'hidden_fire': 461, 'hidden_silence': 1369, 'none': 7, 'weights_touched': 136742}
+repair epoch 2: held-out 0.7200  (26s)  {'output': 4221, 'hidden_fire': 927, 'hidden_silence': 2132, 'none': 18, 'weights_touched': 210033}
+repair epoch 3: held-out 0.7755  (36s)  {'output': 5419, 'hidden_fire': 1316, 'hidden_silence': 2750, 'none': 19, 'weights_touched': 268931}
+EXIT 0

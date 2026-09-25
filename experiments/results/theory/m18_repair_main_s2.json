@@ -1,0 +1,31 @@
+{
+ "config": {
+  "rule": "repair",
+  "eta_unsup": 0.02,
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "homeo": 0,
+  "thin": 0,
+  "seed": 2,
+  "tag": "main"
+ },
+ "curve": [
+  0.6925,
+  0.754,
+  0.796
+ ],
+ "acc": 0.796,
+ "repairs": {
+  "output": 5531,
+  "hidden_fire": 1301,
+  "hidden_silence": 2669,
+  "none": 15,
+  "weights_touched": 271992
+ },
+ "plasticity": 0
+}

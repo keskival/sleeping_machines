@@ -1,0 +1,5 @@
+# 2026-09-25T13:55:52+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule crl_fa --seed 1 --tag main
+crl_fa epoch 1: held-out 0.7615  (9s)  5357475
+crl_fa epoch 2: held-out 0.8010  (18s)  3262392
+crl_fa epoch 3: held-out 0.8160  (27s)  2965237
+EXIT 0
