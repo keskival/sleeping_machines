@@ -5,6 +5,13 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M28 — simplex (multiplicative) learning: negative.** Non-negative, credit-conserving nets,
+debug size: exponentiated-gradient updates of each node's evidence mix (urgency additive) reach
+0.06–0.31 vs 0.85 additive (depth 1) and 0.08–0.15 vs 0.75 (depth 3). *Learned:* the simplex
+view is an exact description (neurons are linear in their evidence mix) but the wrong learning
+geometry: multiplicative steps cannot recruit absent evidence (zero or tiny weights), which is
+most of what learning has to do. THEORY §24.
+
 **E14 full length, seed 0 (width 400, 3 epochs, validation).** Counterfactual vs fired-only:
 depth 1 0.945 vs 0.946 (−0.1), depth 2 0.940 vs 0.933 (+0.6), depth 3 0.926 vs 0.909 (+1.7);
 frozen hidden 0.875 (d1), 0.712 (d2). *Learned:* the gap grows steadily with depth as predicted

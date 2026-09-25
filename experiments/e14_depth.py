@@ -32,12 +32,36 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e14")
 
 
 class DeepRaceNet:
-    _apply = RaceNet._apply
+    _apply_add = RaceNet._apply
+
+    def _apply(self, W, idx, coef, mask, dummy, exists=None):
+        if not self.eg:
+            return self._apply_add(W, idx, coef, mask, dummy, exists)
+        # M28 (THEORY §24): each geometry gets its own update: the evidence mix u = w/ρ moves
+        # multiplicatively on the simplex; the urgency ρ = Σw moves additively by the credit's total.
+        for bi in range(len(idx)):
+            active = np.flatnonzero(coef[bi])
+            if not len(active):
+                continue
+            m = mask[bi, active]
+            if exists is not None:
+                m = m * exists[np.ix_(active, idx[bi])]
+            rho = W[active, :dummy].sum(1, keepdims=True)
+            upd = coef[bi, active, None] * m
+            # urgency: the credit's additive effect on the node's total drive
+            rho_new = np.maximum(rho + upd.sum(1, keepdims=True), 1e-6)
+            # evidence mix: multiplicative step on the simplex
+            r = self.eg * upd / np.maximum(rho, 1e-9)
+            sub = W[np.ix_(active, idx[bi])]
+            W[np.ix_(active, idx[bi])] = sub * np.exp(np.clip(r, -5, 5))
+            W[active, :dummy] *= rho_new / np.maximum(W[active, :dummy].sum(1, keepdims=True), 1e-9)
+            self.work["plasticity"] += int((m > 0).sum()) + len(active)
+        W[:, dummy] = 0
     _elig = RaceNet._elig
 
     def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0, fanin_in=0):
         self.cfg, self.k, self.feedback = cfg, k, feedback
-        self.rng, self.window, self.nonneg = rng, 0.15, False
+        self.rng, self.window, self.nonneg, self.eg = rng, 0.15, False, 0.0
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
@@ -208,6 +232,7 @@ def main(a):
     net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in)
     net.window = a.window
     net.nonneg = bool(a.nonneg)
+    net.eg = a.eg
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -248,6 +273,7 @@ if __name__ == "__main__":
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
+    ap.add_argument("--eg", type=float, default=0.0, help="M28: multiplicative simplex updates with this scale (0 = additive)")
     ap.add_argument("--val", type=int, default=0)
     ap.add_argument("--train-limit", type=int, default=0)
     ap.add_argument("--seed", type=int, default=0)
