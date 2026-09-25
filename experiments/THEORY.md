@@ -858,11 +858,35 @@ dequantized semiring down to the tropical one.
 
 Known: tropical views of ReLU networks (tropical rational maps), Maslov dequantization and
 idempotent analysis, Plackett–Luce, inside–outside, piecewise-deterministic Markov processes.
-Not found: race inference as exactly tropical computation on events, learning as its
+**Closest:** UltraLIF (arXiv 2602.11206) uses ultradiscretization and max-plus algebra for
+spiking neurons, with log-sum-exp at a learnable temperature becoming hard thresholding as it
+goes to zero: dequantization of *neuron dynamics* to make them differentiable. Here what is
+dequantized is the race *between events*, over a recombining forest of histories. Not found: race inference as exactly tropical computation on events, learning as its
 dequantization over a *recombining forest of event histories*, and shadow spikes as the
 first-order term.
 
-### 21.9 Tests
+### 21.9 Weaving closes the past
+
+The pool is always conditional on the inputs so far: each strand's projected time assumes no
+further input, and future inputs will revise it. A collapse (weaving) is the operator that closes
+the past: once an event is woven at t_c, nothing arriving later can influence it.
+
+- **Collapse times are stopping times.** The decision to collapse at t_c uses only inputs up to
+  t_c (a stopping time in the input filtration). Weaving turns part of the open pool into fixed
+  history; the pool is the law of histories given the inputs so far and a prior over the rest.
+- **The gradient respects it.** ∂T/∂w_i is nonzero only for inputs that arrived before the
+  crossing; denying new inputs to the past is why timing gradients ignore later inputs.
+- **Two kinds of counterfactual.** *Woven (truncated):* the residue Δ frozen at the collapse,
+  seeing only evidence up to t_c. *Unwoven (continued):* what would have happened had the
+  collapse not occurred, still receiving future inputs, which is the shadow channel of §20.
+  This plausibly explains why the shadow neuron did best with a long window (0.4): it includes
+  the evidence that weaving denied (M7 measures the trade-off).
+- **When to weave is optimal stopping.** Collapsing early saves time and work but forgoes future
+  evidence; E2's race tracks the optimal stopping rule (MSPRT). Thresholds are learnt stopping
+  rules (§7, E13b); a world model (E13d) could supply the prior over future inputs that decides
+  whether waiting is worth it.
+
+### 21.10 Tests
 
 - **M24a.** The near-miss weights used by the rules equal ⊕_σ derivatives on real samples (up
   to the first-order truncation).
