@@ -799,6 +799,77 @@ substrate (asynchronous, sparse), not from MoE practice:
 0.698; residue weighting: 0.649; shadow window 0.05/0.15: 0.62; hard Δ window: 0.584; sampled
 binary eligibility: 0.548; fired-only: 0.525. **(test M23)**, queued at full size with 2 seeds.
 
+## 21. The unravelled pool: a dequantized tropical computation over a forest of histories
+
+### 21.1 The object
+
+A history is a sequence of events (node, time). At each collapse the pool forks: any pending
+strand could have been the one to collapse. Branches share prefixes and **recombine** when a
+branch's difference stops changing anything downstream (its light cone closes; M20). The full
+unravelling is therefore a *packed forest of histories*: a directed hypergraph whose nodes are
+events and whose hyperedges are collapses. It is not a tree.
+
+### 21.2 The race is tropical
+
+The primitive operation is first arrival, a minimum over projected times, while along a path
+times add. So min plays "addition" and + plays "multiplication": the **min-plus (tropical)
+semiring**. The deterministic forward pass of a race network is a tropical computation on the
+event forest.
+
+### 21.3 Temperature is dequantization
+
+Replace min(a, b) by a ⊕_σ b = −σ log(e^{−a/σ} + e^{−b/σ}). As σ → 0 this is min again. In
+idempotent analysis this family is the **Litvinov–Maslov dequantization**, the formal bridge
+between sums over paths and their classical (tropical) limit. So the "wavefunction" of the
+unravelled pool has a precise counterpart: at σ = 0, the machine (one history); at σ > 0,
+every history weighted by e^{−cost/σ}. (A probability-like weighting, not complex amplitudes,
+but the same structure: a sum over paths and its classical limit.)
+
+### 21.4 Local form: Plackett–Luce races
+
+With Gumbel noise on crossing times, which k members of a group win, and in what order, follows
+the Plackett–Luce distribution with weights e^{−τ/σ}. The pool at temperature σ factorises into
+a **layered product of Plackett–Luce races**, each conditioned on upstream spike times.
+
+### 21.5 Forward weaving: inside values
+
+Each event's soft arrival time is the ⊕_σ-sum over the paths that could produce it. Expanding in
+the number of flips around the realised path gives a hierarchy: order 0 is the realised history
+(the classical path); order 1 is single flips, exactly the **shadow spikes** of §20 and the
+branches of M20; higher orders are interacting flips, which our rules ignore (§6).
+
+### 21.6 Backward weaving: outside values
+
+The derivative of ⊕_σ is a softmax: ∂(a ⊕_σ b)/∂a = e^{−a/σ}/(e^{−a/σ} + e^{−b/σ}). So credit
+splits among competing paths in proportion to e^{−Δ/σ}: **the near-miss weighting is the
+derivative of dequantized addition**, not a heuristic. Along the realised path the adjoint is
+EventProp's time sensitivity; at each fork it is the branch's loss difference times the fork
+probability's sensitivity (§14). Together this is the **inside–outside algorithm** run on the
+network's own forest of event histories.
+
+### 21.7 Inference and learning at different temperatures
+
+Inference runs in the tropical limit: hard, sparse, cheap. Learning needs a neighbourhood of it
+(σ > 0), because the tropical map is piecewise constant. Residues and shadow spikes are the
+cheapest, first-order view of that neighbourhood; annealing σ is continuation from the
+dequantized semiring down to the tropical one.
+
+### 21.8 Credits and what is new
+
+Known: tropical views of ReLU networks (tropical rational maps), Maslov dequantization and
+idempotent analysis, Plackett–Luce, inside–outside, piecewise-deterministic Markov processes.
+Not found: race inference as exactly tropical computation on events, learning as its
+dequantization over a *recombining forest of event histories*, and shadow spikes as the
+first-order term.
+
+### 21.9 Tests
+
+- **M24a.** The near-miss weights used by the rules equal ⊕_σ derivatives on real samples (up
+  to the first-order truncation).
+- **M24b.** Inside–outside on the M20 beam reproduces M19's finite-difference gradient of the
+  soft (σ > 0) objective, better as the beam grows.
+- **M24c.** Annealed σ (dequantization continuation) trains at least as well as a fixed σ at depth.
+
 ## Tests
 
 | | Claim | Test |
@@ -821,6 +892,7 @@ binary eligibility: 0.548; fired-only: 0.525. **(test M23)**, queued at full siz
 | **M16** | knowing the exact unravelling V_n(τ) makes local learning clearly better | oracle proximal-projection learner vs crl_fa, fired-only, M13 (small nets) |
 | **M17** | breakpoint messages reproduce the oracle exactly, sparsely | agreement on every sample; breakpoints per node; nodes reached |
 | **M18** | history repair (cheapest verified single-event repair) rivals gradient-like rules while touching far fewer weights | small nets; accuracy, weights touched, forgetting |
+| **M24** | the pool is a dequantized tropical computation: near-miss weights = ⊕_σ derivatives; inside–outside on the beam = soft-objective gradient; annealing helps at depth | small nets, M19/M20 machinery |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
