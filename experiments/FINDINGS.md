@@ -5,6 +5,16 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E13a (debug size) — reward only.** On 2k images, 2 epochs: near-miss guess 0.30,
+reward-modulated winner-only 0.19, pool policy gradient 0.15, supervised reference 0.59.
+*Learned (tentatively):* spreading credit over the close calls when wrong roughly doubles
+what the standard spiking reinforcement rule reaches. Pool policy gradient may need another
+temperature (σ variants queued). 3 seeds at full size queued.
+
+**Queued to resolve open questions:** M3 against a smooth race-margin objective (does the
+hidden credit follow a smoother objective than 0/1 error?); M3 along training; E9 sparse
+fan-in (16/32/64, with and without growth) as the energy viability gate.
+
 **M18 / M18b / M21 — 3 seeds (small network, 10k images, 3 epochs).**
 
 | rule | accuracy | weights changed |
