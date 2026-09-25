@@ -1,1 +1,5 @@
 # 2026-09-25T17:34:01+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --depth 4 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+depth 4 crl_fa epoch 1: 0.8762 (304s)
+depth 4 crl_fa epoch 2: 0.8935 (588s)
+depth 4 crl_fa epoch 3: 0.9096 (869s)
+EXIT 0

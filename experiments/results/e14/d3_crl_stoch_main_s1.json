@@ -1,0 +1,49 @@
+{
+ "config": {
+  "depth": 3,
+  "width": 400,
+  "variant": "crl_stoch",
+  "window": 0.15,
+  "epochs": 3,
+  "feedback": "dfa",
+  "fanin": 0,
+  "fanin_in": 0,
+  "sigma": 0.15,
+  "zero_sum": 0,
+  "nonneg": 0,
+  "eg": 0.0,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 1,
+  "tag": "main"
+ },
+ "curve": [
+  0.8935,
+  0.9134,
+  0.9253
+ ],
+ "acc": 0.9253,
+ "code": [
+  {
+   "redundancy": 0.19175579239578913,
+   "evidence_used": 0.6357062163092099,
+   "fire_rate": 0.2999750077724457
+  },
+  {
+   "redundancy": 0.24110837058548706,
+   "evidence_used": 0.9837960455037921,
+   "fire_rate": 0.30000001192092896
+  },
+  {
+   "redundancy": 0.2597511949238057,
+   "evidence_used": 0.9999478125,
+   "fire_rate": 0.30000001192092896
+  }
+ ],
+ "credit_reach": [
+  0.10513573333333333,
+  0.1152167,
+  0.11680716666666667
+ ],
+ "synops_per_sample": 132106.2164872364
+}

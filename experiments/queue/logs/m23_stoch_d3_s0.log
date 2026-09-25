@@ -1,0 +1,5 @@
+# 2026-09-25T20:09:22+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --tag main --depth 3 --variant crl_stoch --seed 0
+depth 3 crl_stoch epoch 1: 0.8892 (225s)
+depth 3 crl_stoch epoch 2: 0.9121 (444s)
+depth 3 crl_stoch epoch 3: 0.9208 (661s)
+EXIT 0

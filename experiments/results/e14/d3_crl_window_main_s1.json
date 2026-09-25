@@ -1,0 +1,49 @@
+{
+ "config": {
+  "depth": 3,
+  "width": 400,
+  "variant": "crl_window",
+  "window": 0.15,
+  "epochs": 3,
+  "feedback": "dfa",
+  "fanin": 0,
+  "fanin_in": 0,
+  "sigma": 0.15,
+  "zero_sum": 0,
+  "nonneg": 0,
+  "eg": 0.0,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 1,
+  "tag": "main"
+ },
+ "curve": [
+  0.8997,
+  0.9208,
+  0.9282
+ ],
+ "acc": 0.9282,
+ "code": [
+  {
+   "redundancy": 0.18644410657715144,
+   "evidence_used": 0.6366371334633176,
+   "fire_rate": 0.29996249079704285
+  },
+  {
+   "redundancy": 0.23399476824115942,
+   "evidence_used": 0.977743780472559,
+   "fire_rate": 0.30000001192092896
+  },
+  {
+   "redundancy": 0.24063423436640122,
+   "evidence_used": 1.0,
+   "fire_rate": 0.30000001192092896
+  }
+ ],
+ "credit_reach": [
+  0.10197415,
+  0.11429723333333333,
+  0.11970351666666666
+ ],
+ "synops_per_sample": 132049.9159100999
+}
