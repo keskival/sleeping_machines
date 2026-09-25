@@ -131,6 +131,27 @@ class DeepRaceNet:
             np.maximum(self.th[l], 0.05, out=self.th[l])
 
 
+def code_diagnostics(net, times):
+    """Early-evidence monopoly check (THEORY §18): per hidden layer, the mean absolute
+    correlation between nodes' firing across samples (redundancy), and the share of the
+    layer's input events integrated before its nodes froze (evidence used)."""
+    t, idx = to_events(times)
+    st = net.forward(t, idx)
+    out = []
+    for L in st["layers"]:
+        f = L["fired"].astype(np.float32)
+        live = f.std(0) > 0
+        if live.sum() > 1:
+            c = np.corrcoef(f[:, live].T)
+            red = float(np.abs(c[~np.eye(len(c), dtype=bool)]).mean())
+        else:
+            red = None
+        arrived = np.isfinite(L["t"])[:, None, :] & (L["t"][:, None, :] <= L["freeze"][:, :, None])
+        used = float(arrived.sum(2).mean() / max(np.isfinite(L["t"]).sum(1).mean(), 1))
+        out.append({"redundancy": red, "evidence_used": used, "fire_rate": float(f.mean())})
+    return out
+
+
 def evaluate(net, times, y, batch=250):
     correct = 0
     for i in range(0, len(y), batch):
@@ -163,7 +184,8 @@ def main(a):
             net.teach(net.forward(t, idx), ytr[ii])
         curve.append(evaluate(net, tte, yte))
         print(f"depth {a.depth} {a.variant} epoch {ep + 1}: {curve[-1]:.4f} ({time.time() - t0:.0f}s)", flush=True)
-    res = {"config": vars(a), "curve": curve, "acc": curve[-1],
+    res_diag = code_diagnostics(net, tte[:1000])
+    res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag,
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
     os.makedirs(OUT, exist_ok=True)

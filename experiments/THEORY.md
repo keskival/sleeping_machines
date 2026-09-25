@@ -702,6 +702,54 @@ residues are the unselected experts' margins. Two consequences:
 - **P4.** Sparse fan-in that is safe with DFA (E9, E14) can become untrainable with local
   feedback; the boundary follows F·p ≈ 1.
 
+## 18. The early-evidence monopoly: why sparsity helps races
+
+A race is decided by order statistics. With dense fan-in every node sees the same earliest
+input events, so all nodes are pushed by the same few spikes, fire in correlated ways, and
+the layer carries little beyond those first events; deeper dense layers wait for all upstream
+spikes before deciding. Sparse fan-in gives each node a different subset of early evidence,
+decorrelating the code. Prediction: redundancy falls and accuracy rises as fan-in shrinks,
+until the percolation threshold of §17 bites, so sparsity has an optimum set by two
+competing effects.
+
+Debug evidence (depth 3, 3k images, 1 epoch): dense hidden-to-hidden (fan-in 64): redundancy
+0.17 in the first layer, deeper layers integrate ~100% of upstream spikes before freezing,
+accuracy 0.30; fan-in 2: redundancy 0.06–0.08, evidence used 0.72–0.82, accuracy 0.73.
+E15 records both measures across its sweep.
+
+## 19. Every routing network has a counterfactual routing gradient
+
+Any network whose computation path is *selected* (races, top-k MoE, hard attention, early
+exit, retrieval, beam search, tree-structured nets) chooses among alternatives by an argmax
+or argmin over scores s_i(w). Under noise of scale σ on the scores, the gradient of the
+expected loss is
+
+    ∇E[L] = E[∇L along the chosen route]
+          + Σ_i ρ_σ(s_chosen − s_i) · (L_i − L_chosen) · ∇(s_i − s_chosen),
+
+the pathwise term plus a boundary term per alternative (§4). Backprop keeps only the first:
+the router's blind spot is the missing second term. What the race formalism contributes to
+this general picture:
+
+1. **Residues are sufficient statistics for the boundary term.** From an unchosen route
+   one needs only its margin and the margin's gradient. The costly part, L_i − L_chosen, is
+   needed only for alternatives inside the noise band ρ_σ, which is a small set.
+2. **A cost–accuracy knob.** Evaluate L_i exactly for the top few near-miss alternatives
+   (shadow execution, §14.6), approximate it for the rest (first order, or a critic), and
+   ignore alternatives outside the band.
+3. **Percolation for stacked routers (§17).** Credit reaches deep routing decisions only
+   if the eligible branching exceeds one: k > 1, or near misses counted.
+4. **Asynchronous shadows.** Near-miss routes can be executed as tagged shadow events,
+   where hardware allows it.
+
+**E16 (designed):** an ordinary, non-spiking MoE with top-1 routing on a small task; router
+trained by (a) the standard gate-value gradient, (b) a straight-through estimator,
+(c) the boundary term with the top-m near-miss experts executed in shadow (m = 1, 2) and the
+rest approximated, (d) dense top-2 as a reference. Measures: accuracy, expert load balance,
+router quality (share of inputs routed to the expert with the lowest loss), and compute per
+step. The claim to test is that (c) gives better routers than (a–b) at far less compute than
+(d).
+
 ## Tests
 
 | | Claim | Test |
