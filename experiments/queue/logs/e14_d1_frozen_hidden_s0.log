@@ -1,0 +1,5 @@
+# 2026-09-25T15:20:01+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --depth 1 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+depth 1 frozen_hidden epoch 1: 0.8650 (93s)
+depth 1 frozen_hidden epoch 2: 0.8738 (201s)
+depth 1 frozen_hidden epoch 3: 0.8748 (308s)
+EXIT 0

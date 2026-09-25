@@ -1,0 +1,23 @@
+{
+ "config": {
+  "depth": 2,
+  "width": 400,
+  "variant": "crl_fired_only",
+  "epochs": 3,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 0,
+  "tag": "main"
+ },
+ "curve": [
+  0.8907,
+  0.9257,
+  0.9331
+ ],
+ "acc": 0.9331,
+ "credit_reach": [
+  0.0612198,
+  0.06065165
+ ],
+ "synops_per_sample": 86481.3573888889
+}

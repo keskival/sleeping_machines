@@ -70,6 +70,11 @@ e14_d2_frozen_hidden_s1 experiments/e14_depth.py --depth 2 --variant frozen_hidd
 e14_d3_crl_fa_s1 experiments/e14_depth.py --depth 3 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 1 --tag main
 e14_d3_crl_fired_only_s1 experiments/e14_depth.py --depth 3 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 1 --tag main
 e14_d3_frozen_hidden_s1 experiments/e14_depth.py --depth 3 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+# E14 deeper: depth 4 and 5 (seed 0)
+e14_d4_crl_fa_s0 experiments/e14_depth.py --depth 4 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d4_crl_fired_only_s0 experiments/e14_depth.py --depth 4 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d5_crl_fa_s0 experiments/e14_depth.py --depth 5 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d5_crl_fired_only_s0 experiments/e14_depth.py --depth 5 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
 # M22: gradient-aligned feedback under round-3 settings, and the template-mechanism diagnostics
 m22_crl_sym_s0 experiments/m18_repair.py --rule crl_sym --seed 0 --tag m22
 m22_crl_sign_s0 experiments/m18_repair.py --rule crl_sign --seed 0 --tag m22
