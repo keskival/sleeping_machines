@@ -94,7 +94,10 @@ class DeepRaceNet:
         self._apply(self.Wo, st["idx2"], cfg.eta_out * s, mask2, self.Wo.shape[1] - 1)
         for l, L in enumerate(st["layers"]):
             if cfg.variant != "frozen_hidden":
-                delta = s @ self.B[l]
+                if cfg.variant == "crl_drtp":                 # random projection of the label alone
+                    delta = np.eye(self.k, dtype=np.float32)[y] @ self.B[l]
+                else:
+                    delta = s @ self.B[l]
                 if cfg.variant == "crl_fired_only":
                     elig = L["fired"].astype(np.float32)
                 else:
@@ -153,7 +156,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", type=int, default=2)
     ap.add_argument("--width", type=int, default=400)
-    ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden"))
+    ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden", "crl_drtp"))
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--val", type=int, default=0)
     ap.add_argument("--train-limit", type=int, default=0)

@@ -258,7 +258,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--rule", default="repair",
                     choices=("repair", "output_only", "crl_fa", "crl_fired_only", "frozen_hidden", "unsup_hidden",
-                             "crl_sym", "crl_sign"))
+                             "crl_sym", "crl_sign", "crl_drtp"))
     ap.add_argument("--eta-unsup", type=float, default=0.02, help="M21 competitive learning rate")
     ap.add_argument("--hidden", type=int, default=60)
     ap.add_argument("--train", type=int, default=10000)
