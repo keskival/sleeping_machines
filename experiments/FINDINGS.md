@@ -5,6 +5,16 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M20 — beams as asynchronous shadow events.** One discrete-event pass computes the factual
+history plus one branch per hidden-group collapse ("the group's last winner does not fire"), with
+shadow continuation of the group's members and per-branch output deltas. Over 50 samples (small
+network, 6 branches per sample): factual winner agreement 100%, **branch winner agreement 100%**
+against the batch computation of the same swaps. Cost per sample: ~506 output shadow
+re-predictions and ~81 hidden shadow updates (vs 611 scheduled events in total), mostly from every
+branch re-predicting every output on each output input. *Learned:* branches can run exactly and
+asynchronously in the same event queue (§14.6 holds); the overhead is in re-prediction and has
+obvious savings (only outputs whose ranking can change). Now a regression test.
+
 **E16 — counterfactual routing gradient in an ordinary MoE (numpy; 8 linear experts; top-1).**
 A first version showed a dramatic gain for the boundary term. That was an artifact: my gate
 baseline did not implement the exact Switch-style gradient. With exact gradients, on MNIST every

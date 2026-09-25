@@ -94,3 +94,20 @@ def test_asked_labels_respect_the_budget():
     assert given <= 100 and given >= 95
     lab = E7.Labeller(E7.Stream(labels="ask", label_rate=0.1), 1000)
     assert sum(lab(i, False) for i in range(1000)) == 0
+
+
+def test_shadow_branches_match_batch_swaps():
+    """M20: every shadow-event branch reaches the same winner as the batch computation of its swap."""
+    import m20_shadow as M20
+    import theory_checks as TC
+    cfg = E6.Config(hidden=40, group=10, winners=3, hid_frac=0.6, psp="ramp", deadline=1)
+    x, y = TC.small_mnist(500)
+    net = TC.make_net(cfg, x, 0)
+    TC.pretrain(net, x, y, 1)
+    xt, _ = TC.small_mnist(8, offset=50000)
+    for i in range(8):
+        w, branches, fired_t, _ = M20.shadow_forward(net, xt[i])
+        t, idx = E6.to_events(xt[i:i + 1])
+        assert w == net.forward(t, idx)["winner"][0]
+        ref = M20.batch_branches(net, xt[i], branches, fired_t)
+        assert [br["winner"] for br in branches] == ref
