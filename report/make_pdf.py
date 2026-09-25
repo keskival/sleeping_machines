@@ -360,8 +360,19 @@ def theory_pages(st, W):
                              "mistake can be fixed by an exact projection with no learning rate. It ties the "
                              "near-miss rule: a valid reformulation, not an improvement, and it is now the geometric "
                              "core of history repair.", st["body"])]
+    img = png("e14_depth", W * 0.95)
+    if img:
+        s += [Paragraph("Depth: where counterfactual credit pays (E14)", st["h2"]), img,
+              Paragraph("Hidden credit per layer through fixed random feedback. With one hidden layer, counterfactual "
+                        "and fired-only credit tie. Deeper, a near-miss node matters only through nodes its spike would "
+                        "have tipped over threshold: a path made of events that did not happen, which only counterfactual "
+                        "credit reaches. Label templates alone (DRTP) work in shallow networks and fail in deep ones.",
+                        st["body"])]
+    img = png("e13_bandit", W * 0.8)
     e13 = e13_summary()
-    if e13:
+    if img:
+        s += [Paragraph("Reinforcement learning: reward only (E13a)", st["h2"]), img]
+    elif e13:
         names = {"supervised": "supervised (reference)", "nearmiss": "near-miss guess", "rstdp": "reward-modulated",
                  "pool_pg": "pool policy gradient"}
         rows = [["rule (reward only)", "held-out accuracy", "seeds"]] + [
