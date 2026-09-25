@@ -15,6 +15,22 @@ m13_c3_m05 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap
 m13_c3_m2 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.01 --c-min 0.3 --margin 0.2 --tag c3_m2
 m13_c3_cap03 experiments/m13_projection.py --val 10000 --epochs 5 --batch 32 --cap 0.03 --c-min 0.3 --margin 0.1 --tag c3_cap03
 m13_c3_b1 experiments/m13_projection.py --val 10000 --epochs 5 --batch 1 --cap 0.01 --c-min 0.3 --margin 0.1 --tag c3_b1
+# M18 (THEORY 13): history repair vs gradient-like rules, small network, 3 seeds
+m18_repair_s0 experiments/m18_repair.py --rule repair --seed 0 --tag main
+m18_output_only_s0 experiments/m18_repair.py --rule output_only --seed 0 --tag main
+m18_crl_fa_s0 experiments/m18_repair.py --rule crl_fa --seed 0 --tag main
+m18_crl_fired_only_s0 experiments/m18_repair.py --rule crl_fired_only --seed 0 --tag main
+m18_frozen_hidden_s0 experiments/m18_repair.py --rule frozen_hidden --seed 0 --tag main
+m18_repair_s1 experiments/m18_repair.py --rule repair --seed 1 --tag main
+m18_output_only_s1 experiments/m18_repair.py --rule output_only --seed 1 --tag main
+m18_crl_fa_s1 experiments/m18_repair.py --rule crl_fa --seed 1 --tag main
+m18_crl_fired_only_s1 experiments/m18_repair.py --rule crl_fired_only --seed 1 --tag main
+m18_frozen_hidden_s1 experiments/m18_repair.py --rule frozen_hidden --seed 1 --tag main
+m18_repair_s2 experiments/m18_repair.py --rule repair --seed 2 --tag main
+m18_output_only_s2 experiments/m18_repair.py --rule output_only --seed 2 --tag main
+m18_crl_fa_s2 experiments/m18_repair.py --rule crl_fa --seed 2 --tag main
+m18_crl_fired_only_s2 experiments/m18_repair.py --rule crl_fired_only --seed 2 --tag main
+m18_frozen_hidden_s2 experiments/m18_repair.py --rule frozen_hidden --seed 2 --tag main
 # Stage 0: does one frame per update match minibatches? (validation split, one pass, 3 seeds)
 s0_b32_s0 experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 32 --tag s0_b32 --seed 0
 s0_b1_s0  experiments/e6_hidden.py mnist --winners 3 --hid-frac 0.6 --eta-out 0.01 --eta-hid 0.01 --lr-decay 0.7 --deadline 1 --psp ramp --variant crl_fa --val 10000 --epochs 1 --batch 1 --homeo 3.125e-05 --tag s0_b1 --seed 0
