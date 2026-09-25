@@ -5,6 +5,13 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E9 sparse fan-in (debug size).** 3k images, 1 epoch, validation: fan-in 32 gives 8.1k
+synaptic events per image vs 113.9k dense (14× fewer), with *higher* accuracy (0.817 vs
+0.792). For scale: the MLP that matched round-3 accuracy (32 hidden units) needs ~25k
+multiply-accumulates. If fan-in 32 holds ~0.96 at ~8k events, the inference-energy verdict
+flips in the race's favour. *Next:* E9 pilots (3 epochs; fan-in 16/32/64, with and without
+growth) are queued; if they hold, a full 10-epoch test-set run for the energy table.
+
 **DRTP control (debug size).** Hidden credit from a random projection of the label alone
 (direct random target projection), the pure form of the template mechanism: one hidden layer
 0.54 vs 0.59 for counterfactual credit (close, consistent with templates); **depth 3: 0.20 vs
