@@ -1,0 +1,5 @@
+# 2026-09-25T13:55:12+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule output_only --seed 1 --tag main
+output_only epoch 1: held-out 0.6015  (14s)  {'output': 4996, 'hidden_fire': 0, 'hidden_silence': 0, 'none': 158, 'weights_touched': 167396}
+output_only epoch 2: held-out 0.6340  (26s)  {'output': 8494, 'hidden_fire': 0, 'hidden_silence': 0, 'none': 316, 'weights_touched': 284317}
+output_only epoch 3: held-out 0.6625  (38s)  {'output': 11763, 'hidden_fire': 0, 'hidden_silence': 0, 'none': 474, 'weights_touched': 393485}
+EXIT 0

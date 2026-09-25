@@ -1,0 +1,5 @@
+# 2026-09-25T14:06:08+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.005 --seed 0 --tag e005
+unsup_hidden epoch 1: held-out 0.1320  (13s)  4709017
+unsup_hidden epoch 2: held-out 0.4290  (27s)  4620862
+unsup_hidden epoch 3: held-out 0.4475  (40s)  4468014
+EXIT 0

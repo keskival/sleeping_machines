@@ -1,0 +1,25 @@
+{
+ "config": {
+  "rule": "frozen_hidden",
+  "eta_unsup": 0.02,
+  "hidden": 60,
+  "train": 10000,
+  "test": 2000,
+  "epochs": 3,
+  "cap": 0.05,
+  "margin": 0.1,
+  "candidates": 10,
+  "homeo": 0,
+  "thin": 0,
+  "seed": 2,
+  "tag": "main"
+ },
+ "curve": [
+  0.5855,
+  0.6505,
+  0.6725
+ ],
+ "acc": 0.6725,
+ "repairs": null,
+ "plasticity": 1386481
+}

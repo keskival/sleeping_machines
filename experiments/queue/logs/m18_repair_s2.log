@@ -1,0 +1,5 @@
+# 2026-09-25T13:57:17+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule repair --seed 2 --tag main
+repair epoch 1: held-out 0.6925  (14s)  {'output': 2936, 'hidden_fire': 451, 'hidden_silence': 1329, 'none': 8, 'weights_touched': 143374}
+repair epoch 2: held-out 0.7540  (25s)  {'output': 4349, 'hidden_fire': 895, 'hidden_silence': 2098, 'none': 13, 'weights_touched': 215655}
+repair epoch 3: held-out 0.7960  (35s)  {'output': 5531, 'hidden_fire': 1301, 'hidden_silence': 2669, 'none': 15, 'weights_touched': 271992}
+EXIT 0

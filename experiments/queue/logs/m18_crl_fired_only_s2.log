@@ -1,0 +1,5 @@
+# 2026-09-25T13:59:07+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule crl_fired_only --seed 2 --tag main
+crl_fired_only epoch 1: held-out 0.7490  (9s)  3326445
+crl_fired_only epoch 2: held-out 0.8240  (17s)  1844680
+crl_fired_only epoch 3: held-out 0.8205  (25s)  1593337
+EXIT 0

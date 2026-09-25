@@ -1,0 +1,7 @@
+# 2026-09-25T14:05:23+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.02 --seed 2 --tag main
+unsup_hidden epoch 1: held-out 0.3340  (13s)  4594889
+/workspace/experiments/e6_hidden.py:115: RuntimeWarning: overflow encountered in divide
+  tstar = np.where(A > 0, (theta[None, :, None] + Bc) / A, np.inf)
+unsup_hidden epoch 2: held-out 0.3940  (27s)  4477515
+unsup_hidden epoch 3: held-out 0.4585  (40s)  4366384
+EXIT 0
