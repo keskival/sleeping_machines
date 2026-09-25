@@ -5,6 +5,13 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**E14 complete (2 seeds, width 400, 3 epochs, validation).** Counterfactual vs fired-only vs
+frozen: depth 1 0.949 / 0.947 / 0.873 (gap +0.2; seeds −0.1, +0.4); depth 2 0.942 / 0.930 / 0.708
+(gap **+1.2**, both seeds +1.2); depth 3 0.924 / 0.909 / 0.565 (gap **+1.5**; seeds +1.2, +1.7).
+*Learned:* confirmed at 2 seeds: counterfactual credit's advantage appears from depth 2 and holds
+at depth 3, modest (~1.2–1.5 points) but consistent; a frozen stack collapses with depth, so deep
+race networks depend on hidden credit. Depths 4–5 and credit conservation on top are queued.
+
 **M28 — simplex (multiplicative) learning: negative.** Non-negative, credit-conserving nets,
 debug size: exponentiated-gradient updates of each node's evidence mix (urgency additive) reach
 0.06–0.31 vs 0.85 additive (depth 1) and 0.08–0.15 vs 0.75 (depth 3). *Learned:* the simplex

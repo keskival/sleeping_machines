@@ -304,7 +304,8 @@ def fig_promising():
         ax.set_xticks(ds)
     ax.set_xlabel("hidden layers")
     ax.set_ylabel("points: counterfactual − fired-only")
-    ax.set_title("Counterfactual credit pays with depth\n(full length, seed 0)", fontsize=8.5)
+    ax.set_title(f"Counterfactual credit pays with depth\n(full length, {len({r['config']['seed'] for r in e14})} seeds)",
+                 fontsize=8.5)
 
     # (c) depth-3 ladder (debug)
     ax = axes[1, 0]
