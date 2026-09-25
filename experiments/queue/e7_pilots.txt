@@ -43,6 +43,11 @@ m21_unsup_s0 experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.02 --se
 m21_unsup_s1 experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.02 --seed 1 --tag main
 m21_unsup_s2 experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.02 --seed 2 --tag main
 m21_unsup_e005_s0 experiments/m18_repair.py --rule unsup_hidden --eta-unsup 0.005 --seed 0 --tag e005
+# M3 along training: is hidden credit better aligned early on? (pretrain 0 and 1 epochs; 3 = main)
+m3_pre0_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 0 --seed 0 --tag pre0
+m3_pre0_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 0 --seed 1 --tag pre0
+m3_pre1_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 0 --tag pre1
+m3_pre1_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 1 --tag pre1
 # M19 (THEORY 14): greedy exact path gradient vs fork terms vs holistic, alignment with the true gradient
 m19_s0 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --tag main
 m19_s1 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 1 --tag main
