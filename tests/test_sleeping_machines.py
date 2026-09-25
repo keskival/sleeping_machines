@@ -70,6 +70,7 @@ def _latency_batch(n=60, seed=0):
     dict(psp="ramp"),
     dict(psp="ramp", deadline=1),
     dict(psp="ramp", patch=10, stride=3),
+    dict(psp="ramp", fanin=40),
 ])
 def test_closed_form_matches_event_engine(kw):
     xm = _latency_batch()
@@ -93,6 +94,23 @@ def test_training_step_changes_only_existing_patch_synapses():
     changed = net.W1 != before
     assert changed.any()
     assert not (changed & ~net.M1).any()
+
+
+def test_growth_keeps_fanin_and_connects_only_active_inputs():
+    xm = _latency_batch(32)
+    drive = np.where(np.isfinite(xm), E6.HORIZON - xm, 0).mean(0)
+    net = E6.RaceNet(E6.Config(hidden=100, winners=3, psp="ramp", fanin=20, grow=2), 784, 10,
+                     float(drive.sum()), np.random.default_rng(3), drive)
+    assert (net.M1.sum(1) == 20).all()
+    before = net.M1.copy()
+    t, idx = E6.to_events(xm)
+    for _ in range(3):
+        net.teach(net.forward(t, idx), np.arange(32) % 10)
+    assert (net.M1.sum(1) == 20).all()
+    assert net.work.get("rewire", 0) > 0
+    added = net.M1 & ~before
+    assert np.isfinite(xm[:, np.flatnonzero(added.any(0)[:784])]).any(0).all()
+    assert not (net.W1[:, :784][~net.M1[:, :784]]).any()
 
 
 # ── E5: the vectorised race equals a direct simulation ───────────────────────
