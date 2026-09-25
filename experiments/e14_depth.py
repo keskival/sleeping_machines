@@ -37,6 +37,7 @@ class DeepRaceNet:
 
     def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0):
         self.cfg, self.k, self.feedback = cfg, k, feedback
+        self.rng, self.window = rng, 0.15
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
         for l, h in enumerate(widths):
@@ -73,13 +74,24 @@ class DeepRaceNet:
     def forward(self, t, idx):
         cfg, layers = self.cfg, []
         self.work["samples"] += len(t)
+        shadow = cfg.variant == "crl_shadow"
+        st_, sidx = t, idx                                      # shadow channel: real + upstream shadow spikes
         for l, W in enumerate(self.W):
             T, over, v_at = layer_race(t, idx, W, self.th[l], "ramp")
             fired, freeze = group_race(T, over, W.shape[0] // cfg.group, cfg.winners)
             v, n_before = v_at(freeze)
             self.work["synops"] += int(n_before.sum())
-            layers.append(dict(t=t, idx=idx, fired=fired, freeze=freeze,
-                               snap=np.clip((self.th[l] - v) / self.th[l], 0, None)))
+            L = dict(t=t, idx=idx, fired=fired, freeze=freeze, snap=np.clip((self.th[l] - v) / self.th[l], 0, None))
+            if shadow:
+                # the shadow compartment is never inhibited: it integrates real and shadow inputs and
+                # emits a shadow spike when it would have crossed; only near misses (within the window
+                # after the group's decision) count, so closeness is selected by time, not by sorting
+                Ts, _, _ = layer_race(st_, sidx, W, self.th[l], "ramp")
+                sfire = ~fired & np.isfinite(Ts) & (Ts < freeze + self.window) & (Ts < HORIZON)
+                L["shadow_fired"] = sfire
+                self.work["shadow_spikes"] = self.work.get("shadow_spikes", 0) + int(sfire.sum())
+                st_, sidx = to_events(np.where(fired, freeze, np.where(sfire, Ts, np.inf)))
+            layers.append(L)
             t, idx = to_events(np.where(fired, freeze, np.inf))
         T2, over2, v_at2 = layer_race(t, idx, self.Wo, self.tho, "ramp")
         winner = np.where(np.isfinite(T2).any(1), race_order(T2, over2)[:, 0], -1)
@@ -118,6 +130,13 @@ class DeepRaceNet:
                     delta = s @ self.B[l]
                 if cfg.variant == "crl_fired_only":
                     elig = L["fired"].astype(np.float32)
+                elif cfg.variant == "crl_stoch":              # sampled binary near-miss events, no weighting
+                    p_near = np.exp(-L["snap"] / cfg.sigma)
+                    elig = np.where(L["fired"], 1.0, (self.rng.random(p_near.shape) < p_near)).astype(np.float32)
+                elif cfg.variant == "crl_shadow":             # two-channel neuron: fired, or shadow-fired
+                    elig = (L["fired"] | L["shadow_fired"]).astype(np.float32)
+                elif cfg.variant == "crl_window":             # a hard window: near misses within δ, unweighted
+                    elig = (L["fired"] | (L["snap"] < self.window)).astype(np.float32)
                 else:
                     elig = np.where(L["fired"], 1.0, np.exp(-L["snap"] / cfg.sigma))
                     elig *= elig >= 0.05
@@ -174,6 +193,7 @@ def main(a):
     drive = np.where(np.isfinite(ttr), HORIZON - ttr, 0).mean(0)
     rng = np.random.default_rng(a.seed)
     net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin)
+    net.window = a.window
     curve = []
     t0 = time.time()
     for ep in range(a.epochs):
@@ -199,7 +219,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--depth", type=int, default=2)
     ap.add_argument("--width", type=int, default=400)
-    ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden", "crl_drtp"))
+    ap.add_argument("--variant", default="crl_fa", choices=("crl_fa", "crl_fired_only", "frozen_hidden", "crl_drtp",
+                                                             "crl_stoch", "crl_window", "crl_shadow"))
+    ap.add_argument("--window", type=float, default=0.15, help="near-miss window (crl_window: in Δ; crl_shadow: time)")
     ap.add_argument("--epochs", type=int, default=3)
     ap.add_argument("--feedback", default="dfa", choices=("dfa", "local"),
                     help="E15: dfa = output error to every layer; local = layer by layer along existing synapses")
