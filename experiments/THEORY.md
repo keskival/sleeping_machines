@@ -548,7 +548,7 @@ High σ gives a wide tree, a smooth landscape and a signal to every weight; σ �
 deterministic race. Training from wide to narrow is a principled schedule, replacing the
 hand-set σ we use now.
 
-### 14.7 Beams computed asynchronously: shadow events
+### 14.6 Beams computed asynchronously: shadow events
 
 The beam needs no separate pass and no barrier. Branches live in the same event queue as
 the factual computation:
@@ -577,7 +577,7 @@ and per-branch deltas, only inside active light cones. Side benefit: at decision
 machine knows what the close calls would have led to, which is a calibrated confidence and
 a learning signal before any teacher arrives.
 
-### 14.6 Test
+### 14.7 Test
 
 **M19**: on the M3 network, forks at hidden groups (swap the last winner with the next strand
 in line, probability from their time gap) and at the output race. Compare, at matched extra
