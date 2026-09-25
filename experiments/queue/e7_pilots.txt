@@ -48,6 +48,9 @@ m3_pre0_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16
 m3_pre0_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 0 --seed 1 --tag pre0
 m3_pre1_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 0 --tag pre1
 m3_pre1_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 1 --tag pre1
+# M3 against a smooth race-margin objective: do the rules follow a smoother objective than 0/1 error?
+m3_margin_s0 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --objective margin --seed 0 --tag margin
+m3_margin_s1 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --objective margin --seed 1 --tag margin
 # E13a: bandit feedback (reward only), small network, 3 seeds
 e13_rstdp_s0 experiments/e13_bandit.py --rule rstdp --seed 0 --tag main
 e13_pool_pg_s0 experiments/e13_bandit.py --rule pool_pg --seed 0 --tag main

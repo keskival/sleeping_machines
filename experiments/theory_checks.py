@@ -48,9 +48,22 @@ def pretrain(net, times, y, epochs, batch=32):
             net.teach(net.forward(t, idx), y[ii])
 
 
+OBJECTIVE = "error"
+
+
 def error_under_noise(net, noisy_events, y_rep):
+    """Expected 0/1 error, or (OBJECTIVE = "margin") a smoother race margin: the target's
+    distance to threshold at the decision minus the closest rival's (lower is better)."""
     t, idx = noisy_events
-    return float((net.forward(t, idx)["winner"] != y_rep).mean())
+    st = net.forward(t, idx)
+    if OBJECTIVE == "error":
+        return float((st["winner"] != y_rep).mean())
+    snap = st["snap2"]
+    rows = np.arange(len(y_rep))
+    target = snap[rows, y_rep]
+    rival = snap.copy()
+    rival[rows, y_rep] = np.inf
+    return float(np.clip(target - rival.min(1), -0.5, 0.5).mean())
 
 
 def rule_update(net, variant, t, idx, y):
@@ -149,6 +162,8 @@ def holistic_gradients(net, times, ys, sigma_o, sigma_fs):
 
 
 def m3(a):
+    global OBJECTIVE
+    OBJECTIVE = a.objective
     cfg = Config(hidden=a.hidden, group=10, winners=3, hid_frac=0.6, psp="ramp", deadline=1,
                  eta_out=0.01, eta_hid=0.01, homeo=0.001, seed=a.seed)
     times, y = small_mnist(a.train)
@@ -235,6 +250,7 @@ def m3(a):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("check", choices=("m3", "m19"))
+    ap.add_argument("--objective", default="error", choices=("error", "margin"))
     ap.add_argument("--sigma-o", type=float, default=0.05, help="output race temperature (M19)")
     ap.add_argument("--hidden", type=int, default=60)
     ap.add_argument("--train", type=int, default=5000)
