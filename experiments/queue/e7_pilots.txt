@@ -48,6 +48,21 @@ m3_pre0_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16
 m3_pre0_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 0 --seed 1 --tag pre0
 m3_pre1_s0 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 0 --tag pre1
 m3_pre1_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16 --coords 200 --pretrain 1 --seed 1 --tag pre1
+# E13a: bandit feedback (reward only), small network, 3 seeds
+e13_rstdp_s0 experiments/e13_bandit.py --rule rstdp --seed 0 --tag main
+e13_pool_pg_s0 experiments/e13_bandit.py --rule pool_pg --seed 0 --tag main
+e13_nearmiss_s0 experiments/e13_bandit.py --rule nearmiss --seed 0 --tag main
+e13_supervised_s0 experiments/e13_bandit.py --rule supervised --seed 0 --tag main
+e13_rstdp_s1 experiments/e13_bandit.py --rule rstdp --seed 1 --tag main
+e13_pool_pg_s1 experiments/e13_bandit.py --rule pool_pg --seed 1 --tag main
+e13_nearmiss_s1 experiments/e13_bandit.py --rule nearmiss --seed 1 --tag main
+e13_supervised_s1 experiments/e13_bandit.py --rule supervised --seed 1 --tag main
+e13_rstdp_s2 experiments/e13_bandit.py --rule rstdp --seed 2 --tag main
+e13_pool_pg_s2 experiments/e13_bandit.py --rule pool_pg --seed 2 --tag main
+e13_nearmiss_s2 experiments/e13_bandit.py --rule nearmiss --seed 2 --tag main
+e13_supervised_s2 experiments/e13_bandit.py --rule supervised --seed 2 --tag main
+e13_pool_pg_sig005_s0 experiments/e13_bandit.py --rule pool_pg --sigma 0.05 --seed 0 --tag sig005
+e13_pool_pg_sig05_s0 experiments/e13_bandit.py --rule pool_pg --sigma 0.5 --seed 0 --tag sig05
 # M19 (THEORY 14): greedy exact path gradient vs fork terms vs holistic, alignment with the true gradient
 m19_s0 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 0 --tag main
 m19_s1 experiments/theory_checks.py m19 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --seed 1 --tag main
