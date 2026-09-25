@@ -1,0 +1,124 @@
+{
+ "config": {
+  "router": "boundary",
+  "shadow": 1,
+  "lookahead": 1,
+  "sigma": 0.3,
+  "lb": 0.01,
+  "experts": 8,
+  "task": "piecewise",
+  "train": 20000,
+  "test": 5000,
+  "epochs": 20,
+  "batch": 32,
+  "lr": 0.5,
+  "seed": 2,
+  "tag": "look0.3"
+ },
+ "curve": [
+  {
+   "acc": 0.4012,
+   "router_quality": 0.3562,
+   "balance": 0.7836098809215363
+  },
+  {
+   "acc": 0.504,
+   "router_quality": 0.3908,
+   "balance": 0.7408913644912394
+  },
+  {
+   "acc": 0.5604,
+   "router_quality": 0.3552,
+   "balance": 0.8176766942084756
+  },
+  {
+   "acc": 0.595,
+   "router_quality": 0.2994,
+   "balance": 0.8453300457168054
+  },
+  {
+   "acc": 0.644,
+   "router_quality": 0.3194,
+   "balance": 0.8394212202515321
+  },
+  {
+   "acc": 0.7022,
+   "router_quality": 0.289,
+   "balance": 0.8360851435919927
+  },
+  {
+   "acc": 0.723,
+   "router_quality": 0.2858,
+   "balance": 0.8416971184706321
+  },
+  {
+   "acc": 0.716,
+   "router_quality": 0.2464,
+   "balance": 0.8478540459656958
+  },
+  {
+   "acc": 0.7604,
+   "router_quality": 0.2772,
+   "balance": 0.83578744315197
+  },
+  {
+   "acc": 0.7516,
+   "router_quality": 0.27,
+   "balance": 0.8471803089790036
+  },
+  {
+   "acc": 0.7626,
+   "router_quality": 0.2848,
+   "balance": 0.8407583015678091
+  },
+  {
+   "acc": 0.7908,
+   "router_quality": 0.2868,
+   "balance": 0.8635790346973847
+  },
+  {
+   "acc": 0.791,
+   "router_quality": 0.288,
+   "balance": 0.8528790787080408
+  },
+  {
+   "acc": 0.7788,
+   "router_quality": 0.2844,
+   "balance": 0.8960115071939749
+  },
+  {
+   "acc": 0.7948,
+   "router_quality": 0.2864,
+   "balance": 0.855791453673936
+  },
+  {
+   "acc": 0.782,
+   "router_quality": 0.2764,
+   "balance": 0.8819372336949691
+  },
+  {
+   "acc": 0.7994,
+   "router_quality": 0.2698,
+   "balance": 0.8913271122891688
+  },
+  {
+   "acc": 0.789,
+   "router_quality": 0.2466,
+   "balance": 0.9640537332173831
+  },
+  {
+   "acc": 0.8106,
+   "router_quality": 0.26,
+   "balance": 0.9706995655273797
+  },
+  {
+   "acc": 0.828,
+   "router_quality": 0.2624,
+   "balance": 0.9635943559704232
+  }
+ ],
+ "acc": 0.828,
+ "router_quality": 0.2624,
+ "balance": 0.9635943559704232,
+ "expert_runs_per_sample": 2.0
+}
