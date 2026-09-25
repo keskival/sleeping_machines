@@ -51,6 +51,25 @@ m3_pre1_s1 experiments/theory_checks.py m3 --train 5000 --samples 300 --draws 16
 # M3 against a smooth race-margin objective: do the rules follow a smoother objective than 0/1 error?
 m3_margin_s0 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --objective margin --seed 0 --tag margin
 m3_margin_s1 experiments/theory_checks.py m3 --train 5000 --pretrain 3 --samples 300 --draws 16 --coords 200 --objective margin --seed 1 --tag margin
+# E14: does counterfactual credit dominate with depth? (validation, 3 epochs, width 400)
+e14_d1_crl_fa_s0 experiments/e14_depth.py --depth 1 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d1_crl_fired_only_s0 experiments/e14_depth.py --depth 1 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d1_frozen_hidden_s0 experiments/e14_depth.py --depth 1 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d2_crl_fa_s0 experiments/e14_depth.py --depth 2 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d2_crl_fired_only_s0 experiments/e14_depth.py --depth 2 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d2_frozen_hidden_s0 experiments/e14_depth.py --depth 2 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d3_crl_fa_s0 experiments/e14_depth.py --depth 3 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d3_crl_fired_only_s0 experiments/e14_depth.py --depth 3 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d3_frozen_hidden_s0 experiments/e14_depth.py --depth 3 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 0 --tag main
+e14_d1_crl_fa_s1 experiments/e14_depth.py --depth 1 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d1_crl_fired_only_s1 experiments/e14_depth.py --depth 1 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d1_frozen_hidden_s1 experiments/e14_depth.py --depth 1 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d2_crl_fa_s1 experiments/e14_depth.py --depth 2 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d2_crl_fired_only_s1 experiments/e14_depth.py --depth 2 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d2_frozen_hidden_s1 experiments/e14_depth.py --depth 2 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d3_crl_fa_s1 experiments/e14_depth.py --depth 3 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d3_crl_fired_only_s1 experiments/e14_depth.py --depth 3 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+e14_d3_frozen_hidden_s1 experiments/e14_depth.py --depth 3 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 1 --tag main
 # E13a: bandit feedback (reward only), small network, 3 seeds
 e13_rstdp_s0 experiments/e13_bandit.py --rule rstdp --seed 0 --tag main
 e13_pool_pg_s0 experiments/e13_bandit.py --rule pool_pg --seed 0 --tag main
