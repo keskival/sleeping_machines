@@ -191,6 +191,25 @@ def competitive_step(net, x_t, y, eta):
     net.cfg = saved
 
 
+def diagnose(net, times, y):
+    """Template mechanism check: (1) do the output weights align with the fixed feedback B
+    (feedback alignment)? (2) are hidden nodes class-selective (share of a node's spikes that
+    fall on its most frequent class, averaged over nodes that fire)?"""
+    h = net.h
+    W2 = net.W2[:, :h] - net.W2[:, :h].mean(0, keepdims=True)
+    B = net.B - net.B.mean(0, keepdims=True)
+    align = float(np.mean([W2[c] @ B[c] / (np.linalg.norm(W2[c]) * np.linalg.norm(B[c]) + 1e-12)
+                           for c in range(W2.shape[0])]))
+    t, idx = to_events(times)
+    fired = net.forward(t, idx)["fired"]
+    counts = np.stack([fired[y == c].sum(0) for c in range(10)])       # classes × hidden
+    tot = counts.sum(0)
+    live = tot > 0
+    sel = float((counts.max(0)[live] / tot[live]).mean()) if live.any() else None
+    return {"output_feedback_alignment": align, "hidden_class_selectivity": sel,
+            "chance_selectivity": float(np.bincount(y).max() / len(y))}
+
+
 def accuracy(net, times, y):
     t, idx = to_events(times)
     return float((net.forward(t, idx)["winner"] == y).mean())
@@ -226,7 +245,8 @@ def main(a):
         print(f"{a.rule} epoch {ep + 1}: held-out {curve[-1]:.4f}  ({time.time() - t0:.0f}s)  "
               f"{rep.stats if a.rule in ('repair', 'output_only') else net.work['plasticity'] - before}",
               flush=True)
-    res = {"config": vars(a), "curve": curve, "acc": curve[-1],
+    res_diag = diagnose(net, xte, yte)
+    res = {"config": vars(a), "curve": curve, "acc": curve[-1], "diagnostics": res_diag,
            "repairs": rep.stats if a.rule in ("repair", "output_only") else None,
            "plasticity": net.work["plasticity"]}
     os.makedirs(OUT, exist_ok=True)
@@ -237,7 +257,8 @@ def main(a):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--rule", default="repair",
-                    choices=("repair", "output_only", "crl_fa", "crl_fired_only", "frozen_hidden", "unsup_hidden"))
+                    choices=("repair", "output_only", "crl_fa", "crl_fired_only", "frozen_hidden", "unsup_hidden",
+                             "crl_sym", "crl_sign"))
     ap.add_argument("--eta-unsup", type=float, default=0.02, help="M21 competitive learning rate")
     ap.add_argument("--hidden", type=int, default=60)
     ap.add_argument("--train", type=int, default=10000)

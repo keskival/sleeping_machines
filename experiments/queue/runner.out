@@ -79,3 +79,11 @@
 14:06:53 start m3_pre0_s0
 14:17:23 done m3_pre0_s0 (exit 0)
 14:17:23 start m3_pre0_s1
+14:28:14 done m3_pre0_s1 (exit 0)
+14:28:14 start m3_pre1_s0
+14:38:39 done m3_pre1_s0 (exit 0)
+14:38:39 start m3_pre1_s1
+14:49:00 done m3_pre1_s1 (exit 0)
+14:49:00 start m3_margin_s0
+14:59:20 done m3_margin_s0 (exit 0)
+14:59:20 start m3_margin_s1

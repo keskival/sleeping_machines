@@ -5,6 +5,20 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-25
 
+**M3 against a smooth race-margin objective, and along training.** Output rule +0.82 against
+the margin objective. Hidden credit: random feedback −0.10, fired-only −0.17, true-weight
+feedback +0.28, sign feedback +0.31 (seed 0; reliability 0.79). Along training (error
+objective): random feedback ≈ 0 at 0 and 1 pretraining epochs; sign feedback rises to
++0.45–0.50 after one epoch. *Learned:* the "smoother objective" explanation of the puzzle
+fails: random-feedback hidden credit follows neither objective's gradient, yet adds 16 points.
+*New hypothesis (template mechanism):* with random feedback each hidden node is pushed to fire
+for the classes its feedback row favours, so the hidden layer forms label-conditioned templates
+that the output learns to read; label-driven feature formation, not gradient descent. It would
+also explain why gradient-aligned (true-weight) feedback did worse in rounds 1–2: its targets
+move as the output weights change. First diagnostic (debug size): output–feedback alignment
+0.19 vs 0.04 frozen; hidden class selectivity 0.29 vs 0.24 (chance 0.11). M22 (3 seeds,
+including true-weight and sign feedback under round-3 settings) queued.
+
 **E14 (debug size) — counterfactual credit with depth.** User's hypothesis: the
 counterfactual part matters only beyond one hidden layer. 5k images, 1 epoch, width 200,
 one seed: gap (counterfactual − fired-only) +2.2 at depth 1, +1.9 at depth 2, **+19.3 at
