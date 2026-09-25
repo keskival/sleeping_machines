@@ -70,6 +70,19 @@ e14_d2_frozen_hidden_s1 experiments/e14_depth.py --depth 2 --variant frozen_hidd
 e14_d3_crl_fa_s1 experiments/e14_depth.py --depth 3 --variant crl_fa --width 400 --val 10000 --epochs 3 --seed 1 --tag main
 e14_d3_crl_fired_only_s1 experiments/e14_depth.py --depth 3 --variant crl_fired_only --width 400 --val 10000 --epochs 3 --seed 1 --tag main
 e14_d3_frozen_hidden_s1 experiments/e14_depth.py --depth 3 --variant frozen_hidden --width 400 --val 10000 --epochs 3 --seed 1 --tag main
+# M22: gradient-aligned feedback under round-3 settings, and the template-mechanism diagnostics
+m22_crl_sym_s0 experiments/m18_repair.py --rule crl_sym --seed 0 --tag m22
+m22_crl_sign_s0 experiments/m18_repair.py --rule crl_sign --seed 0 --tag m22
+m22_crl_fa_s0 experiments/m18_repair.py --rule crl_fa --seed 0 --tag m22
+m22_frozen_hidden_s0 experiments/m18_repair.py --rule frozen_hidden --seed 0 --tag m22
+m22_crl_sym_s1 experiments/m18_repair.py --rule crl_sym --seed 1 --tag m22
+m22_crl_sign_s1 experiments/m18_repair.py --rule crl_sign --seed 1 --tag m22
+m22_crl_fa_s1 experiments/m18_repair.py --rule crl_fa --seed 1 --tag m22
+m22_frozen_hidden_s1 experiments/m18_repair.py --rule frozen_hidden --seed 1 --tag m22
+m22_crl_sym_s2 experiments/m18_repair.py --rule crl_sym --seed 2 --tag m22
+m22_crl_sign_s2 experiments/m18_repair.py --rule crl_sign --seed 2 --tag m22
+m22_crl_fa_s2 experiments/m18_repair.py --rule crl_fa --seed 2 --tag m22
+m22_frozen_hidden_s2 experiments/m18_repair.py --rule frozen_hidden --seed 2 --tag m22
 # E13a: bandit feedback (reward only), small network, 3 seeds
 e13_rstdp_s0 experiments/e13_bandit.py --rule rstdp --seed 0 --tag main
 e13_pool_pg_s0 experiments/e13_bandit.py --rule pool_pg --seed 0 --tag main
