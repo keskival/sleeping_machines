@@ -343,6 +343,48 @@ def evaluate(net, times, y, batch=250):
     return correct / len(y)
 
 
+def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
+    """§33 timing-jitter certificate. With non-negative weights every crossing time is a monotone,
+    shift-equivariant (topical) function of its input times, hence 1-Lipschitz in the sup norm; the
+    decision can change only if some race's order at a boundary changes. Certified radius per sample:
+    ε* = min over races of (half the gap between the k-th and (k+1)-th crossing, distance of those
+    crossings to the horizon) and, at the output, half the winner's margin. Checked by jitter."""
+    times, y = times[:n], y[:n]
+    k, G = net.cfg.winners, net.cfg.group
+    radius, pred = [], []
+    for i in range(0, len(y), 250):
+        t, idx = to_events(times[i:i + 250])
+        st = net.forward(t, idx)
+        b = len(t)
+        r = np.full(b, np.inf)
+        for L in st["layers"]:
+            T = np.where(np.isfinite(L["T"]) & (L["T"] < HORIZON), L["T"], np.inf)
+            srt = np.sort(T.reshape(b, -1, G), 2)[:, :, :k + 1]
+            gap = np.where(np.isfinite(srt[:, :, k - 1]), (srt[:, :, k] - srt[:, :, k - 1]) / 2, np.inf)
+            hz = np.abs(np.where(np.isfinite(srt), srt, np.inf) - HORIZON).min(2)
+            r = np.minimum(r, np.minimum(gap, hz).min(1))
+        T2, _, _ = layer_race(st["t2"], st["idx2"], net.Wo, net.tho, "ramp")
+        T2 = np.where(np.isfinite(T2) & (T2 < HORIZON), T2, np.inf)
+        s2 = np.sort(T2, 1)
+        r = np.minimum(r, np.minimum((s2[:, 1] - s2[:, 0]) / 2, np.abs(s2[:, 0] - HORIZON)))
+        r[st["urgent"]] = 0.0
+        radius.append(r)
+        pred.append(st["winner"])
+    radius, pred = np.concatenate(radius), np.concatenate(pred)
+    rng = np.random.default_rng(seed)
+    out = {"radius_quantiles": [float(q) for q in np.quantile(radius, [0.1, 0.25, 0.5, 0.75, 0.9])],
+           "acc": float((pred == y).mean()), "jitter": []}
+    for eps in eps_list:
+        jt = times + np.where(np.isfinite(times), rng.uniform(-eps, eps, times.shape), 0)
+        pj = np.concatenate([net.forward(*to_events(jt[i:i + 250]))["winner"] for i in range(0, len(y), 250)])
+        cert = radius > eps
+        flip = pj != pred
+        out["jitter"].append({"eps": eps, "certified": float(cert.mean()), "flips": float(flip.mean()),
+                              "flips_among_certified": int((flip & cert).sum()),
+                              "acc_jittered": float((pj == y).mean())})
+    return out
+
+
 def main(a):
     cfg = Config(variant=a.variant, winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
@@ -419,6 +461,9 @@ def main(a):
         tm = np.array([0.5 * np.abs(P[j + 1:] - P[j]).sum(1).mean() for j in range(len(P) - 1)])
         return [float(tv.max()), float(tm.mean())]
     res["dobrushin"] = [dobrushin(W_, d_) for W_, d_ in zip(net.W, net.dims)]
+    if a.certify:
+        res["certificate"] = certify(net, tte, yte)
+        print("certificate:", json.dumps(res["certificate"]), flush=True)
     os.makedirs(OUT, exist_ok=True)
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
@@ -448,6 +493,7 @@ if __name__ == "__main__":
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
+    ap.add_argument("--certify", type=int, default=0, help="§33: timing-jitter certificate and jitter check")
     ap.add_argument("--gauge", type=int, default=0, help="§30: credit may not change a node's total weight (urgency left to prices)")
     ap.add_argument("--center-credit", type=int, default=0, help="§27/§29: 1 remove the layer mean of credit, 2 remove its Perron direction; activity left to prices")
     ap.add_argument("--homeo", type=float, default=0.001, help="homeostasis (price) step")

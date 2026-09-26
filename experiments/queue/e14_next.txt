@@ -7,6 +7,7 @@ cons_fa_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --dept
 smoke_ward experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --share-jac 1 --center-credit 1 --gauge 1 --depth 3 --tag smoke
 smoke_perron experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --center-credit 2 --depth 3 --tag smoke
 cons_shadow_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+smoke_cert experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --nonneg 1 --certify 1 --depth 2 --tag smokecert
 smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
 cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
@@ -55,3 +56,19 @@ nonneg_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth
 # M35: boundary-credit advantage vs depth, second seed (main settings, as d*_main_s0)
 main_crl_fa_d5_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fa --seed 1 --tag main
 main_crl_fired_only_d5_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fired_only --seed 1 --tag main
+# §33 topical maps: timing-jitter certificate (exact for --nonneg 1; signed nets checked empirically)
+cert_nn_d1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --nonneg 1 --depth 1
+cert_nn_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --nonneg 1 --depth 3
+cert_sg_d1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --depth 1
+cert_sg_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --depth 3
+# §36 M38: price step (kappa) sweep; eta = 0.01
+kap_fa_0.001 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.001
+kap_pivot_0.001 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.001
+kap_fa_0.003 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.003
+kap_pivot_0.003 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.003
+kap_fa_0.01 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.01
+kap_pivot_0.01 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.01
+kap_fa_0.03 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.03
+kap_pivot_0.03 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.03
+kap_fa_0.1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.1
+kap_pivot_0.1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.1

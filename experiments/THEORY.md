@@ -1451,8 +1451,265 @@ parameter count, sparse fan-in helps deep networks more than shallow ones.
 | Scale and translation symmetries give conserved quantities under gradient flow (§30.3, §30.4) | **Known in general:** Kunin et al. 2021 ("Neural mechanics"); Tanaka & Kunin 2021 ("Noether's learning dynamics"): translation conserves an intercept, scale a norm. |
 | Latency charge: delay learning cannot change mean latency without the clock (§30.4) | Not found. DelGrad trains delays with a spike-time margin loss (shift-invariant) and bounds delays with a sigmoid, but does not discuss total latency. |
 | Forward-contrast / backward-credit duality through one Dobrushin coefficient; boundary terms as the only non-contracting channel (§31) | Not found. |
+| Concave piecewise-linear firing time, one piece per causal set; expressivity (§34.1) | **Prior art:** "Polyhedral geometry of time-to-first-spike neural networks", arXiv 2609.11227 (2026). Time invariance and causality as axioms of temporal computing: Smith, space-time algebra (2017–18); race logic. |
+| Topical-map view: sup-norm non-expansiveness, jitter certificate from race gaps, gaps = robustness margins, no chaos in recurrent excitatory race networks (§34.3–34.5) | Not found. The polyhedral paper's abstract does not treat robustness or recurrence. |
 
 "Not found" means a few targeted searches found nothing; it is not a claim of priority.
+
+## 33. What the theory does not yet explain (audit, 2026-09-26)
+
+The theory so far is a set of local mechanisms (credit estimators, their failure modes, temperature,
+contraction), not a theory of the model class. Open, in order of how much would follow from closing
+them:
+
+1. **What the networks compute.** No characterisation of the function class, its expressivity,
+   or the role of k > 1 winners. *(Partly closed in §34; expressivity is largely prior art.)*
+2. **Robustness to timing noise.** The defining vulnerability of a time code had no theory.
+   *(§34: an exact certificate.)*
+3. **Learning dynamics.** The rules are not gradients of a stated objective. There is no descent
+   function and no convergence result. Prices plus credit is a primal–dual (Arrow–Hurwicz) system,
+   whose stability was only sketched (κ_c, §27).
+4. **Decision time.** First-crossing decisions are first-passage times. There is no optimal-stopping
+   (sequential probability ratio test) account of when a race *should* decide, or of whether our
+   thresholds implement one.
+5. **Recurrent and asynchronous regimes (E7).** Essentially no theory. *(§34.5: stability.)*
+6. **Generalisation.** None: no capacity or margin bound for race networks.
+7. **Noise as model vs noise as smoothing.** σ is used both as the Gumbel noise of a stochastic model
+   and as a smoothing temperature. The two roles coincide only if the substrate's actual timing noise
+   has scale σ, which is unmeasured.
+
+## 34. Excitatory race networks are topical maps
+
+A map f: ℝⁿ → ℝᵐ is **topical** if it is monotone (x ≤ y ⇒ f(x) ≤ f(y)) and additively homogeneous
+(f(x + c1) = f(x) + c1). Topical maps have a mature theory: non-linear Perron–Frobenius theory
+(Crandall & Tartar 1980; Gunawardena & Keane 1995; Gaubert & Gunawardena 2004). The facts established
+above (§22.1 shift equivariance, §31.1 monotonicity for excitatory inputs) say exactly that the
+race network's timing maps are topical. The theory then transfers wholesale.
+
+### 34.1 The neuron: a concave topical map, a minimum over causal sets
+
+A non-negative ramp neuron crosses at the T solving Σ_i w_i (T − t_i)⁺ = θ. For any set S of inputs,
+(x)⁺ ≥ x and (x)⁺ ≥ 0 give θ = Σ_i w_i (T − t_i)⁺ ≥ Σ_{i∈S} w_i (T − t_i), so T ≤ T_S = (θ + Σ_S w_i t_i)/W_S,
+with equality for the causal set (the inputs that actually arrived). Hence
+
+    T(t) = min over input sets S of  (θ + Σ_{i∈S} w_i t_i) / W_S
+
+a tropical sum of weighted means. T is concave, piecewise affine with stochastic gradients, and
+topical. *Prior art:* the concave piecewise-linear structure with one affine piece per causal set, and
+the resulting expressivity (numbers of causal regions, richer than ReLU networks), is in
+"Polyhedral geometry of time-to-first-spike neural networks" (arXiv 2609.11227, 2026). Race logic
+and Smith's space-time algebra (2017–2018) take time invariance and causality as axioms and
+build with min/max. §34.1 is a re-derivation; what follows builds on it.
+
+### 34.2 A network is topical pieces glued along race boundaries
+
+With the firing pattern fixed (which nodes win each group race), the network's map from input times
+to output crossing times is a composition of concave topical maps, which is again **concave and
+topical**. All non-concavity and all discontinuity come from the races: a node's output switches
+between its own crossing time and "no spike" (+∞) when it swaps rank k and k + 1 in its group, or when a
+crossing passes the horizon. This is the geometric version of §31.3: the smooth part is a contraction,
+and everything else happens at race boundaries.
+
+### 34.3 Non-expansiveness (Crandall–Tartar)
+
+Every topical map is non-expansive in the sup norm: ‖f(x) − f(y)‖∞ ≤ ‖x − y‖∞. For a race network with
+non-negative weights and a fixed firing pattern, **no timing perturbation is ever amplified**:
+jitter of at most ε on every input moves every crossing time by at most ε, at every depth. Signed
+weights break this. The sup-norm Lipschitz constant of a neuron is Σ_{i∈S} |w_i| / W_S ≥ 1, unbounded
+as W_S → 0. Excitatory race networks are therefore intrinsically noise-stable in the timing
+domain, and inhibition, the contrast amplifier of §31.5, is also the only amplifier of timing noise:
+the same trade-off from the other side.
+
+### 34.4 An exact timing-jitter certificate
+
+Combine 34.2 and 34.3 by induction over layers. If every input moves by at most ε and the firing
+pattern up to layer l is unchanged, every crossing time up to layer l moves by at most ε. A race at
+layer l + 1 keeps its winners if the gap between its k-th and (k + 1)-th crossing exceeds 2ε, and if
+no relevant crossing lies within ε of the horizon. The decision is unchanged if the output margin
+(second-earliest minus earliest output crossing) exceeds 2ε. So:
+
+    ε*(x) = min( ½·output margin,  min over races of ½·D_k,  min over boundary crossings of |T − H| )
+
+is a **certified radius**: for non-negative weights no jitter with ‖Δt‖∞ < ε* can change the decision.
+It costs one forward pass (`--certify 1`; checked against actual jitter).
+
+Consequences:
+
+1. **The near-miss residues are the robustness margins.** D_k at each race is exactly the quantity
+   the near-miss rule reads (the closest loser's residue). A rule that widens the gaps of the
+   races that matter is doing margin maximisation in the timing domain, as a hinge loss does for
+   a linear classifier. This links the credit theory (§4, §20) to robustness.
+2. **Extreme-value prediction for the null.** Under §28, each race's D_k ~ Exp(σ/k) when no race has
+   an informative margin. With R races on the path, the minimum gap is ~ Exp(σ/(kR)), so the
+   worst-case certificate of an *untrained* network shrinks like 1/R with size. Training must open
+   the gaps that matter. The certificate is worst-case: most small gaps belong to races whose flip
+   would not change the decision, so actual robustness should be much larger. The gap between
+   certified and empirical robustness measures how much of the network is decision-irrelevant.
+3. **Signed networks** carry no certificate. Measuring flips among "certified" samples for them
+   shows how far they are from non-expansive in practice.
+
+### 34.5 Recurrent excitatory race networks cannot be chaotic
+
+Iterating a topical map (a recurrent race network running continuously, a candidate substrate for
+E7's asynchronous stream) inherits non-linear Perron–Frobenius theory:
+
+- **No timing chaos.** A non-expansive map has no positive Lyapunov exponent. Timing
+  perturbations in recurrent excitatory race networks never grow, except through race-boundary
+  switches.
+- **A well-defined rhythm.** For piecewise-affine topical maps the cycle-time vector
+  χ(f) = lim_k f^k(x)/k exists and is independent of x (Kohlberg 1980; Gaubert & Gunawardena). For the
+  min-plus linear case it is the minimum cycle mean of the network graph (Karp's algorithm). So a
+  recurrent race network has computable firing rates, set by its cycles, not by initial conditions.
+- **Inhibition is necessary for rich dynamics.** Anything beyond fixed rhythms and contracting
+  transients (memory by switching, chaotic exploration) needs either race-boundary switching or
+  inhibition. This is a structural argument for E/I balance in asynchronous substrates, derived
+  rather than borrowed from biology.
+
+### 34.6 Tests (M36)
+
+(i) Non-negative networks: **zero** decision flips among samples with ε* > ε, at every tested ε
+(a failure means a bug or a wrong theorem). (ii) Certified radii of trained networks exceed the EVT
+null σ/(kR). (iii) Empirical flips occur at ε well above ε*: the tightness gap. (iv) Signed networks:
+flips among "certified" samples are possible; their rate measures non-expansiveness violations.
+
+## 35. Weaving: commitment cost, free energy and certified early commitment
+
+Results about the weaving operator itself (intuitive description: WEAVING.md). Notation: a race
+among candidates n with projected times T_n; the pool's law at temperature σ is Plackett–Luce with
+π_n = softmax(−T/σ)_n (§21.4, §28); the soft value of the race is its free energy
+F = −σ log Σ_n e^{−T_n/σ} (the dequantized minimum, §21.3).
+
+### 35.1 Committing to a branch costs temperature × surprisal (exact)
+
+When a race weaves, the open value F is replaced by the value of the committed branch, T_w. From
+the definition of π,
+
+    T_w − F  =  −σ log π_w          (exact, for every race and every committed w)
+
+Summed over the weaves of one input, by the Plackett–Luce chain rule,
+
+    Σ_weaves (T_w − F)  =  −σ log P_σ(realised history)
+
+**The value given up by weaving is the temperature times the surprisal of the history that was
+woven.** Averaged over branches drawn from the pool's own law, the Gibbs identity F = E_π[T] − σH(π)
+gives
+
+    E_{w~π}[T_w − F]  =  σ · H(π)
+
+The expected commitment cost of a race is σ times its entropy. This is the Landauer form: closing
+off alternatives costs temperature × information. As σ → 0, a hard race always commits to its
+minimum at zero cost, and all of the cost lives at σ > 0, in the pool.
+
+### 35.2 Near-miss credit is the gradient of the commitment cost
+
+Differentiate the commitment cost C_w = T_w − F with respect to the candidates' times:
+
+    ∂C_w/∂T_w = 1 − π_w,     ∂C_w/∂T_n = −π_n   (n ≠ w)
+
+These are the near-miss weights. Each loser gets credit ∝ e^{−Δ_n/σ} relative to the winner, and the
+credits sum to zero, which is §22.3's conservation. So the three objects the theory treats
+separately are one:
+
+- the credit rule (§4, §21.6),
+- credit conservation at a collapse (§22.3), and
+- the cost of weaving,
+
+**Near-miss credit is the gradient of what weaving throws away.** The supervised output loss is the same object: cross-entropy over output times,
+−log π_y = (T_y − F)/σ, is the commitment cost of weaving the *teacher's* branch. Supervised learning
+lowers the price of committing to the right answer. Minimising the summed commitment
+cost minimises the surprisal of the network's own woven history. That is a label-free objective,
+which makes races decisive, which widens the gaps D_k, which enlarges the certified jitter radius
+(§34.4). With a label, the supervised loss's credit reaches each race only through these same
+derivatives.
+
+### 35.3 The soft value is a submartingale; weaving is its compensator
+
+Condition on the woven past (the filtration F_t of §21.9). With M_t = E[e^{−C/σ} | F_t] (a Doob
+martingale for any total cost C), the soft value F_t = −σ log M_t is a **submartingale** (Jensen,
+since −log is convex): in expectation it can only rise as the past closes. Its Doob–Meyer
+decomposition splits it into a martingale (news: the input revising forecasts) and an increasing
+compensator (commitment: alternatives being closed off). By 35.1, the compensator's increment at
+each race is, in expectation, σ H(π) of that race. (Exact for a single race whose branch values
+are its candidates' times; across layers, where a branch's value is itself an open soft value,
+this is a first-order identification, not yet a proof.) As σ → 0 the soft value becomes the tropical value
+(the best cost still reachable given the woven past), which is **non-decreasing**: every weave can
+only remove options. The step at a weave is the gap to the best alternative it cut off (the D_k of
+§28 and §34.4).
+
+Reading: **a network's decision process splits into learning from new evidence (martingale) and
+paying for commitment (compensator)**. §22.4's temporal-difference signal is the martingale part.
+The commitment part is what the near-miss credit differentiates.
+
+### 35.4 Certified early commitment (bracketing the future)
+
+With excitatory weights, more input only makes crossings earlier. At time t each candidate's
+eventual crossing is therefore bracketed:
+
+- **upper bound** T_n^+(t): its projection if no further input arrives (the current forecast);
+- **lower bound** T_n^−(t): its crossing if every not-yet-arrived input to it arrived at t.
+
+A group's outcome is **certified at t** if its k current leaders' upper bounds lie below every other
+member's lower bound. Within a certified firing pattern the network is monotone (§34.2), so the
+brackets propagate layer by layer exactly (topical maps preserve order: f(x⁻) ≤ f(x) ≤ f(x⁺)). The
+decision is certified at the first t where the output race is certified given certified brackets
+below. This can happen **before** the first output crossing: a downstream race can be woven
+speculatively with **zero rollback probability**. It is the exact form of §21.10.3's speculation.
+
+This is the dual of §34.4. The jitter certificate protects a decision against perturbations of
+the *past*; the early-commitment certificate protects it against the unknown *future*. Both are
+the same monotone (topical) bracketing, applied to different uncertainty sets.
+
+### 35.5 Tests (M37)
+
+(i) The self-supervised commitment objective (minimise Σ −log π_w of woven races) raises the median
+certified radius (§34.4) and trains at least as well as unsupervised continuity learning in E7.
+(ii) On trained networks, certified early commitment decides a substantial fraction of samples before
+the first output crossing, with zero rollbacks, measured by the fraction and the time saved.
+(iii) Measured commitment cost per race matches σ H(π) on samples drawn from the pool
+(Gumbel-perturbed forward passes).
+
+### 35.6 Borrowed and new
+
+Borrowed: the log-sum-exp identity T_w − F = −σ log π_w (the Gibbs variational principle), Doob
+martingales, Doob–Meyer, Landauer's reading of erasure cost, interval bracketing of monotone maps.
+Not found (a few searches, §32): weaving read as paying σ × surprisal, near-miss credit as the
+gradient of commitment cost, the martingale/compensator split of a spiking decision, and zero-rollback
+speculative commitment certified by topical bracketing.
+
+## 36. Learning dynamics: prices must run on the faster timescale
+
+Thresholds are dual variables of an activity constraint (§25), and credit updates the primal
+variables (weights). Learning is therefore a stochastic primal–dual (Arrow–Hurwicz) iteration with
+two step sizes: η for weights and κ for prices.
+
+**Two-timescale theory (Borkar 1997, stochastic approximation).** If κ/η → ∞, the fast variables
+equilibrate for each slow configuration. The prices then track the constraint (a ≈ a*) and the
+weights see a constraint that is always satisfied: the iteration follows the *constrained*
+problem, and its limit points are that problem's stationary points (under the theorem's regularity
+conditions). If instead κ ≪ η, the constraint lags. Any systematic push of the credit on activity
+(its common mode, §27; the deadline anomaly, §30.1) moves the network off the constraint faster
+than the prices can restore it. §27's stationary deficit, a* − a = ηθX̄|μ̄|/(κρ̄), is the linear
+picture of this: it scales with η/κ.
+
+**Our default is on the wrong side.** η = 0.01 and κ = 0.001, so the prices are *ten times slower*
+than the weights. The theory makes three predictions:
+
+1. Rules whose credit has little common mode (random feedback, centred credit) barely stress the
+   constraint, so κ matters little for them. *Observed:* crl_fa trains well at κ = 0.001.
+2. Rules with a strong common mode (uncentred pivotal credit) need κ ≳ η. *Observed (debug,
+   depth 3):* collapse at κ = 0.001; about 70% at κ = 0.01 and κ = 0.03, both ≥ η.
+3. Past κ ≈ η, raising κ helps a common-mode rule only while the prices remain stable (a price step
+   too large makes the thresholds noisy, per-batch). There is a window, roughly η ≲ κ ≲ 10η, and
+   centring shifts it downward.
+
+This replaces "homeostasis rate" as a tuning knob by a derived ordering: **dual faster than
+primal**, with the gap needed set by the size of the credit's common mode. (Borrowed: two-timescale
+stochastic approximation, primal–dual methods; new here: the application and the reading of §27's
+collapse as a timescale inversion.)
+
+**Test (M38):** κ ∈ {0.001, 0.003, 0.01, 0.03, 0.1} for crl_fa and uncentred crl_pivot at depth 3
+(debug). Prediction: crl_fa is flat across κ; crl_pivot has a threshold near κ ≈ η = 0.01 and a
+plateau, then degrades at the largest κ.
 
 ## Tests
 
@@ -1485,6 +1742,9 @@ parameter count, sparse fan-in helps deep networks more than shallow ones.
 | **M33** | backward credit through positive weights collapses to the Perron direction (power iteration); mean centering leaks it at the evidence scale; Perron centering fixes it | `perron_share` vs `common_mode_share` per layer; `--center-credit 2` vs `1` at depth 2 and 3, κ = 0.001 and 0.03 |
 | **M34** | time translation: timing credit sums to the deadline's credit; exact kernels conserve sum errors, so share Jacobian + centering trains depth 3; scale gauge: fixing ρ lets prices alone own urgency | `--share-jac 1` with and without `--center-credit 1`; `--gauge 1` on crl_pivot and crl_fa; `f_eff` over training |
 | **M35** | timing Jacobians are Markov kernels: forward contrast and backward credit contract by one Dobrushin coefficient; boundary (near-miss) credit is the only non-contracting channel; inhibition and selection restore contrast | `dobrushin` per layer over training; non-negative penalty at depths 1, 3, 5; crl_fa − fired_only gap vs depth, multi-seed; sparse vs dense fan-in by depth |
+| **M36** | excitatory race networks are topical maps: sup-norm non-expansive; certified jitter radius ε* = min(½ margin, ½ race gaps, horizon distances) is exact | `--certify 1`: zero flips among certified samples (non-negative); radii vs EVT null; signed networks for contrast |
+| **M37** | weaving costs σ × surprisal; near-miss credit = its gradient; the soft value is a submartingale with commitment as compensator; topical bracketing certifies early commitment with zero rollback | self-supervised commitment objective vs certified radius and E7; fraction and time saved by certified early decisions; commitment cost vs σH(π) under Gumbel sampling |
+| **M38** | prices (thresholds) must be the fast timescale: rules with common-mode credit need κ ≳ η; rules without it are insensitive to κ | κ sweep 0.001 to 0.1 for crl_fa and uncentred crl_pivot, depth 3 (debug) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
