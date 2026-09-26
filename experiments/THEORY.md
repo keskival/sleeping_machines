@@ -2286,6 +2286,51 @@ differentiable ranking, Blondel et al. 2020). *New here:* its identification wit
 the chemical potential as the homeostatic price, and annealed soft-race training of an event network that runs
 hard at inference.
 
+## 49. The affine time gauge: temporal collapse and temporal normalisation
+
+### 49.1 A second exact symmetry: dilation
+
+Within a fixed causal set, a ramp neuron crosses at T = (θ + Σ w_i t_i)/A. Scaling every input time and the
+threshold by c > 0 and shifting the times by b,
+
+    T(c·t + b; c·θ) = (cθ + Σ w_i (c t_i + b)) / A = c·T(t; θ) + b
+
+and since c > 0 preserves every order, the causal sets and race winners are unchanged. **A race layer is
+equivariant under the affine group of time**, provided thresholds scale with the dilation. Shift was §22.1;
+dilation is new. Consequence: a layer's timing can be re-centred and re-scaled, with the next layer's
+thresholds rescaled to match, **without changing the function the network computes**. Normalising a layer's
+timing is a gauge choice, the time-domain counterpart of the scale invariance behind batch and layer
+normalisation. The fixed horizon breaks dilation, as the deadline breaks shift (§30.1): the clock is again the
+only anomaly.
+
+### 49.2 Temporal collapse
+
+A race neuron outputs a weighted mean of its input times plus θ/A. Averaging shrinks spread: across a layer,
+output times vary by about s_in/√F_eff plus the threshold heterogeneity (the forward contraction of §31).
+Without renormalisation, the spread of spike times falls geometrically with depth, and this hurts twice:
+
+- **Expressivity:** decisions ride on ever-smaller time differences, amplifying noise sensitivity and
+  pattern chaos (§41).
+- **Gradients:** the exact weight gradient is ∂T/∂w_i = (t_i − T)/A (§44), proportional to the spread of
+  the node's input times. **Deep weight gradients shrink with the timing spread even under exact
+  backpropagation.** Relative (Adam-style) steps restore the magnitude but not the signal-to-noise ratio.
+
+This is our account of the vanishing and exploding gradients reported for deep first-spike networks
+(Stanojevic et al. 2024). Their remedy, an initialisation that keeps each layer's timing scale matched
+(the ReLU-equivalent mapping), fixes the dilation gauge at initialisation only.
+
+### 49.3 Temporal normalisation
+
+Fix the gauge throughout training: map each layer's output times affinely to a fixed mean and spread
+(t' = 0.3 + 0.15·(t − m_l)/s_l, inside the horizon), with m_l and s_l **running** statistics, a slow per-layer
+gain like homeostasis, not batch statistics (§ async design principle). By 49.1 this adds no restriction on
+the function class; it only reconditions learning. In hardware it is a per-layer delay plus a time-scale
+(ramp-slope) adjustment.
+
+**Predictions (M50):** (i) without normalisation, the spread of fired times shrinks with depth, and so does the
+weight-gradient norm of deep layers; (ii) with it, exact-gradient accuracy at depth 4 is at least that at
+depth 2, and the depth-2 result (0.951, no cancellation) improves. Test: `e20_exact.py --tnorm 1`.
+
 ## Tests
 
 | | Claim | Test |
@@ -2331,6 +2376,7 @@ hard at inference.
 | **M47** | flat supervision: random feedback makes every layer fit label templates independently, so depth re-encodes; composition needs credit that depends on the layer above | `--probe 1` per-layer linear readout: random feedback, frozen, local feedback, pivotal (depth 3) |
 | **M48** | a residual event stream (identity paths) stops the accuracy decline with depth and lets deep layers add features | `--residual 1` vs plain, depths 1, 3, 5, full length |
 | **M49** | the entropic k-winner race is Fermi–Dirac (chemical potential = price); annealed soft-race training recovers the cancellation cost under exact gradients | `e21_soft.py` depth 2, k = 3, hard evaluation vs E20 k = 3 (0.930) and k = 10 (0.951) |
+| **M50** | race layers are equivariant under shift and dilation of time; temporal collapse shrinks deep weight gradients; running temporal normalisation (a gauge choice) restores depth | `e20_exact.py --tnorm 1` at depths 2 and 4 (no cancellation) vs without |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
