@@ -180,6 +180,11 @@ class ExactRaceNet:
 
 
 def data(a):
+    if a.task == "shd":                                       # same shuffle and validation split as e14 --val 800
+        z = np.load(os.path.join(os.path.dirname(__file__), "..", "data", "shd", "shd_700.npz"))
+        perm0 = np.random.default_rng(12345).permutation(len(z["ytr"]))
+        X, y = z["Xtr"][perm0], z["ytr"][perm0]
+        return X[:-800], y[:-800], X[-800:], y[-800:], 20
     if a.task == "mnist":
         x, y = mnist("train")
         xtr, ytr, xte, yte = x[:-10000], y[:-10000], x[-10000:], y[-10000:]
@@ -240,7 +245,7 @@ def main(a):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--task", choices=("mnist", "rhm"), default="mnist")
+    ap.add_argument("--task", choices=("mnist", "rhm", "shd"), default="mnist")
     ap.add_argument("--model", choices=("race", "mlp"), default="race")
     ap.add_argument("--depth", type=int, default=1)
     ap.add_argument("--width", type=int, default=400)

@@ -1,3 +1,23 @@
+# Decision, 2026-09-26: the project's identity is local, sparse, error-gated learning
+
+**Goal:** learning whose cost follows events and errors (E4, E5, M18), decisions that take as long as the
+evidence needs (E2), and credit through what did not happen (THEORY P4, §21, §35). Not "match dense accuracy
+on dense benchmarks by training spiking networks with backprop"; that is an established field in which we
+would only be catching up.
+
+**Consequences.**
+- **Exact-gradient training (E20, E21) is a diagnostic ceiling, not the method.** It showed the race
+  architecture itself is close to dense (0.9675 vs MLP 0.976 at depth 2, matched budget, no cancellation), so
+  the remaining gap is mostly the local learning rule and cancellation.
+- **Every result reports its energy side:** inference synaptic events and spikes per input, and training
+  weight updates, next to accuracy. Mechanisms are judged on the accuracy-vs-energy frontier against dense
+  baselines. A mechanism that costs events must buy accuracy (the residual stream did not: 2–4× events, no
+  gain).
+- **Locality audit for every mechanism:** per node (fine), per-layer broadcast (acceptable if slow and
+  cheap), global backward pass (diagnostic only).
+- **Benchmarks where asynchrony is native:** the Spiking Heidelberg Digits (E22) first, then event-camera data
+  and E7's continual-learning streams, where sparse error-gated updates should have an edge.
+
 # Roadmap after E6 — play to the strengths
 
 Written 2026-09-25. The experiment designs this refers to are E7–E11 in this
