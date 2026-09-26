@@ -1,0 +1,5 @@
+# 2026-09-26T12:14:40+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/m39_patch_entropy.py
+noise sd 0.01: bits [3.2, 12.2, 47.7, 152.8, 595.3, 1894.0]  alpha(area) = 0.965
+noise sd 0.03: bits [2.0, 7.4, 28.2, 90.4, 352.3, 1063.7]  alpha(area) = 0.953
+noise sd 0.10: bits [1.0, 3.3, 12.0, 38.1, 148.1, 418.6]  alpha(area) = 0.934
+EXIT 0
