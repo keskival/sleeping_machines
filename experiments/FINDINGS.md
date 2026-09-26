@@ -25,6 +25,11 @@ of timing credit 0.40, **both 0.785** (slow homeostasis 0.01 fails, as §36's ti
 the first theory-derived fix that changes a result materially; deep exact training of race networks is possible
 with activity owned by the thresholds.
 
+**E20/E21 diagnostics (MNIST, depth 2).** Exact gradients with no cancellation at the MLP's 5-epoch budget:
+0.9675 vs MLP 0.976, so the race architecture itself is close to dense. Fermi–Dirac (soft k-winner) training,
+evaluated hard: 0.942 vs 0.930 trained hard (k = 3, 2 epochs), about 60% of the cancellation cost recovered.
+Both are training-time diagnostics under the 2026-09-26 direction decision (ROADMAP).
+
 **E20 at full length (depth 2, 2 epochs, decay + clipping; the constant-rate runs diverged).** Winners per group
 3 / 5 / 10: 0.930 / 0.926 / 0.951; local rule (E14, 3 epochs) 0.952; backprop MLP (5 epochs) 0.976. *Learned:*
 race cancellation costs about 2 points under exact gradients, and a further ~2.5-point gap remains without it, at

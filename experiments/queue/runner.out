@@ -348,3 +348,9 @@
 20:18:01 start e21_smoke
 20:18:09 done e21_smoke (exit 0)
 20:18:09 start e21_d2_k3
+20:36:31 done e21_d2_k3 (exit 0)
+20:36:31 start e22_prep
+20:36:42 done e22_prep (exit 0)
+20:36:42 start e22_smoke
+20:36:44 done e22_smoke (exit 0)
+20:36:45 start e22_fa_d1
