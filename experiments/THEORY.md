@@ -2029,6 +2029,16 @@ low mean gate on stationary days.
 (iii) On streams with abrupt regime changes (E7's class-blocked streams), the gate beats both frozen
 and fixed-η learning.
 
+**First test (E17, exploratory; design flaw found).** Accuracy by step size: η = 0.001 0.583, 0.003
+0.593, 0.01 0.593, 0.03 0.578; change-gated (error-rate proxy, mean gate 0.15) 0.578; frozen 0.595. Too
+large a step hurts, as predicted, but no step size beats freezing, and the gate is 1.7 points worse
+than frozen. **The test was confounded:** the step size and the gate also applied during the pilot week,
+when the network learns from scratch, so small steps and a mostly closed gate starved initial learning.
+§43 is about tracking after convergence. Coverage also varied from 68% to 95% with η, which makes
+accuracy among decided episodes hard to compare. A corrected run (full-rate learning in the pilot week,
+tracking variants only afterwards, gate statistics warmed up in the pilot) is queued. Prediction (ii)
+stands untested; the evidence so far is that E17's three weeks show no drift that learning can use.
+
 *Borrowed:* LMS tracking theory, variable step-size filters, expected vs unexpected uncertainty. *New
 here:* the Bayes-error scaling of noise injection for error-gated race rules, and the gate derived
 from excess commitment cost.
