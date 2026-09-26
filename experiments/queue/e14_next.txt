@@ -41,8 +41,50 @@ pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --varian
 smoke_res experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --residual 1 --depth 3 --tag smokeres
 res_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 3 --tag res
 res_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 5 --tag res
+# E19 Random Hierarchy Model: race depth vs backprop reference (v=nc=8, m=4, s=2, L=3; seed 0)
+e19_smoke experiments/e19_rhm.py --model race --depth 2 --train 500 --epochs 1
+e19_race_d1_P1000 experiments/e19_rhm.py --model race --depth 1 --train 1000
+e19_race_d2_P1000 experiments/e19_rhm.py --model race --depth 2 --train 1000
+e19_race_d3_P1000 experiments/e19_rhm.py --model race --depth 3 --train 1000
+e19_race_d4_P1000 experiments/e19_rhm.py --model race --depth 4 --train 1000
+e19_race_res_d2_P1000 experiments/e19_rhm.py --model race --depth 2 --residual 1 --train 1000
+e19_race_res_d3_P1000 experiments/e19_rhm.py --model race --depth 3 --residual 1 --train 1000
+e19_race_res_d4_P1000 experiments/e19_rhm.py --model race --depth 4 --residual 1 --train 1000
+e19_mlp_d1_P1000 experiments/e19_rhm.py --model mlp --depth 1 --train 1000
+e19_mlp_d3_P1000 experiments/e19_rhm.py --model mlp --depth 3 --train 1000
+e19_race_d1_P4000 experiments/e19_rhm.py --model race --depth 1 --train 4000
+e19_race_d2_P4000 experiments/e19_rhm.py --model race --depth 2 --train 4000
+e19_race_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --train 4000
+e19_race_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --train 4000
+e19_race_res_d2_P4000 experiments/e19_rhm.py --model race --depth 2 --residual 1 --train 4000
+e19_race_res_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --residual 1 --train 4000
+e19_race_res_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --residual 1 --train 4000
+e19_mlp_d1_P4000 experiments/e19_rhm.py --model mlp --depth 1 --train 4000
+e19_mlp_d3_P4000 experiments/e19_rhm.py --model mlp --depth 3 --train 4000
+e19_race_d1_P16000 experiments/e19_rhm.py --model race --depth 1 --train 16000
+e19_race_d2_P16000 experiments/e19_rhm.py --model race --depth 2 --train 16000
+e19_race_d3_P16000 experiments/e19_rhm.py --model race --depth 3 --train 16000
+e19_race_d4_P16000 experiments/e19_rhm.py --model race --depth 4 --train 16000
+e19_race_res_d2_P16000 experiments/e19_rhm.py --model race --depth 2 --residual 1 --train 16000
+e19_race_res_d3_P16000 experiments/e19_rhm.py --model race --depth 3 --residual 1 --train 16000
+e19_race_res_d4_P16000 experiments/e19_rhm.py --model race --depth 4 --residual 1 --train 16000
+e19_mlp_d1_P16000 experiments/e19_rhm.py --model mlp --depth 1 --train 16000
+e19_mlp_d3_P16000 experiments/e19_rhm.py --model mlp --depth 3 --train 16000
+e19_race_d1_P64000 experiments/e19_rhm.py --model race --depth 1 --train 64000
+e19_race_d2_P64000 experiments/e19_rhm.py --model race --depth 2 --train 64000
+e19_race_d3_P64000 experiments/e19_rhm.py --model race --depth 3 --train 64000
+e19_race_d4_P64000 experiments/e19_rhm.py --model race --depth 4 --train 64000
+e19_race_res_d2_P64000 experiments/e19_rhm.py --model race --depth 2 --residual 1 --train 64000
+e19_race_res_d3_P64000 experiments/e19_rhm.py --model race --depth 3 --residual 1 --train 64000
+e19_race_res_d4_P64000 experiments/e19_rhm.py --model race --depth 4 --residual 1 --train 64000
+e19_mlp_d1_P64000 experiments/e19_rhm.py --model mlp --depth 1 --train 64000
+e19_mlp_d3_P64000 experiments/e19_rhm.py --model mlp --depth 3 --train 64000
 cons_fa_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --depth 5 --tag cons
 res_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 1 --tag res
+# §47 deep: residual depth 10 and 20 vs plain depth 10 (width 200, full length)
+res_w200_d10_s0 experiments/e14_depth.py --width 200 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 10 --tag res
+plain_w200_d10_s0 experiments/e14_depth.py --width 200 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --depth 10 --tag cons
+res_w200_d20_s0 experiments/e14_depth.py --width 200 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 20 --tag res
 # E18 pilot (E18_PREREGISTRATION.md): validation, seed 0
 e18p_w400_f16 experiments/e14_depth.py --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --depth 1 --seed 0 --tag e18pilot --width 400 --fanin-in 16
 e18p_w400_f32 experiments/e14_depth.py --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --depth 1 --seed 0 --tag e18pilot --width 400 --fanin-in 32
