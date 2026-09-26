@@ -1956,6 +1956,83 @@ codes. A direct check is the outgoing-weight correlation r of frequently near-ti
 discrete race selection, the absence of an ordered phase, A ∝ 1/√k, and topographic codes as the
 remedy.
 
+## 42. The exactly solvable race: decision time carries no information about the winner
+
+Take one race whose candidates' crossing times are T_n = μ_n + σ·G_n, with G_n i.i.d. standard Gumbel
+(minimum form), the model under which the pool is exactly Plackett–Luce (§21.4, §28). Three facts
+follow in closed form.
+
+1. **The decision time is Gumbel, located at the free energy.** min_n T_n ~ Gumbel(F, σ) with
+   F = −σ log Σ e^{−μ_n/σ} (§35). So E[decision time] = F − γσ (γ = 0.5772…, Euler–Mascheroni), and its
+   variance is π²σ²/6, independent of the input.
+2. **Who wins is independent of when.** The argmin and the min of independent Gumbels are
+   independent (the same property as for races of exponential clocks). **Within one input, an early
+   decision is exactly as likely to be right as a late one.** Across inputs, easy inputs (low F) are
+   decided earlier, which is why E2 saw decision time fall with evidence strength. But at a fixed
+   input, time is uninformative. So a speed–accuracy trade-off can only come from evidence that keeps
+   *arriving* (the accumulation of E2 and §38), never from waiting within one noisy race. A measured
+   dependence of accuracy on decision time at fixed input measures how far the substrate's race
+   departs from Gumbel structure (test M44).
+3. **Pricing time is a reweighting of near-miss credit.** With loss L = −log π_y + λ·E[T] (cross-entropy
+   plus a price λ on decision time, §30.4 and M5), the exact gradient with respect to the candidates'
+   locations is
+
+       ∂L/∂μ_n = δ_{ny}/σ − π_n · (1/σ − λ)
+
+   The target is pulled earlier as before. Competitors are pushed later by **(1 − λσ) times** their
+   usual near-miss credit: at λσ = 1 they are left alone, and beyond it they are pulled earlier too,
+   so everything speeds up. The credits now sum to λ, not 0: the time price is exactly the clock's
+   anomaly term of §30.1, now as a controllable source. **The speed–accuracy trade-off is a single
+   knob on the near-miss credit, (1 − λσ).**
+
+*Borrowed:* Gumbel extreme-value facts and the min/argmin independence of Gumbel and exponential
+races. *New here:* the reading for race networks (decision time as free energy, time pricing as a
+(1 − λσ) factor on near-miss credit, and time as the clock anomaly's source).
+
+## 43. Continual learning is tracking, and error-gated rules pay for noise
+
+E17's continual race did no better than the same race frozen after a week (−0.2 points). This is
+what adaptive-filter tracking theory (Widrow et al. 1976; Benveniste et al. 1990) predicts when
+drift is slow relative to noise, and race rules make it worse in a specific way.
+
+**Tracking trade-off.** Let the best weights drift like a random walk with variance q per update,
+and let each label carry irreducible noise r. An online rule with step η settles at an excess loss of
+about
+
+    η·r/2  (noise the rule keeps chasing)   +   q/(2η)  (lag behind the drift)
+
+minimised at **η\* ∝ √(q/r)**. A frozen model instead accumulates a lag of about q·t over time t. So
+continual learning beats freezing only after t ≳ 2√(r/q). With slow drift and high noise, η\* is
+tiny, and a fixed η = 0.01 mostly tracks noise.
+
+**Why error-gated race rules are hit hardest.** Race rules learn from errors and near misses (the
+source of their efficiency in E4 and E5). In a noise-dominated task (E17's error rate is about 41%,
+nearly all irreducible), almost every update is driven by noise: the effective r scales with the
+Bayes error, and the "learning work tracks errors" property turns from an asset into a liability.
+
+**The prescription follows from the weaving theory.** Under a calibrated model, the pool's own
+surprisal is expected: by §35.1 the mean commitment cost of the teacher's branch is σH(π). The
+**excess surprisal**, −log π_y − H(π), has mean zero exactly when the model is calibrated, and turns
+positive when the world has changed. So:
+
+- **Change-gated plasticity:** scale η by a running test of excess surprisal (or, as a proxy, of the
+  recent error rate above its long-run baseline). The rule then learns fast after a regime change and
+  almost not at all under stationary noise. It is the "unexpected uncertainty" of Yu & Dayan (2005)
+  and variable-step-size filtering, derived here from the martingale/compensator split of §35.3:
+  learn from the compensator's *deviations*, not from its expected increments.
+
+**Predictions (M45, E17 exploratory; not preregistered):**
+
+(i) Accuracy rises as η falls from 0.03 towards η\*, and the best η is well below 0.01.
+(ii) The change-gated rule (`--gate 1`) matches or beats the best fixed η without knowing it, with a
+low mean gate on stationary days.
+(iii) On streams with abrupt regime changes (E7's class-blocked streams), the gate beats both frozen
+and fixed-η learning.
+
+*Borrowed:* LMS tracking theory, variable step-size filters, expected vs unexpected uncertainty. *New
+here:* the Bayes-error scaling of noise injection for error-gated race rules, and the gate derived
+from excess commitment cost.
+
 ## Tests
 
 | | Claim | Test |
@@ -1995,6 +2072,8 @@ remedy.
 | **M41** | σ should equal the substrate's timing-noise scale (anneal to 0 in deterministic simulation) | Gumbel timing noise injection σ_s; best learning σ vs σ_s; spacing estimator of σ_s |
 | **M42** | generalisation gap falls with the certified jitter radius (algorithmic robustness) | train − test gap vs median ε* across `--certify 1` runs |
 | **M43** | pattern-level chaos: ρ_{l+1} ≈ A√ρ_l (no ordered phase), doubly-exponential decorrelation, A ∝ 1/√k, topographic codes damp it | `rho_per_layer` from `--certify 1` at depths 3 and 5, k = 1 vs 3, trained vs untrained |
+| **M44** | Gumbel race: decision time ~ Gumbel(F, σ), independent of the winner; time pricing scales competitor credit by (1 − λσ) | accuracy vs decision time at fixed input under injected timing noise; λ sweep on the output rule |
+| **M45** | continual learning is tracking: η\* ∝ √(q/r); error-gated rules inject Bayes-error noise; excess-surprisal gating learns only after change | E17 η sweep and `--gate 1`; E7 class-blocked streams |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

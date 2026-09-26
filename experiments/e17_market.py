@@ -105,7 +105,7 @@ def main(a):
     if a.learner.startswith("race"):
         X0, _, _ = episodes(PILOT[0], edges)
         drive = np.where(np.isfinite(X0), HORIZON - X0, 0).mean(0)
-        cfg = Config(variant="crl_fa", winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1,
+        cfg = Config(variant="crl_fa", winners=3, hid_frac=0.6, eta_out=a.eta, eta_hid=a.eta, deadline=1,
                      psp="ramp", homeo=0.001, sigma=0.15, zero_sum=1, seed=a.seed)
         net = DeepRaceNet(cfg, [a.width] * a.depth, X0.shape[1], k_out, drive, rng)
         for attr, v in dict(window=0.15, nonneg=False, eg=0.0, homeo_mode="linear", homeo_rate=0.001,
@@ -115,6 +115,7 @@ def main(a):
     lr_w, wb = np.zeros(5), 0.0                                  # B1: online logistic regression
     mu, var, nstat = np.zeros(5), np.ones(5), 0
     per_day, rows = [], {k: [] for k in ("day", "decided", "pred", "ret", "tdec", "conf")}
+    err_s, err_l, gates = 0.5, 0.5, []            # §43 change-gated plasticity: short/long running error rates
     for day in days:
         X, t0, tr = episodes(day, edges)
         t, p = tr[0], tr[1]
@@ -130,7 +131,7 @@ def main(a):
                 decided = ~urgent & ((win < 2) if k_out == 3 else True)
                 dec_all.append(decided), pred_all.append(win), tdec_all.append(tdec)
                 if pend is not None and learning:                   # teach chunk j-1 now
-                    ps, ptd = pend
+                    ps, ptd, pwin = pend
                     tc = t0[ps] + ptd
                     r = 1e4 * np.log(price_at(t, p, tc + TAU_US) / price_at(t, p, tc))
                     if k_out == 2:
@@ -140,9 +141,18 @@ def main(a):
                         ok = np.ones(len(r), bool)
                         y = np.where(np.abs(r) < HOLD_BP, 2, (r < 0).astype(np.int64))
                     if ok.any():
+                        if a.gate:
+                            wrong = (pwin[ok] != y[ok]).astype(float)
+                            for w_ in wrong:
+                                err_s += (w_ - err_s) / 500
+                                err_l += (w_ - err_l) / 20000
+                            se = np.sqrt(max(err_l * (1 - err_l), 1e-6) / 500)
+                            g = float(np.clip((err_s - err_l) / se, 0.05, 1.0))   # learn when errors rise
+                            net.cfg.eta_out = net.cfg.eta_hid = a.eta * g
+                            gates.append(g)
                         Xs = X[ps][ok]
                         net.teach(net.forward(*to_events(Xs)), y[ok])
-                pend = (sl, tdec)
+                pend = (sl, tdec, win)
             decided, pred, tdec = map(np.concatenate, (dec_all, pred_all, tdec_all))
             conf = np.zeros(len(pred))
         else:
@@ -192,11 +202,12 @@ def main(a):
         print(f"{day} {a.learner}: acc {acc:.4f} decided {rec['decided']}/{rec['episodes']} "
               f"tdec {rec['tdec_mean_s']} profit@2bp {rec['profit_bp_sum_c2']:.0f}", flush=True)
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.learner}_d{a.depth}_w{a.width}_s{a.seed}"
+    name = f"{a.learner}_d{a.depth}_w{a.width}_s{a.seed}" + (f"_eta{a.eta:g}" if a.eta != 0.01 else "") + \
+        ("_gate" if a.gate else "")
     np.savez_compressed(os.path.join(OUT, name + "_episodes.npz"), **{k: np.concatenate(v) for k, v in rows.items()})
     conf_days = [r for r in per_day if dt.date.fromisoformat(r["day"]) in CONF]
     tot = lambda k: sum(r[k] for r in conf_days)  # noqa: E731
-    summary = {"config": vars(a), "per_day": per_day,
+    summary = {"config": vars(a), "per_day": per_day, "mean_gate": float(np.mean(gates)) if gates else None,
                "confirmatory": {"acc": tot("correct") / max(tot("nonflat_decided"), 1),
                                 "coverage": tot("decided") / tot("episodes"),
                                 "profit_bp_per_episode_c2": tot("profit_bp_sum_c2") / tot("episodes"),
@@ -212,6 +223,8 @@ if __name__ == "__main__":
     ap.add_argument("--depth", type=int, default=1)
     ap.add_argument("--width", type=int, default=200)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--eta", type=float, default=0.01, help="§43: learning rate (tracking vs noise)")
+    ap.add_argument("--gate", type=int, default=0, help="§43: change-gated plasticity")
     ap.add_argument("--days", type=int, default=0, help="smoke test: only the first N days")
     a = ap.parse_args()
     if a.days:

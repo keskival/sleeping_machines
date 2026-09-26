@@ -97,6 +97,17 @@ def main():
         rep["hold_minus_b1top_profit"] = ratio_ci(ph, per_day(b1_top, profit_parts))
         rep["verdict_trade_selection_helps"] = bool(rep["hold_minus_race_profit"][1][0] > 0
                                                     and rep["hold_minus_b1top_profit"][1][0] > 0)
+    import glob                                             # §43 exploratory runs: step size and gating
+    extra = {}
+    for p_ in sorted(glob.glob(os.path.join(RES, "race_d1_w200_s0_*_episodes.npz"))):
+        tag = os.path.basename(p_)[len("race_d1_w200_s0_"):-len("_episodes.npz")]
+        e = dict(np.load(p_))
+        extra[tag] = {"acc": ratio_ci(per_day(e, acc_parts)),
+                      "minus_frozen": ratio_ci(per_day(e, acc_parts), per_day(E["race_frozen"], acc_parts))
+                      if E["race_frozen"] is not None else None,
+                      "coverage": float(e["decided"].mean())}
+    if extra:
+        rep["exploratory_section43"] = extra
     with open(os.path.join(RES, "analysis.json"), "w") as f:
         json.dump(rep, f, indent=1)
     print(json.dumps(rep, indent=1))

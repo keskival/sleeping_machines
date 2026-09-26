@@ -422,7 +422,7 @@ def speed_accuracy(net, times, y, n=1000, steps=100):
     for lam in (0.3, 0.5, 0.7, 1.0, 1.3):
         acc, t = decide(V.max(2) >= lam)
         out["absolute"].append({"lambda": lam, "acc": acc, "t": t})
-    for tau in (0.05, 0.1, 0.2):
+    for tau in (0.05, 0.1, 0.2, 0.5, 1.0):
         z = V / tau
         p = np.exp(z - z.max(2, keepdims=True))
         p /= p.sum(2, keepdims=True)
