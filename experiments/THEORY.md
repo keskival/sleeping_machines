@@ -2335,6 +2335,57 @@ the function class; it only reconditions learning. In hardware it is a per-layer
 weight-gradient norm of deep layers; (ii) with it, exact-gradient accuracy at depth 4 is at least that at
 depth 2, and the depth-2 result (0.951, no cancellation) improves. Test: `e20_exact.py --tnorm 1`.
 
+## 50. Why error-gated race learning forgets boundedly, and softmax SGD does not
+
+The first theory aimed at the project's own niche (ROADMAP, 2026-09-26): continual learning.
+
+### 50.1 The near-miss rule is ultraconservative
+
+On a labelled sample, the output rule with credit conservation (§22.3) does nothing if the target wins with
+margin; otherwise it promotes the target (+1) and demotes only competitors that came within the eligibility
+window, with weights normalised to sum to −1. For the step-synapse race with simultaneous inputs (E4's
+setting), a node's potential is v_c = ⟨w_c, x⟩ and the race picks the argmax. The update is then exactly an
+**ultraconservative multiclass algorithm** (Crammer & Singer 2003): it touches only the target and the
+competitors in the "error set", with competitor coefficients summing to −1. Their theorem gives a mistake
+bound: on data separable with margin γ inside radius R, the number of updates is at most about 2(R/γ)²,
+**independent of how long training continues**. For ramp synapses the same structure holds within a causal
+set (§44: the update is urgency-preconditioned gradient), so the bound transfers to the linearised piece.
+
+### 50.2 Bounded interference in class-incremental learning
+
+Train on task A, then task B (new classes). An old class c's row changes during B only on updates where c is in
+the error set (a near miss), so
+
+    ‖Δw_c‖ during B  ≤  η·R·N_c(B),     N_c(B) ≤ M_B ≤ 2(R/γ_B)²
+
+and the new classes' rows also change only on B's mistakes. **Forgetting caused by B is bounded by B's mistake
+count, and stops growing once B is learned**, however long B continues.
+
+### 50.3 Softmax cross-entropy with SGD keeps interfering
+
+Cross-entropy SGD updates every competitor on every sample by η·p_c(x) > 0, and the target row on every sample.
+On separable data the loss and p_c decay only like 1/t while weight norms grow like log t (the implicit-bias
+dynamics of Soudry et al. 2018). The accumulated push on old classes is Σ_t η·p_c,t ~ η log T, and the new
+classes' rows keep growing. **Forgetting keeps growing, logarithmically, with time on the new task.** Hidden
+layers add representation drift, which is again error-gated in the race and not in SGD.
+
+### 50.4 A sharp side prediction: homeostasis breaks the guarantee
+
+Homeostasis updates thresholds on *every* frame, label or not, so it is not conservative. Its drift grows with
+time on task, not with mistakes. **In race networks, homeostasis should be a leading source of forgetting.**
+Turning it off (or gating it by error) should flatten forgetting further.
+
+### 50.5 Predictions (M51, E23: class-incremental split-MNIST, 1k / 4k / 16k frames per task)
+
+(i) Race forgetting is roughly flat in frames per task; MLP–SGD forgetting grows with it (roughly log).
+(ii) The race without homeostasis forgets less than with it, with the gap growing with time on task.
+(iii) The race's number of weight updates per task saturates; the MLP's grows linearly.
+
+*Borrowed:* ultraconservative online algorithms and their mistake bounds (Crammer & Singer 2003); the
+implicit-bias dynamics of cross-entropy (Soudry et al. 2018). *New here, as far as checked:* the
+identification of the conserved near-miss race rule as ultraconservative, the resulting O(M_B) vs O(log T)
+forgetting contrast, and homeostasis as the non-conservative leak.
+
 ## Tests
 
 | | Claim | Test |
@@ -2381,6 +2432,7 @@ depth 2, and the depth-2 result (0.951, no cancellation) improves. Test: `e20_ex
 | **M48** | a residual event stream (identity paths) stops the accuracy decline with depth and lets deep layers add features | `--residual 1` vs plain, depths 1, 3, 5, full length |
 | **M49** | the entropic k-winner race is Fermi–Dirac (chemical potential = price); annealed soft-race training recovers the cancellation cost under exact gradients | `e21_soft.py` depth 2, k = 3, hard evaluation vs E20 k = 3 (0.930) and k = 10 (0.951) |
 | **M50** | race layers are equivariant under shift and dilation of time; temporal collapse shrinks deep weight gradients; running temporal normalisation (a gauge choice) restores depth | `e20_exact.py --tnorm 1` at depths 2 and 4 (no cancellation) vs without |
+| **M51** | the conserved near-miss rule is ultraconservative: forgetting bounded by the new task's mistakes (flat in time on task), vs O(log T) for softmax SGD; homeostasis is the non-conservative leak | E23: race vs MLP forgetting at 1k/4k/16k frames per task; race without homeostasis |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
