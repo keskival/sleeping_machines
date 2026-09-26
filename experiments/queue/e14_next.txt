@@ -95,6 +95,11 @@ e19_race_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --train 4000
 e20k_k10 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10
 e20k_k5 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 5
 e19_race_res_d2_P4000 experiments/e19_rhm.py --model race --depth 2 --residual 2 --train 4000
+# E20 matched budget (5 epochs, as the MLPs)
+e20f_k10_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 2 --winners 10
+e20f_k3_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 2 --winners 3
+e20f_k10_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 4 --winners 10
+e20f_mlp_d4 experiments/e20_exact.py --task mnist --model mlp --depth 4 --width 400 --epochs 5
 e19_race_res_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --residual 2 --train 4000
 e19_race_res_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --residual 2 --train 4000
 e19_mlp_d1_P4000 experiments/e19_rhm.py --model mlp --depth 1 --train 4000

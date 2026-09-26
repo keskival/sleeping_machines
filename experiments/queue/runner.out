@@ -334,3 +334,9 @@
 18:50:29 start e20st_nn
 19:04:19 done e20st_nn (exit 0)
 19:04:19 start e19_race_d4_P4000
+19:06:20 done e19_race_d4_P4000 (exit 0)
+19:06:20 start e20k_k10
+19:22:29 done e20k_k10 (exit 0)
+19:22:29 start e20k_k5
+19:37:34 done e20k_k5 (exit 0)
+19:37:35 start e19_race_res_d2_P4000
