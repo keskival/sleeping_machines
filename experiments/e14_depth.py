@@ -59,8 +59,11 @@ class DeepRaceNet:
         W[:, dummy] = 0
     _elig = RaceNet._elig
 
-    def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0, fanin_in=0):
+    def __init__(self, cfg, widths, d_in, k, drive, rng, feedback="dfa", fanin=0, fanin_in=0, residual=False):
         self.cfg, self.k, self.feedback = cfg, k, feedback
+        # §47 residual event stream: layer l reads the raw input and every earlier hidden layer's spikes,
+        # and the output reads the whole stream; no layer replaces what came before (identity paths)
+        self.residual = residual
         self.rng, self.window, self.nonneg, self.eg = rng, 0.15, False, 0.0
         self.homeo_mode, self.homeo_rate = "linear", 0.001
         self.time_sigma = 0.1
@@ -79,6 +82,10 @@ class DeepRaceNet:
         self.ycount = [np.full(k, 10.0) for _ in widths]
         self.W, self.th, self.B, self.M, self.R, dims = [], [], [], [], [], [d_in] + list(widths)
         expected = float(drive.sum())
+        if residual:
+            dims = [d_in + sum(widths[:l]) for l in range(len(widths) + 1)]
+            hid_charge = [h // cfg.group * cfg.winners * 0.5 for h in widths]
+            charge_in = [expected + sum(hid_charge[:l]) for l in range(len(widths) + 1)]
         for l, h in enumerate(widths):
             W = np.zeros((h, dims[l] + 1), np.float32)
             M = None
@@ -90,7 +97,7 @@ class DeepRaceNet:
                     M[n, rng.choice(live, min(f, len(live)), replace=False)] = True
                 expected_l = expected * min(f, len(live)) / len(live)
             else:
-                expected_l = expected
+                expected_l = charge_in[l] if residual else expected
             mu = 1.0 / (cfg.hid_frac * expected_l)
             W[:, :dims[l]] = rng.normal(mu, mu, (h, dims[l]))
             if M is not None:
@@ -102,7 +109,7 @@ class DeepRaceNet:
             self.R.append(R * (M[:, :dims[l]] if M is not None else 1.0))
             self.th.append(np.ones(h, np.float32))
             expected = h // cfg.group * cfg.winners * 0.5          # charge from the next layer's input spikes
-        mu2 = 1.0 / (cfg.init_frac * expected)
+        mu2 = 1.0 / (cfg.init_frac * (charge_in[-1] if residual else expected))
         self.Wo = np.zeros((k, dims[-1] + 1), np.float32)
         self.Wo[:, :dims[-1]] = rng.normal(mu2, mu2, (k, dims[-1]))
         self.tho = np.full(k, cfg.theta_out, np.float32)
@@ -117,9 +124,14 @@ class DeepRaceNet:
         self.work["samples"] += len(t)
         shadow = cfg.variant == "crl_shadow"
         st_, sidx = t, idx                                      # shadow channel: real + upstream shadow spikes
+        if self.residual:
+            S = np.full((len(t), self.dims[0] + 1), np.inf, np.float32)
+            np.put_along_axis(S, idx, t, 1)
+            S = S[:, :self.dims[0]]
         for l, W in enumerate(self.W):
             T, over, v_at = layer_race(t, idx, W, self.th[l], "ramp")
             fired, freeze = group_race(T, over, W.shape[0] // cfg.group, cfg.winners)
+            self.work["spikes"] = self.work.get("spikes", 0) + int(fired.sum()) + (int(np.isfinite(t).sum()) if l == 0 else 0)
             v, n_before = v_at(freeze)
             if self.M[l] is None:
                 self.work["synops"] += int(n_before.sum())
@@ -138,7 +150,11 @@ class DeepRaceNet:
                 self.work["shadow_spikes"] = self.work.get("shadow_spikes", 0) + int(sfire.sum())
                 st_, sidx = to_events(np.where(fired, freeze, np.where(sfire, Ts, np.inf)))
             layers.append(L)
-            t, idx = to_events(np.where(fired, freeze, np.inf))
+            if self.residual:
+                S = np.concatenate([S, np.where(fired, freeze, np.inf).astype(np.float32)], 1)
+                t, idx = to_events(S)
+            else:
+                t, idx = to_events(np.where(fired, freeze, np.inf))
         T2, over2, v_at2 = layer_race(t, idx, self.Wo, self.tho, "ramp")
         winner = np.where(np.isfinite(T2).any(1), race_order(T2, over2)[:, 0], -1)
         t_dec = np.where(winner >= 0, T2.min(1), HORIZON)
@@ -469,7 +485,10 @@ def main(a):
     rng = np.random.default_rng(a.seed)
     widths = [int(w) for w in a.widths.split(",")] if a.widths else [a.width] * a.depth
     assert len(widths) == a.depth and all(w % 10 == 0 for w in widths), "widths: one multiple of 10 per layer"
-    net = DeepRaceNet(cfg, widths, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in)
+    if a.residual:
+        assert a.feedback == "dfa" and a.variant in ("crl_fa", "crl_fired_only", "frozen_hidden") and not a.fanin, \
+            "residual stream: random-feedback variants only"
+    net = DeepRaceNet(cfg, widths, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in, residual=bool(a.residual))
     net.window = a.window
     net.nonneg = bool(a.nonneg)
     net.eg = a.eg
@@ -515,6 +534,7 @@ def main(a):
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag, "usage_balance": res_balance,
            "credit_reach": [c / n if n else None for c, n in net.reach],
            "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1),
+           "spikes_per_sample": net.work.get("spikes", 0) / max(net.work["samples"], 1),
            "noncausal_credit_share": float(np.mean(net.noncausal)) if net.noncausal else None,
            "sigma_per_layer": [float(v) for v in net.sig_l],
            "common_mode_share": [float(np.mean(c)) if c else None for c in net.cm],
@@ -548,7 +568,8 @@ def main(a):
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
                                              ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
-                                             ("hm", a.homeo_mode if a.homeo_mode != "linear" else "")) if v != "")
+                                             ("hm", a.homeo_mode if a.homeo_mode != "linear" else ""),
+                                             ("W", a.width if a.width != 400 else ""), ("res", a.residual or "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
     with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
@@ -572,6 +593,7 @@ if __name__ == "__main__":
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
+    ap.add_argument("--residual", type=int, default=0, help="§47: residual event stream (identity paths)")
     ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
     ap.add_argument("--winners", type=int, default=3, help="§37: winners k per group of 10")
     ap.add_argument("--probe", type=int, default=0, help="§46: linear probe accuracy per hidden layer")
