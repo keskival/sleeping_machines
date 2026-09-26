@@ -44,6 +44,7 @@ class ExactRaceNet:
         self.nonneg = False
         self.th = [np.ones(h, np.float32) for h in widths]           # §36 prices: per-node thresholds
         self.homeo, self.center = 0.0, False
+        self.tnorm, self.training, self.tstat = False, False, [None] * len(widths)
         self.m = [np.zeros_like(p) for p in self.params]
         self.v = [np.zeros_like(p) for p in self.params]
         self.step = 0
@@ -69,8 +70,25 @@ class ExactRaceNet:
             kth = np.sort(g, 2)[:, :, self.winners - 1:self.winners]
             kth = np.repeat(np.where(np.isfinite(kth), kth, HORIZON), self.group, 2).reshape(b, n)
             presence = np.where(fired, 1.0, np.where(np.isfinite(T), np.exp(-np.clip(T - kth, 0, None) / self.sigma_b), 0.0))
-            acts.append(dict(tin=x, T=T, fired=fired, presence=presence.astype(np.float32)))
-            x = np.where(fired, T, np.inf).astype(np.float32)
+            a_l = 1.0
+            Tn = T
+            if self.tnorm:
+                # §49 temporal normalisation: an affine re-timing of the layer's output (a gauge choice, since race
+                # neurons are equivariant under shift and dilation of time), from running (not batch) statistics
+                fin = T[fired & np.isfinite(T)]
+                l_ = len(acts)
+                if self.training and fin.size:
+                    m_, s_ = float(fin.mean()), float(fin.std() + 1e-4)
+                    if self.tstat[l_] is None:
+                        self.tstat[l_] = [m_, s_]
+                    else:
+                        self.tstat[l_][0] += 0.01 * (m_ - self.tstat[l_][0])
+                        self.tstat[l_][1] += 0.01 * (s_ - self.tstat[l_][1])
+                if self.tstat[l_] is not None:
+                    a_l = 0.15 / self.tstat[l_][1]
+                    Tn = np.clip(0.3 + a_l * (T - self.tstat[l_][0]), 0.0, 0.95)
+            acts.append(dict(tin=x, T=T, Tn=Tn, a=a_l, fired=fired, presence=presence.astype(np.float32)))
+            x = np.where(fired, Tn, np.inf).astype(np.float32)
         To = self._cross(x, self.Wo)
         fin = np.isfinite(x)
         A_all = (self.Wo[None] * fin[:, None, :]).sum(2)
@@ -105,7 +123,9 @@ class ExactRaceNet:
         return gW.astype(np.float32), gt.astype(np.float32)
 
     def train_step(self, tin, y, lr, clip=0.0):
+        self.training = True
         acts, x, To = self.forward(tin)
+        self.training = False
         z = -To / self.tau
         p = np.exp(z - z.max(1, keepdims=True))
         p /= p.sum(1, keepdims=True)
@@ -117,14 +137,14 @@ class ExactRaceNet:
         grads = [None] * (len(self.W) + 1)
         last = acts[-1] if acts else None
         if last is not None:
-            soft_t = np.where(np.isfinite(last["T"]) & (last["presence"] > 0), last["T"], np.inf).astype(np.float32)
+            soft_t = np.where(np.isfinite(last["T"]) & (last["presence"] > 0), last["Tn"], np.inf).astype(np.float32)
             soft = (soft_t, last["presence"])
         else:
             soft = None
         grads[-1], gt = self._node_grads(x, To, self.Wo, gT, soft)
         for l in reversed(range(len(self.W))):
             L = acts[l]
-            gTl = np.where(np.isfinite(L["T"]), gt, 0.0)
+            gTl = np.where(np.isfinite(L["T"]), gt * L["a"], 0.0)          # through the affine re-timing
             if self.center:
                 # §30.1 Ward identity: the layer's summed timing credit is the clock's (activity), owned by the
                 # thresholds; the weights get only the zero-sum part, over the nodes that carry credit
@@ -132,7 +152,7 @@ class ExactRaceNet:
                 gTl = np.where(on, gTl - (gTl.sum(1, keepdims=True) / np.maximum(on.sum(1, keepdims=True), 1)), 0.0)
             if l > 0:
                 P = acts[l - 1]
-                soft_t = np.where(np.isfinite(P["T"]) & (P["presence"] > 0), P["T"], np.inf).astype(np.float32)
+                soft_t = np.where(np.isfinite(P["T"]) & (P["presence"] > 0), P["Tn"], np.inf).astype(np.float32)
                 soft = (soft_t, P["presence"])
             else:
                 soft = None
@@ -194,6 +214,7 @@ def main(a):
     net = ExactRaceNet(Ttr.shape[1], [a.width] * a.depth, k, drive, rng, tau=a.tau, winners=a.winners)
     net.nonneg = bool(a.nonneg)
     net.homeo, net.center = a.homeo, bool(a.center)
+    net.tnorm = bool(a.tnorm)
 
     def acc(T, y):
         return float(np.mean(np.concatenate([net.predict(T[i:i + 500]) for i in range(0, len(y), 500)]) == y))
@@ -212,7 +233,7 @@ def main(a):
               f"({time.time() - t0:.0f}s)", flush=True)
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "train_acc_5k": acc(Ttr[:5000], ytr[:5000])}
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_dc{a.decay}_cl{a.clip:g}_k{a.winners}_P{a.train_limit or 'all'}_s{a.seed}"
+    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_dc{a.decay}_cl{a.clip:g}_k{a.winners}_tn{a.tnorm}_P{a.train_limit or 'all'}_s{a.seed}"
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f, indent=1)
 
@@ -232,6 +253,7 @@ if __name__ == "__main__":
     ap.add_argument("--winners", type=int, default=3, help="winners per group of 10 (10 = no cancellation)")
     ap.add_argument("--decay", type=int, default=0, help="linear learning-rate decay to 10%")
     ap.add_argument("--clip", type=float, default=0.0, help="clip a layer's gradient norm at this multiple of its running norm")
+    ap.add_argument("--tnorm", type=int, default=0, help="§49 temporal normalisation (running affine re-timing)")
     ap.add_argument("--homeo", type=float, default=0.0, help="§36: threshold (price) step towards the target rate")
     ap.add_argument("--center", type=int, default=0, help="§30.1: zero-sum timing credit per layer")
     ap.add_argument("--seed", type=int, default=0)
