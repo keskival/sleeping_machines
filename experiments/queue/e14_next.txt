@@ -85,14 +85,11 @@ e20g_mnist_race_d1 experiments/e20_exact.py --task mnist --depth 1 --width 400 -
 e20g_mnist_race_d2 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 5 --lr 1e-2 --homeo 0.1 --center 1
 e20g_mnist_mlp_d2 experiments/e20_exact.py --task mnist --model mlp --depth 2 --width 400 --epochs 5
 e20g_mnist_race_d3 experiments/e20_exact.py --task mnist --depth 3 --width 400 --epochs 5 --lr 1e-2 --homeo 0.1 --center 1
-e20g_mnist_mlp_d3 experiments/e20_exact.py --task mnist --model mlp --depth 3 --width 400 --epochs 5
-e20g_mnist_race_d5 experiments/e20_exact.py --task mnist --depth 5 --width 400 --epochs 5 --lr 1e-2 --homeo 0.1 --center 1
-e20g_mnist_mlp_d5 experiments/e20_exact.py --task mnist --model mlp --depth 5 --width 400 --epochs 5
-e20g_rhm_race_d1 experiments/e20_exact.py --task rhm --depth 1 --width 200 --epochs 10 --train-limit 16000 --lr 1e-2 --homeo 0.1 --center 1
-e20g_rhm_race_d2 experiments/e20_exact.py --task rhm --depth 2 --width 200 --epochs 10 --train-limit 16000 --lr 1e-2 --homeo 0.1 --center 1
-e20g_rhm_race_d3 experiments/e20_exact.py --task rhm --depth 3 --width 200 --epochs 10 --train-limit 16000 --lr 1e-2 --homeo 0.1 --center 1
-e20g_rhm_race_d4 experiments/e20_exact.py --task rhm --depth 4 --width 200 --epochs 10 --train-limit 16000 --lr 1e-2 --homeo 0.1 --center 1
 e19_race_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --train 4000
+# E20 stability on full data
+e20st_lr1e-2 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2
+e20st_lr3e-3 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 3e-3
+e20st_nn experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --nonneg 1
 e19_race_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --train 4000
 e19_race_res_d2_P4000 experiments/e19_rhm.py --model race --depth 2 --residual 2 --train 4000
 e19_race_res_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --residual 2 --train 4000
