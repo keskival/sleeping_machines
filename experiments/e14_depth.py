@@ -352,7 +352,7 @@ def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
     times, y = times[:n], y[:n]
     k, G = net.cfg.winners, net.cfg.group
     np_err = np.seterr(invalid="ignore")                        # inf − inf in branches np.where discards
-    radius, pred = [], []
+    radius, pred, base_fired = [], [], []
     for i in range(0, len(y), 250):
         t, idx = to_events(times[i:i + 250])
         st = net.forward(t, idx)
@@ -371,18 +371,28 @@ def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
         r[st["urgent"]] = 0.0
         radius.append(r)
         pred.append(st["winner"])
+        base_fired.append([L["fired"] for L in st["layers"]])
     radius, pred = np.concatenate(radius), np.concatenate(pred)
     rng = np.random.default_rng(seed)
     out = {"radius_quantiles": [float(q) for q in np.quantile(radius, [0.1, 0.25, 0.5, 0.75, 0.9])],
            "acc": float((pred == y).mean()), "jitter": []}
     for eps in eps_list:
         jt = times + np.where(np.isfinite(times), rng.uniform(-eps, eps, times.shape), 0)
-        pj = np.concatenate([net.forward(*to_events(jt[i:i + 250]))["winner"] for i in range(0, len(y), 250)])
+        pj, diff = [], np.zeros(len(net.W))
+        for bi, i in enumerate(range(0, len(y), 250)):
+            stj = net.forward(*to_events(jt[i:i + 250]))
+            pj.append(stj["winner"])
+            for l, L in enumerate(stj["layers"]):                  # §41: fraction of groups whose winners changed
+                b_ = len(L["fired"])
+                ch = (L["fired"] != base_fired[bi][l]).reshape(b_, -1, G).any(2)
+                diff[l] += ch.sum()
+        pj = np.concatenate(pj)
+        rho = [float(d / (len(y) * (W_.shape[0] // G))) for d, W_ in zip(diff, net.W)]
         cert = radius > eps
         flip = pj != pred
         out["jitter"].append({"eps": eps, "certified": float(cert.mean()), "flips": float(flip.mean()),
                               "flips_among_certified": int((flip & cert).sum()),
-                              "acc_jittered": float((pj == y).mean())})
+                              "acc_jittered": float((pj == y).mean()), "rho_per_layer": rho})
     np.seterr(**np_err)
     return out
 

@@ -1734,8 +1734,9 @@ So the minimum number of winners is set by fan-in alone:
 
     k · F ≥ G          (the winner–fan-in coupling)
 
-and any extra winner costs bits per spike and robustness while buying nothing. With dense fan-in
-(F = n ≫ G), **k = 1 is optimal on every count**, and our k = 3 at F = 400 is 120× over the coupling
+and any extra winner costs bits per spike and robustness, buying only credit reach and, per §41,
+pattern stability (A ∝ 1/√k). With dense fan-in
+(F = n ≫ G), **k = 1 is optimal for bits per spike and margin** (but maximises pattern chaos, §41), and our k = 3 at F = 400 is 120× over the coupling
 bound. With sparse fan-in F < G, more winners become *necessary*: k ≥ ⌈G/F⌉.
 
 ### 37.2 Fan-in from contraction and coverage
@@ -1885,6 +1886,76 @@ falls as the median certified radius grows. Via §35.2 (near-miss credit is the 
 commitment cost, which widens race gaps), this links the credit rule itself to generalisation.
 **Test (M42):** gap vs median ε* across the `--certify 1` runs.
 
+## 41. Mean-field propagation: race networks are chaotic at the level of firing patterns
+
+The mean-field signal-propagation analysis of deep networks (Poole et al. 2016; Schoenholz et al.
+2017) tracks how the difference between two inputs evolves with depth, and predicts trainable depth
+before any training. Here is its analogue for race networks. It is analytic; the constants are
+order-of-magnitude, and the exponent is the prediction.
+
+### 41.1 The map
+
+Let ρ_l be the fraction of groups at layer l whose winner sets differ between inputs x and x′.
+
+1. **Swapped inputs.** A group whose winners differ changes about one of its k spikes (for small
+   ρ), so a consumer sees a fraction q ≈ ρ_l/k of its arrived inputs swapped: present for one
+   input, absent for the other.
+2. **Timing effect.** A ramp crossing is T = (θ + Σ_S w_i t_i)/W_S (§34.1). Adding or removing one input
+   moves it by about (w_i/W_S)|t_i − T| ~ s/F, where s is the spread of input times. The sign varies
+   across swaps, so qF swaps add like a random walk: |ΔT| ~ s·√q/√F.
+3. **Spread within a group.** Group members read the same inputs with different weights, so their
+   crossing times differ by about s·√(2/F). The normalised perturbation is z = |ΔT|/spread ~ √(q/2):
+   **fan-in cancels.**
+4. **Winner changes.** The gap between the k-th and (k+1)-th crossing has a finite density g at zero
+   (§28), so the probability that the winners change is ≈ g·z for small z.
+
+Together,
+
+    ρ_{l+1}  ≈  A · √ρ_l ,     A ≈ g / √(2k)
+
+### 41.2 Consequences
+
+1. **There is no ordered phase.** Φ(ρ) = A√ρ has infinite slope at 0, so the "identical inputs"
+   state is unstable for every weight scale. In tanh networks the ordered/chaotic phase depends on
+   the weight variance. In race networks, **pattern-level chaos is structural**: it comes from the
+   discreteness of selection. This is consistent with §34: firing *times* are non-expansive, and
+   all amplification happens through the discontinuous winner swaps, which is also where the
+   jitter certificate's boundaries lie.
+2. **Doubly-exponential decorrelation.** Iterating gives
+   log ρ_l ≈ (1 − 2^{−l})·log A² + 2^{−l}·log ρ_0. A tiny input difference (ρ_0 = 10⁻⁴) becomes a
+   macroscopic pattern difference within 3–4 race layers, and then saturates at the fixed point
+   ρ* ≈ min(A², ρ_max). **Beyond about log₂ log(A²/ρ_0) layers, the firing pattern no longer
+   reflects input similarity.** This is a forward-pass limit on useful depth, independent of how
+   good the credit is. It adds to the backward limits of §30.2 and §31.
+3. **The certificate is the threshold of the cascade.** For jitter below ε* nothing flips (ρ = 0
+   exactly, §34.4). The first flips occur with probability ∝ ε, and the √ law then amplifies them.
+4. **More winners dampen the chaos.** A ∝ 1/√k: with more winners, a swap changes a smaller
+   fraction of a group's output. **This revises §37.1.** k = 1 maximises bits per spike and the
+   robustness margin, but it also maximises pattern chaos (A is √3 larger than at k = 3). The choice
+   of k is a three-way trade-off: information per spike, margin, and pattern stability.
+5. **The remedy is smooth codes.** What matters downstream is not *that* a winner was swapped for a
+   near-loser, but how different their outgoing weights are. With r the correlation between the
+   outgoing weight vectors of competitors that nearly tie, q_eff = q·(1 − r) and A_eff = A·√(1 − r).
+   A network whose near-tied competitors project similarly (a **topographic** code, as in
+   self-organising maps) suppresses the chaos and approaches an edge of chaos. Temperature σ > 0
+   does not remove the √: it comes from the random walk over discrete swapped inputs, not from the
+   sharpness of the race.
+
+### 41.3 Predictions (M43)
+
+Measured by `--certify 1` as `rho_per_layer` at jitter ε ∈ {0.001, 0.003, 0.01, 0.03}:
+
+(i) Before saturation, **log ρ_{l+1} ≈ const + ½ log ρ_l**: slope ½ across layers and across ε.
+(ii) Saturation at depth 5 (`cert_sg_d5`) to a common ρ* for all ε.
+(iii) ρ_l is larger for k = 1 than for k = 3 at matched depth (`topo_dense_k1` vs `topo_dense_k3`),
+with a ratio of A near √3 before saturation.
+(iv) Trained networks have a smaller A than untrained ones if learning builds partially topographic
+codes. A direct check is the outgoing-weight correlation r of frequently near-tied pairs.
+
+*Borrowed:* the mean-field propagation method. *New here, as far as checked:* the √ map for
+discrete race selection, the absence of an ordered phase, A ∝ 1/√k, and topographic codes as the
+remedy.
+
 ## Tests
 
 | | Claim | Test |
@@ -1923,6 +1994,7 @@ commitment cost, which widens race gaps), this links the credit rule itself to g
 | **M40** | the optimal weaving rule prices commitment cost (MSPRT: shared free-energy inhibition beats the absolute race); race neurons are blind to absence, usable clock-free only relative to the input's onset | `--speed 1`: absolute vs relative frontiers (depth 1, 3); onset-referenced absence inhibition (M40b, to build) |
 | **M41** | σ should equal the substrate's timing-noise scale (anneal to 0 in deterministic simulation) | Gumbel timing noise injection σ_s; best learning σ vs σ_s; spacing estimator of σ_s |
 | **M42** | generalisation gap falls with the certified jitter radius (algorithmic robustness) | train − test gap vs median ε* across `--certify 1` runs |
+| **M43** | pattern-level chaos: ρ_{l+1} ≈ A√ρ_l (no ordered phase), doubly-exponential decorrelation, A ∝ 1/√k, topographic codes damp it | `rho_per_layer` from `--certify 1` at depths 3 and 5, k = 1 vs 3, trained vs untrained |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
