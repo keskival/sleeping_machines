@@ -128,6 +128,9 @@ class DeepRaceNet:
             S = np.full((len(t), self.dims[0] + 1), np.inf, np.float32)
             np.put_along_axis(S, idx, t, 1)
             S = S[:, :self.dims[0]]
+            srcs = [S]
+            if not hasattr(self, "lat"):
+                self.lat = [None] * (len(self.W) + 1)                # running mean spike time per source
         for l, W in enumerate(self.W):
             T, over, v_at = layer_race(t, idx, W, self.th[l], "ramp")
             fired, freeze = group_race(T, over, W.shape[0] // cfg.group, cfg.winners)
@@ -151,7 +154,20 @@ class DeepRaceNet:
                 st_, sidx = to_events(np.where(fired, freeze, np.where(sfire, Ts, np.inf)))
             layers.append(L)
             if self.residual:
-                S = np.concatenate([S, np.where(fired, freeze, np.inf).astype(np.float32)], 1)
+                srcs.append(np.where(fired, freeze, np.inf).astype(np.float32))
+                if self.residual == 2:
+                    # §47 delay-matched skips: shifting a source by a constant loses no information (§22.1)
+                    # but removes the head start an identity path has over computed paths
+                    for j, src in enumerate(srcs):
+                        fin = src[np.isfinite(src)]
+                        if fin.size:
+                            m_ = float(fin.mean())
+                            self.lat[j] = m_ if self.lat[j] is None else self.lat[j] + 0.01 * (m_ - self.lat[j])
+                    newest = self.lat[len(srcs) - 1] or 0.0
+                    S = np.concatenate([src + max(0.0, newest - (self.lat[j] if self.lat[j] is not None else newest))
+                                        for j, src in enumerate(srcs)], 1)
+                else:
+                    S = np.concatenate(srcs, 1)
                 t, idx = to_events(S)
             else:
                 t, idx = to_events(np.where(fired, freeze, np.inf))
@@ -488,7 +504,7 @@ def main(a):
     if a.residual:
         assert a.feedback == "dfa" and a.variant in ("crl_fa", "crl_fired_only", "frozen_hidden") and not a.fanin, \
             "residual stream: random-feedback variants only"
-    net = DeepRaceNet(cfg, widths, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in, residual=bool(a.residual))
+    net = DeepRaceNet(cfg, widths, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in, residual=a.residual)
     net.window = a.window
     net.nonneg = bool(a.nonneg)
     net.eg = a.eg
@@ -593,7 +609,7 @@ if __name__ == "__main__":
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
-    ap.add_argument("--residual", type=int, default=0, help="§47: residual event stream (identity paths)")
+    ap.add_argument("--residual", type=int, default=0, help="§47: residual event stream; 1 plain skips, 2 delay-matched skips")
     ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
     ap.add_argument("--winners", type=int, default=3, help="§37: winners k per group of 10")
     ap.add_argument("--probe", type=int, default=0, help="§46: linear probe accuracy per hidden layer")

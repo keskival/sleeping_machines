@@ -2224,6 +2224,18 @@ came before.
 4. **Cost:** synaptic work grows with depth, since each layer reads the whole stream. Sparse fan-in
    (E18) bounds it.
 
+**First result (full length, seed 0): plain skips made depth 3 worse,** 0.898 vs 0.937 for the plain stack,
+at twice the synaptic events. **Why, specific to time codes:** an identity path is *faster* than a computed
+path. Raw pixels (bright ones spike at t = 0) reach the output at once, hidden features only after each
+layer integrates, so the output race commits on the shallow evidence before deep features arrive: E6
+round 1's hasty decisions, reintroduced by the skip. In a race, **a skip connection is not neutral: it
+gives the shallowest information a head start.**
+
+**Fix derived from §22.1: delay-matched skips** (`--residual 2`). Delaying a path by a constant loses no
+information (time-shift equivariance) but removes its head start. Each source's spikes enter the stream
+delayed by the running mean latency of the layers they bypass. Queued: depth 1, 3, 10, 20 on MNIST and
+E19 (Random Hierarchy Model).
+
 **Test (M48, full length):** residual vs plain stacks at depths 1, 3, 5 (credit conservation on).
 The plain stack declines 0.960 → 0.952 → 0.941 (depths 1–3). The prediction is that the residual stack
 does not decline, and ideally improves.

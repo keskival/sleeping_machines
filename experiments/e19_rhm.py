@@ -58,7 +58,7 @@ def run_race(a, xtr, ytr, xte, yte, n_c):
     drive = np.where(np.isfinite(Ttr), HORIZON - Ttr, 0).mean(0)
     cfg = Config(variant="crl_fa", winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=0.001, sigma=0.15, zero_sum=1, seed=a.seed)
-    net = DeepRaceNet(cfg, [a.width] * a.depth, Ttr.shape[1], n_c, drive, rng, residual=bool(a.residual))
+    net = DeepRaceNet(cfg, [a.width] * a.depth, Ttr.shape[1], n_c, drive, rng, residual=a.residual)
     for attr, val in dict(window=0.15, nonneg=False, eg=0.0, homeo_mode="linear", homeo_rate=0.001,
                           info_capacity=False, group_conserve=False, pivot_top=False, share_jac=False,
                           causal=False, center_credit=0, gauge=False, self_sigma=0).items():
@@ -136,7 +136,7 @@ def main(a):
     res = run_race(a, Xtr, ytr, Xte, yte, a.nc) if a.model == "race" else run_mlp(a, Xtr, ytr, Xte, yte, a.nc)
     res["config"] = vars(a)
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.model}_d{a.depth}{'_res' if a.residual else ''}_P{a.train}_L{a.L}_s{a.seed}"
+    name = f"{a.model}_d{a.depth}{f'_res{a.residual}' if a.residual else ''}_P{a.train}_L{a.L}_s{a.seed}"
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f, indent=1)
     print(name, "test", res["test_acc"], "train", res["train_acc"], flush=True)
