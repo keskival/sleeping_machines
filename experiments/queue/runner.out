@@ -216,3 +216,49 @@
 13:05:40 start smoke_speed
 13:05:41 done smoke_speed (exit 0)
 13:05:41 start cons_fo_d3_s1
+13:16:36 done cons_fo_d3_s1 (exit 0)
+13:16:36 start e17_eta0.001
+13:18:50 done e17_eta0.001 (exit 0)
+13:18:51 start e17_eta0.003
+13:21:05 done e17_eta0.003 (exit 0)
+13:21:05 start e17_eta0.03
+13:23:17 done e17_eta0.03 (exit 0)
+13:23:17 start e17_gate
+13:25:31 done e17_gate (exit 0)
+13:25:31 start e17_analyze2
+13:25:33 done e17_analyze2 (exit 0)
+13:25:33 start smoke_probe
+13:25:34 done smoke_probe (exit 1)
+13:25:34 start nonneg_d3_s1
+13:36:56 done nonneg_d3_s1 (exit 0)
+13:36:56 start e17_post0.001
+13:39:08 done e17_post0.001 (exit 0)
+13:39:08 start e17_post0.003
+13:41:20 done e17_post0.003 (exit 0)
+13:41:20 start e17_gate2
+13:43:33 done e17_gate2 (exit 0)
+13:43:33 start e17_analyze3
+13:43:35 done e17_analyze3 (exit 0)
+13:43:35 start pivot_d1_s0
+13:48:51 done pivot_d1_s0 (exit 0)
+13:48:51 start smoke_res
+13:48:53 done smoke_res (exit 0)
+13:48:53 start res_d3_s0
+14:14:05 done res_d3_s0 (exit 0)
+14:14:05 start res_d5_s0
+15:10:52 done res_d5_s0 (exit 0)
+15:10:52 start e20_gradcheck
+15:10:53 done e20_gradcheck (exit 0)
+15:10:53 start e20_smoke
+15:10:57 done e20_smoke (exit 0)
+15:10:57 start smoke_res2
+15:10:59 done smoke_res2 (exit 0)
+15:10:59 start res2_d3_s0
+15:36:32 done res2_d3_s0 (exit 0)
+15:36:32 start e20_gradcheck2
+15:36:33 done e20_gradcheck2 (exit 0)
+15:36:33 start e19_smoke
+15:36:37 done e19_smoke (exit 0)
+15:36:37 start e19_race_d1_P1000
+15:36:47 done e19_race_d1_P1000 (exit 0)
+15:36:47 start e19_race_d2_P1000

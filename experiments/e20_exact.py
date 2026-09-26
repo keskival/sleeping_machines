@@ -154,6 +154,18 @@ def data(a):
 def main(a):
     rng = np.random.default_rng(a.seed)
     Ttr, ytr, Tte, yte, k = data(a)
+    if a.model == "mlp":                                  # backprop reference on the same inputs (intensities)
+        from e19_rhm import run_mlp
+        enc = lambda T: np.where(np.isfinite(T), HORIZON - T, 0).astype(np.float32)  # noqa: E731
+        a.epochs_mlp = a.epochs
+        res = run_mlp(a, enc(Ttr), ytr, enc(Tte), yte, k)
+        res.update(config=vars(a), acc=res["test_acc"])
+        os.makedirs(OUT, exist_ok=True)
+        name = f"mlp_{a.task}_d{a.depth}_w{a.width}_P{a.train_limit or 'all'}_s{a.seed}"
+        with open(os.path.join(OUT, name + ".json"), "w") as f:
+            json.dump(res, f, indent=1)
+        print(name, res["acc"], flush=True)
+        return
     drive = float(np.where(np.isfinite(Ttr), HORIZON - Ttr, 0).sum(1).mean())
     net = ExactRaceNet(Ttr.shape[1], [a.width] * a.depth, k, drive, rng, tau=a.tau)
 
@@ -178,6 +190,7 @@ def main(a):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--task", choices=("mnist", "rhm"), default="mnist")
+    ap.add_argument("--model", choices=("race", "mlp"), default="race")
     ap.add_argument("--depth", type=int, default=1)
     ap.add_argument("--width", type=int, default=400)
     ap.add_argument("--epochs", type=int, default=10)
