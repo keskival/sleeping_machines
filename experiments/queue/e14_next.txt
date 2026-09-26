@@ -91,6 +91,9 @@ e20st_lr1e-2 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epoch
 e20st_lr3e-3 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 3e-3
 e20st_nn experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --nonneg 1
 e19_race_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --train 4000
+# E20: cost of race cancellation under exact gradients
+e20k_k10 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10
+e20k_k5 experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 5
 e19_race_res_d2_P4000 experiments/e19_rhm.py --model race --depth 2 --residual 2 --train 4000
 e19_race_res_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --residual 2 --train 4000
 e19_race_res_d4_P4000 experiments/e19_rhm.py --model race --depth 4 --residual 2 --train 4000
