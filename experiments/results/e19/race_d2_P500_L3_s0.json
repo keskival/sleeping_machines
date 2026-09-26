@@ -1,0 +1,23 @@
+{
+ "test_acc": 0.1233,
+ "curve": [
+  0.1233
+ ],
+ "train_acc": 0.17,
+ "synops_per_sample": 14067.536363636364,
+ "config": {
+  "model": "race",
+  "depth": 2,
+  "residual": 0,
+  "width": 200,
+  "train": 500,
+  "epochs": 1,
+  "seed": 0,
+  "rule_seed": 0,
+  "v": 8,
+  "nc": 8,
+  "m": 4,
+  "s": 2,
+  "L": 3
+ }
+}

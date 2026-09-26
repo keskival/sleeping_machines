@@ -39,9 +39,32 @@ now explains, and what is being tested.
   Sparse fan-in (14–22× fewer events in pilots) is the candidate fix.
 - **Leads that reversed.** The shadow neuron (+5 points in debug runs, −0.8 at full length); the
   counterfactual routing gradient in mixture-of-experts (a tie with load balancing at 10 seeds).
+- **Spiking Heidelberg Digits (E22), the first event-native benchmark: poor.** Race 0.35–0.36 vs dense MLP
+  0.56–0.59 (validation), and a frozen random hidden layer (0.385) beats trained ones. Later decisions help only
+  slightly (0.30 → 0.36); the local learning rule is the main problem there.
+- **Residual streams did not rescue depth** under local learning (depth 3: 0.915 with delay-matched skips, 0.898
+  with plain skips, 0.937 without), at 2–4× the synaptic events.
 - **Market stream (E17): no edge.** The race matches simple baselines while deciding a third earlier, but
   continual learning did not help, learned trade selection had no skill, and every learner loses money after costs.
 - **Not yet run:** the E7 stream learner and most theory predictions (M31–M43).
+
+## Direction (decided 26 September)
+
+**The project's identity is local, sparse, error-gated learning on an asynchronous substrate:** learning whose
+cost follows events and errors, decisions that take as long as the evidence needs, and credit through what did
+not happen. Matching dense accuracy by training spiking networks with backpropagation is an established field in
+which this project would only be catching up. Consequences (ROADMAP.md):
+
+- **Exact-gradient training is a diagnostic ceiling, not the method.** It showed the race architecture itself is
+  close to dense: with exact gradients and no cancellation, 0.9675 vs 0.976 for an MLP (MNIST, depth 2, matched
+  budget). So the remaining gap is mostly the local learning rule, plus about 2 points for cancellation
+  (Fermi–Dirac training recovers ~60% of that, as a training-time technique).
+- **Every result reports its energy side** (synaptic events, spikes, weight updates) and is judged on the
+  accuracy-vs-energy frontier against dense models.
+- **Every mechanism gets a locality audit**: per node is fine; a slow per-layer broadcast is acceptable; a global
+  backward pass is diagnostic only.
+- **Benchmarks where asynchrony and continual learning are native:** SHD (E22), class-incremental streams (E23), and
+  next NeuroBench's keyword few-shot class-incremental task.
 
 ## The model
 
@@ -105,6 +128,17 @@ confirmed yet; the tests are queued.
 | Winner–fan-in coupling k·F ≥ G; widths from the data's entropy exponent (§37) | scaling | entropy exponent measured as α ≈ 0.95, which **refuted** an input-redundancy pyramid |
 | Optimal weaving prices commitment cost (MSPRT); race neurons are blind to absence unless referenced to their own onset (§38) | scaling; MSPRT is prior art | relative stopping beats the absolute race (M40) |
 | A neuron's firing time is concave piecewise-linear, one piece per causal set (§34.1) | prior art | polyhedral geometry of first-spike networks (2026) |
+| Deep exact training collapses; fast homeostasis + Ward centering of timing credit rescue it (§27, §30, §36) | scaling, **confirmed** | depth 3 exact training 0.10 → 0.87 (debug); the first theory-derived fix that changed a result materially |
+| A race layer cannot learn the identity, so depth needs identity paths; skips must be delay-matched, or the shallow path wins the race (§47) | scaling, **partly refuted** | delay matching beats plain skips (0.915 vs 0.898), but no skips is best under local learning (0.937) |
+| The entropic k-winner race is Fermi–Dirac; its chemical potential is the price (§48) | exact; soft top-k is prior art | soft-race training recovers ~60% of the cancellation cost (0.942 vs 0.930 / 0.951) |
+| Race layers are equivariant under dilation as well as shift; temporal collapse shrinks deep weight gradients; temporal normalisation is a gauge choice (§49) | exact symmetry; scaling for the collapse | queued |
+| The conserved near-miss rule is Crammer–Singer's ultraconservative algorithm, so forgetting is bounded by the new task's mistakes, vs O(log T) for softmax SGD; homeostasis is the non-conservative leak (§50) | mistake bound is prior art; the continual-learning consequence is new | E23 running |
+
+**Honest assessment of the theory.** Most of it applies known mathematics to race networks. It is correct and
+sometimes useful, but not new mathematics. It changed results in four places: conservation (+1.0 to +1.7), the
+depth-3 rescue (0.10 → 0.87), delay-matched skips (+1.6 over plain), and Fermi–Dirac training (+1.2). Several
+predictions were refuted, and many remain untested. The next genuine step is a result about what local learning
+can and cannot learn: §50 (bounded forgetting) is the first aimed at the project's own niche.
 
 The mathematics is borrowed (Noether and Ward identities, Perron–Frobenius and topical maps, Birkhoff
 contraction, Gibbs and Landauer identities, two-timescale stochastic approximation, mean-field propagation).

@@ -32,6 +32,11 @@ Suspected cause: hasty decisions. The first output crossing commits on the first
 utterance, where early spikes are not stronger evidence, and the rule learns from those premature decisions.
 Pilots with later output decisions (theta_out 3, 10) and speed–accuracy curves queued.
 
+**E22 decision-time diagnosis (5 epochs).** Output threshold 1 / 3 / 10: 0.301 / 0.361 / 0.273; frozen hidden (threshold
+3) 0.380. Speed–accuracy curves rise with later decisions but saturate near 0.36; the relative (MSPRT) rule does
+not beat the absolute race. *Learned:* hasty decisions are a small part of the SHD gap; the local learning rule is
+the main problem (a frozen random hidden layer still beats trained ones).
+
 **E20/E21 diagnostics (MNIST, depth 2).** Exact gradients with no cancellation at the MLP's 5-epoch budget:
 0.9675 vs MLP 0.976, so the race architecture itself is close to dense. Fermi–Dirac (soft k-winner) training,
 evaluated hard: 0.942 vs 0.930 trained hard (k = 3, 2 epochs), about 60% of the cancellation cost recovered.
