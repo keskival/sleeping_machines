@@ -2236,6 +2236,11 @@ information (time-shift equivariance) but removes its head start. Each source's 
 delayed by the running mean latency of the layers they bypass. Queued: depth 1, 3, 10, 20 on MNIST and
 E19 (Random Hierarchy Model).
 
+**Result (depth 3, full length, seed 0):** delay-matched skips 0.915, plain skips 0.898, no skips 0.937.
+Delay matching removes most of the head-start penalty, but skips do not rescue depth under random-feedback
+learning, consistent with §46: the limit is the learning rule, not information loss. The exact-gradient
+ceiling test (E20) decides whether the architecture can use depth at all.
+
 **Test (M48, full length):** residual vs plain stacks at depths 1, 3, 5 (credit conservation on).
 The plain stack declines 0.960 → 0.952 → 0.941 (depths 1–3). The prediction is that the residual stack
 does not decline, and ideally improves.
