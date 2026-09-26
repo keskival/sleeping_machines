@@ -1,0 +1,8 @@
+# 2026-09-26T12:14:46+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --nonneg 1 --certify 1 --depth 2 --tag smokecert
+depth 2 crl_fa epoch 1: 0.1480 (0s)
+/workspace/experiments/e14_depth.py:363: RuntimeWarning: invalid value encountered in subtract
+  gap = np.where(np.isfinite(srt[:, :, k - 1]), (srt[:, :, k] - srt[:, :, k - 1]) / 2, np.inf)
+/workspace/experiments/e14_depth.py:369: RuntimeWarning: invalid value encountered in subtract
+  r = np.minimum(r, np.minimum((s2[:, 1] - s2[:, 0]) / 2, np.abs(s2[:, 0] - HORIZON)))
+certificate: {"radius_quantiles": [0.00010378360748291016, 0.0002468675374984741, 0.0005790889263153076, 0.0011102110147476196, 0.0017661124467849734], "acc": 0.148, "jitter": [{"eps": 0.001, "certified": 0.286, "flips": 0.0, "flips_among_certified": 0, "acc_jittered": 0.148}, {"eps": 0.003, "certified": 0.016, "flips": 0.01, "flips_among_certified": 0, "acc_jittered": 0.146}, {"eps": 0.01, "certified": 0.0, "flips": 0.02, "flips_among_certified": 0, "acc_jittered": 0.146}, {"eps": 0.03, "certified": 0.0, "flips": 0.06, "flips_among_certified": 0, "acc_jittered": 0.148}]}
+EXIT 0

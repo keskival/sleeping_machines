@@ -1711,6 +1711,105 @@ collapse as a timescale inversion.)
 (debug). Prediction: crl_fa is flat across κ; crl_pivot has a threshold near κ ≈ η = 0.01 and a
 plateau, then degrades at the largest κ.
 
+## 37. Topology from hierarchical information: group size, winners, fan-in, depth and widths
+
+Every size so far was chosen by hand (width 400, groups of 10, k = 3 winners, dense fan-in). Here
+they are derived from four constraints: the code capacity of a race, credit percolation (§17),
+contraction (§31), and the multi-scale entropy of the input. These are scaling arguments, not
+theorems; each ends in a test.
+
+### 37.1 What a race group can carry, and what k buys
+
+A group of G members with k winners emits a k-subset (plus order and times). Its set code carries
+log₂ C(G, k) bits, the order at most log₂ k! more, and the times at most k·log₂(H/ρ) at timing
+resolution ρ. Per spike, the set code gives b(k) = log₂ C(G, k)/k. For G = 10 that is 3.32, 2.75,
+2.30 and 1.59 bits for k = 1, 2, 3, 5. Against that:
+
+- **Robustness** falls with k: the decisive gap D_k has mean σ/k (§28), so the certified radius
+  (§34.4) shrinks as 1/k.
+- **Credit reach** rises with k: percolation needs a branching ratio F·p ≥ 1 with firing fraction
+  p = k/G (§17).
+
+So the minimum number of winners is set by fan-in alone:
+
+    k · F ≥ G          (the winner–fan-in coupling)
+
+and any extra winner costs bits per spike and robustness while buying nothing. With dense fan-in
+(F = n ≫ G), **k = 1 is optimal on every count**, and our k = 3 at F = 400 is 120× over the coupling
+bound. With sparse fan-in F < G, more winners become *necessary*: k ≥ ⌈G/F⌉.
+
+### 37.2 Fan-in from contraction and coverage
+
+- **Contraction wants sparse fan-in.** Two consumers with random fan-in F out of n_{l−1} share
+  a fraction ≈ F/n_{l−1} of their inputs, so their rows' total-variation distance is
+  ≈ 1 − F/n_{l−1}, close to 1 (little contraction) for F ≪ n_{l−1}. Dense rows differ only through
+  weight heterogeneity: for N(μ, μ) weights the effective fan-in is F_eff ≈ n/2, so zero-sum credit
+  energy falls by ≈ 2/n per hop (§30.2).
+- **Coverage bounds how sparse.** Every upstream node must be read by some consumer:
+  n_l·F ≳ n_{l−1}·ln n_{l−1} (coupon collector, random wiring).
+- **Depth is set by fan-in.** Without overlap, a node's receptive field grows as s_l ≈ F^l, so
+  seeing the whole input takes L ≈ ln n_in / ln F layers: about 2.4 for F = 16 and 3.2 for F = 8, on
+  784 inputs. With dense fan-in, one layer already sees everything, and depth adds composition but
+  no receptive field.
+
+### 37.3 Widths from multi-scale entropy
+
+A node at depth l summarises a field of s_l inputs. Suppose the information in a field grows as
+h(s) ∝ s^α, with α < 1 for redundant signals and α = 1 for independent pixels. For the layer to
+carry its fields' information at c bits per node,
+
+    n_l ≳ (n_in / s_l) · h(s_l) / c  ∝  s_l^{α−1}  =  F^{−l(1−α)}
+
+**Widths should shrink geometrically with depth, by a factor F^{1−α} per layer**, set by one
+measurable exponent of the data (M39 estimates α from latency-code patches). This uses total
+information, which is an upper bound. The information bottleneck (Tishby) says label-relevant
+information is smaller and falls to log₂ 10 ≈ 3.3 bits at the top, so this is the generous end.
+
+Coverage caps the shrink rate at n_l/n_{l−1} ≥ ln(n_{l−1})/F. Both hold only if
+F^{α} ≳ ln n_{l−1}, a **minimum fan-in for a consistent pyramid**, F ≳ (ln n)^{1/α}. For n = 400 and
+α = 0.5, F ≳ 36.
+
+**Measured (M39, 10k MNIST latency codes, Gaussian-channel bound on patch information at noise sd
+0.01 / 0.03 / 0.1):** h(s) for 1×1 to 28×28 patches gives **α ≈ 0.97 / 0.95 / 0.93**. Total information
+grows almost in proportion to area: under this bound the latency-coded digits are nearly
+incompressible at the pixel level. So the total-information argument predicts **almost constant
+widths** (a shrink factor F^{0.05} ≈ 1 per layer), and constant width is *not* the worst case by this
+criterion. The Gaussian bound is an upper bound on information at a given covariance, so the true α
+may be lower, but not by enough to reverse this at these noise levels. Any case for a pyramid must
+therefore come from **label-relevant** information (the information bottleneck), not from
+redundancy in the input. With α ≈ 1 the minimum pyramid fan-in, (ln n)^{1/α} ≈ ln n ≈ 6, is easy to
+satisfy. Revised prediction 4: the pyramid's advantage over constant width, if any, comes from
+discarding irrelevant detail and should appear only in the upper layers.
+
+### 37.4 The hierarchical signature in weaving
+
+By §35.1 each race commits −log π_w nats (σ × this in value). Summed over a layer's races, this is
+the information the layer commits per input. Along the Markov chain Y → X → L₁ → … → output, the data
+processing inequality bounds what can reach the top. An efficient hierarchy commits many
+fine-grained bits low down and few at the top (about log₂ 10 bits at the output). **Prediction:**
+per-layer commitment entropy decreases with depth in well-trained networks, and more steeply in
+better topologies. This links weaving (§35) to the information bottleneck.
+
+### 37.5 What this says about the current design, and tests (M39)
+
+The current network (dense, constant width, k = 3) is the worst case of this analysis. Its rows
+overlap maximally (strong contraction), its width is constant where label-relevant information shrinks (total information does not, 37.3), and its
+winners are over-provisioned. Predictions:
+
+1. ~~α < 1 on MNIST latency codes (expected about 0.5 to 0.8).~~ **Refuted:** α ≈ 0.93–0.97 (see 37.3).
+2. Sparse fan-in (16 to 64) at depth 3 trains at least as well as dense, with an advantage that
+   grows with depth.
+3. **The coupling k·F ≥ G:** at fan-in 8, k = 1 fails (credit does not percolate) while k = 2 and
+   k = 3 train. At dense fan-in, k = 1 ≈ k = 3 in accuracy, with a larger certified radius for k = 1.
+4. A pyramid (400, 200, 100) ≥ inverted (100, 200, 400) at a similar synapse budget; pyramid plus
+   sparse fan-in is best.
+5. Commitment entropy per layer decreases with depth (37.4).
+
+*Borrowed:* information bottleneck and data processing inequality, rate–distortion, receptive-field
+growth in convolutional hierarchies, coupon-collector coverage, percolation. *New here, as far as
+checked:* the winner–fan-in coupling k·F ≥ G from credit percolation, widths from a race code's
+capacity and the data's entropy exponent, and the minimum fan-in for a consistent pyramid.
+
 ## Tests
 
 | | Claim | Test |
@@ -1745,6 +1844,7 @@ plateau, then degrades at the largest κ.
 | **M36** | excitatory race networks are topical maps: sup-norm non-expansive; certified jitter radius ε* = min(½ margin, ½ race gaps, horizon distances) is exact | `--certify 1`: zero flips among certified samples (non-negative); radii vs EVT null; signed networks for contrast |
 | **M37** | weaving costs σ × surprisal; near-miss credit = its gradient; the soft value is a submartingale with commitment as compensator; topical bracketing certifies early commitment with zero rollback | self-supervised commitment objective vs certified radius and E7; fraction and time saved by certified early decisions; commitment cost vs σH(π) under Gumbel sampling |
 | **M38** | prices (thresholds) must be the fast timescale: rules with common-mode credit need κ ≳ η; rules without it are insensitive to κ | κ sweep 0.001 to 0.1 for crl_fa and uncentred crl_pivot, depth 3 (debug) |
+| **M39** | topology from information: k·F ≥ G; widths shrink by F^{1−α} per layer (α from patch entropy); sparse fan-in beats dense at depth; commitment entropy falls with depth | `m39_patch_entropy.py`; `--fanin` 8/16/64 × `--winners` 1/2/3; `--widths` pyramid vs inverted (depth 3, debug) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

@@ -7,6 +7,7 @@ cons_fa_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --dept
 smoke_ward experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --share-jac 1 --center-credit 1 --gauge 1 --depth 3 --tag smoke
 smoke_perron experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --center-credit 2 --depth 3 --tag smoke
 cons_shadow_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+m39_patch_entropy experiments/m39_patch_entropy.py
 smoke_cert experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --nonneg 1 --certify 1 --depth 2 --tag smokecert
 smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
 cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
@@ -72,3 +73,16 @@ kap_fa_0.03 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000
 kap_pivot_0.03 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.03
 kap_fa_0.1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_fa --homeo 0.1
 kap_pivot_0.1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --depth 3 --tag kdbg --variant crl_pivot --homeo 0.1
+# §37 topology (debug, depth 3, crl_fa). Baseline dense width 200 = cm_fa_d3
+topo_f16 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --fanin 16
+topo_f64 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --fanin 64
+# percolation coupling k/G * F >= 1: fan-in 8 needs k >= 2
+topo_f8_k1 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --fanin 8 --winners 1
+topo_f8_k2 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --fanin 8 --winners 2
+topo_f8_k3 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --fanin 8 --winners 3
+# widths: pyramid vs constant vs inverted, similar synapse budget
+topo_pyr experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --widths 400,200,100
+topo_inv experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --widths 100,200,400
+topo_pyr_f16 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --widths 400,200,100 --fanin 16
+topo_dense_k1 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --winners 1 --certify 1
+topo_dense_k3 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --winners 3 --certify 1

@@ -71,7 +71,7 @@ class DeepRaceNet:
         self.center_credit = False
         self.gauge = False
         self.cm = [[] for _ in widths]
-        self.pm = [[] for _ in widths]                 # §29 diagnostic: share of credit along the Perron direction                 # §27 diagnostic: common-mode share of hidden credit
+        self.pm = [[] for _ in widths]                 # §29 diagnostic: share of credit along the Perron direction
         self.self_sigma, self.sig_l = False, [cfg.sigma for _ in widths]
         self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
         self.info_capacity = False
@@ -351,6 +351,7 @@ def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
     crossings to the horizon) and, at the output, half the winner's margin. Checked by jitter."""
     times, y = times[:n], y[:n]
     k, G = net.cfg.winners, net.cfg.group
+    np_err = np.seterr(invalid="ignore")                        # inf − inf in branches np.where discards
     radius, pred = [], []
     for i in range(0, len(y), 250):
         t, idx = to_events(times[i:i + 250])
@@ -382,11 +383,12 @@ def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
         out["jitter"].append({"eps": eps, "certified": float(cert.mean()), "flips": float(flip.mean()),
                               "flips_among_certified": int((flip & cert).sum()),
                               "acc_jittered": float((pj == y).mean())})
+    np.seterr(**np_err)
     return out
 
 
 def main(a):
-    cfg = Config(variant=a.variant, winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
+    cfg = Config(variant=a.variant, winners=a.winners, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
     x, y = mnist("train")
     if a.val:
@@ -398,7 +400,9 @@ def main(a):
     ttr, tte = latency_code(xtr), latency_code(xte)
     drive = np.where(np.isfinite(ttr), HORIZON - ttr, 0).mean(0)
     rng = np.random.default_rng(a.seed)
-    net = DeepRaceNet(cfg, [a.width] * a.depth, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in)
+    widths = [int(w) for w in a.widths.split(",")] if a.widths else [a.width] * a.depth
+    assert len(widths) == a.depth and all(w % 10 == 0 for w in widths), "widths: one multiple of 10 per layer"
+    net = DeepRaceNet(cfg, widths, 784, 10, drive, rng, a.feedback, a.fanin, a.fanin_in)
     net.window = a.window
     net.nonneg = bool(a.nonneg)
     net.eg = a.eg
@@ -466,6 +470,7 @@ def main(a):
         print("certificate:", json.dumps(res["certificate"]), flush=True)
     os.makedirs(OUT, exist_ok=True)
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
+                                             ("ws", a.widths.replace(",", "-")), ("k", a.winners if a.winners != 3 else ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
                                              ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
@@ -493,6 +498,8 @@ if __name__ == "__main__":
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
+    ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
+    ap.add_argument("--winners", type=int, default=3, help="§37: winners k per group of 10")
     ap.add_argument("--certify", type=int, default=0, help="§33: timing-jitter certificate and jitter check")
     ap.add_argument("--gauge", type=int, default=0, help="§30: credit may not change a node's total weight (urgency left to prices)")
     ap.add_argument("--center-credit", type=int, default=0, help="§27/§29: 1 remove the layer mean of credit, 2 remove its Perron direction; activity left to prices")
