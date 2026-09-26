@@ -23,6 +23,12 @@ e17_analyze experiments/e17_analyze.py
 smoke_cert2 experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --certify 1 --depth 3 --tag smokecert2
 smoke_speed experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --speed 1 --depth 1 --tag smokespeed
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
+# §43 E17 follow-up (exploratory, after the preregistered runs): tracking step size and change-gated plasticity
+e17_eta0.001 experiments/e17_market.py --learner race --eta 0.001
+e17_eta0.003 experiments/e17_market.py --learner race --eta 0.003
+e17_eta0.03 experiments/e17_market.py --learner race --eta 0.03
+e17_gate experiments/e17_market.py --learner race --gate 1
+e17_analyze2 experiments/e17_analyze.py
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
 pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
 pivot_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 0
