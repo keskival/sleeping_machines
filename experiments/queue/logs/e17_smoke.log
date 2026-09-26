@@ -1,0 +1,6 @@
+# 2026-09-26T12:57:42+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e17_market.py --learner race --days 2
+2026-08-25 race: acc 0.5128 decided 6835/8638 tdec 6.980267539868325 profit@2bp -13449
+2026-08-26 race: acc 0.5666 decided 7212/8638 tdec 6.871060522046589 profit@2bp -13028
+2026-09-01 race: acc 0.6031 decided 7293/8638 tdec 6.789494249280131 profit@2bp -12830
+confirmatory: {"acc": 0.6030582988212807, "coverage": 0.8442926603380412, "profit_bp_per_episode_c2": -1.485240004741395, "profit_bp_per_episode_c10": -8.239581287445725}
+EXIT 0

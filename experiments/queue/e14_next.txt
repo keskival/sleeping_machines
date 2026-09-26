@@ -12,6 +12,14 @@ smoke_cert experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epo
 smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
 cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+# E17 market stream (E17_PREREGISTRATION.md); smoke first, then the preregistered learners
+e17_smoke experiments/e17_market.py --learner race --days 2
+e17_b0 experiments/e17_market.py --learner b0
+e17_b1 experiments/e17_market.py --learner b1
+e17_race experiments/e17_market.py --learner race
+e17_race_frozen experiments/e17_market.py --learner race_frozen
+e17_race_hold experiments/e17_market.py --learner race_hold
+e17_analyze experiments/e17_analyze.py
 smoke_cert2 experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --certify 1 --depth 3 --tag smokecert2
 smoke_speed experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --speed 1 --depth 1 --tag smokespeed
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons

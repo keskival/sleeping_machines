@@ -317,10 +317,11 @@ def promising_page(st, W):
         "layer, +1.2 points with two and +1.5 with three (2 seeds, both positive), +1.9 with four and +2.5 with "
         "five (1 seed): the gap grows monotonically with depth. Near-miss nodes influence the output only through events that did "
         "not happen, which fired-only credit cannot see.",
-        "<b>Credit conservation</b> (bottom left, debug): conserving credit at each race, as the theory's "
-        "soft-minimum derivative requires, lifted depth-3 accuracy by 8–10 points in short runs; full-length runs "
-        "are in progress. <b>Correction:</b> the shadow neuron's debug lead did <i>not</i> hold at full length "
-        "(0.916 vs 0.924 at depth 3); a hard, weighting-free window was slightly best (0.930).",
+        "<b>Credit conservation, confirmed at full length</b> (bottom left; 2 seeds, width 400, 3 epochs): "
+        "normalising competitor credit at each race, as the theory's soft-minimum derivative requires, gives "
+        "0.960 / 0.952 / 0.941 at depths 1 / 2 / 3 against 0.949 / 0.942 / 0.924 without: +1.0 to +1.7 points at "
+        "every depth, both seeds. (The debug runs had suggested +8 to +10; full training shrinks it.) "
+        "<b>Correction:</b> the shadow neuron's debug lead did <i>not</i> hold at full length.",
         "<b>Sparse connectivity</b> (bottom right, debug): 14–22× fewer synaptic events per image. In one layer it "
         "even raised accuracy; with two layers it cost accuracy in a very short run. Full runs are queued. For "
         "scale, the MLP that matched round-3 accuracy (0.96) needs ~25k multiply-accumulates; sparse race networks "
@@ -344,6 +345,40 @@ def theory_pages(st, W):
     img = png("principles", W)
     if img:
         s.append(img)
+    s.append(PageBreak())
+    s += [Paragraph("What the theory added since (THEORY §27–41)", st["h1"]),
+          Paragraph("Each result is labelled by what kind of claim it is. <b>Exact</b>: a derivation that holds "
+                    "without approximation. <b>Scaling</b>: an order-of-magnitude argument whose exponent or sign is "
+                    "the prediction. <b>Prior art</b>: found in the literature, credited. None of the predictions below "
+                    "has been confirmed yet; the tests are queued.", st["body"]),
+          table([
+              ["result", "kind", "prediction / status"],
+              ["Timing credit sums to the deadline's credit (Ward identity, §30.1)", "exact",
+               "centring timing credit is the symmetry, not a heuristic"],
+              ["Excitatory race nets are topical maps: timing noise never amplified; certified jitter radius "
+               "(§34)", "exact", "zero flips among certified samples (M36)"],
+              ["Committing to a branch costs σ × surprisal; near-miss credit is its gradient (§35)", "exact",
+               "supervised loss = cost of weaving the teacher's branch"],
+              ["Deep credit contracts like a Markov chain; exact kernels conserve errors in the sum (§30–31)",
+               "scaling", "share Jacobian + centring trains depth 3 (M34)"],
+              ["Credit through positive weights collapses to an activity (Perron) mode (§27, §29)",
+               "scaling; outlier mode is prior art", "Perron centring ≥ mean centring (M33)"],
+              ["Prices must be the faster timescale; our default is 10× too slow (§36)", "scaling",
+               "threshold near κ ≈ η for pivotal credit (M38)"],
+              ["Firing patterns are chaotic: ρ' ≈ A√ρ, no ordered phase; A ∝ 1/√k (§41)", "scaling",
+               "slope ½ in log ρ across layers (M43)"],
+              ["Winner–fan-in coupling k·F ≥ G; widths from the data's entropy exponent (§37)", "scaling",
+               "entropy exponent measured: α ≈ 0.95, so no pyramid from input redundancy (refuted a guess)"],
+              ["Optimal weaving prices commitment cost (MSPRT); race neurons are blind to absence (§38)",
+               "scaling; MSPRT is prior art", "relative stopping beats the absolute race (M40)"],
+              ["Concave piecewise-linear firing time, one piece per causal set (§34.1)", "prior art",
+               "polyhedral geometry of TTFS networks (2026)"],
+          ], [86, 30, 58], st),
+          Paragraph("Honest summary: the mathematics used is borrowed (Noether and Ward identities, "
+                    "Perron–Frobenius and topical maps, Birkhoff contraction, Gibbs/Landauer identities, "
+                    "two-timescale stochastic approximation, mean-field propagation). The applications to race "
+                    "networks were not found in prior work in a few targeted searches (THEORY §32), which is not a "
+                    "claim of priority.", st["small"])]
     s.append(PageBreak())
     s += [Paragraph("Theory: collapsing futures, trees of histories, repair", st["h1"]),
          Paragraph("At any moment the network holds a pool of pending futures: each unfired node's projected "
@@ -459,37 +494,41 @@ def build():
         "promote the right answer. At K = 128 classes: 0.79 accuracy where the reward-modulated rule is at chance, "
         "with 6% of the weight updates of uniform credit.",
         "<b>Races decide as fast as the evidence allows (E2).</b> An accumulator race beats a fixed-time decoder at "
-        "every decision time and tracks the optimal MSPRT, using only additions and a threshold; 74% of input "
-        "events are never processed.",
-        "<b>Learning work tracks activity, not capacity (E5).</b> With capacity grown 64×, the race's work stays "
-        "flat, and it needs about <b>300× fewer weight updates</b> than a sparse softmax on the same connectivity. "
-        "In round 2 its accuracy also caught up (0.998 vs 0.998 at 16k classes).",
-        f"<b>Local, event-driven learning reaches about 96% on MNIST (E6, round 3, one seed).</b> "
-        f"Counterfactual credit {pct(r3['crl_fa'])}, fired-only {pct(r3['crl_fired_only'])}, against "
-        f"{pct(r3['frozen_hidden'])} for a frozen random hidden layer and {pct(r3['single_layer'])} for a single "
-        f"racing layer: depth adds about 4 points, hidden learning about 6.",
+        "every decision time and tracks the optimal MSPRT, using only additions and a threshold.",
+        "<b>Learning work tracks activity, not capacity (E5):</b> about 300× fewer weight updates than a sparse "
+        "softmax on the same connectivity.",
+        f"<b>Local, event-driven learning reaches about 96% on MNIST (E6, E14).</b> One hidden layer "
+        f"{pct(r3['crl_fa'])} (test, round 3); with credit conservation 96.0% (validation, 2 seeds).",
+        "<b>Counterfactual credit pays with depth (E14, full length).</b> Over fired-only credit: +0.2, +1.2, +1.5 "
+        "points at depths 1–3 (2 seeds), +1.9 and +2.5 at depths 4–5 (1 seed). A frozen hidden stack collapses.",
+        "<b>Credit conservation, predicted by the theory, holds at full length:</b> +1.0 to +1.7 points at every "
+        "depth, both seeds.",
     ], st)
     s += [Paragraph("What does not (yet)", st["h2"])]
     s += bullets([
-        "<b>The counterfactual part of hidden credit adds nothing measurable</b> over the fired-only ablation "
-        f"({pct(r3['crl_fa'])} vs {pct(r3['crl_fired_only'])}). A direct check (M3) finds hidden updates only "
-        "weakly aligned with the true gradient, although label-driven hidden learning is clearly useful.",
-        "<b>Stopping hidden work at the decision saves nothing</b> (0.07%): the cost sits before the decision.",
-        "<b>Energy.</b> Only the single racing layer is cheaper than an equally accurate dense model (about 2.4× "
-        "at inference). The hidden-layer networks use about 108k synaptic events per image, about 4× the "
-        "multiply-accumulates of a 32-unit MLP that is as accurate.",
-        "<b>Statistics.</b> All E6 numbers are single seeds.",
+        "<b>Depth still costs accuracy</b> (0.960, 0.952, 0.941 at depths 1–3 with conservation). The theory now "
+        "names three reasons (credit contraction, activity drift, pattern chaos), each with a predicted remedy, "
+        "all untested.",
+        "<b>Energy.</b> Only the single racing layer beats an equally accurate dense model at inference (about 2.4×). "
+        "Dense hidden layers cost more than a small MLP; sparse fan-in (14–22× fewer events) is the candidate fix.",
+        "<b>Leads that reversed:</b> the shadow neuron (debug +5 points, full length −0.8); the counterfactual "
+        "routing gradient in MoE (a tie with load balancing at 10 seeds).",
+        "<b>Market stream (E17): no edge.</b> The race matches simple baselines while deciding a third earlier, "
+        "but continual learning did not help, learned trade selection had no skill, and every learner loses money "
+        "after costs.",
+        "<b>Not yet run:</b> the E7 stream learner; most theory predictions (M31–M43).",
     ], st)
-    s += [Paragraph("What looks promising (details on the next page)", st["h2"])]
+    s += [Paragraph("What is new in the theory (details in the theory pages)", st["h2"])]
     s += bullets([
-        "Learning cost that scales with <i>errors and activity</i> rather than with model size (E4, E5), which is "
-        "exactly what a learner living in a stream needs.",
-        "<b>History repair</b> (learning = fixing the pivotal branch point of the event history) comes within "
-        "~2.3 points of gradient-like rules while changing <b>31× fewer weights</b> (small network, 3 seeds).",
-        "<b>Reward-only learning:</b> crediting the near misses when wrong about doubles what the standard "
-        "reward-modulated spiking rule reaches in a first small test; full runs queued.",
-        "<b>A theory of learning over the tree of possible event histories</b> (greedy backprop, holistic "
-        "backprop and repair as three readings of one tree), and <b>E7</b>: learning from one causal stream.",
+        "<b>Exact results:</b> timing credit sums to the deadline's credit (a Ward identity); excitatory race "
+        "networks are topical maps, so timing noise is never amplified and a decision comes with a certified "
+        "jitter radius; committing to a branch costs temperature × surprisal, and near-miss credit is the gradient "
+        "of that cost.",
+        "<b>Mechanisms, predicted and queued for test:</b> why deep credit dies (contraction by a Markov kernel; "
+        "an activity mode that swamps evidence), why prices must be the faster timescale, and why firing "
+        "<i>patterns</i> are chaotic even though firing times are not.",
+        "<b>Checked against the literature:</b> several pieces turned out to be prior art and are credited (for "
+        "example the polyhedral geometry of first-spike networks, the outlier mode in non-negative backprop).",
     ], st)
     s.append(PageBreak())
     s += promising_page(st, W)
@@ -500,7 +539,14 @@ def build():
                     "the others; each cancelled node freezes Δ, its normalised distance to threshold. A teaching event "
                     "arriving later can then credit near misses, not only the node that fired. The simulator has no "
                     "global clock: it jumps from event to event and counts every operation, and all work and energy "
-                    "figures come from those counts.", st["body"])]
+                    "figures come from those counts.", st["body"]),
+          Paragraph("<b>How a decision unfolds (weaving).</b> Each group of neurons holds an open set of possible "
+                    "futures: every member's projected crossing time, which only moves earlier as input arrives. A "
+                    "crossing is <i>woven</i>, fixed history. When k members have crossed, the group closes, and each "
+                    "loser's distance to threshold is frozen as a near miss. Spikes from closed groups drive the next "
+                    "layer, so the settled region spreads through the network as a diagonal front in layers and time, "
+                    "until the first output crossing decides. Learning rereads the woven record, including the near "
+                    "misses. (experiments/WEAVING.md)", st["body"])]
     s += [Paragraph("E2 · decisions that take as long as they need", st["h2"]), fig_image(fig_e2(d), W),
           Paragraph("The race dominates a fixed-time decoder at every matched decision time and follows the MSPRT, "
                     "which knows the exact likelihoods. Easy trials end in 0.29 s, hard ones in 1.69 s, with no "
@@ -525,8 +571,9 @@ def build():
         "Round 3 (current-based ramp synapses, a collapsing decision bound, 3 winners per group) lifted the hidden "
         "networks from about 0.89–0.90 to about 0.96.",
         "Hidden learning matters: the frozen random hidden layer stays at 0.895.",
-        "Which hidden credit does not matter yet: fired-only ≈ counterfactual. Symmetric feedback was worst in "
-        "rounds 1–2 and was not carried forward.",
+        "With one hidden layer, fired-only ≈ counterfactual credit. From two layers on, counterfactual credit "
+        "leads, and the gap grows with depth (E14, on the depth page). Symmetric feedback was worst in rounds 1–2 "
+        "and was not carried forward.",
         f"A wider hidden layer (2000 nodes): {pct(h2000) if h2000 else 'pending'}, no gain. The single-layer "
         f"control reaches {pct(r3['single_layer'])}: the new synapse model gave ~2.5 points, depth ~4 more.",
     ], st)
@@ -577,11 +624,69 @@ def build():
                        "into the preregistration before 5-seed confirmatory runs on the test set.", st["body"]))
     s.append(PageBreak())
 
+    s += [Paragraph("E17 · a continually learning race on a live market stream", st["h1"]),
+          Paragraph("A test of the model class on real, non-stationary, asynchronous event data: Binance BTCUSDT "
+                    "trades (millisecond timestamps), 7 pilot days and 21 confirmatory days, one stream. This is a "
+                    "crypto market, not a stock market: freely available stock tick data with raw timestamps was not "
+                    "found. Every 10 s the race restarts, trades stream in as spikes (side × size × tick direction), "
+                    "and the network commits at its first output crossing, or abstains. The label is the price move "
+                    "over the next 10 s <i>from the moment it decided</i>. Look-ahead is impossible by construction: "
+                    "a decision uses only trades that already arrived, and weights are taught only with labels "
+                    "revealed before the prediction. <b>Not a trading system; no live trading.</b>", st["body"])]
+    s += bullets([
+        "<b>Learners:</b> continual race; the same race frozen after the pilot days; a three-output race "
+        "(up / down / <b>hold</b>) that learns <i>whether</i> a move will pay the 2 bp cost, i.e. when to trade; "
+        "online logistic regression deciding at the end of each window; momentum.",
+        "<b>Decision rules (preregistered):</b> competitive if within 1 point of logistic regression while deciding "
+        "at least 20% earlier; continual learning helps if it beats frozen by 1 point (day-block interval excludes "
+        "0); trade selection helps if the hold race's profit proxy beats the others at the same trade fraction. "
+        "Near 50% for everyone is the expected null for 10 s direction.",
+    ], st)
+    e17 = {os.path.basename(p_)[:-5]: load(p_) for p_ in glob.glob(os.path.join(RES, "e17", "*.json"))
+           if not p_.endswith("analysis.json")}
+    if e17:
+        rows = [["learner", "accuracy", "coverage", "profit bp/episode (2 bp)", "(10 bp)"]]
+        for k, r in sorted(e17.items()):
+            c = r["confirmatory"]
+            rows.append([k, f"{c['acc']:.4f}", f"{c['coverage']:.3f}", f"{c['profit_bp_per_episode_c2']:+.3f}",
+                         f"{c['profit_bp_per_episode_c10']:+.3f}"])
+        s += [table(rows, [52, 26, 26, 42, 28], st),
+              Paragraph("Confirmatory days only, prequential. Profit is a diagnostic proxy, not tradable P&amp;L.",
+                        st["small"])]
+        an_p = os.path.join(RES, "e17", "analysis.json")
+        if os.path.exists(an_p):
+            an = load(an_p)
+            f = lambda v: f"{100 * v[0]:+.1f} points [{100 * v[1][0]:+.1f}, {100 * v[1][1]:+.1f}]"  # noqa: E731
+            s += bullets([
+                f"<b>Preregistered verdicts:</b> competitive (met: {100 * an['race_earlier_frac']:.0f}% earlier "
+                f"decisions); nominally better than logistic regression ({f(an['race_minus_b1_acc'])}).",
+                f"<b>A fairness check made after seeing the results overturns \u201cbetter\u201d:</b> at the race's "
+                f"coverage, logistic regression is as accurate ({f(an['race_minus_b1_same_coverage_acc'])}); the race "
+                f"ties momentum ({f(an['race_minus_b0_acc'])}). The edge came from abstaining on hard windows.",
+                f"<b>Continual learning did not help:</b> continual − frozen {f(an['continual_minus_frozen_acc'])}.",
+                f"<b>Learning when to trade:</b> the hold race traded {100 * an['hold_trade_fraction']:.1f}% of "
+                f"episodes, at chance accuracy; its profit ties logistic regression's most confident trades at "
+                f"the same rate. No trade-selection skill.",
+                "<b>Every learner loses money after costs.</b> Direction on moves of at least 1 bp is predictable "
+                "at about 59% (above the ~50% null the preregistration expected; checked for look-ahead), not "
+                "enough to pay even a 2 bp cost.",
+            ], st)
+    else:
+        s.append(Paragraph("<b>Status.</b> Data downloaded (28 days), preregistration written before any data was "
+                           "inspected (experiments/E17_PREREGISTRATION.md), runs queued.", st["body"]))
+    s.append(PageBreak())
+
     s += [Paragraph("Lessons learned along the way", st["h1"])]
     s += bullets([
-        "<b>Compute discipline.</b> Parallel experiment runs hung the host twice (no swap; the second hard reboot "
-        "corrupted the filesystem). The logs cannot say which job was responsible. Jobs now run strictly one at a time "
-        "through a queue with a memory cap and a watchdog that stops everything if free memory falls below 3 GB.",
+        "<b>Compute discipline.</b> Running two heavy jobs at once hung the host three times (no swap, and no memory "
+        "limit on the container; two hard reboots corrupted the filesystem). The third time, the queue ran one job while "
+        "an ad-hoc debug run ran beside it. Now every computation, debug snippets included, goes through the one-job "
+        "queue (watchdog at 6 GB free, checked every second), and the container gets hard memory and CPU caps.",
+        "<b>Debug leads reverse.</b> The shadow neuron led by 5 points in 1-epoch runs and trailed by 0.8 at full "
+        "length; credit conservation's +8–10 became +1–1.7. Short runs are reported as leads only.",
+        "<b>Theory can be wrong in informative ways.</b> A predicted input-redundancy pyramid was refuted by measuring "
+        "the data (entropy exponent 0.95, not 0.5–0.8); an early smoke test contradicts the predicted size of the "
+        "activity mode. Both are recorded next to the claims they test.",
         "<b>Hidden batch assumptions.</b> E6 ran homeostasis inside the teaching step, which silently assumed every "
         "sample is taught. With scarce labels that would have switched homeostasis off. Batch-derived constants "
         "(homeostasis rate) also have to be rescaled when moving to one frame per update.",
@@ -594,12 +699,15 @@ def build():
     ], st)
     s += [Paragraph("Where this could go", st["h1"])]
     s += bullets([
-        "<b>Make the hidden layer cheap:</b> stop hidden integration as soon as the output race is decided, and use "
-        "sparse (patch) connectivity, so hidden work stops dominating the energy budget.",
-        "<b>Truly asynchronous inputs:</b> N-MNIST (event-camera recordings of MNIST) and Spiking Heidelberg Digits, "
-        "which need several spikes per input channel.",
-        "<b>Self-triggered resets:</b> treat a fixation or saccade the system itself initiates as the reset, so the "
-        "frame boundary becomes a mechanism rather than a dataset artefact.",
+        "<b>Make depth pay:</b> the theory's three remedies, each with a queued test: centre credit in time "
+        "coordinates (Ward identity), run the prices on the faster timescale, and use sparse fan-in with enough "
+        "winners (k·F ≥ G) or topographic codes to damp pattern chaos.",
+        "<b>Decide better, not only faster:</b> relative (MSPRT) stopping via a shared free-energy inhibition, and "
+        "onset-referenced inhibition so the network can use the <i>absence</i> of expected spikes.",
+        "<b>Make the hidden layer cheap:</b> sparse fan-in cut synaptic events 14–22× in pilots; if accuracy holds, "
+        "the inference-energy verdict flips.",
+        "<b>Live in time:</b> E7 (a causal stream with scarce, late labels) and E17 (a real market stream, with the "
+        "network learning when to act) test the asynchronous, continual side of the proposal.",
         "<b>Seeds:</b> 3–5 seeds for every headline number before any claim.",
     ], st)
     s.append(Spacer(1, 8))
