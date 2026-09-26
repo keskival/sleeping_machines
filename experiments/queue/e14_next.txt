@@ -117,6 +117,15 @@ e22p_fa_to1 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed
 e22p_fa_to3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant crl_fa --theta-out 3
 e22p_fa_to10 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant crl_fa --theta-out 10
 e22p_frozen_to3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant frozen_hidden --theta-out 3
+# E23 (THEORY §50): forgetting vs time on task, class-incremental split-MNIST (validation)
+e23_race_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --tag e23_f5000
+e23_mlp_f5000 experiments/e7_stream.py mlp --order blocked --frames 5000 --val 10000 --tag e23_f5000
+e23_race_f20000 experiments/e7_stream.py race --order blocked --frames 20000 --val 10000 --tag e23_f20000
+e23_mlp_f20000 experiments/e7_stream.py mlp --order blocked --frames 20000 --val 10000 --tag e23_f20000
+e23_race_f80000 experiments/e7_stream.py race --order blocked --frames 80000 --val 10000 --tag e23_f80000
+e23_mlp_f80000 experiments/e7_stream.py mlp --order blocked --frames 80000 --val 10000 --tag e23_f80000
+e23_race_nohomeo_f20000 experiments/e7_stream.py race --order blocked --frames 20000 --val 10000 --homeo 0 --tag e23_nohomeo_f20000
+e23_race_nohomeo_f80000 experiments/e7_stream.py race --order blocked --frames 80000 --val 10000 --homeo 0 --tag e23_nohomeo_f80000
 e49_tn_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 1
 e49_no_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 0
 e20f_k10_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 4 --winners 10
