@@ -1,0 +1,4 @@
+# 2026-09-26T15:58:46+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e20_exact.py --task mnist --depth 1 --width 400 --epochs 2 --train-limit 10000 --lr 3e-3
+mnist depth 1 epoch 1: loss 1.9269 val 0.7866 (54s)
+mnist depth 1 epoch 2: loss 1.2207 val 0.8453 (108s)
+EXIT 0
