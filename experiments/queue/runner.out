@@ -326,3 +326,11 @@
 17:50:31 start e20g_mnist_race_d3
 18:21:20 done e20g_mnist_race_d3 (exit 143)
 18:21:20 start e19_race_d3_P4000
+18:22:47 done e19_race_d3_P4000 (exit 0)
+18:22:47 start e20st_lr1e-2
+18:36:37 done e20st_lr1e-2 (exit 0)
+18:36:37 start e20st_lr3e-3
+18:50:29 done e20st_lr3e-3 (exit 0)
+18:50:29 start e20st_nn
+19:04:19 done e20st_nn (exit 0)
+19:04:19 start e19_race_d4_P4000

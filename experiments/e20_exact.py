@@ -191,7 +191,7 @@ def main(a):
         print(name, res["acc"], flush=True)
         return
     drive = float(np.where(np.isfinite(Ttr), HORIZON - Ttr, 0).sum(1).mean())
-    net = ExactRaceNet(Ttr.shape[1], [a.width] * a.depth, k, drive, rng, tau=a.tau)
+    net = ExactRaceNet(Ttr.shape[1], [a.width] * a.depth, k, drive, rng, tau=a.tau, winners=a.winners)
     net.nonneg = bool(a.nonneg)
     net.homeo, net.center = a.homeo, bool(a.center)
 
@@ -212,7 +212,7 @@ def main(a):
               f"({time.time() - t0:.0f}s)", flush=True)
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "train_acc_5k": acc(Ttr[:5000], ytr[:5000])}
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_dc{a.decay}_cl{a.clip:g}_P{a.train_limit or 'all'}_s{a.seed}"
+    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_dc{a.decay}_cl{a.clip:g}_k{a.winners}_P{a.train_limit or 'all'}_s{a.seed}"
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f, indent=1)
 
@@ -229,6 +229,7 @@ if __name__ == "__main__":
     ap.add_argument("--tau", type=float, default=0.1)
     ap.add_argument("--train-limit", type=int, default=0)
     ap.add_argument("--nonneg", type=int, default=0, help="excitatory weights only (no near-zero A)")
+    ap.add_argument("--winners", type=int, default=3, help="winners per group of 10 (10 = no cancellation)")
     ap.add_argument("--decay", type=int, default=0, help="linear learning-rate decay to 10%")
     ap.add_argument("--clip", type=float, default=0.0, help="clip a layer's gradient norm at this multiple of its running norm")
     ap.add_argument("--homeo", type=float, default=0.0, help="§36: threshold (price) step towards the target rate")
