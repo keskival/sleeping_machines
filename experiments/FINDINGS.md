@@ -25,6 +25,11 @@ of timing credit 0.40, **both 0.785** (slow homeostasis 0.01 fails, as §36's ti
 the first theory-derived fix that changes a result materially; deep exact training of race networks is possible
 with activity owned by the thresholds.
 
+**E20 at full length (depth 2, 2 epochs, decay + clipping; the constant-rate runs diverged).** Winners per group
+3 / 5 / 10: 0.930 / 0.926 / 0.951; local rule (E14, 3 epochs) 0.952; backprop MLP (5 epochs) 0.976. *Learned:*
+race cancellation costs about 2 points under exact gradients, and a further ~2.5-point gap remains without it, at
+an unequal budget (2 vs 5 epochs). Matched-budget runs (5 epochs, depth 2 and 4) queued.
+
 **E17 follow-up, continual learning as tracking (THEORY §43; exploratory).** Step size η 0.001 / 0.003 /
 0.01 / 0.03: 0.583 / 0.593 / 0.593 / 0.578; change-gated 0.578 (mean gate 0.15); frozen 0.595. No setting
 beats freezing. *Learned:* the test was confounded, because η and the gate also applied while learning from
