@@ -12,6 +12,7 @@ smoke_cert experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epo
 smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
 cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+smoke_cert2 experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --certify 1 --depth 3 --tag smokecert2
 smoke_speed experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --speed 1 --depth 1 --tag smokespeed
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
@@ -90,3 +91,6 @@ topo_dense_k3 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 
 # §38 stopping: absolute race vs relative (MSPRT) rule, eval only
 speed_d1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --speed 1 --tag spdbg --depth 1
 speed_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --speed 1 --tag spdbg --depth 3
+# §41 pattern chaos: rho per layer under jitter at depth 5
+cert_sg_d5 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --depth 5
+cert_nn_d5 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --nonneg 1 --depth 5
