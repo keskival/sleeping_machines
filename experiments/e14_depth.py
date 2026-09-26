@@ -387,6 +387,41 @@ def certify(net, times, y, n=1000, eps_list=(0.001, 0.003, 0.01, 0.03), seed=0):
     return out
 
 
+def speed_accuracy(net, times, y, n=1000, steps=100):
+    """§38: when should the output race weave? Absolute rule: decide at the first time any output
+    potential reaches λ·θ (λ = 1 is the network's own race, up to the time grid). Relative (MSPRT) rule:
+    decide when the leader's share softmax(v/θ/τ) reaches 1 − ε, i.e. when committing to it costs
+    less than −log(1 − ε) (§35.1). Evaluation only: the trained network is unchanged."""
+    times, y = times[:n], y[:n]
+    grid = np.linspace(0, HORIZON, steps + 1)[1:]
+    V, Y = [], []
+    for i in range(0, len(y), 250):
+        st = net.forward(*to_events(times[i:i + 250]))
+        _, _, vat = layer_race(st["t2"], st["idx2"], net.Wo, net.tho, "ramp")
+        b = len(st["winner"])
+        V.append(np.stack([vat(np.full((b, net.k), g))[0] / net.tho for g in grid]))   # (steps, b, k)
+        Y.append(y[i:i + 250])
+    V, Y = np.concatenate(V, 1), np.concatenate(Y)
+
+    def decide(stop):                                   # stop: (steps, b) bool
+        first = np.where(stop.any(0), stop.argmax(0), steps - 1)
+        win = V[first, np.arange(V.shape[1])].argmax(1)
+        return float((win == Y).mean()), float(grid[first].mean())
+
+    out = {"absolute": [], "relative": []}
+    for lam in (0.3, 0.5, 0.7, 1.0, 1.3):
+        acc, t = decide(V.max(2) >= lam)
+        out["absolute"].append({"lambda": lam, "acc": acc, "t": t})
+    for tau in (0.05, 0.1, 0.2):
+        z = V / tau
+        p = np.exp(z - z.max(2, keepdims=True))
+        p /= p.sum(2, keepdims=True)
+        for eps in (0.3, 0.1, 0.03, 0.01):
+            acc, t = decide(p.max(2) >= 1 - eps)
+            out["relative"].append({"tau": tau, "eps": eps, "acc": acc, "t": t})
+    return out
+
+
 def main(a):
     cfg = Config(variant=a.variant, winners=a.winners, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
@@ -465,8 +500,12 @@ def main(a):
         tm = np.array([0.5 * np.abs(P[j + 1:] - P[j]).sum(1).mean() for j in range(len(P) - 1)])
         return [float(tv.max()), float(tm.mean())]
     res["dobrushin"] = [dobrushin(W_, d_) for W_, d_ in zip(net.W, net.dims)]
+    if a.speed:
+        res["speed_accuracy"] = speed_accuracy(net, tte, yte)
+        print("speed_accuracy:", json.dumps(res["speed_accuracy"]), flush=True)
     if a.certify:
         res["certificate"] = certify(net, tte, yte)
+        res["train_acc_1k"] = evaluate(net, ttr[:1000], ytr[:1000])     # §40: generalisation gap
         print("certificate:", json.dumps(res["certificate"]), flush=True)
     os.makedirs(OUT, exist_ok=True)
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
@@ -500,6 +539,7 @@ if __name__ == "__main__":
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
     ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
     ap.add_argument("--winners", type=int, default=3, help="§37: winners k per group of 10")
+    ap.add_argument("--speed", type=int, default=0, help="§38: speed–accuracy of absolute vs relative (MSPRT) stopping")
     ap.add_argument("--certify", type=int, default=0, help="§33: timing-jitter certificate and jitter check")
     ap.add_argument("--gauge", type=int, default=0, help="§30: credit may not change a node's total weight (urgency left to prices)")
     ap.add_argument("--center-credit", type=int, default=0, help="§27/§29: 1 remove the layer mean of credit, 2 remove its Perron direction; activity left to prices")
