@@ -2151,6 +2151,43 @@ metaphor for this measure (§21.3); dequantization is the precise statement.
 certificate runs' gap distributions); (ii) redundancy of records predicts which hidden decisions the
 output depends on; (iii) counterfactual credit reach per hop is below 1 exactly when b < 1.
 
+## 46. Flat supervision: why depth re-encodes instead of composing
+
+With direct random feedback, hidden credit at layer l is δ^l = (e·B_l) ⊙ elig_l, where e is the output
+error (with conservation: +1 on the target and −ν_c on competitors, Σν = 1) and B_l is a fixed random
+matrix. Conditioned on the label y, E[δ^l_n | y] ≈ B_l[n, y] − E_ν B_l[n, ·]. A node is therefore pushed
+to fire earlier for the classes its feedback row favours: its **template classes** (the DRTP picture,
+Frenkel et al. 2021; M3's "template mechanism").
+
+**The depth consequence.** Layer l's target is a function of the label and B_l only, not of anything
+the layers above do with its output. Every layer independently fits random label templates from its
+own input. Layer 1 already maps the input to (noisy) functions of y, so deeper layers see a code that is
+close to a function of the label, and can only **denoise or re-encode** it, not add features that
+layer 1 discarded. By the data processing inequality the label information cannot grow with depth, and
+§31 (contraction) and §41 (pattern chaos) make it shrink. This is a mechanism for the observed decline
+with depth (0.960 / 0.952 / 0.941 with conservation), separate from credit strength: better credit
+(conservation, counterfactual) slows the decline but cannot turn it into composition.
+
+**What composition would need.** Layer l's credit must depend on how layer l + 1 *uses* it:
+- local feedback carried through the layer above (`--feedback local`, E15),
+- pivotal credit through the real weights (§26; stabilised by §27–30), or
+- targets defined by the layer above (target propagation).
+Only these give deeper layers a reason to build features that are not label templates.
+
+**Predictions (M47, linear probes per layer, `--probe 1`):**
+
+(i) Random feedback: probe accuracy is flat or falls from layer 1 to layer 3.
+(ii) Frozen random layers: it falls fastest (only contraction and chaos act).
+(iii) Local layer-to-layer feedback and pivotal credit: probe accuracy rises from layer 1 to layer 3, or
+falls less. That is the signature of composition.
+(iv) Hidden-layer class selectivity under random feedback tracks the argmax of each node's feedback row
+(template class), more closely in deeper layers.
+
+*Prior art:* DRTP (Frenkel et al. 2021); direct feedback alignment's difficulty with hierarchical
+features (e.g. Bartunov et al. 2018; Launay et al. 2019). *New here:* the race-network form, its
+link to the depth decline alongside §31 and §41, and the probe predictions that separate composition
+from re-encoding.
+
 ## Tests
 
 | | Claim | Test |
@@ -2193,6 +2230,7 @@ output depends on; (iii) counterfactual credit reach per hop is below 1 exactly 
 | **M44** | Gumbel race: decision time ~ Gumbel(F, σ), independent of the winner; time pricing scales competitor credit by (1 − λσ) | accuracy vs decision time at fixed input under injected timing noise; λ sweep on the output rule |
 | **M45** | continual learning is tracking: η\* ∝ √(q/r); error-gated rules inject Bayes-error noise; excess-surprisal gating learns only after change | E17 η sweep and `--gate 1`; E7 class-blocked streams |
 | **M46** | weaving is local (consistent cuts); certified outcomes are pointer states, noise-proof at rate e^{−2kε/σ}; counterfactual influence obeys a soft light cone b^m; repair = instanton | gap distributions from `--certify` runs; record redundancy vs output dependence; credit reach vs b |
+| **M47** | flat supervision: random feedback makes every layer fit label templates independently, so depth re-encodes; composition needs credit that depends on the layer above | `--probe 1` per-layer linear readout: random feedback, frozen, local feedback, pivotal (depth 3) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

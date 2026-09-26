@@ -432,6 +432,28 @@ def speed_accuracy(net, times, y, n=1000, steps=100):
     return out
 
 
+def probes(net, ttr, ytr, tte, yte, n_train=5000, n_test=2000, lam=1.0):
+    """§46: linear readout accuracy of each layer's firing pattern (ridge regression on the fired indicators
+    and on crossing earliness), trained on n_train training images, scored on n_test validation images."""
+    def feats(times, n):
+        out = None
+        for i in range(0, n, 250):
+            st = net.forward(*to_events(times[i:i + 250]))
+            f = [np.concatenate([L["fired"].astype(np.float32),
+                                 np.where(L["fired"], HORIZON - L["T"], 0).astype(np.float32)], 1)
+                 for L in st["layers"]]
+            out = f if out is None else [np.concatenate([o, g]) for o, g in zip(out, f)]
+        return out
+    Ftr, Fte = feats(ttr, n_train), feats(tte, n_test)
+    Y = np.eye(10)[ytr[:n_train]]
+    accs = []
+    for A, B_ in zip(Ftr, Fte):
+        A1, B1 = np.c_[A, np.ones(len(A))], np.c_[B_, np.ones(len(B_))]
+        Wr = np.linalg.solve(A1.T @ A1 + lam * np.eye(A1.shape[1]), A1.T @ Y)
+        accs.append(float(((B1 @ Wr).argmax(1) == yte[:n_test]).mean()))
+    return accs
+
+
 def main(a):
     cfg = Config(variant=a.variant, winners=a.winners, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
@@ -510,6 +532,9 @@ def main(a):
         tm = np.array([0.5 * np.abs(P[j + 1:] - P[j]).sum(1).mean() for j in range(len(P) - 1)])
         return [float(tv.max()), float(tm.mean())]
     res["dobrushin"] = [dobrushin(W_, d_) for W_, d_ in zip(net.W, net.dims)]
+    if a.probe:
+        res["probe_per_layer"] = probes(net, ttr, ytr, tte, yte)
+        print("probe_per_layer:", res["probe_per_layer"], flush=True)
     if a.speed:
         res["speed_accuracy"] = speed_accuracy(net, tte, yte)
         print("speed_accuracy:", json.dumps(res["speed_accuracy"]), flush=True)
@@ -549,6 +574,7 @@ if __name__ == "__main__":
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
     ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
     ap.add_argument("--winners", type=int, default=3, help="§37: winners k per group of 10")
+    ap.add_argument("--probe", type=int, default=0, help="§46: linear probe accuracy per hidden layer")
     ap.add_argument("--speed", type=int, default=0, help="§38: speed–accuracy of absolute vs relative (MSPRT) stopping")
     ap.add_argument("--certify", type=int, default=0, help="§33: timing-jitter certificate and jitter check")
     ap.add_argument("--gauge", type=int, default=0, help="§30: credit may not change a node's total weight (urgency left to prices)")
