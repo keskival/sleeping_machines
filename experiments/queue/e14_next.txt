@@ -12,6 +12,7 @@ smoke_cert experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epo
 smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
 cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
 cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+smoke_speed experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --speed 1 --depth 1 --tag smokespeed
 cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
 pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
@@ -86,3 +87,6 @@ topo_inv experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --z
 topo_pyr_f16 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --widths 400,200,100 --fanin 16
 topo_dense_k1 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --winners 1 --certify 1
 topo_dense_k3 experiments/e14_depth.py --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --depth 3 --tag topo --width 200 --winners 3 --certify 1
+# §38 stopping: absolute race vs relative (MSPRT) rule, eval only
+speed_d1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --speed 1 --tag spdbg --depth 1
+speed_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --speed 1 --tag spdbg --depth 3

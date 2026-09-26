@@ -1810,6 +1810,81 @@ growth in convolutional hierarchies, coupon-collector coverage, percolation. *Ne
 checked:* the winner–fan-in coupling k·F ≥ G from credit percolation, widths from a race code's
 capacity and the data's entropy exponent, and the minimum fan-in for a consistent pyramid.
 
+## 38. When to weave: optimal stopping and the absence of evidence
+
+### 38.1 The optimal weaving rule is a price on commitment cost
+
+The output race decides at the first *absolute* crossing: the first class potential to reach its
+threshold. For choosing among M hypotheses from accumulating evidence, the asymptotically optimal
+rule (MSPRT, Baum & Veeravalli 1994) stops when the leader's posterior reaches 1 − ε, that is when
+
+    −log π_lead ≤ −log(1 − ε)
+
+By §35.1, −σ log π_lead is exactly the **commitment cost** of weaving the leader now. So the optimal
+rule reads: **weave when committing to the leader costs less than a fixed price** (−σ log(1 − ε)),
+and ε trades speed against accuracy (the price of time of §30.4, now explicit).
+
+In potentials, π_lead ≥ 1 − ε means v_lead − σ log Σ_c e^{v_c/σ} ≥ log(1 − ε): each output's threshold
+is raised by the **free energy of the output pool**, a single shared inhibitory signal. The
+absolute race matches this only when the pool's free energy is constant across inputs and over
+time, which it is not: easy inputs raise all potentials together.
+
+- **Prediction (M40, evaluation only, `--speed 1`):** at matched mean decision time, the relative
+  rule is at least as accurate as the absolute race across the speed–accuracy frontier, with the
+  largest gain on inputs where several classes rise together.
+- **Local implementation:** one inhibitory unit that tracks the log-sum-exp of the output potentials
+  and feeds it back to every output as a moving threshold.
+- *Prior art:* MSPRT as the target of neural decision circuits, including a log-sum-exp
+  implementation in the basal ganglia (Bogacz & Gurney 2007). New here: the identification with the
+  weaving commitment cost and the free energy of the pool.
+
+### 38.2 Race neurons are blind to absence, and a clock-free network can only see it relatively
+
+The Bayes-optimal accumulator for spike-time evidence has two parts. Arrived spikes contribute
+log f_c(t_i), and inputs that **have not yet arrived** contribute log S_c(t), their survival
+probability under class c. A dark pixel that should be bright for class c is evidence against c
+that grows with time. An excitatory race neuron gets no drive from an input that has not arrived,
+and by monotonicity (§34) its forecast can only move earlier. It is **structurally blind to
+absence**.
+
+Using absence needs a reference time: "pixel j has not spiked *by now*". A fixed clock breaks
+time-shift symmetry (§30.1: the clock is an anomaly). But "pixel j has not spiked although the
+input's first spike came Δ ago" is **relative** and shift-invariant. So a clock-free network can
+use absence exactly when it references its own events. A local implementation is class-specific
+inhibition that ramps from the input's onset event (the first input spike) through the weights of
+expected-but-absent inputs. This breaks monotonicity, and with it the §34 guarantees, only through
+inhibition, consistent with §31.5 (inhibition as the contrast amplifier) and §34.5.
+
+**Prediction (M40b):** onset-referenced absence inhibition improves accuracy most on class pairs that
+differ by *missing* strokes (for example 7 vs 9, 1 vs 7), and costs no shift equivariance.
+
+## 39. What σ is: noise model or smoothing?
+
+σ plays two roles: the scale of the timing noise in the pool's model (§28) and a smoothing
+temperature for learning (§21.7). They coincide only when the substrate's actual timing noise has
+Gumbel scale σ_s = σ. Then the soft objective *is* the expected loss of the noisy network, and the
+near-miss weights are the true flip probabilities (§28's 1/(1 + e^{Δ/σ})). Consequences:
+
+- **In a deterministic simulation (σ_s = 0)**, σ is purely a continuation parameter. It is needed
+  for a gradient but biases the objective, so it should be annealed towards 0 (M24c).
+- **On noisy hardware**, σ should track σ_s, which is measurable from the network's own spacings
+  (k·D_k, §28): learning should then *follow the substrate's temperature*, not a schedule.
+  σ < σ_s under-weights near misses that really flip (over-confident credit); σ > σ_s over-smooths.
+- **Test (M41):** inject Gumbel timing noise of scale σ_s into forward passes. The best learning σ
+  tracks σ_s, and the spacing estimator recovers σ_s.
+
+## 40. Generalisation through timing robustness
+
+Algorithmic robustness (Xu & Mannor 2012) bounds the generalisation gap by roughly √(K/n) when the
+input space splits into K cells within which the loss barely changes. §34.4's certificate supplies
+the cells: a decision is constant on a sup-norm ball of radius ε* in input-time space. The input
+has about d_eff active spike times in a window H, so an ε-cover has K ≈ (H/ε)^{d_eff} cells. This
+gives a gap of order √(d_eff · log(H/ε*) / n). The bound is numerically vacuous for d_eff in the
+hundreds, but its **trend** is a prediction: across training runs and rules, the generalisation gap
+falls as the median certified radius grows. Via §35.2 (near-miss credit is the gradient of
+commitment cost, which widens race gaps), this links the credit rule itself to generalisation.
+**Test (M42):** gap vs median ε* across the `--certify 1` runs.
+
 ## Tests
 
 | | Claim | Test |
@@ -1845,6 +1920,9 @@ capacity and the data's entropy exponent, and the minimum fan-in for a consisten
 | **M37** | weaving costs σ × surprisal; near-miss credit = its gradient; the soft value is a submartingale with commitment as compensator; topical bracketing certifies early commitment with zero rollback | self-supervised commitment objective vs certified radius and E7; fraction and time saved by certified early decisions; commitment cost vs σH(π) under Gumbel sampling |
 | **M38** | prices (thresholds) must be the fast timescale: rules with common-mode credit need κ ≳ η; rules without it are insensitive to κ | κ sweep 0.001 to 0.1 for crl_fa and uncentred crl_pivot, depth 3 (debug) |
 | **M39** | topology from information: k·F ≥ G; widths shrink by F^{1−α} per layer (α from patch entropy); sparse fan-in beats dense at depth; commitment entropy falls with depth | `m39_patch_entropy.py`; `--fanin` 8/16/64 × `--winners` 1/2/3; `--widths` pyramid vs inverted (depth 3, debug) |
+| **M40** | the optimal weaving rule prices commitment cost (MSPRT: shared free-energy inhibition beats the absolute race); race neurons are blind to absence, usable clock-free only relative to the input's onset | `--speed 1`: absolute vs relative frontiers (depth 1, 3); onset-referenced absence inhibition (M40b, to build) |
+| **M41** | σ should equal the substrate's timing-noise scale (anneal to 0 in deterministic simulation) | Gumbel timing noise injection σ_s; best learning σ vs σ_s; spacing estimator of σ_s |
+| **M42** | generalisation gap falls with the certified jitter radius (algorithmic robustness) | train − test gap vs median ε* across `--certify 1` runs |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
