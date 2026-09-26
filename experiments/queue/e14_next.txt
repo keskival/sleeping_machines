@@ -41,6 +41,9 @@ pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --varian
 smoke_res experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --residual 1 --depth 3 --tag smokeres
 res_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 3 --tag res
 res_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 1 --depth 5 --tag res
+# E20 exact-gradient ceiling: gradient check and smoke first
+e20_gradcheck experiments/e20_gradcheck.py
+e20_smoke experiments/e20_exact.py --task mnist --depth 2 --width 60 --epochs 1 --train-limit 1000
 smoke_res2 experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --residual 2 --depth 3 --tag smokeres2
 res2_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --zero-sum 1 --variant crl_fa --seed 0 --residual 2 --depth 3 --tag res2
 # E19 Random Hierarchy Model: race depth vs backprop reference (v=nc=8, m=4, s=2, L=3; seed 0)
