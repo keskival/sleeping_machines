@@ -1,0 +1,57 @@
+# E14 follow-ups (2026-09-26). Run with run_queue.sh; ONE runner at a time on this host.
+nonneg_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 0 --tag nonneg
+smoke_diag experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --center-credit 1 --self-sigma 2 --depth 2 --tag smoke
+cons_fa_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+cons_shadow_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+cons_fa_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+smoke_ward experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --share-jac 1 --center-credit 1 --gauge 1 --depth 3 --tag smoke
+smoke_perron experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_pivot --center-credit 2 --depth 3 --tag smoke
+cons_shadow_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 2 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+smoke_dob experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --depth 2 --tag smokedob
+cons_fa_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --seed 1 --tag cons
+cons_shadow_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_shadow --window 0.4 --zero-sum 1 --seed 1 --tag cons
+cons_fo_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 1 --tag cons
+nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
+pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
+pivot_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 0
+pivot_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 3 --seed 0
+pivot_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 1
+pivot_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 1
+pivot_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 3 --seed 1
+pivotcc_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 1 --seed 0
+pivotcc_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 2 --seed 0
+pivotcc_d3_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 3 --seed 0
+ssdbg_d1_ss0 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 1 --self-sigma 0
+ssdbg_d1_ss1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 1 --self-sigma 1
+ssdbg_d3_ss0 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 3 --self-sigma 0
+ssdbg_d3_ss1 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 3 --self-sigma 1
+pivotcc_d1_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 1 --seed 1
+pivotcc_d2_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 2 --seed 1
+pivotcc_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --zero-sum 1 --center-credit 1 --homeo 0.03 --tag pivotcc --depth 3 --seed 1
+# §28 EVT correction (debug): sigma = k x closest-loser gap
+ssdbg_d1_ss2 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 1 --self-sigma 2
+ssdbg_d3_ss2 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag ssdbg --depth 3 --self-sigma 2
+# §27 predictions (debug, depth 3): common-mode share by layer; centering alone vs faster prices alone
+cm_fa_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --tag cmdbg --depth 3
+cm_pivot_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --tag cmdbg --depth 3
+cm_pivotcc_ho001_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 1 --tag cmdbg --depth 3
+# §29 Perron centering vs mean centering (debug); cm_pivot_d3 / cm_pivotcc_ho001_d3 above are the baselines
+pc2_ho001_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 2 --tag pcdbg --depth 3
+pc2_ho003_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 2 --homeo 0.03 --tag pcdbg --depth 3
+pc1_ho003_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 1 --homeo 0.03 --tag pcdbg --depth 3
+pc2_ho001_d2 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 2 --tag pcdbg --depth 2
+pc1_ho001_d2 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --center-credit 1 --tag pcdbg --depth 2
+# §30 Ward identity (time shift) and gauge fixing (scale), debug
+ward_sj_cc0_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --share-jac 1 --tag wdbg --depth 3
+ward_sj_cc1_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --share-jac 1 --center-credit 1 --tag wdbg --depth 3
+ward_sj_cc1_d2 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --share-jac 1 --center-credit 1 --tag wdbg --depth 2
+gauge_pivot_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --gauge 1 --tag wdbg --depth 3
+gauge_pivot_cc1_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_pivot --gauge 1 --center-credit 1 --tag wdbg --depth 3
+gauge_fa_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --gauge 1 --tag wdbg --depth 3
+# §31 M35 (full length): non-negative penalty vs depth (signed baselines = cons_fa_*; d5 added)
+nonneg_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 1 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 0 --tag nonneg
+cons_fa_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fa --zero-sum 1 --seed 0 --tag cons
+nonneg_d5_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 0 --tag nonneg
+# M35: boundary-credit advantage vs depth, second seed (main settings, as d*_main_s0)
+main_crl_fa_d5_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fa --seed 1 --tag main
+main_crl_fired_only_d5_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 5 --variant crl_fired_only --seed 1 --tag main

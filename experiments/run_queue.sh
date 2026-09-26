@@ -13,7 +13,7 @@ set -u
 QUEUE=$1
 PY=${2:-python3}
 LOGS=$(dirname "$QUEUE")/logs
-MIN_AVAIL_MB=${MIN_AVAIL_MB:-3000}
+MIN_AVAIL_MB=${MIN_AVAIL_MB:-6000}
 MEM_CAP_KB=${MEM_CAP_KB:-3500000}
 mkdir -p "$LOGS"
 exec 9>"$QUEUE.lock"
@@ -39,7 +39,7 @@ while :; do
       echo "WATCHDOG: killed at MemAvailable=${avail}MB" | tee -a "$log"
       exit 2
     fi
-    sleep 5
+    sleep 1
   done
   wait $pid; rc=$?
   echo "EXIT $rc" >> "$log"
