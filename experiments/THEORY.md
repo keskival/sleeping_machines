@@ -2198,6 +2198,36 @@ features (e.g. Bartunov et al. 2018; Launay et al. 2019). *New here:* the race-n
 link to the depth decline alongside §31 and §41, and the probe predictions that separate composition
 from re-encoding.
 
+## 47. A residual event stream: identity paths for race networks
+
+**Why race networks need identity paths more than transformers do.** A ReLU or attention layer can
+learn an approximate identity (W ≈ I), so residual connections mainly ease optimisation there. A race
+layer cannot: a k-of-G race re-decides every input and silences most nodes, an information bottleneck
+by construction. Three mechanisms then compound with depth: contraction of timing contrast and
+credit (§31), pattern-level chaos (§41), and flat supervision (§46).
+
+**The construction.** Layer l reads the raw input and the spikes of every earlier hidden layer (a
+growing event stream), and the output reads the whole stream (`--residual 1`). No layer replaces what
+came before.
+
+**What the theory predicts.**
+
+1. **Forward:** the stream contains every earlier layer's spikes unchanged, so its Dobrushin factor
+   is exactly 1 and no depth can destroy information already present. Accuracy should not fall with
+   depth.
+2. **Composition:** a deep layer only has to *add* useful features (the residual reading), which
+   removes §46's objection that depth can only re-encode. Accuracy may rise with depth.
+3. **Backward:** under random feedback every layer already receives credit directly, so identity paths
+   do not change credit reach. With real-weight (pivotal) credit they would give undiminished paths,
+   the analogue of gradient flow through transformer residuals. (Untested: the pivotal variants
+   need the stream's column slicing.)
+4. **Cost:** synaptic work grows with depth, since each layer reads the whole stream. Sparse fan-in
+   (E18) bounds it.
+
+**Test (M48, full length):** residual vs plain stacks at depths 1, 3, 5 (credit conservation on).
+The plain stack declines 0.960 → 0.952 → 0.941 (depths 1–3). The prediction is that the residual stack
+does not decline, and ideally improves.
+
 ## Tests
 
 | | Claim | Test |
@@ -2241,6 +2271,7 @@ from re-encoding.
 | **M45** | continual learning is tracking: η\* ∝ √(q/r); error-gated rules inject Bayes-error noise; excess-surprisal gating learns only after change | E17 η sweep and `--gate 1`; E7 class-blocked streams |
 | **M46** | weaving is local (consistent cuts); certified outcomes are pointer states, noise-proof at rate e^{−2kε/σ}; counterfactual influence obeys a soft light cone b^m; repair = instanton | gap distributions from `--certify` runs; record redundancy vs output dependence; credit reach vs b |
 | **M47** | flat supervision: random feedback makes every layer fit label templates independently, so depth re-encodes; composition needs credit that depends on the layer above | `--probe 1` per-layer linear readout: random feedback, frozen, local feedback, pivotal (depth 3) |
+| **M48** | a residual event stream (identity paths) stops the accuracy decline with depth and lets deep layers add features | `--residual 1` vs plain, depths 1, 3, 5, full length |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
