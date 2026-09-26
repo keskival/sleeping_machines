@@ -2070,6 +2070,87 @@ cosine with its exact gradient**, always.
   then apply within each piece of the piecewise-smooth loss. Convergence across pieces, where the race
   order changes, is not covered; that is where §31–41's boundary phenomena live.
 
+## 45. Locality of weaving, and what transfers from quantum physics
+
+### 45.1 Weaving is local; there is no global collapse
+
+A group weaves using only the spikes that have reached it: its causal past. There is no global "now".
+The woven events at any moment form a **down-closed set of the causal order**: a consistent cut, in
+the language of distributed systems (Lamport clocks, Chandy–Lamport snapshots). The network's
+configuration space is the lattice of such cuts. Far-apart regions of a large network weave
+independently, at their own times, and become correlated only when spikes join their causal cones.
+
+From inside a node, everything not yet in its causal past is still a distribution: the pool
+*conditioned on what that node has received*. What looks like "collapse" from its point of view is
+conditioning. That is the classical counterpart of Everett's relative states. Nothing is objectively
+indeterminate: the pool is classical probability, with no amplitudes, no interference and no
+entanglement, and all correlations come from common causes.
+
+### 45.2 Decoherence: robust outcomes are the pointer states
+
+The analogy that does carry structure is decoherence and einselection. In quantum physics an outcome
+becomes effectively classical when noise from the environment cannot flip it, and it becomes
+objective when many independent records of it exist (Zurek's quantum Darwinism). Here:
+
+- **Pointer states are certified outcomes.** A race whose gap D_k exceeds 2ε cannot be flipped by
+  timing noise of size ε (§34.4). Under the extreme-value null (§28), P(D_k > 2ε) = e^{−2kε/σ}, so
+  outcomes become noise-proof exponentially in gap/σ: a "decoherence rate" k/σ per unit of timing
+  noise.
+- **Objectivity is redundancy of records.** A race outcome is "objective" for the rest of the
+  network when it is copied into many downstream events: its fan-out spikes. The mutual information
+  between the outcome and small fragments of the downstream network (the quantum-Darwinism
+  redundancy measure) is a well-defined information quantity for race networks. It should predict
+  which hidden decisions the output can rely on. (Untested.)
+
+### 45.3 A soft light cone (a Lieb–Robinson-type bound)
+
+In local quantum systems, Lieb–Robinson bounds show influence outside a light cone is exponentially
+suppressed. Race networks have a **strict** light cone for realised influence: spikes are the only
+carriers. Counterfactual influence at σ > 0 (the pool's weight on histories that did not happen)
+leaks outside the realised cone, but only through near misses, each costing a factor ≤ e^{−Δ/σ} (the
+Plackett–Luce flip probability 1/(1 + e^{Δ/σ}), §28). Along a chain of m near misses with gaps
+Δ₁…Δ_m,
+
+    counterfactual weight  ≤  exp(−(Δ₁ + … + Δ_m)/σ)
+
+The total gap along a path plays the role of a Euclidean **action**. Summed over paths with branching
+F_eff near misses per hop, the counterfactual influence at hop distance m is bounded by b^m, where
+b = F_eff · E[e^{−Δ/σ}]. **Credit percolation (§17) is this bound's threshold**: b < 1 means
+counterfactual influence decays exponentially outside the realised cone, and b > 1 means it
+percolates.
+
+One closed form: under the extreme-value null, the closest loser's gap is Exp(σ/k), so
+E[e^{−D/σ}] = k/(k + 1), independent of σ. The closest near miss alone contributes at most k/(k + 1)
+per hop.
+
+### 45.4 Semiclassics: history repair is the instanton
+
+The least-action counterfactual path (the smallest total gap that changes the outcome) dominates the
+sum over histories as σ → 0. That is the **instanton** of the Euclidean path integral (§23.1).
+History repair (M18: the cheapest verified single-event change) is exactly the one-instanton
+approximation; holistic credit (§14) is the full sum; and near-miss credit is the one-loop
+(single-flip) term. This orders the three learning rules by semiclassical order and says when each
+suffices: repair when one path dominates (gaps well separated relative to σ), the full sum when many
+paths have similar action.
+
+### 45.5 Tensor networks for the pool
+
+The unravelled pool is a layered product of Plackett–Luce factors (§21.4): a tensor network whose
+bond dimension is the number of plausible winner sets per group. Tensor-network contraction with
+truncation (matrix-product methods from many-body physics) computes the pool's marginals with
+controlled error, and the beam of M19/M20 is the lowest-bond-dimension truncation. This is a route
+to exact holistic credit at controllable cost. (Untested.)
+
+### 45.6 What does not transfer
+
+Superposition with interference, entanglement and Bell-type correlations have no counterpart: the
+pool is a classical measure over histories. Language such as "the wavefunction of the network" is a
+metaphor for this measure (§21.3); dequantization is the precise statement.
+
+**Tests (M46):** (i) the rate at which race outcomes become noise-proof follows e^{−2kε/σ} (from the
+certificate runs' gap distributions); (ii) redundancy of records predicts which hidden decisions the
+output depends on; (iii) counterfactual credit reach per hop is below 1 exactly when b < 1.
+
 ## Tests
 
 | | Claim | Test |
@@ -2111,6 +2192,7 @@ cosine with its exact gradient**, always.
 | **M43** | pattern-level chaos: ρ_{l+1} ≈ A√ρ_l (no ordered phase), doubly-exponential decorrelation, A ∝ 1/√k, topographic codes damp it | `rho_per_layer` from `--certify 1` at depths 3 and 5, k = 1 vs 3, trained vs untrained |
 | **M44** | Gumbel race: decision time ~ Gumbel(F, σ), independent of the winner; time pricing scales competitor credit by (1 − λσ) | accuracy vs decision time at fixed input under injected timing noise; λ sweep on the output rule |
 | **M45** | continual learning is tracking: η\* ∝ √(q/r); error-gated rules inject Bayes-error noise; excess-surprisal gating learns only after change | E17 η sweep and `--gate 1`; E7 class-blocked streams |
+| **M46** | weaving is local (consistent cuts); certified outcomes are pointer states, noise-proof at rate e^{−2kε/σ}; counterfactual influence obeys a soft light cone b^m; repair = instanton | gap distributions from `--certify` runs; record redundancy vs output dependence; credit reach vs b |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
