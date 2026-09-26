@@ -1,0 +1,60 @@
+{
+ "config": {
+  "depth": 3,
+  "width": 400,
+  "variant": "crl_fa",
+  "anneal": 0.0,
+  "window": 0.15,
+  "epochs": 3,
+  "feedback": "dfa",
+  "fanin": 0,
+  "fanin_in": 0,
+  "sigma": 0.15,
+  "zero_sum": 1,
+  "nonneg": 0,
+  "homeo_mode": "linear",
+  "pivot_top": 0,
+  "group_conserve": 0,
+  "info_capacity": 0,
+  "homeo_rate": 0.001,
+  "eg": 0.0,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 0,
+  "tag": "cons"
+ },
+ "curve": [
+  0.9095,
+  0.9284,
+  0.9373
+ ],
+ "acc": 0.9373,
+ "code": [
+  {
+   "redundancy": 0.19521661243567615,
+   "evidence_used": 0.645419964063157,
+   "fire_rate": 0.2999874949455261
+  },
+  {
+   "redundancy": 0.2270538704021572,
+   "evidence_used": 0.9901319846660278,
+   "fire_rate": 0.30000001192092896
+  },
+  {
+   "redundancy": 0.22312100333586563,
+   "evidence_used": 0.999999375,
+   "fire_rate": 0.30000001192092896
+  }
+ ],
+ "usage_balance": [
+  0.9954978783127789,
+  0.9978108444452679,
+  0.9980488404143456
+ ],
+ "credit_reach": [
+  0.1681417,
+  0.19489751666666666,
+  0.20069336666666668
+ ],
+ "synops_per_sample": 132730.21631374722
+}

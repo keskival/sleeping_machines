@@ -1,0 +1,55 @@
+{
+ "config": {
+  "depth": 1,
+  "width": 400,
+  "variant": "crl_fa",
+  "anneal": 0.0,
+  "window": 0.15,
+  "epochs": 3,
+  "feedback": "dfa",
+  "fanin": 0,
+  "fanin_in": 0,
+  "sigma": 0.15,
+  "zero_sum": 1,
+  "nonneg": 0,
+  "homeo_mode": "linear",
+  "self_sigma": 0,
+  "center_credit": 0,
+  "homeo": 0.001,
+  "causal": 0,
+  "share_jac": 0,
+  "pivot_top": 0,
+  "group_conserve": 0,
+  "info_capacity": 0,
+  "homeo_rate": 0.001,
+  "eg": 0.0,
+  "val": 10000,
+  "train_limit": 0,
+  "seed": 1,
+  "tag": "cons"
+ },
+ "curve": [
+  0.9392,
+  0.9552,
+  0.9607
+ ],
+ "acc": 0.9607,
+ "code": [
+  {
+   "redundancy": 0.17014924236093598,
+   "evidence_used": 0.7276100087930574,
+   "fire_rate": 0.29967498779296875
+  }
+ ],
+ "usage_balance": [
+  0.9957705928422099
+ ],
+ "credit_reach": [
+  0.13419998333333333
+ ],
+ "synops_per_sample": 40917.337006651884,
+ "noncausal_credit_share": null,
+ "sigma_per_layer": [
+  0.15
+ ]
+}

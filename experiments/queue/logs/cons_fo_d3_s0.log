@@ -1,0 +1,5 @@
+# 2026-09-25T23:52:46+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fired_only --zero-sum 1 --seed 0 --tag cons
+depth 3 crl_fired_only epoch 1: 0.8767 (220s)
+depth 3 crl_fired_only epoch 2: 0.9043 (432s)
+depth 3 crl_fired_only epoch 3: 0.9210 (676s)
+EXIT 0

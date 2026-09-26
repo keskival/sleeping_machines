@@ -67,6 +67,12 @@ class DeepRaceNet:
         self.group_conserve = False
         self.pivot_top = False
         self.share_jac = False
+        self.causal, self.noncausal = False, []
+        self.center_credit = False
+        self.gauge = False
+        self.cm = [[] for _ in widths]
+        self.pm = [[] for _ in widths]                 # §29 diagnostic: share of credit along the Perron direction                 # §27 diagnostic: common-mode share of hidden credit
+        self.self_sigma, self.sig_l = False, [cfg.sigma for _ in widths]
         self.usage = [np.full(h, cfg.winners / cfg.group) for h in widths]
         self.info_capacity = False
         self.counts = [np.full((h, k), 1.0) for h in widths]
@@ -180,7 +186,17 @@ class DeepRaceNet:
                         if not self.share_jac:
                             return Wm
                         return Wm / np.maximum(np.abs(Wm).sum(1, keepdims=True), 1e-9)
-                    if carried is None:
+                    if self.causal and carried is not None:
+                        # exact causal Jacobian (§27): ∂T_j/∂t_i = w_ji/A_j · [t_i < T_j], per sample and edge;
+                        # input spikes that reach j after j crossed are in j's woven past and carry no credit
+                        Wn = jac(self.W[l + 1][:, :self.dims[l + 1]])
+                        Tj = st["layers"][l + 1]["T"]                          # consumers' (projected) crossings
+                        causal = L["T"][:, None, :] < Tj[:, :, None]          # (b, consumers, inputs)
+                        full = np.einsum("bj,ji->bi", carried, Wn)
+                        delta = np.einsum("bj,bji->bi", carried, Wn[None, :, :] * causal)
+                        self.noncausal.append(float(np.abs(full - delta).sum() / max(np.abs(full).sum(), 1e-12)))
+                        deadline = np.full((len(delta), 1), np.inf)
+                    elif carried is None:
                         delta = s @ jac(self.Wo[:, :self.dims[l + 1]])
                         deadline = st["t_dec"][:, None]
                     else:
@@ -189,14 +205,26 @@ class DeepRaceNet:
                         deadline = st["layers"][l + 1]["freeze"].max(1, keepdims=True)
                     # arriving before the consumer decides is itself a boundary: a late spike gets the credit it
                     # would have had in time, weighted by its time residue (how much earlier it had to be)
-                    late = np.clip(L["T"] - deadline, 0, None)
-                    delta = delta * np.exp(-late / self.time_sigma)
+                    if np.isfinite(deadline).all():                # (the causal path already gates per edge)
+                        late = np.clip(np.where(np.isfinite(L["T"]), L["T"], 10.0) - deadline, 0, None)
+                        delta = delta * np.exp(-late / self.time_sigma)
                     ref = np.sqrt((s @ self.B[l]) ** 2).mean() if l < len(self.B) else 1.0
                     delta = delta * (ref / max(np.sqrt((delta ** 2).mean()), 1e-12))   # DFA-comparable scale
                 elif self.feedback == "local" and carried is not None:
                     delta = carried @ self.R[l + 1]            # only across synapses that exist
                 else:
                     delta = s @ self.B[l]
+                sig = cfg.sigma
+                if self.self_sigma:
+                    # §28: the race's natural temperature is its own runner-up scale (extreme-value theory):
+                    # each layer tracks the mean residue of the closest loser per group and uses it as σ
+                    d_ = np.where(L["fired"], np.inf, L["snap"]).reshape(len(y), -1, cfg.group).min(2)
+                    d_ = d_[np.isfinite(d_)]
+                    if d_.size:
+                        # the closest loser's gap is the k-th Gumbel spacing, mean σ/k (§28): mode 2 undoes the 1/k
+                        scale = cfg.winners if self.self_sigma == 2 else 1
+                        self.sig_l[l] += 0.05 * (scale * float(d_.mean()) - self.sig_l[l])
+                    sig = self.sig_l[l]
                 if cfg.variant == "crl_fired_only":
                     elig = L["fired"].astype(np.float32)
                 elif cfg.variant == "crl_stoch":              # sampled binary near-miss events, no weighting
@@ -207,9 +235,35 @@ class DeepRaceNet:
                 elif cfg.variant == "crl_window":             # a hard window: near misses within δ, unweighted
                     elig = (L["fired"] | (L["snap"] < self.window)).astype(np.float32)
                 else:
-                    elig = np.where(L["fired"], 1.0, np.exp(-L["snap"] / cfg.sigma))
+                    elig = np.where(L["fired"], 1.0, np.exp(-L["snap"] / sig))
                     elig *= elig >= 0.05
                 credit = delta * elig
+                e_ = elig > 0
+                n_ = np.maximum(e_.sum(1), 1)
+                mu_ = (credit * e_).sum(1) / n_
+                self.cm[l].append(float((mu_ ** 2).sum() / max(((credit ** 2) * e_).sum(1).__truediv__(n_).sum(), 1e-30)))
+                # §29: through real (mostly positive) weights the credit's dominant mode is the backward
+                # operator's Perron direction, v_i = Σ_j [consumer j eligible] W_ji (node i's outgoing weight)
+                pv = None
+                if cfg.variant == "crl_pivot" and not (self.pivot_top and carried is not None):
+                    if carried is None:
+                        pv = np.broadcast_to(self.Wo[:, :self.dims[l + 1]].sum(0), credit.shape)
+                    else:
+                        pv = (carried != 0).astype(np.float32) @ self.W[l + 1][:, :self.dims[l + 1]]
+                    pe = pv * e_
+                    self.pm[l].append(float(np.mean((credit * pe).sum(1) ** 2 / np.maximum(
+                        (pe ** 2).sum(1) * ((credit * e_) ** 2).sum(1), 1e-30))))
+                if self.center_credit:
+                    # §27: the credit's layer mean is an urgency (activity) signal, owned by the prices
+                    # (homeostasis); the weights get only its zero-mean part, the evidence signal.
+                    # Mode 2 (§29) removes the Perron direction instead of the plain mean.
+                    if self.center_credit == 2 and pv is not None:
+                        pe = pv * e_
+                        c_ = (credit * pe).sum(1, keepdims=True) / np.maximum((pe ** 2).sum(1, keepdims=True), 1e-30)
+                        credit = (credit - c_ * pe) * e_
+                    else:
+                        m_ = (credit * e_).sum(1, keepdims=True) / np.maximum(e_.sum(1, keepdims=True), 1)
+                        credit = (credit - m_) * e_
                 if self.group_conserve:
                     # §22.3 applied to hidden races: each group is a collapse, so its credit sums to zero:
                     # pushing one member earlier means pushing its rivals in the group later
@@ -223,7 +277,16 @@ class DeepRaceNet:
                 self.reach[l][0] += int((coef != 0).sum())
                 self.reach[l][1] += coef.size
                 mask = self._elig(L["t"], L["freeze"])
+                if self.gauge:
+                    rho0 = self.W[l][:, :self.dims[l]].sum(1)
                 self._apply(self.W[l], L["idx"], coef, mask, self.dims[l], self.M[l])
+                if self.gauge:
+                    # §30 gauge fixing: (θ, w) → (αθ, αw) is an exact symmetry, so urgency θ/ρ is one degree of
+                    # freedom that credit and prices would both steer. Credit keeps only the evidence mix w/ρ;
+                    # the urgency is left to the prices (thresholds)
+                    rho1 = self.W[l][:, :self.dims[l]].sum(1)
+                    ok = (rho0 > 1e-6) & (rho1 > 1e-6)
+                    self.W[l][ok, :self.dims[l]] *= (rho0[ok] / rho1[ok])[:, None]
             if self.nonneg:                                    # no inhibitory weights: a monotone network
                 np.maximum(self.W[l], 0, out=self.W[l])
             target = cfg.winners / cfg.group
@@ -282,7 +345,7 @@ def evaluate(net, times, y, batch=250):
 
 def main(a):
     cfg = Config(variant=a.variant, winners=3, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
-                 homeo=0.001, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
+                 homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
     x, y = mnist("train")
     if a.val:
         xtr, ytr, xte, yte = x[:-a.val], y[:-a.val], x[-a.val:], y[-a.val:]
@@ -302,6 +365,11 @@ def main(a):
     net.group_conserve = bool(a.group_conserve)
     net.pivot_top = bool(a.pivot_top)
     net.share_jac = bool(a.share_jac)
+    net.causal = bool(a.causal)
+    net.center_credit = a.center_credit
+    q0 = [float(np.mean(net.th[l] ** 2 + (net.W[l][:, :net.dims[l]] ** 2).sum(1))) for l in range(len(net.W))]
+    net.gauge = bool(a.gauge)
+    net.self_sigma = a.self_sigma
     if net.nonneg:
         for W in net.W:
             np.maximum(W, 0, out=W)
@@ -333,12 +401,29 @@ def main(a):
         res_balance.append(float(-(nz * np.log(nz)).sum() / np.log(len(q))))
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "code": res_diag, "usage_balance": res_balance,
            "credit_reach": [c / n if n else None for c, n in net.reach],
-           "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1)}
+           "synops_per_sample": net.work["synops"] / max(net.work["samples"], 1),
+           "noncausal_credit_share": float(np.mean(net.noncausal)) if net.noncausal else None,
+           "sigma_per_layer": [float(v) for v in net.sig_l],
+           "common_mode_share": [float(np.mean(c)) if c else None for c in net.cm],
+           "perron_share": [float(np.mean(c)) if c else None for c in net.pm],
+           "noether_q": [[q, float(np.mean(net.th[l] ** 2 + (net.W[l][:, :net.dims[l]] ** 2).sum(1)))]   # §30.4
+                         for l, q in enumerate(q0)],
+           "f_eff": [float(np.mean(1 / np.maximum(((np.abs(W_[:, :d_]) / np.maximum(np.abs(W_[:, :d_]).sum(1, keepdims=True),
+                     1e-12)) ** 2).sum(1), 1e-12))) for W_, d_ in zip(net.W, net.dims)]}   # §30: evidence-share participation
+    def dobrushin(W_, d_):
+        # §31: contraction of zero-sum timing credit (and of forward time contrast) through one layer's
+        # evidence-share kernel P = |w|/Σ|w|: max and mean total-variation distance between consumers' rows
+        P = np.abs(W_[:, :d_]).astype(np.float64)
+        P /= np.maximum(P.sum(1, keepdims=True), 1e-12)
+        tv = np.array([0.5 * np.abs(P[j + 1:] - P[j]).sum(1).max(initial=0) for j in range(len(P) - 1)])
+        tm = np.array([0.5 * np.abs(P[j + 1:] - P[j]).sum(1).mean() for j in range(len(P) - 1)])
+        return [float(tv.max()), float(tm.mean())]
+    res["dobrushin"] = [dobrushin(W_, d_) for W_, d_ in zip(net.W, net.dims)]
     os.makedirs(OUT, exist_ok=True)
     extras = "".join(f"_{k}{v}" for k, v in (("fb", a.feedback if a.feedback != "dfa" else ""), ("f", a.fanin or ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
-                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
     with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
@@ -362,6 +447,11 @@ if __name__ == "__main__":
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
+    ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
+    ap.add_argument("--gauge", type=int, default=0, help="§30: credit may not change a node's total weight (urgency left to prices)")
+    ap.add_argument("--center-credit", type=int, default=0, help="§27/§29: 1 remove the layer mean of credit, 2 remove its Perron direction; activity left to prices")
+    ap.add_argument("--homeo", type=float, default=0.001, help="homeostasis (price) step")
+    ap.add_argument("--causal", type=int, default=0, help="§27: exact per-edge causal mask between hidden layers")
     ap.add_argument("--share-jac", type=int, default=0, help="pivotal credit through evidence shares w/A (exact Jacobian)")
     ap.add_argument("--pivot-top", type=int, default=0, help="pivotal credit only for the top hidden layer")
     ap.add_argument("--group-conserve", type=int, default=0, help="§22.3 in hidden races: zero-sum credit per group")
