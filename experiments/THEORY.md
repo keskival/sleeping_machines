@@ -2280,6 +2280,10 @@ the near misses. This is §4's boundary term in exact form.
 gradients. At depth 2 with k = 3, the hard evaluation should approach 0.951 (the no-cancellation network) from
 0.930. Test: `e21_soft.py`, gradient-checked.
 
+**Result (depth 2, k = 3, full data, 2 epochs, evaluated as the hard race):** 0.942, against 0.930 trained
+hard and 0.951 with no cancellation: about 60% of the cancellation cost recovered. Partly confirmed. Note the
+direction decision (ROADMAP, 2026-09-26): soft-race training is a training-time technique, not local learning.
+
 *Prior art:* entropic (binary-entropy) relaxations of top-k give exactly this sigmoid-with-threshold form in
 the differentiable sorting and top-k literature (e.g. soft top-k via optimal transport, Xie et al. 2020;
 differentiable ranking, Blondel et al. 2020). *New here:* its identification with the race at temperature σ,

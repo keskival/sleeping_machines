@@ -1,1 +1,4 @@
 # 2026-09-26T20:18:09+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e21_soft.py --depth 2 --width 400 --epochs 2 --winners 3
+mnist depth 2 k 3 epoch 1: loss 0.8449 val hard 0.9367 soft 0.9358 sigma 0.0174 (571s)
+mnist depth 2 k 3 epoch 2: loss 0.2155 val hard 0.9424 soft 0.9426 sigma 0.0030 (1101s)
+EXIT 0
