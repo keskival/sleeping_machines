@@ -141,11 +141,13 @@ def main(a):
                         ok = np.ones(len(r), bool)
                         y = np.where(np.abs(r) < HOLD_BP, 2, (r < 0).astype(np.int64))
                     if ok.any():
-                        if a.gate:
-                            wrong = (pwin[ok] != y[ok]).astype(float)
-                            for w_ in wrong:
+                        if a.post_eta is not None and day not in PILOT:     # §43 corrected: tracking only
+                            net.cfg.eta_out = net.cfg.eta_hid = a.post_eta
+                        if a.gate:                                         # statistics warm up in the pilot too
+                            for w_ in (pwin[ok] != y[ok]).astype(float):
                                 err_s += (w_ - err_s) / 500
                                 err_l += (w_ - err_l) / 20000
+                        if a.gate and day not in PILOT:
                             se = np.sqrt(max(err_l * (1 - err_l), 1e-6) / 500)
                             g = float(np.clip((err_s - err_l) / se, 0.05, 1.0))   # learn when errors rise
                             net.cfg.eta_out = net.cfg.eta_hid = a.eta * g
@@ -203,7 +205,7 @@ def main(a):
               f"tdec {rec['tdec_mean_s']} profit@2bp {rec['profit_bp_sum_c2']:.0f}", flush=True)
     os.makedirs(OUT, exist_ok=True)
     name = f"{a.learner}_d{a.depth}_w{a.width}_s{a.seed}" + (f"_eta{a.eta:g}" if a.eta != 0.01 else "") + \
-        ("_gate" if a.gate else "")
+        ("_gate" if a.gate else "") + (f"_post{a.post_eta:g}" if a.post_eta is not None else "")
     np.savez_compressed(os.path.join(OUT, name + "_episodes.npz"), **{k: np.concatenate(v) for k, v in rows.items()})
     conf_days = [r for r in per_day if dt.date.fromisoformat(r["day"]) in CONF]
     tot = lambda k: sum(r[k] for r in conf_days)  # noqa: E731
@@ -224,7 +226,8 @@ if __name__ == "__main__":
     ap.add_argument("--width", type=int, default=200)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--eta", type=float, default=0.01, help="§43: learning rate (tracking vs noise)")
-    ap.add_argument("--gate", type=int, default=0, help="§43: change-gated plasticity")
+    ap.add_argument("--gate", type=int, default=0, help="§43: change-gated plasticity (confirmatory days only)")
+    ap.add_argument("--post-eta", type=float, default=None, help="§43: learning rate after the pilot days")
     ap.add_argument("--days", type=int, default=0, help="smoke test: only the first N days")
     a = ap.parse_args()
     if a.days:

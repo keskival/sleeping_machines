@@ -17,6 +17,12 @@ cost. *Learned:* the race can match baselines on a real asynchronous stream whil
 nothing here is an edge. Plain 10 s momentum is ~59% right on ≥ 1 bp moves, more than the preregistered null
 expected (look-ahead checked).
 
+**E17 follow-up, continual learning as tracking (THEORY §43; exploratory).** Step size η 0.001 / 0.003 /
+0.01 / 0.03: 0.583 / 0.593 / 0.593 / 0.578; change-gated 0.578 (mean gate 0.15); frozen 0.595. No setting
+beats freezing. *Learned:* the test was confounded, because η and the gate also applied while learning from
+scratch in the pilot week; a corrected run (pilot at full rate, tracking variants afterwards) is queued. What
+stands: three weeks of BTCUSDT show no drift the race can exploit, and a large step (0.03) chases noise.
+
 **Credit conservation at full length (2 seeds, width 400, 3 epochs).** 0.960 / 0.952 / 0.941 at depths 1 / 2 /
 3 vs 0.949 / 0.942 / 0.924 without: +1.0 to +1.7 at every depth, both seeds. The theory's prediction holds; the
 debug size (+8–10) overstated it. Non-negative weights at depth 3: 0.932 vs 0.937 (1 seed).
