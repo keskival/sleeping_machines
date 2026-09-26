@@ -104,7 +104,7 @@ class ExactRaceNet:
             gt = (g_over_A * Cs * W[None]).sum(1) * pres
         return gW.astype(np.float32), gt.astype(np.float32)
 
-    def train_step(self, tin, y, lr):
+    def train_step(self, tin, y, lr, clip=0.0):
         acts, x, To = self.forward(tin)
         z = -To / self.tau
         p = np.exp(z - z.max(1, keepdims=True))
@@ -142,6 +142,14 @@ class ExactRaceNet:
                 self.th[l] += self.homeo * (L["fired"].mean(0) - self.winners / self.group)
                 np.maximum(self.th[l], 0.05, out=self.th[l])
         self.step += 1
+        if clip:                                                    # per-layer gradient-norm clipping
+            if not hasattr(self, "gnorm"):
+                self.gnorm = [None] * len(grads)
+            for j, g in enumerate(grads):
+                nrm = float(np.sqrt((g * g).sum()))
+                self.gnorm[j] = nrm if self.gnorm[j] is None else 0.99 * self.gnorm[j] + 0.01 * min(nrm, clip * self.gnorm[j])
+                if nrm > clip * self.gnorm[j]:
+                    grads[j] = g * (clip * self.gnorm[j] / nrm)
         for j, (prm, g) in enumerate(zip(self.params, grads)):
             self.m[j] = 0.9 * self.m[j] + 0.1 * g
             self.v[j] = 0.999 * self.v[j] + 0.001 * g * g
@@ -193,14 +201,18 @@ def main(a):
     curve, t0 = [], time.time()
     for ep in range(a.epochs):
         perm = rng.permutation(len(ytr))
-        losses = [net.train_step(Ttr[perm[i:i + a.batch]], ytr[perm[i:i + a.batch]], a.lr)
-                  for i in range(0, len(perm), a.batch)]
+        steps = (len(ytr) + a.batch - 1) // a.batch
+        losses = []
+        for si, i in enumerate(range(0, len(perm), a.batch)):
+            frac = (ep * steps + si) / max(a.epochs * steps, 1)
+            lr = a.lr * (1 - 0.9 * frac) if a.decay else a.lr     # linear decay to 10%
+            losses.append(net.train_step(Ttr[perm[i:i + a.batch]], ytr[perm[i:i + a.batch]], lr, a.clip))
         curve.append(acc(Tte, yte))
         print(f"{a.task} depth {a.depth} epoch {ep + 1}: loss {np.mean(losses):.4f} val {curve[-1]:.4f} "
               f"({time.time() - t0:.0f}s)", flush=True)
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "train_acc_5k": acc(Ttr[:5000], ytr[:5000])}
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_P{a.train_limit or 'all'}_s{a.seed}"
+    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_dc{a.decay}_cl{a.clip:g}_P{a.train_limit or 'all'}_s{a.seed}"
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f, indent=1)
 
@@ -217,6 +229,8 @@ if __name__ == "__main__":
     ap.add_argument("--tau", type=float, default=0.1)
     ap.add_argument("--train-limit", type=int, default=0)
     ap.add_argument("--nonneg", type=int, default=0, help="excitatory weights only (no near-zero A)")
+    ap.add_argument("--decay", type=int, default=0, help="linear learning-rate decay to 10%")
+    ap.add_argument("--clip", type=float, default=0.0, help="clip a layer's gradient norm at this multiple of its running norm")
     ap.add_argument("--homeo", type=float, default=0.0, help="§36: threshold (price) step towards the target rate")
     ap.add_argument("--center", type=int, default=0, help="§30.1: zero-sum timing credit per layer")
     ap.add_argument("--seed", type=int, default=0)
