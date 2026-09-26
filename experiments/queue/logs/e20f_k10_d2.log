@@ -3,3 +3,5 @@ mnist depth 2 epoch 1: loss 0.6994 val 0.9379 (483s)
 mnist depth 2 epoch 2: loss 0.1714 val 0.9585 (955s)
 mnist depth 2 epoch 3: loss 0.1119 val 0.9642 (1419s)
 mnist depth 2 epoch 4: loss 0.0772 val 0.9673 (1880s)
+mnist depth 2 epoch 5: loss 0.0516 val 0.9675 (2347s)
+EXIT 0

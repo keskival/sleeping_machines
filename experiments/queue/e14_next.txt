@@ -101,11 +101,19 @@ e20f_k10_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo
 e21_gradcheck experiments/e21_soft.py --gradcheck
 e21_smoke experiments/e21_soft.py --depth 2 --width 60 --epochs 1 --train-limit 1000
 e21_d2_k3 experiments/e21_soft.py --depth 2 --width 400 --epochs 2 --winners 3
+# E22 Spiking Heidelberg Digits: local learning with its energy side, vs dense MLP (validation)
+e22_prep experiments/e22_shd.py
+e22_smoke experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant crl_fa --depth 1 --width 60 --epochs 1 --train-limit 500
+e22_fa_d1 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant crl_fa --depth 1 --width 400 --epochs 10
+e22_fo_d1 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant crl_fired_only --depth 1 --width 400 --epochs 10
+e22_frozen_d1 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant frozen_hidden --depth 1 --width 400 --epochs 10
+e22_fa_d2 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant crl_fa --depth 2 --width 400 --epochs 10
+e22_mlp_d1 experiments/e20_exact.py --task shd --model mlp --depth 1 --width 400 --epochs 30
+e22_mlp_d2 experiments/e20_exact.py --task shd --model mlp --depth 2 --width 400 --epochs 30
 # §49 temporal normalisation (k=10 isolates depth); d2 without = e20k_k10 (0.951)
 e49_tn_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 2 --tnorm 1
 e49_tn_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 1
 e49_no_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 0
-e20f_k3_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 2 --winners 3
 e20f_k10_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 4 --winners 10
 e20f_mlp_d4 experiments/e20_exact.py --task mnist --model mlp --depth 4 --width 400 --epochs 5
 e19_race_res_d3_P4000 experiments/e19_rhm.py --model race --depth 3 --residual 2 --train 4000
