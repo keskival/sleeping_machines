@@ -17,6 +17,14 @@ cost. *Learned:* the race can match baselines on a real asynchronous stream whil
 nothing here is an edge. Plain 10 s momentum is ~59% right on ≥ 1 bp moves, more than the preregistered null
 expected (look-ahead checked).
 
+**E20 — exact spike-time gradients on the race architecture (debug: 10k images, 2 epochs).** Gradients verified
+by finite differences (error 1e-4 to 1e-3 at step 0.01). Adam needs steps relative to each layer's weight scale
+(absolute steps diverged). Depth 1: 0.922 (local rule at this size about 0.85). Depth 3 collapsed to chance (0.10)
+exactly as THEORY §27/§30/§36 predicted, and the theory's remedies rescue it: fast homeostasis 0.64, Ward centering
+of timing credit 0.40, **both 0.785** (slow homeostasis 0.01 fails, as §36's timescale argument says). *Learned:*
+the first theory-derived fix that changes a result materially; deep exact training of race networks is possible
+with activity owned by the thresholds.
+
 **E17 follow-up, continual learning as tracking (THEORY §43; exploratory).** Step size η 0.001 / 0.003 /
 0.01 / 0.03: 0.583 / 0.593 / 0.593 / 0.578; change-gated 0.578 (mean gate 0.15); frozen 0.595. No setting
 beats freezing. *Learned:* the test was confounded, because η and the gate also applied while learning from

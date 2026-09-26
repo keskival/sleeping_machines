@@ -40,23 +40,28 @@ class ExactRaceNet:
         mu2 = 1.0 / (0.3 * expected)
         self.Wo = rng.normal(mu2, mu2, (k_out, dims[-1])).astype(np.float32)
         self.params = self.W + [self.Wo]
+        self.scale = [float(np.abs(W).mean()) for W in self.params]   # Adam steps relative to each layer's scale
+        self.nonneg = False
+        self.th = [np.ones(h, np.float32) for h in widths]           # §36 prices: per-node thresholds
+        self.homeo, self.center = 0.0, False
         self.m = [np.zeros_like(p) for p in self.params]
         self.v = [np.zeros_like(p) for p in self.params]
         self.step = 0
 
     @staticmethod
-    def _cross(tin, W):
-        """Crossing times of a ramp layer on dense input times tin (b, d); θ = 1."""
+    def _cross(tin, W, theta=None):
+        """Crossing times of a ramp layer on dense input times tin (b, d); thresholds θ (default 1)."""
         t, idx = to_events(tin)
         Wp = np.concatenate([W, np.zeros((W.shape[0], 1), np.float32)], 1)   # padding column
-        T, _, _ = layer_race(t, idx, Wp, np.ones(W.shape[0], np.float32), "ramp")
+        th = np.ones(W.shape[0], np.float32) if theta is None else theta
+        T, _, _ = layer_race(t, idx, Wp, th, "ramp")
         return T
 
     def forward(self, tin):
         acts = []
         x = tin
         for W in self.W:
-            T = self._cross(x, W)
+            T = self._cross(x, W, self.th[len(acts)])
             b, n = T.shape
             fired, _ = group_race(T, np.where(np.isfinite(T), 0.0, -np.inf), n // self.group, self.winners)
             fired = fired & np.isfinite(T)
@@ -120,6 +125,11 @@ class ExactRaceNet:
         for l in reversed(range(len(self.W))):
             L = acts[l]
             gTl = np.where(np.isfinite(L["T"]), gt, 0.0)
+            if self.center:
+                # §30.1 Ward identity: the layer's summed timing credit is the clock's (activity), owned by the
+                # thresholds; the weights get only the zero-sum part, over the nodes that carry credit
+                on = gTl != 0
+                gTl = np.where(on, gTl - (gTl.sum(1, keepdims=True) / np.maximum(on.sum(1, keepdims=True), 1)), 0.0)
             if l > 0:
                 P = acts[l - 1]
                 soft_t = np.where(np.isfinite(P["T"]) & (P["presence"] > 0), P["T"], np.inf).astype(np.float32)
@@ -127,11 +137,17 @@ class ExactRaceNet:
             else:
                 soft = None
             grads[l], gt = self._node_grads(L["tin"], L["T"], self.W[l], gTl, soft)
+        if self.homeo:
+            for l, L in enumerate(acts):                            # thresholds track a target firing rate
+                self.th[l] += self.homeo * (L["fired"].mean(0) - self.winners / self.group)
+                np.maximum(self.th[l], 0.05, out=self.th[l])
         self.step += 1
         for j, (prm, g) in enumerate(zip(self.params, grads)):
             self.m[j] = 0.9 * self.m[j] + 0.1 * g
             self.v[j] = 0.999 * self.v[j] + 0.001 * g * g
-            prm -= lr * (self.m[j] / (1 - 0.9 ** self.step)) / (np.sqrt(self.v[j] / (1 - 0.999 ** self.step)) + 1e-8)
+            prm -= lr * self.scale[j] * (self.m[j] / (1 - 0.9 ** self.step)) / (np.sqrt(self.v[j] / (1 - 0.999 ** self.step)) + 1e-8)
+            if self.nonneg:
+                np.maximum(prm, 0, out=prm)
         return loss
 
 
@@ -168,6 +184,8 @@ def main(a):
         return
     drive = float(np.where(np.isfinite(Ttr), HORIZON - Ttr, 0).sum(1).mean())
     net = ExactRaceNet(Ttr.shape[1], [a.width] * a.depth, k, drive, rng, tau=a.tau)
+    net.nonneg = bool(a.nonneg)
+    net.homeo, net.center = a.homeo, bool(a.center)
 
     def acc(T, y):
         return float(np.mean(np.concatenate([net.predict(T[i:i + 500]) for i in range(0, len(y), 500)]) == y))
@@ -182,7 +200,7 @@ def main(a):
               f"({time.time() - t0:.0f}s)", flush=True)
     res = {"config": vars(a), "curve": curve, "acc": curve[-1], "train_acc_5k": acc(Ttr[:5000], ytr[:5000])}
     os.makedirs(OUT, exist_ok=True)
-    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_P{a.train_limit or 'all'}_s{a.seed}"
+    name = f"{a.task}_d{a.depth}_w{a.width}_lr{a.lr:g}_tau{a.tau:g}_nn{a.nonneg}_ho{a.homeo:g}_c{a.center}_P{a.train_limit or 'all'}_s{a.seed}"
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f, indent=1)
 
@@ -198,5 +216,8 @@ if __name__ == "__main__":
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--tau", type=float, default=0.1)
     ap.add_argument("--train-limit", type=int, default=0)
+    ap.add_argument("--nonneg", type=int, default=0, help="excitatory weights only (no near-zero A)")
+    ap.add_argument("--homeo", type=float, default=0.0, help="§36: threshold (price) step towards the target rate")
+    ap.add_argument("--center", type=int, default=0, help="§30.1: zero-sum timing credit per layer")
     ap.add_argument("--seed", type=int, default=0)
     main(ap.parse_args())

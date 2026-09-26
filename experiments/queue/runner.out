@@ -262,3 +262,43 @@
 15:36:37 start e19_race_d1_P1000
 15:36:47 done e19_race_d1_P1000 (exit 0)
 15:36:47 start e19_race_d2_P1000
+15:37:22 done e19_race_d2_P1000 (exit 0)
+15:37:22 start e20_mnist_race_d1
+15:54:52 done e20_mnist_race_d1 (exit 0)
+15:54:52 start e20_mnist_mlp_d1
+15:55:08 done e20_mnist_mlp_d1 (exit 0)
+15:55:08 start e20_mnist_race_d2
+15:55:50 done e20_mnist_race_d2 (exit 143)
+15:55:50 start e19_race_d3_P1000
+15:56:50 done e19_race_d3_P1000 (exit 0)
+15:56:50 start e20dbg_lr1e-3
+15:58:46 done e20dbg_lr1e-3 (exit 0)
+15:58:46 start e20dbg_lr3e-3
+16:00:43 done e20dbg_lr3e-3 (exit 0)
+16:00:45 start e20dbg_lr1e-2
+16:02:43 done e20dbg_lr1e-2 (exit 0)
+16:02:43 start e20dbg_nn
+16:04:39 done e20dbg_nn (exit 0)
+16:04:39 start e20dbg_tau
+16:06:36 done e20dbg_tau (exit 0)
+16:06:36 start e19_race_d4_P1000
+16:07:59 done e19_race_d4_P1000 (exit 0)
+16:07:59 start e20dbg_lr3e-2
+16:09:55 done e20dbg_lr3e-2 (exit 0)
+16:09:56 start e20dbg_lr1e-1
+16:11:55 done e20dbg_lr1e-1 (exit 0)
+16:11:55 start e20dbg_d3_lr1e-2
+16:15:46 done e20dbg_d3_lr1e-2 (exit 0)
+16:15:46 start e19_race_res_d2_P1000
+16:16:26 done e19_race_res_d2_P1000 (exit 0)
+16:16:26 start e19_race_res_d3_P1000
+16:18:00 done e19_race_res_d3_P1000 (exit 0)
+16:18:00 start e20dbg_d3_ho01
+16:21:44 done e20dbg_d3_ho01 (exit 0)
+16:21:44 start e20dbg_d3_ho03
+16:25:22 done e20dbg_d3_ho03 (exit 0)
+16:25:22 start e20dbg_d3_c
+16:30:07 done e20dbg_d3_c (exit 0)
+16:30:07 start e20dbg_d3_ho03_c
+16:34:56 done e20dbg_d3_ho03_c (exit 0)
+16:34:56 start e19_race_res_d4_P1000
