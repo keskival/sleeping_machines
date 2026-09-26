@@ -1,0 +1,3 @@
+# 2026-09-26T16:51:51+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e19_rhm.py --model race --depth 1 --train 4000
+race_d1_P4000_L3_s0 test 0.3268 train 0.464
+EXIT 0

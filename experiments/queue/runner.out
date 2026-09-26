@@ -302,3 +302,17 @@
 16:30:07 start e20dbg_d3_ho03_c
 16:34:56 done e20dbg_d3_ho03_c (exit 0)
 16:34:56 start e19_race_res_d4_P1000
+16:37:26 done e19_race_res_d4_P1000 (exit 0)
+16:37:26 start e20dbg_d3_ho1_c
+16:42:15 done e20dbg_d3_ho1_c (exit 0)
+16:42:15 start e20dbg_d3_ho03_c_lr1
+16:46:59 done e20dbg_d3_ho03_c_lr1 (exit 0)
+16:46:59 start e20dbg_d3_ho1_c_lr1
+16:51:49 done e20dbg_d3_ho1_c_lr1 (exit 0)
+16:51:49 start e19_mlp_d1_P1000
+16:51:50 done e19_mlp_d1_P1000 (exit 0)
+16:51:50 start e19_mlp_d3_P1000
+16:51:51 done e19_mlp_d3_P1000 (exit 0)
+16:51:51 start e19_race_d1_P4000
+16:52:06 done e19_race_d1_P4000 (exit 0)
+16:52:06 start e19_race_d2_P4000
