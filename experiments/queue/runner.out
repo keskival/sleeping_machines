@@ -354,3 +354,15 @@
 20:36:42 start e22_smoke
 20:36:44 done e22_smoke (exit 0)
 20:36:45 start e22_fa_d1
+20:43:19 done e22_fa_d1 (exit 0)
+20:43:19 start e22_fo_d1
+20:49:13 done e22_fo_d1 (exit 0)
+20:49:13 start e22_frozen_d1
+20:54:00 done e22_frozen_d1 (exit 0)
+20:54:00 start e22_fa_d2
+21:02:16 done e22_fa_d2 (exit 0)
+21:02:16 start e22_mlp_d1
+21:02:38 done e22_mlp_d1 (exit 0)
+21:02:38 start e22_mlp_d2
+21:03:11 done e22_mlp_d2 (exit 0)
+21:03:12 start e49_tn_d2

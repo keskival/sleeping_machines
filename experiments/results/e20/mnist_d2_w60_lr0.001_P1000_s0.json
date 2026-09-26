@@ -1,0 +1,18 @@
+{
+ "config": {
+  "task": "mnist",
+  "depth": 2,
+  "width": 60,
+  "epochs": 1,
+  "batch": 64,
+  "lr": 0.001,
+  "tau": 0.1,
+  "train_limit": 1000,
+  "seed": 0
+ },
+ "curve": [
+  0.3505
+ ],
+ "acc": 0.3505,
+ "train_acc_5k": 0.402
+}

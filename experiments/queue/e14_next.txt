@@ -112,6 +112,11 @@ e22_mlp_d1 experiments/e20_exact.py --task shd --model mlp --depth 1 --width 400
 e22_mlp_d2 experiments/e20_exact.py --task shd --model mlp --depth 2 --width 400 --epochs 30
 # §49 temporal normalisation (k=10 isolates depth); d2 without = e20k_k10 (0.951)
 e49_tn_d2 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 2 --tnorm 1
+# E22 hasty-decision diagnosis: later output decisions (theta_out) + speed-accuracy
+e22p_fa_to1 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant crl_fa --theta-out 1
+e22p_fa_to3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant crl_fa --theta-out 3
+e22p_fa_to10 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant crl_fa --theta-out 10
+e22p_frozen_to3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22p --depth 1 --width 400 --epochs 5 --speed 1 --variant frozen_hidden --theta-out 3
 e49_tn_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 1
 e49_no_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 0
 e20f_k10_d4 experiments/e20_exact.py --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 4 --winners 10

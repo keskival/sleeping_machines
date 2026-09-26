@@ -1,0 +1,21 @@
+{
+ "config": {
+  "task": "mnist",
+  "model": "race",
+  "depth": 1,
+  "width": 400,
+  "epochs": 2,
+  "batch": 64,
+  "lr": 0.003,
+  "tau": 0.1,
+  "train_limit": 10000,
+  "nonneg": 1,
+  "seed": 0
+ },
+ "curve": [
+  0.7625,
+  0.8059
+ ],
+ "acc": 0.8059,
+ "train_acc_5k": 0.8016
+}
