@@ -2033,6 +2033,43 @@ and fixed-η learning.
 here:* the Bayes-error scaling of noise injection for error-gated race rules, and the gate derived
 from excess commitment cost.
 
+## 44. The output rule is preconditioned gradient descent (exact)
+
+A partial answer to "which objective do the rules descend?" (§33, gap 3), for the output layer.
+
+**The rule, as implemented.** A node's synapse update is Δw_i = η·c_n·x_i, where c_n is the node's
+credit and x_i the charge that input i injected by the node's fire or cancel time: x_i = (τ_n − t_i)⁺
+for ramp synapses (`RaceNet._elig`), with τ_n the node's crossing time if it fired and the
+cancellation time if not.
+
+**The exact derivative.** For a ramp node that fired, ∂T_n/∂w_i = −(T_n − t_i)/A_n over arrived inputs
+(§30.3). So for a fired node
+
+    Δw_i = η c_n (T_n − t_i)  =  −η · A_n · c_n · ∂T_n/∂w_i
+
+and with c_n = −∂L/∂T_n (credit on "fire earlier") the update is **exactly −η A_n ∂L/∂w_i**: gradient
+descent, preconditioned per node by its urgency A_n > 0. With conservation on, the credit on output times
+is the Plackett–Luce gradient (δ_ny − π_n)/σ up to the residue-versus-time units of Δ (§35.2), so the
+output layer does preconditioned gradient descent on the cross-entropy over its own race.
+
+**Near misses get a truncated gradient, still a descent direction.** A cancelled node is updated with
+charge up to its cancellation time t_k < T_n, which omits the inputs that would have arrived before its
+projected crossing (the woven past, §21.9). Both vectors are non-negative on the same inputs and the
+truncated one has smaller support, so their inner product is positive: **each node's update has positive
+cosine with its exact gradient**, always.
+
+**What follows.**
+
+- M3's measurement, that the output rule is well aligned with the true gradient (+0.36 to +0.82) while
+  hidden credit is not, is a theorem for the output layer up to units and truncation. The hidden layers
+  have no such guarantee: their credit comes through random feedback, and the gap in understanding
+  sits there.
+- The preconditioner A_n equalises learning in time units: the induced change in a node's crossing time,
+  ΔT_n = −η c_n Σ_i (T_n − t_i)²/A_n, does not shrink for high-drive nodes as a plain gradient step would.
+- Standard results for preconditioned stochastic gradient descent (a positive diagonal preconditioner)
+  then apply within each piece of the piecewise-smooth loss. Convergence across pieces, where the race
+  order changes, is not covered; that is where §31–41's boundary phenomena live.
+
 ## Tests
 
 | | Claim | Test |
