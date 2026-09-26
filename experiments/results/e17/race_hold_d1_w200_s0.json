@@ -1,0 +1,297 @@
+{
+ "config": {
+  "learner": "race_hold",
+  "depth": 1,
+  "width": 200,
+  "seed": 0,
+  "days": 0
+ },
+ "per_day": [
+  {
+   "day": "2026-08-25",
+   "episodes": 8638,
+   "decided": 573,
+   "nonflat_decided": 422,
+   "correct": 199,
+   "tdec_mean_s": 5.9615396998254795,
+   "profit_bp_sum_c2": -1292.1740249329698,
+   "profit_bp_sum_c10": -5876.1740249329705
+  },
+  {
+   "day": "2026-08-26",
+   "episodes": 8638,
+   "decided": 7,
+   "nonflat_decided": 7,
+   "correct": 2,
+   "tdec_mean_s": 6.163087714285714,
+   "profit_bp_sum_c2": -19.76525210779985,
+   "profit_bp_sum_c10": -75.76525210779985
+  },
+  {
+   "day": "2026-08-27",
+   "episodes": 8638,
+   "decided": 4,
+   "nonflat_decided": 4,
+   "correct": 3,
+   "tdec_mean_s": 4.2020445,
+   "profit_bp_sum_c2": -2.53042767280091,
+   "profit_bp_sum_c10": -34.53042767280091
+  },
+  {
+   "day": "2026-08-28",
+   "episodes": 8638,
+   "decided": 188,
+   "nonflat_decided": 151,
+   "correct": 79,
+   "tdec_mean_s": 4.415122728723404,
+   "profit_bp_sum_c2": -345.99793433325294,
+   "profit_bp_sum_c10": -1849.9979343332532
+  },
+  {
+   "day": "2026-08-29",
+   "episodes": 8638,
+   "decided": 0,
+   "nonflat_decided": 0,
+   "correct": 0,
+   "tdec_mean_s": null,
+   "profit_bp_sum_c2": 0.0,
+   "profit_bp_sum_c10": 0.0
+  },
+  {
+   "day": "2026-08-30",
+   "episodes": 8638,
+   "decided": 15,
+   "nonflat_decided": 11,
+   "correct": 2,
+   "tdec_mean_s": 4.390410933333333,
+   "profit_bp_sum_c2": -33.805075199163504,
+   "profit_bp_sum_c10": -153.80507519916353
+  },
+  {
+   "day": "2026-08-31",
+   "episodes": 8638,
+   "decided": 35,
+   "nonflat_decided": 26,
+   "correct": 17,
+   "tdec_mean_s": 4.211038628571428,
+   "profit_bp_sum_c2": -43.436983236909256,
+   "profit_bp_sum_c10": -323.4369832369093
+  },
+  {
+   "day": "2026-09-01",
+   "episodes": 8638,
+   "decided": 19,
+   "nonflat_decided": 12,
+   "correct": 7,
+   "tdec_mean_s": 3.853629789473684,
+   "profit_bp_sum_c2": -27.248639080303402,
+   "profit_bp_sum_c10": -179.2486390803034
+  },
+  {
+   "day": "2026-09-02",
+   "episodes": 8638,
+   "decided": 23,
+   "nonflat_decided": 14,
+   "correct": 9,
+   "tdec_mean_s": 4.235531826086956,
+   "profit_bp_sum_c2": -25.27980207351127,
+   "profit_bp_sum_c10": -209.27980207351126
+  },
+  {
+   "day": "2026-09-03",
+   "episodes": 8638,
+   "decided": 190,
+   "nonflat_decided": 137,
+   "correct": 67,
+   "tdec_mean_s": 4.013051889473684,
+   "profit_bp_sum_c2": -370.74603051761403,
+   "profit_bp_sum_c10": -1890.7460305176137
+  },
+  {
+   "day": "2026-09-04",
+   "episodes": 8638,
+   "decided": 237,
+   "nonflat_decided": 195,
+   "correct": 102,
+   "tdec_mean_s": 4.151222476793249,
+   "profit_bp_sum_c2": -421.5099628555507,
+   "profit_bp_sum_c10": -2317.5099628555504
+  },
+  {
+   "day": "2026-09-05",
+   "episodes": 8638,
+   "decided": 0,
+   "nonflat_decided": 0,
+   "correct": 0,
+   "tdec_mean_s": null,
+   "profit_bp_sum_c2": 0.0,
+   "profit_bp_sum_c10": 0.0
+  },
+  {
+   "day": "2026-09-06",
+   "episodes": 8638,
+   "decided": 9,
+   "nonflat_decided": 5,
+   "correct": 4,
+   "tdec_mean_s": 4.659512,
+   "profit_bp_sum_c2": -16.637395661439662,
+   "profit_bp_sum_c10": -88.63739566143965
+  },
+  {
+   "day": "2026-09-07",
+   "episodes": 8638,
+   "decided": 4,
+   "nonflat_decided": 1,
+   "correct": 0,
+   "tdec_mean_s": 5.54248625,
+   "profit_bp_sum_c2": -9.702049548081307,
+   "profit_bp_sum_c10": -41.702049548081305
+  },
+  {
+   "day": "2026-09-08",
+   "episodes": 8638,
+   "decided": 60,
+   "nonflat_decided": 42,
+   "correct": 23,
+   "tdec_mean_s": 3.8081579666666667,
+   "profit_bp_sum_c2": -126.34877721661297,
+   "profit_bp_sum_c10": -606.3487772166129
+  },
+  {
+   "day": "2026-09-09",
+   "episodes": 8638,
+   "decided": 51,
+   "nonflat_decided": 38,
+   "correct": 18,
+   "tdec_mean_s": 4.11400405882353,
+   "profit_bp_sum_c2": -94.11986146851672,
+   "profit_bp_sum_c10": -502.1198614685167
+  },
+  {
+   "day": "2026-09-10",
+   "episodes": 8638,
+   "decided": 57,
+   "nonflat_decided": 42,
+   "correct": 19,
+   "tdec_mean_s": 3.41564001754386,
+   "profit_bp_sum_c2": -92.87075470550106,
+   "profit_bp_sum_c10": -548.870754705501
+  },
+  {
+   "day": "2026-09-11",
+   "episodes": 8638,
+   "decided": 447,
+   "nonflat_decided": 371,
+   "correct": 192,
+   "tdec_mean_s": 3.658829346756152,
+   "profit_bp_sum_c2": -802.445341363846,
+   "profit_bp_sum_c10": -4378.445341363846
+  },
+  {
+   "day": "2026-09-12",
+   "episodes": 8638,
+   "decided": 0,
+   "nonflat_decided": 0,
+   "correct": 0,
+   "tdec_mean_s": null,
+   "profit_bp_sum_c2": 0.0,
+   "profit_bp_sum_c10": 0.0
+  },
+  {
+   "day": "2026-09-13",
+   "episodes": 8638,
+   "decided": 2,
+   "nonflat_decided": 1,
+   "correct": 1,
+   "tdec_mean_s": 7.294961,
+   "profit_bp_sum_c2": -0.9332922825098504,
+   "profit_bp_sum_c10": -16.93329228250985
+  },
+  {
+   "day": "2026-09-14",
+   "episodes": 8638,
+   "decided": 63,
+   "nonflat_decided": 43,
+   "correct": 22,
+   "tdec_mean_s": 3.76243680952381,
+   "profit_bp_sum_c2": -135.47102888762439,
+   "profit_bp_sum_c10": -639.4710288876244
+  },
+  {
+   "day": "2026-09-15",
+   "episodes": 8638,
+   "decided": 341,
+   "nonflat_decided": 281,
+   "correct": 145,
+   "tdec_mean_s": 3.3972122404692078,
+   "profit_bp_sum_c2": -701.4653198027883,
+   "profit_bp_sum_c10": -3429.465319802788
+  },
+  {
+   "day": "2026-09-16",
+   "episodes": 8638,
+   "decided": 453,
+   "nonflat_decided": 375,
+   "correct": 198,
+   "tdec_mean_s": 3.4742845121412804,
+   "profit_bp_sum_c2": -879.6639120290473,
+   "profit_bp_sum_c10": -4503.663912029047
+  },
+  {
+   "day": "2026-09-17",
+   "episodes": 8638,
+   "decided": 6,
+   "nonflat_decided": 5,
+   "correct": 3,
+   "tdec_mean_s": 4.135648,
+   "profit_bp_sum_c2": -14.59823532497937,
+   "profit_bp_sum_c10": -62.59823532497938
+  },
+  {
+   "day": "2026-09-18",
+   "episodes": 8638,
+   "decided": 314,
+   "nonflat_decided": 255,
+   "correct": 118,
+   "tdec_mean_s": 3.3255874299363057,
+   "profit_bp_sum_c2": -609.2080865532662,
+   "profit_bp_sum_c10": -3121.208086553266
+  },
+  {
+   "day": "2026-09-19",
+   "episodes": 8638,
+   "decided": 0,
+   "nonflat_decided": 0,
+   "correct": 0,
+   "tdec_mean_s": null,
+   "profit_bp_sum_c2": 0.0,
+   "profit_bp_sum_c10": 0.0
+  },
+  {
+   "day": "2026-09-20",
+   "episodes": 8638,
+   "decided": 0,
+   "nonflat_decided": 0,
+   "correct": 0,
+   "tdec_mean_s": null,
+   "profit_bp_sum_c2": 0.0,
+   "profit_bp_sum_c10": 0.0
+  },
+  {
+   "day": "2026-09-21",
+   "episodes": 8638,
+   "decided": 246,
+   "nonflat_decided": 180,
+   "correct": 92,
+   "tdec_mean_s": 3.4375295853658536,
+   "profit_bp_sum_c2": -513.1650990434453,
+   "profit_bp_sum_c10": -2481.165099043445
+  }
+ ],
+ "confirmatory": {
+  "acc": 0.5107661492238358,
+  "coverage": 0.013903130133739072,
+  "profit_bp_per_episode_c2": -0.026689454064623856,
+  "profit_bp_per_episode_c10": -0.13791449513453644
+ }
+}

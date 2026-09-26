@@ -1,0 +1,31 @@
+# 2026-09-26T13:00:51+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e17_market.py --learner race_frozen
+2026-08-25 race_frozen: acc 0.5239 decided 6787/8638 tdec 7.030428431855017 profit@2bp -13076
+2026-08-26 race_frozen: acc 0.5612 decided 7168/8638 tdec 6.928021996651785 profit@2bp -13078
+2026-08-27 race_frozen: acc 0.5505 decided 7179/8638 tdec 6.602803267168129 profit@2bp -13293
+2026-08-28 race_frozen: acc 0.5628 decided 7682/8638 tdec 6.663957259307472 profit@2bp -14084
+2026-08-29 race_frozen: acc 0.6157 decided 6892/8638 tdec 7.412588538740569 profit@2bp -13051
+2026-08-30 race_frozen: acc 0.5982 decided 6773/8638 tdec 7.373633603868301 profit@2bp -12483
+2026-08-31 race_frozen: acc 0.5789 decided 8011/8638 tdec 6.441080947572089 profit@2bp -14314
+2026-09-01 race_frozen: acc 0.6098 decided 7466/8638 tdec 6.707171835654969 profit@2bp -12969
+2026-09-02 race_frozen: acc 0.5883 decided 7242/8638 tdec 6.806880377105772 profit@2bp -12927
+2026-09-03 race_frozen: acc 0.5794 decided 7747/8638 tdec 6.524729622305408 profit@2bp -13769
+2026-09-04 race_frozen: acc 0.5817 decided 7474/8638 tdec 6.899169235750602 profit@2bp -13584
+2026-09-05 race_frozen: acc 0.6232 decided 6774/8638 tdec 7.689141071744907 profit@2bp -12942
+2026-09-06 race_frozen: acc 0.6510 decided 7455/8638 tdec 7.306483386586184 profit@2bp -13890
+2026-09-07 race_frozen: acc 0.5830 decided 8156/8638 tdec 6.553536478052967 profit@2bp -15510
+2026-09-08 race_frozen: acc 0.5738 decided 7109/8638 tdec 6.067478053172035 profit@2bp -13186
+2026-09-09 race_frozen: acc 0.5791 decided 6424/8638 tdec 7.028238559464508 profit@2bp -11795
+2026-09-10 race_frozen: acc 0.5729 decided 6548/8638 tdec 7.05874142806964 profit@2bp -11899
+2026-09-11 race_frozen: acc 0.5773 decided 6526/8638 tdec 6.947139383236285 profit@2bp -11737
+2026-09-12 race_frozen: acc 0.6462 decided 3726/8638 tdec 8.346483312130971 profit@2bp -7231
+2026-09-13 race_frozen: acc 0.6925 decided 4752/8638 tdec 7.894622887415824 profit@2bp -8516
+2026-09-14 race_frozen: acc 0.6070 decided 6989/8638 tdec 6.99775036242667 profit@2bp -12343
+2026-09-15 race_frozen: acc 0.6034 decided 7530/8638 tdec 6.836456731075698 profit@2bp -13040
+2026-09-16 race_frozen: acc 0.5982 decided 7133/8638 tdec 6.946856462638442 profit@2bp -12733
+2026-09-17 race_frozen: acc 0.6227 decided 6011/8638 tdec 7.240319830144735 profit@2bp -10696
+2026-09-18 race_frozen: acc 0.5804 decided 7318/8638 tdec 6.940018135556163 profit@2bp -13588
+2026-09-19 race_frozen: acc 0.6683 decided 5862/8638 tdec 7.643116142101672 profit@2bp -10504
+2026-09-20 race_frozen: acc 0.6449 decided 5828/8638 tdec 7.384473450411805 profit@2bp -10198
+2026-09-21 race_frozen: acc 0.5536 decided 7790/8638 tdec 6.201137437483954 profit@2bp -14163
+confirmatory: {"acc": 0.5952147781170191, "coverage": 0.7820372881729677, "profit_bp_per_episode_c2": -1.4179912005074533, "profit_bp_per_episode_c10": -7.674289505891195}
+EXIT 0

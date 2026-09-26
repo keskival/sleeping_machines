@@ -1,0 +1,31 @@
+# 2026-09-26T12:58:31+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e17_market.py --learner b1
+2026-08-25 b1: acc 0.5419 decided 8638/8638 tdec 10.0 profit@2bp -15886
+2026-08-26 b1: acc 0.5657 decided 8638/8638 tdec 10.0 profit@2bp -15844
+2026-08-27 b1: acc 0.5653 decided 8638/8638 tdec 10.0 profit@2bp -15719
+2026-08-28 b1: acc 0.5707 decided 8638/8638 tdec 10.0 profit@2bp -15643
+2026-08-29 b1: acc 0.6321 decided 8638/8638 tdec 10.0 profit@2bp -16372
+2026-08-30 b1: acc 0.6119 decided 8638/8638 tdec 10.0 profit@2bp -16020
+2026-08-31 b1: acc 0.5792 decided 8638/8638 tdec 10.0 profit@2bp -15564
+2026-09-01 b1: acc 0.5892 decided 8638/8638 tdec 10.0 profit@2bp -15523
+2026-09-02 b1: acc 0.5650 decided 8638/8638 tdec 10.0 profit@2bp -15820
+2026-09-03 b1: acc 0.5606 decided 8638/8638 tdec 10.0 profit@2bp -15644
+2026-09-04 b1: acc 0.5698 decided 8638/8638 tdec 10.0 profit@2bp -16035
+2026-09-05 b1: acc 0.6240 decided 8638/8638 tdec 10.0 profit@2bp -16545
+2026-09-06 b1: acc 0.6323 decided 8638/8638 tdec 10.0 profit@2bp -16199
+2026-09-07 b1: acc 0.5737 decided 8638/8638 tdec 10.0 profit@2bp -16507
+2026-09-08 b1: acc 0.5782 decided 8638/8638 tdec 10.0 profit@2bp -16147
+2026-09-09 b1: acc 0.5786 decided 8638/8638 tdec 10.0 profit@2bp -15908
+2026-09-10 b1: acc 0.5798 decided 8638/8638 tdec 10.0 profit@2bp -15922
+2026-09-11 b1: acc 0.5701 decided 8638/8638 tdec 10.0 profit@2bp -15996
+2026-09-12 b1: acc 0.6101 decided 8638/8638 tdec 10.0 profit@2bp -16946
+2026-09-13 b1: acc 0.6643 decided 8638/8638 tdec 10.0 profit@2bp -16276
+2026-09-14 b1: acc 0.5814 decided 8638/8638 tdec 10.0 profit@2bp -15692
+2026-09-15 b1: acc 0.5683 decided 8638/8638 tdec 10.0 profit@2bp -15565
+2026-09-16 b1: acc 0.5800 decided 8638/8638 tdec 10.0 profit@2bp -15712
+2026-09-17 b1: acc 0.6146 decided 8638/8638 tdec 10.0 profit@2bp -15600
+2026-09-18 b1: acc 0.5725 decided 8638/8638 tdec 10.0 profit@2bp -16043
+2026-09-19 b1: acc 0.6160 decided 8638/8638 tdec 10.0 profit@2bp -16110
+2026-09-20 b1: acc 0.6418 decided 8638/8638 tdec 10.0 profit@2bp -15522
+2026-09-21 b1: acc 0.5532 decided 8638/8638 tdec 10.0 profit@2bp -15990
+confirmatory: {"acc": 0.5829466553767993, "coverage": 1.0, "profit_bp_per_episode_c2": -1.8506448352961915, "profit_bp_per_episode_c10": -9.850644835296192}
+EXIT 0

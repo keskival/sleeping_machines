@@ -3,6 +3,34 @@
 One entry per result: what we ran, what came out, what it teaches us, what changes.
 Newest first. Numbers are single seeds unless stated.
 
+## 2026-09-26
+
+**E17 — a continually learning race on the BTCUSDT trade stream (preregistered; 21 confirmatory days,
+prequential, day-block 95% intervals).** Direction accuracy on moves ≥ 1 bp: race 0.593 (88% of episodes
+decided, 6.7 s mean decision), frozen race 0.595, online logistic regression 0.583 (decides at 10 s), momentum
+0.591. Preregistered rules: competitive (met, 33% earlier) and nominally better than logistic regression (+1.0
+[0.6, 1.5]). A fairness check made after seeing the results overturns "better": logistic regression at the
+race's coverage is as accurate (+0.1 [−0.3, +0.5]); momentum ties the race. Continual − frozen −0.2 [−0.6,
++0.1]: no benefit from test-time learning. The hold race (learning when to trade) traded 1.4% of episodes at
+chance accuracy, tying logistic regression's most confident trades. Every learner loses money after a 2 bp
+cost. *Learned:* the race can match baselines on a real asynchronous stream while deciding a third earlier;
+nothing here is an edge. Plain 10 s momentum is ~59% right on ≥ 1 bp moves, more than the preregistered null
+expected (look-ahead checked).
+
+**Credit conservation at full length (2 seeds, width 400, 3 epochs).** 0.960 / 0.952 / 0.941 at depths 1 / 2 /
+3 vs 0.949 / 0.942 / 0.924 without: +1.0 to +1.7 at every depth, both seeds. The theory's prediction holds; the
+debug size (+8–10) overstated it. Non-negative weights at depth 3: 0.932 vs 0.937 (1 seed).
+
+**Theory §27–41 (THEORY.md) and first measurements.** Exact: a Ward identity (timing credit sums to the
+deadline's credit), topical-map non-expansiveness with a certified jitter radius, and a commitment-cost
+identity (near-miss credit is the gradient of σ × surprisal). Scaling predictions queued as M31–M43. Measured
+so far: the input's entropy exponent α ≈ 0.95 (M39), refuting a predicted input-redundancy pyramid; smoke tests
+show a common-mode share around 0.03, against a predicted value near 1 (untrained; decisive run queued).
+
+**Engineering.** The host hung a third time: the queue ran one job while an ad-hoc debug run ran beside it.
+Now every computation goes through the queue, the watchdog is at 6 GB and checks every second, and `dev.sh`
+gives new containers hard memory, CPU and GPU settings.
+
 ## 2026-09-25
 
 **Pivotal credit (THEORY §26; debug, 10k images, 2 epochs, output conservation on).** Computing

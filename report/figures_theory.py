@@ -304,26 +304,35 @@ def fig_promising():
         ax.set_xticks(ds)
     ax.set_xlabel("hidden layers")
     ax.set_ylabel("points: counterfactual − fired-only")
-    ax.set_title(f"Counterfactual credit pays with depth\n(full length, {len({r['config']['seed'] for r in e14})} seeds)",
+    ax.set_title("Counterfactual credit pays with depth\n(full length; 2 seeds at depths 1–3, 1 at 4–5)",
                  fontsize=8.5)
 
-    # (c) depth-3 ladder (debug)
+    # (c) credit conservation at full length: without vs with, by depth
     ax = axes[1, 0]
-    if dbg:
-        lad = dbg["depth3_variants"]
-        names = ["fired-only", "residue weighting", "shadow neuron", "residue + conservation",
-                 "shadow + conservation"]
-        vals = [lad[n] for n in names]
-        cols = [GRAY, ORANGE, AQUA, ORANGE, AQUA]
-        for i, (n, v, c) in enumerate(zip(names, vals, cols)):
-            ax.barh(i, v, color=c, alpha=0.55 if "conservation" not in n else 0.95, height=0.6)
-            ax.text(v + 0.005, i, f"{v:.3f}", va="center", fontsize=7.5)
-        ax.set_yticks(range(len(names)), names, fontsize=7.5)
-        ax.invert_yaxis()
-        ax.set_xlim(0.45, 0.85)
-        ax.grid(axis="y", visible=False)
-    ax.set_xlabel("accuracy, depth 3")
-    ax.set_title("Depth 3 variants (debug: 1 seed, 1 epoch)\nshadow lead did NOT hold at full length", fontsize=8.5)
+    runs14 = [load(p) for p in glob.glob(os.path.join(RES, "e14", "d*_crl_fa_*.json"))]
+    base, cons = {}, {}
+    for r in runs14:
+        c_ = r["config"]
+        if c_.get("width") != 400 or c_.get("epochs") != 3 or c_.get("train_limit"):
+            continue
+        extra = any(c_.get(k) for k in ("nonneg", "center_credit", "share_jac", "gauge", "self_sigma", "causal"))
+        if c_["tag"] == "main" and not c_.get("zero_sum"):
+            base.setdefault(c_["depth"], []).append(r["acc"])
+        elif c_["tag"] == "cons" and c_.get("zero_sum") and not extra:
+            cons.setdefault(c_["depth"], []).append(r["acc"])
+    ds = sorted(set(base) & set(cons))
+    for j, (dd, lab, c) in enumerate(((base, "without", GRAY), (cons, "with conservation", BLUE))):
+        xs = [d + (j - 0.5) * 0.36 for d in ds]
+        ys = [np.mean(dd[d]) for d in ds]
+        ax.bar(xs, ys, width=0.34, color=c, label=lab)
+        for x_, d in zip(xs, ds):
+            ax.plot([x_] * len(dd[d]), dd[d], ".", color=INK, ms=3)
+    ax.set_ylim(0.9, 0.97)
+    ax.set_xticks(ds)
+    ax.set_xlabel("hidden layers")
+    ax.set_ylabel("accuracy")
+    ax.legend(fontsize=7, loc="upper right", frameon=False)
+    ax.set_title("Credit conservation: +1.0 to +1.7 points\n(full length, 2 seeds; dots = seeds)", fontsize=8.5)
 
     # (d) sparse fan-in: events vs accuracy (debug)
     ax = axes[1, 1]
@@ -347,7 +356,7 @@ def fig_principles():
     """The five principles, what each predicts, and how far each is established."""
     rows = [
         ("P1  Inference is tropical;\nunrealised futures are\nits dequantization",
-         [("credit conserved at each race", "lead"), ("near-miss weight = soft-min derivative", "confirmed"),
+         [("credit conserved at each race", "confirmed"), ("near-miss weight = soft-min derivative", "confirmed"),
           ("asynchronous branches exact (M20)", "confirmed")]),  # the soft-min identity is exact maths
         ("P2  Weaving closes the past",
          [("shadow (unwoven) beats residue (woven)", "negative"), ("collapse = optimal stopping (E2)", "confirmed")]),
