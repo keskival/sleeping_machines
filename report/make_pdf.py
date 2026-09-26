@@ -373,6 +373,16 @@ def theory_pages(st, W):
                "scaling; MSPRT is prior art", "relative stopping beats the absolute race (M40)"],
               ["Concave piecewise-linear firing time, one piece per causal set (§34.1)", "prior art",
                "polyhedral geometry of TTFS networks (2026)"],
+              ["Deep exact training collapses; fast homeostasis + Ward centering rescue it (§27, §30, §36)",
+               "scaling, confirmed", "depth-3 exact training 0.10 → 0.87 (debug)"],
+              ["Skips must be delay-matched or the shallow path wins the race (§47)", "scaling, partly refuted",
+               "0.915 vs 0.898 plain, but no skips best (0.937) under local learning"],
+              ["The entropic k-winner race is Fermi–Dirac; chemical potential = price (§48)",
+               "exact; soft top-k prior art", "recovers ~60% of the cancellation cost"],
+              ["Dilation equivariance; temporal collapse; temporal normalisation as a gauge (§49)",
+               "exact symmetry; scaling", "queued"],
+              ["Conserved near-miss rule is ultraconservative: forgetting bounded by the new task's mistakes, vs "
+               "O(log T) for softmax SGD (§50)", "bound prior art; consequence new", "E23 running"],
           ], [86, 30, 58], st),
           Paragraph("Honest summary: the mathematics used is borrowed (Noether and Ward identities, "
                     "Perron–Frobenius and topical maps, Birkhoff contraction, Gibbs/Landauer identities, "
@@ -513,6 +523,11 @@ def build():
         "Dense hidden layers cost more than a small MLP; sparse fan-in (14–22× fewer events) is the candidate fix.",
         "<b>Leads that reversed:</b> the shadow neuron (debug +5 points, full length −0.8); the counterfactual "
         "routing gradient in MoE (a tie with load balancing at 10 seeds).",
+        "<b>Spiking Heidelberg Digits (E22), the first event-native benchmark: poor.</b> Race 0.35–0.36 vs dense "
+        "MLP 0.56–0.59; a frozen random hidden layer beats trained ones. Later decisions help only slightly; the local "
+        "learning rule is the main problem there.",
+        "<b>Residual streams did not rescue depth</b> under local learning (depth 3: 0.915 delay-matched, 0.898 plain, "
+        "0.937 without), at 2–4× the synaptic events.",
         "<b>Market stream (E17): no edge.</b> The race matches simple baselines while deciding a third earlier, "
         "but continual learning did not help, learned trade selection had no skill, and every learner loses money "
         "after costs.",
@@ -529,6 +544,29 @@ def build():
         "<i>patterns</i> are chaotic even though firing times are not.",
         "<b>Checked against the literature:</b> several pieces turned out to be prior art and are credited (for "
         "example the polyhedral geometry of first-spike networks, the outlier mode in non-negative backprop).",
+    ], st)
+    s.append(PageBreak())
+    s += [Paragraph("Direction (decided 26 September)", st["h1"]),
+          Paragraph("<b>The project's identity is local, sparse, error-gated learning on an asynchronous substrate:</b> "
+                    "learning whose cost follows events and errors, decisions that take as long as the evidence needs, "
+                    "and credit through what did not happen. Matching dense accuracy by training spiking networks with "
+                    "backpropagation is an established field in which this project would only be catching up.",
+                    st["body"])]
+    s += bullets([
+        "<b>Exact-gradient training is a diagnostic ceiling, not the method.</b> With exact gradients and no "
+        "cancellation the race architecture reaches 0.9675 vs 0.976 for an MLP (MNIST, depth 2, matched budget): the "
+        "architecture is close to dense, and the gap is mostly the local learning rule plus ~2 points for "
+        "cancellation (Fermi–Dirac training recovers ~60% of it).",
+        "<b>Every result reports its energy side</b> (synaptic events, spikes, weight updates), judged on the "
+        "accuracy-vs-energy frontier against dense models.",
+        "<b>Every mechanism gets a locality audit:</b> per node is fine; a slow per-layer broadcast is acceptable; a "
+        "global backward pass is diagnostic only.",
+        "<b>Benchmarks where asynchrony and continual learning are native:</b> SHD (E22), class-incremental streams "
+        "(E23), then NeuroBench's keyword few-shot class-incremental task.",
+        "<b>Honest assessment of the theory:</b> mostly known mathematics applied to race networks. It changed results in "
+        "four places (conservation +1.0–1.7; depth-3 exact training rescued 0.10 → 0.87; delay-matched skips +1.6 over "
+        "plain; Fermi–Dirac training +1.2). The next genuine step is a result about what local learning can and cannot "
+        "learn; §50 (bounded forgetting) is the first aimed at the project's own niche.",
     ], st)
     s.append(PageBreak())
     s += promising_page(st, W)
