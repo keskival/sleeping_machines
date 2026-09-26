@@ -29,6 +29,7 @@ e17_eta0.003 experiments/e17_market.py --learner race --eta 0.003
 e17_eta0.03 experiments/e17_market.py --learner race --eta 0.03
 e17_gate experiments/e17_market.py --learner race --gate 1
 e17_analyze2 experiments/e17_analyze.py
+smoke_probe experiments/e14_depth.py --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --probe 1 --depth 2 --tag smokeprobe
 nonneg_d3_s1 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --depth 3 --variant crl_fa --zero-sum 1 --nonneg 1 --seed 1 --tag nonneg
 pivot_d1_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
 pivot_d2_s0 experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 2 --seed 0
@@ -108,3 +109,8 @@ speed_d3 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --
 # §41 pattern chaos: rho per layer under jitter at depth 5
 cert_sg_d5 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --depth 5
 cert_nn_d5 experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --variant crl_fa --certify 1 --tag certdbg --nonneg 1 --depth 5
+# §46 flat supervision: linear probe per layer (depth 3, debug)
+probe_fa experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --probe 1 --depth 3 --tag probe --variant crl_fa
+probe_frozen experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --probe 1 --depth 3 --tag probe --variant frozen_hidden
+probe_local experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --probe 1 --depth 3 --tag probe --variant crl_fa --feedback local
+probe_pivot experiments/e14_depth.py --width 200 --val 10000 --train-limit 10000 --epochs 2 --zero-sum 1 --probe 1 --depth 3 --tag probe --variant crl_pivot --pivot-top 1
