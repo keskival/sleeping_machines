@@ -1,0 +1,25 @@
+{
+ "test_acc": 0.9757,
+ "curve": [
+  0.962,
+  0.971,
+  0.9769,
+  0.976,
+  0.9757
+ ],
+ "train_acc": 0.9944,
+ "config": {
+  "task": "mnist",
+  "model": "mlp",
+  "depth": 1,
+  "width": 400,
+  "epochs": 5,
+  "batch": 64,
+  "lr": 0.001,
+  "tau": 0.1,
+  "train_limit": 0,
+  "seed": 0,
+  "epochs_mlp": 5
+ },
+ "acc": 0.9757
+}

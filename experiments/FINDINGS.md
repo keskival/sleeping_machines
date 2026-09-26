@@ -25,6 +25,13 @@ of timing credit 0.40, **both 0.785** (slow homeostasis 0.01 fails, as §36's ti
 the first theory-derived fix that changes a result materially; deep exact training of race networks is possible
 with activity owned by the thresholds.
 
+**E22 — Spiking Heidelberg Digits, first pass (validation, seed 0, 10 epochs): poor.** Race depth 1: counterfactual
+0.353, fired-only 0.314, **frozen hidden 0.385**; depth 2 0.356; dense MLP 0.559 / 0.589 (depth 1 / 2). Synaptic events
+per utterance 87–139k (MLP ~288k multiply-accumulates). *Learned:* far behind the MLP, and hidden learning hurts.
+Suspected cause: hasty decisions. The first output crossing commits on the first few hundred ms of a one-second
+utterance, where early spikes are not stronger evidence, and the rule learns from those premature decisions.
+Pilots with later output decisions (theta_out 3, 10) and speed–accuracy curves queued.
+
 **E20/E21 diagnostics (MNIST, depth 2).** Exact gradients with no cancellation at the MLP's 5-epoch budget:
 0.9675 vs MLP 0.976, so the race architecture itself is close to dense. Fermi–Dirac (soft k-winner) training,
 evaluated hard: 0.942 vs 0.930 trained hard (k = 3, 2 epochs), about 60% of the cancellation cost recovered.

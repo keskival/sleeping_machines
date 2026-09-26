@@ -1,1 +1,12 @@
 # 2026-09-26T20:36:45+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e22 --variant crl_fa --depth 1 --width 400 --epochs 10
+depth 1 crl_fa epoch 1: 0.2612 (40s)
+depth 1 crl_fa epoch 2: 0.2838 (79s)
+depth 1 crl_fa epoch 3: 0.2825 (118s)
+depth 1 crl_fa epoch 4: 0.2850 (156s)
+depth 1 crl_fa epoch 5: 0.3013 (195s)
+depth 1 crl_fa epoch 6: 0.3250 (234s)
+depth 1 crl_fa epoch 7: 0.3100 (273s)
+depth 1 crl_fa epoch 8: 0.3187 (312s)
+depth 1 crl_fa epoch 9: 0.3262 (351s)
+depth 1 crl_fa epoch 10: 0.3525 (391s)
+EXIT 0

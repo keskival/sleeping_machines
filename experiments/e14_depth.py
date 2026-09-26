@@ -487,7 +487,7 @@ def probes(net, ttr, ytr, tte, yte, n_train=5000, n_test=2000, lam=1.0):
 
 
 def main(a):
-    cfg = Config(variant=a.variant, winners=a.winners, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
+    cfg = Config(variant=a.variant, winners=a.winners, theta_out=a.theta_out, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
                  homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
     if a.dataset == "shd":                                   # E22: spike times directly (e22_shd.py)
         z = np.load(os.path.join(os.path.dirname(__file__), "..", "data", "shd", "shd_700.npz"))
@@ -598,7 +598,7 @@ def main(a):
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
                                              ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else ""),
-                                             ("W", a.width if a.width != 400 else ""), ("res", a.residual or ""), ("ds", a.dataset if a.dataset != "mnist" else "")) if v != "")
+                                             ("W", a.width if a.width != 400 else ""), ("res", a.residual or ""), ("ds", a.dataset if a.dataset != "mnist" else ""), ("to", a.theta_out if a.theta_out != 1.0 else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
     with open(os.path.join(OUT, f"d{a.depth}_{a.variant}{extras}_{a.tag or 'run'}_s{a.seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
@@ -622,6 +622,7 @@ if __name__ == "__main__":
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")
+    ap.add_argument("--theta-out", type=float, default=1.0, help="output threshold (higher = later decisions)")
     ap.add_argument("--dataset", default="mnist", choices=("mnist", "shd"), help="E22: Spiking Heidelberg Digits")
     ap.add_argument("--residual", type=int, default=0, help="§47: residual event stream; 1 plain skips, 2 delay-matched skips")
     ap.add_argument("--widths", default="", help="§37: per-layer widths, e.g. 800,400,200 (overrides --width)")
