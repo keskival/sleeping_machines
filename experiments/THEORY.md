@@ -2245,6 +2245,47 @@ ceiling test (E20) decides whether the architecture can use depth at all.
 The plain stack declines 0.960 → 0.952 → 0.941 (depths 1–3). The prediction is that the residual stack
 does not decline, and ideally improves.
 
+## 48. The entropic k-winner race is a Fermi–Dirac distribution
+
+**The problem it addresses.** Under exact spike-time gradients, hard k-of-G cancellation costs about 2
+points (E20, depth 2: 0.930 at k = 3 vs 0.951 with no cancellation). A cancelled node's spike is absent, so
+its gradient is zero except through a surrogate.
+
+**The dequantized race.** Give each member of a group a soft membership m_n ∈ [0, 1] with Σ_n m_n = k,
+chosen to maximise Σ m_n·(−T_n) + σ·Σ h(m_n), with h the binary entropy. The stationarity conditions give
+
+    m_n = 1 / (1 + e^{(T_n − μ)/σ}),        μ fixed by Σ_n m_n = k
+
+**the Fermi–Dirac distribution**. Winners behave as fermions: each node fires at most once, the analogue of
+Pauli exclusion. The multiplier μ is the group's **chemical potential**, which is also its price in the
+sense of §25 (a dual variable for the capacity k). As σ → 0, μ tends to the k-th crossing time, and m tends
+to the hard top-k: the race is the zero-temperature limit.
+
+**The Jacobian is closed form.** With f_n = m_n(1 − m_n) and ∂μ/∂T_j = f_j / Σ_l f_l,
+
+    ∂m_n/∂T_j = (f_n/σ) · (f_j / Σ_l f_l − δ_nj)
+
+so gradient reaches every member of the group, weighted by its occupation fluctuation f. Nodes deep inside
+the winners (m ≈ 1) or far outside (m ≈ 0) get almost none; the gradient concentrates at the Fermi level,
+the near misses. This is §4's boundary term in exact form.
+
+**A training scheme follows.**
+- **Train on the soft race:** every member spikes at its crossing time with amplitude m_n (graded
+  spikes, in training only).
+- **Anneal σ to zero** (continuation, §21.7), so training ends at the hard race.
+- **Infer with the hard race:** the actual event network, at the actual cost.
+- **Homeostasis sets μ's drift:** the thresholds are the slow part of the chemical potential.
+
+**Prediction (M49):** Fermi–Dirac training recovers most of the ~2-point cancellation cost under exact
+gradients. At depth 2 with k = 3, the hard evaluation should approach 0.951 (the no-cancellation network) from
+0.930. Test: `e21_soft.py`, gradient-checked.
+
+*Prior art:* entropic (binary-entropy) relaxations of top-k give exactly this sigmoid-with-threshold form in
+the differentiable sorting and top-k literature (e.g. soft top-k via optimal transport, Xie et al. 2020;
+differentiable ranking, Blondel et al. 2020). *New here:* its identification with the race at temperature σ,
+the chemical potential as the homeostatic price, and annealed soft-race training of an event network that runs
+hard at inference.
+
 ## Tests
 
 | | Claim | Test |
@@ -2289,6 +2330,7 @@ does not decline, and ideally improves.
 | **M46** | weaving is local (consistent cuts); certified outcomes are pointer states, noise-proof at rate e^{−2kε/σ}; counterfactual influence obeys a soft light cone b^m; repair = instanton | gap distributions from `--certify` runs; record redundancy vs output dependence; credit reach vs b |
 | **M47** | flat supervision: random feedback makes every layer fit label templates independently, so depth re-encodes; composition needs credit that depends on the layer above | `--probe 1` per-layer linear readout: random feedback, frozen, local feedback, pivotal (depth 3) |
 | **M48** | a residual event stream (identity paths) stops the accuracy decline with depth and lets deep layers add features | `--residual 1` vs plain, depths 1, 3, 5, full length |
+| **M49** | the entropic k-winner race is Fermi–Dirac (chemical potential = price); annealed soft-race training recovers the cancellation cost under exact gradients | `e21_soft.py` depth 2, k = 3, hard evaluation vs E20 k = 3 (0.930) and k = 10 (0.951) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
