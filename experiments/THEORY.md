@@ -4365,6 +4365,41 @@ sums; in continuous time, local schemes provably match backpropagation (equilibr
 suggests the obstacle is not locality itself. E61 (race attention learned by local credit) is the first test with learned
 internal routing.
 
+## 99. Scaling laws from representations: the approximation–estimation tradeoff, order codes, and merging by a race
+
+*Written 2026-09-27, after E62's first scaling points (1M / 10M / 90M characters: 2.05 / 1.81 / 1.66 bpc with copy; a
+three-point fit gives an exponent ≈ 0.19 and a floor ≈ 1.39 for counting and copying).*
+
+**(a) Where the data exponent comes from.** Let a predictor map contexts to m internal states (a representation φ with m
+values) and predict the next symbol from counts per state. Its excess log-loss over the source's entropy rate splits into
+  approximation  a(m) = H(X | φ*(context)) − H∞  (the best m-state representation's lost information), and
+  estimation     ≈ m·(|A| − 1)·log₂ D / (2D) bits per symbol  (minimum description length; context-tree weighting
+                 attains it for tree sources).
+*Proposition.* If a(m) ≈ c·m^−γ, choosing m per D gives m* ∝ (D / log D)^(1/(1+γ)) and
+  L(D) − H∞ ∝ (D / log D)^(−γ/(1+γ)).
+The data exponent β = γ/(1 + γ) is set by how fast representations of growing size approach the entropy rate. Exact
+contexts of bounded order approach it slowly and have a floor at the order-K conditional entropy; a representation that
+merges contexts with similar futures has a larger γ (fewer states lose less information), hence a better exponent and a
+lower floor. Memory follows m*: S(D) ∝ D^(1/(1+γ)), so h = 1/(1 + γ) and β = 1 − h, the relation stated in §95(c), now
+derived with h tied to the representation. (This is the event-model counterpart of explanations of neural scaling laws by
+the intrinsic dimension of the data: there the exponent is set by how well a model of size N resolves the data manifold.)
+
+**(b) Order codes.** k spikes on N channels, read as a set, carry log₂ C(N, k) bits; read as an ordered sequence,
+log₂(N! / (N − k)!) ≈ k·log₂ N bits, about k·log₂ k more. Rank-order codes therefore offer more distinguishable states per
+active unit, a larger m at equal activity, which by (a) is worth a better exponent if the extra states carry predictive
+information.
+
+**(c) Merging contexts by a race (native representation learning).** Code units u = 1..m each hold a predictive
+distribution q_u over the next symbol. A context c is assigned to the code unit whose distribution best predicts c's
+observed continuations: every code unit's clock runs at a rate increasing in its log-likelihood on c's counts, and the
+first to fire claims c (a race; competitive learning). Assignment and re-estimation alternate (the likelihood form of
+k-means, i.e. clustering in Kullback–Leibler divergence); each step does not increase the training loss of the merged
+predictor, which converges to a local optimum. The code of a context is then used as a context itself (alone or joined
+with the most recent characters), generalizing across histories that the counts show to be predictively alike.
+
+**Predictions (E65).** Adding merged-context experts to the stage-2 mixture lowers test loss at every data size, most at
+small data (where estimation dominates), and raises the fitted data exponent relative to counting alone.
+
 ## Tests
 
 | | Claim | Test |
