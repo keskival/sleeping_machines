@@ -59,6 +59,11 @@ now explains, and what is being tested.
   Minsky machine wired only from Delay/Or/And/Veto nodes and one reference oscillator runs every test program
   exactly. With timing jitter, a comb coincidence once per cycle makes success independent of program length
   (q/σ = 20: 1.00 over 25 and 81 steps; without restoration 0.60 and 0.30).
+- **A measured frontier against a clocked dense model (E32).** On E27's timing task, at matched accuracy (≈ 0.91):
+  event learner 10.2 synaptic events per episode vs 1.9k multiply-adds for the cheapest clocked conv net (≈ 190×;
+  ≈ 80× in energy), ≈ 19,000× when the episode sits in 99% silence, ≈ 6,000× fewer training operations. Caveats:
+  the dense model reaches 0.995 at 3M multiply-adds, and a sparse (event-driven) dense model narrows the gap to ≈ 10×:
+  the advantage belongs to the event paradigm and grows with silence (§63).
 - **Pull-only does not transfer to weights (E26b, negative).** Dropping the competitor push in the main race
   collapses SHD from 0.35 to 0.06. For weights the native counter-force is a conserved per-node budget (§60).
 - **True grokking test (E29): no grokking yet (1 seed).** Frozen random loops memorize (test 0.015); with hidden
@@ -383,6 +388,18 @@ parity (10 inputs). Under timing jitter:
 | 6.7 | 0.15 | 0.05 | 0.75 | 0.58 |
 
 Restoration (one comb coincidence per counter per cycle) makes reliability independent of length where q/σ ≥ 10.
+
+**E32 (frontier vs a clocked dense model).** E27's task; dense = 1-D temporal conv on binned spikes (F filters,
+receptive field 4 units), backprop + Adam, 200k episodes, 2 seeds; event = E27's learner, 5 seeds.
+
+| model | test | cost / episode |
+|---|---|---|
+| event learner | 0.914 | 10.2 synaptic events |
+| dense F = 16, δ = 0.05 / 0.25 / 1.0 | 0.995 / 0.984 / 0.935 | 3.07M / 123k / 7.8k MACs |
+| dense F = 4, δ = 1.0 (cheapest at ≈ 0.91) | 0.895 | 1.9k MACs |
+| dense F = 4 / 2, δ = 2.0 / 1.0 | 0.845 / 0.686 | 500 / 970 MACs |
+
+With 99% silence around each episode the dense costs grow 100×; the event cost does not. See §63 for caveats.
 
 **E26b/E26d (transfer to the main race, negative).** SHD, depth 1, 10 epochs, 1 seed:
 
