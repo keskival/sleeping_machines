@@ -1,0 +1,2 @@
+e42_confirm_c2 experiments/e42_when.py --stage learners --days confirm --c 2 --m 30
+e42_confirm_c10 experiments/e42_when.py --stage learners --days confirm --c 10 --m 30
