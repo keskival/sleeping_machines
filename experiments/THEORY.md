@@ -4767,6 +4767,79 @@ messages; snapshot emission; exact spike-time gradients.
 - Measures: accuracy, messages and spikes per utterance.
 - Ablations: content delays off (δ fixed), gate off (all messages sent), snapshot off (payload = unit identity only).
 
+## 106. Scaling and representation laws for time-vector networks
+
+*Written 2026-09-28. Checks: `theory_106_checks.py` → `results/theory/s106_checks.json`.*
+
+**(a) Work law for delay-coded attention.** In §105(b) a query pays for the keys that send, i.e. the keys above the cut. For
+softmax mass 1 − ε, it pays for the smallest set of keys holding that mass.
+- *Model.* N keys with scores s ~ N(μ, σ²). Softmax exponentially tilts the score distribution, e^s·N(μ, σ²) ∝ N(μ + σ², σ²), so
+  mass 1 − ε lies above s_c = μ + σ² − σ z_ε, with z_ε = Φ⁻¹(1 − ε).
+- *High-temperature phase* (σ < σ_c = √(2 ln N)): the keys that must send number
+    W(N, σ) ≈ N · Q(σ − z_ε) ≈ N^{1 − (σ − z_ε)² / (2 ln N)},
+  and the latency is κ(max s − s_c). The work fraction falls like a Gaussian tail in the *sharpness* σ.
+- *Frozen phase* (σ > σ_c): this is the random energy model's freezing transition. The mass condenses on a vanishing fraction
+  of keys, following Poisson–Dirichlet statistics with m = σ_c/σ. The count is independent of N as N → ∞ at fixed m, but
+  approaches that limit slowly.
+- *Checked* at N = 10⁴, 10⁵, 10⁶ and ε = 0.01:
+  - the tilted law is within 1–5% for σ ≤ 3 (e.g. 250,389 keys needed against 250,266 predicted at N = 10⁶, σ = 3);
+  - it under-predicts near σ_c (×1.1–1.3 at σ = 4, ×1.3–3.5 at σ = 5);
+  - at σ = 6 the count grows sublinearly: 63, 149, 801 keys (N^0.55 over this range).
+- *Scaling law.* The work of attention is set by how sharp the scores are, not by how many keys exist. A context-length
+  exponent below 1 follows whenever sharpness grows with √(ln N). Dense attention pays N regardless of sharpness.
+- *Test:* E76 measures the keys needed per query and head in trained character-level Transformers, as a function of context
+  position. This gives the empirical work exponent for language with no distributional assumption.
+
+**(b) Time–precision invariant.** Arrival jitter σ_t (substrate noise, or the simulation grid) perturbs each delay-coded
+weight by the factor e^{±σ_t/κ}, a relative error ε_w ≈ σ_t/κ. Spanning a logit range Δs costs latency T_lat = κΔs. Hence
+  T_lat · ε_w ≈ σ_t · Δs:
+precision and latency trade at a rate fixed by the substrate's jitter and the logit range. This is a design equation for
+hardware (§9): a clockless core with 10 ps jitter and κ = 1 ns gives 1% weights over a logit range of 10 in 10 ns.
+
+**(c) Symmetries of the substrate (theorem: dilation and shift covariance).** Let a time-vector layer (§105) have units on a
+lattice of positions p and log-scales m. Unit (p, m) has:
+- mode rates Λ₀ ρ^{−m}, content-delay scale τ₀ ρ^{m} and reset time τ_R ρ^{m};
+- gate, write and readout parameters that depend only on the offset between sender and receiver (Δp, Δm), not on absolute
+  (p, m).
+Then:
+1. shifting the input's channels by k lattice steps shifts every spike from (p, m) to (p + k, m) at the same time;
+2. dilating the input's times by ρ^j moves every spike from (p, m) at time T to (p, m + j) at time ρ^j T;
+3. with the same structure in every layer, the whole network is equivariant to the group of shifts × dilations.
+*Proof.* z_λ(ρ t) under the dilated stream equals z_{ρλ}(t) under the original: substitute t_s → ρ t_s in Σ e^{λ(t − t_s − δ_s)}
+B v_s, with δ_s scaling with the unit. Potentials, and hence threshold crossings, are unchanged in value and scaled in time.
+Emitted snapshots are equal. The gate and write parameters see only offsets. Induct over layers. ∎
+*Checked:* a unit with complex modes, content delays, gate and reset, under a dilation of 1.7, fires the same 13 spikes at
+exactly 1.7× the original times (error 6·10⁻¹⁴).
+*Prior art:* scale-invariant temporal histories (Shankar & Howard 2012, log-spaced Laplace memories), scale-equivariant CNNs
+(Sosnovik et al. 2020). *New here:* exact covariance for event networks with content-dependent delays, threshold firing and
+snapshot payloads. It holds because every mechanism is defined in time, so dilation only relabels scales.
+
+**(d) Why it matters: generalization across speakers.** Speech from a new speaker differs largely by:
+- a shift along the cochlear (log-frequency) axis, from vocal-tract length;
+- a change of tempo.
+Both are group actions of (c). For a model equivariant in its layers and invariant at its readout, a variation that is exactly
+a group action costs nothing to generalize over, and the estimation term of the §99 scaling law sees effective data multiplied
+by the size of the orbit the data covers. Prediction: the gap between training-speaker and held-out-speaker accuracy measures
+the part of speaker variation that is *not* a shift or a tempo change. Equivariant networks should shrink that gap, and our
+SHD failures were exactly that gap (§92: 0.73 held-in vs 0.36–0.46 held-out speakers). Weight sharing also divides the
+parameter count by the number of lattice sites.
+
+**(e) Work per token: time-vector network vs Transformer.**
+- *Transformer:* per token and layer, ≈ 12 d² (projections and MLP) + 2 N d (attention).
+- *Time-vector layer:* per token, e_tok events × (fan-out F × gate pass rate g) messages × (d + n d) for the score and the
+  write, plus spikes × n d for snapshots.
+- *Attention part:* by (a), W(N, σ) · d instead of N d.
+- *Sparse routing:* dense projections are replaced by gated routing, with a per-token cost of e_tok F g (n + 1) d, independent
+  of the model width.
+So the ratio of work at equal function is W(N, σ)/N on attention and e_tok F g (n + 1)/(12 d) on the rest. The first is fixed
+by the data's sharpness (E76), the second by the sparsity learned (E74 reports messages and spikes).
+
+**Tests.**
+- E75: SHD with the equivariant time-vector network of (c): shared weights across 35 band positions × 3 time scales,
+  offset-dependent gates, delays and writes, invariant readout. Compare with E74 (unshared) on held-out speakers, and on the
+  train − held-out gap.
+- E76: attention work law in trained Transformers (a).
+
 ## Tests
 
 | | Claim | Test |
