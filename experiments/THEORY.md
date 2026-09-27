@@ -3049,6 +3049,14 @@ long enough to see both spikes (duration) and then align (delay), or receive cre
 span longer than its window. **Prediction (M62):** hidden nodes with learnable duration (hold), shortened as
 their delays align, become motif-selective, and depth 2 then beats depth 1 on shared-motif tasks.
 
+**Test (same day): not supported.** Hold-then-align (windows start at 2.0; each pull aligns the window's arrivals
+and shrinks the window toward their spread) leaves accuracy unchanged (depth 2: 0.38–0.48, 2 seeds; depth 1 0.50)
+and, label-free, raises class selectivity more than motif selectivity (median 0.28 vs 0.16; strongly
+motif-selective nodes fall from 22 to 9). Longer windows let a node see more of an episode, and it uses that to
+become a better class detector. Reach was not the missing piece; the missing piece is a pressure that makes a node
+prefer a part over a whole. In dense networks that pressure is width-limited capacity shared across many
+outputs; here every hidden node can afford to be a class template. Open.
+
 ## Tests
 
 | | Claim | Test |
