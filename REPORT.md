@@ -265,14 +265,16 @@ every ordered pair of parts (57,840 units), paid for only when both parts fire (
 
 | E53, 5 seeds, 40k episodes | test accuracy | updates |
 |---|---|---|
-| depth 3, instant credit, cooled exploration (T = 0.3) | 0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999 | ≈ 1,100 to converge |
+| **depth 3, + margin earned by reliability (§86b)** | **0.997–0.999 at every checkpoint, 5/5 seeds** | ≈ 1,100–1,400 + ≈ 250 near-miss |
+| depth 3, instant credit, cooled exploration (T = 0.3) | 0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999 (dips) | ≈ 1,100 to converge |
 | depth 3, greedy instant credit (T = 0) | 0.71–0.85 (cycles between shared prefixes) | 4k–11k |
 | depth 3, credit to every candidate | 0.33–0.36 (never fires) | ≈ 26k |
 | depth 2, same credit | 0.32–0.42 | ≈ 24k |
 
-The final-checkpoint spread comes from transient dips after convergence: a converged class sits just above its
-threshold, and one demotion as a false winner can knock it under until it is relearned (§86; a margin maintained by
-near-miss credit is the fix under test). With synapses grown only when first credited (§85: provably the same
+Without a margin, converged classes dip: a node sits just above its threshold and one demotion as a false winner knocks
+it under until relearned. A margin kept by near-miss credit removes the dips but also protects wrong routes (3/5 seeds
+freeze on a shared prefix); a margin *earned by reliability*, applied only when the node's recent fires were mostly
+correct, keeps the search open for unreliable nodes and protects reliable ones (§86b): stable at 0.997–0.999. With synapses grown only when first credited (§85: provably the same
 decisions as dense weights), depth 3 with 20 channels gives 0.981–1.000 (5 seeds) with 9.5k–13.7k synapses ever grown
 out of 145k candidates.
 - A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes

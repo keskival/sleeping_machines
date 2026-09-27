@@ -1011,13 +1011,16 @@ def build():
             "parts (57,840 candidates, ≈ 41 events per episode). 5 seeds, 40k episodes:")]
     s.append(table([
         ["E53", "test accuracy", "updates"],
-        ["depth 3, instant credit, exploration T = 0.3", "0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999", "≈ 1,100"],
+        ["<b>depth 3, + margin earned by reliability (§86b)</b>", "<b>0.997–0.999 at every checkpoint, 5/5 seeds</b>", "≈ 1,100–1,400"],
+        ["depth 3, instant credit, exploration T = 0.3", "0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999 (dips)", "≈ 1,100"],
         ["depth 3, greedy instant credit", "0.71–0.85 (cycles between shared prefixes)", "4k–11k"],
         ["depth 3, credit to every candidate", "0.33–0.36 (never fires)", "≈ 26k"],
         ["depth 2, same credit", "0.32–0.42", "≈ 24k"],
     ], [70, 74, 30], st))
-    s += [P("The final-checkpoint spread comes from transient dips after convergence: a converged class sits just above its "
-            "threshold and one demotion can knock it under (§86; a margin kept by near-miss credit is under test). With "
+    s += [P("Without a margin, converged classes dip (a node sits just above threshold; one demotion knocks it under). A margin "
+            "kept by near-miss credit removes the dips but also protects wrong routes (3/5 seeds freeze on a shared prefix); a "
+            "margin earned by reliability, applied only when the node's recent fires were mostly correct, is stable at "
+            "0.997–0.999 (§86b). With "
             "synapses grown only when first credited (§85, provably the same decisions as dense weights), depth 3 at 20 "
             "channels gives 0.981–1.000 with 9.5k–13.7k of 145k candidate synapses ever grown.")]
     s += [P("5. Generalization and grokking", "h1"),
