@@ -41,8 +41,11 @@ now explains, and what is being tested.
   including a·b mod p (the delays find the discrete log). But this is **restriction, not grokking** (§58): the
   single-phase readout can express only one-character relations.
 - **In a race, winning is positional (E26, E27).** Punishing the wrong winner in time collapses all detectors onto
-  one phase (chance); pull-only learning, sparse and error-driven, learns the relation from random delays
-  (0.86–0.91). False positives must be removed by veto, not by displacement: 0.87–0.92 vs 0.21.
+  one phase (chance in all 15 runs, 3 seeds × 5 fractions); pull-only learning, sparse and error-driven, learns
+  the relation from random delays (**full runs, 3 seeds: p = 31 test 0.97–0.98 at 50% of pairs, 0.81–0.94 at
+  30%; p = 59 0.95 and 0.91–0.97**), with 10× fewer updates than the push. Timing noise makes generalization
+  reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; a cooling schedule
+  is queued. False positives must be removed by veto, not by displacement (E27 pilot: 0.87–0.92 vs 0.21).
 - **Routing credit from cancellation (E28, one seed).** Pulling the wanted cancelled near-miss on its partial
   window beats MoE-style fired credit (0.41 vs 0.34) at equal events. Full runs queued.
 - **True grokking test (E29): not working yet.** The general network starves (few coincidences); being redesigned.
@@ -254,9 +257,21 @@ random tables are not (a DFT-rank argument, §53.5). Kept as a diagnostic: the l
 generalization is restriction by the readout (§58).
 
 **E26 (native delay learning).** Same ring, but learning is sparse, local and error-driven, with a race readout.
-With the wrong-winner push, all detectors collapse onto one phase and nothing is learned (chance, with or without
-timing noise). Pull-only: test 0.86–0.91 from 30% of pairs, ~37k updates in 100k samples (pilot, 2 seeds; sweep
-queued). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
+400k samples per run, 3 seeds.
+
+| p | fraction | pull-only (test) | with push (test) | pull-only + noise σ = 1 (test) |
+|---|---|---|---|---|
+| 31 | 0.05–0.10 | memorizes (train 0.3–0.75, test at chance) | chance | memorizes |
+| 31 | 0.2 | 0.78 (1 of 3 seeds), others fail | chance | 0.73 (3 of 3) |
+| 31 | 0.3 | 0.81–0.94 | chance | 0.69–0.77 |
+| 31 | 0.5 | 0.97–0.98 | chance | 0.75–0.77 |
+| 59 | 0.2 | 0.89 (1 of 3) | – | queued |
+| 59 | 0.3 | 0.91–0.97 | – | queued |
+| 59 | 0.5 | 0.95 | – | – |
+
+The push makes about 386k updates per run (an error on nearly every sample); pull-only about 40k at 50% of pairs.
+Noise annealed by the error rate stays near σ ≈ 0.25 and limits accuracy; a schedule that cools to zero with
+the learner's own update count is queued (E26c). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
 
 **E27 (delays + coincidence windows + veto).** Patterns "B within Δ after A unless C". Specializing false firers
 by veto: 0.87–0.92; displacing them in time: 0.21–0.24 (pilot, 2 seeds, 20k episodes; 5-seed runs queued). The

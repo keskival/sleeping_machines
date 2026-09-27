@@ -1,0 +1,16 @@
+{"frac": 0.05, "seed": 0, "step": 400000, "train": 0.041666666666666664, "test": 0.03176341730558598, "err_trace": 0.9648, "sigma": 0.0, "updates": 372706}
+{"frac": 0.05, "seed": 1, "step": 400000, "train": 0.0, "test": 0.03504928806133625, "err_trace": 0.9658, "sigma": 0.0, "updates": 377241}
+{"frac": 0.05, "seed": 2, "step": 400000, "train": 0.041666666666666664, "test": 0.027382256297918947, "err_trace": 0.9329, "sigma": 0.0, "updates": 354233}
+{"frac": 0.1, "seed": 0, "step": 400000, "train": 0.03125, "test": 0.03236994219653179, "err_trace": 0.961, "sigma": 0.0, "updates": 369184}
+{"frac": 0.1, "seed": 1, "step": 400000, "train": 0.020833333333333332, "test": 0.03468208092485549, "err_trace": 0.9547, "sigma": 0.0, "updates": 381415}
+{"frac": 0.1, "seed": 2, "step": 400000, "train": 0.041666666666666664, "test": 0.03121387283236994, "err_trace": 0.9442, "sigma": 0.0, "updates": 366028}
+{"frac": 0.2, "seed": 0, "step": 400000, "train": 0.036458333333333336, "test": 0.031209362808842653, "err_trace": 0.9632, "sigma": 0.0, "updates": 385761}
+{"frac": 0.2, "seed": 1, "step": 400000, "train": 0.036458333333333336, "test": 0.031209362808842653, "err_trace": 0.9646, "sigma": 0.0, "updates": 383951}
+{"frac": 0.2, "seed": 2, "step": 400000, "train": 0.015625, "test": 0.036410923276983094, "err_trace": 0.9656, "sigma": 0.0, "updates": 386036}
+{"frac": 0.3, "seed": 0, "step": 400000, "train": 0.034722222222222224, "test": 0.031203566121842496, "err_trace": 0.9627, "sigma": 0.0, "updates": 386366}
+{"frac": 0.3, "seed": 1, "step": 400000, "train": 0.052083333333333336, "test": 0.0237741456166419, "err_trace": 0.966, "sigma": 0.0, "updates": 386629}
+{"frac": 0.3, "seed": 2, "step": 400000, "train": 0.03125, "test": 0.03268945022288262, "err_trace": 0.9583, "sigma": 0.0, "updates": 386215}
+{"frac": 0.5, "seed": 0, "step": 400000, "train": 0.0375, "test": 0.02702702702702703, "err_trace": 0.9598, "sigma": 0.0, "updates": 386744}
+{"frac": 0.5, "seed": 1, "step": 400000, "train": 0.029166666666666667, "test": 0.035343035343035345, "err_trace": 0.9658, "sigma": 0.0, "updates": 386801}
+{"frac": 0.5, "seed": 2, "step": 400000, "train": 0.04375, "test": 0.02079002079002079, "err_trace": 0.9576, "sigma": 0.0, "updates": 386821}
+EXIT-OK 122.9

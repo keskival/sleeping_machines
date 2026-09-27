@@ -1,0 +1,2 @@
+e26c_p31_cool experiments/e26_noisy_race.py --fracs 0.1,0.15,0.2,0.3 --seeds 3 --steps 400000 --repel 0 --push 0 --anneal 2 --p 31 --sigma 1 --tag cool
+e26c_p59_cool experiments/e26_noisy_race.py --fracs 0.1,0.15,0.2,0.3 --seeds 3 --steps 400000 --repel 0 --push 0 --anneal 2 --p 59 --sigma 1 --tag cool
