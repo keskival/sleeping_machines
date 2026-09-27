@@ -1110,7 +1110,8 @@ def build():
         "information. A 2 bp round-trip fee (a tenth of a realistic taker fee) removes it: staying out is correct for a "
         "taker here; the edge would need market-making economics. <b>Confirmed on the 21 untouched days</b> (preregistered): "
         "before fees +0.26 to +1.05 bp from the own state, +0.47 to +1.40 bp with perp and ETH; at 2 bp every selected "
-        "state loses; at 5 bp none qualifies.",
+        "state loses; at 5 bp none qualifies. <b>Across four markets</b> (ETH spot, SOL spot or the BTC perpetual traded, the "
+        "others as leaders; choices made on the pilot days): at most ≈ 1 bp before fees, nothing at 2 bp (E55b).",
         "<b>Against a Transformer point process (E52, E57, §90).</b> A Transformer Hawkes process with the event network's own "
         "hazard family and 128 events of context, selected on day 5, scores −1.97 / −1.82 nats per event on the held-out days "
         "(≈ 108k multiply-adds per event; −1.83 / −1.65 with 12 finer windows). The semi-Markov event network scores −2.38 / "
