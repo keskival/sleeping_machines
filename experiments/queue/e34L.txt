@@ -1,0 +1,3 @@
+e34L_ph15_200k experiments/e34_compose.py --seeds 5 --steps 200000 --part-hi 1.5 --tag L200k
+e34L_bank_200k experiments/e34_compose.py --seeds 5 --steps 200000 --scales 1,2,4 --tag L200k
+e34L_bank_1M experiments/e34_compose.py --seeds 5 --steps 1000000 --scales 1,2,4 --seeds 3 --tag L1M

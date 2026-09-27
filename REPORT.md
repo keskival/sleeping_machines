@@ -382,6 +382,14 @@ chance. **E28c** (15 classes from 6 motifs, 5 seeds) tests the case depth should
 | 60k episodes | 0.51 (0.42–0.56) | 0.44 (0.40–0.47) |
 
 Depth 1 wins at both lengths: the hidden layer does not learn reusable motif detectors under the current rule.
+
+**E36 vs E34 on the hierarchical task (important):** a Transformer on event tokens trained on 2M episodes reaches
+0.9975–0.998, above E34's 0.97 (tuned windows, 40k episodes) and 0.86 (window bank), at ≈ 175k–690k multiply-adds per
+episode vs ≈ 14 events. On composition, a well-trained Transformer currently wins on accuracy; E34 keeps a ≈ 10⁴×
+cost advantage. E34 with 5× and 25× more training is queued for a fair budget. E34's errors with the window bank are
+mostly classes sharing one motif, caused largely by *dead classes* (no synapse ever crosses threshold: tied copies of
+the same channel pair at several scales split the pulls); Winnow-style multiplicative pulls help slightly (0.916 vs
+0.912, 3 seeds, 20k) and one-shot recruitment of dead classes hurts (0.79–0.94: routes latch onto early distractors).
 **Corrected diagnosis (§62):** receptive fields show the trained hidden nodes *are* part detectors (86 of 124 take
 both strongest inputs from one motif; untrained 2 of 35); the §60 readout accumulates without a window and so
 discards the parts' order, which is what E28's classes are made of. **Refuted by the error breakdown:** depth 2

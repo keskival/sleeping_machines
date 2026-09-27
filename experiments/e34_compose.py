@@ -30,7 +30,8 @@ INF = np.inf
 
 
 class Compose:
-    def __init__(self, N, K, depth, W, rng, budget=1.0, thr=0.5, part_hi=1.5, learn_win=0, scales=None):
+    def __init__(self, N, K, depth, W, rng, budget=1.0, thr=0.5, part_hi=1.5, learn_win=0, scales=None, mult=0, recruit=0):
+        self.mult, self.recruit = mult, recruit
         self.learn_win = learn_win
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
@@ -81,7 +82,13 @@ class Compose:
         return c, x, ft, used
 
     def _pull(self, W, c, j, eta):                          # conserved pull of synapse j on node c
-        tot = W[c].sum(); W[c, j] += eta * tot; W[c] *= tot / W[c].sum()
+        tot = W[c].sum()
+        if self.mult:                                       # Winnow (§68): multiplicative, then renormalize;
+            W[c, j] *= 1 + eta * 10                          # concentrates on consistently pulled synapses
+            W[c, j] = max(W[c, j], eta * tot / 10)           # (a floor so a never-pulled synapse can start)
+        else:
+            W[c, j] += eta * tot
+        W[c] *= tot / W[c].sum()
 
     def _drop(self, W, c, j, eta):                          # conserved weakening
         tot = W[c].sum(); W[c, j] *= 1 - eta; W[c] *= tot / max(W[c].sum(), 1e-12)
@@ -100,6 +107,11 @@ class Compose:
                     score = np.where(ok, score, -INF)
                     i, j = np.unravel_index(np.argmax(score), score.shape)
                     self._pull(self.h, y, fired[i], eta); self._pull(self.g, y, fired[j], eta)
+                    if self.recruit and not ((self.h[y] > self.thr).any() and (self.g[y] > self.thr).any()):
+                        for Wt, part in ((self.h, fired[i]), (self.g, fired[j])):   # one-shot recruitment of a
+                            tot = Wt[y].sum()                                        # dead class: its route is
+                            Wt[y] *= (tot - 1.5 * self.thr) / max(tot - Wt[y, part], 1e-9)  # set above threshold
+                            Wt[y, part] = 1.5 * self.thr
                     if self.depth == 2 and self.learn_win:        # duration credit (§61): parts on the pulled route
                         for part in (fired[i], fired[j]):          # tighten their window toward what they observed
                             pp, qq = self.pairs[part]
@@ -122,6 +134,8 @@ def main():
     ap.add_argument("--part-hi", type=float, default=1.5, help="part-node window [0, part_hi] (fixed)")
     ap.add_argument("--scales", default="", help="comma list: bank of part-window scales, e.g. 1,2,4")
     ap.add_argument("--learn-win", type=int, default=0, help="1: part windows learned from pulled routes")
+    ap.add_argument("--recruit", type=int, default=0, help="1: one-shot recruitment of classes with no live route")
+    ap.add_argument("--mult", type=int, default=0, help="1: multiplicative (Winnow) routing pulls (§68)")
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
     ap.add_argument("--eta", type=float, default=0.3)
     ap.add_argument("--steps", type=int, default=20000)
@@ -135,7 +149,7 @@ def main():
         rng = np.random.default_rng(s)
         motifs, classes = T.make_task(a.N, a.M, a.K, rng)
         net = Compose(a.N, a.K, a.depth, a.W, rng, part_hi=a.part_hi, learn_win=a.learn_win,
-                      scales=[float(x) for x in a.scales.split(",")] if a.scales else None)
+                      scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
@@ -152,7 +166,7 @@ def main():
                 net.events = e0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
