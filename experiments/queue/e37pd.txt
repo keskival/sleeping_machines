@@ -1,0 +1,16 @@
+e37pd_f0.2_l0.01 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.2 --lam 0.01 --tag pd
+e37pd_f0.2_l0.05 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.2 --lam 0.05 --tag pd
+e37pd_f0.2_l0.2 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.2 --lam 0.2 --tag pd
+e37pd_f0.2_l0.5 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.2 --lam 0.5 --tag pd
+e37pd_f0.3_l0.01 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.3 --lam 0.01 --tag pd
+e37pd_f0.3_l0.05 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.3 --lam 0.05 --tag pd
+e37pd_f0.3_l0.2 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.3 --lam 0.2 --tag pd
+e37pd_f0.3_l0.5 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.3 --lam 0.5 --tag pd
+e37pd_f0.5_l0.01 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.5 --lam 0.01 --tag pd
+e37pd_f0.5_l0.05 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.5 --lam 0.05 --tag pd
+e37pd_f0.5_l0.2 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.5 --lam 0.2 --tag pd
+e37pd_f0.5_l0.5 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.5 --lam 0.5 --tag pd
+e37pd_f0.7_l0.01 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.7 --lam 0.01 --tag pd
+e37pd_f0.7_l0.05 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.7 --lam 0.05 --tag pd
+e37pd_f0.7_l0.2 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.7 --lam 0.2 --tag pd
+e37pd_f0.7_l0.5 experiments/e37_grok.py --epochs 400 --seeds 3 --every 10 --frac 0.7 --lam 0.5 --tag pd
