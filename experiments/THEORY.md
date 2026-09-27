@@ -4534,6 +4534,44 @@ per example 0.923 (Corollary 2 in practice); full grid queued.*
 token identities, a query–key map learned from the race timing, values read by time-normalized attention; against the
 Transformer baseline of E61 and the discrete-route race attention of E61.
 
+## 103. Race Transformers subsume Transformer training: the pathwise race gradient (theorem, proofs)
+
+*Written 2026-09-27; completes §96 (expressiveness), §100–§102 (representations, time-normalized attention) with trainability.*
+
+**Lemma (race attention is reparameterizable).** Fix exponential noise E_j ~ Exp(1) and let λ_j = exp(s_j), T = min_j E_j/λ_j with
+winner w, and o = Σ_j λ_j T v_j (§102). For fixed noise, w is locally constant in s and T = E_w e^(−s_w), so almost everywhere
+  ∂o/∂s_i = λ_i T v_i − 1[i = w]·o,     ∂o/∂v_i = λ_i T.
+*Unbiasedness.* E[λ_i T v_i] = p_i v_i (E[T] = 1/Λ). By the independence of W and T (§101), o = TΛ·ō with ō = Σ_j p_j v_j, so
+E[1[w = i]·o] = P(w = i)·E[TΛ]·ō = p_i ō. Hence E[∂o/∂s_i] = p_i (v_i − ō), the Jacobian of softmax attention, and
+E[∂o/∂v_i] = p_i. ∎  Each key's term is local: its own rate, the decision time, whether it won, and the output o returned with
+the error; the time channel carries the normalization in the backward pass too (the winner's −o).
+
+**Theorem (subsumption of training).** Build a race Transformer: every softmax (attention heads, output layer) replaced by a
+time-normalized race with R independent races; feed-forward blocks, normalization and the residual stream as small dense cores
+inside units (§102). Then
+(i) forward: each head's expected output is softmax attention, and each output race samples the softmax (§101);
+(ii) backward: event message passing, error payloads sent back only along connections active in the forward pass, with the
+     local pathwise rule of the Lemma at every race and the ordinary chain rule inside dense cores, computes an unbiased
+     estimate of ∇ E[L_R], the gradient of the race network's expected loss (the chain rule composes; noise is fixed per step);
+(iii) E[L_R] − L_Transformer = ½·tr(H·Cov(o)) + O(E|o − ō|³) = O(1/R) for a loss with bounded second and third derivatives,
+     and likewise for gradients: training a race Transformer is stochastic gradient descent on the Transformer objective up to
+     an O(1/R) bias and additional gradient noise of variance O(1/R);
+(iv) backward traffic mirrors the active forward paths (keys with non-negligible λ_j T, units that fired), so it is as sparse
+     as the forward pass; truncating keys that have not fired by a cutoff biases outputs and gradients by at most the skipped
+     softmax mass times the payload bound;
+(v) relative position is native (learnable delays or lag biases b_j on the scores, with ∂L/∂b_j = ∂L/∂s_j); heads are
+     independent races; the output layer's cross-entropy gradient is the local estimate of §101 Corollary 2.
+Together with §96 (every Transformer is expressible) this makes the Transformer family, including its training by gradient
+descent, a limit (R → ∞) of race networks trained by local event-driven message passing.
+
+**What the theorem leaves open.** The O(1/R) terms, and whether the sparse regime where the efficiency lives (few races, hard
+or truncated retrieval, discrete routes as in §83–§89) keeps training close enough; the asynchronous overlap of forward and
+backward passes across tokens adds staleness, bounded as in §98(e).
+
+**Test (E68).** The same small Transformer (payload dimension 32, 2 layers, 4 heads) trained with softmax attention and with
+race attention at R = 1, 4, 16 (pathwise gradients as in the Lemma), on associative recall with learned embeddings and on
+character-level text: prediction, curves approach the softmax Transformer as R grows, with R = 4 already close.
+
 ## Tests
 
 | | Claim | Test |
