@@ -1,6 +1,4 @@
 # E61: race attention trained by local credit vs a Transformer trained by gradients (associative recall, learned query-key map)
-e61_event experiments/e61_race_attention.py --model event --seeds 5 --checkpoints 250,500,1000,2000,4000,10000
-e61_tf experiments/e61_race_attention.py --model tf --seeds 3 --checkpoints 1000,4000,10000,40000,100000,200000
 e61_tf_d128L2 experiments/e61_race_attention.py --model tf --seeds 1 --d 128 --layers 2 --lr 1e-3 --checkpoints 10000,100000,400000,1000000
 e61_tf_d128L4 experiments/e61_race_attention.py --model tf --seeds 1 --d 128 --layers 4 --lr 3e-4 --checkpoints 10000,100000,400000,1000000
 e61_tf_d64L4 experiments/e61_race_attention.py --model tf --seeds 1 --d 64 --layers 4 --lr 1e-3 --checkpoints 10000,100000,400000,1000000
