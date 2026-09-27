@@ -35,7 +35,7 @@ open.
    that can memorize, given a rhythm resource, memorizes without sleep and generalizes after a delay with sleep
    (0.95–0.99 on unseen pairs in 5/5 seeds with cooled timing noise at the right temperature); it stays at chance on relations
    the rhythm cannot express. A data × sleep phase diagram shows memorization, grokking and collapse regimes. Grokking
-   also works with depth: (a + b + c) mod p through two composed rhythm stages (0.998, pilot).
+   also works with depth: (a + b + c) mod p through two composed rhythm stages (0.99–1.00, 3/3 seeds at p = 17 and 31).
 6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 48 channels leaves the
    number of learning mistakes flat and makes inference cheaper (§77).
 7. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) the architecture has not beaten dense baselines;
@@ -221,11 +221,19 @@ over (3 seeds each, λ = 0.05, cooled timing noise on the shared route):
 | a² + ab + b² | no | 0.48–0.56 | 0.03–0.04 |
 | random table | no | 0.46–0.56 | 0.01–0.04 |
 
-**Grokking with depth (E41, pilot).** (a + b + c) mod p cannot be computed by one rhythm read; the shared route
-composes two stages (a and b set a spike time, which c then offsets). With a memorizer for every triple available,
-the network stays at chance on unseen triples without sleep (0.06) and generalizes to 0.998–0.999 with sleep
-(p = 17, 30% of triples, 2 seeds). At 2–4% of triples and 200 epochs it memorizes: the shared route learns only from
-errors, so its learning time grows as the data shrinks (§78); longer runs are testing this.
+**Grokking with depth (E41, 3 seeds per cell).** (a + b + c) mod p cannot be computed by one rhythm read; the shared
+route composes two stages (a and b set a spike time, which c then offsets). A memorizer for every triple is available.
+
+| (a + b + c) mod p | p = 17 | p = 31 |
+|---|---|---|
+| 30% of triples, sleep | 0.994–0.999 (3/3) | 0.992–1.000 (3/3) |
+| 10% of triples, sleep | 0.79–0.93 | 0.94, 0.98 (2/3; ρ ≈ 0.003) |
+| no sleep | train 1.0, test at chance | train 1.0, test at chance |
+| no chain (lookup only), sleep | train 0.23, test at chance | train 0.11, test at chance |
+
+The network discovers the composed relation and generalizes almost perfectly; the fraction of data it needs falls with
+p (§78). At 2–4% of triples and 200 epochs it memorizes: the shared route learns only from errors, so its learning
+time grows as the data shrinks; longer runs are testing this.
 
 **Limits.** The shared route's form (one rhythm, or a two-stage chain) is a resource that restricts which relations
 can be grokked; the network chooses it over memorization but does not build it. Timing noise on the shared route
@@ -325,7 +333,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E34 | depth by composition | 0.97 vs 0.39 |
 | E37 | grokking by a route change | 0.93–0.97 in 2 of 3 seeds |
 | E38, E40 | SHD with the timing architecture | not yet |
-| E41 | grokking with depth (a + b + c) mod p | 0.998 (pilot) |
+| E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
 | E42 | trading with costs, when to transact | learns not to trade (pilot) |
 | E44 | online world model (point process) | ≈ Hawkes, < neural point process |
 

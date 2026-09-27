@@ -3471,6 +3471,10 @@ network memorizes and stays at chance on unseen triples (0.06); with sleep and c
 (pilot, p = 17, 30% of triples, 2 seeds). The chain's credit reaches the first stage through the second without
 contraction, as §56.4 and §68 predict: the error on one chain moves every delay on it by the same step.
 
+**Full runs (E41, 3 seeds per cell):** 30% of triples: 0.994–0.999 (p = 17) and 0.992–1.000 (p = 31); 10%: 0.79–0.93
+(p = 17) and 0.94, 0.98, 0.03 (p = 31, ρ ≈ 0.003); without sleep train 1.0 and test at chance; without the chain (lookup
+only) collapse (train 0.11–0.23, test at chance). Depth-2 grokking is confirmed, and the fraction needed falls with p.
+
 **What is and is not given.** The shared route's form (two rhythm stages) is a resource, as E37's single rhythm is: it
 restricts the shared route to compositions of cyclic additions. What the experiment shows is that a network which can
 also memorize discovers the composed relation, with depth, under sleep; whether it chooses the correct depth when
