@@ -104,6 +104,7 @@ def run_learners(days, c, edges, eta_ev=0.1, eta_lg=0.05, seed=0, freeze=None, m
     """prequential over `days` in order: act at each decision with current models; learn from label k once t >= t_k + L."""
     rng = np.random.default_rng(seed)
     ev = freeze["ev"] if freeze else Free(27, 3, rng)
+    price = np.full(3, 2.0); gamma, kappa = 0.8, 0.5                      # priced variant (Amendment 1)
     Wl = freeze["Wl"] if freeze else np.zeros((3, 9))
     out = []
     for day in days:
@@ -112,9 +113,11 @@ def run_learners(days, c, edges, eta_ev=0.1, eta_lg=0.05, seed=0, freeze=None, m
         n = len(D["r"])
         look = max(1, int(LOOK_US / max(np.median(np.diff(D["t"])), 1)))
         lab = teacher(D["r"], c * m, look)                      # teacher charges m × c (uncertainty margin)
-        pos = {"event": np.zeros(n, int), "logit": np.zeros(n, int)}
-        xe = xl = 0
+        pos = {"event": np.zeros(n, int), "logit": np.zeros(n, int), "priced": np.zeros(n, int)}
+        xe = xl = xp = 0
         pend, ops = [], 0
+        acc = np.zeros(3); trades = []                                  # priced: evidence accumulators, open trades
+        lp = np.log(D["P"])
         for k in range(n):
             # release labels whose lookahead has passed (teacher target and the inputs seen then)
             while pend and D["t"][pend[0][0]] + LOOK_US <= D["t"][k]:
@@ -130,13 +133,29 @@ def run_learners(days, c, edges, eta_ev=0.1, eta_lg=0.05, seed=0, freeze=None, m
             ops += ev.synaptic_events(xin, ft)
             if c_ev < 3:
                 xe = int(POS[c_ev])
+            # profit-priced: detector spikes accumulate (leaky); a change needs its accumulator to cross its price;
+            # prices learn from each executed change's realized profit after costs, LOOK_US later (no look-ahead)
+            while trades and D["t"][trades[0][0]] + LOOK_US <= D["t"][k]:
+                j, tgt, frm = trades.pop(0)
+                jj = min(np.searchsorted(D["t"], D["t"][j] + LOOK_US), n - 1)
+                gain = (tgt - frm) * 1e4 * (lp[jj] - lp[j]) - c * abs(tgt - frm)
+                price[tgt + 1] = max(1.0, price[tgt + 1] + (kappa if gain < 0 else -kappa))
+            acc *= gamma
+            fired = np.isfinite(ft)
+            acc[fired] += 1.0
+            cand = [i for i in range(3) if POS[i] != xp and acc[i] > price[i]]
+            if cand:
+                i = max(cand, key=lambda i: acc[i] - price[i])
+                trades.append((k, int(POS[i]), xp)); xp = int(POS[i]); acc[:] = 0.0
+            pos["priced"][k] = xp
             fin = np.r_[np.nan_to_num(F[k]), np.eye(3)[xl + 1], 1.0]
             xl = int(POS[int(np.argmax(Wl @ fin))]) if np.abs(Wl).sum() else xl
             pos["event"][k], pos["logit"][k] = xe, xl
             pend.append((k, xin, fin, xe, xl))
         row = {"day": str(day), "c": c, "m": m, "decisions": n, "teacher": pnl(lab, D["r"], c), "flat": [0.0, 0],
                "hold": pnl(np.ones(n, int), D["r"], c), "event": pnl(pos["event"], D["r"], c),
-               "logit": pnl(pos["logit"], D["r"], c), "event_ops_per_decision": ops / n}
+               "logit": pnl(pos["logit"], D["r"], c), "priced": pnl(pos["priced"], D["r"], c),
+               "prices": [round(float(x), 2) for x in price], "event_ops_per_decision": ops / n}
         out.append(row)
         print(json.dumps(row), flush=True)
     return out, {"ev": ev, "Wl": Wl}
@@ -149,10 +168,16 @@ def main():
     ap.add_argument("--eta", type=float, default=0.1)
     ap.add_argument("--m", type=float, default=1.0, help="teacher cost multiplier (tuned on pilot days)")
     ap.add_argument("--ndays", type=int, default=7)
-    ap.add_argument("--days", default="pilot", choices=("pilot",))
+    ap.add_argument("--days", default="pilot", choices=("pilot", "confirm"))
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     days = PILOT
+    if a.stage == "learners" and a.days == "confirm":           # one pass: pilot then confirmatory; report the latter
+        out, _ = run_learners(PILOT + CONF, a.c, size_edges(), eta_ev=a.eta, m=a.m)
+        conf = [r for r in out if r["day"] >= str(CONF[0])]
+        with open(os.path.join(OUT, f"confirm_c{a.c:g}_m{a.m:g}.json"), "w") as f:
+            json.dump({"args": vars(a), "pilot": [r for r in out if r["day"] < str(CONF[0])], "confirm": conf}, f, indent=1)
+        return
     if a.stage == "learners":
         out, _ = run_learners(days[:a.ndays], a.c, size_edges(), eta_ev=a.eta, m=a.m)
         with open(os.path.join(OUT, f"pilot_learners_c{a.c:g}_eta{a.eta:g}_m{a.m:g}_d{a.ndays}.json"), "w") as f:
