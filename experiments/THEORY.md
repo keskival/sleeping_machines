@@ -3851,6 +3851,21 @@ checkpoint ≥ 0.99 on at least 4/5 seeds (without the margin: 7 of 40 checkpoin
 P2: θ_m = 0.75 = θ_1 removes fewer dips than 0.9. P3: E34's task with W = 4.2 and instant credit: θ_m = 0.9 keeps the
 per-seed plateaus (0.988–0.995) without dips. P4: depth 4 (E54, θ_m = 0.9): ≥ 0.99 at the final checkpoint on 4/5 seeds.
 
+**Results.** P3 holds exactly: on E34's task with θ_m = 0.9 every checkpoint of every seed is identical (0.988 / 0.989 /
+0.995 / 0.994 / 0.991), with fewer updates than without the margin (591–939 vs 1,064–1,479). P2 holds (θ_m = 0.75 still
+dips). P1 fails in an instructive way: on E53 the dips vanish, but 3 of 5 seeds freeze at 0.979–0.988, one class held
+on an invalid shared prefix. The margin protects whatever route a node holds: an invalid prefix route is demoted on
+every example of the class it collides with, and repaired on every one of its own correct fires, at the same rate, so
+it persists and exploration can no longer replace it (without the margin all five seeds found the valid order by 5k
+episodes). Depth 4 without a margin (E54) is stable anyway: 0.999–1.000 on 5/5.
+
+**§86b: the margin must be earned.** A valid route is demoted rarely (noise); an invalid one systematically. The node
+can tell them apart from its own record: the precision of its recent fires, correct / (correct + false), kept as
+decaying counts at the node (the reliability price of §80). Near-miss credit only when that precision ≥ a gate: an
+invalid prefix route (precision ≈ ½ when it collides with one other class) stays breakable, a valid one (precision ≈ 1)
+is protected. *Prediction (E53g, 5 seeds):* with θ_m = 0.9 and gate 0.9, final ≥ 0.99 on ≥ 4/5 seeds and no checkpoint
+after 10k episodes below 0.99 on those seeds.
+
 ## Tests
 
 | | Claim | Test |
