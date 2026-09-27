@@ -31,19 +31,27 @@ INF = np.inf
 
 class Compose:
     def __init__(self, N, K, depth, W, rng, budget=1.0, thr=0.5, part_hi=1.5, learn_win=0, scales=None, mult=0, recruit=0,
-                 summed=0, alpha=1.0, beta=0.3):
+                 summed=0, alpha=1.0, beta=0.3, ibank=None):
         self.mult, self.recruit = mult, recruit
         self.summed, self.alpha, self.beta = summed, alpha, beta
         self.credit, self.temp, self.rng, self.margin, self.nm = "union", 0.0, rng, 0.0, 0
         self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K)
-        self.learn_win = learn_win
+        self.learn_win = learn_win; self.learn_iv = 0; self.iv_min = 30
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
             base = [(p, q) for p in range(N) for q in range(N) if p != q]
-            scales = scales or [part_hi]                     # a bank of window scales per pair (no learning)
-            self.pairs = [pq for w in scales for pq in base]
-            P = len(self.pairs)
-            self.lo = np.zeros(P); self.hi = np.concatenate([np.full(len(base), w) for w in scales])
+            if ibank:                                        # §88: every interval [i·δ, j·δ] per pair, a fixed-window copy
+                d_, mx = ibank; n_ = int(round(mx / d_))
+                iv = [(i * d_, j * d_) for i in range(n_) for j in range(i + 1, n_ + 1)]
+                self.pairs = [pq for _ in iv for pq in base]
+                self.lo = np.concatenate([np.full(len(base), lo) for lo, _ in iv])
+                self.hi = np.concatenate([np.full(len(base), hi) for _, hi in iv])
+                P = len(self.pairs)
+            else:
+                scales = scales or [part_hi]                 # a bank of window scales per pair (no learning)
+                self.pairs = [pq for w in scales for pq in base]
+                P = len(self.pairs)
+                self.lo = np.zeros(P); self.hi = np.concatenate([np.full(len(base), w) for w in scales])
         else:
             P = N
         self.P = P
@@ -96,6 +104,27 @@ class Compose:
             self.syn += int(((self.h[:, f] > 0.01) | (self.g[:, f] > 0.01)).sum())   # effective synapses read
         return ft, (f, win, same, inst)
 
+    def _iv_update(self, t, units, positive):
+        """§88: parametric duration learning at shared parts (version space). A correct fire extends each contributing
+        part's observed positive lag range; a false fire moves a window edge halfway toward a lag outside that range,
+        never excluding a lag seen in a positive."""
+        if not self.learn_iv or len(units) == 0:
+            return
+        pp = np.array([self.pairs[u] for u in units]); dt = t[pp[:, 1]] - t[pp[:, 0]]
+        for u, d in zip(units, dt):
+            if positive:
+                self.pos_lo[u] = min(self.pos_lo[u], d); self.pos_hi[u] = max(self.pos_hi[u], d); self.npos[u] += 1
+            elif self.npos[u] >= self.iv_min:                # edges of the estimated support (uniform MVUE)
+                ext = (self.pos_hi[u] - self.pos_lo[u]) / (self.npos[u] - 1)
+                a_hat, b_hat = self.pos_lo[u] - ext, self.pos_hi[u] + ext
+                if d > b_hat:
+                    self.hi[u] = min(self.hi[u], (d + b_hat) / 2)
+                elif d < a_hat:
+                    self.lo[u] = max(self.lo[u], (d + a_hat) / 2)
+
+    def _contrib(self, k, f, win, same, i):
+        return np.r_[f[win[i]][self.h[k, f[win[i]]] > 0.05], f[same[i]][self.g[k, f[same[i]]] > 0.05]].astype(int)
+
     def _mul(self, W, c, idx, fac):                         # multiplicative update of a set, conserved budget
         if len(idx):
             W[c, idx] *= fac; W[c] /= W[c].sum()
@@ -104,6 +133,8 @@ class Compose:
         c, x, ft, (f, win, same, inst) = self.forward(t)
         if c < self.K:                                      # §86b: the firing node's record
             self.ok_c[c] = 0.98 * self.ok_c[c] + (c == y); self.bad_c[c] = 0.98 * self.bad_c[c] + (c != y)
+            if self.learn_iv:                               # §88: durations tuned at the contributing parts
+                self._iv_update(t, self._contrib(c, f, win, same, inst[c]), c == y)
         prec = self.ok_c[y] / max(self.ok_c[y] + self.bad_c[y], 1e-9) if y < self.K else 0.0
         if c == y:
             if self.margin and y < self.K and prec >= self.gate:   # §86: near-miss credit keeps a margin
@@ -191,6 +222,8 @@ def main():
     ap.add_argument("--W", type=float, default=3.5, help="class hold window (covers the gap between parts)")
     ap.add_argument("--part-hi", type=float, default=1.5, help="part-node window [0, part_hi] (fixed)")
     ap.add_argument("--scales", default="", help="comma list: bank of part-window scales, e.g. 1,2,4")
+    ap.add_argument("--learn-iv", type=float, default=0.0, help="§88: part windows start at [0, x] and are tuned (0 = off)")
+    ap.add_argument("--ibank", default="", help="§88 interval bank 'delta,max': every window [i*delta, j*delta] per pair")
     ap.add_argument("--learn-win", type=int, default=0, help="1: part windows learned from pulled routes")
     ap.add_argument("--recruit", type=int, default=0, help="1: one-shot recruitment of classes with no live route")
     ap.add_argument("--mult", type=int, default=0, help="1: multiplicative (Winnow) routing pulls (§68)")
@@ -216,8 +249,12 @@ def main():
         motifs, classes = T.make_task(a.N, a.M, a.K, rng)
         net = Compose(a.N, a.K, a.depth, a.W, rng, part_hi=a.part_hi, learn_win=a.learn_win,
                       scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit,
-                      summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta)
+                      summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta,
+                      ibank=tuple(float(x) for x in a.ibank.split(",")) if a.ibank else None)
         net.credit, net.temp, net.margin, net.gate = a.credit, a.temp, a.margin, a.gate
+        if a.learn_iv:                                        # §88: broad initial windows, tuned by the version space
+            net.learn_iv = 1; net.lo[:] = 0.0; net.hi[:] = a.learn_iv
+            net.pos_lo = np.full(net.P, np.inf); net.pos_hi = np.full(net.P, -np.inf); net.npos = np.zeros(net.P)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
@@ -234,7 +271,7 @@ def main():
                 net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{('ib' + a.ibank.replace(',', '-')) if a.ibank else (a.scales.replace(",", "-") if a.scales else a.part_hi)}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_iv{a.learn_iv:g}' if a.learn_iv else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
