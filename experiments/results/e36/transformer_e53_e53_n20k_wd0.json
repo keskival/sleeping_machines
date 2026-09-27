@@ -1,0 +1,42 @@
+{
+ "args": {
+  "task": "e53",
+  "sizes": "32x2",
+  "episodes": 2000000,
+  "batch": 32,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "e53_n20k_wd0",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 20000,
+  "reltime": 0
+ },
+ "rows": [
+  {
+   "task": "e53",
+   "reltime": 0,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9955000281333923,
+   "params": 26613,
+   "tokens_per_episode": 8.37,
+   "macs_per_episode": 215340.40319999997,
+   "wall_s": 415.5
+  },
+  {
+   "task": "e53",
+   "reltime": 0,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9950000047683716,
+   "params": 26613,
+   "tokens_per_episode": 8.379,
+   "macs_per_episode": 215580.882048,
+   "wall_s": 418.1
+  }
+ ]
+}

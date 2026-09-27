@@ -28,6 +28,9 @@ can **match or beat** MLPs and Transformers.
   1–2M training examples.
 - **It groks where a Transformer does not.** Trained on 30% of all (a, b, c) triples, it learns (a + b + c) mod 17 and
   is 99.4–99.9% correct on the triples it never saw; a Transformer with weight decay stays at 3–63%.
+- **Ten times less data.** On the depth-3 order task the event network is 99.8–99.9% correct after 1,000–2,000 examples,
+  each seen once; a Transformer allowed as many passes as it likes needs about 10,000–20,000 examples for 99% (with 2,000
+  it reaches 33–41%, with 5,000 82–90%).
 - **Deep order from a few thousand examples.** Recognizing which of 20 *orders* of four patterns occurred needs four
   levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
   correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
