@@ -833,7 +833,7 @@ def build():
         "Without sleep the network memorizes; with sleep it generalizes after a delay (0.93–0.99, reliable with cooled "
         "timing noise); a data × sleep phase diagram shows memorization, grokking and collapse; with depth, (a + b + c) "
         "mod p through two composed rhythm stages reaches 0.99–1.00 (3 seeds, p = 17 and 31).",
-        "<b>Learning cost follows activity, not model size:</b> 12 → 48 input channels leaves learning mistakes flat and "
+        "<b>Learning cost follows activity, not model size:</b> 12 → 96 input channels leaves learning mistakes flat and "
         "makes inference cheaper (§77).",
         "<b>Not yet: real asynchronous benchmarks.</b> SHD below dense baselines; on the market, correctly posed as "
         "trading with costs, no learner profits and the native one learns to stay out; the online world model, built as "
@@ -859,14 +859,14 @@ def build():
          "vs thousands of MACs",
          "classical model class (semi-Markov); offline-trained GRU pending"],
         ["<b>Learning cost follows activity, not model size</b>",
-         "E35: 12 → 48 channels, mistakes flat, inference cheaper; §77, §81", "measured to 48 channels"],
+         "E35: 12 → 96 channels, 0.999–1.000, mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81", "measured to 96 channels"],
         ["<b>Structure discovery, implicit Occam razor</b>",
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<i>Not supremacy:</i> composition accuracy", "E34 chains 0.97 vs Transformer 0.998 (≈ 10⁴× cheaper)",
          "Transformer more accurate"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
-        ["<i>Not supremacy:</i> trading profit", "E42: no learner profits after costs; the native one stays out",
+        ["<i>Not supremacy:</i> trading profit", "E42 (28 unseen days): no learner beats buy-and-hold; the priced native one breaks even (+56 bp), others lose",
          "the data may hold no edge"],
     ], [48, 76, 50], st))
     s.append(PageBreak())
@@ -920,8 +920,8 @@ def build():
                  ["clocked conv net (E32)", "0.995 / 0.984 / 0.895", "3.07M / 123k / 1.9k MACs", "backprop, 200k"]],
                 [56, 36, 42, 40], st)]
     s += fig(fig_e32, W * 0.95)
-    s += [P("<b>Scaling with the input basis (E35, §77).</b> At fixed spikes per episode, 12 → 48 candidate channels "
-            "leaves accuracy ≈ 1.0 and learning updates flat while synaptic events per episode fall: learning and "
+    s += [P("<b>Scaling with the input basis (E35, §77).</b> At fixed spikes per episode, 12 → 96 candidate channels "
+            "leaves accuracy ≈ 1.0 (96: 1.000, 0.999, 1.000) and learning updates flat while synaptic events per episode fall: learning and "
             "inference cost follow activity, not the size of the basis.")]
     s += [P("<b>Why.</b> Attention cannot see order without position information and must synthesize time comparisons from "
             "dot products at O(n²·d) per layer; a hold/trigger node computes the comparison as its primitive, at the cost "
@@ -956,7 +956,9 @@ def build():
             "diagram (4 × 4, 3 seeds) shows no grokking below 20–30% of pairs, and above it a minimum sleep that falls "
             "with data. Larger problems grok more reliably: 2/3 seeds at p = 31 and 59, 3/3 at p = 97 (ρ ≈ 0.005). With depth (E41, 3 seeds): (a + b + c) mod p through two composed rhythm stages, 0.99–1.00 on unseen "
             "triples from 30% of them at p = 17 and 31, and from 10% in 2 of 3 seeds at p = 31 (ρ ≈ 0.003); chance "
-            "without sleep; collapse without the chain.")]
+            "without sleep; collapse without the chain. The data it needs is far above the Occam bound (§78): at 1–7% of "
+            "triples it memorizes and stays at chance, also when trained 7–10× longer; the threshold at p = 17 lies "
+            "between 7% and 30%.")]
     s += fig(fig_e37, W * 0.9)
     s += fig(fig_phase, W * 0.9)
     s += fig(fig_e41, W * 0.9)
@@ -985,8 +987,10 @@ def build():
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
         "race reached 0.35; a published LSTM ≈ 0.70; state of the art ≈ 0.9. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage.",
-        "<b>Market stream posed as trading with costs (E42, pilot):</b> imitating a hindsight teacher over-trades and "
-        "loses; a profit-priced event learner makes 26 changes in 7 days (−170 bp): it learns that trading does not pay.",
+        "<b>Market stream posed as trading with costs (E42, confirmed on 28 unseen days, preregistered):</b> at 2 bp, "
+        "imitating a hindsight teacher over-trades and loses (event learner −27,228 bp, logistic −29,179); the "
+        "profit-priced event learner nets +56 bp with 34 changes (break-even); buy-and-hold +866; at 10 bp all stay out. "
+        "No learner beats buy-and-hold; pricing the decision is what stops the losses.",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
