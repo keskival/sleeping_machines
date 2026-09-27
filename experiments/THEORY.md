@@ -3459,7 +3459,9 @@ memorizer with nothing to replace it. E37's failing seed is (b): with timing noi
 route's own update count (E26c's schedule), all three seeds grok (0.97–0.98; pilot, σ = 2 at p = 31), including the one
 that collapsed in every earlier run, and accuracy on the other seeds rises (0.96 → 0.98). The grokking phase is bounded
 above by data and below by search; fluctuations widen it from below. The noise must scale with the ring (σ ≈ 0.065 p
-was sufficient at p = 31 and 97, not at p = 59 with σ = 2: scaling sweep queued).
+was sufficient at p = 31 and 97, not at p = 59 with σ = 2: scaling sweep queued). *5 seeds at p = 31 (λ = 0.05):* σ = 2
+groks in 5/5 (0.95–0.99); σ = 0, 1 and 4 in 4/5 (the same hard seed fails): an optimal exploration temperature,
+not a monotone effect, as expected of annealing.
 
 **Depth-2 grokking (E41).** (a + b + c) mod p cannot be computed by one rhythm read (one read adds one time to one
 phase). The shared route composes two stages: a resets rhythm 1 and b reads it, emitting a spike whose phase is

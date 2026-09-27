@@ -33,7 +33,7 @@ open.
    is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.
 5. **Grokking occurs, by a route change under sleep, and only for relations the substrate can express.** A network
    that can memorize, given a rhythm resource, memorizes without sleep and generalizes after a delay with sleep
-   (0.93–0.99 on unseen pairs; reliable across seeds with cooled timing noise, pilot); it stays at chance on relations
+   (0.95–0.99 on unseen pairs in 5/5 seeds with cooled timing noise at the right temperature); it stays at chance on relations
    the rhythm cannot express. A data × sleep phase diagram shows memorization, grokking and collapse regimes. Grokking
    also works with depth: (a + b + c) mod p through two composed rhythm stages (0.998, pilot).
 6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 48 channels leaves the
@@ -179,7 +179,7 @@ classes. In time, the natural shared intermediate is a sum, and a sum of times n
 |---|---|---|
 | no sleep | 1.000 | 0.03–0.04 |
 | sleep λ = 0.02 / 0.05 / 0.2, no timing noise | ≈ 1.0 (2 seeds) | 0.93–0.97 (2 seeds); the third seed collapses |
-| sleep + cooled timing noise on the shared route (pilot) | 1.0 | 0.97–0.98 (3/3 seeds) |
+| sleep + cooled timing noise σ = 2 on the shared route (5 seeds) | 1.0 | 0.95–0.99 (5/5 seeds; σ = 0, 1, 4: 4/5) |
 | sleep, no rhythm | 0.45 | 0.00 |
 
 **Phase diagram (data × sleep; 3 seeds per cell, cooled noise).**
