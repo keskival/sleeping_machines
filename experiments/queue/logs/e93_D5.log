@@ -1,0 +1,2 @@
+/workspace/experiments/e54_chains.py:146: RuntimeWarning: invalid value encountered in subtract
+  dt = t[self.pp[:, 1]] - t[self.pp[:, 0]]
