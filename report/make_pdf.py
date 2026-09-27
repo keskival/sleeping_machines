@@ -881,7 +881,7 @@ def build():
     s += fig(FM.fig_credit, W)
     s += [P("<b>Where it does not win yet:</b> event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 "
             "for a published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a "
-            "special case of ours; E71 tests it with sparse units), and trading, where no "
+            "special case of ours; E74 tests a network that computes with delays and vectors together), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
             "any taker fee). <b>Next:</b> a path to generative language models built this way (section 10).")]
     s.append(PageBreak())
@@ -1129,8 +1129,10 @@ def build():
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
         "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
         "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
-        "event units of our kind with every unit updated on every event (both select checkpoints on the test set). E71 "
-        "(queued) uses that unit inside the paradigm, with sparse tonotopic subscriptions, selected on held-out speakers. SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "event units of our kind with every unit updated on every event (both select checkpoints on the test set); time only fades their state, so they do not "
+        "compute with delays. E74 (queued) tests the paradigm's own design: events carry small vectors whose content sets their "
+        "delays and whether they are sent; the receiver's clock weights and rotates what arrives; units fire at threshold and "
+        "emit their state at that moment (§105). SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
         "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
         "to 0.675 (E59, §92).",
@@ -1265,7 +1267,7 @@ def build():
         "<b>Selection comes free.</b> Mamba-class models gain their power by letting the input set how fast the state forgets. "
         "In an event network, which channel fired is that signal. A unit that an event does not address need not be touched "
         "at all, and skipping it is exact (sleeping execution). The best published models on spoken digits (95.9–96.3%) are "
-        "such units with every unit updated on every event. E71 (queued) tests the sparse version.",
+        "such units with every unit updated on every event, and time only fades their state: they do not compute with delays.",
         "<b>A race unit is an integrate-and-fire neuron with a random threshold.</b> Its gradient is the event-based "
         "backpropagation used for spiking networks, but the random threshold keeps the expected loss smooth even when "
         "spikes appear or vanish. At the moment of decision, each unit's own integral is on average exactly its probability "
@@ -1276,6 +1278,14 @@ def build():
         "parameters.",
     ], st)
     s += fig(FM.fig_race_time, W)
+    s += [P("<b>Delays and vectors, computing together (theory, §105).</b> An event carries a small vector, and its content decides "
+            "when it arrives: a message whose content matches the receiver is delayed in proportion to the match, and one that "
+            "does not match is never sent. The receiver's state fades with time, so a later arrival counts more. Proved and "
+            "checked: the receiver holds exactly softmax attention over the matching messages, with no multiplications for the "
+            "weights and no sampling, paying only for messages sent. Races compute the same softmax by sampling (fast, slightly "
+            "noisy); delays compute it by waiting (exact, slower for a wider range of scores). A unit fires when its evidence "
+            "crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation. "
+            "Such networks compute in the log semiring: delays add, gains multiply. E74 tests it on spoken digits.")]
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
             "Attention is learnable by local credit: in a recall task where the network must learn which key a query refers to "
             "and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct after 68 "

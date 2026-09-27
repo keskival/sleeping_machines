@@ -83,7 +83,7 @@ right order and keeps it (§84).
 
 **Where it does not win yet:** event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 for a
 published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a special case of
-ours; E71 tests it with sparse units), and trading, where no learner beats
+ours; E74 tests a network that computes with delays and vectors together), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
 **Next:** a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
 
@@ -466,8 +466,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
   (Event-SSM, Schöne et al. 2024) and 96.3% (S7, Soydan et al. 2024); the last two process the spikes one event at a time
   with linear state-space units, which §104 shows are event units of our kind with every unit updated on every event (both
-  select checkpoints on the test set). **E71 (queued)** uses that unit inside the paradigm: selective event-CDE units with
-  sparse tonotopic subscriptions, selected on held-out speakers. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
+  select checkpoints on the test set). These units do not compute with delays: time only fades their state. **E74
+  (queued)** tests the paradigm's own design instead: events carry small vectors, content sets each message's delay (and
+  whether it is sent at all), the receiver's clock weights and rotates what arrives, units fire when their evidence crosses
+  threshold and emit their state at that moment (§105); selected on held-out speakers. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
@@ -669,7 +671,7 @@ The only nonlinearity is in *which* units fire *when*. Four consequences follow:
 - *Selection comes free.* Mamba-class models gain their power by letting the input set how fast the state forgets. In an
   event network, which channel fired is that signal. A unit that an event does not address need not be touched at all, and
   skipping it is exact, not an approximation (sleeping execution). The best published models on spoken digits (95.9–96.3%)
-  are such units with every unit updated on every event. E71 (queued) tests the sparse version.
+  are such units with every unit updated on every event, and time only fades their state: they do not compute with delays.
 - *A race unit is an integrate-and-fire neuron with a random threshold.* It integrates its rate and fires when the integral
   crosses a random level. Its gradient is the event-based backpropagation used for spiking networks, but the random
   threshold keeps the expected loss smooth even when spikes appear or vanish. At the moment of decision, each unit's own
@@ -679,6 +681,15 @@ The only nonlinearity is in *which* units fire *when*. Four consequences follow:
   A fast race is one softmax; a slower race buys expressiveness with time rather than with parameters.
 
 ![A race unit integrates its rate until a random threshold; each unit's own integral at the decision estimates its win probability; slower races escape the single-softmax rank bound](report/figures/race_time.png)
+
+**Delays and vectors, computing together (theory, §105).** In this design an event carries a small vector, and its content
+decides *when* it arrives: a message whose content matches the receiver is delayed in proportion to the match, and a message
+that does not match is never sent. The receiver's state fades with time, so a later arrival counts more. Consequence, proved
+and checked: the receiver holds exactly softmax attention over the matching messages, with no multiplications for the
+weights and no sampling, and it pays only for messages that were sent. Races compute the same softmax by *sampling* (fast,
+slightly noisy); delays compute it by *waiting* (exact, slower for a wider range of scores). A unit then fires when its
+evidence crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation.
+Networks built this way compute in the log semiring: delays add, and gains multiply. E74 tests it on spoken digits.
 
 **First evidence.**
 - Deep order is learned from about ten times less data than a Transformer needs (§4).
@@ -749,7 +760,9 @@ on language itself. The stages above are how that will be decided.
 | E64, E64b | LSTM and Transformer LMs at equal data | one-pass runs unconverged; converged runs queued |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
-| E70, E71 | SHD: race attention over onsets; event-CDE units (sparse) | queued |
+| E70 | SHD: race attention over onsets | queued |
+| E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
+| E74 | SHD: time-vector network (content delays, snapshot payloads) | queued first |
 
 ## Reproducing
 
