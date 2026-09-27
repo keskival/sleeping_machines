@@ -4109,6 +4109,28 @@ held-out-speaker validation now errs on the pessimistic side (0.46 vs 0.675 on t
 the test set is smaller than on the held-out speakers, whose voices lie further from the training voices. A published
 LSTM reaches ≈ 0.70; the counted event models, with no gradients, are now within ≈ 0.025 of it.
 
+## 93. Inference activity follows the learned structure: pruning the candidate generator by credit
+
+*Written 2026-09-27, before E93's full runs.*
+
+**Problem (§85).** A chain unit at level k fires for every part within W₂ after a firing level-(k − 1) unit, so a network
+that searched a basis of 10⁷–10¹⁰ candidates keeps paying for all their extensions: 44 / 155 / 454 events per example at
+depth 3 / 4 / 5, although only a few routes carry weight.
+
+**Rule.** After a warm-up, a unit is extended to the next level only if one of its children carries weight on some class
+node (> 0.05), re-evaluated periodically (a sleep phase, the reuse filter of §72 applied to the candidate generator).
+Usefulness flows down from the children: extending only units that are themselves credited would fail at bootstrap,
+since a deep pattern's lower composites often lie outside the credited window.
+
+**Why accuracy survives.** A valid route's units carry weight θ or more (they fire the class), so their parents stay
+extended; extensions whose children carry no weight contribute nothing to any potential above threshold, so removing
+them changes no decision except by removing noise units that could otherwise be credited. *Observed (one seed, depth 3,
+4k examples):* 44 → 26 events per example, accuracy 0.965 → 0.989.
+
+**Prediction (E93).** At depth 3 / 4 / 5 the pruned networks match the unpruned accuracy (E54: 0.98–1.00 / 0.999–1.000 /
+0.94 at 4k) while events per example fall by ≥ 40%, and by more at greater depth, since the pruned fraction of the
+extension tree grows with depth.
+
 ## Tests
 
 | | Claim | Test |
