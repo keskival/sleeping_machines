@@ -89,6 +89,26 @@ def copy_by_key(keys, stream, eps):
     return P
 
 
+def sleeping_hedge(P, awake, sel, eta, share=0.0):
+    """sleeping experts (Freund, Schapire, Singer, Warmuth 1997), one weight vector per selector context: the mixture uses
+    only awake experts; after each event, awake experts are multiplied by (p_i / p_mix)^eta, which conserves the awake
+    experts' total weight (conserved multiplicative credit); sleeping experts neither vote nor learn."""
+    T, E = P.shape; out = np.empty(T)
+    W = {}
+    Pl = P.tolist(); Al = awake.tolist(); Sl = sel.tolist()
+    for t in range(T):
+        w = W.get(Sl[t])
+        if w is None:
+            w = W[Sl[t]] = np.ones(E)
+        a = np.array(Al[t]); p = np.array(Pl[t])
+        wa = w[a]; pm = float((wa * p[a]).sum() / wa.sum())
+        out[t] = pm
+        w[a] = wa * (p[a] / pm) ** eta
+        if share:                                                      # fixed share: tracking a switching best expert
+            w[a] = (1 - share) * w[a] + share * w[a].mean()
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--D", type=int, default=1_000_000)
@@ -108,6 +128,16 @@ def main():
         wp = base[:, a.K + 2]                                            # the partial-word expert of E63 (key P)
         p1 = C1.kt(s1, stream, back=wp); p2 = C2.kt(s2, stream, back=p1)  # (W1,P) -> P ; (W2,P) -> (W1,P)
         return np.column_stack([base, p1, p2, cp1, cp2])
+
+    def awake_mask(Pm):
+        """an expert is awake when it has information: count experts whose probability differs from uniform-ish fallbacks
+        are always awake (they back off); copy experts only when they found a match."""
+        aw = np.ones(Pm.shape, bool)
+        nc = len(S2.COPY_L)
+        cols = list(range(Pm.shape[1] - 4 - nc, Pm.shape[1] - 4)) + [Pm.shape[1] - 2, Pm.shape[1] - 1]
+        for c in cols:
+            aw[:, c] = np.abs(Pm[:, c] - 1.0 / A) > 1e-12
+        return aw
     res = {"args": vars(a)}
     for with_w in (0, 1):
         best = None
@@ -131,6 +161,16 @@ def main():
                     "chosen": {"eta": eta, "W": W}}
         if with_w:
             res[key]["expert_test_bpc"] = [float(np.mean(-np.log2(np.maximum(Pt[:, i], 1e-12)))) for i in range(-4, 0)]
+    # sleeping-experts mixer on the full expert set (eta chosen on validation)
+    Pv = experts(valid, 0.05); Pt = experts(test, 0.05)
+    def longest_sel(Pm, prev):
+        nc = len(S2.COPY_L); cp = Pm[:, -nc - 4:-4]; found = np.abs(cp - 1.0 / A) > 1e-12
+        return np.where(found.any(1), nc - np.argmax(found[:, ::-1], 1), 0) * A + prev
+    selv = longest_sel(Pv, np.r_[train[-1], valid[:-1]]); selt = longest_sel(Pt, np.r_[valid[-1], test[:-1]])
+    best = min(((float(np.mean(-np.log2(sleeping_hedge(Pv, awake_mask(Pv), selv, eta, sh)))), eta, sh)
+                for eta in (0.3, 1.0) for sh in (0.01, 0.05, 0.2)))
+    res["sleeping"] = {"valid_bpc": best[0], "eta": best[1], "share": best[2],
+                       "test_bpc": float(np.mean(-np.log2(sleeping_hedge(Pt, awake_mask(Pt), selt, best[1], best[2]))))}
     res["wall_s"] = round(time.time() - t0, 1)
     print(json.dumps(res), flush=True)
     with open(os.path.join(OUT, f"wordkeys_D{a.D}_K{a.K}.json"), "w") as f:

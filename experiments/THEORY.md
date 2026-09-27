@@ -4420,6 +4420,35 @@ Hedge mixture cannot use them, because its weights are global per selector, not 
 inside the expert (two words → one word → partial word) they are informative everywhere (2.26 / 2.28 bpc alone) and the
 mixture improves from 2.028 to 2.005 bpc. Principle: a sparse, specific representation must carry its own backoff (or the
 mixer must weight by per-position confidence); scaling runs queued.
+**Sleeping experts (E66, same run).** The principled per-position mixer is the sleeping-experts algorithm (Freund, Schapire,
+Singer, Warmuth 1997): only awake experts (a copy memory that found a match; a context whose key was seen) vote, and after
+each event awake experts are multiplied by (p_i / p_mix)^η, which conserves the awake experts' total weight; with fixed share
+(tracking a switching best expert) it reaches 1.963 bpc against 2.005 for the windowed Hedge mixture and 2.028 for the base.
+This is the native semantics of an event network: a detector that does not fire is asleep, neither votes nor learns.
+
+## 100. Signals that carry representations: payload events, race attention on vectors, local updates
+
+*Written 2026-09-27.*
+
+**What an event can carry.** (i) Its *time*: a latency relative to a reference encodes a real number; delays add, first
+arrival is a minimum, clock rates encode probabilities (races already compute with this). (ii) A *payload*: an event is a
+message (source, time, vector) rather than a pulse; the receiver works only when a message arrives, but the message carries
+a representation (an embedding). (iii) *Change-triggered payloads*: a unit emits its new vector only when it has changed by
+more than a threshold (delta networks, event-driven recurrent units): dense in value, sparse in traffic.
+
+**Race attention on vectors.** A query event carrying q and stored events carrying keys k_i race with rates exp(q·k_i / τ):
+the first to fire is i with probability softmax(q·k/τ)_i (§96), now over learned real-valued representations. For the
+winner w, ∂ log P(w) / ∂k_i = (1[i = w] − P(i)) · q/τ, and ∂ log P(w)/∂q = (k_w − Σ_i P(i) k_i)/τ, which needs only the
+query, the competing keys' rates and the winner: a local update, computable at the race. Credit to the winner's value
+payload is local as well. So embeddings (the representations that make "cat" and "dog" interchangeable, which exact-string
+counting and merging cannot learn, §99) become learnable without a global backward pass.
+
+**Cost accounting.** A payload of dimension d costs ≈ d operations per receiving synapse. The advantage then comes from
+temporal and structural sparsity (which units emit, and when), not from signals being one bit; for language, a few context
+units are active per character and each emits only on its events.
+
+**Next experiment.** Word keys with learned payload vectors (instead of exact identity) for the copy and counting experts:
+retrieval by vector similarity via the race, keys and queries updated by the local rule above.
 
 ## Tests
 
