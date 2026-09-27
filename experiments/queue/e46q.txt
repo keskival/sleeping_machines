@@ -1,0 +1,8 @@
+e46q_0.1 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --q 0.1 --tag qsweep
+e46q_0.2 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --q 0.2 --tag qsweep
+e46q_0.3 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --q 0.3 --tag qsweep
+e46q_0.4 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --q 0.4 --tag qsweep
+e46s_1 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --scales 1 --tag ssweep
+e46s_1-2 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --scales 1,2 --tag ssweep
+e46s_1-2-4 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --scales 1,2,4 --tag ssweep
+e46s_0.5-1-2-4-8 experiments/e46_menu.py --steps 40000 --M 4 --seeds 5 --scales 0.5,1,2,4,8 --tag ssweep
