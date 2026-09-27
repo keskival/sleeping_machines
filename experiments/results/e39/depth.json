@@ -1,0 +1,146 @@
+{
+ "single_node_order_m2_G12": {
+  "configurations": 132,
+  "nodes_found": 3,
+  "examples": [
+   {
+    "trigger": 0,
+    "dT": 0,
+    "roles": {
+     "1": [
+      "veto",
+      0,
+      null
+     ]
+    }
+   },
+   {
+    "trigger": 0,
+    "dT": 0,
+    "roles": {
+     "1": [
+      "veto",
+      1,
+      null
+     ]
+    }
+   }
+  ]
+ },
+ "single_node_order_m3_G12": {
+  "configurations": 1320,
+  "nodes_found": 3,
+  "examples": [
+   {
+    "trigger": 1,
+    "dT": 0,
+    "roles": {
+     "0": [
+      "hold",
+      0,
+      null
+     ],
+     "2": [
+      "veto",
+      0,
+      null
+     ]
+    }
+   },
+   {
+    "trigger": 1,
+    "dT": 0,
+    "roles": {
+     "0": [
+      "hold",
+      0,
+      null
+     ],
+     "2": [
+      "veto",
+      1,
+      null
+     ]
+    }
+   }
+  ]
+ },
+ "single_node_order_m4_G5": {
+  "configurations": 120,
+  "nodes_found": 3,
+  "examples": [
+   {
+    "trigger": 1,
+    "dT": 2,
+    "roles": {
+     "0": [
+      "hold",
+      2,
+      2
+     ],
+     "2": [
+      "hold",
+      0,
+      1
+     ],
+     "3": [
+      "veto",
+      1,
+      null
+     ]
+    }
+   },
+   {
+    "trigger": 1,
+    "dT": 2,
+    "roles": {
+     "0": [
+      "hold",
+      2,
+      2
+     ],
+     "2": [
+      "hold",
+      0,
+      2
+     ],
+     "3": [
+      "veto",
+      1,
+      null
+     ]
+    }
+   }
+  ]
+ },
+ "single_node_order_m4_G8": {
+  "configurations": 1680,
+  "nodes_found": 0,
+  "examples": []
+ },
+ "single_node_order_m4_G12": {
+  "configurations": 11880,
+  "nodes_found": 0,
+  "examples": []
+ },
+ "allen_depth2": {
+  "exact": true,
+  "errors": {},
+  "positives": {
+   "before": 3835,
+   "meets": 667,
+   "overlaps": 2240,
+   "starts": 1134,
+   "during": 853,
+   "finishes": 1088,
+   "equals": 1154,
+   "after": 3733,
+   "met-by": 1167,
+   "overlapped-by": 2190,
+   "started-by": 488,
+   "contains": 853,
+   "finished-by": 500
+  },
+  "skipped": 98
+ }
+}
