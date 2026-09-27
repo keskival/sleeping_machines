@@ -3418,7 +3418,9 @@ A before B, "C not between A and B" is XNOR(C after A, C after B): not linearly 
 rate-based network needs a hidden layer for it, and one stateful node computes it. **Proposition (M75a):** one
 arm/disarm node computes the interval-exclusion predicate; no stateless node does (proof: it is not a product set
 relative to any trigger; the pair of configurations that swap C across A while keeping the lags to the trigger's
-side fixed gives the counterexample, as in Theorem 1).
+side fixed gives the counterexample, as in Theorem 1). *Checked (E39b):* the arm/disarm node is exact on all distinct-time
+configurations of grids 0–4 and 0–11, and no stateless node of E39's family (every trigger, role, delay in {0, 1, 2},
+window in {0, 1, 2, ∞}) computes the predicate on either grid.
 
 **Parity.** A toggle node (every input spike flips its state; it reports its state at a readout event) computes the
 parity of the number of events on its live synapses: k-sparse parity over N channels is represented by one node with

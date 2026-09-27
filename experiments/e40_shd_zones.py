@@ -82,6 +82,7 @@ def main():
     ap.add_argument("--per", type=int, default=20, help="prototypes (zones) per class")
     ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--eta", type=float, default=0.05)
+    ap.add_argument("--lam", type=float, default=0.0, help="sleep: prototype-weight decay per epoch")
     ap.add_argument("--kappa", type=float, default=0.0005)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--tag", default="")
@@ -98,13 +99,15 @@ def main():
     for ep in range(1, a.epochs + 1):
         for i in rng.permutation(len(y)):
             net.teach(F[i], y[i], a.eta)
+        if a.lam:                                               # sleep (§72): keep only reused structure
+            net.W += a.lam * (net.W.mean(1, keepdims=True) - net.W)
         curve.append({"epoch": ep, "train": float((net.predict(F) == y).mean()),
                       "test": float((net.predict(Ft) == yt).mean()), "updates": net.updates})
         print(json.dumps(curve[-1]), flush=True)
     res = {"args": vars(a), "parts": int(F.shape[1]), "part_events_per_utterance": float((F > 0).sum(1).mean()),
            "prototypes": int(len(net.W)), "curve": curve, "final_test": curve[-1]["test"],
            "best_test": max(c["test"] for c in curve), "wall_s": round(time.time() - t0, 1)}
-    with open(os.path.join(OUT, f"zones_per{a.per}_tau{a.tau}_b{a.blur}_s{a.seed}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"zones_per{a.per}_tau{a.tau}_b{a.blur}_lam{a.lam}_s{a.seed}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump(res, f, indent=1)
     print(json.dumps({k: v for k, v in res.items() if k != "curve"}))
 
