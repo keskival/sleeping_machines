@@ -1,0 +1,4 @@
+e41f_p17_f0.01 experiments/e41_grok3.py --epochs 200 --seeds 3 --every 20 --lam 0.05 --sigma 2.21 --p 17 --tag fsweep --frac 0.01
+e41f_p17_f0.02 experiments/e41_grok3.py --epochs 200 --seeds 3 --every 20 --lam 0.05 --sigma 2.21 --p 17 --tag fsweep --frac 0.02
+e41f_p17_f0.04 experiments/e41_grok3.py --epochs 200 --seeds 3 --every 20 --lam 0.05 --sigma 2.21 --p 17 --tag fsweep --frac 0.04
+e41f_p17_f0.07 experiments/e41_grok3.py --epochs 200 --seeds 3 --every 20 --lam 0.05 --sigma 2.21 --p 17 --tag fsweep --frac 0.07
