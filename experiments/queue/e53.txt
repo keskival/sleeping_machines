@@ -82,4 +82,3 @@ e93_D3 experiments/e54_chains.py --D 3 --prune-after 3000 --steps 40000 --seeds 
 e93_D4 experiments/e54_chains.py --D 4 --prune-after 3000 --steps 40000 --seeds 5
 e93_D5 experiments/e54_chains.py --D 5 --prune-after 3000 --steps 12000 --seeds 3
 e54_tf_n40k_wd0 experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e54_n40k_wd0
-e54_D5 experiments/e54_chains.py --D 5 --steps 12000 --seeds 3

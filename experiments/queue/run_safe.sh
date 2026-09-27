@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Safe experiment runner: runs the commands in a queue file ONE AT A TIME.
 #   usage: queue/run_safe.sh queue/<name>.txt   (lines: "<name> <script.py> <args...>", run from repo root; # comments ok)
+# Watchdog measures anonymous memory (memory.stat anon), not memory.current, which includes reclaimable page cache.
 # Guards (the host hung twice from ~12 concurrent torch jobs in a 3-CPU / 10 GB no-swap container):
 #   * global lock: only one runner (hence one job) at a time across all queues
 #   * BLAS/torch threads pinned to 1 per job
@@ -22,7 +23,7 @@ while IFS= read -r line; do
   nice -n 10 bash -c "cd /workspace && $cmd" > "$(dirname "$0")/logs/$name.log" 2>&1 &
   pid=$!
   while kill -0 $pid 2>/dev/null; do
-    if [ "$(cat /sys/fs/cgroup/memory.current)" -gt "$limit" ]; then
+    if [ "$(awk '/^anon /{print $2}' /sys/fs/cgroup/memory.stat)" -gt "$limit" ]; then
       echo "$(date +%T) KILL $name: memory above ${MEM_FRAC}%"; pkill -TERM -P $pid; kill -TERM $pid; sleep 5; pkill -KILL -P $pid; kill -KILL $pid
     fi
     sleep 2

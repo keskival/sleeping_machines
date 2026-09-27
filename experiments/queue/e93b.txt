@@ -1,0 +1,3 @@
+# depth 5 (pruned and unpruned), run under the watchdog that measures anonymous memory
+e93_D5 experiments/e54_chains.py --D 5 --prune-after 3000 --steps 12000 --seeds 3
+e54_D5 experiments/e54_chains.py --D 5 --steps 12000 --seeds 3
