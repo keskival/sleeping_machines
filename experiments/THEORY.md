@@ -3349,6 +3349,86 @@ node reach m = 3; without vetoes one node orders only m = 2. (iv) Grokking and d
 zones over part events, so depth 2 is the natural architecture; deeper structure (unions, sequences of zones) needs
 depth 3 and beyond.
 
+## 72. Sleep is a reuse filter: a phase diagram for grokking
+
+*Written 2026-09-27, from §66, §68, §69 and E37 (grokking in 2 of 3 seeds at every λ > 0; memorization absorbing at
+λ = 0; one seed losing even training accuracy).*
+
+**Survival of a parameter.** Consider one synaptic parameter w (a lookup entry, an operand delay's attachment, a part's
+routing weight) in a network trained by errors-only pulls of size η (on the normalized budget, §68) and decayed by a
+fraction λ per epoch toward its baseline. Let m be the number of training examples whose errors pull w, and e the
+fraction of epochs in which such an example errs. Per epoch, w gains about m·e·η and loses λ·w, so its equilibrium is
+
+  w* ≈ m·e·η / λ,
+
+and w stays above the firing threshold θ only if the parameter's **reuse** m exceeds
+
+  m* = λ·θ / (e·η).
+
+**Two kinds of parameters.** A memorizing parameter serves one training example (m = 1: E37's pair node for (a, b)).
+A shared parameter serves every example it takes part in (m ≈ n/p for an operand delay in E37; m ≈ n/K·(classes
+sharing it) for a part). Sleep therefore keeps a parameter iff it is reused at least m* times: **decay is a minimum-
+reuse prior**, the event-network form of a description-length penalty, acting through errors instead of a loss term.
+
+**Phase diagram (predicted).** With n training examples and p operand values:
+- memorization phase: λ < e·η/θ (m* < 1): per-example parameters survive; with error gating, memorization is absorbing
+  (§69). E37 at λ = 0.
+- grokking phase: e·η/θ < λ and n/p ≥ m*: per-example parameters are pruned, shared ones survive; the relation becomes
+  the absorbing state. E37 at λ ≥ 0.02 in 2 of 3 seeds.
+- collapse phase: n/p < m* (too little reuse for the decay): everything is pruned, including the shared route before
+  it is learned. Training accuracy falls (E37 seed 1, train 0.40–0.48; the shared route there never became correct,
+  so its errors never stopped and its parameters kept being pulled in inconsistent directions).
+The grokking boundary in data is **n* ≈ p·λ·θ/(e·η)**: more data widens the grokking phase linearly, and a stronger
+sleep needs proportionally more data. (The dense-network analogue is the weight-decay/data trade-off of grokking;
+here it has an explicit reuse form.)
+
+**Delay.** Within the grokking phase the delay is max(time for memorized entries to decay below θ ≈ ln(w*/θ)/λ,
+time for the shared route to learn from the recurring errors), which is §69's refined form and matches E37's weak
+λ-dependence above λ ≈ 0.05.
+
+**Predictions (M72).** In an E37 sweep over training fraction × λ: (i) test accuracy is high only in a band of λ
+whose upper edge rises linearly with n; (ii) below the band, train 1 / test chance; above it, train falls too;
+(iii) the band vanishes when n/p < ~m* at the smallest useful λ.
+
+## 73. Compositionality from the same filter
+
+A part used by c classes is pulled by c classes' errors; a class-specific whole by one's. By §72 sleep keeps parts
+with reuse ≥ m* and prunes wholes. This is the missing pressure of §62: E28's hidden nodes became whole-class
+detectors because nothing penalized a node for being used by one class only, and E28 ran without decay.
+**Predictions (M73).** With sleep on hidden routing weights: (i) part selectivity rises relative to class
+selectivity (§62's receptive-field measure); (ii) on shared-motif tasks, depth 2 overtakes depth 1 at smaller
+training budgets than without sleep; (iii) the effect grows with the number of classes sharing each part.
+
+## 74. Scaling: widen the candidate basis at logarithmic learning cost and constant inference cost
+
+In the networks of §64–§71 a node's inference cost is the events on its live synapses (routing weights above
+threshold): O(depth × k) per decision, independent of the number N of candidate inputs, because candidates without a
+live synapse receive nothing. Learning which k of N candidates to route costs O(k log N) mistakes (§68). So the
+architecture can grow its candidate basis (more channels, more part types, more window scales, more rhythms) with
+logarithmic learning cost and no inference cost; a dense model pays ∝ N at every step for every candidate.
+**Prediction (M74, E35 N-sweep):** with N = 12, 24, 48, 96 channels (same spikes per episode), accuracy stays ≈ 1,
+synaptic events per episode stay constant, and updates grow ∝ log N, not ∝ N.
+
+## 75. Stateful nodes: order-XNOR in one node, and parity representable by one toggle
+
+**Arm/disarm breaks the product-set lemma.** E27's hold node is stateful: A's spike arms it, C's spike disarms it, B's
+spike fires it if armed. Its accept set (A before B, and C not between them) is not a product set in lag coordinates
+relative to B (whether C vetoes depends on t_A), so §71's Lemma 1 covers stateless nodes only. In Boolean terms, with
+A before B, "C not between A and B" is XNOR(C after A, C after B): not linearly separable in those two comparisons, so a
+rate-based network needs a hidden layer for it, and one stateful node computes it. **Proposition (M75a):** one
+arm/disarm node computes the interval-exclusion predicate; no stateless node does (proof: it is not a product set
+relative to any trigger; the pair of configurations that swap C across A while keeping the lags to the trigger's
+side fixed gives the counterexample, as in Theorem 1).
+
+**Parity.** A toggle node (every input spike flips its state; it reports its state at a readout event) computes the
+parity of the number of events on its live synapses: k-sparse parity over N channels is represented by one node with
+k synapses. Sparse parity is a canonical grokking task for gradient training on dense networks, which need
+N^Ω(k) steps under statistical-query-type lower bounds. **Open (M75b):** whether native credit can find the k
+channels. Parity has no per-channel correlation, so a correlation-driven rule (including the pulls of §68) gets no
+signal from single channels; what the toggle representation changes is that each labelled example becomes one linear
+equation over GF(2) in the unknown channel set, solvable from ~N examples by elimination, if a native, local form of
+elimination exists. That is the question, not a claim.
+
 ## Tests
 
 | | Claim | Test |
@@ -3415,6 +3495,10 @@ depth 3 and beyond.
 | **M69** | grokking = flip of the absorbing state: without decay memorization absorbs; with decay the relation absorbs; delay ∝ 1/λ; inexpressible relations stay memorized | E37 λ sweep curves; lookup share of test answers; op controls (poly, rand) |
 | **M70** | order is native to hold/trigger nodes and synthesized by attention; relative-time attention bias is the fair Transformer baseline; no Transformer matches accuracy at comparable cost | E36 long training; E36 with `--reltime 1` on E27 and E28 |
 | **M71** | depth hierarchy: depth 1 = product sets in lag coordinates, one node orders m events iff m ≤ 3; depth 2 = difference-bound zones; depth 3 = finite unions | E39: exhaustive single-node search on a grid (m = 3 found, m = 4 none); depth-2 Allen relations verified |
+| **M72** | sleep keeps parameters reused ≥ m* = λθ/(eη) times: memorization / grokking / collapse phases; data boundary n* ∝ pλθ/(eη) | E37 phase diagram over training fraction × λ |
+| **M73** | the same reuse filter makes hidden nodes parts rather than wholes; with sleep, depth pays at smaller budgets | E34/E28 with decay on hidden routing; §62 receptive-field measure |
+| **M74** | candidate basis grows at O(k log N) learning cost and constant inference cost | E35 N = 12, 24, 48, 96 |
+| **M75** | stateful arm/disarm nodes compute order-XNOR in one node (not a product set); toggle nodes represent k-sparse parity; native learnability open | exhaustive check of stateless vs stateful nodes on interval exclusion; toggle-node parity learning |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
