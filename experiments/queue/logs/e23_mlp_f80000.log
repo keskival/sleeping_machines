@@ -1,0 +1,11 @@
+# 2026-09-26T22:01:43+00:00 /tmp/claude-1000/-workspace/4d6e03c9-6477-46d7-bfd6-34a24cb951d4/scratchpad/venv/bin/python experiments/e7_stream.py mlp --order blocked --frames 80000 --val 10000 --tag e23_f80000
+{
+ "prequential_acc": 0.98375,
+ "late_acc": 0.9779375,
+ "held_out_acc": 0.1938,
+ "labels_used": 80000,
+ "used_first_view": 136.886,
+ "used_later_views": 136.88884375,
+ "wall_s": 388.7
+}
+EXIT 0

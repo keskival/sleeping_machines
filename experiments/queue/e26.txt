@@ -1,0 +1,6 @@
+# E26: sparse error-driven delay learning with a race readout (THEORY §54)
+e26_p31_push1 experiments/e26_noisy_race.py --fracs 0.05,0.1,0.2,0.3,0.5 --seeds 3 --steps 400000 --repel 0 --p 31 --push 1 --tag push1
+e26_p31_push0 experiments/e26_noisy_race.py --fracs 0.05,0.1,0.2,0.3,0.5 --seeds 3 --steps 400000 --repel 0 --p 31 --push 0 --tag push0
+e26_p31_push0_noise experiments/e26_noisy_race.py --fracs 0.05,0.1,0.2,0.3,0.5 --seeds 3 --steps 400000 --repel 0 --p 31 --push 0 --sigma 1 --tag push0_noise
+e26_p59_push0 experiments/e26_noisy_race.py --fracs 0.05,0.1,0.2,0.3,0.5 --seeds 3 --steps 400000 --repel 0 --p 59 --push 0 --tag push0
+e26_p59_push0_noise experiments/e26_noisy_race.py --fracs 0.05,0.1,0.2,0.3,0.5 --seeds 3 --steps 400000 --repel 0 --p 59 --push 0 --sigma 1 --tag push0_noise

@@ -2386,6 +2386,545 @@ implicit-bias dynamics of cross-entropy (Soudry et al. 2018). *New here, as far 
 identification of the conserved near-miss race rule as ultraconservative, the resulting O(M_B) vs O(log T)
 forgetting contrast, and homeostasis as the non-conservative leak.
 
+## 51. The class prior belongs in the prices: why the race forgets old discriminations
+
+*Written 2026-09-26 after E23's first readout, before the ablations below were run.*
+
+### 51.1 What E23 showed first
+
+With a single head, both the race and the MLP forget everything (forgetting 0.97 / 0.98 at 1k frames per task):
+the newest classes win on every input. That is the known task-recency bias of class-incremental learning, and it
+saturates the metric, so §50's predictions cannot be tested on it. The informative readout is **task-aware**
+accuracy (only the task's own classes may win; for the race, the other outputs' thresholds are put out of reach
+and the race is re-run). There the prediction reversed: race 0.17 forgetting, MLP 0.03.
+
+### 51.2 The gap in §50.2
+
+The mistake bound counts every update of B, including those where an *old* class wins or nearly wins on a B
+input. In class-incremental learning that is most of B's early updates, and each one lowers an old class's
+weights on B's features. §50.2 bounds ‖Δw_c‖, but not *where* the change goes: it goes onto shared features,
+which are what separate c from its task-mate c′. So a small norm bound does not protect discrimination.
+
+### 51.3 A prior channel absorbs the shift
+
+When the label prior shifts (a new block), the loss-optimal response is mostly a per-class offset. SGD has one: the
+bias gradient is p − y, whose mean over the block is exactly the prior mismatch, and a uniform offset across a
+task's classes leaves their within-task ranking unchanged. The race's output thresholds are fixed (the bias column
+is zeroed), so the whole prior shift is written into feature weights. **In time, a class bias is a price:** a
+threshold, the chemical potential of §48. Let the teaching signal move it, θ_c ← θ_c·exp(−η_θ s_c). A few price
+updates then give the old classes the margin that ends B's near misses (ultraconservative updates stop at margin),
+so fewer updates reach old-class weights.
+
+### 51.4 Predictions (M52, E23 at 1k frames per task)
+
+(i) Race with learned prices (η_θ ∈ {0.003, 0.01, 0.03}): task-aware forgetting falls toward the MLP's; single-head
+forgetting stays near 1 (a prior channel cannot fix recency; that needs a balanced prior or replay).
+(ii) Output-only learning (frozen hidden) forgets less than full learning, and removing homeostasis helps only a
+little: the leak of §51.2 is at the output, not in homeostasis.
+(iii) Old-class weight updates during later blocks drop with prices.
+
+*Borrowed:* task-recency bias and bias correction in class-incremental learning (Wu et al. 2019, BiC; Masana et
+al. 2022 survey). *New here, as far as checked:* the reading of the class prior as a race price, and the gap
+between a norm bound and discrimination in §50.
+
+### 51.5 First results (E23, 1 seed, validation)
+
+Task-aware forgetting, race vs MLP: 0.167 vs 0.030 at 1k frames per task, 0.158 vs 0.021 at 16k. Output-only
+race (frozen hidden): 0.192; the same without homeostasis: 0.183.
+
+- §50 (i), race forgetting flat in time on task: **holds** (0.167 → 0.158). MLP forgetting growing like log T:
+  **refuted**; it falls (0.030 → 0.021). The implicit-bias argument of §50.3 is about norms, and, like §50.2, says
+  nothing about where the change goes.
+- §50 (ii), homeostasis as the leak: **not supported** with a frozen hidden layer (0.183 vs 0.192).
+- §51 (ii), the leak sits at the output: **confirmed**. A purely ultraconservative linear race on fixed features
+  forgets more than the full network. The race is flat in time, as the mistake bound says, but at a level 5–8×
+  the MLP's, because the bounded number of updates lands on the wrong coordinates.
+
+## 52. Grokking in the race: sleep turns an absorbing memorization into a phase transition
+
+*Written 2026-09-26, before E24's race runs were read. Setting: E24, (a + b) mod p from two one-hot input
+spikes, a fraction of the p² pairs for training. A dense MLP with AdamW groks there on this CPU (p = 31, half
+the pairs: train 1.0 by step 1k, test 0.00 until ~3k, 0.87 at 20k, weight norm falling).*
+
+### 52.1 Two circuits, two costs
+
+A network that fits n training pairs can do it in two ways.
+
+- **Memorization is memory indexing.** Each training pair gets its own hidden winner pattern, and the output
+  row of its label is tuned to that pattern: a lookup table keyed by the pair. The table's norm grows with
+  the number of entries: to give n patterns margin γ with near-orthogonal k-winner codes needs roughly
+  ‖W‖²_mem ≈ c_mem · n/γ².
+- **Generalization is a relation.** Modular addition is addition of phases (a ↦ e^{2πia/p}); the known
+  generalizing circuit uses a few Fourier frequencies (Nanda et al. 2023), with a norm C_gen/γ² that does
+  **not** grow with n.
+
+The minimum-norm solution with margin γ is therefore the lookup table below a critical data size
+n* ≈ C_gen/c_mem and the relation above it (the "circuit efficiency" account of Varma et al. 2023, in race
+units). This is the manifesto's claim in miniature: a lookup is the spatial solution, a relation the
+compressed one, and only a pressure towards small norm makes the system prefer the relation.
+
+### 52.2 Without sleep the race cannot grok (a consequence of §50)
+
+The output rule is ultraconservative (§50.1): it updates only on mistakes and near misses (margin window
+`margin`). Once every training sample wins with margin, **the rule is inert**: the memorizing solution is an
+absorbing state. Nothing moves the weights towards smaller norm, so the relation never takes over, whatever
+the training time.
+
+Softmax SGD differs: every sample always updates by p_c > 0, and the implicit bias of cross-entropy
+(Soudry et al. 2018) drifts the weights towards the max-margin direction at rate ~1/log t. That is why dense
+networks can grok slowly even without weight decay, and why weight decay speeds it up. **The same property
+that bounds the race's forgetting (§50) forbids its grokking.**
+
+### 52.3 Sleep is the leak that restores the drive
+
+Sleep downscaling (the synaptic homeostasis hypothesis, Tononi & Cirelli 2003/2014): after each waking epoch,
+every weight shrinks, w ← (1 − λ)w. Waking and sleeping together minimise
+
+    λ/2 · ‖W‖²  +  Σ_samples hinge(margin − Δ(x, y))
+
+by stochastic subgradient steps: the waking rule is the hinge subgradient (it fires only inside the margin
+window, and §44 makes it exact up to a per-node positive preconditioner at the output), sleep is the L2 step.
+That is **Pegasos** (Shalev-Shwartz et al. 2007), which converges to the regularized max-margin solution. By
+§52.1 that solution is the relation when n > n*. So the race groks when it sleeps, and only then.
+
+Sleep is non-conservative, like homeostasis (§50.4): it erodes margins everywhere, not only where there
+were errors. **Sleep trades the forgetting guarantee for generalization.** The two E23/E24 axes are one
+dial.
+
+### 52.4 Timescales and the phase diagram
+
+Control parameters: the data fraction n/p², the sleep strength λ, and the waking rate η.
+
+- **Grokking time.** The memorizing part of W is defended only while it carries margin that the relation does
+  not already provide. Once the relational component can carry the margin, the table decays geometrically
+  during sleep: t_grok − t_fit ≈ (1/λ) · log(‖W_mem‖/‖W_gen‖). **Delay ∝ 1/λ**, and larger initial norms
+  (higher `init_frac`) lengthen it logarithmically (Omnigrok's "LU mechanism": grokking needs the initial norm
+  to be above the generalizing one).
+- **Too much sleep underfits.** The waking rule restores at most η·(rate of margin violations)·R per epoch,
+  while sleep removes λ‖W‖². When λ exceeds roughly η·R/‖W_gen‖ even the relation cannot hold its margin: the
+  network neither memorizes nor generalizes.
+- **Too little data never groks.** Below n* the minimum-norm solution *is* the table; sleep only makes it more
+  efficient. Reducing the data after grokking should undo it ("ungrokking", Varma et al.).
+
+So there are three phases: memorization (λ → 0, or n < n*), grokking (intermediate λ, n > n*), and
+confusion (λ large).
+
+### 52.5 Order parameters the race makes visible
+
+The event substrate exposes quantities that dense networks hide:
+
+- **Code sharing.** Memorization gives nearly one hidden winner pattern per pair; the relation gives patterns
+  shared across the pairs with equal a + b (their fibre). The number of distinct hidden codes among training
+  pairs, or the mutual information I(code; pair) − I(code; label), should drop sharply at grokking (a
+  neural-collapse-like order parameter, measured in spikes).
+- **Latent heat in plasticity.** The rule is error-gated, so plasticity events per epoch are a direct readout
+  of how much margin is being re-carved. Prediction: after the fit, plasticity falls, then **peaks at the
+  transition** as the table is dismantled and the relation built, then falls to a low floor. A peak in
+  susceptibility at a phase transition, measurable for free.
+- **Certified radius.** Max-margin solutions have larger margins in time units, so the median certified
+  jitter radius ε* (§34.4) should jump at grokking, tying §40's generalisation-through-timing-robustness to
+  this transition.
+
+### 52.6 The hidden layer is the risk
+
+The argument is exact for the output layer (§44). Hidden credit comes through random feedback, which by §46
+fits label templates layer by layer rather than composing. If the hidden layer cannot form phase-like
+features, the sleeping race is a max-margin readout on a slowly changing, nearly random code: a kernel
+machine. Random k-winner codes of the pair then need a width that grows with p² to generalize, and the race
+would generalize only through width, not grok. Frozen hidden vs random-feedback hidden separates the two.
+
+### 52.7 Time coding could lower the critical data size
+
+The manifesto's thesis is that relations are cheap in time. Modular addition is addition of phases, and a race
+neuron computes weighted means of input times (P3). If operands arrive as delays on a cyclic clock (a at
+phase a/p, b at phase b/p), the relation is a coincidence detector over summed delays, with a norm of a few
+synapses per output, so C_gen, and with it n*, should fall well below the one-hot case. **Prediction:
+phase-coded operands grok from smaller training fractions than one-hot operands.** The encoding needs a cyclic
+(wrapping) readout, which the race does not yet have; to design.
+
+### 52.8 Predictions (M53, E24)
+
+(i) Race without sleep: fits the training set, test stays near chance for any training length; plasticity
+decays towards zero after the fit.
+(ii) Race with sleep, intermediate λ: delayed generalization, with a delay that scales roughly as 1/λ; large
+λ underfits.
+(iii) A plasticity peak and a drop in the number of distinct hidden codes at the transition.
+(iv) Frozen hidden layer: generalization, if any, grows smoothly with width and not with training time.
+(v) Below a critical training fraction no λ groks; the critical fraction is lower for phase-coded operands
+(when built).
+(vi) Sleep increases forgetting in E23 (§52.3's dial).
+
+*Borrowed:* grokking (Power et al. 2022); circuit efficiency and ungrokking (Varma et al. 2023); the norm
+account and initial-norm dependence (Liu et al. 2022, Omnigrok); Fourier circuits for modular addition (Nanda
+et al. 2023); Pegasos (Shalev-Shwartz et al. 2007); the implicit bias of cross-entropy (Soudry et al. 2018);
+sleep as synaptic downscaling (Tononi & Cirelli). Biologically motivated mechanisms that help grokking in MLPs,
+including homeostasis and lateral inhibition, are studied by Leon (2026). *New here, as far as checked (web
+search, 2026-09-26, no demonstration of grokking in spiking or event networks found):* that an
+ultraconservative race rule makes memorization absorbing; that sleep downscaling turns it into a
+Pegasos-driven phase transition; that one dial trades forgetting against generalization; and the event-level
+order parameters (code sharing, plasticity peak, certified radius).
+
+### 52.9 First test, and a correction: in a thresholded race, downscaling is price inflation
+
+**Result (E24, p = 31, half the pairs, 5,000 epochs, no deadline, no homeostasis).** No λ grokked. λ ≤ 3e-4:
+memorization, test 0.000–0.004 throughout. λ = 1e-3: slow collapse (train 0.97 → 0.51). λ ≥ 3e-3: the network
+**dies** (weight norm → 0, train 0.00, plasticity 0). The grokking phase is missing, and the "confusion" phase
+is not underfitting but silence. Without sleep, plasticity did not stop either (§52.2 assumed it would): random-
+feedback hidden credit keeps the codes churning while the test error stays at the lookup's floor.
+
+**What §52.3 got wrong.** A node fires when its potential reaches θ, so (W, θ) → (cW, cθ) is a gauge symmetry
+of the race (the dilation of §49, applied to potentials). Shrinking W with θ fixed is not a norm penalty; it is
+**raising every price**. Below threshold nothing fires, no error is registered (a silent output is not a
+competitor), and the error-gated rule cannot recover: silence is a second absorbing state, next to
+memorization. Pegasos needs two things the plain race lacks:
+
+1. **The network must keep deciding while margins shrink.** A deadline (the leader fires at the horizon)
+   makes the output an argmax again, so sleep shrinks margins measured in units of θ, and the waking rule
+   defends only the margins that the data needs. That is Pegasos's absolute margin, in θ units.
+2. **Hidden prices must follow the drive.** Homeostasis lowers hidden thresholds as downscaling lowers the
+   drive, so hidden codes survive. The gauge-invariant quantity that sleep then shrinks is ‖w_n‖/θ_n only
+   to the extent that homeostasis lags, so hidden-layer sleep is weak by design; the output layer carries
+   the max-margin pressure.
+
+So **sleep needs prices** (P5): downscaling regularizes only when thresholds are dual variables that re-balance
+activity. This is the grokking counterpart of §51, where the missing prior channel was also a price.
+
+**Revised prediction (M53, before the rerun):** with deadline and hidden homeostasis, the silent phase
+disappears; an intermediate λ shows delayed generalization; large λ underfits instead of dying. If the
+intermediate phase still does not appear, §52.6's risk (random-feedback hidden credit cannot build relational
+features) is the leading explanation, and a frozen or wider hidden layer should behave the same.
+
+## 53. Delays instead of lookup: modular arithmetic on a ring, learned by replay
+
+*Written 2026-09-26 after E24's race runs (all test ≤ 0.008 against chance 0.032, feedback-alignment MLP 0.000:
+only backprop groks there) and after E25 pilots. The E24 encoding put both operands at t = 0, so time did no work.
+This section re-poses the task the way the README's Sleep Sort note suggests.*
+
+### 53.1 The compiled ring
+
+A ring of p relay nodes, each firing the next after one delay unit, is a cyclic clock: a spike injected at node a
+sits at node (a + t) mod p at time t. Inject operand a as a position, let operand b set the read time (a delay of
+b units on its line), and a coincidence detector per node reports (a + b) mod p. Addition is waiting; the modulus
+is the cycle. 4p synapses, 2b + p + 1 synaptic events per query, all p² pairs correct, nothing learned
+(`e25_delay_ring.py compiled`). The lookup table needs p² conjunction nodes and cannot answer an unseen pair.
+
+### 53.2 What the substrate assumes: characters
+
+Give every operand line and every class detector a learnable delay on a ring of any period; write it as a phasor,
+z = e^{2πi·delay/period}. The prediction is the class whose detector phase is nearest to the sum of the two
+operand delays:
+
+  ŷ(a, b) = argmax_c Re( z̄_c · z_a · z_b ).
+
+This fits a labelling exactly iff y = h(f(a) + g(b)) for some maps into a cyclic group (h injective on the used
+classes): the labels factor through **one character** of an abelian group. It contains a + b, a − b, relabelled
+sums, a² + b², and a·b on the nonzero residues (a cyclic group of order p − 1, so the delays must learn the
+discrete logarithm). It excludes a² + ab + b² and random tables. 3p parameters. The substrate knows it is
+composing phases; it is not told which operation, which frequency, or which encoding of the operands.
+
+### 53.3 Learning is synchronization; replay is its power method
+
+With the classes as labelled constraints z_a z_b z̄_y ≈ 1, learning is angular synchronization on the
+tripartite hypergraph of training triples (a, b, y). The replay rule
+
+  z_a ← unit( Σ_{samples with a} z_y z̄_b ),  and likewise for z_b and z_y,
+
+is local (a delay moves to the circular mean of what the samples it took part in say it should be: in time,
+the teacher's arrival minus the partner operand's arrival) and is the generalized power method for
+synchronization. It needs all stored samples at once, so it is a sleep-phase computation. The online,
+error-gated version of the same geometry (§35's weaving, in continuous delays) fails even on the training set
+where replay succeeds. (Corrected in §54: the cause is the push on the wrong winner, not the loop.)
+
+Replay is not required, but forgetting is. Keep one phasor trace per delay, add each sample's vote as it
+arrives (S_a += z_y z̄_b, with the delays read from the current traces), and downscale all traces by (1 − λ)
+in a sleep phase between epochs. Without downscaling the first, random-phase votes are never outweighed and
+the traces freeze into an inconsistent state (pilot, p = 97, 20% of pairs: test 0.01). With λ = 0.5 the
+same rule reaches test 1.000 from 20% of pairs. This is §52's sleep, now doing what §52 predicted it would do:
+the online rule is a power method whose stale early iterates must be forgotten. In E24's race the same
+downscaling only destroyed training accuracy; the difference is the hypothesis class, not the sleep.
+
+### 53.4 Two thresholds: statistical and computational
+
+- **Identifiability.** 3p phases with a gauge (a global phase per group and the frequency choice m ∈ Z_p^*)
+  against n constraints of log p bits: a consistent fit is forced to be the relation once n exceeds about
+  3p, i.e. frac ≳ 3/p. Below it, fits that memorize exist even in this tiny class (E25 pilots: p = 31,
+  5% of pairs, train 1.0, test at chance). This is §52.1's lookup/relation dichotomy with parameter
+  counting instead of norms.
+- **Search.** The power method from random starts succeeds only well above that: pilots at p = 97 succeed from
+  10% of pairs (8 restarts chosen on training error, test 1.000) and fail at 3–5% (train 0.1–0.4). As in
+  sparse synchronization and planted problems, a gap between what the data determines and what local
+  iteration finds is expected; its width is the measurement.
+
+### 53.5 Relation to grokking
+
+A grokking MLP ends in the circuit Σ_ω cos(ω(a + b − c)) (Nanda et al. 2023): it builds a phase representation
+of the operands out of weights, slowly, under weight decay. The ring has that representation as physics:
+delays add and cycles wrap. The prediction is that the delay substrate reaches the relation from a much smaller
+fraction and with no slow memorize-then-generalize phase, because its hypothesis class holds nothing but
+characters. The price is the class: one ring is one character, so a² + ab + b², which the MLP can grok, is out of
+reach. A bank of K rings summing votes is a K-term character expansion, the MLP's grokked form, but it does not
+rescue poly: e^{2πi m(a² + ab + b²)/p} = e^{2πi m a²/p} · e^{2πi m ab/p} · e^{2πi m b²/p}, and the middle
+factor, as a p × p matrix in (a, b), is a DFT matrix, full rank. Each frequency needs K ≈ p separable rings, so
+the bank grows to ~p² parameters, a table. Compression by delays exists exactly for separable compositions.
+
+### 53.6 Predictions (M54, E25)
+
+(i) Compiled ring: accuracy 1.0 at every p, events 2b + p + 1.
+(ii) Replay generalizes (test ≥ 0.99) above a critical fraction f_c(p) that falls with p, while memorizing
+    (train 1, test at chance) is possible below it; f_c between 3/p and ~10/p.
+(iii) The online error-gated learner and the discrete near-miss learner fail where replay succeeds.
+(iv) The class boundary: add, sub, perm, sq, mul learned; poly and rand not, at any fraction.
+(v) The backprop MLP needs a larger fraction than replay at the same p, and thousands of steps.
+(vi) A bank of rings learns poly only with K ≈ p rings per frequency (no compression): the delay substrate's
+    advantage is confined to separable compositions, and the sample complexity for poly should look like a table's.
+
+## 54. In a race, winning is positional: teach by pulling, never by pushing
+
+*Written 2026-09-26 from E26 pilots (p = 31, 30% of pairs, 1–2 seeds). Full sweeps queued (`queue/e26.txt`,
+`queue/e26b.txt`).*
+
+§53's replay and trace learners work, but they are dense: every sample updates, in epochs, with global
+normalisation. E26 asks the question in native terms. Passive delay ring; a query is two operand spikes; class
+detectors race, and the first to coincide fires and cancels the rest; learning happens only on errors and touches
+only the three delays involved plus, optionally, the wrong winner.
+
+**Observation.** With the usual two-sided rule (pull the teacher earlier and push the wrong winner later), all p
+detectors collapse onto a single phase (pilot: 30 of 31 inter-detector gaps < 0.1) and accuracy stays at
+chance, even on the training set, with or without timing noise σ ∈ {1, 2, 3, 8}. Repelling crowded runners-up
+does not fix it. With the push removed, the same sparse rule learns everything jointly from random delays:
+test 0.86–0.91 on unseen pairs from 30% of pairs, about 37k updates in 100k samples, σ = 0.
+
+**Why.** In a race, a class wins by being *earliest*, not by others being late: cancellation already implements
+the competition. The teacher pull has a fixed point per class (its detector listens just after the phase its
+samples produce), so pull-only learning is a set of independent contractions. The push has no fixed point of its
+own: the pushed detector's position is set by *other* classes' errors, and each push hands the lead to the next
+detector just behind it. The ring of detectors behaves like a queue, and pushes feed it back toward the read point
+until it is one clump. A dense softmax needs the push because scores are not exclusive; a race does not, and
+the push is actively harmful. (§53.3's "frustration" of online learning was this push, not the loop.)
+
+**Consequence for the main architecture.** The race rule used everywhere since E6 has exactly this term: every
+competitor gets −elig (a near-miss-weighted push later). If the argument holds beyond the ring, it is also a cause
+of the race's weak results where competitors crowd (SHD, E23 forgetting, E24). Test: `--compete 0` on E22 (SHD)
+and E24 (grokking), queued.
+
+**Predictions (M55).** (i) E26 push = 0 generalizes above a critical fraction, push = 1 never does; (ii) annealed
+timing noise changes sample efficiency but not the push result; (iii) `--compete 0` does not lower SHD accuracy,
+and raises it if competitor crowding is a cause of the gap.
+
+## 55. Where supremacy can and cannot be claimed
+
+*Written 2026-09-26.*
+
+The one formal separation found in the literature goes against spiking networks: indexing needs Ω(n/log²n)
+spiking gates vs O(√n) sigmoid gates (Lynch, Musco & Parter 2017, Neuro-RAM). Indexing is the dense world's
+native operation. The question is where the reverse holds.
+
+**Not on operation counts for static functions.** The compiled ring (§53.1) adds mod p with O(1) events given
+a shared pacemaker, but a dense network fed the operands as scalars computes cos(2π(a + b)/p) in O(1)
+operations too. The apparent separation against a one-hot MLP is an encoding effect, not an effect of asynchrony.
+Any static function has a clocked implementation whose op count matches the event count up to the encoding.
+
+**Where the clockless system is different in kind.** A clocked system pays per tick × unit whether or not
+anything happened; an event system pays per event. So a defensible separation needs:
+
+1. **Streams whose information rate is far below any usable clock rate:** cost ∝ informative events vs ∝ T/dt.
+   The clock can't be slowed without missing timing that matters (SHD-style precise timing inside long silence).
+2. **Decisions whose latency is set by the evidence (E2):** the event system answers at the first sufficient
+   event; a clocked pipeline answers after its fixed depth × tick.
+3. **Learning whose cost ∝ errors (E26):** no epochs, no backward pass over time.
+
+All three must hold on one task at matched accuracy, with the dense side allowed the same priors and input
+encoding. That task family is the benchmark target: sparse event streams with rare, precisely timed informative
+events (mostly-silent keyword spotting, event-camera onsets, anomaly onset), measured in events, latency, and
+updates.
+
+## 56. Computing with time: what clocklessness forbids, what a reference adds, and how credit flows
+
+*Written 2026-09-26. Builds on the space-time algebra of J. E. Smith (ISCA 2018; "(Newtonian) Space-Time
+Algebra", arXiv 2001.04242) and on race logic as tropical algebra (Madhavan, Sherwood & Strukov 2014; Madhavan
+et al., "Temporal State Machines", 2021). Those works define the primitives and their algebra. This section adds
+three things: what shift invariance forbids and the minimal fix (§56.2–56.3), the credit structure of
+space-time networks (§56.4), and the resulting pull-only learning principle (§56.5).*
+
+### 56.1 Primitives
+
+Values are spike times in T = ℝ ∪ {∞} (∞ = no spike), each line spiking at most once per episode.
+
+| primitive | output time | neural form | tropical form |
+|---|---|---|---|
+| delay δ_c | a + c | axon or dendrite | a ⊗ c (min-plus) |
+| first-of (OR) | min(a, b) | either input fires the node | a ⊕ b |
+| coincidence (AND) | max(a, b) | threshold 2 with long PSPs | max-plus ⊕ |
+| veto (inhibit) | a if a < b, else ∞ | inhibitory synapse that arrives first | not tropical: breaks monotonicity |
+
+The race of §1–§55 is min over a group, with cancellation of the rest: first-of with a label.
+
+### 56.2 Clockless means shift-equivariant, and shift-equivariant networks cannot add times
+
+With no clock, nothing in the network knows absolute time: shifting every input by c shifts every spike by c.
+Every primitive above commutes with the shift, so every network built from them computes a function with
+f(a₁ + c, …, a_n + c) = f(a₁, …, a_n) + c (Smith's invariance). Consequences:
+
+- **a + b is not computable**, for two variable times: it would shift by 2c. More generally, only functions whose
+  pieces have unit total slope. Differences can be computed (compare a against b), sums cannot.
+- **Absolute magnitudes are not computable.** "Fire 3 ms after a" is fine; "fire at time 3" is not, because
+  nothing marks time 0. §38's blindness to absence is the same fact: an absent spike can't be noticed without a
+  reference that says when it was due.
+
+So an asynchronous substrate of pure delays and races computes **relations among times, never their sums**.
+Sleep Sort sorts because sorting is shift-equivariant. Modular addition is not, and needs more.
+
+### 56.3 The minimal reference: one oscillator, and time becomes a group
+
+Break the symmetry with the smallest possible reference: a free-running oscillator of period P, shared by
+everything and amortized over all queries (a brain rhythm). Now a spike has a **phase** φ = t mod P, and a
+unit can act at a phase set by one input and read at a time set by another (the E25 ring: operand a resets the
+phase, operand b reads it). With the reference:
+
+- The symmetry drops from all shifts ℝ to shifts by whole periods, Pℤ. Functions are equivariant only under
+  those, so phase addition (a + b mod P) becomes computable: it is invariant under Pℤ shifts of both operands.
+- **Races on a circle need an anchor.** "First" is not defined on a circle: every phase is after every other.
+  Order exists only relative to a reference event (the read): the winner is the first detector phase *after*
+  the read. Every cyclic race therefore has an anchor, and learning targets must be defined relative to it
+  (E26: the teacher listens half a unit after the read).
+- **What one reference buys is exactly one character.** With a single oscillator, the relations reachable at
+  O(1) events per query are those factoring through one phase composition, y = h(f(a) + g(b) mod P): E25's
+  learnable class, now derived from the symmetry instead of observed. Several oscillators with incommensurate
+  periods give several characters; the DFT-rank argument of §53.5 bounds what they can compress.
+
+The manifesto's "relative, causal, temporal referencing" is therefore not optional: a clockless system computes
+relations; a system with one rhythm computes group operations; nothing in between computes sums.
+
+### 56.4 Credit flows along one causal chain
+
+A spike's time in a network of delays, first-ofs and coincidences is a tropical polynomial in the delays: the
+sum of the delays along one path, the **critical path** (the argmin through first-ofs, the argmax through
+coincidences). Its derivative with respect to a delay is 1 on the critical path and 0 elsewhere (almost
+everywhere). So exact credit in a space-time network is:
+
+- **Sparse by construction:** one path per spike, length = depth, not fan-in × depth as in a dense backward
+  pass. The critical path is recorded for free during the forward race: each node remembers which input set its
+  time (the E4 "which input arrived last before threshold" trace).
+- **Local:** each node needs only whether it is on the path and the sign of the error at the end.
+- **Discontinuous at ties:** when two paths tie, credit switches. This is where learning can oscillate, and
+  where timing noise (§41, §48) smooths the switch into a probability.
+
+(For integrate-to-threshold nodes the path generalizes to the causal set, §34.1; Mostafa 2018's exact TTFS
+gradient has this structure.)
+
+### 56.5 Teach the event that should have won; never touch the losers
+
+Every error in a race network is a race lost by the right event: the teacher's spike came after the winner's
+(or never came), or a spike that should have been vetoed was not. The native fix is to move **only the event
+that should have won**, along its critical path, toward an **anchored target time** (the reference + margin),
+and to leave the losers alone:
+
+- Wrong class won: move the teacher's path so the teacher arrives at anchor + m.
+- A spike fired that should not have: move the **veto's** path so the inhibitor arrives first. Veto is the
+  only native way to make something later, and it makes suppression an act of winning too.
+- Teacher never fired: move its path toward coincidence. The target of an arrival is its partner in the window,
+  not "earlier": arrivals move toward each other. A one-sided "make it earlier" rule drifts, since shortening
+  delays or loop periods makes everything earlier (E28 delays past the anchor, E29 periods to the floor).
+
+A false positive does require acting on the loser, and here the distinction is how. Shifting its delays later
+(a **push**) displaces it in time; that is what collapsed E26. Adding an inhibitory condition that blocks it on
+the offending inputs (a **veto**) specializes it and leaves its timing alone. So the rule is: *losers are
+specialized by inhibition, never displaced in time.*
+
+This is regression to an anchored time on one causal chain, not a margin against competitors. §54 is the
+evidence that it matters: the two-sided rule (pull the teacher, push the winner) collapses all detectors onto
+one phase, while pull-only learns the relation. The push fails because a loser's time has no target of its own;
+it is set by other classes' errors, and each push hands the lead to the next loser. In a race the losers are
+beaten, not punished.
+
+**Why this is sparse and asynchronous by construction:** updates happen only on errors (a lost race), touch
+only one causal chain (depth-many delays), and need only a local anchor. No sums over samples, no backward pass
+through all synapses, no clock except the one reference that §56.3 shows is needed anyway.
+
+### 56.6 Predictions (M56, E27)
+
+(i) A network with learnable delays on excitatory (coincidence) and veto synapses, trained by §56.5 only,
+    learns temporal patterns of the form "B within Δ after A, unless C in between", generalizing to unseen
+    timings.
+(ii) Fixing false positives by pushing the loser's delays later, instead of by veto, breaks it (as in E26).
+(iii) Without veto synapses, patterns that need "unless" are not learnable at any size (monotonicity).
+(iv) Updates per sample fall to ≈ the error rate × depth; synaptic events per sample stay ≈ input spikes +
+     O(1).
+(v) Without a reference, a sum of two times is not computable (§56.2): a linear-time race network given the
+    operands as spike times, with no oscillator, cannot learn a + b as an output time at any size, while it can
+    learn comparisons (which of a, b is larger, by how much, within a window).
+
+## 57. Routing needs counterfactuals, and cancellation supplies them without extra events
+
+*Written 2026-09-27, prompted by the observation that a race network is a routing network: which node wins is a
+discrete route choice, and critical-path credit (§56.4) only tunes timing along the route taken.*
+
+### 57.1 The problem
+
+§56.4's derivative is 1 along the critical path and 0 elsewhere. It says how to move the route that was taken,
+never whether another route should have been taken. The same wall appears in sparse mixture-of-experts: the
+gate's gradient exists only for experts that ran, which is why top-k routing with k ≥ 2 is used, to compare at
+least two alternatives. Routing credit requires counterfactual information: what the untaken routes would have
+produced.
+
+### 57.2 Three sources of counterfactual information in a race
+
+| source | what it tells | cost |
+|---|---|---|
+| k winners per group (k ≥ 2) | the runners-up's actual outputs | (k − 1) extra spikes per group, all downstream events they cause |
+| cancelled near-misses | how close each cancelled node came (its frozen charge) and on which inputs (its best partial window) | none: the charge is state the node already has at cancellation |
+| timing noise σ | which route would have won under a small perturbation | extra runs, or temperature over time |
+
+The second is native and free. A cancelled node stops integrating, but the charge it has reached and the inputs
+that produced it are its state at the moment of cancellation. They are exactly the counterfactual "had I been
+allowed to continue, I would have fired on these inputs", ranked by how near the node came.
+
+### 57.3 The rule
+
+On an error, the teacher's missing input tells the hidden layer what route was needed (through the teacher's
+synapses, w2). Pull the **cancelled node the teacher wants with the highest near-miss**, on **its best partial
+window only**, so it wins its group next time; do not touch the route that was taken, and do not push the winner.
+Strengthening all inputs that reached the cancelled node (distractors included) is destructive (E28 pilot: 0.18,
+at the "none" floor); restricting the pull to the partial window turns it into a gain (0.41 vs 0.34 for top-k
+fired credit, 0.35 at depth 1; one seed, 8k episodes; full runs queued).
+
+### 57.4 Predictions (M57, E28)
+
+(i) Near-miss routing credit beats critical-path-only credit at depth 2, and matches or beats top-k fired credit.
+(ii) Near-miss credit with k = 1 approaches its k = 2 result: counterfactuals from cancellation replace
+     counterfactuals from extra firing, at fewer events.
+(iii) Depth 2 with near-miss credit beats depth 1 on hierarchical motifs.
+(iv) Displacing false winners in time breaks it, as in E26 and E27.
+
+## 58. What counts as generalization: restriction, forced generalization, and grokking
+
+*Written 2026-09-27, after the objection that E25/E26 generalize because their structure restricts them to the
+answer's form.*
+
+A learner can reach the relation on unseen pairs for three different reasons, and only the last is grokking.
+
+1. **Restriction.** The hypothesis class contains the relation and little else. E25/E26's single loop with a
+   single-phase readout can only express one-character relations (§53.2); within that class, any good fit on
+   enough data is the relation. This measures the prior, not the learner.
+2. **Forced generalization.** The class does contain memorizers, but only below its capacity. E25 shows it
+   exactly: with 3p parameters, fits that memorize exist below n ≈ 3p (p = 31, 5% of pairs: train 1.0, test at
+   chance) and stop existing above it. Generalization above capacity is counting, not learning.
+3. **Grokking.** At n well below capacity, memorizers consistent with the training set exist in the class, and
+   the learner still reaches the relation. That is a property of the learning dynamics (its implicit preference),
+   and it is what the dense MLP shows on E24 (≈ 17k parameters vs 480 training pairs at p = 31, frac 0.5).
+
+**Criterion.** Report the capacity ratio ρ = n / (effective parameter count) with every generalization result.
+Grokking claims need ρ ≪ 1, a class that provably contains memorizers at that n, and a demonstration that some
+learner in the same class does memorize (a table-like baseline trained the same way).
+
+**Consequence for this project.** A loop in the substrate is not itself the bias: a loop's period is a
+learnable delay, and delays are scale-free (any period works with rescaled injection delays), so "a recurrent
+delay loop exists" is as generic as recurrence. The bias in E26 is the **single-phase readout**, which removes
+every non-cyclic hypothesis. The honest test (E29) is a general race network, the one that memorizes E24 at
+test 0.00, given recurrent delay loops as a resource and native credit (pull-only, errors only, near-miss
+routing). It passes only if it reaches the relation at ρ ≪ 1 while the same network without loops, or without
+counterfactual credit, memorizes.
+
 ## Tests
 
 | | Claim | Test |
@@ -2433,6 +2972,13 @@ forgetting contrast, and homeostasis as the non-conservative leak.
 | **M49** | the entropic k-winner race is Fermi–Dirac (chemical potential = price); annealed soft-race training recovers the cancellation cost under exact gradients | `e21_soft.py` depth 2, k = 3, hard evaluation vs E20 k = 3 (0.930) and k = 10 (0.951) |
 | **M50** | race layers are equivariant under shift and dilation of time; temporal collapse shrinks deep weight gradients; running temporal normalisation (a gauge choice) restores depth | `e20_exact.py --tnorm 1` at depths 2 and 4 (no cancellation) vs without |
 | **M51** | the conserved near-miss rule is ultraconservative: forgetting bounded by the new task's mistakes (flat in time on task), vs O(log T) for softmax SGD; homeostasis is the non-conservative leak | E23: race vs MLP forgetting at 1k/4k/16k frames per task; race without homeostasis |
+| **M52** | the class prior belongs in the output prices; without them the prior shift is written into old classes' feature weights | E23 task-aware forgetting with `--price` 0.003/0.01/0.03; frozen hidden; homeo 0 |
+| **M53** | without sleep the race's memorization is absorbing; sleep downscaling (Pegasos) gives grokking with delay ∝ 1/λ; plasticity peaks and hidden codes merge at the transition; sleep trades forgetting for generalization | E24: `e24_grok.py race --sleep` sweep, frozen hidden, training fraction sweep; E23 with sleep |
+| **M54** | delays instead of lookup: a ring computes (a+b) mod p compiled; delays as phasors learn exactly the one-character relations; replay (power-method synchronization) generalizes above f_c(p), online error-gated learning is frustrated | E25: `e25_delay_ring.py` compiled / sync fraction sweeps p = 31, 59, 97 / ops / online / learn / table; E24 MLP at matched fractions |
+| **M55** | in a race, winning is positional: pull-only error-driven learning converges, the wrong-winner push collapses the detectors; the main race rule's competitor push may be a cause of its weak results | E26 `e26_noisy_race.py --push 0/1 --sigma`; E26b `--compete 0` on E22 SHD and E24 |
+| **M56** | clockless = shift-equivariant: no sums of times; one oscillator reference gives one cyclic character; credit flows along one critical path; teach only the event that should have won, toward an anchored time; veto is the native way to make something later | E27: learnable delays on coincidence + veto synapses, pull-only vs with loser push, with vs without veto, on 'B within Δ after A unless C' patterns |
+| **M57** | routing needs counterfactuals; cancelled near-misses supply them at no extra events: pull the wanted cancelled node on its best partial window | E28 `e28_routing.py` arms path / fired / nearmiss (k = 1, 2) / push, depth 1 vs 2 |
+| **M58** | generalization claims need the capacity ratio ρ = n / params; grokking = relation reached at ρ ≪ 1 while memorizers exist in the class | E29: general race network + recurrent delay loops as a resource, native credit, on E24; controls without loops and without counterfactual credit |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

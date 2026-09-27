@@ -1,6 +1,6 @@
 # Sleeping Machines: status report
 
-*Status as of 26 September 2026. The fuller, illustrated version is the PDF built by `report/make_pdf.py`
+*Status as of 27 September 2026. The fuller, illustrated version is the PDF built by `report/make_pdf.py`
 (`report/sleeping_machines_status.pdf`). The theory is in `experiments/THEORY.md`, the running log in
 `experiments/FINDINGS.md`, and every experiment's predictions in `experiments/E*_PREREGISTRATION.md`,
 written before evaluation.*
@@ -13,7 +13,7 @@ now explains, and what is being tested.
 ![One race: B fires, A and C are cancelled but keep their distance to threshold](report/figures/race.png)
 
 **Contents:** [In one page](#in-one-page) · [The model](#the-model) · [Experiments](#experiments) ·
-[Theory](#theory) · [E7 and E17: living in time](#e7-and-e17-living-in-time) · [Energy](#energy) ·
+[Theory](#theory) · [E7 and E17: living in time](#e7-and-e17-living-in-time) · [E24–E29: computing with time](#e24e29-computing-with-time) · [Energy](#energy) ·
 [Lessons](#lessons) · [Next](#next) · [Reproducing](#reproducing)
 
 ## In one page
@@ -32,6 +32,21 @@ now explains, and what is being tested.
 - **Credit conservation, predicted by the theory, holds at full length:** +1.0 to +1.7 points at every
   depth, both seeds (0.960 / 0.952 / 0.941 vs 0.949 / 0.942 / 0.924 at depths 1 / 2 / 3).
 
+**New on 26–27 September (E24–E29, THEORY §53–§58; pilots unless marked)**
+- **Local learning in the race network does not grok (E24, complete).** Every race variant, with or without sleep,
+  ends at or below chance on unseen pairs (≤ 0.008 vs 0.032). Among dense MLPs, backprop and Kolen–Pollack grok
+  (0.87, 0.956), feedback alignment does not (0.000; Fourier-shaped feedback 0.033).
+- **Delays compute where weights look up (E25).** A ring of relays computes (a + b) mod p for all pairs with no
+  learning, 4p synapses. Learned as phases, 3p delays reach test 1.000 from 15–20% of pairs (5 seeds, p = 31–97),
+  including a·b mod p (the delays find the discrete log). But this is **restriction, not grokking** (§58): the
+  single-phase readout can express only one-character relations.
+- **In a race, winning is positional (E26, E27).** Punishing the wrong winner in time collapses all detectors onto
+  one phase (chance); pull-only learning, sparse and error-driven, learns the relation from random delays
+  (0.86–0.91). False positives must be removed by veto, not by displacement: 0.87–0.92 vs 0.21.
+- **Routing credit from cancellation (E28, one seed).** Pulling the wanted cancelled near-miss on its partial
+  window beats MoE-style fired credit (0.41 vs 0.34) at equal events. Full runs queued.
+- **True grokking test (E29): not working yet.** The general network starves (few coincidences); being redesigned.
+
 **What does not (yet)**
 - **Depth still costs accuracy.** The theory now names three reasons (credit contraction, activity drift,
   pattern chaos), each with a predicted remedy; all are untested.
@@ -46,6 +61,12 @@ now explains, and what is being tested.
   with plain skips, 0.937 without), at 2–4× the synaptic events.
 - **Market stream (E17): no edge.** The race matches simple baselines while deciding a third earlier, but
   continual learning did not help, learned trade selection had no skill, and every learner loses money after costs.
+- **Class-incremental split-MNIST (E23), first readout: the race forgets more than SGD, against §50's
+  prediction.** With a single head both forget everything (0.97 / 0.98): the newest classes win every input, so
+  that metric cannot separate them. Task-aware (only the task's own classes may win): race forgetting 0.17 vs
+  MLP 0.03 at 1k frames per task, MLP 0.03 again at 4k (1 seed). Diagnosis (§51): the race output has no class
+  prior, since its thresholds are fixed, so each new block's prior shift is written into old classes' feature weights.
+  Learned output prices (M52) are being tested.
 - **Not yet run:** the E7 stream learner and most theory predictions (M31–M43).
 
 ## Direction (decided 26 September)
@@ -65,6 +86,25 @@ which this project would only be catching up. Consequences (ROADMAP.md):
   backward pass is diagnostic only.
 - **Benchmarks where asynchrony and continual learning are native:** SHD (E22), class-incremental streams (E23), and
   next NeuroBench's keyword few-shot class-incremental task.
+- **Generalization beyond the overfit/underfit compromise (added 26 September):** grokking (E24), with sleep as
+  synaptic downscaling. Theory §52: without sleep the race's memorization is absorbing; with sleep it becomes a
+  phase transition. No demonstration of grokking in spiking or event networks was found in a web search.
+
+## Direction update (27 September)
+
+The 26 September direction still holds, with one sharpening: **every mechanism must be native** (an event handler:
+local state, triggered by events, cost proportional to events; no batches, epochs, global sums, normalisation
+across units, replay, or scans over all classes). E25's replay and trace learners worked by going dense and are
+kept as diagnostics only. The research questions are now the gaps named in THEORY §55–§58:
+
+- **G0, where supremacy can live (§55).** Not in operation counts for static functions (an encoding effect), but in
+  cost per information event on sparse streams, evidence-limited latency, and learning cost per error, all three
+  at once and against dense models given the same priors.
+- **G1, native credit.** Pull-only toward partners, veto for false positives, near-miss routing (§54, §56.5, §57).
+- **G2, time that computes.** Delay, k-of-n threshold with window, veto, hold, and one oscillator reference as the
+  operator basis (§56); clockless networks cannot add times, one rhythm gives one cyclic character.
+- **Generalization standard (§58).** Report the capacity ratio ρ = n / params; grokking only when memorizers exist
+  in the class and the learner still finds the relation.
 
 ## The model
 
@@ -132,13 +172,24 @@ confirmed yet; the tests are queued.
 | A race layer cannot learn the identity, so depth needs identity paths; skips must be delay-matched, or the shallow path wins the race (§47) | scaling, **partly refuted** | delay matching beats plain skips (0.915 vs 0.898), but no skips is best under local learning (0.937) |
 | The entropic k-winner race is Fermi–Dirac; its chemical potential is the price (§48) | exact; soft top-k is prior art | soft-race training recovers ~60% of the cancellation cost (0.942 vs 0.930 / 0.951) |
 | Race layers are equivariant under dilation as well as shift; temporal collapse shrinks deep weight gradients; temporal normalisation is a gauge choice (§49) | exact symmetry; scaling for the collapse | queued |
-| The conserved near-miss rule is Crammer–Singer's ultraconservative algorithm, so forgetting is bounded by the new task's mistakes, vs O(log T) for softmax SGD; homeostasis is the non-conservative leak (§50) | mistake bound is prior art; the continual-learning consequence is new | E23 running |
+| The conserved near-miss rule is Crammer–Singer's ultraconservative algorithm, so forgetting is bounded by the new task's mistakes, vs O(log T) for softmax SGD; homeostasis is the non-conservative leak (§50) | mistake bound is prior art; the continual-learning consequence is new | **contradicted so far** (E23, task-aware: race 0.17 vs MLP 0.03); §51 locates the gap |
+| A norm bound is not a discrimination bound: without a class-prior channel the prior shift of each new block is written into old classes' feature weights; in time, a class bias is a price (output threshold) (§51) | scaling; task-recency bias is prior art (BiC) | learned output prices cut task-aware forgetting (M52), queued |
+| Grokking: memorization is memory indexing (norm grows with data), the relation has a fixed norm; the ultraconservative rule makes memorization absorbing; sleep downscaling makes waking + sleeping Pegasos, which converges to the max-margin relation; one dial trades forgetting for generalization; plasticity peaks and hidden codes merge at the transition (§52) | exact at the output (via §44); scaling for delays | E24 running: dense MLP groks on CPU (test 0.00 → 0.87); race without sleep memorizes, test below chance |
+| Delays instead of lookup: a ring adds mod p; delays as phasors learn exactly the one-character relations; replay is power-method synchronization (§53) | exact class; synchronization is prior art | E25: test 1.000 above a capacity threshold; restriction, not grokking (§58) |
+| In a race, winning is positional: pull-only error-driven learning converges, pushing the wrong winner collapses the detectors (§54) | scaling | E26 pilot: chance with push, 0.86–0.91 without; transfer to the main race queued |
+| Supremacy is not in op counts for static functions (encoding effect); it can only be in cost per information event, evidence-limited latency and learning cost per error (§55) | argument; Neuro-RAM separation is prior art | defines the benchmark target |
+| Clockless = shift-equivariant: no sums of times; one oscillator reference gives one cyclic character; credit follows one critical path; losers are specialized by veto, never displaced; coincidence targets are partners (§56) | exact (symmetry); space-time algebra is prior art (Smith 2018) | E27 pilot: veto 0.87–0.92 vs push 0.21 |
+| Routing needs counterfactuals; cancelled near-misses supply them at no extra events (§57) | new rule; top-k MoE is prior art | E28 pilot, 1 seed: 0.41 vs 0.34 (fired) vs 0.18 (path only) |
+| Restriction vs forced generalization vs grokking; report ρ = n / params (§58) | criterion | E29 (true grokking test) not yet functional |
 
 **Honest assessment of the theory.** Most of it applies known mathematics to race networks. It is correct and
 sometimes useful, but not new mathematics. It changed results in four places: conservation (+1.0 to +1.7), the
 depth-3 rescue (0.10 → 0.87), delay-matched skips (+1.6 over plain), and Fermi–Dirac training (+1.2). Several
 predictions were refuted, and many remain untested. The next genuine step is a result about what local learning
-can and cannot learn: §50 (bounded forgetting) is the first aimed at the project's own niche.
+can and cannot learn. §50 (bounded forgetting) was the first aimed at the project's own niche, and its first test
+went against it; §51 names why. §52 (grokking) is the second: it predicts that the same property, error-gated
+updates that stop at margin, both protects old tasks and forbids generalizing past memorization, with sleep as
+the dial between them.
 
 The mathematics is borrowed (Noether and Ward identities, Perron–Frobenius and topical maps, Birkhoff
 contraction, Gibbs and Landauer identities, two-timescale stochastic approximation, mean-field propagation).
@@ -188,6 +239,38 @@ live trading.**
   at least 1 bp (more than the ~50% null the preregistration expected; checked for look-ahead), but not by
   enough to pay a 2 bp cost, let alone the 10 bp taker fee.
 
+## E24–E29: computing with time
+
+**E24 (grokking, complete).** p = 31, half the pairs. The race with local credit memorizes: train ≈ 1.0, test
+≤ 0.008 in all 17 runs (sleep 0 to 3·10⁻², with and without a deadline); sleep at 10⁻² or stronger destroys
+training accuracy instead. Dense MLPs: backprop 0.87, Kolen–Pollack 0.956, feedback alignment 0.000. At p = 97,
+backprop fails at 10% and 20% of pairs and groks at 30% (0.937).
+
+**E25 (delays instead of lookup).** The compiled ring: all p² pairs correct, 4p synapses, 2b + p + 1 synaptic
+events per query. Delays as phases, learned by replay (power-method synchronization): test 1.000 on unseen pairs
+from 20% of pairs at p = 31, 15% at p = 59 and 97 (5 seeds each); below the capacity threshold it memorizes
+(train 1.0, test at chance). Learnable class: exactly y = h(f(a) + g(b) mod p), including a·b; a² + ab + b² and
+random tables are not (a DFT-rank argument, §53.5). Kept as a diagnostic: the learner is dense, and the
+generalization is restriction by the readout (§58).
+
+**E26 (native delay learning).** Same ring, but learning is sparse, local and error-driven, with a race readout.
+With the wrong-winner push, all detectors collapse onto one phase and nothing is learned (chance, with or without
+timing noise). Pull-only: test 0.86–0.91 from 30% of pairs, ~37k updates in 100k samples (pilot, 2 seeds; sweep
+queued). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
+
+**E27 (delays + coincidence windows + veto).** Patterns "B within Δ after A unless C". Specializing false firers
+by veto: 0.87–0.92; displacing them in time: 0.21–0.24 (pilot, 2 seeds, 20k episodes; 5-seed runs queued). The
+first task version did not need veto (no-veto matched); fixed by planting vetoed near-misses.
+
+**E28 (depth and routing).** Hierarchical motifs (ordered pairs of sub-motifs). Pilot, one seed, 8k episodes:
+near-miss routing 0.41, top-k fired credit 0.34, depth 1 0.35, critical path only 0.18. Two bugs found on the way
+were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor, and counterfactual pulls
+must use the near-miss's partial window only.
+
+**E29 (true grokking test).** A general race network that can memorize, given recurrent delay loops with random
+learnable periods, native credit, E24's encoding. Not yet functional: even the no-loop control does not memorize
+(sparse coincidences starve the hidden layer). Being redesigned.
+
 ## Energy
 
 Operation counts priced with published per-operation energies (45 nm logic and SRAM; measured Loihi): order-of-
@@ -197,6 +280,14 @@ accurate dense model (about 2.4× at batch 1; it loses at batch 256). The dense 
 unbatched dense training. Sparse fan-in is the lever: 14–22× fewer events in pilots.
 
 ## Lessons
+
+- **The queue is not optional (26 September).** A fourth host hang: ten ad-hoc E24 jobs launched beside two queue
+  runners in a 3-CPU, 10 GB, no-swap container. All runs now go through `experiments/queue/run_safe.sh`: one job
+  at a time under a global lock, one BLAS thread, a watchdog at 70% of the container's memory.
+- **Dense machinery creeps in.** Replay, phasor sums, restarts selected offline, dense updates: each rescued a
+  result by leaving the event-driven world. Such results are diagnostics, not the direction.
+- **Check what a structure gives away.** E25's generalization came from its readout's hypothesis class; §58's
+  capacity ratio is now reported with every generalization claim.
 
 - **Compute discipline.** Two heavy jobs at once hung the host three times (no swap and no container memory
   limit; two hard reboots corrupted the filesystem). The third time, an ad-hoc debug run ran beside the queue.
@@ -211,13 +302,15 @@ unbatched dense training. Sparse fan-in is the lever: 14–22× fewer events in 
 
 ## Next
 
-1. **Make depth pay:** centre credit in time coordinates, run the prices on the faster timescale, use sparse
-   fan-in with k·F ≥ G, and test topographic codes against pattern chaos. Each has a queued test.
-2. **Decide better, not only faster:** relative (MSPRT) stopping by a shared free-energy inhibition, and
-   onset-referenced inhibition so absent spikes count as evidence.
-3. **Make the hidden layer cheap:** sparse fan-in at full length, for the energy table.
-4. **Live in time:** E7 pilots, and E17's follow-ups if its preregistered rules come out positive.
-5. **Seeds:** 3–5 for every headline number before any claim.
+1. **E26–E28 full runs (queued):** do pull-only, veto and near-miss routing hold across seeds; does depth 2 beat
+   depth 1; does `--compete 0` transfer to SHD and E24.
+2. **E29 redesign:** activity levels so the general network can memorize, then the grokking test at ρ ≪ 1 with
+   and without loops and counterfactual credit.
+3. **Hold and rate operators:** temporal memory and interval scaling, completing the operator basis (§56).
+4. **Two-counter machine compiled from the basis:** a constructive completeness proof, and where it fails as
+   timing noise grows (precision as the tape).
+5. **The supremacy benchmark (§55):** a sparse event stream where cost per information event, latency and updates
+   per error can all be measured against dense models given the same priors.
 
 ## Reproducing
 

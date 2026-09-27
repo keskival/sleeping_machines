@@ -376,3 +376,18 @@
 21:29:33 start e22p_frozen_to3
 21:32:03 done e22p_frozen_to3 (exit 0)
 21:32:03 start e23_race_f5000
+21:33:58 done e23_race_f5000 (exit 0)
+21:33:58 start e23_mlp_f5000
+21:34:09 done e23_mlp_f5000 (exit 0)
+21:34:10 start e23_race_f20000
+21:41:54 start e23_race_f20000
+21:45:21 done e23_race_f20000 (exit 0)
+21:45:21 start e23_mlp_f20000
+21:46:18 done e23_mlp_f20000 (exit 0)
+21:46:19 start e23_race_f80000
+22:01:43 done e23_race_f80000 (exit 0)
+22:01:43 start e23_mlp_f80000
+22:08:15 done e23_mlp_f80000 (exit 0)
+22:08:15 start e23_race_nohomeo_f20000
+22:24:53 done e23_race_nohomeo_f20000 (exit 0)
+22:24:53 start e23_race_nohomeo_f80000

@@ -128,6 +128,7 @@ class Mech:
     carry: int = 0            # a label seen in an episode teaches its later frames
     continuity: float = 0.0   # learning rate of the view-to-view pull on hidden nodes
     consolidation: float = 0.0  # effective rate η / (1 + c · accumulated |Δw|)
+    price: float = 0.0          # output thresholds learn from the teaching signal (the race's class prior)
 
 
 class StreamRace(RaceNet):
@@ -158,6 +159,13 @@ class StreamRace(RaceNet):
         self.lr_mult, self.cfg.homeo = saved * scale, 0.0     # homeostasis runs once per frame, in after()
         self.teach(st, np.array([label]))
         self.lr_mult, self.cfg.homeo = saved, homeo
+
+    def apply_signal(self, st, s):
+        super().apply_signal(st, s)
+        if self.mech.price:                       # target: cheaper to fire; near misses: dearer
+            self.th2 *= np.exp(-self.mech.price * self.lr_mult * s.sum(0))
+            np.clip(self.th2, 0.1 * self.cfg.theta_out, 10 * self.cfg.theta_out, out=self.th2)
+            self.work["plasticity"] += int((s != 0).any(0).sum())
 
     def pull(self, st, prev_fired):
         """Continuity: hidden nodes that won on the previous view and nearly won now
@@ -266,7 +274,7 @@ def run(kind, cfg, mech, sc, x, y, xe, ye, replay=0, window=1000):
     rec = {k: np.zeros(len(labels)) for k in ("correct", "used", "taught", "asked")}
     first = reset.copy()
     ov_within, ov_across, last_code = [], [], None
-    task_acc = []
+    task_acc, task_acc_ti, block_work = [], [], []
     t0 = time.time()
     for i in range(len(labels)):
         if reset[i]:
@@ -304,6 +312,8 @@ def run(kind, cfg, mech, sc, x, y, xe, ye, replay=0, window=1000):
         rec["taught"][i] = taught
         if sc.order == "blocked" and (i + 1 == len(labels) or task[i + 1] != task[i]):
             task_acc.append(per_task_acc(kind, net, te_times[:2000], ye[:2000]))
+            task_acc_ti.append(per_task_acc(kind, net, te_times[:2000], ye[:2000], aware=True))
+            block_work.append(net.work["plasticity"] if kind == "race" else net.macs)
     wall = time.time() - t0
     n = len(labels)
     wins = [slice(a, min(a + window, n)) for a in range(0, n, window)]
@@ -336,6 +346,11 @@ def run(kind, cfg, mech, sc, x, y, xe, ye, replay=0, window=1000):
         res["task_acc"] = A.tolist()
         res["forgetting"] = float(np.mean([A[:, k].max() - A[-1, k] for k in range(len(TASKS) - 1)]))
         res["final_task_mean"] = float(A[-1].mean())
+        B = np.array(task_acc_ti)                 # task-aware: argmax over the task's own classes
+        res["task_acc_ti"] = B.tolist()
+        res["forgetting_ti"] = float(np.mean([B[:, k].max() - B[-1, k] for k in range(len(TASKS) - 1)]))
+        res["final_task_mean_ti"] = float(B[-1].mean())
+        res["work_per_block"] = np.diff([0] + block_work).tolist()
     return res
 
 
@@ -348,15 +363,25 @@ def held_out(kind, net, te_times, ye):
     return float((net.test(te_times, ye) == ye).mean())
 
 
-def per_task_acc(kind, net, te_times, ye):
-    if kind == "race":
-        saved = dict(net.work)
-        pred = np.concatenate([net.forward(*to_events(te_times[i:i + 250]))["winner"]
-                               for i in range(0, len(ye), 250)])
-        net.work = saved
-    else:
-        pred = net.test(te_times, ye)
-    return [float((pred[np.isin(ye, c)] == ye[np.isin(ye, c)]).mean()) for c in TASKS]
+def per_task_acc(kind, net, te_times, ye, aware=False):
+    """Single-head accuracy per task, or task-aware: only the task's own classes may win
+    (race: the other outputs' thresholds are put out of reach and the race is re-run)."""
+    out = []
+    for c in TASKS if aware else [None]:
+        if kind == "race":
+            saved, th2 = dict(net.work), net.th2.copy()
+            if c is not None:
+                net.th2 = np.where(np.isin(np.arange(net.k), c), th2, 1e9).astype(th2.dtype)
+            pred = np.concatenate([net.forward(*to_events(te_times[i:i + 250]))["winner"]
+                                   for i in range(0, len(ye), 250)])
+            net.work, net.th2 = saved, th2
+        else:
+            z = np.maximum(net.feats(te_times) @ net.W1 + net.b1, 0) @ net.W2 + net.b2
+            if c is not None:
+                z[:, [j for j in range(z.shape[1]) if j not in c]] = -np.inf
+            pred = z.argmax(1)
+        out.append([float((pred[np.isin(ye, t)] == ye[np.isin(ye, t)]).mean()) for t in TASKS])
+    return out[0] if not aware else [out[k][k] for k in range(len(TASKS))]
 
 
 def load(n_val):

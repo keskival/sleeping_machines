@@ -194,6 +194,8 @@ class DeepRaceNet:
         update = (st["winner"] != y) | (rival.min(1) < cfg.margin) | st["urgent"]
         s = -elig2 * (elig2 >= 0.05)
         s[rows, y] = 0.0
+        if not cfg.compete:                                # E26: teacher pull only (THEORY §54)
+            s[:] = 0.0
         if cfg.zero_sum:                                   # credit conserved at the collapse (THEORY §22)
             s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
@@ -488,7 +490,7 @@ def probes(net, ttr, ytr, tte, yte, n_train=5000, n_test=2000, lam=1.0):
 
 def main(a):
     cfg = Config(variant=a.variant, winners=a.winners, theta_out=a.theta_out, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
-                 homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, seed=a.seed)
+                 homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, compete=a.compete, seed=a.seed)
     if a.dataset == "shd":                                   # E22: spike times directly (e22_shd.py)
         z = np.load(os.path.join(os.path.dirname(__file__), "..", "data", "shd", "shd_700.npz"))
         Xa, ya = z["Xtr"], z["ytr"]
@@ -596,7 +598,7 @@ def main(a):
                                              ("ws", a.widths.replace(",", "-")), ("k", a.winners if a.winners != 3 else ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
-                                             ("zs", a.zero_sum or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("zs", a.zero_sum or ""), ("nc", "" if a.compete else 1), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else ""),
                                              ("W", a.width if a.width != 400 else ""), ("res", a.residual or ""), ("ds", a.dataset if a.dataset != "mnist" else ""), ("to", a.theta_out if a.theta_out != 1.0 else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
@@ -619,6 +621,7 @@ if __name__ == "__main__":
     ap.add_argument("--fanin-in", type=int, default=0, help="input-to-first-hidden fan-in (0 = dense)")
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
+    ap.add_argument("--compete", type=int, default=1, help="0: no competitor push, teacher pull only (E26)")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")

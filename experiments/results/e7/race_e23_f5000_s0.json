@@ -1,0 +1,131 @@
+{
+ "kind": "race",
+ "config": {
+  "variant": "crl_fa",
+  "hidden": 1000,
+  "group": 10,
+  "winners": 3,
+  "eta_out": 0.01,
+  "eta_hid": 0.01,
+  "sigma": 0.15,
+  "margin": 0.1,
+  "homeo": 3.125e-05,
+  "init_frac": 0.3,
+  "hid_frac": 0.6,
+  "patch": 0,
+  "fanin": 0,
+  "grow": 0,
+  "stride": 4,
+  "lateral": 0,
+  "theta_out": 1.0,
+  "lr_decay": 1.0,
+  "deadline": 1,
+  "psp": "ramp",
+  "scaling": 0,
+  "zero_sum": 0,
+  "batch": 1,
+  "epochs": 1,
+  "seed": 0
+ },
+ "mech": {
+  "prior": 0.0,
+  "tau_prior": 3.0,
+  "prior_across": 0,
+  "tags": 1,
+  "tau_tag": 5.0,
+  "carry": 0,
+  "continuity": 0.0,
+  "consolidation": 0.0
+ },
+ "stream": {
+  "order": "blocked",
+  "frames": 5000,
+  "length": 5,
+  "shift": 2,
+  "label_rate": 1.0,
+  "labels": "random",
+  "delay": 0,
+  "bucket": 20.0,
+  "seed": 0
+ },
+ "replay": 0,
+ "frames": 5000,
+ "labels_used": 5000,
+ "prequential_acc": 0.883,
+ "curve_acc": [
+  0.939,
+  0.868,
+  0.865,
+  0.903,
+  0.84
+ ],
+ "curve_used": [
+  112.905,
+  127.843,
+  112.734,
+  114.156,
+  123.966
+ ],
+ "acc_first_view": 0.803,
+ "acc_later_views": 0.903,
+ "used_first_view": 118.341,
+ "used_later_views": 118.31575,
+ "late_acc": 0.84,
+ "late_used": 123.966,
+ "taught_frames": 5000,
+ "held_out_acc": 0.185,
+ "wall_s": 67.6,
+ "work_per_frame": {
+  "synops": 116277.0518,
+  "plasticity": 36573.97,
+  "hidden_spikes": 287.3332,
+  "input_spikes": 137.2884,
+  "feedback": 996.312,
+  "homeo": 287.3332,
+  "synops_cascade": 116128.8976
+ },
+ "code_overlap": {
+  "within_episode": 0.4931782520491404,
+  "across_episodes": 0.37685029906776707
+ },
+ "task_acc": [
+  [
+   0.9877149877149877,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.9637305699481865,
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.0,
+   0.9388297872340425,
+   0.0,
+   0.0
+  ],
+  [
+   0.002457002457002457,
+   0.0,
+   0.0,
+   0.983451536643026,
+   0.0
+  ],
+  [
+   0.002457002457002457,
+   0.0,
+   0.0,
+   0.0,
+   0.9387254901960784
+  ]
+ ],
+ "forgetting": 0.9678174697708101,
+ "final_task_mean": 0.18823649853061616,
+ "val": 10000
+}

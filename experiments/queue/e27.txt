@@ -1,0 +1,4 @@
+# E27: delays + coincidence windows + veto, pull-only vs push (THEORY §56)
+e27_veto experiments/e27_veto.py --steps 200000 --seeds 5 --fix veto
+e27_push experiments/e27_veto.py --steps 200000 --seeds 5 --fix push
+e27_noveto experiments/e27_veto.py --steps 200000 --seeds 5 --fix veto --noveto 1

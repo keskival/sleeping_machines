@@ -202,6 +202,7 @@ class Config:
     psp: str = "step"        # "step": each spike adds w at once; "ramp": it injects a constant current w
     scaling: int = 0         # subtractive synaptic scaling (constant summed weight per node)
     zero_sum: int = 0        # normalise competitor credit so the output signal sums to zero
+    compete: int = 1         # 0: no push on competitors, the teacher is only pulled earlier (E26, THEORY §54)
     batch: int = 32
     epochs: int = 3
     seed: int = 0
@@ -310,6 +311,8 @@ class RaceNet:
         update = (st["winner"] != y) | (rival.min(1) < cfg.margin) | st["urgent"]
         s = -elig2 * (elig2 >= 0.05)                       # competitors, near-miss weighted
         s[rows, y] = 0.0
+        if not cfg.compete:
+            s[:] = 0.0
         if cfg.zero_sum:                                   # competitors share a total of -1
             s /= np.maximum(-s.sum(1, keepdims=True), 1e-9)
         s[rows, y] = 1.0
