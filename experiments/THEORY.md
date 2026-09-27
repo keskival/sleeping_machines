@@ -4054,6 +4054,27 @@ while 1 − q is well above 2f, and degrades at the highest noise. P2 (E91 ancho
 margin anchored at the latest supra-threshold instant keeps every seed at or above its no-margin value (0.990–0.999)
 without the dips.
 
+## 92. Spoken digits across speakers: validate on unseen voices, code bands relative to the voice
+
+*Written 2026-09-27, before E59.*
+
+**Protocol flaw found.** E51 chose its configuration on a random 10% of the training utterances, spoken by the training
+speakers, and scored 0.73 there but 0.647 on the test set, whose utterances come mostly from two speakers never heard in
+training (1,840 of 2,264). Test accuracy barely moved across very different configurations (0.647 at B = 140, O = 40;
+0.649 at B = 35, O = 5): selection optimized speaker-specific detail. Validation must hold out whole speakers (here
+speakers 3 and 6, 1,169 training utterances).
+
+**Relative coding.** A voice shifts formants along the cochlear (band) axis; a class-conditional event model on absolute
+bands learns the training voices' positions. Native invariance: each utterance keeps a running sum and count of the
+bands of its spikes (two counters, updated per spike), and both the conditioning state (the last spike's band) and the
+predicted next band are coded relative to the running centroid. The transform is shared by all class models, so the
+likelihood comparison stays exact. This is the reference-frame idea of §56 (a relative time needs a reference event)
+applied to frequency.
+
+**Predictions (E59).** P1: on held-out speakers, relative coding beats absolute coding at the best configuration of each.
+P2: the configuration chosen on held-out speakers transfers to the test set, with a gap much smaller than E51's
+0.73 → 0.647. P3: relative coding raises test accuracy by ≥ 0.02 over E51's 0.647.
+
 ## Tests
 
 | | Claim | Test |
