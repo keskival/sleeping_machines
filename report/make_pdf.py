@@ -703,8 +703,13 @@ def build():
                     "field matched to the pattern length. It worked because of theory: order is an asymmetry of PSP "
                     "durations and veto needs the held interval (§61, §64); a node computing one interval predicate "
                     "needs only O(its few parameters) mistakes. <b>Depth pays too (E34):</b> hold/trigger chains reach "
-                    "0.97 on hierarchical motifs (0.86 with a generic window bank) vs 0.39 at depth 1, 5 seeds. A "
-                    "Transformer on event tokens is the next baseline; grokking remains open.", st["body"])]
+                    "0.97 on hierarchical motifs (0.86 with a generic window bank) vs 0.39 at depth 1, 5 seeds. "
+                    "<b>Against Transformers (E36):</b> an event-token Transformer trained 10× longer reaches 0.989–0.996 "
+                    "at 146k–1.16M multiply-adds: accuracy parity within half a point at ≈ 10⁴–10⁵× the cost. "
+                    "<b>Grokking (E37):</b> a network that can memorize, given a rhythm resource, stays memorized without "
+                    "sleep and with sleep generalizes to 0.93–0.97 in 2 of 3 seeds, after a delay (memorized by epoch 5, "
+                    "generalizing from epoch 70). <b>Theorem (§71):</b> one node orders at most three events; depth 2 "
+                    "computes every difference-bound zone.", st["body"])]
     s.append(PageBreak())
     s += [Paragraph("In one page", st["h1"]),
           Paragraph("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: "

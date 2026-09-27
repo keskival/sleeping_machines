@@ -30,12 +30,19 @@ local updates):
 | clocked conv net at ≈ 0.91 | 0.895 | 1.9k multiply-adds | backprop |
 
 More accurate than the best dense model at about 10⁵× fewer operations, and the event cost does not grow with
-silence while the clocked cost does. Priors on both sides: the event network is built from directional hold/veto
+silence while the clocked cost does. **Against Transformers (E36):** a Transformer on event tokens (one token per
+spike, so it also pays nothing for silence) trained 10× longer (2M episodes) reaches 0.989–0.996 at 146k–1.16M
+multiply-adds per episode: accuracy parity within half a point, at ≈ 2·10⁴–1.5·10⁵× the event network's cost and with
+backprop over 2M episodes versus ~1,000 local updates. Priors on both sides: the event network is built from directional hold/veto
 nodes (§64); the conv net gets a receptive field matched to the pattern length. What made it work is theory, not
 tuning: order is an asymmetry of PSP durations and veto needs the held interval (§61, §64), and a node computing one
 interval predicate needs only O(its few parameters) mistakes (§64.3). **Depth now pays too (E34):** on hierarchical
 motifs, hold/trigger chains reach 0.97 (tuned part windows; 0.86 with a generic window bank) vs 0.39 at depth 1,
-5 seeds. A Transformer on event tokens is the next baseline (E36, running); grokking remains open (E29).
+5 seeds. **Grokking (E37):** a network that can memorize (pair-node lookup, ρ ≈ 0.016) and also has a rhythm resource
+memorizes and stays at chance without sleep (3/3 seeds); with sleep, the relation becomes the absorbing state and it
+generalizes to 0.93–0.97 on unseen pairs in 2 of 3 seeds, with a genuine delay (memorized by epoch 5, generalizing
+from epoch 70 at λ = 0.02). The rhythm is a generic resource, not the answer: the controls on relations it cannot
+express are running.
 
 **A theorem (§71, proved, and checked by exhaustive search in E39).** A single hold/trigger/veto node accepts exactly
 a product set in lag coordinates relative to its trigger; consequently one node can put at most three events in order

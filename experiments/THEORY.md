@@ -3259,6 +3259,13 @@ The relation is now the absorbing state: every pair the shared route gets right 
     given by the lookup falls to zero (the lookup empties).
 (iii) The delay scales as 1/λ: the shared route learns only from errors, which arrive at a rate of about
     n·λ/ln(L/θ) per epoch; it needs a roughly fixed number of errors U (E26: ~10⁴–10⁵), so T_grok ≈ U·ln(L/θ)/(n·λ).
+**Status after E37 (p = 31, half the pairs, 3 seeds, 400 epochs).** (i) confirmed: λ = 0 memorizes and stays at
+chance in all seeds (test 0.029–0.044). (ii) confirmed in 2 of 3 seeds at every λ > 0 (test 0.93–0.97), with a
+genuine delay at small λ (λ = 0.02, seed 0: train ≥ 0.95 at epoch 5, test ≥ 0.5 at epoch 70). Seed 1 fails at every
+λ: its rhythm route never finds the relation, and once the lookup decays even training falls (0.40–0.48), which is
+prediction (iv)'s mechanism. (iii) partly refuted: the delay shrinks with λ but far slower than 1/λ (test ≥ 0.5 at
+epochs 70–100, 50–60, 45–50 for λ = 0.02, 0.05, 0.2): T_grok ≈ max(c/λ, T_rhythm), and the shared route's own learning
+time dominates above λ ≈ 0.05.
 (iv) Relations the rhythm cannot express (a² + ab + b², random tables) stay memorized at chance on test for any λ,
     and with strong λ lose training accuracy too, since the lookup keeps decaying and nothing can take over.
 
