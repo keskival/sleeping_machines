@@ -56,7 +56,7 @@ def main():
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
     ax.legend(loc="center right", fontsize=8)
-    ax.set_title("(a + b) mod 97: delays reach the relation from few pairs", color=INK, fontsize=11, loc="left")
+    ax.set_title("(a + b) mod 97: a phase-restricted delay model vs a dense MLP", color=INK, fontsize=11, loc="left")
     fig.savefig(os.path.join(FIG, "e25_generalization.png"), dpi=200, bbox_inches="tight", facecolor="white")
 
 

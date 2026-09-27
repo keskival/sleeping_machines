@@ -1,6 +1,6 @@
 # Sleeping Machines: status report
 
-*Status as of 27 September 2026. The fuller, illustrated version is the PDF built by `report/make_pdf.py`
+*Status as of 27 September 2026 (PDF regenerated the same day). The fuller, illustrated version is the PDF built by `report/make_pdf.py`
 (`report/sleeping_machines_status.pdf`). The theory is in `experiments/THEORY.md`, the running log in
 `experiments/FINDINGS.md`, and every experiment's predictions in `experiments/E*_PREREGISTRATION.md`,
 written before evaluation.*
@@ -338,7 +338,8 @@ Depth 1 wins at both lengths: the hidden layer does not learn reusable motif det
 A selectivity diagnosis (§62) shows trained hidden nodes become class detectors (median class selectivity 0.21 vs
 motif 0.12), with label-gated or label-free credit alike; motifs span up to 1.5 but a window is 0.6, so pulls never
 reach the motif's second spike. Hold-then-align hidden learning, the predicted fix, did not help (accuracy unchanged,
-class selectivity rose further): the missing piece is a pressure toward parts over wholes. Open. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
+class selectivity rose further): the missing piece is a pressure toward parts over wholes. Sparse hidden fan-in (2–3 random channels per node) was
+worse (0.17–0.36, 2 seeds): with 192 nodes a given motif pair is covered by ~1.6 nodes. Open. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
 reversed, and depth did not beat depth 1. All arms were far from solving the task; the readout uses pull-only weights without §60's
 conservation and prices, and 48 hidden nodes, which E29 showed cannot work. Rerun with those fixes is next. Two
 bugs found on the way were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor,
