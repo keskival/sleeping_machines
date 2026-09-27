@@ -116,9 +116,9 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
-| *Not supremacy:* composition that hinges on timing precision | E34m: chains 0.988–0.995 per seed, stable at every checkpoint, 40k examples, ≈ 14 events; Transformer 0.998 after 2M examples (0.42–0.70 after 40k) | the Transformer is more accurate given 50× the data; fixed windows cannot express the task's minimum intervals |
+| **Composition at equal data** | E34g vs E36g: chains 0.988–0.995 per seed from ≤ 8k examples seen once, ≈ 14 events; Transformer given 10k examples × 200 passes 0.955–0.976 at ≈ 175k multiply-adds | given 2M examples the Transformer reaches 0.998; fixed windows cannot express the task's minimum intervals (learned durations, E56, running) |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
-| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55: the predictable edge is 0.3–1.5 bp per trade (larger with BTC-perp and ETH states), below any taker fee | staying out is correct for a taker here (§87) |
+| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55 (confirmed on 21 unseen days): the predictable edge is 0.3–1.4 bp per trade (larger with BTC-perp and ETH states), below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
 
@@ -293,6 +293,10 @@ At depth 4 (which of 20 orders of four motifs; 5.5·10⁷ candidate units per ro
 one level of composites too few the network cannot express the order and stays at 0.57–0.76 (E54).
 - A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
   (≈ 180k multiply-adds per episode).
+- **At equal data the chains are more accurate.** Given a fixed set of 10k examples and 200 passes over it (AdamW,
+  weight decay), the Transformer reaches 0.955 and 0.976; the chains reach their plateaus (0.988–0.995) within 8k
+  examples seen once each (E36g). With one credit rule (instant credit, cooled exploration, margin earned by precision),
+  the chains are stable on every task tried: 0.988–0.995 with tuned windows, 0.984–0.992 with a generic window bank.
 
 ## 5. Generalization and grokking
 
@@ -421,7 +425,9 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   out-of-sample edge of +0.3 to +0.9 bp per trade before fees, and adding lead–lag states of BTC perpetual futures and
   ETH raises it to +1.1 to +1.5 bp (pilot, held-out days): more markets do carry more information. But even a 2 bp
   round-trip fee (a tenth of a realistic taker fee) removes it: staying out is the correct policy for a taker on this
-  data, and the edge that exists would need market-making economics. Confirmation on the 21 untouched days is queued.
+  data, and the edge that exists would need market-making economics. **Confirmed on the 21 untouched days**
+  (preregistered; fit on the pilot days): before fees +0.26 to +1.05 bp per trade from the own state, +0.47 to +1.40 bp
+  with perp and ETH; at 2 bp every selected state loses (−0.11 to −1.35 bp); at 5 bp no state qualifies.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A
