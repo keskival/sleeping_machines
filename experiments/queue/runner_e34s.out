@@ -7,3 +7,17 @@
 12:24:04 start e34s_d1_5000
 12:24:20 done e34s_d1_5000 (exit 0)
 12:24:20 start e34s_d2_10000_l0
+12:24:48 done e34s_d2_10000_l0 (exit 0)
+12:24:48 start e34s_d2_10000_l0.05
+12:25:16 done e34s_d2_10000_l0.05 (exit 0)
+12:25:16 start e34s_d2_10000_l0.2
+12:25:42 done e34s_d2_10000_l0.2 (exit 0)
+12:25:42 start e34s_d1_10000
+12:26:04 done e34s_d1_10000 (exit 0)
+12:26:04 start e34s_d2_20000_l0
+12:26:48 done e34s_d2_20000_l0 (exit 0)
+12:26:48 start e34s_d2_20000_l0.05
+12:27:30 done e34s_d2_20000_l0.05 (exit 0)
+12:27:30 start e34s_d2_20000_l0.2
+12:28:13 done e34s_d2_20000_l0.2 (exit 0)
+12:28:13 start e34s_d1_20000

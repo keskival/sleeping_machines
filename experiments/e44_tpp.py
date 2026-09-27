@@ -42,17 +42,24 @@ def day_events(day, big_q):
     return T[o], Y[o]
 
 
+HOLD = 2.0                                                      # part window (s): k within HOLD after j
+
+
 class TPP:
-    def __init__(self, kind, eta=0.01, meta=False):
-        self.kind, self.eta, self.meta = kind, eta, meta
+    def __init__(self, kind, eta=0.01, meta=False, parts=False):
+        self.kind, self.eta, self.meta, self.parts = kind, eta, meta, parts
+        self.NS = NT + (NT * NT if parts else 0)                  # state channels: types, then (j, k) parts
         self.mu = np.full(NT, 0.1)
-        self.alpha = np.full((NT, NT, len(BETAS)), 0.0 if kind == "poisson" else 0.01)
+        self.alpha = np.full((NT, self.NS, len(BETAS)), 0.0 if kind == "poisson" else 0.01)
+        self.last = np.full(NT, -np.inf)                          # last time of each type (for the hold nodes)
+        if parts:
+            self.alpha[:, NT:] = 1e-4                              # parts start silent and must earn their weight
         self.fast = np.zeros_like(self.alpha)                   # fast weights, log domain (native_meta)
         self.m = [np.zeros_like(self.mu), np.zeros_like(self.alpha)]; self.v = [np.zeros_like(self.mu),
                                                                                 np.zeros_like(self.alpha)]
         self.k = 0
         self.ll_fast, self.ll_slow = 0.0, 0.0
-        self.S = np.zeros((NT, len(BETAS))); self.t0 = None
+        self.S = np.zeros((self.NS, len(BETAS))); self.t0 = None
 
     def A(self):
         return self.alpha * np.exp(self.fast)
@@ -60,7 +67,7 @@ class TPP:
     def step(self, t, y):
         """score the event, then learn from it. Returns its log-likelihood."""
         if self.t0 is None:
-            self.t0 = t; self.S[y] += 1.0
+            self.t0 = t; self.S[y] += 1.0; self.last[y] = t
             return None
         d = max(t - self.t0, 1e-6)
         decay = np.exp(-BETAS * d)
@@ -94,6 +101,10 @@ class TPP:
                 if self.meta:                                   # fast weights: log-domain correction, surprise-gated,
                     self.fast = 0.995 * self.fast + np.clip(eta * surprise * g_a * self.A(), -0.2, 0.2)   # leaky
         self.S = S_before; self.S[y] += 1.0; self.t0 = t
+        if self.parts:                                            # hold/trigger parts: y triggers (j, y) if j is held
+            held = np.flatnonzero(t - self.last <= HOLD)
+            self.S[NT + held * NT + y] += 1.0
+        self.last[y] = t
         return ll
 
     def sleep(self):
@@ -142,6 +153,50 @@ class NeuralTPP:
         pass
 
 
+class InhibTPP:
+    """native intensity with excitation AND inhibition: lambda_e(t) = mu_e * exp(sum W_exc S - sum W_inh S), both weight
+    sets positive and learned by multiplicative (exponentiated-gradient) updates; compensator by trapezoid quadrature."""
+
+    def __init__(self, eta=0.005, parts=False, q=6):
+        self.eta, self.parts, self.q = eta, parts, q
+        self.NS = NT + (NT * NT if parts else 0)
+        self.mu = np.full(NT, 0.1)
+        self.We = np.full((NT, self.NS, len(BETAS)), 1e-3); self.Wi = np.full((NT, self.NS, len(BETAS)), 1e-3)
+        self.S = np.zeros((self.NS, len(BETAS))); self.t0 = None; self.last = np.full(NT, -np.inf)
+
+    def lam(self, S):
+        return self.mu * np.exp(np.clip(np.einsum("ejb,jb->e", self.We - self.Wi, S), -8, 8))
+
+    def step(self, t, y):
+        if self.t0 is None:
+            self.t0 = t; self.S[y] += 1.0; self.last[y] = t
+            return None
+        d = max(t - self.t0, 1e-6)
+        taus = np.linspace(0, d, self.q)
+        Ss = [self.S * np.exp(-BETAS * u) for u in taus]
+        lams = np.array([self.lam(S_) for S_ in Ss])            # (q, NT)
+        wts = np.full(self.q, d / (self.q - 1)); wts[[0, -1]] /= 2
+        comp = (wts[:, None] * lams).sum(0)
+        ll = float(np.log(max(lams[-1, y], 1e-12)) - comp.sum())
+        # gradients of ll w.r.t. log-intensity parameters
+        gz = -np.einsum("q,qe,qjb->ejb", wts, lams, np.array(Ss))  # d(-compensator)/d(W_e) summed over time
+        gz[y] += Ss[-1]
+        g_mu = -comp / self.mu; g_mu[y] += 1.0 / self.mu[y]
+        self.mu *= np.exp(np.clip(self.eta * g_mu * self.mu, -0.5, 0.5))
+        self.We *= np.exp(np.clip(self.eta * gz, -0.5, 0.5))     # EG on excitatory weights (+ direction)
+        self.Wi *= np.exp(np.clip(-self.eta * gz, -0.5, 0.5))    # EG on inhibitory weights (- direction)
+        np.clip(self.We, 1e-5, 5, out=self.We); np.clip(self.Wi, 1e-5, 5, out=self.Wi)
+        self.S = Ss[-1]; self.S[y] += 1.0; self.t0 = t
+        if self.parts:
+            held = np.flatnonzero(t - self.last <= HOLD)
+            self.S[NT + held * NT + y] += 1.0
+        self.last[y] = t
+        return ll
+
+    def sleep(self):
+        pass
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ndays", type=int, default=7)
@@ -151,7 +206,9 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     qs = np.concatenate([load_day(d)[2][::50] for d in PILOT]); big_q = float(np.quantile(qs, 0.99))
     models = {"poisson": TPP("poisson", a.eta), "hawkes": TPP("hawkes", a.eta), "native": TPP("native", a.eta),
-              "native_meta": TPP("native", a.eta, meta=True)}
+              "native_meta": TPP("native", a.eta, meta=True),
+              "native_parts": TPP("native", a.eta, parts=True), "hawkes_parts": TPP("hawkes", a.eta, parts=True),
+              "native_inhib": InhibTPP(a.eta), "native_inhib_parts": InhibTPP(a.eta, parts=True)}
     if a.neural:
         models["neural"] = NeuralTPP()
     rows = []

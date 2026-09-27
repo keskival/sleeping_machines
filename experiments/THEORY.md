@@ -3406,7 +3406,12 @@ whose upper edge rises linearly with n; (ii) below the band, train 1 / test chan
 A part used by c classes is pulled by c classes' errors; a class-specific whole by one's. By §72 sleep keeps parts
 with reuse ≥ m* and prunes wholes. This is the missing pressure of §62: E28's hidden nodes became whole-class
 detectors because nothing penalized a node for being used by one class only, and E28 ran without decay.
-**Predictions (M73).** With sleep on hidden routing weights: (i) part selectivity rises relative to class
+**Test (E34 with sleep, 5 seeds): refuted as stated.** Depth 2 with a window bank: no sleep 0.89 / 0.87 / 0.84 at 5k /
+10k / 20k episodes; λ = 0.05: 0.63 / 0.66 / 0.63; λ = 0.2: collapse (0.06). The reuse filter acts on what is learned.
+In E34 the parts are a fixed basis and only the class routes are learned; a class's routing weights are reused only by
+that class's examples, so sleep erodes correct routes instead of selecting parts. The prediction presupposed a network
+that learns both parts and wholes; it remains untested there and is wrong as a general "sleep helps depth" claim.
+**Predictions (M73, as first stated).** With sleep on hidden routing weights: (i) part selectivity rises relative to class
 selectivity (§62's receptive-field measure); (ii) on shared-motif tasks, depth 2 overtakes depth 1 at smaller
 training budgets than without sleep; (iii) the effect grows with the number of classes sharing each part.
 
@@ -3548,6 +3553,11 @@ distribution. A world model for this project is therefore W itself, built and le
    reliably right, which is §45's optimal tracking rule with the noise ratio estimated online.
 5. *Decisions from the model.* Roll the race forward over the trading horizon to obtain the distribution of the price
    change; act only when the expected gain minus cost exceeds a profit-learned price (E42).
+
+**Richer native state (same day):** hold/trigger pair parts over event types as extra state, started near zero:
+neutral (−2.643/−2.854/−2.696 vs −2.641/−2.852/−2.695); a log-linear intensity with learned inhibition (to express
+suppression, e.g. bid-ask bounce): worse (−3.26/−3.22/−3.08), because multiplicative steps on the log-intensity weights
+saturate at every event and the weights random-walk. The gap to the neural point process stays open.
 
 **Stage 1 results (E44, 3 pilot days, nats per event):** Poisson −3.00/−3.42/−3.32; Hawkes (Adam) −2.62/−2.94/−2.84;
 native −2.64/−2.85/−2.70; native with fast/slow surprise-gated plasticity −2.64/−2.85/−2.69; GRU neural point process

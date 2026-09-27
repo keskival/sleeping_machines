@@ -2,7 +2,7 @@
  "args": {
   "ndays": 3,
   "eta": 0.005,
-  "neural": 1
+  "neural": 0
  },
  "big_q": 0.24558000266551971,
  "rows": [
@@ -19,7 +19,10 @@
    "ll_per_event_hawkes": -2.623431215565562,
    "ll_per_event_native": -2.6411477867991944,
    "ll_per_event_native_meta": -2.6382905564600776,
-   "ll_per_event_neural": -2.387588328147687
+   "ll_per_event_native_parts": -2.643258123948884,
+   "ll_per_event_hawkes_parts": -2.8782479286968066,
+   "ll_per_event_native_inhib": -3.2634204490277905,
+   "ll_per_event_native_inhib_parts": -4.016954208894831
   },
   {
    "day": "2026-08-26",
@@ -34,7 +37,10 @@
    "ll_per_event_hawkes": -2.9424353606609226,
    "ll_per_event_native": -2.8520522523824865,
    "ll_per_event_native_meta": -2.8501729874610717,
-   "ll_per_event_neural": -2.61362974997757
+   "ll_per_event_native_parts": -2.8536424781634575,
+   "ll_per_event_hawkes_parts": -3.128992652185428,
+   "ll_per_event_native_inhib": -3.2153673752624807,
+   "ll_per_event_native_inhib_parts": -4.4090239801752915
   },
   {
    "day": "2026-08-27",
@@ -49,7 +55,10 @@
    "ll_per_event_hawkes": -2.8421871763615707,
    "ll_per_event_native": -2.695378665577371,
    "ll_per_event_native_meta": -2.693494020984427,
-   "ll_per_event_neural": -2.517375958023785
+   "ll_per_event_native_parts": -2.6963493981870688,
+   "ll_per_event_hawkes_parts": -2.9802543399929786,
+   "ll_per_event_native_inhib": -3.0772048476489124,
+   "ll_per_event_native_inhib_parts": -5.716152088968512
   }
  ]
 }
