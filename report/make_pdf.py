@@ -945,6 +945,29 @@ def build():
             "episodes reaches 0.998 at ≈ 175k–690k multiply-adds vs ≈ 14 events. The chains are not training-limited: at 200k "
             "episodes they stay at 0.954 (tuned) and 0.87 (bank); some class routes lock onto wrong parts.")]
     s += fig(fig_e34, W * 0.9)
+    s += [P("<b>What the credit rule must be (§83–§84).</b> A class node should sum its held and its coincident trigger inputs "
+            "and learn by full-information multiplicative updates under a conserved budget. Proved: conservation resolves the "
+            "AND's credit ambiguity (a false fire does not say which half was wrong) iff the threshold exceeds half the "
+            "budget; the mistake bound grows with the log of the candidate basis (16 → 32 channels: 1.3× the updates). "
+            "Crediting every candidate deadlocks when units fire in every positive at different instants (window bank: "
+            "0.05–0.10); crediting the one instant closest to firing can cycle between invalid prefixes; cooled exploration "
+            "over instants reaches the valid route, which is absorbing. With a class window covering the task's span, E34's "
+            "task plateaus at 0.988–0.995 per seed and the generic bank at 0.97–0.99; the gap to 0.998 is timing precision "
+            "(fixed windows cannot express the minimum intervals)."),
+          P("<b>Order among three parts: depth 3 (E53, E54).</b> Classes that are different orders of the same motif sets "
+            "(20 classes, decoys = other orders) need ordered intermediates: composite units u → v over every ordered pair of "
+            "parts (57,840 candidates, ≈ 41 events per episode). 5 seeds, 40k episodes:")]
+    s.append(table([
+        ["E53", "test accuracy", "updates"],
+        ["depth 3, instant credit, exploration T = 0.3", "0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999", "≈ 1,100"],
+        ["depth 3, greedy instant credit", "0.71–0.85 (cycles between shared prefixes)", "4k–11k"],
+        ["depth 3, credit to every candidate", "0.33–0.36 (never fires)", "≈ 26k"],
+        ["depth 2, same credit", "0.32–0.42", "≈ 24k"],
+    ], [70, 74, 30], st))
+    s += [P("The final-checkpoint spread comes from transient dips after convergence: a converged class sits just above its "
+            "threshold and one demotion can knock it under (§86; a margin kept by near-miss credit is under test). With "
+            "synapses grown only when first credited (§85, provably the same decisions as dense weights), depth 3 at 20 "
+            "channels gives 0.981–1.000 with 9.5k–13.7k of 145k candidate synapses ever grown.")]
     s += [P("5. Generalization and grokking", "h1"),
           P("<b>What counts (§58):</b> restriction, forced generalization above capacity, and grokking (the relation reached "
             "while memorizers are available) are different claims; each reports ρ = n/params. <b>Per-class parameters "
