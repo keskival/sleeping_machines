@@ -1,0 +1,9 @@
+# E53: depth 3 by composites + instant credit with exploration (THEORY §84, predictions P1-P5)
+e53_d3_T0.3 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5
+e53_d3_T0 experiments/e53_depth3.py --depth 3 --temp 0 --beta 0.5
+e53_d3_T0.1 experiments/e53_depth3.py --depth 3 --temp 0.1 --beta 0.5
+e53_d3_T1 experiments/e53_depth3.py --depth 3 --temp 1 --beta 0.5
+e53_d3_union experiments/e53_depth3.py --depth 3 --credit union --beta 0.5
+e53_d2_T0.3 experiments/e53_depth3.py --depth 2 --temp 0.3 --beta 0.5
+e53_tf_n40k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e53_n40k
+e53_tf_online experiments/e36_transformer.py --task e53 --sizes 32x2,64x2 --episodes 2000000 --batch 64 --seeds 2 --tag e53_online2M

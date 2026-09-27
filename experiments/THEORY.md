@@ -3711,6 +3711,57 @@ P4: N = 16 → 32 channels (P = 240 → 992 part nodes): updates grow by ≲ 1.5
 If P1 holds, the chains match the Transformer (0.998 after 2M episodes) with ≈ 10⁴× less inference compute and ≈ 50×
 fewer training episodes.
 
+## 84. Depth 3: order among three parts, credit at an instant, and exploration toward the absorbing route
+
+*Written 2026-09-27, after single-seed diagnostics of E53 (stated as such) and before its 5-seed runs.*
+
+**Why depth 3.** With summed potentials (§83) a class node's held input is a sum: H > θ can say "A and B were both held"
+but not "A before B". So classes that are different orders of the same motif set (E53: (A, B, C) vs (B, A, C)) need a
+unit whose firing already encodes an order: a composite node (u → v) over two part nodes, firing at v's spike if u fired
+within W₂ before. The class node then holds the composite A→B and is triggered by C.
+
+**Proposition 1 (activity pays for the expansion).** Let a layer of candidate composites contain one node per ordered pair of
+units below: P² nodes for P parts, P^(2^(d−1)) at depth d. Only composites whose inputs both fire within the window
+ever produce an event, so the work per episode is the number of fired composites, at most (units fired per window)²,
+independent of P², and a composite that never fires is never touched by learning. The mistake bound of full-information
+Winnow grows with the log of the basis (§83(i)): 2·log P at depth 3, not P. Winnow over an exponential feature
+expansion is intractable to simulate in general (Khardon, Roth & Servedio, JAIR 2005, for monomial kernels); **in an
+event network temporal sparsity is what makes the expanded Winnow tractable**: an unfired composite has no cost, and
+the fired ones are bounded by the event density per window. Dense streams (SHD, §55) are exactly where this breaks.
+
+**Proposition 2 (deadlock of union credit at depth ≥ 3).** Under §83's union credit, every unit that fires in every
+positive example with some unit before it (in the class window) is promoted at every miss, in the trigger role. At
+depth 3 the intermediate units (part B and composite A→B, at B's end) fire in every positive, and so do the targets
+(part C, composite B→C, at C's end). By §83(i) promotions never change the ratios among always-promoted units, so the
+trigger mass stays split between two instants. If no single instant carries more than θ, the node never fires, no
+false fire ever occurs, and no demotion (the only operation that separates them) happens: a fixed point without
+learning. At depth 2 (E34) the first part has a predecessor only through noise (f < 1), so the split does not arise.
+Observed (E53, one seed): trigger mass 0.26 / 0.26 / 0.25 / 0.23 over those four units, test 0.36, every error a miss.
+
+**Instant credit.** On a miss, credit one instant τ̂ (a fired unit with an earlier unit in the window): promote the hold
+units in [τ̂ − W, τ̂) if H(τ̂) ≤ θ and the trigger units at τ̂ if G(τ̂) ≤ θ (deficient roles only, full information within
+the instant). The promoted mass is then ≤ θ, so a promotion that misses the target costs Φ at most log(1 + αθ), while
+one that contains it gains at least log((1 + α)/(1 + αθ)).
+
+**Proposition 3 (the valid route is absorbing; greedy can cycle).** Call a route valid if it is present in no negative
+example. A valid route's units are demoted only as co-contributors of a false fire caused by other units, and then
+§83(ii) still lowers Φ. So once a valid route carries θ in both roles it fires on every positive and is never removed:
+it is an absorbing state (as the rule flip of §69). An invalid route (a prefix shared with another class) fires, is
+demoted below θ, then misses its own examples; greedy selection (τ̂ = the instant closest to firing) credits the prefix
+again because the prefix instant still holds most of the mass: a cycle that never visits the valid instant. Choosing
+τ̂ at random with probability ∝ exp(min(H, G)/T) makes every candidate instant reachable, so the walk hits the absorbing
+route with probability one; T trades search (large T) against wasted promotions (small T), as the cooled noise of §76.
+Observed (one seed, 20k episodes): greedy 0.725 (the prefix cycle, seen in the weights: hold on part A 0.75, trigger at
+B's end); T = 0.1 / 0.3 / 1: 0.998 with 1,022 / 1,142 / 1,423 updates; depth 2 with instant credit 0.44.
+
+**Predictions (E53, 5 seeds, 40k episodes; 6 motifs, 5 sets × 4 orders = 20 classes, permuted decoys).**
+P1: depth 3, instant credit, T = 0.3: ≥ 0.99 on ≥ 4/5 seeds.
+P2: greedy (T = 0) fails on ≥ 2/5 seeds (< 0.95); union credit < 0.6 on all seeds (deadlock).
+P3: depth 2 < 0.7 on all seeds (a summed hold is unordered).
+P4: updates stay within 3× of depth 2 in E34w (log P² = 2 log P), and events per episode ≈ 40 (activity, not P² = 57,600).
+P5: an event-token Transformer given a fixed 40k-episode training set (2M presentations, AdamW) stays below the chains;
+given 2M fresh episodes it may match them, at ≈ 10⁴× the inference cost.
+
 ## Tests
 
 | | Claim | Test |
