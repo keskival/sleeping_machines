@@ -8,3 +8,7 @@ e60_G16_hi40_r0 experiments/e60_dvs.py --G 16 --hi 40 --rel 0 --eval val
 e60_G16_hi80_r1 experiments/e60_dvs.py --G 16 --hi 80 --rel 1 --eval val
 e60_G16_hi80_r0 experiments/e60_dvs.py --G 16 --hi 80 --rel 0 --eval val
 e60_test experiments/e60_select_test.py
+e60b_reg8_T100 experiments/e60b_dvs_depth.py --reg 8 --T 100 --eta 0.05
+e60b_reg8_T300 experiments/e60b_dvs_depth.py --reg 8 --T 300 --eta 0.05
+e60b_reg4_T100 experiments/e60b_dvs_depth.py --reg 4 --T 100 --eta 0.05
+e60b_reg8_T100_eta02 experiments/e60b_dvs_depth.py --reg 8 --T 100 --eta 0.02
