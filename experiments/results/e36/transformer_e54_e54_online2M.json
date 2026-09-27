@@ -1,0 +1,42 @@
+{
+ "args": {
+  "task": "e54",
+  "sizes": "32x2",
+  "episodes": 2000000,
+  "batch": 64,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "e54_online2M",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 0,
+  "reltime": 0
+ },
+ "rows": [
+  {
+   "task": "e54",
+   "reltime": 0,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9919999837875366,
+   "params": 26741,
+   "tokens_per_episode": 10.2255,
+   "macs_per_episode": 265357.676832,
+   "wall_s": 584.1
+  },
+  {
+   "task": "e54",
+   "reltime": 0,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9959999918937683,
+   "params": 26741,
+   "tokens_per_episode": 10.2015,
+   "macs_per_episode": 264705.101088,
+   "wall_s": 587.4
+  }
+ ]
+}

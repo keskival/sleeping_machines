@@ -3833,7 +3833,8 @@ depth 3 (E54 D3: 1,198–2,380; 0.981–1.000). P4 holds: an event-token Transfo
 set of 40k examples, 50 passes) reaches 0.9895 / 0.9905 without weight decay (0.977 / 0.9705 with 0.1), against the
 chains' 0.999–1.000 from 10–15k examples seen once: about ten times the error rate, at ≈ 265k multiply-adds per example
 against ≈ 39 events (pruned, §93). (At depth 3 the same Transformer matches the chains; the gap opens with depth. The
-Transformer with 2M fresh examples at depth 4 is queued.)
+Transformer with 2M fresh examples at depth 4 reaches 0.992 / 0.996: with ≈ 150× the data it still has 4–8× the
+chains' error rate.)
 
 ## 86. Stability after convergence: a margin, maintained by near-miss credit
 
