@@ -1,3 +1,45 @@
 14:45:53 start e53_d3_T0.3
 14:47:11 done e53_d3_T0.3 (exit 0)
 14:47:11 start e53_d3_T0
+14:48:45 done e53_d3_T0 (exit 0)
+14:48:45 start e53_d3_T0.1
+14:50:11 done e53_d3_T0.1 (exit 0)
+14:50:11 start e53_d3_T1
+14:51:31 done e53_d3_T1 (exit 0)
+14:51:31 start e53_d3_union
+14:53:36 done e53_d3_union (exit 0)
+14:53:36 start e53_d2_T0.3
+14:54:52 done e53_d2_T0.3 (exit 0)
+14:54:52 start diag_dips53
+14:54:54 done diag_dips53 (exit 1)
+14:54:54 start e34x_tuned_union
+14:55:48 done e34x_tuned_union (exit 0)
+14:55:48 start diag_dips53b
+14:56:24 done diag_dips53b (exit 0)
+14:56:24 start e34x_tuned_inst
+14:57:22 done e34x_tuned_inst (exit 0)
+14:57:22 start diag_dips53c
+14:58:44 done diag_dips53c (exit 0)
+14:58:44 start e34x_bank_inst
+14:59:56 done e34x_bank_inst (exit 0)
+14:59:56 start diag_dips53d
+15:01:30 done diag_dips53d (exit 0)
+15:01:30 start e54_D3
+15:02:50 done e54_D3 (exit 0)
+15:02:50 start e54_D4
+15:07:13 done e54_D4 (exit 0)
+15:07:13 start e53m_d3_m0.9
+15:08:39 done e53m_d3_m0.9 (exit 0)
+15:08:39 start e53m_d3_m0.75
+15:10:07 done e53m_d3_m0.75 (exit 0)
+15:10:07 start e34m_tuned
+15:11:09 done e34m_tuned (exit 0)
+15:11:09 start e34m_bank
+15:12:21 done e34m_bank (exit 0)
+15:12:21 start e54m_D4
+15:16:53 done e54m_D4 (exit 0)
+15:16:53 start e53g_m0.9_g0.9
+15:18:15 done e53g_m0.9_g0.9 (exit 0)
+15:18:15 start e55_edge
+15:18:43 done e55_edge (exit 0)
+15:18:43 start e53g_m0.9_g0.97
