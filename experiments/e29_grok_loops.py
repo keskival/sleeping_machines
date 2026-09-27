@@ -140,16 +140,17 @@ class Net:
         x = st["x"]
         arr = x + self.do[y]
         got = np.isfinite(arr)
+        wants = self.wo[y] > 2 * self.wo[y].mean()              # the teacher wants h (relative to its budget)
         if got.any():                                           # teacher output pull, resource-conserving:
             tot = self.wo[y].sum()                              # the node's other synapses pay for it;
             self.wo[y, got] += eta * tot / got.sum()            # a pull moves a fraction eta of the budget
             self.wo[y] *= tot / self.wo[y].sum()
             self.do[y, got] += 0.5 * (arr[got].mean() - arr[got])
-            for h in np.flatnonzero(st["fired"] & (self.wo[y] > 0.5)):
+            for h in np.flatnonzero(st["fired"] & wants):
                 if credit != "frozen":
                     self.pull_hidden(h, st["win"][h], st["info"][h], eta * 0.5)
         if credit == "nearmiss":                                # counterfactual routing from cancellation
-            want = (~st["fired"]) & (self.wo[y] > 0.5) & (st["charge"] > 0.5)
+            want = (~st["fired"]) & wants & (st["charge"] > 0.5)
             for h in np.flatnonzero(want):
                 self.pull_hidden(h, st["win"][h], st["info"][h], eta)
         if y < self.p:                                          # prices: a missed teacher gets cheaper,
