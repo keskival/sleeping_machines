@@ -1,0 +1,16 @@
+# E68: race Transformer vs softmax Transformer (THEORY §103)
+e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
+e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
+e68_recall_R4_s0 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 0
+e68_recall_R16_s0 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 0
+e68_recall_R0_s1 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 1
+e68_recall_R1_s1 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 1
+e68_recall_R4_s1 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 1
+e68_recall_R16_s1 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 1
+e68_recall_R0_s2 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 2
+e68_recall_R1_s2 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 2
+e68_recall_R4_s2 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 2
+e68_recall_R16_s2 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 2
+e68_text_R0 experiments/e68_race_transformer.py --task text --R 0 --steps 3000
+e68_text_R1 experiments/e68_race_transformer.py --task text --R 1 --steps 3000
+e68_text_R4 experiments/e68_race_transformer.py --task text --R 4 --steps 3000
