@@ -1,0 +1,8 @@
+# E34w: summed hold/trigger potentials + full-information Winnow (THEORY §83); predictions P1-P4 preregistered there
+e34w_tuned experiments/e34_compose.py --summed 1 --thr 0.6 --steps 40000 --seeds 5
+e34w_bank experiments/e34_compose.py --summed 1 --thr 0.6 --scales 1,2,4 --steps 40000 --seeds 5
+e34w_t04 experiments/e34_compose.py --summed 1 --thr 0.4 --steps 10000 --seeds 5
+e34w_t05 experiments/e34_compose.py --summed 1 --thr 0.5 --steps 10000 --seeds 5
+e34w_t07 experiments/e34_compose.py --summed 1 --thr 0.7 --steps 10000 --seeds 5
+e34w_N32 experiments/e34_compose.py --summed 1 --thr 0.6 --N 32 --steps 40000 --seeds 5 --tag N32
+e34w_N16b experiments/e34_compose.py --summed 1 --thr 0.6 --steps 10000 --seeds 5 --tag s10k

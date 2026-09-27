@@ -3665,6 +3665,52 @@ types) −1.69 / −2.06 / −2.07. **Open:** whether it holds on held-out days 
 contexts × 6 windows could track day-specific statistics), and whether a GRU given the same window-bank inputs closes the
 gap (i.e. whether the advantage is the representation or the learning rule).
 
+## 83. Learning an ordered conjunction: summed potentials, full-information credit, and why the threshold must exceed half the budget
+
+*Written 2026-09-27 (before E34w).*
+
+**Setting.** A class node has conserved hold weights h and trigger weights g over P part nodes (each sums to 1). It
+fires at the first instant τ at which a part fires and both potentials exceed θ: the held input
+H(τ) = Σ h_e over parts fired in [τ − W, τ) and the coincident trigger input G(τ) = Σ g_l over parts firing at τ.
+Summation is what a membrane does; E34 instead required one synapse per role above θ = ½ (a hard route choice).
+Target: a route (e*, l*) present (e* in the window before l*) in every positive example of the class and in no
+negative one. Credit, on events only:
+- miss (the class should have fired and did not): multiply by (1 + α) the hold weight of every part that fired within
+  W before some later part, and the trigger weight of every part that fired within W after some earlier part; renormalize;
+- false fire at τ: multiply by (1 − β) the hold contributors in [τ − W, τ) and the trigger contributors at τ; renormalize.
+
+**(i) Ratio monotonicity (proof).** Renormalization multiplies every weight of a role by the same factor, so it cancels in
+h_{e*}/h_j. On a miss e* is always promoted (it fires before l* within W), so log(h_{e*}/h_j) never decreases and grows by
+log(1 + α) on every miss in which the distractor j is not promoted. If j is promotable in at most a fraction f of the
+class's misses, its relative mass shrinks as (1 + α)^−(1−f)m after m misses, and the role concentrates past θ once
+Σ_j h_j/h_{e*} < (1 − θ)/θ: O(log(P)/((1 − f)·log(1 + α))) misses per role, logarithmic in the candidate basis
+(as §77, §81), unaffected by demotions of the kind in (ii) unless they hit e*.
+
+**(ii) The AND-credit threshold (proof).** A false fire does not say which role was wrong. Let Φ = −log h_{e*} − log g_{l*}
+(the relative entropy to the target). The example is negative, so the target route is not present at τ: at most one
+target is among the demoted contributors. The demoted sets carry mass m > θ in each role (the node fired). A role whose
+target is demoted changes log-weight by log(1 − β) − log(1 − βm) ≥ log(1 − β) − log(1 − βθ); a role whose target is not
+demoted gains −log(1 − βm) > −log(1 − βθ). In the worst case
+
+  ΔΦ < 2·log(1 − βθ) − log(1 − β),  which is negative iff (1 − βθ)² < 1 − β  ⟺  β < (2θ − 1)/θ².
+
+So **conservation resolves the AND's credit ambiguity exactly when θ > ½ of the budget**: whichever role was wrong,
+renormalization moves more mass onto its target than the demotion took from the other role's target. At θ = ½ the
+worst-case drift is positive for every β (log((1 − β/2)²/(1 − β)) > 0), and below ½ it is worse. E34 ran at θ = ½.
+Promotions never increase Φ (each role's promoted set contains its target: ΔΦ_role = −log(1 + α) + log(1 + α·m_U) ≤ 0).
+
+**(iii) Copies cooperate only if potentials sum.** A window bank contains k copies of a part that co-fire. Full-information
+promotion gives them equal shares; with a one-synapse threshold none reaches θ once 1/k < θ, which is the E34 bank failure
+(classes that never form a route). With summation their shares add.
+
+**Predictions (E34w, 5 seeds, E28/E34 task, 15 classes, θ = 0.6, α = 1, β = 0.3; β < (2θ − 1)/θ² = 0.56).**
+P1: tuned part windows ≥ 0.99 test on at least 4 of 5 seeds (E34: 0.97; 0.954 after 200k episodes).
+P2: window bank {1, 2, 4} within 0.02 of tuned (E34: 0.87 vs 0.954).
+P3: θ = 0.4 and 0.5 worse than 0.6–0.7 (the drift of (ii)); at 10k episodes.
+P4: N = 16 → 32 channels (P = 240 → 992 part nodes): updates grow by ≲ 1.5× (log P ratio 1.26), not 4×.
+If P1 holds, the chains match the Transformer (0.998 after 2M episodes) with ≈ 10⁴× less inference compute and ≈ 50×
+fewer training episodes.
+
 ## Tests
 
 | | Claim | Test |
