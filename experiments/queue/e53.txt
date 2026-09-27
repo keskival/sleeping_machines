@@ -7,6 +7,7 @@ e53_d3_union experiments/e53_depth3.py --depth 3 --credit union --beta 0.5
 e53_d2_T0.3 experiments/e53_depth3.py --depth 2 --temp 0.3 --beta 0.5
 diag_dips53 experiments/diag/dips53.py
 e34x_tuned_union experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --steps 40000 --seeds 5 --tag W4.2
+diag_dips53b experiments/diag/dips53.py
 e34x_tuned_inst experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --steps 40000 --seeds 5
 e34x_bank_inst experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --scales 1,2,4 --steps 40000 --seeds 5
 e54_D3 experiments/e54_chains.py --D 3 --steps 40000 --seeds 5

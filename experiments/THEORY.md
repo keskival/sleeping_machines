@@ -3779,6 +3779,15 @@ P4: updates stay within 3× of depth 2 in E34w (log P² = 2 log P), and events p
 P5: an event-token Transformer given a fixed 40k-episode training set (2M presentations, AdamW) stays below the chains;
 given 2M fresh episodes it may match them, at ≈ 10⁴× the inference cost.
 
+**Results (E53, 5 seeds, 40k episodes).** P1 fails as stated (final checkpoint ≥ 0.99 on 3/5: 0.998, 0.963, 0.999,
+0.997, 0.964), but not for lack of learning: every seed is at 0.998–0.999 by 5k episodes (≈ 1,100 updates) and the misses
+are transient dips after convergence (7 of 40 checkpoints fall to 0.96–0.98 and recover). Dips grow with the exploration
+temperature (10 of 40 at T = 1), pointing at exploratory promotions on rare late misses. P2 holds: greedy 0.71–0.85 on
+all seeds (4k–11k updates, the prefix cycle); union credit 0.33–0.36 on all seeds (≈ 26k updates, the class nodes never
+fire: the deadlock). T = 0.1 searches more slowly (four seeds need 25–35k episodes), as the T trade-off predicts. P3
+holds: depth 2 with the same credit 0.32–0.42. P4 holds: ≈ 1,100 updates to converge (depth 2 in E34w: 890–1,531), 41
+events per episode against a basis of 57,840 units. P5 pending.
+
 ## 85. Synapses grown on credit: exact dense Winnow at the cost of activity, and the price of depth
 
 *Written 2026-09-27 (before E54's 5-seed runs).*
