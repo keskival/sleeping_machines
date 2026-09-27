@@ -447,9 +447,60 @@ def fig_race_theory():
     return fig
 
 
+def fig_race_time():
+    """§104: a race unit as integrate-and-fire with a random threshold; the compensator estimator; deliberation buys rank."""
+    chk = _load(os.path.join(RES, "theory", "s104_checks.json"))
+    fig, axs = plt.subplots(1, 3, figsize=(7.8, 2.6), gridspec_kw={"wspace": 0.5, "width_ratios": [1.2, 1, 1]})
+    # (a) one unit: a linear CDE state (a decaying and a rotating component) jumps at input events and flows between them;
+    # its hazard exp(w . z) is integrated until it crosses an exponential threshold E
+    rng = np.random.default_rng(3); ev = np.sort(rng.uniform(0.05, 1.6, 9)); tt = np.linspace(0, 2.0, 4001); dt = tt[1] - tt[0]
+    z = np.zeros((len(tt), 2), complex); cur = np.zeros(2, complex); lam = np.array([-2.0, -1.0 + 9j]); k = 0
+    for i, t in enumerate(tt):
+        cur = cur * np.exp(lam * dt)
+        while k < len(ev) and ev[k] <= t:
+            cur = cur + np.array([1.0, 0.8]); k += 1
+        z[i] = cur
+    haz = np.exp(-2.6 + 0.9 * z[:, 0].real + 0.7 * z[:, 1].real); Lam = np.cumsum(haz) * dt; E = 1.3
+    fi = int(np.argmax(Lam >= E)); fire = tt[fi]
+    ax = axs[0]
+    ax.plot(tt[:fi + 1], Lam[:fi + 1], color=EVENT, lw=1.6, label="integrated hazard Λ(t)")
+    ax.plot(tt[:fi + 1], haz[:fi + 1] / haz[:fi + 1].max() * 0.9, color=MUTED, lw=0.8, label="hazard exp(w·z(t)) (scaled)")
+    ax.axhline(E, color=INK, lw=0.8, ls="--"); ax.text(0.02, E + 0.06, "random threshold E ~ Exp(1)", fontsize=6.3, color=INK)
+    ax.vlines(ev, -0.18, -0.05, color=BLUE, lw=1.2); ax.text(0.02, -0.34, "input events (state jumps)", fontsize=6.3, color=BLUE)
+    ax.axvline(fire, color=EVENT, lw=0.8, ls=":"); ax.text(fire + 0.03, 0.3, "fires", fontsize=6.5, color=EVENT)
+    ax.set_xlim(0, 2.0); ax.set_ylim(-0.42, 2.1); ax.set_xlabel("time", fontsize=7); ax.tick_params(labelsize=6.5)
+    ax.set_title("(a) a race unit is integrate-and-fire\nwith an exponential threshold", fontsize=7.4)
+    ax.legend(fontsize=5.8, frameon=False, loc="upper left", bbox_to_anchor=(0.0, 0.93))
+    # (b) compensator estimator
+    a = chk["a_compensator"]; K = len(a["P_exact"]); x = np.arange(K)
+    ax = axs[1]
+    ax.bar(x, a["P_exact"], color=LIGHT_BLUE, width=0.6, label="exact win probability")
+    ax.scatter(x, a["mean_Lambda_i(T)"], color=EVENT, s=16, zorder=3, label="mean of its own Λ_i(T)")
+    for i in range(K):
+        r = a["var_indicator"][i] / a["var_Lambda"][i]
+        ax.text(x[i], max(a["P_exact"][i], a["mean_Lambda_i(T)"][i]) + 0.02, f"÷{r:.1f}" if r < 2 else f"÷{r:.0f}",
+                ha="center", fontsize=5.8, color=MUTED)
+    ax.set_xticks(x); ax.set_xticklabels([f"unit {i + 1}" for i in x], fontsize=6); ax.tick_params(labelsize=6.5)
+    ax.set_ylim(0, 0.56); ax.set_title("(b) own integrated hazard at the\ndecision = win probability", fontsize=7.4)
+    ax.legend(fontsize=5.8, frameon=False, loc="upper left")
+    ax.set_xlabel("÷: variance below the winner indicator", fontsize=6.2, color=MUTED)
+    # (c) deliberation buys expressiveness
+    sw = chk["c_mos_rank"]["sweep"]; mt = [r["mean_decision_time"] for r in sw]; rs = [r["residual_beyond_rank_d+1"] for r in sw]
+    ax = axs[2]
+    ax.plot(mt, rs, color=EVENT, marker="o", ms=4, lw=1.4)
+    ax.set_xscale("log"); ax.set_xlabel("mean decision time (race slowed by a common gain)", fontsize=6.4)
+    ax.set_ylabel("share beyond a single softmax\n(log-prob. matrix beyond rank d+1)", fontsize=6.4); ax.tick_params(labelsize=6.5)
+    ax.set_ylim(-0.01, 0.25)
+    ax.text(mt[0], rs[0] + 0.015, "fast race =\none softmax", fontsize=6.2, color=INK)
+    ax.text(mt[-1], rs[-1] - 0.05, "slow race =\nmixture of\nsoftmaxes", fontsize=6.2, color=INK, ha="right")
+    ax.set_title("(c) deliberation time buys\nexpressiveness", fontsize=7.4)
+    fig.suptitle("Races in continuous time (§104): checked numerically", fontsize=8.4, y=1.07)
+    return fig
+
+
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "figures")
     for name, fn in (("concept", fig_concept), ("supremacy_map", fig_supremacy_map), ("anatomy", fig_anatomy),
-                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling), ("race_theory", fig_race_theory)):
+                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling), ("race_theory", fig_race_theory), ("race_time", fig_race_time)):
         fig = fn(); fig.savefig(os.path.join(out, name + ".png"), bbox_inches="tight", facecolor="white"); plt.close(fig)
         print("wrote", name)
