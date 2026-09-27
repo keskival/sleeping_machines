@@ -15,7 +15,8 @@ Network (native primitives only):
                reference, the end of the episode). Events per episode: input spikes + fired detectors.
 
 Learning happens only on errors and only on the causal chain of the event that should have won (§56.5):
-  teacher k did not fire, no coincidence   move its window/delays toward the observed interval (pull)
+  teacher k did not fire, no coincidence   align: move its delays together; hold (--tol hold): lengthen its
+                                           PSP window until the second input falls inside it
   teacher k did not fire, it was vetoed     weaken the veto synapses that blocked it (they were on its chain)
   a wrong detector c fired  (--fix veto)   specialize c by inhibition: strengthen the veto synapses of channels
                                            that spiked while c was armed and move their delays into that span
@@ -70,9 +71,10 @@ def sample(pats, N, H, q, rng):
 
 
 class Net:
-    def __init__(self, pats, N, H, rng):
+    def __init__(self, pats, N, H, rng, tol="align"):
         self.pats, self.N, self.H, K = pats, N, H, len(pats)
-        self.d = rng.uniform(0, 3, (K, 2))                  # delays on the two excitatory synapses
+        self.tol = tol
+        self.d = rng.uniform(0, 3, (K, 2)) if tol == "align" else np.zeros((K, 2))   # excitatory delays
         self.w = np.full(K, 0.5)                            # integration windows
         self.u = rng.uniform(0, 3, (K, N))                  # veto delays
         self.g = np.full((K, N), 0.25)                      # veto strengths (active above 1/2)
@@ -111,17 +113,23 @@ class Net:
             kind = infos[y][0]
             if kind == "nocoinc":
                 _, a1, a2 = infos[y]
-                gap = a2 - a1                               # bring the two arrivals together (pull)
-                self.d[y, 0] += eta * np.sign(gap) * 0.5
-                self.d[y, 1] -= eta * np.sign(gap) * 0.5
-                self.w[y] += eta * 0.1
-                np.maximum(self.d, 0, out=self.d)
+                gap = a2 - a1
+                if self.tol == "hold":                      # hold: lengthen the PSP until B falls inside it
+                    self.w[y] += eta * max(abs(gap) - self.w[y], 0) + eta * 0.1
+                else:                                       # align: bring the two arrivals together (pull)
+                    self.d[y, 0] += eta * np.sign(gap) * 0.5
+                    self.d[y, 1] -= eta * np.sign(gap) * 0.5
+                    self.w[y] += eta * 0.1
+                    np.maximum(self.d, 0, out=self.d)
             else:                                            # wrongly vetoed: the blockers were on its chain
                 blockers = infos[y][1]
                 self.g[y, blockers] -= eta
         if win < K and win != y:                            # a wrong detector fired
             c = win
             _, first, second = infos[c]
+            if self.tol == "hold" and second - first > 0.5 * self.w[c]:
+                # a late partner fired it: shorten the hold toward just below that span (duration credit, §61)
+                self.w[c] += eta * ((second - first) * 0.95 - self.w[c])
             if fix == "veto":                                # specialize it by inhibition
                 i, j = self.pats[c][0], self.pats[c][1]
                 lo, hi = min(t[i], t[j]), max(t[i], t[j])     # channels that spiked inside the armed interval
@@ -159,6 +167,8 @@ def main():
     ap.add_argument("--steps", type=int, default=50000)
     ap.add_argument("--eta", type=float, default=0.05)
     ap.add_argument("--fix", default="veto", choices=("veto", "push"))
+    ap.add_argument("--tol", default="align", choices=("align", "hold"),
+                    help="temporal tolerance by aligning delays, or by holding a long PSP (§61)")
     ap.add_argument("--noveto", type=int, default=0, help="1: veto synapses disabled (monotone network)")
     ap.add_argument("--seeds", type=int, default=3)
     ap.add_argument("--tag", default="")
@@ -168,7 +178,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         pats = make_task(a.N, a.K, a.H, rng)
-        net = Net(pats, a.N, a.H, rng)
+        net = Net(pats, a.N, a.H, rng, a.tol)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(pats, a.N, a.H, a.q, rng)
@@ -181,7 +191,7 @@ def main():
         r = {"seed": s, "final": curve[-1], "curve": curve, "events_per_episode": net.events / (a.steps + 20000)}
         rows.append(r)
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"N{a.N}_K{a.K}_{a.fix}{'_noveto' if a.noveto else ''}{'_' + a.tag if a.tag else ''}.json"
+    name = f"N{a.N}_K{a.K}_{a.fix}{'_hold' if a.tol == 'hold' else ''}{'_noveto' if a.noveto else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
