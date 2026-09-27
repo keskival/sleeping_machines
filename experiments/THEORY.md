@@ -3501,6 +3501,54 @@ threshold (Occam, above) from a time threshold (∝ 1/n); long runs at 2% and 4%
 **Prediction (M78), as first stated:** in E41 at p = 17, generalization appears at training fractions of a few percent, far below E37's
 fractions at D = 1 for the same p, and the threshold fraction falls with p.
 
+## 79. An asynchronous world model: the weaving operator as a learned temporal point process
+
+*Written 2026-09-27, before the E43 world model was built beyond a direction classifier (which is not a world model:
+it predicts one binary label, not what happens next, when, or with what probability).*
+
+**What a world model of an event stream is.** A generative model of the process: given the history (and a latent
+state carried between events), the probability of which event happens next and when. The standard formalism is the
+temporal point process with conditional intensities λ_e(t | history): the next event is the first arrival among
+competing risks, with density λ_e(t)·exp(−∫ Σ_e' λ_e'). Frontier instances: Hawkes processes (self-exciting
+intensities), neural Hawkes processes (continuous-time LSTM, Mei & Eisner 2017), Transformer Hawkes processes (Zuo et
+al. 2020), intensity-free models of inter-event times (Shchur et al. 2020). Latent-dynamics world models for control
+(Dreamer's RSSM, Hafner et al.) add a deterministic recurrent state and a stochastic latent; JEPA-style models predict
+in a learned representation rather than raw events.
+
+**The correspondence to the manifesto.** The weaving operator W is exactly a competing-risks point process: the state
+is a pool of pending future events with latency distributions; at each moment one fires, cancels itself from the pool,
+and updates the others' latencies (§§1–5 of the manifesto's "initial thoughts"). A race of noisy latencies with Gumbel
+timing noise is a softmax over event types (§44), so a race network is a native sampler of the competing-risks
+distribution. A world model for this project is therefore W itself, built and learned.
+
+**Design (E43).**
+1. *Pool.* For each event type e (up-move, down-move, large aggressive buy, large aggressive sell, burst), a pending
+   prediction whose latency distribution is set by the current state. Output: P(next type) and its timing
+   distribution; sampling = one noisy race.
+2. *Latent state in continuous time.* Fast state: exponentially decaying traces of recent events of each type (the
+   Hawkes excitation, as leaky integrators between events). Slow state: a regime estimate (activity rate,
+   volatility), updated at events. Persistent memory: hold loops (§59) when patterns must be carried longer.
+3. *Learning = online likelihood at every event.* When type e occurs at t, each type's log-intensity parameters move
+   along the competing-risks log-likelihood gradient: up for the type that happened (at its actual time), down in
+   proportion to each type's integrated intensity since the last event. The native form is the positional rule (pull
+   the prediction that should have won toward its time, §54) plus normalization over the pool (the "others were less
+   likely" term arrives through the shared budget, §68), not a push of losers in time.
+4. *Learning to learn.* (a) Complementary learning systems (McClelland et al. 1995; fast weights, Ba et al. 2016):
+   fast parameters track the current regime, slow parameters are consolidated in sleep between sessions and keep only
+   structure reused across days (§72). (b) Plasticity gated by surprise: a Bayesian online change-point estimate
+   (Adams & MacKay 2007) of the stream's regime raises fast plasticity after a break and lowers it when the model is
+   reliably right, which is §45's optimal tracking rule with the noise ratio estimated online.
+5. *Decisions from the model.* Roll the race forward over the trading horizon to obtain the distribution of the price
+   change; act only when the expected gain minus cost exceeds a profit-learned price (E42).
+
+**Evaluation.** Online (prequential) log-likelihood per event of type and timing, against (i) a Poisson baseline per
+type, (ii) an online multivariate Hawkes process with exponential kernels, (iii) a GRU-based neural point process
+trained online by backprop; adaptation after regime changes (likelihood in the hour after a volatility break); then
+profit after costs through the decision layer. **Predictions (M79):** the native pool beats Poisson and matches the
+online Hawkes process in likelihood (both have the same excitation structure); surprise-gated fast/slow plasticity
+improves likelihood after regime breaks relative to fixed plasticity; whether the native model approaches the neural
+point process is open.
+
 ## Tests
 
 | | Claim | Test |
@@ -3574,6 +3622,7 @@ fractions at D = 1 for the same p, and the threshold fraction falls with p.
 | **M76** | collapse is data-limited or search-limited; cooled noise removes the second; depth-2 grokking of (a + b + c) mod p through a composed rhythm chain | E37 noise sweep and p-scaling with σ ∝ p; E41 full runs (p = 17, 31; fractions; no-sleep and lookup-only controls); Transformer baseline on E41's task |
 | **M77** | learning cost scales with activity (log of co-active channels), not basis size N | E35 N-sweep at fixed spikes/episode (done to N = 48: flat); spikes/episode sweep at fixed N |
 | **M78** | grokking fraction f* ≈ D log p / p^D: composition makes grokking exponentially cheaper than memorization | E41 training-fraction sweep at p = 17 (and p = 31) |
+| **M79** | the weaving operator W is a competing-risks temporal point process; a native pool learned by online likelihood with fast/slow, surprise-gated plasticity is an asynchronous world model | E43: online log-likelihood (type and timing) vs Poisson, online Hawkes, GRU neural point process; adaptation after regime breaks; decisions from the model |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
