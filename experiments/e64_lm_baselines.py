@@ -23,20 +23,21 @@ A = S1.A
 
 
 class LSTMLM(nn.Module):
-    def __init__(self, h):
+    def __init__(self, h, drop=0.0):
         super().__init__()
         self.emb = nn.Embedding(A, 64); self.rnn = nn.LSTM(64, h, batch_first=True); self.out = nn.Linear(h, A)
+        self.drop = nn.Dropout(drop)
 
     def forward(self, x, state=None):
-        h, state = self.rnn(self.emb(x), state)
-        return self.out(h), state
+        h, state = self.rnn(self.drop(self.emb(x)), state)
+        return self.out(self.drop(h)), state
 
 
 class TfLM(nn.Module):
-    def __init__(self, d, L, ctx):
+    def __init__(self, d, L, ctx, drop=0.0):
         super().__init__()
         self.emb = nn.Embedding(A, d); self.pos = nn.Embedding(ctx, d)
-        layer = nn.TransformerEncoderLayer(d, 4, 4 * d, dropout=0.0, batch_first=True, norm_first=True)
+        layer = nn.TransformerEncoderLayer(d, 4, 4 * d, dropout=drop, batch_first=True, norm_first=True)
         self.enc = nn.TransformerEncoder(layer, L, enable_nested_tensor=False); self.out = nn.Linear(d, A)
         self.register_buffer("mask", torch.triu(torch.full((ctx, ctx), float("-inf")), 1))
 
@@ -45,31 +46,9 @@ class TfLM(nn.Module):
         return self.out(self.enc(self.emb(x) + self.pos.weight[:n], mask=self.mask[:n, :n], is_causal=True)), None
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="lstm", choices=("lstm", "tf"))
-    ap.add_argument("--D", type=int, default=1_000_000)
-    ap.add_argument("--passes", type=float, default=3.0)
-    ap.add_argument("--size", type=int, default=256, help="LSTM hidden size or Transformer width")
-    ap.add_argument("--layers", type=int, default=2)
-    ap.add_argument("--ctx", type=int, default=256)
-    ap.add_argument("--test", type=int, default=1_000_000)
-    a = ap.parse_args()
-    os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(0); rng = np.random.default_rng(0)
-    x = S1.load(); train = torch.tensor(x[:a.D]); test = torch.tensor(x[95_000_000:95_000_000 + a.test])
-    net = LSTMLM(a.size) if a.model == "lstm" else TfLM(a.size, a.layers, a.ctx)
-    opt = torch.optim.Adam(net.parameters(), lr=2e-3 if a.model == "lstm" else 1e-3)
-    B, T = 32, a.ctx
-    steps = int(a.passes * a.D / (B * T))
-    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, max(steps, 1))
-    for step in range(steps):
-        idx = rng.integers(0, a.D - T - 1, B)
-        xb = torch.stack([train[i:i + T] for i in idx]); yb = torch.stack([train[i + 1:i + T + 1] for i in idx])
-        logits, _ = net(xb)
-        loss = nn.functional.cross_entropy(logits.reshape(-1, A), yb.reshape(-1))
-        opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
-        if step % max(steps // 10, 1) == 0:
-            print(json.dumps({"step": step, "of": steps, "train_bpc": float(loss) / math.log(2), "wall_s": round(time.time() - t0)}), flush=True)
+def score(net, test, a, T):
+    """bits per character on `test`: LSTM statefully in blocks of 4096; Transformer in windows of T with T/2 of context."""
+    was = net.training
     net.eval(); tot = 0.0; n = 0
     with torch.no_grad():                                               # score in windows of T with T/2 of context
         state = None
@@ -86,10 +65,53 @@ def main():
                 logits, _ = net(xb)
                 lo = 0 if s0 == 0 else half
                 tot += float(nn.functional.cross_entropy(logits[0, lo:], yb[0, lo:], reduction="sum")); n += T - lo
+    net.train(was)
+    return tot / n / math.log(2)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--model", default="lstm", choices=("lstm", "tf"))
+    ap.add_argument("--D", type=int, default=1_000_000)
+    ap.add_argument("--passes", type=float, default=3.0)
+    ap.add_argument("--size", type=int, default=256, help="LSTM hidden size or Transformer width")
+    ap.add_argument("--layers", type=int, default=2)
+    ap.add_argument("--ctx", type=int, default=256)
+    ap.add_argument("--test", type=int, default=1_000_000)
+    ap.add_argument("--dropout", type=float, default=0.0)
+    ap.add_argument("--valid", type=int, default=0, help="if > 0: score this many validation characters at 10 checkpoints and "
+                    "test the best checkpoint (early stopping on validation)")
+    a = ap.parse_args()
+    os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(0); rng = np.random.default_rng(0)
+    x = S1.load(); train = torch.tensor(x[:a.D]); test = torch.tensor(x[95_000_000:95_000_000 + a.test])
+    net = LSTMLM(a.size, a.dropout) if a.model == "lstm" else TfLM(a.size, a.layers, a.ctx, a.dropout)
+    valid = torch.tensor(x[90_000_000:90_000_000 + a.valid]) if a.valid else None
+    best = (float("inf"), None, -1); vcurve = []
+    opt = torch.optim.Adam(net.parameters(), lr=2e-3 if a.model == "lstm" else 1e-3)
+    B, T = 32, a.ctx
+    steps = int(a.passes * a.D / (B * T))
+    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, max(steps, 1))
+    for step in range(steps):
+        idx = rng.integers(0, a.D - T - 1, B)
+        xb = torch.stack([train[i:i + T] for i in idx]); yb = torch.stack([train[i + 1:i + T + 1] for i in idx])
+        logits, _ = net(xb)
+        loss = nn.functional.cross_entropy(logits.reshape(-1, A), yb.reshape(-1))
+        opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
+        if step % max(steps // 10, 1) == 0 or step == steps - 1:
+            row = {"step": step, "of": steps, "train_bpc": float(loss) / math.log(2), "wall_s": round(time.time() - t0)}
+            if valid is not None and step > 0:
+                row["valid_bpc"] = score(net, valid, a, T); vcurve.append(row)
+                if row["valid_bpc"] < best[0]:
+                    best = (row["valid_bpc"], {k: v.clone() for k, v in net.state_dict().items()}, step)
+            print(json.dumps(row), flush=True)
+    if best[1] is not None:
+        net.load_state_dict(best[1])
+    tbpc = score(net, test, a, T)
     nparam = sum(p.numel() for p in net.parameters())
-    res = {"args": vars(a), "params": nparam, "test_bpc": tot / n / math.log(2), "steps": steps, "wall_s": round(time.time() - t0, 1)}
+    res = {"args": vars(a), "params": nparam, "test_bpc": tbpc, "steps": steps,
+           "valid_curve": vcurve, "best_step": best[2], "best_valid_bpc": best[0] if best[1] is not None else None, "wall_s": round(time.time() - t0, 1)}
     print(json.dumps(res), flush=True)
-    with open(os.path.join(OUT, f"{a.model}_D{a.D}_s{a.size}_p{a.passes:g}.json"), "w") as f:
+    with open(os.path.join(OUT, f"{a.model}_D{a.D}_s{a.size}_p{a.passes:g}" + (f"_dr{a.dropout:g}_v" if a.valid else "") + ".json"), "w") as f:
         json.dump(res, f)
 
 
