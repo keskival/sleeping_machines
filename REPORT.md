@@ -309,6 +309,10 @@ out of 145k candidates.
 At depth 4 (which of 20 orders of four motifs; 5.5·10⁷ candidate units per role), the same rules give 0.999–1.000 on
 5/5 seeds after 10–15k examples, with ≈ 2,000 updates, ≈ 150 events per example and 77k–84k synapses ever grown; with
 one level of composites too few the network cannot express the order and stays at 0.57–0.76 (E54).
+**Inference cost follows the learned structure (§93).** After a warm-up, a unit is extended to the next level only if one
+of its children carries weight (checked periodically, like sleep): accuracy is unchanged (depth 3: identical per seed;
+depth 4: 0.995–1.000) while events per example fall by 42% at depth 3 (44 → 26) and 75% at depth 4 (≈ 155 → 39); the
+saving grows with depth (E93).
 - A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
   (≈ 180k multiply-adds per episode).
 - **Closing the gap: learned windows plus latest-instant credit (§88–§89).** The remaining errors were lost races to a

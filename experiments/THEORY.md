@@ -4131,6 +4131,12 @@ them changes no decision except by removing noise units that could otherwise be 
 0.94 at 4k) while events per example fall by ≥ 40%, and by more at greater depth, since the pruned fraction of the
 extension tree grows with depth.
 
+**Results (E93, 5 seeds, 40k examples; pruning after 3k).** Depth 3: accuracy identical seed for seed to the unpruned
+network (0.999 / 1.000 / 1.000 / 0.981 / 0.999), events per example 44 → 26 (−42%). Depth 4: 1.000 / 0.995 / 1.000 /
+0.999 / 1.000 (unpruned 0.999–1.000), events 147–168 → 38–39 (−75%), at the price of slower convergence (1.0 reached by
+25–35k examples instead of 10–15k; 2.1k–2.5k updates instead of 1.9k–2.0k). The saving grows with depth, as predicted.
+Depth 5: first run killed by a watchdog that counted page cache as memory (0.6 GB in use); rerun queued.
+
 ## Tests
 
 | | Claim | Test |
