@@ -856,14 +856,17 @@ def build():
         "budget lets a node learn an AND without knowing which half was wrong; that deep order is trainable with the fewest "
         "mistakes any learner can guarantee; and that a race of clocks carries both the softmax (which fires) and its "
         "normalizer (when), so Transformer attention and its gradients are computed on average exactly by local rules: "
-        "Transformers, including their training, are a limit of these networks.",
+        "Transformers, including their training, are a limit of these networks. And event networks are exactly controlled "
+        "differential equations driven by their events: the order detectors they learn are the universal features of event "
+        "streams, the state-space units behind today's best event-stream models are a special case, and a race run in "
+        "continuous time is more expressive than a softmax, the more so the longer it deliberates (§104).",
     ], st)
     s += [P("<b>Scope of the evidence.</b> The supremacy results (timing, composition, deep order, grokking) are on synthetic "
             "tasks built to test one capability at a time, where the target is exactly expressible by the primitives. The theory "
             "behind them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) "
             "is not task-specific: the reason to expect them to carry over to sparse, precisely timed real streams. On the real "
             "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
-            "0.675 vs ≈ 0.70 (LSTM); a market world model 0.07–0.18 nats behind a Transformer point process; no trading edge "
+            "0.675 vs ≈ 0.70 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.07–0.18 nats behind a Transformer point process; no trading edge "
             "after fees in four markets; on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs 94–98% published.")]
     s += fig(FM.fig_supremacy_map, W)
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
@@ -877,7 +880,8 @@ def build():
             "settling, finds the right order and keeps it (§84).")]
     s += fig(FM.fig_credit, W)
     s += [P("<b>Where it does not win yet:</b> event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 "
-            "for a published LSTM), and trading, where no "
+            "for a published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a "
+            "special case of ours; E71 tests it with sparse units), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
             "any taker fee). <b>Next:</b> a path to generative language models built this way (section 10).")]
     s.append(PageBreak())
@@ -943,7 +947,7 @@ def build():
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands, selected on held-out speakers: "
-         "0.675 test (E51 0.647); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
+         "0.675 test (E51 0.647); LSTM ≈ 0.70; state of the art 95.9–96.3% (event-by-event state-space models)", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
          "the data may hold no edge"],
     ], [48, 76, 50], st))
@@ -1123,7 +1127,10 @@ def build():
         "<b>Spiking Heidelberg Digits</b> (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test "
         "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
-        "race reached 0.35; a published LSTM ≈ 0.70; state of the art ≈ 0.9. SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
+        "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
+        "event units of our kind with every unit updated on every event (both select checkpoints on the test set). E71 "
+        "(queued) uses that unit inside the paradigm, with sparse tonotopic subscriptions, selected on held-out speakers. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
         "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
         "to 0.675 (E59, §92).",
@@ -1246,14 +1253,44 @@ def build():
             "objective, up to an error shrinking as 1/R with R races per head: Transformers, including their training, are a "
             "limit of these networks. Numerical check below; training curves compared in E68 (running).")]
     s += fig(FM.fig_race_theory, W)
+    s += [P("<b>Time and content, one system (theory, §104).</b> Continuous-time neural models describe a hidden state that "
+            "flows and is pushed by its input: neural ODEs, controlled differential equations, and the state-space models "
+            "behind Mamba-class language models. An event network is exactly such a system. Between events its state flows in "
+            "closed form, and at each event it jumps. The only nonlinearity is in <i>which</i> units fire <i>when</i>. Four "
+            "consequences follow:")]
+    s += bullets([
+        "<b>Order detectors are the natural features of event streams.</b> The iterated integrals that make these models "
+        "universal (the “signature” of a path) are, for event streams, the counts of ordered event patterns: exactly what our "
+        "“this, then that” detectors learn. Stacking such detectors builds the universal feature set.",
+        "<b>Selection comes free.</b> Mamba-class models gain their power by letting the input set how fast the state forgets. "
+        "In an event network, which channel fired is that signal. A unit that an event does not address need not be touched "
+        "at all, and skipping it is exact (sleeping execution). The best published models on spoken digits (95.9–96.3%) are "
+        "such units with every unit updated on every event. E71 (queued) tests the sparse version.",
+        "<b>A race unit is an integrate-and-fire neuron with a random threshold.</b> Its gradient is the event-based "
+        "backpropagation used for spiking networks, but the random threshold keeps the expected loss smooth even when "
+        "spikes appear or vanish. At the moment of decision, each unit's own integral is on average exactly its probability "
+        "of winning, for any time-varying rates.",
+        "<b>Time adds expressiveness.</b> If the scores change while the race runs, the race outputs a mixture of softmaxes "
+        "over its own decision time. That is more expressive than the single softmax at the end of every Transformer (the "
+        "“softmax bottleneck”). A fast race is one softmax; a slower race buys expressiveness with time rather than with "
+        "parameters.",
+    ], st)
+    s += fig(FM.fig_race_time, W)
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
             "Attention is learnable by local credit: in a recall task where the network must learn which key a query refers to "
             "and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct after 68 "
             "mistakes, and stays 100% on contexts four times longer than trained on (one run; five runs and a Transformer "
-            "comparison running, E61).")]
+            "comparison running, E61). <b>Language, stage 1</b> (counting experts, copy memories and word-keyed memories, mixed "
+            "by conserved multiplicative credit), measured on text8 test text at 1M, 10M and 90M training characters: the "
+            "mixture reaches 2.00, 1.79 and 1.65 bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at "
+            "1M and 10M (E66). Stored contexts grow as D^0.41 and pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a "
+            "floor near 1.73 bpc, which the mixture already passes: the floor belongs to the component, not to the design. For "
+            "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. Our first gradient-trained baselines at equal "
+            "data (one pass over 10M characters: LSTM 2.17, Transformer 2.43) are not converged, so no comparison is claimed "
+            "until converged runs (multiple passes, early stopping on validation, E64b) finish.")]
     s += fig(FM.fig_lm_topology, W)
-    s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (running, "
-            "E62), not the goal but a measurement of how memory and loss scale with data; (2) race attention over the stream, "
+    s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
+            "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) race attention over the stream, "
             "learned by local credit; (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
             "misses. At each stage: a recurrent network and a Transformer trained by gradients on the same text; bits per "
             "character, examples needed, work per character.")]

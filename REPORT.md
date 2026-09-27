@@ -52,14 +52,17 @@ can **match or beat** MLPs and Transformers.
   lets a node learn an AND without knowing which half was wrong; that deep order is trainable with the fewest mistakes
   any learner can guarantee; and that a race of clocks carries both the softmax (which clock fires) and its normalizer
   (when), so Transformer attention and its gradients are computed on average exactly by local rules: Transformers,
-  including their training, are a limit of these networks.
+  including their training, are a limit of these networks. And event networks are exactly controlled differential
+  equations driven by their events: the order detectors they learn are the universal features of event streams, the
+  state-space units behind today's best event-stream models are a special case, and a race run in continuous time is more
+  expressive than a softmax, the more so the longer it deliberates (§104).
 
 **Scope of the evidence.** The supremacy results (timing, composition, deep order, grokking) are on synthetic tasks built
 to test one capability at a time, where the target is exactly expressible by the network's primitives. The theory behind
 them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) is not
 task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
 tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
-0.675 vs ≈ 0.70 for an LSTM; a market-stream world model 0.07–0.18 nats per event behind a Transformer point process; and
+0.675 vs ≈ 0.70 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.07–0.18 nats per event behind a Transformer point process; and
 no trading edge after fees in four markets; and on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs
 94–98% published.
 
@@ -79,7 +82,8 @@ right order and keeps it (§84).
 ![Three credit rules on the same class node: never fires, trapped on the shared prefix, finds the order](report/figures/credit_dynamics.png)
 
 **Where it does not win yet:** event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 for a
-published LSTM), and trading, where no learner beats
+published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a special case of
+ours; E71 tests it with sparse units), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
 **Next:** a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
 
@@ -143,7 +147,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: 0.990 given 40k × 50 and 0.992–0.996 given 2M fresh examples (4–10× the error rate) at ≈ 7,000× the computation |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
-| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
+| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and far below the state of the art (95.9–96.3%, event-by-event state-space models) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
@@ -459,8 +463,11 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   bands relative to the voice** (each utterance keeps a running sum and count of its spikes' bands; context and
   prediction are relative to that centroid) raises accuracy on held-out speakers from 0.36–0.38 to 0.44–0.46 at every
   configuration and, selected on held-out speakers only, reaches **0.675 on the test set** (absolute coding under the
-  same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; state of the art ≈ 0.9. The weight race reaches 0.35; a published LSTM ≈ 0.70; state of the
-  art ≈ 0.9. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
+  same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
+  (Event-SSM, Schöne et al. 2024) and 96.3% (S7, Soydan et al. 2024); the last two process the spikes one event at a time
+  with linear state-space units, which §104 shows are event units of our kind with every unit updated on every event (both
+  select checkpoints on the test set). **E71 (queued)** uses that unit inside the paradigm: selective event-CDE units with
+  sparse tonotopic subscriptions, selected on held-out speakers. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
@@ -652,8 +659,37 @@ numerically; E68 compares training curves directly (running).
 
 ![Race estimates against exact softmax quantities: attention outputs, softmax probabilities from rate times decision time, and pathwise attention gradients all lie on the diagonal](report/figures/race_theory.png)
 
+**Time and content, one system (theory, §104).** Continuous-time neural models describe a hidden state that flows and is
+pushed by its input: neural ODEs, controlled differential equations, and the state-space models behind Mamba-class language
+models. An event network is exactly such a system. Between events its state flows in closed form, and at each event it jumps.
+The only nonlinearity is in *which* units fire *when*. Four consequences follow:
+- *Order detectors are the natural features of event streams.* The iterated integrals that make these models universal (the
+  "signature" of a path) are, for event streams, the counts of ordered event patterns: exactly what our "this, then that"
+  detectors learn. Stacking such detectors builds the universal feature set.
+- *Selection comes free.* Mamba-class models gain their power by letting the input set how fast the state forgets. In an
+  event network, which channel fired is that signal. A unit that an event does not address need not be touched at all, and
+  skipping it is exact, not an approximation (sleeping execution). The best published models on spoken digits (95.9–96.3%)
+  are such units with every unit updated on every event. E71 (queued) tests the sparse version.
+- *A race unit is an integrate-and-fire neuron with a random threshold.* It integrates its rate and fires when the integral
+  crosses a random level. Its gradient is the event-based backpropagation used for spiking networks, but the random
+  threshold keeps the expected loss smooth even when spikes appear or vanish. At the moment of decision, each unit's own
+  integral is on average exactly its probability of winning, for any time-varying rates.
+- *Time adds expressiveness.* If the scores change while the race runs, the race outputs a mixture of softmaxes over its own
+  decision time. That is more expressive than the single softmax at the end of every Transformer (the "softmax bottleneck").
+  A fast race is one softmax; a slower race buys expressiveness with time rather than with parameters.
+
+![A race unit integrates its rate until a random threshold; each unit's own integral at the decision estimates its win probability; slower races escape the single-softmax rank bound](report/figures/race_time.png)
+
 **First evidence.**
 - Deep order is learned from about ten times less data than a Transformer needs (§4).
+- *Language, stage 1 (counting experts, copy memories, word-keyed memories, mixed by conserved multiplicative credit).*
+  The stage is measured on text8 test text at 1M, 10M and 90M training characters. The mixture reaches 2.00, 1.79 and 1.65
+  bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at 1M and 10M (E66). Its stored contexts grow
+  as D^0.41 and its pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a floor near 1.73 bpc, which the mixture
+  already passes: that floor belongs to the component, not to the design. For scale, large Transformers reach ≈ 1.1 on
+  text8 from 90M characters. Our first gradient-trained baselines at equal data (one pass over 10M characters: LSTM 2.17,
+  Transformer 2.43) are not converged, so no comparison is claimed until converged runs (multiple passes, early stopping on
+  validation, E64b) finish.
 - *Attention is learnable by local credit.* In a recall task where the network must learn which key a query refers to and
   which neighbour to read (a learned query–key match, as a Transformer's attention learns), a race-attention layer trained
   by local credit alone is 100% correct after 68 mistakes, and stays 100% correct on contexts four times longer than it
@@ -662,7 +698,7 @@ numerically; E68 compares training curves directly (running).
 ![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
 
 **The plan, in stages, each measured on character-level text (text8):**
-1. *Counting baseline* (running, E62): context detectors of increasing length with counts of what follows, plus a copy
+1. *Counting baseline* (measured, E62–E66; above): context detectors of increasing length with counts of what follows, plus a copy
    memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
 2. *Race attention over the stream* (the E61 mechanism at scale): content-addressed retrieval learned by local credit.
 3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
@@ -706,6 +742,14 @@ on language itself. The stages above are how that will be decided.
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
 | E42 | trading with costs, when to transact | learns not to trade (confirmed on 21 unseen days) |
 | E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
+| E57 | market world model with slow regime counters | within 0.07–0.18 nats of a Transformer point process |
+| E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
+| E61 | race attention with learned query–key match (recall) | 100% after 68 mistakes, length ×4; Transformer sweep running |
+| E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
+| E64, E64b | LSTM and Transformer LMs at equal data | one-pass runs unconverged; converged runs queued |
+| E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
+| E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
+| E70, E71 | SHD: race attention over onsets; event-CDE units (sparse) | queued |
 
 ## Reproducing
 
