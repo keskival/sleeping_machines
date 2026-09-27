@@ -3937,6 +3937,38 @@ windows plateau at 0.988 on this seed).
 earned at precision 0.9).** P1: ≥ 0.995 on at least 4/5 seeds (the Transformer: 0.998 after 2M examples). P2: every
 seed at or above its fixed-window plateau (E34m: 0.988–0.995). P3: ≈ 20 events per episode, ≤ 1,000 updates.
 
+**Results (E56, 5 seeds).** P1 fails (≥ 0.995 on 1/5: 0.993 / 0.991 / 0.999 / 0.990 / 0.985); P2 fails (3/5 at or above the
+fixed-window plateau); P3 holds but for one seed (≈ 20 events; 377–1,358 updates). On average learned windows equal the
+hand-tuned ones (0.991 vs 0.991): timing precision no longer has to be given, but it is not what limits accuracy. The
+remaining errors (seed 4: 1.2% of the test set, all lost races, no misses) come from *shortcut routes*, §89.
+
+## 89. The race's shortcut: partial-evidence routes, and crediting the latest instant
+
+*Written 2026-09-27, after the E56 error analysis, before the 5-seed runs.*
+
+**Observation.** On E34's task with learned windows, every error on seed 4 is a lost race: another class fires first.
+The winners use a route that holds motif A's part and is triggered by the *cross* pair (A's end → B's start), so they fire
+when B begins, before B is complete. On other classes' examples a noise spike on B's first channel inside the gap window
+completes that route: it is right about 99% of the time. Its rare false fires demote it, but (a) the earned margin
+protects it (precision ≈ 0.99 clears a 0.9 gate) and (b) on the next misses cooled exploration re-credits the prefix
+instant, whose drive is high, about 80% of the time; the complete route's trigger (B's part) starts near zero and
+never catches up. This is the speed–accuracy trade-off of any first-to-fire readout: commit early on partial evidence
+and pay its error rate; a model that decides after the whole episode (a Transformer) does not face it.
+
+**Proposition (latest-instant credit).** For a class whose pattern ends with a fixed last event, every earlier instant
+at which a route can fire is a prefix of the pattern; a prefix route is valid only if no other class or decoy shares the
+prefix, whereas a route at the pattern's last event with the rest of the pattern held is valid whenever the pattern
+determines the class. Crediting, on a miss, the latest candidate instant of the example therefore always credits a
+superset of the complete evidence. Instants after the pattern (noise) vary between examples, so by §83(i) their units
+lose weight relative to the pattern's (they are promoted in a fraction f < 1 of the misses). Unlike exploration, this
+choice is deterministic and needs no temperature: it removes both the prefix trap of §84 and the shortcut above.
+*Observed (one seed each):* E53 (depth 3) 0.998 after 1,000 episodes with 435 updates (exploration: ≈ 5k episodes,
+≈ 1,100 updates).
+
+**Predictions (5 seeds, 40k episodes).** P1: E53 with latest-instant credit ≥ 0.99 at the final checkpoint on 5/5 seeds,
+with fewer updates than exploration (≈ 1,100). P2: E34's task with learned windows and latest-instant credit ≥ 0.995 on
+≥ 3/5 seeds (the shortcut removed). P3: with the earned margin added, no seed below its no-margin value.
+
 ## Tests
 
 | | Claim | Test |

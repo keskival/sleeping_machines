@@ -147,7 +147,9 @@ class Net:
                 HS = win @ self.h[y, U]; GS = same @ self.g[y, U]
                 cand = win.any(1)
                 score = np.minimum(HS, GS)
-                if self.temp > 0:                           # cooled exploration over instants (§76, §84)
+                if self.credit == "latest":                 # §89: the last candidate instant (complete evidence)
+                    i = int(np.flatnonzero(cand)[-1])
+                elif self.temp > 0:                         # cooled exploration over instants (§76, §84)
                     z = np.where(cand, (score - score[cand].max()) / self.temp, -np.inf)
                     pr = np.exp(z); i = int(self.rng.choice(len(pr), p=pr / pr.sum()))
                 else:
@@ -172,7 +174,7 @@ def main():
     ap.add_argument("--thr", type=float, default=0.6)
     ap.add_argument("--alpha", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.3)
-    ap.add_argument("--credit", default="instant", choices=("instant", "union"))
+    ap.add_argument("--credit", default="instant", choices=("instant", "union", "latest"))
     ap.add_argument("--temp", type=float, default=0.0, help="instant credit: softmax temperature (0 = greedy)")
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin theta_m (0 = off)")
     ap.add_argument("--gate", type=float, default=0.0, help="§86b: near-miss only if the node's recent precision >= gate")

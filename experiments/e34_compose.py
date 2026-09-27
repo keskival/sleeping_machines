@@ -146,9 +146,11 @@ class Compose:
             return False
         if y < self.K and not np.isfinite(ft[y]) and len(f) >= 2 and self.credit == "union":   # §83: every candidate
             self._mul(self.h, y, f[win.any(0)], 1 + self.alpha); self._mul(self.g, y, f[win.any(1)], 1 + self.alpha)
-        elif y < self.K and not np.isfinite(ft[y]) and len(f) >= 2 and win.any():               # §84: one instant
+        elif y < self.K and not np.isfinite(ft[y]) and len(f) >= 2 and win.any():               # §84/§89: one instant
             HS = win @ self.h[y, f]; GS = same @ self.g[y, f]; cand = win.any(1); score = np.minimum(HS, GS)
-            if self.temp > 0:
+            if self.credit == "latest":                     # §89: the last candidate instant (complete evidence)
+                i = int(np.flatnonzero(cand)[-1])
+            elif self.temp > 0:
                 z = np.where(cand, (score - score[cand].max()) / self.temp, -np.inf); pr = np.exp(z)
                 i = int(self.rng.choice(len(pr), p=pr / pr.sum()))
             else:
@@ -229,7 +231,7 @@ def main():
     ap.add_argument("--mult", type=int, default=0, help="1: multiplicative (Winnow) routing pulls (§68)")
     ap.add_argument("--summed", type=int, default=0, help="1: summed hold/trigger potentials + full-information Winnow (§83)")
     ap.add_argument("--thr", type=float, default=0.5)
-    ap.add_argument("--credit", default="union", choices=("union", "instant"))
+    ap.add_argument("--credit", default="union", choices=("union", "instant", "latest"))
     ap.add_argument("--temp", type=float, default=0.0)
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin (0 = off)")
     ap.add_argument("--gate", type=float, default=0.0, help="§86b precision gate for the margin")
@@ -271,7 +273,7 @@ def main():
                 net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{('ib' + a.ibank.replace(',', '-')) if a.ibank else (a.scales.replace(",", "-") if a.scales else a.part_hi)}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_iv{a.learn_iv:g}' if a.learn_iv else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{('ib' + a.ibank.replace(',', '-')) if a.ibank else (a.scales.replace(",", "-") if a.scales else a.part_hi)}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit in ('instant', 'latest') else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_iv{a.learn_iv:g}' if a.learn_iv else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
