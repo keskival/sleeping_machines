@@ -51,6 +51,7 @@ e52_v_d64L32 experiments/e52_thp.py --mode val --d 64 --L 32 --epochs 30
 e52_v_d64L256 experiments/e52_thp.py --mode val --d 64 --L 256 --epochs 30
 e52_v_d64f experiments/e52_thp.py --mode val --d 64 --fine 1 --epochs 30
 e52_v_d64lr3 experiments/e52_thp.py --mode val --d 64 --lr 3e-4 --epochs 30
+e52_test experiments/e52_select_test.py
 e53_tf_n40k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e53_n40k
 e53_tf_online experiments/e36_transformer.py --task e53 --sizes 32x2,64x2 --episodes 2000000 --batch 64 --seeds 2 --tag e53_online2M
 e54_tf_n40k experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e54_n40k

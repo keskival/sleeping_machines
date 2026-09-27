@@ -1,0 +1,8 @@
+/workspace/experiments/e52_thp.py:126: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tl += float(ll.sum()); tn += ll.numel()
+{"epoch": 1, "train_ll": -2.1576965893366844, "wall_s": 6.5, "day5": -2.889232803574994}
+{"epoch": 2, "train_ll": -1.7621115700331236, "wall_s": 9.5, "day5": -2.6204227129849946}
+{"epoch": 3, "train_ll": -1.6901090307343491, "wall_s": 12.5, "day5": -2.5801205263852993}
+{"epoch": 4, "train_ll": -1.6471797326746742, "wall_s": 15.5, "day5": -2.4912818892762982}
+{"epoch": 5, "train_ll": -1.6157239497524811, "wall_s": 18.5, "day5": -2.521058588308038}
