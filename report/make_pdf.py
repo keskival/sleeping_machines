@@ -855,7 +855,9 @@ def build():
           P("<b>Grokking as a route change (E37).</b> Each class has a pair-node lookup that can memorize everything "
             "(ρ ≈ 0.016) and a shared route through a rhythm with learned delays; learning is errors-only. Without sleep: "
             "train 1.0, test 0.03–0.04. With sleep (λ = 0.02–0.2): test 0.93–0.97 in 2 of 3 seeds, after a delay; the "
-            "third seed collapses. Sleep without the rhythm: train 0.45, test 0.")]
+            "third seed collapses. Sleep without the rhythm: train 0.45, test 0. The rhythm is used only where it fits: "
+            "a − b and relabelled sums grok (0.95–0.98), a·b in 1 of 3 seeds, while a² + ab + b² and random tables stay "
+            "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep.")]
     s += fig(fig_e37, W * 0.9)
     s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "
             "is used by more than m* = λθ/(eη) examples: lookup entries serve one and die, the rhythm's delays serve many "

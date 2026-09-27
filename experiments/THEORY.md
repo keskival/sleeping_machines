@@ -3266,7 +3266,10 @@ genuine delay at small λ (λ = 0.02, seed 0: train ≥ 0.95 at epoch 5, test �
 prediction (iv)'s mechanism. (iii) partly refuted: the delay shrinks with λ but far slower than 1/λ (test ≥ 0.5 at
 epochs 70–100, 50–60, 45–50 for λ = 0.02, 0.05, 0.2): T_grok ≈ max(c/λ, T_rhythm), and the shared route's own learning
 time dominates above λ ≈ 0.05.
-(iv) Relations the rhythm cannot express (a² + ab + b², random tables) stay memorized at chance on test for any λ,
+(iv) *Confirmed (E37 op controls, 3 seeds, with cooled noise):* a − b and relabelled sums grok (0.95–0.98); a·b in 1
+of 3 seeds (0.98; 0.51 and 0.08 in the others); a² + ab + b² and random tables stay at chance on test (0.01–0.04) while
+training falls to 0.46–0.56 under sleep.
+(iv, as predicted) Relations the rhythm cannot express (a² + ab + b², random tables) stay memorized at chance on test for any λ,
     and with strong λ lose training accuracy too, since the lookup keeps decaying and nothing can take over.
 
 ## 70. Order is native to a race and learned by a Transformer

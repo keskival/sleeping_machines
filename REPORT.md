@@ -175,9 +175,20 @@ once the rhythm answers a pair, its decayed lookup entry is never relearned, so 
 predicts three regimes (memorization, grokking, collapse), all observed, and a data threshold n* ∝ p·λθ/(eη). The
 delay shrinks with λ more slowly than 1/λ, because the shared route's own learning time dominates.
 
-**Limits.** The rhythm resource can only express one-character relations; whether the network groks exactly the
-relations it can express and memorizes the rest is being tested. One seed in three fails because its shared route
-never becomes correct.
+**The rhythm is used only where it fits.** On relations the rhythm can express the network groks; on relations it
+cannot, it stays at chance on unseen pairs, and under sleep its memorized training pairs erode with nothing to take
+over (3 seeds each, λ = 0.05, cooled timing noise on the shared route):
+
+| relation | expressible by one rhythm | train | test (chance ≈ 0.03) |
+|---|---|---|---|
+| a + b, a − b, relabelled sum | yes | 1.00 | 0.95–0.98 |
+| a · b (the delays must find the discrete logarithm) | yes | 0.53–1.00 | 0.98 in 1 seed, 0.51 and 0.08 in the others |
+| a² + ab + b² | no | 0.48–0.56 | 0.03–0.04 |
+| random table | no | 0.46–0.56 | 0.01–0.04 |
+
+**Limits.** The shared route's form (one rhythm) is a resource that restricts which relations can be grokked. Without
+timing noise one seed in three fails because its shared route never becomes correct; cooled noise on that route
+removes the failure in pilots (3/3 seeds), with 5-seed confirmation running.
 
 ## 6. The weight race
 
