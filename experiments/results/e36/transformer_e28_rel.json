@@ -1,0 +1,42 @@
+{
+ "args": {
+  "task": "e28",
+  "sizes": "32x2",
+  "episodes": 1000000,
+  "batch": 64,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "rel",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 0,
+  "reltime": 1
+ },
+ "rows": [
+  {
+   "task": "e28",
+   "reltime": 1,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9984999895095825,
+   "params": 51988,
+   "tokens_per_episode": 6.857,
+   "macs_per_episode": 179561.76457600002,
+   "wall_s": 254.6
+  },
+  {
+   "task": "e28",
+   "reltime": 1,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9959999918937683,
+   "params": 51988,
+   "tokens_per_episode": 6.861,
+   "macs_per_episode": 179672.359904,
+   "wall_s": 299.7
+  }
+ ]
+}
