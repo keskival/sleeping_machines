@@ -1,0 +1,35 @@
+[
+ {
+  "day": "2026-08-25",
+  "decisions": 23514,
+  "event_coverage": 0.3489558967379747,
+  "event_acc_when_predicting": 0.6034125533211456,
+  "logit_acc": 0.6685663250116957,
+  "surprise_ratio_end": [
+   0.7860091229858809,
+   1.1160092290119648
+  ]
+ },
+ {
+  "day": "2026-08-26",
+  "decisions": 16751,
+  "event_coverage": 0.31391044776119403,
+  "event_acc_when_predicting": 0.600228223659186,
+  "logit_acc": 0.6941492537313433,
+  "surprise_ratio_end": [
+   0.8820110026103767,
+   0.916896387962659
+  ]
+ },
+ {
+  "day": "2026-08-27",
+  "decisions": 16880,
+  "event_coverage": 0.3788139107767048,
+  "event_acc_when_predicting": 0.5911792305286205,
+  "logit_acc": 0.682741868594111,
+  "surprise_ratio_end": [
+   1.3732537685454198,
+   0.864715705591713
+  ]
+ }
+]

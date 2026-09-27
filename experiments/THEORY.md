@@ -3389,7 +3389,15 @@ here it has an explicit reuse form.)
 time for the shared route to learn from the recurring errors), which is §69's refined form and matches E37's weak
 λ-dependence above λ ≈ 0.05.
 
-**Predictions (M72).** In an E37 sweep over training fraction × λ: (i) test accuracy is high only in a band of λ
+**Status after the phase diagram (E37, p = 31, 4 fractions × 4 λ × 3 seeds, cooled noise on the shared route).**
+Three regimes confirmed: at 20% of pairs no λ groks; weak sleep memorizes (train ≈ 0.94, test at chance) and strong
+sleep erodes the memorizer with nothing to replace it (train 0.64 at λ = 0.5): data-limited collapse, data threshold
+between 20% and 30% of pairs (n/p ≈ 6–9). The predicted *shape* was wrong: the grokking region is bounded below by a
+minimum sleep λ_min(n) that falls with data (30%: reliable only at λ = 0.5, 0.89–0.96; 50%: from λ = 0.05, 0.96–0.99;
+70%: already at λ = 0.01, 0.95–0.98), and no upper edge appears up to λ = 0.5 above the data threshold. Reading: sleep
+must dismantle memorization faster than errors relearn it, and more data makes the shared route learn faster, so less
+sleep suffices; the collapse edge of §72 lies above λ = 0.5 once n exceeds the threshold.
+**Predictions (M72, as first stated).** In an E37 sweep over training fraction × λ: (i) test accuracy is high only in a band of λ
 whose upper edge rises linearly with n; (ii) below the band, train 1 / test chance; above it, train falls too;
 (iii) the band vanishes when n/p < ~m* at the smallest useful λ.
 
@@ -3540,6 +3548,12 @@ distribution. A world model for this project is therefore W itself, built and le
    reliably right, which is §45's optimal tracking rule with the noise ratio estimated online.
 5. *Decisions from the model.* Roll the race forward over the trading horizon to obtain the distribution of the price
    change; act only when the expected gain minus cost exceeds a profit-learned price (E42).
+
+**Stage 1 results (E44, 3 pilot days, nats per event):** Poisson −3.00/−3.42/−3.32; Hawkes (Adam) −2.62/−2.94/−2.84;
+native −2.64/−2.85/−2.70; native with fast/slow surprise-gated plasticity −2.64/−2.85/−2.69; GRU neural point process
+–/−2.61/−2.52. The first prediction holds (native ≈ Hawkes, both far above Poisson); the native model trails the neural
+point process by ≈ 0.2 nats, consistent with its latent state being only fast traces; plasticity gating is neutral on
+day averages (its test is the window after regime breaks).
 
 **Evaluation.** Online (prequential) log-likelihood per event of type and timing, against (i) a Poisson baseline per
 type, (ii) an online multivariate Hawkes process with exponential kernels, (iii) a GRU-based neural point process

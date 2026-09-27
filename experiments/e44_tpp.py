@@ -101,15 +101,59 @@ class TPP:
             self.alpha = np.maximum(self.alpha * np.exp(0.3 * self.fast), 1e-4); self.fast[:] = 0.0
 
 
+class NeuralTPP:
+    """continuous-time GRU point process (neural-Hawkes style), trained online by Adam, one step per event."""
+
+    def __init__(self, d=16, lr=3e-3, seed=0):
+        import torch
+        self.torch = torch
+        torch.manual_seed(seed); torch.set_num_threads(1)
+        self.cell = torch.nn.GRUCell(NT + 1, d)
+        self.out = torch.nn.Linear(d, NT)
+        self.log_gamma = torch.nn.Parameter(torch.zeros(d))
+        self.opt = torch.optim.Adam(list(self.cell.parameters()) + list(self.out.parameters()) + [self.log_gamma], lr=lr)
+        self.h = torch.zeros(1, d); self.t0 = None
+
+    def lam(self, h, dt):
+        g = self.torch.exp(self.log_gamma)
+        return self.torch.nn.functional.softplus(self.out(h * self.torch.exp(-g * dt)))
+
+    def step(self, t, y):
+        torch = self.torch
+        if self.t0 is None:
+            self.t0 = t
+            x = torch.zeros(1, NT + 1); x[0, y] = 1.0
+            self.h = self.cell(x, self.h).detach()
+            return None
+        d = max(t - self.t0, 1e-6)
+        ts = torch.linspace(0, d, 6)[:, None]                   # quadrature for the compensator
+        lams = torch.cat([self.lam(self.h, tt) for tt in ts])  # (6, NT)
+        comp = torch.trapezoid(lams.sum(1), ts[:, 0])
+        ll = torch.log(lams[-1, y] + 1e-9) - comp
+        self.opt.zero_grad(); (-ll).backward(); self.opt.step()
+        with torch.no_grad():
+            x = torch.zeros(1, NT + 1); x[0, y] = 1.0; x[0, NT] = float(np.log(d + 1e-3))
+            g = torch.exp(self.log_gamma)
+            self.h = self.cell(x, self.h * torch.exp(-g * d)).detach()
+        self.t0 = t
+        return float(ll.detach())
+
+    def sleep(self):
+        pass
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ndays", type=int, default=7)
     ap.add_argument("--eta", type=float, default=0.005)
+    ap.add_argument("--neural", type=int, default=1)
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     qs = np.concatenate([load_day(d)[2][::50] for d in PILOT]); big_q = float(np.quantile(qs, 0.99))
     models = {"poisson": TPP("poisson", a.eta), "hawkes": TPP("hawkes", a.eta), "native": TPP("native", a.eta),
               "native_meta": TPP("native", a.eta, meta=True)}
+    if a.neural:
+        models["neural"] = NeuralTPP()
     rows = []
     for day in PILOT[:a.ndays]:
         T, Y = day_events(day, big_q)

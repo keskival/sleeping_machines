@@ -774,10 +774,15 @@ def build():
         "146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.",
         "<b>Depth pays when composition is a hold/trigger chain</b> (0.97 vs 0.39 at depth 1), but a well-trained "
         "Transformer is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.",
-        "<b>Grokking occurs, by a route change under sleep.</b> A network that can memorize, given a rhythm resource, "
-        "memorizes without sleep and generalizes after a delay with sleep (0.93–0.97, 2 of 3 seeds). Sleep keeps only "
-        "parameters that many examples use.",
-        "<b>Not yet: real asynchronous benchmarks</b> (spoken digits, a market stream).",
+        "<b>Grokking occurs, by a route change under sleep, and only for relations the substrate can express.</b> "
+        "Without sleep the network memorizes; with sleep it generalizes after a delay (0.93–0.99, reliable with cooled "
+        "timing noise); a data × sleep phase diagram shows memorization, grokking and collapse; with depth, (a + b + c) "
+        "mod p through two composed rhythm stages reaches 0.998 (pilot).",
+        "<b>Learning cost follows activity, not model size:</b> 12 → 48 input channels leaves learning mistakes flat and "
+        "makes inference cheaper (§77).",
+        "<b>Not yet: real asynchronous benchmarks.</b> SHD below dense baselines; on the market, correctly posed as "
+        "trading with costs, no learner profits and the native one learns to stay out; an online world model of the "
+        "stream matches a Hawkes process but not a neural point process.",
     ], st)
     s.append(PageBreak())
 
@@ -830,6 +835,9 @@ def build():
                  ["clocked conv net (E32)", "0.995 / 0.984 / 0.895", "3.07M / 123k / 1.9k MACs", "backprop, 200k"]],
                 [56, 36, 42, 40], st)]
     s += fig(fig_e32, W * 0.95)
+    s += [P("<b>Scaling with the input basis (E35, §77).</b> At fixed spikes per episode, 12 → 48 candidate channels "
+            "leaves accuracy ≈ 1.0 and learning updates flat while synaptic events per episode fall: learning and "
+            "inference cost follow activity, not the size of the basis.")]
     s += [P("<b>Why.</b> Attention cannot see order without position information and must synthesize time comparisons from "
             "dot products at O(n²·d) per layer; a hold/trigger node computes the comparison as its primitive, at the cost "
             "of its input events (§70). The clocked model also pays per time bin, so silence multiplies its cost; a conv "
@@ -857,7 +865,10 @@ def build():
             "train 1.0, test 0.03–0.04. With sleep (λ = 0.02–0.2): test 0.93–0.97 in 2 of 3 seeds, after a delay; the "
             "third seed collapses. Sleep without the rhythm: train 0.45, test 0. The rhythm is used only where it fits: "
             "a − b and relabelled sums grok (0.95–0.98), a·b in 1 of 3 seeds, while a² + ab + b² and random tables stay "
-            "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep.")]
+            "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep. A data × sleep phase "
+            "diagram (4 × 4, 3 seeds) shows no grokking below 20–30% of pairs, and above it a minimum sleep that falls "
+            "with data. With depth (E41, pilot): (a + b + c) mod p through two composed rhythm stages, 0.998 on unseen "
+            "triples with sleep, 0.06 without.")]
     s += fig(fig_e37, W * 0.9)
     s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "
             "is used by more than m* = λθ/(eη) examples: lookup entries serve one and die, the rhythm's delays serve many "
@@ -882,8 +893,11 @@ def build():
         "<b>Spiking Heidelberg Digits:</b> the weight race 0.35 vs 0.56–0.59 for a dense MLP. For the timing architecture the "
         "representation is the bottleneck: onset-referenced parts give a dense readout 0.566, and the native learner "
         "overfits (0.27–0.33). SHD is only ≈ 6× sparser than a 10 ms raster, a weak test of the paradigm.",
-        "<b>Market stream (BTCUSDT):</b> the race matches simple baselines while deciding a third earlier; ≈ 59% direction "
-        "accuracy does not pay trading costs.",
+        "<b>Market stream posed as trading with costs (E42, pilot):</b> imitating a hindsight teacher over-trades and "
+        "loses; a profit-priced event learner makes 26 changes in 7 days (−170 bp): it learns that trading does not pay.",
+        "<b>Online world model (E44):</b> a temporal point process of four event types learned from every event; the "
+        "native model (−2.64/−2.85/−2.70 nats per event) matches Hawkes (−2.62/−2.94/−2.84) and trails a GRU neural "
+        "point process (−2.61/−2.52) by ≈ 0.2 nats.",
     ], st)
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([

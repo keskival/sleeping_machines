@@ -1,7 +1,8 @@
 {
  "args": {
   "ndays": 3,
-  "eta": 0.005
+  "eta": 0.005,
+  "neural": 1
  },
  "big_q": 0.24558000266551971,
  "rows": [
@@ -17,7 +18,8 @@
    "ll_per_event_poisson": -2.995741702043626,
    "ll_per_event_hawkes": -2.623431215565562,
    "ll_per_event_native": -2.6411477867991944,
-   "ll_per_event_native_meta": -2.6382905564600776
+   "ll_per_event_native_meta": -2.6382905564600776,
+   "ll_per_event_neural": -2.387588328147687
   },
   {
    "day": "2026-08-26",
@@ -31,7 +33,8 @@
    "ll_per_event_poisson": -3.4220105219360755,
    "ll_per_event_hawkes": -2.9424353606609226,
    "ll_per_event_native": -2.8520522523824865,
-   "ll_per_event_native_meta": -2.8501729874610717
+   "ll_per_event_native_meta": -2.8501729874610717,
+   "ll_per_event_neural": -2.61362974997757
   },
   {
    "day": "2026-08-27",
@@ -45,7 +48,8 @@
    "ll_per_event_poisson": -3.3151859318757317,
    "ll_per_event_hawkes": -2.8421871763615707,
    "ll_per_event_native": -2.695378665577371,
-   "ll_per_event_native_meta": -2.693494020984427
+   "ll_per_event_native_meta": -2.693494020984427,
+   "ll_per_event_neural": -2.517375958023785
   }
  ]
 }

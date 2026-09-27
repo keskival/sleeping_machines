@@ -31,11 +31,17 @@ open.
    146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.
 4. **Depth pays when composition is a hold/trigger chain** (0.97 vs 0.39 at depth 1), but a well-trained Transformer
    is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.
-5. **Grokking occurs, by a route change under sleep.** A network that can memorize, given a rhythm resource,
-   memorizes without sleep and generalizes after a delay with sleep (0.93–0.97 on unseen pairs, 2 of 3 seeds). Sleep
-   is a reuse filter: it keeps only parameters that many examples use.
-6. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) and a market stream the architecture has not yet
-   beaten simple dense baselines.
+5. **Grokking occurs, by a route change under sleep, and only for relations the substrate can express.** A network
+   that can memorize, given a rhythm resource, memorizes without sleep and generalizes after a delay with sleep
+   (0.93–0.99 on unseen pairs; reliable across seeds with cooled timing noise, pilot); it stays at chance on relations
+   the rhythm cannot express. A data × sleep phase diagram shows memorization, grokking and collapse regimes. Grokking
+   also works with depth: (a + b + c) mod p through two composed rhythm stages (0.998, pilot).
+6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 48 channels leaves the
+   number of learning mistakes flat and makes inference cheaper (§77).
+7. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) the architecture has not beaten dense baselines;
+   on the market stream, a correctly posed trading task (profit after costs) is not profitable for any learner, and
+   the native learner learns to stay out; an online world model of the stream matches a Hawkes process but not a
+   neural point process.
 
 ## 1. What an event node computes
 
@@ -129,6 +135,12 @@ on Loihi, ≈ 10 pJ per multiply-add with its weight read) gives ≈ 10⁴× at 
 needed 10× more training to reach parity; a Transformer with a learned relative-time attention bias, the fair
 strengthening, is being run.
 
+**Scaling with the size of the input basis (E35, §74, §77).** With the spikes per episode held fixed, widening the
+candidate inputs from 12 to 48 channels leaves accuracy at ≈ 1.0 and the number of learning updates flat (566–1,493,
+194–535, 330–1,198 per 100k episodes; 3 seeds each), while synaptic events per episode fall (7.2–8.2 → 3.9–4.8).
+Learning touches only synapses of active inputs, so its cost scales with activity, not with the basis; a dense model
+pays for every input at every step.
+
 ## 4. Depth and composition
 
 Classes that are ordered combinations of shared parts (15 classes, each an ordered pair of 6 motifs) are zones over
@@ -163,8 +175,23 @@ classes. In time, the natural shared intermediate is a sum, and a sum of times n
 | condition (p = 31, half the pairs, 3 seeds) | train | test (chance 0.032) |
 |---|---|---|
 | no sleep | 1.000 | 0.03–0.04 |
-| sleep λ = 0.02 / 0.05 / 0.2 | ≈ 1.0 (2 seeds) | 0.93–0.97 (2 seeds); the third seed collapses |
+| sleep λ = 0.02 / 0.05 / 0.2, no timing noise | ≈ 1.0 (2 seeds) | 0.93–0.97 (2 seeds); the third seed collapses |
+| sleep + cooled timing noise on the shared route (pilot) | 1.0 | 0.97–0.98 (3/3 seeds) |
 | sleep, no rhythm | 0.45 | 0.00 |
+
+**Phase diagram (data × sleep; 3 seeds per cell, cooled noise).**
+
+| fraction of pairs ↓ / sleep λ → | 0.01 | 0.05 | 0.2 | 0.5 |
+|---|---|---|---|---|
+| 0.2 | 0.02–0.03 | 0.03–0.04 | 0.02–0.04 | 0.03–0.04 |
+| 0.3 | 0.08–0.39 | 0.03–0.76 | 0.04–0.88 | 0.89–0.96 |
+| 0.5 | 0.03–0.98 | 0.96–0.99 | 0.98–0.99 | 0.97–0.99 |
+| 0.7 | 0.95–0.98 | 0.98–1.00 | 0.99 | 0.98–0.99 |
+
+Below a data threshold (between 20% and 30% of pairs) no sleep strength groks: weak sleep memorizes, strong sleep
+erodes the memorized pairs with nothing taking over (train falls to 0.64). Above it, grokking needs a minimum sleep
+that falls with data: sleep must dismantle memorization faster than errors relearn it, and more data makes the shared
+route learn faster.
 
 ![Train (dashed) and test (solid) accuracy over epochs, with and without sleep](report/figures/e37_grokking.png)
 
@@ -186,9 +213,15 @@ over (3 seeds each, λ = 0.05, cooled timing noise on the shared route):
 | a² + ab + b² | no | 0.48–0.56 | 0.03–0.04 |
 | random table | no | 0.46–0.56 | 0.01–0.04 |
 
-**Limits.** The shared route's form (one rhythm) is a resource that restricts which relations can be grokked. Without
-timing noise one seed in three fails because its shared route never becomes correct; cooled noise on that route
-removes the failure in pilots (3/3 seeds), with 5-seed confirmation running.
+**Grokking with depth (E41, pilot).** (a + b + c) mod p cannot be computed by one rhythm read; the shared route
+composes two stages (a and b set a spike time, which c then offsets). With a memorizer for every triple available,
+the network stays at chance on unseen triples without sleep (0.06) and generalizes to 0.998–0.999 with sleep
+(p = 17, 30% of triples, 2 seeds). At 2–4% of triples and 200 epochs it memorizes: the shared route learns only from
+errors, so its learning time grows as the data shrinks (§78); longer runs are testing this.
+
+**Limits.** The shared route's form (one rhythm, or a two-stage chain) is a resource that restricts which relations
+can be grokked; the network chooses it over memorization but does not build it. Timing noise on the shared route
+(cooled with its own updates) is needed for reliability across seeds.
 
 ## 6. The weight race
 
@@ -216,13 +249,36 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
   10 ms bins dense models use, it is only ≈ 6× sparser than a clocked raster.
-- **Market stream (BTCUSDT trades).** The weight race matches simple baselines while deciding a third earlier;
-  short-term direction is ≈ 59% predictable, not enough to pay trading costs; continual learning did not help.
+- **Market stream (BTCUSDT trades), posed as a trading problem (E42, preregistered; pilot days so far).** Position
+  ∈ {short, flat, long}, decisions at price events, objective profit after costs (2 and 10 bp). Imitating a cost-aware
+  hindsight teacher over-trades (7 pilot days at 2 bp: event learner −12k bp, logistic −4.9k), because a learner that
+  predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
+  accumulates against prices learned from realized profit) makes 26 changes in 7 days and nets −170 bp, close to
+  buy-and-hold: it learns that trading does not pay here. Confirmatory days are queued.
+- **An online world model of the stream (E44, pilot days).** Four event types (price up/down moves, large aggressive
+  buys/sells) as a temporal point process learned online from every event (§79), scored by the prequential
+  log-likelihood of each event's type and timing:
+
+  | model | nats per event, days 1 / 2 / 3 |
+  |---|---|
+  | constant rates (Poisson) | −3.00 / −3.42 / −3.32 |
+  | Hawkes process, Adam | −2.62 / −2.94 / −2.84 |
+  | native (normalized multiplicative learning) | −2.64 / −2.85 / −2.70 |
+  | native + fast/slow surprise-gated plasticity | −2.64 / −2.85 / −2.69 |
+  | recurrent neural point process (GRU, Adam) | – / −2.61 / −2.52 |
+
+  The native world model matches or beats Hawkes but trails the neural point process by ≈ 0.2 nats: its latent state
+  is only fast event traces; the slow regime state and hold-loop memory of §79 are the next step. Learning-to-learn
+  plasticity is neutral on whole-day averages; its test is the likelihood after regime breaks.
 
 ## 8. Open problems and next steps
 
-- **Grokking theory tests (running):** the phase diagram over data × sleep (§72), relations the rhythm cannot express,
-  sleep as the pressure toward reusable parts (§73), and O(log N) learning as the candidate basis grows (§74).
+- **Structure discovery:** a bank of rhythms and chain depths from which the network must pick the right structure,
+  so that grokking no longer relies on a provided route.
+- **A richer native world model:** slow regime state and hold-loop memory (§79), to close the gap to the neural point
+  process; model-based decisions on the market stream.
+- **Running:** sleep as the pressure toward reusable parts (§73); E41's full runs and long low-data runs (§78);
+  E37 with 5 seeds and p-scaling; E42's confirmatory days.
 - **Fair baselines (running):** relative-time-attention Transformers; the chains with 5–25× more training.
 - **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
@@ -257,6 +313,9 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E34 | depth by composition | 0.97 vs 0.39 |
 | E37 | grokking by a route change | 0.93–0.97 in 2 of 3 seeds |
 | E38, E40 | SHD with the timing architecture | not yet |
+| E41 | grokking with depth (a + b + c) mod p | 0.998 (pilot) |
+| E42 | trading with costs, when to transact | learns not to trade (pilot) |
+| E44 | online world model (point process) | ≈ Hawkes, < neural point process |
 
 ## Reproducing
 
