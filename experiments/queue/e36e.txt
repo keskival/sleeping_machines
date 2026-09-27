@@ -1,0 +1,1 @@
+e36_add3_p17 experiments/e36_transformer.py --task add3 --p 17 --frac 0.3 --sizes 32x2,64x2 --episodes 6400000 --wd 1.0 --seeds 2 --tag add3
