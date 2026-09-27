@@ -161,7 +161,7 @@ def _rows(path):
 
 def _panel_depth(ax):
     """deep order (E53 depth 3, E54 depth 4): accuracy vs operations; chains unpruned / pruned vs Transformers."""
-    _panel(ax, "Deep order: parity at depth 3, ~10× fewer errors\nat depth 4 with equal data, 10³–10⁴× less work",
+    _panel(ax, "Deep order: parity at depth 3,\n~10× fewer errors at depth 4 (equal data)",
            "operations per example (log)", "test accuracy")
     ev = []
     for path, lab in (("e53/d3_S5R4_t0.6_latest_T0_b0.5_m0.9_g0.9.json", "depth 3"), ("e54/D4_L2_S5R4_T0.3.json", "depth 4"),
@@ -406,15 +406,16 @@ def fig_lm_scaling():
     d = np.logspace(5, 10, 60)
     a_t = 1.0 + 2.2 * (d / 1e5) ** -0.12
     a_e = 1.75 + 1.2 * (d / 1e5) ** -0.35
-    b.plot(d, a_t, color=DENSE_T, lw=1.8, label="Transformer: slower, lower floor")
-    b.plot(d, a_e, color=EVENT, lw=1.8, label="counting event model: faster, higher floor")
-    b.fill_between(d, 1.25, 1.72, color=EVENT, alpha=0.09, lw=0)
-    b.text(2e9, 1.45, "where shared codes and copying\nmight put the floor: open", fontsize=6.3, color=MUTED, ha="right", va="center")
-    b.set_ylim(1.1, 3.4)
+    b.plot(d, a_t, color=DENSE_T, lw=1.8, label="Transformer")
+    b.plot(d, a_e, color="#f3a37f", lw=1.6, label="counting-only event model: fast, higher floor")
+    b.fill_between(d, 0.72 + 2.2 * (d / 1e5) ** -0.14 * 0.9, a_t, color=EVENT, alpha=0.22, lw=0,
+                   label="event model with race attention and learned codes\n(hypothesis): at least Transformer-level, possibly better")
+    b.set_ylim(0.7, 3.4)
     b.set_xscale("log"); b.set_xticks([]); b.set_yticks([])
     b.set_xlabel("training text (characters)", fontsize=7.5); b.set_ylabel("prediction loss (lower = better)", fontsize=7.5)
-    b.set_title("Loss against data", fontsize=8.6); b.legend(fontsize=6.5, loc="upper right")
-    fig.suptitle("Predicted scaling (schematic, from §95; not measured)", fontsize=8.6, y=1.02)
+    b.set_title("Loss against data", fontsize=8.6)
+    b.legend(fontsize=6.3, loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False)
+    fig.suptitle("Predicted scaling (schematic, from §95–§96; not measured)", fontsize=8.6, y=1.02)
     return fig
 
 

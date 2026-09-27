@@ -4195,7 +4195,8 @@ compute, is the binding resource.
 log D)/D per symbol (minimum description length; context-tree weighting); with S ∝ D^h,
       L(D) ≈ L_∞ + A · D^−(1−h) · log D,
 a steeper approach than a Transformer's data exponent (≈ 0.1) toward a higher floor L_∞, the entropy the context class can
-capture; shared sparse codes and induction traces exist to lower L_∞.
+capture; shared sparse codes and induction traces exist to lower L_∞. (This floor belongs to the *counting* design; it
+is not a limit of event networks: §96 shows the Transformer layer itself has an event form.)
 (d) *Mixer.* Hedge's regret over S experts is O(log S) in total log-loss: adding candidate detectors costs ≈ log S and no
 per-token compute.
 (e) *Depth* multiplies candidates by P per level but active units only by r, and pruning keeps activity close to linear in
@@ -4203,6 +4204,54 @@ depth (§93: −75% at depth 4).
 
 **Tests.** On text8 subsets of 10⁶, 10⁷, 10⁸ characters: measure S(D) (h), L(D) (the exponent 1 − h and the floor L_∞) and
 the constant per-token cost, against an LSTM and a small Transformer at the same data.
+
+## 96. A Transformer layer in event form: race attention (proposition; learnability open)
+
+*Written 2026-09-27, prompted by the question whether event networks must have a higher loss floor than Transformers.*
+
+**Claim.** There is no expressiveness gap in principle: every operation of a Transformer layer has an event equivalent,
+and stacking layers is composition.
+
+1. *Similarity.* With sparse binary codes, q·k is the overlap of active channels. A key token arms a hold node with its
+code; the query's channels arrive as triggers; the summed coincident input is the overlap (§83).
+2. *Softmax as a race.* (a) Hard attention: with integrate-to-threshold latency decreasing in the drive, the first key node to
+fire has the largest overlap (argmax by first arrival). (b) Soft attention: let key i fire as an exponential clock with rate
+λ_i = exp(q·k_i/τ) (an exponential integrate-and-fire nonlinearity); the first to fire is i with probability
+λ_i / Σ_j λ_j = softmax(q·k/τ)_i (competing risks, §79, §94). The winner's value code is an unbiased sample of the
+attention output Σ_i softmax_i v_i; R parallel races (or R repetitions in time) average to it with error O(1/√R).
+3. *Relative position* is native: delays and hold windows compute time differences directly (§61, §71), which dense
+attention needs added position encodings or learned biases for (E36: the relative-time bias).
+4. *The feed-forward block* is summed thresholds over sparse codes (perceptron layers; two layers are universal for Boolean
+features) or composite units (§84).
+5. *Residual stream and heads.* A shared spike bus to which layers add codes; heads are independent races.
+Together with the substrate's universality (§59: an exact two-counter machine given timing precision), expressiveness is not
+the question.
+
+**What is open.** (i) *Learnability with local credit at depth.* Backpropagation trains queries, keys, values and the
+feed-forward block jointly through softmax gradients. The race supplies local credit: when the wrong key wins, the right key
+is pulled earlier (positional winning, §54) using near-miss counterfactuals (§57), with conserved multiplicative updates on
+which channels to hold and which to trigger on (§83). Whether this trains deep stacks as well as gradients do is the
+research question; §84–§89 (credit at an instant, latest-instant credit, margins, pruning by credit) are the progress so far.
+(ii) *Precision.* Timing noise plays the role numeric precision plays in a Transformer; restoration (§59) bounds its
+accumulation. (iii) *Cost.* With sparse codes a query reaches only keys that share an active channel (an inverted index),
+so retrieval is sublinear in the context length rather than O(T), and work per token still follows activity.
+
+**A lower bound, and room above it.** The emulation is a thought experiment, not a blueprint: it shows an event network
+can do at least as well as a Transformer, whether or not it is built layer by layer. The event form also has degrees of
+freedom a dense layer lacks, which is where it could do better: (a) *time as a coding axis*: the order in which n channels
+fire carries up to log₂(n!) bits beyond which channels fire (rank-order codes); (b) *conditional computation by
+construction*: only active units work, so capacity and per-token cost are decoupled; (c) *structure grown by credit*:
+candidates cost nothing until they earn a synapse (§85, §93), and on deep order this finds structure from ≈ 10× less data
+than a gradient-trained Transformer (E94, measured); (d) *exact sampling by races and sublinear retrieval by shared
+channels*. Which of these pays off at language scale is the empirical question.
+
+**Consequence for §95.** The higher floor predicted there is a property of a counting design. With race attention over
+learned sparse codes the floor could be Transformer-like at a fraction of the work; whether local credit can learn it is
+the test.
+
+**Prediction (to be tested).** A single race-attention layer trained by local credit learns associative recall (copy the
+value that followed a key earlier in the stream) and the induction pattern at accuracy comparable to a one-layer Transformer
+trained by gradients, with retrieval cost sublinear in the context length.
 
 ## Tests
 

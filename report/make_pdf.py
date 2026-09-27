@@ -1233,11 +1233,21 @@ def build():
     ], st)
     s += fig(FM.fig_lm_scaling, W)
     s += [P("<b>How it should scale</b> (predicted, schematic): work per character stays flat as the model grows, so memory, not "
-            "computation, limits scale; loss falls quickly with data at first (counting models are strong with little data) but "
-            "toward a higher floor, since pure counting cannot generalize to unseen contexts. How far shared codes and copying "
-            "lower that floor decides whether this competes with large Transformers or only with smaller ones."),
-          P("<b>Realistic expectation and test.</b> Roughly the quality of the best compression-style models and small recurrent "
-            "networks, at a small fraction of the computation per character and with no growth in cost for long texts. Test: "
+            "computation, limits scale. A design built on counting alone learns fast but toward a higher floor (it cannot "
+            "generalize to unseen contexts). <b>That floor is not a limit of event networks</b>: a Transformer layer has an event "
+            "form (§96). Query–key similarity is the overlap of spike codes; a race among stored keys picks the best match, and a "
+            "race of randomly ticking clocks picks each key with exactly its softmax-attention probability; relative position is "
+            "native; the feed-forward block is threshold units over codes; stacking layers is composition. In principle an "
+            "event network expresses what a Transformer expresses, with retrieval reaching only keys that share a channel. "
+            "<b>At least as well, and room to do better:</b> the mapping is a thought experiment showing the paradigm can match a "
+            "Transformer, not a blueprint. The event form has freedoms a dense layer lacks: the order in which signals fire is a "
+            "second axis for information (up to log₂ n! extra bits for n signals); only active units work, so a model can be very "
+            "large while each word stays cheap; structure is grown where it proves useful (on deep order it needed about ten "
+            "times less data than a Transformer, measured); sampling and retrieval come directly from races and shared channels."),
+          P("<b>Realistic expectation and test.</b> The counting version: roughly compression-model or small-recurrent-network "
+            "quality at a small fraction of the computation. With race attention, nothing in principle stops Transformer-level "
+            "quality; whether local learning rules can train deep stacks of such layers as well as gradients do is the research "
+            "question, testable small first (one race-attention layer learning associative recall and induction). Test: "
             "character-level prediction on text8 / enwik8, in stages (counting, detectors, copying, weighted voting), at 10⁶, 10⁷ "
             "and 10⁸ characters, against a recurrent network and a small Transformer given the same text.")]
     s.append(Spacer(1, 6))
