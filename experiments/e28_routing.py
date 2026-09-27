@@ -20,6 +20,8 @@ Hidden credit ("which route should have been taken"), by arm:
               needs the k winners to fire (k events per group)
   nearmiss  + cancelled hidden nodes the teacher wants (w2 > 0.5; under --fix60, > 2x the node's mean) whose near-miss was above 1/2 are pulled so
               they win their group next time: counterfactual routing from cancellation, no extra events
+  recur     hidden layer learns label-free: every hidden winner pulls its own firing window (conserved), on
+            every episode; labels train only the readout. Parts from recurrence (§62)
   push      = nearmiss, but a wrong winner is displaced in time (its delays lengthened) instead of specialized
 A wrong winner is otherwise specialized: the synapses in its firing window are weakened.
 """
@@ -150,6 +152,11 @@ class Net:
 
     def teach(self, t, y, eta, arm):
         c, st = self.forward(t)
+        if arm == "recur" and self.depth == 2:                  # parts from recurrence: every hidden winner pulls
+            for h in np.flatnonzero(st["fired"]):               # its own firing window, label-free, conserved
+                wi = st["win"][h]
+                if len(wi):
+                    self._pull1(h, wi, eta * 0.25)
         if c == y:
             return False
         x = st["x"]
@@ -174,7 +181,7 @@ class Net:
                     wi = st["win"][h]                           # on the partial coincidence that nearly fired it
                     if len(wi):
                         self._pull1(h, wi, eta)
-            if self.depth == 2 and arm != "path":               # fired contributors: sharpen their own inputs
+            if self.depth == 2 and arm not in ("path", "recur"):             # fired contributors: sharpen their own inputs
                 for h in np.flatnonzero(st["fired"] & wants):
                     wi = st["win"][h]
                     if len(wi):
@@ -220,7 +227,7 @@ def main():
     ap.add_argument("--W", type=float, default=0.6)
     ap.add_argument("--fix60", type=int, default=0, help="1: §60 readout (non-leaky, conserved, priced)")
     ap.add_argument("--kappa", type=float, default=0.02)
-    ap.add_argument("--arm", default="nearmiss", choices=("path", "fired", "nearmiss", "push"))
+    ap.add_argument("--arm", default="nearmiss", choices=("path", "fired", "nearmiss", "push", "recur"))
     ap.add_argument("--steps", type=int, default=30000)
     ap.add_argument("--eta", type=float, default=0.05)
     ap.add_argument("--seeds", type=int, default=3)
