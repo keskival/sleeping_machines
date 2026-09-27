@@ -836,8 +836,8 @@ def build():
         "<b>Learning cost follows activity, not model size:</b> 12 → 48 input channels leaves learning mistakes flat and "
         "makes inference cheaper (§77).",
         "<b>Not yet: real asynchronous benchmarks.</b> SHD below dense baselines; on the market, correctly posed as "
-        "trading with costs, no learner profits and the native one learns to stay out; an online world model of the "
-        "stream matches a Hawkes process but not a neural point process.",
+        "trading with costs, no learner profits and the native one learns to stay out; the online world model, built as "
+        "an event network, beats a neural point process by 0.5–0.9 nats per event, also on held-out days.",
     ], st)
     s.append(PageBreak())
 
@@ -955,7 +955,13 @@ def build():
         "overfits (0.27–0.33). SHD is only ≈ 6× sparser than a 10 ms raster, a weak test of the paradigm.",
         "<b>Market stream posed as trading with costs (E42, pilot):</b> imitating a hindsight teacher over-trades and "
         "loses; a profit-priced event learner makes 26 changes in 7 days (−170 bp): it learns that trading does not pay.",
-        "<b>Online world model (E44), prequential log-likelihood per event (nats; days 1 / 2 / 3):</b> Poisson "
+        "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
+        "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
+        "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
+        "from a delay line, count-learned detectors) reproduces that model exactly and scores −2.11 nats per event online "
+        "(days 1–5) and −2.38 / −2.10 frozen on held-out days 6 / 7, against −2.62 and −3.15 / −2.98 for the GRU, at ≈ 19 "
+        "synaptic operations per event. The model class is classical; an offline-trained GRU is the remaining check.",
+        "<b>Earlier native world model (E44), prequential log-likelihood per event (nats; days 1 / 2 / 3):</b> Poisson "
         "−3.00 / −3.42 / −3.32; Hawkes (Adam) −2.62 / −2.94 / −2.84; native (multiplicative) −2.64 / −2.85 / −2.70; "
         "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only.",
         "<b>Online world model (E44):</b> a temporal point process of four event types learned from every event; the "
