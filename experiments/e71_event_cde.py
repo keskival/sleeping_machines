@@ -86,11 +86,13 @@ class CDELayer(nn.Module):
 
 
 class Net(nn.Module):
-    def __init__(self, B, D, N, layers, sel, chunk, sub_w, groups):
+    def __init__(self, B, D, N, layers, sel, chunk, sub_w, groups, sizes=None, n_cls=20):
+        """sizes: sizes of the event coordinates (SHD: [B] bands; DVS: [G, G, 2] for x, y, polarity), embedded additively."""
         super().__init__()
-        self.band = nn.Embedding(B, D); self.cnt = nn.Linear(1, D)
+        sizes = sizes or [B]
+        self.emb = nn.ModuleList([nn.Embedding(n, D) for n in sizes]); self.cnt = nn.Linear(1, D)
         self.layers = nn.ModuleList([CDELayer(D, N, sel, chunk) for _ in range(layers)])
-        self.norm = nn.LayerNorm(D); self.out = nn.Linear(D, 20)
+        self.norm = nn.LayerNorm(D); self.out = nn.Linear(D, n_cls)
         self.register_buffer("sub", None)
         if sub_w:                                                               # tonotopic windows over bands, per state group
             centers = (torch.arange(groups) + 0.5) * B / groups
@@ -98,11 +100,14 @@ class Net(nn.Module):
             self.register_buffer("sub", win.float().repeat_interleave(N // groups, 1))   # (B, N)
 
     def forward(self, band, t, cnt, mask, pool):
-        x = self.band(band.long()) + self.cnt(cnt[..., None])
+        """band: (B, L, C) event coordinates."""
+        band = band.long(); x = self.cnt(cnt[..., None])
+        for c, e in enumerate(self.emb):
+            x = x + e(band[..., c])
         work = []
         for i, layer in enumerate(self.layers):
             dt = torch.diff(t, dim=1, prepend=t[:, :1])
-            sub = self.sub[band.long()] if (i == 0 and self.sub is not None) else None
+            sub = self.sub[band[..., 0]] if (i == 0 and self.sub is not None) else None
             x = layer(x, dt, mask, sub)
             work.append(float(mask.sum()) * (float(sub.mean()) if sub is not None else 1.0))
             if pool > 1 and i < len(self.layers) - 1:
@@ -111,24 +116,46 @@ class Net(nn.Module):
         return self.out(z.sum(1) / mask.sum(1, keepdim=True).clamp(min=1)), work
 
 
-def batchify(items, B, shift, rng, drop):
-    items = [(b, t, c, y) for b, t, c, y in items]
+def batchify(items, B, shift, rng, drop, sizes=None, n_shift=1):
+    """items: (coords (n,) or (n, C), times, counts, label); the first n_shift coordinates get one random shift per item
+    (SHD: the band; DVS: x and y), clipped to their sizes."""
+    items = [(b.reshape(len(b), -1), t, c, y) for b, t, c, y in items]
+    sizes = np.array(sizes or [B])
     if drop:
         keep = [rng.random(len(b)) >= drop for b, *_ in items]
         items = [(b[k], t[k], c[k], y) for (b, t, c, y), k in zip(items, keep)]
     L = max(len(b) for b, *_ in items)
-    band = torch.zeros(len(items), L, dtype=torch.long); tt = torch.zeros(len(items), L); cc = torch.zeros(len(items), L)
+    band = torch.zeros(len(items), L, len(sizes), dtype=torch.long); tt = torch.zeros(len(items), L); cc = torch.zeros(len(items), L)
     mask = torch.zeros(len(items), L)
     for i, (b, t, c, _) in enumerate(items):
-        sh = int(rng.integers(-shift, shift + 1)) if shift else 0
-        n = len(b); band[i, :n] = torch.from_numpy(np.clip(b.astype(np.int64) + sh, 0, B - 1))
+        sh = np.zeros(len(sizes), np.int64)
+        if shift:
+            sh[:n_shift] = rng.integers(-shift, shift + 1, n_shift)
+        n = len(b); band[i, :n] = torch.from_numpy(np.clip(b.astype(np.int64) + sh[None], 0, sizes[None] - 1))
         tt[i, :n] = torch.from_numpy(t); tt[i, n:] = float(t[-1]) if n else 0.0
         cc[i, :n] = torch.from_numpy(c); mask[i, :n] = 1
     return band, tt, cc, mask, torch.tensor([y for *_, y in items])
 
 
+def dvs_events(x, y, p, t_us, grid, merge):
+    """DVS128: pixels pooled to a grid x grid map, per (cell, polarity) channel spikes closer than `merge` s merged."""
+    cell = 128 // grid
+    cx, cy = x.astype(np.int64) // cell, y.astype(np.int64) // cell; ch = (cx * grid + cy) * 2 + p.astype(np.int64)
+    t = t_us / 1e6; o = np.lexsort((t, ch)); cc, tt = ch[o], t[o]
+    new = np.r_[True, (cc[1:] != cc[:-1]) | (np.diff(tt) > merge)]
+    g = np.cumsum(new) - 1; cnt = np.bincount(g)
+    ech, et = cc[new], tt[new]; k = np.argsort(et, kind="stable"); ech, et = ech[k], et[k]
+    coords = np.stack([ech // 2 // grid, ech // 2 % grid, ech % 2], 1).astype(np.int16)
+    return coords, (et - et[0]).astype(np.float32), np.log1p(cnt[k]).astype(np.float32)
+
+
+DVS_VAL_USERS = (21, 22, 23)
+
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--data", default="shd", choices=("shd", "dvs"))
+    ap.add_argument("--grid", type=int, default=16, help="DVS: pooled map size")
     ap.add_argument("--B", type=int, default=140)
     ap.add_argument("--merge", type=float, default=0.002)
     ap.add_argument("--D", type=int, default=64)
@@ -149,15 +176,26 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="debug: use only this many training utterances")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed)
-    def load(split, part):
-        return [(*events(t, u, a.merge), y) for t, u, y in S.utterances(split, a.B, part) if len(t) > 1]
-    tr = load("train", "fit_spk" if a.eval == "spk" else None)
-    ev = load("train", "val_spk") if a.eval == "spk" else load("test", None)
+    if a.data == "shd":
+        sizes, n_shift, n_cls = [a.B], 1, 20
+        def load(split, part):
+            return [(*events(t, u, a.merge), y) for t, u, y in S.utterances(split, a.B, part) if len(t) > 1]
+        tr = load("train", "fit_spk" if a.eval == "spk" else None)
+        ev = load("train", "val_spk") if a.eval == "spk" else load("test", None)
+    else:                                                                   # DVS128 Gesture; selection on held-out users
+        import dvs_data as DV
+        sizes, n_shift, n_cls = [a.grid, a.grid, 2], 2, 11
+        tr, ev = [], []
+        for c, x, y, p, t, u in DV.iter_split("train"):
+            if len(t) > 1:
+                (ev if (a.eval == "spk" and u in DVS_VAL_USERS) else tr).append((*dvs_events(x, y, p, t, a.grid, a.merge), c))
+        if a.eval == "test":
+            ev = [(*dvs_events(x, y, p, t, a.grid, a.merge), c) for c, x, y, p, t, u in DV.iter_split("test") if len(t) > 1]
     if a.limit:
         tr = tr[:a.limit]; ev = ev[:max(64, a.limit // 4)]
     print(json.dumps({"train": len(tr), "eval": len(ev), "median_events": int(np.median([len(b) for b, *_ in tr])),
                       "load_s": round(time.time() - t0)}), flush=True)
-    net = Net(a.B, a.D, a.N, a.layers, a.sel, a.chunk, a.sub, a.groups)
+    net = Net(a.B, a.D, a.N, a.layers, a.sel, a.chunk, a.sub, a.groups, sizes, n_cls)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     order = np.argsort([len(b) for b, *_ in tr])                               # length buckets: batches of similar length
     buckets = [order[i:i + a.bs] for i in range(0, len(order), a.bs)]
@@ -166,7 +204,7 @@ def main():
     for ep in range(a.epochs):
         net.train(); tl = 0.0
         for bi in rng.permutation(len(buckets)):
-            band, tt, cc, mask, y = batchify([tr[j] for j in buckets[bi]], a.B, a.shift, rng, a.drop)
+            band, tt, cc, mask, y = batchify([tr[j] for j in buckets[bi]], a.B, a.shift, rng, a.drop, sizes, n_shift)
             logits, _ = net(band, tt, cc, mask, a.pool)
             loss = nn.functional.cross_entropy(logits, y, label_smoothing=0.1)
             opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
@@ -174,15 +212,16 @@ def main():
         net.eval(); ok = 0; work = np.zeros(a.layers); nev = 0
         eo = np.argsort([len(b) for b, *_ in ev])
         with torch.no_grad():
-            for i0 in range(0, len(ev), 64):
-                idx = eo[i0:i0 + 64]
-                band, tt, cc, mask, y = batchify([ev[j] for j in idx], a.B, 0, rng, 0.0)
+            eb = 64 if a.data == "shd" else a.bs
+            for i0 in range(0, len(ev), eb):
+                idx = eo[i0:i0 + eb]
+                band, tt, cc, mask, y = batchify([ev[j] for j in idx], a.B, 0, rng, 0.0, sizes, n_shift)
                 logits, w = net(band, tt, cc, mask, a.pool); ok += int((logits.argmax(1) == y).sum())
                 work += np.array(w); nev += len(idx)
         row = {"epoch": ep + 1, "train_loss": round(tl / len(buckets), 4), f"{a.eval}_acc": round(ok / len(ev), 4),
                "unit_events_per_utt_by_layer": (work / nev).round(1).tolist(), "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    tag = f"sel{a.sel}_sub{a.sub}_D{a.D}_N{a.N}_L{a.layers}_p{a.pool}_{a.eval}_s{a.seed}"
+    tag = ("" if a.data == "shd" else f"dvs_g{a.grid}_m{a.merge:g}_") + f"sel{a.sel}_sub{a.sub}_D{a.D}_N{a.N}_L{a.layers}_p{a.pool}_{a.eval}_s{a.seed}"
     with open(os.path.join(OUT, f"cde_{tag}.json"), "w") as f:
         json.dump(res, f)
 
