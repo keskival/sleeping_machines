@@ -1,0 +1,5 @@
+# E71: SHD with event-CDE units (THEORY §104); selection on held-out speakers; test runs appended after selection
+e71_sel1_spk experiments/e71_event_cde.py --sel 1 --epochs 20 --merge 0.003 --eval spk
+e71_sel0_spk experiments/e71_event_cde.py --sel 0 --epochs 20 --merge 0.003 --eval spk
+e71_sel1_sub30_spk experiments/e71_event_cde.py --sel 1 --sub 30 --epochs 20 --merge 0.003 --eval spk
+e71_dvs_sel1_spk experiments/e71_event_cde.py --data dvs --grid 16 --merge 0.03 --sel 1 --bs 4 --lr 1e-3 --shift 2 --epochs 20 --eval spk
