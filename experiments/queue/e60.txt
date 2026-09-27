@@ -12,3 +12,6 @@ e60b_reg8_T100 experiments/e60b_dvs_depth.py --reg 8 --T 100 --eta 0.05
 e60b_reg8_T300 experiments/e60b_dvs_depth.py --reg 8 --T 300 --eta 0.05
 e60b_reg4_T100 experiments/e60b_dvs_depth.py --reg 4 --T 100 --eta 0.05
 e60b_reg8_T100_eta02 experiments/e60b_dvs_depth.py --reg 8 --T 100 --eta 0.02
+e60b_reg8_T100_tri experiments/e60b_dvs_depth.py --reg 8 --T 100 --eta 0.05 --tri 1
+e60b_reg4_T100_tri experiments/e60b_dvs_depth.py --reg 4 --T 100 --eta 0.05 --tri 1
+e60b_test experiments/e60b_select_test.py
