@@ -868,7 +868,7 @@ def build():
          "Transformer more accurate"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
-        ["<i>Not supremacy:</i> trading profit", "E42 (28 unseen days): no learner beats buy-and-hold; the priced native one breaks even (+56 bp), others lose",
+        ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
          "the data may hold no edge"],
     ], [48, 76, 50], st))
     s.append(PageBreak())
@@ -1014,9 +1014,9 @@ def build():
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
         "race reached 0.35; a published LSTM ≈ 0.70; state of the art ≈ 0.9. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage.",
-        "<b>Market stream posed as trading with costs (E42, confirmed on 28 unseen days, preregistered):</b> at 2 bp, "
-        "imitating a hindsight teacher over-trades and loses (event learner −27,228 bp, logistic −29,179); the "
-        "profit-priced event learner nets +56 bp with 34 changes (break-even); buy-and-hold +866; at 10 bp all stay out. "
+        "<b>Market stream posed as trading with costs (E42, confirmed on 21 unseen days, preregistered):</b> at 2 bp, "
+        "imitating a hindsight teacher over-trades and loses (event learner −15,236 bp, logistic −24,302); the "
+        "profit-priced event learner nets +226 bp with 8 changes; buy-and-hold +932; at 10 bp all stay out. "
         "No learner beats buy-and-hold; pricing the decision is what stops the losses.",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
