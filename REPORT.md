@@ -61,8 +61,8 @@ now explains, and what is being tested.
   (q/σ = 20: 1.00 over 25 and 81 steps; without restoration 0.60 and 0.30).
 - **Pull-only does not transfer to weights (E26b, negative).** Dropping the competitor push in the main race
   collapses SHD from 0.35 to 0.06. For weights the native counter-force is a conserved per-node budget (§60).
-- **True grokking test (E29): no grokking yet (1 seed).** Frozen random loops memorize (test 0.015); learned periods
-  random-walk and collapse training; fixed-period variant queued. Earlier: Readout fixed by conservation, prices, and
+- **True grokking test (E29): no grokking yet (1 seed).** Frozen random loops memorize (test 0.015); with hidden
+  learning, training collapses with learned or fixed periods: hidden-layer credit is the open problem. Earlier: Readout fixed by conservation, prices, and
   enough hidden nodes (96 cannot memorize 480 pairs by Cover's bound; 384 can: train 0.88).
 
 **What does not (yet)**
@@ -353,9 +353,10 @@ pairs, 80 epochs, ρ ≈ 0.006, 1 seed): **no grokking yet.**
 | no loops, hidden learned | 0.38 | 0.006 |
 | loops frozen (random reservoir), hidden frozen | 0.64 | 0.015 |
 
-Frozen random loops only memorize, as §56.2 predicts for unlearned injection delays. Learning the loop periods is
-unstable: a period shifts every lap of every sample, so its credit is global, not on one causal chain. A
-fixed-period variant (delays learned) is queued.
+Frozen random loops only memorize, as §56.2 predicts for unlearned injection delays. With learned hidden weights and
+delays the network collapses whether loop periods are learned or fixed (E29c, fixed periods: train 0.05, test
+0.015), so the cause is not period credit (my first diagnosis) but hidden-layer learning among many loop-lap
+arrivals. Native hidden-layer credit is the open problem shared with E28c.
 
 **E30 (completeness, complete).** A two-counter machine as a netlist of Delay, Or, And (a PSP window per input) and
 Veto nodes plus one reference oscillator; counters are phases of spikes in hold loops. Exact on add, double and
