@@ -4172,6 +4172,38 @@ level (≈ 1.7–2.0); + composite units and induction traces better than PPM-st
 level (≈ 1.2–1.4), still above large Transformers (≈ 1.0); per-character work proportional to active units, constant in
 context length. Staged, so each ingredient's contribution is measured.
 
+## 95. Topology and scaling laws of an event language model (before any run)
+
+*Written 2026-09-27; companion to §94.*
+
+**Topology.** (1) Symbol events → a sparse feature encoder (k of N shared channels per symbol). (2) L levels of order units
+("u then v within a window": skip-grams), all chains as candidates, synapses grown only on predictive credit (§85),
+extensions pruned by credit (§93): a context tree grown by credit (the structure of PPM and context-tree weighting,
+extended with gaps and shared codes). (3) Slow state: leaky counters (cache, topic, regime; §90) and induction traces per
+unit. (4) Every active unit predicts the next symbol by counts backed off along its parent chain. (5) A mixer with
+conserved multiplicative weights (Hedge, §83) over the active predictors; readout by a race of exponential clocks with
+rates ∝ the mixed probabilities (exact sampling, §94). No dense layer anywhere; a symbol touches only the units it
+activates.
+
+**Scaling laws (predicted).**
+(a) *Compute per token* c ≈ L·r (r units firing per level after pruning): independent of the number of grown synapses S and
+of the context length T (traces and counters update in O(1) per event). Training compute ≈ c·D, linear in data, with no
+parameter factor (a Transformer: ≈ 6·N·D, plus attention over T).
+(b) *Memory* S(D) ∝ D^h, h the growth exponent of useful contexts (Heaps-like; plausibly 0.5–0.7 for text): memory, not
+compute, is the binding resource.
+(c) *Loss.* For count-based context models the excess over the best predictor in the class is ≈ (effective parameters ×
+log D)/D per symbol (minimum description length; context-tree weighting); with S ∝ D^h,
+      L(D) ≈ L_∞ + A · D^−(1−h) · log D,
+a steeper approach than a Transformer's data exponent (≈ 0.1) toward a higher floor L_∞, the entropy the context class can
+capture; shared sparse codes and induction traces exist to lower L_∞.
+(d) *Mixer.* Hedge's regret over S experts is O(log S) in total log-loss: adding candidate detectors costs ≈ log S and no
+per-token compute.
+(e) *Depth* multiplies candidates by P per level but active units only by r, and pruning keeps activity close to linear in
+depth (§93: −75% at depth 4).
+
+**Tests.** On text8 subsets of 10⁶, 10⁷, 10⁸ characters: measure S(D) (h), L(D) (the exponent 1 − h and the floor L_∞) and
+the constant per-token cost, against an LSTM and a small Transformer at the same data.
+
 ## Tests
 
 | | Claim | Test |
