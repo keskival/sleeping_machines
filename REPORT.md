@@ -36,7 +36,7 @@ open.
    (0.95–0.99 on unseen pairs in 5/5 seeds with cooled timing noise at the right temperature); it stays at chance on relations
    the rhythm cannot express. A data × sleep phase diagram shows memorization, grokking and collapse regimes. Grokking
    also works with depth: (a + b + c) mod p through two composed rhythm stages (0.99–1.00, 3/3 seeds at p = 17 and 31).
-6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 48 channels leaves the
+6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 96 channels leaves the
    number of learning mistakes flat and makes inference cheaper (§77).
 7. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) the architecture has not beaten dense baselines;
    on the market stream, a correctly posed trading task (profit after costs) is not profitable for any learner, and
@@ -54,7 +54,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks** | E35: 1.000 at 7.5 synaptic events per episode, nothing given; best conv net 0.995 at 3.07M multiply-adds; event-token Transformer 0.989–0.996 at 146k–1.16M after 10× more training | one task family built around the primitives; the cost gap is largely the clock (an event-driven conv net would narrow it to ≈ 10×) |
 | **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 and 0.03 (seed 1; chance 0.06) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
 | **A better world model of a real market stream at ≈ 200× lower cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | the model class is classical (semi-Markov); a GRU trained offline for several epochs is still running |
-| **Learning cost follows activity, not model size** | E35: 12 → 48 input channels leaves learning mistakes flat and inference cheaper; §77, §81 give the reason and a mistake bound | measured up to 48 channels |
+| **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
 | *Not supremacy:* composition accuracy | E34: hold/trigger chains 0.97 vs Transformer 0.998 on hierarchical motifs (at ≈ 10⁴× lower cost) | the Transformer is more accurate |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
@@ -153,8 +153,9 @@ needed 10× more training to reach parity; a Transformer with a learned relative
 strengthening, is being run.
 
 **Scaling with the size of the input basis (E35, §74, §77).** With the spikes per episode held fixed, widening the
-candidate inputs from 12 to 48 channels leaves accuracy at ≈ 1.0 and the number of learning updates flat (566–1,493,
-194–535, 330–1,198 per 100k episodes; 3 seeds each), while synaptic events per episode fall (7.2–8.2 → 3.9–4.8).
+candidate inputs from 12 to 96 channels leaves accuracy at ≈ 1.0 (96 channels: 1.000, 0.999, 1.000) and the number of
+learning updates flat (566–1,493, 194–535, 330–1,198 and 267–1,056 per 100k episodes at 12, 24, 48 and 96 channels;
+3 seeds each), while synaptic events per episode fall (7.2–8.2 → 3.2–4.0).
 Learning touches only synapses of active inputs, so its cost scales with activity, not with the basis; a dense model
 pays for every input at every step.
 
@@ -252,9 +253,10 @@ route composes two stages (a and b set a spike time, which c then offsets). A me
 
 ![Grokking with depth: test accuracy on unseen triples by condition](report/figures/e41_depth_grok.png)
 
-The network discovers the composed relation and generalizes almost perfectly; the fraction of data it needs falls with
-p (§78). At 2–4% of triples and 200 epochs it memorizes: the shared route learns only from errors, so its learning
-time grows as the data shrinks; longer runs are testing this.
+The network discovers the composed relation and generalizes almost perfectly. The fraction of data it needs is far
+above the information-theoretic (Occam) bound of a few percent (§78): at 1–7% of triples it memorizes (train
+0.75–1.00) and stays at chance on unseen triples, also when trained 7–10× longer (2%: 2,000 epochs; 4%: 1,500 epochs;
+3 seeds each). Training time is therefore not what binds; the threshold at p = 17 lies between 7% and 30%.
 
 **Limits.** The shared route's form (one rhythm, or a two-stage chain) is a resource that restricts which relations
 can be grokked; the network chooses it over memorization but does not build it. Timing noise on the shared route
@@ -296,7 +298,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   hindsight teacher over-trades (7 pilot days at 2 bp: event learner −12k bp, logistic −4.9k), because a learner that
   predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
   accumulates against prices learned from realized profit) makes 26 changes in 7 days and nets −170 bp, close to
-  buy-and-hold: it learns that trading does not pay here. Confirmatory days are queued.
+  buy-and-hold: it learns that trading does not pay here. **Confirmed on 28 unseen days (preregistered):** at 2 bp the
+  imitating event learner loses 27,228 bp (8,083 position changes) and the logistic learner 29,179 bp; the priced event
+  learner nets +56 bp with 34 changes (break-even); buy-and-hold +866 bp; the hindsight teacher +13,890 bp. At 10 bp every
+  learner stays out. No learner beats buy-and-hold; pricing the decision is what stops the losses.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A
@@ -341,7 +346,9 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   is untested.
 - **Composition accuracy:** the chains plateau (0.95 / 0.87 at 200k episodes) below the Transformer's 0.998; the
   failure is class routes locking onto wrong parts.
-- **Running:** E41's full runs and long low-data runs (§78); E37 with 5 seeds and p-scaling; E42's confirmatory days.
+- **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17, not
+  a few percent; not a matter of training time). The sleep reuse filter (§72: each shared delay is reused ≈ n/p times)
+  is the candidate constraint; untested.
 - **Fair baselines (running):** relative-time-attention Transformers; the chains with 5–25× more training.
 - **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
@@ -379,7 +386,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E51 | SHD with class-conditional event world models | 0.647 test |
 | E36 (add3) | Transformer on E41's task | 0.03–0.63 after 100k steps (chance 0.06) |
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
-| E42 | trading with costs, when to transact | learns not to trade (pilot) |
+| E42 | trading with costs, when to transact | learns not to trade (confirmed on 28 days) |
 | E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
 
 ## Reproducing

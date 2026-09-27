@@ -3519,6 +3519,12 @@ time is T ≈ U/(n·e) epochs; with n ≈ 100–200 triples, 200 epochs are too 
 threshold (Occam, above) from a time threshold (∝ 1/n); long runs at 2% and 4% (1,500–2,000 epochs) test which binds.
 **Prediction (M78), as first stated:** in E41 at p = 17, generalization appears at training fractions of a few percent, far below E37's
 fractions at D = 1 for the same p, and the threshold fraction falls with p.
+**Result (E41f, E41t; 3 seeds each): refuted as stated.** At 1%, 2%, 4% and 7% of triples (200 epochs) the network
+memorizes (train 0.75–1.00) and stays at chance on unseen triples (0.05–0.07); at 2% for 2,000 epochs and 4% for 1,500
+epochs, the same. The time threshold does not bind, and the Occam bound is not the learner's threshold: at p = 17 it lies
+between 7% and 30% (at 10%: 0.79–0.93). The bound counts hypotheses; it says nothing about whether the error-driven search
+with sleep reaches the chain before memorization absorbs the errors. The candidate constraint is §72's reuse filter: a
+shared delay is reused ≈ n/p times per epoch, and below the reuse threshold sleep prunes it as fast as errors build it.
 
 ## 79. An asynchronous world model: the weaving operator as a learned temporal point process
 

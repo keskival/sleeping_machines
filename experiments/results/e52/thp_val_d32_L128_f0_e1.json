@@ -1,0 +1,22 @@
+{
+ "args": {
+  "mode": "val",
+  "d": 32,
+  "L": 128,
+  "epochs": 1,
+  "batch": 16,
+  "lr": 0.001,
+  "fine": 0
+ },
+ "params": 30936,
+ "epochs": [
+  {
+   "epoch": 1,
+   "train_ll": -3.5021715913107485,
+   "wall_s": 5.6,
+   "day5": -3.756036028415418
+  }
+ ],
+ "semimarkov_day5": -3.123778577915542,
+ "macs_per_event": 41728
+}
