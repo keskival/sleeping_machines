@@ -1,0 +1,9 @@
+{"epoch": 10, "train": 0.5520833333333334, "test": 0.0, "updates": 3359, "periods": []}
+{"epoch": 20, "train": 0.5895833333333333, "test": 0.0, "updates": 6045, "periods": []}
+{"epoch": 30, "train": 0.5645833333333333, "test": 0.002079002079002079, "updates": 8584, "periods": []}
+{"epoch": 40, "train": 0.5083333333333333, "test": 0.0, "updates": 11235, "periods": []}
+{"epoch": 50, "train": 0.49166666666666664, "test": 0.0, "updates": 14087, "periods": []}
+{"epoch": 60, "train": 0.42083333333333334, "test": 0.0, "updates": 17111, "periods": []}
+{"epoch": 70, "train": 0.39166666666666666, "test": 0.002079002079002079, "updates": 20326, "periods": []}
+{"epoch": 80, "train": 0.375, "test": 0.006237006237006237, "updates": 23721, "periods": []}
+rho 0.0067 EXIT-OK 628.2

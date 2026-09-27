@@ -60,7 +60,8 @@ now explains, and what is being tested.
   (q/σ = 20: 1.00 over 25 and 81 steps; without restoration 0.60 and 0.30).
 - **Pull-only does not transfer to weights (E26b, negative).** Dropping the competitor push in the main race
   collapses SHD from 0.35 to 0.06. For weights the native counter-force is a conserved per-node budget (§60).
-- **True grokking test (E29): machinery now works, test running.** Readout fixed by conservation, prices, and
+- **True grokking test (E29): no grokking yet (1 seed).** Frozen random loops memorize (test 0.015); learned periods
+  random-walk and collapse training; fixed-period variant queued. Earlier: Readout fixed by conservation, prices, and
   enough hidden nodes (96 cannot memorize 480 pairs by Cover's bound; 384 can: train 0.88).
 
 **What does not (yet)**
@@ -335,7 +336,18 @@ and counterfactual pulls must use the near-miss's partial window only.
 learnable periods, native credit, E24's encoding. Getting the no-loop control to memorize took four fixes, each a
 theory point (§60): output nodes accumulate without leak; pulls conserve a per-node budget in fractional steps;
 weakening conserves too; per-node prices break up hub classes; and the hidden layer must exceed the readout's
-Cover capacity (96 nodes cannot separate 480 pairs; 384 memorize, train 0.88). Runs with and without loops queued.
+Cover capacity (96 nodes cannot separate 480 pairs; 384 memorize, train 0.88). First full runs (p = 31, half the
+pairs, 80 epochs, ρ ≈ 0.006, 1 seed): **no grokking yet.**
+
+| arm | train | test (chance 0.032) |
+|---|---|---|
+| loops, hidden and periods learned | collapses to 0.03 (periods random-walk between 1 and 29) | 0.04 |
+| no loops, hidden learned | 0.38 | 0.006 |
+| loops frozen (random reservoir), hidden frozen | 0.64 | 0.015 |
+
+Frozen random loops only memorize, as §56.2 predicts for unlearned injection delays. Learning the loop periods is
+unstable: a period shifts every lap of every sample, so its credit is global, not on one causal chain. A
+fixed-period variant (delays learned) is queued.
 
 **E30 (completeness, complete).** A two-counter machine as a netlist of Delay, Or, And (a PSP window per input) and
 Veto nodes plus one reference oscillator; counters are phases of spikes in hold loops. Exact on add, double and
