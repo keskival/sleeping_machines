@@ -1,6 +1,6 @@
 # Sleeping Machines: what is known
 
-*27 September 2026. The illustrated version is the PDF built by `report/make_pdf.py`
+*28 September 2026. The illustrated version is the PDF built by `report/make_pdf.py`
 (`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
 the experiment log is `experiments/FINDINGS.md` and git history.*
 
@@ -13,11 +13,12 @@ spikes, trades on a market, sensor alarms), where *when* something happens is th
 **Sleeping Machines are networks that only work when an event arrives.** A node waits. It fires when the right inputs
 arrive in the right time window ("B within 1.5 s after A"), and the first node to fire gives the answer, a *race*.
 Silence costs nothing, and time itself does the computing: a delay or a waiting window plays the role that a weight
-matrix plays in a dense network.
+matrix plays in a dense network. A signal can also carry a small vector (a few numbers), and its content sets its own
+delay: when it arrives decides how much it counts.
 
-The questions are whether such networks can **learn** (without backpropagation or any dense machinery: a node adjusts
-only its few connections that were active, like moving money between accounts under a fixed budget) and whether they
-can **match or beat** MLPs and Transformers.
+The questions are whether such networks can **learn** (with credit that flows only along the events that actually
+happened: a node adjusts only its few connections that were active, like moving money between accounts under a fixed
+budget) and whether they can **match or beat** MLPs and Transformers.
 
 ![A clocked network pays for every cell at every tick; an event network pays only when a spike arrives](report/figures/concept.png)
 
@@ -31,6 +32,11 @@ can **match or beat** MLPs and Transformers.
 - **Ten times less data.** On the depth-3 order task the event network is 99.8–99.9% correct after 1,000–2,000 examples,
   each seen once; a Transformer allowed as many passes as it likes needs about 10,000–20,000 examples for 99% (with 2,000
   it reaches 33–41%, with 5,000 82–90%).
+- **Learning to retrieve from ≥ 250× less data.** In a recall task where the network must learn which stored key a query
+  refers to (what attention learns), race attention trained by local credit is 100% correct after 1,000–4,000 examples
+  (5 of 5 runs) and stays 100% on contexts four times longer. Of seven Transformer configurations (width 64–128, 2–4
+  layers, absolute or relative positions), only the two largest solve it, after 400k–1M examples, and they reach at most
+  72% on the longer contexts (one run each; E61).
 - **Deep order from a few thousand examples.** Recognizing which of 20 *orders* of four patterns occurred needs four
   levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
   correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
@@ -42,9 +48,9 @@ can **match or beat** MLPs and Transformers.
   seen once, learning its own timing windows, at ≈ 20 events per example; a Transformer needs 2M examples for
   0.9955–0.998, and given the same 40k examples 50 times it reaches 0.9935–0.9965 (0.955–0.985 with weight decay or 10k
   examples).
-- **A world model of a real market stream within 0.07–0.18 nats of a Transformer at ≈ 1/3000 of the computation.**
+- **A world model of a real market stream within 0.08–0.19 nats of a Transformer at ≈ 1/3000 of the computation.**
   Predicting the next trade events of BTC on days it never saw, a small event network with slow "regime" counters beats
-  a recurrent neural point process (GRU) and comes within 0.07–0.18 nats per event of a Transformer point process, using
+  a recurrent neural point process (GRU) and comes within 0.08–0.19 nats per event of a Transformer point process, using
   ≈ 40 operations per event instead of ≈ 110k–130k multiply-adds. The Transformer is the more accurate model.
 - **Learning cost follows activity, not size.** Eight times more inputs (12 → 96 channels) costs no more learning
   mistakes.
@@ -55,14 +61,16 @@ can **match or beat** MLPs and Transformers.
   including their training, are a limit of these networks. And event networks are exactly controlled differential
   equations driven by their events: the order detectors they learn are the universal features of event streams, the
   state-space units behind today's best event-stream models are a special case, and a race run in continuous time is more
-  expressive than a softmax, the more so the longer it deliberates (§104).
+  expressive than a softmax, the more so the longer it deliberates (§104). When signals carry vectors whose content sets
+  their delays, a receiver whose state fades computes exactly softmax attention, paying only for the messages that match
+  (§105), and the work attention then costs is set by how sharp it is, not by how much context there is (§106).
 
 **Scope of the evidence.** The supremacy results (timing, composition, deep order, grokking) are on synthetic tasks built
 to test one capability at a time, where the target is exactly expressible by the network's primitives. The theory behind
 them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) is not
 task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
 tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
-0.675 vs ≈ 0.70 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.07–0.18 nats per event behind a Transformer point process; and
+0.675 vs ≈ 0.70 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.08–0.19 nats per event behind a Transformer point process; and
 no trading edge after fees in four markets; and on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs
 94–98% published.
 
@@ -132,6 +140,12 @@ and what remains open.
    the native learner learns to stay out. An online world model of the stream, built as an event network with state and
    window nodes, beats a neural point process by 0.5–0.9 nats per event, also on held-out days, at ≈ 19 synaptic
    operations per event.
+8. **Transformers are a limit of these networks, including their training, and time adds what they lack (§96,
+   §101–§106).** A race of random clocks computes softmax attention and its gradient on average from local quantities;
+   event networks are controlled differential equations whose universal features are the order detectors they learn;
+   content-dependent delays compute softmax attention exactly at a cost set by its sharpness; and a network laid out on
+   positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. The tests
+   on real data (spoken digits, language) are queued (E74–E76).
 
 ## Where the event paradigm wins, and where it does not
 
@@ -142,9 +156,10 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 |---|---|---|
 | **Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks** | E35: 1.000 at 7.5 synaptic events per episode, nothing given; best conv net 0.995 at 3.07M multiply-adds; event-token Transformer 0.989–0.996 at 146k–1.16M after 10× more training | one task family built around the primitives; the cost gap is largely the clock (an event-driven conv net would narrow it to ≈ 10×) |
 | **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 and 0.03 (seed 1; chance 0.06) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
-| **A world model of a real market stream: better than a GRU point process, within 0.07–0.18 nats of a Transformer point process, at ≈ 1/3000 of its cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | a Transformer Hawkes process is more accurate on the held-out days (−1.97 / −1.82 vs −2.15 / −1.96 with the same hazard family; E52, E57) |
+| **A world model of a real market stream: better than a GRU point process, within 0.08–0.19 nats of a Transformer point process, at ≈ 1/3000 of its cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | a Transformer Hawkes process is more accurate on the held-out days (−1.97 / −1.82 vs −2.16 / −1.97 with the same hazard family; E52, E57) |
 | **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
+| **Learned retrieval from ≥ 250× less data** | E61: race attention with a learned query–key match, 5/5 runs 100% after 1–4k examples (64–68 mistakes), 100% on 4× longer contexts; Transformers (7 configurations): only d = 128 with 4 layers solves it, after 400k–1M examples (absolute positions: 0.25 on 4× length; relative ALiBi: 0.72) | the event learner's candidate routes are (item, offset) pairs, i.e. relative offsets are its native coordinates (ALiBi gives the Transformer the same); one run per Transformer configuration, second seed running |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: 0.990 given 40k × 50 and 0.992–0.996 given 2M fresh examples (4–10× the error rate) at ≈ 7,000× the computation |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
 | *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and far below the state of the art (95.9–96.3%, event-by-event state-space models) | unseen test speakers expose overfitting to training speakers |
@@ -345,7 +360,7 @@ saving grows with depth (E93).
   motifs) are learned: 0.9987 / 0.9967 / 0.9993 / 0.990 / 0.998 from 40k examples seen once (E89), against the
   Transformer's 0.9955–0.998 after 2M examples and 0.9935 / 0.9965 given the same 40k examples 50 times (without
   weight decay; 0.982 / 0.985 with): parity at equal data, from one pass instead of fifty, at ≈ 10⁴× less computation.
-- **At equal data the chains are more accurate.** Given a fixed set of 10k examples and 200 passes over it (AdamW,
+- **With 10k examples the chains are more accurate.** Given a fixed set of 10k examples and 200 passes over it (AdamW,
   weight decay), the Transformer reaches 0.955 and 0.976; the chains reach their plateaus (0.988–0.995) within 8k
   examples seen once each (E36g). With one credit rule (instant credit, cooled exploration, margin earned by precision),
   the chains are stable on every task tried: 0.988–0.995 with tuned windows, 0.984–0.992 with a generic window bank.
@@ -474,7 +489,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
   10 ms bins dense models use, it is only ≈ 6× sparser than a clocked raster.
-- **Market stream (BTCUSDT trades), posed as a trading problem (E42, preregistered; pilot days so far).** Position
+- **Market stream (BTCUSDT trades), posed as a trading problem (E42, preregistered; confirmed on 21 unseen days).** Position
   ∈ {short, flat, long}, decisions at price events, objective profit after costs (2 and 10 bp). Imitating a cost-aware
   hindsight teacher over-trades (7 pilot days at 2 bp: event learner −12k bp, logistic −4.9k), because a learner that
   predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
@@ -505,8 +520,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   hazard family (one intensity per event type and gap window) and 128 events of context, selected on day 5 and tested
   on days 6–7, scores −1.97 / −1.82 nats per event (≈ 108k multiply-adds per event); with 12 finer windows −1.83 / −1.65.
   The semi-Markov event network scores −2.38 / −2.10; adding slow regime state (leaky event counters at 5 s and 60 s
-  and an order-flow counter, with backoff to the plain model) brings it to −2.18 / −2.00, and a third backoff level of per-type counters −2.15 / −1.96 (fine windows: −1.90 / −1.72)
-  at ≈ 30 operations per event. The Transformer is the better world model by 0.07–0.18 nats per event; the event network
+  and an order-flow counter, with backoff to the plain model) brings it to −2.18 / −2.00, and a third backoff level of per-type counters −2.16 / −1.97 (fine windows: −1.91 / −1.73; each chosen on day 5)
+  at ≈ 30 operations per event. The Transformer is the better world model by 0.08–0.19 nats per event; the event network
   gets within that at ≈ 1/3000 of the computation. Estimating the slow state by counts transfers to unseen days;
   constant-step multiplicative factors track the end of training and do not (E58).
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
@@ -525,7 +540,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   Cost: ≈ 4 network events and ≈ 19 synaptic operations per market event, against thousands of multiply-adds for the
   GRU. The model class is classical (Markov renewal processes); what is shown is that the event network with window
   nodes is the right world model here and generalizes across days. A GRU trained offline for several epochs on days
-  1–5, the strongest dense baseline, is running.
+  1–5, the strongest recurrent baseline, is queued (E49); the Transformer point process is ahead (below, E52).
 - **Earlier native world model (E44, pilot days).** Four event types (price up/down moves, large aggressive
   buys/sells) as a temporal point process learned online from every event (§79), scored by the prequential
   log-likelihood of each event's type and timing:
@@ -538,31 +553,36 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   | native + fast/slow surprise-gated plasticity | −2.64 / −2.85 / −2.69 |
   | recurrent neural point process (GRU, Adam) | – / −2.61 / −2.52 |
 
-  The native world model matches or beats Hawkes but trails the neural point process by ≈ 0.2 nats. Adding pair-part
-  state is neutral; adding inhibition (to express suppression) destabilized learning as implemented. The gap is open. Learning-to-learn
-  plasticity is neutral on whole-day averages; its test is the likelihood after regime breaks.
+  The native world model matches or beats Hawkes but trailed the neural point process by ≈ 0.2 nats; the semi-Markov
+  network of E48 (above) closed that gap. Adding pair-part state was neutral; adding inhibition (to express suppression)
+  destabilized learning as implemented; learning-to-learn plasticity was neutral on whole-day averages.
 
 ## 8. Open problems and next steps
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
-- **Depth beyond four and denser streams:** the price of depth is activity, n·r^L events per example (§85); demand-driven
-  propagation (extend a unit only toward grown synapses) is the untested remedy, and dense streams (spoken digits,
-  §55) are where it matters.
+- **Depth beyond four and denser streams:** the price of depth is activity, n·r^L events per example (§85); extending a
+  unit only toward children that carry weight cuts events by 42% at depth 3 and 75% at depth 4 with unchanged accuracy
+  (§93); depth 5 is queued, and dense streams (spoken digits, §55) are where it matters.
+- **Time-vector networks on real streams (§105–§106):** E74 (content-dependent delays, snapshot payloads) and E75 (the
+  same, laid out to be exactly equivariant to band shifts and tempo) on spoken digits, selected on held-out speakers;
+  the question is whether computing with delays and vectors closes the gap to 95–96%.
+- **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
+  actually need, as the context grows (E76); this fixes how much delay-coded attention saves on text.
 - **Structure discovery for grokking:** a bank of rhythms and chain depths from which the network must pick, so that
   grokking no longer relies on a provided route (E45 pilot: it picks correctly).
 - **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17); the
   sleep reuse filter (§72) is the candidate constraint; untested.
-- **Transformer baselines on the depth-3 and depth-4 tasks, and a Transformer Hawkes process on the market stream**
-  (running).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
 - **A real benchmark where the paradigm should win:** streams with rare, precisely timed events (§55), and a
   representation for speech that the native learner can use.
 - **Joules, not operation counts:** run trained networks on neuromorphic hardware (§9).
 
 **Working constraints.** Every mechanism is an event handler (local state, triggered by events, cost proportional to
-events); dense procedures such as replay are used only as diagnostics. All computation runs one job at a time
+events); dense procedures such as replay are used only as diagnostics. The time-vector networks (E73–E75) are trained by
+gradients that flow only through the spikes that occurred (§104d), simulated on a 1 ms grid for speed; the same gradients
+have an event-driven form (EventProp-style adjoints), which is how they would run natively. All computation runs one job at a time
 through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the host.
 
 ## 9. Hardware: what these networks need, and what exists
@@ -578,6 +598,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | learning: multiplicative credit under a conserved budget | per-synapse multiplicative update plus per-node renormalization, a tag marking which synapses contributed at the credited instant, a local random source, a per-node precision counter | §83–§86b, §89 |
 | synapses grown only when first credited | run-time allocation of synapses in a sparse store (the candidate basis is 10⁵–10¹⁰ units; only 10⁴–10⁵ are ever grown) | §85 (exactly dense Winnow) |
 | part windows tuned from their own lags | per-synapse window edges updated by a local rule | §88 |
+| signals that carry small vectors whose content sets their delay | an 8–32-value payload per event, a small dense core per unit, a delay computed per message, and a jitter small against the delay scale | delay-coded attention (§105); latency × weight error = jitter × logit range (§106b) |
 
 **The optimal machine (a sketch).** Clockless digital cores with timestamped events, per-synapse delay and window
 fields, and per-node timers; arrival-order comparators and inhibition trees for the race; a small event-triggered
@@ -657,7 +678,7 @@ normalizer). Three consequences, each proved:
 So a network built from such races, with small dense cores for the rest, is trained by local message passing as stochastic
 gradient descent on the Transformer objective, up to an error that shrinks as 1/R with R races per head. Transformers are,
 in this precise sense, a limit of these networks, including how they are trained. The figure checks the three statements
-numerically; E68 compares training curves directly (running).
+numerically; E68 compares training curves directly (queued).
 
 ![Race estimates against exact softmax quantities: attention outputs, softmax probabilities from rate times decision time, and pathwise attention gradients all lie on the diagonal](report/figures/race_theory.png)
 
@@ -701,17 +722,19 @@ Networks built this way compute in the log semiring: delays add, and gains multi
   text8 from 90M characters. Our first gradient-trained baselines at equal data (one pass over 10M characters: LSTM 2.17,
   Transformer 2.43) are not converged, so no comparison is claimed until converged runs (multiple passes, early stopping on
   validation, E64b) finish.
-- *Attention is learnable by local credit.* In a recall task where the network must learn which key a query refers to and
-  which neighbour to read (a learned query–key match, as a Transformer's attention learns), a race-attention layer trained
-  by local credit alone is 100% correct after 68 mistakes, and stays 100% correct on contexts four times longer than it
-  trained on (one run; five runs and a Transformer comparison are running, E61).
+- *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
+  a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
+  race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
+  and 100% on contexts four times longer; the Transformers that solve it need 400k–1M examples and reach at most 72% on
+  the longer contexts (E61).
 
 ![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
 
 **The plan, in stages, each measured on character-level text (text8):**
 1. *Counting baseline* (measured, E62–E66; above): context detectors of increasing length with counts of what follows, plus a copy
    memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
-2. *Race attention over the stream* (the E61 mechanism at scale): content-addressed retrieval learned by local credit.
+2. *Attention over the stream*, by races (the E61 mechanism at scale; E68) or by content-dependent delays (§105:
+   exact, and as cheap as the attention is sharp; E76 measures how sharp a trained model's attention on text is).
 3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
 4. *Stacked layers* with credit along causal chains and near misses.
 At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
@@ -720,7 +743,8 @@ measures: bits per character, examples needed, and work per character.
 ![Predicted scaling: work per character stays flat as the model grows; the full design contains the counting stage, so it is never worse than it, and aims at or below the better of counting and Transformer at every data size](report/figures/lm_scaling.png)
 
 **What is established and what is not.** Established: the expressive equivalence, the locality of exact credit for
-races, the optimality of the depth bound, learned attention on a recall task, and data efficiency on deep order.
+races, the optimality of the depth bound, exact delay-coded attention and its work law (theory, checked), learned
+attention on a recall task from ≥ 250× less data than a Transformer, and data efficiency on deep order.
 Not yet shown: that stacked race-attention layers with learned codes, trained by local credit, match or beat a Transformer
 on language itself. The stages above are how that will be decided.
 
@@ -753,16 +777,19 @@ on language itself. The stages above are how that will be decided.
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
 | E42 | trading with costs, when to transact | learns not to trade (confirmed on 21 unseen days) |
 | E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
-| E57 | market world model with slow regime counters | within 0.07–0.18 nats of a Transformer point process |
+| E57 | market world model with slow regime counters | within 0.08–0.19 nats of a Transformer point process |
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
-| E61 | race attention with learned query–key match (recall) | 100% after 68 mistakes, length ×4; Transformer sweep running |
+| E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
 | E64, E64b | LSTM and Transformer LMs at equal data | one-pass runs unconverged; converged runs queued |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
+| E71, E72 | dense event-SSM units (SHD, market) | withdrawn: they do not compute with delays |
 | E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | queued first |
+| E75 | SHD: equivariant time-vector network (band shift × tempo) | queued; shift covariance verified exactly |
+| E76 | attention work law in trained character-level Transformers | queued after E64b |
 
 ## Reproducing
 
@@ -776,4 +803,4 @@ python experiments/e39_depth.py                                   # checks of th
 python report/figures_time.py && python report/make_pdf.py        # figures and the PDF
 ```
 
-Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for E36.
+Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for the gradient-trained models and baselines (E36, E52, E61, E64, E67–E76).

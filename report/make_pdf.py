@@ -821,9 +821,10 @@ def build():
          P("<b>Sleeping Machines are networks that only work when an event arrives.</b> A node waits. It fires when the right "
            "inputs arrive in the right time window (“B within 1.5 s after A”), and the first node to fire gives the answer, "
            "a <i>race</i>. Silence costs nothing, and time itself does the computing: a delay or a waiting window plays the "
-           "role that a weight matrix plays in a dense network."),
-         P("The questions are whether such networks can <b>learn</b> (without backpropagation or any dense machinery: a node "
-           "adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
+           "role that a weight matrix plays in a dense network. A signal can also carry a small vector (a few numbers), and "
+           "its content sets its own delay: when it arrives decides how much it counts."),
+         P("The questions are whether such networks can <b>learn</b> (with credit that flows only along the events that "
+           "actually happened: a node adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
            "whether they can <b>match or beat</b> MLPs and Transformers.")]
     s += fig(FM.fig_concept, W)
     s += [P("Highlights", "h1")]
@@ -836,6 +837,11 @@ def build():
         "<b>Ten times less data.</b> On the depth-3 order task the event network is 99.8–99.9% correct after 1,000–2,000 "
         "examples seen once; a Transformer allowed as many passes as it likes needs about 10,000–20,000 for 99% (2,000: "
         "33–41%; 5,000: 82–90%).",
+        "<b>Learning to retrieve from ≥ 250× less data.</b> In a recall task where the network must learn which stored key a "
+        "query refers to (what attention learns), race attention trained by local credit is 100% correct after 1,000–4,000 "
+        "examples (5 of 5 runs) and stays 100% on contexts four times longer. Of seven Transformer configurations (width "
+        "64–128, 2–4 layers, absolute or relative positions), only the two largest solve it, after 400k–1M examples, and they "
+        "reach at most 72% on the longer contexts (one run each; E61).",
         "<b>Deep order from a few thousand examples.</b> Recognizing which of 20 orders of four patterns occurred needs four "
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
@@ -846,9 +852,9 @@ def build():
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
         "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
         "same 40k examples 50 times.",
-        "<b>A world model of a real market stream within 0.07–0.18 nats of a Transformer at ≈ 1/3000 of the computation.</b> "
+        "<b>A world model of a real market stream within 0.08–0.19 nats of a Transformer at ≈ 1/3000 of the computation.</b> "
         "On days it never saw, a small event network with slow regime counters beats a GRU point process and comes within "
-        "0.07–0.18 nats per event of a Transformer point process, at ≈ 40 operations per event instead of ≈ 110k–130k; the "
+        "0.08–0.19 nats per event of a Transformer point process, at ≈ 40 operations per event instead of ≈ 110k–130k; the "
         "Transformer is the more accurate model.",
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
         "mistakes.",
@@ -859,14 +865,17 @@ def build():
         "Transformers, including their training, are a limit of these networks. And event networks are exactly controlled "
         "differential equations driven by their events: the order detectors they learn are the universal features of event "
         "streams, the state-space units behind today's best event-stream models are a special case, and a race run in "
-        "continuous time is more expressive than a softmax, the more so the longer it deliberates (§104).",
+        "continuous time is more expressive than a softmax, the more so the longer it deliberates (§104). When signals carry "
+        "vectors whose content sets their delays, a receiver whose state fades computes exactly softmax attention, paying "
+        "only for the messages that match (§105), and the work attention then costs is set by how sharp it is, not by how "
+        "much context there is (§106).",
     ], st)
     s += [P("<b>Scope of the evidence.</b> The supremacy results (timing, composition, deep order, grokking) are on synthetic "
             "tasks built to test one capability at a time, where the target is exactly expressible by the primitives. The theory "
             "behind them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) "
             "is not task-specific: the reason to expect them to carry over to sparse, precisely timed real streams. On the real "
             "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
-            "0.675 vs ≈ 0.70 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.07–0.18 nats behind a Transformer point process; no trading edge "
+            "0.675 vs ≈ 0.70 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.08–0.19 nats behind a Transformer point process; no trading edge "
             "after fees in four markets; on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs 94–98% published.")]
     s += fig(FM.fig_supremacy_map, W)
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
@@ -916,6 +925,12 @@ def build():
         "<b>Not yet: real asynchronous benchmarks.</b> SHD below dense baselines; on the market, correctly posed as "
         "trading with costs, no learner profits and the native one learns to stay out; the online world model, built as "
         "an event network, beats a neural point process by 0.5–0.9 nats per event, also on held-out days.",
+        "<b>Transformers are a limit of these networks, including their training, and time adds what they lack (§96, "
+        "§101–§106).</b> Races of random clocks compute softmax attention and its gradient on average from local quantities; "
+        "event networks are controlled differential equations whose universal features are the order detectors they learn; "
+        "content-dependent delays compute softmax attention exactly at a cost set by its sharpness; a network laid out on "
+        "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. Tests "
+        "on real data (spoken digits, language) are queued (E74–E76).",
     ], st)
     s.append(PageBreak())
     s += [P("Where the event paradigm wins, and where it does not", "h1"),
@@ -932,14 +947,18 @@ def build():
          "100k steps): 0.29 / 0.63 (seed 0, d = 32 / 64), 0.06 / 0.03 (seed 1; chance 0.06)",
          "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
          "Transformer"],
-        ["<b>World model: beats a GRU; within 0.07–0.18 nats of a Transformer point process at ≈ 1/3000 of its cost</b>",
+        ["<b>World model: beats a GRU; within 0.08–0.19 nats of a Transformer point process at ≈ 1/3000 of its cost</b>",
          "E48: online −2.11 vs GRU −2.62 nats/event; held-out frozen −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic ops "
          "vs thousands of MACs",
-         "the Transformer Hawkes process is more accurate (held-out −1.97 / −1.82 vs −2.15 / −1.96, same hazard family)"],
+         "the Transformer Hawkes process is more accurate (held-out −1.97 / −1.82 vs −2.16 / −1.97, same hazard family)"],
         ["<b>Learning cost follows activity, not model size</b>",
          "E35: 12 → 96 channels, 0.999–1.000, mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81", "measured to 96 channels"],
         ["<b>Structure discovery, implicit Occam razor</b>",
-         "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
+         "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot, 2 seeds; 5-seed runs queued"],
+        ["<b>Learned retrieval from ≥ 250× less data</b>", "E61: race attention with a learned query–key match, 5/5 runs 100% "
+         "after 1–4k examples, 100% on 4× longer contexts; of 7 Transformer configurations only d = 128, 4 layers solves it, "
+         "after 400k–1M examples (4× length: 0.25 absolute positions, 0.72 ALiBi)", "the event learner's candidate routes are "
+         "(item, offset) pairs (ALiBi gives the Transformer relative offsets too); one run per Transformer configuration"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
          "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "depth 3: a Transformer matches (0.996–0.999) at ≈ 5,000× the "
          "computation; depth 4: 0.990 at equal data, 0.992–0.996 with 2M (4–10× the error rate)"],
@@ -949,7 +968,7 @@ def build():
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands, selected on held-out speakers: "
          "0.675 test (E51 0.647); LSTM ≈ 0.70; state of the art 95.9–96.3% (event-by-event state-space models)", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
-         "the data may hold no edge"],
+         "the predictable edge is ≈ 1 bp per trade, below any taker fee (E55, E55b): staying out is correct"],
     ], [48, 76, 50], st))
     s.append(PageBreak())
 
@@ -1157,32 +1176,35 @@ def build():
         "hazard family and 128 events of context, selected on day 5, scores −1.97 / −1.82 nats per event on the held-out days "
         "(≈ 108k multiply-adds per event; −1.83 / −1.65 with 12 finer windows). The semi-Markov event network scores −2.38 / "
         "−2.10; slow regime state (leaky event counters at 5 s and 60 s, an order-flow counter, backoff) brings it to −2.18 / "
-        "−2.00 (fine windows −1.93 / −1.75) at ≈ 30 operations per event. The Transformer is the better world model by "
-        "0.07–0.18 nats; the event network gets within that at ≈ 1/3000 of the computation. Counted slow state transfers to "
+        "−2.00, and per-type counters as a third backoff level to −2.16 / −1.97 (fine windows −1.91 / −1.73; chosen on day 5) at ≈ 30 operations per event. The Transformer is the better world model by "
+        "0.08–0.19 nats; the event network gets within that at ≈ 1/3000 of the computation. Counted slow state transfers to "
         "unseen days; constant-step multiplicative factors track the end of training and do not (E58).",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
         "from a delay line, count-learned detectors) reproduces that model exactly and scores −2.11 nats per event online "
         "(days 1–5) and −2.38 / −2.10 frozen on held-out days 6 / 7, against −2.62 and −3.15 / −2.98 for the GRU, at ≈ 19 "
-        "synaptic operations per event. The model class is classical; an offline-trained GRU is the remaining check.",
+        "synaptic operations per event. The model class is classical; an offline-trained GRU is queued (E49), and the "
+        "Transformer point process is ahead (above).",
         "<b>Earlier native world model (E44), prequential log-likelihood per event (nats; days 1 / 2 / 3):</b> Poisson "
         "−3.00 / −3.42 / −3.32; Hawkes (Adam) −2.62 / −2.94 / −2.84; native (multiplicative) −2.64 / −2.85 / −2.70; "
-        "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only.",
-        "<b>Online world model (E44):</b> a temporal point process of four event types learned from every event; the "
-        "native model (−2.64/−2.85/−2.70 nats per event) matches Hawkes (−2.62/−2.94/−2.84) and trails a GRU neural "
-        "point process (−2.61/−2.52) by ≈ 0.2 nats.",
+        "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only; the "
+        "semi-Markov network of E48 (above) closed the gap to the GRU.",
     ], st)
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
         "and with fixed windows but hurts when windows are learned (it entrenches early shortcuts at the firing instant and "
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
-        "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); demand-driven propagation is the "
-        "untested remedy; dense streams (spoken digits, §55) are where it matters.",
+        "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
+        "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
+        "<b>Time-vector networks on real streams (§105–§106):</b> E74 (content-dependent delays, snapshot payloads) and E75 "
+        "(the same, exactly equivariant to band shifts and tempo) on spoken digits, selected on held-out speakers: do "
+        "delays and vectors computing together close the gap to 95–96%?",
+        "<b>The work law of attention in language (§106a):</b> how many keys a trained character-level Transformer's queries "
+        "actually need as the context grows (E76), which fixes what delay-coded attention saves on text.",
         "<b>Structure discovery for grokking</b> (E45 pilot picks correctly) and <b>the data threshold of grokking</b> (7–30% "
         "of triples, far above the Occam bound; the sleep reuse filter is the candidate constraint).",
-        "<b>Transformer baselines</b> on the depth-3/4 tasks and a Transformer Hawkes process on the market stream (running).",
         "<b>Native learning of sparse parity</b> (§75) and <b>a real benchmark with rare, precisely timed events</b> (§55).",
         "<b>Joules, not operation counts:</b> run trained networks on neuromorphic hardware (§9).",
     ], st)
@@ -1197,6 +1219,9 @@ def build():
          "random source, precision counter", "§83–§86b, §89"],
         ["synapses grown when first credited", "run-time allocation in a sparse synapse store", "basis 10⁵–10¹⁰, 10⁴–10⁵ grown (§85)"],
         ["part windows tuned from their own lags", "per-synapse window edges with a local rule", "§88"],
+        ["signals carrying small vectors whose content sets their delay", "8–32 values per event, a small dense core per unit, "
+         "a delay computed per message, jitter small against the delay scale", "delay-coded attention (§105); latency × "
+         "weight error = jitter × logit range (§106b)"],
     ], [48, 76, 50], st))
     s += [P("<b>The optimal machine (a sketch).</b> Clockless digital cores with timestamped events, per-synapse delay and window "
             "fields and per-node timers; arrival-order comparators and inhibition trees for the race; a small event-triggered "
@@ -1253,7 +1278,7 @@ def build():
             "locally computed gradient of this race is, on average, exactly the gradient of softmax attention. A network of such "
             "races with small dense cores is trained by local message passing as stochastic gradient descent on the Transformer "
             "objective, up to an error shrinking as 1/R with R races per head: Transformers, including their training, are a "
-            "limit of these networks. Numerical check below; training curves compared in E68 (running).")]
+            "limit of these networks. Numerical check below; training curves compared in E68 (queued).")]
     s += fig(FM.fig_race_theory, W)
     s += [P("<b>Time and content, one system (theory, §104).</b> Continuous-time neural models describe a hidden state that "
             "flows and is pushed by its input: neural ODEs, controlled differential equations, and the state-space models "
@@ -1287,10 +1312,10 @@ def build():
             "crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation. "
             "Such networks compute in the log semiring: delays add, gains multiply. E74 tests it on spoken digits.")]
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
-            "Attention is learnable by local credit: in a recall task where the network must learn which key a query refers to "
-            "and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct after 68 "
-            "mistakes, and stays 100% on contexts four times longer than trained on (one run; five runs and a Transformer "
-            "comparison running, E61). <b>Language, stage 1</b> (counting experts, copy memories and word-keyed memories, mixed "
+            "Attention is learnable by local credit, from far less data: in a recall task where the network must learn which key "
+            "a query refers to and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct "
+            "after 1–4k examples and 64–68 mistakes (5/5 runs) and 100% on contexts four times longer; the Transformers that solve "
+            "it need 400k–1M examples and reach at most 72% on the longer contexts (E61). <b>Language, stage 1</b> (counting experts, copy memories and word-keyed memories, mixed "
             "by conserved multiplicative credit), measured on text8 test text at 1M, 10M and 90M training characters: the "
             "mixture reaches 2.00, 1.79 and 1.65 bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at "
             "1M and 10M (E66). Stored contexts grow as D^0.41 and pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a "
@@ -1300,18 +1325,21 @@ def build():
             "until converged runs (multiple passes, early stopping on validation, E64b) finish.")]
     s += fig(FM.fig_lm_topology, W)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
-            "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) race attention over the stream, "
-            "learned by local credit; (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
+            "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "
+            "races (E61 at scale; E68) or by content-dependent delays (§105: exact, and as cheap as the attention is sharp; E76 "
+            "measures how sharp a trained model's attention on text is); (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
             "misses. At each stage: a recurrent network and a Transformer trained by gradients on the same text; bits per "
             "character, examples needed, work per character.")]
     s += fig(FM.fig_lm_scaling, W)
     s += [P("<b>Established and not.</b> Established: expressive equivalence, locality of exact credit for races, optimality of "
-            "the depth bound, learned attention on a recall task, data efficiency on deep order. Not yet shown: that stacked "
+            "the depth bound, exact delay-coded attention and its work law (theory, checked), learned attention on a recall task from "
+            "≥ 250× less data than a Transformer, data efficiency on deep order. Not yet shown: that stacked "
             "race-attention layers with learned codes, trained by local credit, match or beat a Transformer on language itself; "
             "the stages decide it.")]
     s.append(Spacer(1, 6))
     s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
-               "procedures are diagnostics only. Reproduce: python report/figures_time.py && python report/make_pdf.py.",
+               "procedures are diagnostics only; time-vector networks (E73–E75) are trained by gradients that flow only through "
+               "spikes that occurred, simulated on a 1 ms grid for speed (an event-driven adjoint form exists). Reproduce: python report/figures_time.py && python report/make_pdf.py.",
                "small"))
     doc = SimpleDocTemplate(OUT, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm, topMargin=16 * mm,
                             bottomMargin=16 * mm, title="Sleeping Machines — what is known",

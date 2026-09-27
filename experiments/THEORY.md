@@ -4029,8 +4029,8 @@ belong to tracking (online use), where recency is the point.
 
 **Against the Transformer on the test days (E52 test, selected on day 5 per hazard family).** Coarse windows: THP −1.97 /
 −1.82 nats per event (≈ 108k multiply-adds) vs the event network with regime counters −2.18 / −2.00, and with a third
-backoff level of per-type counters (τ = 2 s) −2.15 / −1.96; fine windows: THP −1.83 / −1.65 vs −1.90 / −1.72. The
-Transformer is the better world model by 0.07–0.18 nats per event; the counted event network costs ≈ 30–40 operations
+backoff level of per-type counters (τ = 2 s) −2.16 / −1.97; fine windows: THP −1.83 / −1.65 vs −1.91 / −1.73 (variants chosen on day 5;
+an earlier −2.15 / −1.96 was a variant not preferred by validation). The Transformer is the better world model by 0.08–0.19 nats per event; the counted event network costs ≈ 30–40 operations
 per event (≈ 1/3000–1/4000).
 
 ## 91. Latest-instant credit under trailing noise: a drift bound, and where the margin should stand
@@ -4810,7 +4810,7 @@ B v_s, with δ_s scaling with the unit. Potentials, and hence threshold crossing
 Emitted snapshots are equal. The gate and write parameters see only offsets. Induct over layers. ∎
 *Checked:* a unit with complex modes, content delays, gate and reset, under a dilation of 1.7, fires the same 13 spikes at
 exactly 1.7× the original times (error 6·10⁻¹⁴).
-*Prior art:* scale-invariant temporal histories (Shankar & Howard 2012, log-spaced Laplace memories), scale-equivariant CNNs
+*Prior art:* our own §49 (ramp neurons are dilation-equivariant if thresholds scale; here the scale lattice absorbs dilation with no parameter change), scale-invariant temporal histories (Shankar & Howard 2012, log-spaced Laplace memories), scale-equivariant CNNs
 (Sosnovik et al. 2020). *New here:* exact covariance for event networks with content-dependent delays, threshold firing and
 snapshot payloads. It holds because every mechanism is defined in time, so dilation only relabels scales.
 
