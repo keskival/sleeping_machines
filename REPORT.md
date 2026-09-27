@@ -255,9 +255,9 @@ conjunction and an order by construction.
 - An event-token Transformer trained on 2M episodes reaches 0.998 at ≈ 175k–690k multiply-adds per episode, against
   ≈ 14 events for the chains. The chains are not training-limited: with 5× more training (200k episodes) they stay at
   0.954 (tuned windows, 0.90–0.99) and 0.87 (window bank, 0.81–0.96); two seeds in five plateau near 0.90 because
-  some class routes lock onto the wrong parts. On composition the Transformer is more accurate; the chains are ≈ 10⁴×
-  cheaper. With the window bank, the chains' errors come mostly from classes that never form a
-  route (copies of a part at several scales split the pulls).
+  some class routes lock onto the wrong parts (under E34's original credit rule; the rules below remove this). With the
+  window bank, the chains' errors came mostly from classes that never form a route (copies of a part at several scales
+  split the pulls).
 - **What the credit rule must be (§83).** A class node should sum its held inputs and its coincident trigger inputs, as a
   membrane does, and learn by full-information multiplicative updates under a conserved budget. Proved: a false fire
   cannot say which half of the AND was wrong, yet conservation still moves the weights toward the target whenever the
@@ -271,9 +271,8 @@ conjunction and an order by construction.
   to firing fixes the split but can cycle between invalid prefixes forever; choosing the instant with probability
   ∝ exp(potential/T) reaches the valid route, which is then absorbing. With the class window covering the task's span
   (4.2), E34's task gives per-seed plateaus of 0.988–0.995 by either credit rule, and the generic window bank now
-  reaches 0.97–0.99 (E34x). The remaining gap to the Transformer (0.998) is timing precision: the fixed windows cannot
-  express the task's minimum intervals (a naive oracle route with the same windows scores 0.91–0.99; learned durations,
-  as in E35, are the missing piece).
+  reaches 0.97–0.99 (E34x). Fixed windows cannot express the task's minimum intervals (a naive oracle route with the
+  same windows scores 0.91–0.99); learned windows plus latest-instant credit close the gap (below).
 
 **Order among three parts: depth 3 (E53, E54).** Classes that are different *orders* of the same motif sets (20
 classes; decoys are the other orders) cannot be separated by summing held inputs, which is unordered. A layer of

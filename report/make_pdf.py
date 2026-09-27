@@ -1030,8 +1030,10 @@ def build():
             "Crediting every candidate deadlocks when units fire in every positive at different instants (window bank: "
             "0.05–0.10); crediting the one instant closest to firing can cycle between invalid prefixes; cooled exploration "
             "over instants reaches the valid route, which is absorbing. With a class window covering the task's span, E34's "
-            "task plateaus at 0.988–0.995 per seed and the generic bank at 0.97–0.99; the gap to 0.998 is timing precision "
-            "(fixed windows cannot express the minimum intervals)."),
+            "task plateaus at 0.988–0.995 per seed and the generic bank at 0.97–0.99 with fixed windows. <b>Learned windows "
+            "(§88) plus credit to the latest instant (§89)</b> remove the last errors, lost races to a shortcut that fires "
+            "when the second motif merely begins: 0.990–0.999 (mean 0.9965) from 40k examples seen once, against a "
+            "Transformer's 0.9955–0.998 after 2M examples and 0.982–0.985 given the same 40k examples 50 times."),
           P("<b>Order among three parts: depth 3 (E53, E54).</b> Classes that are different orders of the same motif sets "
             "(20 classes, decoys = other orders) need ordered intermediates: composite units u → v over every ordered pair of "
             "parts (57,840 candidates, ≈ 41 events per episode). 5 seeds, 40k episodes:")]
