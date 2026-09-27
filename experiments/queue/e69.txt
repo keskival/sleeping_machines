@@ -1,0 +1,5 @@
+# E69: race-attention THP vs softmax THP on the market stream (configurations as selected in E52; only attention changes)
+e69_coarse_R0 experiments/e69_race_thp.py --mode test --R 0 --d 64 --L 32 --epochs 11 --fine 0
+e69_coarse_R4 experiments/e69_race_thp.py --mode test --R 4 --d 64 --L 32 --epochs 11 --fine 0
+e69_coarse_R1 experiments/e69_race_thp.py --mode test --R 1 --d 64 --L 32 --epochs 11 --fine 0
+e69_fine_R4 experiments/e69_race_thp.py --mode test --R 4 --d 64 --L 128 --epochs 29 --fine 1
