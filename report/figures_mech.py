@@ -122,7 +122,7 @@ def fig_supremacy_map():
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.02, 0.1), markerscale=0.7)
     # (c) world model of a real market stream (held-out days)
     ax = axs[1, 0]
-    ax.set_title("World model of a real market stream:\nbetter predictions, 80–200× less work", fontsize=8.6)
+    ax.set_title("World model of a real market stream:\nbeats a GRU at 80–200× less work", fontsize=8.6)
     rows = [("event network (semi-Markov)", [-2.38, -2.10], 19, EVENT, "D"),
             ("GRU point process, online", [-3.15, -2.98], 1.5e3, DENSE_O, "o")]
     for f, c, lab in _extra_world():
