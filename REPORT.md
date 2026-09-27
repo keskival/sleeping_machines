@@ -75,7 +75,7 @@ and what remains open.
 **Contents:** [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
 [2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
 [4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
-[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) ·
+[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) ·
 [Experiment index](#experiment-index) · [Reproducing](#reproducing)
 
 ## Summary
@@ -475,26 +475,83 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 ## 8. Open problems and next steps
 
-- **Structure discovery:** a bank of rhythms and chain depths from which the network must pick the right structure,
-  so that grokking no longer relies on a provided route.
-- **A richer native world model:** slow regime state and hold-loop memory (§79), to close the gap to the neural point
-  process; model-based decisions on the market stream.
-- **Sleep does not help depth when only routes are learned:** in E34 (fixed part basis, learned class routes) sleep
-  erodes correct routes (0.87 → 0.66 at λ = 0.05, collapse at 0.2); whether it selects parts when parts are learned
-  is untested.
-- **Composition accuracy:** the chains plateau (0.95 / 0.87 at 200k episodes) below the Transformer's 0.998; the
-  failure is class routes locking onto wrong parts.
-- **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17, not
-  a few percent; not a matter of training time). The sleep reuse filter (§72: each shared delay is reused ≈ n/p times)
-  is the candidate constraint; untested.
-- **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).
+- **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
+  4 and with fixed windows, but hurts when windows are learned (it entrenches early shortcuts); crediting the complete
+  route with the margin as well (§89) is under test.
+- **Depth beyond four and denser streams:** the price of depth is activity, n·r^L events per example (§85); demand-driven
+  propagation (extend a unit only toward grown synapses) is the untested remedy, and dense streams (spoken digits,
+  §55) are where it matters.
+- **Structure discovery for grokking:** a bank of rhythms and chain depths from which the network must pick, so that
+  grokking no longer relies on a provided route (E45 pilot: it picks correctly).
+- **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17); the
+  sleep reuse filter (§72) is the candidate constraint; untested.
+- **Transformer baselines on the depth-3 and depth-4 tasks, and a Transformer Hawkes process on the market stream**
+  (running).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
 - **A real benchmark where the paradigm should win:** streams with rare, precisely timed events (§55), and a
   representation for speech that the native learner can use.
+- **Joules, not operation counts:** run trained networks on neuromorphic hardware (§9).
 
 **Working constraints.** Every mechanism is an event handler (local state, triggered by events, cost proportional to
 events); dense procedures such as replay are used only as diagnostics. All computation runs one job at a time
 through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the host.
+
+## 9. Hardware: what these networks need, and what exists
+
+**What the model asks of hardware.** Each primitive the theory and experiments settled on maps to a hardware feature:
+
+| what the network does | what hardware must provide | why (theory / evidence) |
+|---|---|---|
+| work only when an event arrives | event-driven execution, no global clock sweep; memory next to compute | cost follows activity (§55, §63, §77) |
+| delays and hold windows (“B within 1.5 s after A”) | per-synapse programmable delays and per-node hold timers, fine time resolution, ideally timestamps rather than time steps | order is held intervals (§61); one node = a product set in lag coordinates (§71) |
+| first to fire wins, the rest are cancelled | fast arrival-order resolution and inhibition (winner-take-all) | the race readout; timing precision bounds exact computation (§59) |
+| summed held and coincident inputs | integrate-and-threshold at the event | §83 |
+| learning: multiplicative credit under a conserved budget | per-synapse multiplicative update plus per-node renormalization, a tag marking which synapses contributed at the credited instant, a local random source, a per-node precision counter | §83–§86b, §89 |
+| synapses grown only when first credited | run-time allocation of synapses in a sparse store (the candidate basis is 10⁵–10¹⁰ units; only 10⁴–10⁵ are ever grown) | §85 (exactly dense Winnow) |
+| part windows tuned from their own lags | per-synapse window edges updated by a local rule | §88 |
+
+**The optimal machine (a sketch).** Clockless digital cores with timestamped events, per-synapse delay and window
+fields, and per-node timers; arrival-order comparators and inhibition trees for the race; a small event-triggered
+learning engine per core (multiply, renormalize, tag, random draw); and a content-addressed sparse synapse store with
+allocation on credit. This is close to *race logic* (computing with the arrival times of signal edges: first arrival is
+a minimum, a delay is an addition; the same tropical, max-plus algebra as the weaving operator of §79), plus learning.
+At published costs of ≈ 24 pJ per synaptic event (Loihi, 2018), the networks of this report would spend about 0.2 nJ per
+example on the timing task (7.5 events), ≈ 0.5 nJ on composition (≈ 20) and ≈ 4 nJ at depth 4 (≈ 150); a Transformer
+at 175k multiply-adds per example on a GPU spends on the order of a microjoule (orders of magnitude, not measurements).
+
+**What exists (September 2026).**
+
+| system | availability | fit for these networks |
+|---|---|---|
+| Intel Loihi 2 (and Hala Point, 1,152 chips) | research access only (Intel's research community); Hala Point is a prototype at Sandia; Loihi 3 announced, specifications unpublished | **best current match for prototyping:** asynchronous event-driven cores; weight, delay (up to 62 time steps) and tag per synapse; learning rules programmable in microcode. Missing: synapses allocated at run time, delays beyond ~60 steps, continuous timestamps |
+| SpiNNaker2 (SpiNNcloud) | commercially available systems (152 ARM cores per chip); deployed at Sandia | **most flexible:** every rule here, including synapse growth, can be written in software; less energy-efficient per event than dedicated logic; time-stepped |
+| BrainChip Akida (AKD1000/1500; Akida Pico) | commercial; Pico in FPGA-cloud evaluation since Feb 2026; Akida 2 in development | built for converted convolutional spiking networks with limited on-device learning; no programmable delays of the kind needed: poor fit |
+| Innatera Pulsar | in volume production (2026): spiking fabric plus RISC-V and CNN/FFT accelerators, µW–mW | deployment of small, already trained networks at the sensor; learning of the kind here not advertised |
+| SynSense Speck (vision, with an event camera on chip) and Xylo (audio, time series) | commercial dev kits | inference-only spiking ASICs: deployment of small trained networks |
+| DYNAP-SE2, BrainScaleS-2 | research | analog continuous-time dynamics (delays through synaptic time constants, ~10 ms); natural time, but device mismatch |
+| IBM NorthPole | research | synchronous, dense near-memory inference: not event-driven, not a fit |
+| FPGAs | commercial | delays as timestamp queues, synapses in block-RAM hash tables: **the most practical way to build the full rule set faithfully today** |
+| event sensors: Sony/Prophesee IMX636/637, iniVation; event audio | commercial | natural front ends: they emit exactly the event streams these networks consume |
+| CPUs / GPUs | commercial | a CPU simulates sparse events efficiently (all experiments here ran on a few CPU cores); GPUs suit dense, regular work and fit poorly |
+
+**What to do with it.** (1) Measure joules, not operation counts: map trained networks onto Loihi 2 (inference) and
+the full learning calculus onto SpiNNaker2 or an FPGA, against a Transformer on a GPU. (2) Deploy frozen networks on
+sensor-edge chips (Pulsar, Xylo, Speck) where event sensors already exist. (3) The feature no commercial chip offers,
+and the one these results say matters most, is **run-time synapse allocation on credit** (with per-node conserved
+budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates while storing only what it uses.
+
+*Sources:* [Intel Hala Point](https://newsroom.intel.com/artificial-intelligence/intel-builds-worlds-largest-neuromorphic-system-to-enable-more-sustainable-ai) ·
+[Loihi 2 overview](https://open-neuromorphic.org/neuromorphic-computing/hardware/loihi-2-intel/) ·
+[Loihi 2 learning and delays](https://www.emergentmind.com/topics/loihi-2-neuromorphic-chip) ·
+[SpiNNcloud SpiNNaker2 launch](https://siliconangle.com/2024/05/08/spinncloud-systems-launches-spinnaker2-first-commercial-neuromorphic-supercomputer/) ·
+[SpiNNaker2 at Sandia](https://www.hpcwire.com/off-the-wire/sandia-deploys-spinnaker2-neuromorphic-system-from-spinncloud/) ·
+[Akida Pico](https://brainchip.com/brainchip-announces-immediate-availability-of-akida-pico-for-remote-evaluation-via-fpga-cloud/) ·
+[Innatera Pulsar](https://www.innatera.com/newsroom/innatera-unveils-pulsar-the-worlds-first-mass-market-neuromorphic-microcontroller-for-the-sensor-edge/) ·
+[SynSense Speck and Xylo](https://www.synsense.ai/synsense-launches-speck-xylo-neuromorphic-development-kits-for-edge-ai-vision-and-audio-work/) ·
+[DYNAP-SE2](https://arxiv.org/pdf/2310.00564) ·
+[Sony event-based vision sensors](https://www.sony-semicon.com/en/products/is/industry/evs.html) ·
+[Race logic (Madhavan, Sherwood, Strukov)](https://ieeexplore.ieee.org/document/6853226/) ·
+[Loihi energy per synaptic operation (Davies et al., 2018)](https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf)
 
 ## Experiment index
 

@@ -1124,11 +1124,58 @@ def build():
     ], st)
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
-        "Grokking theory tests (running): phase diagram over data × sleep (§72); relations the rhythm cannot express; sleep "
-        "as the pressure toward reusable parts (§73); O(log N) learning as the candidate basis grows (§74).",
-        "Composition accuracy against Transformers; grokking reliability; native learning of sparse parity (§75, open); "
-        "a real stream with rare, precisely timed events (§55).",
+        "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
+        "and with fixed windows but hurts when windows are learned; crediting the complete route with the margin too (§89) "
+        "is under test.",
+        "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); demand-driven propagation is the "
+        "untested remedy; dense streams (spoken digits, §55) are where it matters.",
+        "<b>Structure discovery for grokking</b> (E45 pilot picks correctly) and <b>the data threshold of grokking</b> (7–30% "
+        "of triples, far above the Occam bound; the sleep reuse filter is the candidate constraint).",
+        "<b>Transformer baselines</b> on the depth-3/4 tasks and a Transformer Hawkes process on the market stream (running).",
+        "<b>Native learning of sparse parity</b> (§75) and <b>a real benchmark with rare, precisely timed events</b> (§55).",
+        "<b>Joules, not operation counts:</b> run trained networks on neuromorphic hardware (§9).",
     ], st)
+    s += [P("9. Hardware: what these networks need, and what exists", "h1"),
+          P("Each primitive the theory settled on maps to a hardware feature:")]
+    s.append(table([
+        ["what the network does", "what hardware must provide", "why"],
+        ["work only when an event arrives", "event-driven execution; memory next to compute", "cost follows activity (§55, §77)"],
+        ["delays and hold windows", "per-synapse programmable delays, per-node hold timers, timestamps", "order is held intervals (§61, §71)"],
+        ["first to fire wins, the rest cancelled", "fast arrival-order resolution and inhibition", "the race readout (§59)"],
+        ["multiplicative credit under a conserved budget", "per-synapse multiply, per-node renormalize, contribution tags, local "
+         "random source, precision counter", "§83–§86b, §89"],
+        ["synapses grown when first credited", "run-time allocation in a sparse synapse store", "basis 10⁵–10¹⁰, 10⁴–10⁵ grown (§85)"],
+        ["part windows tuned from their own lags", "per-synapse window edges with a local rule", "§88"],
+    ], [48, 76, 50], st))
+    s += [P("<b>The optimal machine (a sketch).</b> Clockless digital cores with timestamped events, per-synapse delay and window "
+            "fields and per-node timers; arrival-order comparators and inhibition trees for the race; a small event-triggered "
+            "learning engine per core; a content-addressed sparse synapse store with allocation on credit. This is close to "
+            "<i>race logic</i> (first arrival = minimum, delay = addition: the max-plus algebra of §79) plus learning. At ≈ 24 pJ "
+            "per synaptic event (Loihi, 2018) these networks would spend ≈ 0.2 nJ per example on the timing task, ≈ 0.5 nJ on "
+            "composition and ≈ 4 nJ at depth 4; a Transformer at 175k multiply-adds per example on a GPU is on the order of "
+            "a microjoule (orders of magnitude, not measurements)."),
+          P("<b>What exists (September 2026):</b>")]
+    s.append(table([
+        ["system", "availability", "fit"],
+        ["Intel Loihi 2 / Hala Point", "research access; Hala Point a prototype (Sandia); Loihi 3 announced, no public specs",
+         "best for prototyping: event-driven; weight, delay (≤ 62 steps), tag per synapse; microcode learning rules. Missing: "
+         "run-time synapse allocation, long delays, timestamps"],
+        ["SpiNNaker2 (SpiNNcloud)", "commercial systems; 152 ARM cores/chip", "most flexible: every rule incl. synapse growth in "
+         "software; less efficient per event; time-stepped"],
+        ["BrainChip Akida / Akida Pico", "commercial; Pico in FPGA-cloud evaluation (2026)", "converted CNN-style SNNs, limited "
+         "learning, no suitable delays: poor fit"],
+        ["Innatera Pulsar", "volume production (2026), µW–mW", "deploy small trained networks at the sensor"],
+        ["SynSense Speck / Xylo", "commercial dev kits", "inference-only spiking ASICs for vision / audio"],
+        ["DYNAP-SE2, BrainScaleS-2", "research", "analog continuous time; device mismatch"],
+        ["IBM NorthPole", "research", "synchronous dense inference: not a fit"],
+        ["FPGAs", "commercial", "delays as timestamp queues, synapses in BRAM hash tables: the most faithful full implementation today"],
+        ["event sensors (Sony/Prophesee, iniVation)", "commercial", "natural front ends: they emit these event streams"],
+    ], [38, 58, 78], st))
+    s += [P("<b>What to do with it.</b> Measure joules: trained networks on Loihi 2, the full learning calculus on SpiNNaker2 or "
+            "an FPGA, against a Transformer on a GPU; deploy frozen networks on sensor-edge chips. The feature no commercial "
+            "chip offers, and the one these results say matters most, is <b>run-time synapse allocation on credit</b> with "
+            "per-node conserved budgets: it lets a network search 10⁷–10¹⁰ candidates while storing only what it uses. "
+            "Sources are listed in REPORT.md §9.", "small")]
     s.append(Spacer(1, 6))
     s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
                "procedures are diagnostics only. Reproduce: python report/figures_time.py && python report/make_pdf.py.",
