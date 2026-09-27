@@ -1,0 +1,20 @@
+/workspace/experiments/e52_thp.py:126: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tl += float(ll.sum()); tn += ll.numel()
+{"epoch": 1, "train_ll": -2.763367794890683, "wall_s": 6.4, "day5": -3.3890354010750605}
+{"epoch": 2, "train_ll": -2.016290916718621, "wall_s": 9.1, "day5": -3.186519383013779}
+{"epoch": 3, "train_ll": -1.8710090353669855, "wall_s": 11.9, "day5": -2.840619252174908}
+{"epoch": 4, "train_ll": -1.7956635741289708, "wall_s": 14.8, "day5": -2.7160617995393808}
+{"epoch": 5, "train_ll": -1.7608351911866356, "wall_s": 17.6, "day5": -2.7150522626455293}
+{"epoch": 6, "train_ll": -1.7263628080644708, "wall_s": 20.3, "day5": -2.669198030282421}
+{"epoch": 7, "train_ll": -1.7022854512294363, "wall_s": 23.0, "day5": -2.660850425267937}
+{"epoch": 8, "train_ll": -1.680023920066533, "wall_s": 25.7, "day5": -2.6286017274851194}
+{"epoch": 9, "train_ll": -1.6590042551702084, "wall_s": 28.5, "day5": -2.5541649496731327}
+{"epoch": 10, "train_ll": -1.6452401343958523, "wall_s": 31.2, "day5": -2.5691232965022888}
+{"epoch": 11, "train_ll": -1.6335406084683626, "wall_s": 33.9, "day5": -2.485511951646447}
+{"epoch": 12, "train_ll": -1.6213006208311698, "wall_s": 36.6, "day5": -2.5558405275021334}
+{"epoch": 13, "train_ll": -1.6069232817456542, "wall_s": 39.3, "day5": -2.506214797906565}
+{"epoch": 14, "train_ll": -1.5994752423334992, "wall_s": 42.1, "day5": -2.5364343120188453}
+{"epoch": 15, "train_ll": -1.5932737125099907, "wall_s": 44.8, "day5": -2.5057176555357104}
+{"epoch": 16, "train_ll": -1.5847844026274227, "wall_s": 47.6, "day5": -2.548355333407138}
+{"epoch": 17, "train_ll": -1.5780149803610517, "wall_s": 50.5, "day5": -2.5028756926377596}

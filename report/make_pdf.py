@@ -1125,8 +1125,8 @@ def build():
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
-        "and with fixed windows but hurts when windows are learned; crediting the complete route with the margin too (§89) "
-        "is under test.",
+        "and with fixed windows but hurts when windows are learned (it entrenches early shortcuts at the firing instant and "
+        "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); demand-driven propagation is the "
         "untested remedy; dense streams (spoken digits, §55) are where it matters.",
         "<b>Structure discovery for grokking</b> (E45 pilot picks correctly) and <b>the data threshold of grokking</b> (7–30% "

@@ -476,8 +476,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 ## 8. Open problems and next steps
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
-  4 and with fixed windows, but hurts when windows are learned (it entrenches early shortcuts); crediting the complete
-  route with the margin as well (§89) is under test.
+  4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
+  at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
 - **Depth beyond four and denser streams:** the price of depth is activity, n·r^L events per example (§85); demand-driven
   propagation (extend a unit only toward grown synapses) is the untested remedy, and dense streams (spoken digits,
   §55) are where it matters.
