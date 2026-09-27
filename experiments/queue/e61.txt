@@ -3,3 +3,6 @@ e61_tf_d128L2 experiments/e61_race_attention.py --model tf --seeds 1 --d 128 --l
 e61_tf_d128L4 experiments/e61_race_attention.py --model tf --seeds 1 --d 128 --layers 4 --lr 3e-4 --checkpoints 10000,100000,400000,1000000
 e61_tf_d64L4 experiments/e61_race_attention.py --model tf --seeds 1 --d 64 --layers 4 --lr 1e-3 --checkpoints 10000,100000,400000,1000000
 e61_tf_d64L2lr3 experiments/e61_race_attention.py --model tf --seeds 1 --d 64 --layers 2 --lr 3e-4 --checkpoints 10000,100000,400000,1000000
+e61_tf_alibi_d128L4 experiments/e61_race_attention.py --model tf --pos alibi --seeds 1 --d 128 --layers 4 --lr 3e-4 --checkpoints 10000,100000,400000,1000000
+e61_tf_alibi_d64L2 experiments/e61_race_attention.py --model tf --pos alibi --seeds 1 --d 64 --layers 2 --lr 1e-3 --checkpoints 10000,100000,400000,1000000
+e61_tf_d128L4_s1 experiments/e61_race_attention.py --model tf --seeds 2 --d 128 --layers 4 --lr 3e-4 --checkpoints 100000,200000,400000,700000,1000000
