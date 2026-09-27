@@ -52,7 +52,11 @@ def onset_parts(x, pool, tau, nbins):
     nb = BANDS // pool
     C = np.zeros((nb, nbins), np.float32)
     if len(t):
-        k = np.minimum(((t - t.min()) / tau).astype(int), nbins - 1)
+        if FEAT.get("dilate"):                                  # two references (onset, offset): tempo-invariant time
+            u = (t - t.min()) / max(t.max() - t.min(), 1e-3)
+            k = np.minimum((u * nbins).astype(int), nbins - 1)
+        else:
+            k = np.minimum(((t - t.min()) / tau).astype(int), nbins - 1)
         np.add.at(C, (b, k), 1.0)
     return C.ravel()
 
@@ -78,7 +82,7 @@ def deep_parts(x, pool, w1, w2):
     return C.ravel()
 
 
-FEAT = {"pairs": True, "onset": 0.0, "deep": 0}
+FEAT = {"pairs": True, "onset": 0.0, "deep": 0, "dilate": 0}
 
 
 def build(X, pool, scales):
@@ -145,18 +149,19 @@ def main():
     ap.add_argument("--onset", type=float, default=0.0, help="> 0: add onset-referenced parts with this bin (s)")
     ap.add_argument("--deep", type=int, default=0, help="> 0: add depth-2 pair-of-pair parts on bands pooled by this")
     ap.add_argument("--nopairs", type=int, default=0)
+    ap.add_argument("--dilate", type=int, default=0, help="1: onset parts in utterance-relative time (onset..offset)")
     ap.add_argument("--rule", default="native", choices=("native", "softmax"))
     ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--eta", type=float, default=0.05)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
-    FEAT.update(pairs=not a.nopairs, onset=a.onset, deep=a.deep)
+    FEAT.update(pairs=not a.nopairs, onset=a.onset, deep=a.deep, dilate=a.dilate)
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     d = np.load(os.path.join(ROOT, "shd_700.npz"))
     scales = [float(s) for s in a.scales.split(",")]
-    cache = os.path.join(OUT, f"feats_p{a.pool}_s{a.scales}_o{a.onset}_d{a.deep}_np{a.nopairs}.npz")
+    cache = os.path.join(OUT, f"feats_p{a.pool}_s{a.scales}_o{a.onset}_d{a.deep}_np{a.nopairs}_dl{a.dilate}.npz")
     if os.path.exists(cache):
         c = np.load(cache); F, Ft = c["F"], c["Ft"]
     else:
@@ -181,7 +186,7 @@ def main():
     res = {"args": vars(a), "parts": int(F.shape[1]), "part_events_per_utterance": float(np.expm1(F).sum(1).mean()),
            "curve": curve, "final_test": curve[-1]["test"], "wall_s": round(time.time() - t0, 1)}
     print(json.dumps({k: v for k, v in res.items() if k != "curve"}))
-    with open(os.path.join(OUT, f"{a.rule}_p{a.pool}_s{a.scales}_o{a.onset}_d{a.deep}_np{a.nopairs}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"{a.rule}_p{a.pool}_s{a.scales}_o{a.onset}_d{a.deep}_np{a.nopairs}_dl{a.dilate}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump(res, f, indent=1)
 
 

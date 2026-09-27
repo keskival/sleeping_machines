@@ -98,6 +98,14 @@ depth is needed: to order two events that fall on the same side of a node's trig
   ≈ 80× in energy), ≈ 19,000× when the episode sits in 99% silence, ≈ 6,000× fewer training operations. Caveats:
   the dense model reaches 0.995 at 3M multiply-adds, and a sparse (event-driven) dense model narrows the gap to ≈ 10×:
   the advantage belongs to the event paradigm and grows with silence (§63).
+- **SHD with the new architecture: not yet (E38, E40, negative).** On real speech the representation is the bottleneck.
+  A dense softmax on local temporal-pair parts reaches only 0.40; adding onset-referenced parts (§56.2's reference)
+  lifts it to 0.566, matching the dense MLP; normalizing time by utterance duration (a second reference, for tempo)
+  lowers it (0.46). The native zone learner on those parts overfits (train 0.65, test 0.27–0.33, sleep does not help).
+- **Stateful nodes are strictly stronger (E39b).** "B after A and C not between them" (an order-XNOR) is computed by one
+  arm/disarm node and by no stateless node (exhaustive search), extending §71.
+- **§72's collapse phase observed (E37).** With sleep but no shared route, training accuracy falls to 0.45 and test is
+  0.00 in all seeds: memorization cannot persist under decay and nothing takes over.
 - **Pull-only does not transfer to weights (E26b, negative).** Dropping the competitor push in the main race
   collapses SHD from 0.35 to 0.06. For weights the native counter-force is a conserved per-node budget (§60).
 - **True grokking test (E29): no grokking yet (1 seed).** Frozen random loops memorize (test 0.015); with hidden

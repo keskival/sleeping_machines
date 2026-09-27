@@ -1,0 +1,6 @@
+{
+ "grid": 12,
+ "configurations": 1320,
+ "stateful_exact": true,
+ "stateless_nodes_found": 0
+}
