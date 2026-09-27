@@ -1,0 +1,9 @@
+# E66 rerun: sleeping mixer with conserved awake weight (nan fix), vectorized word hashing (D90M memory)
+e66b_D1M experiments/e66_wordkeys.py --D 1000000 --K 5 --test 1000000
+e66b_D10M experiments/e66_wordkeys.py --D 10000000 --K 6 --test 1000000
+# E70: SHD with race attention over band-onset events; selection on held-out speakers, then test once
+e70_R4_spk experiments/e70_shd_race.py --R 4 --layers 2 --d 64 --epochs 12 --eval spk
+e70_R0_spk experiments/e70_shd_race.py --R 0 --layers 2 --d 64 --epochs 12 --eval spk
+e70_R4_test experiments/e70_shd_race.py --R 4 --layers 2 --d 64 --epochs 12 --eval test
+e70_R0_test experiments/e70_shd_race.py --R 0 --layers 2 --d 64 --epochs 12 --eval test
+e66b_D90M experiments/e66_wordkeys.py --D 90000000 --K 7 --test 1000000

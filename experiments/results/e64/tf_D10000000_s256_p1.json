@@ -1,0 +1,1 @@
+{"args": {"model": "tf", "D": 10000000, "passes": 1.0, "size": 256, "layers": 2, "ctx": 256, "test": 1000000}, "params": 1658907, "test_bpc": 2.426908791525532, "steps": 1220, "wall_s": 1889.5}
