@@ -3717,6 +3717,17 @@ P4: N = 16 → 32 channels (P = 240 → 992 part nodes): updates grow by ≲ 1.5
 If P1 holds, the chains match the Transformer (0.998 after 2M episodes) with ≈ 10⁴× less inference compute and ≈ 50×
 fewer training episodes.
 
+**Results (E34w, 5 seeds).** P1 fails: tuned windows 0.977 / 0.911 / 0.990 / 0.983 / 0.981 at 40k episodes, with 890–1,531
+updates (the plateau is reached by 8k episodes and then constant, apart from transient drops such as seed 1's 0.989 →
+0.911). Part of the floor is the task, not the learner: the class window W = 3.5 inherited from E34 is shorter than the
+longest span between the two part events (gap ≤ 2.5 plus the second motif ≤ 1.5), leaving 0.07–1.4% of test examples
+unreachable per seed; the transient drops come from continued corrections on such irreducible errors. P2 fails
+badly: the window bank collapses (0.05–0.10, ≈ 36k updates, all misses). This is the instant-splitting deadlock found
+afterwards (§84, Proposition 2): with wide part windows, cross pairs between the two motifs fire in every positive at
+instants other than the target's. P3 fails: θ = 0.4, 0.5 and 0.7 give the same accuracies seed by seed; the worst-case
+drift of (ii) does not arise here (few false fires). P4 holds: N = 16 → 32 channels raises updates 1.3× (mean 1,150 →
+1,495; predicted ≲ 1.5×, log-ratio 1.26). Follow-up (E34x): W = 4.2 and §84's instant credit, tuned and bank.
+
 ## 84. Depth 3: order among three parts, credit at an instant, and exploration toward the absorbing route
 
 *Written 2026-09-27, after single-seed diagnostics of E53 (stated as such) and before its 5-seed runs.*
@@ -3767,6 +3778,41 @@ P3: depth 2 < 0.7 on all seeds (a summed hold is unordered).
 P4: updates stay within 3× of depth 2 in E34w (log P² = 2 log P), and events per episode ≈ 40 (activity, not P² = 57,600).
 P5: an event-token Transformer given a fixed 40k-episode training set (2M presentations, AdamW) stays below the chains;
 given 2M fresh episodes it may match them, at ≈ 10⁴× the inference cost.
+
+## 85. Synapses grown on credit: exact dense Winnow at the cost of activity, and the price of depth
+
+*Written 2026-09-27 (before E54's 5-seed runs).*
+
+**Representation.** A class node's role weights over a candidate basis of Q units (all chain units up to level L:
+Q = P + P² + … + P^(L+1)) are stored as w_j = s·v_j for units with a grown synapse and w_j = s·u for all others (one
+shared value u per node), with a scale s. A multiplicative update of a set S grows synapses for the units in S that lack
+one (v_j := u), multiplies their v_j, and renormalizes by recomputing s from Σ v_j + (Q − n)·u (n grown synapses);
+folding s into v and u is a change of representation.
+
+**Proposition (exactness).** From the uniform start w_j = 1/Q, this lazy network produces the same weights, hence the same
+decisions, as dense Winnow with a conserved budget. *Proof.* By induction over updates: in the dense algorithm every
+unit never in an updated set has been multiplied only by the normalizers, so all such units share one value, which is
+s·u; a grown unit has additionally been multiplied by its own update factors, as v_j. The normalizer computed from
+Σ v_j + (Q − n)·u equals the dense total. ∎ *Verified (E54, D = 3, Q = 144,780):* identical decisions over 8,000 test
+episodes (equal decision hash), identical update counts and accuracy, dense vs lazy.
+
+**Consequences.** (a) The mistake bound keeps its log Q = (L + 1)·log P (§83(i)): from 1/Q a target needs log₂(θQ)
+net doublings, linear in depth. (b) Memory is the number of distinct units ever in a credited set (8.5k grown of
+145k in 4k episodes at D = 3); the basis itself (5.5·10⁷ at depth 4, 2·10¹⁰ at depth 5) is never stored. (c) Time per
+episode is the number of fired units. A candidate that never fires, or fires but is never credited, costs nothing.
+
+**The price of depth is activity.** A chain unit at level k fires for each part firing within W₂ after a firing level
+k − 1 unit, so the fired units per episode grow as n·r^L, with r the parts firing per window: measured 44 / 155 / 454
+events per episode at depth 3 / 4 / 5 (r ≈ 3). This is exponential in depth with base r (the stream's density), not
+in P: cheap for sparse streams and moderate depth, and the reason dense streams (SHD, §55) are hard. A Transformer's
+cost is O(layers·n²·d), polynomial in depth, so a crossover depth exists, L* ≈ log(layers·n²·d)/log r (≈ 10 here).
+Demand-driven propagation (extend a unit only if it has grown synapses downstream) would cut n·r^L to the credited
+paths; untested.
+
+**Predictions (E54, 20 channels, 8 motifs, 5 sets × 4 orders = 20 classes; instant credit, T = 0.3).**
+P1: depth 4 (L = 2): ≥ 0.99 on ≥ 4/5 seeds at 40k episodes. P2: one level short (L = 1): < 0.8 on all seeds.
+P3: updates to plateau grow at most linearly with depth: depth 4 ≤ 2× depth 3 (log Q ratio 1.5).
+P4: an event-token Transformer on the same task with a fixed 40k-episode training set stays below the chains.
 
 ## Tests
 

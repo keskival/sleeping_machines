@@ -34,6 +34,7 @@ class Compose:
                  summed=0, alpha=1.0, beta=0.3):
         self.mult, self.recruit = mult, recruit
         self.summed, self.alpha, self.beta = summed, alpha, beta
+        self.credit, self.temp, self.rng = "union", 0.0, rng
         self.learn_win = learn_win
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
@@ -102,8 +103,19 @@ class Compose:
         c, x, ft, (f, win, same, inst) = self.forward(t)
         if c == y:
             return False
-        if y < self.K and not np.isfinite(ft[y]) and len(f) >= 2:   # miss: promote every candidate (full information)
+        if y < self.K and not np.isfinite(ft[y]) and len(f) >= 2 and self.credit == "union":   # §83: every candidate
             self._mul(self.h, y, f[win.any(0)], 1 + self.alpha); self._mul(self.g, y, f[win.any(1)], 1 + self.alpha)
+        elif y < self.K and not np.isfinite(ft[y]) and len(f) >= 2 and win.any():               # §84: one instant
+            HS = win @ self.h[y, f]; GS = same @ self.g[y, f]; cand = win.any(1); score = np.minimum(HS, GS)
+            if self.temp > 0:
+                z = np.where(cand, (score - score[cand].max()) / self.temp, -np.inf); pr = np.exp(z)
+                i = int(self.rng.choice(len(pr), p=pr / pr.sum()))
+            else:
+                i = int(np.argmax(np.where(cand, score, -1.0)))
+            if HS[i] <= self.thr:
+                self._mul(self.h, y, f[win[i]], 1 + self.alpha)
+            if GS[i] <= self.thr:
+                self._mul(self.g, y, f[same[i]], 1 + self.alpha)
         if c < self.K:                                      # false fire: demote every contributor at its instant
             i = inst[c]
             self._mul(self.h, c, f[win[i]], 1 - self.beta); self._mul(self.g, c, f[same[i]], 1 - self.beta)
@@ -174,6 +186,8 @@ def main():
     ap.add_argument("--mult", type=int, default=0, help="1: multiplicative (Winnow) routing pulls (§68)")
     ap.add_argument("--summed", type=int, default=0, help="1: summed hold/trigger potentials + full-information Winnow (§83)")
     ap.add_argument("--thr", type=float, default=0.5)
+    ap.add_argument("--credit", default="union", choices=("union", "instant"))
+    ap.add_argument("--temp", type=float, default=0.0)
     ap.add_argument("--alpha", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.3)
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
@@ -191,6 +205,7 @@ def main():
         net = Compose(a.N, a.K, a.depth, a.W, rng, part_hi=a.part_hi, learn_win=a.learn_win,
                       scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit,
                       summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta)
+        net.credit, net.temp = a.credit, a.temp
         curve = []
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
@@ -207,7 +222,7 @@ def main():
                 net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 

@@ -1,0 +1,6 @@
+# E54: chain composites with synapses grown on credit (THEORY §85, predictions P1-P4)
+e54_D3 experiments/e54_chains.py --D 3 --steps 40000 --seeds 5
+e54_D4 experiments/e54_chains.py --D 4 --steps 40000 --seeds 5
+e54_D4_L1 experiments/e54_chains.py --D 4 --L 1 --steps 20000 --seeds 5
+e54_tf_n40k experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e54_n40k
+e54_D5 experiments/e54_chains.py --D 5 --steps 12000 --seeds 3
