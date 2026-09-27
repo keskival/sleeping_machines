@@ -2,3 +2,5 @@
 {"seed": 1, "step": 20000, "test": 0.222, "updates": 12563, "events_per_episode": 15.904}
 {"seed": 2, "step": 20000, "test": 0.484, "updates": 13003, "events_per_episode": 14.738666666666667}
 {"seed": 3, "step": 20000, "test": 0.28733333333333333, "updates": 13232, "events_per_episode": 16.154666666666667}
+{"seed": 4, "step": 20000, "test": 0.47733333333333333, "updates": 12232, "events_per_episode": 15.304}
+EXIT-OK 33.5

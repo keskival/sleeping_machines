@@ -1,0 +1,3 @@
+e45_ab experiments/e45_discover.py --epochs 200 --seeds 5 --task ab
+e45_abc experiments/e45_discover.py --epochs 200 --seeds 5 --task abc
+e45_rand experiments/e45_discover.py --epochs 200 --seeds 5 --task rand
