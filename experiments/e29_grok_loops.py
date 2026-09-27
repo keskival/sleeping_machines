@@ -60,8 +60,8 @@ def integrate(arr, w, W, thr=1.0, v=None):
 
 
 class Net:
-    def __init__(self, p, R, Hn, G, k, W, H, rng, dinit=1.0, budget=8.0, kappa=0.02, veto=0):
-        self.dinit, self.budget, self.kappa = dinit, budget, kappa
+    def __init__(self, p, R, Hn, G, k, W, H, rng, dinit=1.0, budget=8.0, kappa=0.02, veto=0, learn_P=1):
+        self.dinit, self.budget, self.kappa, self.learn_P = dinit, budget, kappa, learn_P
         self.p, self.R, self.Hn, self.G, self.k, self.W, self.H = p, R, Hn, G, k, W, H
         self.P = rng.uniform(3, 12, R)                          # loop periods
         self.d = rng.uniform(0, 12, (R, p))                     # a -> loop injection delays
@@ -125,7 +125,7 @@ class Net:
             s = src[j]
             self.wh[h, s] += eta * tot / len(wi)
             shift = 0.5 * (target - arr[j])
-            if s < self.R and lap[j] > 0:                       # a loop lap: split between delay and period
+            if s < self.R and lap[j] > 0 and self.learn_P:      # a loop lap: split between delay and period
                 self.dh[h, s] += shift / 2
                 self.P[s] += shift / (2 * lap[j])
             else:
@@ -197,6 +197,7 @@ def main():
     ap.add_argument("--epochs", type=int, default=100)
     ap.add_argument("--eta", type=float, default=0.02)
     ap.add_argument("--budget", type=float, default=4.0, help="class node synaptic budget")
+    ap.add_argument("--learn-periods", type=int, default=1, help="0: loop periods fixed (delays still learn)")
     ap.add_argument("--veto", type=int, default=1, help="1: false winners get veto synapses (§56.5)")
     ap.add_argument("--kappa", type=float, default=0.02, help="price step")
     ap.add_argument("--dinit", type=float, default=1.0, help="initial hidden delay spread")
@@ -208,7 +209,7 @@ def main():
     t0 = time.time()
     rng = np.random.default_rng(a.seed)
     (A, B), (At, Bt) = split(a.p, a.frac, a.seed)
-    net = Net(a.p, a.loops, a.hidden, a.group, a.k, a.W, a.H, rng, a.dinit, a.budget, a.kappa, a.veto)
+    net = Net(a.p, a.loops, a.hidden, a.group, a.k, a.W, a.H, rng, a.dinit, a.budget, a.kappa, a.veto, a.learn_periods)
     rho = len(A) / net.params()
     curve = []
     for ep in range(1, a.epochs + 1):                           # a stream of training pairs, reshuffled

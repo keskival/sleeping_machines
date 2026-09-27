@@ -1,0 +1,5 @@
+# E28c: depth and part reuse: 15 classes from 6 motifs, 5 seeds, short and long training
+e28c_d1_20k experiments/e28_routing.py --seeds 5 --fix60 1 --eta 0.02 --K 15 --M 6 --steps 20000 --depth 1 --tag K15_20k
+e28c_fired_20k experiments/e28_routing.py --seeds 5 --fix60 1 --eta 0.02 --K 15 --M 6 --steps 20000 --arm fired --hidden 192 --group 16 --k 1 --tag K15_20k
+e28c_d1_60k experiments/e28_routing.py --seeds 5 --fix60 1 --eta 0.02 --K 15 --M 6 --steps 60000 --depth 1 --tag K15_60k
+e28c_fired_60k experiments/e28_routing.py --seeds 5 --fix60 1 --eta 0.02 --K 15 --M 6 --steps 60000 --arm fired --hidden 192 --group 16 --k 1 --tag K15_60k

@@ -1,0 +1,1 @@
+e29c_L4_fixedP experiments/e29_grok_loops.py --hidden 384 --group 16 --k 1 --W 1.0 --budget 16 --eta 0.02 --kappa 0.02 --veto 0 --epochs 80 --every 10 --loops 4 --credit nearmiss --learn-periods 0 --tag h384_fixedP
