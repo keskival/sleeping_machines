@@ -3026,6 +3026,29 @@ duration, and they answer different credit questions: a coincidence missed by mi
 missed because the partner came too late for the PSP lengthens the duration; a false fire from a partner that came
 too late shortens it.
 
+## 62. Why depth does not pay yet: hidden nodes become class detectors, and motifs are out of reach of the window
+
+*Written 2026-09-27 from E28c and a hidden-selectivity diagnosis (15 classes built from 6 motifs, 192 hidden,
+20k episodes; selectivity = max over conditions of P(fire | condition) − P(fire | not)).*
+
+| hidden layer | median motif selectivity | median class selectivity | motif-selective nodes (> 0.3) | class-selective nodes (> 0.3) |
+|---|---|---|---|---|
+| untrained | 0.07 | 0.13 | 7 | 28 |
+| trained, label-gated credit (fired) | 0.12 | 0.21 | 24 | 55 |
+| trained, label-free (every winner pulls its window) | 0.11 | 0.19 | 22 | 55 |
+
+Training makes hidden nodes more class-selective than motif-selective, with or without labels: they duplicate what
+depth 1 does, so depth adds nothing (E28c: depth 1 0.51 vs depth 2 0.44). Label-free learning from recurrence
+(the STDP route to repeated patterns) does not change this, although motifs are ~50× more frequent than chance
+coincidences of the same channels.
+
+**Diagnosis.** A motif is "j within 0.3–1.5 after i"; the hidden window is 0.6. A pull moves only arrivals already
+inside the firing window, so a node whose window catches i but not j can never align j onto it: the recurrence is
+there, but the credit cannot reach it. This is §61's distinction again: to discover a motif a node must either hold
+long enough to see both spikes (duration) and then align (delay), or receive credit from near-coincidences across a
+span longer than its window. **Prediction (M62):** hidden nodes with learnable duration (hold), shortened as
+their delays align, become motif-selective, and depth 2 then beats depth 1 on shared-motif tasks.
+
 ## Tests
 
 | | Claim | Test |
@@ -3083,6 +3106,7 @@ too late shortens it.
 | **M59** | the operator basis + one reference is Turing-complete (two-counter machine); restoration by a comb coincidence per cycle makes reliability independent of program length | E30 `e30_minsky.py`: exact on all programs; success vs q/σ with and without restoration, 25 vs 81 steps |
 | **M60** | pull-only on weights needs conserved per-node budgets (fractional steps), conserving weakening and prices; readout capacity (Cover) bounds memorization | E26b `--compete 0` on SHD (refutes transfer); E29 readout on frozen hidden, 96 vs 384 nodes |
 | **M61** | aligning (delay) destroys the interval's content, holding (PSP duration) keeps it; veto and ordering need duration; delay and duration are separate learnable parameters with separate credit | E27 `--tol hold` vs `align`, veto vs no veto; with duration shrinking on late-partner false fires |
+| **M62** | depth fails because hidden nodes become class detectors; motifs longer than the window are out of reach of pulls; hold-then-align hidden learning makes them motif-selective and lets depth pay | E28 depth 2 with learnable hidden durations; motif vs class selectivity; E28c task |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

@@ -334,7 +334,10 @@ chance. **E28c** (15 classes from 6 motifs, 5 seeds) tests the case depth should
 | 20k episodes | 0.50 (0.43–0.56) | 0.42 (0.38–0.46) |
 | 60k episodes | 0.51 (0.42–0.56) | 0.44 (0.40–0.47) |
 
-Depth 1 wins at both lengths: the hidden layer does not learn reusable motif detectors under the current rule. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
+Depth 1 wins at both lengths: the hidden layer does not learn reusable motif detectors under the current rule.
+A selectivity diagnosis (§62) shows trained hidden nodes become class detectors (median class selectivity 0.21 vs
+motif 0.12), with label-gated or label-free credit alike; motifs span up to 1.5 but a window is 0.6, so pulls never
+reach the motif's second spike. Hold-then-align hidden learning is the predicted fix. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
 reversed, and depth did not beat depth 1. All arms were far from solving the task; the readout uses pull-only weights without §60's
 conservation and prices, and 48 hidden nodes, which E29 showed cannot work. Rerun with those fixes is next. Two
 bugs found on the way were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor,
