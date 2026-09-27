@@ -52,3 +52,14 @@ decides when changing it pays for its cost. E42 poses that problem.
   multiply-adds; not a pass/fail criterion.
 
 A negative H1 with a positive H2 is a meaningful result: a learner that correctly decides that transacting does not pay.
+
+## Amendment 1 (2026-09-27, pilot days only; confirmatory days not yet touched)
+
+Pilot runs showed that imitating the hindsight teacher over-trades: at c = 2 bp over three pilot days the event learner
+lost 16–33k bp with thousands of position changes, logistic regression 7–23k, against a teacher making ~900 changes per
+day. A teacher that charges m × c (m tuned on pilot days) narrows this (m = 30: logistic −348 bp over 3 days, 332
+changes, i.e. near flat; event learner still −8.9k, 2,352 changes). Two changes are added before any confirmatory run:
+(1) the teacher cost multiplier m is a pilot-tuned hyperparameter for both learners; (2) an additional event-learner
+variant, **profit-priced**, whose change-detectors carry prices (thresholds) raised when their realized trades lose after
+costs and lowered when declined changes would have paid, learning the no-trade band from realized profit rather than by
+imitation. Hypotheses H1–H4 and metrics are unchanged.
