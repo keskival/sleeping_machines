@@ -1,0 +1,42 @@
+{
+ "args": {
+  "task": "e54",
+  "sizes": "32x2",
+  "episodes": 2000000,
+  "batch": 32,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "e54_n40k_wd0",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 40000,
+  "reltime": 0
+ },
+ "rows": [
+  {
+   "task": "e54",
+   "reltime": 0,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9894999861717224,
+   "params": 26741,
+   "tokens_per_episode": 10.2255,
+   "macs_per_episode": 265357.676832,
+   "wall_s": 446.3
+  },
+  {
+   "task": "e54",
+   "reltime": 0,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9904999732971191,
+   "params": 26741,
+   "tokens_per_episode": 10.2015,
+   "macs_per_episode": 264705.101088,
+   "wall_s": 435.6
+  }
+ ]
+}

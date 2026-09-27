@@ -1,0 +1,7 @@
+# E94: data efficiency on the depth-3 order task: chains at log-spaced checkpoints; Transformer on fixed sets of n examples
+e94_chains experiments/e53_depth3.py --depth 3 --credit latest --beta 0.5 --margin 0.9 --gate 0.9 --eval-at 250,500,1000,2000,5000,10000 --steps 10000 --seeds 5
+e94_tf_n2k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 2000 --episodes 400000 --batch 32 --wd 0 --seeds 2 --tag e53_n2k_wd0
+e94_tf_n5k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 5000 --episodes 1000000 --batch 32 --wd 0 --seeds 2 --tag e53_n5k_wd0
+e94_tf_n10k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 10000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e53_n10k_wd0
+e94_tf_n20k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 20000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e53_n20k_wd0
+e54_tf_online experiments/e36_transformer.py --task e54 --sizes 32x2 --episodes 2000000 --batch 64 --seeds 2 --tag e54_online2M
