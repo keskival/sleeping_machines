@@ -123,8 +123,8 @@ def fig_supremacy_map():
     _panel_depth(axs[1, 0]); _panel_data(axs[1, 1])
     # (c) world model of a real market stream (held-out days 6-7; one hazard family: the 6-window bank)
     ax = axs[2, 0]
-    ax.set_title("Market world model: within 0.07–0.18 nats\nof a Transformer, ~1/3000 of the work", fontsize=8.4)
-    rows = [("event network + slow regime counters (E57)", [-2.153, -1.960], 40, EVENT, "D"),
+    ax.set_title("Market world model: within 0.08–0.19 nats\nof a Transformer, ~1/3000 of the work", fontsize=8.4)
+    rows = [("event network + slow regime counters (E57)", [-2.159, -1.973], 40, EVENT, "D"),
             ("event network, semi-Markov (E48)", [-2.38, -2.10], 19, "#f3a37f", "D"),
             ("GRU point process, online", [-3.15, -2.98], 1.5e3, DENSE_O, "o")]
     thp = os.path.join(RES, "e52", "thp_test_d64_L32_f0_e11.json")
