@@ -34,9 +34,9 @@ can **match or beat** MLPs and Transformers.
 - **Deep order from a few thousand examples.** Recognizing which of 20 *orders* of four patterns occurred needs four
   levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
   correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
-  ≈ 80k connections ever created. **With the same 40k examples a Transformer makes about ten times as many errors at
-  depth 4 (0.990 vs 0.999–1.000)**, at ≈ 7,000× the computation per example; at depth 3 it reaches the same accuracy
-  only with 8–400× more data.
+  ≈ 80k connections ever created. **At depth 4 a Transformer given the same 40k examples makes about ten times as many
+  errors (0.990 vs 0.999–1.000), and even with 2M examples (≈ 150× the data) still 4–8 times as many (0.992–0.996)**, at
+  ≈ 7,000× the computation per example; at depth 3 it reaches the same accuracy only with 8–400× more data.
 - **Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.** On a task of 15 classes
   built from ordered pairs of shared motifs, the event network reaches 0.990–0.999 (mean 0.9965) from 40k examples
   seen once, learning its own timing windows, at ≈ 20 events per example; a Transformer needs 2M examples for
@@ -137,7 +137,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **A world model of a real market stream: better than a GRU point process, within 0.07–0.18 nats of a Transformer point process, at ≈ 1/3000 of its cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | a Transformer Hawkes process is more accurate on the held-out days (−1.97 / −1.82 vs −2.15 / −1.96 with the same hazard family; E52, E57) |
 | **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
-| **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: given 40k × 50 it reaches 0.990 (≈ 10× the error rate) at ≈ 7,000× the computation; with 2M fresh examples: running |
+| **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: 0.990 given 40k × 50 and 0.992–0.996 given 2M fresh examples (4–10× the error rate) at ≈ 7,000× the computation |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
 | *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
@@ -323,8 +323,8 @@ At depth 4 (which of 20 orders of four motifs; 5.5·10⁷ candidate units per ro
 5/5 seeds after 10–15k examples, with ≈ 2,000 updates, ≈ 150 events per example and 77k–84k synapses ever grown; with
 one level of composites too few the network cannot express the order and stays at 0.57–0.76 (E54). An event-token
 Transformer given the same kind of data (40k examples, 50 passes) reaches 0.9895 / 0.9905 without weight decay (0.977 /
-0.9705 with it): about ten times the chains' error rate, at ≈ 265k multiply-adds per example. At depth 3 it matched the
-chains; the gap opens with depth.
+0.9705 with it): about ten times the chains' error rate, at ≈ 265k multiply-adds per example; with 2M fresh examples
+0.992 / 0.996, still 4–8 times the error rate. At depth 3 it matched the chains; the gap opens with depth.
 **Inference cost follows the learned structure (§93).** After a warm-up, a unit is extended to the next level only if one
 of its children carries weight (checked periodically, like sleep): accuracy is unchanged (depth 3: identical per seed;
 depth 4: 0.995–1.000) while events per example fall by 42% at depth 3 (44 → 26) and 75% at depth 4 (≈ 155 → 39); the
