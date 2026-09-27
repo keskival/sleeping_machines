@@ -4018,6 +4018,42 @@ backoff level of per-type counters (τ = 2 s) −2.15 / −1.96; fine windows: T
 Transformer is the better world model by 0.07–0.18 nats per event; the counted event network costs ≈ 30–40 operations
 per event (≈ 1/3000–1/4000).
 
+## 91. Latest-instant credit under trailing noise: a drift bound, and where the margin should stand
+
+*Written 2026-09-27, before E91.*
+
+**Setting.** A class node with summed potentials and conserved multiplicative credit; on a miss it promotes, by (1 + α),
+the deficient roles at the latest candidate instant of the example (§89); on a false fire it demotes, by (1 − β), the
+contributors at the firing instant. The target route fires its trigger unit l* at the pattern's last event and is valid
+(never complete in a negative). Let q be the probability that an example's latest candidate instant lies after the
+pattern (trailing noise), f_j the probability that a non-target unit j is in the credited trigger set on a miss, and ρ the
+rate, per miss, of false fires to which l* contributes.
+
+**Proposition (drift).** For every distractor j, Λ_j = log(g_{l*} / g_j) (renormalization cancels, §83(i)) changes on a miss
+by +log(1 + α) when the credited instant is the pattern's end and j is not credited there (probability ≥ 1 − q − f_j),
+by −log(1 + α) when j is credited and l* is not (probability ≤ f_j), and by at most −log(1/(1 − β)) per false fire in which
+l* is demoted and j is not. Hence
+
+  E[ΔΛ_j per miss] ≥ (1 − q − 2 f_j) · log(1 + α) − ρ · log(1/(1 − β)).
+
+When the right side is positive, every distractor's share decays geometrically and the trigger role concentrates on l*
+after M = O((log Q + log((1 − θ)/θ)) / drift) misses: logarithmic in the candidate basis Q, and slower as trailing noise
+grows, as 1/(1 − q − 2f). As q → 1 − 2f (the pattern's end is rarely the latest instant) learning stalls. The same bound
+holds for the hold role with the window before the credited instant.
+
+**Consequence for the margin (§86, §89).** Near-miss credit acts on correct answers, which are frequent, so whatever
+instant it anchors to is promoted far more often than misses are credited. At the firing instant it protects shortcuts;
+at the latest candidate instant it multiplies the trailing-noise term q by the rate of correct answers. The anchor
+consistent with the bound is the latest instant at which the node's *own* drive already exceeds θ: trailing noise units
+carry little weight, so this is the pattern's end once the complete route has weight, and the margin then protects what
+the node already recognizes rather than whatever came last.
+
+**Predictions.** P1 (E91 noise sweep, E53 with latest-instant credit, 5 seeds, noise probability 0.1 / 0.25 / 0.4 / 0.55):
+the measured q rises with the noise, and the updates needed grow at least as fast as 1/(1 − q); accuracy stays ≥ 0.99
+while 1 − q is well above 2f, and degrades at the highest noise. P2 (E91 anchor, E34's task with learned windows): the
+margin anchored at the latest supra-threshold instant keeps every seed at or above its no-margin value (0.990–0.999)
+without the dips.
+
 ## Tests
 
 | | Claim | Test |
