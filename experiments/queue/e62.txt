@@ -1,0 +1,5 @@
+# E62: character-level LM on text8, stage 1 (counting event model + copy memory): scaling with training size (§95)
+e62_D1M experiments/e62_charlm.py --D 1000000 --K 5 --test 1000000
+e62_D10M experiments/e62_charlm.py --D 10000000 --K 6 --test 1000000
+e62_D90M experiments/e62_charlm.py --D 90000000 --K 7 --test 1000000
+e62_D90M_full experiments/e62_charlm.py --D 90000000 --K 7 --test 5000000
