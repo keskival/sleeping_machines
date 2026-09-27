@@ -3262,6 +3262,28 @@ The relation is now the absorbing state: every pair the shared route gets right 
 (iv) Relations the rhythm cannot express (a² + ab + b², random tables) stay memorized at chance on test for any λ,
     and with strong λ lose training accuracy too, since the lookup keeps decaying and nothing can take over.
 
+## 70. Order is native to a race and learned by a Transformer
+
+*Written 2026-09-27, after E36's first runs (event-token Transformers 0.93–0.97 at 576k MACs on E27's task, 0.42–0.70
+at 687k on E28's, vs 1.000 at 7.5 events and 0.97 at ~14 events), and before the long-training and relative-time
+runs were read.*
+
+Self-attention without position information is permutation-invariant: it cannot see order at all. With time
+encodings, a head can compare two events' times only through dot products of sinusoidal features, i.e. it must
+synthesize the predicate "t_B − t_A ∈ [lo, hi]" from learned projections, at O(n²·d) per layer whether or not the
+comparison is relevant. A hold/trigger node computes exactly that predicate as its primitive, at the cost of the
+events it receives (§64), and learns which one with O(log N) mistakes (§68). On tasks defined by order and bounded
+differences (E27, E28), the prediction is: small Transformers fail, large ones improve slowly with training, and the
+gap narrows but costs grow as n²·d.
+
+**The fair strengthening.** Give each attention head the relational primitive directly: an additive bias on the
+attention score that is a learned function of t_j − t_i (relative-time bias, in the spirit of relative position
+encodings and ALiBi). This removes the "must synthesize comparisons" disadvantage; what remains is the dense cost.
+**Predictions (M70):** (i) with 10× more training, event-token Transformers approach 1.0 on E27 but not at < 10⁴
+MACs; (ii) a relative-time bias raises small Transformers substantially on E27 and E28; (iii) no Transformer
+reaches the event network's accuracy at comparable cost, because its cost is quadratic in events while the event
+network's is linear in the events a node receives.
+
 ## Tests
 
 | | Claim | Test |
@@ -3326,6 +3348,7 @@ The relation is now the absorbing state: every pair the shared route gets right 
 | **M66** | per-class parameters cannot generalize on (a + b) mod p (each (class, operand) pair is seen once); a shared intermediate is needed, and a sum-in-time needs a rhythm; grokking = routing moves from per-class to shared routes under decay | E37: memorizing network + relays + rhythm, native routing, with and without the rhythm, with and without decay |
 | **M68** | conserved fractional pulls are normalized online learning on the simplex (Winnow/Hedge family): O(k log N) mistakes per node, additive over a chain's depth; durations O(log range), vetoes O(N) | mistake counts vs N (E35 with N = 12, 24, 48) and vs depth (E34); additive vs normalized pulls |
 | **M69** | grokking = flip of the absorbing state: without decay memorization absorbs; with decay the relation absorbs; delay ∝ 1/λ; inexpressible relations stay memorized | E37 λ sweep curves; lookup share of test answers; op controls (poly, rand) |
+| **M70** | order is native to hold/trigger nodes and synthesized by attention; relative-time attention bias is the fair Transformer baseline; no Transformer matches accuracy at comparable cost | E36 long training; E36 with `--reltime 1` on E27 and E28 |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

@@ -1,0 +1,2 @@
+e36_rel_e27 experiments/e36_transformer.py --task e27 --reltime 1 --sizes 16x1,32x2,64x2 --episodes 2000000 --tag rel
+e36_rel_e28 experiments/e36_transformer.py --task e28 --reltime 1 --sizes 32x2,64x2 --episodes 2000000 --tag rel
