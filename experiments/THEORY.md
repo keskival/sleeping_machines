@@ -4141,6 +4141,37 @@ network (0.999 / 1.000 / 1.000 / 0.981 / 0.999), events per example 44 → 26 (�
 25–35k examples instead of 10–15k; 2.1k–2.5k updates instead of 1.9k–2.0k). The saving grows with depth, as predicted.
 Depth 5: first run killed by a watchdog that counted page cache as memory (0.6 GB in use); rerun queued.
 
+## 94. Language as an event stream: what it takes to compete with Transformers (design, before any run)
+
+*Written 2026-09-27.*
+
+**Baseline mapping.** With each token (or byte) an event, the counted semi-Markov world model with hierarchical backoff
+(§90) is a variable-order n-gram model, and leaky regime counters are a cache or topic model: n-gram quality, not
+Transformer quality. The market result (§90) names the missing capacities: retrieval by content from long context and
+statistics shared across similar symbols.
+
+**Four ingredients, each from the calculus.**
+1. *Tokenization as synaptogenesis.* Byte or character events; the composite units of §84–§85 over them are candidate
+   n-grams; a synapse is grown only on predictive credit (BPE learned by credit, not frequency); pruning by credit (§93)
+   bounds the per-character activity whatever the candidate space.
+2. *Sparse distributed token codes.* Per-class parameters cannot generalize (§66); a token fires k of N shared feature
+   channels, learned from co-occurrence, so routes learned for one token transfer to similar ones. Time adds rank-order
+   coding: a token's most informative features fire first, and first-to-fire readouts use them first.
+3. *Induction traces.* Each token type keeps a trace of its recent successors, updated only when it occurs: "A then B
+   earlier; A again → B", content-addressed by identity at O(1) per event, with cost independent of context length.
+4. *Mixing by conserved multiplicative credit.* Many count-based predictors (context detectors, induction traces, regime
+   counters) combined by Hedge-type weights under a conserved budget (§83): the structure of context-mixing compressors,
+   which reach roughly LSTM-level bits per character on enwik8 without deep backpropagation.
+
+**Proposition (sampling is a race).** Give every candidate next token an exponential clock with rate λ_i ∝ p_i; the first to
+fire is token i with probability λ_i / Σ_j λ_j (competing risks, §79; the Gumbel-max trick in time). The race readout is
+exact sampling from the model's distribution, with no normalization step.
+
+**Predictions (character-level language modeling, text8 / enwik8, bits per character).** Counts with backoff ≈ n-gram
+level (≈ 1.7–2.0); + composite units and induction traces better than PPM-style models; + mixing ≈ context-mixing or LSTM
+level (≈ 1.2–1.4), still above large Transformers (≈ 1.0); per-character work proportional to active units, constant in
+context length. Staged, so each ingredient's contribution is measured.
+
 ## Tests
 
 | | Claim | Test |
