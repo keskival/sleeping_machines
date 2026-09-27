@@ -3207,6 +3207,61 @@ with it, generalization requires the routing credit to prefer the shared route, 
 be shown to do. §52's sleep (downscaling) is the candidate pressure: shared routes are reinforced by every class's
 errors and survive decay, per-class routes by one pair each and fade.
 
+## 68. The native rules are online learning on the simplex: why a few hundred mistakes suffice
+
+*Written 2026-09-27, to explain E35's mistake counts and §60's need for conservation.*
+
+**The update.** §60's conserved fractional pull on node c's synapse j is W_c ← (W_c + η·|W_c|·e_j) · |W_c| / |W_c|(1+η):
+the pulled synapse gains, every other synapse is multiplied by 1/(1+η). On the normalized weights w = W_c/|W_c| this is
+w ← (w + η e_j)/(1 + η), a step toward a vertex of the probability simplex; the conserved weakening of a false
+winner is the mirror step away. This is the family of normalized online updates on the simplex (Winnow, Hedge,
+exponentiated gradient: mirror descent with an entropic geometry), not the perceptron's Euclidean one.
+
+**What that buys.** For a target that is a k-sparse choice among N inputs (a detector's hold channel and trigger
+channel: k = 2; a class's parts: k = its number of parts), multiplicative/normalized online learners make
+O(k log N) mistakes (Littlestone 1988; Kivinen & Warmuth 1997), where additive perceptron updates on the same
+problem need O(k·N) in the worst case. Predicted E35 mistakes per detector: order k log N ≈ 2·log(12) ≈ 5 per
+relevant choice times the number of patterns it must also reject; observed ~100–400 per detector including
+duration and veto learning. The observations the bound explains:
+- **E35**: routing among 12 channels found in a few hundred mistakes per detector, then learning stops.
+- **§60**: unnormalized pull-only (additive, positive weights) saturates: every pulled synapse grows, nothing
+  shrinks, all classes fire. The normalization is not a safeguard added to the rule; it is what makes the rule a
+  learner with a logarithmic mistake bound.
+- **§60's fractional steps**: a pull that moves a fixed fraction of the budget is the constant learning rate of
+  the multiplicative family; an absolute step that rescales the whole row is a step size that grows with the row's
+  sparsity, which is why nodes "remembered only their last sample".
+
+**Durations and vetoes.** A hold duration learned by moving toward the observed gap when a partner came too late
+(and below it on a late false fire) is online interval learning: O(log(range/resolution)) mistakes. Veto sets
+learned by strengthening on false fires and weakening on false blocks are monotone disjunctions learned by
+elimination: at most N mistakes in the realizable case. Together: a hold/trigger/veto node on N channels is learned
+with O(log N + N_veto + log(range/resolution)) mistakes, independent of the number of episodes.
+
+**Depth.** In a hold/trigger chain the credit for an error goes to one route (§56.4, §57), so the mistakes of a
+chain of depth D add over its nodes rather than multiply: O(D·k log N). This is the theoretical reason E34's depth-2
+network learned with ~1–2k updates while depth 1, whose nodes must each carry a whole class, did not converge.
+
+## 69. Grokking is a flip of the absorbing state (E37)
+
+*Written 2026-09-27, before E37's full runs were read.*
+
+Error-gated learning with two routes has two candidate absorbing states. **Memorization** absorbs when there is no
+decay: once each training pair's lookup entry answers correctly there are no errors, nothing learns, and the shared
+route stays untrained (E37 pilot: train 1.0, test 0.031, 950 updates in all). **Decay flips which state absorbs.** A
+lookup entry pulled to level L decays below threshold after n_d ≈ ln(L/θ)/λ epochs; then the pair errs, which
+teaches both the lookup (re-memorizing) and the shared route. Once the shared route answers a pair correctly, the
+decayed lookup entry falls silent, the rhythm answers, no error occurs, and **the lookup entry is never re-learned**.
+The relation is now the absorbing state: every pair the shared route gets right is permanently handed over.
+
+**Predictions (M69).**
+(i) With λ = 0, test stays at chance for any number of epochs (absorbing memorization).
+(ii) With λ > 0, test rises after train has saturated (delayed generalization), and the fraction of test answers
+    given by the lookup falls to zero (the lookup empties).
+(iii) The delay scales as 1/λ: the shared route learns only from errors, which arrive at a rate of about
+    n·λ/ln(L/θ) per epoch; it needs a roughly fixed number of errors U (E26: ~10⁴–10⁵), so T_grok ≈ U·ln(L/θ)/(n·λ).
+(iv) Relations the rhythm cannot express (a² + ab + b², random tables) stay memorized at chance on test for any λ,
+    and with strong λ lose training accuracy too, since the lookup keeps decaying and nothing can take over.
+
 ## Tests
 
 | | Claim | Test |
@@ -3269,6 +3324,8 @@ errors and survive decay, per-class routes by one pair each and fade.
 | **M64** | order = asymmetric PSP durations; one node = one bounded difference with exclusions; fixing the order of m points needs an (m − 1)-node chain (temporal depth = order-chain length); O(VC ≈ 2 + N) mistakes per node | E27 `--tol hold` (directional) with and without veto; E33 `e33_allen.py`: all 13 Allen relations exact |
 | **M65** | depth pays when composition is a hold/trigger chain; routing to channels and parts is learned with O(N) mistakes per node | E34 `e34_compose.py` depth 2 vs 1, window variants; E35 `e35_free.py` nothing given |
 | **M66** | per-class parameters cannot generalize on (a + b) mod p (each (class, operand) pair is seen once); a shared intermediate is needed, and a sum-in-time needs a rhythm; grokking = routing moves from per-class to shared routes under decay | E37: memorizing network + relays + rhythm, native routing, with and without the rhythm, with and without decay |
+| **M68** | conserved fractional pulls are normalized online learning on the simplex (Winnow/Hedge family): O(k log N) mistakes per node, additive over a chain's depth; durations O(log range), vetoes O(N) | mistake counts vs N (E35 with N = 12, 24, 48) and vs depth (E34); additive vs normalized pulls |
+| **M69** | grokking = flip of the absorbing state: without decay memorization absorbs; with decay the relation absorbs; delay ∝ 1/λ; inexpressible relations stay memorized | E37 λ sweep curves; lookup share of test answers; op controls (poly, rand) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

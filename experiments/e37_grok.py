@@ -22,6 +22,8 @@ import time
 
 import numpy as np
 
+import e25_delay_ring as E25
+
 OUT = os.path.join(os.path.dirname(__file__), "results", "e37")
 INF = np.inf
 
@@ -62,7 +64,7 @@ class Net:
         tot = W[c].sum(); W[c, j] *= 1 - eta; W[c] *= tot / max(W[c].sum(), 1e-12)
 
     def teach(self, a, b, eta, eta_r):
-        y = (a + b) % self.p
+        y = int(E25.label(np.array([a]), np.array([b]), self.p, OP)[0])
         c, route = self.predict(a, b)
         if c == y:
             return False
@@ -81,8 +83,12 @@ class Net:
         self.r += lam * (tot / self.r.shape[1] - self.r)          # decay toward uniform, budget conserved
 
 
+OP = "add"
+
+
 def acc(net, A, B):
-    return float(np.mean([net.predict(a, b)[0] == (a + b) % net.p for a, b in zip(A, B)]))
+    Y = E25.label(A, B, net.p, OP)
+    return float(np.mean([net.predict(a, b)[0] == y for a, b, y in zip(A, B, Y)]))
 
 
 def main():
@@ -92,6 +98,7 @@ def main():
     ap.add_argument("--epochs", type=int, default=400)
     ap.add_argument("--eta", type=float, default=0.3)
     ap.add_argument("--eta-r", type=float, default=0.3)
+    ap.add_argument("--op", default="add", choices=("add", "sub", "mul", "perm", "sq", "poly", "rand"))
     ap.add_argument("--budget", type=float, default=12.0, help="lookup synaptic budget per class row")
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: lookup decay per epoch")
     ap.add_argument("--rhythm", type=int, default=1, help="0: no rhythm route (lookup only)")
@@ -99,12 +106,17 @@ def main():
     ap.add_argument("--every", type=int, default=20)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
+    global OP
+    OP = a.op
+    E25.OP = a.op
     os.makedirs(OUT, exist_ok=True)
     rows, t0 = [], time.time()
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         A_, B_ = np.divmod(np.arange(a.p * a.p), a.p)
-        perm = rng.permutation(a.p * a.p); n = int(a.frac * a.p * a.p)
+        if a.op == "mul":                                        # nonzero operands (a cyclic group)
+            keep = (A_ > 0) & (B_ > 0); A_, B_ = A_[keep], B_[keep]
+        perm = rng.permutation(len(A_)); n = int(a.frac * len(A_))
         A, B, At, Bt = A_[perm[:n]], B_[perm[:n]], A_[perm[n:]], B_[perm[n:]]
         net = Net(a.p, rng, budget=a.budget)
         if not a.rhythm:
@@ -120,7 +132,7 @@ def main():
                               "test_lookup_answers": float(lk), "updates": net.updates})
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"p{a.p}_f{a.frac}_lam{a.lam}_r{a.rhythm}{'_' + a.tag if a.tag else ''}.json"
+    name = f"p{a.p}_{a.op}_f{a.frac}_lam{a.lam}_r{a.rhythm}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "rho": a.frac * a.p * a.p / (a.p ** 3 + 3 * a.p),
                    "wall_s": round(time.time() - t0, 1)}, f)
