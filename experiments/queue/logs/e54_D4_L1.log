@@ -1,0 +1,8 @@
+/workspace/experiments/e54_chains.py:142: RuntimeWarning: invalid value encountered in subtract
+  dt = t[self.pp[:, 1]] - t[self.pp[:, 0]]
+{"seed": 0, "Q": 144780, "step": 20000, "test": 0.566, "updates": 7384, "grown_synapses": 29258, "events_per_episode": 53.277, "synapses_per_episode": 46.808, "decision_hash": 487742064}
+{"seed": 1, "Q": 144780, "step": 20000, "test": 0.624, "updates": 8697, "grown_synapses": 33422, "events_per_episode": 55.226, "synapses_per_episode": 44.882, "decision_hash": 485079757}
+{"seed": 2, "Q": 144780, "step": 20000, "test": 0.76, "updates": 7450, "grown_synapses": 30594, "events_per_episode": 53.584, "synapses_per_episode": 38.89, "decision_hash": 495765009}
+{"seed": 3, "Q": 144780, "step": 20000, "test": 0.764, "updates": 7819, "grown_synapses": 29674, "events_per_episode": 53.022, "synapses_per_episode": 45.927, "decision_hash": 483372361}
+{"seed": 4, "Q": 144780, "step": 20000, "test": 0.603, "updates": 7859, "grown_synapses": 29606, "events_per_episode": 52.052, "synapses_per_episode": 44.266, "decision_hash": 474454883}
+EXIT-OK 57.4

@@ -277,6 +277,9 @@ freeze on a shared prefix); a margin *earned by reliability*, applied only when 
 correct, keeps the search open for unreliable nodes and protects reliable ones (§86b): stable at 0.997–0.999. With synapses grown only when first credited (§85: provably the same
 decisions as dense weights), depth 3 with 20 channels gives 0.981–1.000 (5 seeds) with 9.5k–13.7k synapses ever grown
 out of 145k candidates.
+At depth 4 (which of 20 orders of four motifs; 5.5·10⁷ candidate units per role), the same rules give 0.999–1.000 on
+5/5 seeds after 10–15k examples, with ≈ 2,000 updates, ≈ 150 events per example and 77k–84k synapses ever grown; with
+one level of composites too few the network cannot express the order and stays at 0.57–0.76 (E54).
 - A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
   (≈ 180k multiply-adds per episode).
 

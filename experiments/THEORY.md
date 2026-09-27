@@ -3823,6 +3823,11 @@ P1: depth 4 (L = 2): ≥ 0.99 on ≥ 4/5 seeds at 40k episodes. P2: one level sh
 P3: updates to plateau grow at most linearly with depth: depth 4 ≤ 2× depth 3 (log Q ratio 1.5).
 P4: an event-token Transformer on the same task with a fixed 40k-episode training set stays below the chains.
 
+**Results (E54, 5 seeds).** P1 holds: depth 4 (L = 2) 1.000 / 1.000 / 1.000 / 0.999 / 1.000, reached by 10–15k episodes
+and flat thereafter, 1,872–2,015 updates, 147–168 events per episode, 77k–84k synapses grown of 5.5·10⁷ candidates per
+role. P2 holds: one level short (L = 1) 0.57–0.76 with 7.4k–8.7k updates. P3 holds: depth 4 needs ≈ 1.25× the updates of
+depth 3 (E54 D3: 1,198–2,380; 0.981–1.000). P4 pending (Transformer queued).
+
 ## 86. Stability after convergence: a margin, maintained by near-miss credit
 
 *Written 2026-09-27, after the E53 dip diagnostic, before the margin runs.*
