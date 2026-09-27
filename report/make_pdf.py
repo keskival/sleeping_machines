@@ -922,7 +922,8 @@ def build():
         ["<b>Structure discovery, implicit Occam razor</b>",
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
-         "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "Transformer on this task running"],
+         "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "a Transformer matches depth 3 (0.996–0.999) "
+         "at ≈ 5,000× the computation; depth 4 running"],
         ["<b>Composition: Transformer-level accuracy from one pass</b>", "learned windows + latest-instant credit "
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
@@ -1051,6 +1052,8 @@ def build():
         ["depth 3, greedy instant credit", "0.71–0.85 (cycles between shared prefixes)", "4k–11k"],
         ["depth 3, credit to every candidate", "0.33–0.36 (never fires)", "≈ 26k"],
         ["depth 2, same credit", "0.32–0.42", "≈ 24k"],
+        ["<i>Transformer, 2M fresh examples</i>", "<i>0.997–0.999</i>", "<i>215k–843k MACs/example</i>"],
+        ["<i>Transformer, 40k × 50 passes (wd 0 / 0.1)</i>", "<i>0.9975, 0.996 / 0.981, 0.994</i>", "<i>215k MACs/example</i>"],
     ], [70, 74, 30], st))
     s += [P("Without a margin, converged classes dip (a node sits just above threshold; one demotion knocks it under). A margin "
             "kept by near-miss credit removes the dips but also protects wrong routes (3/5 seeds freeze on a shared prefix); a "

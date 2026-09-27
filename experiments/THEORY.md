@@ -3786,7 +3786,10 @@ temperature (10 of 40 at T = 1), pointing at exploratory promotions on rare late
 all seeds (4k–11k updates, the prefix cycle); union credit 0.33–0.36 on all seeds (≈ 26k updates, the class nodes never
 fire: the deadlock). T = 0.1 searches more slowly (four seeds need 25–35k episodes), as the T trade-off predicts. P3
 holds: depth 2 with the same credit 0.32–0.42. P4 holds: ≈ 1,100 updates to converge (depth 2 in E34w: 890–1,531), 41
-events per episode against a basis of 57,840 units. P5 pending.
+events per episode against a basis of 57,840 units. P5 fails as stated: an event-token Transformer given the same kind
+of data reaches the chains' accuracy: 0.997–0.999 with 2M fresh examples, 0.9975 / 0.996 given 40k examples 50 times
+without weight decay (0.981 / 0.994 with weight decay 0.1). The chains (latest-instant credit, earned margin: 0.997–0.999)
+match it from ≤ 5k examples seen once, at ≈ 41 events per example against ≈ 215k multiply-adds.
 
 ## 85. Synapses grown on credit: exact dense Winnow at the cost of activity, and the price of depth
 
