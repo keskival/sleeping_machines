@@ -188,9 +188,33 @@ conjunction and an order by construction.
   updates (E34: thousands), reached by 8k episodes; 4× more candidate parts (16 → 32 channels) costs 1.3× more updates,
   as the log-of-the-basis bound predicts. The remaining floor is partly the task setup: the class window (3.5) is
   shorter than the longest span between the two part events (4.0), leaving 0.07–1.4% of test examples unreachable.
-- **When updates never fire the node (§84).** If units fire in every positive example at *different* instants, crediting
-  them all keeps the mass split across instants: no instant crosses the threshold, the node never fires, and nothing
-  corrects it. This is why the window bank collapses under that rule (0.05–0.10) and why credit must go to one instant.
+- **Credit goes to one instant, found by cooled exploration (§84).** If units fire in every positive example at
+  *different* instants, crediting them all keeps the mass split across instants: no instant crosses the threshold, the
+  node never fires, and nothing corrects it (window bank under that rule: 0.05–0.10). Crediting the one instant closest
+  to firing fixes the split but can cycle between invalid prefixes forever; choosing the instant with probability
+  ∝ exp(potential/T) reaches the valid route, which is then absorbing. With the class window covering the task's span
+  (4.2), E34's task gives per-seed plateaus of 0.988–0.995 by either credit rule, and the generic window bank now
+  reaches 0.97–0.99 (E34x). The remaining gap to the Transformer (0.998) is timing precision: the fixed windows cannot
+  express the task's minimum intervals (a naive oracle route with the same windows scores 0.91–0.99; learned durations,
+  as in E35, are the missing piece).
+
+**Order among three parts: depth 3 (E53, E54).** Classes that are different *orders* of the same motif sets (20
+classes; decoys are the other orders) cannot be separated by summing held inputs, which is unordered. A layer of
+composite units (u → v, firing at v if u fired within a window) supplies ordered intermediates; the candidate basis is
+every ordered pair of parts (57,840 units), paid for only when both parts fire (≈ 41 events per episode).
+
+| E53, 5 seeds, 40k episodes | test accuracy | updates |
+|---|---|---|
+| depth 3, instant credit, cooled exploration (T = 0.3) | 0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999 | ≈ 1,100 to converge |
+| depth 3, greedy instant credit (T = 0) | 0.71–0.85 (cycles between shared prefixes) | 4k–11k |
+| depth 3, credit to every candidate | 0.33–0.36 (never fires) | ≈ 26k |
+| depth 2, same credit | 0.32–0.42 | ≈ 24k |
+
+The final-checkpoint spread comes from transient dips after convergence: a converged class sits just above its
+threshold, and one demotion as a false winner can knock it under until it is relearned (§86; a margin maintained by
+near-miss credit is the fix under test). With synapses grown only when first credited (§85: provably the same
+decisions as dense weights), depth 3 with 20 channels gives 0.981–1.000 (5 seeds) with 9.5k–13.7k synapses ever grown
+out of 145k candidates.
 - A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
   (≈ 180k multiply-adds per episode).
 
