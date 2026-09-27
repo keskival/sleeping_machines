@@ -2903,7 +2903,8 @@ beat fired credit at k = 2 (0.31 both), (ii) k = 1 near-miss matched k = 2 fired
 variance, (iii) not confirmed (depth 2 ≈ depth 1), (iv) confirmed (push 0.17). All arms far below ceiling; the
 readout lacked §60's conservation and capacity. With §60 applied to every node (E28b, 3 seeds): depth 2 with routing
 credit 0.72–0.74 vs depth 1 0.68 vs depth 2 path-only 0.17: (i) confirmed strongly, (ii) near-miss ≈ fired, (iii)
-a modest lead for depth.*
+a modest lead for depth that did not hold with 15 classes from 6 shared motifs (E28c, 5 seeds: depth 1 0.51 vs
+depth 2 0.44 at 60k): depth is learnable, not yet advantageous.*
 
 (i) Near-miss routing credit beats critical-path-only credit at depth 2, and matches or beats top-k fired credit.
 (ii) Near-miss credit with k = 1 approaches its k = 2 result: counterfactuals from cancellation replace
