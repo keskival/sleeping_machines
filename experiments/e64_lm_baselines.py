@@ -111,8 +111,10 @@ def main():
     res = {"args": vars(a), "params": nparam, "test_bpc": tbpc, "steps": steps,
            "valid_curve": vcurve, "best_step": best[2], "best_valid_bpc": best[0] if best[1] is not None else None, "wall_s": round(time.time() - t0, 1)}
     print(json.dumps(res), flush=True)
-    with open(os.path.join(OUT, f"{a.model}_D{a.D}_s{a.size}_p{a.passes:g}" + (f"_dr{a.dropout:g}_v" if a.valid else "") + ".json"), "w") as f:
+    name = f"{a.model}_D{a.D}_s{a.size}_p{a.passes:g}" + (f"_dr{a.dropout:g}_v" if a.valid else "")
+    with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f)
+    torch.save({"args": vars(a), "state": net.state_dict()}, os.path.join(OUT, name + ".pt"))      # for E76
 
 
 if __name__ == "__main__":
