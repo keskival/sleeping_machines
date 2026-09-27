@@ -1,0 +1,8 @@
+e50_c2_k1_H60 experiments/e50_mbpolicy.py --c 2 --kappa 1 --H 60 --every 10
+e50_c2_k1_H300 experiments/e50_mbpolicy.py --c 2 --kappa 1 --H 300 --every 10
+e50_c2_k3_H60 experiments/e50_mbpolicy.py --c 2 --kappa 3 --H 60 --every 10
+e50_c2_k3_H300 experiments/e50_mbpolicy.py --c 2 --kappa 3 --H 300 --every 10
+e50_c10_k1_H60 experiments/e50_mbpolicy.py --c 10 --kappa 1 --H 60 --every 10
+e50_c10_k1_H300 experiments/e50_mbpolicy.py --c 10 --kappa 1 --H 300 --every 10
+e50_c10_k3_H60 experiments/e50_mbpolicy.py --c 10 --kappa 3 --H 60 --every 10
+e50_c10_k3_H300 experiments/e50_mbpolicy.py --c 10 --kappa 3 --H 300 --every 10
