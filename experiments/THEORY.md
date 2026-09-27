@@ -3873,7 +3873,9 @@ after 10k episodes below 0.99 on those seeds.
 **Result (E53g, 5 seeds): holds.** 0.998 / 0.999 / 0.999 / 0.997 / 0.999, identical at every checkpoint from 5k to 40k
 episodes (no dips, no frozen prefixes), with 1,075–1,434 updates and 197–277 near-miss updates. The ungated margin at
 depth 4 (E54m) froze the same way as at depth 3 (0.970–0.996 from the first checkpoint, vs 0.999–1.000 without a
-margin); the gated rule at depth 4 and on E34's task is queued.
+margin). The gated rule is stable on every task tried: depth 4 1.000 / 1.000 / 1.000 / 0.999 / 1.000 (E54g); E34's task
+0.988–0.995 per seed, identical at every checkpoint; the generic window bank 0.984–0.992 (E34g; union credit: 0.05–0.10,
+E34's original rule: 0.86–0.87).
 
 ## 87. When is staying out the right policy? An executable-edge bound
 
@@ -3896,6 +3898,11 @@ correct for a taker; the ≈ 1 bp edge would need near-zero fees (market making,
 **Prediction (confirmation on the 21 untouched days, fit on all 7 pilot days):** with f = 0 the held-out edge stays
 positive for the selected states and is larger with perp + ETH than with the own state alone; with f = 2 bp the net
 return of the selected states is ≤ 0 (or the selection is empty).
+**Result (21 untouched days, fit on the 7 pilot days): both predictions hold.** Before fees every information set keeps a
+positive held-out edge at every horizon: BTC spot's own state +0.26 to +1.05 bp per trade (≈ 5–6k decisions a day),
+own + perp + ETH +0.47 to +1.40 bp (≈ 1,100 a day). At f = 2 bp few states are selected and all lose (−0.11 to −1.35 bp);
+at 5 bp none is selected. Other markets add 30–60% to the edge, which stays near 1 bp: for a taker, staying out is the
+correct policy on this data.
 
 ## 88. Select structure, tune durations: what a candidate basis should and should not carry
 

@@ -916,8 +916,8 @@ def build():
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
          "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "Transformer on this task running"],
-        ["<i>Not supremacy:</i> composition hinging on timing precision", "E34m chains 0.988–0.995, stable, 40k examples; "
-         "Transformer 0.998 after 2M (0.42–0.70 after 40k)", "Transformer more accurate with 50× the data"],
+        ["<b>Composition at equal data</b>", "chains 0.988–0.995 from ≤ 8k examples seen once (E34g); Transformer given "
+         "10k examples × 200 passes 0.955–0.976 (E36g)", "with 2M examples the Transformer reaches 0.998"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
@@ -1094,7 +1094,9 @@ def build():
         "sell at the bid), BTC spot's own event states carry a real held-out edge of +0.3 to +0.9 bp per trade before fees, "
         "and lead–lag states of BTC perpetual futures and ETH raise it to +1.1 to +1.5 bp: more markets carry more "
         "information. A 2 bp round-trip fee (a tenth of a realistic taker fee) removes it: staying out is correct for a "
-        "taker here; the edge would need market-making economics. Confirmation on the 21 untouched days is queued.",
+        "taker here; the edge would need market-making economics. <b>Confirmed on the 21 untouched days</b> (preregistered): "
+        "before fees +0.26 to +1.05 bp from the own state, +0.47 to +1.40 bp with perp and ETH; at 2 bp every selected "
+        "state loses; at 5 bp none qualifies.",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
