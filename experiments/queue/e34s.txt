@@ -1,0 +1,12 @@
+e34s_d2_5000_l0 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 5000 --lam 0 --tag sl5000
+e34s_d2_5000_l0.05 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 5000 --lam 0.05 --tag sl5000
+e34s_d2_5000_l0.2 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 5000 --lam 0.2 --tag sl5000
+e34s_d1_5000 experiments/e34_compose.py --seeds 5 --depth 1 --steps 5000 --tag sl5000
+e34s_d2_10000_l0 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 10000 --lam 0 --tag sl10000
+e34s_d2_10000_l0.05 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 10000 --lam 0.05 --tag sl10000
+e34s_d2_10000_l0.2 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 10000 --lam 0.2 --tag sl10000
+e34s_d1_10000 experiments/e34_compose.py --seeds 5 --depth 1 --steps 10000 --tag sl10000
+e34s_d2_20000_l0 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 20000 --lam 0 --tag sl20000
+e34s_d2_20000_l0.05 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 20000 --lam 0.05 --tag sl20000
+e34s_d2_20000_l0.2 experiments/e34_compose.py --seeds 5 --scales 1,2,4 --steps 20000 --lam 0.2 --tag sl20000
+e34s_d1_20000 experiments/e34_compose.py --seeds 5 --depth 1 --steps 20000 --tag sl20000

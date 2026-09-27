@@ -122,6 +122,7 @@ def main():
     ap.add_argument("--part-hi", type=float, default=1.5, help="part-node window [0, part_hi] (fixed)")
     ap.add_argument("--scales", default="", help="comma list: bank of part-window scales, e.g. 1,2,4")
     ap.add_argument("--learn-win", type=int, default=0, help="1: part windows learned from pulled routes")
+    ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
     ap.add_argument("--eta", type=float, default=0.3)
     ap.add_argument("--steps", type=int, default=20000)
     ap.add_argument("--seeds", type=int, default=3)
@@ -139,6 +140,9 @@ def main():
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
             net.teach(t, y, a.eta)
+            if a.lam and step % 1000 == 0:                    # sleep (§72): routing weights decay toward uniform
+                for Wt in (net.h, net.g):
+                    Wt += a.lam * (Wt.sum(1, keepdims=True) / Wt.shape[1] - Wt)
             if step % (a.steps // 5) == 0:
                 ev = np.random.default_rng(99); n = 1500; ok = 0; e0 = net.events
                 for _ in range(n):
@@ -148,7 +152,7 @@ def main():
                 net.events = e0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
