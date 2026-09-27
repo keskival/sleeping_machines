@@ -3461,6 +3461,41 @@ restricts the shared route to compositions of cyclic additions. What the experim
 also memorize discovers the composed relation, with depth, under sleep; whether it chooses the correct depth when
 routes of several depths are available is the next test.
 
+## 77. Learning cost is set by activity, not by the size of the candidate basis
+
+*Written 2026-09-27 from E35's channel sweep: with the spikes per episode held fixed, accuracy ≈ 1.0 and the number of
+updates did not grow from N = 12 to 48 channels (566–1,493; 194–535; 330–1,198 per 100k episodes, 3 seeds each), while
+synaptic events per episode fell (7.2–8.2 → 3.9–4.8).*
+
+§68 bounds mistakes by O(k log N) because normalized pulls behave like Winnow over all N candidates. The observed
+curve is flatter, and the reason is structural: a pull only touches synapses that were active in the episode. On an
+error the counterfactual candidates are the channel pairs that actually spiked, s² of them for s active channels, not
+N². A normalized pull moves weight onto the chosen pair and away from the node's other synapses in proportion to their
+weight; synapses of channels that were silent keep their (small, shrinking) share without ever competing. The relevant
+competitors are the channels that co-occur with the target in erring episodes, so the mistake count behaves like
+O(k log s_eff), where s_eff is the number of channels active in an episode, independent of N when activity is fixed.
+Inference is likewise O(live synapses reached by active channels). **Scaling law:** at fixed activity, the candidate
+basis (channels, part types, window scales, rhythms) can grow without bound at no cost in either learning or
+inference; costs grow only with activity. This is the learning-side counterpart of E5 (inference work tracks activity).
+**Prediction (M77):** at fixed N, raising the spikes per episode (s) raises the updates needed roughly as log s; at fixed
+s, N has no effect (E35 N = 96 running).
+
+## 78. Composition makes grokking exponentially cheaper than memorization
+
+A depth-D rhythm chain over D + 1 operands (E41 at D = 2) has (D + 2)·p + D real delays. With delays resolved to timing
+precision δ it is a finite class of size (p/δ)^{O(Dp)}, so an Occam/PAC bound gives a sample complexity of
+O(D·p·log(p/δ)/ε) for error ε, linear in depth. Memorizing the relation needs every one of the p^{D+1} operand tuples.
+The fraction of the tuples needed to grok is therefore about
+
+  f* ≈ D·p·log(p/δ) / p^{D+1} ≈ D log p / p^D,
+
+which falls exponentially with depth: deeper compositions should grok from exponentially smaller fractions of the data,
+provided the learning rule finds the chain (§76's search condition) and sleep's reuse threshold is met (§72: each shared
+delay is reused ≈ n/p times, which grows with n). For E41 at p = 17, D = 2 the bound suggests a few percent of the
+4,913 triples; at D = 1 (E37, p = 31) about 10% of 961 pairs, consistent with E26's generalization from 20–30%.
+**Prediction (M78):** in E41 at p = 17, generalization appears at training fractions of a few percent, far below E37's
+fractions at D = 1 for the same p, and the threshold fraction falls with p.
+
 ## Tests
 
 | | Claim | Test |
@@ -3532,6 +3567,8 @@ routes of several depths are available is the next test.
 | **M74** | candidate basis grows at O(k log N) learning cost and constant inference cost | E35 N = 12, 24, 48, 96 |
 | **M75** | stateful arm/disarm nodes compute order-XNOR in one node (not a product set); toggle nodes represent k-sparse parity; native learnability open | exhaustive check of stateless vs stateful nodes on interval exclusion; toggle-node parity learning |
 | **M76** | collapse is data-limited or search-limited; cooled noise removes the second; depth-2 grokking of (a + b + c) mod p through a composed rhythm chain | E37 noise sweep and p-scaling with σ ∝ p; E41 full runs (p = 17, 31; fractions; no-sleep and lookup-only controls); Transformer baseline on E41's task |
+| **M77** | learning cost scales with activity (log of co-active channels), not basis size N | E35 N-sweep at fixed spikes/episode (done to N = 48: flat); spikes/episode sweep at fixed N |
+| **M78** | grokking fraction f* ≈ D log p / p^D: composition makes grokking exponentially cheaper than memorization | E41 training-fraction sweep at p = 17 (and p = 31) |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
