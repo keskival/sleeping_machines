@@ -77,3 +77,9 @@
 16:18:58 start e89_e53_latest_g99
 16:20:18 done e89_e53_latest_g99 (exit 0)
 16:20:18 start e52_v_d32
+16:21:16 done e52_v_d32 (exit 0)
+16:21:16 start e89b_e34_latest_iv_nmL
+16:22:24 done e89b_e34_latest_iv_nmL (exit 0)
+16:22:24 start e89b_e53_latest_nmL
+16:23:58 done e89b_e53_latest_nmL (exit 0)
+16:23:58 start e52_v_d64

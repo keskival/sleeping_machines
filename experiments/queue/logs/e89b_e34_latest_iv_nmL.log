@@ -1,0 +1,8 @@
+/workspace/experiments/e34_compose.py:68: RuntimeWarning: invalid value encountered in subtract
+  dt = t[q] - t[p]
+{"seed": 0, "step": 40000, "test": 0.9166666666666666, "updates": 1582, "near_miss_updates": 8471, "events_per_episode": 19.83, "synapses_per_episode": 14.950666666666667}
+{"seed": 1, "step": 40000, "test": 0.9786666666666667, "updates": 1714, "near_miss_updates": 9056, "events_per_episode": 20.261333333333333, "synapses_per_episode": 16.602}
+{"seed": 2, "step": 40000, "test": 0.9806666666666667, "updates": 1152, "near_miss_updates": 11048, "events_per_episode": 19.61466666666667, "synapses_per_episode": 11.324666666666667}
+{"seed": 3, "step": 40000, "test": 0.9413333333333334, "updates": 2529, "near_miss_updates": 8567, "events_per_episode": 19.777333333333335, "synapses_per_episode": 15.68}
+{"seed": 4, "step": 40000, "test": 0.936, "updates": 2533, "near_miss_updates": 6918, "events_per_episode": 19.61466666666667, "synapses_per_episode": 13.692666666666666}
+EXIT-OK 66.9

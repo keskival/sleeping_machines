@@ -3980,6 +3980,13 @@ expressible once the gap part's window is learned. P3 fails: with the margin gat
 task fall to 0.976–0.981, the margin again protecting routes that are right ≈ 99% of the time. The gate must exceed
 the precision the task requires (a route wrong 1% of the time must stay correctable when the target is 99.8%): gate
 0.99 queued.
+**Follow-ups.** Gate 0.99: depth 3 stable (0.997–0.999, 476–565 updates) but E34's task with learned windows unchanged
+(seeds 3–4 at 0.971 / 0.982): the level of the gate is not the cause. Near-miss credit at the latest instant instead of the
+firing instant makes E34's task worse (0.92–0.98, unstable) while depth 3 is unaffected. The reason: the latest candidate
+instant of an example is often a noise event after the pattern. On a miss (rare) that costs little, since inconsistent
+noise fades (§83(i)); near-miss credit acts on every correct answer, so it keeps promoting noise instants. Latest-instant
+credit is right for misses; the margin needs another anchor (open). Best configuration on E34's task so far: learned
+windows and latest-instant credit without a margin (0.990–0.9993; occasional dips).
 
 ## Tests
 

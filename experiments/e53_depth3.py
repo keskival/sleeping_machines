@@ -138,7 +138,10 @@ class Net:
         if c == y:
             prec = self.ok_c[y] / max(self.ok_c[y] + self.bad_c[y], 1e-9) if y < self.K else 0.0
             if self.margin and y < self.K and prec >= self.gate:
-                self._near_miss(y, U, win, same, inst[y])
+                i = inst[y]
+                if self.credit == "latest" and win.any():   # §89: margin for the complete route (latest instant)
+                    i = int(np.flatnonzero(win.any(1))[-1])
+                self._near_miss(y, U, win, same, i)
             return
         if y < self.K and not np.isfinite(ft[y]) and len(U) >= 2:
             if self.credit == "union":                      # §83 as stated: every candidate in the episode

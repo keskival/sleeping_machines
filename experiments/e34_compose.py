@@ -139,6 +139,8 @@ class Compose:
         if c == y:
             if self.margin and y < self.K and prec >= self.gate:   # §86: near-miss credit keeps a margin
                 i = inst[y]
+                if self.credit == "latest" and win.any():   # §89: margin for the complete route (latest instant)
+                    i = int(np.flatnonzero(win.any(1))[-1])
                 if self.h[y, f[win[i]]].sum() < self.margin:
                     self._mul(self.h, y, f[win[i]], 1 + self.alpha); self.nm += 1
                 if self.g[y, f[same[i]]].sum() < self.margin:

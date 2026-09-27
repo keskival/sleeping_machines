@@ -39,6 +39,8 @@ e36g_n40k_wd0 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 40
 e89_e34_latest_iv_g99 experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit latest --learn-iv 3 --margin 0.9 --gate 0.99 --steps 40000 --seeds 5
 e89_e53_latest_g99 experiments/e53_depth3.py --depth 3 --credit latest --beta 0.5 --margin 0.9 --gate 0.99
 e52_v_d32 experiments/e52_thp.py --mode val --d 32 --epochs 30
+e89b_e34_latest_iv_nmL experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit latest --learn-iv 3 --margin 0.9 --gate 0.99 --steps 40000 --seeds 5 --tag nmL
+e89b_e53_latest_nmL experiments/e53_depth3.py --depth 3 --credit latest --beta 0.5 --margin 0.9 --gate 0.99 --tag nmL
 e52_v_d64 experiments/e52_thp.py --mode val --d 64 --epochs 30
 e52_v_d128 experiments/e52_thp.py --mode val --d 128 --epochs 30
 e52_v_d64L32 experiments/e52_thp.py --mode val --d 64 --L 32 --epochs 30
