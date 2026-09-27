@@ -1061,7 +1061,10 @@ def build():
             "margin earned by reliability, applied only when the node's recent fires were mostly correct, is stable at "
             "0.997–0.999 (§86b). With "
             "synapses grown only when first credited (§85, provably the same decisions as dense weights), depth 3 at 20 "
-            "channels gives 0.981–1.000 with 9.5k–13.7k of 145k candidate synapses ever grown.")]
+            "channels gives 0.981–1.000 with 9.5k–13.7k of 145k candidate synapses ever grown. <b>Inference cost follows the "
+            "learned structure (§93):</b> extending a unit only if one of its children carries weight (checked periodically, "
+            "like sleep) keeps accuracy (depth 3 identical; depth 4 0.995–1.000) while events per example fall 42% at depth 3 "
+            "and 75% at depth 4 (≈ 155 → 39).")]
     s += [P("5. Generalization and grokking", "h1"),
           P("<b>What counts (§58):</b> restriction, forced generalization above capacity, and grokking (the relation reached "
             "while memorizers are available) are different claims; each reports ρ = n/params. <b>Per-class parameters "
