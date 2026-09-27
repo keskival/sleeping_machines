@@ -636,14 +636,29 @@ invented for that; what needs care is what the network builds on top.
 
 - *Work per character stays flat* as the model grows: only the detectors that fire do any work, however many exist.
   A Transformer's work grows with its size. Memory, not computation, becomes the resource that limits scale.
-- *Loss falls quickly with data at first* (counting models are strong with little data) but toward a *higher floor*:
-  pure counting cannot generalize to contexts it has never seen. How far shared codes and copying lower that floor is the
-  open question, and it decides whether this can compete with large Transformers or only with smaller ones.
+- *Loss falls quickly with data at first* (counting models are strong with little data), but a design built on counting
+  alone approaches a *higher floor*: it cannot generalize to contexts it has never seen.
+- *That floor is not a limit of event networks.* A Transformer layer has an event form (§96). Similarity between a query
+  and stored keys is the overlap of their spike codes; a "race" among the stored keys picks the best match, and a race of
+  randomly ticking clocks picks each key with exactly the probability softmax attention would give it; relative position
+  is native (delays and windows measure time differences directly); the feed-forward block is threshold units over
+  codes. Stacking such layers is composition. So in principle an event network can express what a Transformer expresses,
+  at work that follows activity; retrieval can even be cheaper, since a query only reaches keys that share a channel with
+  it.
+- *At least as well, and room to do better.* The layer-by-layer mapping is a thought experiment: it shows the paradigm can
+  match a Transformer, not that it should be built that way. The event form has freedoms a dense layer lacks: the *order*
+  in which signals fire is a second axis for information (n signals can carry up to log₂ n! extra bits in their order);
+  only active units work, so a model can be very large while each word stays cheap; structure is grown where it proves
+  useful, which on deep order already needed about ten times less data than a Transformer (measured, §4); and sampling
+  and retrieval come directly from races and shared channels. Which of these pays off for language is what experiments
+  must show.
 
-**Realistic expectation.** Roughly the quality of the best compression-style models and small recurrent networks
-(which already show that counting plus careful mixing, without deep backpropagation, gets surprisingly far), at a small
-fraction of the computation per character, with no growth in cost for long texts. Matching large Transformers would
-require the shared codes to capture meaning as well as learned embeddings do; that is research, not engineering.
+**Realistic expectation.** The counting version: roughly the quality of the best compression-style models and small
+recurrent networks, at a small fraction of the computation per character and with no growth in cost for long texts. With
+race attention layers, nothing in principle stops Transformer-level quality; what is unknown is whether local learning
+rules (the ones that learned everything in this report, without backpropagation) can train deep stacks of such layers as
+well as gradients train Transformers. That is the research question, and it can be tested small first: a single
+race-attention layer learning associative recall and "induction" (copy what followed a word earlier).
 
 **How we would test it.** Character-level prediction on standard text benchmarks (text8, enwik8), in stages, so that each
 part's contribution is measured: counting with backoff, then context detectors, then copying traces, then weighted
