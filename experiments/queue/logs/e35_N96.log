@@ -1,0 +1,12 @@
+{"seed": 0, "step": 100000, "test": 1.0, "updates": 1056, "synaptic_events": 4.033}
+{"seed": 1, "step": 100000, "test": 0.999, "updates": 592, "synaptic_events": 3.4475}
+Traceback (most recent call last):
+  File "/workspace/experiments/e35_free.py", line 129, in <module>
+    main()
+    ~~~~^^
+  File "/workspace/experiments/e35_free.py", line 112, in main
+    tt, y = E27.sample(pats, N, H, q, rng)
+            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/experiments/e27_veto.py", line 70, in sample
+    raise RuntimeError("could not sample")
+RuntimeError: could not sample

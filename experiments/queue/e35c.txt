@@ -1,0 +1,1 @@
+e35_N96 experiments/e35_free.py --N 96 --steps 100000 --seeds 3
