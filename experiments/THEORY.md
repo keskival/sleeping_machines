@@ -4312,6 +4312,56 @@ activity-paid candidate basis. It does not cover *learning* intermediate represe
 codes, and the keys and queries of race attention (§96). That is the trainability question language needs; its first test
 is E61 (a race-attention layer trained by local credit on associative recall and induction).
 
+## 98. Scalability of training, and whether local credit is as good as backpropagation
+
+*Written 2026-09-27.*
+
+**(a) The mistake bound is optimal in the basis size (Littlestone).** Selecting one route among Q candidates is a class of
+Littlestone dimension ≥ ⌊log₂ Q⌋ (a mistake tree of that depth exists: each example can split the remaining candidates in
+half), so every online learner, local or not, can be forced to make Ω(log Q) = Ω(d·log P) mistakes on depth-d order
+detectors. §97's O(log Q / δ) is therefore optimal up to the noise-dependent factor δ; depth costs mistakes linearly, and
+no learner does better in the worst case.
+
+**(b) Samples.** By online-to-batch conversion, a run with M mistakes over T examples yields a hypothesis with expected
+error ≤ M/T, so reaching error ε needs T = O(d·log P / (δ·ε)) examples: linear in depth, logarithmic in the candidate basis.
+(Measured: ≈ 10× fewer examples than a gradient-trained Transformer at depth 3; E94.)
+
+**(c) Compute.** Training work = Σ over examples of (units fired) + Σ over mistakes of (units credited) ≈ T·c + M·s, with c the
+activity per example (n·r^L before pruning, less after, §93) and s the size of a credited set. It is linear in the data
+and independent of the candidate basis Q. Backpropagation costs ≈ 6·N per example for N parameters, all of which are
+touched on every example.
+
+**(d) Memory.** Synapses exist only for units ever credited (§85), at most M·s: *in a realizable task memory stops growing
+once learning converges*, whatever the data size. In non-realizable, open-ended data (language) new useful contexts keep
+appearing and memory grows as D^h (§95).
+
+**(e) Parallel training.** Credit at a node reads and writes only that node's weights, and the multiplicative updates of a
+node commute (products commute; renormalization is a common scale), so the log-weight changes computed by different workers
+on different examples add exactly. The only coupling is that which routes get credited depends on the current weights: with
+updates merged after a staleness of τ examples, the standard analysis of delayed online learning adds O(τ) to the mistake
+bound. Training therefore parallelizes across nodes with no global barrier and across data with bounded staleness; it
+needs no backward pass through the whole network, no stored activations, and no synchronized weight broadcast.
+
+**(f) Is local credit as good as backpropagation?**
+*Proposition (exact races: the gradient is the causal chain).* A race network computes a max-plus (tropical) function of
+its delays: arrival times are minima of sums. For y = max_i (a_i + x_i), ∂y/∂a_j = 1[j = argmax] (a subgradient). Hence the
+exact backpropagated (sub)gradient of the output with respect to any delay or weight is non-zero only along the critical
+path, the chain of spikes that caused the output, and each node can tag which input triggered it. Credit that follows the
+causal chain backwards *is* backpropagation for this algebra; nothing is lost by locality.
+*The catch: losers get no gradient.* Exact backpropagation through a max gives no signal to the paths that lost, which is
+why counterfactual credit from near misses (§57) is needed: it is the local counterpart of replacing the max by a softmax.
+*Proposition (soft races: local exact gradients).* For a race of exponential clocks with rates λ_i, the winner w has
+probability λ_w / Λ (Λ = Σ λ), and ∂ log P(w) / ∂ log λ_i = 1[i = w] − λ_i / Λ: each clock needs only its own rate and the
+total, which the race itself provides. This is the likelihood-ratio gradient of one race, exact and local.
+*What is open.* (i) Through deep stacks of stochastic races the likelihood-ratio estimator's variance grows with depth, so
+local learning could need more examples than backpropagation through a continuous, reparameterized network; conserved
+multiplicative updates have mistake bounds instead of variance, near-miss information acts as a variance reducer, and the
+measured data efficiency points the other way (E94), but this is not yet a theorem for learned hidden representations.
+(ii) For hidden units inside additive distributed codes, error must be delivered to units whose effect is spread across many
+sums; in continuous time, local schemes provably match backpropagation (equilibrium propagation; predictive coding), which
+suggests the obstacle is not locality itself. E61 (race attention learned by local credit) is the first test with learned
+internal routing.
+
 ## Tests
 
 | | Claim | Test |
