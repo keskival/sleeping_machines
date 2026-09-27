@@ -3596,6 +3596,14 @@ therefore prefers the simplest route that explains the data, without an explicit
 route; (ii) the selected route is the one with the fewest parameters among those that can express the relation; (iii)
 adding more candidate routes (more pairs, more chain orders) costs O(log M) extra errors, not O(M).
 
+**Per-class menus (E46, pilot).** The same mechanism inside each class of E34's composition task: a class keeps a few
+candidate (hold part, trigger part) routes, proposed from its misses and priced by their own reliability; it answers
+through its cheapest route that fires. With a generic window bank this reaches 0.92 mean at 20k episodes (3 seeds;
+0.86–0.98), against 0.86–0.87 for weighted routing even at 200k: a route that locked onto the wrong parts is priced out
+and replaced instead of trapping the class. The network has **no synaptic weights**: learning is a discrete choice of
+wiring by reliability, which is the manifesto's claim that plasticity serves computation (here it only selects which
+temporal predicates to compose).
+
 ## Tests
 
 | | Claim | Test |
