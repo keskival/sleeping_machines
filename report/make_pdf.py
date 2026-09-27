@@ -837,6 +837,10 @@ def build():
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
         "≈ 80k connections ever created (Transformer comparison on this task running).",
+        "<b>Composing parts: Transformer-level accuracy from 50× less data, better at equal data.</b> 15 classes built from "
+        "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
+        "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.955–0.985 given "
+        "10k–40k examples many times over.",
         "<b>A better world model of a real market stream at 80–200× less computation.</b> Predicting the next trade events "
         "of BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).",
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
@@ -856,9 +860,9 @@ def build():
             "crediting the tempting shortcut (“A, then B” is shared with another class) traps it; exploring a little, then "
             "settling, finds the right order and keeps it (§84).")]
     s += fig(FM.fig_credit, W)
-    s += [P("<b>Where it does not win yet:</b> composition that hinges on fine timing precision (0.99 vs a Transformer's "
-            "0.998); spoken digits (0.65 vs 0.70 for a published LSTM); and trading, where no learner beats buy-and-hold on "
-            "this data.")]
+    s += [P("<b>Where it does not win yet:</b> spoken digits (0.65 vs 0.70 for a published LSTM), and trading, where no "
+            "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
+            "any taker fee).")]
     s.append(PageBreak())
     s += [P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
            "race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an "
@@ -879,8 +883,9 @@ def build():
         "<b>Depth is learned natively when credit is right (§83–§86).</b> Summed potentials with conserved multiplicative "
         "credit, credit to one instant with cooled exploration, and synapses grown only when credited (provably the same "
         "decisions as dense weights) learn order among three and four parts: 0.999–1.000 on 5/5 seeds at depth 4 with "
-        "≈ 2,000 updates and ≈ 80k grown synapses out of 5.5·10⁷ candidates. Where composition hinges on fine timing "
-        "precision a Transformer is still more accurate (0.998 vs 0.988–0.995) at ≈ 10⁴× the cost and 50× the data.",
+        "≈ 2,000 updates and ≈ 80k grown synapses out of 5.5·10⁷ candidates. With learned timing windows and credit to the "
+        "latest instant, the composition task a Transformer led reaches 0.990–0.999 (mean 0.9965) from 40k examples seen "
+        "once, vs 0.9955–0.998 for a Transformer after 2M (§88–§89).",
         "<b>Grokking occurs, by a route change under sleep, and only for relations the substrate can express.</b> "
         "Without sleep the network memorizes; with sleep it generalizes after a delay (0.93–0.99, reliable with cooled "
         "timing noise); a data × sleep phase diagram shows memorization, grokking and collapse; with depth, (a + b + c) "
@@ -916,8 +921,9 @@ def build():
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
          "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "Transformer on this task running"],
-        ["<b>Composition at equal data</b>", "chains 0.988–0.995 from ≤ 8k examples seen once (E34g); Transformer given "
-         "10k examples × 200 passes 0.955–0.976 (E36g)", "with 2M examples the Transformer reaches 0.998"],
+        ["<b>Composition: Transformer-level accuracy from 50× less data</b>", "learned windows + latest-instant credit "
+         "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.982–0.985 given the "
+         "same 40k × 50", "one seed at 0.990; dips without a margin"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
@@ -978,7 +984,10 @@ def build():
         ["converged nodes sit on their threshold", "near-miss margin, earned by recent precision",
          "margins survive r demotions (§86); unearned margins protect wrong routes (§86b)", "0.997–0.999 at every checkpoint (E53g)"],
         ["timing precision", "tune one window per part from its own lags",
-         "a window bank costs activity quadratic in resolution; tuning costs none (§88)", "E56 (running)"],
+         "a window bank costs activity quadratic in resolution; tuning costs none (§88)", "learned = hand-tuned windows (E56)"],
+        ["first-to-fire commits on partial evidence", "credit the latest candidate instant on a miss",
+         "the pattern is complete only at its last event; earlier instants are prefixes (§89)",
+         "composition 0.990–0.999; depth 3 at half the updates (E89)"],
     ], [34, 40, 62, 38], st))
     s.append(PageBreak())
 

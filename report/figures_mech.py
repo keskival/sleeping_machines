@@ -97,20 +97,29 @@ def fig_supremacy_map():
     ax.annotate("1.000 at 7.5 events", (7.5, 1.0), xytext=(9, -12), textcoords="offset points", fontsize=7, color=INK)
     ax.set_ylim(0.9, 1.006); ax.set_xlim(2, 1e7)
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.0, 0.28), markerscale=0.7)
-    # (b) composition (E28/E34 task): chains vs Transformers at two data budgets
+    # (b) composition (E28/E34 task): chains vs Transformers at several data budgets (ordinal: light = less data)
     ax = axs[0, 1]
-    _panel(ax, "Composing parts: near-equal accuracy,\n10⁴× less work, 50× less data", "operations per example (log)", "test accuracy")
+    _panel(ax, "Composing parts: parity with 50× less data,\nbetter at equal data", "operations per example (log)", "test accuracy")
     small = [(r["macs_per_episode"], r["acc"]) for r in _load(os.path.join(RES, "e36", "transformer_e28.json"))["rows"]]
+    fixed = []
+    for tag in ("n10k_wd0.1", "n40k_wd0.1", "n40k_wd0"):
+        p = os.path.join(RES, "e36", f"transformer_e28_{tag}.json")
+        if os.path.exists(p):
+            fixed += [(r["macs_per_episode"], r["acc"]) for r in _load(p)["rows"]]
     big = [(p[0], p[1]) for p in _tf_points("transformer_e28_long_partial.jsonl")] + \
           [(p[0], p[1]) for p in _tf_points("transformer_e28_rel.json")]
-    ax.scatter(*zip(*small), s=16, marker="s", facecolor="white", edgecolor=DENSE_T, lw=1.2, label="Transformer, 40k examples", zorder=3)
+    lo_s, hi_s = min(a for _, a in small), max(a for _, a in small)
+    ax.text(0.98, 0.04, f"Transformer, 40k examples once: {lo_s:.2f}–{hi_s:.2f} (below the axis)", transform=ax.transAxes,
+            ha="right", fontsize=6.6, color=MUTED)
+    if fixed:
+        ax.scatter(*zip(*fixed), s=18, marker="s", color="#86b6ef", label="Transformer, 10k–40k examples × 50–200 passes", zorder=3)
     ax.scatter(*zip(*big), s=16, marker="s", color=DENSE_T, label="Transformer, 1–2M examples", zorder=3)
     chains = _chain_plateau()
     if chains:
-        ax.scatter([14] * len(chains), chains, s=40, marker="D", color=EVENT, label="event chains, 40k examples", zorder=4)
-        ax.annotate(f"{min(chains):.3f}–{max(chains):.3f}", (14, min(chains)), xytext=(8, -12), textcoords="offset points", fontsize=7)
-    ax.set_ylim(0.35, 1.03); ax.set_xlim(5, 3e6)
-    ax.legend(fontsize=6.3, loc="center left", bbox_to_anchor=(0.12, 0.62), markerscale=0.7)
+        ax.scatter([20] * len(chains), chains, s=40, marker="D", color=EVENT, label="event chains, 40k examples once", zorder=4)
+        ax.annotate(f"{min(chains):.3f}–{max(chains):.3f}", (20, min(chains)), xytext=(8, -12), textcoords="offset points", fontsize=7)
+    ax.set_ylim(0.94, 1.003); ax.set_xlim(5, 3e6)
+    ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.02, 0.1), markerscale=0.7)
     # (c) world model of a real market stream (held-out days)
     ax = axs[1, 0]
     ax.set_title("World model of a real market stream:\nbetter predictions, 80–200× less work", fontsize=8.6)
@@ -142,8 +151,9 @@ def fig_supremacy_map():
 
 
 def _chain_plateau():
-    """E34's task, final checkpoint of the best available native rule (margin run if present, else W = 4.2 union)."""
-    for pat in ("d2_K15_ph1.5_sum_t0.6_a1_b0.5_instant_T0.3_W4.2_m0.9.json", "d2_K15_ph1.5_sum_t0.6_a1_b0.5_W4.2.json"):
+    """E34's task, final checkpoint: learned windows + latest-instant credit (§88–§89) if present, else earlier rules."""
+    for pat in ("d2_K15_ph1.5_sum_t0.6_a1_b0.5_latest_T0_W4.2_iv3.json",
+                "d2_K15_ph1.5_sum_t0.6_a1_b0.5_instant_T0.3_W4.2_m0.9.json", "d2_K15_ph1.5_sum_t0.6_a1_b0.5_W4.2.json"):
         p = os.path.join(RES, "e34", pat)
         if os.path.exists(p):
             return [r["final"]["test"] for r in _load(p)["rows"]]
