@@ -322,6 +322,29 @@ def fig_e32():
     return fig
 
 
+def fig_e37():
+    """E37: train and test accuracy over epochs, with and without sleep (p = 31, half the pairs, seed 0)."""
+    runs = [("p31_add_f0.5_lam0.0_r1.json", "no sleep", GRAY), ("p31_add_f0.5_lam0.02_r1.json", "sleep λ = 0.02", BLUE),
+            ("p31_add_f0.5_lam0.2_r1.json", "sleep λ = 0.2", ORANGE)]
+    fig, ax = plt.subplots(figsize=(6.4, 2.8))
+    for fn, name, col in runs:
+        path = os.path.join(RES, "e37", fn)
+        if not os.path.exists(path):
+            continue
+        c = load(path)["rows"][0]["curve"]
+        ep = [x["epoch"] for x in c]
+        ax.plot(ep, [x["train"] for x in c], color=col, ls="--", lw=1.4)
+        ax.plot(ep, [x["test"] for x in c], color=col, label=name)
+    ax.axhline(1 / 31, color=GRAY, lw=0.8, ls=":")
+    ax.set_xscale("log")
+    ax.set_xlabel("epoch (log scale)")
+    ax.set_ylabel("accuracy (dashed: train, solid: test)")
+    ax.set_ylim(-0.03, 1.05)
+    ax.legend(fontsize=7, loc="center right")
+    ax.set_title("E37: memorized by epoch 5; with sleep, unseen pairs follow after a delay")
+    return fig
+
+
 def time_pages(st, W):
     """E24–E30 and THEORY §53–§62: computing with time (26–27 September)."""
     s = [Paragraph("Computing with time (E24–E30, 26–27 September)", st["h1"]),
@@ -388,6 +411,17 @@ def time_pages(st, W):
           Paragraph("E27's detectors were told their two channels. With learned hold, trigger and veto weights over all "
                     "channels and learned hold durations: 1.000 on four seeds and 0.9995 on the fifth, 7.5 synaptic events "
                     "per episode, 443–1,530 updates in 200k episodes. This is the headline result.", st["body"])]
+    s += [Paragraph("E37: grokking as a route change", st["h2"]),
+          Paragraph("A network that can memorize (one pair node per operand pair routed to classes; ρ = n/params ≈ "
+                    "0.016) and also has a generic rhythm resource (E26's ring with learned delays). Errors-only learning "
+                    "makes memorization absorbing: without sleep, train 1.0 and test at chance in all seeds. Sleep "
+                    "(decay of the per-pair weights) prunes parameters that are not reused (§72); the relation becomes "
+                    "the absorbing state and test reaches 0.93–0.97 in 2 of 3 seeds at every λ > 0, after a delay at "
+                    "small λ: at λ = 0.02 it memorizes by epoch 5, partly forgets as sleep erodes the lookup (train dips near epoch 10), then recovers through the relation, with unseen pairs following from epoch ≈ 50. The third seed collapses (its shared route never becomes correct), as does the network with "
+                    "sleep but no rhythm (train 0.45, test 0).", st["body"])]
+    f37 = fig_e37()
+    if f37 is not None:
+        s.append(fig_image(f37, W))
     s += [Paragraph("E29: true grokking test, not passed", st["h2"]),
           Paragraph("A general race network that can memorize (ρ = n/params ≈ 0.006), given recurrent delay loops, on "
                     "E24's encoding. Frozen random loops only memorize (test 0.015); with hidden learning, training "
