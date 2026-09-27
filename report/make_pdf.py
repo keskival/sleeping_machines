@@ -1235,6 +1235,15 @@ def build():
         "<b>Depth is trainable, optimally.</b> For ordered-pattern detectors of depth d, mistakes grow as d × log(candidate "
         "pool), and no learner can do better in the worst case (§97–§98).",
     ], st)
+    s += [P("<b>Training, subsumed (theory, §101–§103).</b> A race of randomly ticking clocks splits its output into two independent "
+            "channels: which clock fires first (a sample from the softmax) and when (the decision time, which carries the "
+            "softmax's normalizer). Proved: every competitor computes its own softmax probability locally (its rate times the "
+            "decision time); keys emitting values scaled by that product give, on average, exactly softmax attention; and the "
+            "locally computed gradient of this race is, on average, exactly the gradient of softmax attention. A network of such "
+            "races with small dense cores is trained by local message passing as stochastic gradient descent on the Transformer "
+            "objective, up to an error shrinking as 1/R with R races per head: Transformers, including their training, are a "
+            "limit of these networks. Numerical check below; training curves compared in E68 (running).")]
+    s += fig(FM.fig_race_theory, W)
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
             "Attention is learnable by local credit: in a recall task where the network must learn which key a query refers to "
             "and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct after 68 "

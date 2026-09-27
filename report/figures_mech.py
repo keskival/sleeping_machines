@@ -421,9 +421,35 @@ def fig_lm_scaling():
     return fig
 
 
+# ── 8. The race carries the softmax and its normalizer: local estimates vs exact quantities (§101–§103) ─────
+def fig_race_theory():
+    rng = np.random.default_rng(0); pts = {"attention output": [], "softmax probability\n(own rate × decision time)": [],
+                                           "attention gradient\n(pathwise, local)": []}
+    for _ in range(12):
+        n, d = 6, 3; s = rng.normal(0, 1.5, n); v = rng.normal(0, 1, (n, d)); lam = np.exp(s); p = lam / lam.sum(); ob = p @ v
+        N = 60000; E = rng.exponential(size=(N, n)); Tj = E / lam; w = Tj.argmin(1); T = Tj.min(1)
+        o = (T[:, None] * lam[None, :]) @ v
+        pts["attention output"] += list(zip(ob, o.mean(0)))
+        pts["softmax probability\n(own rate × decision time)"] += list(zip(p, (lam[None, :] * T[:, None]).mean(0)))
+        J = p[:, None] * (v - ob)
+        G = np.array([((lam[i] * T)[:, None] * v[i][None, :] - (w == i)[:, None] * o).mean(0) for i in range(n)])
+        pts["attention gradient\n(pathwise, local)"] += list(zip(J.ravel(), G.ravel()))
+    fig, axs = plt.subplots(1, 3, figsize=(7.4, 2.6), gridspec_kw={"wspace": 0.35})
+    for ax, (name, xy) in zip(axs, pts.items()):
+        x, y = np.array(xy).T
+        lo, hi = min(x.min(), y.min()), max(x.max(), y.max())
+        ax.plot([lo, hi], [lo, hi], color=MUTED, lw=0.8)
+        ax.scatter(x, y, s=6, color=EVENT, alpha=0.7, zorder=3)
+        ax.set_title(name, fontsize=7.6); ax.tick_params(labelsize=6.5)
+        ax.set_xlabel("exact (softmax attention)", fontsize=7); ax.set_ylabel("race estimate (mean)", fontsize=7)
+    fig.suptitle("Races compute softmax attention and its gradient from local quantities (unbiased; 12 random problems)",
+                 fontsize=8.4, y=1.04)
+    return fig
+
+
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "figures")
     for name, fn in (("concept", fig_concept), ("supremacy_map", fig_supremacy_map), ("anatomy", fig_anatomy),
-                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling)):
+                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling), ("race_theory", fig_race_theory)):
         fig = fn(); fig.savefig(os.path.join(out, name + ".png"), bbox_inches="tight", facecolor="white"); plt.close(fig)
         print("wrote", name)
