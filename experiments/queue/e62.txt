@@ -10,3 +10,8 @@ e64_lstm_D1M experiments/e64_lm_baselines.py --model lstm --D 1000000 --passes 5
 e64_tf_D1M experiments/e64_lm_baselines.py --model tf --D 1000000 --passes 5
 e64_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --passes 1
 e64_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --passes 1
+e62_K5_D1000000 experiments/e62_charlm.py --D 1000000 --K 5 --test 1000000 --copy 0
+e62_K5_D3000000 experiments/e62_charlm.py --D 3000000 --K 5 --test 1000000 --copy 0
+e62_K5_D10000000 experiments/e62_charlm.py --D 10000000 --K 5 --test 1000000 --copy 0
+e62_K5_D30000000 experiments/e62_charlm.py --D 30000000 --K 5 --test 1000000 --copy 0
+e62_K5_D90000000 experiments/e62_charlm.py --D 90000000 --K 5 --test 1000000 --copy 0
