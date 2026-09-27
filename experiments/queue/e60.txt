@@ -1,0 +1,10 @@
+# E60: DVS128 Gesture, native motion events + counting classifiers; val on users 20-23, then one test
+e60_G32_hi40_r1 experiments/e60_dvs.py --G 32 --hi 40 --rel 1 --eval val
+e60_G32_hi40_r0 experiments/e60_dvs.py --G 32 --hi 40 --rel 0 --eval val
+e60_G32_hi80_r1 experiments/e60_dvs.py --G 32 --hi 80 --rel 1 --eval val
+e60_G32_hi80_r0 experiments/e60_dvs.py --G 32 --hi 80 --rel 0 --eval val
+e60_G16_hi40_r1 experiments/e60_dvs.py --G 16 --hi 40 --rel 1 --eval val
+e60_G16_hi40_r0 experiments/e60_dvs.py --G 16 --hi 40 --rel 0 --eval val
+e60_G16_hi80_r1 experiments/e60_dvs.py --G 16 --hi 80 --rel 1 --eval val
+e60_G16_hi80_r0 experiments/e60_dvs.py --G 16 --hi 80 --rel 0 --eval val
+e60_test experiments/e60_select_test.py
