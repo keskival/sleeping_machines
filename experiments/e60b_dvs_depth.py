@@ -25,7 +25,7 @@ import e60_dvs as E60  # noqa: E402
 OUT = os.path.join(os.path.dirname(__file__), "results", "e60")
 
 
-def features(x, y, t, G, R, T_ms, reg):
+def features(x, y, t, G, R, T_ms, reg, tri=0):
     tok, tim, _ = E60.motion_tokens(x, y, t, G, 10.0, 2.0, 40.0, 0, nreg=reg, S=50.0)
     region = tok // 16; direction = (tok // 2) % 8                    # E60 token = ((region)*8 + dir)*2 + speed
     uni = region * 8 + direction
@@ -35,7 +35,13 @@ def features(x, y, t, G, R, T_ms, reg):
     same = np.r_[False, (r_s[1:] == r_s[:-1]) & ((t_s[1:] - t_s[:-1]) * 1000 <= T_ms)]
     big = (r_s * 64 + np.r_[0, d_s[:-1]] * 8 + d_s)[same]
     cu = np.bincount(uni, minlength=nU); cb = np.bincount(big, minlength=reg * reg * 64)
-    return np.r_[cu, cb].astype(np.float64), len(tok)
+    parts = [cu, cb]
+    if tri:                                                            # depth 3: three successive directions in a region
+        same2 = same & np.r_[False, same[:-1]]
+        d1 = np.r_[0, 0, d_s[:-2]]; d2 = np.r_[0, d_s[:-1]]
+        trig = (r_s * 512 + d1 * 64 + d2 * 8 + d_s)[same2]
+        parts.append(np.bincount(trig, minlength=reg * reg * 512))
+    return np.concatenate(parts).astype(np.float64), len(tok)
 
 
 def main():
@@ -45,13 +51,14 @@ def main():
     ap.add_argument("--T", type=float, default=100.0, help="bigram window (ms)")
     ap.add_argument("--eta", type=float, default=0.05)
     ap.add_argument("--passes", type=int, default=20)
+    ap.add_argument("--tri", type=int, default=0)
     ap.add_argument("--eval", default="val", choices=("val", "test"))
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True); t0 = time.time()
     def enc(it):
         X, Y, U, ev = [], [], [], []
         for lab, x, y, p, t, u in it:
-            f, n = features(x, y, t, a.G, 10.0, a.T, a.reg); X.append(f); Y.append(lab); U.append(u); ev.append(n)
+            f, n = features(x, y, t, a.G, 10.0, a.T, a.reg, a.tri); X.append(f); Y.append(lab); U.append(u); ev.append(n)
         return np.array(X), np.array(Y), np.array(U), np.array(ev)
     Xtr, Ytr, Utr, Etr = enc(D.iter_split("train"))
     if a.eval == "val":
@@ -60,7 +67,9 @@ def main():
         Xf, Yf = Xtr, Ytr; Xe, Ye, _, _ = enc(D.iter_split("test"))
     K = 11; nU = a.reg * a.reg * 8
     res = {"args": vars(a), "n_eval": len(Ye), "motion_events_per_gesture": float(Etr.mean())}
-    for name, cols in (("unigram", slice(0, nU)), ("unigram+bigram", slice(None))):
+    nB = nU + a.reg * a.reg * 64
+    sets = [("unigram", slice(0, nU)), ("unigram+bigram", slice(0, nB))] + ([("uni+bi+trigram", slice(None))] if a.tri else [])
+    for name, cols in sets:
         C = np.full((K, Xf[:, cols].shape[1]), 0.5)
         for k in range(K):
             C[k] += Xf[Yf == k][:, cols].sum(0)
@@ -80,7 +89,7 @@ def main():
         res[f"winnow_{name}"] = float(np.mean(np.argmax(Fe @ Wt.T, 1) == Ye)); res[f"winnow_{name}_mistakes"] = mistakes
     res["wall_s"] = round(time.time() - t0, 1)
     print(json.dumps(res), flush=True)
-    with open(os.path.join(OUT, f"depth_G{a.G}_reg{a.reg}_T{a.T:g}_eta{a.eta:g}_{a.eval}.json"), "w") as f:
+    with open(os.path.join(OUT, f"depth_G{a.G}_reg{a.reg}_T{a.T:g}_eta{a.eta:g}{'_tri' if a.tri else ''}_{a.eval}.json"), "w") as f:
         json.dump(res, f)
 
 
