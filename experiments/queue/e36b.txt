@@ -1,0 +1,1 @@
+e36_tf_e27_long experiments/e36_transformer.py --task e27 --sizes 32x2,64x2,64x4 --episodes 2000000 --tag long
