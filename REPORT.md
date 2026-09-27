@@ -184,6 +184,8 @@ classes. In time, the natural shared intermediate is a sum, and a sum of times n
 
 **Phase diagram (data × sleep; 3 seeds per cell, cooled noise).**
 
+![Grokking phase diagram: mean test accuracy (and seed range) by training fraction and sleep strength](report/figures/e37_phase.png)
+
 | fraction of pairs ↓ / sleep λ → | 0.01 | 0.05 | 0.2 | 0.5 |
 |---|---|---|---|---|
 | 0.2 | 0.02–0.03 | 0.03–0.04 | 0.02–0.04 | 0.03–0.04 |
@@ -230,6 +232,8 @@ route composes two stages (a and b set a spike time, which c then offsets). A me
 | 10% of triples, sleep | 0.79–0.93 | 0.94, 0.98 (2/3; ρ ≈ 0.003) |
 | no sleep | train 1.0, test at chance | train 1.0, test at chance |
 | no chain (lookup only), sleep | train 0.23, test at chance | train 0.11, test at chance |
+
+![Grokking with depth: test accuracy on unseen triples by condition](report/figures/e41_depth_grok.png)
 
 The network discovers the composed relation and generalizes almost perfectly; the fraction of data it needs falls with
 p (§78). At 2–4% of triples and 200 epochs it memorizes: the shared route learns only from errors, so its learning
