@@ -53,10 +53,10 @@ def scan(loga, b, C=None):
 
 
 class CDELayer(nn.Module):
-    def __init__(self, D, N, sel, chunk):
+    def __init__(self, D, N, sel, chunk, tau_range=(1e-3, 1.0)):
         super().__init__()
         self.N, self.sel, self.chunk = N, sel, chunk
-        tau = torch.exp(torch.linspace(math.log(1e-3), math.log(1.0), N))       # time constants 1 ms .. 1 s
+        tau = torch.exp(torch.linspace(math.log(tau_range[0]), math.log(tau_range[1]), N))   # time constants (s)
         self.log_rate = nn.Parameter(-torch.log(tau))                           # Re Lambda = -exp(log_rate)
         self.freq = nn.Parameter(torch.rand(N) * math.pi / tau)                  # Im Lambda
         self.log_delta = nn.Parameter(torch.zeros(N))
