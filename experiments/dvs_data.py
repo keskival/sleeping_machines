@@ -58,14 +58,14 @@ def recording_samples(aedat):
 def split(which):
     """all samples of the official train (users 1-23) or test (users 24-29) split: [(label, x, y, p, t, user)]."""
     d = os.path.join(ROOT, "DvsGesture")
-    users = range(1, 24) if which == "train" else range(24, 30)
+    with open(os.path.join(d, f"trials_to_{which}.txt")) as f:           # the official recording lists
+        names = [l.strip() for l in f if l.strip().endswith(".aedat")]
     res = []
-    for u in users:
-        for a in sorted(glob.glob(os.path.join(d, f"user{u:02d}_*.aedat"))):
-            if not os.path.exists(a.replace(".aedat", "_labels.csv")):
-                continue
-            for s in recording_samples(a):
-                res.append((*s, u))
+    for n in names:
+        a = os.path.join(d, n)
+        u = int(n[4:6])
+        for s in recording_samples(a):
+            res.append((*s, u))
     return res
 
 
