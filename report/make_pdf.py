@@ -837,10 +837,10 @@ def build():
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
         "≈ 80k connections ever created (Transformer comparison on this task running).",
-        "<b>Composing parts: Transformer-level accuracy from 50× less data, better at equal data.</b> 15 classes built from "
+        "<b>Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.</b> 15 classes built from "
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
-        "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.955–0.985 given "
-        "10k–40k examples many times over.",
+        "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
+        "same 40k examples 50 times.",
         "<b>A better world model of a real market stream at 80–200× less computation.</b> Predicting the next trade events "
         "of BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).",
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
@@ -921,8 +921,8 @@ def build():
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
          "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "Transformer on this task running"],
-        ["<b>Composition: Transformer-level accuracy from 50× less data</b>", "learned windows + latest-instant credit "
-         "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.982–0.985 given the "
+        ["<b>Composition: Transformer-level accuracy from one pass</b>", "learned windows + latest-instant credit "
+         "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
@@ -1033,7 +1033,8 @@ def build():
             "task plateaus at 0.988–0.995 per seed and the generic bank at 0.97–0.99 with fixed windows. <b>Learned windows "
             "(§88) plus credit to the latest instant (§89)</b> remove the last errors, lost races to a shortcut that fires "
             "when the second motif merely begins: 0.990–0.999 (mean 0.9965) from 40k examples seen once, against a "
-            "Transformer's 0.9955–0.998 after 2M examples and 0.982–0.985 given the same 40k examples 50 times."),
+            "Transformer's 0.9955–0.998 after 2M examples and 0.9935–0.9965 given the same 40k examples 50 times: parity at "
+            "equal data, from one pass, at ≈ 10⁴× less computation."),
           P("<b>Order among three parts: depth 3 (E53, E54).</b> Classes that are different orders of the same motif sets "
             "(20 classes, decoys = other orders) need ordered intermediates: composite units u → v over every ordered pair of "
             "parts (57,840 candidates, ≈ 41 events per episode). 5 seeds, 40k episodes:")]

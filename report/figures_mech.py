@@ -99,7 +99,7 @@ def fig_supremacy_map():
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.0, 0.28), markerscale=0.7)
     # (b) composition (E28/E34 task): chains vs Transformers at several data budgets (ordinal: light = less data)
     ax = axs[0, 1]
-    _panel(ax, "Composing parts: parity with 50× less data,\nbetter at equal data", "operations per example (log)", "test accuracy")
+    _panel(ax, "Composing parts: Transformer-level accuracy\nfrom one pass, ~10⁴× less work", "operations per example (log)", "test accuracy")
     small = [(r["macs_per_episode"], r["acc"]) for r in _load(os.path.join(RES, "e36", "transformer_e28.json"))["rows"]]
     fixed = []
     for tag in ("n10k_wd0.1", "n40k_wd0.1", "n40k_wd0"):
