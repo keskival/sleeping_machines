@@ -862,7 +862,7 @@ def build():
             "crediting the tempting shortcut (“A, then B” is shared with another class) traps it; exploring a little, then "
             "settling, finds the right order and keeps it (§84).")]
     s += fig(FM.fig_credit, W)
-    s += [P("<b>Where it does not win yet:</b> spoken digits (0.65 vs 0.70 for a published LSTM), and trading, where no "
+    s += [P("<b>Where it does not win yet:</b> spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
             "any taker fee).")]
     s.append(PageBreak())
@@ -926,7 +926,7 @@ def build():
         ["<b>Composition: Transformer-level accuracy from one pass</b>", "learned windows + latest-instant credit "
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
-        ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
+        ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands: 0.675 test (E51 0.647; "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
          "the data may hold no edge"],
@@ -1103,7 +1103,9 @@ def build():
         "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
         "race reached 0.35; a published LSTM ≈ 0.70; state of the art ≈ 0.9. SHD is only ≈ 6× sparser than a 10 ms raster, "
-        "a weak test of the paradigm's cost advantage.",
+        "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
+        "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
+        "to 0.675 (E59, §92).",
         "<b>Market stream posed as trading with costs (E42, confirmed on 21 unseen days, preregistered):</b> at 2 bp, "
         "imitating a hindsight teacher over-trades and loses (event learner −15,236 bp, logistic −24,302); the "
         "profit-priced event learner nets +226 bp with 8 changes; buy-and-hold +932; at 10 bp all stay out. "

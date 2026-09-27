@@ -62,7 +62,7 @@ right order and keeps it (§84).
 
 ![Three credit rules on the same class node: never fires, trapped on the shared prefix, finds the order](report/figures/credit_dynamics.png)
 
-**Where it does not win yet:** spoken digits (0.65 vs 0.70 for a published LSTM), and trading, where no learner beats
+**Where it does not win yet:** spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
 
 ---
@@ -125,7 +125,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
-| *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
+| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
@@ -428,8 +428,11 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   network predicts its spikes best. One counting pass, no gradients. Test 0.647 (validation on held-in speakers 0.734);
   timing adds +0.06, the onset reference +0.21. The gap is the voice: 81% of the test utterances come from two speakers
   never heard in training, and test accuracy barely moves across very different configurations (0.647–0.649), so
-  selecting on held-in speakers optimized speaker-specific detail (§92). Validation on held-out speakers and bands coded
-  relative to the voice (a running centroid per utterance) are under test (E59). The weight race reaches 0.35; a published LSTM ≈ 0.70; state of the
+  selecting on held-in speakers optimized speaker-specific detail (§92). **Validating on held-out speakers and coding
+  bands relative to the voice** (each utterance keeps a running sum and count of its spikes' bands; context and
+  prediction are relative to that centroid) raises accuracy on held-out speakers from 0.36–0.38 to 0.44–0.46 at every
+  configuration and, selected on held-out speakers only, reaches **0.675 on the test set** (absolute coding under the
+  same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; state of the art ≈ 0.9. The weight race reaches 0.35; a published LSTM ≈ 0.70; state of the
   art ≈ 0.9. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place

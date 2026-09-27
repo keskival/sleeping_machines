@@ -4098,6 +4098,14 @@ applied to frequency.
 P2: the configuration chosen on held-out speakers transfers to the test set, with a gap much smaller than E51's
 0.73 → 0.647. P3: relative coding raises test accuracy by ≥ 0.02 over E51's 0.647.
 
+**Results (E59).** Held-out speakers 3 and 6 are far harder than the test's unseen speakers: absolute coding 0.359–0.379
+across the grid. P1 holds at every configuration: relative coding 0.441–0.464 (≈ +0.09). Selected per coding on the
+held-out speakers only and scored once: absolute (B = 70, O = 40) test 0.657, relative (B = 140, O = 40) test 0.675. P3
+holds (+0.028 over E51's 0.647; +0.018 over absolute coding under the same protocol). P2 as stated is moot: the
+held-out-speaker validation now errs on the pessimistic side (0.46 vs 0.675 on test), the safe direction. The gain on
+the test set is smaller than on the held-out speakers, whose voices lie further from the training voices. A published
+LSTM reaches ≈ 0.70; the counted event models, with no gradients, are now within ≈ 0.025 of it.
+
 ## Tests
 
 | | Claim | Test |
