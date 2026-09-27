@@ -841,9 +841,10 @@ def build():
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
         "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
         "same 40k examples 50 times.",
-        "<b>A world model of a real market stream that beats a recurrent network at 80–200× less computation.</b> On days it "
-        "never saw, a small event network beats a GRU point process; a Transformer point process does better still on "
-        "validation data (it reads the recent regime); a native regime state is being tested.",
+        "<b>A world model of a real market stream within 0.1–0.2 nats of a Transformer at ≈ 1/4000 of the computation.</b> "
+        "On days it never saw, a small event network with slow regime counters beats a GRU point process and comes within "
+        "0.1–0.2 nats per event of a Transformer point process, at ≈ 30 operations per event instead of ≈ 110k–130k; the "
+        "Transformer is the more accurate model.",
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
         "mistakes.",
         "<b>New theory, proved:</b> exactly what one event node can compute and where depth is needed; why a fixed weight "
@@ -912,10 +913,10 @@ def build():
          "100k steps): 0.29 / 0.63 (seed 0, d = 32 / 64), 0.06 / 0.03 (seed 1; chance 0.06)",
          "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
          "Transformer"],
-        ["<b>World model better than a GRU point process at 80–200× lower cost</b>",
+        ["<b>World model: beats a GRU; within 0.1–0.2 nats of a Transformer point process at ≈ 1/4000 of its cost</b>",
          "E48: online −2.11 vs GRU −2.62 nats/event; held-out frozen −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic ops "
          "vs thousands of MACs",
-         "a Transformer Hawkes process is better on validation (−2.43 vs −3.12); test and a native regime state running"],
+         "the Transformer Hawkes process is more accurate (held-out −1.97 / −1.82 vs −2.18 / −2.00, same hazard family)"],
         ["<b>Learning cost follows activity, not model size</b>",
          "E35: 12 → 96 channels, 0.999–1.000, mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81", "measured to 96 channels"],
         ["<b>Structure discovery, implicit Occam razor</b>",
@@ -1110,6 +1111,13 @@ def build():
         "taker here; the edge would need market-making economics. <b>Confirmed on the 21 untouched days</b> (preregistered): "
         "before fees +0.26 to +1.05 bp from the own state, +0.47 to +1.40 bp with perp and ETH; at 2 bp every selected "
         "state loses; at 5 bp none qualifies.",
+        "<b>Against a Transformer point process (E52, E57, §90).</b> A Transformer Hawkes process with the event network's own "
+        "hazard family and 128 events of context, selected on day 5, scores −1.97 / −1.82 nats per event on the held-out days "
+        "(≈ 108k multiply-adds per event; −1.83 / −1.65 with 12 finer windows). The semi-Markov event network scores −2.38 / "
+        "−2.10; slow regime state (leaky event counters at 5 s and 60 s, an order-flow counter, backoff) brings it to −2.18 / "
+        "−2.00 (fine windows −1.93 / −1.75) at ≈ 30 operations per event. The Transformer is the better world model by "
+        "0.1–0.2 nats; the event network gets within that at ≈ 1/4000 of the computation. Counted slow state transfers to "
+        "unseen days; constant-step multiplicative factors track the end of training and do not (E58).",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
