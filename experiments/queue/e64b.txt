@@ -1,0 +1,5 @@
+# E64b: converged baselines at equal data (multi-pass, dropout, best checkpoint on 200k validation characters)
+e64b_lstm_D1M experiments/e64_lm_baselines.py --model lstm --D 1000000 --size 256 --passes 20 --dropout 0.2 --valid 200000
+e64b_tf_D1M experiments/e64_lm_baselines.py --model tf --D 1000000 --size 256 --layers 2 --passes 20 --dropout 0.2 --valid 200000
+e64b_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --size 512 --passes 6 --dropout 0.1 --valid 200000
+e64b_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000
