@@ -1,0 +1,1 @@
+{"args": {"model": "lstm", "D": 1000000, "passes": 5.0, "size": 256, "layers": 2, "ctx": 256, "test": 1000000}, "params": 338395, "test_bpc": 2.4090338842683923, "steps": 610, "wall_s": 210.6}

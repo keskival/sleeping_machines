@@ -1,0 +1,1 @@
+{"args": {"D": 30000000, "K": 5, "test": 1000000, "copy": 0}, "stored_contexts": 545884, "stored_pairs": 1782309, "valid_bpc_counts": 1.7661821520641052, "test_bpc_counts": 1.8588707328264313, "wall_s": 27.6}

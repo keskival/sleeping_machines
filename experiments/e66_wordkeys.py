@@ -26,25 +26,29 @@ MOD = (1 << 61) - 1
 
 
 def word_keys(x):
-    """per position t: hashes of (W1, P) and (W2, P) describing the context before x_t."""
-    n = len(x); is_sp = x == 0
+    """per position t: hashes of (W1, P) and (W2, P) describing the context before x_t (polynomial hashes mod 2^64,
+    computed by one vectorized pass per position-in-word, so memory stays O(n) machine words)."""
+    n = len(x); x = np.asarray(x); is_sp = x == 0
     wid = np.cumsum(np.r_[0, is_sp[:-1]])                             # word index of each position (space ends a word)
-    # hash of each complete word (polynomial over its characters)
-    h = np.zeros(n, np.int64); cur = 0; xl = x.tolist(); word_hash = []; hl = []
-    for c in xl:
-        if c == 0:
-            word_hash.append(cur); cur = 0
-        else:
-            cur = (cur * 131 + c) % MOD
-        hl.append(cur)
-    part = np.r_[0, np.array(hl[:-1], np.int64)]                       # partial-word hash before x_t
-    wh = np.array(word_hash + [cur], np.int64)
-    w_before = wid                                                     # number of complete words before position t
-    w1 = np.where(w_before >= 1, wh[np.maximum(w_before - 1, 0)], -7)
-    w2 = np.where(w_before >= 2, wh[np.maximum(w_before - 2, 0)], -11)
-    k1 = (w1 * 1000003 + part) % MOD
-    k2 = ((w2 * 1000003 + w1) % MOD * 1000033 + part) % MOD
-    return k1, k2
+    start = np.maximum.accumulate(np.where(is_sp, np.arange(n) + 1, 0))   # first position of the current word
+    pos = np.arange(n) - start                                         # position inside the word (spaces: -1 -> 0 below)
+    hl = np.zeros(n, np.uint64); c = x.astype(np.uint64); m = ~is_sp
+    k = 0
+    with np.errstate(over="ignore"):
+        while True:
+            idx = np.flatnonzero(m & (pos == k))
+            if not len(idx):
+                break
+            hl[idx] = (hl[idx - 1] * np.uint64(131) if k else np.uint64(0)) + c[idx]
+            k += 1
+        part = np.r_[np.uint64(0), hl[:-1]]                            # partial-word hash before x_t
+        ends = np.flatnonzero(is_sp)
+        wh = np.r_[np.where(ends > 0, hl[np.maximum(ends - 1, 0)], np.uint64(0)), hl[-1]]
+        w1 = np.where(wid >= 1, wh[np.maximum(wid - 1, 0)], np.uint64(0x9E3779B97F4A7C15))
+        w2 = np.where(wid >= 2, wh[np.maximum(wid - 2, 0)], np.uint64(0xC2B2AE3D27D4EB4F))
+        k1 = w1 * np.uint64(1000003) + part
+        k2 = (w2 * np.uint64(1000003) + w1) * np.uint64(1000033) + part
+    return k1.view(np.int64), k2.view(np.int64)
 
 
 class KeyCounts:
@@ -99,13 +103,15 @@ def sleeping_hedge(P, awake, sel, eta, share=0.0):
     for t in range(T):
         w = W.get(Sl[t])
         if w is None:
-            w = W[Sl[t]] = np.ones(E)
-        a = np.array(Al[t]); p = np.array(Pl[t])
-        wa = w[a]; pm = float((wa * p[a]).sum() / wa.sum())
+            w = W[Sl[t]] = np.ones(E) / E
+        a = np.array(Al[t]); p = np.maximum(np.array(Pl[t]), 1e-12)
+        wa = w[a]; tot = wa.sum(); pm = float((wa * p[a]).sum() / tot)
         out[t] = pm
-        w[a] = wa * (p[a] / pm) ** eta
+        nw = wa * (p[a] / pm) ** eta
+        nw *= tot / nw.sum()                                           # the awake experts' total weight is conserved
         if share:                                                      # fixed share: tracking a switching best expert
-            w[a] = (1 - share) * w[a] + share * w[a].mean()
+            nw = (1 - share) * nw + share * nw.mean()
+        w[a] = nw
     return out
 
 
@@ -122,9 +128,10 @@ def main():
     tk1, tk2 = word_keys(train); C1 = KeyCounts(tk1, train); C2 = KeyCounts(tk2, train)
     def experts(stream, eps):
         base = S2.experts(orders, word, train, stream, a.K, eps)
-        full = np.r_[train, stream]; k1, k2 = word_keys(full)
-        s1, s2 = k1[len(train):], k2[len(train):]
-        cp1 = copy_by_key(k1, full, eps)[len(train):]; cp2 = copy_by_key(k2, full, eps)[len(train):]
+        tail = 400                                                       # the keys need only the last two words of context
+        k1, k2 = word_keys(np.r_[train[-tail:], stream]); s1, s2 = k1[tail:], k2[tail:]
+        full = np.r_[train, stream]
+        cp1 = copy_by_key(np.r_[tk1, s1], full, eps)[len(train):]; cp2 = copy_by_key(np.r_[tk2, s2], full, eps)[len(train):]
         wp = base[:, a.K + 2]                                            # the partial-word expert of E63 (key P)
         p1 = C1.kt(s1, stream, back=wp); p2 = C2.kt(s2, stream, back=p1)  # (W1,P) -> P ; (W2,P) -> (W1,P)
         return np.column_stack([base, p1, p2, cp1, cp2])
@@ -139,10 +146,10 @@ def main():
             aw[:, c] = np.abs(Pm[:, c] - 1.0 / A) > 1e-12
         return aw
     res = {"args": vars(a)}
+    PV, PT = experts(valid, 0.05), experts(test, 0.05)                   # computed once, shared by all mixers
     for with_w in (0, 1):
         best = None
-        eps = 0.05
-        Pv = experts(valid, eps); Pv = Pv if with_w else Pv[:, :-4]
+        Pv = PV if with_w else PV[:, :-4]
         nc = len(S2.COPY_L); cpcols = Pv[:, -nc - 4:-4] if with_w else Pv[:, -nc:]
         found = np.abs(cpcols - 1.0 / A) > 1e-12; longest = np.where(found.any(1), nc - np.argmax(found[:, ::-1], 1), 0)
         prev_ch = np.r_[train[-1], valid[:-1]]
@@ -152,7 +159,7 @@ def main():
                 if best is None or bpc < best[0]:
                     best = (bpc, eta, W)
         bpc_v, eta, W = best
-        Pt = experts(test, eps); Pt = Pt if with_w else Pt[:, :-4]
+        Pt = PT if with_w else PT[:, :-4]
         cpcols = Pt[:, -nc - 4:-4] if with_w else Pt[:, -nc:]
         found = np.abs(cpcols - 1.0 / A) > 1e-12; longest = np.where(found.any(1), nc - np.argmax(found[:, ::-1], 1), 0)
         prev_ch = np.r_[valid[-1], test[:-1]]
@@ -162,7 +169,7 @@ def main():
         if with_w:
             res[key]["expert_test_bpc"] = [float(np.mean(-np.log2(np.maximum(Pt[:, i], 1e-12)))) for i in range(-4, 0)]
     # sleeping-experts mixer on the full expert set (eta chosen on validation)
-    Pv = experts(valid, 0.05); Pt = experts(test, 0.05)
+    Pv, Pt = PV, PT
     def longest_sel(Pm, prev):
         nc = len(S2.COPY_L); cp = Pm[:, -nc - 4:-4]; found = np.abs(cp - 1.0 / A) > 1e-12
         return np.where(found.any(1), nc - np.argmax(found[:, ::-1], 1), 0) * A + prev
