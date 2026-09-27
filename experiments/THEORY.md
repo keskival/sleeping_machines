@@ -4494,6 +4494,46 @@ softmax gradient descent in test accuracy at equal examples (within 0.5 points),
 (P2) Two layers, hidden payloads trained through the race error: close to backpropagation with symmetric feedback, and
 still above one layer with random feedback.
 
+## 102. Time-normalized race attention: soft attention in representation space, natively
+
+*Written 2026-09-27, from §101.*
+
+**Construction.** Stored events carry key and value payloads (k_j, v_j); a query event carries q. Each armed key runs an
+exponential clock with rate λ_j = exp(q·k_j/τ + b_j), where b_j is a native relative-position term (a delay shifts the key's
+arrival; a learned bias per lag). The first arrival fixes the decision time T, observed by every key. Each key emits its value
+payload scaled by λ_j·T; the query node sums what arrives: o = Σ_j λ_j T v_j.
+
+**Proposition.** E[o] = Σ_j softmax(q·k/τ + b)_j v_j, soft attention (by §101: E[λ_j T] = λ_j/Λ). With R independent races
+(heads with shared weights, or replicas) the covariance of o falls as 1/R; per coordinate, Var(o_d) = Σ_j p_j² v_{jd}² + …
+≤ max_j |v_j|² Σ_j p_j². Hard attention is the identity channel alone (the winner's value, §96); time-normalized attention
+uses both channels: which keys, and when.
+
+**Sparse retrieval with a bounded bias.** Keys whose clocks have not fired by a cutoff c·T can be skipped (their λ_j T is
+small): the bias of the truncated output is bounded by (skipped softmax mass) × max |v|, the error of top-k attention;
+with sparse codes, a query reaches only keys sharing an active channel (§96), so the armed set is small to begin with.
+
+**Learning (local).** Keys and queries from the race's timing (§101 Corollary 3); values from the output error
+(Δv_j ∝ λ_j T · ∂L/∂o, local to key j); multi-head = several races; a layer = attention races + threshold feed-forward
+nodes on payloads; composition = stacking, with timing errors propagated by §101 Corollary 4.
+
+**Why this makes subsumption direct.** Every Transformer head maps to a race whose output is a time-weighted sum of value
+payloads, with the same expected output as softmax attention; the remaining differences are variance (reduced by R), the
+native relative-time term, and the option of sparse retrieval. The open question is the same as before: training deep stacks
+by these local rules as well as backpropagation trains Transformers.
+
+**Design constraint: small payloads.** Inside a unit a payload is dense, synchronous arithmetic: a d-dimensional payload costs
+≈ d operations per receiving synapse per event, so total work ≈ events × fan-out × d. The paradigm's advantage survives only
+if sparsity and asynchrony hold *between* units while d stays small (≈ 8–32; also the scale of graded spikes in neuromorphic
+hardware). Representational capacity must then come from the event structure: which units fire (log₂ C(M, k) bits for k of
+M), in what order (≈ k·log₂ k more, §99b), plus k·d·b payload bits at b bits of precision; with many units firing sparsely,
+which-and-when dominates. A cheap dense core per asynchronous unit, combinatorial capacity across units.
+*E67 (MNIST, one seed, iterate-averaged over the last epoch): exact softmax learning 0.927, race-time learning with 4 races
+per example 0.923 (Corollary 2 in practice); full grid queued.*
+
+**Test (E68).** Associative recall with learned vector representations: queries and keys as learned embeddings (d = 16) of
+token identities, a query–key map learned from the race timing, values read by time-normalized attention; against the
+Transformer baseline of E61 and the discrete-route race attention of E61.
+
 ## Tests
 
 | | Claim | Test |

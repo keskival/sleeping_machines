@@ -1,0 +1,24 @@
+# E67: learning from race timing (THEORY §101), MNIST, iterate-averaged, 3 seeds
+e67_exact_s0 experiments/e67_race_time.py --rule exact --epochs 3 --seed 0
+e67_rt1_s0 experiments/e67_race_time.py --rule race_time --races 1 --epochs 3 --seed 0
+e67_rt4_s0 experiments/e67_race_time.py --rule race_time --races 4 --epochs 3 --seed 0
+e67_rt16_s0 experiments/e67_race_time.py --rule race_time --races 16 --epochs 3 --seed 0
+e67_win_s0 experiments/e67_race_time.py --rule winner --epochs 3 --seed 0
+e67_exact_s1 experiments/e67_race_time.py --rule exact --epochs 3 --seed 1
+e67_rt1_s1 experiments/e67_race_time.py --rule race_time --races 1 --epochs 3 --seed 1
+e67_rt4_s1 experiments/e67_race_time.py --rule race_time --races 4 --epochs 3 --seed 1
+e67_rt16_s1 experiments/e67_race_time.py --rule race_time --races 16 --epochs 3 --seed 1
+e67_win_s1 experiments/e67_race_time.py --rule winner --epochs 3 --seed 1
+e67_exact_s2 experiments/e67_race_time.py --rule exact --epochs 3 --seed 2
+e67_rt1_s2 experiments/e67_race_time.py --rule race_time --races 1 --epochs 3 --seed 2
+e67_rt4_s2 experiments/e67_race_time.py --rule race_time --races 4 --epochs 3 --seed 2
+e67_rt16_s2 experiments/e67_race_time.py --rule race_time --races 16 --epochs 3 --seed 2
+e67_win_s2 experiments/e67_race_time.py --rule winner --epochs 3 --seed 2
+e67_hex_s0 experiments/e67_race_time.py --rule exact --hidden 256 --feedback sym --epochs 3 --lr 0.02 --seed 0
+e67_hexr_s0 experiments/e67_race_time.py --rule exact --hidden 256 --feedback random --epochs 3 --lr 0.02 --seed 0
+e67_hrt4_s0 experiments/e67_race_time.py --rule race_time --races 4 --hidden 256 --feedback sym --epochs 3 --lr 0.02 --seed 0
+e67_hrt4r_s0 experiments/e67_race_time.py --rule race_time --races 4 --hidden 256 --feedback random --epochs 3 --lr 0.02 --seed 0
+e67_hex_s1 experiments/e67_race_time.py --rule exact --hidden 256 --feedback sym --epochs 3 --lr 0.02 --seed 1
+e67_hexr_s1 experiments/e67_race_time.py --rule exact --hidden 256 --feedback random --epochs 3 --lr 0.02 --seed 1
+e67_hrt4_s1 experiments/e67_race_time.py --rule race_time --races 4 --hidden 256 --feedback sym --epochs 3 --lr 0.02 --seed 1
+e67_hrt4r_s1 experiments/e67_race_time.py --rule race_time --races 4 --hidden 256 --feedback random --epochs 3 --lr 0.02 --seed 1
