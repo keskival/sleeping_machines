@@ -59,6 +59,10 @@ e57_pt_fine experiments/e57_regime.py --m 5 --pertype 1 --fine 1
 e53_tf_online experiments/e36_transformer.py --task e53 --sizes 32x2,64x2 --episodes 2000000 --batch 64 --seeds 2 --tag e53_online2M
 e91_e34_supra experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit latest --learn-iv 3 --margin 0.9 --gate 0.9 --anchor supra --steps 40000 --seeds 5
 e55b_multi experiments/e55b_multi.py
+e91_q0.1 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.1 --steps 20000 --seeds 5
+e91_q0.25 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.25 --steps 20000 --seeds 5
+e91_q0.4 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.4 --steps 20000 --seeds 5
+e91_q0.55 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.55 --steps 20000 --seeds 5
 e53_tf_n40k_wd0 experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e53_n40k_wd0
 e54_tf_n40k experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e54_n40k
 e54_tf_n40k_wd0 experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e54_n40k_wd0

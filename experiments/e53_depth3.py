@@ -181,12 +181,13 @@ def main():
     ap.add_argument("--temp", type=float, default=0.0, help="instant credit: softmax temperature (0 = greedy)")
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin theta_m (0 = off)")
     ap.add_argument("--gate", type=float, default=0.0, help="§86b: near-miss only if the node's recent precision >= gate")
+    ap.add_argument("--q", type=float, default=0.25, help="noise spike probability per channel")
     ap.add_argument("--steps", type=int, default=40000)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
-    H, q, rows, t0 = 16.0, 0.25, [], time.time()
+    H, q, rows, t0 = 16.0, a.q, [], time.time()
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         task = make_task(a.N, a.M, a.S, a.R, rng)
@@ -196,15 +197,20 @@ def main():
             t, y = sample(task, a.N, H, q, rng)
             net.teach(t, y)
             if step % (a.steps // 8) == 0:
-                ev = np.random.default_rng(99); n = 1500; ok = 0; e0, s0 = net.events, net.syn
+                ev = np.random.default_rng(99); n = 1500; ok = 0; e0, s0 = net.events, net.syn; trail = npos = 0
                 for _ in range(n):
                     t, y = sample(task, a.N, H, q, ev); ok += net.forward(t)[0] == y
+                    if y < len(task[1]):                     # §91: is the latest candidate instant after the pattern?
+                        ev0 = net.events; U, x = net.units(t); net.events = ev0; last_end = t[task[0][task[1][y][-1]][1]]
+                        cand = x[((x[None, :] < x[:, None]) & (x[None, :] >= x[:, None] - W)).any(1)]
+                        npos += 1; trail += bool(len(cand) and cand.max() > last_end + 1e-9)
                 curve.append({"step": step, "test": ok / n, "updates": net.updates, "near_miss_updates": net.nm,
+                              "q_trail": trail / max(npos, 1),
                               "events_per_episode": (net.events - e0) / n, "synapses_per_episode": (net.syn - s0) / n})
                 net.events, net.syn = e0, s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}_{a.credit}_T{a.temp:g}_b{a.beta:g}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}{f'_q{a.q:g}' if a.q != 0.25 else ''}_{a.credit}_T{a.temp:g}_b{a.beta:g}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
