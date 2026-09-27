@@ -113,3 +113,56 @@
 17:01:51 start e57_pt_fine
 17:02:55 done e57_pt_fine (exit 0)
 17:02:55 start e53_tf_online
+17:50:48 done e53_tf_online (exit 0)
+17:50:48 start e91_e34_supra
+17:52:00 done e91_e34_supra (exit 0)
+17:52:00 start e55b_multi
+17:52:54 done e55b_multi (exit 0)
+17:52:54 start e91_q0.1
+17:53:42 done e91_q0.1 (exit 0)
+17:53:42 start e91_q0.25
+17:54:34 done e91_q0.25 (exit 0)
+17:54:34 start e91_q0.4
+17:55:32 done e91_q0.4 (exit 0)
+17:55:32 start e91_q0.55
+17:56:42 done e91_q0.55 (exit 0)
+17:56:42 start e59_B35_O10_r0
+17:57:09 done e59_B35_O10_r0 (exit 0)
+17:57:09 start e59_B35_O40_r0
+17:57:35 done e59_B35_O40_r0 (exit 0)
+17:57:35 start e59_B70_O10_r0
+17:58:01 done e59_B70_O10_r0 (exit 0)
+17:58:01 start e59_B70_O40_r0
+17:58:29 done e59_B70_O40_r0 (exit 0)
+17:58:29 start e59_B140_O10_r0
+17:58:57 done e59_B140_O10_r0 (exit 0)
+17:58:57 start e59_B140_O40_r0
+17:59:27 done e59_B140_O40_r0 (exit 0)
+17:59:27 start e59_B35_O10_r1
+17:59:53 done e59_B35_O10_r1 (exit 0)
+17:59:53 start e59_B35_O40_r1
+18:00:21 done e59_B35_O40_r1 (exit 0)
+18:00:21 start e59_B70_O10_r1
+18:00:47 done e59_B70_O10_r1 (exit 0)
+18:00:47 start e59_B70_O40_r1
+18:01:15 done e59_B70_O40_r1 (exit 0)
+18:01:15 start e59_B140_O10_r1
+18:01:43 done e59_B140_O10_r1 (exit 0)
+18:01:43 start e59_B140_O40_r1
+18:02:15 done e59_B140_O40_r1 (exit 0)
+18:02:15 start e59_test
+18:03:45 done e59_test (exit 0)
+18:03:45 start e53_tf_n40k_wd0
+18:17:38 done e53_tf_n40k_wd0 (exit 0)
+18:17:38 start e54_tf_n40k
+18:32:33 done e54_tf_n40k (exit 0)
+18:32:33 start e93_D3
+18:33:43 done e93_D3 (exit 0)
+18:33:43 start e93_D4
+18:35:25 done e93_D4 (exit 0)
+18:35:25 start e93_D5
+18:36:01 KILL e93_D5: memory above 70%
+./run_safe.sh: line 26: kill: (70081) - No such process
+18:36:08 done e93_D5 (exit 143)
+18:36:08 start e54_tf_n40k_wd0
+18:51:03 done e54_tf_n40k_wd0 (exit 0)

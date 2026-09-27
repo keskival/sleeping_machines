@@ -192,7 +192,7 @@ def _panel_data(ax):
     ax.set_xscale("log"); ax.tick_params(labelsize=7)
     ax.set_xlabel("distinct training examples (log)", fontsize=7.5); ax.set_ylabel("test accuracy", fontsize=7.5)
     rows = _rows("e53/d3_S5R4_t0.6_curve_latest_T0_b0.5_m0.9_g0.9.json")
-    title = "Data efficiency (depth-3 order)"
+    title = "Data efficiency (depth-3 order): 0.99 from\n~1–2k examples vs ~10–20k for a Transformer"
     if rows:
         steps = [c["step"] for c in rows[0]["curve"]]
         acc = np.array([[c["test"] for c in r["curve"]] for r in rows])
@@ -210,7 +210,7 @@ def _panel_data(ax):
         ns = sorted(set(n for n, _ in pts)); med = [np.median([a for m, a in pts if m == n]) for n in ns]
         ax.plot(ns, med, color=DENSE_T, lw=1.0)
     ax.set_title(title, fontsize=8.6); ax.set_ylim(0.3, 1.02)
-    ax.legend(fontsize=6.0, loc="lower right", markerscale=0.8)
+    ax.legend(fontsize=6.0, loc="center right", bbox_to_anchor=(1.0, 0.42), markerscale=0.8)
 
 
 def _chain_plateau():
