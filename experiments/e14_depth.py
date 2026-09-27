@@ -201,7 +201,13 @@ class DeepRaceNet:
         s[rows, y] = 1.0
         s *= update[:, None]
         mask2 = self._elig(st["t2"], st["freeze2"])
+        if cfg.conserve:                                   # §60: rows grow freely up to the budget, after
+            budget = np.maximum(self.Wo[:, :-1].sum(1, keepdims=True), cfg.conserve * cfg.theta_out)  # which a pull
+                                                           # is paid for by the node's other synapses
         self._apply(self.Wo, st["idx2"], cfg.eta_out * s, mask2, self.Wo.shape[1] - 1)
+        if cfg.conserve:
+            tot = self.Wo[:, :-1].sum(1, keepdims=True)
+            self.Wo[:, :-1] *= np.where(tot > budget, budget / np.maximum(tot, 1e-9), 1.0)
         if self.nonneg:
             np.maximum(self.Wo, 0, out=self.Wo)
         carried = None                                             # local feedback, from the top layer down
@@ -490,7 +496,7 @@ def probes(net, ttr, ytr, tte, yte, n_train=5000, n_test=2000, lam=1.0):
 
 def main(a):
     cfg = Config(variant=a.variant, winners=a.winners, theta_out=a.theta_out, hid_frac=0.6, eta_out=0.01, eta_hid=0.01, deadline=1, psp="ramp",
-                 homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, compete=a.compete, seed=a.seed)
+                 homeo=a.homeo, sigma=a.sigma, zero_sum=a.zero_sum, compete=a.compete, conserve=a.conserve, seed=a.seed)
     if a.dataset == "shd":                                   # E22: spike times directly (e22_shd.py)
         z = np.load(os.path.join(os.path.dirname(__file__), "..", "data", "shd", "shd_700.npz"))
         Xa, ya = z["Xtr"], z["ytr"]
@@ -598,7 +604,7 @@ def main(a):
                                              ("ws", a.widths.replace(",", "-")), ("k", a.winners if a.winners != 3 else ""),
                                              ("fi", a.fanin_in or ""), ("sg", a.sigma if a.sigma != 0.15 else ""),
                                              ("w", a.window if a.variant in ("crl_shadow", "crl_window") else ""),
-                                             ("zs", a.zero_sum or ""), ("nc", "" if a.compete else 1), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
+                                             ("zs", a.zero_sum or ""), ("nc", "" if a.compete else 1), ("cv", a.conserve or ""), ("gc", a.group_conserve or ""), ("pt", a.pivot_top or ""), ("sj", a.share_jac or ""), ("ca", a.causal or ""), ("cc", a.center_credit or ""), ("gf", a.gauge or ""), ("ss", a.self_sigma or ""), ("ho", a.homeo if a.homeo != 0.001 else ""), ("nn", a.nonneg or ""), ("eg", a.eg or ""),
                                              ("hm", a.homeo_mode if a.homeo_mode != "linear" else ""),
                                              ("W", a.width if a.width != 400 else ""), ("res", a.residual or ""), ("ds", a.dataset if a.dataset != "mnist" else ""), ("to", a.theta_out if a.theta_out != 1.0 else "")) if v != "")
     # every setting that varies is in the name, so runs never overwrite each other
@@ -622,6 +628,7 @@ if __name__ == "__main__":
     ap.add_argument("--sigma", type=float, default=0.15, help="near-miss temperature")
     ap.add_argument("--zero-sum", type=int, default=0, help="conserve credit at each collapse")
     ap.add_argument("--compete", type=int, default=1, help="0: no competitor push, teacher pull only (E26)")
+    ap.add_argument("--conserve", type=float, default=0, help="B > 0: per-output synaptic budget of B thresholds, conserved once reached (§60)")
     ap.add_argument("--nonneg", type=int, default=0, help="clamp all weights to be non-negative (monotone net)")
     ap.add_argument("--homeo-mode", default="linear", choices=("linear", "sinkhorn"))
     ap.add_argument("--self-sigma", type=int, default=0, help="§28: per-layer σ from the closest-loser residue; 1 raw mean, 2 k × mean (EVT-corrected)")

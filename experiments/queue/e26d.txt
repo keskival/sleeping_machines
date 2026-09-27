@@ -1,0 +1,3 @@
+e26b_shd_nc_cv3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e26b --variant crl_fa --depth 1 --width 400 --epochs 10 --compete 0 --conserve 3
+e26b_shd_nc_cv10 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e26b --variant crl_fa --depth 1 --width 400 --epochs 10 --compete 0 --conserve 10
+e26b_shd_cv3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e26b --variant crl_fa --depth 1 --width 400 --epochs 10 --conserve 3
