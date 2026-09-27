@@ -55,6 +55,19 @@ def recording_samples(aedat):
     return out
 
 
+def iter_split(which):
+    """stream the official split recording by recording: yields (label, x, y, p, t, user) without keeping raw events."""
+    d = os.path.join(ROOT, "DvsGesture")
+    with open(os.path.join(d, f"trials_to_{which}.txt")) as f:
+        names = [l.strip() for l in f if l.strip().endswith(".aedat")]
+    for n in names:
+        a = os.path.join(d, n)
+        x, y, p, t = read_aedat31(a)
+        for c, s0, e in labels(a.replace(".aedat", "_labels.csv")):
+            m = (t >= s0) & (t < e)
+            yield (c - 1, x[m], y[m], p[m], t[m] - s0, int(n[4:6]))
+
+
 def split(which):
     """all samples of the official train (users 1-23) or test (users 24-29) split: [(label, x, y, p, t, user)]."""
     d = os.path.join(ROOT, "DvsGesture")
