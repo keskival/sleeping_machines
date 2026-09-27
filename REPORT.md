@@ -341,7 +341,9 @@ discards the parts' order, which is what E28's classes are made of. **Refuted by
 makes no order errors (0% reversed-class errors vs 13% at depth 1); 56% of its answers are a class that shares one
 motif with the right one. It fails at *conjunction*: one detected part fires a class. Neither a cap on single
 synapses (0.36–0.45; ~14 redundant detectors per motif still sum past threshold), windowed readouts (0.35–0.46),
-nor global hidden competition (0.23–0.36) fixed it. Open: how a native readout requires two *distinct* parts. (Superseded first diagnosis: a selectivity
+nor global hidden competition (0.23–0.36), nor input consumption by the first hidden spike (the manifesto's
+self-cancelling events; 0.16–0.35: early distractor coincidences consume the motifs' spikes) fixed it. Open: how a
+native readout requires two *distinct* parts. (Superseded first diagnosis: a selectivity
 metric suggested class detectors, median class selectivity 0.21 vs motif 0.12, with label-gated or label-free credit; motifs span up to 1.5 but a window is 0.6, so pulls never
 reach the motif's second spike. Hold-then-align hidden learning, the predicted fix, did not help (accuracy unchanged,
 class selectivity rose further): the missing piece is a pressure toward parts over wholes. Sparse hidden fan-in (2–3 random channels per node) was

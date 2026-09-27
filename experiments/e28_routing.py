@@ -105,8 +105,8 @@ def integrate(arr, w, W, thr=1.0):
 
 
 class Net:
-    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02, hold=0.0, fanin=0, outW=np.inf, wmax=1.0):
-        self.outW, self.wmax = outW, wmax
+    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02, hold=0.0, fanin=0, outW=np.inf, wmax=1.0, consume=0):
+        self.outW, self.wmax, self.consume = outW, wmax, consume
         self.fix60, self.kappa, self.hold = fix60, kappa, hold
         self.Wh = np.full(Hn, hold if hold else W)            # per-hidden-node window (duration)
         self.thr = np.ones(K)
@@ -129,6 +129,8 @@ class Net:
         ft = np.full(self.Hn, INF); charge = np.zeros(self.Hn); win = [None] * self.Hn
         for h in range(self.Hn):
             ft[h], charge[h], win[h] = integrate(t + self.d1[h], self.w1[h], self.Wh[h])
+        if self.consume:                                        # events self-cancel when applied: the first hidden
+            return self._consume_race(t, ft, charge, win)       # node to fire consumes the spikes it fired on
         fired = np.zeros(self.Hn, bool)
         for g0 in range(0, self.Hn, self.G):                   # group races: first k fire, the rest cancelled
             grp = np.arange(g0, min(g0 + self.G, self.Hn))
@@ -136,6 +138,24 @@ class Net:
             fired[order[np.isfinite(ft[order])]] = True
         out = np.where(fired, ft, INF)
         return out, fired, charge, win
+
+    def _consume_race(self, t, ft, charge, win):
+        fired = np.zeros(self.Hn, bool)
+        avail = np.isfinite(t).copy()
+        tt = t.copy()
+        for _ in range(self.consume):                           # at most `consume` hidden spikes per episode
+            cand = np.where(fired, INF, ft)
+            h = int(cand.argmin())
+            if not np.isfinite(cand[h]):
+                break
+            fired[h] = True
+            avail[win[h]] = False                               # its input spikes are used up
+            tt = np.where(avail, t, INF)
+            stale = (~fired) & np.isfinite(ft)                  # nodes that relied on consumed spikes re-race
+            for g in np.flatnonzero(stale):
+                if np.intersect1d(win[g], win[h]).size:
+                    ft[g], charge[g], win[g] = integrate(tt + self.d1[g], self.w1[g], self.Wh[g])
+        return np.where(fired, ft, INF), fired, charge, win
 
     def forward(self, t):
         st = {}
@@ -245,6 +265,7 @@ def main():
     ap.add_argument("--W", type=float, default=0.6)
     ap.add_argument("--fix60", type=int, default=0, help="1: §60 readout (non-leaky, conserved, priced)")
     ap.add_argument("--kappa", type=float, default=0.02)
+    ap.add_argument("--consume", type=int, default=0, help="> 0: hidden spikes consume their inputs (W self-cancel), max this many")
     ap.add_argument("--wmax", type=float, default=1.0, help="max output synaptic weight, as a fraction of threshold")
     ap.add_argument("--outW", type=float, default=np.inf, help="output window under --fix60 (inf: no leak)")
     ap.add_argument("--fanin", type=int, default=0, help="> 0: hidden nodes connect to this many random channels")
@@ -260,7 +281,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         motifs, classes = make_task(a.N, a.M, a.K, rng)
-        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa, a.hold, a.fanin, a.outW, a.wmax)
+        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa, a.hold, a.fanin, a.outW, a.wmax, a.consume)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(motifs, classes, a.N, a.H, a.q, rng)
@@ -273,7 +294,7 @@ def main():
                 net.events = ev0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_hold' if a.hold else ''}{f'_F{a.fanin}' if a.fanin else ''}{f'_oW{a.outW:g}' if np.isfinite(a.outW) else ''}{f'_wm{a.wmax:g}' if a.wmax < 1 else ''}{'_' + a.tag if a.tag else ''}.json"
+    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_hold' if a.hold else ''}{f'_F{a.fanin}' if a.fanin else ''}{f'_oW{a.outW:g}' if np.isfinite(a.outW) else ''}{f'_wm{a.wmax:g}' if a.wmax < 1 else ''}{f'_cs{a.consume}' if a.consume else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))

@@ -3058,9 +3058,10 @@ vs 13% at depth 1); 56% of its answers are a class sharing one motif with the tr
 threshold (~14 redundant detectors per motif still sum past it), windowed readouts, and global competition across
 the hidden layer. The open problem is precise: a native readout that requires two *distinct* parts when parts are
 represented redundantly. (Dense readouts get this from signed weights that learn to subtract single-part evidence;
-the race readout has positive weights and one threshold.) One native candidate not yet tried: a readout node per
-class whose inputs are *vetoed by themselves* after the first part (refractory per part group), so that only a
-second, different part can complete it.
+the race readout has positive weights and one threshold.) Tried and negative: input consumption (the first hidden node to
+fire uses up its input spikes, the weaving operator's self-cancellation), 0.16–0.35, because the earliest
+coincidences are often distractors and they consume the motifs' spikes. Not yet tried: a readout node whose inputs
+are vetoed by themselves after the first part (refractory per part group), so only a different part completes it.
 
 **Original diagnosis (superseded).** A motif is "j within 0.3–1.5 after i"; the hidden window is 0.6. A pull moves only arrivals already
 inside the firing window, so a node whose window catches i but not j can never align j onto it: the recurrence is
