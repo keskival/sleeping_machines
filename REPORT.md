@@ -156,7 +156,10 @@ conjunction and an order by construction.
   both strongest inputs from one motif), but one detected part fires a class; 56% of its answers share one motif with
   the truth (E28).
 - An event-token Transformer trained on 2M episodes reaches 0.998 at ≈ 175k–690k multiply-adds per episode, against
-  ≈ 14 events for the chains. With the window bank, the chains' errors come mostly from classes that never form a
+  ≈ 14 events for the chains. The chains are not training-limited: with 5× more training (200k episodes) they stay at
+  0.954 (tuned windows, 0.90–0.99) and 0.87 (window bank, 0.81–0.96); two seeds in five plateau near 0.90 because
+  some class routes lock onto the wrong parts. On composition the Transformer is more accurate; the chains are ≈ 10⁴×
+  cheaper. With the window bank, the chains' errors come mostly from classes that never form a
   route (copies of a part at several scales split the pulls).
 
 ## 5. Generalization and grokking
@@ -280,6 +283,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 - **Sleep does not help depth when only routes are learned:** in E34 (fixed part basis, learned class routes) sleep
   erodes correct routes (0.87 → 0.66 at λ = 0.05, collapse at 0.2); whether it selects parts when parts are learned
   is untested.
+- **Composition accuracy:** the chains plateau (0.95 / 0.87 at 200k episodes) below the Transformer's 0.998; the
+  failure is class routes locking onto wrong parts.
 - **Running:** E41's full runs and long low-data runs (§78); E37 with 5 seeds and p-scaling; E42's confirmatory days.
 - **Fair baselines (running):** relative-time-attention Transformers; the chains with 5–25× more training.
 - **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).

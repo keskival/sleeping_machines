@@ -1,0 +1,2 @@
+/workspace/experiments/e34_compose.py:54: RuntimeWarning: invalid value encountered in subtract
+  dt = t[q] - t[p]
