@@ -1,0 +1,51 @@
+{
+ "args": {
+  "ndays": 3,
+  "eta": 0.005
+ },
+ "big_q": 0.24558000266551971,
+ "rows": [
+  {
+   "day": "2026-08-25",
+   "events": 42598,
+   "counts": [
+    11722,
+    11791,
+    9714,
+    9372
+   ],
+   "ll_per_event_poisson": -2.995741702043626,
+   "ll_per_event_hawkes": -2.623431215565562,
+   "ll_per_event_native": -2.6411477867991944,
+   "ll_per_event_native_meta": -2.6382905564600776
+  },
+  {
+   "day": "2026-08-26",
+   "events": 27963,
+   "counts": [
+    8447,
+    8303,
+    5542,
+    5671
+   ],
+   "ll_per_event_poisson": -3.4220105219360755,
+   "ll_per_event_hawkes": -2.9424353606609226,
+   "ll_per_event_native": -2.8520522523824865,
+   "ll_per_event_native_meta": -2.8501729874610717
+  },
+  {
+   "day": "2026-08-27",
+   "events": 29463,
+   "counts": [
+    8765,
+    8114,
+    5815,
+    6769
+   ],
+   "ll_per_event_poisson": -3.3151859318757317,
+   "ll_per_event_hawkes": -2.8421871763615707,
+   "ll_per_event_native": -2.695378665577371,
+   "ll_per_event_native_meta": -2.693494020984427
+  }
+ ]
+}
