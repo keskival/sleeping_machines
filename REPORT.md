@@ -49,6 +49,14 @@ can **match or beat** MLPs and Transformers.
   lets a node learn an AND without knowing which half was wrong; why learning deep order needs a little exploration
   and a safety margin.
 
+**Scope of the evidence.** The supremacy results (timing, composition, deep order, grokking) are on synthetic tasks built
+to test one capability at a time, where the target is exactly expressible by the network's primitives. The theory behind
+them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) is not
+task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
+tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
+0.675 vs ≈ 0.70 for an LSTM; a market-stream world model 0.07–0.18 nats per event behind a Transformer point process; and
+no trading edge after fees in four markets. A real event-camera benchmark is the next test.
+
 ![Where the event network stands against dense models, task by task](report/figures/supremacy_map.png)
 
 **What the network actually does** on one example: spikes arrive; part detectors fire when two spikes are close

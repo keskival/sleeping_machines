@@ -852,6 +852,13 @@ def build():
         "budget lets a node learn an AND without knowing which half was wrong; why learning deep order needs a little "
         "exploration and a safety margin.",
     ], st)
+    s += [P("<b>Scope of the evidence.</b> The supremacy results (timing, composition, deep order, grokking) are on synthetic "
+            "tasks built to test one capability at a time, where the target is exactly expressible by the primitives. The theory "
+            "behind them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) "
+            "is not task-specific: the reason to expect them to carry over to sparse, precisely timed real streams. On the real "
+            "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
+            "0.675 vs ≈ 0.70 (LSTM); a market world model 0.07–0.18 nats behind a Transformer point process; no trading edge "
+            "after fees in four markets. A real event-camera benchmark is the next test.")]
     s += fig(FM.fig_supremacy_map, W)
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
             "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
