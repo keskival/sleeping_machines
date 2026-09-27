@@ -1,0 +1,22 @@
+[
+ {
+  "day": "2026-08-25",
+  "frozen": false,
+  "events": 42598,
+  "ll_event_network": -1.693448119572445,
+  "ll_table": -1.6934542637936998,
+  "max_abs_diff": 0.00020120204370766004,
+  "network_events_per_real_event": 3.907624771116015,
+  "synaptic_ops_per_real_event": 18.717592375228882
+ },
+ {
+  "day": "2026-08-26",
+  "frozen": false,
+  "events": 27963,
+  "ll_event_network": -2.0611195647808995,
+  "ll_table": -2.0611269423711467,
+  "max_abs_diff": 0.00017885957915808604,
+  "network_events_per_real_event": 4.142617029646319,
+  "synaptic_ops_per_real_event": 19.186174587848228
+ }
+]
