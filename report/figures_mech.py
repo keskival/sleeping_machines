@@ -408,8 +408,10 @@ def fig_lm_scaling():
     a_e = 1.75 + 1.2 * (d / 1e5) ** -0.35
     b.plot(d, a_t, color=DENSE_T, lw=1.8, label="Transformer")
     b.plot(d, a_e, color="#f3a37f", lw=1.6, label="counting stage (E62): fast, higher floor")
-    b.fill_between(d, 0.72 + 2.2 * (d / 1e5) ** -0.14 * 0.9, a_t, color=EVENT, alpha=0.22, lw=0,
-                   label="full design (race attention, learned codes; the aim):\nat or below Transformer loss")
+    upper = np.minimum(a_t, a_e)                   # the full design contains the counting experts: never worse than
+    lower = np.minimum(upper - 0.05, 0.72 + 2.2 * (d / 1e5) ** -0.14 * 0.9)   # either curve; the band starts at their minimum
+    b.fill_between(d, lower, upper, color=EVENT, alpha=0.22, lw=0,
+                   label="full design (contains the counting experts; the aim):\nat or below the better of the two")
     b.set_ylim(0.7, 3.4)
     b.set_xscale("log"); b.set_xticks([]); b.set_yticks([])
     b.set_xlabel("training text (characters)", fontsize=7.5); b.set_ylabel("prediction loss (lower = better)", fontsize=7.5)

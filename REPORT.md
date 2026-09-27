@@ -642,7 +642,7 @@ not grow with model size or text length, learned by local rules from less data.
 At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
 measures: bits per character, examples needed, and work per character.
 
-![Predicted scaling: work per character stays flat as the model grows; the counting stage has a higher floor; the full design aims at or below Transformer loss](report/figures/lm_scaling.png)
+![Predicted scaling: work per character stays flat as the model grows; the full design contains the counting stage, so it is never worse than it, and aims at or below the better of counting and Transformer at every data size](report/figures/lm_scaling.png)
 
 **What is established and what is not.** Established: the expressive equivalence, the locality of exact credit for
 races, the optimality of the depth bound, learned attention on a recall task, and data efficiency on deep order.
