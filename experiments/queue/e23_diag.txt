@@ -1,0 +1,7 @@
+e23d_race_frozen_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --eta-hid 0 --tag e23d_frozen_f5000
+e23d_race_frozen_nohomeo_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --eta-hid 0 --homeo 0 --tag e23d_frozen_nohomeo_f5000
+e23d_race_s1_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --seed 1 --tag e23_f5000
+e23d_mlp_s1_f5000 experiments/e7_stream.py mlp --order blocked --frames 5000 --val 10000 --seed 1 --tag e23_f5000
+e23p_race_price01_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --price 0.01 --tag e23p_price01_f5000
+e23p_race_price03_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --price 0.03 --tag e23p_price03_f5000
+e23p_race_price003_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --price 0.003 --tag e23p_price003_f5000

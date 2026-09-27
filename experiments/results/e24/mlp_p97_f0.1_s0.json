@@ -1,0 +1,102 @@
+{
+ "args": {
+  "kind": "mlp",
+  "p": 97,
+  "frac": 0.1,
+  "seed": 0,
+  "hidden": 256,
+  "every": 3000,
+  "tag": "p97_f0.1",
+  "steps": 30000,
+  "lr": 0.001,
+  "wd": 1.0,
+  "init": 1.0,
+  "credit": "bp",
+  "freqs": 3,
+  "variant": "crl_fa",
+  "group": 10,
+  "winners": 3,
+  "eta": 0.01,
+  "batch": 32,
+  "epochs": 2000,
+  "margin": 0.1,
+  "homeo": 0.0,
+  "init_frac": 0.3,
+  "sigma": 0.15,
+  "sleep": 0.0,
+  "deadline": 0
+ },
+ "curve": [
+  {
+   "step": 3000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 107.86501320352716,
+   "align": 1.0
+  },
+  {
+   "step": 6000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 105.4095179518831,
+   "align": 1.0
+  },
+  {
+   "step": 9000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 104.5990200309197,
+   "align": 1.0
+  },
+  {
+   "step": 12000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 104.1253786874484,
+   "align": 1.0
+  },
+  {
+   "step": 15000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 103.79535684456059,
+   "align": 1.0
+  },
+  {
+   "step": 18000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 103.51857626976997,
+   "align": 1.0
+  },
+  {
+   "step": 21000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 103.31212038297372,
+   "align": 1.0
+  },
+  {
+   "step": 24000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 103.14622618454534,
+   "align": 1.0
+  },
+  {
+   "step": 27000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 103.01740758412728,
+   "align": 1.0
+  },
+  {
+   "step": 30000,
+   "train": 1.0,
+   "test": 0.0,
+   "norm": 102.91094524766504,
+   "align": 1.0
+  }
+ ],
+ "wall_s": 355.8
+}

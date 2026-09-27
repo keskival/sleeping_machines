@@ -1,0 +1,10 @@
+{"frac": 0.1, "seed": 0, "n_train": 941, "epochs": 2, "train": 1.0, "test": 0.009211147850732168, "updates": 941, "params": 912673}
+{"frac": 0.1, "seed": 1, "n_train": 941, "epochs": 2, "train": 1.0, "test": 0.012753897024090695, "updates": 941, "params": 912673}
+{"frac": 0.1, "seed": 2, "n_train": 941, "epochs": 2, "train": 1.0, "test": 0.010510155880963629, "updates": 941, "params": 912673}
+{"frac": 0.3, "seed": 0, "n_train": 2823, "epochs": 2, "train": 1.0, "test": 0.009565745520801701, "updates": 2823, "params": 912673}
+{"frac": 0.3, "seed": 1, "n_train": 2823, "epochs": 2, "train": 1.0, "test": 0.013665350744002429, "updates": 2823, "params": 912673}
+{"frac": 0.3, "seed": 2, "n_train": 2823, "epochs": 2, "train": 1.0, "test": 0.010780443364713028, "updates": 2823, "params": 912673}
+{"frac": 0.5, "seed": 0, "n_train": 4704, "epochs": 2, "train": 1.0, "test": 0.008501594048884165, "updates": 4704, "params": 912673}
+{"frac": 0.5, "seed": 1, "n_train": 4704, "epochs": 2, "train": 1.0, "test": 0.01381509032943677, "updates": 4704, "params": 912673}
+{"frac": 0.5, "seed": 2, "n_train": 4704, "epochs": 2, "train": 1.0, "test": 0.010201912858660999, "updates": 4704, "params": 912673}
+EXIT-OK 0.3

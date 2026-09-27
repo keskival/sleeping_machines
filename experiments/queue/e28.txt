@@ -1,0 +1,7 @@
+# E28: depth in time, counterfactual routing credit (THEORY §57)
+e28_d1 experiments/e28_routing.py --steps 60000 --seeds 3 --depth 1 --tag d1
+e28_path experiments/e28_routing.py --steps 60000 --seeds 3 --arm path
+e28_fired_k2 experiments/e28_routing.py --steps 60000 --seeds 3 --arm fired --k 2
+e28_nearmiss_k2 experiments/e28_routing.py --steps 60000 --seeds 3 --arm nearmiss --k 2
+e28_nearmiss_k1 experiments/e28_routing.py --steps 60000 --seeds 3 --arm nearmiss --k 1
+e28_push_k2 experiments/e28_routing.py --steps 60000 --seeds 3 --arm push --k 2

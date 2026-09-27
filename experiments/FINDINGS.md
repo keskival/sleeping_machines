@@ -5,6 +5,26 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-26
 
+**E24 — grokking on (a + b) mod 31, half the pairs for training (first runs).** Dense MLP, full-batch AdamW
+(wd 1.0): train 1.0 by step 1k, test 0.00 until ~3k, then 0.87 at 20k while the weight norm falls: the regime
+exists on this CPU (92 s). Race without sleep: train 0.99–1.0 within ~50 epochs, test 0.002 (below chance 0.032)
+through 1,500 epochs. *Learned:* the race memorizes as a partial-key lookup: an unseen pair activates the codes
+of training pairs sharing an operand, whose sums are all different, so it is reliably wrong. Contrary to §52.2,
+plasticity never goes quiet (57M events by epoch 1,300, still rising) and the weight norm grows; random-feedback
+hidden credit keeps the codes churning. Sleep sweep running.
+
+**E23 — class-incremental split-MNIST (5 blocks), the readout was the problem.** Single-head forgetting is
+saturated for both learners (race 0.968, MLP 0.979 at 1k frames per task; MLP 0.984 at 4k): each block drives
+the old tasks to exactly 0.00, so §50's predictions cannot be tested on it. Added a task-aware readout (only the
+task's classes may win; the race is re-run with the other outputs' thresholds out of reach) and plasticity per
+block. Task-aware forgetting: race 0.167, MLP 0.030 (1k per task); MLP 0.029 at 4k. *Learned:* §50's prediction
+is reversed so far. The race output has no bias (the bias column is zeroed, thresholds fixed), so the prior shift
+of each block is carried by old classes' feature weights (THEORY §51). *Changes:* `--price` (learned output
+thresholds) added; ablations queued.
+
+**Engineering.** The container was restarted without a GPU (host driver is nouveau; not needed: the code is
+numpy-only). The venv lives in the session scratchpad and had to be rebuilt; the interrupted E23 job reran.
+
 **E17 — a continually learning race on the BTCUSDT trade stream (preregistered; 21 confirmatory days,
 prequential, day-block 95% intervals).** Direction accuracy on moves ≥ 1 bp: race 0.593 (88% of episodes
 decided, 6.7 s mean decision), frozen race 0.595, online logistic regression 0.583 (decides at 10 s), momentum

@@ -1,0 +1,9 @@
+{
+ "prequential_acc": 0.916475,
+ "late_acc": 0.8724375,
+ "held_out_acc": 0.1841,
+ "labels_used": 80000,
+ "used_first_view": 94.6728125,
+ "used_later_views": 94.65271875,
+ "wall_s": 580.0
+}

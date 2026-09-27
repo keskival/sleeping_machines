@@ -1,0 +1,11 @@
+# 2026-09-26T21:51:29+00:00 /tmp/claude-1000/-workspace/4d6e03c9-6477-46d7-bfd6-34a24cb951d4/scratchpad/venv/bin/python experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --eta-hid 0 --tag e23d_frozen_f5000
+{
+ "prequential_acc": 0.849,
+ "late_acc": 0.812,
+ "held_out_acc": 0.1865,
+ "labels_used": 5000,
+ "used_first_view": 122.185,
+ "used_later_views": 122.14725,
+ "wall_s": 381.8
+}
+EXIT 0

@@ -1,0 +1,8 @@
+# re-runs of jobs lost in the 2026-09-26 host hang
+e24_mlp_fa_fourier experiments/e24_grok.py mlp --p 31 --frac 0.5 --hidden 256 --every 3000 --steps 30000 --credit fa_fourier --tag fa_fourier
+e24_mlp_kp experiments/e24_grok.py mlp --p 31 --frac 0.5 --hidden 256 --every 3000 --steps 30000 --credit kp --tag kp
+e24_race_dl_sleep3e-3 experiments/e24_grok.py race --p 31 --frac 0.5 --hidden 250 --every 100 --epochs 5000 --homeo 0.001 --deadline 1 --sleep 3e-3 --tag dl_sleep3e-3
+e24_race_dl_sleep1e-2 experiments/e24_grok.py race --p 31 --frac 0.5 --hidden 250 --every 100 --epochs 5000 --homeo 0.001 --deadline 1 --sleep 1e-2 --tag dl_sleep1e-2
+e24_race_dl_sleep3e-2 experiments/e24_grok.py race --p 31 --frac 0.5 --hidden 250 --every 100 --epochs 5000 --homeo 0.001 --deadline 1 --sleep 3e-2 --tag dl_sleep3e-2
+e23d_race_s1_f5000 experiments/e7_stream.py race --order blocked --frames 5000 --val 10000 --seed 1 --tag e23_f5000
+e23_race_nohomeo_f80000 experiments/e7_stream.py race --order blocked --frames 80000 --val 10000 --homeo 0 --tag e23_nohomeo_f80000

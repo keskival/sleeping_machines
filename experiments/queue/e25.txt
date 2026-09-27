@@ -1,0 +1,32 @@
+# E25: modular addition with delays (THEORY §53)
+e25_compiled_p31 experiments/e25_delay_ring.py compiled --p 31
+e25_compiled_p97 experiments/e25_delay_ring.py compiled --p 97
+e25_sync_p31 experiments/e25_delay_ring.py sync --p 31 --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5
+e25_sync_p59 experiments/e25_delay_ring.py sync --p 59 --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5
+e25_sync_p97 experiments/e25_delay_ring.py sync --p 97 --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5
+e25_sync_p97_r1 experiments/e25_delay_ring.py sync --p 97 --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5 --restarts 1 --tag r1
+e25_online_p31 experiments/e25_delay_ring.py online --p 31 --fracs 0.1,0.3,0.5 --seeds 3 --epochs 300 --eta 0.2
+e25_online_p97 experiments/e25_delay_ring.py online --p 97 --fracs 0.1,0.3,0.5 --seeds 3 --epochs 100 --eta 0.2
+e25_learn_p31 experiments/e25_delay_ring.py learn --p 31 --fracs 0.1,0.3,0.5 --seeds 3 --epochs 200
+e25_table_p97 experiments/e25_delay_ring.py table --p 97 --fracs 0.1,0.3,0.5 --seeds 3 --epochs 50
+e25_mlp_p97_f0.1 experiments/e24_grok.py mlp --frac 0.1 --p 97 --hidden 256 --every 3000 --steps 30000 --tag p97_f0.1
+e25_mlp_p97_f0.2 experiments/e24_grok.py mlp --frac 0.2 --p 97 --hidden 256 --every 3000 --steps 30000 --tag p97_f0.2
+e25_mlp_p97_f0.3 experiments/e24_grok.py mlp --frac 0.3 --p 97 --hidden 256 --every 3000 --steps 30000 --tag p97_f0.3
+e25_mlp_p97_f0.5 experiments/e24_grok.py mlp --frac 0.5 --p 97 --hidden 256 --every 3000 --steps 30000 --tag p97_f0.5
+e25_mlp_p31_f0.2 experiments/e24_grok.py mlp --frac 0.2 --p 31 --hidden 256 --every 3000 --steps 30000 --tag p31_f0.2
+e25_mlp_p31_f0.3 experiments/e24_grok.py mlp --frac 0.3 --p 31 --hidden 256 --every 3000 --steps 30000 --tag p31_f0.3
+e25_sync_p97_mul experiments/e25_delay_ring.py sync --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5 --p 97 --op mul
+e25_sync_p97_sq experiments/e25_delay_ring.py sync --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5 --p 97 --op sq
+e25_sync_p97_poly experiments/e25_delay_ring.py sync --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5 --p 97 --op poly
+e25_sync_p97_rand experiments/e25_delay_ring.py sync --fracs 0.01,0.02,0.03,0.05,0.07,0.1,0.15,0.2,0.3,0.5 --seeds 5 --p 97 --op rand
+e25_trace_p97_d0 experiments/e25_delay_ring.py trace --p 97 --fracs 0.05,0.07,0.1,0.15,0.2,0.3 --seeds 5 --epochs 100 --restarts 4 --decay 0 --tag d0
+e25_trace_p97_d0.5 experiments/e25_delay_ring.py trace --p 97 --fracs 0.05,0.07,0.1,0.15,0.2,0.3 --seeds 5 --epochs 100 --restarts 4 --decay 0.5 --tag d0.5
+e25_trace_p97_d0.9 experiments/e25_delay_ring.py trace --p 97 --fracs 0.05,0.07,0.1,0.15,0.2,0.3 --seeds 5 --epochs 100 --restarts 4 --decay 0.9 --tag d0.9
+e25_scal_p23 experiments/e25_delay_ring.py sync --p 23 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p31 experiments/e25_delay_ring.py sync --p 31 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p47 experiments/e25_delay_ring.py sync --p 47 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p59 experiments/e25_delay_ring.py sync --p 59 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p73 experiments/e25_delay_ring.py sync --p 73 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p97 experiments/e25_delay_ring.py sync --p 97 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p131 experiments/e25_delay_ring.py sync --p 131 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal
+e25_scal_p181 experiments/e25_delay_ring.py sync --p 181 --fracs 0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25 --seeds 10 --tag scal

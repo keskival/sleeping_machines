@@ -1,0 +1,4 @@
+# E26b: does dropping the competitor push transfer to the main race? (THEORY §54)
+e26b_shd_nc experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e26b --variant crl_fa --depth 1 --width 400 --epochs 10 --compete 0
+e26b_grok_nc experiments/e24_grok.py race --p 31 --frac 0.5 --hidden 250 --every 100 --epochs 2000 --homeo 0.001 --deadline 1 --compete 0 --tag nc_sleep0
+e26b_grok_nc_sleep experiments/e24_grok.py race --p 31 --frac 0.5 --hidden 250 --every 100 --epochs 2000 --homeo 0.001 --deadline 1 --compete 0 --sleep 1e-3 --tag nc_sleep1e-3
