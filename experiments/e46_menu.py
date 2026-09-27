@@ -85,6 +85,7 @@ def main():
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--scales", default="1,2,4")
     ap.add_argument("--M", type=int, default=4)
+    ap.add_argument("--q", type=float, default=0.25, help="distractor spike probability per channel")
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
@@ -94,13 +95,13 @@ def main():
         motifs, classes = T.make_task(16, 6, 15, rng)
         net = Menu(16, 15, 3.5, [float(v) for v in a.scales.split(",")], a.M)
         for step in range(a.steps):
-            t, y = T.sample(motifs, classes, 16, 12.0, 0.25, rng); net.teach(t, y)
+            t, y = T.sample(motifs, classes, 16, 12.0, a.q, rng); net.teach(t, y)
         ev = np.random.default_rng(99); ok = 0
         for _ in range(1500):
-            t, y = T.sample(motifs, classes, 16, 12.0, 0.25, ev); ok += net.forward(t)[0] == y
+            t, y = T.sample(motifs, classes, 16, 12.0, a.q, ev); ok += net.forward(t)[0] == y
         rows.append({"seed": s, "test": ok / 1500, "updates": net.updates})
         print(json.dumps(rows[-1]), flush=True)
-    with open(os.path.join(OUT, f"menu_M{a.M}_{a.steps}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"menu_M{a.M}_{a.steps}_q{a.q:g}_s{a.scales.replace(',', '-')}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 

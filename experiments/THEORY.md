@@ -3604,6 +3604,30 @@ and replaced instead of trapping the class. The network has **no synaptic weight
 wiring by reliability, which is the manifesto's claim that plasticity serves computation (here it only selects which
 temporal predicates to compose).
 
+## 81. A mistake bound for route menus (proposition, with proof sketch)
+
+**Setting (realizable, noise-free labels).** K classes; P part types (E34/E46's hold nodes on channel pairs at several
+window scales). Class k is exactly one route (h_k*, g_k*): it holds iff part h_k* fires within W before part g_k*.
+Distractor spikes are independent of the class. For a wrong pair (h, g) ≠ (h_k*, g_k*), let q ≥ its probability of
+occurring (h before g within W) in an episode of class k; the true pair occurs in every episode of class k. Δ = 1 − q.
+
+**Learner.** E46: on a miss of class k, every pair of fired parts (earlier → later within W) is counted for k; the
+most frequent pair is proposed as a route; routes carry prices (running error rates); a class answers through its
+cheapest firing route below price 1/2.
+
+**Proposition (M81).** (a) After m misses of class k, the true pair is the most frequent candidate with probability at
+least 1 − P²·exp(−2mΔ²) (Hoeffding over at most P² wrong pairs, each with mean ≤ q against the true pair's 1). So
+m = O((log P + log(1/δ)) / Δ²) misses suffice with probability 1 − δ. (b) A proposed true route never errs on class k's
+episodes; its price decays to 0. A wrong route for k fires on episodes of other classes or of none with probability
+≥ some ε > 0 unless it is equivalent to the true one on the data; each such firing is an error that raises its price,
+so it is priced out after O(1/ε) errors. (c) Total mistakes: O(K·(log P + log(1/δ)) / Δ² + K/ε), independent of the
+number of episodes and logarithmic in the part basis. □ (sketch)
+
+**What it says.** The cost of discovering structure is set by how often the wrong structure *looks* right (the gap Δ),
+quadratically, and by the size of the candidate space only logarithmically: widening the part basis is cheap, noisy
+data is expensive. **Predictions:** (i) updates grow with distractor density roughly as 1/(1 − q)²; (ii) updates grow
+at most logarithmically with the number of window scales (part types).
+
 ## Tests
 
 | | Claim | Test |
@@ -3679,6 +3703,7 @@ temporal predicates to compose).
 | **M78** | grokking fraction f* ≈ D log p / p^D: composition makes grokking exponentially cheaper than memorization | E41 training-fraction sweep at p = 17 (and p = 31) |
 | **M79** | the weaving operator W is a competing-risks temporal point process; a native pool learned by online likelihood with fast/slow, surprise-gated plasticity is an asynchronous world model | E43: online log-likelihood (type and timing) vs Poisson, online Hawkes, GRU neural point process; adaptation after regime breaks; decisions from the model |
 | **M80** | structure discovery = full-information online model selection over routes (Hedge-like prices); racing on reliability selects the simplest route that fits (implicit Occam) | E45 5 seeds on a+b, a+b+c, random; menu size sweep |
+| **M81** | route-menu mistake bound O(K (log P + log 1/δ)/Δ² + K/ε): logarithmic in the part basis, quadratic in the inverse distractor gap | E46 distractor-density sweep (q) and window-scale sweep |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

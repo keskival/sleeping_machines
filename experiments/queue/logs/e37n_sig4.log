@@ -1,0 +1,4 @@
+{"seed": 0, "epoch": 400, "train": 1.0, "test": 0.9875259875259875, "test_lookup_answers": 0.0, "updates": 27817}
+{"seed": 1, "epoch": 400, "train": 0.46875, "test": 0.035343035343035345, "test_lookup_answers": 0.0, "updates": 150476}
+{"seed": 2, "epoch": 400, "train": 1.0, "test": 0.9459459459459459, "test_lookup_answers": 0.0, "updates": 26929}
+{"seed": 3, "epoch": 400, "train": 1.0, "test": 0.9812889812889813, "test_lookup_answers": 0.0, "updates": 20944}

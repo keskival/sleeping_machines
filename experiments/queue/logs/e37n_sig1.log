@@ -1,0 +1,6 @@
+{"seed": 0, "epoch": 400, "train": 1.0, "test": 0.9812889812889813, "test_lookup_answers": 0.0, "updates": 21452}
+{"seed": 1, "epoch": 400, "train": 0.475, "test": 0.02286902286902287, "test_lookup_answers": 0.0, "updates": 149511}
+{"seed": 2, "epoch": 400, "train": 1.0, "test": 0.9812889812889813, "test_lookup_answers": 0.0, "updates": 19948}
+{"seed": 3, "epoch": 400, "train": 1.0, "test": 0.9625779625779626, "test_lookup_answers": 0.0, "updates": 19460}
+{"seed": 4, "epoch": 400, "train": 1.0, "test": 0.9293139293139293, "test_lookup_answers": 0.0, "updates": 44313}
+EXIT-OK 11.7
