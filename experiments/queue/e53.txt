@@ -45,6 +45,8 @@ e52_v_d64 experiments/e52_thp.py --mode val --d 64 --epochs 30
 e52_v_d128 experiments/e52_thp.py --mode val --d 128 --epochs 30
 e57_m5 experiments/e57_regime.py --m 5
 e57_m20 experiments/e57_regime.py --m 20
+e58_eta0.01 experiments/e58_factor_world.py --eta 0.01
+e58_eta0.03 experiments/e58_factor_world.py --eta 0.03
 e52_v_d64L32 experiments/e52_thp.py --mode val --d 64 --L 32 --epochs 30
 e52_v_d64L256 experiments/e52_thp.py --mode val --d 64 --L 256 --epochs 30
 e52_v_d64f experiments/e52_thp.py --mode val --d 64 --fine 1 --epochs 30
