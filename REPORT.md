@@ -267,8 +267,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   | native + fast/slow surprise-gated plasticity | −2.64 / −2.85 / −2.69 |
   | recurrent neural point process (GRU, Adam) | – / −2.61 / −2.52 |
 
-  The native world model matches or beats Hawkes but trails the neural point process by ≈ 0.2 nats: its latent state
-  is only fast event traces; the slow regime state and hold-loop memory of §79 are the next step. Learning-to-learn
+  The native world model matches or beats Hawkes but trails the neural point process by ≈ 0.2 nats. Adding pair-part
+  state is neutral; adding inhibition (to express suppression) destabilized learning as implemented. The gap is open. Learning-to-learn
   plasticity is neutral on whole-day averages; its test is the likelihood after regime breaks.
 
 ## 8. Open problems and next steps
@@ -277,8 +277,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   so that grokking no longer relies on a provided route.
 - **A richer native world model:** slow regime state and hold-loop memory (§79), to close the gap to the neural point
   process; model-based decisions on the market stream.
-- **Running:** sleep as the pressure toward reusable parts (§73); E41's full runs and long low-data runs (§78);
-  E37 with 5 seeds and p-scaling; E42's confirmatory days.
+- **Sleep does not help depth when only routes are learned:** in E34 (fixed part basis, learned class routes) sleep
+  erodes correct routes (0.87 → 0.66 at λ = 0.05, collapse at 0.2); whether it selects parts when parts are learned
+  is untested.
+- **Running:** E41's full runs and long low-data runs (§78); E37 with 5 seeds and p-scaling; E42's confirmatory days.
 - **Fair baselines (running):** relative-time-attention Transformers; the chains with 5–25× more training.
 - **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
