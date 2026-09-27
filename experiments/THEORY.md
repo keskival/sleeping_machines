@@ -2992,6 +2992,32 @@ memorizes (train 0.88 by epoch 7). Grokking tests need hidden layers above this 
 **Revised principle (§54, §56.5):** never displace in time; for weights, pull under conservation; remove false
 winners by veto where codes are specific and by conserved weakening plus prices where they overlap.
 
+## 61. Two kinds of temporal tolerance: aligning destroys the interval, holding keeps it
+
+*Written 2026-09-27 from the E27 error analysis.*
+
+A coincidence node can accept "B within Δ after A" in two ways.
+
+- **Align:** delay A by about the typical gap so it meets B, with a narrow window. The interval [t_A, t_B] is
+  compressed into the window; the node no longer knows what happened in between.
+- **Hold:** give A a PSP of length Δ and fire when B arrives while it is still open. The node is armed exactly over
+  the raw interval [t_A, t_B].
+
+The two are equivalent for detecting the pair and not equivalent for anything that depends on the interval's
+content. A veto for "unless C in between" must arrive while the node is armed; under alignment the armed span is
+a narrow window near t_B + d_B, while C can fall anywhere in (t_A, t_B), so no single veto delay covers it. Under
+holding, a veto with no delay does. E27 shows the symptom: with alignment the veto synapse on the right channel
+reaches full strength for every pattern, yet vetoed near-misses remain the main error (192 of 318 errors after
+100k episodes). With holding, veto adds +5 points over no veto (pilot, 2 seeds) versus +1.8 under alignment,
+though the pilot's windows only grow, which caps its overall accuracy (0.71–0.73).
+
+**Principle.** Delays are for *where in time* an event should act; PSP durations are for *how long* a node should
+remember that it happened. Any operator whose meaning involves the interval between events (veto, ordering,
+"no C since A") needs duration, not delay. Learning therefore has two timing parameters per synapse, delay and
+duration, and they answer different credit questions: a coincidence missed by misalignment moves the delay; one
+missed because the partner came too late for the PSP lengthens the duration; a false fire from a partner that came
+too late shortens it.
+
 ## Tests
 
 | | Claim | Test |
@@ -3048,6 +3074,7 @@ winners by veto where codes are specific and by conserved weakening plus prices 
 | **M58** | generalization claims need the capacity ratio ρ = n / params; grokking = relation reached at ρ ≪ 1 while memorizers exist in the class | E29: general race network + recurrent delay loops as a resource, native credit, on E24; controls without loops and without counterfactual credit |
 | **M59** | the operator basis + one reference is Turing-complete (two-counter machine); restoration by a comb coincidence per cycle makes reliability independent of program length | E30 `e30_minsky.py`: exact on all programs; success vs q/σ with and without restoration, 25 vs 81 steps |
 | **M60** | pull-only on weights needs conserved per-node budgets (fractional steps), conserving weakening and prices; readout capacity (Cover) bounds memorization | E26b `--compete 0` on SHD (refutes transfer); E29 readout on frozen hidden, 96 vs 384 nodes |
+| **M61** | aligning (delay) destroys the interval's content, holding (PSP duration) keeps it; veto and ordering need duration; delay and duration are separate learnable parameters with separate credit | E27 `--tol hold` vs `align`, veto vs no veto; with duration shrinking on late-partner false fires |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
