@@ -25,3 +25,4 @@
 23:53:20 start e25_mlp_p97_f0.3
 00:10:41 done e25_mlp_p97_f0.3 (exit 0)
 00:10:41 start e25_mlp_p97_f0.5
+00:35:30 stopped by lead: p97 f0.5 MLP and remaining MLP baselines dropped (p97 f0.3 already groks); op checks re-queued as e25b

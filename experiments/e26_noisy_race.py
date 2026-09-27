@@ -39,7 +39,7 @@ def race(d, e, t, a, b, p, sigma, rng):
     return int(order[0]), phase, int(order[1]), float(wait[order[1]] - wait[order[0]])
 
 
-def run(p, frac, seed, steps, eta, sigma0, tau, anneal, give="", repel=1, push=1):
+def run(p, frac, seed, steps, eta, sigma0, tau, anneal, give="", repel=1, push=1, cool=20000.0):
     rng = np.random.default_rng(seed)
     A, B = np.divmod(np.arange(p * p), p)
     perm = rng.permutation(p * p)
@@ -54,7 +54,10 @@ def run(p, frac, seed, steps, eta, sigma0, tau, anneal, give="", repel=1, push=1
     for step in range(1, steps + 1):
         i = tr[rng.integers(n)]
         a, b, y = A[i], B[i], (A[i] + B[i]) % p
-        sigma = sigma0 * (err if anneal else 1.0)
+        if anneal == 2:                             # cool to zero with the learner's own update count
+            sigma = sigma0 * np.exp(-updates / cool)
+        else:
+            sigma = sigma0 * (err if anneal else 1.0)
         c, phase, r2, gap2 = race(d, e, t, a, b, p, sigma, rng)
         wrong = c != y
         err += (wrong - err) / tau
@@ -85,7 +88,8 @@ def main():
     ap.add_argument("--eta", type=float, default=0.3)
     ap.add_argument("--sigma", type=float, default=0.0)
     ap.add_argument("--tau", type=float, default=500)
-    ap.add_argument("--anneal", type=int, default=1)
+    ap.add_argument("--anneal", type=int, default=1, help="0 fixed, 1 sigma follows the error trace, 2 cools with updates")
+    ap.add_argument("--cool", type=float, default=20000.0)
     ap.add_argument("--repel", type=int, default=1)
     ap.add_argument("--push", type=int, default=1)
     ap.add_argument("--give", default="", help="sanity: maps given their true values, e.g. 'dt'")
@@ -95,7 +99,7 @@ def main():
     t0, rows = time.time(), []
     for frac in map(float, a.fracs.split(",")):
         for s in range(a.seeds):
-            c = run(a.p, frac, s, a.steps, a.eta, a.sigma, a.tau, a.anneal, a.give, a.repel, a.push)
+            c = run(a.p, frac, s, a.steps, a.eta, a.sigma, a.tau, a.anneal, a.give, a.repel, a.push, a.cool)
             rows.append({"frac": frac, "seed": s, "final": c[-1], "curve": c})
             print(json.dumps({"frac": frac, "seed": s, **c[-1]}), flush=True)
     with open(os.path.join(OUT, f"p{a.p}_s{a.sigma}_a{a.anneal}_r{a.repel}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
