@@ -1073,6 +1073,11 @@ def build():
         "imitating a hindsight teacher over-trades and loses (event learner −15,236 bp, logistic −24,302); the "
         "profit-priced event learner nets +226 bp with 8 changes; buy-and-hold +932; at 10 bp all stay out. "
         "No learner beats buy-and-hold; pricing the decision is what stops the losses.",
+        "<b>Is staying out right? An edge audit (E55, §87).</b> From executable round trips on the tape (buy at the ask, "
+        "sell at the bid), BTC spot's own event states carry a real held-out edge of +0.3 to +0.9 bp per trade before fees, "
+        "and lead–lag states of BTC perpetual futures and ETH raise it to +1.1 to +1.5 bp: more markets carry more "
+        "information. A 2 bp round-trip fee (a tenth of a realistic taker fee) removes it: staying out is correct for a "
+        "taker here; the edge would need market-making economics. Confirmation on the 21 untouched days is queued.",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
         "decomposition located the GRU's lead in which event comes next; count baselines located the missing information "
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
