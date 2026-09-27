@@ -63,6 +63,18 @@ e91_q0.1 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.1 --steps 20
 e91_q0.25 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.25 --steps 20000 --seeds 5
 e91_q0.4 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.4 --steps 20000 --seeds 5
 e91_q0.55 experiments/e53_depth3.py --credit latest --beta 0.5 --q 0.55 --steps 20000 --seeds 5
+e59_B35_O10_r0 experiments/e51_shd_world.py --B 35 --O 10 --rel 0 --eval spk
+e59_B35_O40_r0 experiments/e51_shd_world.py --B 35 --O 40 --rel 0 --eval spk
+e59_B70_O10_r0 experiments/e51_shd_world.py --B 70 --O 10 --rel 0 --eval spk
+e59_B70_O40_r0 experiments/e51_shd_world.py --B 70 --O 40 --rel 0 --eval spk
+e59_B140_O10_r0 experiments/e51_shd_world.py --B 140 --O 10 --rel 0 --eval spk
+e59_B140_O40_r0 experiments/e51_shd_world.py --B 140 --O 40 --rel 0 --eval spk
+e59_B35_O10_r1 experiments/e51_shd_world.py --B 35 --O 10 --rel 1 --eval spk
+e59_B35_O40_r1 experiments/e51_shd_world.py --B 35 --O 40 --rel 1 --eval spk
+e59_B70_O10_r1 experiments/e51_shd_world.py --B 70 --O 10 --rel 1 --eval spk
+e59_B70_O40_r1 experiments/e51_shd_world.py --B 70 --O 40 --rel 1 --eval spk
+e59_B140_O10_r1 experiments/e51_shd_world.py --B 140 --O 10 --rel 1 --eval spk
+e59_B140_O40_r1 experiments/e51_shd_world.py --B 140 --O 40 --rel 1 --eval spk
 e53_tf_n40k_wd0 experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e53_n40k_wd0
 e54_tf_n40k experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e54_n40k
 e54_tf_n40k_wd0 experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag e54_n40k_wd0

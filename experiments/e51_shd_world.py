@@ -21,22 +21,33 @@ GAPS = np.array([0.001, 0.003, 0.01, 0.03])
 EDGES = np.r_[0.0, GAPS, np.inf]
 
 
+VAL_SPEAKERS = (3, 6)                                      # held-out speakers: validation like the test (unseen voices)
+
+
 def utterances(split, B, part=None):
-    """part: None (all), "fit" (90% of train), "val" (10% of train, fixed split)."""
+    """part: None (all), "fit"/"val" (random 10% of train), "fit_spk"/"val_spk" (train minus / only VAL_SPEAKERS)."""
     with h5py.File(os.path.join(ROOT, f"shd_{split}.h5"), "r") as f:
         times, units, labels = f["spikes"]["times"], f["spikes"]["units"], np.array(f["labels"])
         val = np.random.default_rng(0).random(len(labels)) < 0.1
+        spk = np.isin(np.array(f["extra"]["speaker"]), VAL_SPEAKERS)
         for i in range(len(labels)):
             if part == "fit" and val[i]: continue
             if part == "val" and not val[i]: continue
+            if part == "fit_spk" and spk[i]: continue
+            if part == "val_spk" and not spk[i]: continue
             t = np.asarray(times[i], np.float64); u = (np.asarray(units[i]).astype(np.int64) * B) // 700
             o = np.argsort(t, kind="stable")
             yield t[o], u[o], int(labels[i])
 
 
-def features(t, u, B, O):
-    """per spike (after the first): context index and window bucket, next band, and the gap's span over windows."""
+def features(t, u, B, O, rel=0):
+    """per spike (after the first): context index and window bucket, next band, and the gap's span over windows.
+    rel=1: bands coded relative to the utterance's running centroid (sum and count of bands so far, per spike),
+    for the context and for the predicted next band alike (speaker-invariant coordinates)."""
     gap = np.diff(t); last = u[:-1]; nxt = u[1:]
+    if rel:
+        m = np.round(np.cumsum(u) / np.arange(1, len(u) + 1)).astype(np.int64)[:-1]
+        last = np.clip(last - m + B // 2, 0, B - 1); nxt = np.clip(nxt - m + B // 2, 0, B - 1)
     k = np.searchsorted(GAPS, gap)
     ob = np.minimum(((t[:-1] - t[0]) * O).astype(int), O - 1)
     ctx = last * O + ob
@@ -50,28 +61,33 @@ def main():
     ap.add_argument("--O", type=int, default=5)
     ap.add_argument("--a", type=float, default=0.5)
     ap.add_argument("--timing", type=int, default=1)
-    ap.add_argument("--eval", default="val", choices=("val", "test"), help="val: fit on 90% of train, score the other 10%")
+    ap.add_argument("--eval", default="val", choices=("val", "test", "spk"),
+                    help="val: random 10% of train; spk: held-out training speakers; test: the test set")
+    ap.add_argument("--rel", type=int, default=0, help="1: speaker-invariant relative band coding")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
     K, nb, NCX = 20, len(GAPS) + 1, a.B * a.O
     TP = np.full((K, NCX, nb, a.B), a.a, np.float32); HN = np.full((K, NCX, nb), a.a); HE = np.full((K, NCX, nb), 1e-3)
-    for t, u, y in utterances("train", a.B, "fit" if a.eval == "val" else None):
+    fit_part = {"val": "fit", "spk": "fit_spk", "test": None}[a.eval]
+    for t, u, y in utterances("train", a.B, fit_part):
         if len(t) < 2: continue
-        ctx, k, nxt, span = features(t, u, a.B, a.O)
+        ctx, k, nxt, span = features(t, u, a.B, a.O, a.rel)
         np.add.at(TP[y], (ctx, k, nxt), 1.0); np.add.at(HN[y], (ctx, k), 1.0); np.add.at(HE[y], ctx, span)
     logP = np.log(TP / TP.sum(-1, keepdims=True)); H = HN / HE; logH = np.log(H)
     ok = n = 0; conf = np.zeros((K, K), int)
-    for t, u, y in (utterances("train", a.B, "val") if a.eval == "val" else utterances("test", a.B)):
+    score_it = {"val": lambda: utterances("train", a.B, "val"), "spk": lambda: utterances("train", a.B, "val_spk"),
+                "test": lambda: utterances("test", a.B)}[a.eval]()
+    for t, u, y in score_it:
         if len(t) < 2: continue
-        ctx, k, nxt, span = features(t, u, a.B, a.O)
+        ctx, k, nxt, span = features(t, u, a.B, a.O, a.rel)
         ll = logP[:, ctx, k, nxt].sum(1)
         if a.timing:
             ll = ll + logH[:, ctx, k].sum(1) - (H[:, ctx, :] * span[None]).sum((1, 2))
         pred = int(np.argmax(ll)); ok += pred == y; n += 1; conf[y, pred] += 1
     res = {"args": vars(a), f"{a.eval}_acc": ok / n, "n_test": n, "wall_s": round(time.time() - t0, 1)}
     print(json.dumps(res), flush=True)
-    with open(os.path.join(OUT, f"world_B{a.B}_O{a.O}_a{a.a:g}_t{a.timing}_{a.eval}.json"), "w") as f:
+    with open(os.path.join(OUT, f"world_B{a.B}_O{a.O}_a{a.a:g}_t{a.timing}{'_rel' if a.rel else ''}_{a.eval}.json"), "w") as f:
         json.dump({**res, "confusion": conf.tolist()}, f)
 
 
