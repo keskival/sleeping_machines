@@ -22,6 +22,13 @@ from e44_tpp import day_events, NT, SemiMarkov  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(__file__), "results", "e57")
 GAPS = SemiMarkov.GAPS; EDGES = np.r_[0.0, GAPS, np.inf]; NB = len(GAPS) + 1
+
+
+def set_bank(fine):
+    """window bank: the event network's 6 windows, or the THP's fine bank (12 log-spaced edges, 1 ms - 30 s)."""
+    global GAPS, EDGES, NB
+    GAPS = np.geomspace(0.001, 30.0, 12) if fine else SemiMarkov.GAPS
+    EDGES = np.r_[0.0, GAPS, np.inf]; NB = len(GAPS) + 1
 RATE_EDGES = np.array([0.5, 2.0, 8.0, 32.0])            # events per second
 FLOW_EDGES = np.array([-1.5, 1.5])
 
@@ -84,7 +91,9 @@ def run(days, train, evals, taus, flow, m):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--m", type=float, default=5.0)
+    ap.add_argument("--fine", type=int, default=0)
     a = ap.parse_args()
+    set_bank(a.fine)
     os.makedirs(OUT, exist_ok=True)
     qs = np.concatenate([load_day(d)[2][::50] for d in PILOT]); big_q = float(np.quantile(qs, 0.99))
     days = [day_events(d, big_q) for d in PILOT]
@@ -94,9 +103,9 @@ def main():
                              ("+ rates 5 s, 60 s + flow", [5.0, 60.0], True), ("+ rate 5 s + flow", [5.0], True)):
         val = run(days, range(4), [4], taus, flow, a.m)
         test = run(days, range(5), [5, 6], taus, flow, a.m)
-        row = {"model": name, "m": a.m, **{f"val_{k}": v for k, v in val.items()}, **{f"test_{k}": v for k, v in test.items()}}
+        row = {"model": name, "m": a.m, "fine": a.fine, **{f"val_{k}": v for k, v in val.items()}, **{f"test_{k}": v for k, v in test.items()}}
         rows.append(row); print(json.dumps(row), flush=True)
-    with open(os.path.join(OUT, f"regime_m{a.m:g}.json"), "w") as f:
+    with open(os.path.join(OUT, f"regime_m{a.m:g}{'_fine' if a.fine else ''}.json"), "w") as f:
         json.dump(rows, f, indent=1)
 
 
