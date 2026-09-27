@@ -2898,6 +2898,11 @@ fired credit, 0.35 at depth 1; one seed, 8k episodes; full runs queued).
 
 ### 57.4 Predictions (M57, E28)
 
+*Status (full runs, 3 seeds): (i) confirmed against critical-path-only credit (0.31–0.33 vs 0.17); near-miss did not
+beat fired credit at k = 2 (0.31 both), (ii) k = 1 near-miss matched k = 2 fired at 28% fewer events but with high
+variance, (iii) not confirmed (depth 2 ≈ depth 1), (iv) confirmed (push 0.17). All arms far below ceiling; the
+readout lacked §60's conservation and capacity.*
+
 (i) Near-miss routing credit beats critical-path-only credit at depth 2, and matches or beats top-k fired credit.
 (ii) Near-miss credit with k = 1 approaches its k = 2 result: counterfactuals from cancellation replace
      counterfactuals from extra firing, at fewer events.

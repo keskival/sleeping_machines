@@ -46,8 +46,10 @@ now explains, and what is being tested.
   30%; p = 59 0.95 and 0.91–0.97**), with 10× fewer updates than the push. Timing noise makes generalization
   reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; a cooling schedule
   is queued. False positives must not be displaced in time (E27, 5 seeds: 0.195 vs 0.914 with veto, 0.896 with none).
-- **Routing credit from cancellation (E28, one seed).** Pulling the wanted cancelled near-miss on its partial
-  window beats MoE-style fired credit (0.41 vs 0.34) at equal events. Full runs queued.
+- **Routing credit (E28, full runs, 3 seeds): counterfactuals help, the near-miss lead reversed, depth does not
+  pay yet.** Counterfactual credit beats path-only (0.31–0.33 vs 0.17); near-miss adds nothing over fired credit at
+  k = 2 (0.31 both; the pilot's 0.41 vs 0.34 did not survive); near-miss at k = 1 matches it with 28% fewer events
+  but high variance; depth 2 ≈ depth 1 (0.29). No arm solves the task (chance 0.14): the readout lacks §60's fixes.
 - **The operator basis is Turing-complete, and restoration makes it scalable (E30, complete).** A two-counter
   Minsky machine wired only from Delay/Or/And/Veto nodes and one reference oscillator runs every test program
   exactly. With timing jitter, a comb coincidence once per cycle makes success independent of program length
@@ -191,7 +193,7 @@ confirmed yet; the tests are queued.
 | In a race, winning is positional: pull-only error-driven learning converges, pushing the wrong winner collapses the detectors (§54) | scaling | E26 pilot: chance with push, 0.86–0.91 without; transfer to the main race queued |
 | Supremacy is not in op counts for static functions (encoding effect); it can only be in cost per information event, evidence-limited latency and learning cost per error (§55) | argument; Neuro-RAM separation is prior art | defines the benchmark target |
 | Clockless = shift-equivariant: no sums of times; one oscillator reference gives one cyclic character; credit follows one critical path; losers are specialized by veto, never displaced; coincidence targets are partners (§56) | exact (symmetry); space-time algebra is prior art (Smith 2018) | E27 pilot: veto 0.87–0.92 vs push 0.21 |
-| Routing needs counterfactuals; cancelled near-misses supply them at no extra events (§57) | new rule; top-k MoE is prior art | E28 pilot, 1 seed: 0.41 vs 0.34 (fired) vs 0.18 (path only) |
+| Routing needs counterfactuals; cancelled near-misses supply them at no extra events (§57) | new rule; top-k MoE is prior art | E28, 3 seeds: counterfactual 0.31–0.33 vs path-only 0.17; near-miss ≈ fired at k = 2 (pilot lead reversed); depth 2 ≈ depth 1 |
 | Restriction vs forced generalization vs grokking; report ρ = n / params (§58) | criterion | E29 (true grokking test) running |
 | The basis + one reference is Turing-complete; restoration in time makes reliability length-independent (§59) | construction; Minsky/Maass completeness is prior art | E30: exact; q/σ = 20 restored 1.00 at 25 and 81 steps |
 | Pull-only on weights needs conservation; readout capacity (Cover) bounds memorization (§60) | refutes §54's transfer | E26b: SHD 0.06 without push; E29 readout 0.45 → 0.88 with 384 hidden |
@@ -296,10 +298,23 @@ unless C"; 10% of episodes are vetoed near-misses, so a network without veto is 
 Displacement is decisively destructive. Veto helps (+1.8 points) but does not yet approach 1.0, so veto learning is
 only partly working. (The first task version did not need veto; fixed by planting vetoed near-misses.)
 
-**E28 (depth and routing).** Hierarchical motifs (ordered pairs of sub-motifs). Pilot, one seed, 8k episodes:
-near-miss routing 0.41, top-k fired credit 0.34, depth 1 0.35, critical path only 0.18. Two bugs found on the way
-were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor, and counterfactual pulls
-must use the near-miss's partial window only.
+**E28 (depth and routing, full runs, 3 seeds, 60k episodes).** Hierarchical motifs (ordered pairs of sub-motifs;
+chance 0.14).
+
+| arm | test (mean; seeds) | events / episode |
+|---|---|---|
+| depth 1 | 0.29 (0.34, 0.22, 0.32) | 11.7 |
+| depth 2, critical path only | 0.17 (0.18, 0.12, 0.21) | 17.9 |
+| depth 2, fired runners-up (k = 2, MoE-style) | 0.31 (0.34, 0.30, 0.30) | 24.6 |
+| depth 2, + near-miss pull (k = 2) | 0.31 (0.34, 0.30, 0.29) | 24.6 |
+| depth 2, near-miss (k = 1) | 0.33 (0.43, 0.36, 0.18) | 17.9 |
+| depth 2, near-miss + push | 0.17 (0.08, 0.14, 0.29) | 24.6 |
+
+Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead reversed, and depth does
+not beat depth 1. All arms are far from solving the task; the readout uses pull-only weights without §60's
+conservation and prices, and 48 hidden nodes, which E29 showed cannot work. Rerun with those fixes is next. Two
+bugs found on the way were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor,
+and counterfactual pulls must use the near-miss's partial window only.
 
 **E29 (true grokking test).** A general race network that can memorize, given recurrent delay loops with random
 learnable periods, native credit, E24's encoding. Getting the no-loop control to memorize took four fixes, each a
