@@ -963,6 +963,23 @@ def build():
           P("<b>Routing needs counterfactuals (§57).</b> Credit along a spike's causal path cannot say whether another route "
             "should have been taken; cancelled near misses supply it. Without it a two-layer network stays at chance "
             "(0.17 vs 0.72–0.74, E28).")]
+    s += [P("<b>A learning calculus for deep event networks (§83–§88).</b> Learning deep order natively needed five rules, "
+            "each derived from a failure, each local to a node and paid for by events:")]
+    s.append(table([
+        ["problem", "rule", "why it works", "evidence"],
+        ["an AND fails: which half was wrong?", "sum inputs; multiplicative credit under a conserved budget",
+         "conservation moves weight toward the target on every false fire iff θ > ½ budget (§83, proved)",
+         "4× candidates → 1.3× updates (E34w)"],
+        ["candidates fire at different instants", "credit one instant, chosen by cooled exploration",
+         "all-instant credit deadlocks (proved); greedy cycles on shared prefixes; valid routes absorb (§84)",
+         "depth 3: 0.998–0.999 vs 0.71–0.85 greedy, 0.33 all-instant (E53)"],
+        ["the candidate basis grows as P^depth", "grow a synapse when first credited",
+         "exactly the decisions of dense weights (§85, proved, checked)", "depth 4: 80k of 5.5·10⁷ grown, 0.999–1.000 (E54)"],
+        ["converged nodes sit on their threshold", "near-miss margin, earned by recent precision",
+         "margins survive r demotions (§86); unearned margins protect wrong routes (§86b)", "0.997–0.999 at every checkpoint (E53g)"],
+        ["timing precision", "tune one window per part from its own lags",
+         "a window bank costs activity quadratic in resolution; tuning costs none (§88)", "E56 (running)"],
+    ], [34, 40, 62, 38], st))
     s.append(PageBreak())
 
     s += [P("3. Against dense models and Transformers", "h1"),
