@@ -840,6 +840,36 @@ def build():
         "an event network, beats a neural point process by 0.5–0.9 nats per event, also on held-out days.",
     ], st)
     s.append(PageBreak())
+    s += [P("Where the event paradigm wins, and where it does not", "h1"),
+          P("“Supremacy” here means a measured advantage over dense networks given the same data; each row states its "
+            "caveat.")]
+    s.append(table([
+        ["claim", "evidence", "caveat"],
+        ["<b>Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks</b>",
+         "E35: 1.000 at 7.5 synaptic events, nothing given; conv net 0.995 at 3.07M MACs; event-token Transformer "
+         "0.989–0.996 at 146k–1.16M after 10× more training",
+         "one task family; much of the gap is the clock (an event-driven conv net ≈ 10×)"],
+        ["<b>Groks composed arithmetic where a Transformer does not</b>",
+         "E41, (a + b + c) mod 17, 30% of triples: 0.994–0.999 (3/3) in 200 epochs; Transformer (AdamW, weight decay, "
+         "100k steps): 0.29 / 0.63 (seed 0), 0.06 (seed 1)",
+         "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
+         "Transformer"],
+        ["<b>Better world model of a real market stream at ≈ 200× lower cost</b>",
+         "E48: online −2.11 vs GRU −2.62 nats/event; held-out frozen −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic ops "
+         "vs thousands of MACs",
+         "classical model class (semi-Markov); offline-trained GRU pending"],
+        ["<b>Learning cost follows activity, not model size</b>",
+         "E35: 12 → 48 channels, mistakes flat, inference cheaper; §77, §81", "measured to 48 channels"],
+        ["<b>Structure discovery, implicit Occam razor</b>",
+         "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
+        ["<i>Not supremacy:</i> composition accuracy", "E34 chains 0.97 vs Transformer 0.998 (≈ 10⁴× cheaper)",
+         "Transformer more accurate"],
+        ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
+         "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
+        ["<i>Not supremacy:</i> trading profit", "E42: no learner profits after costs; the native one stays out",
+         "the data may hold no edge"],
+    ], [48, 76, 50], st))
+    s.append(PageBreak())
 
     s += [P("1. What an event node computes", "h1"),
           P("<b>Primitives.</b> Spike times; delay; first-of (min) and all-of (max); hold (an input opens a window of given "
@@ -950,9 +980,11 @@ def build():
             "timing networks do not transfer to its weights (SHD 0.04–0.29 vs 0.35).")]
     s += [P("7. Real data", "h1")]
     s += bullets([
-        "<b>Spiking Heidelberg Digits:</b> the weight race 0.35 vs 0.56–0.59 for a dense MLP. For the timing architecture the "
-        "representation is the bottleneck: onset-referenced parts give a dense readout 0.566, and the native learner "
-        "overfits (0.27–0.33). SHD is only ≈ 6× sparser than a 10 ms raster, a weak test of the paradigm.",
+        "<b>Spiking Heidelberg Digits</b> (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test "
+        "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
+        "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
+        "race reached 0.35; a published LSTM ≈ 0.70; state of the art ≈ 0.9. SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "a weak test of the paradigm's cost advantage.",
         "<b>Market stream posed as trading with costs (E42, pilot):</b> imitating a hindsight teacher over-trades and "
         "loses; a profit-priced event learner makes 26 changes in 7 days (−170 bp): it learns that trading does not pay.",
         "<b>The world model is an event network, and it beats a neural point process (E44, E48).</b> A likelihood "
