@@ -120,18 +120,21 @@ def fig_supremacy_map():
         ax.annotate(f"{min(chains):.3f}–{max(chains):.3f}", (20, min(chains)), xytext=(8, -12), textcoords="offset points", fontsize=7)
     ax.set_ylim(0.94, 1.003); ax.set_xlim(5, 3e6)
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.02, 0.1), markerscale=0.7)
-    # (c) world model of a real market stream (held-out days)
+    # (c) world model of a real market stream (held-out days 6-7; one hazard family: the 6-window bank)
     ax = axs[1, 0]
-    ax.set_title("World model of a real market stream:\nbeats a GRU at 80–200× less work", fontsize=8.6)
-    rows = [("event network (semi-Markov)", [-2.38, -2.10], 19, EVENT, "D"),
+    ax.set_title("Market world model: within 0.2 nats\nof a Transformer, ~1/4000 of the work", fontsize=8.4)
+    rows = [("event network + slow regime counters (E57)", [-2.184, -1.999], 30, EVENT, "D"),
+            ("event network, semi-Markov (E48)", [-2.38, -2.10], 19, "#f3a37f", "D"),
             ("GRU point process, online", [-3.15, -2.98], 1.5e3, DENSE_O, "o")]
-    for f, c, lab in _extra_world():
-        rows.append((lab, f, c, DENSE_T, "s"))
+    thp = os.path.join(RES, "e52", "thp_test_d64_L32_f0_e11.json")
+    if os.path.exists(thp):
+        r = _load(thp); e = r["epochs"][-1]
+        rows.append(("Transformer Hawkes process", [e["day6"], e["day7"]], r["macs_per_event"], DENSE_T, "s"))
     for name, vals, cost, col, mk in rows:
-        ax.scatter([cost] * len(vals), vals, s=40 if col == EVENT else 18, marker=mk, color=col, zorder=4, label=name)
-    ax.set_xscale("log"); ax.set_xlim(5, 3e5)
+        ax.scatter([cost] * len(vals), vals, s=40 if mk == "D" else 18, marker=mk, color=col, zorder=4, label=name)
+    ax.set_xscale("log"); ax.set_xlim(5, 1e6)
     ax.set_xlabel("operations per event (log)", fontsize=7.5); ax.set_ylabel("log-likelihood per event, held-out days\n(higher = better)", fontsize=7.2)
-    ax.tick_params(labelsize=7); ax.legend(fontsize=6.3, loc="lower right", markerscale=0.7)
+    ax.tick_params(labelsize=7); ax.legend(fontsize=6.0, loc="center left", bbox_to_anchor=(0.16, 0.4), markerscale=0.7)
     # (d) grokking (a + b + c) mod 17 from 30% of the triples
     ax = axs[1, 1]
     ax.set_title("Grokking (a + b + c) mod 17 from 30%:\nthe event chain generalizes", fontsize=8.6)

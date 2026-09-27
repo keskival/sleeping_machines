@@ -1,0 +1,34 @@
+/workspace/experiments/e52_thp.py:126: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tl += float(ll.sum()); tn += ll.numel()
+{"epoch": 1, "train_ll": -2.795959126365288, "wall_s": 6.4, "day5": -3.133657645631049}
+{"epoch": 2, "train_ll": -1.920786442032923, "wall_s": 9.2, "day5": -2.893524567492178}
+{"epoch": 3, "train_ll": -1.7798772036857495, "wall_s": 12.0, "day5": -2.713788871631861}
+{"epoch": 4, "train_ll": -1.6785204296038772, "wall_s": 14.8, "day5": -2.5284783583569794}
+{"epoch": 5, "train_ll": -1.625941370423314, "wall_s": 17.5, "day5": -2.4558831401598384}
+{"epoch": 6, "train_ll": -1.5820533040621094, "wall_s": 20.3, "day5": -2.4150471040821797}
+{"epoch": 7, "train_ll": -1.5526935052230424, "wall_s": 23.1, "day5": -2.437800596360355}
+{"epoch": 8, "train_ll": -1.5247169987269025, "wall_s": 25.9, "day5": -2.3932481516607313}
+{"epoch": 9, "train_ll": -1.506123784181593, "wall_s": 28.7, "day5": -2.3155933359920624}
+{"epoch": 10, "train_ll": -1.482864016185691, "wall_s": 31.4, "day5": -2.3502772911739878}
+{"epoch": 11, "train_ll": -1.4674982571120907, "wall_s": 34.2, "day5": -2.2665690872723765}
+{"epoch": 12, "train_ll": -1.44922906429463, "wall_s": 37.0, "day5": -2.315501336783765}
+{"epoch": 13, "train_ll": -1.43016226811551, "wall_s": 39.7, "day5": -2.280909560517503}
+{"epoch": 14, "train_ll": -1.4227683028845004, "wall_s": 42.5, "day5": -2.283009924830034}
+{"epoch": 15, "train_ll": -1.4082244949542366, "wall_s": 45.3, "day5": -2.2472934213711606}
+{"epoch": 16, "train_ll": -1.4002069643663742, "wall_s": 48.1, "day5": -2.262082599967493}
+{"epoch": 17, "train_ll": -1.3894263342180353, "wall_s": 50.9, "day5": -2.3001130244971852}
+{"epoch": 18, "train_ll": -1.3845410784429135, "wall_s": 53.7, "day5": -2.253628909191526}
+{"epoch": 19, "train_ll": -1.3724814789668514, "wall_s": 56.4, "day5": -2.2278883708150765}
+{"epoch": 20, "train_ll": -1.36417782111997, "wall_s": 59.2, "day5": -2.210597998123487}
+{"epoch": 21, "train_ll": -1.360420776718975, "wall_s": 62.0, "day5": -2.230173745150498}
+{"epoch": 22, "train_ll": -1.358100675254001, "wall_s": 64.8, "day5": -2.1813224102778217}
+{"epoch": 23, "train_ll": -1.3474021483566987, "wall_s": 67.5, "day5": -2.2181626256418028}
+{"epoch": 24, "train_ll": -1.3381493071972694, "wall_s": 70.3, "day5": -2.212457365480765}
+{"epoch": 25, "train_ll": -1.3318344042005732, "wall_s": 73.1, "day5": -2.1998858398640424}
+{"epoch": 26, "train_ll": -1.325693239396175, "wall_s": 75.9, "day5": -2.168754934471919}
+{"epoch": 27, "train_ll": -1.3203731333258975, "wall_s": 78.6, "day5": -2.224860430005625}
+{"epoch": 28, "train_ll": -1.3176512838440602, "wall_s": 81.4, "day5": -2.200446262443454}
+{"epoch": 29, "train_ll": -1.3093524294101082, "wall_s": 84.2, "day5": -2.1685402007754835}
+{"epoch": 30, "train_ll": -1.3047527843204172, "wall_s": 87.0, "day5": -2.174507977848833}
+{"args": {"mode": "val", "d": 64, "L": 128, "epochs": 30, "batch": 16, "lr": 0.001, "fine": 1}, "params": 113268, "semimarkov_day5": -3.123778577915542, "macs_per_event": 134400}
