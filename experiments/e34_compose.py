@@ -30,8 +30,10 @@ INF = np.inf
 
 
 class Compose:
-    def __init__(self, N, K, depth, W, rng, budget=1.0, thr=0.5, part_hi=1.5, learn_win=0, scales=None, mult=0, recruit=0):
+    def __init__(self, N, K, depth, W, rng, budget=1.0, thr=0.5, part_hi=1.5, learn_win=0, scales=None, mult=0, recruit=0,
+                 summed=0, alpha=1.0, beta=0.3):
         self.mult, self.recruit = mult, recruit
+        self.summed, self.alpha, self.beta = summed, alpha, beta
         self.learn_win = learn_win
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
@@ -45,7 +47,9 @@ class Compose:
         self.P = P
         self.h = rng.uniform(0, 2 * budget / P, (K, P))     # hold-role weights
         self.g = rng.uniform(0, 2 * budget / P, (K, P))     # trigger-role weights
-        self.updates = 0; self.events = 0
+        if summed:
+            self.h /= self.h.sum(1, keepdims=True); self.g /= self.g.sum(1, keepdims=True)
+        self.updates = 0; self.events = 0; self.syn = 0
 
     def parts(self, t):
         if self.depth == 1:
@@ -74,9 +78,41 @@ class Compose:
                     break
         return ft, used
 
+    def classes_summed(self, x):
+        """§83: summed potentials. Class c fires at the first fired instant tau where the held input
+        H = sum h[c, e] over parts fired in [tau - W, tau) and the coincident trigger input G = sum g[c, l] over parts
+        firing at tau both exceed thr. Returns fire times, (fired parts, window matrix, instant index) for credit."""
+        f = np.flatnonzero(np.isfinite(x)); f = f[np.argsort(x[f], kind="stable")]; xf = x[f]
+        win = (xf[None, :] < xf[:, None]) & (xf[None, :] >= xf[:, None] - self.W)     # win[i, j]: j held at i
+        same = xf[None, :] == xf[:, None]
+        ft = np.full(self.K, INF); inst = np.full(self.K, -1)
+        if len(f) >= 2:
+            HS = self.h[:, f] @ win.T; GS = self.g[:, f] @ same.T
+            ok = (HS > self.thr) & (GS > self.thr)
+            anyc = ok.any(1); first = ok.argmax(1)
+            ft[anyc] = xf[first[anyc]]; inst[anyc] = first[anyc]
+            self.syn += int(((self.h[:, f] > 0.01) | (self.g[:, f] > 0.01)).sum())   # effective synapses read
+        return ft, (f, win, same, inst)
+
+    def _mul(self, W, c, idx, fac):                         # multiplicative update of a set, conserved budget
+        if len(idx):
+            W[c, idx] *= fac; W[c] /= W[c].sum()
+
+    def teach_summed(self, t, y):
+        c, x, ft, (f, win, same, inst) = self.forward(t)
+        if c == y:
+            return False
+        if y < self.K and not np.isfinite(ft[y]) and len(f) >= 2:   # miss: promote every candidate (full information)
+            self._mul(self.h, y, f[win.any(0)], 1 + self.alpha); self._mul(self.g, y, f[win.any(1)], 1 + self.alpha)
+        if c < self.K:                                      # false fire: demote every contributor at its instant
+            i = inst[c]
+            self._mul(self.h, c, f[win[i]], 1 - self.beta); self._mul(self.g, c, f[same[i]], 1 - self.beta)
+        self.updates += 1
+        return True
+
     def forward(self, t):
         x = self.parts(t)
-        ft, used = self.classes(x)
+        ft, used = self.classes_summed(x) if self.summed else self.classes(x)
         self.events += int(np.isfinite(t).sum() + np.isfinite(x).sum() + np.isfinite(ft).sum())
         c = int(ft.argmin()) if np.isfinite(ft).any() else self.K
         return c, x, ft, used
@@ -136,6 +172,10 @@ def main():
     ap.add_argument("--learn-win", type=int, default=0, help="1: part windows learned from pulled routes")
     ap.add_argument("--recruit", type=int, default=0, help="1: one-shot recruitment of classes with no live route")
     ap.add_argument("--mult", type=int, default=0, help="1: multiplicative (Winnow) routing pulls (§68)")
+    ap.add_argument("--summed", type=int, default=0, help="1: summed hold/trigger potentials + full-information Winnow (§83)")
+    ap.add_argument("--thr", type=float, default=0.5)
+    ap.add_argument("--alpha", type=float, default=1.0)
+    ap.add_argument("--beta", type=float, default=0.3)
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
     ap.add_argument("--eta", type=float, default=0.3)
     ap.add_argument("--steps", type=int, default=20000)
@@ -149,24 +189,25 @@ def main():
         rng = np.random.default_rng(s)
         motifs, classes = T.make_task(a.N, a.M, a.K, rng)
         net = Compose(a.N, a.K, a.depth, a.W, rng, part_hi=a.part_hi, learn_win=a.learn_win,
-                      scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit)
+                      scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit,
+                      summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
-            net.teach(t, y, a.eta)
+            net.teach_summed(t, y) if a.summed else net.teach(t, y, a.eta)
             if a.lam and step % 1000 == 0:                    # sleep (§72): routing weights decay toward uniform
                 for Wt in (net.h, net.g):
                     Wt += a.lam * (Wt.sum(1, keepdims=True) / Wt.shape[1] - Wt)
             if step % (a.steps // 5) == 0:
-                ev = np.random.default_rng(99); n = 1500; ok = 0; e0 = net.events
+                ev = np.random.default_rng(99); n = 1500; ok = 0; e0 = net.events; s0 = net.syn
                 for _ in range(n):
                     t, y = T.sample(motifs, classes, a.N, H, q, ev); ok += net.forward(t)[0] == y
                 curve.append({"step": step, "test": ok / n, "updates": net.updates,
-                              "events_per_episode": (net.events - e0) / n})
-                net.events = e0
+                              "events_per_episode": (net.events - e0) / n, "synapses_per_episode": (net.syn - s0) / n})
+                net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
