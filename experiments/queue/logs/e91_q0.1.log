@@ -4,3 +4,5 @@
 {"seed": 1, "step": 20000, "test": 1.0, "updates": 364, "near_miss_updates": 0, "q_trail": 0.09486166007905138, "events_per_episode": 26.208, "synapses_per_episode": 28.18}
 {"seed": 2, "step": 20000, "test": 1.0, "updates": 382, "near_miss_updates": 0, "q_trail": 0.12067260138476756, "events_per_episode": 25.720666666666666, "synapses_per_episode": 27.107333333333333}
 {"seed": 3, "step": 20000, "test": 0.9993333333333333, "updates": 382, "near_miss_updates": 0, "q_trail": 0.11067193675889328, "events_per_episode": 26.234, "synapses_per_episode": 27.370666666666665}
+{"seed": 4, "step": 20000, "test": 1.0, "updates": 362, "near_miss_updates": 0, "q_trail": 0.10770750988142293, "events_per_episode": 25.094, "synapses_per_episode": 26.068}
+EXIT-OK 46.7

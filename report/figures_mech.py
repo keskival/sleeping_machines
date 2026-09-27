@@ -285,9 +285,37 @@ def fig_theory():
     return fig
 
 
+# ── 6. A derived law, measured: latest-instant credit slows as trailing noise grows (§91) ──────────────────
+def fig_drift():
+    pts = []
+    for q, f in ((0.1, "d3_S5R4_t0.6_q0.1_latest_T0_b0.5.json"), (0.25, "d3_S5R4_t0.6_latest_T0_b0.5.json"),
+                 (0.4, "d3_S5R4_t0.6_q0.4_latest_T0_b0.5.json"), (0.55, "d3_S5R4_t0.6_q0.55_latest_T0_b0.5.json")):
+        p = os.path.join(RES, "e53", f)
+        if not os.path.exists(p):
+            continue
+        for r in _load(p)["rows"]:
+            reach = next((c["updates"] for c in r["curve"] if c["test"] >= 0.99), None)
+            pts.append((r["final"]["q_trail"], reach, q))
+    fig, ax = plt.subplots(figsize=(5.6, 3.0))
+    ok = [(a, b) for a, b, _ in pts if b is not None]; miss = [(a, 2100) for a, b, _ in pts if b is None]
+    ax.scatter(*zip(*ok), s=20, color=EVENT, zorder=4, label="one run (5 seeds per noise level)")
+    if miss:
+        ax.scatter(*zip(*miss), s=24, marker="v", facecolor="white", edgecolor=EVENT, lw=1.2, zorder=4, label="never reached 0.99")
+    qs = np.linspace(0.05, 0.66, 100)
+    base = [b for a, b, q in pts if q == 0.1 and b is not None]; qb = np.mean([a for a, b, q in pts if q == 0.1])
+    fq = 0.03; c = np.mean(base) * (1 - qb - 2 * fq)
+    ax.plot(qs, c / (1 - qs - 2 * fq), color=BLUE, lw=1.6, label="derived law: c / (1 − q − 2f), f = 0.03")
+    ax.plot(qs, np.mean(base) * (1 - qb) / (1 - qs), color=GRAY, lw=1.0, label="c / (1 − q)")
+    ax.set_xlabel("q: share of examples with events after the pattern (measured)", fontsize=7.5)
+    ax.set_ylabel("learning updates to reach 0.99", fontsize=7.5)
+    ax.set_ylim(0, 2300); ax.tick_params(labelsize=7); ax.legend(fontsize=6.6, loc="upper left")
+    ax.set_title("Crediting the latest instant: learning slows as 1/(1 − q − 2f), as derived (§91)", fontsize=8.6)
+    return fig
+
+
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "figures")
     for name, fn in (("concept", fig_concept), ("supremacy_map", fig_supremacy_map), ("anatomy", fig_anatomy),
-                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory)):
+                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift)):
         fig = fn(); fig.savefig(os.path.join(out, name + ".png"), bbox_inches="tight", facecolor="white"); plt.close(fig)
         print("wrote", name)

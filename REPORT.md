@@ -207,6 +207,13 @@ derived from a failure, each local to a node and paid for by events:
 | timing precision | tune one window per part from its own lags (version space) | selecting windows from a bank costs activity quadratic in resolution; tuning costs none (§88) | learned windows converge to the true intervals and equal hand-tuned ones (E56) |
 | first-to-fire commits on partial evidence | on a miss, credit the latest candidate instant | the pattern is complete only at its last event; earlier instants are prefixes, valid only if unshared (§89) | composition 0.990–0.999 (from 0.988–0.995); depth 3 at half the updates (E89) |
 
+**A derived law, measured (§91).** Crediting the latest instant works because noise after the pattern is inconsistent
+between examples; the bound says learning slows as 1/(1 − q − 2f), with q the share of examples whose last event is
+noise. Sweeping the noise level and measuring q directly, the updates needed follow the law with one fitted parameter
+(f ≈ 0.03), and learning fails only as q approaches its limit:
+
+![Updates to learn depth-3 order versus measured trailing noise q, with the derived law](report/figures/drift_law.png)
+
 ## 3. Against dense models and Transformers
 
 On the timing task, with priors on both sides (hold/veto nodes; a receptive field matched to the pattern length for
