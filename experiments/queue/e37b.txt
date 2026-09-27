@@ -1,0 +1,5 @@
+e37_op_sub experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --op sub
+e37_op_mul experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --op mul
+e37_op_perm experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --op perm
+e37_op_poly experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --op poly
+e37_op_rand experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --op rand
