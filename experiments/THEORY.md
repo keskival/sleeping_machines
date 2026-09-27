@@ -4572,6 +4572,143 @@ backward passes across tokens adds staleness, bounded as in §98(e).
 race attention at R = 1, 4, 16 (pathwise gradients as in the Lemma), on associative recall with learned embeddings and on
 character-level text: prediction, curves approach the softmax Transformer as R grows, with R = 4 already close.
 
+## 104. Event networks as controlled differential equations: signatures, selective jumps, races in time
+
+*Written 2026-09-27. Sources: neural CDEs (Kidger et al. 2020), neural rough DEs and Log-NCDEs (Morrill et al. 2021; Walker
+et al. 2024), the linear-CDE theory of selective state-space models (Cirone, Orvieto, Walker, Salvi, Lyons, NeurIPS 2024),
+neural jump SDEs (Jia & Benson 2019), EventProp (Wunderlich & Pehle 2021), event-by-event SSMs (Event-SSM: Schöne et al.
+2024; S7: Soydan, Zubić et al. 2024), mixture of softmaxes (Yang et al. 2018). Numerical checks: `theory_104_checks.py` →
+`results/theory/s104_checks.json`.*
+
+**Question.** Neural ODEs are continuous-depth networks, and neural CDEs are continuous-time RNNs driven by a path. Is there a
+connection with event networks beyond the analogy, and does it tell us how event times and payload content should interact?
+The answer is yes, and the connection is exact. Four consequences are new here: (b), (d)–(g).
+
+**(a) An event network is a CDE driven by a counting path.** Write an event stream on channels 1..J as the time-augmented
+counting path X_t = (t, N¹_t, …, N^J_t), with N^j_t the number of channel-j events up to t, plus payloads ξ (the running sum of
+payload vectors). A linear CDE driven by it,
+  dZ_t = A₀ Z_t dt + Σ_j A_j Z_{t−} dN^j_t + B dξ_t,
+is exactly an event unit. Between events it flows in closed form, Z ← e^{A₀Δt} Z. At an event on channel j it jumps: Z ← D_j Z
++ B u, with D_j = exp(A_j) (Marcus) or I + A_j (Itô). Leaky counters are real diagonal A₀; rhythms are imaginary eigenvalues;
+delay lines are the LMU/HiPPO choice. Hold, trigger and reset nodes are D_j = 0 on a component. Every mechanism of §83–§103
+whose state is linear between events is an instance. The nonlinearity lives in what generates events (races, thresholds), not
+in the flow.
+
+**(b) The signature of the counting path is the set of order-detector counts (proposition).** For a word I = (i₁…i_n) of
+channels, the strictly ordered iterated integral
+  S^I_{s,t} = ∫_{s<u₁<…<u_n≤t} dN^{i₁}_{u₁} ⋯ dN^{i_n}_{u_n}
+counts the ordered n-tuples of distinct events labelled i₁, then i₂, …, then i_n inside (s, t]. That is precisely the
+(counting version of the) order detector of §53–§54 and §97. Words that contain the time letter weight the tuples by their
+gaps: the word (i, t, j) is Σ over ordered (i, j) pairs of (t_j − t_i).
+*Proof.* Expand the integral over the atoms of the jump measures.
+*Algebra.* Because the tuples are strictly ordered, the counts multiply by the **quasi-shuffle** (stuffle) product of Hoffman:
+S^u·S^v = Σ over quasi-shuffles w of u and v of S^w. The quasi-shuffles are the interleavings plus the merges in which both
+tuples use the same event, which requires the same channel. The shuffle product that holds for continuous paths is not the
+right one here. Hoffman's exp/log isomorphism maps the quasi-shuffle algebra onto the shuffle algebra of the geometric
+(Marcus) signature, so the order-detector counts generate the same function algebra as the signature.
+*Consequences.*
+(i) Universality: the time-augmented path is tree-reduced, so by Stone–Weierstrass (signature universality: Hambly–Lyons
+uniqueness, and Fermanian 2020 as used by Cirone et al.), linear combinations of time-weighted order-detector counts
+approximate any continuous function of the event stream uniformly on compact sets.
+(ii) An AND of two detectors is a sum of longer detectors (their quasi-shuffles). This is the algebraic reason summed ANDs
+worked (§83).
+(iii) There are J^n words at level n. This is the P^depth growth of §97, and lazy growth on credit (§85, §93) is sparse
+signature selection.
+Booleans (min(count, 1)) are nonlinear functions of the counts and inherit the same universality through a readout.
+
+**(c) What one layer can compute depends on the gate (Cirone et al. Thms 4.1 and 4.3, Prop. 4.5, applied to events).** For a
+linear CDE with gate path ω and input path ξ:
+- ω = t alone (S4/S5/LRU, and Event-SSM on events): the closure is linear filters, ψ(t) + ∫ φ(t − s) dξ_s, so one layer weights
+  each past event by a fixed kernel of its age. All selection happens in the nonlinearity between layers.
+- Dense A_i with ω containing the input: context-dependent filtering. The closure is Ψ(ω_[0,t]) + ∫ Φ(ω_[s,t]) · dξ_s, with Φ
+  any continuous function of the path segment since s.
+- Diagonal A_i: the closure is ψ(ω_t) + ∫ φ(ω_t − ω_s) dξ_s, a comparison of two points of the gate path. With the event gate
+  ω = (t, N¹…N^J) this reads: **each past event is weighted by any continuous function of its age and of how many events of each
+  channel have occurred since.** "Time since the last j" and "count of j since s" are the special cases our hold and counter
+  nodes implement.
+- Chaining diagonal CDEs recovers the dense closure (Prop. 4.5). In event networks the chain runs through events: a layer's
+  output events are the next layer's counting path.
+Event selectivity is therefore free. The identity of each event is a natural selective gate, which Mamba-style models have to
+synthesize from Δ_t = softplus(W x_t).
+
+**Proposition (exact sleeping execution).** Let A₀ and every D_j be block-diagonal by unit, with D_j = I on units not
+subscribed to channel j. Then the lazy simulation reproduces the dense per-event simulation exactly: each unit stores its state
+and its last update time τ_u, and is touched only by subscribed events (Z_u ← D_{u,j} e^{A₀,u (t − τ_u)} Z_u + B_{u,j} u).
+The work is Σ_events |subscribers(j)| · d² for a dense d-dimensional core per unit (d for a diagonal core), instead of
+events · H² for the whole state.
+*Proof.* Flows of one block commute with themselves (e^{AΔ₁}e^{AΔ₂} = e^{A(Δ₁+Δ₂)}), and D_j = I off the subscribers. ∎
+This formalizes the design constraint of §102, a dense small core inside each unit with sparse events between units, as a
+block-diagonal linear CDE with event coupling. Event-SSM and S7 update every state component on every event; the subscription
+structure is what the paradigm adds.
+
+**(d) A race unit is an integrate-and-fire neuron with an exponential threshold; its gradient is EventProp's jump term.**
+Let a unit's intensity be λ(t) = exp(w · Z(t)) for a CDE state Z. By the time-change theorem it fires first at T with
+Λ(T) = ∫₀^T λ = E, E ~ Exp(1): it integrates its rate and fires at a random threshold. By the implicit-function theorem,
+  ∂T/∂θ = −∂_θ Λ(T) / λ(T),
+the jump condition that EventProp derives with the adjoint method for deterministic thresholds. §103's pathwise gradient is its
+constant-rate case. Check (d): IFT −0.6542919449 against finite differences −0.6542919450.
+*What the random threshold buys.* EventProp's gradients are exact only at a fixed spike count and are blind to spike creation
+and deletion. With a threshold that has a density, the expected loss is smooth across creation and deletion. The pathwise
+estimator is unbiased whenever the per-sample loss is Lipschitz in the times. Hence the design principle: **read out functions
+of times, not of identities.** Times are continuous in the parameters and identities are not. This is why the time-normalized
+readout λ_i T works (§102–§103).
+
+**(e) Proportional hazards separate "which" from "when" (theorem).** Let λ_i(t) = e^{s_i} g(t), where the gain g ≥ 0 is common
+to the race and may depend on time and on any state. Then the winner is independent of T, P(winner = i) = softmax(s)_i for
+every g, and G(T) = ∫₀^T g ~ Exp(Σ_j e^{s_j}). Consequently e^{s_i}·G(T) is an unbiased local estimate of softmax_i.
+*Proof.* In internal time G, the race is a constant-rate race (§101). ∎
+*Converse.* If the ratios λ_i/λ_j vary during the race, the identity depends on T.
+*Design rule.* Content (query–key match) sets the relative hazards. Context, time, attention gain and urgency set the common
+gain. The gain then controls speed without distorting the decision: a race can be run at any tempo.
+Check (b): the winner frequencies equal softmax in both the fast half and the slow half of T, with an oscillating g.
+
+**(f) The compensator estimator: local probabilities for any race (theorem).** For arbitrary predictable intensities λ_i(t),
+which may be time-varying, interacting or non-proportional, let T be the first event of the superposition. Then
+  E[Λ_i(T)] = P(winner = i),   Λ_i(T) = ∫₀^T λ_i,   and Σ_i Λ_i(T) ~ Exp(1).
+*Proof.* N_i(t ∧ T) − Λ_i(t ∧ T) is a martingale (Doob–Meyer compensator), and N_i(T) = 1[i wins]; apply optional stopping
+(E Λ(T) = 1 < ∞). The sum is the superposition time-changed to unit rate. ∎
+Each unit's own integrated hazard at the decision time (its "membrane potential" in (d)) is thus an unbiased estimate of its
+winning probability. No normalizer is needed, and averaging R races reduces the variance to 1/R. This generalizes §101
+(Λ_i(T) = λ_i T at constant rates).
+Check (a), with 5 units and non-proportional exponential-in-time rates: E Λ_i(T) = (0.198, 0.194, 0.382, 0.155, 0.074)
+against exact (0.197, 0.194, 0.381, 0.154, 0.073). Its variance is 1.4–23× smaller than the winner indicator's (0.036 vs 0.159, 0.170 vs 0.236,
+…, 0.003 vs 0.068). Σ_i Λ_i(T) has mean 1.002 and variance 0.998.
+
+**(g) A race whose logits move during the race is a continuous mixture of softmaxes (theorem).** For any intensities,
+  P(winner = i) = ∫ (λ_i(t)/λ(t)) · λ(t) e^{−Λ(t)} dt = E_T[ softmax(log λ(T))_i ]:
+the instantaneous softmax, averaged over the race's own decision-time density. With proportional hazards this collapses to one
+softmax (e). With logits that drift during the race, for example a unit state flowing by its CDE or other events arriving
+while the race runs, it is a mixture of softmaxes indexed by decision time. A single softmax over logits W h has a log-
+probability matrix of rank at most d + 1 (the softmax bottleneck, Yang et al. 2018). A race is not bound by this.
+*How much depends on deliberation.* Check (c) uses d = 4, 60 outputs, 300 contexts and linearly drifting logits, slowing the
+race by a common factor e^{−m}. The share of the centred log-probability matrix beyond rank d + 1 is 0.0001 (m = 0, mean
+decision time 0.004), 0.02 (m = 3), 0.14 (m = 6) and 0.22 (m = 9). Fast races are single softmaxes; slow races integrate the
+logit trajectory and gain rank. **Deliberation time buys expressiveness at no parameter cost**, a speed–expressiveness
+trade-off unique to computing in time.
+
+**(h) What this changes in practice.**
+1. **Unit core.** A small, per-unit, selective linear CDE driven by the counting path of the events the unit subscribes to:
+   closed-form flow between events, channel- or payload-selected jumps, and exact lazy execution. Its expressiveness is
+   characterized by (c) and its capacity by (b).
+   *Prior art:* the non-selective (Event-SSM, SHD 95.9%) and selective (S7, SHD 96.3%) versions reach state-of-the-art
+   accuracy on SHD, SSC and DVS-Gesture while updating every state component on every event (both select checkpoints on the
+   test set, as Schöne et al. note). Our additions are subscription sparsity with exact lazy execution, and races (d)–(g) as
+   the between-unit event generators.
+2. **Readouts.** Race readouts should use times: proportional hazards for exact softmax behaviour (e), compensators for local
+   probabilities (f), and slow races where output rank matters (g), for instance language-model outputs.
+3. **Training.** Time-change gradients (d) through every race and ordinary chain rules through the linear flows. The flows are
+   linear in the state, so no adjoint jumps are needed inside a unit, as Schöne et al. observe; jumps occur only at races.
+
+**Grading.** (a) and (c) are known mathematics, applied here. (b) is elementary; its value is the identification, the
+quasi-shuffle correction and the universality consequence. (d) is EventProp's jump plus the time-change theorem; the "times, not
+identities" principle is the useful new reading. (e) and (f) are proved and checked numerically. (g) is proved; its
+magnitude is measured on one synthetic family only.
+
+**Test (E71).** SHD with the speaker-held-out protocol (§92): event-CDE units over the spike stream, comparing the non-
+selective gate (Event-SSM) against the channel/payload-selective gate (the diagonal closure of (c)), then tonotopic subscription
+sparsity with the work counted. The aim is to close the 0.675 → ~0.96 gap with a native, sparse mechanism, and to report the
+accuracy–work frontier.
+
 ## Tests
 
 | | Claim | Test |
