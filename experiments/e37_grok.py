@@ -33,8 +33,9 @@ def wrap(x, p):
 
 
 class Net:
-    def __init__(self, p, rng, thr=0.5, budget=12.0):
+    def __init__(self, p, rng, thr=0.5, budget=12.0, sigma=0.0, cool=20000.0):
         self.p, self.thr = p, thr
+        self.sigma, self.cool, self.r_updates, self.rng = sigma, cool, 0, rng
         # lookup = pair nodes (one hold/trigger node per operand-line pair, E34's parts) routed to classes: r[c, pair]
         self.r = rng.uniform(0, 1e-3, (p, p * p)); self.budget = budget   # rows grow to the budget, then conserve
         self.d, self.e, self.t = (rng.uniform(0, p, p) for _ in range(3))                   # rhythm
@@ -44,8 +45,11 @@ class Net:
         col = self.r[:, a * self.p + b]
         return int(col.argmax()) if col.max() > self.thr else None
 
-    def rhythm(self, a, b):
+    def rhythm(self, a, b, noisy=False):
         phase = (self.e[b] - self.d[a]) % self.p
+        if noisy and self.sigma:                                  # E26c: timing noise, cooled with the route's own
+            s = self.sigma * np.exp(-self.r_updates / self.cool)  # update count, lets it escape bad configurations
+            phase = (phase + s * self.rng.standard_normal()) % self.p
         wait = (self.t - phase) % self.p
         return int(wait.argmin()), phase
 
@@ -71,7 +75,8 @@ class Net:
         self._pull(self.r, y, a * self.p + b, eta)
         if route == "lookup":
             self._drop(self.r, c, a * self.p + b, eta)
-        _, phase = self.rhythm(a, b)                              # E26: pull only, toward the teacher's phase
+        _, phase = self.rhythm(a, b, noisy=True)                  # E26: pull only, toward the teacher's phase
+        self.r_updates += 1
         gap = wrap(self.t[y] - phase - 0.5, self.p)
         s = eta_r * np.sign(gap)
         self.e[b] += s / 3; self.d[a] -= s / 3; self.t[y] -= s / 3
@@ -100,6 +105,7 @@ def main():
     ap.add_argument("--eta-r", type=float, default=0.3)
     ap.add_argument("--op", default="add", choices=("add", "sub", "mul", "perm", "sq", "poly", "rand"))
     ap.add_argument("--budget", type=float, default=12.0, help="lookup synaptic budget per class row")
+    ap.add_argument("--sigma", type=float, default=0.0, help="timing noise on the rhythm route, cooled (E26c)")
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: lookup decay per epoch")
     ap.add_argument("--rhythm", type=int, default=1, help="0: no rhythm route (lookup only)")
     ap.add_argument("--seeds", type=int, default=3)
@@ -118,7 +124,7 @@ def main():
             keep = (A_ > 0) & (B_ > 0); A_, B_ = A_[keep], B_[keep]
         perm = rng.permutation(len(A_)); n = int(a.frac * len(A_))
         A, B, At, Bt = A_[perm[:n]], B_[perm[:n]], A_[perm[n:]], B_[perm[n:]]
-        net = Net(a.p, rng, budget=a.budget)
+        net = Net(a.p, rng, budget=a.budget, sigma=a.sigma)
         if not a.rhythm:
             net.rhythm = lambda aa, bb: (-1, 0.0)                # rhythm route absent: silent lookup = wrong
         curve = []
@@ -132,7 +138,7 @@ def main():
                               "test_lookup_answers": float(lk), "updates": net.updates})
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"p{a.p}_{a.op}_f{a.frac}_lam{a.lam}_r{a.rhythm}{'_' + a.tag if a.tag else ''}.json"
+    name = f"p{a.p}_{a.op}_f{a.frac}_lam{a.lam}_r{a.rhythm}{f'_sig{a.sigma:g}' if a.sigma else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "rho": a.frac * a.p * a.p / (a.p ** 3 + 3 * a.p),
                    "wall_s": round(time.time() - t0, 1)}, f)

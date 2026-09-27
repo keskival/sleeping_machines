@@ -1,0 +1,4 @@
+e37n_sig0 experiments/e37_grok.py --epochs 400 --seeds 5 --every 10 --lam 0.05 --sigma 0 --tag noise
+e37n_sig1 experiments/e37_grok.py --epochs 400 --seeds 5 --every 10 --lam 0.05 --sigma 1 --tag noise
+e37n_sig2 experiments/e37_grok.py --epochs 400 --seeds 5 --every 10 --lam 0.05 --sigma 2 --tag noise
+e37n_sig4 experiments/e37_grok.py --epochs 400 --seeds 5 --every 10 --lam 0.05 --sigma 4 --tag noise
