@@ -72,6 +72,15 @@ def motion_tokens(x, y, t, G, R, lo, hi, rel, nreg=4, S=50.0):
     return tok[o], tim[o] / 1e6, len(cc)
 
 
+def _users(which):
+    d = os.path.join(D.ROOT, "DvsGesture")
+    with open(os.path.join(d, f"trials_to_{which}.txt")) as f:
+        names = [l.strip() for l in f if l.strip().endswith(".aedat")]
+    for n in names:
+        for _ in D.labels(os.path.join(d, n).replace(".aedat", "_labels.csv")):
+            yield (int(n[4:6]),)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--G", type=int, default=32)
@@ -86,11 +95,6 @@ def main():
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     t0 = time.time()
-    train = D.split("train")
-    if a.eval == "val":
-        fit = [s for s in train if s[5] <= 19]; ev = [s for s in train if s[5] >= 20]
-    else:
-        fit, ev = train, D.split("test")
     V = 4 * 4 * 8 * 2; K = 11
     def enc(samples):
         out = []
@@ -100,7 +104,11 @@ def main():
             ob = np.minimum(((tim - (tim[0] if len(tim) else 0)) / dur * a.O).astype(int), a.O - 1) if len(tim) else tim
             out.append((lab, tok, ob, len(t), ncell))
         return out
-    F, E = enc(fit), enc(ev)
+    if a.eval == "val":                                              # streamed: only motion tokens are kept
+        tr = enc(D.iter_split("train")); users = [u for *_, u in _users("train")]
+        F = [e for e, u in zip(tr, users) if u <= 19]; E = [e for e, u in zip(tr, users) if u >= 20]
+    else:
+        F, E = enc(D.iter_split("train")), enc(D.iter_split("test"))
     bag = np.full((K, V), a.a); T = np.full((K, V * a.O, V), a.a / V)
     for lab, tok, ob, _, _ in F:
         np.add.at(bag[lab], tok, 1.0)
