@@ -991,6 +991,10 @@ def build():
          "the pattern is complete only at its last event; earlier instants are prefixes (§89)",
          "composition 0.990–0.999; depth 3 at half the updates (E89)"],
     ], [34, 40, 62, 38], st))
+    s += [P("<b>A derived law, measured (§91).</b> Latest-instant credit works because noise after the pattern is inconsistent "
+            "between examples; the bound says learning slows as 1/(1 − q − 2f), q the share of examples whose last event is "
+            "noise. Sweeping the noise and measuring q, the updates needed follow the law with one fitted parameter (f ≈ 0.03):")]
+    s += fig(FM.fig_drift, W * 0.8)
     s.append(PageBreak())
 
     s += [P("3. Against dense models and Transformers", "h1"),

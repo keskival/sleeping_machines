@@ -4061,6 +4061,14 @@ while 1 − q is well above 2f, and degrades at the highest noise. P2 (E91 ancho
 margin anchored at the latest supra-threshold instant keeps every seed at or above its no-margin value (0.990–0.999)
 without the dips.
 
+**Result, P1 (E91 noise sweep, 5 seeds, 20k episodes): holds, quantitatively.** Measured q (the fraction of positive
+examples whose latest candidate instant is after the pattern) 0.105 / 0.284 / 0.459 / 0.62 at noise 0.1 / 0.25 / 0.4 /
+0.55; updates to reach 0.99 (mean over seeds) 359 / 453 / 603 / ≥ 934 (two seeds never reach it at the highest noise);
+ratios to the lowest noise 1 / 1.26 / 1.68 / ≥ 2.6 against 1/(1 − q): 1 / 1.25 / 1.65 / 2.35. With the one remaining
+parameter of the bound fitted at the highest noise (f ≈ 0.03), 1/(1 − q − 2f) predicts 1.27 and 1.73 for the middle
+levels (measured 1.26, 1.68). Accuracy 0.999–1.000, 0.997–0.999, 0.995–0.999, then 0.925–0.995 at the highest noise;
+activity grows with the noise (26 → 90 events per example).
+
 **Result, P2 (E91 anchor): fails, identically.** The supra-threshold anchor reproduces the firing-instant margin seed for
 seed (0.992 / 0.991 / 0.999 / 0.976 / 0.981). A shortcut that is right ≈ 99% of the time is exactly what such a node
 recognizes: its latest supra-threshold instant is its firing instant, and the complete route never crosses θ. Any margin
