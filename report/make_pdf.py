@@ -383,6 +383,61 @@ def fig_e37():
     return fig
 
 
+def fig_phase():
+    """E37 phase diagram: mean test accuracy over training fraction × sleep strength (3 seeds; min–max annotated)."""
+    cells = {}
+    for path in glob.glob(os.path.join(RES, "e37", "p31_add_f*_lam*_r1_sig2_pd.json")):
+        d = load(path); v = [r["final"]["test"] for r in d["rows"]]
+        cells[(d["args"]["frac"], d["args"]["lam"])] = v
+    if not cells:
+        return None
+    fr = sorted({k[0] for k in cells}); la = sorted({k[1] for k in cells})
+    M = np.array([[np.mean(cells[(f, l)]) for l in la] for f in fr])
+    from matplotlib.colors import LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list("seq", ["#f4f3ef", "#a9c8ef", "#2a78d6", "#174a8c"])
+    fig, ax = plt.subplots(figsize=(6.0, 2.9))
+    im = ax.imshow(M, cmap=cmap, vmin=0, vmax=1, aspect="auto", origin="lower")
+    for i, f in enumerate(fr):
+        for j, l in enumerate(la):
+            v = cells[(f, l)]
+            ax.text(j, i, f"{np.mean(v):.2f}\n{min(v):.2f}–{max(v):.2f}", ha="center", va="center", fontsize=6.5,
+                    color="white" if np.mean(v) > 0.6 else INK)
+    ax.set_xticks(range(len(la))); ax.set_xticklabels([f"{l:g}" for l in la])
+    ax.set_yticks(range(len(fr))); ax.set_yticklabels([f"{int(f * 100)}%" for f in fr])
+    ax.set_xlabel("sleep strength λ (decay of the lookup per epoch)"); ax.set_ylabel("training pairs")
+    ax.grid(False)
+    fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02, label="test accuracy")
+    ax.set_title("Grokking phase diagram, (a + b) mod 31: memorize / grok / collapse")
+    return fig
+
+
+def fig_e41():
+    """E41: test accuracy on unseen triples, (a + b + c) mod p, by condition (3 seeds; dots = seeds)."""
+    conds = [("30%, sleep", "f0.3_lam0.05"), ("10%, sleep", "f0.1_lam0.05"), ("30%, no sleep", "f0.3_lam0.0"),
+             ("30%, lookup only", "c0")]
+    fig, ax = plt.subplots(figsize=(6.4, 2.6))
+    for k, (p, col) in enumerate(((17, BLUE), (31, ORANGE))):
+        for i, (name, key) in enumerate(conds):
+            fs = [f for f in glob.glob(os.path.join(RES, "e41", f"p{p}_*.json")) if key in f and "smoke" not in f
+                  and "fsweep" not in f and "tlong" not in f]
+            if key == "c0":
+                fs = [f for f in fs if f.endswith("_c0.json")]
+            else:
+                fs = [f for f in fs if f.endswith("_c1.json")]
+            if not fs:
+                continue
+            v = [r["final"]["test"] for r in load(fs[0])["rows"]]
+            x = i + (k - 0.5) * 0.3
+            ax.bar(x, np.mean(v), width=0.28, color=col, label=f"p = {p}" if i == 0 else None)
+            ax.scatter([x] * len(v), v, color=INK, s=8, zorder=3)
+    ax.set_xticks(range(len(conds))); ax.set_xticklabels([c[0] for c in conds], fontsize=7.5)
+    ax.set_ylabel("test accuracy, unseen triples"); ax.set_ylim(0, 1.05)
+    ax.legend(fontsize=7, loc="upper right")
+    ax.set_title("Grokking with depth: (a + b + c) mod p through a two-stage rhythm chain")
+    ax.grid(axis="x", visible=False)
+    return fig
+
+
 def time_pages(st, W):
     """E24–E30 and THEORY §53–§62: computing with time (26–27 September)."""
     s = [Paragraph("Computing with time (E24–E30, 26–27 September)", st["h1"]),
@@ -863,8 +918,9 @@ def build():
             "intermediates; in time, a sum needs a rhythm."),
           P("<b>Grokking as a route change (E37).</b> Each class has a pair-node lookup that can memorize everything "
             "(ρ ≈ 0.016) and a shared route through a rhythm with learned delays; learning is errors-only. Without sleep: "
-            "train 1.0, test 0.03–0.04. With sleep (λ = 0.02–0.2): test 0.93–0.97 in 2 of 3 seeds, after a delay; the "
-            "third seed collapses. Sleep without the rhythm: train 0.45, test 0. The rhythm is used only where it fits: "
+            "train 1.0, test 0.03–0.04. With sleep: test 0.93–0.97 in 2 of 3 seeds without timing noise, and 0.95–0.99 in "
+            "5 of 5 seeds with cooled timing noise on the shared route (σ = 2), after a delay. Sleep without the rhythm: "
+            "train 0.45, test 0. The rhythm is used only where it fits: "
             "a − b and relabelled sums grok (0.95–0.98), a·b in 1 of 3 seeds, while a² + ab + b² and random tables stay "
             "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep. A data × sleep phase "
             "diagram (4 × 4, 3 seeds) shows no grokking below 20–30% of pairs, and above it a minimum sleep that falls "
@@ -872,6 +928,8 @@ def build():
             "triples from 30% of them at p = 17 and 31, and from 10% in 2 of 3 seeds at p = 31 (ρ ≈ 0.003); chance "
             "without sleep; collapse without the chain.")]
     s += fig(fig_e37, W * 0.9)
+    s += fig(fig_phase, W * 0.9)
+    s += fig(fig_e41, W * 0.9)
     s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "
             "is used by more than m* = λθ/(eη) examples: lookup entries serve one and die, the rhythm's delays serve many "
             "and survive, and once the rhythm answers a pair its lookup entry is never relearned. This predicts "
@@ -897,6 +955,9 @@ def build():
         "overfits (0.27–0.33). SHD is only ≈ 6× sparser than a 10 ms raster, a weak test of the paradigm.",
         "<b>Market stream posed as trading with costs (E42, pilot):</b> imitating a hindsight teacher over-trades and "
         "loses; a profit-priced event learner makes 26 changes in 7 days (−170 bp): it learns that trading does not pay.",
+        "<b>Online world model (E44), prequential log-likelihood per event (nats; days 1 / 2 / 3):</b> Poisson "
+        "−3.00 / −3.42 / −3.32; Hawkes (Adam) −2.62 / −2.94 / −2.84; native (multiplicative) −2.64 / −2.85 / −2.70; "
+        "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only.",
         "<b>Online world model (E44):</b> a temporal point process of four event types learned from every event; the "
         "native model (−2.64/−2.85/−2.70 nats per event) matches Hawkes (−2.62/−2.94/−2.84) and trails a GRU neural "
         "point process (−2.61/−2.52) by ≈ 0.2 nats.",
