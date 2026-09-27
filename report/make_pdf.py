@@ -338,9 +338,10 @@ def time_pages(st, W):
                  ["depth 2, counterfactual routing credit", "0.72–0.74", "0.44"],
                  ["depth 2, critical-path credit only", "0.17 (chance 0.14)", "–"]], [70, 40, 64], st),
           Paragraph("A race is a routing network: without counterfactual credit (runners-up or cancelled near-misses) "
-                    "depth stays at chance. With it, depth is learnable but not better: hidden nodes become class "
-                    "detectors rather than reusable parts, with label-gated or label-free credit, with longer "
-                    "windows, and with sparse fan-in (§62). Getting here required §60: pull-only on weights needs a "
+                    "depth stays at chance. With it, depth is learnable but not better. Receptive fields show the hidden "
+                    "nodes do learn parts (86 of 124 draw both strongest inputs from one motif), but the readout fails "
+                    "at conjunction: 56% of depth-2 answers are a class sharing one motif with the true one, and none "
+                    "are order errors; synapse caps, windowed readouts and global competition did not fix it (§62). Getting here required §60: pull-only on weights needs a "
                     "conserved per-node budget in fractional steps, conserving weakening, per-node prices, and enough "
                     "hidden nodes for Cover's capacity bound (depth 1 rose from 0.29 to 0.68).", st["small"])]
     s += [Paragraph("E29: true grokking test, not passed", st["h2"]),
@@ -683,7 +684,8 @@ def build():
         "learnable, but it does not beat depth 1 yet: hidden nodes become class detectors, not parts.",
         "<b>No true grokking yet (E29).</b> E25's generalization with delays is restriction by the readout, not "
         "grokking; a general network with learned loops has not generalized.",
-        "<b>Negative:</b> pull-only does not transfer to the main weight race (SHD 0.35 → 0.06), and SHD offers only "
+        "<b>Negative:</b> pull-only, conserved budgets and prices do not transfer to the main weight race (SHD 0.35 "
+        "→ 0.04–0.29 across variants), and SHD offers only "
         "~6× input-side advantage at the bins dense models use: not a supremacy benchmark.",
     ], st)
     s += [Paragraph("What is new in the theory (details in the theory pages)", st["h2"])]

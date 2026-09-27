@@ -3052,6 +3052,16 @@ are reversed pairs). Non-leaky accumulation was right for a static task (E29) an
 task, where the readout must align one part's spike with the other's by a delay inside a window (§61). The original
 diagnosis below is kept for the record.
 
+**Second correction (error breakdown, same day).** Depth 2 makes no order errors at all (0% reversed-class answers,
+vs 13% at depth 1); 56% of its answers are a class sharing one motif with the true class. The failure is
+**conjunction**, not order: a single detected part fires a class. It survives capping single synapses below
+threshold (~14 redundant detectors per motif still sum past it), windowed readouts, and global competition across
+the hidden layer. The open problem is precise: a native readout that requires two *distinct* parts when parts are
+represented redundantly. (Dense readouts get this from signed weights that learn to subtract single-part evidence;
+the race readout has positive weights and one threshold.) One native candidate not yet tried: a readout node per
+class whose inputs are *vetoed by themselves* after the first part (refractory per part group), so that only a
+second, different part can complete it.
+
 **Original diagnosis (superseded).** A motif is "j within 0.3–1.5 after i"; the hidden window is 0.6. A pull moves only arrivals already
 inside the firing window, so a node whose window catches i but not j can never align j onto it: the recurrence is
 there, but the credit cannot reach it. This is §61's distinction again: to discover a motif a node must either hold

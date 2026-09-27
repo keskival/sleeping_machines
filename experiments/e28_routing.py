@@ -105,8 +105,8 @@ def integrate(arr, w, W, thr=1.0):
 
 
 class Net:
-    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02, hold=0.0, fanin=0, outW=np.inf):
-        self.outW = outW
+    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02, hold=0.0, fanin=0, outW=np.inf, wmax=1.0):
+        self.outW, self.wmax = outW, wmax
         self.fix60, self.kappa, self.hold = fix60, kappa, hold
         self.Wh = np.full(Hn, hold if hold else W)            # per-hidden-node window (duration)
         self.thr = np.ones(K)
@@ -215,7 +215,8 @@ class Net:
                     self.w2[c] *= tot / max(self.w2[c].sum(), 1e-9)
                 else:
                     self.w2[c, wi] -= eta
-        np.clip(self.w2, 0, 1, out=self.w2); np.maximum(self.d2, 0, out=self.d2)
+        np.clip(self.w2, 0, self.wmax * (self.thr[:, None] if self.fix60 else 1.0), out=self.w2)  # no single
+        np.maximum(self.d2, 0, out=self.d2)                     # synapse fires a node when wmax < 1 (conjunction)
         if self.depth == 2:
             np.clip(self.w1, 0, 1, out=self.w1); np.maximum(self.d1, 0, out=self.d1)
             if self.m1 is not None:
@@ -244,6 +245,7 @@ def main():
     ap.add_argument("--W", type=float, default=0.6)
     ap.add_argument("--fix60", type=int, default=0, help="1: §60 readout (non-leaky, conserved, priced)")
     ap.add_argument("--kappa", type=float, default=0.02)
+    ap.add_argument("--wmax", type=float, default=1.0, help="max output synaptic weight, as a fraction of threshold")
     ap.add_argument("--outW", type=float, default=np.inf, help="output window under --fix60 (inf: no leak)")
     ap.add_argument("--fanin", type=int, default=0, help="> 0: hidden nodes connect to this many random channels")
     ap.add_argument("--hold", type=float, default=0.0, help="> 0: hidden windows start at this length and are learned (§62)")
@@ -258,7 +260,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         motifs, classes = make_task(a.N, a.M, a.K, rng)
-        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa, a.hold, a.fanin, a.outW)
+        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa, a.hold, a.fanin, a.outW, a.wmax)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(motifs, classes, a.N, a.H, a.q, rng)
@@ -271,7 +273,7 @@ def main():
                 net.events = ev0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_hold' if a.hold else ''}{f'_F{a.fanin}' if a.fanin else ''}{f'_oW{a.outW:g}' if np.isfinite(a.outW) else ''}{'_' + a.tag if a.tag else ''}.json"
+    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_hold' if a.hold else ''}{f'_F{a.fanin}' if a.fanin else ''}{f'_oW{a.outW:g}' if np.isfinite(a.outW) else ''}{f'_wm{a.wmax:g}' if a.wmax < 1 else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))

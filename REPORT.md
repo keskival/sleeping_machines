@@ -337,7 +337,11 @@ chance. **E28c** (15 classes from 6 motifs, 5 seeds) tests the case depth should
 Depth 1 wins at both lengths: the hidden layer does not learn reusable motif detectors under the current rule.
 **Corrected diagnosis (§62):** receptive fields show the trained hidden nodes *are* part detectors (86 of 124 take
 both strongest inputs from one motif; untrained 2 of 35); the §60 readout accumulates without a window and so
-discards the parts' order, which is what E28's classes are made of. (Superseded first diagnosis: a selectivity
+discards the parts' order, which is what E28's classes are made of. **Refuted by the error breakdown:** depth 2
+makes no order errors (0% reversed-class errors vs 13% at depth 1); 56% of its answers are a class that shares one
+motif with the right one. It fails at *conjunction*: one detected part fires a class. Neither a cap on single
+synapses (0.36–0.45; ~14 redundant detectors per motif still sum past threshold), windowed readouts (0.35–0.46),
+nor global hidden competition (0.23–0.36) fixed it. Open: how a native readout requires two *distinct* parts. (Superseded first diagnosis: a selectivity
 metric suggested class detectors, median class selectivity 0.21 vs motif 0.12, with label-gated or label-free credit; motifs span up to 1.5 but a window is 0.6, so pulls never
 reach the motif's second spike. Hold-then-align hidden learning, the predicted fix, did not help (accuracy unchanged,
 class selectivity rose further): the missing piece is a pressure toward parts over wholes. Sparse hidden fan-in (2–3 random channels per node) was
@@ -388,8 +392,9 @@ Restoration (one comb coincidence per counter per cycle) makes reliability indep
 | push + conserved budget (3) | 0.276 |
 
 In the main weight race, pull-only fails and a conserved budget alone does not rescue it (it also costs 7 points
-with the push). E28/E29 needed conservation *and* per-class prices *and* a non-leaky readout; the main race's
-output thresholds are fixed, so the complete §60 readout has not yet been tried there.
+with the push). **E31** added per-class prices to the main race (SHD, depth 1, 10 epochs, 1 seed): price step
+0.003 → 0.291, 0.01 → 0.266, prices + conserved budget → 0.203, prices + budget without the push → 0.043, all
+below the 0.35 baseline. §60's readout, which rescued E28, does not transfer to the main race.
 
 ## Energy
 
