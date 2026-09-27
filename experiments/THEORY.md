@@ -3823,6 +3823,34 @@ P1: depth 4 (L = 2): ≥ 0.99 on ≥ 4/5 seeds at 40k episodes. P2: one level sh
 P3: updates to plateau grow at most linearly with depth: depth 4 ≤ 2× depth 3 (log Q ratio 1.5).
 P4: an event-token Transformer on the same task with a fixed 40k-episode training set stays below the chains.
 
+## 86. Stability after convergence: a margin, maintained by near-miss credit
+
+*Written 2026-09-27, after the E53 dip diagnostic, before the margin runs.*
+
+**Observation (E53, E34x).** Converged networks dip: a class that answers all of its probe positives correctly drops to
+0% within 200 episodes and is relearned later (E53: 15–17 late breaks per seed in 40k episodes). The diagnostic shows
+that most breaks follow a single update, the class's demotion as a false winner (it fired first on another class's
+example, or on a 'none' example), not exploration.
+
+**Why (proposition).** Instant credit promotes only deficient roles (§84), so a node stops being promoted as soon as its
+potential at the valid instant crosses θ: it converges to the edge of its firing region. A demotion that contains the
+target unit (mass w) removes a factor (1 − β) from a set of mass m ≥ w and renormalizes, so the target becomes
+w(1 − β)/(1 − βm) ≤ w(1 − β)/(1 − βw) =: f(w). A node at w slightly above θ falls below it after one such demotion.
+It survives r successive demotions iff w > θ_r, where θ_0 = θ and θ_r = f⁻¹(θ_{r−1}) = θ_{r−1}/(1 − β(1 − θ_{r−1})).
+At θ = 0.6, β = 0.5: θ_1 = 0.75, θ_2 = 0.857, θ_3 = 0.923. (The bound on m is tight when the demoted set is the
+target alone; a demoted set that holds nearly all of the role's mass barely moves it, since renormalization restores it.)
+
+**Near-miss credit.** When a class fires correctly, at the firing instant the node knows its own potentials. If a role's
+contributing mass is below a margin θ_m, promote those contributors as on a miss. This is local (the node's own state at
+its own firing event, plus the teacher's confirmation) and costs updates only until the mass exceeds θ_m. On positives the
+target is present, so §83(i) applies to these promotions unchanged. With θ_m = θ_r, no r successive demotions can break a
+converged node before the next correct fire repairs it.
+
+**Predictions (5 seeds, 40k episodes).** P1: E53 (depth 3, T = 0.3) with θ_m = 0.9 ≈ θ_2: after 10k episodes every
+checkpoint ≥ 0.99 on at least 4/5 seeds (without the margin: 7 of 40 checkpoints dip), and the final ≥ 0.99 on 5/5.
+P2: θ_m = 0.75 = θ_1 removes fewer dips than 0.9. P3: E34's task with W = 4.2 and instant credit: θ_m = 0.9 keeps the
+per-seed plateaus (0.988–0.995) without dips. P4: depth 4 (E54, θ_m = 0.9): ≥ 0.99 at the final checkpoint on 4/5 seeds.
+
 ## Tests
 
 | | Claim | Test |
