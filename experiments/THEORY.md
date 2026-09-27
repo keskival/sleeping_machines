@@ -4264,6 +4264,54 @@ the test.
 value that followed a key earlier in the stream) and the induction pattern at accuracy comparable to a one-layer Transformer
 trained by gradients, with retrieval cost sublinear in the context length.
 
+## 97. Trainability of depth: a mistake bound for depth-d order detectors (theorem, proof sketch)
+
+*Written 2026-09-27; assembles §83, §85, §91 and the absorbing-route argument of §84 into one statement.*
+
+**Concept class.** Events on N channels; P part units (ordered channel pairs with windows); chain units up to level
+L = d − 2 (a unit at level j is a level-(j − 1) unit followed by a part within W₂), so the candidate basis has
+Q = Σ_{j=0}^{L} P^(j+1) ≈ P^(d−1) units. Each class k is an ordered pattern of d parts with bounded gaps.
+*Realizability (R):* for each class there is a route (hold unit u_k at level L, trigger part l_k) that is present, with u_k
+in the window before l_k, in every positive example at the pattern's last event, and complete in no negative example.
+
+**Learner.** Class nodes with summed hold and trigger potentials over units (§83), conserved budgets, threshold θ > ½;
+synapses grown on credit (§85: exactly dense Winnow); on a miss, the deficient roles at the latest candidate instant are
+promoted by (1 + α); on a false fire, the contributors at the firing instant are demoted by (1 − β) with
+β < (2θ − 1)/θ² (§83(ii)).
+
+**Noise parameters.** q: probability that an example's latest candidate instant lies after the pattern (trailing noise);
+f: maximal probability that a given distractor unit is in a credited set on a miss; ρ: false fires per miss in which the
+target contributes (validity makes these fires due to other units).
+
+**Theorem.** Let δ = (1 − q − 2f)·log(1 + α) − ρ·log(1/(1 − β)) > 0. For every class, with probability ≥ 1 − ε, the number
+of misses before its route carries more than θ in both roles is
+
+  M = O( (log Q + log(θ/(1 − θ)) + log(1/ε)) / δ² ) = O( d·log P / δ² )   (in expectation O(d·log P / δ)),
+
+after which the route fires on every positive example (it is absorbing: validity means no false fire removes it, §84),
+and every false fire caused by other units lowers the relative-entropy potential by at least
+γ = log(1 − β) − 2·log(1 − βθ) > 0 (§83(ii)), so false fires are bounded by the potential as well. Memory is the number of
+units ever credited (§85), and work per example the number of fired units, n·r^L before pruning and fewer after (§93).
+
+*Proof sketch.* For each distractor j and role, Λ_j = log(w_target / w_j) is invariant under renormalization (§83(i)); by §91
+its per-miss increments are bounded and have mean ≥ δ, so by Azuma's inequality Λ_j(M) ≥ δM − O(√(M·log(Q/ε))) for all j
+simultaneously with probability ≥ 1 − ε. The role's target carries more than θ once Σ_j e^(−Λ_j) < (1 − θ)/θ, which holds when
+every Λ_j exceeds log(Q·θ/(1 − θ)); solving for M gives the bound. Absorption and the false-fire bound are §84 and §83(ii). ∎
+
+*Remark (why the ratio potential).* Tracking only −log w_target gives a valid but conservative condition: a promotion
+that misses the target costs at most log(1 + αθ) and one that hits it gains at least log((1 + α)/(1 + αθ)), which
+guarantees progress only for q < log((1 + α)/(1 + αθ)) / log(1 + α) ≈ 0.32 at α = 1, θ = 0.6. The ratio potential
+counts only distractors actually co-promoted; the measured sweep (§91) learned up to q ≈ 0.62, as the ratio form predicts.
+
+**Evidence.** Updates grow linearly in depth, not in the basis: depth 3 → 4 multiplies Q by ≈ 380 but the updates by ≈ 1.25
+(E54); the dependence on trailing noise follows 1/(1 − q − 2f) (E91); one level too few cannot express the class
+(E54 L = 1: 0.57–0.76), as realizability requires.
+
+**What the theorem does not cover, and where depth goes next.** It is a theorem about *selecting* depth from an exhaustive,
+activity-paid candidate basis. It does not cover *learning* intermediate representations outside such a basis: shared
+codes, and the keys and queries of race attention (§96). That is the trainability question language needs; its first test
+is E61 (a race-attention layer trained by local credit on associative recall and induction).
+
 ## Tests
 
 | | Claim | Test |
