@@ -4413,6 +4413,13 @@ characters does no better (3.3). Starting from the exact order-2 automaton (2.95
 merge only statistically indistinguishable ones (the split-merge reconstruction of causal states, with tests), and, for
 text, must know that different symbols behave alike: distributional classes of words, which no operation on exact strings
 produces. These are the next representation experiments; a(m) in (a) is only improved by them.
+**First step that works (E66, one run at 1M characters, 100k test): keys at the unit where text repeats, with backoff inside
+each expert.** Counts and copy memories keyed on (previous word, partial word) and (two previous words, partial word) are
+sparse (112k distinct keys in 200k characters); alone they fall back to a uniform guess where unseen (3.7–4.5 bpc), and a
+Hedge mixture cannot use them, because its weights are global per selector, not per position. With Witten–Bell backoff
+inside the expert (two words → one word → partial word) they are informative everywhere (2.26 / 2.28 bpc alone) and the
+mixture improves from 2.028 to 2.005 bpc. Principle: a sparse, specific representation must carry its own backoff (or the
+mixer must weight by per-position confidence); scaling runs queued.
 
 ## Tests
 
