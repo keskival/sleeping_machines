@@ -1,0 +1,4 @@
+e31_shd_pr003 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e31 --variant crl_fa --depth 1 --width 400 --epochs 10 --price 0.003
+e31_shd_pr01 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e31 --variant crl_fa --depth 1 --width 400 --epochs 10 --price 0.01
+e31_shd_pr01_cv3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e31 --variant crl_fa --depth 1 --width 400 --epochs 10 --price 0.01 --conserve 3
+e31_shd_pr01_nc_cv3 experiments/e14_depth.py --dataset shd --val 800 --zero-sum 1 --seed 0 --tag e31 --variant crl_fa --depth 1 --width 400 --epochs 10 --price 0.01 --conserve 3 --compete 0

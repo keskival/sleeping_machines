@@ -3026,7 +3026,7 @@ duration, and they answer different credit questions: a coincidence missed by mi
 missed because the partner came too late for the PSP lengthens the duration; a false fire from a partner that came
 too late shortens it.
 
-## 62. Why depth does not pay yet: hidden nodes become class detectors, and motifs are out of reach of the window
+## 62. Why depth does not pay yet (corrected: the hidden nodes are parts; the readout discards their order)
 
 *Written 2026-09-27 from E28c and a hidden-selectivity diagnosis (15 classes built from 6 motifs, 192 hidden,
 20k episodes; selectivity = max over conditions of P(fire | condition) − P(fire | not)).*
@@ -3042,7 +3042,17 @@ depth 1 does, so depth adds nothing (E28c: depth 1 0.51 vs depth 2 0.44). Label-
 (the STDP route to repeated patterns) does not change this, although motifs are ~50× more frequent than chance
 coincidences of the same channels.
 
-**Diagnosis.** A motif is "j within 0.3–1.5 after i"; the hidden window is 0.6. A pull moves only arrivals already
+**Correction (same day).** The selectivity metric conflates: a genuine motif detector also looks class-selective,
+because it fires for every class containing its motif. Looking at receptive fields instead (the two strongest input
+channels of each hidden node that some class relies on): after training, 86 of 124 such nodes take both inputs from
+the same motif (parts), 16 from different motifs, 22 use a non-motif channel; untrained, 2 of 35 were parts. **The
+hidden layer does learn parts.** What fails is the readout introduced by §60: it accumulates without a window,
+which counts which parts occurred and discards their order, while E28's classes are ordered pairs (and the decoys
+are reversed pairs). Non-leaky accumulation was right for a static task (E29) and is wrong for a temporal-order
+task, where the readout must align one part's spike with the other's by a delay inside a window (§61). The original
+diagnosis below is kept for the record.
+
+**Original diagnosis (superseded).** A motif is "j within 0.3–1.5 after i"; the hidden window is 0.6. A pull moves only arrivals already
 inside the firing window, so a node whose window catches i but not j can never align j onto it: the recurrence is
 there, but the credit cannot reach it. This is §61's distinction again: to discover a motif a node must either hold
 long enough to see both spikes (duration) and then align (delay), or receive credit from near-coincidences across a
