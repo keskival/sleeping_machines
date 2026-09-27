@@ -604,6 +604,13 @@ budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates
 
 ## 10. Next frontier: generative language models (a plan)
 
+**The thesis.** Sleeping Machines networks subsume Transformers: any Transformer can in principle be written as one, since
+the substrate is universal and every part of a Transformer layer has an event form (below). What remains to show is
+the stronger part: that the networks' own local learning rules, whose cost follows activity, reach the same quality, and
+that the energy saved grows with how sparse the needed computation is. Silence, sparse codes and "only firing units work"
+are where the savings measured here (10³–10⁵×) came from; a computation that truly needs everything to meet everything
+at every step would save little.
+
 **Why language.** Language models are where Transformers are strongest, and where their cost hurts most: every generated
 word passes through every weight, and the cost of attention grows with the length of the text. If event networks can
 generate text at useful quality, the payoff is large: work per word that does not grow with model size or text length.

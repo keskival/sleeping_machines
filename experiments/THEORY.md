@@ -4245,6 +4245,17 @@ candidates cost nothing until they earn a synapse (§85, §93), and on deep orde
 than a gradient-trained Transformer (E94, measured); (d) *exact sampling by races and sublinear retrieval by shared
 channels*. Which of these pays off at language scale is the empirical question.
 
+**The thesis, stated in three strengths.** (1) *Function class: established in principle.* By §59 (universality) and the
+event form of a Transformer layer above, every Transformer is a special case of a Sleeping Machines network. (2) *Learning:
+trivially subsumed, non-trivially open.* A universal substrate can simulate backpropagation, but an event network emulating
+dense gradient descent loses its advantages (it becomes dense and synchronous). The substantive claim is that *native* local
+credit, with cost proportional to activity, reaches the same quality: supported so far by learned depth (§84–§89), ≈ 10× data
+efficiency on deep order (E94) and parity or better at equal data on composition and deep order; untested at language scale.
+(3) *Power: in proportion to sparsity.* One synaptic event costs roughly what one multiply-add does, so emulating a
+computation that genuinely needs every input to meet every weight at every step saves nothing; the savings come from sparsity
+in the data (silence is free), the representation (sparse codes) and the computation (only firing units work), which is where
+10³–10⁵× was measured. For language, per-token sparsity is plausible, so large savings are plausible; that is a prediction.
+
 **Consequence for §95.** The higher floor predicted there is a property of a counting design. With race attention over
 learned sparse codes the floor could be Transformer-like at a fraction of the work; whether local credit can learn it is
 the test.
