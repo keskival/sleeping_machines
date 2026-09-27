@@ -107,3 +107,9 @@
 16:45:14 start e57_fine
 16:46:30 done e57_fine (exit 0)
 16:46:30 start e53_tf_n40k
+17:00:49 done e53_tf_n40k (exit 0)
+17:00:49 start e57_pt
+17:01:51 done e57_pt (exit 0)
+17:01:51 start e57_pt_fine
+17:02:55 done e57_pt_fine (exit 0)
+17:02:55 start e53_tf_online
