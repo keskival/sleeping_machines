@@ -64,6 +64,7 @@ def main():
     ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--seeds", type=int, default=2)
+    ap.add_argument("--tag", default="")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     rows = []
@@ -99,7 +100,7 @@ def main():
                  "wall_s": round(time.time() - t0, 1)}
             rows.append(r)
             print(json.dumps(r), flush=True)
-    with open(os.path.join(OUT, f"transformer_{a.task}.json"), "w") as f:
+    with open(os.path.join(OUT, f"transformer_{a.task}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows}, f, indent=1)
     print("EXIT-OK")
 

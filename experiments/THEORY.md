@@ -3181,6 +3181,32 @@ E32's comparison unfair; the headline comparison (§63's table) holds with nothi
 bits. Counterfactual pulls find it with O(N) mistakes per detector (E35: ~100–400 per detector), consistent with
 §64.3's Occam argument extended to routing.
 
+## 66. What grokking requires of a timing network: shared intermediates, and a sum needs a rhythm
+
+*Written 2026-09-27, before redesigning E29 with the machinery that works (hold/trigger nodes, routing credit).*
+
+**Per-class parameters cannot generalize on (a + b) mod p.** Suppose each class detector c has its own delay on every
+operand line. For a fixed c, operand a occurs in exactly one pair, (a, c − a). A training pair constrains only its own
+two synapses on its own class node; an unseen pair's synapses are constrained by nothing. Such a network can memorize
+every training pair and must be at chance on every test pair, whatever its learning rule. (The same holds for any
+per-class lookup, which is why E24's local race memorized.) Generalization needs **intermediate nodes shared across
+classes**, whose parameters every class's errors move; that is what an MLP's hidden layer provides.
+
+**The time-native shared intermediate is a node whose output time is the sum.** If one node fires at a time that
+encodes a + b, every class reads it by phase and all classes share the same operand parameters (this is E26, which
+generalizes). But a + b as a time is a series composition, and a clockless network cannot add two times (§56.2); it
+needs a reference: an oscillator whose phase is reset by one operand and sampled by the other (§56.3).
+
+**So a true grokking test for this substrate is well posed as:** a network that can memorize (per-class delays on
+operand lines, so memorizers exist at ρ ≪ 1), that also has access to generic shared resources (relay nodes and a
+rhythm with random, learnable period), trained by the native rules that work (hold/trigger coincidence, routing by
+counterfactual pulls under conserved budgets, errors only). It groks if it moves its solution from the per-class
+route (memorization) to the shared route through the rhythm (the relation) while memorizers are still available. The
+prediction is sharp: without the rhythm resource it must stay at chance on test pairs (per-class argument above);
+with it, generalization requires the routing credit to prefer the shared route, which is what the routing rule must
+be shown to do. §52's sleep (downscaling) is the candidate pressure: shared routes are reinforced by every class's
+errors and survive decay, per-class routes by one pair each and fade.
+
 ## Tests
 
 | | Claim | Test |
@@ -3242,6 +3268,7 @@ bits. Counterfactual pulls find it with O(N) mistakes per detector (E35: ~100–
 | **M63** | at matched accuracy an event learner beats the cheapest clocked dense model by ~10² in operations, growing linearly with silence; vs a sparse (event-driven) dense model only ~10× | E32 `e32_frontier.py`: dense conv over F × δ, silence padding; E27 synaptic-event counts |
 | **M64** | order = asymmetric PSP durations; one node = one bounded difference with exclusions; fixing the order of m points needs an (m − 1)-node chain (temporal depth = order-chain length); O(VC ≈ 2 + N) mistakes per node | E27 `--tol hold` (directional) with and without veto; E33 `e33_allen.py`: all 13 Allen relations exact |
 | **M65** | depth pays when composition is a hold/trigger chain; routing to channels and parts is learned with O(N) mistakes per node | E34 `e34_compose.py` depth 2 vs 1, window variants; E35 `e35_free.py` nothing given |
+| **M66** | per-class parameters cannot generalize on (a + b) mod p (each (class, operand) pair is seen once); a shared intermediate is needed, and a sum-in-time needs a rhythm; grokking = routing moves from per-class to shared routes under decay | E37: memorizing network + relays + rhythm, native routing, with and without the rhythm, with and without decay |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
