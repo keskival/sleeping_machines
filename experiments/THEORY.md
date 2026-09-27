@@ -4054,6 +4054,14 @@ while 1 − q is well above 2f, and degrades at the highest noise. P2 (E91 ancho
 margin anchored at the latest supra-threshold instant keeps every seed at or above its no-margin value (0.990–0.999)
 without the dips.
 
+**Result, P2 (E91 anchor): fails, identically.** The supra-threshold anchor reproduces the firing-instant margin seed for
+seed (0.992 / 0.991 / 0.999 / 0.976 / 0.981). A shortcut that is right ≈ 99% of the time is exactly what such a node
+recognizes: its latest supra-threshold instant is its firing instant, and the complete route never crosses θ. Any margin
+anchored in what the node already recognizes protects the shortcut; on this task the near-valid route is the problem, so
+a margin cannot tell it from the valid one by the node's own drive or precision. Open: a margin that requires the
+route to be complete (for example, protection only for routes whose trigger is the latest part of every positive they
+fired on).
+
 ## 92. Spoken digits across speakers: validate on unseen voices, code bands relative to the voice
 
 *Written 2026-09-27, before E59.*
