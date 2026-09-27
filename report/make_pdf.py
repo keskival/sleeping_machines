@@ -841,8 +841,9 @@ def build():
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
         "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
         "same 40k examples 50 times.",
-        "<b>A better world model of a real market stream at 80–200× less computation.</b> Predicting the next trade events "
-        "of BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).",
+        "<b>A world model of a real market stream that beats a recurrent network at 80–200× less computation.</b> On days it "
+        "never saw, a small event network beats a GRU point process; a Transformer point process does better still on "
+        "validation data (it reads the recent regime); a native regime state is being tested.",
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
         "mistakes.",
         "<b>New theory, proved:</b> exactly what one event node can compute and where depth is needed; why a fixed weight "
@@ -911,10 +912,10 @@ def build():
          "100k steps): 0.29 / 0.63 (seed 0, d = 32 / 64), 0.06 / 0.03 (seed 1; chance 0.06)",
          "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
          "Transformer"],
-        ["<b>Better world model of a real market stream at 80–200× lower cost</b>",
+        ["<b>World model better than a GRU point process at 80–200× lower cost</b>",
          "E48: online −2.11 vs GRU −2.62 nats/event; held-out frozen −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic ops "
          "vs thousands of MACs",
-         "classical model class (semi-Markov); offline-trained GRU pending"],
+         "a Transformer Hawkes process is better on validation (−2.43 vs −3.12); test and a native regime state running"],
         ["<b>Learning cost follows activity, not model size</b>",
          "E35: 12 → 96 channels, 0.999–1.000, mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81", "measured to 96 channels"],
         ["<b>Structure discovery, implicit Occam razor</b>",
