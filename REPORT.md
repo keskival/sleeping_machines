@@ -338,8 +338,18 @@ parity (10 inputs). Under timing jitter:
 
 Restoration (one comb coincidence per counter per cycle) makes reliability independent of length where q/σ ≥ 10.
 
-**E26b (transfer to the main race, negative).** `--compete 0` on SHD, depth 1, 10 epochs: 0.061 vs 0.35 with the
-competitor push. For weights the push is the bound; conservation is the native replacement (§60).
+**E26b/E26d (transfer to the main race, negative).** SHD, depth 1, 10 epochs, 1 seed:
+
+| output rule | SHD validation |
+|---|---|
+| competitor push (baseline) | 0.35 |
+| no push | 0.061 |
+| no push + conserved budget (3 or 10 thresholds) | 0.056 (both; chance 0.05) |
+| push + conserved budget (3) | 0.276 |
+
+In the main weight race, pull-only fails and a conserved budget alone does not rescue it (it also costs 7 points
+with the push). E28/E29 needed conservation *and* per-class prices *and* a non-leaky readout; the main race's
+output thresholds are fixed, so the complete §60 readout has not yet been tried there.
 
 ## Energy
 
