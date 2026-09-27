@@ -6,3 +6,7 @@ e62_D90M_full experiments/e62_charlm.py --D 90000000 --K 7 --test 5000000
 e63_D1M experiments/e63_mixlm.py --D 1000000 --K 5 --test 1000000
 e63_D10M experiments/e63_mixlm.py --D 10000000 --K 6 --test 1000000
 e63_D90M experiments/e63_mixlm.py --D 90000000 --K 7 --test 1000000
+e64_lstm_D1M experiments/e64_lm_baselines.py --model lstm --D 1000000 --passes 5
+e64_tf_D1M experiments/e64_lm_baselines.py --model tf --D 1000000 --passes 5
+e64_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --passes 1
+e64_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --passes 1
