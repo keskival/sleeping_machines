@@ -868,7 +868,7 @@ def build():
             "a − b and relabelled sums grok (0.95–0.98), a·b in 1 of 3 seeds, while a² + ab + b² and random tables stay "
             "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep. A data × sleep phase "
             "diagram (4 × 4, 3 seeds) shows no grokking below 20–30% of pairs, and above it a minimum sleep that falls "
-            "with data. With depth (E41, pilot): (a + b + c) mod p through two composed rhythm stages, 0.998 on unseen "
+            "with data. Larger problems grok more reliably: 2/3 seeds at p = 31 and 59, 3/3 at p = 97 (ρ ≈ 0.005). With depth (E41, pilot): (a + b + c) mod p through two composed rhythm stages, 0.998 on unseen "
             "triples with sleep, 0.06 without.")]
     s += fig(fig_e37, W * 0.9)
     s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "

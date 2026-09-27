@@ -191,6 +191,11 @@ classes. In time, the natural shared intermediate is a sum, and a sum of times n
 | 0.5 | 0.03–0.98 | 0.96–0.99 | 0.98–0.99 | 0.97–0.99 |
 | 0.7 | 0.95–0.98 | 0.98–1.00 | 0.99 | 0.98–0.99 |
 
+**Scaling with the problem size (3 seeds, half the pairs, noise ∝ p):** p = 31: 2 of 3 seeds grok (0.95–0.99); p = 59:
+2 of 3 (0.96–0.98); **p = 97: 3 of 3 (0.96–1.00) at ρ ≈ 0.005**. Larger problems grok more reliably although memorizers
+are relatively more plentiful: at a fixed fraction each shared delay is reused ≈ n/p = p/2 times, which grows with p
+(§72).
+
 Below a data threshold (between 20% and 30% of pairs) no sleep strength groks: weak sleep memorizes, strong sleep
 erodes the memorized pairs with nothing taking over (train falls to 0.64). Above it, grokking needs a minimum sleep
 that falls with data: sleep must dismantle memorization faster than errors relearn it, and more data makes the shared

@@ -21,8 +21,8 @@
    "ll_per_event_native_meta": -2.6382905564600776,
    "ll_per_event_native_parts": -2.643258123948884,
    "ll_per_event_hawkes_parts": -2.8782479286968066,
-   "ll_per_event_native_inhib": -3.2634204490277905,
-   "ll_per_event_native_inhib_parts": -4.016954208894831
+   "ll_per_event_native_inhib": -2.799852372819546,
+   "ll_per_event_native_inhib_parts": -2.7925085139492936
   },
   {
    "day": "2026-08-26",
@@ -39,8 +39,8 @@
    "ll_per_event_native_meta": -2.8501729874610717,
    "ll_per_event_native_parts": -2.8536424781634575,
    "ll_per_event_hawkes_parts": -3.128992652185428,
-   "ll_per_event_native_inhib": -3.2153673752624807,
-   "ll_per_event_native_inhib_parts": -4.4090239801752915
+   "ll_per_event_native_inhib": -3.1320249979015986,
+   "ll_per_event_native_inhib_parts": -3.1741718992181145
   },
   {
    "day": "2026-08-27",
@@ -57,8 +57,8 @@
    "ll_per_event_native_meta": -2.693494020984427,
    "ll_per_event_native_parts": -2.6963493981870688,
    "ll_per_event_hawkes_parts": -2.9802543399929786,
-   "ll_per_event_native_inhib": -3.0772048476489124,
-   "ll_per_event_native_inhib_parts": -5.716152088968512
+   "ll_per_event_native_inhib": -2.9356840296844977,
+   "ll_per_event_native_inhib_parts": -2.9524760272889785
   }
  ]
 }
