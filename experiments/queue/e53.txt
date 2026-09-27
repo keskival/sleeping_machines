@@ -43,6 +43,8 @@ e89b_e34_latest_iv_nmL experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 -
 e89b_e53_latest_nmL experiments/e53_depth3.py --depth 3 --credit latest --beta 0.5 --margin 0.9 --gate 0.99 --tag nmL
 e52_v_d64 experiments/e52_thp.py --mode val --d 64 --epochs 30
 e52_v_d128 experiments/e52_thp.py --mode val --d 128 --epochs 30
+e57_m5 experiments/e57_regime.py --m 5
+e57_m20 experiments/e57_regime.py --m 20
 e52_v_d64L32 experiments/e52_thp.py --mode val --d 64 --L 32 --epochs 30
 e52_v_d64L256 experiments/e52_thp.py --mode val --d 64 --L 256 --epochs 30
 e52_v_d64f experiments/e52_thp.py --mode val --d 64 --fine 1 --epochs 30
