@@ -4450,6 +4450,50 @@ units are active per character and each emits only on its events.
 **Next experiment.** Word keys with learned payload vectors (instead of exact identity) for the copy and counting experts:
 retrieval by vector similarity via the race, keys and queries updated by the local rule above.
 
+## 101. Coupling time and representation: the identity–time decomposition of a race, local softmax gradients, and backpropagation in the time domain
+
+*Written 2026-09-27; theorem with proof, consequences, and a test (E67).*
+
+**Setting.** A race node receives candidates i with scores s_i computed from representations (payloads, §100; e.g.
+s_i = q·k_i/τ) and fires exponential clocks with rates λ_i = exp(s_i). W is the winner, T the first-arrival time.
+
+**Theorem (identity–time decomposition).** (1) P(W = i) = λ_i / Λ = softmax(s)_i, Λ = Σ_j λ_j. (2) T ~ Exponential(Λ), so
+E[T] = 1/Λ and E[log(1/T)] = log Λ + γ = logsumexp(s) + γ (γ: Euler's constant). (3) W and T are independent.
+*Proof.* P(W = i, T > t) = ∫_t^∞ λ_i e^(−λ_i u) Π_{j≠i} e^(−λ_j u) du = (λ_i/Λ)·e^(−Λt), which factorizes; the rest is the
+exponential law's moments. ∎
+The race thus splits its output into two independent channels: *which* (a sample of the softmax: a representation choice)
+and *when* (the log-partition function: confidence). Downstream nodes receive the normalizer that a dense softmax computes
+explicitly, for free, in the arrival time.
+
+**Corollary 1 (each competitor knows its own probability).** E[λ_j T] = λ_j / Λ = p_j: the product of a node's own rate and
+the observed decision time is an unbiased estimate of its softmax probability (variance p_j², relative variance 1 per race;
+R races reduce it by R).
+
+**Corollary 2 (exact cross-entropy learning from local quantities).** For target y, ∂ log p_y / ∂s_j = 1[j = y] − p_j, estimated
+without bias by 1[j = y] − λ_j T: each node needs its own rate, the one decision time every node observes, and whether it is
+the target. No normalization circuit, no access to competitors.
+
+**Corollary 3 (time teaches representations).** With s_j = q·k_j/τ: Δk_j ∝ (1[j = y] − λ_j T)·q (local to key j: it holds k_j,
+receives q), Δq ∝ Σ_j (1[j = y] − λ_j T)·k_j (sent back only by keys with non-negligible λ_j T: sparse). The timing of the race
+is the learning signal for the payload vectors.
+
+**Corollary 4 (backpropagation in the time domain).** dE[T]/ds_i = −λ_i/Λ² = −p_i·E[T], estimated locally by −λ_i T²/2
+(E[λ_i T²] = 2λ_i/Λ²). A node told "fire δ earlier" (a timing error from downstream) converts it into score changes for its
+inputs, Δs_i ∝ δ·λ_i T²/2, and scores are functions of payloads, so timing errors become representation updates and
+representation errors become timing errors further down: learning propagates between the two domains through each race.
+For deterministic time-to-first-spike nodes the same holds with the causal set: t_out = (Σ_{i∈C} w_i t_i + θ)/Σ_{i∈C} w_i
+for non-leaky integrate-and-fire nodes, so ∂t_out/∂w_i = (t_i − t_out)/Σ_C w and ∂t_out/∂t_i = w_i/Σ_C w: local quantities
+(the exact spike-time gradient of time-to-first-spike networks).
+
+**Delivering error to hidden units.** The error originates locally (Corollary 2); reaching hidden units requires sending it
+back along the forward synapses (their transpose) or, without weight symmetry, along fixed random feedback (feedback
+alignment), which trains hidden layers in practice.
+
+**Predictions (E67, MNIST).** (P1) One-layer race classifier trained by Corollary 2 (one race per example) matches exact
+softmax gradient descent in test accuracy at equal examples (within 0.5 points), and beats a winner-only race perceptron.
+(P2) Two layers, hidden payloads trained through the race error: close to backpropagation with symmetric feedback, and
+still above one layer with random feedback.
+
 ## Tests
 
 | | Claim | Test |
