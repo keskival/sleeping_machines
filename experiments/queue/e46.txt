@@ -1,0 +1,3 @@
+e46_M4_40k experiments/e46_menu.py --steps 40000 --M 4
+e46_M8_40k experiments/e46_menu.py --steps 40000 --M 8
+e46_M4_200k experiments/e46_menu.py --steps 200000 --M 4
