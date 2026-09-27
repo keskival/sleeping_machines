@@ -3573,6 +3573,29 @@ online Hawkes process in likelihood (both have the same excitation structure); s
 improves likelihood after regime breaks relative to fixed plasticity; whether the native model approaches the neural
 point process is open.
 
+## 80. Structure discovery as online model selection, with an implicit Occam razor
+
+*Written 2026-09-27 from E45's pilot: given a menu of routes (single rhythms over each operand pair, a two-stage chain,
+and a triple lookup), the network picks the (a, b) rhythm for (a + b) mod p (test 1.000, 2/2 seeds), the depth-2 chain
+for (a + b + c) mod p (0.999, 1 of 2 seeds; the other did not converge in 120 epochs), and no shared route for a random
+table (test at chance).*
+
+**Mechanism.** Each route keeps a price, a running estimate of its error rate, updated on every example from its own
+answer, including routes that did not answer: evaluating every route is cheap in an event network (each is a few
+delays and one race), so route selection has full-information feedback. The cheapest route answers. This is online
+model selection over M experts with full information, the setting of Hedge / multiplicative weights, with regret
+O(√(T log M)): the network converges to the most reliable route on the menu, and a route that cannot express the
+relation keeps a price near its chance error rate.
+
+**Implicit Occam razor.** For a + b, the two-stage chain can also express the relation (it only needs to learn to ignore
+c), yet the single (a, b) rhythm won in both seeds (its price reached 0.000, the chain's stayed ≈ 0.92). A route with
+fewer parameters becomes reliable after fewer errors (§68: O(k log N) mistakes; §78: sample complexity ∝ its
+parameter count), so its price falls first and it takes over before the larger route has learned. Racing on reliability
+therefore prefers the simplest route that explains the data, without an explicit complexity penalty. **Predictions
+(M80):** (i) with more seeds and epochs, a + b selects a single pair rhythm, a + b + c the chain, random tables no
+route; (ii) the selected route is the one with the fewest parameters among those that can express the relation; (iii)
+adding more candidate routes (more pairs, more chain orders) costs O(log M) extra errors, not O(M).
+
 ## Tests
 
 | | Claim | Test |
@@ -3647,6 +3670,7 @@ point process is open.
 | **M77** | learning cost scales with activity (log of co-active channels), not basis size N | E35 N-sweep at fixed spikes/episode (done to N = 48: flat); spikes/episode sweep at fixed N |
 | **M78** | grokking fraction f* ≈ D log p / p^D: composition makes grokking exponentially cheaper than memorization | E41 training-fraction sweep at p = 17 (and p = 31) |
 | **M79** | the weaving operator W is a competing-risks temporal point process; a native pool learned by online likelihood with fast/slow, surprise-gated plasticity is an asynchronous world model | E43: online log-likelihood (type and timing) vs Poisson, online Hawkes, GRU neural point process; adaptation after regime breaks; decisions from the model |
+| **M80** | structure discovery = full-information online model selection over routes (Hedge-like prices); racing on reliability selects the simplest route that fits (implicit Occam) | E45 5 seeds on a+b, a+b+c, random; menu size sweep |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
