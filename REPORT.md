@@ -44,10 +44,13 @@ now explains, and what is being tested.
   one phase (chance in all 15 runs, 3 seeds × 5 fractions); pull-only learning, sparse and error-driven, learns
   the relation from random delays (**full runs, 3 seeds: p = 31 test 0.97–0.98 at 50% of pairs, 0.81–0.94 at
   30%; p = 59 0.95 and 0.91–0.97**), with 10× fewer updates than the push. Timing noise makes generalization
-  reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; a cooling schedule
-  is queued. False positives must not be displaced in time (E27, 5 seeds: 0.195 vs 0.914 with veto, 0.896 with none).
-- **Routing credit (E28, full runs, 3 seeds): counterfactuals help, the near-miss lead reversed, depth does not
-  pay yet.** Counterfactual credit beats path-only (0.31–0.33 vs 0.17); near-miss adds nothing over fired credit at
+  reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; **cooled to zero with
+  the learner's own update count it keeps the reliability and lifts the cap** (p = 31: 3/3 seeds at 20%, 1.00 / 1.00 /
+  0.92 at 30%; smaller gain at p = 59). False positives must not be displaced in time (E27, 5 seeds: 0.195 vs 0.914 with veto, 0.896 with none).
+- **§60's readout fix transfers (E28 pilot, 1 seed): depth 1 rises from 0.29 to 0.756.** Depth 2 reaches 0.37, so
+  hidden-layer learning is now the bottleneck. Full runs queued.
+- **Routing credit (E28, full runs, 3 seeds, before the readout fix): counterfactuals help, the near-miss lead
+  reversed, depth does not pay yet.** Counterfactual credit beats path-only (0.31–0.33 vs 0.17); near-miss adds nothing over fired credit at
   k = 2 (0.31 both; the pilot's 0.41 vs 0.34 did not survive); near-miss at k = 1 matches it with 28% fewer events
   but high variance; depth 2 ≈ depth 1 (0.29). No arm solves the task (chance 0.14): the readout lacks §60's fixes.
 - **The operator basis is Turing-complete, and restoration makes it scalable (E30, complete).** A two-counter
@@ -283,8 +286,9 @@ generalization is restriction by the readout (§58).
 | 59 | 0.5 | 0.95 | – | – |
 
 The push makes about 386k updates per run (an error on nearly every sample); pull-only about 40k at 50% of pairs.
-Noise annealed by the error rate stays near σ ≈ 0.25 and limits accuracy; a schedule that cools to zero with
-the learner's own update count is queued (E26c). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
+Noise annealed by the error rate stays near σ ≈ 0.25 and limits accuracy. **E26c** cools σ = 1 to zero with the
+learner's own update count (3 seeds): p = 31 generalizes at 20% in 3/3 seeds (0.74–0.83) and reaches 1.00, 1.00,
+0.92 at 30%; p = 59 0.93–0.97 at 30%, 1/3 seeds at 20% (as without noise). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
 
 **E27 (delays + coincidence windows + veto, full runs, 5 seeds, 200k episodes).** Patterns "B within Δ after A
 unless C"; 10% of episodes are vetoed near-misses, so a network without veto is capped near 0.9.
