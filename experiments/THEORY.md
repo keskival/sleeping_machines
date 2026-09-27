@@ -2901,7 +2901,9 @@ fired credit, 0.35 at depth 1; one seed, 8k episodes; full runs queued).
 *Status (full runs, 3 seeds): (i) confirmed against critical-path-only credit (0.31–0.33 vs 0.17); near-miss did not
 beat fired credit at k = 2 (0.31 both), (ii) k = 1 near-miss matched k = 2 fired at 28% fewer events but with high
 variance, (iii) not confirmed (depth 2 ≈ depth 1), (iv) confirmed (push 0.17). All arms far below ceiling; the
-readout lacked §60's conservation and capacity.*
+readout lacked §60's conservation and capacity. With §60 applied to every node (E28b, 3 seeds): depth 2 with routing
+credit 0.72–0.74 vs depth 1 0.68 vs depth 2 path-only 0.17: (i) confirmed strongly, (ii) near-miss ≈ fired, (iii)
+a modest lead for depth.*
 
 (i) Near-miss routing credit beats critical-path-only credit at depth 2, and matches or beats top-k fired credit.
 (ii) Near-miss credit with k = 1 approaches its k = 2 result: counterfactuals from cancellation replace

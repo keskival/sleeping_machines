@@ -1,1 +1,8 @@
 01:47:51 start e28b_d1
+01:48:35 done e28b_d1 (exit 0)
+01:48:35 start e28b_fired
+01:59:33 done e28b_fired (exit 0)
+01:59:33 start e28b_nearmiss
+02:10:14 done e28b_nearmiss (exit 0)
+02:10:14 start e28b_path
+02:23:15 done e28b_path (exit 0)

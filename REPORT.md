@@ -47,8 +47,9 @@ now explains, and what is being tested.
   reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; **cooled to zero with
   the learner's own update count it keeps the reliability and lifts the cap** (p = 31: 3/3 seeds at 20%, 1.00 / 1.00 /
   0.92 at 30%; smaller gain at p = 59). False positives must not be displaced in time (E27, 5 seeds: 0.195 vs 0.914 with veto, 0.896 with none).
-- **§60's readout fix transfers (E28 pilot, 1 seed): depth 1 rises from 0.29 to 0.756.** Depth 2 reaches 0.37, so
-  hidden-layer learning is now the bottleneck. Full runs queued.
+- **With §60's fixes, depth works with routing credit (E28b, 3 seeds).** Depth 1 0.68; depth 2 with counterfactual
+  routing credit 0.72–0.74 (a modest lead, ranges overlap); depth 2 with critical-path credit only 0.17 (chance
+  0.14). Routing credit is what makes depth learnable; near-miss credit matches fired credit, not better.
 - **Routing credit (E28, full runs, 3 seeds, before the readout fix): counterfactuals help, the near-miss lead
   reversed, depth does not pay yet.** Counterfactual credit beats path-only (0.31–0.33 vs 0.17); near-miss adds nothing over fired credit at
   k = 2 (0.31 both; the pilot's 0.41 vs 0.34 did not survive); near-miss at k = 1 matches it with 28% fewer events
@@ -314,8 +315,18 @@ chance 0.14).
 | depth 2, near-miss (k = 1) | 0.33 (0.43, 0.36, 0.18) | 17.9 |
 | depth 2, near-miss + push | 0.17 (0.08, 0.14, 0.29) | 24.6 |
 
-Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead reversed, and depth does
-not beat depth 1. All arms are far from solving the task; the readout uses pull-only weights without §60's
+**E28b (the same, with §60's readout and hidden-layer conservation, 192 hidden, k = 1; 3 seeds).**
+
+| arm | test (mean; seeds) |
+|---|---|
+| depth 1 | 0.68 (0.72, 0.59, 0.73) |
+| depth 2, fired credit | 0.74 (0.69, 0.83, 0.70) |
+| depth 2, + near-miss credit | 0.72 (0.72, 0.77, 0.68) |
+| depth 2, critical path only | 0.17 (0.15, 0.12, 0.22) |
+
+With a working readout, depth 2 with routing credit edges past depth 1, and without routing credit it stays at
+chance. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
+reversed, and depth did not beat depth 1. All arms were far from solving the task; the readout uses pull-only weights without §60's
 conservation and prices, and 48 hidden nodes, which E29 showed cannot work. Rerun with those fixes is next. Two
 bugs found on the way were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor,
 and counterfactual pulls must use the near-miss's partial window only.
