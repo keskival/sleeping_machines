@@ -853,8 +853,10 @@ def build():
         "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
         "mistakes.",
         "<b>New theory, proved:</b> exactly what one event node can compute and where depth is needed; why a fixed weight "
-        "budget lets a node learn an AND without knowing which half was wrong; why learning deep order needs a little "
-        "exploration and a safety margin.",
+        "budget lets a node learn an AND without knowing which half was wrong; that deep order is trainable with the fewest "
+        "mistakes any learner can guarantee; and that a race of clocks carries both the softmax (which fires) and its "
+        "normalizer (when), so Transformer attention and its gradients are computed on average exactly by local rules: "
+        "Transformers, including their training, are a limit of these networks.",
     ], st)
     s += [P("<b>Scope of the evidence.</b> The supremacy results (timing, composition, deep order, grokking) are on synthetic "
             "tasks built to test one capability at a time, where the target is exactly expressible by the primitives. The theory "
