@@ -77,7 +77,7 @@ right order and keeps it (§84).
 
 **Where it does not win yet:** spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
-**Next:** a real event-camera benchmark, and a plan for generative language models built this way ([§10](#10-next-frontier-generative-language-models-a-plan)).
+**Next:** a real event-camera benchmark, and a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
 
 ---
 
@@ -91,7 +91,7 @@ and what remains open.
 **Contents:** [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
 [2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
 [4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
-[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) · [10. Language models](#10-next-frontier-generative-language-models-a-plan) ·
+[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) · [10. Language models](#10-next-frontier-generative-language-models) ·
 [Experiment index](#experiment-index) · [Reproducing](#reproducing)
 
 ## Summary
@@ -602,75 +602,52 @@ budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates
 [Race logic (Madhavan, Sherwood, Strukov)](https://ieeexplore.ieee.org/document/6853226/) ·
 [Loihi energy per synaptic operation (Davies et al., 2018)](https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf)
 
-## 10. Next frontier: generative language models (a plan)
+## 10. Next frontier: generative language models
 
-**The thesis.** Sleeping Machines networks subsume Transformers: any Transformer can in principle be written as one, since
-the substrate is universal and every part of a Transformer layer has an event form (below). What remains to show is
-the stronger part: that the networks' own local learning rules, whose cost follows activity, reach the same quality, and
-that the energy saved grows with how sparse the needed computation is. Silence, sparse codes and "only firing units work"
-are where the savings measured here (10³–10⁵×) came from; a computation that truly needs everything to meet everything
-at every step would save little.
+**The aim** is not to approximate Transformers but to exceed them: the same or better quality, with work per word that does
+not grow with model size or text length, learned by local rules from less data.
 
-**Why language.** Language models are where Transformers are strongest, and where their cost hurts most: every generated
-word passes through every weight, and the cost of attention grows with the length of the text. If event networks can
-generate text at useful quality, the payoff is large: work per word that does not grow with model size or text length.
+**Why that is a reasonable aim** (theory; details in §96–§98):
+- *Nothing a Transformer computes is out of reach.* Every part of a Transformer layer has an event form: similarity between
+  a query and stored keys is the overlap of their spike codes; a race among the stored keys picks the best match, and a
+  race of randomly ticking clocks picks each key with exactly the probability softmax attention gives it; relative position
+  is native (delays and windows measure time differences directly); the feed-forward block is threshold units over codes.
+  Stacking layers is composition. So a Sleeping Machines network can express any Transformer.
+- *It has freedoms a Transformer lacks.* The *order* in which signals fire is a second axis for information (n signals can
+  carry up to log₂ n! extra bits in their order); only active units work, so a model can be very large while each word
+  stays cheap; structure is grown where it proves useful; sampling is a race, and retrieval reaches only keys that share
+  a channel with the query.
+- *Local learning is not a handicap in principle.* A race computes with minima and sums; the exact gradient that
+  backpropagation would compute for it runs only along the chain of spikes that caused the output, which each node can
+  trace locally. Credit along that chain *is* backpropagation for these networks; what gradients cannot provide (a
+  signal for the paths that lost) comes from near misses. For races of random clocks the exact gradient is also local.
+- *Depth is trainable, and optimally so.* For networks that detect ordered patterns of depth d, the number of learning
+  mistakes grows as d × log(size of the candidate pool), and no learner of any kind can do better in the worst case (§97, §98).
 
-**How text becomes events.** Each character (or byte) is an event, like a spike in the timing tasks. Nothing needs to be
-invented for that; what needs care is what the network builds on top.
+**First evidence.**
+- Deep order is learned from about ten times less data than a Transformer needs (§4).
+- *Attention is learnable by local credit.* In a recall task where the network must learn which key a query refers to and
+  which neighbour to read (a learned query–key match, as a Transformer's attention learns), a race-attention layer trained
+  by local credit alone is 100% correct after 68 mistakes, and stays 100% correct on contexts four times longer than it
+  trained on (one run; five runs and a Transformer comparison are running, E61).
 
 ![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
 
-**The design, in five parts** (details and predictions: §94–§95):
-1. *Characters as events.*
-2. *Shared codes.* Each character (and later, each learned chunk) fires a few channels out of a shared pool, so that
-   similar things overlap. Giving every word its own private switch is what stops simple models from generalizing
-   (we proved this for arithmetic, §66).
-3. *Context detectors* ("this, then that" units, the same ones that learned deep order here). Every possible chunk is a
-   candidate, but a connection is created only when it helps predict what comes next, and unused ones are pruned. This
-   is, in effect, a tokenizer that is learned by usefulness rather than by frequency (as today's byte-pair tokenizers are).
-4. *Slow memory.* Counters that track the topic and recent vocabulary (they closed half the gap to a Transformer on the
-   market stream), and traces that remember "last time A appeared, B followed", the copying trick that makes Transformers
-   good at repeating names and phrases. Each costs a fixed amount per character, however long the text.
-5. *Predict and choose.* Every active detector votes for the next character; votes are weighted by each detector's track
-   record (the same budget-conserving updates that learned everything else here). The choice is made by a race: every
-   candidate gets a clock that ticks at a rate proportional to its probability, and the first to tick is the next
-   character. A race of such clocks samples *exactly* from the model's probabilities, so the network's own
-   first-to-fire readout is the sampler.
+**The plan, in stages, each measured on character-level text (text8):**
+1. *Counting baseline* (running, E62): context detectors of increasing length with counts of what follows, plus a copy
+   memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
+2. *Race attention over the stream* (the E61 mechanism at scale): content-addressed retrieval learned by local credit.
+3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
+4. *Stacked layers* with credit along causal chains and near misses.
+At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
+measures: bits per character, examples needed, and work per character.
 
-**How it should scale** (predicted, schematic; not measured):
+![Predicted scaling: work per character stays flat as the model grows; the counting stage has a higher floor; the full design aims at or below Transformer loss](report/figures/lm_scaling.png)
 
-![Predicted scaling: work per character stays flat as the model grows; loss falls faster at first but toward a higher floor](report/figures/lm_scaling.png)
-
-- *Work per character stays flat* as the model grows: only the detectors that fire do any work, however many exist.
-  A Transformer's work grows with its size. Memory, not computation, becomes the resource that limits scale.
-- *Loss falls quickly with data at first* (counting models are strong with little data), but a design built on counting
-  alone approaches a *higher floor*: it cannot generalize to contexts it has never seen.
-- *That floor is not a limit of event networks.* A Transformer layer has an event form (§96). Similarity between a query
-  and stored keys is the overlap of their spike codes; a "race" among the stored keys picks the best match, and a race of
-  randomly ticking clocks picks each key with exactly the probability softmax attention would give it; relative position
-  is native (delays and windows measure time differences directly); the feed-forward block is threshold units over
-  codes. Stacking such layers is composition. So in principle an event network can express what a Transformer expresses,
-  at work that follows activity; retrieval can even be cheaper, since a query only reaches keys that share a channel with
-  it.
-- *At least as well, and room to do better.* The layer-by-layer mapping is a thought experiment: it shows the paradigm can
-  match a Transformer, not that it should be built that way. The event form has freedoms a dense layer lacks: the *order*
-  in which signals fire is a second axis for information (n signals can carry up to log₂ n! extra bits in their order);
-  only active units work, so a model can be very large while each word stays cheap; structure is grown where it proves
-  useful, which on deep order already needed about ten times less data than a Transformer (measured, §4); and sampling
-  and retrieval come directly from races and shared channels. Which of these pays off for language is what experiments
-  must show.
-
-**Realistic expectation.** The counting version: roughly the quality of the best compression-style models and small
-recurrent networks, at a small fraction of the computation per character and with no growth in cost for long texts. With
-race attention layers, nothing in principle stops Transformer-level quality; what is unknown is whether local learning
-rules (the ones that learned everything in this report, without backpropagation) can train deep stacks of such layers as
-well as gradients train Transformers. That is the research question, and it can be tested small first: a single
-race-attention layer learning associative recall and "induction" (copy what followed a word earlier).
-
-**How we would test it.** Character-level prediction on standard text benchmarks (text8, enwik8), in stages, so that each
-part's contribution is measured: counting with backoff, then context detectors, then copying traces, then weighted
-voting. At three data sizes (10⁶, 10⁷, 10⁸ characters), against a recurrent network and a small Transformer given the
-same text, measuring loss, memory and work per character.
+**What is established and what is not.** Established: the expressive equivalence, the locality of exact credit for
+races, the optimality of the depth bound, learned attention on a recall task, and data efficiency on deep order.
+Not yet shown: that stacked race-attention layers with learned codes, trained by local credit, match or beat a Transformer
+on language itself. The stages above are how that will be decided.
 
 ## Experiment index
 

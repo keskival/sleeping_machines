@@ -4171,6 +4171,8 @@ exact sampling from the model's distribution, with no normalization step.
 level (≈ 1.7–2.0); + composite units and induction traces better than PPM-style models; + mixing ≈ context-mixing or LSTM
 level (≈ 1.2–1.4), still above large Transformers (≈ 1.0); per-character work proportional to active units, constant in
 context length. Staged, so each ingredient's contribution is measured.
+(These numbers describe the counting-and-mixing design only; with race attention and learned codes (§96) the aim is
+Transformer-level or better, and local credit is not a handicap in principle (§98).)
 
 ## 95. Topology and scaling laws of an event language model (before any run)
 

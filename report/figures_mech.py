@@ -407,9 +407,9 @@ def fig_lm_scaling():
     a_t = 1.0 + 2.2 * (d / 1e5) ** -0.12
     a_e = 1.75 + 1.2 * (d / 1e5) ** -0.35
     b.plot(d, a_t, color=DENSE_T, lw=1.8, label="Transformer")
-    b.plot(d, a_e, color="#f3a37f", lw=1.6, label="counting-only event model: fast, higher floor")
+    b.plot(d, a_e, color="#f3a37f", lw=1.6, label="counting stage (E62): fast, higher floor")
     b.fill_between(d, 0.72 + 2.2 * (d / 1e5) ** -0.14 * 0.9, a_t, color=EVENT, alpha=0.22, lw=0,
-                   label="event model with race attention and learned codes\n(hypothesis): at least Transformer-level, possibly better")
+                   label="full design (race attention, learned codes; the aim):\nat or below Transformer loss")
     b.set_ylim(0.7, 3.4)
     b.set_xscale("log"); b.set_xticks([]); b.set_yticks([])
     b.set_xlabel("training text (characters)", fontsize=7.5); b.set_ylabel("prediction loss (lower = better)", fontsize=7.5)
