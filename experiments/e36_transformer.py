@@ -97,6 +97,7 @@ def main():
     ap.add_argument("--p", type=int, default=17)
     ap.add_argument("--frac", type=float, default=0.3)
     ap.add_argument("--wd", type=float, default=0.0, help="AdamW weight decay (grokking regime needs it)")
+    ap.add_argument("--ntrain", type=int, default=0, help="e27/e28: a fixed training set of n episodes, revisited (epochs = episodes/n)")
     ap.add_argument("--reltime", type=int, default=0, help="1: learned relative-time attention bias (§70)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
@@ -124,6 +125,9 @@ def main():
         else:
             ev = np.random.default_rng(99)
             test = [draw(ev) for _ in range(2000)]
+            if a.ntrain:                                       # sample efficiency: n distinct episodes, many epochs
+                fixed = [draw(rng) for _ in range(a.ntrain)]
+                draw = lambda r: fixed[r.integers(a.ntrain)]                   # noqa: E731
         for size in a.sizes.split(","):
             d, L = map(int, size.split("x"))
             torch.manual_seed(seed)
