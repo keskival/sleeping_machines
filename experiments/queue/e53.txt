@@ -19,7 +19,19 @@ e53m_d3_m0.75 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5 --margin
 e34m_tuned experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --steps 40000 --seeds 5
 e34m_bank experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --scales 1,2,4 --steps 40000 --seeds 5
 e54m_D4 experiments/e54_chains.py --D 4 --margin 0.9 --steps 40000 --seeds 5
+e53g_m0.9_g0.9 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5 --margin 0.9 --gate 0.9
+e53g_m0.9_g0.97 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5 --margin 0.9 --gate 0.97
 e54_D4_L1 experiments/e54_chains.py --D 4 --L 1 --steps 20000 --seeds 5
+e36g_n10k_wd0.1 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 10000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag n10k_wd0.1
+e36g_n40k_wd0.1 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag n40k_wd0.1
+e36g_n40k_wd0 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag n40k_wd0
+e52_v_d32 experiments/e52_thp.py --mode val --d 32 --epochs 30
+e52_v_d64 experiments/e52_thp.py --mode val --d 64 --epochs 30
+e52_v_d128 experiments/e52_thp.py --mode val --d 128 --epochs 30
+e52_v_d64L32 experiments/e52_thp.py --mode val --d 64 --L 32 --epochs 30
+e52_v_d64L256 experiments/e52_thp.py --mode val --d 64 --L 256 --epochs 30
+e52_v_d64f experiments/e52_thp.py --mode val --d 64 --fine 1 --epochs 30
+e52_v_d64lr3 experiments/e52_thp.py --mode val --d 64 --lr 3e-4 --epochs 30
 e53_tf_n40k experiments/e36_transformer.py --task e53 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e53_n40k
 e53_tf_online experiments/e36_transformer.py --task e53 --sizes 32x2,64x2 --episodes 2000000 --batch 64 --seeds 2 --tag e53_online2M
 e54_tf_n40k experiments/e36_transformer.py --task e54 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag e54_n40k

@@ -4,14 +4,70 @@
 (`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
 the experiment log is `experiments/FINDINGS.md` and git history.*
 
-Sleeping Machines proposes that computation can happen **in time rather than memory**: candidate events race, the
-first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an input, and by
-inhibition that arrives in time. This report states what is now known about such networks, why, and what remains
-open.
+## In plain terms
+
+Today's neural networks are **clocked and dense**: at every step, every input is multiplied by every weight, whether
+or not anything happened. Many real signals are the opposite: long silences broken by precisely timed events (nerve
+spikes, trades on a market, sensor alarms), where *when* something happens is the information.
+
+**Sleeping Machines are networks that only work when an event arrives.** A node waits. It fires when the right inputs
+arrive in the right time window ("B within 1.5 s after A"), and the first node to fire gives the answer, a *race*.
+Silence costs nothing, and time itself does the computing: a delay or a waiting window plays the role that a weight
+matrix plays in a dense network.
+
+The questions are whether such networks can **learn** (without backpropagation or any dense machinery: a node adjusts
+only its few connections that were active, like moving money between accounts under a fixed budget) and whether they
+can **match or beat** MLPs and Transformers.
+
+![A clocked network pays for every cell at every tick; an event network pays only when a spike arrives](report/figures/concept.png)
+
+## Highlights
+
+- **Same accuracy, 10,000–100,000× less computation.** On timing-pattern recognition a learned event network is
+  perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after
+  1–2M training examples.
+- **It groks where a Transformer does not.** Trained on 30% of all (a, b, c) triples, it learns (a + b + c) mod 17 and
+  is 99.4–99.9% correct on the triples it never saw; a Transformer with weight decay stays at 3–63%.
+- **Deep order from a few thousand examples.** Recognizing which of 20 *orders* of four patterns occurred needs four
+  levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
+  correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
+  ≈ 80k connections ever created (Transformer comparison on this task is running).
+- **A better world model of a real market stream at ≈ 1/80 of the computation.** Predicting the next trade events of
+  BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).
+- **Learning cost follows activity, not size.** Eight times more inputs (12 → 96 channels) costs no more learning
+  mistakes.
+- **New theory, proved:** exactly what one event node can compute and where depth is needed; why a fixed weight budget
+  lets a node learn an AND without knowing which half was wrong; why learning deep order needs a little exploration
+  and a safety margin.
+
+![Where the event network stands against dense models, task by task](report/figures/supremacy_map.png)
+
+**What the network actually does** on one example: spikes arrive; part detectors fire when two spikes are close
+enough in time; an order detector fires when part B follows part A; the class node holds that and fires when C
+arrives. With the same motifs in another order, the "A then B" detector still fires but nothing completes the pattern.
+
+![One decision, event by event: the right order fires the class node, a decoy does not](report/figures/anatomy.png)
+
+**Why learning it is not trivial.** When a detector for "A, then B, then C" fails to fire, which of its connections
+should change? Crediting every candidate spreads the weight so thinly that the node never fires; crediting the
+tempting shortcut ("A, then B" is shared with another class) traps it; exploring a little, then settling, finds the
+right order and keeps it (§84).
+
+![Three credit rules on the same class node: never fires, trapped on the shared prefix, finds the order](report/figures/credit_dynamics.png)
+
+**Where it does not win yet:** composition that depends on fine timing precision (0.99 vs a Transformer's 0.998);
+spoken digits (0.65 vs 0.70 for a published LSTM); and trading, where no learner beats buy-and-hold on this data.
+
+---
+
+Technically, Sleeping Machines proposes that computation can happen **in time rather than memory**: candidate events
+race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an input,
+and by inhibition that arrives in time. The rest of this report states what is now known about such networks, why,
+and what remains open.
 
 ![One race: B fires, A and C are cancelled but keep their distance to threshold](report/figures/race.png)
 
-**Contents:** [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
+**Contents:** [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
 [2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
 [4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
 [6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) ·
@@ -29,8 +85,11 @@ open.
 3. **On a timing task, a learned event network matches or beats dense models at 10⁴–10⁵× lower cost**, with nothing
    given: 1.000 accuracy at 7.5 synaptic events per episode, against 0.989–0.996 for event-token Transformers at
    146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.
-4. **Depth pays when composition is a hold/trigger chain** (0.97 vs 0.39 at depth 1), but a well-trained Transformer
-   is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.
+4. **Depth is learned natively when credit is right (§83–§86).** Summed potentials with conserved multiplicative
+   credit, credit given to one instant with cooled exploration, and synapses grown only when credited (provably the
+   same decisions as dense weights) learn order among three and four parts: 0.999–1.000 on 5/5 seeds at depth 4, with
+   ≈ 2,000 updates and ≈ 80k grown synapses out of 5.5·10⁷ candidates. On a composition task that hinges on fine
+   timing precision a Transformer is still more accurate (0.998 vs 0.988–0.995), at ≈ 10⁴× the cost and 50× the data.
 5. **Grokking occurs, by a route change under sleep, and only for relations the substrate can express.** A network
    that can memorize, given a rhythm resource, memorizes without sleep and generalizes after a delay with sleep
    (0.95–0.99 on unseen pairs in 5/5 seeds with cooled timing noise at the right temperature); it stays at chance on relations
@@ -53,10 +112,11 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 |---|---|---|
 | **Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks** | E35: 1.000 at 7.5 synaptic events per episode, nothing given; best conv net 0.995 at 3.07M multiply-adds; event-token Transformer 0.989–0.996 at 146k–1.16M after 10× more training | one task family built around the primitives; the cost gap is largely the clock (an event-driven conv net would narrow it to ≈ 10×) |
 | **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 and 0.03 (seed 1; chance 0.06) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
-| **A better world model of a real market stream at ≈ 200× lower cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | the model class is classical (semi-Markov); a GRU trained offline for several epochs is still running |
+| **A better world model of a real market stream at 80–200× lower cost** (inference only / with online learning) | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | the model class is classical (semi-Markov); a GRU trained offline for several epochs is still running |
 | **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
-| *Not supremacy:* composition accuracy | E34: hold/trigger chains 0.97 vs Transformer 0.998 on hierarchical motifs (at ≈ 10⁴× lower cost) | the Transformer is more accurate |
+| **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
+| *Not supremacy:* composition that hinges on timing precision | E34m: chains 0.988–0.995 per seed, stable at every checkpoint, 40k examples, ≈ 14 events; Transformer 0.998 after 2M examples (0.42–0.70 after 40k) | the Transformer is more accurate given 50× the data; fixed windows cannot express the task's minimum intervals |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner profits after costs; the native one learns to stay out | the data (trades only, one asset) may hold no exploitable edge |
 
