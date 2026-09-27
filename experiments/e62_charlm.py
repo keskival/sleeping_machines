@@ -144,7 +144,7 @@ def main():
         res["test_bpc_counts_copy"] = tst["bpc_counts_copy"]; res["copy_weights"] = v["weights"]
     res["wall_s"] = round(time.time() - t0, 1)
     print(json.dumps({k: v2 for k, v2 in res.items() if k != "copy_weights"}), flush=True)
-    with open(os.path.join(OUT, f"counts_D{a.D}_K{a.K}_copy{a.copy}.json"), "w") as f:
+    with open(os.path.join(OUT, f"counts_D{a.D}_K{a.K}_copy{a.copy}.json"), "w") as f:  # (K fixed across D: the h series)
         json.dump(res, f)
 
 
