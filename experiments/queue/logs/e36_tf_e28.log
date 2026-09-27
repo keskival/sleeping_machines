@@ -8,3 +8,6 @@
 {"task": "e28", "seed": 0, "d": 64, "layers": 2, "acc": 0.6995000243186951, "params": 102032, "tokens_per_episode": 6.857, "macs_per_episode": 687131.250944, "wall_s": 13.0}
 {"task": "e28", "seed": 1, "d": 16, "layers": 1, "acc": 0.41749998927116394, "params": 3808, "tokens_per_episode": 6.861, "macs_per_episode": 22839.338272, "wall_s": 7.6}
 {"task": "e28", "seed": 1, "d": 32, "layers": 1, "acc": 0.43700000643730164, "params": 13744, "tokens_per_episode": 6.861, "macs_per_episode": 87832.660544, "wall_s": 8.1}
+{"task": "e28", "seed": 1, "d": 32, "layers": 2, "acc": 0.47350001335144043, "params": 26448, "tokens_per_episode": 6.861, "macs_per_episode": 175153.321088, "wall_s": 9.8}
+{"task": "e28", "seed": 1, "d": 64, "layers": 2, "acc": 0.5105000138282776, "params": 102032, "tokens_per_episode": 6.861, "macs_per_episode": 687538.5141759999, "wall_s": 13.1}
+EXIT-OK

@@ -1,0 +1,5 @@
+e37_lam0 experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0
+e37_lam002 experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.02
+e37_lam005 experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05
+e37_lam02 experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.2
+e37_norhythm experiments/e37_grok.py --epochs 400 --seeds 3 --every 5 --lam 0.05 --rhythm 0
