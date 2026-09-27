@@ -45,7 +45,7 @@ now explains, and what is being tested.
   the relation from random delays (**full runs, 3 seeds: p = 31 test 0.97–0.98 at 50% of pairs, 0.81–0.94 at
   30%; p = 59 0.95 and 0.91–0.97**), with 10× fewer updates than the push. Timing noise makes generalization
   reliable at 20% (3/3 seeds vs 1/3) but, annealed by the error rate, caps accuracy near 0.75; a cooling schedule
-  is queued. False positives must be removed by veto, not by displacement (E27 pilot: 0.87–0.92 vs 0.21).
+  is queued. False positives must not be displaced in time (E27, 5 seeds: 0.195 vs 0.914 with veto, 0.896 with none).
 - **Routing credit from cancellation (E28, one seed).** Pulling the wanted cancelled near-miss on its partial
   window beats MoE-style fired credit (0.41 vs 0.34) at equal events. Full runs queued.
 - **The operator basis is Turing-complete, and restoration makes it scalable (E30, complete).** A two-counter
@@ -284,9 +284,17 @@ The push makes about 386k updates per run (an error on nearly every sample); pul
 Noise annealed by the error rate stays near σ ≈ 0.25 and limits accuracy; a schedule that cools to zero with
 the learner's own update count is queued (E26c). Transfer test to the main race (`--compete 0` on SHD and E24) queued.
 
-**E27 (delays + coincidence windows + veto).** Patterns "B within Δ after A unless C". Specializing false firers
-by veto: 0.87–0.92; displacing them in time: 0.21–0.24 (pilot, 2 seeds, 20k episodes; 5-seed runs queued). The
-first task version did not need veto (no-veto matched); fixed by planting vetoed near-misses.
+**E27 (delays + coincidence windows + veto, full runs, 5 seeds, 200k episodes).** Patterns "B within Δ after A
+unless C"; 10% of episodes are vetoed near-misses, so a network without veto is capped near 0.9.
+
+| false positives handled by | test | updates |
+|---|---|---|
+| veto (specialize) | 0.914 (0.887–0.934) | 15–20k |
+| none (no veto synapses) | 0.896 (0.881–0.918) | 18–23k |
+| push (displace in time) | 0.195 (0.18–0.20) | ~155k |
+
+Displacement is decisively destructive. Veto helps (+1.8 points) but does not yet approach 1.0, so veto learning is
+only partly working. (The first task version did not need veto; fixed by planting vetoed near-misses.)
 
 **E28 (depth and routing).** Hierarchical motifs (ordered pairs of sub-motifs). Pilot, one seed, 8k episodes:
 near-miss routing 0.41, top-k fired credit 0.34, depth 1 0.35, critical path only 0.18. Two bugs found on the way
