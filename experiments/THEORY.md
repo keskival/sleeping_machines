@@ -3559,7 +3559,9 @@ distribution. A world model for this project is therefore W itself, built and le
 **Richer native state (same day):** hold/trigger pair parts over event types as extra state, started near zero:
 neutral (−2.643/−2.854/−2.696 vs −2.641/−2.852/−2.695); a log-linear intensity with learned inhibition (to express
 suppression, e.g. bid-ask bounce): worse (−3.26/−3.22/−3.08), because multiplicative steps on the log-intensity weights
-saturate at every event and the weights random-walk. The gap to the neural point process stays open.
+saturate at every event and the weights random-walk. The gap to the neural point process stays open. With log-domain steps normalized per synapse (Adam on the
+log-weights) the inhibitory model is stable but still below excitation-only (−2.80/−3.13/−2.94): suppression is not
+what the GRU adds here, or not in this form.
 
 **Stage 1 results (E44, 3 pilot days, nats per event):** Poisson −3.00/−3.42/−3.32; Hawkes (Adam) −2.62/−2.94/−2.84;
 native −2.64/−2.85/−2.70; native with fast/slow surprise-gated plasticity −2.64/−2.85/−2.69; GRU neural point process

@@ -183,8 +183,11 @@ class InhibTPP:
         gz[y] += Ss[-1]
         g_mu = -comp / self.mu; g_mu[y] += 1.0 / self.mu[y]
         self.mu *= np.exp(np.clip(self.eta * g_mu * self.mu, -0.5, 0.5))
-        self.We *= np.exp(np.clip(self.eta * gz, -0.5, 0.5))     # EG on excitatory weights (+ direction)
-        self.Wi *= np.exp(np.clip(-self.eta * gz, -0.5, 0.5))    # EG on inhibitory weights (- direction)
+        # log-domain steps normalized per synapse by its own running gradient scale (local, keeps weights positive)
+        self.v = 0.999 * getattr(self, "v", np.zeros_like(gz)) + 0.001 * gz * gz
+        st = 1e-3 * gz / (np.sqrt(self.v) + 1e-8)
+        self.We *= np.exp(np.clip(st, -0.1, 0.1))                # excitatory: + direction
+        self.Wi *= np.exp(np.clip(-st, -0.1, 0.1))               # inhibitory: - direction
         np.clip(self.We, 1e-5, 5, out=self.We); np.clip(self.Wi, 1e-5, 5, out=self.Wi)
         self.S = Ss[-1]; self.S[y] += 1.0; self.t0 = t
         if self.parts:
