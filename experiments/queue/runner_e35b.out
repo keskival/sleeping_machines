@@ -1,1 +1,8 @@
 11:59:55 start e35_N12
+12:00:47 done e35_N12 (exit 0)
+12:00:47 start e35_N24
+12:01:33 done e35_N24 (exit 0)
+12:01:33 start e35_N48
+12:02:17 done e35_N48 (exit 0)
+12:02:17 start e35_N96
+12:02:47 done e35_N96 (exit 1)

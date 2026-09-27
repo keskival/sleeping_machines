@@ -106,6 +106,13 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         pats = E27.make_task(N, K, H, rng)                     # same tasks and seeds as E27 / E32
+        for _ in range(20):                                    # redraw task sets in which some class cannot be
+            try:                                               # sampled (two patterns sharing their A and B
+                chk = np.random.default_rng(12345)             # channels); leaves every earlier task unchanged
+                [E27.sample(pats, N, H, q, chk) for _ in range(300)]
+                break
+            except RuntimeError:
+                pats = E27.make_task(N, K, H, rng)
         net = Free(N, K, rng)
         curve = []
         for step in range(1, a.steps + 1):
