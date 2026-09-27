@@ -1,0 +1,2 @@
+e41t_p17_f0.02 experiments/e41_grok3.py --lam 0.05 --sigma 2.21 --p 17 --seeds 3 --every 100 --frac 0.02 --epochs 2000 --tag tlong
+e41t_p17_f0.04 experiments/e41_grok3.py --lam 0.05 --sigma 2.21 --p 17 --seeds 3 --every 100 --frac 0.04 --epochs 1500 --tag tlong
