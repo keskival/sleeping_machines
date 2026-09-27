@@ -1,0 +1,6 @@
+/workspace/experiments/e36_transformer.py:32: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, L)
+{"task": "e27", "seed": 0, "d": 8, "layers": 1, "acc": 0.6685000061988831, "params": 1013, "tokens_per_episode": 5.8045, "macs_per_episode": 5036.931524, "wall_s": 23.4}
+/workspace/experiments/e36_transformer.py:32: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, L)
+{"task": "e27", "seed": 0, "d": 16, "layers": 1, "acc": 0.6934999823570251, "params": 3557, "tokens_per_episode": 5.8045, "macs_per_episode": 18989.575048, "wall_s": 24.7}

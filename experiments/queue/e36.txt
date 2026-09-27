@@ -1,0 +1,2 @@
+e36_tf_e27 experiments/e36_transformer.py --task e27 --sizes 8x1,16x1,32x1,32x2,64x2
+e36_tf_e28 experiments/e36_transformer.py --task e28 --sizes 16x1,32x1,32x2,64x2 --episodes 40000
