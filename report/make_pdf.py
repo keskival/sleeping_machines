@@ -373,6 +373,21 @@ def time_pages(st, W):
                     "are order errors; synapse caps, windowed readouts and global competition did not fix it (§62). Getting here required §60: pull-only on weights needs a "
                     "conserved per-node budget in fractional steps, conserving weakening, per-node prices, and enough "
                     "hidden nodes for Cover's capacity bound (depth 1 rose from 0.29 to 0.68).", st["small"])]
+    s += [Paragraph("E34: depth by composition in time", st["h2"]),
+          table([["hierarchical motifs, 15 classes from 6 motifs, 5 seeds", "test"],
+                 ["depth 2, hold/trigger chains, part window [0, 1.5]", "0.97 (0.92–0.99)"],
+                 ["depth 2, generic window bank {1, 2, 4}", "0.86 (0.79–0.96)"],
+                 ["depth 2, single wide window 4", "0.79 (0.68–0.93)"],
+                 ["depth 1, same nodes on channels", "0.39 (0.32–0.48)"],
+                 ["E28 (accumulating readout), depth 1 / 2", "0.51 / 0.44"]], [110, 50], st),
+          Paragraph("Parts are directional hold nodes on channel pairs; a class node holds one part's spike and is "
+                    "triggered by another's, so a single part cannot satisfy it: conjunction and order by construction "
+                    "(§64). Routing is learned by counterfactual pulls under conserved budgets. Learning the part windows "
+                    "from class routes failed (0.08–0.13): a shared part must not be shaped by one class.", st["small"])]
+    s += [Paragraph("E35: nothing given", st["h2"]),
+          Paragraph("E27's detectors were told their two channels. With learned hold, trigger and veto weights over all "
+                    "channels and learned hold durations: 1.000 on four seeds and 0.9995 on the fifth, 7.5 synaptic events "
+                    "per episode, 443–1,530 updates in 200k episodes. This is the headline result.", st["body"])]
     s += [Paragraph("E29: true grokking test, not passed", st["h2"]),
           Paragraph("A general race network that can memorize (ρ = n/params ≈ 0.006), given recurrent delay loops, on "
                     "E24's encoding. Frozen random loops only memorize (test 0.015); with hidden learning, training "
@@ -673,6 +688,24 @@ def build():
     s += [Paragraph("Sleeping Machines", st["title"]),
           Paragraph(f"Computing with races, cancellations and near misses · status report, {date.today():%d %B %Y}",
                     st["sub"])]
+    s += [Paragraph("Headline: a learned event network beats a clocked dense model at ~10⁵× lower cost", st["h1"]),
+          Paragraph("On a timing task (“B within Δ after A, unless C”, 4 patterns + none, 12 channels), with "
+                    "<b>nothing given</b>: each detector learns which channel holds, which triggers, how long it "
+                    "holds and which channels veto, by errors-only local updates (E35).", st["body"]),
+          table([["model", "test accuracy", "cost per episode", "learning"],
+                 ["<b>event network (E35)</b>", "<b>1.000 ×4, 0.9995</b> (5 seeds)", "<b>7.5 synaptic events</b>",
+                  "443–1,530 updates in 200k episodes"],
+                 ["clocked conv net, best (E32)", "0.995", "3.07M multiply-adds", "backprop, 200k episodes"],
+                 ["clocked conv net, cheapest ≥ 0.99", "0.992", "768k multiply-adds", "backprop"],
+                 ["clocked conv net at ≈ 0.91", "0.895", "1.9k multiply-adds", "backprop"]], [52, 40, 38, 44], st),
+          Paragraph("More accurate than the best dense model at about 10⁵× fewer operations; the event cost does not "
+                    "grow with silence, the clocked cost does. Priors on both sides: hold/veto nodes (§64) vs a receptive "
+                    "field matched to the pattern length. It worked because of theory: order is an asymmetry of PSP "
+                    "durations and veto needs the held interval (§61, §64); a node computing one interval predicate "
+                    "needs only O(its few parameters) mistakes. <b>Depth pays too (E34):</b> hold/trigger chains reach "
+                    "0.97 on hierarchical motifs (0.86 with a generic window bank) vs 0.39 at depth 1, 5 seeds. A "
+                    "Transformer on event tokens is the next baseline; grokking remains open.", st["body"])]
+    s.append(PageBreak())
     s += [Paragraph("In one page", st["h1"]),
           Paragraph("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: "
                     "candidate events race, the first to fire cancels the rest, and the cancelled ones keep a trace of "

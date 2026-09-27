@@ -16,6 +16,27 @@ now explains, and what is being tested.
 [Theory](#theory) · [E7 and E17: living in time](#e7-and-e17-living-in-time) · [E24–E29: computing with time](#e24e29-computing-with-time) · [Energy](#energy) ·
 [Lessons](#lessons) · [Next](#next) · [Reproducing](#reproducing)
 
+## Headline (27 September): a learned event network beats a clocked dense model at ~10⁵× lower cost
+
+On a timing task ("B within Δ after A, unless C", 4 patterns + none, 12 channels; E27's task), with **nothing given**
+(each detector learns which channel holds, which triggers, how long it holds and which channels veto; errors-only,
+local updates):
+
+| model | test accuracy | cost per episode | learning |
+|---|---|---|---|
+| **event network (E35)** | **1.000, 1.000, 1.000, 1.000, 0.9995** (5 seeds) | **7.5 synaptic events** | 443–1,530 updates in 200k episodes |
+| clocked conv net, best (E32) | 0.995 | 3.07M multiply-adds | backprop, 200k episodes |
+| clocked conv net, cheapest ≥ 0.99 | 0.992 | 768k multiply-adds | backprop |
+| clocked conv net at ≈ 0.91 | 0.895 | 1.9k multiply-adds | backprop |
+
+More accurate than the best dense model at about 10⁵× fewer operations, and the event cost does not grow with
+silence while the clocked cost does. Priors on both sides: the event network is built from directional hold/veto
+nodes (§64); the conv net gets a receptive field matched to the pattern length. What made it work is theory, not
+tuning: order is an asymmetry of PSP durations and veto needs the held interval (§61, §64), and a node computing one
+interval predicate needs only O(its few parameters) mistakes (§64.3). **Depth now pays too (E34):** on hierarchical
+motifs, hold/trigger chains reach 0.97 (tuned part windows; 0.86 with a generic window bank) vs 0.39 at depth 1,
+5 seeds. A Transformer on event tokens is the next baseline (E36, running); grokking remains open (E29).
+
 ## In one page
 
 **What holds up**

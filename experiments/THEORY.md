@@ -3160,6 +3160,27 @@ detector. The dense conv baseline has 16 × 12 × 16 + readout ≈ 3k parameters
 of interval predicates, a node that computes exactly one needs only as many mistakes as its few parameters.
 The flip side is the same statement: tasks not made of such predicates need depth, which is where §62 stands.
 
+## 65. Depth and routing, learned: hold/trigger chains (E34) and nothing-given detectors (E35)
+
+*Written 2026-09-27.*
+
+**E34: depth pays when composition is a chain.** E28's class nodes accumulated evidence, so any one part could fire a
+class (§62). A hold/trigger class node cannot be satisfied by one part: one part's spike must be held and a different,
+later part's spike must trigger. On E28's task (15 classes from 6 motifs; 5 seeds, 40k episodes): depth 2 0.97
+(0.92–0.99) with part windows [0, 1.5], 0.86 with a generic bank of windows {1, 2, 4}, 0.79 with one wide window 4;
+depth 1 with the same nodes 0.39; E28's accumulating readout 0.44–0.51. Routing (which part holds, which triggers)
+is learned by counterfactual pulls under conserved budgets. Learning part windows from class routes failed
+(0.08–0.13): a part shared across classes must not be shaped by one class's errors, the same lesson as §62.
+
+**E35: nothing given.** Detectors with learned hold, trigger and veto weights over all channels and learned hold
+durations solve E27's task at 1.000 on four seeds and 0.9995 on the fifth (7.5 synaptic events per episode, 443–1,530
+updates in 200k episodes). Given E27 told its detectors their channels, this removes the structural prior that made
+E32's comparison unfair; the headline comparison (§63's table) holds with nothing given.
+
+**Why routing is cheap here.** Each detector's routing is a choice of one hold and one trigger channel: 2 · log₂N
+bits. Counterfactual pulls find it with O(N) mistakes per detector (E35: ~100–400 per detector), consistent with
+§64.3's Occam argument extended to routing.
+
 ## Tests
 
 | | Claim | Test |
@@ -3220,6 +3241,7 @@ The flip side is the same statement: tasks not made of such predicates need dept
 | **M62** | depth fails because hidden nodes become class detectors; motifs longer than the window are out of reach of pulls; hold-then-align hidden learning makes them motif-selective and lets depth pay | E28 depth 2 with learnable hidden durations; motif vs class selectivity; E28c task |
 | **M63** | at matched accuracy an event learner beats the cheapest clocked dense model by ~10² in operations, growing linearly with silence; vs a sparse (event-driven) dense model only ~10× | E32 `e32_frontier.py`: dense conv over F × δ, silence padding; E27 synaptic-event counts |
 | **M64** | order = asymmetric PSP durations; one node = one bounded difference with exclusions; fixing the order of m points needs an (m − 1)-node chain (temporal depth = order-chain length); O(VC ≈ 2 + N) mistakes per node | E27 `--tol hold` (directional) with and without veto; E33 `e33_allen.py`: all 13 Allen relations exact |
+| **M65** | depth pays when composition is a hold/trigger chain; routing to channels and parts is learned with O(N) mistakes per node | E34 `e34_compose.py` depth 2 vs 1, window variants; E35 `e35_free.py` nothing given |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

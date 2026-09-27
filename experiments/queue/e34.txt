@@ -1,0 +1,4 @@
+e34_d2_ph15 experiments/e34_compose.py --steps 40000 --seeds 5 --part-hi 1.5
+e34_d2_bank experiments/e34_compose.py --steps 40000 --seeds 5 --scales 1,2,4
+e34_d2_ph4 experiments/e34_compose.py --steps 40000 --seeds 5 --part-hi 4.0
+e34_d1 experiments/e34_compose.py --steps 40000 --seeds 5 --depth 1
