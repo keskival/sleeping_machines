@@ -57,3 +57,23 @@
 15:42:21 start e55_confirm
 15:43:37 done e55_confirm (exit 0)
 15:43:37 start e56_iv
+15:44:45 done e56_iv (exit 0)
+15:44:45 start e36g_n40k_wd0.1
+15:58:30 done e36g_n40k_wd0.1 (exit 0)
+15:58:30 start e89_e53_latest
+15:59:48 done e89_e53_latest (exit 0)
+15:59:48 start e89_e53_latest_g
+16:01:13 done e89_e53_latest_g (exit 0)
+16:01:13 start e89_e34_latest_iv
+16:02:19 done e89_e34_latest_iv (exit 0)
+16:02:19 start e89_e34_latest_iv_g
+16:03:27 done e89_e34_latest_iv_g (exit 0)
+16:03:27 start e89_e34_latest_tuned
+16:04:25 done e89_e34_latest_tuned (exit 0)
+16:04:25 start e36g_n40k_wd0
+16:17:50 done e36g_n40k_wd0 (exit 0)
+16:17:50 start e89_e34_latest_iv_g99
+16:18:58 done e89_e34_latest_iv_g99 (exit 0)
+16:18:58 start e89_e53_latest_g99
+16:20:18 done e89_e53_latest_g99 (exit 0)
+16:20:18 start e52_v_d32

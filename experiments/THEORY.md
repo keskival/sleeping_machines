@@ -3973,7 +3973,8 @@ with fewer updates than exploration (≈ 1,100). P2: E34's task with learned win
 half of exploration's); without it the same values from the first checkpoint (5k episodes; 550–690 updates) with one final
 dip. P2 holds: E34's task with learned windows and latest-instant credit 0.9987 / 0.9967 / 0.9993 / 0.990 / 0.998
 (≥ 0.995 on 4/5; mean 0.9965) from 40k examples seen once, against the Transformer's 0.9955–0.998 after 2M examples and
-0.982 / 0.985 given the same 40k examples 50 times. Both pieces are needed: with fixed windows latest-instant credit keeps
+0.9935 / 0.9965 given the same 40k examples 50 times without weight decay (0.982 / 0.985 with): parity at equal data,
+from one pass instead of fifty. Both pieces are needed: with fixed windows latest-instant credit keeps
 the old plateaus (0.988–0.995), because the complete route (A held with the gap part, B's part as trigger) is only
 expressible once the gap part's window is learned. P3 fails: with the margin gated at precision 0.9, two seeds of E34's
 task fall to 0.976–0.981, the margin again protecting routes that are right ≈ 99% of the time. The gate must exceed

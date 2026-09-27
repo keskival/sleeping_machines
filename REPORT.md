@@ -32,10 +32,11 @@ can **match or beat** MLPs and Transformers.
   levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
   correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
   ≈ 80k connections ever created (Transformer comparison on this task is running).
-- **Composing parts: Transformer-level accuracy from 50× less data, better at equal data.** On a task of 15 classes
+- **Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.** On a task of 15 classes
   built from ordered pairs of shared motifs, the event network reaches 0.990–0.999 (mean 0.9965) from 40k examples
   seen once, learning its own timing windows, at ≈ 20 events per example; a Transformer needs 2M examples for
-  0.9955–0.998 and reaches 0.955–0.985 when given 10k–40k examples many times over.
+  0.9955–0.998, and given the same 40k examples 50 times it reaches 0.9935–0.9965 (0.955–0.985 with weight decay or 10k
+  examples).
 - **A better world model of a real market stream at ≈ 1/80 of the computation.** Predicting the next trade events of
   BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).
 - **Learning cost follows activity, not size.** Eight times more inputs (12 → 96 channels) costs no more learning
@@ -121,7 +122,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
-| **Composition: Transformer-level accuracy from 50× less data, better at equal data** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.982–0.985 given the same 40k × 50 passes, 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
+| **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55 (confirmed on 21 unseen days): the predictable edge is 0.3–1.4 bp per trade (larger with BTC-perp and ETH states), below any taker fee | staying out is correct for a taker here (§87) |
 
@@ -302,7 +303,8 @@ one level of composites too few the network cannot express the order and stays a
   *shortcut*: a class that fires as soon as its second motif begins, right about 99% of the time. Crediting the latest
   instant of an example (where the pattern is complete) removes it, once the windows (including the gap between the
   motifs) are learned: 0.9987 / 0.9967 / 0.9993 / 0.990 / 0.998 from 40k examples seen once (E89), against the
-  Transformer's 0.9955–0.998 after 2M examples and 0.982 / 0.985 given the same 40k examples 50 times.
+  Transformer's 0.9955–0.998 after 2M examples and 0.9935 / 0.9965 given the same 40k examples 50 times (without
+  weight decay; 0.982 / 0.985 with): parity at equal data, from one pass instead of fifty, at ≈ 10⁴× less computation.
 - **At equal data the chains are more accurate.** Given a fixed set of 10k examples and 200 passes over it (AdamW,
   weight decay), the Transformer reaches 0.955 and 0.976; the chains reach their plateaus (0.988–0.995) within 8k
   examples seen once each (E36g). With one credit rule (instant credit, cooled exploration, margin earned by precision),
