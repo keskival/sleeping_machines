@@ -121,7 +121,7 @@ class Net:
         self.dense = dense
         self.reg = {}                                                        # unit key -> synapse index (lazy)
         self.h = Syn(K, self.Q, dense); self.g = Syn(K, self.Q, dense)
-        self.events = 0; self.syn = 0; self.updates = 0
+        self.events = 0; self.syn = 0; self.updates = 0; self.margin = 0.0
 
     def _idx(self, key, k):
         if self.dense:                                                       # exact dense index of the unit
@@ -172,6 +172,12 @@ class Net:
     def teach(self, t, y):
         c, U, win, same, inst, ft = self.forward(t)
         if c == y:
+            if self.margin and y < self.K:                                  # §86: near-miss credit
+                i = inst[y]
+                if self.h.w(U[win[i]])[y].sum() < self.margin:
+                    self._grow(U, self._keys, win[i]); self.h.mul(y, U[win[i]], 1 + self.alpha)
+                if self.g.w(U[same[i]])[y].sum() < self.margin:
+                    self._grow(U, self._keys, same[i]); self.g.mul(y, U[same[i]], 1 + self.alpha)
             return
         if y < self.K and not np.isfinite(ft[y]) and len(U) >= 2:           # miss: instant credit (§84)
             hy, gy = self.h.w(U)[y], self.g.w(U)[y]
@@ -205,6 +211,7 @@ def main():
     ap.add_argument("--beta", type=float, default=0.5)
     ap.add_argument("--temp", type=float, default=0.3)
     ap.add_argument("--q", type=float, default=0.2)
+    ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin (0 = off)")
     ap.add_argument("--dense", type=int, default=0)
     ap.add_argument("--steps", type=int, default=40000)
     ap.add_argument("--seeds", type=int, default=5)
@@ -216,7 +223,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         task = make_task(a.N, a.M, a.D, a.S, a.R, rng)
-        net = Net(a.N, len(task[1]), L, rng, a.thr, a.alpha, a.beta, a.temp, a.dense)
+        net = Net(a.N, len(task[1]), L, rng, a.thr, a.alpha, a.beta, a.temp, a.dense); net.margin = a.margin
         curve, decisions = [], []
         for step in range(1, a.steps + 1):
             t, y = sample(task, a.N, a.q, rng)
@@ -231,7 +238,7 @@ def main():
         rows.append({"seed": s, "Q": net.Q, "final": curve[-1], "curve": curve,
                      "decision_hash": int(np.sum(np.array(decisions) * (np.arange(len(decisions)) % 9973 + 1)))})
         print(json.dumps({"seed": s, "Q": net.Q, **curve[-1], "decision_hash": rows[-1]["decision_hash"]}), flush=True)
-    with open(os.path.join(OUT, f"D{a.D}_L{L}_S{a.S}R{a.R}_T{a.temp:g}{'_dense' if a.dense else ''}"
+    with open(os.path.join(OUT, f"D{a.D}_L{L}_S{a.S}R{a.R}_T{a.temp:g}{'_dense' if a.dense else ''}{f'_m{a.margin:g}' if a.margin else ''}"
                                 f"{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))

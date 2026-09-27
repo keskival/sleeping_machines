@@ -84,7 +84,7 @@ def sample(task, N, H, q, rng):
 class Net:
     def __init__(self, N, K, depth, rng, thr, alpha, beta, credit="instant"):
         self.N, self.K, self.depth, self.thr, self.alpha, self.beta = N, K, depth, thr, alpha, beta
-        self.credit = credit; self.temp = 0.0; self.rng = rng
+        self.credit = credit; self.temp = 0.0; self.rng = rng; self.margin = 0.0; self.nm = 0
         self.pp = np.array([(p, q) for p in range(N) for q in range(N) if p != q]); self.P = len(self.pp)
         self.Q = self.P + (self.P ** 2 if depth == 3 else 0)
         self.h = rng.uniform(0.5, 1.5, (K, self.Q)); self.h /= self.h.sum(1, keepdims=True)
@@ -123,9 +123,18 @@ class Net:
         if len(idx):
             W_[c, idx] *= fac; W_[c] /= W_[c].sum()
 
+    def _near_miss(self, y, U, win, same, i):
+        """§86: a correct fire below the margin promotes its own contributors (keeps the route > theta_m)."""
+        if self.h[y, U[win[i]]].sum() < self.margin:
+            self._mul(self.h, y, U[win[i]], 1 + self.alpha); self.nm += 1
+        if self.g[y, U[same[i]]].sum() < self.margin:
+            self._mul(self.g, y, U[same[i]], 1 + self.alpha); self.nm += 1
+
     def teach(self, t, y):
         c, U, win, same, inst, ft = self.forward(t)
         if c == y:
+            if self.margin and y < self.K:
+                self._near_miss(y, U, win, same, inst[y])
             return
         if y < self.K and not np.isfinite(ft[y]) and len(U) >= 2:
             if self.credit == "union":                      # §83 as stated: every candidate in the episode
@@ -161,6 +170,7 @@ def main():
     ap.add_argument("--beta", type=float, default=0.3)
     ap.add_argument("--credit", default="instant", choices=("instant", "union"))
     ap.add_argument("--temp", type=float, default=0.0, help="instant credit: softmax temperature (0 = greedy)")
+    ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin theta_m (0 = off)")
     ap.add_argument("--steps", type=int, default=40000)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--tag", default="")
@@ -170,7 +180,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         task = make_task(a.N, a.M, a.S, a.R, rng)
-        net = Net(a.N, len(task[1]), a.depth, rng, a.thr, a.alpha, a.beta, a.credit); net.temp = a.temp
+        net = Net(a.N, len(task[1]), a.depth, rng, a.thr, a.alpha, a.beta, a.credit); net.temp = a.temp; net.margin = a.margin
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(task, a.N, H, q, rng)
@@ -179,12 +189,12 @@ def main():
                 ev = np.random.default_rng(99); n = 1500; ok = 0; e0, s0 = net.events, net.syn
                 for _ in range(n):
                     t, y = sample(task, a.N, H, q, ev); ok += net.forward(t)[0] == y
-                curve.append({"step": step, "test": ok / n, "updates": net.updates,
+                curve.append({"step": step, "test": ok / n, "updates": net.updates, "near_miss_updates": net.nm,
                               "events_per_episode": (net.events - e0) / n, "synapses_per_episode": (net.syn - s0) / n})
                 net.events, net.syn = e0, s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}_{a.credit}_T{a.temp:g}_b{a.beta:g}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}_{a.credit}_T{a.temp:g}_b{a.beta:g}{f'_m{a.margin:g}' if a.margin else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
