@@ -1,0 +1,6 @@
+e37sc_p31_s2.02 experiments/e37_grok.py --p 31 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 2.02 --tag scale
+e37sc_p31_s4.03 experiments/e37_grok.py --p 31 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 4.03 --tag scale
+e37sc_p59_s3.83 experiments/e37_grok.py --p 59 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 3.83 --tag scale
+e37sc_p59_s7.67 experiments/e37_grok.py --p 59 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 7.67 --tag scale
+e37sc_p97_s6.31 experiments/e37_grok.py --p 97 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 6.31 --tag scale
+e37sc_p97_s12.61 experiments/e37_grok.py --p 97 --epochs 300 --seeds 3 --every 25 --lam 0.05 --sigma 12.61 --tag scale
