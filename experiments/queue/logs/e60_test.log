@@ -1,0 +1,2 @@
+{"selected": {"G": 32, "R": 10.0, "lo": 2.0, "hi": 80.0, "S": 50.0, "rel": 0, "O": 6, "a": 0.5, "eval": "val"}, "val_acc": 0.6302083333333334}
+{"args": {"G": 32, "R": 10.0, "lo": 2.0, "hi": 80.0, "S": 50.0, "rel": 0, "O": 6, "a": 0.5, "eval": "test"}, "test_bag_acc": 0.6631944444444444, "test_seq_acc": 0.3090277777777778, "n": 288, "raw_events_per_gesture": 410440.62152777775, "onset_events_per_gesture": 18126.940972222223, "motion_events_per_gesture": 26348.46875, "wall_s": 141.8}

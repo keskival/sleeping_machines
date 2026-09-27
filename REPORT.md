@@ -58,7 +58,8 @@ them (what a node computes, mistake bounds logarithmic in the candidate basis, c
 task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
 tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
 0.675 vs ≈ 0.70 for an LSTM; a market-stream world model 0.07–0.18 nats per event behind a Transformer point process; and
-no trading edge after fees in four markets. A real event-camera benchmark is the next test.
+no trading edge after fees in four markets; and on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs
+94–98% published.
 
 ![Where the event network stands against dense models, task by task](report/figures/supremacy_map.png)
 
@@ -75,9 +76,10 @@ right order and keeps it (§84).
 
 ![Three credit rules on the same class node: never fires, trapped on the shared prefix, finds the order](report/figures/credit_dynamics.png)
 
-**Where it does not win yet:** spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no learner beats
+**Where it does not win yet:** event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 for a
+published LSTM), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
-**Next:** a real event-camera benchmark, and a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
+**Next:** a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
 
 ---
 
@@ -481,6 +483,13 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   **Across four markets (E55b):** trading ETH spot, SOL spot or the BTC perpetual instead, each with the other three as
   leaders (horizon and side chosen on the pilot days, read once on the untouched days), the edge before fees is at most
   ≈ 1 bp (BTC ≈ +1.0, perpetual ≈ +0.6, ETH and SOL ≈ 0 to +0.5), and every selection is negative or empty at a 2 bp fee.
+- **Event-camera gestures (DVS128 Gesture, E60; 11 gestures, 29 people, the official split).** Native motion events
+  (coarse cells with a refractory hold, onset detection, direction-selective pair detectors with an opponent veto, verified
+  on a synthetic moving edge) turn ≈ 410k raw events per gesture into ≈ 15k motion events. A bag of motion events scored
+  by counting reaches 0.663 on unseen people; adding depth (pairs of successive motions in a region) and the
+  multiplicative learner of §83 reaches 0.776 on held-out training users and **0.701 on the test users** (configuration
+  chosen on validation only). Published systems reach 94–98% (trained spiking networks and CNNs). The representation is
+  far from what these gestures need (rotation sense and trajectory shape); depth helps, but this is not yet competitive.
 - **Against a Transformer point process (E52, E57, §90).** A Transformer Hawkes process given the event network's own
   hazard family (one intensity per event type and gap window) and 128 events of context, selected on day 5 and tested
   on days 6–7, scores −1.97 / −1.82 nats per event (≈ 108k multiply-adds per event); with 12 finer windows −1.83 / −1.65.
