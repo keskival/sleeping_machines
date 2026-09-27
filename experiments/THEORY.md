@@ -3431,6 +3431,33 @@ signal from single channels; what the toggle representation changes is that each
 equation over GF(2) in the unknown channel set, solvable from ~N examples by elimination, if a native, local form of
 elimination exists. That is the question, not a claim.
 
+## 76. Grokking with depth, and the two kinds of collapse
+
+*Written 2026-09-27 from E37 with timing noise and E41's pilots; full runs queued.*
+
+**Collapse has two causes.** §72's collapse phase lumps together (a) *data-limited* collapse: shared parameters are
+reused fewer than m* = λθ/(eη) times, so sleep prunes them along with the memorizers, and no learning rule can avoid
+it; and (b) *search-limited* collapse: reuse suffices, but the shared route's error-driven search sits in a frustrated
+configuration whose errors pull it in inconsistent directions, so it never becomes correct and sleep then erodes the
+memorizer with nothing to replace it. E37's failing seed is (b): with timing noise on the shared route, cooled with the
+route's own update count (E26c's schedule), all three seeds grok (0.97–0.98; pilot, σ = 2 at p = 31), including the one
+that collapsed in every earlier run, and accuracy on the other seeds rises (0.96 → 0.98). The grokking phase is bounded
+above by data and below by search; fluctuations widen it from below. The noise must scale with the ring (σ ≈ 0.065 p
+was sufficient at p = 31 and 97, not at p = 59 with σ = 2: scaling sweep queued).
+
+**Depth-2 grokking (E41).** (a + b + c) mod p cannot be computed by one rhythm read (one read adds one time to one
+phase). The shared route composes two stages: a resets rhythm 1 and b reads it, emitting a spike whose phase is
+e₁(b) − d₁(a); that spike resets rhythm 2, which c reads. With a memorizer available (one node per triple,
+ρ ≈ 0.3 p³ / p⁴ ≈ 0.018 at p = 17) and errors-only learning split along the one causal chain (§56.4): without sleep the
+network memorizes and stays at chance on unseen triples (0.06); with sleep and cooled noise it generalizes to 0.998–0.999
+(pilot, p = 17, 30% of triples, 2 seeds). The chain's credit reaches the first stage through the second without
+contraction, as §56.4 and §68 predict: the error on one chain moves every delay on it by the same step.
+
+**What is and is not given.** The shared route's form (two rhythm stages) is a resource, as E37's single rhythm is: it
+restricts the shared route to compositions of cyclic additions. What the experiment shows is that a network which can
+also memorize discovers the composed relation, with depth, under sleep; whether it chooses the correct depth when
+routes of several depths are available is the next test.
+
 ## Tests
 
 | | Claim | Test |
@@ -3501,6 +3528,7 @@ elimination exists. That is the question, not a claim.
 | **M73** | the same reuse filter makes hidden nodes parts rather than wholes; with sleep, depth pays at smaller budgets | E34/E28 with decay on hidden routing; §62 receptive-field measure |
 | **M74** | candidate basis grows at O(k log N) learning cost and constant inference cost | E35 N = 12, 24, 48, 96 |
 | **M75** | stateful arm/disarm nodes compute order-XNOR in one node (not a product set); toggle nodes represent k-sparse parity; native learnability open | exhaustive check of stateless vs stateful nodes on interval exclusion; toggle-node parity learning |
+| **M76** | collapse is data-limited or search-limited; cooled noise removes the second; depth-2 grokking of (a + b + c) mod p through a composed rhythm chain | E37 noise sweep and p-scaling with σ ∝ p; E41 full runs (p = 17, 31; fractions; no-sleep and lookup-only controls); Transformer baseline on E41's task |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
