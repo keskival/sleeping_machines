@@ -35,7 +35,7 @@ class Compose:
         self.mult, self.recruit = mult, recruit
         self.summed, self.alpha, self.beta = summed, alpha, beta
         self.credit, self.temp, self.rng, self.margin, self.nm = "union", 0.0, rng, 0.0, 0
-        self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K)
+        self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K); self.anchor = "fire"
         self.learn_win = learn_win; self.learn_iv = 0; self.iv_min = 30
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
@@ -139,8 +139,13 @@ class Compose:
         if c == y:
             if self.margin and y < self.K and prec >= self.gate:   # §86: near-miss credit keeps a margin
                 i = inst[y]
-                if self.credit == "latest" and win.any():   # §89: margin for the complete route (latest instant)
+                if self.credit == "latest" and win.any() and self.anchor == "latest":   # §89: latest candidate instant
                     i = int(np.flatnonzero(win.any(1))[-1])
+                elif self.credit == "latest" and self.anchor == "supra":   # §91: latest instant the node itself drives past θ
+                    HS = win @ self.h[y, f]; GS = same @ self.g[y, f]
+                    sup = np.flatnonzero((HS > self.thr) & (GS > self.thr))
+                    if len(sup):
+                        i = int(sup[-1])
                 if self.h[y, f[win[i]]].sum() < self.margin:
                     self._mul(self.h, y, f[win[i]], 1 + self.alpha); self.nm += 1
                 if self.g[y, f[same[i]]].sum() < self.margin:
@@ -237,6 +242,7 @@ def main():
     ap.add_argument("--temp", type=float, default=0.0)
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin (0 = off)")
     ap.add_argument("--gate", type=float, default=0.0, help="§86b precision gate for the margin")
+    ap.add_argument("--anchor", default="latest", choices=("fire", "latest", "supra"), help="instant the margin protects")
     ap.add_argument("--alpha", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.3)
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
@@ -255,7 +261,7 @@ def main():
                       scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit,
                       summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta,
                       ibank=tuple(float(x) for x in a.ibank.split(",")) if a.ibank else None)
-        net.credit, net.temp, net.margin, net.gate = a.credit, a.temp, a.margin, a.gate
+        net.credit, net.temp, net.margin, net.gate, net.anchor = a.credit, a.temp, a.margin, a.gate, a.anchor
         if a.learn_iv:                                        # §88: broad initial windows, tuned by the version space
             net.learn_iv = 1; net.lo[:] = 0.0; net.hi[:] = a.learn_iv
             net.pos_lo = np.full(net.P, np.inf); net.pos_hi = np.full(net.P, -np.inf); net.npos = np.zeros(net.P)
@@ -275,7 +281,7 @@ def main():
                 net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{('ib' + a.ibank.replace(',', '-')) if a.ibank else (a.scales.replace(",", "-") if a.scales else a.part_hi)}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit in ('instant', 'latest') else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_iv{a.learn_iv:g}' if a.learn_iv else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{('ib' + a.ibank.replace(',', '-')) if a.ibank else (a.scales.replace(",", "-") if a.scales else a.part_hi)}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit in ('instant', 'latest') else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_iv{a.learn_iv:g}' if a.learn_iv else ''}{f'_{a.anchor}' if a.margin and a.anchor != 'latest' else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
