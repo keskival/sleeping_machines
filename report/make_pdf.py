@@ -1210,51 +1210,41 @@ def build():
             "chip offers, and the one these results say matters most, is <b>run-time synapse allocation on credit</b> with "
             "per-node conserved budgets: it lets a network search 10⁷–10¹⁰ candidates while storing only what it uses. "
             "Sources are listed in REPORT.md §9.", "small")]
-    s += [P("10. Next frontier: generative language models (a plan)", "h1"),
-          P("<b>The thesis.</b> Sleeping Machines networks subsume Transformers: any Transformer can in principle be written as one, "
-            "since the substrate is universal and every part of a Transformer layer has an event form. What remains to show is "
-            "the stronger part: that the networks' own local learning rules, whose cost follows activity, reach the same quality, "
-            "and that the energy saved grows with how sparse the needed computation is (silence, sparse codes and only-firing-"
-            "units-work are where the 10³–10⁵× measured here came from)."),
-          P("<b>Why language.</b> Language models are where Transformers are strongest and where their cost hurts most: every "
-            "generated word passes through every weight, and attention grows with the length of the text. If event networks can "
-            "generate text at useful quality, the payoff is work per word that does not grow with model size or text length."),
-          P("<b>How text becomes events.</b> Each character (or byte) is an event, like a spike in the timing tasks; what needs "
-            "care is what the network builds on top:")]
-    s += fig(FM.fig_lm_topology, W)
+    s += [P("10. Next frontier: generative language models", "h1"),
+          P("<b>The aim</b> is not to approximate Transformers but to exceed them: the same or better quality, with work per word "
+            "that does not grow with model size or text length, learned by local rules from less data."),
+          P("<b>Why that is a reasonable aim</b> (theory, §96–§98):")]
     s += bullets([
-        "<b>Shared codes.</b> Each character (and later each learned chunk) fires a few channels from a shared pool, so similar "
-        "things overlap; a private switch per word is what stops simple models from generalizing (proved for arithmetic, §66).",
-        "<b>Context detectors</b> (“this, then that” units, the ones that learned deep order here). Every chunk is a candidate, "
-        "but a connection is created only when it helps predict what comes next, and unused ones are pruned: a tokenizer "
-        "learned by usefulness rather than frequency.",
-        "<b>Slow memory.</b> Counters for topic and recent vocabulary (they closed half the gap to a Transformer on the market "
-        "stream), and traces that remember “last time A appeared, B followed” (the copying that makes Transformers good at "
-        "names and phrases); each costs a fixed amount per character, however long the text.",
-        "<b>Predict and choose.</b> Active detectors vote, weighted by their track record (the same budget-conserving updates "
-        "as everywhere here). The choice is a race: every candidate gets a clock ticking at a rate proportional to its "
-        "probability, and the first to tick wins. Such a race samples exactly from the model's probabilities: the network's "
-        "own first-to-fire readout is the sampler.",
+        "<b>Nothing a Transformer computes is out of reach.</b> Query–key similarity is the overlap of spike codes; a race among "
+        "stored keys picks the best match, and a race of randomly ticking clocks picks each key with exactly its "
+        "softmax-attention probability; relative position is native; the feed-forward block is threshold units over codes; "
+        "stacking layers is composition. A Sleeping Machines network can express any Transformer.",
+        "<b>It has freedoms a Transformer lacks:</b> the order in which signals fire carries up to log₂ n! extra bits for n "
+        "signals; only active units work, so a model can be very large while each word stays cheap; structure grows where "
+        "it proves useful; sampling is a race; retrieval reaches only keys sharing a channel with the query.",
+        "<b>Local learning is not a handicap in principle.</b> A race computes with minima and sums; the exact gradient "
+        "backpropagation would compute runs only along the chain of spikes that caused the output, which each node traces "
+        "locally: credit along that chain is backpropagation for these networks, and near misses supply the signal gradients "
+        "cannot give to losing paths. For races of random clocks the exact gradient is local too.",
+        "<b>Depth is trainable, optimally.</b> For ordered-pattern detectors of depth d, mistakes grow as d × log(candidate "
+        "pool), and no learner can do better in the worst case (§97–§98).",
     ], st)
+    s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
+            "Attention is learnable by local credit: in a recall task where the network must learn which key a query refers to "
+            "and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct after 68 "
+            "mistakes, and stays 100% on contexts four times longer than trained on (one run; five runs and a Transformer "
+            "comparison running, E61).")]
+    s += fig(FM.fig_lm_topology, W)
+    s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (running, "
+            "E62), not the goal but a measurement of how memory and loss scale with data; (2) race attention over the stream, "
+            "learned by local credit; (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
+            "misses. At each stage: a recurrent network and a Transformer trained by gradients on the same text; bits per "
+            "character, examples needed, work per character.")]
     s += fig(FM.fig_lm_scaling, W)
-    s += [P("<b>How it should scale</b> (predicted, schematic): work per character stays flat as the model grows, so memory, not "
-            "computation, limits scale. A design built on counting alone learns fast but toward a higher floor (it cannot "
-            "generalize to unseen contexts). <b>That floor is not a limit of event networks</b>: a Transformer layer has an event "
-            "form (§96). Query–key similarity is the overlap of spike codes; a race among stored keys picks the best match, and a "
-            "race of randomly ticking clocks picks each key with exactly its softmax-attention probability; relative position is "
-            "native; the feed-forward block is threshold units over codes; stacking layers is composition. In principle an "
-            "event network expresses what a Transformer expresses, with retrieval reaching only keys that share a channel. "
-            "<b>At least as well, and room to do better:</b> the mapping is a thought experiment showing the paradigm can match a "
-            "Transformer, not a blueprint. The event form has freedoms a dense layer lacks: the order in which signals fire is a "
-            "second axis for information (up to log₂ n! extra bits for n signals); only active units work, so a model can be very "
-            "large while each word stays cheap; structure is grown where it proves useful (on deep order it needed about ten "
-            "times less data than a Transformer, measured); sampling and retrieval come directly from races and shared channels."),
-          P("<b>Realistic expectation and test.</b> The counting version: roughly compression-model or small-recurrent-network "
-            "quality at a small fraction of the computation. With race attention, nothing in principle stops Transformer-level "
-            "quality; whether local learning rules can train deep stacks of such layers as well as gradients do is the research "
-            "question, testable small first (one race-attention layer learning associative recall and induction). Test: "
-            "character-level prediction on text8 / enwik8, in stages (counting, detectors, copying, weighted voting), at 10⁶, 10⁷ "
-            "and 10⁸ characters, against a recurrent network and a small Transformer given the same text.")]
+    s += [P("<b>Established and not.</b> Established: expressive equivalence, locality of exact credit for races, optimality of "
+            "the depth bound, learned attention on a recall task, data efficiency on deep order. Not yet shown: that stacked "
+            "race-attention layers with learned codes, trained by local credit, match or beat a Transformer on language itself; "
+            "the stages decide it.")]
     s.append(Spacer(1, 6))
     s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
                "procedures are diagnostics only. Reproduce: python report/figures_time.py && python report/make_pdf.py.",
