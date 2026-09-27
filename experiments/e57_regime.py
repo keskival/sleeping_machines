@@ -34,8 +34,10 @@ FLOW_EDGES = np.array([-1.5, 1.5])
 
 
 class RegimeWorld:
-    def __init__(self, taus, flow, m):
+    def __init__(self, taus, flow, m, pertype=0):
         self.taus, self.flow, self.m = list(taus), flow, m
+        self.pertype = pertype                                   # third level: per-type counters (tau = 2 s, 3 levels each)
+        self.pc = np.zeros(NT); self.D = {}                       # sparse third-level cells: key -> [N(NB), E(NB), P(NB, NT)]
         self.nr = [len(RATE_EDGES) + 1] * len(self.taus) + ([len(FLOW_EDGES) + 1] if flow else [])
         R = int(np.prod(self.nr)) if self.nr else 1
         self.cN = np.full((NT, NT, NB), 0.5); self.cE = np.full((NT, NT, NB), 1.0); self.cP = np.ones((NT, NT, NB, NT))
@@ -60,10 +62,20 @@ class RegimeWorld:
         h = (self.fN[ctx][r] + self.m * hc) / (self.fE[ctx][r] + self.m)       # backed-off (m: pseudo-exposure, s)
         pc = self.cP[ctx][k] / self.cP[ctx][k].sum()
         p = (self.fP[ctx][r][k] + self.m * pc) / (self.fP[ctx][r][k].sum() + self.m)
+        key = None
+        if self.pertype:                                                        # level 3 backs off to level 2
+            key = (ctx, r, tuple(np.searchsorted([0.5, 2.5], self.pc)))
+            cell = self.D.get(key)
+            if cell is not None:
+                h = (cell[0] + self.m * h) / (cell[1] + self.m)
+                p = (cell[2][k] + self.m * p) / (cell[2][k].sum() + self.m)
         ll = float(np.log(h[k] * p[y]) - (h * span).sum())
         if self.learn:
             self.cN[ctx][k] += 1; self.cE[ctx] += span; self.cP[ctx][k][y] += 1
             self.fN[ctx][r][k] += 1; self.fE[ctx][r] += span; self.fP[ctx][r][k][y] += 1
+            if key is not None:
+                cell = self.D.setdefault(key, [np.zeros(NB), np.zeros(NB), np.zeros((NB, NT))])
+                cell[0][k] += 1; cell[1] += span; cell[2][k][y] += 1
         self._count(d, y)
         self.t0 = t; self.l2, self.l1 = self.l1, y
         return ll
@@ -73,10 +85,12 @@ class RegimeWorld:
             self.c[i] = self.c[i] * np.exp(-d / tau) + 1.0
         if self.flow:
             self.fl = self.fl * np.exp(-d / 10.0) + (1.0 if y == 0 else -1.0 if y == 1 else 0.0)
+        if self.pertype:
+            self.pc *= np.exp(-d / 2.0); self.pc[y] += 1.0
 
 
-def run(days, train, evals, taus, flow, m):
-    w = RegimeWorld(taus, flow, m)
+def run(days, train, evals, taus, flow, m, pertype=0):
+    w = RegimeWorld(taus, flow, m, pertype)
     for di in train:
         for t, y in zip(*days[di]):
             w.step(t, y)
@@ -92,20 +106,26 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--m", type=float, default=5.0)
     ap.add_argument("--fine", type=int, default=0)
+    ap.add_argument("--pertype", type=int, default=0, help="1: compare with a third backoff level of per-type counters")
     a = ap.parse_args()
     set_bank(a.fine)
     os.makedirs(OUT, exist_ok=True)
     qs = np.concatenate([load_day(d)[2][::50] for d in PILOT]); big_q = float(np.quantile(qs, 0.99))
     days = [day_events(d, big_q) for d in PILOT]
     rows = []
-    for name, taus, flow in (("semi-Markov (no regime)", [], False), ("+ rate 5 s", [5.0], False),
-                             ("+ rate 60 s", [60.0], False), ("+ rates 5 s, 60 s", [5.0, 60.0], False),
-                             ("+ rates 5 s, 60 s + flow", [5.0, 60.0], True), ("+ rate 5 s + flow", [5.0], True)):
-        val = run(days, range(4), [4], taus, flow, a.m)
-        test = run(days, range(5), [5, 6], taus, flow, a.m)
+    configs = (("semi-Markov (no regime)", [], False, 0), ("+ rate 5 s", [5.0], False, 0),
+               ("+ rate 60 s", [60.0], False, 0), ("+ rates 5 s, 60 s", [5.0, 60.0], False, 0),
+               ("+ rates 5 s, 60 s + flow", [5.0, 60.0], True, 0), ("+ rate 5 s + flow", [5.0], True, 0))
+    if a.pertype:
+        configs = (("+ rates 5 s, 60 s + flow", [5.0, 60.0], True, 0),
+                   ("+ rates + flow + per-type 2 s (level 3)", [5.0, 60.0], True, 1),
+                   ("+ rates + per-type 2 s (level 3)", [5.0, 60.0], False, 1))
+    for name, taus, flow, pt in configs:
+        val = run(days, range(4), [4], taus, flow, a.m, pt)
+        test = run(days, range(5), [5, 6], taus, flow, a.m, pt)
         row = {"model": name, "m": a.m, "fine": a.fine, **{f"val_{k}": v for k, v in val.items()}, **{f"test_{k}": v for k, v in test.items()}}
         rows.append(row); print(json.dumps(row), flush=True)
-    with open(os.path.join(OUT, f"regime_m{a.m:g}{'_fine' if a.fine else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"regime_m{a.m:g}{'_fine' if a.fine else ''}{'_pt' if a.pertype else ''}.json"), "w") as f:
         json.dump(rows, f, indent=1)
 
 
