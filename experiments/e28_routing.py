@@ -105,8 +105,9 @@ def integrate(arr, w, W, thr=1.0):
 
 
 class Net:
-    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02):
-        self.fix60, self.kappa = fix60, kappa
+    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02, hold=0.0):
+        self.fix60, self.kappa, self.hold = fix60, kappa, hold
+        self.Wh = np.full(Hn, hold if hold else W)            # per-hidden-node window (duration)
         self.thr = np.ones(K)
         self.N, self.K, self.H, self.depth, self.G, self.k, self.W = N, K, H, depth, G, k, W
         nin = N if depth == 1 else Hn
@@ -119,7 +120,7 @@ class Net:
     def hidden(self, t):
         ft = np.full(self.Hn, INF); charge = np.zeros(self.Hn); win = [None] * self.Hn
         for h in range(self.Hn):
-            ft[h], charge[h], win[h] = integrate(t + self.d1[h], self.w1[h], self.W)
+            ft[h], charge[h], win[h] = integrate(t + self.d1[h], self.w1[h], self.Wh[h])
         fired = np.zeros(self.Hn, bool)
         for g0 in range(0, self.Hn, self.G):                   # group races: first k fire, the rest cancelled
             grp = np.arange(g0, min(g0 + self.G, self.Hn))
@@ -144,7 +145,13 @@ class Net:
         st.update(x=x, ft=ft, owin=owin, winner=c)
         return c, st
 
-    def _pull1(self, h, wi, eta):
+    def _pull1(self, h, wi, eta, t=None):
+        if self.hold and t is not None and len(wi) > 1:       # §62 hold-then-align: arrivals in the window move
+            a = t[wi] + self.d1[h, wi]                          # toward each other (delay), and the window shrinks
+            self.d1[h, wi] += eta * 5 * (a.mean() - a)          # toward their remaining spread (duration)
+            np.maximum(self.d1[h], 0, out=self.d1[h])
+            a = t[wi] + self.d1[h, wi]
+            self.Wh[h] += eta * 5 * ((a.max() - a.min()) * 1.2 + 0.1 - self.Wh[h])
         if self.fix60:                                          # §60 for hidden nodes too: conserved budget
             tot = self.w1[h].sum(); self.w1[h, wi] += eta * tot / len(wi); self.w1[h] *= tot / self.w1[h].sum()
         else:
@@ -156,7 +163,7 @@ class Net:
             for h in np.flatnonzero(st["fired"]):               # its own firing window, label-free, conserved
                 wi = st["win"][h]
                 if len(wi):
-                    self._pull1(h, wi, eta * 0.25)
+                    self._pull1(h, wi, eta * 0.25, t)
         if c == y:
             return False
         x = st["x"]
@@ -180,12 +187,12 @@ class Net:
                 for h in np.flatnonzero(want):                  # counterfactual route: make it win its group,
                     wi = st["win"][h]                           # on the partial coincidence that nearly fired it
                     if len(wi):
-                        self._pull1(h, wi, eta)
+                        self._pull1(h, wi, eta, t)
             if self.depth == 2 and arm not in ("path", "recur"):             # fired contributors: sharpen their own inputs
                 for h in np.flatnonzero(st["fired"] & wants):
                     wi = st["win"][h]
                     if len(wi):
-                        self._pull1(h, wi, eta * 0.5)
+                        self._pull1(h, wi, eta * 0.5, t)
         if self.fix60:                                          # §60 prices: false winner dearer, missed cheaper
             if y < self.K: self.thr[y] -= self.kappa
             if c < self.K and c != y: self.thr[c] += self.kappa
@@ -227,6 +234,7 @@ def main():
     ap.add_argument("--W", type=float, default=0.6)
     ap.add_argument("--fix60", type=int, default=0, help="1: §60 readout (non-leaky, conserved, priced)")
     ap.add_argument("--kappa", type=float, default=0.02)
+    ap.add_argument("--hold", type=float, default=0.0, help="> 0: hidden windows start at this length and are learned (§62)")
     ap.add_argument("--arm", default="nearmiss", choices=("path", "fired", "nearmiss", "push", "recur"))
     ap.add_argument("--steps", type=int, default=30000)
     ap.add_argument("--eta", type=float, default=0.05)
@@ -238,7 +246,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         motifs, classes = make_task(a.N, a.M, a.K, rng)
-        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa)
+        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa, a.hold)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(motifs, classes, a.N, a.H, a.q, rng)
@@ -251,7 +259,7 @@ def main():
                 net.events = ev0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_' + a.tag if a.tag else ''}.json"
+    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_hold' if a.hold else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
