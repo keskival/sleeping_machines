@@ -2,7 +2,8 @@
  "args": {
   "ndays": 3,
   "eta": 0.005,
-  "neural": 0
+  "neural": 1,
+  "freeze_after": 0
  },
  "big_q": 0.24558000266551971,
  "rows": [
@@ -15,14 +16,41 @@
     9714,
     9372
    ],
-   "ll_per_event_poisson": -2.995741702043626,
-   "ll_per_event_hawkes": -2.623431215565562,
    "ll_per_event_native": -2.6411477867991944,
-   "ll_per_event_native_meta": -2.6382905564600776,
-   "ll_per_event_native_parts": -2.643258123948884,
-   "ll_per_event_hawkes_parts": -2.8782479286968066,
-   "ll_per_event_native_inhib": -2.799852372819546,
-   "ll_per_event_native_inhib_parts": -2.7925085139492936
+   "ll_per_event_markov_last2": -2.5254965375477187,
+   "ll_per_event_markov_last1_gap": -2.2908175222878953,
+   "ll_per_event_markov_last2_gap": -2.2804805137651076,
+   "ll_per_event_semimarkov1": -1.7303644445864819,
+   "ll_per_event_semimarkov2": -1.6934542637936998,
+   "ll_per_event_neural": -2.387588328147687,
+   "split_type_time_native": [
+    -1.273,
+    -1.368
+   ],
+   "split_type_time_markov_last2": [
+    -1.158,
+    -1.368
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.923,
+    -1.368
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.913,
+    -1.368
+   ],
+   "split_type_time_semimarkov1": [
+    -0.923,
+    -0.808
+   ],
+   "split_type_time_semimarkov2": [
+    -0.913,
+    -0.781
+   ],
+   "split_type_time_neural": [
+    -1.077,
+    -1.311
+   ]
   },
   {
    "day": "2026-08-26",
@@ -33,14 +61,41 @@
     5542,
     5671
    ],
-   "ll_per_event_poisson": -3.4220105219360755,
-   "ll_per_event_hawkes": -2.9424353606609226,
    "ll_per_event_native": -2.8520522523824865,
-   "ll_per_event_native_meta": -2.8501729874610717,
-   "ll_per_event_native_parts": -2.8536424781634575,
-   "ll_per_event_hawkes_parts": -3.128992652185428,
-   "ll_per_event_native_inhib": -3.1320249979015986,
-   "ll_per_event_native_inhib_parts": -3.1741718992181145
+   "ll_per_event_markov_last2": -2.7918070314285606,
+   "ll_per_event_markov_last1_gap": -2.5768074603705715,
+   "ll_per_event_markov_last2_gap": -2.555208034332337,
+   "ll_per_event_semimarkov1": -2.1260754878287917,
+   "ll_per_event_semimarkov2": -2.0611269423711467,
+   "ll_per_event_neural": -2.61362974997757,
+   "split_type_time_native": [
+    -1.18,
+    -1.672
+   ],
+   "split_type_time_markov_last2": [
+    -1.12,
+    -1.672
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.905,
+    -1.672
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.883,
+    -1.672
+   ],
+   "split_type_time_semimarkov1": [
+    -0.905,
+    -1.221
+   ],
+   "split_type_time_semimarkov2": [
+    -0.883,
+    -1.178
+   ],
+   "split_type_time_neural": [
+    -0.972,
+    -1.641
+   ]
   },
   {
    "day": "2026-08-27",
@@ -51,14 +106,41 @@
     5815,
     6769
    ],
-   "ll_per_event_poisson": -3.3151859318757317,
-   "ll_per_event_hawkes": -2.8421871763615707,
    "ll_per_event_native": -2.695378665577371,
-   "ll_per_event_native_meta": -2.693494020984427,
-   "ll_per_event_native_parts": -2.6963493981870688,
-   "ll_per_event_hawkes_parts": -2.9802543399929786,
-   "ll_per_event_native_inhib": -2.9356840296844977,
-   "ll_per_event_native_inhib_parts": -2.9524760272889785
+   "ll_per_event_markov_last2": -2.682651945929323,
+   "ll_per_event_markov_last1_gap": -2.470585021257733,
+   "ll_per_event_markov_last2_gap": -2.4519415398801856,
+   "ll_per_event_semimarkov1": -2.125182845879384,
+   "ll_per_event_semimarkov2": -2.0668468016495227,
+   "ll_per_event_neural": -2.517375958023785,
+   "split_type_time_native": [
+    -1.17,
+    -1.525
+   ],
+   "split_type_time_markov_last2": [
+    -1.157,
+    -1.525
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.945,
+    -1.525
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.927,
+    -1.525
+   ],
+   "split_type_time_semimarkov1": [
+    -0.945,
+    -1.18
+   ],
+   "split_type_time_semimarkov2": [
+    -0.927,
+    -1.14
+   ],
+   "split_type_time_neural": [
+    -1.004,
+    -1.513
+   ]
   }
  ]
 }

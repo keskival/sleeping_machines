@@ -3636,6 +3636,35 @@ quadratically, and by the size of the candidate space only logarithmically: wide
 data is expensive. **Predictions:** (i) updates grow with distractor density roughly as 1/(1 − q)²; (ii) updates grow
 at most logarithmically with the number of window scales (part types).
 
+## 82. What the market stream's world model needs: the time since the last event (E44, E48)
+
+*Written 2026-09-27. Diagnostic path: decomposing each model's log-likelihood into a type part (log P(type | an event
+now)) and a timing part (log of the total rate minus its integral) showed the GRU neural point process's 0.2-nat lead
+over the native Hawkes-type model was entirely in the type part (−1.08 vs −1.27 nats on day 1; timing −1.31 vs −1.37).
+Count baselines then located it: conditioning the next type on the last two types recovers little (−1.16), on the last
+type and the time since it almost everything and more (−0.92, better than the GRU's −1.08).*
+
+**The model.** A semi-Markov (Markov renewal) marked point process: the hazard of the next event and the distribution of
+its type depend on the last event types and on the elapsed time, piecewise constant over a bank of windows (0.01, 0.05,
+0.2, 1, 5 s). The model class is classical (Lévy 1954; Pyke 1961). As an event network: state nodes armed by the last
+event and disarmed by the next (§75); window nodes opened in turn by expiry events of a delay line from the last event
+(§61); hazard and type detectors whose rates are set by synapses from the armed state and the open window; learning is a
+count on the synapse that predicted the event and exposure on the hazard synapses. E48 verifies that the event network
+reproduces the table form's likelihood exactly (to 2·10⁻⁴ nats), at ≈ 4 network events and ≈ 19 synaptic operations per
+market event.
+
+**Why it beats the neural point process here.** (i) The predictive structure of this stream is a depth-1 temporal
+predicate relative to the last event: the lag to the trigger, which §71 says one node computes. (ii) For a piecewise-
+constant model, online counts are exact sufficient statistics: after every event the model is the maximum-likelihood fit,
+with no step size; a recurrent network sees log Δt as an input and must learn its effect by stochastic gradient steps,
+far less sample-efficient online. (iii) Non-exponential waiting times (the timing part improves from −1.31 to −0.78 on
+day 1) come for free from the window bank; exponential Hawkes kernels cannot express them.
+
+**Result (days 1–3, online, total nats per event):** GRU −2.39 / −2.61 / −2.52; semi-Markov event network (last two
+types) −1.69 / −2.06 / −2.07. **Open:** whether it holds on held-out days with learning frozen (a count model with 96
+contexts × 6 windows could track day-specific statistics), and whether a GRU given the same window-bank inputs closes the
+gap (i.e. whether the advantage is the representation or the learning rule).
+
 ## Tests
 
 | | Claim | Test |
@@ -3712,6 +3741,7 @@ at most logarithmically with the number of window scales (part types).
 | **M79** | the weaving operator W is a competing-risks temporal point process; a native pool learned by online likelihood with fast/slow, surprise-gated plasticity is an asynchronous world model | E43: online log-likelihood (type and timing) vs Poisson, online Hawkes, GRU neural point process; adaptation after regime breaks; decisions from the model |
 | **M80** | structure discovery = full-information online model selection over routes (Hedge-like prices); racing on reliability selects the simplest route that fits (implicit Occam) | E45 5 seeds on a+b, a+b+c, random; menu size sweep |
 | **M81** | route-menu mistake bound O(K (log P + log 1/δ)/Δ² + K/ε): logarithmic in the part basis, quadratic in the inverse distractor gap | E46 distractor-density sweep (q) and window-scale sweep |
+| **M82** | the market stream's world model is dominated by the time since the last event; a semi-Markov event network (state + window-bank nodes, count learning) beats a neural point process | E44/E48 likelihood with type/timing split; held-out frozen days; GRU given window-bank inputs |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

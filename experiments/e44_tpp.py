@@ -45,6 +45,116 @@ def day_events(day, big_q):
 HOLD = 2.0                                                      # part window (s): k within HOLD after j
 
 
+class StateTPP:
+    """native intensity + a stateful memory of the last one and two event types (arm/disarm nodes held until the next
+    event, §75): lambda_e = mu_e + sum alpha S + g1[e, last] + g2[e, last2, last]; all weights positive, learned by
+    exponentiated-gradient steps on the online likelihood. The state is constant between events, so its compensator
+    term is its value times the gap."""
+
+    def __init__(self, eta=0.005, order=2):
+        self.eta, self.order = eta, order
+        self.base = TPP("native", eta)
+        self.g1 = np.full((NT, NT), 1e-3); self.g2 = np.full((NT, NT, NT), 1e-3)
+        self.l1 = self.l2 = None
+
+    def step(self, t, y):
+        b = self.base
+        if b.t0 is None:
+            b.step(t, y); self.l1 = y
+            return None
+        d = max(t - b.t0, 1e-6)
+        decay = np.exp(-BETAS * d); Sb = b.S * decay; integ = b.S * (1 - decay) / BETAS
+        st = self.g1[:, self.l1] + (self.g2[:, self.l2, self.l1] if (self.order > 1 and self.l2 is not None) else 0)
+        lam = b.mu + np.einsum("ejb,jb->e", b.alpha, Sb) + st
+        comp = b.mu * d + np.einsum("ejb,jb->e", b.alpha, integ) + st * d
+        ll = float(np.log(max(lam[y], 1e-12)) - comp.sum())
+        self.split = (float(np.log(lam[y] / lam.sum())), float(np.log(lam.sum()) - comp.sum()))
+        # learning: base parameters as in TPP, plus the state weights (EG)
+        g_mu = -d * np.ones(NT); g_mu[y] += 1 / lam[y]
+        g_a = -np.repeat(integ[None], NT, 0); g_a[y] += Sb / lam[y]
+        b.mu = np.maximum(b.mu * np.exp(np.clip(self.eta * g_mu * b.mu, -.5, .5)), 1e-4)
+        b.alpha = np.maximum(b.alpha, 1e-4) * np.exp(np.clip(self.eta * g_a * np.maximum(b.alpha, 1e-4), -.5, .5))
+        gs = -d * np.ones(NT); gs[y] += 1 / lam[y]
+        self.g1[:, self.l1] *= np.exp(np.clip(self.eta * gs * self.g1[:, self.l1], -.5, .5))
+        if self.order > 1 and self.l2 is not None:
+            v = self.g2[:, self.l2, self.l1]; self.g2[:, self.l2, self.l1] = v * np.exp(np.clip(self.eta * gs * v, -.5, .5))
+        b.S = Sb; b.S[y] += 1; b.t0 = t
+        self.l2, self.l1 = self.l1, y
+        return ll
+
+    def sleep(self):
+        pass
+
+
+class SemiMarkov:
+    """native semi-Markov marked point process: state = identity of the last event (or last two), held by nodes with a
+    bank of window durations (GAPS); in each window bucket k the hazard h[ctx, k] and the next-type distribution
+    P[ctx, k, :] are learned online as normalized counts (events / exposure time; type counts). Exact likelihood:
+    log(h[ctx, k*] * P[ctx, k*, y]) - sum_k h[ctx, k] * (time spent in bucket k). `learn=False` freezes it."""
+    GAPS = np.array([0.01, 0.05, 0.2, 1.0, 5.0])
+
+    def __init__(self, order=2):
+        self.order = order; nb = len(self.GAPS) + 1
+        self.N = np.full((NT, NT, nb), 0.5); self.E = np.full((NT, NT, nb), 1.0)   # events, exposure per bucket
+        self.P = np.ones((NT, NT, nb, NT)); self.l1 = self.l2 = None; self.t0 = None; self.learn = True
+        self.edges = np.r_[0.0, self.GAPS, np.inf]
+
+    def step(self, t, y):
+        if self.t0 is None:
+            self.t0, self.l1 = t, y
+            return None
+        d = max(t - self.t0, 1e-6)
+        c2 = (self.l2 if (self.order > 1 and self.l2 is not None) else 0)
+        ctx = (c2, self.l1)
+        k = int(np.searchsorted(self.GAPS, d))
+        span = np.clip(d - self.edges[:-1], 0, np.diff(self.edges))                # time spent in each bucket
+        h = self.N[ctx] / self.E[ctx]
+        pk = self.P[ctx][k] / self.P[ctx][k].sum()
+        comp = float((h * span).sum())
+        ll = float(np.log(h[k] * pk[y]) - comp)
+        self.split = (float(np.log(pk[y])), float(np.log(h[k]) - comp))
+        if self.learn:
+            self.N[ctx][k] += 1.0; self.E[ctx] += span; self.P[ctx][k][y] += 1.0
+        self.t0 = t; self.l2, self.l1 = self.l1, y
+        return ll
+
+    def sleep(self):
+        pass
+
+
+class MarkovMarks:
+    """baseline: total rate as the native model; next type from online counts given the last two types (gap=0), or
+    given (last type, bucket of the time since the last event) (gap=1), or (last two types, gap bucket) (gap=2)."""
+    GAPS = np.array([0.01, 0.05, 0.2, 1.0, 5.0])
+
+    def __init__(self, eta=0.005, gap=0):
+        self.rate = TPP("native", eta); self.gap = gap
+        self.C = np.ones((NT, NT, len(self.GAPS) + 1, NT)); self.l1 = self.l2 = None
+
+    def step(self, t, y):
+        r = self.rate
+        if r.t0 is None:
+            r.step(t, y); self.l1 = y
+            return None
+        d = max(t - r.t0, 1e-6)
+        decay = np.exp(-BETAS * d); Sb = r.S * decay; integ = r.S * (1 - decay) / BETAS
+        lam = r.mu + np.einsum("ejb,jb->e", r.alpha, Sb); comp = r.mu * d + np.einsum("ejb,jb->e", r.alpha, integ)
+        tot, ctot = lam.sum(), comp.sum()
+        gb = int(np.searchsorted(self.GAPS, d)) if self.gap else 0
+        a2 = (self.l2 if self.l2 is not None else self.l1) if self.gap != 1 else 0
+        ctx = self.C[a2, self.l1, gb]
+        pt = ctx / ctx.sum()
+        ll = float(np.log(pt[y]) + np.log(tot) - ctot)
+        self.split = (float(np.log(pt[y])), float(np.log(tot) - ctot))
+        r.step(t, y)                                          # learns the rates (its own ll is discarded)
+        ctx[y] += 1
+        self.l2, self.l1 = self.l1, y
+        return ll
+
+    def sleep(self):
+        pass
+
+
 class TPP:
     def __init__(self, kind, eta=0.01, meta=False, parts=False):
         self.kind, self.eta, self.meta, self.parts = kind, eta, meta, parts
@@ -77,6 +187,7 @@ class TPP:
         lam = self.mu + np.einsum("ejb,jb->e", A, S_before)
         comp = self.mu * d + np.einsum("ejb,jb->e", A, integ)
         ll = float(np.log(max(lam[y], 1e-12)) - comp.sum())
+        self.split = (float(np.log(max(lam[y], 1e-12) / lam.sum())), float(np.log(lam.sum()) - comp.sum()))
         if self.kind != "poisson" or True:
             g_mu = -d * np.ones(NT); g_mu[y] += 1.0 / max(lam[y], 1e-12)
             g_a = -integ[None, :, :].repeat(NT, 0)
@@ -141,6 +252,8 @@ class NeuralTPP:
         lams = torch.cat([self.lam(self.h, tt) for tt in ts])  # (6, NT)
         comp = torch.trapezoid(lams.sum(1), ts[:, 0])
         ll = torch.log(lams[-1, y] + 1e-9) - comp
+        lt = lams[-1].detach()
+        self.split = (float(torch.log(lt[y] / lt.sum())), float(torch.log(lt.sum()) - comp.detach()))
         self.opt.zero_grad(); (-ll).backward(); self.opt.step()
         with torch.no_grad():
             x = torch.zeros(1, NT + 1); x[0, y] = 1.0; x[0, NT] = float(np.log(d + 1e-3))
@@ -205,29 +318,44 @@ def main():
     ap.add_argument("--ndays", type=int, default=7)
     ap.add_argument("--eta", type=float, default=0.005)
     ap.add_argument("--neural", type=int, default=1)
+    ap.add_argument("--freeze_after", type=int, default=0, help="stop learning after this many days (held-out test)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     qs = np.concatenate([load_day(d)[2][::50] for d in PILOT]); big_q = float(np.quantile(qs, 0.99))
     models = {"poisson": TPP("poisson", a.eta), "hawkes": TPP("hawkes", a.eta), "native": TPP("native", a.eta),
               "native_meta": TPP("native", a.eta, meta=True),
               "native_parts": TPP("native", a.eta, parts=True), "hawkes_parts": TPP("hawkes", a.eta, parts=True),
-              "native_inhib": InhibTPP(a.eta), "native_inhib_parts": InhibTPP(a.eta, parts=True)}
+              }
+    models = {k: models[k] for k in ("poisson", "hawkes", "native")}
+    models["native_state1"] = StateTPP(a.eta, order=1); models["native_state2"] = StateTPP(a.eta, order=2)
+    models = {k: models[k] for k in ("native", "neural")} if "neural" in models else {k: models[k] for k in ("native",)}
+    models["markov_last2"] = MarkovMarks(a.eta, gap=0); models["markov_last1_gap"] = MarkovMarks(a.eta, gap=1)
+    models["markov_last2_gap"] = MarkovMarks(a.eta, gap=2)
+    models["semimarkov1"] = SemiMarkov(order=1); models["semimarkov2"] = SemiMarkov(order=2)
     if a.neural:
         models["neural"] = NeuralTPP()
     rows = []
-    for day in PILOT[:a.ndays]:
+    for di, day in enumerate(PILOT[:a.ndays]):
+        if a.freeze_after and di == a.freeze_after:
+            for m in models.values():
+                m.learn = False
+                if hasattr(m, "opt"):
+                    for g in m.opt.param_groups: g["lr"] = 0.0
+                if hasattr(m, "eta"): m.eta = 0.0
+                if hasattr(m, "rate"): m.rate.eta = 0.0
         T, Y = day_events(day, big_q)
-        tot = {k: 0.0 for k in models}; n = 0
+        tot = {k: 0.0 for k in models}; n = 0; split = {k: np.zeros(2) for k in models}
         for t, y in zip(T, Y):
             lls = {k: m.step(t, y) for k, m in models.items()}
-            if lls["poisson"] is not None:
+            if lls["native"] is not None:
                 n += 1
                 for k in models:
-                    tot[k] += lls[k]
+                    tot[k] += lls[k]; split[k] += np.array(getattr(models[k], "split", (0.0, 0.0)))
         for m in models.values():
             m.sleep()
         row = {"day": str(day), "events": int(n), "counts": np.bincount(Y, minlength=NT).tolist(),
-               **{f"ll_per_event_{k}": tot[k] / max(n, 1) for k in models}}
+               **{f"ll_per_event_{k}": tot[k] / max(n, 1) for k in models},
+               **{f"split_type_time_{k}": (split[k] / max(n, 1)).round(3).tolist() for k in models}}
         rows.append(row)
         print(json.dumps(row), flush=True)
     with open(os.path.join(OUT, "pilot_stage1.json"), "w") as f:
