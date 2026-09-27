@@ -20,6 +20,7 @@ e34m_tuned experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --
 e34m_bank experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --scales 1,2,4 --steps 40000 --seeds 5
 e54m_D4 experiments/e54_chains.py --D 4 --margin 0.9 --steps 40000 --seeds 5
 e53g_m0.9_g0.9 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5 --margin 0.9 --gate 0.9
+e55_edge experiments/e55_edge.py
 e53g_m0.9_g0.97 experiments/e53_depth3.py --depth 3 --temp 0.3 --beta 0.5 --margin 0.9 --gate 0.97
 e54_D4_L1 experiments/e54_chains.py --D 4 --L 1 --steps 20000 --seeds 5
 e36g_n10k_wd0.1 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 10000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag n10k_wd0.1
