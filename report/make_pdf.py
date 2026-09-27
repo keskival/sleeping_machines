@@ -13,6 +13,7 @@ import os
 from datetime import date
 
 import matplotlib
+import matplotlib.patches  # noqa: F401
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
@@ -294,33 +295,70 @@ def fig_e30():
 
 
 def fig_e32():
-    """E32: accuracy vs operations per episode, clocked dense conv (F, dt) vs the event learner."""
+    """accuracy vs operations per episode on E27's task: clocked conv nets, event-token Transformers, event network."""
+    fig, ax = plt.subplots(figsize=(6.4, 3.0))
     pts = {}
     for path in glob.glob(os.path.join(RES, "e32", "dense_F*.json")):
         for r in load(path)["rows"]:
-            key = (r.get("filters", 16), r["dt"], r["pad"])
-            pts.setdefault(key, []).append((r["acc"], r["macs_per_episode"]))
-    if not pts:
-        return None
-    fig, ax = plt.subplots(figsize=(6.4, 3.0))
-    for pad, col, name in ((0.0, BLUE, "clocked dense conv (episode only)"),
-                           (990.0, GRAY, "clocked dense conv, episode in 99% silence")):
-        xs, ys = [], []
-        for (F, dt, p_), v in sorted(pts.items()):
-            if p_ == pad:
-                xs.append(np.mean([m for _, m in v])); ys.append(np.mean([a for a, _ in v]))
-        ax.scatter(xs, ys, color=col, s=18, label=name, zorder=3)
-    ax.scatter([10.2], [0.914], color=ORANGE, s=60, marker="D", label="event learner (E27), with or without silence",
-               zorder=4)
-    ax.axhline(0.914, color=ORANGE, lw=0.8, ls=":")
+            if r["pad"] == 0.0:
+                pts.setdefault((r.get("filters", 16), r["dt"]), []).append((r["acc"], r["macs_per_episode"]))
+    if pts:
+        xs = [np.mean([m for _, m in v]) for v in pts.values()]; ys = [np.mean([a for a, _ in v]) for v in pts.values()]
+        ax.scatter(xs, ys, color=GRAY, s=18, label="clocked conv net (backprop, 200k episodes)", zorder=3)
+    tf = {}
+    for path in glob.glob(os.path.join(RES, "e36", "transformer_e27*.json")):
+        long = "long" in path or "rel" in path
+        for r in load(path)["rows"]:
+            tf.setdefault((long, r["d"], r["layers"], r.get("reltime", 0)), []).append((r["acc"], r["macs_per_episode"]))
+    for long, col, name in ((False, YELLOW, "event-token Transformer, 200k episodes"),
+                            (True, BLUE, "event-token Transformer, 2M episodes")):
+        v = [(np.mean([m for _, m in vv]), np.mean([a for a, _ in vv])) for k, vv in tf.items() if k[0] == long]
+        if v:
+            ax.scatter(*zip(*v), color=col, s=18, marker="s", label=name, zorder=3)
+    ax.scatter([7.5], [1.0], color=ORANGE, s=70, marker="D", label="event network (E35), nothing given", zorder=4)
     ax.set_xscale("log")
     ax.set_xlabel("operations per episode (synaptic events or multiply-adds), log scale")
     ax.set_ylabel("test accuracy")
     ax.set_ylim(0.4, 1.02)
     ax.legend(fontsize=7, loc="lower right")
-    ax.set_title("E32: at matched accuracy, ~190× fewer operations; ~19,000× in a sparse stream")
+    ax.set_title("Timing task: equal or better accuracy at 10⁴–10⁵× fewer operations")
     return fig
 
+
+def fig_depth_theorem():
+    """§71: a node's accept set in lag coordinates is a product set; the order a < b is not."""
+    fig, axs = plt.subplots(1, 2, figsize=(6.4, 2.7))
+    for ax in axs:
+        ax.set_xlim(-4, 0.3); ax.set_ylim(-4, 0.3); ax.set_aspect("equal")
+        ax.set_xlabel("lag of input a to the trigger"); ax.set_ylabel("lag of input b")
+    axs[0].add_patch(matplotlib.patches.Rectangle((-3, -2.5), 2.2, 1.8, color=BLUE, alpha=0.35, lw=0))
+    axs[0].set_title("one node: a product set")
+    axs[1].fill_between([-4, 0], [-4, 0], [0, 0], color=ORANGE, alpha=0.35, lw=0)
+    axs[1].plot([-2, -1], [-1.5, -0.5], "o", color=INK, ms=4)
+    axs[1].plot([-1], [-1.5], "x", color="#c0392b", ms=7, mew=2)
+    axs[1].annotate("in any product set\ncontaining both dots,\nbut violates a < b", (-1, -1.5), (-3.9, -3.6), fontsize=7,
+                    arrowprops=dict(arrowstyle="->", lw=0.7))
+    axs[1].set_title("a before b: not a product set")
+    fig.tight_layout()
+    return fig
+
+
+def fig_e34():
+    """depth and composition on hierarchical motifs (15 classes from 6 motifs)."""
+    rows = [("depth 1, hold/trigger on channels", 0.39, GRAY), ("E28 accumulating readout, depth 2", 0.44, GRAY),
+            ("depth 2, single wide window", 0.79, BLUE), ("depth 2, window bank {1, 2, 4}", 0.86, BLUE),
+            ("depth 2, tuned part window", 0.97, BLUE), ("Transformer, 2M episodes, ~175k MACs", 0.998, YELLOW)]
+    fig, ax = plt.subplots(figsize=(6.4, 2.6))
+    y = np.arange(len(rows))
+    ax.barh(y, [r[1] for r in rows], color=[r[2] for r in rows], height=0.6)
+    ax.set_yticks(y); ax.set_yticklabels([r[0] for r in rows], fontsize=7)
+    for yi, (_, v, _) in zip(y, rows):
+        ax.text(v + 0.01, yi, f"{v:.2f}", va="center", fontsize=7, color=INK)
+    ax.axvline(1 / 16, color=GRAY, lw=0.8, ls=":")
+    ax.set_xlim(0, 1.1); ax.set_xlabel("test accuracy (5 seeds; chance 0.06)")
+    ax.set_title("Depth by composition: hold/trigger chains (≈ 14 events per episode)")
+    ax.grid(axis="y", visible=False)
+    return fig
 
 def fig_e37():
     """E37: train and test accuracy over epochs, with and without sleep (p = 31, half the pairs, seed 0)."""
@@ -705,340 +743,160 @@ def theory_pages(st, W):
 
 
 def build():
-    import figures_theory
-    figures_theory.main()
-    d = load(os.path.join(ROOT, "report", "data.json"))
-    runs = e6_runs()
+    """The report: what is known, organized by claim (mirrors REPORT.md)."""
     st = styles()
     W = 174
-    r3 = {v: runs.get((v, 3, 1000)) for v in ("crl_fa", "crl_fired_only", "frozen_hidden", "single_layer")}
-    h2000 = runs.get(("crl_fa", 3, 2000))
-    e7_done = sorted(glob.glob(os.path.join(RES, "e7", "*.json")))
 
-    def pct(x):
-        return f"{100 * x:.1f}%" if x is not None else "pending"
+    def fig(fn, w=W):
+        f = fn()
+        return [fig_image(f, w)] if f is not None else []
 
-    s = []
-    s += [Paragraph("Sleeping Machines", st["title"]),
-          Paragraph(f"Computing with races, cancellations and near misses · status report, {date.today():%d %B %Y}",
-                    st["sub"])]
-    s += [Paragraph("Headline: a learned event network beats a clocked dense model at ~10⁵× lower cost", st["h1"]),
-          Paragraph("On a timing task (“B within Δ after A, unless C”, 4 patterns + none, 12 channels), with "
-                    "<b>nothing given</b>: each detector learns which channel holds, which triggers, how long it "
-                    "holds and which channels veto, by errors-only local updates (E35).", st["body"]),
+    def P(t, style="body"):
+        return Paragraph(t, st[style])
+
+    s = [P("Sleeping Machines: what is known", "title"),
+         P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
+         P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
+           "race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an "
+           "input, and by inhibition that arrives in time. This report states what is now known about such networks, "
+           "why, and what remains open. Derivations and proofs are in experiments/THEORY.md (cited as §n)."),
+         P("Summary", "h1")]
+    s += bullets([
+        "<b>What one node computes is exactly characterized, and it says where depth is needed.</b> A node with a trigger, "
+        "hold and veto inputs accepts a product set in lag coordinates; one node orders at most three events; two layers "
+        "compute every conjunction of bounded time differences, three layers every union (§71, proved; exhaustive "
+        "search agrees). Nodes with state (arm/disarm) are strictly stronger.",
+        "<b>Event networks learn timing with very few mistakes</b> if winning is positional (pull the event that should "
+        "have won, never push a loser later) and order uses held intervals, not aligned delays: O(log N + a few) "
+        "mistakes per node.",
+        "<b>On a timing task a learned event network matches or beats dense models at 10⁴–10⁵× lower cost</b>, with "
+        "nothing given: 1.000 at 7.5 synaptic events per episode vs 0.989–0.996 for event-token Transformers at "
+        "146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.",
+        "<b>Depth pays when composition is a hold/trigger chain</b> (0.97 vs 0.39 at depth 1), but a well-trained "
+        "Transformer is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.",
+        "<b>Grokking occurs, by a route change under sleep.</b> A network that can memorize, given a rhythm resource, "
+        "memorizes without sleep and generalizes after a delay with sleep (0.93–0.97, 2 of 3 seeds). Sleep keeps only "
+        "parameters that many examples use.",
+        "<b>Not yet: real asynchronous benchmarks</b> (spoken digits, a market stream).",
+    ], st)
+    s.append(PageBreak())
+
+    s += [P("1. What an event node computes", "h1"),
+          P("<b>Primitives.</b> Spike times; delay; first-of (min) and all-of (max); hold (an input opens a window of given "
+            "duration); veto (an input blocks the node while within its window). A node fires at its trigger if its holds "
+            "are met and no veto is active."),
+          P("<b>Theorem (§71).</b> In lag coordinates relative to the trigger a stateless node accepts a product set. So one "
+            "node orders at most three events (trigger the middle one, hold the first, veto the last until it arrives); two "
+            "layers compute every conjunction of bounded differences with exclusions (every zone of timed-automata "
+            "verification); three layers every finite union. <i>Evidence:</i> an exhaustive search over single nodes finds "
+            "the proof's own node for 3 events and none for 4 on grids of 1,680 and 11,880 configurations; all thirteen "
+            "Allen interval relations built at depth 2 are exact on ~19,900 interval pairs (E39).")]
+    s += fig(fig_depth_theorem, W * 0.9)
+    s += [P("<b>Stateful nodes are stronger.</b> A node armed by A, disarmed by C and fired by B computes an XNOR of two "
+            "order relations, which no stateless node computes (exhaustive search, E39b); a toggle node computes parity."),
+          P("<b>Clockless computation computes relations, not sums</b>: shift symmetry forbids adding two times; one shared "
+            "rhythm makes cyclic arithmetic computable (§56)."),
+          P("<b>Completeness and reliability (E30).</b> A two-counter machine wired from these primitives plus one oscillator "
+            "runs exactly (Turing-complete given timing precision). Jitter accumulates like a random walk; one restoring "
+            "coincidence per cycle makes reliability independent of program length.")]
+    s += fig(fig_e30, W * 0.85)
+    s.append(PageBreak())
+
+    s += [P("2. How event networks learn", "h1"),
+          P("<b>Winning is positional (§54).</b> Pull the event that should have won; never push a loser later, which "
+            "hands the win to the next loser and collapses the detectors. With learned delays on (a + b) mod p: push at "
+            "chance in all 15 runs, pull-only 0.97–0.98 (E26). Timing noise cooled to zero makes small-data "
+            "generalization reliable.")]
+    s += fig(fig_e26, W * 0.85)
+    s += [P("<b>Order needs held intervals, not aligned delays (§61).</b> Delaying A to meet B compresses the interval so a "
+            "veto cannot see where C fell; A opening a window that B must hit keeps it. With holding, the detector for "
+            "“B within Δ after A unless C” reaches 1.000 on 5 seeds with ~450 updates in 200k episodes, and veto is worth "
+            "19 points (alignment: 0.914, veto worth 1.8)."),
+          P("<b>The rules are online learning on the simplex (§68):</b> pulls moving a fixed fraction of a conserved budget "
+            "are Winnow/Hedge-type updates with O(k log N) mistake bounds; durations are interval learning, vetoes "
+            "monotone disjunctions. With nothing given, detectors learn channels, durations and vetoes: 1.000 ×4, 0.9995, "
+            "443–1,530 updates (E35)."),
+          P("<b>Routing needs counterfactuals (§57).</b> Credit along a spike's causal path cannot say whether another route "
+            "should have been taken; cancelled near misses supply it. Without it a two-layer network stays at chance "
+            "(0.17 vs 0.72–0.74, E28).")]
+    s.append(PageBreak())
+
+    s += [P("3. Against dense models and Transformers", "h1"),
           table([["model", "test accuracy", "cost per episode", "learning"],
-                 ["<b>event network (E35)</b>", "<b>1.000 ×4, 0.9995</b> (5 seeds)", "<b>7.5 synaptic events</b>",
-                  "443–1,530 updates in 200k episodes"],
-                 ["clocked conv net, best (E32)", "0.995", "3.07M multiply-adds", "backprop, 200k episodes"],
-                 ["clocked conv net, cheapest ≥ 0.99", "0.992", "768k multiply-adds", "backprop"],
-                 ["clocked conv net at ≈ 0.91", "0.895", "1.9k multiply-adds", "backprop"]], [52, 40, 38, 44], st),
-          Paragraph("More accurate than the best dense model at about 10⁵× fewer operations; the event cost does not "
-                    "grow with silence, the clocked cost does. Priors on both sides: hold/veto nodes (§64) vs a receptive "
-                    "field matched to the pattern length. It worked because of theory: order is an asymmetry of PSP "
-                    "durations and veto needs the held interval (§61, §64); a node computing one interval predicate "
-                    "needs only O(its few parameters) mistakes. <b>Depth pays too (E34):</b> hold/trigger chains reach "
-                    "0.97 on hierarchical motifs (0.86 with a generic window bank) vs 0.39 at depth 1, 5 seeds. "
-                    "<b>Against Transformers (E36):</b> an event-token Transformer trained 10× longer reaches 0.989–0.996 "
-                    "at 146k–1.16M multiply-adds: accuracy parity within half a point at ≈ 10⁴–10⁵× the cost. "
-                    "<b>Grokking (E37):</b> a network that can memorize, given a rhythm resource, stays memorized without "
-                    "sleep and with sleep generalizes to 0.93–0.97 in 2 of 3 seeds, after a delay (memorized by epoch 5, "
-                    "generalizing from epoch 70). <b>Theorem (§71):</b> one node orders at most three events; depth 2 "
-                    "computes every difference-bound zone.", st["body"])]
-    s.append(PageBreak())
-    s += [Paragraph("In one page", st["h1"]),
-          Paragraph("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: "
-                    "candidate events race, the first to fire cancels the rest, and the cancelled ones keep a trace of "
-                    "how close they came, which a later teaching signal can use. Every experiment below had its "
-                    "predictions written down before evaluation, and the report includes what did not work.",
-                    st["body"]),
-          Paragraph("What holds up", st["h2"])]
-    s += bullets([
-        "<b>A cancelled node can be taught (E4).</b> Keeping a loser's distance to threshold lets a delayed teacher "
-        "promote the right answer. At K = 128 classes: 0.79 accuracy where the reward-modulated rule is at chance, "
-        "with 6% of the weight updates of uniform credit.",
-        "<b>Races decide as fast as the evidence allows (E2).</b> An accumulator race beats a fixed-time decoder at "
-        "every decision time and tracks the optimal MSPRT, using only additions and a threshold.",
-        "<b>Learning work tracks activity, not capacity (E5):</b> about 300× fewer weight updates than a sparse "
-        "softmax on the same connectivity.",
-        f"<b>Local, event-driven learning reaches about 96% on MNIST (E6, E14).</b> One hidden layer "
-        f"{pct(r3['crl_fa'])} (test, round 3); with credit conservation 96.0% (validation, 2 seeds).",
-        "<b>Counterfactual credit pays with depth (E14, full length).</b> Over fired-only credit: +0.2, +1.2, +1.5 "
-        "points at depths 1–3 (2 seeds), +1.9 and +2.5 at depths 4–5 (1 seed). A frozen hidden stack collapses.",
-        "<b>Credit conservation, predicted by the theory, holds at full length:</b> +1.0 to +1.7 points at every "
-        "depth, both seeds.",
-    ], st)
-    s += [Paragraph("What does not (yet)", st["h2"])]
-    s += bullets([
-        "<b>Depth still costs accuracy</b> (0.960, 0.952, 0.941 at depths 1–3 with conservation). The theory now "
-        "names three reasons (credit contraction, activity drift, pattern chaos), each with a predicted remedy, "
-        "all untested.",
-        "<b>Energy.</b> Only the single racing layer beats an equally accurate dense model at inference (about 2.4×). "
-        "Dense hidden layers cost more than a small MLP; sparse fan-in (14–22× fewer events) is the candidate fix.",
-        "<b>Leads that reversed:</b> the shadow neuron (debug +5 points, full length −0.8); the counterfactual "
-        "routing gradient in MoE (a tie with load balancing at 10 seeds).",
-        "<b>Spiking Heidelberg Digits (E22), the first event-native benchmark: poor.</b> Race 0.35–0.36 vs dense "
-        "MLP 0.56–0.59; a frozen random hidden layer beats trained ones. Later decisions help only slightly; the local "
-        "learning rule is the main problem there.",
-        "<b>Residual streams did not rescue depth</b> under local learning (depth 3: 0.915 delay-matched, 0.898 plain, "
-        "0.937 without), at 2–4× the synaptic events.",
-        "<b>Market stream (E17): no edge.</b> The race matches simple baselines while deciding a third earlier, "
-        "but continual learning did not help, learned trade selection had no skill, and every learner loses money "
-        "after costs.",
-        "<b>Not yet run:</b> the E7 stream learner; most theory predictions (M31–M43).",
-    ], st)
-    s += [Paragraph("New on 26–27 September: computing with time (details on the E24–E30 pages)", st["h2"])]
-    s += bullets([
-        "<b>In a race, winning is positional (E26, 3 seeds).</b> Sparse, error-driven delay learning that pulls only "
-        "the teacher learns (a + b) mod p (0.97–0.98 at 50% of pairs, p = 31); pushing the wrong winner stays at chance "
-        "in every run. Displacing false positives is equally destructive (E27, 5 seeds: 0.195 vs 0.914 with veto).",
-        "<b>The operator basis is Turing-complete (E30).</b> A Minsky machine wired from delay, or, and, veto and one "
-        "oscillator runs exactly; restoring phases once per cycle makes reliability independent of program length.",
-        "<b>Depth needs counterfactual routing credit (E28)</b>, which cancellation supplies; with it depth is "
-        "learnable, but it does not beat depth 1 yet: hidden nodes become class detectors, not parts.",
-        "<b>No true grokking yet (E29).</b> E25's generalization with delays is restriction by the readout, not "
-        "grokking; a general network with learned loops has not generalized.",
-        "<b>A measured frontier (E32).</b> At matched accuracy (≈ 0.91) on a timing task the event learner uses ≈ 190× "
-        "fewer operations than the cheapest clocked dense model, ≈ 19,000× inside 99% silence, ≈ 6,000× fewer in "
-        "training; the dense model can reach 0.995 at far higher cost, and a sparse (event-driven) dense model narrows "
-        "the gap to ≈ 10×.",
-        "<b>Negative:</b> pull-only, conserved budgets and prices do not transfer to the main weight race (SHD 0.35 "
-        "→ 0.04–0.29 across variants), and SHD offers only "
-        "~6× input-side advantage at the bins dense models use: not a supremacy benchmark.",
-    ], st)
-    s += [Paragraph("What is new in the theory (details in the theory pages)", st["h2"])]
-    s += bullets([
-        "<b>Exact results:</b> timing credit sums to the deadline's credit (a Ward identity); excitatory race "
-        "networks are topical maps, so timing noise is never amplified and a decision comes with a certified "
-        "jitter radius; committing to a branch costs temperature × surprisal, and near-miss credit is the gradient "
-        "of that cost.",
-        "<b>Mechanisms, predicted and queued for test:</b> why deep credit dies (contraction by a Markov kernel; "
-        "an activity mode that swamps evidence), why prices must be the faster timescale, and why firing "
-        "<i>patterns</i> are chaotic even though firing times are not.",
-        "<b>Checked against the literature:</b> several pieces turned out to be prior art and are credited (for "
-        "example the polyhedral geometry of first-spike networks, the outlier mode in non-negative backprop).",
-    ], st)
-    s.append(PageBreak())
-    s += [Paragraph("Direction (decided 26 September)", st["h1"]),
-          Paragraph("<b>The project's identity is local, sparse, error-gated learning on an asynchronous substrate:</b> "
-                    "learning whose cost follows events and errors, decisions that take as long as the evidence needs, "
-                    "and credit through what did not happen. Matching dense accuracy by training spiking networks with "
-                    "backpropagation is an established field in which this project would only be catching up.",
-                    st["body"])]
-    s += bullets([
-        "<b>Exact-gradient training is a diagnostic ceiling, not the method.</b> With exact gradients and no "
-        "cancellation the race architecture reaches 0.9675 vs 0.976 for an MLP (MNIST, depth 2, matched budget): the "
-        "architecture is close to dense, and the gap is mostly the local learning rule plus ~2 points for "
-        "cancellation (Fermi–Dirac training recovers ~60% of it).",
-        "<b>Every result reports its energy side</b> (synaptic events, spikes, weight updates), judged on the "
-        "accuracy-vs-energy frontier against dense models.",
-        "<b>Every mechanism gets a locality audit:</b> per node is fine; a slow per-layer broadcast is acceptable; a "
-        "global backward pass is diagnostic only.",
-        "<b>Benchmarks where asynchrony and continual learning are native:</b> SHD (E22), class-incremental streams "
-        "(E23), then NeuroBench's keyword few-shot class-incremental task.",
-        "<b>Honest assessment of the theory:</b> mostly known mathematics applied to race networks. It changed results in "
-        "four places (conservation +1.0–1.7; depth-3 exact training rescued 0.10 → 0.87; delay-matched skips +1.6 over "
-        "plain; Fermi–Dirac training +1.2). The next genuine step is a result about what local learning can and cannot "
-        "learn; §50 (bounded forgetting) is the first aimed at the project's own niche.",
-    ], st)
-    s.append(PageBreak())
-    s += promising_page(st, W)
-
-    s += [Paragraph("The idea", st["h1"]),
-          Image(os.path.join(ROOT, "report", "figures", "race.png"), width=W * mm, height=W * mm * 500 / 1080),
-          Paragraph("Nodes are non-leaky integrate-to-threshold units. The first to reach threshold fires and cancels "
-                    "the others; each cancelled node freezes Δ, its normalised distance to threshold. A teaching event "
-                    "arriving later can then credit near misses, not only the node that fired. The simulator has no "
-                    "global clock: it jumps from event to event and counts every operation, and all work and energy "
-                    "figures come from those counts.", st["body"]),
-          Paragraph("<b>How a decision unfolds (weaving).</b> Each group of neurons holds an open set of possible "
-                    "futures: every member's projected crossing time, which only moves earlier as input arrives. A "
-                    "crossing is <i>woven</i>, fixed history. When k members have crossed, the group closes, and each "
-                    "loser's distance to threshold is frozen as a near miss. Spikes from closed groups drive the next "
-                    "layer, so the settled region spreads through the network as a diagonal front in layers and time, "
-                    "until the first output crossing decides. Learning rereads the woven record, including the near "
-                    "misses. (experiments/WEAVING.md)", st["body"])]
-    s += [Paragraph("E2 · decisions that take as long as they need", st["h2"]), fig_image(fig_e2(d), W),
-          Paragraph("The race dominates a fixed-time decoder at every matched decision time and follows the MSPRT, "
-                    "which knows the exact likelihoods. Easy trials end in 0.29 s, hard ones in 1.69 s, with no "
-                    "controller deciding when to stop.", st["body"])]
-    s.append(PageBreak())
-    s += [Paragraph("E4 · counterfactual credit", st["h1"]), fig_image(fig_e4(d), W),
-          Paragraph("Rules that credit only nodes that fired can only punish a wrong winner; as K grows the right "
-                    "answer almost never fires, and they collapse to chance. Counterfactual rules can promote the "
-                    "target from its frozen record. Crediting only competitors that came close is both the most "
-                    "accurate and the cheapest local rule. It still trails the global-gradient reference by 13 points "
-                    "at K = 128, and credit survives a delayed teacher only until another race overwrites the record.",
-                    st["body"])]
-    s += [Paragraph("E5 · capacity that costs nothing while it sleeps", st["h2"]), fig_image(fig_e5(), W),
-          Paragraph("The fair baseline is a sparse softmax on the same connectivity, because most of what event "
-                    "computing saves comes from sparsity itself. Against it, inference work is similar (the race "
-                    "saves about 20% by stopping early), while learning work is about 300× lower: only near misses "
-                    "are updated. Dense models grow linearly with K.", st["body"])]
+                 ["<b>event network, nothing given (E35)</b>", "<b>1.000 ×4, 0.9995</b>", "<b>7.5 synaptic events</b>",
+                  "443–1,530 updates, 200k episodes"],
+                 ["event-token Transformer, 2M episodes", "0.989–0.996", "146k–1.16M MACs", "backprop"],
+                 ["event-token Transformer, 200k episodes", "0.65–0.97", "5k–576k MACs", "backprop"],
+                 ["clocked conv net (E32)", "0.995 / 0.984 / 0.895", "3.07M / 123k / 1.9k MACs", "backprop, 200k"]],
+                [56, 36, 42, 40], st)]
+    s += fig(fig_e32, W * 0.95)
+    s += [P("<b>Why.</b> Attention cannot see order without position information and must synthesize time comparisons from "
+            "dot products at O(n²·d) per layer; a hold/trigger node computes the comparison as its primitive, at the cost "
+            "of its input events (§70). The clocked model also pays per time bin, so silence multiplies its cost; a conv "
+            "net evaluated only where spikes are would cost ≈ 100 multiply-adds, not millions (§63). At published "
+            "per-operation energies the gap at equal accuracy is ≈ 10⁴×. <i>Limits:</i> one task built around the "
+            "primitives; the Transformer needed 10× more training for parity; a relative-time-attention Transformer "
+            "is being run.")]
     s.append(PageBreak())
 
-    s += [Paragraph("E6 · hidden layers on MNIST", st["h1"]), fig_image(fig_e6(runs), W)]
-    s += bullets([
-        "Round 3 (current-based ramp synapses, a collapsing decision bound, 3 winners per group) lifted the hidden "
-        "networks from about 0.89–0.90 to about 0.96.",
-        "Hidden learning matters: the frozen random hidden layer stays at 0.895.",
-        "With one hidden layer, fired-only ≈ counterfactual credit. From two layers on, counterfactual credit "
-        "leads, and the gap grows with depth (E14, on the depth page). Symmetric feedback was worst in rounds 1–2 "
-        "and was not carried forward.",
-        f"A wider hidden layer (2000 nodes): {pct(h2000) if h2000 else 'pending'}, no gain. The single-layer "
-        f"control reaches {pct(r3['single_layer'])}: the new synapse model gave ~2.5 points, depth ~4 more.",
-    ], st)
-    s += [Paragraph("Energy, measured by counting", st["h2"]), fig_image(fig_energy(), W),
-          Paragraph("Operation counts priced with published per-operation energies (45 nm logic and SRAM; measured "
-                    "Loihi). These are order-of-magnitude estimates, not chip measurements. At inference, the single "
-                    "racing layer is the only network that beats an equally accurate dense model; the round-3 hidden "
-                    "networks are 1.2–1.5× cheaper to <i>train</i> than unbatched dense training. Hidden layers integrate about "
-                    "100 input events in each of 1000 nodes before inhibition stops them, and that swamps the savings. "
-                    "Against batched dense hardware every advantage disappears.", st["body"])]
+    s += [P("4. Depth and composition", "h1"),
+          P("Classes that are ordered combinations of shared parts are zones over part events, so the theorem prescribes two "
+            "layers: parts (hold nodes on channel pairs) and class nodes that hold one part's spike and are triggered by "
+            "another's, so a single part cannot satisfy them. Learned natively: 0.97 with part windows at the motif scale, "
+            "0.86 with a generic bank of window scales, depth 1 0.39 (5 seeds, E34). A readout that accumulates evidence "
+            "fails at conjunction even though its hidden nodes learn parts (E28). An event-token Transformer trained on 2M "
+            "episodes reaches 0.998 at ≈ 175k–690k multiply-adds vs ≈ 14 events.")]
+    s += fig(fig_e34, W * 0.9)
+    s += [P("5. Generalization and grokking", "h1"),
+          P("<b>What counts (§58):</b> restriction, forced generalization above capacity, and grokking (the relation reached "
+            "while memorizers are available) are different claims; each reports ρ = n/params. <b>Per-class parameters "
+            "cannot generalize on (a + b) mod p (§66):</b> each operand occurs once per class, so generalization needs shared "
+            "intermediates; in time, a sum needs a rhythm."),
+          P("<b>Grokking as a route change (E37).</b> Each class has a pair-node lookup that can memorize everything "
+            "(ρ ≈ 0.016) and a shared route through a rhythm with learned delays; learning is errors-only. Without sleep: "
+            "train 1.0, test 0.03–0.04. With sleep (λ = 0.02–0.2): test 0.93–0.97 in 2 of 3 seeds, after a delay; the "
+            "third seed collapses. Sleep without the rhythm: train 0.45, test 0.")]
+    s += fig(fig_e37, W * 0.9)
+    s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "
+            "is used by more than m* = λθ/(eη) examples: lookup entries serve one and die, the rhythm's delays serve many "
+            "and survive, and once the rhythm answers a pair its lookup entry is never relearned. This predicts "
+            "memorization, grokking and collapse regimes (all observed) and a data threshold n* ∝ pλθ/(eη).")]
     s.append(PageBreak())
 
-    s += theory_pages(st, W)
-
-    s += [Paragraph("E7 · a learner that lives in a causal stream", st["h1"]),
-          Paragraph("Everything above trained the way clocked hardware likes: minibatches, IID epochs, a global "
-                    "learning-rate schedule, a label for every sample, a separate test phase. None of that is needed "
-                    "by an event-driven learner; it is inherited. E7 drops it. The guiding rule is not biological "
-                    "fidelity but this: <b>where we deviate from biology only because of synchronous-hardware habits, "
-                    "we do not carry the deviation over.</b>", st["body"]),
-          fig_image(fig_e7(), W)]
-    s.append(table([
-        ["habit", "origin", "in E7"],
-        ["minibatch updates", "GPU throughput", "one update per frame (Stage 0 checks this changes nothing)"],
-        ["epochs, reshuffling", "batched SGD", "one pass over a stream"],
-        ["global learning-rate decay", "SGD convergence", "per-synapse consolidation"],
-        ["homeostasis from batch means", "vectorised statistic", "per node, every frame, label or not"],
-        ["dense feedback matrix", "cheap matmul", "counted as events to eligible nodes only"],
-        ["train phase, then test", "benchmark protocol", "predict every frame before learning from it"],
-        ["a label for every sample", "benchmark convention", "10% labels, late labels, or labels the learner asks for"],
-        ["frames with a global t = 0", "datasets are frames", "kept as episode resets; slow state crosses them"],
-        ["latency-coded dense images", "MNIST is a frame", "kept as a benchmark, not a sensor model"],
-    ], [48, 38, 88], st))
-    s += [Spacer(1, 6), Paragraph("Hypotheses (preregistered)", st["h2"])]
+    s += [P("6. The weight race", "h1"),
+          P("The original architecture (integrate-to-threshold nodes with learned weights, racing in groups) holds its first "
+            "results: a cancelled node can be taught (E4: 0.79 at K = 128 where reward-modulated rules are at chance); races "
+            "decide as fast as the evidence allows (E2, matching the optimal MSPRT); learning work tracks activity (E5: "
+            "≈ 300× fewer updates); local learning reaches ≈ 0.96 on latency-coded MNIST with counterfactual credit that "
+            "pays more with depth (E6, E14).")]
+    im = png("e14_depth", W * 0.7)
+    if im:
+        s.append(im)
+    s += [P("Its limits: depth still costs accuracy; only its single racing layer beats an equal dense model at inference "
+            "(≈ 2.4×); it forgets more than SGD (E23); it memorizes instead of grokking (E24); and the rules that fixed the "
+            "timing networks do not transfer to its weights (SHD 0.04–0.29 vs 0.35).")]
+    s += [P("7. Real data", "h1")]
     s += bullets([
-        "<b>H0</b> one frame per update learns as well as minibatches of 32.",
-        "<b>H1</b> a carried prior cuts the input events needed to decide on later views, without hurting first views.",
-        "<b>H2</b> at 10% labels, carried labels and continuity help on real episodes and not on the "
-        "<b>shuffled-time control</b> (same frames, order destroyed).",
-        "<b>H3</b> labels the learner asks for (when its race is uncertain) beat random labels on the same budget.",
-        "<b>H4</b> synaptic tags make labels that arrive 2 frames late usable.",
-        "<b>H5</b> on class-blocked streams the race forgets less than an MLP trained by SGD; replay is reported "
-        "alongside and may beat both.",
+        "<b>Spiking Heidelberg Digits:</b> the weight race 0.35 vs 0.56–0.59 for a dense MLP. For the timing architecture the "
+        "representation is the bottleneck: onset-referenced parts give a dense readout 0.566, and the native learner "
+        "overfits (0.27–0.33). SHD is only ≈ 6× sparser than a 10 ms raster, a weak test of the paradigm.",
+        "<b>Market stream (BTCUSDT):</b> the race matches simple baselines while deciding a third earlier; ≈ 59% direction "
+        "accuracy does not pay trading costs.",
     ], st)
-    status = (f"{len(e7_done)} E7 result files so far." if e7_done else
-              "Code, tests and the pilot queue are in place; the pilots run after the E6 jobs finish.")
-    s.append(Paragraph(f"<b>Status.</b> {status} Pilots use the validation split to set thresholds, which are written "
-                       "into the preregistration before 5-seed confirmatory runs on the test set.", st["body"]))
-    s.append(PageBreak())
-
-    s += [Paragraph("E17 · a continually learning race on a live market stream", st["h1"]),
-          Paragraph("A test of the model class on real, non-stationary, asynchronous event data: Binance BTCUSDT "
-                    "trades (millisecond timestamps), 7 pilot days and 21 confirmatory days, one stream. This is a "
-                    "crypto market, not a stock market: freely available stock tick data with raw timestamps was not "
-                    "found. Every 10 s the race restarts, trades stream in as spikes (side × size × tick direction), "
-                    "and the network commits at its first output crossing, or abstains. The label is the price move "
-                    "over the next 10 s <i>from the moment it decided</i>. Look-ahead is impossible by construction: "
-                    "a decision uses only trades that already arrived, and weights are taught only with labels "
-                    "revealed before the prediction. <b>Not a trading system; no live trading.</b>", st["body"])]
+    s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
-        "<b>Learners:</b> continual race; the same race frozen after the pilot days; a three-output race "
-        "(up / down / <b>hold</b>) that learns <i>whether</i> a move will pay the 2 bp cost, i.e. when to trade; "
-        "online logistic regression deciding at the end of each window; momentum.",
-        "<b>Decision rules (preregistered):</b> competitive if within 1 point of logistic regression while deciding "
-        "at least 20% earlier; continual learning helps if it beats frozen by 1 point (day-block interval excludes "
-        "0); trade selection helps if the hold race's profit proxy beats the others at the same trade fraction. "
-        "Near 50% for everyone is the expected null for 10 s direction.",
+        "Grokking theory tests (running): phase diagram over data × sleep (§72); relations the rhythm cannot express; sleep "
+        "as the pressure toward reusable parts (§73); O(log N) learning as the candidate basis grows (§74).",
+        "Fair baselines (running): relative-time-attention Transformers; the chains with 5–25× more training.",
+        "Composition accuracy against Transformers; grokking reliability; native learning of sparse parity (§75, open); "
+        "a real stream with rare, precisely timed events (§55).",
     ], st)
-    e17 = {os.path.basename(p_)[:-5]: load(p_) for p_ in glob.glob(os.path.join(RES, "e17", "*.json"))
-           if not p_.endswith("analysis.json")}
-    if e17:
-        rows = [["learner", "accuracy", "coverage", "profit bp/episode (2 bp)", "(10 bp)"]]
-        for k, r in sorted(e17.items()):
-            c = r["confirmatory"]
-            rows.append([k, f"{c['acc']:.4f}", f"{c['coverage']:.3f}", f"{c['profit_bp_per_episode_c2']:+.3f}",
-                         f"{c['profit_bp_per_episode_c10']:+.3f}"])
-        s += [table(rows, [52, 26, 26, 42, 28], st),
-              Paragraph("Confirmatory days only, prequential. Profit is a diagnostic proxy, not tradable P&amp;L.",
-                        st["small"])]
-        an_p = os.path.join(RES, "e17", "analysis.json")
-        if os.path.exists(an_p):
-            an = load(an_p)
-            f = lambda v: f"{100 * v[0]:+.1f} points [{100 * v[1][0]:+.1f}, {100 * v[1][1]:+.1f}]"  # noqa: E731
-            s += bullets([
-                f"<b>Preregistered verdicts:</b> competitive (met: {100 * an['race_earlier_frac']:.0f}% earlier "
-                f"decisions); nominally better than logistic regression ({f(an['race_minus_b1_acc'])}).",
-                f"<b>A fairness check made after seeing the results overturns \u201cbetter\u201d:</b> at the race's "
-                f"coverage, logistic regression is as accurate ({f(an['race_minus_b1_same_coverage_acc'])}); the race "
-                f"ties momentum ({f(an['race_minus_b0_acc'])}). The edge came from abstaining on hard windows.",
-                f"<b>Continual learning did not help:</b> continual − frozen {f(an['continual_minus_frozen_acc'])}.",
-                f"<b>Learning when to trade:</b> the hold race traded {100 * an['hold_trade_fraction']:.1f}% of "
-                f"episodes, at chance accuracy; its profit ties logistic regression's most confident trades at "
-                f"the same rate. No trade-selection skill.",
-                "<b>Every learner loses money after costs.</b> Direction on moves of at least 1 bp is predictable "
-                "at about 59% (above the ~50% null the preregistration expected; checked for look-ahead), not "
-                "enough to pay even a 2 bp cost.",
-            ], st)
-    else:
-        s.append(Paragraph("<b>Status.</b> Data downloaded (28 days), preregistration written before any data was "
-                           "inspected (experiments/E17_PREREGISTRATION.md), runs queued.", st["body"]))
-    s.append(PageBreak())
-
-    s += time_pages(st, W)
-    s.append(PageBreak())
-    s += [Paragraph("Lessons learned along the way", st["h1"])]
-    s += bullets([
-        "<b>Compute discipline.</b> Running two heavy jobs at once hung the host three times (no swap, and no memory "
-        "limit on the container; two hard reboots corrupted the filesystem). The third time, the queue ran one job while "
-        "an ad-hoc debug run ran beside it. Now every computation, debug snippets included, goes through the one-job "
-        "queue (watchdog at 6 GB free, checked every second), and the container gets hard memory and CPU caps.",
-        "<b>The queue is not optional (26 September).</b> A fourth hang: ten ad-hoc jobs beside two queue runners. All "
-        "runs now go through queue/run_safe.sh: one job under a global lock, one thread, a memory watchdog.",
-        "<b>Dense machinery creeps in.</b> Replay, phasor sums, offline restart selection and dense updates each rescued "
-        "a result by leaving the event-driven world; such results are diagnostics, not the direction.",
-        "<b>Check what a structure gives away.</b> E25 generalized because its readout could express nothing else.",
-        "<b>Debug leads reverse.</b> The shadow neuron led by 5 points in 1-epoch runs and trailed by 0.8 at full "
-        "length; credit conservation's +8–10 became +1–1.7. Short runs are reported as leads only.",
-        "<b>Theory can be wrong in informative ways.</b> A predicted input-redundancy pyramid was refuted by measuring "
-        "the data (entropy exponent 0.95, not 0.5–0.8); an early smoke test contradicts the predicted size of the "
-        "activity mode. Both are recorded next to the claims they test.",
-        "<b>Hidden batch assumptions.</b> E6 ran homeostasis inside the teaching step, which silently assumed every "
-        "sample is taught. With scarce labels that would have switched homeostasis off. Batch-derived constants "
-        "(homeostasis rate) also have to be rescaled when moving to one frame per update.",
-        "<b>A case that batching hides.</b> A frame where no hidden node fires crashed the per-frame learner; in "
-        "batches, some other sample always fired.",
-        "<b>Undercounted training work.</b> The feedback fan-out and homeostasis updates were not counted. They are "
-        "now, as events to eligible nodes only.",
-        "<b>Controls before claims.</b> Round 3 looked like a win for counterfactual hidden credit until the fired-only "
-        "ablation matched it. The single-layer and shuffled-time controls exist for the same reason.",
-    ], st)
-    s += [Paragraph("Where this could go", st["h1"])]
-    s += bullets([
-        "<b>Parts, not wholes (§62):</b> find the pressure that makes hidden nodes detect reusable parts, so that depth "
-        "pays under native credit; then the true grokking test (E29) with that hidden layer.",
-        "<b>The complete §60 readout in the main race</b> (conserved budgets, prices, non-leaky outputs) on SHD.",
-        "<b>The supremacy benchmark (§55):</b> a stream with spikes per channel per precision bin ≪ 0.01, measured in "
-        "events, latency and updates against dense models given the same priors.",
-        "<b>Make depth pay:</b> the theory's three remedies, each with a queued test: centre credit in time "
-        "coordinates (Ward identity), run the prices on the faster timescale, and use sparse fan-in with enough "
-        "winners (k·F ≥ G) or topographic codes to damp pattern chaos.",
-        "<b>Decide better, not only faster:</b> relative (MSPRT) stopping via a shared free-energy inhibition, and "
-        "onset-referenced inhibition so the network can use the <i>absence</i> of expected spikes.",
-        "<b>Make the hidden layer cheap:</b> sparse fan-in cut synaptic events 14–22× in pilots; if accuracy holds, "
-        "the inference-energy verdict flips.",
-        "<b>Live in time:</b> E7 (a causal stream with scarce, late labels) and E17 (a real market stream, with the "
-        "network learning when to act) test the asynchronous, continual side of the proposal.",
-        "<b>Seeds:</b> 3–5 seeds for every headline number before any claim.",
-    ], st)
-    s.append(Spacer(1, 8))
-    s.append(Paragraph("Reproduce: <font face='DV'>python report/make_pdf.py</font> rebuilds this document from "
-                       "experiments/results and report/data.json. Preregistrations: experiments/E*_PREREGISTRATION.md.",
-                       st["small"]))
-
+    s.append(Spacer(1, 6))
+    s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
+               "procedures are diagnostics only. Reproduce: python report/figures_time.py && python report/make_pdf.py.",
+               "small"))
     doc = SimpleDocTemplate(OUT, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm, topMargin=16 * mm,
-                            bottomMargin=16 * mm, title="Sleeping Machines — status report",
+                            bottomMargin=16 * mm, title="Sleeping Machines — what is known",
                             author="Sleeping Machines project")
     doc.build(s, onFirstPage=footer, onLaterPages=footer)
     print("wrote", OUT)
