@@ -3988,6 +3988,30 @@ noise fades (§83(i)); near-miss credit acts on every correct answer, so it keep
 credit is right for misses; the margin needs another anchor (open). Best configuration on E34's task so far: learned
 windows and latest-instant credit without a margin (0.990–0.9993; occasional dips).
 
+## 90. The world model needs slow state, and slow state must be counted, not tracked
+
+*Written 2026-09-27, after E52 (validation), E57 and E58.*
+
+**The gap.** A Transformer Hawkes process with the event network's own piecewise-constant hazard family, trained on days
+1–4 and frozen, scores −2.43 nats per event on day 5; the semi-Markov event network (last two event types, gap window)
+scores −3.12. Only the context differs: the Transformer attends over the last 128 events and their times, and so can
+read the recent regime (how fast events are arriving, which side is pressing).
+
+**Slow state, native.** Leaky counters updated only at events, c ← c·e^(−Δ/τ) + 1, are event nodes whose level is the
+recent rate at scale τ; quantized, they join the event network's state, and rare (type, regime, window) cells back off
+to the plain semi-Markov estimate. With rate counters at 5 s and 60 s (and an order-flow counter) day 5 improves from
+−3.12 to −2.76 (half the gap), and the held-out test days from −2.38 / −2.10 to −2.18 / −2.00 (E57), at a few extra
+counter updates per event. Backoff strength barely matters (m = 5 or 20: within 0.01 nats).
+
+**Counting versus tracking (a principle for frozen transfer).** A factorized version (per-feature multiplicative factors
+on the hazard, learned by exponentiated-gradient Poisson regression, E58) looks better on day 5 (−2.63) but is worse on
+the test days (−2.37 / −2.23, below even the plain model on day 7), and worse the larger its step (η = 0.03: −2.65 /
+−2.42). With a constant step, multiplicative updates weight recent evidence exponentially: the frozen factors describe
+the end of the last training day, not the regime structure, and its quantile edges (from the first events of day 1) do
+not travel either. Counts average all the evidence and fixed rate edges mean the same thing on every day, so they
+transfer. For a model that is frozen and then deployed, estimate by counting; constant-step multiplicative updates
+belong to tracking (online use), where recency is the point.
+
 ## Tests
 
 | | Claim | Test |
