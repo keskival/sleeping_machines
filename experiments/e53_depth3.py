@@ -85,6 +85,7 @@ class Net:
     def __init__(self, N, K, depth, rng, thr, alpha, beta, credit="instant"):
         self.N, self.K, self.depth, self.thr, self.alpha, self.beta = N, K, depth, thr, alpha, beta
         self.credit = credit; self.temp = 0.0; self.rng = rng; self.margin = 0.0; self.nm = 0
+        self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K)   # §86b: recent precision per node
         self.pp = np.array([(p, q) for p in range(N) for q in range(N) if p != q]); self.P = len(self.pp)
         self.Q = self.P + (self.P ** 2 if depth == 3 else 0)
         self.h = rng.uniform(0.5, 1.5, (K, self.Q)); self.h /= self.h.sum(1, keepdims=True)
@@ -132,8 +133,11 @@ class Net:
 
     def teach(self, t, y):
         c, U, win, same, inst, ft = self.forward(t)
+        if c < self.K:                                      # the firing node's record (decaying counts, local)
+            self.ok_c[c] = 0.98 * self.ok_c[c] + (c == y); self.bad_c[c] = 0.98 * self.bad_c[c] + (c != y)
         if c == y:
-            if self.margin and y < self.K:
+            prec = self.ok_c[y] / max(self.ok_c[y] + self.bad_c[y], 1e-9) if y < self.K else 0.0
+            if self.margin and y < self.K and prec >= self.gate:
                 self._near_miss(y, U, win, same, inst[y])
             return
         if y < self.K and not np.isfinite(ft[y]) and len(U) >= 2:
@@ -171,6 +175,7 @@ def main():
     ap.add_argument("--credit", default="instant", choices=("instant", "union"))
     ap.add_argument("--temp", type=float, default=0.0, help="instant credit: softmax temperature (0 = greedy)")
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin theta_m (0 = off)")
+    ap.add_argument("--gate", type=float, default=0.0, help="§86b: near-miss only if the node's recent precision >= gate")
     ap.add_argument("--steps", type=int, default=40000)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--tag", default="")
@@ -180,7 +185,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         task = make_task(a.N, a.M, a.S, a.R, rng)
-        net = Net(a.N, len(task[1]), a.depth, rng, a.thr, a.alpha, a.beta, a.credit); net.temp = a.temp; net.margin = a.margin
+        net = Net(a.N, len(task[1]), a.depth, rng, a.thr, a.alpha, a.beta, a.credit); net.temp = a.temp; net.margin = a.margin; net.gate = a.gate
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(task, a.N, H, q, rng)
@@ -194,7 +199,7 @@ def main():
                 net.events, net.syn = e0, s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}_{a.credit}_T{a.temp:g}_b{a.beta:g}{f'_m{a.margin:g}' if a.margin else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_S{a.S}R{a.R}_t{a.thr:g}_{a.credit}_T{a.temp:g}_b{a.beta:g}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 

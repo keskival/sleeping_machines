@@ -811,9 +811,56 @@ def build():
     def P(t, style="body"):
         return Paragraph(t, st[style])
 
+    import figures_mech as FM                                   # explanatory figures (plain-language front)
     s = [P("Sleeping Machines: what is known", "title"),
          P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
-         P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
+         P("In plain terms", "h1"),
+         P("Today's neural networks are <b>clocked and dense</b>: at every step, every input is multiplied by every weight, "
+           "whether or not anything happened. Many real signals are the opposite: long silences broken by precisely timed "
+           "events (nerve spikes, trades on a market, sensor alarms), where <i>when</i> something happens is the information."),
+         P("<b>Sleeping Machines are networks that only work when an event arrives.</b> A node waits. It fires when the right "
+           "inputs arrive in the right time window (“B within 1.5 s after A”), and the first node to fire gives the answer, "
+           "a <i>race</i>. Silence costs nothing, and time itself does the computing: a delay or a waiting window plays the "
+           "role that a weight matrix plays in a dense network."),
+         P("The questions are whether such networks can <b>learn</b> (without backpropagation or any dense machinery: a node "
+           "adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
+           "whether they can <b>match or beat</b> MLPs and Transformers.")]
+    s += fig(FM.fig_concept, W)
+    s += [P("Highlights", "h1")]
+    s += bullets([
+        "<b>Same accuracy, 10,000–100,000× less computation.</b> On timing-pattern recognition a learned event network is "
+        "perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after "
+        "1–2M training examples.",
+        "<b>It groks where a Transformer does not.</b> Trained on 30% of all (a, b, c) triples, it learns (a + b + c) mod 17 "
+        "and is 99.4–99.9% correct on the triples it never saw; a Transformer with weight decay stays at 3–63%.",
+        "<b>Deep order from a few thousand examples.</b> Recognizing which of 20 orders of four patterns occurred needs four "
+        "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
+        "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
+        "≈ 80k connections ever created (Transformer comparison on this task running).",
+        "<b>A better world model of a real market stream at 80–200× less computation.</b> Predicting the next trade events "
+        "of BTC on days it never saw, a small event network beats a recurrent neural point process (GRU).",
+        "<b>Learning cost follows activity, not size.</b> Eight times more inputs (12 → 96 channels) costs no more learning "
+        "mistakes.",
+        "<b>New theory, proved:</b> exactly what one event node can compute and where depth is needed; why a fixed weight "
+        "budget lets a node learn an AND without knowing which half was wrong; why learning deep order needs a little "
+        "exploration and a safety margin.",
+    ], st)
+    s += fig(FM.fig_supremacy_map, W)
+    s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
+            "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
+            "when C arrives. With the same motifs in another order, the “A then B” detector still fires but nothing "
+            "completes the pattern.")]
+    s += fig(FM.fig_anatomy, W)
+    s += [P("<b>Why learning it is not trivial.</b> When a detector for “A, then B, then C” fails to fire, which of its "
+            "connections should change? Crediting every candidate spreads the weight so thinly that the node never fires; "
+            "crediting the tempting shortcut (“A, then B” is shared with another class) traps it; exploring a little, then "
+            "settling, finds the right order and keeps it (§84).")]
+    s += fig(FM.fig_credit, W)
+    s += [P("<b>Where it does not win yet:</b> composition that hinges on fine timing precision (0.99 vs a Transformer's "
+            "0.998); spoken digits (0.65 vs 0.70 for a published LSTM); and trading, where no learner beats buy-and-hold on "
+            "this data.")]
+    s.append(PageBreak())
+    s += [P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
            "race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an "
            "input, and by inhibition that arrives in time. This report states what is now known about such networks, "
            "why, and what remains open. Derivations and proofs are in experiments/THEORY.md (cited as §n)."),
@@ -829,8 +876,11 @@ def build():
         "<b>On a timing task a learned event network matches or beats dense models at 10⁴–10⁵× lower cost</b>, with "
         "nothing given: 1.000 at 7.5 synaptic events per episode vs 0.989–0.996 for event-token Transformers at "
         "146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.",
-        "<b>Depth pays when composition is a hold/trigger chain</b> (0.97 vs 0.39 at depth 1), but a well-trained "
-        "Transformer is more accurate on the composition task (0.998) at ≈ 10⁴× the cost.",
+        "<b>Depth is learned natively when credit is right (§83–§86).</b> Summed potentials with conserved multiplicative "
+        "credit, credit to one instant with cooled exploration, and synapses grown only when credited (provably the same "
+        "decisions as dense weights) learn order among three and four parts: 0.999–1.000 on 5/5 seeds at depth 4 with "
+        "≈ 2,000 updates and ≈ 80k grown synapses out of 5.5·10⁷ candidates. Where composition hinges on fine timing "
+        "precision a Transformer is still more accurate (0.998 vs 0.988–0.995) at ≈ 10⁴× the cost and 50× the data.",
         "<b>Grokking occurs, by a route change under sleep, and only for relations the substrate can express.</b> "
         "Without sleep the network memorizes; with sleep it generalizes after a delay (0.93–0.99, reliable with cooled "
         "timing noise); a data × sleep phase diagram shows memorization, grokking and collapse; with depth, (a + b + c) "
@@ -856,7 +906,7 @@ def build():
          "100k steps): 0.29 / 0.63 (seed 0, d = 32 / 64), 0.06 / 0.03 (seed 1; chance 0.06)",
          "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
          "Transformer"],
-        ["<b>Better world model of a real market stream at ≈ 200× lower cost</b>",
+        ["<b>Better world model of a real market stream at 80–200× lower cost</b>",
          "E48: online −2.11 vs GRU −2.62 nats/event; held-out frozen −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic ops "
          "vs thousands of MACs",
          "classical model class (semi-Markov); offline-trained GRU pending"],
@@ -864,8 +914,10 @@ def build():
          "E35: 12 → 96 channels, 0.999–1.000, mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81", "measured to 96 channels"],
         ["<b>Structure discovery, implicit Occam razor</b>",
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
-        ["<i>Not supremacy:</i> composition accuracy", "E34 chains 0.97 vs Transformer 0.998 (≈ 10⁴× cheaper)",
-         "Transformer more accurate"],
+        ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
+         "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "Transformer on this task running"],
+        ["<i>Not supremacy:</i> composition hinging on timing precision", "E34m chains 0.988–0.995, stable, 40k examples; "
+         "Transformer 0.998 after 2M (0.42–0.70 after 40k)", "Transformer more accurate with 50× the data"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E51 class-conditional event world models 0.647 test (0.73 held-in "
          "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
