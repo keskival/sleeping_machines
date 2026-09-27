@@ -122,8 +122,8 @@ def fig_supremacy_map():
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.02, 0.1), markerscale=0.7)
     # (c) world model of a real market stream (held-out days 6-7; one hazard family: the 6-window bank)
     ax = axs[1, 0]
-    ax.set_title("Market world model: within 0.2 nats\nof a Transformer, ~1/4000 of the work", fontsize=8.4)
-    rows = [("event network + slow regime counters (E57)", [-2.184, -1.999], 30, EVENT, "D"),
+    ax.set_title("Market world model: within 0.07–0.18 nats\nof a Transformer, ~1/3000 of the work", fontsize=8.4)
+    rows = [("event network + slow regime counters (E57)", [-2.153, -1.960], 40, EVENT, "D"),
             ("event network, semi-Markov (E48)", [-2.38, -2.10], 19, "#f3a37f", "D"),
             ("GRU point process, online", [-3.15, -2.98], 1.5e3, DENSE_O, "o")]
     thp = os.path.join(RES, "e52", "thp_test_d64_L32_f0_e11.json")
