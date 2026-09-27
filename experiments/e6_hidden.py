@@ -203,6 +203,7 @@ class Config:
     scaling: int = 0         # subtractive synaptic scaling (constant summed weight per node)
     zero_sum: int = 0        # normalise competitor credit so the output signal sums to zero
     compete: int = 1         # 0: no push on competitors, the teacher is only pulled earlier (E26, THEORY §54)
+    price: float = 0         # §60: per-class price step on output thresholds (fraction of theta_out)
     conserve: float = 0      # B > 0: output rows capped at a conserved budget of B thresholds (heterosynaptic, §60)
     batch: int = 32
     epochs: int = 3

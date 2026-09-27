@@ -335,11 +335,14 @@ chance. **E28c** (15 classes from 6 motifs, 5 seeds) tests the case depth should
 | 60k episodes | 0.51 (0.42–0.56) | 0.44 (0.40–0.47) |
 
 Depth 1 wins at both lengths: the hidden layer does not learn reusable motif detectors under the current rule.
-A selectivity diagnosis (§62) shows trained hidden nodes become class detectors (median class selectivity 0.21 vs
-motif 0.12), with label-gated or label-free credit alike; motifs span up to 1.5 but a window is 0.6, so pulls never
+**Corrected diagnosis (§62):** receptive fields show the trained hidden nodes *are* part detectors (86 of 124 take
+both strongest inputs from one motif; untrained 2 of 35); the §60 readout accumulates without a window and so
+discards the parts' order, which is what E28's classes are made of. (Superseded first diagnosis: a selectivity
+metric suggested class detectors, median class selectivity 0.21 vs motif 0.12, with label-gated or label-free credit; motifs span up to 1.5 but a window is 0.6, so pulls never
 reach the motif's second spike. Hold-then-align hidden learning, the predicted fix, did not help (accuracy unchanged,
 class selectivity rose further): the missing piece is a pressure toward parts over wholes. Sparse hidden fan-in (2–3 random channels per node) was
-worse (0.17–0.36, 2 seeds): with 192 nodes a given motif pair is covered by ~1.6 nodes. Open. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
+worse (0.17–0.36, 2 seeds): with 192 nodes a given motif pair is covered by ~1.6 nodes.) A windowed readout
+that can see order is being tested. (Before the fix:) Counterfactual routing credit is needed (path-only fails), but the one-seed near-miss lead
 reversed, and depth did not beat depth 1. All arms were far from solving the task; the readout uses pull-only weights without §60's
 conservation and prices, and 48 hidden nodes, which E29 showed cannot work. Rerun with those fixes is next. Two
 bugs found on the way were theory errors: a one-sided "make it earlier" rule drifts every delay past the anchor,
