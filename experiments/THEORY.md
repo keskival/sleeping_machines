@@ -4709,6 +4709,64 @@ selective gate (Event-SSM) against the channel/payload-selective gate (the diago
 sparsity with the work counted. The aim is to close the 0.675 → ~0.96 gap with a native, sparse mechanism, and to report the
 accuracy–work frontier.
 
+## 105. Time and vectors compute together: content-dependent delays, transported payloads, snapshot emission
+
+*Written 2026-09-28. The architecture the paradigm was aiming at: events carry small vectors, and neither the times nor the
+vectors are a side channel of the other. Prior art uses one side only. Delay-learning spiking networks (Hammouamri et al.
+2024, 95.1% on SHD; Mészáros et al. 2025, 93.2%) send scalar spikes over static learned delays. Event-SSMs and S7 send vectors
+with no delays, updating every state on every event. Spiking Transformers compute attention on clocked binary spike maps.
+Attention by content-dependent delays with an exact softmax identity was not found in a search (2026-09-28).*
+
+**Setting.** An event is (t, v) with v ∈ R^d small. On a synapse from a sender to unit j, the message carries a content score
+r = q_j·v + c_ij. It is **sent only if r > 0**, and it **arrives after the delay δ = τ_j·r**. Unit j holds z_j ∈ C^n, which flows
+as z ← e^{Λ_j Δt} z between arrivals and jumps by B v at each arrival. It fires at the first T with Re⟨w_j, z_j(T)⟩ = θ, and it
+emits (T, y = φ(Re C_j z_j(T))). Four couplings follow: content → time (delay and gate), time → content (the flow transports each
+payload: it decays and rotates by its age after arrival), content → time (threshold crossing), and time → content (the
+snapshot at the firing time).
+
+**(a) What a unit holds.** z_j(t) = Σ_arrivals e^{Λ_j (t − t_s − τ_j r_s)} B v_s. With a real mode of rate 1/κ this is
+e^{−(t − t_s)/κ} · e^{(τ_j/κ) r_s} · B v_s. **A delay is a multiplicative gain in the exponent**: arriving later by τr means
+decaying less, by the factor e^{τr/κ}. With complex modes the delay is also a rotation, e^{iω τ r}. Content therefore
+reweights and rephases payloads through time alone, with no multiplier.
+
+**(b) Lemma (delay-coded attention; exact).** Keys send at t₀ with scores s_j, all at or above a cut s_c, delays κ(s_j − s_c),
+and payloads v_j. Keys below the cut send nothing. A receiver with one real mode of rate 1/κ, read at any t ≥ t₀ + κ(s_max − s_c),
+holds N(t) = e^{−(t − t₀)/κ} e^{−s_c} Σ_{s_j ≥ s_c} e^{s_j} v_j. Its count channel (the same mode fed with 1) holds the same
+factor times Σ e^{s_j}. Their ratio is **softmax attention over the keys above the cut**, exactly and deterministically.
+*Proof.* Substitute the arrival times into the flow. ∎
+- The error against full softmax is at most 2 max‖v‖ times the softmax mass below the cut.
+- Cost is proportional to the keys that send, and latency is κ(s_max − s_c): the dynamic range of the logits is bought with time.
+- Checked numerically: equality to machine precision with all keys sending and with the top half or top quarter sending (the
+  error then equals the missing mass: 0.15 and 0.35 in the check).
+- **Races and delays are the two ends of one trade-off.** Races (§101–§103) compute the softmax by *sampling* (fast, noise 1/R).
+  Delays compute it by *waiting* (exact, latency proportional to the logit range).
+
+**(c) The semiring.** Leaky integration of delayed arrivals gives κ log N(t) + t = κ · log Σ_s exp((t_s + δ_s)/κ + log w_s).
+This is a log-sum-exp over arrival times, where delays add and weights enter as log-offsets. Its zero-temperature limit is
+max-plus (latest arrival), while first-arrival races give min-plus (§98). **A delay network computes in the log semiring
+natively**, and attention is that semiring's product of scores with values. Composition across layers adds delays and
+multiplies gains: products are computed by adding times.
+
+**(d) Emission couples back.** The firing time T solves Re⟨w, z(T)⟩ = θ: the unit fires when its delay-weighted evidence
+suffices, so strong matching content fires it early. The emitted vector is the state at that moment, y = φ(Re C z(T)). It
+carries what the evidence was, while T carries how decisive it was. Gradients are local:
+- ∂T/∂θ = −∂V(T)/∂θ / V̇(T)  (§104d);
+- ∂y = φ′ · Re C (∂z(T) + ż(T) ∂T);
+- ∂(arrival)/∂v = τ_j q_j  (content moves arrivals).
+
+**(e) What one layer computes.** In §104c's terms, the weight on a past payload is a function of its age *minus a content-
+dependent shift*, φ(t − t_s − δ(v_s, j)), evaluated at a time T chosen by the evidence itself. This is outside the closure of
+any linear CDE: the shift is nonlinear in content, and the readout time is state-dependent. It contains:
+- static delays (the scalar delay-network limit: v constant, δ fixed);
+- Event-SSM-style filtering (δ ≡ 0, emission at every event);
+- attention (lemma (b)).
+
+**Test (E74).** SHD, selected on held-out speakers. A time-vector network: 16-dimensional payloads; 64 + 64 units with 8
+complex modes each; layer 1 on tonotopic windows, layer 2 on a random quarter of layer 1; content-gated, content-delayed
+messages; snapshot emission; exact spike-time gradients.
+- Measures: accuracy, messages and spikes per utterance.
+- Ablations: content delays off (δ fixed), gate off (all messages sent), snapshot off (payload = unit identity only).
+
 ## Tests
 
 | | Claim | Test |
