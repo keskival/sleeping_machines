@@ -87,13 +87,16 @@ def batchify(eps):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--task", default="e27", choices=("e27", "e28"))
+    ap.add_argument("--task", default="e27", choices=("e27", "e28", "add3"))
     ap.add_argument("--sizes", default="8x1,16x1,32x1,32x2", help="d x layers")
     ap.add_argument("--episodes", type=int, default=200000)
     ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--seeds", type=int, default=2)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--p", type=int, default=17)
+    ap.add_argument("--frac", type=float, default=0.3)
+    ap.add_argument("--wd", type=float, default=0.0, help="AdamW weight decay (grokking regime needs it)")
     ap.add_argument("--reltime", type=int, default=0, help="1: learned relative-time attention bias (§70)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
@@ -104,17 +107,28 @@ def main():
             N, K, H, q = 12, 4, 10.0, 0.4
             pats = E27.make_task(N, K, H, rng)
             draw = lambda r: E27.sample(pats, N, H, q, r)                      # noqa: E731
-        else:
+        elif a.task == "e28":
             N, K, H, q = 16, 15, 12.0, 0.25
             motifs, classes = E28.make_task(N, 6, K, rng)
             draw = lambda r: E28.sample(motifs, classes, N, H, q, r)           # noqa: E731
-        ev = np.random.default_rng(99)
-        test = [draw(ev) for _ in range(2000)]
+        if a.task == "add3":                                   # E41's task: fixed training triples, held-out test
+            P = a.p; N, K, H = 3 * P, P - 1, 1.0
+            allT = np.array(np.unravel_index(np.arange(P ** 3), (P,) * 3)).T
+            perm = rng.permutation(len(allT)); n = int(a.frac * len(allT))
+            def ep(tr):
+                t = np.full(3 * P, np.inf); t[tr[0]] = 0.0; t[P + tr[1]] = 0.0; t[2 * P + tr[2]] = 0.0
+                return t, int(tr.sum() % P)
+            train_eps = [ep(x) for x in allT[perm[:n]]]
+            draw = lambda r: train_eps[r.integers(n)]                          # noqa: E731
+            test = [ep(x) for x in allT[perm[n:]][:3000]]
+        else:
+            ev = np.random.default_rng(99)
+            test = [draw(ev) for _ in range(2000)]
         for size in a.sizes.split(","):
             d, L = map(int, size.split("x"))
             torch.manual_seed(seed)
             net = EventTransformer(N, K + 1, d, L, H, a.reltime)
-            opt = torch.optim.Adam(net.parameters(), lr=a.lr)
+            opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=a.wd)
             t0 = time.time()
             for _ in range(a.episodes // a.batch):
                 ch, tm, mask, y = batchify([draw(rng) for _ in range(a.batch)])
