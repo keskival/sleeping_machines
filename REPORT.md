@@ -52,7 +52,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | claim | evidence | caveat |
 |---|---|---|
 | **Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks** | E35: 1.000 at 7.5 synaptic events per episode, nothing given; best conv net 0.995 at 3.07M multiply-adds; event-token Transformer 0.989–0.996 at 146k–1.16M after 10× more training | one task family built around the primitives; the cost gap is largely the clock (an event-driven conv net would narrow it to ≈ 10×) |
-| **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 (seed 1, d = 32) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
+| **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 and 0.03 (seed 1; chance 0.06) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
 | **A better world model of a real market stream at ≈ 200× lower cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | the model class is classical (semi-Markov); a GRU trained offline for several epochs is still running |
 | **Learning cost follows activity, not model size** | E35: 12 → 48 input channels leaves learning mistakes flat and inference cheaper; §77, §81 give the reason and a mistake bound | measured up to 48 channels |
 | **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
@@ -377,7 +377,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E37 | grokking by a route change | 0.93–0.97 in 2 of 3 seeds |
 | E38, E40 | SHD with the timing architecture | not yet |
 | E51 | SHD with class-conditional event world models | 0.647 test |
-| E36 (add3) | Transformer on E41's task | 0.06–0.63 after 100k steps |
+| E36 (add3) | Transformer on E41's task | 0.03–0.63 after 100k steps (chance 0.06) |
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
 | E42 | trading with costs, when to transact | learns not to trade (pilot) |
 | E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |

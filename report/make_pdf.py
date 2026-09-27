@@ -851,7 +851,7 @@ def build():
          "one task family; much of the gap is the clock (an event-driven conv net ≈ 10×)"],
         ["<b>Groks composed arithmetic where a Transformer does not</b>",
          "E41, (a + b + c) mod 17, 30% of triples: 0.994–0.999 (3/3) in 200 epochs; Transformer (AdamW, weight decay, "
-         "100k steps): 0.29 / 0.63 (seed 0), 0.06 (seed 1)",
+         "100k steps): 0.29 / 0.63 (seed 0, d = 32 / 64), 0.06 / 0.03 (seed 1; chance 0.06)",
          "the two-stage rhythm route is a provided resource (E45: it can choose among routes); more steps might help the "
          "Transformer"],
         ["<b>Better world model of a real market stream at ≈ 200× lower cost</b>",
