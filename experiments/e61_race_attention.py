@@ -15,6 +15,7 @@ n pairs, test with 4n).
 """
 import argparse
 import json
+import math
 import os
 import time
 
@@ -106,7 +107,27 @@ def run_tf(a):
             def forward(self, x):
                 h = self.enc(self.tok(x) + self.pos.weight[:x.shape[1]])
                 return self.out(h[:, -1])
-        net = TF(a.d, a.layers); opt = torch.optim.Adam(net.parameters(), lr=a.lr)
+        class AlibiTF(nn.Module):
+            """pre-norm Transformer with ALiBi relative-position biases (score - slope_h * |i - j|), no position embeddings:
+            the fair comparison for length generalization (the event network's routes are relative offsets)."""
+            def __init__(self, d=64, L=2, h=4):
+                super().__init__()
+                self.h, self.dh = h, d // h
+                self.tok = nn.Embedding(V, d); self.out = nn.Linear(d, a.K); self.nf = nn.LayerNorm(d)
+                self.n1 = nn.ModuleList([nn.LayerNorm(d) for _ in range(L)]); self.n2 = nn.ModuleList([nn.LayerNorm(d) for _ in range(L)])
+                self.qkv = nn.ModuleList([nn.Linear(d, 3 * d) for _ in range(L)]); self.o = nn.ModuleList([nn.Linear(d, d) for _ in range(L)])
+                self.ff = nn.ModuleList([nn.Sequential(nn.Linear(d, 4 * d), nn.GELU(), nn.Linear(4 * d, d)) for _ in range(L)])
+                self.register_buffer("slopes", torch.tensor([2.0 ** (-8 * (i + 1) / h) for i in range(h)]))
+            def forward(self, x):
+                B, n = x.shape; z = self.tok(x); idx = torch.arange(n)
+                bias = -self.slopes[:, None, None] * (idx[None, :, None] - idx[None, None, :]).abs()      # (h, n, n)
+                for l in range(len(self.qkv)):
+                    q, k, v = self.qkv[l](self.n1[l](z)).view(B, n, 3, self.h, self.dh).permute(2, 0, 3, 1, 4)
+                    att = torch.softmax(q @ k.transpose(-1, -2) / math.sqrt(self.dh) + bias, -1)
+                    z = z + self.o[l]((att @ v).transpose(1, 2).reshape(B, n, -1))
+                    z = z + self.ff[l](self.n2[l](z))
+                return self.out(self.nf(z)[:, -1])
+        net = (AlibiTF(a.d, a.layers) if a.pos == "alibi" else TF(a.d, a.layers)); opt = torch.optim.Adam(net.parameters(), lr=a.lr)
         def batch(n, B, r):
             X, Y = [], []
             for _ in range(B):
@@ -139,12 +160,13 @@ def main():
     ap.add_argument("--d", type=int, default=64)
     ap.add_argument("--layers", type=int, default=2)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--pos", default="abs", choices=("abs", "alibi"), help="Transformer positions: learned absolute or ALiBi")
     ap.add_argument("--checkpoints", default="250,500,1000,2000,5000,10000,20000")
     a = ap.parse_args()
     a.checkpoints = [int(x) for x in a.checkpoints.split(",")]
     os.makedirs(OUT, exist_ok=True); t0 = time.time()
     rows = run_event(a) if a.model == "event" else run_tf(a)
-    tag = "" if a.model == "event" else f"_d{a.d}_L{a.layers}_lr{a.lr:g}"
+    tag = "" if a.model == "event" else f"_d{a.d}_L{a.layers}_lr{a.lr:g}" + ("_alibi" if a.pos == "alibi" else "")
     with open(os.path.join(OUT, f"{a.model}_K{a.K}_n{a.n}{tag}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
 
