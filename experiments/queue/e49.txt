@@ -1,0 +1,2 @@
+e49_gru_offline_d32 experiments/e49_gru_offline.py --d 32 --epochs 3
+e49_gru_offline_d64 experiments/e49_gru_offline.py --d 64 --epochs 3

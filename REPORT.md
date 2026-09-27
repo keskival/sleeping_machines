@@ -40,8 +40,9 @@ open.
    number of learning mistakes flat and makes inference cheaper (§77).
 7. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) the architecture has not beaten dense baselines;
    on the market stream, a correctly posed trading task (profit after costs) is not profitable for any learner, and
-   the native learner learns to stay out; an online world model of the stream matches a Hawkes process but not a
-   neural point process.
+   the native learner learns to stay out. An online world model of the stream, built as an event network with state and
+   window nodes, beats a neural point process by 0.5–0.9 nats per event, also on held-out days, at ≈ 19 synaptic
+   operations per event.
 
 ## 1. What an event node computes
 
@@ -275,7 +276,24 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
   accumulates against prices learned from realized profit) makes 26 changes in 7 days and nets −170 bp, close to
   buy-and-hold: it learns that trading does not pay here. Confirmatory days are queued.
-- **An online world model of the stream (E44, pilot days).** Four event types (price up/down moves, large aggressive
+- **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
+  Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
+  event comes next, not when. Count baselines located the missing information: the time since the last event. A
+  semi-Markov event network (state nodes armed by the last two event types, a bank of window nodes opened by the expiry
+  events of a delay line, hazard and type detectors learned by synaptic counts) reproduces that model exactly and beats
+  the GRU online and on held-out days:
+
+  | nats per event | days 1–5, online (mean) | day 6, frozen | day 7, frozen |
+  |---|---|---|---|
+  | GRU neural point process (online Adam, then frozen) | −2.62 | −3.15 | −2.98 |
+  | native Hawkes-type | −2.81 | −3.01 | −2.86 |
+  | **semi-Markov event network** | **−2.11** | **−2.38** | **−2.10** |
+
+  Cost: ≈ 4 network events and ≈ 19 synaptic operations per market event, against thousands of multiply-adds for the
+  GRU. The model class is classical (Markov renewal processes); what is shown is that the event network with window
+  nodes is the right world model here and generalizes across days. A GRU trained offline for several epochs on days
+  1–5, the strongest dense baseline, is running.
+- **Earlier native world model (E44, pilot days).** Four event types (price up/down moves, large aggressive
   buys/sells) as a temporal point process learned online from every event (§79), scored by the prequential
   log-likelihood of each event's type and timing:
 
@@ -339,7 +357,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E38, E40 | SHD with the timing architecture | not yet |
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
 | E42 | trading with costs, when to transact | learns not to trade (pilot) |
-| E44 | online world model (point process) | ≈ Hawkes, < neural point process |
+| E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
 
 ## Reproducing
 
