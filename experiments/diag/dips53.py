@@ -1,7 +1,7 @@
 """Diagnostic for E53's transient dips: after convergence, which updates break a class's valid route?"""
 import json, sys
 import numpy as np
-sys.path.insert(0, '.')
+sys.path.insert(0, __import__('os').path.join(__import__('os').path.dirname(__file__), '..'))
 import e53_depth3 as E
 
 for seed in (1, 4):
