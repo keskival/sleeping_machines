@@ -1,0 +1,65 @@
+{
+ "args": {
+  "task": "add3",
+  "sizes": "32x2,64x2",
+  "episodes": 6400000,
+  "batch": 64,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "add3",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 1.0,
+  "reltime": 0
+ },
+ "rows": [
+  {
+   "task": "add3",
+   "reltime": 0,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.28600001335144043,
+   "params": 27601,
+   "tokens_per_episode": 3.0,
+   "macs_per_episode": 75424.0,
+   "wall_s": 828.8
+  },
+  {
+   "task": "add3",
+   "reltime": 0,
+   "seed": 0,
+   "d": 64,
+   "layers": 2,
+   "acc": 0.6333333253860474,
+   "params": 104337,
+   "tokens_per_episode": 3.0,
+   "macs_per_episode": 298304.0,
+   "wall_s": 1462.3
+  },
+  {
+   "task": "add3",
+   "reltime": 0,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.055666666477918625,
+   "params": 27601,
+   "tokens_per_episode": 3.0,
+   "macs_per_episode": 75424.0,
+   "wall_s": 914.3
+  },
+  {
+   "task": "add3",
+   "reltime": 0,
+   "seed": 1,
+   "d": 64,
+   "layers": 2,
+   "acc": 0.032999999821186066,
+   "params": 104337,
+   "tokens_per_episode": 3.0,
+   "macs_per_episode": 298304.0,
+   "wall_s": 1881.7
+  }
+ ]
+}
