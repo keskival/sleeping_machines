@@ -853,7 +853,8 @@ def build():
             "another's, so a single part cannot satisfy them. Learned natively: 0.97 with part windows at the motif scale, "
             "0.86 with a generic bank of window scales, depth 1 0.39 (5 seeds, E34). A readout that accumulates evidence "
             "fails at conjunction even though its hidden nodes learn parts (E28). An event-token Transformer trained on 2M "
-            "episodes reaches 0.998 at ≈ 175k–690k multiply-adds vs ≈ 14 events.")]
+            "episodes reaches 0.998 at ≈ 175k–690k multiply-adds vs ≈ 14 events. The chains are not training-limited: at 200k "
+            "episodes they stay at 0.954 (tuned) and 0.87 (bank); some class routes lock onto wrong parts.")]
     s += fig(fig_e34, W * 0.9)
     s += [P("5. Generalization and grokking", "h1"),
           P("<b>What counts (§58):</b> restriction, forced generalization above capacity, and grokking (the relation reached "
