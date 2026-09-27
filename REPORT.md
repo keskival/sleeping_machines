@@ -336,10 +336,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   hindsight teacher over-trades (7 pilot days at 2 bp: event learner −12k bp, logistic −4.9k), because a learner that
   predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
   accumulates against prices learned from realized profit) makes 26 changes in 7 days and nets −170 bp, close to
-  buy-and-hold: it learns that trading does not pay here. **Confirmed on 28 unseen days (preregistered):** at 2 bp the
-  imitating event learner loses 27,228 bp (8,083 position changes) and the logistic learner 29,179 bp; the priced event
-  learner nets +56 bp with 34 changes (break-even); buy-and-hold +866 bp; the hindsight teacher +13,890 bp. At 10 bp every
-  learner stays out. No learner beats buy-and-hold; pricing the decision is what stops the losses.
+  buy-and-hold: it learns that trading does not pay here. **Confirmed on 21 unseen days (preregistered):** at 2 bp the
+  imitating event learner loses 15,236 bp (4,760 position changes) and the logistic learner 24,302 bp; the priced event
+  learner nets +226 bp with 8 changes; buy-and-hold +932 bp; the hindsight teacher +9,211 bp. At 10 bp every learner
+  stays out (buy-and-hold +764 bp). No learner beats buy-and-hold; pricing the decision is what stops the losses.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A
@@ -423,7 +423,7 @@ through `experiments/queue/run_safe.sh` after parallel jobs repeatedly hung the 
 | E51 | SHD with class-conditional event world models | 0.647 test |
 | E36 (add3) | Transformer on E41's task | 0.03–0.63 after 100k steps (chance 0.06) |
 | E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
-| E42 | trading with costs, when to transact | learns not to trade (confirmed on 28 days) |
+| E42 | trading with costs, when to transact | learns not to trade (confirmed on 21 unseen days) |
 | E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
 
 ## Reproducing
