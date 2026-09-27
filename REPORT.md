@@ -181,6 +181,18 @@ conjunction and an order by construction.
   some class routes lock onto the wrong parts. On composition the Transformer is more accurate; the chains are ≈ 10⁴×
   cheaper. With the window bank, the chains' errors come mostly from classes that never form a
   route (copies of a part at several scales split the pulls).
+- **What the credit rule must be (§83).** A class node should sum its held inputs and its coincident trigger inputs, as a
+  membrane does, and learn by full-information multiplicative updates under a conserved budget. Proved: a false fire
+  cannot say which half of the AND was wrong, yet conservation still moves the weights toward the target whenever the
+  firing threshold exceeds half the budget. Measured (E34w, 5 seeds): 0.911–0.990 at 40k episodes with 890–1,531
+  updates (E34: thousands), reached by 8k episodes; 4× more candidate parts (16 → 32 channels) costs 1.3× more updates,
+  as the log-of-the-basis bound predicts. The remaining floor is partly the task setup: the class window (3.5) is
+  shorter than the longest span between the two part events (4.0), leaving 0.07–1.4% of test examples unreachable.
+- **When updates never fire the node (§84).** If units fire in every positive example at *different* instants, crediting
+  them all keeps the mass split across instants: no instant crosses the threshold, the node never fires, and nothing
+  corrects it. This is why the window bank collapses under that rule (0.05–0.10) and why credit must go to one instant.
+- A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
+  (≈ 180k multiply-adds per episode).
 
 ## 5. Generalization and grokking
 
