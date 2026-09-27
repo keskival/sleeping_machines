@@ -1,0 +1,132 @@
+{
+ "args": {
+  "dts": "1.0,2.0",
+  "filters": 1,
+  "episodes": 200000,
+  "batch": 64,
+  "pads": "0,90,990",
+  "seeds": 2
+ },
+ "rows": [
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 0.0,
+   "acc": 0.567,
+   "macs_per_episode": 485,
+   "train_macs_per_episode": 1455,
+   "wall_s": 8.4
+  },
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 90.0,
+   "acc": 0.567,
+   "macs_per_episode": 4805,
+   "train_macs_per_episode": 14415,
+   "wall_s": 8.4
+  },
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 990.0,
+   "acc": 0.567,
+   "macs_per_episode": 48005,
+   "train_macs_per_episode": 144015,
+   "wall_s": 8.4
+  },
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 0.0,
+   "acc": 0.447,
+   "macs_per_episode": 125,
+   "train_macs_per_episode": 375,
+   "wall_s": 8.2
+  },
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 90.0,
+   "acc": 0.447,
+   "macs_per_episode": 1205,
+   "train_macs_per_episode": 3615,
+   "wall_s": 8.2
+  },
+  {
+   "seed": 0,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 990.0,
+   "acc": 0.447,
+   "macs_per_episode": 12005,
+   "train_macs_per_episode": 36015,
+   "wall_s": 8.2
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 0.0,
+   "acc": 0.456,
+   "macs_per_episode": 485,
+   "train_macs_per_episode": 1455,
+   "wall_s": 8.6
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 90.0,
+   "acc": 0.456,
+   "macs_per_episode": 4805,
+   "train_macs_per_episode": 14415,
+   "wall_s": 8.6
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 1.0,
+   "pad": 990.0,
+   "acc": 0.456,
+   "macs_per_episode": 48005,
+   "train_macs_per_episode": 144015,
+   "wall_s": 8.6
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 0.0,
+   "acc": 0.4805,
+   "macs_per_episode": 125,
+   "train_macs_per_episode": 375,
+   "wall_s": 8.5
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 90.0,
+   "acc": 0.4805,
+   "macs_per_episode": 1205,
+   "train_macs_per_episode": 3615,
+   "wall_s": 8.5
+  },
+  {
+   "seed": 1,
+   "filters": 1,
+   "dt": 2.0,
+   "pad": 990.0,
+   "acc": 0.4805,
+   "macs_per_episode": 12005,
+   "train_macs_per_episode": 36015,
+   "wall_s": 8.5
+  }
+ ]
+}

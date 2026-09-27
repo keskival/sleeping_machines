@@ -293,6 +293,35 @@ def fig_e30():
     return fig
 
 
+def fig_e32():
+    """E32: accuracy vs operations per episode, clocked dense conv (F, dt) vs the event learner."""
+    pts = {}
+    for path in glob.glob(os.path.join(RES, "e32", "dense_F*.json")):
+        for r in load(path)["rows"]:
+            key = (r.get("filters", 16), r["dt"], r["pad"])
+            pts.setdefault(key, []).append((r["acc"], r["macs_per_episode"]))
+    if not pts:
+        return None
+    fig, ax = plt.subplots(figsize=(6.4, 3.0))
+    for pad, col, name in ((0.0, BLUE, "clocked dense conv (episode only)"),
+                           (990.0, GRAY, "clocked dense conv, episode in 99% silence")):
+        xs, ys = [], []
+        for (F, dt, p_), v in sorted(pts.items()):
+            if p_ == pad:
+                xs.append(np.mean([m for _, m in v])); ys.append(np.mean([a for a, _ in v]))
+        ax.scatter(xs, ys, color=col, s=18, label=name, zorder=3)
+    ax.scatter([10.2], [0.914], color=ORANGE, s=60, marker="D", label="event learner (E27), with or without silence",
+               zorder=4)
+    ax.axhline(0.914, color=ORANGE, lw=0.8, ls=":")
+    ax.set_xscale("log")
+    ax.set_xlabel("operations per episode (synaptic events or multiply-adds), log scale")
+    ax.set_ylabel("test accuracy")
+    ax.set_ylim(0.4, 1.02)
+    ax.legend(fontsize=7, loc="lower right")
+    ax.set_title("E32: at matched accuracy, ~190× fewer operations; ~19,000× in a sparse stream")
+    return fig
+
+
 def time_pages(st, W):
     """E24–E30 and THEORY §53–§62: computing with time (26–27 September)."""
     s = [Paragraph("Computing with time (E24–E30, 26–27 September)", st["h1"]),
@@ -358,7 +387,19 @@ def time_pages(st, W):
     if f30 is not None:
         s.append(fig_image(f30, W))
     s.append(PageBreak())
-    s += [Paragraph("Theory added (THEORY §53–§62)", st["h1"])]
+    s += [Paragraph("E32: a measured frontier against a clocked dense model", st["h2"]),
+          Paragraph("E27's task, against a 1-D temporal conv net on binned spikes trained by backprop on the same 200k "
+                    "episodes. The cheapest dense model at the event learner's accuracy (≈ 0.91) needs 1.9k "
+                    "multiply-adds per episode; the event learner 10.2 synaptic events (≈ 190× fewer operations, ≈ 80× "
+                    "less energy at published per-operation costs). In 99% silence the clocked cost grows 100× and the "
+                    "event cost does not (≈ 19,000×). Training: ≈ 6,000× fewer operations. <b>Caveats:</b> the dense "
+                    "model reaches 0.995 at 3M multiply-adds, which the event learner cannot yet buy; and most of the gap "
+                    "is the clock: a sparse, event-driven implementation of the same conv would cost ≈ 106 "
+                    "multiply-adds, only ≈ 10× more (§63).", st["body"])]
+    f32 = fig_e32()
+    if f32 is not None:
+        s.append(fig_image(f32, W))
+    s += [Paragraph("Theory added (THEORY §53–§63)", st["h1"])]
     s += bullets([
         "<b>Clockless means shift-equivariant (§56).</b> A network of delays, first-ofs, coincidences and vetoes "
         "commutes with time shifts, so it cannot add two times, only compare them. One oscillator reference breaks the "
@@ -684,6 +725,10 @@ def build():
         "learnable, but it does not beat depth 1 yet: hidden nodes become class detectors, not parts.",
         "<b>No true grokking yet (E29).</b> E25's generalization with delays is restriction by the readout, not "
         "grokking; a general network with learned loops has not generalized.",
+        "<b>A measured frontier (E32).</b> At matched accuracy (≈ 0.91) on a timing task the event learner uses ≈ 190× "
+        "fewer operations than the cheapest clocked dense model, ≈ 19,000× inside 99% silence, ≈ 6,000× fewer in "
+        "training; the dense model can reach 0.995 at far higher cost, and a sparse (event-driven) dense model narrows "
+        "the gap to ≈ 10×.",
         "<b>Negative:</b> pull-only, conserved budgets and prices do not transfer to the main weight race (SHD 0.35 "
         "→ 0.04–0.29 across variants), and SHD offers only "
         "~6× input-side advantage at the bins dense models use: not a supremacy benchmark.",

@@ -3078,6 +3078,38 @@ become a better class detector. Reach was not the missing piece; the missing pie
 prefer a part over a whole. In dense networks that pressure is width-limited capacity shared across many
 outputs; here every hidden node can afford to be a class template. Open.
 
+## 63. A measured frontier: event learner vs clocked dense model on a timing task (E32)
+
+*Written 2026-09-27. Task: E27's ("B within Δ after A unless C", 4 patterns + none, 12 channels, episodes of 10
+time units). Dense: 1-D temporal conv on binned spikes (F filters, receptive field 4 time units, ReLU, max over
+time, linear readout), backprop + Adam, 200k training episodes as for E27, 2 seeds; cost = multiply-adds (MACs) of
+the forward pass. Event: E27's learner, 5 seeds; cost = synaptic events actually delivered (excitatory synapses of
+the channels that spiked, existing veto synapses reached, detector spikes).*
+
+| model | test accuracy | cost per episode |
+|---|---|---|
+| event learner (delays, windows, veto; errors-only updates) | 0.914 (0.887–0.934) | 10.2 synaptic events |
+| dense, F = 16, δ = 0.05 | 0.995 | 3.07M MACs |
+| dense, F = 16, δ = 0.25 | 0.984 | 123k |
+| dense, F = 16, δ = 1.0 | 0.935 | 7.8k |
+| dense, F = 4, δ = 1.0 | 0.895 (0.872, 0.918) | 1.9k |
+| dense, F = 4, δ = 2.0 | 0.845 | 500 |
+| dense, F = 2, δ = 1.0 | 0.686 | 970 |
+
+**At matched accuracy (≈ 0.91)** the event learner uses ≈ 190× fewer operations per episode than the cheapest
+clocked dense model found (1.9k MACs), ≈ 80× less energy at published per-operation costs (Loihi synaptic event
+≈ 24 pJ vs a 45 nm MAC with its weight read ≈ 10 pJ). With the episode inside 99% silence (a sparse stream) the
+clocked model's cost grows 100× and the event learner's does not: ≈ 19,000× in operations, ≈ 8,000× in energy.
+Training: ≈ 0.09 updates per episode touching ≲ 10 parameters (≈ 1.8·10⁵ parameter changes in all) vs ≈ 1.2·10⁹
+MACs of backprop, ≈ 6,000×.
+
+**What this does not show.** (1) Accuracy: the dense model goes far higher (0.995) at far higher cost; the event
+learner has no knob to buy accuracy with more compute yet. (2) Most of the separation is the clock, not the
+learner: a dense conv evaluated only where spikes are (a sparse, event-driven digital implementation) would cost
+≈ spikes × F × width ≈ 6.6 × 4 × 4 ≈ 106 MACs, only ≈ 10× more than the event learner. That is §55's point: the
+advantage belongs to the event paradigm however it is implemented, and grows with silence. (3) One task, designed
+around the primitives; the cheapest dense model was searched only over F ∈ {1, 2, 4, 16} and δ ∈ {0.05 … 2}.
+
 ## Tests
 
 | | Claim | Test |
@@ -3136,6 +3168,7 @@ outputs; here every hidden node can afford to be a class template. Open.
 | **M60** | pull-only on weights needs conserved per-node budgets (fractional steps), conserving weakening and prices; readout capacity (Cover) bounds memorization | E26b `--compete 0` on SHD (refutes transfer); E29 readout on frozen hidden, 96 vs 384 nodes |
 | **M61** | aligning (delay) destroys the interval's content, holding (PSP duration) keeps it; veto and ordering need duration; delay and duration are separate learnable parameters with separate credit | E27 `--tol hold` vs `align`, veto vs no veto; with duration shrinking on late-partner false fires |
 | **M62** | depth fails because hidden nodes become class detectors; motifs longer than the window are out of reach of pulls; hold-then-align hidden learning makes them motif-selective and lets depth pay | E28 depth 2 with learnable hidden durations; motif vs class selectivity; E28c task |
+| **M63** | at matched accuracy an event learner beats the cheapest clocked dense model by ~10² in operations, growing linearly with silence; vs a sparse (event-driven) dense model only ~10× | E32 `e32_frontier.py`: dense conv over F × δ, silence padding; E27 synaptic-event counts |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
