@@ -3865,6 +3865,10 @@ decaying counts at the node (the reliability price of §80). Near-miss credit on
 invalid prefix route (precision ≈ ½ when it collides with one other class) stays breakable, a valid one (precision ≈ 1)
 is protected. *Prediction (E53g, 5 seeds):* with θ_m = 0.9 and gate 0.9, final ≥ 0.99 on ≥ 4/5 seeds and no checkpoint
 after 10k episodes below 0.99 on those seeds.
+**Result (E53g, 5 seeds): holds.** 0.998 / 0.999 / 0.999 / 0.997 / 0.999, identical at every checkpoint from 5k to 40k
+episodes (no dips, no frozen prefixes), with 1,075–1,434 updates and 197–277 near-miss updates. The ungated margin at
+depth 4 (E54m) froze the same way as at depth 3 (0.970–0.996 from the first checkpoint, vs 0.999–1.000 without a
+margin); the gated rule at depth 4 and on E34's task is queued.
 
 ## 87. When is staying out the right policy? An executable-edge bound
 
