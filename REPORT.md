@@ -48,7 +48,14 @@ now explains, and what is being tested.
   is queued. False positives must be removed by veto, not by displacement (E27 pilot: 0.87–0.92 vs 0.21).
 - **Routing credit from cancellation (E28, one seed).** Pulling the wanted cancelled near-miss on its partial
   window beats MoE-style fired credit (0.41 vs 0.34) at equal events. Full runs queued.
-- **True grokking test (E29): not working yet.** The general network starves (few coincidences); being redesigned.
+- **The operator basis is Turing-complete, and restoration makes it scalable (E30, complete).** A two-counter
+  Minsky machine wired only from Delay/Or/And/Veto nodes and one reference oscillator runs every test program
+  exactly. With timing jitter, a comb coincidence once per cycle makes success independent of program length
+  (q/σ = 20: 1.00 over 25 and 81 steps; without restoration 0.60 and 0.30).
+- **Pull-only does not transfer to weights (E26b, negative).** Dropping the competitor push in the main race
+  collapses SHD from 0.35 to 0.06. For weights the native counter-force is a conserved per-node budget (§60).
+- **True grokking test (E29): machinery now works, test running.** Readout fixed by conservation, prices, and
+  enough hidden nodes (96 cannot memorize 480 pairs by Cover's bound; 384 can: train 0.88).
 
 **What does not (yet)**
 - **Depth still costs accuracy.** The theory now names three reasons (credit contraction, activity drift,
@@ -183,7 +190,9 @@ confirmed yet; the tests are queued.
 | Supremacy is not in op counts for static functions (encoding effect); it can only be in cost per information event, evidence-limited latency and learning cost per error (§55) | argument; Neuro-RAM separation is prior art | defines the benchmark target |
 | Clockless = shift-equivariant: no sums of times; one oscillator reference gives one cyclic character; credit follows one critical path; losers are specialized by veto, never displaced; coincidence targets are partners (§56) | exact (symmetry); space-time algebra is prior art (Smith 2018) | E27 pilot: veto 0.87–0.92 vs push 0.21 |
 | Routing needs counterfactuals; cancelled near-misses supply them at no extra events (§57) | new rule; top-k MoE is prior art | E28 pilot, 1 seed: 0.41 vs 0.34 (fired) vs 0.18 (path only) |
-| Restriction vs forced generalization vs grokking; report ρ = n / params (§58) | criterion | E29 (true grokking test) not yet functional |
+| Restriction vs forced generalization vs grokking; report ρ = n / params (§58) | criterion | E29 (true grokking test) running |
+| The basis + one reference is Turing-complete; restoration in time makes reliability length-independent (§59) | construction; Minsky/Maass completeness is prior art | E30: exact; q/σ = 20 restored 1.00 at 25 and 81 steps |
+| Pull-only on weights needs conservation; readout capacity (Cover) bounds memorization (§60) | refutes §54's transfer | E26b: SHD 0.06 without push; E29 readout 0.45 → 0.88 with 384 hidden |
 
 **Honest assessment of the theory.** Most of it applies known mathematics to race networks. It is correct and
 sometimes useful, but not new mathematics. It changed results in four places: conservation (+1.0 to +1.7), the
@@ -283,8 +292,25 @@ were theory errors: a one-sided "make it earlier" rule drifts every delay past t
 must use the near-miss's partial window only.
 
 **E29 (true grokking test).** A general race network that can memorize, given recurrent delay loops with random
-learnable periods, native credit, E24's encoding. Not yet functional: even the no-loop control does not memorize
-(sparse coincidences starve the hidden layer). Being redesigned.
+learnable periods, native credit, E24's encoding. Getting the no-loop control to memorize took four fixes, each a
+theory point (§60): output nodes accumulate without leak; pulls conserve a per-node budget in fractional steps;
+weakening conserves too; per-node prices break up hub classes; and the hidden layer must exceed the readout's
+Cover capacity (96 nodes cannot separate 480 pairs; 384 memorize, train 0.88). Runs with and without loops queued.
+
+**E30 (completeness, complete).** A two-counter machine as a netlist of Delay, Or, And (a PSP window per input) and
+Veto nodes plus one reference oscillator; counters are phases of spikes in hold loops. Exact on add, double and
+parity (10 inputs). Under timing jitter:
+
+| q/σ | 25 steps, plain | 81 steps, plain | 25 steps, restored | 81 steps, restored |
+|---|---|---|---|---|
+| 20 | 0.60 | 0.30 | 1.00 | 1.00 |
+| 10 | 0.23 | 0.13 | 0.975 | 0.975 |
+| 6.7 | 0.15 | 0.05 | 0.75 | 0.58 |
+
+Restoration (one comb coincidence per counter per cycle) makes reliability independent of length where q/σ ≥ 10.
+
+**E26b (transfer to the main race, negative).** `--compete 0` on SHD, depth 1, 10 epochs: 0.061 vs 0.35 with the
+competitor push. For weights the push is the bound; conservation is the native replacement (§60).
 
 ## Energy
 
@@ -322,8 +348,8 @@ unbatched dense training. Sparse fan-in is the lever: 14–22× fewer events in 
 2. **E29 redesign:** activity levels so the general network can memorize, then the grokking test at ρ ≪ 1 with
    and without loops and counterfactual credit.
 3. **Hold and rate operators:** temporal memory and interval scaling, completing the operator basis (§56).
-4. **Two-counter machine compiled from the basis:** a constructive completeness proof, and where it fails as
-   timing noise grows (precision as the tape).
+4. **Conservation in the main race:** `--compete 0` plus per-node conserved budgets on SHD, to see whether the
+   native counter-force recovers or beats the push.
 5. **The supremacy benchmark (§55):** a sparse event stream where cost per information event, latency and updates
    per error can all be measured against dense models given the same priors.
 

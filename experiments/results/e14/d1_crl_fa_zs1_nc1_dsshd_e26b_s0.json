@@ -1,0 +1,94 @@
+{
+ "config": {
+  "depth": 1,
+  "width": 400,
+  "variant": "crl_fa",
+  "anneal": 0.0,
+  "window": 0.15,
+  "epochs": 10,
+  "feedback": "dfa",
+  "fanin": 0,
+  "fanin_in": 0,
+  "sigma": 0.15,
+  "zero_sum": 1,
+  "compete": 0,
+  "nonneg": 0,
+  "homeo_mode": "linear",
+  "self_sigma": 0,
+  "theta_out": 1.0,
+  "dataset": "shd",
+  "residual": 0,
+  "widths": "",
+  "winners": 3,
+  "probe": 0,
+  "speed": 0,
+  "certify": 0,
+  "gauge": 0,
+  "center_credit": 0,
+  "homeo": 0.001,
+  "causal": 0,
+  "share_jac": 0,
+  "pivot_top": 0,
+  "group_conserve": 0,
+  "info_capacity": 0,
+  "homeo_rate": 0.001,
+  "eg": 0.0,
+  "val": 800,
+  "train_limit": 0,
+  "seed": 0,
+  "tag": "e26b"
+ },
+ "curve": [
+  0.0525,
+  0.0525,
+  0.0525,
+  0.0575,
+  0.06875,
+  0.07125,
+  0.05375,
+  0.055,
+  0.05875,
+  0.06125
+ ],
+ "acc": 0.06125,
+ "code": [
+  {
+   "redundancy": 0.38263239552166767,
+   "evidence_used": 0.2634397441651705,
+   "fire_rate": 0.29993748664855957
+  }
+ ],
+ "usage_balance": [
+  0.807054180922425
+ ],
+ "credit_reach": [
+  0.31538920609026644
+ ],
+ "synops_per_sample": 46587.953684724256,
+ "spikes_per_sample": 475.6732186432406,
+ "noncausal_credit_share": null,
+ "sigma_per_layer": [
+  0.15
+ ],
+ "common_mode_share": [
+  0.07321206707462122
+ ],
+ "perron_share": [
+  null
+ ],
+ "noether_q": [
+  [
+   1.066566824913025,
+   14.036020278930664
+  ]
+ ],
+ "f_eff": [
+  365.1328430175781
+ ],
+ "dobrushin": [
+  [
+   0.8101855570400135,
+   0.5049914895991472
+  ]
+ ]
+}

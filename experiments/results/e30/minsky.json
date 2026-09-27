@@ -1,0 +1,499 @@
+{
+ "args": {
+  "q": 0.02,
+  "sigmas": "0,0.001,0.002,0.003,0.004,0.006",
+  "trials": 40,
+  "steps_long": 0
+ },
+ "exact_all": true,
+ "rows": [
+  {
+   "prog": "add",
+   "in": [
+    3,
+    5
+   ],
+   "got": [
+    8,
+    0
+   ],
+   "ref": [
+    8,
+    0
+   ],
+   "cycles": 11,
+   "steps": 11,
+   "ok": true,
+   "events": 5364,
+   "sigma": 0.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "got": [
+    22,
+    0
+   ],
+   "ref": [
+    22,
+    0
+   ],
+   "cycles": 25,
+   "steps": 25,
+   "ok": true,
+   "events": 5770,
+   "sigma": 0.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    0,
+    7
+   ],
+   "got": [
+    7,
+    0
+   ],
+   "ref": [
+    7,
+    0
+   ],
+   "cycles": 15,
+   "steps": 15,
+   "ok": true,
+   "events": 5486,
+   "sigma": 0.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    5,
+    0
+   ],
+   "got": [
+    5,
+    0
+   ],
+   "ref": [
+    5,
+    0
+   ],
+   "cycles": 1,
+   "steps": 1,
+   "ok": true,
+   "events": 5068,
+   "sigma": 0.0
+  },
+  {
+   "prog": "double",
+   "in": [
+    4,
+    0
+   ],
+   "got": [
+    0,
+    8
+   ],
+   "ref": [
+    0,
+    8
+   ],
+   "cycles": 13,
+   "steps": 13,
+   "ok": true,
+   "events": 5422,
+   "sigma": 0.0
+  },
+  {
+   "prog": "double",
+   "in": [
+    10,
+    3
+   ],
+   "got": [
+    0,
+    23
+   ],
+   "ref": [
+    0,
+    23
+   ],
+   "cycles": 31,
+   "steps": 31,
+   "ok": true,
+   "events": 5920,
+   "sigma": 0.0
+  },
+  {
+   "prog": "double",
+   "in": [
+    0,
+    0
+   ],
+   "got": [
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0
+   ],
+   "cycles": 1,
+   "steps": 1,
+   "ok": true,
+   "events": 5074,
+   "sigma": 0.0
+  },
+  {
+   "prog": "parity",
+   "in": [
+    0,
+    9
+   ],
+   "got": [
+    1,
+    0
+   ],
+   "ref": [
+    1,
+    0
+   ],
+   "cycles": 15,
+   "steps": 15,
+   "ok": true,
+   "events": 5611,
+   "sigma": 0.0
+  },
+  {
+   "prog": "parity",
+   "in": [
+    0,
+    14
+   ],
+   "got": [
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0
+   ],
+   "cycles": 22,
+   "steps": 22,
+   "ok": true,
+   "events": 5886,
+   "sigma": 0.0
+  },
+  {
+   "prog": "parity",
+   "in": [
+    0,
+    0
+   ],
+   "got": [
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0
+   ],
+   "cycles": 1,
+   "steps": 1,
+   "ok": true,
+   "events": 5086,
+   "sigma": 0.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.0,
+   "restore": false,
+   "q_over_sigma": null,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.001,
+   "restore": false,
+   "q_over_sigma": 20.0,
+   "success": 0.6
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.002,
+   "restore": false,
+   "q_over_sigma": 10.0,
+   "success": 0.225
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.003,
+   "restore": false,
+   "q_over_sigma": 6.666666666666667,
+   "success": 0.15
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.004,
+   "restore": false,
+   "q_over_sigma": 5.0,
+   "success": 0.075
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.006,
+   "restore": false,
+   "q_over_sigma": 3.3333333333333335,
+   "success": 0.1
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.0,
+   "restore": false,
+   "q_over_sigma": null,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.001,
+   "restore": false,
+   "q_over_sigma": 20.0,
+   "success": 0.3
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.002,
+   "restore": false,
+   "q_over_sigma": 10.0,
+   "success": 0.125
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.003,
+   "restore": false,
+   "q_over_sigma": 6.666666666666667,
+   "success": 0.05
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.004,
+   "restore": false,
+   "q_over_sigma": 5.0,
+   "success": 0.05
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.006,
+   "restore": false,
+   "q_over_sigma": 3.3333333333333335,
+   "success": 0.025
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.0,
+   "restore": true,
+   "q_over_sigma": null,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.001,
+   "restore": true,
+   "q_over_sigma": 20.0,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.002,
+   "restore": true,
+   "q_over_sigma": 10.0,
+   "success": 0.975
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.003,
+   "restore": true,
+   "q_over_sigma": 6.666666666666667,
+   "success": 0.75
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.004,
+   "restore": true,
+   "q_over_sigma": 5.0,
+   "success": 0.35
+  },
+  {
+   "prog": "add",
+   "in": [
+    10,
+    12
+   ],
+   "steps": 25,
+   "sigma": 0.006,
+   "restore": true,
+   "q_over_sigma": 3.3333333333333335,
+   "success": 0.025
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.0,
+   "restore": true,
+   "q_over_sigma": null,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.001,
+   "restore": true,
+   "q_over_sigma": 20.0,
+   "success": 1.0
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.002,
+   "restore": true,
+   "q_over_sigma": 10.0,
+   "success": 0.975
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.003,
+   "restore": true,
+   "q_over_sigma": 6.666666666666667,
+   "success": 0.575
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.004,
+   "restore": true,
+   "q_over_sigma": 5.0,
+   "success": 0.1
+  },
+  {
+   "prog": "add",
+   "in": [
+    2,
+    40
+   ],
+   "steps": 81,
+   "sigma": 0.006,
+   "restore": true,
+   "q_over_sigma": 3.3333333333333335,
+   "success": 0.075
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+# E29: true grokking test (THEORY §58); 384 hidden (Cover capacity: 96 cannot memorize 480 pairs)
+e29_L4_nearmiss experiments/e29_grok_loops.py --hidden 384 --group 16 --k 1 --W 1.0 --budget 16 --eta 0.02 --kappa 0.02 --veto 0 --epochs 80 --every 10 --loops 4 --credit nearmiss --tag h384
+e29_L0_nearmiss experiments/e29_grok_loops.py --hidden 384 --group 16 --k 1 --W 1.0 --budget 16 --eta 0.02 --kappa 0.02 --veto 0 --epochs 80 --every 10 --loops 0 --credit nearmiss --tag h384
+e29_L4_frozen experiments/e29_grok_loops.py --hidden 384 --group 16 --k 1 --W 1.0 --budget 16 --eta 0.02 --kappa 0.02 --veto 0 --epochs 80 --every 10 --loops 4 --credit frozen --tag h384

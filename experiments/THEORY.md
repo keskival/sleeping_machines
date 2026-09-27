@@ -2707,7 +2707,7 @@ competitor gets −elig (a near-miss-weighted push later). If the argument holds
 of the race's weak results where competitors crowd (SHD, E23 forgetting, E24). Test: `--compete 0` on E22 (SHD)
 and E24 (grokking), queued.
 
-**Predictions (M55).** (i) E26 push = 0 generalizes above a critical fraction, push = 1 never does; (ii) annealed
+**Predictions (M55).** (Status: (i) confirmed at full length, 3 seeds; (iii) refuted for the weight-based race, see §60.) (i) E26 push = 0 generalizes above a critical fraction, push = 1 never does; (ii) annealed
 timing noise changes sample efficiency but not the push result; (iii) `--compete 0` does not lower SHD accuracy,
 and raises it if competitor crowding is a cause of the gap.
 
@@ -2925,6 +2925,63 @@ test 0.00, given recurrent delay loops as a resource and native credit (pull-onl
 routing). It passes only if it reaches the relation at ρ ≪ 1 while the same network without loops, or without
 counterfactual credit, memorizes.
 
+## 59. A two-counter machine wired from the basis, and restoration in time
+
+*Written 2026-09-27 with E30 (`e30_minsky.py`, results in `results/e30/minsky.json`).*
+
+**Construction.** A netlist of four node types (Delay; Or; And with a PSP window per input; Veto), plus a reference
+oscillator, runs two-counter Minsky programs. Counter value n is the phase OFF + n·q of a spike in a hold loop of
+period T. Per cycle, the spike takes one of three Delay paths: hold (T), increment (T + q), decrement (T − q);
+path choice is an And with the instruction's enable line (long PSP) and a Veto on the hold path. The zero test is
+an And of the counter with the reference (window q/2); branching is a Veto ("next unless zero") and an And ("next
+if zero"); a decrement blocked at zero returns to hold through And(zero, gated counter). No node reads a clock,
+stores a number, or branches in code.
+
+**Result.** Exact on every test (add, double, parity; 10 inputs including zero edge cases): correct counters and
+the exact cycle count, ~5k events per run. Two-counter machines are Turing-complete (Minsky 1967), so the basis
+{delay, first-of, coincidence, veto, hold} + one reference is Turing-complete given unbounded phase precision
+(prior art for spiking networks with exact delays: Maass 1996). Two wiring lessons are general: coincidence
+windows must be per input (a PSP length per synapse), or stale spikes from earlier cycles pair with new ones;
+and every veto that blocks a path must hand the spike to another path, or state is destroyed.
+
+**Precision is the tape, and restoration makes length free.** With jitter σ on every hop, phases random-walk.
+Without restoration, success falls with program length (q/σ = 20: 0.60 over 25 steps, 0.30 over 81). With one
+restoring coincidence per counter per cycle (the loop delivers the spike q/2 early; a comb tick at the nominal
+phase re-emits it), success is length-independent (q/σ = 20: 1.00 at both lengths; q/σ = 10: 0.975 at both). This
+is digital restoration done in time: the cost is one comb coincidence per counter per cycle, the capacity T/q
+states per counter, and the error rate per step a function of q/σ only. The residual failures at q/σ ≤ 7 come from
+the unrestored control margins inside a cycle.
+
+**Consequence.** An asynchronous temporal substrate can compute arbitrarily long with noisy timing, and the
+resource accounting is explicit: precision (T/q) replaces tape, cycles replace steps, events replace energy, and
+restoration events are the price of reliability.
+
+## 60. Pull-only on weights needs conservation; capacity sets the readout
+
+*Written 2026-09-27 from E26b and the E29 readout diagnosis.*
+
+**E26b refutes §54's transfer as stated.** Dropping the competitor push from the main weight-based race collapses
+SHD from 0.35 to 0.061 (`--compete 0`, depth 1, 10 epochs). The positional principle holds for timing parameters
+(delays and phases, where a pull cannot inflate anything: E26), but not for weights: in the weight race the push
+is the only force bounding the weights, and without it every class node inflates and fires.
+
+**The native counter-force is conservation.** E29's readout, isolated on a frozen hidden layer with unique codes,
+shows the sequence: pull-only weights saturate (every class fires at once, the winner is timing noise); a
+per-node conserved synaptic budget (heterosynaptic: a pull on the co-active synapses is paid by the node's
+others) stops that, but only if each pull moves a fixed fraction of the budget (otherwise each pull rescales the
+whole node and it remembers only its last sample); weakening a false winner must also conserve (otherwise it is
+a one-way drain); per-node prices (thresholds raised by false wins, lowered by misses; §36, §51) break up the
+remaining hub classes. Veto at the readout over-suppresses when codes overlap.
+
+**Capacity, not the rule, set the plateau.** A first-to-threshold class node is a linear threshold unit on the
+hidden spikes; with 96 hidden nodes it can separate only ~2·96 random patterns (Cover 1965), fewer than the 480
+training pairs, and the readout plateaued near 0.45 for every rule variant. With 384 hidden nodes the same rule
+memorizes (train 0.88 by epoch 7). Grokking tests need hidden layers above this bound, or the "memorizer" in
+§58's criterion does not exist.
+
+**Revised principle (§54, §56.5):** never displace in time; for weights, pull under conservation; remove false
+winners by veto where codes are specific and by conserved weakening plus prices where they overlap.
+
 ## Tests
 
 | | Claim | Test |
@@ -2979,6 +3036,8 @@ counterfactual credit, memorizes.
 | **M56** | clockless = shift-equivariant: no sums of times; one oscillator reference gives one cyclic character; credit flows along one critical path; teach only the event that should have won, toward an anchored time; veto is the native way to make something later | E27: learnable delays on coincidence + veto synapses, pull-only vs with loser push, with vs without veto, on 'B within Δ after A unless C' patterns |
 | **M57** | routing needs counterfactuals; cancelled near-misses supply them at no extra events: pull the wanted cancelled node on its best partial window | E28 `e28_routing.py` arms path / fired / nearmiss (k = 1, 2) / push, depth 1 vs 2 |
 | **M58** | generalization claims need the capacity ratio ρ = n / params; grokking = relation reached at ρ ≪ 1 while memorizers exist in the class | E29: general race network + recurrent delay loops as a resource, native credit, on E24; controls without loops and without counterfactual credit |
+| **M59** | the operator basis + one reference is Turing-complete (two-counter machine); restoration by a comb coincidence per cycle makes reliability independent of program length | E30 `e30_minsky.py`: exact on all programs; success vs q/σ with and without restoration, 25 vs 81 steps |
+| **M60** | pull-only on weights needs conserved per-node budgets (fractional steps), conserving weakening and prices; readout capacity (Cover) bounds memorization | E26b `--compete 0` on SHD (refutes transfer); E29 readout on frozen hidden, 96 vs 384 nodes |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
