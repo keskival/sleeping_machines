@@ -1,0 +1,4 @@
+e35_N12 experiments/e35_free.py --N 12 --steps 100000 --seeds 3
+e35_N24 experiments/e35_free.py --N 24 --steps 100000 --seeds 3
+e35_N48 experiments/e35_free.py --N 48 --steps 100000 --seeds 3
+e35_N96 experiments/e35_free.py --N 96 --steps 100000 --seeds 3

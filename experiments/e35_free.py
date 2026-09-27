@@ -94,13 +94,14 @@ class Free:
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--N", type=int, default=12, help="channels (more = more distractors)")
     ap.add_argument("--steps", type=int, default=200000)
     ap.add_argument("--eta", type=float, default=0.1)
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
-    N, K, H, q = 12, 4, 10.0, 0.4
+    N, K, H, q = a.N, 4, 10.0, 0.4 * 12 / a.N              # same expected number of spikes per episode
     rows, t0 = [], time.time()
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
@@ -119,7 +120,7 @@ def main():
                               "synaptic_events": syn / 2000})
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"free{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"free_N{a.N}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
