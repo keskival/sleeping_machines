@@ -626,12 +626,29 @@ not grow with model size or text length, learned by local rules from less data.
   carry up to log₂ n! extra bits in their order); only active units work, so a model can be very large while each word
   stays cheap; structure is grown where it proves useful; sampling is a race, and retrieval reaches only keys that share
   a channel with the query.
-- *Local learning is not a handicap in principle.* A race computes with minima and sums; the exact gradient that
+- *Local learning is not a handicap in principle* (and for Transformer-style attention it is exact on average; below). A
+  race computes with minima and sums; the exact gradient that
   backpropagation would compute for it runs only along the chain of spikes that caused the output, which each node can
   trace locally. Credit along that chain *is* backpropagation for these networks; what gradients cannot provide (a
   signal for the paths that lost) comes from near misses. For races of random clocks the exact gradient is also local.
 - *Depth is trainable, and optimally so.* For networks that detect ordered patterns of depth d, the number of learning
   mistakes grows as d × log(size of the candidate pool), and no learner of any kind can do better in the worst case (§97, §98).
+
+**Training, subsumed (theory, §101–§103).** A race of randomly ticking clocks splits its output into two independent
+channels: *which* clock fires first (a sample from the softmax) and *when* (the decision time, which carries the softmax's
+normalizer). Three consequences, each proved:
+- every competitor can compute its own softmax probability from purely local information: its own rate times the decision
+  time that everyone observes;
+- if every stored key emits its value scaled by that product, the sum is, on average, exactly softmax attention: a native
+  attention head with no normalization circuit;
+- the gradient of this race with respect to its scores, computed locally at each key, is on average exactly the gradient
+  of softmax attention.
+So a network built from such races, with small dense cores for the rest, is trained by local message passing as stochastic
+gradient descent on the Transformer objective, up to an error that shrinks as 1/R with R races per head. Transformers are,
+in this precise sense, a limit of these networks, including how they are trained. The figure checks the three statements
+numerically; E68 compares training curves directly (running).
+
+![Race estimates against exact softmax quantities: attention outputs, softmax probabilities from rate times decision time, and pathwise attention gradients all lie on the diagonal](report/figures/race_theory.png)
 
 **First evidence.**
 - Deep order is learned from about ten times less data than a Transformer needs (§4).
