@@ -419,7 +419,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   Class-conditional world models (E51): one semi-Markov event network per class, whose state is the last spike's band,
   the time since it (window bank) and the time since the utterance onset; an utterance is assigned to the class whose
   network predicts its spikes best. One counting pass, no gradients. Test 0.647 (validation on held-in speakers 0.734);
-  timing adds +0.06, the onset reference +0.21. The weight race reaches 0.35; a published LSTM ≈ 0.70; state of the
+  timing adds +0.06, the onset reference +0.21. The gap is the voice: 81% of the test utterances come from two speakers
+  never heard in training, and test accuracy barely moves across very different configurations (0.647–0.649), so
+  selecting on held-in speakers optimized speaker-specific detail (§92). Validation on held-out speakers and bands coded
+  relative to the voice (a running centroid per utterance) are under test (E59). The weight race reaches 0.35; a published LSTM ≈ 0.70; state of the
   art ≈ 0.9. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
