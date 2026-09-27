@@ -3866,6 +3866,28 @@ invalid prefix route (precision ≈ ½ when it collides with one other class) st
 is protected. *Prediction (E53g, 5 seeds):* with θ_m = 0.9 and gate 0.9, final ≥ 0.99 on ≥ 4/5 seeds and no checkpoint
 after 10k episodes below 0.99 on those seeds.
 
+## 87. When is staying out the right policy? An executable-edge bound
+
+*Written 2026-09-27, after the pilot edge audit (E55), before its confirmation.*
+
+**Bound.** Let a policy observe a discrete state s (anything an event world model carries) at each decision point and
+choose long, short or flat for a horizon H. Its expected net return per decision is at most
+Σ_s P(s) · max(0, E[r_long | s] − f, E[r_short | s] − f), where r is the *executable* round trip (enter at the ask,
+leave at the bid, or the reverse, read from the tape) and f the fee. So if no state's conditional mean executable
+return exceeds f, flat is optimal for every policy that uses only that information, however clever. Trade prices
+bounce between bid and ask, so the mid or last price would show spurious predictability (after a buy at the ask the
+next print tends to be lower); executable returns remove it.
+
+**Pilot (E55; fit days 1–5, score days 6–7).** Unconditional executable round trips are −0.2 to −0.3 bp. Selected
+states give a genuine held-out edge before fees: +0.3 to +0.9 bp per trade from BTC spot's own state, up to +1.1 to
++1.5 bp over 30–120 s with BTC-perpetual or ETH lead–lag states: other markets do carry information about this one.
+At f = 2 bp (a tenth of a realistic taker round trip) essentially no state clears the fee in-sample and held-out net
+returns are −0.2 to −0.8 bp (one single-state exception, +1.9 bp at 63 trades/day, is within noise). Staying out is
+correct for a taker; the ≈ 1 bp edge would need near-zero fees (market making, a different problem).
+**Prediction (confirmation on the 21 untouched days, fit on all 7 pilot days):** with f = 0 the held-out edge stays
+positive for the selected states and is larger with perp + ETH than with the own state alone; with f = 2 bp the net
+return of the selected states is ≤ 0 (or the selection is empty).
+
 ## Tests
 
 | | Claim | Test |

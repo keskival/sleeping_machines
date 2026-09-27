@@ -95,11 +95,17 @@ def main():
     ap.add_argument("--H", default="1,5,30,120")
     ap.add_argument("--fees", default="0,2,5,10")
     ap.add_argument("--min_count", type=int, default=300)
+    ap.add_argument("--confirm", type=int, default=0, help="1: fit on all 7 pilot days, score the 21 confirmatory days (once)")
     a = ap.parse_args()
     H = [float(x) for x in a.H.split(",")]; fees = [float(x) for x in a.fees.split(",")]
     os.makedirs(OUT, exist_ok=True)
-    days = [features(d, H) for d in PILOT]
-    tr, te = days[:5], days[5:]
+    if a.confirm:                                            # preregistered in REPORT/THEORY before this run
+        from e17_market import CONF
+        tr = [features(d, H) for d in PILOT]; te = [features(d, H) for d in CONF]
+    else:
+        days = [features(d, H) for d in PILOT]
+        tr, te = days[:5], days[5:]
+    ntr, nte = len(tr), len(te)
     sets = {"own": ["own"], "own+perp": ["own", "perp"], "own+eth": ["own", "eth"], "own+perp+eth": ["own", "perp", "eth"],
             "perp": ["perp"]}
     rows = []
@@ -121,15 +127,15 @@ def main():
                     sel_tr = np.isin(ktr, list(good)) & np.isfinite(ytr)
                     sel_te = np.isin(kte, list(good)) & np.isfinite(yte)
                     rows.append({"info": name, "H": h, "side": side, "fee": fee, "states": len(good),
-                                 "in_sample_trades_per_day": float(sel_tr.sum() / 5),
+                                 "in_sample_trades_per_day": float(sel_tr.sum() / ntr),
                                  "in_sample_net_bp": float(np.mean(ytr[sel_tr]) - fee) if sel_tr.any() else None,
-                                 "heldout_trades_per_day": float(sel_te.sum() / 2),
+                                 "heldout_trades_per_day": float(sel_te.sum() / nte),
                                  "heldout_net_bp": float(np.mean(yte[sel_te]) - fee) if sel_te.any() else None})
     for r in rows:
         if r["fee"] in (0, 2) and r["heldout_trades_per_day"] > 0:
             print(json.dumps(r), flush=True)
     uncond = {f"{s}{h}": float(np.nanmean(np.concatenate([d[f"{s}{h}"] for d in tr]))) for s in ("long", "short") for h in H}
-    with open(os.path.join(OUT, "edge_pilot.json"), "w") as f:
+    with open(os.path.join(OUT, "edge_confirm.json" if a.confirm else "edge_pilot.json"), "w") as f:
         json.dump({"args": vars(a), "unconditional_mean_bp_days1_5": uncond, "rows": rows}, f, indent=1)
     print("unconditional", json.dumps(uncond)); print("EXIT-OK")
 

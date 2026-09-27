@@ -118,7 +118,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
 | *Not supremacy:* composition that hinges on timing precision | E34m: chains 0.988–0.995 per seed, stable at every checkpoint, 40k examples, ≈ 14 events; Transformer 0.998 after 2M examples (0.42–0.70 after 40k) | the Transformer is more accurate given 50× the data; fixed windows cannot express the task's minimum intervals |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
-| *Not supremacy:* trading profit | E42: no learner profits after costs; the native one learns to stay out | the data (trades only, one asset) may hold no exploitable edge |
+| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55: the predictable edge is 0.3–1.5 bp per trade (larger with BTC-perp and ETH states), below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
 
@@ -400,6 +400,12 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   imitating event learner loses 15,236 bp (4,760 position changes) and the logistic learner 24,302 bp; the priced event
   learner nets +226 bp with 8 changes; buy-and-hold +932 bp; the hindsight teacher +9,211 bp. At 10 bp every learner
   stays out (buy-and-hold +764 bp). No learner beats buy-and-hold; pricing the decision is what stops the losses.
+- **Is staying out right? An edge audit (E55, §87).** Measuring executable round trips from the tape (buy at the ask,
+  sell at the bid, so bid-ask bounce cannot fake predictability), states of BTC spot's own event stream carry a real
+  out-of-sample edge of +0.3 to +0.9 bp per trade before fees, and adding lead–lag states of BTC perpetual futures and
+  ETH raises it to +1.1 to +1.5 bp (pilot, held-out days): more markets do carry more information. But even a 2 bp
+  round-trip fee (a tenth of a realistic taker fee) removes it: staying out is the correct policy for a taker on this
+  data, and the edge that exists would need market-making economics. Confirmation on the 21 untouched days is queued.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A

@@ -3,3 +3,6 @@
 {"seed": 0, "Q": 55016780, "step": 40000, "test": 0.98, "updates": 2455, "grown_synapses": 133914, "events_per_episode": 154.587, "synapses_per_episode": 42.7, "decision_hash": 407960216}
 {"seed": 1, "Q": 55016780, "step": 40000, "test": 0.986, "updates": 2268, "grown_synapses": 129334, "events_per_episode": 168.328, "synapses_per_episode": 43.74, "decision_hash": 410206520}
 {"seed": 2, "Q": 55016780, "step": 40000, "test": 0.992, "updates": 1894, "grown_synapses": 96995, "events_per_episode": 158.999, "synapses_per_episode": 37.929, "decision_hash": 413269208}
+{"seed": 3, "Q": 55016780, "step": 40000, "test": 0.996, "updates": 2326, "grown_synapses": 112744, "events_per_episode": 152.939, "synapses_per_episode": 45.003, "decision_hash": 411009233}
+{"seed": 4, "Q": 55016780, "step": 40000, "test": 0.97, "updates": 2646, "grown_synapses": 148931, "events_per_episode": 147.331, "synapses_per_episode": 39.739, "decision_hash": 404261952}
+EXIT-OK 270.4

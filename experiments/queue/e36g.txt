@@ -1,4 +1,1 @@
-# E36g: Transformer sample efficiency on E28/E34's composition task: fixed training sets of n episodes, 2M presentations
-e36g_n10k_wd0.1 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 10000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag n10k_wd0.1
-e36g_n40k_wd0.1 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0.1 --seeds 2 --tag n40k_wd0.1
-e36g_n40k_wd0 experiments/e36_transformer.py --task e28 --sizes 32x2 --ntrain 40000 --episodes 2000000 --batch 32 --wd 0 --seeds 2 --tag n40k_wd0
+# moved into e53.txt on 2026-09-27 (runs there, before the long Transformer jobs)

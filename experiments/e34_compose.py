@@ -35,6 +35,7 @@ class Compose:
         self.mult, self.recruit = mult, recruit
         self.summed, self.alpha, self.beta = summed, alpha, beta
         self.credit, self.temp, self.rng, self.margin, self.nm = "union", 0.0, rng, 0.0, 0
+        self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K)
         self.learn_win = learn_win
         self.N, self.K, self.depth, self.W, self.thr = N, K, depth, W, thr
         if depth == 2:
@@ -101,8 +102,11 @@ class Compose:
 
     def teach_summed(self, t, y):
         c, x, ft, (f, win, same, inst) = self.forward(t)
+        if c < self.K:                                      # §86b: the firing node's record
+            self.ok_c[c] = 0.98 * self.ok_c[c] + (c == y); self.bad_c[c] = 0.98 * self.bad_c[c] + (c != y)
+        prec = self.ok_c[y] / max(self.ok_c[y] + self.bad_c[y], 1e-9) if y < self.K else 0.0
         if c == y:
-            if self.margin and y < self.K:                  # §86: near-miss credit keeps a margin
+            if self.margin and y < self.K and prec >= self.gate:   # §86: near-miss credit keeps a margin
                 i = inst[y]
                 if self.h[y, f[win[i]]].sum() < self.margin:
                     self._mul(self.h, y, f[win[i]], 1 + self.alpha); self.nm += 1
@@ -195,6 +199,7 @@ def main():
     ap.add_argument("--credit", default="union", choices=("union", "instant"))
     ap.add_argument("--temp", type=float, default=0.0)
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin (0 = off)")
+    ap.add_argument("--gate", type=float, default=0.0, help="§86b precision gate for the margin")
     ap.add_argument("--alpha", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.3)
     ap.add_argument("--lam", type=float, default=0.0, help="sleep: routing-weight decay per 1000 episodes (§72)")
@@ -212,7 +217,7 @@ def main():
         net = Compose(a.N, a.K, a.depth, a.W, rng, part_hi=a.part_hi, learn_win=a.learn_win,
                       scales=[float(x) for x in a.scales.split(",")] if a.scales else None, mult=a.mult, recruit=a.recruit,
                       summed=a.summed, thr=a.thr, alpha=a.alpha, beta=a.beta)
-        net.credit, net.temp, net.margin = a.credit, a.temp, a.margin
+        net.credit, net.temp, net.margin, net.gate = a.credit, a.temp, a.margin, a.gate
         curve = []
         for step in range(1, a.steps + 1):
             t, y = T.sample(motifs, classes, a.N, H, q, rng)
@@ -229,7 +234,7 @@ def main():
                 net.events = e0; net.syn = s0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{f'_m{a.margin:g}' if a.margin else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
+    with open(os.path.join(OUT, f"d{a.depth}_K{a.K}_ph{a.scales.replace(",", "-") if a.scales else a.part_hi}{'_lw' if a.learn_win else ''}{f'_lam{a.lam:g}' if a.lam else ''}{'_mult' if a.mult else ''}{'_rec' if a.recruit else ''}{f'_sum_t{a.thr:g}_a{a.alpha:g}_b{a.beta:g}' if a.summed else ''}{f'_{a.credit}_T{a.temp:g}_W{a.W:g}' if a.summed and a.credit == 'instant' else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
 
