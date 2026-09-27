@@ -18,7 +18,7 @@ Hidden credit ("which route should have been taken"), by arm:
   path      only hidden nodes that fired and feed the teacher (w2 > 0.5) are pulled: timing along the taken route
   fired     + fired hidden nodes that don't yet feed the teacher get w2 strengthened: top-k MoE credit, which
               needs the k winners to fire (k events per group)
-  nearmiss  + cancelled hidden nodes the teacher wants (w2 > 0.5) whose near-miss was above 1/2 are pulled so
+  nearmiss  + cancelled hidden nodes the teacher wants (w2 > 0.5; under --fix60, > 2x the node's mean) whose near-miss was above 1/2 are pulled so
               they win their group next time: counterfactual routing from cancellation, no extra events
   push      = nearmiss, but a wrong winner is displaced in time (its delays lengthened) instead of specialized
 A wrong winner is otherwise specialized: the synapses in its firing window are weakened.
@@ -142,6 +142,12 @@ class Net:
         st.update(x=x, ft=ft, owin=owin, winner=c)
         return c, st
 
+    def _pull1(self, h, wi, eta):
+        if self.fix60:                                          # §60 for hidden nodes too: conserved budget
+            tot = self.w1[h].sum(); self.w1[h, wi] += eta * tot / len(wi); self.w1[h] *= tot / self.w1[h].sum()
+        else:
+            self.w1[h, wi] += eta
+
     def teach(self, t, y, eta, arm):
         c, st = self.forward(t)
         if c == y:
@@ -150,10 +156,11 @@ class Net:
         if y < self.K:                                          # pull the teacher's route (critical path)
             arr = x + self.d2[y]
             got = np.isfinite(arr)
-            if self.depth == 1 or arm != "path":
+            wants = self.w2[y] > (2 * self.w2[y].mean() if self.fix60 else 0.5)   # teacher wants h (relative
+            if self.depth == 1 or arm != "path":                                # to its budget under §60)
                 cand = got
             else:
-                cand = got & (self.w2[y] > 0.5)
+                cand = got & wants
             if cand.any():
                 target = np.min(arr[cand])                      # pull the late arrivals earlier, to coincide
                 if self.fix60:                                  # §60: conserved budget, fractional step
@@ -162,16 +169,16 @@ class Net:
                     self.w2[y, cand] += eta
                 self.d2[y, cand] += 0.5 * (target - arr[cand])
             if self.depth == 2 and arm in ("nearmiss", "push"):
-                want = (~st["fired"]) & (self.w2[y] > 0.5) & (st["charge"] > 0.5)
+                want = (~st["fired"]) & wants & (st["charge"] > 0.5)
                 for h in np.flatnonzero(want):                  # counterfactual route: make it win its group,
                     wi = st["win"][h]                           # on the partial coincidence that nearly fired it
                     if len(wi):
-                        self.w1[h, wi] += eta
+                        self._pull1(h, wi, eta)
             if self.depth == 2 and arm != "path":               # fired contributors: sharpen their own inputs
-                for h in np.flatnonzero(st["fired"] & (self.w2[y] > 0.5)):
+                for h in np.flatnonzero(st["fired"] & wants):
                     wi = st["win"][h]
                     if len(wi):
-                        self.w1[h, wi] += eta * 0.5
+                        self._pull1(h, wi, eta * 0.5)
         if self.fix60:                                          # §60 prices: false winner dearer, missed cheaper
             if y < self.K: self.thr[y] -= self.kappa
             if c < self.K and c != y: self.thr[c] += self.kappa
