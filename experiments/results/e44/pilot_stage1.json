@@ -1,9 +1,9 @@
 {
  "args": {
-  "ndays": 3,
+  "ndays": 7,
   "eta": 0.005,
   "neural": 1,
-  "freeze_after": 0
+  "freeze_after": 5
  },
  "big_q": 0.24558000266551971,
  "rows": [
@@ -140,6 +140,186 @@
    "split_type_time_neural": [
     -1.004,
     -1.513
+   ]
+  },
+  {
+   "day": "2026-08-28",
+   "events": 33023,
+   "counts": [
+    8449,
+    8866,
+    6892,
+    8816
+   ],
+   "ll_per_event_native": -2.4090279346005947,
+   "ll_per_event_markov_last2": -2.4011395383512277,
+   "ll_per_event_markov_last1_gap": -2.187547430272874,
+   "ll_per_event_markov_last2_gap": -2.164210862664493,
+   "ll_per_event_semimarkov1": -1.7918005536512374,
+   "ll_per_event_semimarkov2": -1.7179292805020054,
+   "ll_per_event_neural": -2.1685609868552067,
+   "split_type_time_native": [
+    -1.148,
+    -1.261
+   ],
+   "split_type_time_markov_last2": [
+    -1.14,
+    -1.261
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.926,
+    -1.261
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.903,
+    -1.261
+   ],
+   "split_type_time_semimarkov1": [
+    -0.926,
+    -0.866
+   ],
+   "split_type_time_semimarkov2": [
+    -0.903,
+    -0.815
+   ],
+   "split_type_time_neural": [
+    -0.975,
+    -1.193
+   ]
+  },
+  {
+   "day": "2026-08-29",
+   "events": 8938,
+   "counts": [
+    2200,
+    2075,
+    2368,
+    2295
+   ],
+   "ll_per_event_native": -3.466152744062196,
+   "ll_per_event_markov_last2": -3.4771380651030253,
+   "ll_per_event_markov_last1_gap": -3.3260339797467564,
+   "ll_per_event_markov_last2_gap": -3.3099567634559985,
+   "ll_per_event_semimarkov1": -3.093425758258722,
+   "ll_per_event_semimarkov2": -3.0252204686449304,
+   "ll_per_event_neural": -3.504286734115374,
+   "split_type_time_native": [
+    -1.096,
+    -2.37
+   ],
+   "split_type_time_markov_last2": [
+    -1.107,
+    -2.37
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.956,
+    -2.37
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.94,
+    -2.37
+   ],
+   "split_type_time_semimarkov1": [
+    -0.956,
+    -2.137
+   ],
+   "split_type_time_semimarkov2": [
+    -0.94,
+    -2.085
+   ],
+   "split_type_time_neural": [
+    -0.965,
+    -2.539
+   ]
+  },
+  {
+   "day": "2026-08-30",
+   "events": 14679,
+   "counts": [
+    4340,
+    4161,
+    2972,
+    3206
+   ],
+   "ll_per_event_native": -3.006179412637837,
+   "ll_per_event_markov_last2": -2.9968143193022425,
+   "ll_per_event_markov_last1_gap": -2.793939986512115,
+   "ll_per_event_markov_last2_gap": -2.7714776786636164,
+   "ll_per_event_semimarkov1": -2.4547724844646197,
+   "ll_per_event_semimarkov2": -2.380610622943175,
+   "ll_per_event_neural": -3.1474830801601654,
+   "split_type_time_native": [
+    -1.122,
+    -1.884
+   ],
+   "split_type_time_markov_last2": [
+    -1.113,
+    -1.884
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.91,
+    -1.884
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.888,
+    -1.884
+   ],
+   "split_type_time_semimarkov1": [
+    -0.911,
+    -1.544
+   ],
+   "split_type_time_semimarkov2": [
+    -0.888,
+    -1.492
+   ],
+   "split_type_time_neural": [
+    -0.978,
+    -2.17
+   ]
+  },
+  {
+   "day": "2026-08-31",
+   "events": 25413,
+   "counts": [
+    7768,
+    7815,
+    5405,
+    4425
+   ],
+   "ll_per_event_native": -2.856345785242301,
+   "ll_per_event_markov_last2": -2.8380609795885294,
+   "ll_per_event_markov_last1_gap": -2.633976805536252,
+   "ll_per_event_markov_last2_gap": -2.6132253157202197,
+   "ll_per_event_semimarkov1": -2.154237169323128,
+   "ll_per_event_semimarkov2": -2.0996806382319617,
+   "ll_per_event_neural": -2.9751271058835833,
+   "split_type_time_native": [
+    -1.126,
+    -1.731
+   ],
+   "split_type_time_markov_last2": [
+    -1.107,
+    -1.731
+   ],
+   "split_type_time_markov_last1_gap": [
+    -0.903,
+    -1.731
+   ],
+   "split_type_time_markov_last2_gap": [
+    -0.883,
+    -1.731
+   ],
+   "split_type_time_semimarkov1": [
+    -0.907,
+    -1.248
+   ],
+   "split_type_time_semimarkov2": [
+    -0.886,
+    -1.214
+   ],
+   "split_type_time_neural": [
+    -0.982,
+    -1.993
    ]
   }
  ]
