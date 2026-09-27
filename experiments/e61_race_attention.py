@@ -106,7 +106,7 @@ def run_tf(a):
             def forward(self, x):
                 h = self.enc(self.tok(x) + self.pos.weight[:x.shape[1]])
                 return self.out(h[:, -1])
-        net = TF(); opt = torch.optim.Adam(net.parameters(), lr=1e-3)
+        net = TF(a.d, a.layers); opt = torch.optim.Adam(net.parameters(), lr=a.lr)
         def batch(n, B, r):
             X, Y = [], []
             for _ in range(B):
@@ -136,12 +136,16 @@ def main():
     ap.add_argument("--alpha", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.5)
     ap.add_argument("--seeds", type=int, default=5)
+    ap.add_argument("--d", type=int, default=64)
+    ap.add_argument("--layers", type=int, default=2)
+    ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--checkpoints", default="250,500,1000,2000,5000,10000,20000")
     a = ap.parse_args()
     a.checkpoints = [int(x) for x in a.checkpoints.split(",")]
     os.makedirs(OUT, exist_ok=True); t0 = time.time()
     rows = run_event(a) if a.model == "event" else run_tf(a)
-    with open(os.path.join(OUT, f"{a.model}_K{a.K}_n{a.n}.json"), "w") as f:
+    tag = "" if a.model == "event" else f"_d{a.d}_L{a.layers}_lr{a.lr:g}"
+    with open(os.path.join(OUT, f"{a.model}_K{a.K}_n{a.n}{tag}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
 
 
