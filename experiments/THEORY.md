@@ -2734,7 +2734,15 @@ anything happened; an event system pays per event. So a defensible separation ne
 3. **Learning whose cost ∝ errors (E26):** no epochs, no backward pass over time.
 
 All three must hold on one task at matched accuracy, with the dense side allowed the same priors and input
-encoding. That task family is the benchmark target: sparse event streams with rare, precisely timed informative
+encoding.
+
+**A quantitative criterion for the input side.** A clocked system that must resolve timing δ pays at least
+(channels × duration / δ) input samples; an event system pays one per spike. The separation factor is therefore
+1 / ρ_δ, with ρ_δ = spikes per channel per δ-bin. Measured on SHD (test set, 227 utterances): 8,414 spikes per
+0.71 s utterance on 700 channels, so ρ = 0.017 at δ = 1 ms (59×), 0.068 at 4 ms (15×), 0.17 at 10 ms (6×).
+Dense SHD models do well with 10 ms bins, so SHD offers only about 6× on the input side: it is dense in time, a
+poor supremacy benchmark. The benchmark must have ρ_δ ≪ 0.01 at the precision the task truly needs, e.g. rare
+informative events in long silence, where the factor grows with the silence. That task family is the benchmark target: sparse event streams with rare, precisely timed informative
 events (mostly-silent keyword spotting, event-camera onsets, anomaly onset), measured in events, latency, and
 updates.
 
@@ -2947,7 +2955,9 @@ and every veto that blocks a path must hand the spike to another path, or state 
 **Precision is the tape, and restoration makes length free.** With jitter σ on every hop, phases random-walk.
 Without restoration, success falls with program length (q/σ = 20: 0.60 over 25 steps, 0.30 over 81). With one
 restoring coincidence per counter per cycle (the loop delivers the spike q/2 early; a comb tick at the nominal
-phase re-emits it), success is length-independent (q/σ = 20: 1.00 at both lengths; q/σ = 10: 0.975 at both). This
+phase re-emits it), success is length-independent (q/σ = 20: 1.00 at both lengths; q/σ = 10: 0.975 at both). (A random walk fits the unrestored runs with one parameter: a counter phase after s steps is N(0, σ√(h s)) and
+fails beyond q/2; q/σ = 20 with 60% success at 25 steps gives h ≈ 5.8 jittered hops per cycle, which predicts 35%
+at 81 steps, observed 30%; the netlist has about six hops per counter per cycle.) This
 is digital restoration done in time: the cost is one comb coincidence per counter per cycle, the capacity T/q
 states per counter, and the error rate per step a function of q/σ only. The residual failures at q/σ ≤ 7 come from
 the unrestored control margins inside a cycle.

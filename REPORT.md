@@ -109,7 +109,9 @@ kept as diagnostics only. The research questions are now the gaps named in THEOR
 
 - **G0, where supremacy can live (§55).** Not in operation counts for static functions (an encoding effect), but in
   cost per information event on sparse streams, evidence-limited latency, and learning cost per error, all three
-  at once and against dense models given the same priors.
+  at once and against dense models given the same priors. The input-side factor is 1 / (spikes per channel per
+  precision bin): SHD gives only ~6× at the 10 ms bins dense models use (59× at 1 ms), so it is not the supremacy
+  benchmark; that needs streams with density ≪ 0.01 per bin.
 - **G1, native credit.** Pull-only toward partners, veto for false positives, near-miss routing (§54, §56.5, §57).
 - **G2, time that computes.** Delay, k-of-n threshold with window, veto, hold, and one oscillator reference as the
   operator basis (§56); clockless networks cannot add times, one rhythm gives one cyclic character.
