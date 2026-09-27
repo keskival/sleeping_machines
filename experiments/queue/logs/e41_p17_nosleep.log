@@ -1,0 +1,4 @@
+{"seed": 0, "epoch": 200, "train": 1.0, "test": 0.064}
+{"seed": 1, "epoch": 200, "train": 1.0, "test": 0.056666666666666664}
+{"seed": 2, "epoch": 200, "train": 1.0, "test": 0.059333333333333335}
+EXIT-OK 5.6
