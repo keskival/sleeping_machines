@@ -1,0 +1,3 @@
+e27h_veto experiments/e27_veto.py --steps 200000 --seeds 5 --tol hold --fix veto
+e27h_noveto experiments/e27_veto.py --steps 200000 --seeds 5 --tol hold --fix veto --noveto 1
+e27h_push experiments/e27_veto.py --steps 200000 --seeds 5 --tol hold --fix push

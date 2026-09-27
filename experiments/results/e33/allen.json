@@ -1,0 +1,37 @@
+{
+ "samples": 20000,
+ "ambiguous_skipped": 99,
+ "positives": {
+  "before": 3738,
+  "meets": 615,
+  "overlaps": 2171,
+  "starts": 1153,
+  "during": 864,
+  "finishes": 1127,
+  "equals": 1087,
+  "after": 3964,
+  "met-by": 1131,
+  "overlapped-by": 2147,
+  "started-by": 517,
+  "contains": 912,
+  "finished-by": 475
+ },
+ "errors": {},
+ "all_exact": true,
+ "errors_total": 0,
+ "nodes": {
+  "before": 1,
+  "meets": 1,
+  "after": 1,
+  "met-by": 1,
+  "overlaps": 3,
+  "starts": 3,
+  "during": 3,
+  "finishes": 3,
+  "equals": 3,
+  "overlapped-by": 3,
+  "started-by": 3,
+  "contains": 3,
+  "finished-by": 3
+ }
+}

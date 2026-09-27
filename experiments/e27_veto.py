@@ -85,9 +85,14 @@ class Net:
         """Returns (fire time or INF, info) for detector k on input times t."""
         i, j = self.pats[k][0], self.pats[k][1]
         a1, a2 = t[i] + self.d[k, 0], t[j] + self.d[k, 1]
-        first, second = min(a1, a2), max(a1, a2)
-        if not np.isfinite(second) or second - first > self.w[k]:
-            return INF, ("nocoinc", a1, a2)
+        if self.tol == "hold":                              # directional: A opens a PSP of length w, B must come
+            first, second = a1, a2                          # while it is open (an And with windows (w, 0), as E30)
+            if not (np.isfinite(a1) and np.isfinite(a2)) or not (0 <= a2 - a1 <= self.w[k]):
+                return INF, ("nocoinc", a1, a2)
+        else:
+            first, second = min(a1, a2), max(a1, a2)
+            if not np.isfinite(second) or second - first > self.w[k]:
+                return INF, ("nocoinc", a1, a2)
         veto_t = t + self.u[k]
         blockers = np.flatnonzero((self.g[k] > 0.5) & (veto_t > first) & (veto_t < second))
         if len(blockers):

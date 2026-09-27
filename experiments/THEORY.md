@@ -3110,6 +3110,56 @@ learner: a dense conv evaluated only where spikes are (a sparse, event-driven di
 advantage belongs to the event paradigm however it is implemented, and grows with silence. (3) One task, designed
 around the primitives; the cheapest dense model was searched only over F ∈ {1, 2, 4, 16} and δ ∈ {0.05 … 2}.
 
+## 64. Order is asymmetry of duration; one node computes an interval predicate; few mistakes suffice
+
+*Written 2026-09-27, with E27's directional-hold result (0.9995 and 1.000 on 2 seeds, ~400 updates in 40k
+episodes; without veto 0.81).*
+
+### 64.1 The recurring construction
+
+Three separate constructions needed the same thing. E30's Minsky machine worked only when coincidence windows were
+set per input (a long PSP on the enable line, none on the counter spike); with symmetric windows, stale spikes paired
+across cycles. E27's detector reached 1.0 only when A's input opened a long PSP and B's was instantaneous; its
+symmetric version accepted reversed order (0.71) and its aligned version lost the interval the veto needs (0.91).
+In each case **order is encoded by an asymmetry of PSP durations, and exclusion by a veto inside the held
+interval.** A symmetric coincidence is order-blind by construction.
+
+### 64.2 One node, one interval predicate
+
+Give every synapse three timing parameters: delay d, duration (PSP length) w, and sign (excitatory or veto). A node
+with an excitatory A-synapse (delay d_A, duration w), an instantaneous excitatory B-synapse (delay d_B) and veto
+synapses (delays u_C) fires exactly when
+
+  t_B + d_B − (t_A + d_A) ∈ [0, w]   and   no C with t_C + u_C in (t_A + d_A, t_B + d_B).
+
+That is the predicate "B within [d_A − d_B, d_A − d_B + w] after A, and no C in between (shifted by u_C)", the
+atom of the manifesto's causal logic ("emit A after x if no B") generalized to an interval. **Corrected claim, verified (E33).** A relation fixing one bounded difference with exclusions ("q within
+[lo, hi] after p, no C in between") is one node. A relation fixing the order of m points is a chain of m − 1
+nodes, and not one node: a node's hold condition ("each held input arrived within its window before the trigger")
+is invariant under swapping the arrival order of two held inputs inside their windows, so it cannot fix their
+mutual order; a chain can, because each node's output spike carries "so far in order" forward in time to the node
+that checks the next point. **Temporal depth equals the length of the order chain.** E33 wires all thirteen of
+Allen's interval relations this way (before, meets and their inverses: 1 node; overlaps, starts, during,
+finishes, equals and inverses: 3-node chains; causal, no negative delays) and checks them against their
+definitions on ~19,900 random interval pairs with planted equalities (tolerance 0.05; 99 samples within a
+tolerance band skipped as ambiguous): exact, every relation with 475–3,964 positive cases. (Allen's algebra is
+prior art; the node-level construction and the depth statement are the claim.) First versions had three bugs,
+each instructive: delaying the trigger instead of the held input weakens "after" into "not too long before"; a
+chain cannot subtract a tolerance from a spike time (non-causal), it can only absorb it in later delays; and
+planted equalities must keep intervals valid.
+
+### 64.3 Why so few updates
+
+The hypothesis class of one hold+veto node on N channels is small: an interval on one time difference (two
+parameters) and a set of veto channels (a disjunction over N): VC dimension about 2 + N. Mistake-driven learning
+of an interval and of a monotone disjunction needs O(VC · log(1/ε)) mistakes (Littlestone's bounds for
+monotone disjunctions are logarithmic in N per relevant channel), independent of how many episodes stream past.
+E27 hold: ~400 updates in 40k episodes (~1%), for K = 4 detectors on N = 12 channels, i.e. ~100 mistakes per
+detector. The dense conv baseline has 16 × 12 × 16 + readout ≈ 3k parameters at δ = 0.25 and needs ~10⁵ episodes.
+**The event learner's sample and update efficiency is an Occam effect of the primitive:** when the task is made
+of interval predicates, a node that computes exactly one needs only as many mistakes as its few parameters.
+The flip side is the same statement: tasks not made of such predicates need depth, which is where §62 stands.
+
 ## Tests
 
 | | Claim | Test |
@@ -3169,6 +3219,7 @@ around the primitives; the cheapest dense model was searched only over F ∈ {1,
 | **M61** | aligning (delay) destroys the interval's content, holding (PSP duration) keeps it; veto and ordering need duration; delay and duration are separate learnable parameters with separate credit | E27 `--tol hold` vs `align`, veto vs no veto; with duration shrinking on late-partner false fires |
 | **M62** | depth fails because hidden nodes become class detectors; motifs longer than the window are out of reach of pulls; hold-then-align hidden learning makes them motif-selective and lets depth pay | E28 depth 2 with learnable hidden durations; motif vs class selectivity; E28c task |
 | **M63** | at matched accuracy an event learner beats the cheapest clocked dense model by ~10² in operations, growing linearly with silence; vs a sparse (event-driven) dense model only ~10× | E32 `e32_frontier.py`: dense conv over F × δ, silence padding; E27 synaptic-event counts |
+| **M64** | order = asymmetric PSP durations; one node = one bounded difference with exclusions; fixing the order of m points needs an (m − 1)-node chain (temporal depth = order-chain length); O(VC ≈ 2 + N) mistakes per node | E27 `--tol hold` (directional) with and without veto; E33 `e33_allen.py`: all 13 Allen relations exact |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
