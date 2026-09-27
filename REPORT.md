@@ -187,6 +187,17 @@ it a two-layer network stays at chance (E28: 0.17 vs 0.72–0.74).
 **Timing noise helps search if it cools to zero.** Noise that shrinks with the learner's own update count makes
 generalization at small data reliable (3/3 seeds instead of 1/3) without capping accuracy (E26c).
 
+**A learning calculus for deep event networks (§83–§88).** Learning deep order natively needed five rules, each
+derived from a failure, each local to a node and paid for by events:
+
+| problem | rule | why it works | evidence |
+|---|---|---|---|
+| an AND fails: which half was wrong? | sum held and coincident inputs; multiplicative credit under a conserved budget | conservation moves weight toward the target on every false fire iff the threshold exceeds half the budget (§83, proved) | 4× more candidates cost 1.3× more updates (E34w) |
+| candidates fire at different instants | credit one instant, chosen by cooled exploration | crediting all instants splits the weight forever (deadlock, proved); greedy credit cycles on shared prefixes; a valid route is absorbing (§84) | depth 3: 0.998–0.999 vs 0.71–0.85 greedy, 0.33 all-instants (E53) |
+| the candidate basis grows as P^depth | grow a synapse only when it is first credited | exactly the decisions of dense weights (§85, proved and checked); memory and time follow activity | depth 4: 80k of 5.5·10⁷ synapses grown, 0.999–1.000 (E54) |
+| converged nodes sit on their threshold | a margin kept by near-miss credit, earned by the node's recent precision | margins survive r demotions (θ_r ladder, §86); an unearned margin also protects wrong routes (§86b) | 0.997–0.999 at every checkpoint (E53g) |
+| timing precision | tune one window per part from its own lags (version space) | selecting windows from a bank costs activity quadratic in resolution; tuning costs none (§88) | windows converge to the true intervals (E56, running) |
+
 ## 3. Against dense models and Transformers
 
 On the timing task, with priors on both sides (hold/veto nodes; a receptive field matched to the pattern length for
