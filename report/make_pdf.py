@@ -862,7 +862,7 @@ def build():
             "is not task-specific: the reason to expect them to carry over to sparse, precisely timed real streams. On the real "
             "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
             "0.675 vs ≈ 0.70 (LSTM); a market world model 0.07–0.18 nats behind a Transformer point process; no trading edge "
-            "after fees in four markets. A real event-camera benchmark is the next test.")]
+            "after fees in four markets; on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs 94–98% published.")]
     s += fig(FM.fig_supremacy_map, W)
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
             "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
@@ -874,10 +874,10 @@ def build():
             "crediting the tempting shortcut (“A, then B” is shared with another class) traps it; exploring a little, then "
             "settling, finds the right order and keeps it (§84).")]
     s += fig(FM.fig_credit, W)
-    s += [P("<b>Where it does not win yet:</b> spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no "
+    s += [P("<b>Where it does not win yet:</b> event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 "
+            "for a published LSTM), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
-            "any taker fee). <b>Next:</b> a real event-camera benchmark, and a plan for generative language models built this way "
-            "(section 10).")]
+            "any taker fee). <b>Next:</b> a path to generative language models built this way (section 10).")]
     s.append(PageBreak())
     s += [P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
            "race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an "
@@ -1137,6 +1137,11 @@ def build():
         "before fees +0.26 to +1.05 bp from the own state, +0.47 to +1.40 bp with perp and ETH; at 2 bp every selected "
         "state loses; at 5 bp none qualifies. <b>Across four markets</b> (ETH spot, SOL spot or the BTC perpetual traded, the "
         "others as leaders; choices made on the pilot days): at most ≈ 1 bp before fees, nothing at 2 bp (E55b).",
+        "<b>Event-camera gestures (DVS128 Gesture, E60; official split).</b> Native motion events (refractory cells, onsets, "
+        "direction-selective pair detectors with an opponent veto) turn ≈ 410k raw events per gesture into ≈ 15k. A bag of "
+        "motion events reaches 0.663 on unseen people; depth (successive motions per region) with the multiplicative learner "
+        "reaches 0.776 on held-out training users and 0.701 on the test users (chosen on validation). Published systems reach "
+        "94–98%: not yet competitive; the representation misses rotation sense and trajectory shape.",
         "<b>Against a Transformer point process (E52, E57, §90).</b> A Transformer Hawkes process with the event network's own "
         "hazard family and 128 events of context, selected on day 5, scores −1.97 / −1.82 nats per event on the held-out days "
         "(≈ 108k multiply-adds per event; −1.83 / −1.65 with 12 finer windows). The semi-Markov event network scores −2.38 / "
