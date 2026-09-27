@@ -836,8 +836,8 @@ def build():
         "<b>Deep order from a few thousand examples.</b> Recognizing which of 20 orders of four patterns occurred needs four "
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
-        "≈ 80k connections ever created. At depth 3 a Transformer matches it only with 8–400× more data and ≈ 5,000× the "
-        "computation per example (depth 4 running).",
+        "≈ 80k connections ever created. <b>With the same 40k examples a Transformer makes about ten times as many errors at "
+        "depth 4</b> (0.990 vs 0.999–1.000) at ≈ 7,000× the computation; at depth 3 it matches only with 8–400× more data.",
         "<b>Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.</b> 15 classes built from "
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
         "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
@@ -923,8 +923,8 @@ def build():
         ["<b>Structure discovery, implicit Occam razor</b>",
          "E45 pilot: one rhythm for a + b (1.000), the chain for a + b + c (0.999), nothing for random tables", "pilot"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
-         "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "a Transformer matches depth 3 (0.996–0.999) "
-         "at ≈ 5,000× the computation; depth 4 running"],
+         "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "depth 3: a Transformer matches (0.996–0.999) at ≈ 5,000× the "
+         "computation; depth 4 at equal data: 0.990, ≈ 10× the error rate"],
         ["<b>Composition: Transformer-level accuracy from one pass</b>", "learned windows + latest-instant credit "
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],

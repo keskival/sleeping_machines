@@ -82,7 +82,7 @@ def _panel(ax, title, xlabel, ylabel):
 
 
 def fig_supremacy_map():
-    fig, axs = plt.subplots(2, 2, figsize=(7.4, 5.6), gridspec_kw={"hspace": 0.62, "wspace": 0.3})
+    fig, axs = plt.subplots(3, 2, figsize=(7.4, 8.4), gridspec_kw={"hspace": 0.68, "wspace": 0.3})
     # (a) timing patterns (E27 task): E35 event network vs Transformers and clocked conv nets
     ax = axs[0, 0]
     _panel(ax, "Timing patterns:\nsame accuracy, ~10⁵× less work", "operations per example (log)", "test accuracy")
@@ -120,8 +120,9 @@ def fig_supremacy_map():
         ax.annotate(f"{min(chains):.3f}–{max(chains):.3f}", (20, min(chains)), xytext=(8, -12), textcoords="offset points", fontsize=7)
     ax.set_ylim(0.94, 1.003); ax.set_xlim(5, 3e6)
     ax.legend(fontsize=6.3, loc="lower left", bbox_to_anchor=(0.02, 0.1), markerscale=0.7)
+    _panel_depth(axs[1, 0]); _panel_data(axs[1, 1])
     # (c) world model of a real market stream (held-out days 6-7; one hazard family: the 6-window bank)
-    ax = axs[1, 0]
+    ax = axs[2, 0]
     ax.set_title("Market world model: within 0.07–0.18 nats\nof a Transformer, ~1/3000 of the work", fontsize=8.4)
     rows = [("event network + slow regime counters (E57)", [-2.153, -1.960], 40, EVENT, "D"),
             ("event network, semi-Markov (E48)", [-2.38, -2.10], 19, "#f3a37f", "D"),
@@ -136,7 +137,7 @@ def fig_supremacy_map():
     ax.set_xlabel("operations per event (log)", fontsize=7.5); ax.set_ylabel("log-likelihood per event, held-out days\n(higher = better)", fontsize=7.2)
     ax.tick_params(labelsize=7); ax.legend(fontsize=6.0, loc="center left", bbox_to_anchor=(0.16, 0.4), markerscale=0.7)
     # (d) grokking (a + b + c) mod 17 from 30% of the triples
-    ax = axs[1, 1]
+    ax = axs[2, 1]
     ax.set_title("Grokking (a + b + c) mod 17 from 30%:\nthe event chain generalizes", fontsize=8.6)
     ev = [r["final"]["test"] for r in _load(os.path.join(RES, "e41", "p17_f0.3_lam0.05_sig2.21_c1.json"))["rows"]]
     tfr = _load(os.path.join(RES, "e36", "transformer_add3_add3.json"))["rows"]
@@ -151,6 +152,65 @@ def fig_supremacy_map():
     ax.set_ylim(0, 1.05); ax.set_xlim(-0.5, 2.5); ax.set_ylabel("accuracy on unseen triples", fontsize=7.5)
     ax.tick_params(labelsize=7); ax.grid(axis="x", visible=False)
     return fig
+
+
+def _rows(path):
+    p = os.path.join(RES, path)
+    return _load(p)["rows"] if os.path.exists(p) else []
+
+
+def _panel_depth(ax):
+    """deep order (E53 depth 3, E54 depth 4): accuracy vs operations; chains unpruned / pruned vs Transformers."""
+    _panel(ax, "Deep order: parity at depth 3, ~10× fewer errors\nat depth 4 with equal data, 10³–10⁴× less work",
+           "operations per example (log)", "test accuracy")
+    ev = []
+    for path, lab in (("e53/d3_S5R4_t0.6_latest_T0_b0.5_m0.9_g0.9.json", "depth 3"), ("e54/D4_L2_S5R4_T0.3.json", "depth 4"),
+                      ("e54/D4_L2_S5R4_T0.3_pr3000.json", "depth 4, pruned")):
+        rows = _rows(path)
+        if rows:
+            ev.append((lab, [r["final"]["events_per_episode"] for r in rows], [r["final"]["test"] for r in rows]))
+    tf = []
+    for path, lab, fill in (("e36/transformer_e53_e53_online2M.json", "depth 3: 2M examples", True),
+                            ("e36/transformer_e53_e53_n40k_wd0.json", "depth 3: 40k × 50", True),
+                            ("e36/transformer_e54_e54_n40k_wd0.json", "depth 4: 40k × 50", False),
+                            ("e36/transformer_e54_e54_n40k.json", "depth 4: 40k × 50, wd 0.1", False)):
+        rows = _rows(path)
+        if rows:
+            tf.append((lab, [r["macs_per_episode"] for r in rows], [r["acc"] for r in rows], fill))
+    for lab, x, y in ev:                                   # shape = depth (circle 3, diamond 4); light = pruned
+        ax.scatter(x, y, s=34, marker="o" if "3" in lab else "D", color=EVENT if "pruned" not in lab else "#f3a37f",
+                   zorder=4, label=f"event chains, {lab}")
+    for lab, x, y, fill in tf:
+        ax.scatter(x, y, s=22, marker="o" if lab.startswith("depth 3") else "D", color=DENSE_T if "wd" not in lab else "white",
+                   edgecolor=DENSE_T, lw=1.1, zorder=3, label=f"Transformer, {lab}")
+    ax.set_xlim(10, 3e6); ax.set_ylim(0.96, 1.003)
+    ax.legend(fontsize=5.6, loc="lower left", bbox_to_anchor=(0.0, 0.0), markerscale=0.7)
+
+
+def _panel_data(ax):
+    """data efficiency on the depth-3 task: accuracy vs distinct training examples."""
+    ax.set_xscale("log"); ax.tick_params(labelsize=7)
+    ax.set_xlabel("distinct training examples (log)", fontsize=7.5); ax.set_ylabel("test accuracy", fontsize=7.5)
+    rows = _rows("e53/d3_S5R4_t0.6_curve_latest_T0_b0.5_m0.9_g0.9.json")
+    title = "Data efficiency (depth-3 order)"
+    if rows:
+        steps = [c["step"] for c in rows[0]["curve"]]
+        acc = np.array([[c["test"] for c in r["curve"]] for r in rows])
+        ax.fill_between(steps, acc.min(0), acc.max(0), color=EVENT, alpha=0.18, lw=0)
+        ax.plot(steps, np.median(acc, 0), "-o", color=EVENT, ms=3.5, lw=1.6, label="event chains (each example seen once)")
+    pts = []
+    for n, tag in ((2000, "n2k"), (5000, "n5k"), (10000, "n10k"), (20000, "n20k"), (40000, "n40k")):
+        for r in _rows(f"e36/transformer_e53_e53_{tag}_wd0.json"):
+            pts.append((n, r["acc"]))
+    for r in _rows("e36/transformer_e53_e53_online2M.json"):
+        if r["d"] == 32:
+            pts.append((2_000_000, r["acc"]))
+    if pts:
+        ax.scatter(*zip(*pts), s=18, marker="s", color=DENSE_T, zorder=4, label="Transformer (as many passes as it likes)")
+        ns = sorted(set(n for n, _ in pts)); med = [np.median([a for m, a in pts if m == n]) for n in ns]
+        ax.plot(ns, med, color=DENSE_T, lw=1.0)
+    ax.set_title(title, fontsize=8.6); ax.set_ylim(0.3, 1.02)
+    ax.legend(fontsize=6.0, loc="lower right", markerscale=0.8)
 
 
 def _chain_plateau():
