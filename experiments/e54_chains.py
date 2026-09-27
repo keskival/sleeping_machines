@@ -123,6 +123,7 @@ class Net:
         self.h = Syn(K, self.Q, dense); self.g = Syn(K, self.Q, dense)
         self.events = 0; self.syn = 0; self.updates = 0; self.margin = 0.0
         self.gate = 0.0; self.ok_c = np.zeros(K); self.bad_c = np.zeros(K)
+        self.prune_after = 0; self.n_seen = 0; self.useful = {k: set() for k in range(1, L + 1)}   # §93
 
     def _idx(self, key, k):
         if self.dense:                                                       # exact dense index of the unit
@@ -133,6 +134,9 @@ class Net:
         """synaptogenesis at credit: units in the credited set without a synapse get one (on every class node)."""
         for i in np.flatnonzero(sel & (U < 0)):
             U[i] = self.reg.setdefault(keys[i], len(self.reg))
+            k, key = keys[i]
+            if k >= 1 and not (self.prune_after and self.n_seen > self.prune_after):   # warm-up: any credited child
+                self.useful[k].add(key // self.P)
         self.h.grow(len(self.reg)); self.g.grow(len(self.reg))
 
     def _dense_base(self, k):
@@ -143,9 +147,12 @@ class Net:
         f = np.flatnonzero(np.isfinite(dt) & (dt >= 0) & (dt <= PART_HI)); xf = t[self.pp[f, 1]]
         keys = [(0, int(p)) for p in f]; xs = list(xf)
         level = [(int(p), float(x)) for p, x in zip(f, xf)]                  # (flat key within level, time)
+        prune = self.prune_after and self.n_seen > self.prune_after and not self.dense
         for k in range(1, self.L + 1):
             nxt = []
             for u, xu in level:
+                if prune and u not in self.useful[k]:             # §93: extend only parents with a credited child
+                    continue
                 for p, xp in zip(f, xf):
                     if xu < xp <= xu + W2:
                         nxt.append((u * self.P + int(p), float(xp)))
@@ -170,7 +177,21 @@ class Net:
         c = int(ft.argmin()) if np.isfinite(ft).any() else self.K
         return c, U, win, same, inst, ft
 
+    def refresh_useful(self, w_min=0.05):
+        """§93 (a sleep phase): a parent is useful if one of its children carries weight > w_min on some class node."""
+        if not self.reg:
+            return
+        keys = list(self.reg.keys()); idx = np.array([self.reg[kk] for kk in keys])
+        wmax = np.maximum(self.h.w(idx).max(0), self.g.w(idx).max(0))
+        self.useful = {k: set() for k in range(1, self.L + 1)}
+        for (k, key), w in zip(keys, wmax):
+            if k >= 1 and w > w_min:
+                self.useful[k].add(key // self.P)
+
     def teach(self, t, y):
+        self.n_seen += 1
+        if self.prune_after and self.n_seen > self.prune_after and self.n_seen % 1000 == 1:
+            self.refresh_useful()
         c, U, win, same, inst, ft = self.forward(t)
         if c < self.K:                                                       # §86b: the firing node's record
             self.ok_c[c] = 0.98 * self.ok_c[c] + (c == y); self.bad_c[c] = 0.98 * self.bad_c[c] + (c != y)
@@ -215,6 +236,7 @@ def main():
     ap.add_argument("--beta", type=float, default=0.5)
     ap.add_argument("--temp", type=float, default=0.3)
     ap.add_argument("--q", type=float, default=0.2)
+    ap.add_argument("--prune-after", type=int, default=0, help="§93: after n examples extend only parents with credited children")
     ap.add_argument("--margin", type=float, default=0.0, help="§86 near-miss margin (0 = off)")
     ap.add_argument("--gate", type=float, default=0.0, help="§86b precision gate for the margin")
     ap.add_argument("--dense", type=int, default=0)
@@ -228,7 +250,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         task = make_task(a.N, a.M, a.D, a.S, a.R, rng)
-        net = Net(a.N, len(task[1]), L, rng, a.thr, a.alpha, a.beta, a.temp, a.dense); net.margin = a.margin; net.gate = a.gate
+        net = Net(a.N, len(task[1]), L, rng, a.thr, a.alpha, a.beta, a.temp, a.dense); net.margin = a.margin; net.gate = a.gate; net.prune_after = a.prune_after
         curve, decisions = [], []
         for step in range(1, a.steps + 1):
             t, y = sample(task, a.N, a.q, rng)
@@ -243,7 +265,7 @@ def main():
         rows.append({"seed": s, "Q": net.Q, "final": curve[-1], "curve": curve,
                      "decision_hash": int(np.sum(np.array(decisions) * (np.arange(len(decisions)) % 9973 + 1)))})
         print(json.dumps({"seed": s, "Q": net.Q, **curve[-1], "decision_hash": rows[-1]["decision_hash"]}), flush=True)
-    with open(os.path.join(OUT, f"D{a.D}_L{L}_S{a.S}R{a.R}_T{a.temp:g}{'_dense' if a.dense else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}"
+    with open(os.path.join(OUT, f"D{a.D}_L{L}_S{a.S}R{a.R}_T{a.temp:g}{'_dense' if a.dense else ''}{f'_m{a.margin:g}' if a.margin else ''}{f'_g{a.gate:g}' if a.gate else ''}{f'_pr{a.prune_after}' if a.prune_after else ''}"
                                 f"{'_' + a.tag if a.tag else ''}.json"), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
