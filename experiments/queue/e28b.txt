@@ -1,0 +1,4 @@
+e28b_d1 experiments/e28_routing.py --steps 60000 --seeds 3 --fix60 1 --eta 0.02 --depth 1 --tag d1
+e28b_fired experiments/e28_routing.py --steps 60000 --seeds 3 --fix60 1 --eta 0.02 --arm fired --hidden 192 --group 16 --k 1
+e28b_nearmiss experiments/e28_routing.py --steps 60000 --seeds 3 --fix60 1 --eta 0.02 --arm nearmiss --hidden 192 --group 16 --k 1
+e28b_path experiments/e28_routing.py --steps 60000 --seeds 3 --fix60 1 --eta 0.02 --arm path --hidden 192 --group 16 --k 1

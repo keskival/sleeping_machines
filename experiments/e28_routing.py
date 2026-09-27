@@ -82,7 +82,7 @@ def sample(motifs, classes, N, H, q, rng):
     raise RuntimeError("sampling failed")
 
 
-def integrate(arr, w, W):
+def integrate(arr, w, W, thr=1.0):
     """Windowed integrate-to-threshold. arr: arrival times per synapse, w: weights. Returns (fire time, charge
     reached, the synapses in the firing window)."""
     ok = np.isfinite(arr) & (w > 0.02)
@@ -95,7 +95,7 @@ def integrate(arr, w, W):
         s += w[idx[hi]]
         while arr[idx[hi]] - arr[idx[lo]] > W:
             s -= w[idx[lo]]; lo += 1
-        if s >= 1.0:
+        if s >= thr:
             return arr[idx[hi]], s, idx[lo:hi + 1]
         if s > best:
             best, bwin = s, idx[lo:hi + 1]
@@ -103,7 +103,9 @@ def integrate(arr, w, W):
 
 
 class Net:
-    def __init__(self, N, K, H, depth, Hn, G, k, W, rng):
+    def __init__(self, N, K, H, depth, Hn, G, k, W, rng, fix60=0, kappa=0.02):
+        self.fix60, self.kappa = fix60, kappa
+        self.thr = np.ones(K)
         self.N, self.K, self.H, self.depth, self.G, self.k, self.W = N, K, H, depth, G, k, W
         nin = N if depth == 1 else Hn
         self.Hn = Hn
@@ -133,7 +135,8 @@ class Net:
             x = t
         ft = np.full(self.K, INF); owin = [None] * self.K
         for c in range(self.K):
-            ft[c], _, owin[c] = integrate(x + self.d2[c], self.w2[c], self.W)
+            ft[c], _, owin[c] = integrate(x + self.d2[c], self.w2[c], self.W if not self.fix60 else np.inf,
+                                          self.thr[c])
         c = int(ft.argmin()) if ft.min() < self.H + 1 else self.K
         self.events += int(np.isfinite(t).sum() + np.isfinite(x).sum() * (self.depth == 2) + np.isfinite(ft).sum())
         st.update(x=x, ft=ft, owin=owin, winner=c)
@@ -153,7 +156,10 @@ class Net:
                 cand = got & (self.w2[y] > 0.5)
             if cand.any():
                 target = np.min(arr[cand])                      # pull the late arrivals earlier, to coincide
-                self.w2[y, cand] += eta
+                if self.fix60:                                  # §60: conserved budget, fractional step
+                    tot = self.w2[y].sum(); self.w2[y, cand] += eta * tot / cand.sum(); self.w2[y] *= tot / self.w2[y].sum()
+                else:
+                    self.w2[y, cand] += eta
                 self.d2[y, cand] += 0.5 * (target - arr[cand])
             if self.depth == 2 and arm in ("nearmiss", "push"):
                 want = (~st["fired"]) & (self.w2[y] > 0.5) & (st["charge"] > 0.5)
@@ -166,12 +172,20 @@ class Net:
                     wi = st["win"][h]
                     if len(wi):
                         self.w1[h, wi] += eta * 0.5
+        if self.fix60:                                          # §60 prices: false winner dearer, missed cheaper
+            if y < self.K: self.thr[y] -= self.kappa
+            if c < self.K and c != y: self.thr[c] += self.kappa
+            np.clip(self.thr, 0.2, 5.0, out=self.thr)
         if c < self.K and c != y:                               # a wrong class fired
             if arm == "push":                                   # displace it in time (the loser push)
                 self.d2[c] += eta
             else:                                               # specialize it: drop the synapses that fired it
                 wi = st["owin"][c]
-                self.w2[c, wi] -= eta
+                if self.fix60:                                  # conserving specialization
+                    tot = self.w2[c].sum(); self.w2[c, wi] *= 1 - eta
+                    self.w2[c] *= tot / max(self.w2[c].sum(), 1e-9)
+                else:
+                    self.w2[c, wi] -= eta
         np.clip(self.w2, 0, 1, out=self.w2); np.maximum(self.d2, 0, out=self.d2)
         if self.depth == 2:
             np.clip(self.w1, 0, 1, out=self.w1); np.maximum(self.d1, 0, out=self.d1)
@@ -197,6 +211,8 @@ def main():
     ap.add_argument("--group", type=int, default=8)
     ap.add_argument("--k", type=int, default=2)
     ap.add_argument("--W", type=float, default=0.6)
+    ap.add_argument("--fix60", type=int, default=0, help="1: §60 readout (non-leaky, conserved, priced)")
+    ap.add_argument("--kappa", type=float, default=0.02)
     ap.add_argument("--arm", default="nearmiss", choices=("path", "fired", "nearmiss", "push"))
     ap.add_argument("--steps", type=int, default=30000)
     ap.add_argument("--eta", type=float, default=0.05)
@@ -208,7 +224,7 @@ def main():
     for s in range(a.seeds):
         rng = np.random.default_rng(s)
         motifs, classes = make_task(a.N, a.M, a.K, rng)
-        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng)
+        net = Net(a.N, a.K, a.H, a.depth, a.hidden, a.group, a.k, a.W, rng, a.fix60, a.kappa)
         curve = []
         for step in range(1, a.steps + 1):
             t, y = sample(motifs, classes, a.N, a.H, a.q, rng)
@@ -221,7 +237,7 @@ def main():
                 net.events = ev0
         rows.append({"seed": s, "final": curve[-1], "curve": curve})
         print(json.dumps({"seed": s, **curve[-1]}), flush=True)
-    name = f"d{a.depth}_{a.arm}_k{a.k}{'_' + a.tag if a.tag else ''}.json"
+    name = f"d{a.depth}_{a.arm}_k{a.k}{'_f60' if a.fix60 else ''}{'_' + a.tag if a.tag else ''}.json"
     with open(os.path.join(OUT, name), "w") as f:
         json.dump({"args": vars(a), "rows": rows, "wall_s": round(time.time() - t0, 1)}, f)
     print("EXIT-OK", round(time.time() - t0, 1))
