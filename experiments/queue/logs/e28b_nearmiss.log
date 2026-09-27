@@ -1,0 +1,4 @@
+{"seed": 0, "step": 60000, "test": 0.716, "updates": 20154, "events_per_episode": 20.420666666666666}
+{"seed": 1, "step": 60000, "test": 0.7746666666666666, "updates": 18521, "events_per_episode": 20.513333333333332}
+{"seed": 2, "step": 60000, "test": 0.6826666666666666, "updates": 21692, "events_per_episode": 20.245333333333335}
+EXIT-OK 639.9
