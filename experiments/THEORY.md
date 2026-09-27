@@ -3897,6 +3897,39 @@ correct for a taker; the ≈ 1 bp edge would need near-zero fees (market making,
 positive for the selected states and is larger with perp + ETH than with the own state alone; with f = 2 bp the net
 return of the selected states is ≤ 0 (or the selection is empty).
 
+## 88. Select structure, tune durations: what a candidate basis should and should not carry
+
+*Written 2026-09-27, after single-seed diagnostics (stated), before E56's 5-seed runs.*
+
+**Two ways to learn a duration.** (a) *Selection:* give each channel pair a bank of fixed-window copies [iδ, jδ] and let
+§83–§86 credit choose among them. Exactly the machinery that learns routes and order, with O(log #intervals) mistakes,
+but every lag fires all copies whose window contains it, about (T_max/δ)²/4 of them, so activity grows quadratically
+with timing resolution (E34 with δ = 0.25, T_max = 4: > 60 s for 1,000 episodes, against 2 s without the bank).
+Unions of coarser (dyadic) windows would be cheaper but cannot be expressed: under summation a lag fires only its own
+piece, whose weight must then carry the whole threshold. (b) *Tuning:* one window per part, adjusted from the lags the
+part itself observes when it contributes, at no extra activity. So: **select structure (routes, order), tune durations.**
+
+**A native duration rule for shared parts (version space).** A part keeps the range of lags it had when it contributed to
+a correct fire; the estimated support is that range widened by its minimum-variance unbiased extension
+(max − min)/(n − 1) at each end; on a false fire a contributing part whose lag lies outside the estimated support moves
+that window edge halfway toward it, and never excludes a lag seen in a positive. Shared parts are safe because only
+positive evidence widens and only atypical negative evidence narrows. Two traps, both observed: *censoring* (once an edge
+moves inward, positives beyond it never fire the part and are never observed, so an early, narrow range freezes a wrong
+edge: motif lower edges stuck at 0.51–0.56 against a true 0.3) and *misattribution* (most contributors of a false fire had
+legitimate lags); requiring ≥ 30 positive observations before any exclusion removes both in the diagnostic.
+
+**Why the gap constraint appears without being asked for.** The label requires the second motif to start 0.5–2.5 after
+the first ends, a difference of spike times, which one node cannot enforce (§71); the cross pair (end of A → start of B)
+is a part that encodes it. It fires in every positive, so full-information credit splits the hold mass between the A part
+and the cross part; with θ = 0.6 each alone is below threshold and the node needs both: the conjunction is learned, and
+the cross part's window converges to the gap interval. Observed (one seed, 12k episodes): motif windows [0.26–0.30,
+D + ≤ 0.12] against the true [0.3, D]; cross windows [0.38–0.50, 2.5–3.0]; test 0.993 with 548 updates (the tuned fixed
+windows plateau at 0.988 on this seed).
+
+**Predictions (E56, E34's task, 5 seeds, 40k episodes; broad initial windows [0, 3], instant credit T = 0.3, margin 0.9
+earned at precision 0.9).** P1: ≥ 0.995 on at least 4/5 seeds (the Transformer: 0.998 after 2M examples). P2: every
+seed at or above its fixed-window plateau (E34m: 0.988–0.995). P3: ≈ 20 events per episode, ≤ 1,000 updates.
+
 ## Tests
 
 | | Claim | Test |

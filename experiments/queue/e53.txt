@@ -41,3 +41,4 @@ e54g_D4 experiments/e54_chains.py --D 4 --margin 0.9 --gate 0.9 --steps 40000 --
 e34g_tuned experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --gate 0.9 --steps 40000 --seeds 5
 e34g_bank experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --gate 0.9 --scales 1,2,4 --steps 40000 --seeds 5
 e55_confirm experiments/e55_edge.py --confirm 1
+e56_iv experiments/e34_compose.py --summed 1 --thr 0.6 --W 4.2 --beta 0.5 --credit instant --temp 0.3 --margin 0.9 --gate 0.9 --learn-iv 3 --steps 40000 --seeds 5
