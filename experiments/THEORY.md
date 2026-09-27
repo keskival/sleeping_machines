@@ -4400,6 +4400,20 @@ with the most recent characters), generalizing across histories that the counts 
 **Predictions (E65).** Adding merged-context experts to the stage-2 mixture lowers test loss at every data size, most at
 small data (where estimation dominates), and raises the fitted data exponent relative to counting alone.
 
+**Results (E65, E65b; 1M training characters, 100k test): the prediction fails, and the failures locate what a
+representation must do.** (1) Merging order-3 contexts by their continuations adds nothing (2.0295 vs 2.0282 bpc): there
+the counts are not data-starved. Merging order-5 contexts gains 0.0025: an unseen context gets no code, because the code
+was computed from continuations it does not have; generalization to unseen contexts needs codes computed from the context's
+content. (2) A learned recursive state (automaton: state + character → state, one table lookup per event) computed from
+content, learned by merging (state, character) pairs with similar next-character distributions, collapses toward bigram
+quality (3.4 bpc; the number of states in use falls, e.g. 622 → 17): next-symbol merging discards every distinction that
+matters only later, and hard likelihood clustering lets broad clusters absorb low-count items. Merging by the next two
+characters does no better (3.3). Starting from the exact order-2 automaton (2.95 bpc), merging only loses information.
+**Consequence.** A representation that beats exact contexts must also *split* states where earlier history matters and
+merge only statistically indistinguishable ones (the split-merge reconstruction of causal states, with tests), and, for
+text, must know that different symbols behave alike: distributional classes of words, which no operation on exact strings
+produces. These are the next representation experiments; a(m) in (a) is only improved by them.
+
 ## Tests
 
 | | Claim | Test |
