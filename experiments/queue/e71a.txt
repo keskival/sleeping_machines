@@ -1,0 +1,2 @@
+# E71: SHD with event-CDE units (THEORY §104); selection on held-out speakers; test runs appended after selection
+e71_pilot experiments/e71_event_cde.py --limit 1600 --epochs 8 --merge 0.003 --eval spk
