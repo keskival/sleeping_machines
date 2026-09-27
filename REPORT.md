@@ -136,6 +136,7 @@ the conv net):
 |---|---|---|---|
 | **event network, nothing given (E35)** | **1.000 ×4, 0.9995** | **7.5 synaptic events** | 443–1,530 local updates, 200k episodes |
 | event-token Transformer, 2M episodes (E36) | 0.989–0.996 | 146k–1.16M multiply-adds | backprop |
+| Transformer with learned relative-time attention bias, 1M episodes (E36f) | 0.996, 0.998 | 149k–150k multiply-adds | backprop |
 | event-token Transformer, 200k episodes | 0.65–0.97 | 5k–576k | backprop |
 | clocked conv net (E32) | 0.995 / 0.984 / 0.895 | 3.07M / 123k / 1.9k | backprop, 200k episodes |
 
@@ -149,8 +150,9 @@ per time bin; 99% silence multiplies its cost by 100), and a conv net evaluated 
 on Loihi, ≈ 10 pJ per multiply-add with its weight read) gives ≈ 10⁴× at equal accuracy.
 
 **Limits.** One task, designed around the primitives; the dense search covered a grid of sizes. The Transformer
-needed 10× more training to reach parity; a Transformer with a learned relative-time attention bias, the fair
-strengthening, is being run.
+needed 10× more training to reach parity. Giving it a learned relative-time attention bias (the fair strengthening:
+time differences enter attention directly) brings it to 0.996–0.998 at ≈ 150k multiply-adds after 1M episodes,
+still below the event network and ≈ 2·10⁴× its cost.
 
 **Scaling with the size of the input basis (E35, §74, §77).** With the spikes per episode held fixed, widening the
 candidate inputs from 12 to 96 channels leaves accuracy at ≈ 1.0 (96 channels: 1.000, 0.999, 1.000) and the number of
@@ -349,7 +351,6 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 - **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17, not
   a few percent; not a matter of training time). The sleep reuse filter (§72: each shared delay is reused ≈ n/p times)
   is the candidate constraint; untested.
-- **Fair baselines (running):** relative-time-attention Transformers; the chains with 5–25× more training.
 - **Composition accuracy** against Transformers, and **grokking reliability** (the failing seed).
 - **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
 - **A real benchmark where the paradigm should win:** streams with rare, precisely timed events (§55), and a

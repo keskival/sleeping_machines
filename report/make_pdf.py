@@ -310,9 +310,11 @@ def fig_e32():
         long = "long" in path or "rel" in path
         for r in load(path)["rows"]:
             tf.setdefault((long, r["d"], r["layers"], r.get("reltime", 0)), []).append((r["acc"], r["macs_per_episode"]))
-    for long, col, name in ((False, YELLOW, "event-token Transformer, 200k episodes"),
-                            (True, BLUE, "event-token Transformer, 2M episodes")):
-        v = [(np.mean([m for _, m in vv]), np.mean([a for a, _ in vv])) for k, vv in tf.items() if k[0] == long]
+    for long, rel, col, name in ((False, 0, YELLOW, "event-token Transformer, 200k episodes"),
+                                 (True, 0, BLUE, "event-token Transformer, 2M episodes"),
+                                 (True, 1, AQUA, "Transformer + relative-time bias, 1M episodes")):
+        v = [(np.mean([m for _, m in vv]), np.mean([a for a, _ in vv])) for k, vv in tf.items()
+             if k[0] == long and k[3] == rel]
         if v:
             ax.scatter(*zip(*v), color=col, s=18, marker="s", label=name, zorder=3)
     ax.scatter([7.5], [1.0], color=ORANGE, s=70, marker="D", label="event network (E35), nothing given", zorder=4)
@@ -916,6 +918,7 @@ def build():
                  ["<b>event network, nothing given (E35)</b>", "<b>1.000 ×4, 0.9995</b>", "<b>7.5 synaptic events</b>",
                   "443–1,530 updates, 200k episodes"],
                  ["event-token Transformer, 2M episodes", "0.989–0.996", "146k–1.16M MACs", "backprop"],
+                 ["Transformer + relative-time bias, 1M episodes", "0.996, 0.998", "≈ 150k MACs", "backprop"],
                  ["event-token Transformer, 200k episodes", "0.65–0.97", "5k–576k MACs", "backprop"],
                  ["clocked conv net (E32)", "0.995 / 0.984 / 0.895", "3.07M / 123k / 1.9k MACs", "backprop, 200k"]],
                 [56, 36, 42, 40], st)]
@@ -928,8 +931,9 @@ def build():
             "of its input events (§70). The clocked model also pays per time bin, so silence multiplies its cost; a conv "
             "net evaluated only where spikes are would cost ≈ 100 multiply-adds, not millions (§63). At published "
             "per-operation energies the gap at equal accuracy is ≈ 10⁴×. <i>Limits:</i> one task built around the "
-            "primitives; the Transformer needed 10× more training for parity; a relative-time-attention Transformer "
-            "is being run.")]
+            "primitives; the Transformer needed 10× more training for parity; with a learned relative-time attention bias "
+            "(time differences enter attention directly) it reaches 0.996–0.998 at ≈ 150k MACs, still below the event "
+            "network at ≈ 2·10⁴× its cost.")]
     s.append(PageBreak())
 
     s += [P("4. Depth and composition", "h1"),
@@ -1008,7 +1012,6 @@ def build():
     s += bullets([
         "Grokking theory tests (running): phase diagram over data × sleep (§72); relations the rhythm cannot express; sleep "
         "as the pressure toward reusable parts (§73); O(log N) learning as the candidate basis grows (§74).",
-        "Fair baselines (running): relative-time-attention Transformers; the chains with 5–25× more training.",
         "Composition accuracy against Transformers; grokking reliability; native learning of sparse parity (§75, open); "
         "a real stream with rare, precisely timed events (§55).",
     ], st)
