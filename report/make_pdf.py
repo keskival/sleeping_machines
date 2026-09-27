@@ -777,7 +777,7 @@ def build():
         "<b>Grokking occurs, by a route change under sleep, and only for relations the substrate can express.</b> "
         "Without sleep the network memorizes; with sleep it generalizes after a delay (0.93–0.99, reliable with cooled "
         "timing noise); a data × sleep phase diagram shows memorization, grokking and collapse; with depth, (a + b + c) "
-        "mod p through two composed rhythm stages reaches 0.998 (pilot).",
+        "mod p through two composed rhythm stages reaches 0.99–1.00 (3 seeds, p = 17 and 31).",
         "<b>Learning cost follows activity, not model size:</b> 12 → 48 input channels leaves learning mistakes flat and "
         "makes inference cheaper (§77).",
         "<b>Not yet: real asynchronous benchmarks.</b> SHD below dense baselines; on the market, correctly posed as "
@@ -868,8 +868,9 @@ def build():
             "a − b and relabelled sums grok (0.95–0.98), a·b in 1 of 3 seeds, while a² + ab + b² and random tables stay "
             "at chance on unseen pairs (0.01–0.04) and their training accuracy erodes under sleep. A data × sleep phase "
             "diagram (4 × 4, 3 seeds) shows no grokking below 20–30% of pairs, and above it a minimum sleep that falls "
-            "with data. Larger problems grok more reliably: 2/3 seeds at p = 31 and 59, 3/3 at p = 97 (ρ ≈ 0.005). With depth (E41, pilot): (a + b + c) mod p through two composed rhythm stages, 0.998 on unseen "
-            "triples with sleep, 0.06 without.")]
+            "with data. Larger problems grok more reliably: 2/3 seeds at p = 31 and 59, 3/3 at p = 97 (ρ ≈ 0.005). With depth (E41, 3 seeds): (a + b + c) mod p through two composed rhythm stages, 0.99–1.00 on unseen "
+            "triples from 30% of them at p = 17 and 31, and from 10% in 2 of 3 seeds at p = 31 (ρ ≈ 0.003); chance "
+            "without sleep; collapse without the chain.")]
     s += fig(fig_e37, W * 0.9)
     s += [P("<b>Why (§69, §72).</b> Error-gated learning makes memorization absorbing. Sleep keeps a parameter only if it "
             "is used by more than m* = λθ/(eη) examples: lookup entries serve one and die, the rhythm's delays serve many "
