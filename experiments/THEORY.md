@@ -3904,6 +3904,13 @@ own + perp + ETH +0.47 to +1.40 bp (≈ 1,100 a day). At f = 2 bp few states are
 at 5 bp none is selected. Other markets add 30–60% to the edge, which stays near 1 bp: for a taker, staying out is the
 correct policy on this data.
 
+**Across markets (E55b).** Each of BTC spot, ETH spot, SOL spot and the BTC perpetual as the traded market, the other three
+as leaders; horizon and side chosen on the pilot days only, then read once on the 21 untouched days. Before fees: BTC
++1.0 to +1.1 bp per trade, the perpetual +0.6 bp, ETH ≈ 0, SOL ≈ 0 to +0.5 bp. At 2 bp every selection is negative or
+empty; at 5 bp and above nothing qualifies. (Choosing the horizon on the untouched days instead would show up to +1 bp at
+2 bp: selection on the test set, not an edge.) Even top-tier taker fees on the perpetual (≈ 3.4 bp round trip) exceed the
+edge: across these four markets a taker should stay out.
+
 ## 88. Select structure, tune durations: what a candidate basis should and should not carry
 
 *Written 2026-09-27, after single-seed diagnostics (stated), before E56's 5-seed runs.*

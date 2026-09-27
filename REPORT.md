@@ -126,7 +126,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.98–1.00 | Transformer on the same task running |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
 | *Not supremacy:* spoken digits (SHD) | E51: class-conditional event world models reach 0.647 test (0.73 on held-in speakers), our best by far, but below a published LSTM (≈ 0.70) and the state of the art (≈ 0.9) | unseen test speakers expose overfitting to training speakers |
-| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55 (confirmed on 21 unseen days): the predictable edge is 0.3–1.4 bp per trade (larger with BTC-perp and ETH states), below any taker fee | staying out is correct for a taker here (§87) |
+| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
 
@@ -445,6 +445,9 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   data, and the edge that exists would need market-making economics. **Confirmed on the 21 untouched days**
   (preregistered; fit on the pilot days): before fees +0.26 to +1.05 bp per trade from the own state, +0.47 to +1.40 bp
   with perp and ETH; at 2 bp every selected state loses (−0.11 to −1.35 bp); at 5 bp no state qualifies.
+  **Across four markets (E55b):** trading ETH spot, SOL spot or the BTC perpetual instead, each with the other three as
+  leaders (horizon and side chosen on the pilot days, read once on the untouched days), the edge before fees is at most
+  ≈ 1 bp (BTC ≈ +1.0, perpetual ≈ +0.6, ETH and SOL ≈ 0 to +0.5), and every selection is negative or empty at a 2 bp fee.
 - **Against a Transformer point process (E52, E57, §90).** A Transformer Hawkes process given the event network's own
   hazard family (one intensity per event type and gap window) and 128 events of context, selected on day 5 and tested
   on days 6–7, scores −1.97 / −1.82 nats per event (≈ 108k multiply-adds per event); with 12 finer windows −1.83 / −1.65.
