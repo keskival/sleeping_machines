@@ -926,8 +926,8 @@ def build():
         ["<b>Composition: Transformer-level accuracy from one pass</b>", "learned windows + latest-instant credit "
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
-        ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands: 0.675 test (E51 0.647; "
-         "speakers); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
+        ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands, selected on held-out speakers: "
+         "0.675 test (E51 0.647); LSTM ≈ 0.70; state of the art ≈ 0.9", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
          "the data may hold no edge"],
     ], [48, 76, 50], st))
