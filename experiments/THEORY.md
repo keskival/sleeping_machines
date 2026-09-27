@@ -3493,7 +3493,12 @@ which falls exponentially with depth: deeper compositions should grok from expon
 provided the learning rule finds the chain (§76's search condition) and sleep's reuse threshold is met (§72: each shared
 delay is reused ≈ n/p times, which grows with n). For E41 at p = 17, D = 2 the bound suggests a few percent of the
 4,913 triples; at D = 1 (E37, p = 31) about 10% of 961 pairs, consistent with E26's generalization from 20–30%.
-**Prediction (M78):** in E41 at p = 17, generalization appears at training fractions of a few percent, far below E37's
+*Pilot (same day, 200 epochs, 2 seeds):* at 2% and 4% of triples the network memorizes (train 0.92–0.98) and stays
+at chance on unseen triples: at this training length the bound is not the binding constraint. The shared route learns
+only from errors, at most n per epoch, and needs a roughly fixed number U of error events (E26: ~10⁴), so its learning
+time is T ≈ U/(n·e) epochs; with n ≈ 100–200 triples, 200 epochs are too few. The refined claim separates a data
+threshold (Occam, above) from a time threshold (∝ 1/n); long runs at 2% and 4% (1,500–2,000 epochs) test which binds.
+**Prediction (M78), as first stated:** in E41 at p = 17, generalization appears at training fractions of a few percent, far below E37's
 fractions at D = 1 for the same p, and the threshold fraction falls with p.
 
 ## Tests
