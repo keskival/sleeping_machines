@@ -87,7 +87,7 @@ def batchify(eps):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--task", default="e27", choices=("e27", "e28", "add3"))
+    ap.add_argument("--task", default="e27", choices=("e27", "e28", "add3", "e53"))
     ap.add_argument("--sizes", default="8x1,16x1,32x1,32x2", help="d x layers")
     ap.add_argument("--episodes", type=int, default=200000)
     ap.add_argument("--batch", type=int, default=64)
@@ -112,6 +112,11 @@ def main():
             N, K, H, q = 16, 15, 12.0, 0.25
             motifs, classes = E28.make_task(N, 6, K, rng)
             draw = lambda r: E28.sample(motifs, classes, N, H, q, r)           # noqa: E731
+        elif a.task == "e53":                                  # E53: orders of motif sets, depth 3 (THEORY §84)
+            import e53_depth3 as E53
+            N, H, q = 16, 16.0, 0.25
+            task53 = E53.make_task(N, 6, 5, 4, rng); K = len(task53[1])
+            draw = lambda r: E53.sample(task53, N, H, q, r)                    # noqa: E731
         if a.task == "add3":                                   # E41's task: fixed training triples, held-out test
             P = a.p; N, K, H = 3 * P, P - 1, 1.0
             allT = np.array(np.unravel_index(np.arange(P ** 3), (P,) * 3)).T
