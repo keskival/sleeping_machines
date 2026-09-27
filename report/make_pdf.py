@@ -836,7 +836,8 @@ def build():
         "<b>Deep order from a few thousand examples.</b> Recognizing which of 20 orders of four patterns occurred needs four "
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
-        "≈ 80k connections ever created (Transformer comparison on this task running).",
+        "≈ 80k connections ever created. At depth 3 a Transformer matches it only with 8–400× more data and ≈ 5,000× the "
+        "computation per example (depth 4 running).",
         "<b>Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.</b> 15 classes built from "
         "ordered pairs of shared motifs: 0.990–0.999 (mean 0.9965) from 40k examples seen once, with learned timing windows, "
         "at ≈ 20 events per example; a Transformer needs 2M examples for 0.9955–0.998 and reaches 0.9935–0.9965 given the "
