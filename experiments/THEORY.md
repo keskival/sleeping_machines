@@ -3138,7 +3138,7 @@ atom of the manifesto's causal logic ("emit A after x if no B") generalized to a
 nodes, and not one node: a node's hold condition ("each held input arrived within its window before the trigger")
 is invariant under swapping the arrival order of two held inputs inside their windows, so it cannot fix their
 mutual order; a chain can, because each node's output spike carries "so far in order" forward in time to the node
-that checks the next point. **Temporal depth equals the length of the order chain.** E33 wires all thirteen of
+that checks the next point. **Temporal depth equals the length of the order chain.** *(Superseded by §71: depth 2 suffices for every conjunction of order constraints; one node orders at most three events.)* E33 wires all thirteen of
 Allen's interval relations this way (before, meets and their inverses: 1 node; overlaps, starts, during,
 finishes, equals and inverses: 3-node chains; causal, no negative delays) and checks them against their
 definitions on ~19,900 random interval pairs with planted equalities (tolerance 0.05; 99 samples within a
@@ -3284,6 +3284,64 @@ MACs; (ii) a relative-time bias raises small Transformers substantially on E27 a
 reaches the event network's accuracy at comparable cost, because its cost is quadratic in events while the event
 network's is linear in the events a node receives.
 
+## 71. A depth hierarchy for one-shot temporal networks (theorem, with proofs; corrects §64.2)
+
+*Written 2026-09-27. The mapping of spiking depth to difference-constraint zones was not found in the searches made for
+this project; that is not a claim of priority. Zones (difference-bound matrices) are standard in timed-automata
+verification (Dill 1989; Alur & Dill 1994).*
+
+**Setting.** Events are real times t_1, …, t_m (all finite: complete episodes). A *node* has one trigger input T with
+delay d_T; hold inputs i with delay d_i and window w_i ∈ [0, ∞]; veto inputs j with delay d_j and window w_j ∈ [0, ∞];
+all delays ≥ 0 (causality). It fires at τ = t_T + d_T iff every hold satisfies τ − w_i ≤ t_i + d_i ≤ τ and no veto
+satisfies τ − w_j ≤ t_j + d_j ≤ τ. A veto with w_j = ∞ reads "has not arrived by τ". Min (first-of) and max (all-of)
+nodes fire at the min / max of their inputs. A network's inputs are the events; a node's output is a spike at its
+firing time, available to later nodes. Depth counts nodes on the longest path.
+
+**Lemma 1 (one node = a product set in lag coordinates).** Write x_i = t_i − t_T. A hold constrains only x_i, to
+[−w_i + (d_T − d_i), d_T − d_i] (bounded above by causality); a veto constrains only x_j, to the complement of an
+interval; an input feeding several synapses gets the intersection. So the set of accepted configurations, in lag
+coordinates, is S_1 × S_2 × … × S_m with each S_i ⊆ ℝ depending on input i alone. □
+
+**Theorem 1 (total order).** One node computes P_m = {t_1 < t_2 < … < t_m} on all finite configurations iff m ≤ 3.
+*If:* m = 2: trigger t_2, hold t_1 with w = ∞, d_1 = d_T = 0 (accepts t_1 ≤ t_2; strictness by a veto on t_1 with
+w = 0). m = 3: additionally veto t_3 with w = ∞ and d_3 = 0: accepted iff t_3 has not arrived by t_2, i.e. t_3 > t_2.
+*Only if* (on the unbounded domain ℝ^m, i.e. arbitrary spacings): suppose one node computes P_m, m ≥ 4, with trigger
+k. At least two other inputs a < b lie on the same side of k. Before it: P_m's projection onto (x_a, x_b) contains
+(−2, −1.5) and (−1, −0.5) (extend each to a full point of P_m by placing the other events suitably), so the node's
+product set contains (−1, −1.5), which strictly reverses t_a < t_b, and the node accepts a configuration outside P_m.
+After it: the points (1, 1.5) and (2, 3) give the product point (2, 1.5), again a strict reversal. (Causality matters
+only in forcing the "after" inputs to be vetoes, since hold lags are bounded above, but the product argument does not
+depend on the synapse type.) □ *Remark:* on a bounded domain (all lags within the node's delays and windows) the
+theorem fails: bounded windows then partition the whole range and one node can fix larger orders. E39's first grid
+search (times 0–4) found such nodes for m = 4; the theorem is about scale-free order, which is what a clockless system
+must compute.
+
+**Theorem 2 (hierarchy).** Let an *atom* be a constraint t_j − t_i ∈ [lo, hi] (hi possibly ∞) or its negation
+restricted to one pair, and a *zone* a conjunction of atoms (a difference-bound region).
+(a) Depth 1 computes exactly the product sets of Lemma 1 (for the best choice of trigger).
+(b) Every zone is computed at depth 2: one node per atom (trigger the later event, hold the earlier one with the
+    delays and window that give [lo, hi]; a negated atom as a veto), then one max node over the atom nodes.
+(c) Every finite union of zones is computed at depth 3: a min node over the zones' depth-2 outputs.
+(d) Depth 1 is strictly weaker than depth 2 (Theorem 1 with m = 4).
+*Proof of (b).* An atom node fires iff its atom holds, at a finite time; the max node fires iff all atom nodes fire.
+(c) likewise with min. (a) is Lemma 1. □
+
+**Verification (E39, `e39_depth.py`).** Exhaustive search over single nodes (every trigger, every role in {none,
+hold, veto} per input, delays {0, 1, 2}, windows {0, 1, 2, ∞}) against the total order on distinct integer times:
+m = 2 and m = 3 are computed (grid 0–11; for m = 3 the search returns exactly the proof's node: trigger t_2, hold t_1
+with w = ∞, veto t_3 with w = ∞); m = 4 is computed on the bounded grid 0–4 (the remark's exception) and by no node on
+the grids 0–7 (1,680 configurations) and 0–11 (11,880). All thirteen Allen relations built as atom nodes plus one max
+node (depth 2) are exact on ~19,900 random interval pairs. The search is exhaustive over its parameter grid; the proof
+covers all real parameters.
+
+**Consequences.** (i) §64.2's "temporal depth = order-chain length" is wrong: E33's 3-node chains have depth 3, but
+every Allen relation is a zone, so depth 2 suffices, and the before/meets relations are depth 1. (ii) What a single
+node cannot do is exactly to order two inputs on the same side of its trigger: the representational reason depth is
+needed at all in these networks. (iii) The veto with an infinite window (absence until the trigger) is what lets one
+node reach m = 3; without vetoes one node orders only m = 2. (iv) Grokking and depth connect here: E34's classes are
+zones over part events, so depth 2 is the natural architecture; deeper structure (unions, sequences of zones) needs
+depth 3 and beyond.
+
 ## Tests
 
 | | Claim | Test |
@@ -3349,6 +3407,7 @@ network's is linear in the events a node receives.
 | **M68** | conserved fractional pulls are normalized online learning on the simplex (Winnow/Hedge family): O(k log N) mistakes per node, additive over a chain's depth; durations O(log range), vetoes O(N) | mistake counts vs N (E35 with N = 12, 24, 48) and vs depth (E34); additive vs normalized pulls |
 | **M69** | grokking = flip of the absorbing state: without decay memorization absorbs; with decay the relation absorbs; delay ∝ 1/λ; inexpressible relations stay memorized | E37 λ sweep curves; lookup share of test answers; op controls (poly, rand) |
 | **M70** | order is native to hold/trigger nodes and synthesized by attention; relative-time attention bias is the fair Transformer baseline; no Transformer matches accuracy at comparable cost | E36 long training; E36 with `--reltime 1` on E27 and E28 |
+| **M71** | depth hierarchy: depth 1 = product sets in lag coordinates, one node orders m events iff m ≤ 3; depth 2 = difference-bound zones; depth 3 = finite unions | E39: exhaustive single-node search on a grid (m = 3 found, m = 4 none); depth-2 Allen relations verified |
 | **M23** | the two-channel (shadow-spike) neuron trains deep race networks at least as well as residue weighting, with binary, sort-free eligibility | depth 1–3, windows, 2 seeds |
 | **E15** | credit percolation: reach decays geometrically below F·p ≈ 1; counterfactual credit and σ move the threshold | local layer-wise feedback, depth × fan-in × σ × credit type; per-layer reach and accuracy |
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |

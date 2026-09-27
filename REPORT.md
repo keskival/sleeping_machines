@@ -37,6 +37,12 @@ interval predicate needs only O(its few parameters) mistakes (§64.3). **Depth n
 motifs, hold/trigger chains reach 0.97 (tuned part windows; 0.86 with a generic window bank) vs 0.39 at depth 1,
 5 seeds. A Transformer on event tokens is the next baseline (E36, running); grokking remains open (E29).
 
+**A theorem (§71, proved, and checked by exhaustive search in E39).** A single hold/trigger/veto node accepts exactly
+a product set in lag coordinates relative to its trigger; consequently one node can put at most three events in order
+(on the scale-free domain), depth 2 computes every conjunction of bounded-difference constraints (every zone), and
+depth 3 every finite union of zones. This corrects an earlier claim (§64: "depth = chain length") and explains where
+depth is needed: to order two events that fall on the same side of a node's trigger.
+
 ## In one page
 
 **What holds up**
