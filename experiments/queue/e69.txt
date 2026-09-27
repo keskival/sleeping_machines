@@ -3,15 +3,3 @@ e69_coarse_R0 experiments/e69_race_thp.py --mode test --R 0 --d 64 --L 32 --epoc
 e69_coarse_R4 experiments/e69_race_thp.py --mode test --R 4 --d 64 --L 32 --epochs 11 --fine 0
 e69_coarse_R1 experiments/e69_race_thp.py --mode test --R 1 --d 64 --L 32 --epochs 11 --fine 0
 e69_fine_R4 experiments/e69_race_thp.py --mode test --R 4 --d 64 --L 128 --epochs 29 --fine 1
-# E72: CDE point process (event-CDE units instead of attention), selection on day 5, then test once
-e72_val_d32_L128_s0 experiments/e72_cde_thp.py --mode val --d 32 --L 128 --sel 0 --epochs 30 --fine 0
-e72_val_d32_L128_s1 experiments/e72_cde_thp.py --mode val --d 32 --L 128 --sel 1 --epochs 30 --fine 0
-e72_val_d32_L512_s0 experiments/e72_cde_thp.py --mode val --d 32 --L 512 --sel 0 --epochs 30 --fine 0
-e72_val_d32_L512_s1 experiments/e72_cde_thp.py --mode val --d 32 --L 512 --sel 1 --epochs 30 --fine 0
-e72_val_d64_L128_s0 experiments/e72_cde_thp.py --mode val --d 64 --L 128 --sel 0 --epochs 30 --fine 0
-e72_val_d64_L128_s1 experiments/e72_cde_thp.py --mode val --d 64 --L 128 --sel 1 --epochs 30 --fine 0
-e72_val_d64_L512_s0 experiments/e72_cde_thp.py --mode val --d 64 --L 512 --sel 0 --epochs 30 --fine 0
-e72_val_d64_L512_s1 experiments/e72_cde_thp.py --mode val --d 64 --L 512 --sel 1 --epochs 30 --fine 0
-e72_val_fine_L128 experiments/e72_cde_thp.py --mode val --d 64 --L 128 --sel 1 --epochs 30 --fine 1
-e72_val_fine_L512 experiments/e72_cde_thp.py --mode val --d 64 --L 512 --sel 1 --epochs 30 --fine 1
-e72_test experiments/e72_select_test.py

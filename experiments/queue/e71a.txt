@@ -1,2 +1,3 @@
-# E71: SHD with event-CDE units (THEORY §104); selection on held-out speakers; test runs appended after selection
-e71_pilot experiments/e71_event_cde.py --limit 1600 --epochs 8 --merge 0.003 --eval spk
+# E74: time-vector network (THEORY §105) on SHD; pilot, then the full run (held-out-speaker selection)
+e74_pilot experiments/e74_time_vector_net.py --limit 2000 --epochs 6 --w_sd 0.05,0.05 --eval spk
+e74_full experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --eval spk
