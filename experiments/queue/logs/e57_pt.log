@@ -1,0 +1,3 @@
+{"model": "+ rates 5 s, 60 s + flow", "m": 5.0, "fine": 0, "val_day5": -2.763195429695868, "test_day6": -2.1841855757880273, "test_day7": -1.9991291380715488}
+{"model": "+ rates + flow + per-type 2 s (level 3)", "m": 5.0, "fine": 0, "val_day5": -2.722069618856509, "test_day6": -2.1586639378797328, "test_day7": -1.973409587468643}
+{"model": "+ rates + per-type 2 s (level 3)", "m": 5.0, "fine": 0, "val_day5": -2.727103586483274, "test_day6": -2.1532314244237467, "test_day7": -1.9601249020512783}

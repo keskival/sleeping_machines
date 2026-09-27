@@ -4012,6 +4012,12 @@ not travel either. Counts average all the evidence and fixed rate edges mean the
 transfer. For a model that is frozen and then deployed, estimate by counting; constant-step multiplicative updates
 belong to tracking (online use), where recency is the point.
 
+**Against the Transformer on the test days (E52 test, selected on day 5 per hazard family).** Coarse windows: THP −1.97 /
+−1.82 nats per event (≈ 108k multiply-adds) vs the event network with regime counters −2.18 / −2.00, and with a third
+backoff level of per-type counters (τ = 2 s) −2.15 / −1.96; fine windows: THP −1.83 / −1.65 vs −1.90 / −1.72. The
+Transformer is the better world model by 0.07–0.18 nats per event; the counted event network costs ≈ 30–40 operations
+per event (≈ 1/3000–1/4000).
+
 ## Tests
 
 | | Claim | Test |
