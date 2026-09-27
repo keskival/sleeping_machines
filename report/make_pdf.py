@@ -872,7 +872,8 @@ def build():
     s += fig(FM.fig_credit, W)
     s += [P("<b>Where it does not win yet:</b> spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
-            "any taker fee).")]
+            "any taker fee). <b>Next:</b> a real event-camera benchmark, and a plan for generative language models built this way "
+            "(section 10).")]
     s.append(PageBreak())
     s += [P("Sleeping Machines proposes that computation can happen <b>in time rather than memory</b>: candidate events "
            "race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an "
@@ -1206,6 +1207,36 @@ def build():
             "chip offers, and the one these results say matters most, is <b>run-time synapse allocation on credit</b> with "
             "per-node conserved budgets: it lets a network search 10⁷–10¹⁰ candidates while storing only what it uses. "
             "Sources are listed in REPORT.md §9.", "small")]
+    s += [P("10. Next frontier: generative language models (a plan)", "h1"),
+          P("<b>Why language.</b> Language models are where Transformers are strongest and where their cost hurts most: every "
+            "generated word passes through every weight, and attention grows with the length of the text. If event networks can "
+            "generate text at useful quality, the payoff is work per word that does not grow with model size or text length."),
+          P("<b>How text becomes events.</b> Each character (or byte) is an event, like a spike in the timing tasks; what needs "
+            "care is what the network builds on top:")]
+    s += fig(FM.fig_lm_topology, W)
+    s += bullets([
+        "<b>Shared codes.</b> Each character (and later each learned chunk) fires a few channels from a shared pool, so similar "
+        "things overlap; a private switch per word is what stops simple models from generalizing (proved for arithmetic, §66).",
+        "<b>Context detectors</b> (“this, then that” units, the ones that learned deep order here). Every chunk is a candidate, "
+        "but a connection is created only when it helps predict what comes next, and unused ones are pruned: a tokenizer "
+        "learned by usefulness rather than frequency.",
+        "<b>Slow memory.</b> Counters for topic and recent vocabulary (they closed half the gap to a Transformer on the market "
+        "stream), and traces that remember “last time A appeared, B followed” (the copying that makes Transformers good at "
+        "names and phrases); each costs a fixed amount per character, however long the text.",
+        "<b>Predict and choose.</b> Active detectors vote, weighted by their track record (the same budget-conserving updates "
+        "as everywhere here). The choice is a race: every candidate gets a clock ticking at a rate proportional to its "
+        "probability, and the first to tick wins. Such a race samples exactly from the model's probabilities: the network's "
+        "own first-to-fire readout is the sampler.",
+    ], st)
+    s += fig(FM.fig_lm_scaling, W)
+    s += [P("<b>How it should scale</b> (predicted, schematic): work per character stays flat as the model grows, so memory, not "
+            "computation, limits scale; loss falls quickly with data at first (counting models are strong with little data) but "
+            "toward a higher floor, since pure counting cannot generalize to unseen contexts. How far shared codes and copying "
+            "lower that floor decides whether this competes with large Transformers or only with smaller ones."),
+          P("<b>Realistic expectation and test.</b> Roughly the quality of the best compression-style models and small recurrent "
+            "networks, at a small fraction of the computation per character and with no growth in cost for long texts. Test: "
+            "character-level prediction on text8 / enwik8, in stages (counting, detectors, copying, weighted voting), at 10⁶, 10⁷ "
+            "and 10⁸ characters, against a recurrent network and a small Transformer given the same text.")]
     s.append(Spacer(1, 6))
     s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
                "procedures are diagnostics only. Reproduce: python report/figures_time.py && python report/make_pdf.py.",

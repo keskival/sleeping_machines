@@ -74,6 +74,7 @@ right order and keeps it (§84).
 
 **Where it does not win yet:** spoken digits (0.675 vs 0.70 for a published LSTM), and trading, where no learner beats
 buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
+**Next:** a real event-camera benchmark, and a plan for generative language models built this way ([§10](#10-next-frontier-generative-language-models-a-plan)).
 
 ---
 
@@ -87,7 +88,7 @@ and what remains open.
 **Contents:** [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
 [2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
 [4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
-[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) ·
+[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) · [10. Language models](#10-next-frontier-generative-language-models-a-plan) ·
 [Experiment index](#experiment-index) · [Reproducing](#reproducing)
 
 ## Summary
@@ -597,6 +598,54 @@ budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates
 [Sony event-based vision sensors](https://www.sony-semicon.com/en/products/is/industry/evs.html) ·
 [Race logic (Madhavan, Sherwood, Strukov)](https://ieeexplore.ieee.org/document/6853226/) ·
 [Loihi energy per synaptic operation (Davies et al., 2018)](https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf)
+
+## 10. Next frontier: generative language models (a plan)
+
+**Why language.** Language models are where Transformers are strongest, and where their cost hurts most: every generated
+word passes through every weight, and the cost of attention grows with the length of the text. If event networks can
+generate text at useful quality, the payoff is large: work per word that does not grow with model size or text length.
+
+**How text becomes events.** Each character (or byte) is an event, like a spike in the timing tasks. Nothing needs to be
+invented for that; what needs care is what the network builds on top.
+
+![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
+
+**The design, in five parts** (details and predictions: §94–§95):
+1. *Characters as events.*
+2. *Shared codes.* Each character (and later, each learned chunk) fires a few channels out of a shared pool, so that
+   similar things overlap. Giving every word its own private switch is what stops simple models from generalizing
+   (we proved this for arithmetic, §66).
+3. *Context detectors* ("this, then that" units, the same ones that learned deep order here). Every possible chunk is a
+   candidate, but a connection is created only when it helps predict what comes next, and unused ones are pruned. This
+   is, in effect, a tokenizer that is learned by usefulness rather than by frequency (as today's byte-pair tokenizers are).
+4. *Slow memory.* Counters that track the topic and recent vocabulary (they closed half the gap to a Transformer on the
+   market stream), and traces that remember "last time A appeared, B followed", the copying trick that makes Transformers
+   good at repeating names and phrases. Each costs a fixed amount per character, however long the text.
+5. *Predict and choose.* Every active detector votes for the next character; votes are weighted by each detector's track
+   record (the same budget-conserving updates that learned everything else here). The choice is made by a race: every
+   candidate gets a clock that ticks at a rate proportional to its probability, and the first to tick is the next
+   character. A race of such clocks samples *exactly* from the model's probabilities, so the network's own
+   first-to-fire readout is the sampler.
+
+**How it should scale** (predicted, schematic; not measured):
+
+![Predicted scaling: work per character stays flat as the model grows; loss falls faster at first but toward a higher floor](report/figures/lm_scaling.png)
+
+- *Work per character stays flat* as the model grows: only the detectors that fire do any work, however many exist.
+  A Transformer's work grows with its size. Memory, not computation, becomes the resource that limits scale.
+- *Loss falls quickly with data at first* (counting models are strong with little data) but toward a *higher floor*:
+  pure counting cannot generalize to contexts it has never seen. How far shared codes and copying lower that floor is the
+  open question, and it decides whether this can compete with large Transformers or only with smaller ones.
+
+**Realistic expectation.** Roughly the quality of the best compression-style models and small recurrent networks
+(which already show that counting plus careful mixing, without deep backpropagation, gets surprisingly far), at a small
+fraction of the computation per character, with no growth in cost for long texts. Matching large Transformers would
+require the shared codes to capture meaning as well as learned embeddings do; that is research, not engineering.
+
+**How we would test it.** Character-level prediction on standard text benchmarks (text8, enwik8), in stages, so that each
+part's contribution is measured: counting with backoff, then context detectors, then copying traces, then weighted
+voting. At three data sizes (10⁶, 10⁷, 10⁸ characters), against a recurrent network and a small Transformer given the
+same text, measuring loss, memory and work per character.
 
 ## Experiment index
 

@@ -373,9 +373,54 @@ def fig_drift():
     return fig
 
 
+# ── 7. Plan: an event language model (topology, schematic scaling; §94–§95) ────────────────────────────────
+def fig_lm_topology():
+    fig, ax = plt.subplots(figsize=(7.4, 3.6)); ax.set_xlim(0, 100); ax.set_ylim(0, 50); ax.axis("off")
+    def box(x, y, w, h, title, sub, col):
+        ax.add_patch(Rectangle((x, y), w, h, facecolor=col, alpha=0.16, edgecolor=col, lw=1.2))
+        ax.text(x + w / 2, y + h - 2.2, title, ha="center", va="top", fontsize=7.8, weight="bold", color=INK)
+        ax.text(x + w / 2, y + h - 6.4, sub, ha="center", va="top", fontsize=6.6, color=MUTED, linespacing=1.3)
+    def arrow(x0, y0, x1, y1):
+        ax.annotate("", xy=(x1, y1), xytext=(x0, y0), arrowprops=dict(arrowstyle="-|>", color=MUTED, lw=1))
+    box(1, 34, 18, 14, "1  characters", "each character\nis an event", GRAY)
+    box(23, 34, 22, 14, "2  shared codes", "each character fires a few\nshared feature channels", BLUE)
+    box(49, 30, 26, 18, "3  context detectors", "“this, then that” units over\nthe codes; grown only when they\nhelp predict; unused ones pruned", BLUE)
+    box(49, 4, 26, 18, "4  slow memory", "counters: topic, recent words\ntraces: “last time A came,\nB followed” (copying)", AQUA)
+    box(79, 30, 20, 18, "5  predict & choose", "each active detector votes;\nvotes weighted by track\nrecord; a race of clocks\npicks the next character", EVENT)
+    arrow(19, 41, 23, 41); arrow(45, 41, 49, 41); arrow(62, 30, 62, 22); arrow(75, 39, 79, 39); arrow(75, 13, 89, 30)
+    ax.plot([89, 89, 10], [30, 2, 2], color=EVENT, lw=0.9); ax.annotate("", xy=(10, 34), xytext=(10, 2),
+                                                                         arrowprops=dict(arrowstyle="-|>", color=EVENT, lw=0.9))
+    ax.text(28, 3.2, "the chosen character becomes the next input event", fontsize=6.6, color=EVENT, ha="center")
+    ax.set_title("A planned event language model: work only where characters arrive (design, not yet built)", fontsize=8.8)
+    return fig
+
+
+def fig_lm_scaling():
+    fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 2.8), gridspec_kw={"wspace": 0.35})
+    n = np.logspace(6, 11, 50)
+    a.plot(n, n / 1e6, color=DENSE_T, lw=1.8, label="Transformer: grows with model size")
+    a.plot(n, np.full_like(n, 30.0), color=EVENT, lw=1.8, label="event model: active units only")
+    a.set_xscale("log"); a.set_yscale("log"); a.set_xticks([]); a.set_yticks([])
+    a.set_xlabel("model size (parameters or grown synapses)", fontsize=7.5); a.set_ylabel("work per character", fontsize=7.5)
+    a.set_title("Work per character", fontsize=8.6); a.legend(fontsize=6.5, loc="upper left")
+    d = np.logspace(5, 10, 60)
+    a_t = 1.0 + 2.2 * (d / 1e5) ** -0.12
+    a_e = 1.75 + 1.2 * (d / 1e5) ** -0.35
+    b.plot(d, a_t, color=DENSE_T, lw=1.8, label="Transformer: slower, lower floor")
+    b.plot(d, a_e, color=EVENT, lw=1.8, label="counting event model: faster, higher floor")
+    b.fill_between(d, 1.25, 1.72, color=EVENT, alpha=0.09, lw=0)
+    b.text(2e9, 1.45, "where shared codes and copying\nmight put the floor: open", fontsize=6.3, color=MUTED, ha="right", va="center")
+    b.set_ylim(1.1, 3.4)
+    b.set_xscale("log"); b.set_xticks([]); b.set_yticks([])
+    b.set_xlabel("training text (characters)", fontsize=7.5); b.set_ylabel("prediction loss (lower = better)", fontsize=7.5)
+    b.set_title("Loss against data", fontsize=8.6); b.legend(fontsize=6.5, loc="upper right")
+    fig.suptitle("Predicted scaling (schematic, from §95; not measured)", fontsize=8.6, y=1.02)
+    return fig
+
+
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "figures")
     for name, fn in (("concept", fig_concept), ("supremacy_map", fig_supremacy_map), ("anatomy", fig_anatomy),
-                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift)):
+                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling)):
         fig = fn(); fig.savefig(os.path.join(out, name + ".png"), bbox_inches="tight", facecolor="white"); plt.close(fig)
         print("wrote", name)
