@@ -1,0 +1,24 @@
+[
+ {
+  "day": "2026-08-25",
+  "decisions": 23514,
+  "event_coverage": 0.8756857908391102,
+  "event_acc_when_predicting": 0.6150558523555124,
+  "logit_acc": 0.6685663250116957,
+  "surprise_ratio_end": [
+   0.9443245613480159,
+   1.1160092290119648
+  ]
+ },
+ {
+  "day": "2026-08-26",
+  "decisions": 16751,
+  "event_coverage": 0.8428059701492537,
+  "event_acc_when_predicting": 0.6332790252886591,
+  "logit_acc": 0.6941492537313433,
+  "surprise_ratio_end": [
+   1.03569245421242,
+   0.916896387962659
+  ]
+ }
+]
