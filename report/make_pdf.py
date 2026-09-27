@@ -245,6 +245,145 @@ def fig_e7():
 
 # ── Document ──────────────────────────────────────────────────────────────────
 
+def fig_e26():
+    """E26: test accuracy vs training fraction, p = 31, by learning rule (3 seeds each; line = mean, dots = seeds)."""
+    arms = [("p31_s0.0_a1_r0_push1.json", "push on the wrong winner", GRAY),
+            ("p31_s0.0_a1_r0_push0.json", "pull only", BLUE),
+            ("p31_s1.0_a1_r0_push0_noise.json", "pull only + noise (annealed by error)", YELLOW),
+            ("p31_s1.0_a2_r0_cool.json", "pull only + noise cooled to zero", ORANGE)]
+    fig, ax = plt.subplots(figsize=(6.4, 2.5))
+    for fn, name, col in arms:
+        path = os.path.join(RES, "e26", fn)
+        if not os.path.exists(path):
+            continue
+        rows = load(path)["rows"]
+        fr = sorted({r["frac"] for r in rows})
+        vals = [[r["final"]["test"] for r in rows if r["frac"] == f] for f in fr]
+        for f, v in zip(fr, vals):
+            ax.scatter([f] * len(v), v, color=col, s=10, alpha=0.5, lw=0)
+        ax.plot(fr, [np.mean(v) for v in vals], color=col, marker="o", ms=4, label=name)
+    ax.axhline(1 / 31, color=GRAY, lw=0.8, ls=":")
+    ax.set_xlabel("fraction of the p² pairs used for training (p = 31)")
+    ax.set_ylabel("test accuracy, unseen pairs")
+    ax.set_ylim(-0.03, 1.05)
+    ax.legend(fontsize=7, loc="center right")
+    ax.set_title("E26: sparse, error-driven delay learning with a race readout")
+    return fig
+
+
+def fig_e30():
+    """E30: two-counter machine success vs timing precision q/sigma, with and without restoration."""
+    path = os.path.join(RES, "e30", "minsky.json")
+    if not os.path.exists(path):
+        return None
+    rows = [r for r in load(path)["rows"] if "success" in r and r.get("q_over_sigma")]
+    fig, ax = plt.subplots(figsize=(6.4, 2.8))
+    for restore, steps, col, ls in ((False, 25, GRAY, "-"), (False, 81, GRAY, "--"),
+                                    (True, 25, BLUE, "-"), (True, 81, BLUE, "--")):
+        pts = sorted((r["q_over_sigma"], r["success"]) for r in rows
+                     if r.get("restore") == restore and r["steps"] == steps)
+        if pts:
+            ax.plot(*zip(*pts), color=col, ls=ls, marker="o", ms=4,
+                    label=f"{'restored' if restore else 'plain'}, {steps} steps")
+    ax.set_xlabel("timing precision q / σ (quantum over jitter per hop)")
+    ax.set_ylabel("programs computed exactly")
+    ax.set_ylim(-0.03, 1.05)
+    ax.legend(fontsize=7, loc="upper left")
+    ax.set_title("E30: a Minsky machine wired from delay, or, and, veto + one oscillator")
+    return fig
+
+
+def time_pages(st, W):
+    """E24–E30 and THEORY §53–§62: computing with time (26–27 September)."""
+    s = [Paragraph("Computing with time (E24–E30, 26–27 September)", st["h1"]),
+         Paragraph("Until E24 the learned part of every race network was synaptic weights; time was a code, never a "
+                   "resource. These experiments ask what time itself computes and how a system can learn it "
+                   "natively: every mechanism an event handler with local state, cost proportional to events, no "
+                   "batches, epochs, replay or global sums. Dense rescues are kept only as diagnostics.",
+                   st["body"])]
+    s += [Paragraph("E24: grokking (complete)", st["h2"]),
+          Paragraph("(a + b) mod 31, half the pairs. Every local race variant, with or without sleep downscaling, "
+                    "memorizes: train ≈ 1.0, test ≤ 0.008 (chance 0.032, 17 runs). Dense MLPs: backprop 0.87, "
+                    "Kolen–Pollack 0.956, feedback alignment 0.000. At p = 97 backprop fails at 10% and 20% of pairs "
+                    "and groks at 30% (0.937).", st["body"])]
+    s += [Paragraph("E25: delays instead of lookup", st["h2"]),
+          Paragraph("A ring of relays computes (a + b) mod p for all pairs with no learning: 4p synapses, about 2p "
+                    "events per query. Delays learned as phases generalize to 1.000 on unseen pairs from 15–20% of "
+                    "pairs (5 seeds, p = 31–97), including a·b mod p (the delays find the discrete logarithm); "
+                    "a² + ab + b² and random tables are out of reach. <b>This is restriction, not grokking</b> "
+                    "(§58): the single-phase readout can only express one-character relations, and the learner "
+                    "(replay) is dense.", st["body"])]
+    im = png("e25_generalization", W * 0.55)
+    if im:
+        s.append(im)
+    s += [Paragraph("E26: in a race, winning is positional", st["h2"]),
+          Paragraph("The same ring, learned natively: updates only on errors, only on the delays involved, a race "
+                    "readout. Pushing the wrong winner later collapses every detector onto one phase (chance in all "
+                    "15 runs, ~386k updates each). Pulling only the teacher learns the relation (p = 31: 0.97–0.98 at "
+                    "50% of pairs; p = 59: 0.95) with ~40k updates. Timing noise makes generalization at 20% reliable; "
+                    "cooled to zero it also lifts the accuracy cap.", st["body"])]
+    s.append(fig_image(fig_e26(), W))
+    s.append(PageBreak())
+    s += [Paragraph("E27: false positives are specialized, never displaced", st["h2"]),
+          table([["false positives handled by", "test (5 seeds)", "updates"],
+                 ["veto (inhibition)", "0.914 (0.887–0.934)", "15–20k"],
+                 ["none (no veto synapses)", "0.896 (0.881–0.918)", "18–23k"],
+                 ["push (delays lengthened)", "0.195 (0.18–0.20)", "~155k"]], [70, 55, 30], st),
+          Paragraph("Patterns “B within Δ after A unless C”. Displacement is destructive; veto helps only a little, "
+                    "because aligning by delay destroys the interval the veto must see (§61: tolerance by holding a "
+                    "long PSP keeps it).", st["small"])]
+    s += [Paragraph("E28: depth needs routing credit, and does not pay yet", st["h2"]),
+          table([["arm (hierarchical motifs)", "6 classes, 3 seeds", "15 classes from 6 motifs, 5 seeds, 60k"],
+                 ["depth 1", "0.68", "0.51"],
+                 ["depth 2, counterfactual routing credit", "0.72–0.74", "0.44"],
+                 ["depth 2, critical-path credit only", "0.17 (chance 0.14)", "–"]], [70, 40, 64], st),
+          Paragraph("A race is a routing network: without counterfactual credit (runners-up or cancelled near-misses) "
+                    "depth stays at chance. With it, depth is learnable but not better: hidden nodes become class "
+                    "detectors rather than reusable parts, with label-gated or label-free credit, with longer "
+                    "windows, and with sparse fan-in (§62). Getting here required §60: pull-only on weights needs a "
+                    "conserved per-node budget in fractional steps, conserving weakening, per-node prices, and enough "
+                    "hidden nodes for Cover's capacity bound (depth 1 rose from 0.29 to 0.68).", st["small"])]
+    s += [Paragraph("E29: true grokking test, not passed", st["h2"]),
+          Paragraph("A general race network that can memorize (ρ = n/params ≈ 0.006), given recurrent delay loops, on "
+                    "E24's encoding. Frozen random loops only memorize (test 0.015); with hidden learning, training "
+                    "collapses whether loop periods are learned or fixed. No grokking yet.", st["body"])]
+    s += [Paragraph("E30: the operator basis is Turing-complete, and restoration makes it scale", st["h2"]),
+          Paragraph("A two-counter Minsky machine as a netlist of Delay, Or, And (a PSP window per input) and Veto "
+                    "nodes plus one reference oscillator; counters are phases of spikes in hold loops. Exact on every "
+                    "test program. Under timing jitter, one comb coincidence per counter per cycle makes reliability "
+                    "independent of program length: precision is the tape, and restoration is its price.",
+                    st["body"])]
+    f30 = fig_e30()
+    if f30 is not None:
+        s.append(fig_image(f30, W))
+    s.append(PageBreak())
+    s += [Paragraph("Theory added (THEORY §53–§62)", st["h1"])]
+    s += bullets([
+        "<b>Clockless means shift-equivariant (§56).</b> A network of delays, first-ofs, coincidences and vetoes "
+        "commutes with time shifts, so it cannot add two times, only compare them. One oscillator reference breaks the "
+        "symmetry to shifts by a period and makes time a cyclic group: exactly one character, which is E25's "
+        "learnable class. The space-time algebra itself is prior art (Smith 2018; race logic).",
+        "<b>Credit follows one causal chain (§56.4).</b> A spike's time depends on one critical path, with derivative "
+        "1 along it: exact credit is sparse by construction and does not contract with depth. Routing choices need "
+        "counterfactuals on top (§57); cancelled near-misses supply them without extra events.",
+        "<b>Teach the event that should have won (§54, §56.5, §60).</b> Never displace a loser in time; remove false "
+        "positives by veto where codes are specific. For timing parameters pull-only suffices; for weights, pull "
+        "under a conserved budget with prices.",
+        "<b>Aligning destroys the interval, holding keeps it (§61).</b> Delay says where in time an event acts, PSP "
+        "duration how long a node remembers it; veto and ordering need duration.",
+        "<b>What counts as generalization (§58).</b> Restriction by the model class, forced generalization above "
+        "capacity, and grokking (the relation reached while memorizers exist) are different claims; report ρ = n / "
+        "params with every result.",
+        "<b>Where supremacy can live (§55).</b> Not in operation counts for static functions (an encoding effect). On "
+        "the input side the factor is 1 / (spikes per channel per precision bin): SHD gives only ~6× at 10 ms bins, "
+        "so the benchmark must be far sparser in time.",
+        "<b>Completeness and restoration (§59).</b> {delay, first-of, coincidence, veto, hold} + one reference is "
+        "Turing-complete (Minsky; prior art for spiking nets: Maass 1996); a random-walk model with ~6 jittered hops "
+        "per cycle fits the unrestored failures.",
+    ], st)
+    return s
+
+
 def styles():
     base = ParagraphStyle("b", fontName="DV", fontSize=9.2, leading=13.2, textColor=colors.HexColor(INK),
                           spaceAfter=5)
@@ -533,6 +672,20 @@ def build():
         "after costs.",
         "<b>Not yet run:</b> the E7 stream learner; most theory predictions (M31–M43).",
     ], st)
+    s += [Paragraph("New on 26–27 September: computing with time (details on the E24–E30 pages)", st["h2"])]
+    s += bullets([
+        "<b>In a race, winning is positional (E26, 3 seeds).</b> Sparse, error-driven delay learning that pulls only "
+        "the teacher learns (a + b) mod p (0.97–0.98 at 50% of pairs, p = 31); pushing the wrong winner stays at chance "
+        "in every run. Displacing false positives is equally destructive (E27, 5 seeds: 0.195 vs 0.914 with veto).",
+        "<b>The operator basis is Turing-complete (E30).</b> A Minsky machine wired from delay, or, and, veto and one "
+        "oscillator runs exactly; restoring phases once per cycle makes reliability independent of program length.",
+        "<b>Depth needs counterfactual routing credit (E28)</b>, which cancellation supplies; with it depth is "
+        "learnable, but it does not beat depth 1 yet: hidden nodes become class detectors, not parts.",
+        "<b>No true grokking yet (E29).</b> E25's generalization with delays is restriction by the readout, not "
+        "grokking; a general network with learned loops has not generalized.",
+        "<b>Negative:</b> pull-only does not transfer to the main weight race (SHD 0.35 → 0.06), and SHD offers only "
+        "~6× input-side advantage at the bins dense models use: not a supremacy benchmark.",
+    ], st)
     s += [Paragraph("What is new in the theory (details in the theory pages)", st["h2"])]
     s += bullets([
         "<b>Exact results:</b> timing credit sums to the deadline's credit (a Ward identity); excitatory race "
@@ -714,12 +867,19 @@ def build():
                            "inspected (experiments/E17_PREREGISTRATION.md), runs queued.", st["body"]))
     s.append(PageBreak())
 
+    s += time_pages(st, W)
+    s.append(PageBreak())
     s += [Paragraph("Lessons learned along the way", st["h1"])]
     s += bullets([
         "<b>Compute discipline.</b> Running two heavy jobs at once hung the host three times (no swap, and no memory "
         "limit on the container; two hard reboots corrupted the filesystem). The third time, the queue ran one job while "
         "an ad-hoc debug run ran beside it. Now every computation, debug snippets included, goes through the one-job "
         "queue (watchdog at 6 GB free, checked every second), and the container gets hard memory and CPU caps.",
+        "<b>The queue is not optional (26 September).</b> A fourth hang: ten ad-hoc jobs beside two queue runners. All "
+        "runs now go through queue/run_safe.sh: one job under a global lock, one thread, a memory watchdog.",
+        "<b>Dense machinery creeps in.</b> Replay, phasor sums, offline restart selection and dense updates each rescued "
+        "a result by leaving the event-driven world; such results are diagnostics, not the direction.",
+        "<b>Check what a structure gives away.</b> E25 generalized because its readout could express nothing else.",
         "<b>Debug leads reverse.</b> The shadow neuron led by 5 points in 1-epoch runs and trailed by 0.8 at full "
         "length; credit conservation's +8–10 became +1–1.7. Short runs are reported as leads only.",
         "<b>Theory can be wrong in informative ways.</b> A predicted input-redundancy pyramid was refuted by measuring "
@@ -737,6 +897,11 @@ def build():
     ], st)
     s += [Paragraph("Where this could go", st["h1"])]
     s += bullets([
+        "<b>Parts, not wholes (§62):</b> find the pressure that makes hidden nodes detect reusable parts, so that depth "
+        "pays under native credit; then the true grokking test (E29) with that hidden layer.",
+        "<b>The complete §60 readout in the main race</b> (conserved budgets, prices, non-leaky outputs) on SHD.",
+        "<b>The supremacy benchmark (§55):</b> a stream with spikes per channel per precision bin ≪ 0.01, measured in "
+        "events, latency and updates against dense models given the same priors.",
         "<b>Make depth pay:</b> the theory's three remedies, each with a queued test: centre credit in time "
         "coordinates (Ward identity), run the prices on the faster timescale, and use sparse fan-in with enough "
         "winners (k·F ≥ G) or topographic codes to damp pattern chaos.",
