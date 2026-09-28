@@ -41,6 +41,7 @@ class TVLayer(nn.Module):
         super().__init__()
         self.normalize = normalize                  # non-spiking read z / (count channel + 1): the §105 normalizer
         self.cdelay, self.gate, self.snapshot, self.causal = cdelay, gate, snapshot, causal
+        self.vdot_min = 0.02                       # floor on dV/dt at a crossing: bounds 1/V' for grazing spikes
         self.register_buffer("sent", torch.zeros(n_in, M, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.dmax, self.spiking, self.theta = M, n, dmax, spiking, theta
         tau = torch.exp(torch.empty(M, n).uniform_(math.log(tau_range[0]), math.log(tau_range[1])))
@@ -113,7 +114,7 @@ class TVLayer(nn.Module):
         lj, wj = lam[jj], wc[jj]
         zT0 = torch.exp(lj * frac[:, None]) * zprev
         V0 = (wj * zT0).real.sum(-1) - th * Rpre
-        Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=0.02)
+        Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=self.vdot_min)
         s = frac - ((V0 - th) / Vdot).clamp(-1.0, 1.0)                         # refined time since grid point k-1
         if self.causal:                                                        # never earlier than the detecting step
             s = s.clamp(1e-3, 1.0)
