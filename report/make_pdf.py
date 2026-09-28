@@ -186,6 +186,75 @@ def fig_e6(runs):
     return fig
 
 
+def fig_potential_evidence():
+    """Show the two strongest current learning signals on their own task scales."""
+    fig, (ax_lm, ax_retrieval) = plt.subplots(1, 2, figsize=(7.2, 2.9), gridspec_kw={"width_ratios": [1.45, 1]})
+
+    # Real text8 test results: E79 expert count changes with data (K=5/6/7).
+    e79 = []
+    for path in glob.glob(os.path.join(RES, "e79", "race_mixer_D*_K*_e77none.json")):
+        row = load(path)
+        D = int(row["args"]["D"])
+        if D in (1_000_000, 10_000_000, 90_000_000):
+            e79.append((D, int(row["args"]["K"]), row["copy_window_256"]["race_frozen_test_bpc"],
+                        row["copy_window_256"]["race_online_test_bpc"]))
+    e79.sort()
+    ds = np.array([x[0] for x in e79], dtype=float)
+    frozen = np.array([x[2] for x in e79])
+    online = np.array([x[3] for x in e79])
+    ax_lm.plot(ds, frozen, color=BLUE, marker="o", label="E79 race mixture · frozen")
+    ax_lm.plot(ds, online, color=AQUA, marker="o", ls="--", label="E79 · online adaptation")
+
+    base = os.path.join(RES, "e64")
+    lstm = load(os.path.join(base, "lstm_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
+    tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
+    ax_lm.scatter([1_000_000], [lstm], color=ORANGE, marker="s", s=36, zorder=4, label="E64b LSTM · 1M")
+    ax_lm.scatter([1_000_000], [tf], color=GRAY, marker="D", s=34, zorder=4, label="E64b Transformer · 1M")
+    ax_lm.set_xscale("log")
+    ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
+    ax_lm.set_xlim(700_000, 130_000_000)
+    ax_lm.set_ylim(1.35, 2.55)
+    ax_lm.set_xlabel("training characters")
+    ax_lm.set_ylabel("test bits per character · lower is better")
+    ax_lm.set_title("A · Real text8 language modeling")
+    ax_lm.legend(fontsize=6.2, loc="upper right", ncol=1)
+
+    # Learned retrieval on E61's separate synthetic recall task.
+    event = load(os.path.join(RES, "e61", "event_K32_n8.json"))
+    tf_paths = glob.glob(os.path.join(RES, "e61", "tf_K32_n8*.json"))
+    event_at_4k = []
+    for row in event["rows"]:
+        vals = [p["n32"] for p in row["curve"] if p["seen"] <= 4_000]
+        event_at_4k.append(max(vals))
+    tf_max = max(p["n32"] for path in tf_paths for row in load(path)["rows"] for p in row["curve"])
+    labels = ["Local race attention", "Best of 7 Transformers"]
+    vals = [min(event_at_4k), tf_max]
+    cols = [BLUE, GRAY]
+    y = np.arange(2)
+    ax_retrieval.barh(y, vals, color=cols, height=0.55)
+    ax_retrieval.set_yticks(y, labels, fontsize=7)
+    ax_retrieval.invert_yaxis()
+    ax_retrieval.set_xlim(0, 1.14)
+    ax_retrieval.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
+    ax_retrieval.axvline(1 / 32, color=INK, ls=":", lw=1)
+    ax_retrieval.text(1 / 32 + 0.015, 1.55, "chance", fontsize=6.4, color=MUTED, va="center")
+    ax_retrieval.text(vals[0] - 0.02, 0, "100% · 5/5 by 4k", ha="right", va="center", fontsize=6.5, color="white")
+    ax_retrieval.text(vals[1] + 0.025, 1, f"{tf_max:.0%} · up to 1M", ha="left", va="center", fontsize=6.5, color=INK)
+    ax_retrieval.set_xlabel("accuracy at 4× context")
+    ax_retrieval.set_title("B · Synthetic key retrieval")
+
+    fig.suptitle("Measured signals for the frontier-model hypothesis", x=0.02, ha="left", fontsize=9.5,
+                 fontweight="bold")
+    fig.text(0.02, -0.02,
+             "Separate tasks and scales. E79 points are single-seed text8 test results; K rises 5→6→7. At 1M, "
+             "the E79 and E64b runs share the training and test text. E61 is a synthetic recall task.",
+             fontsize=6.4, color=MUTED)
+    fig.tight_layout(rect=(0, 0.08, 1, 0.91))
+    out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def pretty(name):
     rnd = "round 3" if name.endswith("_r3") else "round 2" if name.endswith("_v2") else "round 1"
     base = name.removesuffix("_r3").removesuffix("_v2")
@@ -827,7 +896,12 @@ def build():
            "actually happened: a node adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
            "whether they can <b>match or beat</b> MLPs and Transformers.")]
     s += fig(FM.fig_concept, W)
+    s += [P("<b>Strongest real-language signal so far.</b> On the same 1M-character text8 training and test split, "
+            "E79's native race mixture scores 1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for "
+            "the two-layer Transformer. This is a clear performance lead for the combined native experts and copy "
+            "memory, and the first result to build on in the deeper language-model campaign.")]
     s += [P("Highlights", "h1")]
+    s += fig(fig_potential_evidence, W)
     s += bullets([
         "<b>Same accuracy, 10,000–100,000× less computation.</b> On timing-pattern recognition a learned event network is "
         "perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after "
@@ -1424,6 +1498,53 @@ def build():
                "procedures are diagnostics only; time-vector networks (E73–E75) are trained by gradients that flow only through "
                "spikes that occurred, simulated on a 1 ms grid for speed (an event-driven adjoint form exists). Reproduce: python report/figures_time.py && python report/make_pdf.py.",
                "small"))
+    s += [PageBreak(), P("11. Potential applications and the transformation", "h1"),
+          P("If deep event models learn Transformer-level representations and remain trainable as data, depth, and memory "
+            "grow, this could open a different route to frontier AI. Training and inference would spend computation on "
+            "messages that fire, memories that are retrieved, and parameters that receive useful credit. A model could keep "
+            "a large associative store and spend work on the information each prediction actually uses. Lower cost per token "
+            "would expand the number and scale of experiments a fixed research budget can support, and make capable models "
+            "cheaper to serve continuously."),
+          P("Applications", "h2")]
+    s += bullets([
+        "<b>Language and knowledge work.</b> Deep models could combine persistent event memory, recurrent state, and "
+        "key/value retrieval to reason across long-running projects without reprocessing every token in a large dense "
+        "context. Lower inference cost would make capable personal and organizational assistants practical to run more often.",
+        "<b>Autonomous mobile platforms.</b> Phones, wearables, vehicles, and robots receive asynchronous camera, audio, "
+        "motion, and location streams. Event routing could keep perception and decisions local, respond to salient changes, "
+        "and retrieve relevant past observations. That could reduce cloud round trips, conserve battery during quiet periods, "
+        "keep sensitive sensor data on the device, and preserve useful autonomy while disconnected.",
+        "<b>Robotics and industry.</b> Machines could pair fast event reactions with selective recall, adapting to changing "
+        "workflows without running a dense model over every sensor frame. Applications include inspection, logistics, "
+        "process control, and collaborative machines.",
+        "<b>Scientific and environmental sensing.</b> Instruments could analyze rare events continuously, retain causal "
+        "context, and coordinate through compact messages rather than transmitting every raw sample.",
+    ], st)
+    s += [P("Economics and industry shift", "h2"),
+          P("At frontier quality, the main benefit would be a new compute scaling curve for both training and inference. "
+            "Fewer dense operations and unnecessary weight updates would reduce accelerator-hours and energy per useful "
+            "token. The same capital and power envelope could support larger training runs, broader ablations, more continual "
+            "adaptation, or more users. Demand would move toward high-bandwidth memory near compute, sparse routing networks, "
+            "rapid event resolution, and associative stores. Data centers could become heterogeneous: GPUs for dense kernels, "
+            "event-capable processors for sparse temporal work, and memory-centric accelerators for associative retrieval. "
+            "Architecture and investment decisions would track useful learning and retrieval throughput alongside dense FLOPs."),
+          P("This would change the economics of frontier development. Research teams could explore more architectures at the "
+            "same budget, service providers could lower inference cost, and capable models could reach devices and organizations "
+            "that cannot justify today's energy and infrastructure footprint. Scaling learned routes and associative memory "
+            "would reshape model software, accelerator design, data-center layout, and the products built on them."),
+          P("Mobile autonomy", "h2"),
+          P("The most visible change could be a device that watches and listens continuously while using little power between "
+            "meaningful events. A phone or robot could build a persistent local model of people, places, and ongoing tasks; "
+            "retrieve relevant observations when something changes; and coordinate applications or physical actions without "
+            "shipping a continuous sensor feed to a remote service. Fast local response, longer battery life, offline capability, "
+            "and user-controlled memory could make autonomy a property of the platform itself. As autonomy grows, dependable "
+            "permission boundaries, memory controls, and clear action records become core product capabilities."),
+          P("The route from current evidence", "h2"),
+          P("E79's native expert mixture leads the completed 1M text8 gradient baselines on the same split. E61 learns "
+            "associative retrieval and context extrapolation with local credit. The theory supplies exact delay-coded attention "
+            "and a linear-work associative scan for fixed event schedules. The decisive step is to make these capabilities "
+            "work together in deep E77 language models, then measure matched quality, training cost, inference work, and energy "
+            "on real hardware. This is a concrete path from promising mechanisms to a new frontier-computing paradigm.")]
     doc = SimpleDocTemplate(OUT, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm, topMargin=16 * mm,
                             bottomMargin=16 * mm, title="Sleeping Machines — what is known",
                             author="Sleeping Machines project")

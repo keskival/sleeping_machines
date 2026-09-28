@@ -24,6 +24,10 @@ budget) and whether they can **match or beat** MLPs and Transformers.
 
 ## Highlights
 
+- **Real-language performance lead:** on the same 1M-character text8 training and test split, E79's native race mixture scores **1.808 bpc** frozen, compared with **2.179** for the completed LSTM and **2.367** for the 2-layer Transformer. The mixture is a strong combined-system result; its memory and compute are not matched to the gradient baselines yet.
+
+![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
+
 - **Same accuracy, 10,000–100,000× less computation.** On timing-pattern recognition a learned event network is
   perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after
   1–2M training examples.
@@ -655,6 +659,15 @@ budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates
 **The aim** is not to approximate Transformers but to exceed them: the same or better quality, with work per word that does
 not grow with model size or text length, learned by local rules from less data.
 
+The clearest real-language signal so far is E79's race mixture: at 1M training characters it scores 1.808 bpc frozen
+(1.782 with online weight adaptation), against 2.179 for the completed validation-selected LSTM and 2.367 for the
+2-layer Transformer on the same text8 training and test split. This is a strong result for combining native predictive
+experts and associative copy memory. The expert mixture has additional memory and its compute is not yet matched, so
+this result motivates the deeper E77 test rather than standing in for it. In a separate synthetic task, E61 learned
+query–key retrieval with local credit and generalized to four times the context. Together with the exact delay-coded
+attention result and the associative state scan, these results make the architectural path concrete: learn to retrieve,
+compose state in parallel, then build depth and measure the full model.
+
 ### Potential: a different route to frontier models
 
 Sleeping Machines can combine mechanisms that dense sequence models usually bundle together. Event-state layers build and
@@ -719,6 +732,15 @@ and spend computation where the learned model says information is needed.
 The mathematical work now points to concrete levers for that outcome: keep score credit alive near competing routes,
 bound payload and layer gains as depth grows, and reduce candidate search with an index that preserves retrieval mass.
 The depth-4/8/16 queue is the first language-model test of whether those levers work together beyond shallow stacks.
+
+### Evidence to date
+
+The E79 text8 scores at 1M / 10M / 90M characters are 1.808 / 1.613 / 1.504 bpc frozen and 1.782 / 1.593 / 1.483
+with online adaptation. The expert count also rises from five to seven, so this is a joint data-and-capacity trend. The
+completed 1M same-split gradient baselines score 2.179 for the 256-unit LSTM and 2.367 for the two-layer Transformer.
+The 10M LSTM has reached 1.765 validation bpc at step 4,392 / 7,324; its matched Transformer result is pending. E79
+therefore supplies a favorable real-language performance signal, while the fairest learned deep-model comparison is
+still ahead.
 
 Depth is now a first-class variable in E77. Each deeper layer receives the retained event stream, appends its newly
 emitted events, and also receives sparse raw-input skips; it does not add a dense per-token residual computation. THEORY
@@ -944,8 +966,8 @@ on language itself. The stages above are how that will be decided.
 | E70 | SHD: race attention over onsets | queued |
 | E71, E72 | dense event-SSM units (SHD, market) | withdrawn: they do not compute with delays |
 | E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
-| E74 | SHD: time-vector network (content delays, snapshot payloads) | queued first |
-| E75 | SHD: equivariant time-vector network (band shift × tempo) | queued; shift covariance verified exactly |
+| E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
+| E75 | SHD: equivariant time-vector network (band shift × tempo) | initial pilot was resource-limited; exact shift covariance verified; lower-batch retrial queued |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
@@ -953,6 +975,65 @@ on language itself. The stages above are how that will be decided.
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
+
+## 11. Potential applications and the transformation
+
+If deep event models learn Transformer-level representations and remain trainable as data, depth, and memory grow, this
+could open a different route to frontier AI. Computation in training and inference would follow useful messages, retrieved
+memories, and active parameter updates. A model could keep a large associative store and spend work on the information
+each prediction actually uses. Lower cost per token would expand the number and scale of experiments a fixed research
+budget can support, and would make high-capability models cheaper to serve continuously.
+
+### Applications
+
+- **Language and knowledge work:** deep models could combine persistent event memory, recurrent state, and key–value
+  retrieval to reason across long-running projects without reprocessing every token in a large dense context. Lower
+  inference cost would make capable personal and organizational assistants practical to run more often.
+- **Autonomous mobile platforms:** phones, wearables, vehicles, and robots continuously receive asynchronous camera,
+  audio, motion, and location streams. Event-based routing could keep perception and decision making local, responding
+  immediately to salient changes while preserving longer-lived associative memory. That could reduce dependence on a
+  cloud round trip, conserve battery during quiet periods, keep sensitive sensor data on the device, and let a platform
+  maintain useful autonomy when disconnected.
+- **Robotics and industrial systems:** machines could combine fast event reactions with selective recall of past
+  situations, adapting to changing workflows without running a dense model over every sensor frame. The same design
+  could support low-latency inspection, logistics, process control, and collaborative machines.
+- **Scientific and environmental sensing:** instruments and distributed sensors could analyze rare events continuously,
+  retain causal context, and coordinate through compact messages rather than transmitting every raw sample.
+
+### Economic and industry shift
+
+At frontier quality, the main benefit would be a new compute scaling curve for both training and inference. Fewer dense
+operations and fewer unnecessary weight updates would reduce accelerator-hours and energy per useful token. The same
+capital and power envelope could then support larger training runs, broader ablations, more continual adaptation, or
+more users. Increased demand would move toward high-bandwidth memory near compute, sparse routing networks, rapid event
+resolution, and associative stores. GPU data centers could evolve into heterogeneous facilities where GPUs handle
+dense kernels and event-capable processors handle sparse temporal work; investments would be guided by useful learning
+and retrieval throughput rather than peak dense FLOPs alone.
+
+That would change the economics of frontier development. Research teams could explore more architectures at the same
+budget, service providers could lower inference cost, and capable models could reach devices and organizations that
+cannot justify today's energy and infrastructure footprint. A shift from scaling dense tensor operations to scaling
+learned routes and associative memory would be an architectural transition across model software, accelerator design,
+data-center layout, and the products built on top of them.
+
+### Mobile autonomy
+
+The most visible change could be an autonomous device that listens and watches continuously while using little power
+between meaningful events. A phone or robot could build a persistent local model of people, places, and ongoing tasks;
+retrieve relevant past observations when something changes; and coordinate applications or physical actions without
+shipping a continuous sensor feed to a remote service. Fast local response, longer battery life, offline capability,
+and user-controlled memory would make autonomy feel like a property of the platform itself rather than a remote feature
+that must be explicitly invoked. As autonomy grows, dependable permission boundaries, memory controls, and clear action
+records become core product capabilities.
+
+### The evidence path to that outcome
+
+The current signals provide a reason to pursue this path: E79's native expert mixture leads the completed 1M text8
+gradient baselines on the same split; E61 learns associative retrieval and context extrapolation with local credit; and
+the theory gives exact attention and a linear-work associative scan for fixed event schedules. The decisive next step
+is to show these capabilities working together in the deeper E77 language model, then measure matched quality,
+training cost, inference work, and energy on real hardware. That is the route from a promising mechanism to a new
+frontier-computing paradigm.
 
 ## Reproducing
 
