@@ -4947,6 +4947,24 @@ multiplicative credit (§83): weights w_e ∝ π_e Π_{s<t} p_e(x_s | x_<s)^η, 
 guarantee. E78 reports all three: the Bayes mixture (i) and fixed share (ii), which carry the guarantee, and the tuned
 variant.
 
+**(e) The race mixer: products of experts, natively (geometric pooling).** A race over the next character whose clock
+rates are exp(Σ_e w_{s,e} log p_e(c)) samples from the geometric mixture p ∝ Π_e p_e^{w_e}. That is logistic mixing, the
+engine of the PAQ/cmix compressors. Its log loss is convex in w, so online gradient descent with the exact local gradient
+∂/∂w_e = log p_e(y) − E_mix[log p_e] has regret O(√T) against the best *fixed weight vector*, per selector context. The
+comparison class is products of experts, which contains every single expert (a one-hot w). A product can sharpen where
+the experts agree and cancel where one is confidently wrong, so it can be far below every expert even without switching.
+Each weight's update needs only its own expert's log-probability of the outcome and the mixture's expectation of it (a
+small dense core over 27 characters).
+*Measured before the full runs.* With 300k training characters and 30k test characters, geometric race mixing gives 1.95
+bpc, against 2.28 for linear Hedge over the same experts and 2.61 for the best expert. With E78 at 1M, the Bayes mixture
+equals the best expert (2.218, as (i) says), and fixed share gives 1.945, below E66's tuned Hedge (1.980).
+
+**Fairness conditions for comparisons with Transformers.** Two properties give the native side an advantage, so both are
+reported separately:
+- *Copy memory:* it searches the whole test prefix; restricted to 256 characters it matches the E64 Transformer's context.
+- *Online adaptation:* the mixer keeps learning while predicting, as compressors are scored; with weights frozen after the
+  validation stream it is static, like the Transformer.
+
 **Test (E78).** On the same 1M test characters: the E66 experts (counting orders, word-keyed counts, copy memories) and
 E77's time-vector model, each alone and mixed three ways, at 1M training characters and later 10M. Prediction by (i)–(ii):
 the mixture is at or below the best part everywhere, and strictly below where the parts' errors differ.
