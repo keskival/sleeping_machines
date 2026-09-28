@@ -1184,8 +1184,8 @@ def build():
         "(the time since the last event). A semi-Markov event network (state nodes for the last two types, window nodes "
         "from a delay line, count-learned detectors) reproduces that model exactly and scores −2.11 nats per event online "
         "(days 1–5) and −2.38 / −2.10 frozen on held-out days 6 / 7, against −2.62 and −3.15 / −2.98 for the GRU, at ≈ 19 "
-        "synaptic operations per event. The model class is classical; an offline-trained GRU is queued (E49), and the "
-        "Transformer point process is ahead (above).",
+        "synaptic operations per event. The model class is classical; an offline-trained GRU scores −2.72 / −2.53 on the "
+        "held-out days, also behind (E49); the Transformer point process is ahead of both (above).",
         "<b>Earlier native world model (E44), prequential log-likelihood per event (nats; days 1 / 2 / 3):</b> Poisson "
         "−3.00 / −3.42 / −3.32; Hawkes (Adam) −2.62 / −2.94 / −2.84; native (multiplicative) −2.64 / −2.85 / −2.70; "
         "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only; the "
@@ -1330,7 +1330,11 @@ def build():
             "by conserved multiplicative credit), measured on text8 test text at 1M, 10M and 90M training characters: the "
             "mixture reaches 2.00, 1.79 and 1.65 bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at "
             "1M and 10M (E66). Stored contexts grow as D^0.41 and pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a "
-            "floor near 1.73 bpc, which the mixture already passes: the floor belongs to the component, not to the design. For "
+            "floor near 1.73 bpc, which the mixture already passes: the floor belongs to the component, not to the design. "
+            "<b>Mixing by a race</b> (§108: each candidate's clock rate is the weighted sum of the experts' log-probabilities, "
+            "a product of experts, as the best compressors mix) takes the same experts at 10M characters from 1.80 to "
+            "<b>1.61 bits per character</b>, with weights frozen after the validation text and the copy memory limited to "
+            "256 characters (the Transformer baseline's context), at a few hundred operations per character (E79). For "
             "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. Our first gradient-trained baselines at equal "
             "data (one pass over 10M characters: LSTM 2.17, Transformer 2.43) are not converged, so no comparison is claimed "
             "until converged runs (multiple passes, early stopping on validation, E64b) finish.")]
