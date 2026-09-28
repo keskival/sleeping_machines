@@ -4840,6 +4840,73 @@ by the data's sharpness (E76), the second by the sparsity learned (E74 reports m
   train − held-out gap.
 - E76: attention work law in trained Transformers (a).
 
+## 107. Two memories: states that select when written, retrieval that selects when read
+
+*Written 2026-09-28. The step from spoken digits to language. Prior art: exponential gating with a normalizer state (xLSTM:
+sLSTM/mLSTM, Beck et al. 2024), which scales to billions of parameters competitively with Transformers; the recall–memory
+trade-off of recurrent models (Arora et al. 2023, "Zoology"; "Based" 2024); hybrids of recurrence and attention (Griffin,
+Jamba, Samba); heavy-hitter key retention (H2O).*
+
+**(a) A time-vector unit is exponential gating in time.** A real mode of a unit (§105) holds
+z(t) = Σ_s e^{−(t − t_s)/κ} · e^{τ r_s/κ} · B v_s, and its count channel holds c(t) = Σ_s e^{−(t − t_s)/κ} e^{τ r_s/κ}.
+- *Forget gate:* e^{−Δt/κ}, set by elapsed time, not by a learned per-step gate. With content-dependent tempo (§104c) it
+  becomes content-dependent.
+- *Input gate:* exp(τ r/κ), from the content-dependent delay. It is exponential, as xLSTM found necessary, and here it arises
+  from time alone.
+- *Normalizer:* the count channel is mLSTM's normalizer state; z/c is the normalized read.
+So the recurrent half of the time-vector network is the event-time form of the exponential-gating family, which is known to
+scale on language. What the paradigm adds:
+- messages below the cut are never sent (sparse writes);
+- units emit only when they cross threshold (sparse reads, §105d);
+- time is continuous, so the gates are functions of real elapsed time.
+*Grading:* the identity is algebra; the scaling evidence is xLSTM's, not ours.
+
+**(b) Write-time selection cannot replace read-time retrieval (capacity bound).** A unit's gate uses the payload and the
+unit's own query at the moment of writing. It cannot know which future question will be asked. To answer, for any of N
+stored key–value pairs, a query that arrives later, any state must hold ≥ N log₂|V| bits: the answers for all N possible
+questions are recoverable from it. This is the information bound behind Arora et al.'s recall–memory trade-off. A state of
+M units × n modes × b effective bits therefore recalls at most M n b / log₂|V| pairs. In-context recall of arbitrarily many
+facts needs **retrieval**: a query sent at reading time, to stored keys that reply.
+
+**(c) Retrieval natively: a race opens a window, and arrivals within it are exponentially weighted.** Stored key units
+reply to a query with delay κ(s_max − s), so higher scores arrive **first**; s_max is a bound on scores, known in advance.
+The receiver:
+1. opens a hold window of length κΔ at the first arrival (§61);
+2. weights each arrival a in the window by e^{(t_close − a)/κ}, in a mode that grows over the bounded window;
+3. accumulates a count channel alongside.
+The ratio of the two channels is **exactly softmax attention over the keys within Δ of the best**. Keys outside the window
+are ignored, and every key below the global cut never sends.
+- *Error:* at most 2 max‖v‖ × the softmax mass more than Δ below the top.
+- *Work:* the keys within Δ of the maximum, which is the work law of §106(a) with the cut relative to the maximum.
+- *Primitives:* this uses only the race (first arrival), the hold window, and the flow. The race picks where to look, and
+  the window decides how much to average.
+- *Memory:* key units are the events of the past. They can be retained by credit, keeping keys that were retrieved (the
+  pruning of §93, and H2O's heavy hitters), so memory follows use.
+
+**(d) The hybrid, and its cost law.** A time-vector language model has two parts:
+- recurrent time-vector layers (a): sparse, constant work per character;
+- a delay-coded retrieval layer (c): work per character W(N, σ)·d, set by the sharpness of retrieval and not by context
+  length.
+Its work per character is e F g (n + 1) d + W(N, σ) d + (spikes) · n d. A Transformer's is 12 L d² + 2 L N d. Where
+retrieval is sharp (copying, names, induction), W ≪ N, and the recurrent part is sparse by construction. E76 measures σ
+on text for Transformers; E77 measures it in our own model.
+
+**(e) Gates are trainable only near the cut.** A message below the cut is never sent, so its gate receives no gradient. The
+off-state is absorbing unless shared parameters (the unit's query) lift the message above the cut. This is §57's routing
+problem again, and the same remedy applies: near misses, meaning messages just below the cut, carry the counterfactual
+signal, and cooled noise on the cut explores. Diagnostic: the fraction of synapses that send at least once, tracked over
+training. If it collapses, the gates need a near-miss band.
+
+**Test (E77).** A time-vector character language model on text8:
+- two spiking time-vector layers over characters as events (half-integer times, so readouts are causal);
+- non-spiking readout units giving a state per character;
+- one delay-coded retrieval layer (exact softmax over keys within Δ of the best, keys = past states, values carry the next
+  character);
+- a readout.
+It is trained with the same gradients as E74, at 1M and 10M characters, against E64b's converged LSTM and Transformer and
+the stage-1 event model. Reported: bits per character, messages, spikes and keys per character. The ablation without
+retrieval measures what (b) predicts it loses.
+
 ## Tests
 
 | | Claim | Test |

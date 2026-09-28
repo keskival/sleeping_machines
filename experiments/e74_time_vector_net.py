@@ -37,16 +37,17 @@ TAU_R = 20.0                                                         # reset tra
 
 class TVLayer(nn.Module):
     def __init__(self, n_in, M, d_in, d_out, n, dmax, mask=None, spiking=True, w_sd=0.1, theta=1.0, gate_bias=0.5,
-                 cdelay=1, gate=1, snapshot=1):
+                 cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0):
         super().__init__()
-        self.cdelay, self.gate, self.snapshot = cdelay, gate, snapshot
+        self.cdelay, self.gate, self.snapshot, self.causal = cdelay, gate, snapshot, causal
+        self.register_buffer("sent", torch.zeros(n_in, M, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.dmax, self.spiking, self.theta = M, n, dmax, spiking, theta
-        tau = torch.exp(torch.empty(M, n).uniform_(math.log(5.0), math.log(100.0)))
-        self.log_rate = nn.Parameter(-torch.log(tau)); self.freq = nn.Parameter(torch.rand(M, n) * 0.3)   # rad/ms
+        tau = torch.exp(torch.empty(M, n).uniform_(math.log(tau_range[0]), math.log(tau_range[1])))
+        self.log_rate = nn.Parameter(-torch.log(tau)); self.freq = nn.Parameter(torch.rand(M, n) * 0.3)   # rad per time unit
         self.Bre = nn.Parameter(torch.randn(n, d_in) / math.sqrt(d_in)); self.Bim = nn.Parameter(torch.randn(n, d_in) / math.sqrt(d_in))
         self.wre = nn.Parameter(torch.randn(M, n) * w_sd); self.wim = nn.Parameter(torch.randn(M, n) * w_sd)
         self.q = nn.Parameter(torch.randn(M, d_in) / math.sqrt(d_in)); self.c = nn.Parameter(torch.full((n_in, M), gate_bias))
-        self.log_td = nn.Parameter(torch.full((M,), math.log(10.0)))       # delay per unit of score (ms)
+        self.log_td = nn.Parameter(torch.full((M,), math.log(td0)))        # delay per unit of score (time units)
         if spiking:
             self.Cre = nn.Parameter(torch.randn(M, d_out, n) / math.sqrt(n)); self.Cim = nn.Parameter(torch.randn(M, d_out, n) / math.sqrt(n))
             self.emb = nn.Parameter(torch.randn(M, d_out) * 0.5)
@@ -66,6 +67,8 @@ class TVLayer(nn.Module):
         if self.gate:
             keep = r.detach() > 0                                              # non-matching content: no message
             pe, pj, r = pe[keep], pj[keep], r[keep]
+        if not self.training:
+            self.sent[ei[pe], pj] = True
         rd = r if self.cdelay else nn.functional.softplus(self.c[ei[pe], pj])    # ablation: static per-synapse delay
         a = et[pe] + (torch.exp(self.log_td[pj]) * rd.clamp(min=0)).clamp(max=self.dmax)   # arrival time
         g = torch.ceil(a.detach()); ok = (g <= G - 1) & (g >= 0)
@@ -105,6 +108,8 @@ class TVLayer(nn.Module):
         V0 = (wj * zT0).real.sum(-1) - th * Rpre
         Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=0.02)
         s = frac - ((V0 - th) / Vdot).clamp(-1.0, 1.0)                         # refined time since grid point k-1
+        if self.causal:                                                        # never earlier than the detecting step
+            s = s.clamp(1e-3, 1.0)
         zT = torch.exp(lj * s[:, None]) * zprev                                # state at the firing time
         C = torch.complex(self.Cre, self.Cim)[jj]                              # (S, d_out, n)
         y = nn.functional.gelu((C @ zT[..., None]).squeeze(-1).real) * self.snapshot + self.emb[jj]
@@ -192,6 +197,8 @@ def main():
             opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
             tl += float(loss)
         net.eval(); ok = 0; st = {"msgs": np.zeros(3), "spikes": np.zeros(2)}; ne = 0
+        for l_ in (net.l1, net.l2, net.ro):
+            l_.sent.zero_()
         with torch.no_grad():
             for i0 in range(0, len(ev), a.bs):
                 items = ev[i0:i0 + a.bs]
@@ -202,6 +209,8 @@ def main():
                     st[k_] += np.array(info[k_]) * len(items)
         row = {"epoch": ep + 1, "train_loss": round(tl / nb, 4), f"{a.eval}_acc": round(ok / len(ev), 4),
                "msgs_per_utt": (st["msgs"] / ne).round(0).tolist(), "spikes_per_utt": (st["spikes"] / ne).round(0).tolist(),
+               "synapses_sending": [round(float(l_.sent[l_.mask].float().mean() if l_.mask is not None else l_.sent.float().mean()), 3)
+                                    for l_ in (net.l1, net.l2, net.ro)],
                "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
     with open(os.path.join(OUT, f"tv_d{a.d}_n{a.n}_M{a.M1}-{a.M2}_w{a.window}_cd{a.cdelay}g{a.gate}sn{a.snapshot}_{a.eval}_s{a.seed}.json"), "w") as f:
