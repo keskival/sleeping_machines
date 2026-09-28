@@ -562,7 +562,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. The resulting predictions are hypotheses to test; current results do not establish a language-model scaling or energy advantage. E64b's 1M-character, 20-pass validation-selected LSTM scores 2.179 test bits/character; a 2-layer width-256 Transformer on the same training size and pass count scores 2.367. Both best checkpoints occur at the final validation point, so strict convergence is not established. The 10M baselines are running, and E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. The resulting predictions are hypotheses to test; current results do not establish a language-model scaling or energy advantage. E64b's 1M-character, 20-pass validation-selected LSTM scores 2.179 test bits/character; a 2-layer width-256 Transformer on the same training size and pass count scores 2.367. Both best checkpoints occur at the final validation point, so strict convergence is not established. The 10M LSTM is in progress at step 4,392/7,324 with validation 1.765 bpc; this is an intermediate validation value. Its matched Transformer is queued, and E77 has no completed LM result yet.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -814,17 +814,34 @@ slightly noisy); delays compute it by *waiting* (exact, slower for a wider range
 evidence crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation.
 Networks built this way compute in the log semiring: delays add, and gains multiply. E74 tests it on spoken digits.
 
-**Two memories (theory, §107).** Such a unit is, algebraically, the exponentially gated memory of xLSTM (a family
-already shown to scale to billions of parameters competitively with Transformers): elapsed time is its forget gate, the
-content-dependent delay its input gate, the count channel its normalizer. But a memory that chooses what to keep when it
-writes cannot answer arbitrary questions asked later: remembering N facts for any future question needs at least N × (bits
-per fact) of state. So a language model built this way needs a second memory, *retrieval*, done natively: a question is
-sent to stored keys, which reply sooner the better they match; the first reply opens a short window, and replies inside it
-are weighted exponentially, which is exactly softmax attention over the good matches. Its aggregation cost is the number
-of good matches. Its search cost is still linear in the context without an index. E77 combines a configurable stack of
-spiking time-vector layers, a recurrent state, and one adaptive retrieval layer. Deeper layers have sparse raw-event
-skips; the retrieval layer can mix delay-coded attention with a linear-time state route. An indexed candidate search is
+**Two memories (theory, §107).** A time-vector unit has a *restricted affine-accumulator resemblance* to exponential-gated
+recurrent memories: for a fixed event schedule, elapsed time supplies decay, content-dependent delay supplies an
+exponential write factor, and a count channel normalizes the read. This is not an algebraic identity with a full xLSTM
+layer. Current E74/E77 do not implement sLSTM's learned gate/memory-mixing cell or mLSTM's matrix state of key/value
+outer products. E77's causal event-Hopfield update and token query/key/value retrieval are separate associative
+operations. xLSTM is a useful topology and scaling precedent: its 7B model was trained on 2.3T tokens, and a separate
+672-run study covered 80M–7B parameters and 2B–2T tokens, reporting better compute/loss trade-offs than its tested
+Llama2-style Transformer baseline ([xLSTM architecture](https://arxiv.org/abs/2405.04517), [xLSTM 7B](https://arxiv.org/abs/2503.13427), [xLSTM scaling study](https://arxiv.org/abs/2510.02228)).
+Those results establish that a nonstandard recurrent/matrix-memory family can be built and scaled deeply; they do not
+transfer to E77. For our design, the actionable lessons are explicit repeatable blocks, stable gate/residual settings,
+systematic parameter/data/context sweeps, and kernel performance treated as part of the architecture. E77 should retain
+event-state layers and sparse event routes while applying that disciplined scale methodology.
+
+A write-time memory cannot answer arbitrary questions asked later: remembering N facts for any future question needs at
+least N × (bits per fact) of state. So a language model built this way needs a second memory, *retrieval*, done natively:
+a question is sent to stored keys, which reply sooner the better they match; the first reply opens a short window, and
+replies inside it are weighted exponentially, which is exactly softmax attention over the good matches. Its aggregation
+cost is the number of good matches. Its search cost is still linear in the context without an index. E77 combines a
+configurable stack of spiking time-vector layers, recurrent state, and adaptive retrieval. Deeper layers have sparse
+raw-event skips; retrieval can mix delay-coded attention with a linear-time state route. An indexed candidate search is
 still needed to reduce total attention search work.
+
+**Parallel state scan (theory, §107(i)).** With event arrivals/topology fixed, each time-vector memory step is an affine
+map $z_k=A_kz_{k-1}+x_k$. These maps compose associatively, so an exact prefix scan computes all states in logarithmic
+parallel depth while keeping linear arithmetic work. The count normalizer has the same form. This gives a concrete route
+to parallelizing the recurrent state path without dense pairwise attention. It does not remove the current dense
+time-by-batch-by-unit tensors, parallelize hard event births or reset decisions, or establish an energy advantage. The
+next step is output/gradient equivalence on fixed event schedules, followed by a small, safe timing pilot.
 
 **Local learning that provably suffices (theory, §108–§109).** When units predict the next character by racing (each
 candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is a *gated
@@ -842,15 +859,23 @@ in this design features come from the time-vector layers and the native detector
   already passes: that floor belongs to the component, not to the design. **Mixing by a race (§108)** instead of linear
   Hedge (each next-character candidate's clock rate is the weighted sum of the experts' log-probabilities: a product of
   experts, as the best text compressors mix) takes the same experts at 10M training characters from 1.80 to **1.61 bits
-  per character**, with weights frozen after the validation text and the copy memory limited to the last 256 characters
-  (the Transformer baseline's context), at a few hundred operations per character (E79), and at 90M to **1.50** (1.65
-  linear). For scale, published text8 results: a standard LSTM ≈ 1.43, stronger recurrent models 1.27–1.36, large
+  per character**, with weights frozen after the validation text, at a few hundred operations per character (E79). Across
+  the single-seed E79 runs, the 256-character-copy-window mixture scores 1.808 / 1.613 / 1.504 frozen and 1.782 / 1.593 /
+  1.483 online at 1M / 10M / 90M training characters. Expert count also rises from 5 to 6 to 7, so this is a promising
+  data-and-capacity scaling signal, not an isolated data-scaling law. Comparing unbounded copy against the 256-character
+  window gives frozen scores 1.779 vs 1.808 at 1M, 1.612 vs 1.613 at 10M, and 1.512 vs 1.504 at 90M. Long-range copy
+  helps modestly in the smallest run, but has no measured advantage at 10M or 90M; the small differences are single-seed
+  results without uncertainty estimates. This supports testing bounded copy/retrieval spans at scale, while preserving
+  long-range associative retrieval as a separate mechanism. For scale, published text8 results: a standard LSTM ≈ 1.43,
+  stronger recurrent models 1.27–1.36, large
   Transformers ≈ 1.08; so at full scale the native model is near an LSTM and behind Transformers. Fixed share, which
   carries the §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
   text8 from 90M characters. The first gradient-trained 10M baselines (one pass: LSTM 2.17, Transformer 2.43) were
   unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
-  Transformer; both best checkpoints occur at the final validation point. Multi-pass 10M controls are running, and the
-  matched 2/4/8/16-layer E77 comparisons are queued. No language-model advantage for E77 is established yet.
+  Transformer; both best checkpoints occur at the final validation point. The 10M LSTM is in progress: its latest
+  checkpoint is step 4,392/7,324 with validation 1.765 bpc, still improving from earlier checkpoints. This is an
+  intermediate validation value, not a test result; the matched 10M Transformer and 2/4/8/16-layer E77 comparisons are
+  still queued. No language-model advantage for E77 is established yet.
 - *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
   a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
   race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
@@ -913,7 +938,7 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M baselines running |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM mid-run at validation 1.765, matched Transformer queued |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
@@ -924,7 +949,7 @@ on language itself. The stages above are how that will be decided.
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
-| E79 | race (product-of-experts) mixer of the native experts | 10M: 1.61, 90M: 1.50 bpc frozen, 256-character memory (linear Hedge 1.80 / 1.65); baselines pending |
+| E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |

@@ -185,6 +185,27 @@ The architecture has an advantage only if its attainable loss is lower for the s
 
 Advance a mechanism when its predicted intermediate statistic changes in the predicted direction and improves the equal-budget quality–resource frontier across seeds. Retire or revise it when the intermediate statistic fails, even if a single benchmark score improves. This keeps the mathematical story connected to causal evidence and directs effort toward the actual frontier: learned sparse representations, trainable deep routing, and sublinear retrieval without a quality loss.
 
+## xLSTM transfer: topology and scale protocol
+
+xLSTM supplies a concrete deep-recurrent precedent, not an equivalence theorem for E77. The original family distinguishes
+scalar gated memory (sLSTM) from query-addressed matrix memory (mLSTM); its 7B model and later scaling study show what a
+serious non-Transformer scale program looks like ([xLSTM](https://arxiv.org/abs/2405.04517), [xLSTM 7B](https://arxiv.org/abs/2503.13427),
+[xLSTM scaling laws](https://arxiv.org/abs/2510.02228)). Transfer the experimental discipline: define a repeatable macroblock,
+stabilize gates and residual gains, measure model and kernel throughput together, and sweep depth, width, data, and context
+under matched compute budgets. Preserve E77's event-state and sparse-route structure; do not infer that xLSTM's dense
+position-wise blocks or its measured scaling result transfers automatically.
+
+The algebraic opportunity specific to our state update is THEORY §107(i). For fixed event bins, represent each recurrence
+step by its diagonal affine map $(A_k,x_k)$ and use the associative composition
+$(A_j,x_j)\circ(A_i,x_i)=(A_jA_i,A_jx_i+x_j)$. The proposed verification sequence is:
+
+1. On a fixed schedule, compare the sequential recurrence with a prefix scan at every time bin, including complex state and count normalizer.
+2. Compare loss gradients for all input payloads and decay parameters; they should agree up to floating-point reduction error because both compute the same affine map.
+3. Measure peak memory, wall time, state bytes, and scan work at increasing grid length and depth. The scan has linear work and logarithmic parallel depth, but still emits dense prefix states.
+4. Only after that passes, test a small event-sparse segmented scan that skips empty intervals. Count arrival sorting, dispatch, hidden dense buffers, and emitted-state storage in the cost.
+
+This path targets parallel training of the affine memory core. Spike threshold/reset logic and event-topology changes remain separately measured; scan speed alone would not establish an end-to-end or energy advantage.
+
 ## Cross-domain anchors
 
 - Timed automata and timed-word languages: [Alur & Dill (1994)](https://doi.org/10.1016/0304-3975(94)90010-8).
@@ -194,3 +215,4 @@ Advance a mechanism when its predicted intermediate statistic changes in the pre
 - Empirical language-model scaling and compute-optimal allocation: [Kaplan et al. (2020)](https://arxiv.org/abs/2001.08361), [Hoffmann et al. (2022)](https://arxiv.org/abs/2203.15556).
 - The project's detailed derivations and tests remain in [THEORY.md](THEORY.md), especially §§34, 71, 83–89, 94–109; current measurements and caveats are in [REPORT.md](../REPORT.md).
 - Modern Hopfield retrieval and its attention update: [Ramsauer et al. (2021)](https://arxiv.org/abs/2008.02217); E77's additional results are the fixed-memory query Jacobian bound, sequence-level key-fan-out certificate, and conditional retained-event depth composition in THEORY §107(f–h).
+- Exponential-gated recurrent and matrix memory architectures: [Beck et al. (2024), xLSTM](https://arxiv.org/abs/2405.04517); [xLSTM 7B](https://arxiv.org/abs/2503.13427); [xLSTM scaling laws](https://arxiv.org/abs/2510.02228). These are inspiration and comparison targets, not evidence for E77's own scaling.

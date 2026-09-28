@@ -15,6 +15,7 @@ fi
 # files that have not been reviewed for the report.
 FILES=(
   REPORT.md
+  AWS_EXPERIMENT_INSTANCE.md
   Dockerfile
   codex.sh
   dev.sh

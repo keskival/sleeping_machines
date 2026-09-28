@@ -5,6 +5,19 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-28
 
+**xLSTM transfer and affine-scan lemma (analysis, not an experiment).** Corrected the earlier overstatement: a real-mode,
+fixed-schedule time-vector state is a restricted normalized exponential accumulator, not a full xLSTM layer. It lacks
+sLSTM's learned gate/memory mixing and mLSTM's query-addressed matrix memory; E77's Hopfield key/value updates are an
+explicit separate operation. xLSTM's 7B model and its 672-run, 80M–7B parameter scaling study are precedents for deep
+non-Transformer scale methodology, not transferred evidence for E77 ([7B model](https://arxiv.org/abs/2503.13427),
+[scaling study](https://arxiv.org/abs/2510.02228)). New derivation: for fixed event bins, each E74 state step is the
+diagonal affine map $(A_k,x_k):z\mapsto A_kz+x_k$. Composition
+$(A_j,x_j)\circ(A_i,x_i)=(A_jA_i,A_jx_i+x_j)$ is associative, so a prefix scan can compute all state bins with linear
+work and logarithmic parallel depth; the count state follows the same construction. This preserves the recurrence in
+exact arithmetic but keeps dense prefix-state storage and does not parallelize topology changes, thresholds, or resets.
+**Next:** compare sequential and scan values/gradients on fixed schedules, then time a small serialized pilot. No speedup
+or energy saving has been measured.
+
 **Hopfield event-message architecture and depth bound (not yet measured on language).** E77 now applies a causal key/value
 associative update over emitted event payloads at each event layer, then forwards the updated payloads. Queries, keys,
 and values use separate trainable maps; a gated identity path preserves the original event, with update scale 1/depth.
@@ -35,9 +48,9 @@ motivate a measured temperature/near-miss sweep before claiming that sharper, sp
 
 **Adaptive retrieval and depth, theory-to-code update.** E77 has event-state layers, a recurrent state route, event-level Hopfield payload updates, and a token query/key/value retrieval interface. Event-state layers remain non-attention layers; the associative update is a separate operation at emitted events. E77 accepts configurable depth and adds sparse raw-event skips to deeper blocks. This prototype is not yet trained or validated. Sparse describes its synaptic fan-out and event-stream wiring, not a measured sparse execution kernel: `TVLayer` allocates dense time-by-batch-by-unit states, while event and token retrieval score all eligible pairs. The attention window or event top-k limits value aggregation, not candidate search. **Design correction:** sparse aggregation does not imply sparse search or low energy; indexed candidate search and an event-driven simulator remain open engineering problems.
 
-**Existing reasons for optimism, with scope.** The completed E79 native-expert mixture scores 1.808 bpc frozen (1.782 online) at 1M text8 characters, ahead of the completed one-layer 256-unit LSTM at 2.179; at 90M it reaches 1.50. E61 learned query/key race retrieval solved its synthetic recall task in 1–4k examples and extrapolated to 4× context. These are strong signals about retrieval, compositional experts, and data efficiency. E79 includes count/copy memories and lacks matched compute/energy accounting; E61 is a synthetic task. E77 has no completed LM result yet, so these findings motivate the deeper adaptive model rather than establish its superiority.
+**E79 data/capacity scaling and copy-window ablation.** The race mixture's 256-character-copy setting scores 1.808 / 1.613 / 1.504 frozen bpc (1.782 / 1.593 / 1.483 with online weight adaptation) at 1M / 10M / 90M training characters. Expert count rises with data (K=5/6/7), so this is evidence that the native expert mixture improves as both data and capacity grow, not an isolated data-scaling law. Removing the copy-window cap changes frozen test bpc from 1.808 to 1.779 at 1M, 1.613 to 1.612 at 10M, and 1.504 to 1.512 at 90M. Thus unbounded copy helps modestly at 1M but has no consistent advantage at larger scales; the 0.008 difference at 90M is one seed and has no uncertainty estimate. **Learned:** keep a 256-character copy window in scale comparisons, and treat long-range associative retrieval as its own capacity path. E79 is ahead of the completed 1M one-layer LSTM (2.179 bpc), but adds count/copy memory and has no matched compute/energy accounting. E61 learned query/key race retrieval solved a synthetic recall task in 1–4k examples and extrapolated to 4× context. E77 has no completed LM result yet; these findings motivate its deeper adaptive model but do not establish its superiority.
 
-**E64b 1M baselines and runner status.** The validation-selected 20-pass LSTM completed at 2.1385 valid / 2.1794 test bpc (338,395 parameters). The 2-layer width-256 Transformer completed at 2.3403 valid / 2.3667 test bpc (1,658,907 parameters); both best checkpoints are at the final validation point, so strict convergence is not established. The LSTM is better on this 1M-character setting despite having fewer parameters; this is a baseline result, not evidence about E77 or frontier-scale comparisons. E64b's 10M LSTM is currently running under the shared safe-runner lock. Do not start another runner in parallel.
+**E64b 1M baselines and runner status.** The validation-selected 20-pass LSTM completed at 2.1385 valid / 2.1794 test bpc (338,395 parameters). The 2-layer width-256 Transformer completed at 2.3403 valid / 2.3667 test bpc (1,658,907 parameters); both best checkpoints are at the final validation point, so strict convergence is not established. The LSTM is better on this 1M-character setting despite having fewer parameters; this is a baseline result, not evidence about E77 or frontier-scale comparisons. E64b's 10M LSTM is in progress at step 4,392/7,324; validation has improved through the latest checkpoint to 1.765 bpc. This is an intermediate validation score, not a test result. The matched 10M Transformer is queued next under the same safe-runner lock; no other runner should be started in parallel.
 
 **E64b LSTM versus the E79 race mixture at 1M text8 characters.** The validation-selected 256-hidden-unit LSTM used 20 passes and early
 stopping on 200k validation characters: 2.138 validation / 2.179 test bits per character, 338,395 parameters. E79's frozen race
