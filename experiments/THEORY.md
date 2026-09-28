@@ -4761,6 +4761,38 @@ any linear CDE: the shift is nonlinear in content, and the readout time is state
 - Event-SSM-style filtering (δ ≡ 0, emission at every event);
 - attention (lemma (b)).
 
+**(f) Attention roles and a trainable sparse path.** The event-state layers need not do attention; query/key/value retrieval is a separate operation. For a query $q_i$ and stored key/value pairs $(k_j,v_j)$, use
+
+\[
+s_{ij}=q_i^\top k_j/\sqrt{d_k}+b_{ij},\qquad
+\delta_{ij}=\kappa(s_{ij}-s_c),\qquad
+y_i=\frac{\sum_{j\in C_i}e^{s_{ij}}v_j}{\sum_{j\in C_i}e^{s_{ij}}}.
+\]
+
+The query is the receiver's trainable content template; the key controls the arrival time; the value is the transported payload. With all keys in $C_i$, the delay-coded layer is exactly softmax attention after its value and count channels are divided. For a loss gradient $g_i=\partial L/\partial y_i$,
+
+\[
+\frac{\partial L}{\partial s_{ij}}=p_{ij}\,g_i^\top(v_j-y_i),
+\]
+
+so the same residual $v_j-y_i$ that teaches which value was useful trains the query and key through $s_{ij}$. This is the crucial trainability signal: a model that only transports whichever sparse route already exists may never learn the missing key match. The exact dense identity proves a Transformer attention layer is representable; it does not make its $O(N^2d)$ comparisons efficient.
+
+To preserve this signal while reducing wasted pair work, let $C_i\subseteq\{1,\ldots,N\}$ be a learned candidate set produced by a shared code, route graph, or coarse key index. Train key/query scores and values on candidates, while separately training the candidate mechanism against dense teacher mass or the task gradient. Begin with broad candidate coverage; progressively lower the candidate budget only when recall and downstream loss remain stable. Keep near-miss credit for excluded keys close to the selection boundary so the route can recruit a missing useful key. At inference, the target work is $O(|C_i|d)$ value aggregation plus the cost of finding $C_i$; all-pairs scoring hidden inside candidate selection gives no asymptotic saving. A dense training phase is acceptable if its cost is amortized by a materially cheaper deployment model, but report training and inference energy separately.
+
+**An adaptive retrieval interface can choose another computation.** E77 now places a learned causal state route beside key/value retrieval. Its state update is $m_i=\sigma(f_k(k_i))\odot m_{i-1}+\sigma(w_k(k_i))\odot v_i$, with the state at position $i$ using only earlier keys. A learned gate mixes this linear-in-context route with retrieval. Gate one, zero interaction coefficients, and an infinite delay window recover causal softmax attention; gate zero gives a content-gated recurrent memory. This is one attention-capable module inside a heterogeneous network, not a mandate to turn every event-state layer into attention.
+
+Within retrieval, a low-rank query/key interaction lets compatibility and transported values co-adapt:
+
+\[
+u_{ij}=(A_h^\top q_i)\odot(B_h^\top k_j),\quad
+s_{ij}=q_i^\top k_j/\sqrt{d_k}+a_h^\top u_{ij},\quad
+\tilde v_{ij}=v_j+W_h u_{ij}.
+\]
+
+Rank $r=\dim u$ controls interaction width. E77 applies this only to retrieval; its event-state layers retain their own temporal computation. Training uses a smooth near-miss window and evaluation a hard score window. The implementation still scores every causal query/key pair, so it has not yet reduced total search work. This is a candidate mechanism, not a measured improvement. Compare ranks 0/1/4/16, state-only, full softmax, and windowed modes; measure quality, query/key/value gradients, active candidates, depth stability, bytes moved, and energy.
+
+**Expressivity floor and depth.** Do not turn every event-state layer into attention. A Transformer-level comparison concerns the complete stack: residual paths, normalization, position information, nonlinear tokenwise computation, retrieval, and the optimizer. E77 now exposes arbitrary event depth and sparse raw-input skip paths; its default two-layer setting is a prototype, not the limit of the architecture. A Transformer-equivalent path through the whole stack plus alternate event-state paths is the goal. Measure layerwise gradient norms, event activity, route coverage, quality, and work as depth grows; the one-layer softmax identity alone does not establish deep trainability.
+
 **Test (E74).** SHD, selected on held-out speakers. A time-vector network: 16-dimensional payloads; 64 + 64 units with 8
 complex modes each; layer 1 on tonotopic windows, layer 2 on a random quarter of layer 1; content-gated, content-delayed
 messages; snapshot emission; exact spike-time gradients.
@@ -4877,7 +4909,13 @@ The receiver:
 The ratio of the two channels is **exactly softmax attention over the keys within Δ of the best**. Keys outside the window
 are ignored, and every key below the global cut never sends.
 - *Error:* at most 2 max‖v‖ × the softmax mass more than Δ below the top.
-- *Work:* the keys within Δ of the maximum, which is the work law of §106(a) with the cut relative to the maximum.
+- *Aggregation work:* the keys within Δ of the maximum, which is the work law of §106(a) with the cut relative to the maximum.
+- *Search work:* this does **not** by itself make finding those keys sublinear. Unless the key store has an index or a
+  routing structure, every stored key must still compare its score with the query (or an equivalent global search must
+  be done). That costs O(Nd) score work for N keys of dimension d, even if only W ≪ N values reach the receiver. A
+  massively parallel race can reduce decision latency while still spending linear energy. Sublinear total work requires
+  an explicit assumption about key structure and an index that returns a candidate set of size C ≪ N; then score work is
+  O(Cd) and payload aggregation is O(Wd). Exact arbitrary-key retrieval has no such guarantee for free.
 - *Primitives:* this uses only the race (first arrival), the hold window, and the flow. The race picks where to look, and
   the window decides how much to average.
 - *Memory:* key units are the events of the past. They can be retained by credit, keeping keys that were retrieved (the
@@ -4885,11 +4923,13 @@ are ignored, and every key below the global cut never sends.
 
 **(d) The hybrid, and its cost law.** A time-vector language model has two parts:
 - recurrent time-vector layers (a): sparse, constant work per character;
-- a delay-coded retrieval layer (c): work per character W(N, σ)·d, set by the sharpness of retrieval and not by context
-  length.
-Its work per character is e F g (n + 1) d + W(N, σ) d + (spikes) · n d. A Transformer's is 12 L d² + 2 L N d. Where
-retrieval is sharp (copying, names, induction), W ≪ N, and the recurrent part is sparse by construction. E76 measures σ
-on text for Transformers; E77 measures it in our own model.
+- a delay-coded retrieval layer (c): O(Nd) score work without indexing, followed by O(Wd) payload aggregation; with a
+  suitable candidate index of size C, O(Cd + Wd).
+Its unindexed work per character is e F g (n + 1) d + Nd + Wd + (spikes) · n d. A Transformer's is approximately
+12 L d² + 2 L N d. Where retrieval is sharp (copying, names, induction), W may be much smaller than N, but that only
+reduces aggregation unless candidate search is also sparse. E76 measures W on text; E77 must report both score candidates
+and retrieved keys. A practical sublinear-work claim also needs an indexed retrieval experiment with recall and quality
+measured against exact search.
 
 **(e) Gates are trainable only near the cut.** A message below the cut is never sent, so its gate receives no gradient. The
 off-state is absorbing unless shared parameters (the unit's query) lift the message above the cut. This is §57's routing
@@ -4897,15 +4937,124 @@ problem again, and the same remedy applies: near misses, meaning messages just b
 signal, and cooled noise on the cut explores. Diagnostic: the fraction of synapses that send at least once, tracked over
 training. If it collapses, the gates need a near-miss band.
 
+**(f) What event-stream skips guarantee about depth.** E77 preserves the previous layer's events and appends events
+created by the next layer. In an ideal differentiable relaxation, write this as
+\(E_{\ell+1}=\operatorname{concat}(E_\ell,F_\ell(E_\ell))\). The Jacobian is the vertical stack
+\([I;D F_\ell]\), hence \(J^T J=I+(D F_\ell)^T D F_\ell\succeq I\). Therefore its smallest singular value is at
+least one: the retained event coordinates cannot be contracted by this inclusion map. Across layers, the same argument
+preserves the original event coordinates.
+
+This elementary result is deliberately narrow. It says nothing about gradients from the final loss to a particular
+newly created event, whether sparse routes receive useful credit, whether the event count explodes, or whether the
+continuous relaxation matches hard event creation/cancellation. It is not a deep trainability theorem for language
+models. Existing §97–§98 mistake bounds apply to realizable ordered-pattern learners under their stated candidate-route
+assumptions; they do not establish a bound for E77's language objective. E77 uses sparse event-stream skips rather than
+dense tokenwise residual blocks. Its prototype still uses dense time-by-batch-by-unit state tensors in `TVLayer`, and
+its attention retrieval computes all query/key scores. A genuinely sparse execution kernel and indexed candidate
+search remain necessary to realize the manifesto's energy goal. Next: depth sweeps (2, 4, 8, 16) should record loss,
+layerwise gradient norms, active events, route coverage, and simulator/search work; theory must then explain measured
+failures rather than infer trainability from the skip path alone.
+
+**(g) Hopfield retrieval gives a depth-scalable local credit rule.** The modern Hopfield/softmax-attention equivalence
+is a one-update statement: given stored key/value pairs $(k_j,v_j)$ and query $q$, set
+$p_j=\exp(\beta q^\top k_j)/\sum_r\exp(\beta q^\top k_r)$ and $y=\sum_jp_jv_j$. For the
+auto-associative case $v_j=k_j$, this is the modern Hopfield retrieval update; separate $k$ and $v$ give its useful
+hetero-associative key/value generalization. This distinction matters: a Transformer attention head is a differentiable
+associative lookup, while arbitrary learned values need not descend the classical Hopfield energy in query space.
+
+In the auto-associative case, define $\Phi(q)=\beta^{-1}\log\sum_j\exp(\beta q^\top k_j)$. Then
+$y(q)=\nabla\Phi(q)$ and $\nabla^2\Phi(q)=\beta\operatorname{Cov}_p(k)\succeq0$. The update is monotone
+and its Lipschitz constant is at most $\beta D_K^2/4$. In particular, the repeated retrieval iteration
+$q_{t+1}=y(q_t)$ is a contraction when $\beta D_K^2/4<1$, giving a unique fixed point and geometric convergence.
+Above that sufficient threshold the proof stops: sharper retrieval and multiple attractors become possible, but
+convergence and gradient stability require more structure. For arbitrary hetero-associative values $V\ne K$, the
+query Jacobian is the cross-covariance below and need not be symmetric or derive from a scalar potential. E77 therefore
+uses one learned retrieval update per event layer plus an identity path, not unanalysed repeated Hopfield settling.
+
+For loss gradient $g=\partial L/\partial y$, direct differentiation gives
+\[
+\frac{\partial L}{\partial s_j}=p_j\,g^\top(v_j-y),\qquad
+\nabla_qL=\beta\sum_jp_j[g^\top(v_j-y)]k_j,\qquad
+\nabla_{v_j}L=p_jg.
+\]
+The score credit is centered: $\sum_j\partial L/\partial s_j=0$. A key is rewarded when its value improves on
+the retrieved mean in the direction required by the loss; this trains *where to read* and *what to transmit* through
+the same operation. For a fixed memory and key/value diameters $D_K=\max_{ij}\|k_i-k_j\|$ and
+$D_V=\max_{ij}\|v_i-v_j\|$, the query Jacobian is a cross-covariance,
+\[
+D_qy=\beta\sum_jp_j(v_j-y)(k_j-\bar k)^\top,\qquad
+\|D_qy\|_2\le\frac{\beta D_KD_V}{4}.
+\]
+The inequality follows from Cauchy–Schwarz for the covariance and the Hilbert-space variance bound
+$\mathbb E\|X-\mathbb EX\|^2\le\operatorname{diam}(X)^2/4$. Crucially, this query sensitivity bound does not
+grow with the number of stored events when the key/value diameters are bounded. It gives a concrete, memory-count
+independent control variable for retrieval gain: inverse temperature and representation diameter.
+
+**Sharp retrieval and learnable credit pull in opposite directions.** Let $j^*$ be the best key and assume a score
+margin $m=\min_{j\ne j^*}q^\top(k_{j^*}-k_j)>0$. At inverse temperature $\beta$, the non-winner softmax mass
+obeys
+\[
+1-p_{j^*}\le (N-1)e^{-\beta m}.
+\]
+Thus $\beta m\ge\log((N-1)/\epsilon)$ suffices for at most $\epsilon$ non-winner mass. With two competing keys,
+the route probability is $p=\sigma(\beta\Delta)$ and $\partial p/\partial\Delta=\beta p(1-p)$. Credit is
+largest at the ambiguous boundary $p=1/2$ and decays exponentially once one route dominates. A hard-excluded key
+has exactly zero score credit. Sharper retrieval therefore improves selection error while concentrating trainable
+credit into a narrow near-tie band; this derives the need for broad early retrieval, near-miss candidates, and gradual
+sparsification. Counting only the keys aggregated after a route is chosen misses this learning cost.
+
+Combining the error and Jacobian bounds makes the scaling tradeoff explicit: a worst-case query gain is
+$K_q\le\beta D_KD_V/4$ before query/key/value projection and gate gains. If required $\beta$ grows with memory
+count to keep fixed error under a fixed margin, a depth guarantee must track that increase. The model can reduce the
+pressure by increasing useful score margins, controlling payload diameters, or shrinking the candidate universe with
+a learned index that retains softmax mass. An index that secretly computes all-pairs scores does not change the work
+law.
+
+Now compose event updates $h_{\ell+1}=h_\ell+\alpha_\ell F_\ell(h_\ell)$, where each $F_\ell$ is
+one causal Hopfield message update plus a bounded readout/gate. If the *full fixed-topology Jacobian* obeys
+$\|DF_\ell\|_2\le K$ and $\alpha_\ell K\le1/2$, then
+\[
+e^{-2K\sum_\ell\alpha_\ell}\le
+\sigma_{\min}(D h_L/D h_0)\le\sigma_{\max}(D h_L/D h_0)
+\le e^{K\sum_\ell\alpha_\ell}.
+\]
+This follows by bounding each factor $I+\alpha_\ell DF_\ell$ between singular values
+$1-\alpha_\ell K$ and $1+\alpha_\ell K$, then multiplying. Choosing $\alpha_\ell=1/L$ yields
+depth-independent credit bounds $[e^{-2K},e^K]$. E77's event-Hopfield residual is initialized with this $1/L$
+scale; its learned maps and hard spike topology do **not yet enforce** the required uniform $K$. E77 logs learned
+delay gain $\beta$, diameter upper bounds, and the query-only bound; the full gate/key/value Jacobian still needs
+either a proof or direct measurement. Thus the theorem identifies exactly what to control, not a claim that the
+implementation already satisfies it. A next proof step is to
+bound the fixed-topology payload Jacobian from query/key/value diameter, gate slope, and output-map norm; a next
+experiment step is to log these gains and per-role gradients at depths 2 and 4, then 8 and 16.
+
+There is a second structural limit. If candidate set $C(q)$ has dense softmax mass $1-\epsilon$, then
+$\|y-y_C\|\le2V_{\max}\epsilon$. But hard top-$k$ gives excluded keys zero score gradient. Therefore dense
+Hopfield retrieval is the trainability/recall reference; a sparse index is a separate learned component. It must retain
+mass and useful score credit (via near-miss or teacher-mass training) while reducing candidate search itself. Top-$k$
+aggregation after all-pairs scoring is not a compute saving. E77's new event-level Hopfield update attends only among
+emitted events, keeps query/key/value maps separate, uses learned score-to-delay decay, and carries the retrieved
+payload into the next event layer. It runs only when events exist, but current candidate scoring is still quadratic in
+the number of emitted events; measured work and an index are still needed for a sparsity claim.
+
+This is the mathematical reason to study associative event message passing for depth: (1) Hopfield's centered score
+credit makes address and content train together; (2) its local sensitivity depends on score sharpness and payload
+diameter rather than memory count; (3) residual step scaling can prevent exponential gradient collapse across depth
+under an explicit bounded-gain condition; and (4) event sparsity can reduce *which payloads are updated*, while an
+index is still needed to reduce *which keys are searched*. These are separate claims with separate measurements.
+
 **Test (E77).** A time-vector character language model on text8:
 - two spiking time-vector layers over characters as events (half-integer times, so readouts are causal);
+- a causal modern-Hopfield query/key/value update over emitted payload events after each event layer, with a 1/depth residual scale;
 - non-spiking readout units giving a state per character;
 - one delay-coded retrieval layer (exact softmax over keys within Δ of the best, keys = past states, values carry the next
   character);
 - a readout.
 It is trained with the same gradients as E74, at 1M and 10M characters, against E64b's converged LSTM and Transformer and
-the stage-1 event model. Reported: bits per character, messages, spikes and keys per character. The ablation without
-retrieval measures what (b) predicts it loses.
+the stage-1 event model. Reported: bits per character, messages, spikes, keys per query, and score candidates per query.
+The current dense score implementation evaluates every causal query–key pair; its retrieved-key count is an aggregation
+count, not a measured sublinear search cost. The ablation without retrieval measures what (b) predicts it loses, while an
+indexed-search variant is required to test the total-work claim.
 
 ## 108. The lower envelope: the full event language model is never worse than its best part
 

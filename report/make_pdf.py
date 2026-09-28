@@ -1320,8 +1320,42 @@ def build():
             "future question needs at least N × (bits per fact) of state. A language model built this way needs a second "
             "memory, retrieval, done natively: a question is sent to stored keys, which reply sooner the better they match; "
             "the first reply opens a short window, and replies inside it are weighted exponentially, which is exactly softmax "
-            "attention over the good matches. Its cost is the number of good matches, not the length of the text. E77 builds "
-            "this language model and trains it on text8 against the converged LSTM and Transformer.")]
+            "attention over the good matches. Aggregating values costs the number of good matches; finding them still costs "
+            "linear work without an index. E77 is a configurable, deeper-capable prototype; its new adaptive path is not "
+            "yet measured against the converged language baselines.")]
+    s += [P("<b>Potential: a layer can choose its memory operation.</b> Softmax key/value attention is a one-step modern "
+            "Hopfield retrieval rule under the associative-memory interpretation. E77 now applies a separate causal "
+            "query/key/value update to emitted event payloads, then passes the retrieved vector onward through the event "
+            "stream. Its score gradient is centered on the retrieved value, teaching both where to read and what to send. "
+            "The temporal layers remain event-state layers; the design is heterogeneous by intent. A learned gate mixes "
+            "this event-level lookup with an identity payload path. In the auto-associative case, retrieval is the gradient "
+            "of a convex log-partition function with a positive-semidefinite covariance Hessian; repeated retrieval is "
+            "contractive when inverse temperature times key-diameter squared / 4 is below one. Separate keys and values "
+            "enable hetero-association but need not preserve this energy structure, so E77 uses one gated update per layer."),
+          P("<b>A depth result with explicit assumptions.</b> For fixed keys and values, the query sensitivity of softmax "
+            "retrieval is a cross-covariance bounded by inverse temperature times key diameter times value diameter / 4, "
+            "independent of the number of memories. If each event-level correction has bounded full Jacobian, residual "
+            "scaling by 1/depth keeps the stack Jacobian bounded away from zero and infinity. E77 logs score spread, "
+            "retrieval entropy, update size, diameter upper bounds, the query-Jacobian bound, and role-specific gradients. Hard event "
+            "births and learned route discovery are not covered by the bound."),
+          P("<b>Precision and learning credit trade off.</b> With score margin m, non-winner mass is at most "
+            "(N−1)e^(−βm), so sharper scores improve retrieval. For two keys, however, score sensitivity is "
+            "βp(1−p): it peaks at a tie and vanishes when the route is certain. An excluded key gets no gradient. "
+            "This mathematically motivates broad early retrieval, near-miss credit, and gradual sparsification."),
+          P("<b>If these mechanisms scale.</b> Deep event stacks that preserve associative recall and learn useful sparse "
+            "routes could grow model memory and reasoning capacity without making every token pay for every possible "
+            "interaction. Training would follow predictive routes; inference would follow emitted events and retrieved "
+            "candidates. Capability growth would depend less on dense matrix size and more on temporal composition, "
+            "associative memory, and sparse routing. A stronger accuracy-per-compute curve could shift frontier investment "
+            "toward fast memory, event-capable processors, and distributed associative stores, while reducing dependence "
+            "on ever-larger dense GPU clusters."),
+          P("<b>Cost is still a live question.</b> The event Hopfield update runs only at emitted events, but it scores "
+            "every eligible event pair. Token retrieval also scores every query/key pair, and TVLayer still allocates "
+            "dense time-by-batch-by-unit state. Sparse wiring is not yet sparse execution or a measured energy win."),
+          P("<b>Scaling depth.</b> E77 accepts configurable event depth. Each deeper layer receives prior events plus "
+            "sparse raw-input skips, with event-level Hopfield updates scaled by 1/depth; this is not a dense tokenwise "
+            "residual block. Depth sweeps will track route coverage and optimization; the two-layer configuration is a "
+            "starting point, not a depth limit.")]
     s += [P("<b>Local learning that provably suffices (theory, §108–§109).</b> When units predict the next character by racing "
             "(each candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is "
             "a gated linear network: every unit predicts the target itself and learns only its own convex loss, so no error is "
