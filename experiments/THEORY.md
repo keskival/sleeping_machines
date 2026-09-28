@@ -4874,24 +4874,32 @@ by the data's sharpness (E76), the second by the sparsity learned (E74 reports m
 
 ## 107. Two memories: states that select when written, retrieval that selects when read
 
-*Written 2026-09-28. The step from spoken digits to language. Prior art: exponential gating with a normalizer state (xLSTM:
-sLSTM/mLSTM, Beck et al. 2024), which scales to billions of parameters competitively with Transformers; the recall–memory
-trade-off of recurrent models (Arora et al. 2023, "Zoology"; "Based" 2024); hybrids of recurrence and attention (Griffin,
-Jamba, Samba); heavy-hitter key retention (H2O).*
+*Written 2026-09-28. The step from spoken digits to language. Prior art includes xLSTM's scalar and matrix memories
+(Beck et al. 2024), its 7B language model (Beck et al. 2025), and a broad xLSTM scaling study (Beck et al. 2025); recurrent
+recall–memory trade-offs (Arora et al. 2023, "Zoology"; "Based" 2024); recurrent/attention hybrids (Griffin, Jamba, Samba);
+and heavy-hitter key retention (H2O). These are architectural and experimental precedents, not inherited guarantees for E77.*
 
-**(a) A time-vector unit is exponential gating in time.** A real mode of a unit (§105) holds
-z(t) = Σ_s e^{−(t − t_s)/κ} · e^{τ r_s/κ} · B v_s, and its count channel holds c(t) = Σ_s e^{−(t − t_s)/κ} e^{τ r_s/κ}.
-- *Forget gate:* e^{−Δt/κ}, set by elapsed time, not by a learned per-step gate. With content-dependent tempo (§104c) it
-  becomes content-dependent.
-- *Input gate:* exp(τ r/κ), from the content-dependent delay. It is exponential, as xLSTM found necessary, and here it arises
-  from time alone.
-- *Normalizer:* the count channel is mLSTM's normalizer state; z/c is the normalized read.
-So the recurrent half of the time-vector network is the event-time form of the exponential-gating family, which is known to
-scale on language. What the paradigm adds:
+**(a) A time-vector unit has a restricted exponential-gated accumulator.** For a fixed arrival schedule, one real mode
+obeys the affine recurrence $z_k=a_kz_{k-1}+x_k$, where $a_k=e^{-\Delta t_k/\kappa}$ and each arrival contributes its
+payload multiplied by its content-derived delay factor. Thus
+\[
+z(t)=\sum_s e^{-(t-t_s)/\kappa}e^{\tau r_s/\kappa}Bv_s,
+\qquad
+c(t)=\sum_s e^{-(t-t_s)/\kappa}e^{\tau r_s/\kappa}.
+\]
+This is algebraically the *same affine accumulator skeleton* as an exponential-gated normalized memory only under
+restrictive choices: fixed event topology, identity candidate/payload map, scalar real mode, unit output gate, and gates
+tied to elapsed time and content delay. The count channel is a normalizer analogous to a normalized recurrent memory.
+Current E74/E77 layers do not implement the full xLSTM sLSTM cell (learned input/forget gates and memory mixing), nor the
+mLSTM matrix state that stores key/value outer products and reads them with a query. E77's causal event-Hopfield and
+token-level query/key/value retrieval are explicit associative operations, separate from its time-vector accumulator.
+
+The distinction matters for transfer: xLSTM's scale results motivate deep stack design and careful gate/kernel engineering,
+but do not establish E74/E77's trainability, scaling, or energy use. What the time-vector paradigm adds:
 - messages below the cut are never sent (sparse writes);
 - units emit only when they cross threshold (sparse reads, §105d);
 - time is continuous, so the gates are functions of real elapsed time.
-*Grading:* the identity is algebra; the scaling evidence is xLSTM's, not ours.
+The sparse claims describe event structure; the current implementation still materializes dense time-by-batch-by-unit state.
 
 **(b) Write-time selection cannot replace read-time retrieval (capacity bound).** A unit's gate uses the payload and the
 unit's own query at the moment of writing. It cannot know which future question will be asked. To answer, for any of N
@@ -5090,6 +5098,28 @@ credit makes address and content train together; (2) its local sensitivity depen
 diameter rather than memory count; (3) residual step scaling can prevent exponential gradient collapse across depth
 under an explicit bounded-gain condition; and (4) event sparsity can reduce *which payloads are updated*, while an
 index is still needed to reduce *which keys are searched*. These are separate claims with separate measurements.
+
+**(i) The fixed-schedule time-vector state admits an exact associative scan.** For each batch item, unit, and mode,
+the current affine memory update is $z_k=A_kz_{k-1}+x_k$. Here $A_k$ is diagonal (in the current implementation it is
+the per-unit complex decay $e^{\lambda}$), and $x_k$ is the sum of payload arrivals assigned to bin $k$. Represent one
+step by the affine map $T_k=(A_k,x_k)$. Chronological composition is
+\[
+T_j\circ T_i=(A_jA_i,\;A_jx_i+x_j).
+\]
+Because this is composition of maps, it is associative. An exact parallel prefix scan over these pairs returns every
+prefix state $z_k$ in $O(Gn)$ work and $O(\log G)$ parallel depth for $G$ bins and $n$ diagonal modes; the scalar count
+channel is another scan of the same form. This replaces the serial dependency through the fixed affine state recurrence
+without changing its mathematical result or adding all-pairs attention. Since both schedules compute the same
+differentiable affine composition, their exact-arithmetic gradients are equal as well; floating-point association can
+introduce reduction-order differences. It is a concrete route to parallelizing the memory-state portion of training.
+
+The claim is deliberately scoped. It assumes the arrival schedule and topology are fixed. The scan still writes all
+prefix states, so it does not remove the current $G\times B\times M\times n$ dense storage or prove sparse execution.
+Spike threshold/reset-trace decisions, event creation, routing changes, and candidate search are separate operations;
+the scan alone does not parallelize or sparsify them. An event-sparse version would need sorted arrivals, segment
+composition over empty intervals, and explicit accounting for sort/dispatch/bytes. **Next derivation-to-measurement step:**
+compare scan and sequential outputs plus gradients on identical fixed event schedules, then run one small scan pilot only
+after the shared safe runner is free. Record wall time, peak memory, and bytes moved; correctness alone is not a speed claim.
 
 **Test (E77).** A time-vector character language model on text8:
 - two spiking time-vector layers over characters as events (half-integer times, so readouts are causal);
