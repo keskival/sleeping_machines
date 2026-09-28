@@ -38,6 +38,7 @@ class EqLayer(nn.Module):
         super().__init__()
         n_off = int(offs.max()) + 1
         self.register_buffer("offs", offs); self.register_buffer("scale", scale)      # scale: (M,) = rho^m
+        self.register_buffer("sent", torch.zeros(offs.shape, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.spiking, self.theta, self.dmax = offs.shape[1], n, spiking, theta, dmax
         tau = torch.exp(torch.linspace(math.log(5.0), math.log(100.0), n))
         self.log_rate = nn.Parameter(-torch.log(tau)); self.freq = nn.Parameter(torch.rand(n) * 0.3)
@@ -58,6 +59,8 @@ class EqLayer(nn.Module):
         r = v @ self.q + self.c[oid]
         keep = r.detach() > 0
         pe, pj, oid, v, r = pe[keep], pj[keep], oid[keep], v[keep], r[keep]
+        if not self.training:
+            self.sent[ei[pe], pj] = True
         sc = self.scale[pj]
         a = et[pe] + (torch.exp(self.log_td) * sc * r).clamp(max=self.dmax * sc)            # delay scales with the unit
         g = torch.ceil(a.detach()); ok = (g <= G - 1) & (g >= 0)
@@ -209,9 +212,14 @@ def main():
             opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
             tl += float(loss)
         net.eval()
-        acc, info = evaluate(net, ev, a, rng); tr_acc, _ = evaluate(net, probe, a, rng)
+        for l_ in (net.l1, net.l2, net.ro):
+            l_.sent.zero_()
+        acc, info = evaluate(net, ev, a, rng)
+        sending = [round(float(l_.sent[l_.offs >= 0].float().mean()), 3) for l_ in (net.l1, net.l2, net.ro)]
+        tr_acc, _ = evaluate(net, probe, a, rng)
         row = {"epoch": ep + 1, "train_loss": round(tl / nb, 4), f"{a.eval}_acc": round(acc, 4), "train_probe_acc": round(tr_acc, 4),
-               "msgs_per_utt": info["msgs"], "spikes_per_utt": info["spikes"], "wall_s": round(time.time() - t0)}
+               "msgs_per_utt": info["msgs"], "spikes_per_utt": info["spikes"], "synapses_sending": sending,
+               "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
     with open(os.path.join(OUT, f"eq_S{a.scales}_rho{a.rho:g}_st{a.stride1}_w{a.win1}_sh{a.shift}_{a.eval}_s{a.seed}.json"), "w") as f:
         json.dump(res, f)

@@ -1,3 +1,6 @@
+# E77: time-vector language model on text8 (THEORY §107), 1M characters: with and without delay-coded retrieval
+e77_D1M_r1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --retrieval 1
+e77_D1M_r0 experiments/e77_tv_lm.py --D 1000000 --passes 5 --retrieval 0
 # E74 ablations (§105): content delays off, gate off, snapshot off
 e74_static_delay experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --cdelay 0 --eval spk
 e74_no_gate experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --gate 0 --eval spk
