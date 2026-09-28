@@ -7,6 +7,8 @@ e80_test experiments/e80_select_test.py
 # E81: race gated linear network over the native experts (THEORY §109)
 e81_D1M experiments/e81_race_gln.py --D 1000000 --K 5
 e81_D10M experiments/e81_race_gln.py --D 10000000 --K 6
+e79wk_D1M experiments/e79_race_mixer.py --D 1000000 --K 5 --wordkeys 1 --windows 256
+e79wk_D10M experiments/e79_race_mixer.py --D 10000000 --K 6 --wordkeys 1 --windows 256
 # E68: race Transformer vs softmax Transformer (THEORY §103)
 e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
 e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
