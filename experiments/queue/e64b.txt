@@ -5,3 +5,4 @@ e64b_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --size 
 e64b_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000
 e76_attention_work experiments/e76_attention_work.py --windows 200
 e77_D10M_r1 experiments/e77_tv_lm.py --D 10000000 --passes 2 --retrieval 1
+e78_D10M experiments/e78_envelope.py --D 10000000 --K 6 --e77 tvlm_D10000000_p2_r1_M128-128-64_s0

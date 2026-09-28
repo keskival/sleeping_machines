@@ -1,0 +1,20 @@
+{
+ "args": {
+  "d": 32,
+  "epochs": 3,
+  "chunk": 64,
+  "lr": 0.002
+ },
+ "heldout": [
+  {
+   "day": "2026-08-30",
+   "gru_offline_frozen": -2.7207920122802833,
+   "semimarkov_frozen": -2.38061062294322
+  },
+  {
+   "day": "2026-08-31",
+   "gru_offline_frozen": -2.5255554093538484,
+   "semimarkov_frozen": -2.099680638231963
+  }
+ ]
+}
