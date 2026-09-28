@@ -1,10 +1,11 @@
 """E83: depth and gradient-flow study for Sleeping Machines on spoken digits.
 
-All layers are event layers. Layer 1 uses local tonotopic wiring; each later
-layer receives sparse messages only from the immediately preceding layer. A
-shared auxiliary readout is trained at each depth, while inference uses only
-the deepest readout. This supplies local learning signals without allowing the
-prediction to bypass the event hierarchy.
+All hidden layers are event layers. Layer 1 uses local tonotopic wiring; each
+later layer receives sparse messages only from the immediately preceding
+layer. A shared auxiliary readout is trained at each depth, while inference
+uses only the deepest readout. The event-prefix objective applies sampled
+causal label losses and can add a bounded counterfactual boundary signal for
+route gates that lost their content races.
 
 This isolates the fixed-topology depth question from the separate speaker
 equivariance question in E75. It reports per-layer gradient norms, candidate
@@ -536,7 +537,11 @@ def main():
             or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0):
         raise ValueError("counterfactual shadow count must be nonnegative; cf_band and cf_sigma must be positive")
     os.makedirs(OUT, exist_ok=True)
-    torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed); t0 = time.time()
+    torch.manual_seed(a.seed)
+    rng = np.random.default_rng(a.seed)
+    prefix_rng = np.random.default_rng(a.seed + 100_003)
+    counterfactual_rng = np.random.default_rng(a.seed + 200_003)
+    t0 = time.time()
 
     def load(split, part):
         return [(*events(t, u, a.merge), y) for t, u, y in S.utterances(split, a.bands, part) if len(t) > 1]
@@ -562,7 +567,9 @@ def main():
     for ep in range(a.epochs):
         net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
         cf_eligible_ep = cf_shadow_ep = 0
-        cf_abs_delta_ep = 0.0
+        cf_abs_delta_ep = cf_signed_delta_ep = 0.0
+        cf_helpful_ep = 0
+        cf_grad_norms_ep = cf_path_cosines_ep = cf_relative_norms_ep = None
         perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
@@ -572,7 +579,7 @@ def main():
             if event_readout:
                 prefix_times = sampled_prefix_times(len(items), a.prefix_samples,
                                                     a.prefix_horizon_ms, a.prefix_window_start,
-                                                    et.device, et.dtype, rng)
+                                                    et.device, et.dtype, prefix_rng)
             _, info = net(eb, ei, et, len(items), grid, return_taps=True,
                           collect_routes=event_readout and a.cf_shadows_per_layer > 0)
             traces = info["tap_traces"]
@@ -615,7 +622,7 @@ def main():
                     if not len(near):
                         continue
                     take = min(a.cf_shadows_per_layer, len(near))
-                    selected = rng.choice(near, size=take, replace=False)
+                    selected = counterfactual_rng.choice(near, size=take, replace=False)
                     batch_ids, source_units, source_payload = info["route_inputs"][k]
                     route_event_ids = route_info["event_index"]
                     route_receivers = route_info["receiver"]
@@ -640,6 +647,8 @@ def main():
                         delta = (base_total - shadow_total) if active else (shadow_total - base_total)
                         delta_value = float(delta)
                         cf_abs_delta_sum += abs(delta_value)
+                        cf_signed_delta_ep += delta_value
+                        cf_helpful_ep += int(delta_value < 0.0)
                         cf_shadow_count += 1
 
                         source_unit = source_units[event_index]
@@ -653,6 +662,28 @@ def main():
                         cf_proxy = cf_proxy + (boundary_derivative * inclusion_correction
                                                * (live_score - live_score.detach()))
                 loss = loss + a.cf_weight * cf_proxy
+                if i0 == 0 and cf_shadow_count:
+                    groups = [list(layer.parameters()) for layer in net.layers]
+                    params = [p for group in groups for p in group]
+                    cf_grads = torch.autograd.grad(cf_proxy, params, retain_graph=True,
+                                                   allow_unused=True)
+                    path_grads = torch.autograd.grad(
+                        main_loss + a.aux_weight * aux_loss, params,
+                        retain_graph=True, allow_unused=True)
+                    cf_grad_norms_ep, cf_path_cosines_ep, cf_relative_norms_ep = [], [], []
+                    start = 0
+                    for group in groups:
+                        stop = start + len(group)
+                        cg, pg = cf_grads[start:stop], path_grads[start:stop]
+                        csq = sum(float(g.detach().square().sum()) for g in cg if g is not None)
+                        psq = sum(float(g.detach().square().sum()) for g in pg if g is not None)
+                        dot = sum(float((c.detach() * p.detach()).sum())
+                                  for c, p in zip(cg, pg) if c is not None and p is not None)
+                        cn, pn = math.sqrt(csq), math.sqrt(psq)
+                        cf_grad_norms_ep.append(round(cn, 6))
+                        cf_path_cosines_ep.append(round(dot / (cn * pn), 6) if cn and pn else None)
+                        cf_relative_norms_ep.append(round(cn / pn, 6) if pn else None)
+                        start = stop
             cf_eligible_ep += cf_eligible
             cf_shadow_ep += cf_shadow_count
             cf_abs_delta_ep += cf_abs_delta_sum
@@ -887,6 +918,13 @@ def main():
             row["counterfactual_route_shadows_per_epoch"] = int(cf_shadow_ep)
             row["counterfactual_mean_abs_loss_delta"] = round(
                 cf_abs_delta_ep / max(cf_shadow_ep, 1), 6)
+            row["counterfactual_mean_signed_open_minus_closed_loss"] = round(
+                cf_signed_delta_ep / max(cf_shadow_ep, 1), 6)
+            row["counterfactual_fraction_opening_improves_loss"] = round(
+                cf_helpful_ep / max(cf_shadow_ep, 1), 4)
+            row["first_batch_counterfactual_layer_grad_norms"] = cf_grad_norms_ep
+            row["first_batch_counterfactual_vs_pathwise_cosines"] = cf_path_cosines_ep
+            row["first_batch_counterfactual_to_pathwise_norm_ratios"] = cf_relative_norms_ep
         else:
             row["shd_max_over_time_acc"] = round(max_ok / len(ev), 4)
         res.setdefault("eval_output_payloads", []).append(epoch_output_payloads)
