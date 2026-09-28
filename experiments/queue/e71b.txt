@@ -1,19 +1,19 @@
 # E77 stage 1: isolate token retrieval and event-Hopfield contributions at equal settings.
-e77_retained_stream_smoke_depth4 experiments/e77_tv_lm.py --D 10000 --passes 0.5 --bs 2 --L 64 --depth 4 --valid 1000 --test 1000
-e77_D1M_r1_eh1_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1
-e77_D1M_r0_eh1_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 0 --event_hopfield 1
-e77_D1M_r1_eh0_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 0
+e77_retained_stream_boot0p1_smoke_depth4 experiments/e77_tv_lm.py --D 10000 --passes 0.5 --bs 2 --L 64 --depth 4 --valid 1000 --test 1000 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
+e77_D1M_r1_eh1_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
+e77_D1M_r0_eh1_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 0 --event_hopfield 1 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
+e77_D1M_r1_eh0_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 0 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
 
 # Matched depth/parameter controls: same 256-character windows, 5M token exposure,
 # batch 4 (same 4,882 optimizer updates and, by seed, the same sampled windows as E77).
 # Widths 104/104/112/136 match E77 parameter counts within 4% across depths 2/4/8/16.
 e64b_tf_D1M_L2_match_p5_b4 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 104 --layers 2 --passes 5 --batch_size 4 --dropout 0 --valid 200000
 e64b_tf_D1M_L4_match_p5_b4 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 104 --layers 4 --passes 5 --batch_size 4 --dropout 0 --valid 200000
-e77_D1M_depth4_r1_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 4
+e77_D1M_depth4_r1_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 4 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
 e64b_tf_D1M_L8_match_p5_b4 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 112 --layers 8 --passes 5 --batch_size 4 --dropout 0 --valid 200000
-e77_D1M_depth8_r1_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 8
+e77_D1M_depth8_r1_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 8 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
 e64b_tf_D1M_L16_match_p5_b4 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 136 --layers 16 --passes 5 --batch_size 4 --dropout 0 --valid 200000
-e77_D1M_depth16_r1_p5 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 16
+e77_D1M_depth16_r1_p5_boot0p1 experiments/e77_tv_lm.py --D 1000000 --passes 5 --bs 4 --retrieval 1 --event_hopfield 1 --depth 16 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
 
 # Stronger, wider depth-4 reference with four times the training exposure.
 e64b_tf_D1M_L4_s256_p20 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 256 --layers 4 --passes 20 --dropout 0.2 --valid 200000

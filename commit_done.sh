@@ -46,6 +46,9 @@ FILES=(
   experiments/queue/e83_event_prefix_cf_local_smoke.txt
   experiments/queue/e83_event_prefix_d4_cf_local.txt
   experiments/queue/e77_route_cf_smoke.txt
+  experiments/queue/e77_route_cf_bootstrap.txt
+  experiments/queue/e77_depth4_bootstrap_compare.txt
+  experiments/queue/e77_default_width_bootstrap_smoke.txt
   experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt
@@ -57,6 +60,8 @@ FILES=(
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
   experiments/results/e83/*.json
   experiments/results/e83/e83_final_layer_activity.png
+  experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77.json
+  experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4.json
   experiments/results/e84
   experiments/results/e114
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
@@ -64,6 +69,7 @@ FILES=(
   report/make_pdf.py
   report/figures/potential_evidence.png
   report/figures/e83_route_gradient_diagnostics.png
+  report/figures/e77_depth_trainability_bootstrap.png
   report/sleeping_machines_status.pdf
   commit_done.sh
 )

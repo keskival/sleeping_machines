@@ -5,6 +5,35 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-28
 
+**E77 depth-4 event bootstrap and route-credit diagnostic (§133).** A matched
+16-update, seed-77 text8 micro-pilot exposed a trainability blocker: with the
+fixed threshold $\theta=1$, test activity was [0.018, 0, 0, 0] events/character
+across four layers, and only layer 1 had any nonzero gradient (5/16 updates).
+The deeper stack was effectively absent from learning. We added a
+label-free, depth-ordered threshold calibration from empirical pre-reset
+voltage quantiles, targeting 0.1 spikes/character/layer. The matched calibrated
+run set thresholds [0.664, 0.229, 0.429, 0.283], produced [0.065, 0.052,
+0.044, 0.035] test events/character, and had nonzero per-layer gradients on
+15/16, 16/16, 14/16, and 16/16 updates. This is direct evidence that the
+previous initialization silenced the deep event stack and that a measured
+activity scale can restore gradient paths. The tiny run (4,096 training
+characters, 512 validation/test characters, width 8, 16 updates, one seed)
+does not establish language-model quality or depth scaling: test BPC was
+4.341 fixed versus 4.284 calibrated, too little data for a performance claim.
+
+The calibrated model also received 64 near-boundary route shadows per layer
+(256 total). Minibatch-clustered layer means of $L_{open}-L_{closed}$ and
+standard errors were: layer 1 −0.000034 ± 0.000237; layer 2 −0.000440 ±
+0.000236; layer 3 −0.000045 ± 0.000103; layer 4 −0.000092 ± 0.000477. Every
+approximate 95% interval includes zero. Only 3.1–15.6% of sampled openings
+helped by layer; the global counterfactual/pathwise norm ratio averaged
+0.61%, with cosine −0.0019. A weak prior should therefore remain broad, and
+the optimizer still applies no counterfactual update. This is a posterior
+uncertainty result, not a reason to turn up the gain. E77's token-level query/
+key module still materializes a dense causal $L\times L$ score matrix; this
+experiment measures deep hidden-route trainability, not sparse retrieval cost.
+All runs used the memory-guarded queue.
+
 **E83 causal prefix supervision and route-gradient statistics (§§130–132).** The per-utterance normalized-time sampler was future-dependent: it used each utterance's last event to choose a prefix. E83 now samples a fixed, shared 0–1000 ms physical-time window, stratified into exogenous query strata. Under log loss, the population optimum at each query is the causal posterior $P(Y\mid\mathcal F_t)$; choosing query time using future duration would instead reweight labels by duration. The code also fixed a PyTorch autograd failure in grouping equal event times (`unique_consecutive` had no derivative), replacing it with detached group IDs and differentiable group-time means. This makes the prefix-time path differentiable; it does not remove E83's 1 ms hidden-state scan.
 
 The exact route boundary term from §§19/57 is now measured by toggling one near-boundary route, rerunning the whole downstream stack, and comparing factual and shadow prefix loss at identical sampled query times. A first Horvitz–Thompson implementation multiplied each sampled route by candidate-count/sample-count. At depth 4, 128 train / 32 held-out, two epochs and seed 6, this drew 128 shadows per epoch from about 480k eligible routes. Train loss rose 1,974 → 17,044, prefix NLL and layer-4 activity exploded, so that estimator is too noisy at this budget. The fixed-population formula in §132 explains the scale: total-estimator covariance has the factor $N^2(1-m/N)/m$.

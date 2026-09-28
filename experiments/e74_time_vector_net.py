@@ -59,7 +59,7 @@ class TVLayer(nn.Module):
         return torch.complex(-torch.exp(self.log_rate), self.freq)
 
     def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None, return_routes=False,
-                return_route_graph=False):
+                return_route_graph=False, return_voltage_samples=False):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -117,6 +117,8 @@ class TVLayer(nn.Module):
         if self.spiking:
             F = torch.zeros(G, B, M, dtype=torch.bool); FR = torch.zeros(G, B, M); RP = torch.zeros(G, B, M)
         Xk = X.unbind(0)                                                       # one backward op instead of G slices
+        if return_voltage_samples:
+            voltage_samples = []
         if return_routes:
             peak_voltage = Vp.new_tensor(float("-inf"))
             peak_threshold_margin = Vp.new_tensor(float("-inf"))
@@ -126,6 +128,8 @@ class TVLayer(nn.Module):
                 c = c * Ec + Xc[k]
                 Vs.append((wc * z / (c + 1.0)).real.sum(-1)); continue
             V = (wc * z).real.sum(-1)
+            if return_voltage_samples:
+                voltage_samples.append(V.detach())
             if not self.spiking:
                 Vs.append(V); continue
             zs.append(z)
@@ -148,6 +152,10 @@ class TVLayer(nn.Module):
             route_info["peak_voltage"] = float(peak_voltage)
             route_info["peak_threshold_margin"] = float(peak_threshold_margin)
             route_info["firing_fraction"] = float(F.float().mean())
+            if return_voltage_samples:
+                # Preserve (time, batch, unit) axes so threshold calibration can
+                # replay the exact reset dynamics without rerunning the network.
+                route_info["voltage_samples"] = torch.stack(voltage_samples, dim=0)
         good = kk >= 1; kk, bb, jj = kk[good], bb[good], jj[good]
         frac, Rpre = FR[kk, bb, jj], RP[kk, bb, jj]
         Z = torch.stack(zs); zprev = Z[kk - 1, bb, jj]                          # state at the grid point before the crossing

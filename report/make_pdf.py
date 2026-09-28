@@ -14,6 +14,7 @@ from datetime import date
 
 import matplotlib
 import matplotlib.patches  # noqa: F401
+from matplotlib.lines import Line2D  # noqa: E402
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
@@ -321,6 +322,58 @@ def fig_e83_route_diagnostics():
              fontsize=6.0, color=MUTED)
     fig.tight_layout(rect=(0, 0.10, 1, 0.90))
     out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_gradient_diagnostics.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e77_bootstrap_diagnostics():
+    """Show whether activity calibration lets gradients reach a deep E77 stack."""
+    fixed_matches = glob.glob(os.path.join(
+        RES, "e77", "tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77.json"))
+    boot_matches = glob.glob(os.path.join(
+        RES, "e77", "tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4.json"))
+    if not fixed_matches or not boot_matches:
+        raise FileNotFoundError("missing matched E77 threshold-bootstrap micro-pilot results")
+    fixed, boot = load(fixed_matches[0]), load(boot_matches[0])
+    layers = np.arange(1, 5)
+    fixed_active = [100 * np.mean([r["event_layer_grad_norms"][i] > 0 for r in fixed["valid_curve"]])
+                    for i in range(4)]
+    boot_active = [100 * np.mean([r["event_layer_grad_norms"][i] > 0 for r in boot["valid_curve"]])
+                   for i in range(4)]
+    fixed_spikes = np.asarray(fixed["test_work"]["spikes_per_char"][:4], dtype=float)
+    boot_spikes = np.asarray(boot["test_work"]["spikes_per_char"][:4], dtype=float)
+
+    fig, (ax_grad, ax_spikes) = plt.subplots(1, 2, figsize=(7.6, 3.0))
+    width = 0.34
+    ax_grad.bar(layers - width / 2, fixed_active, width, color=GRAY, label="fixed θ=1")
+    ax_grad.bar(layers + width / 2, boot_active, width, color=BLUE, label="voltage-quantile bootstrap")
+    ax_grad.set_xticks(layers)
+    ax_grad.set_ylim(0, 108)
+    ax_grad.set_ylabel("updates with gradient (%)")
+    ax_grad.set_xlabel("event layer")
+    ax_grad.set_title("A · Gradient reach across depth")
+
+    ax_spikes.bar(layers - width / 2, fixed_spikes, width, color=GRAY, label="fixed θ=1")
+    ax_spikes.bar(layers + width / 2, boot_spikes, width, color=BLUE, label="voltage-quantile bootstrap")
+    ax_spikes.axhline(0.1, color=INK, ls=":", lw=1)
+    ax_spikes.set_xticks(layers)
+    ax_spikes.set_ylim(0, 0.12)
+    ax_spikes.set_ylabel("test spikes / character")
+    ax_spikes.set_xlabel("event layer")
+    ax_spikes.set_title("B · Sparse event activity")
+    fig.suptitle("E77 · a data-calibrated threshold reopens the depth-4 learning path",
+                 x=0.02, ha="left", fontsize=9.2, fontweight="bold")
+    fig.legend(handles=[
+        matplotlib.patches.Patch(color=GRAY, label="fixed θ=1"),
+        matplotlib.patches.Patch(color=BLUE, label="voltage-quantile bootstrap"),
+        Line2D([0], [0], color=INK, ls=":", lw=1, label="target 0.1 spikes / char / layer"),
+    ], loc="upper center", bbox_to_anchor=(0.58, 0.89), ncol=3, fontsize=6.2,
+       frameon=False, handlelength=1.5, columnspacing=1.1)
+    fig.text(0.02, 0.005,
+             "One seed; width 8, 4,096 training characters, 16 updates, 512 test characters. "
+             "This diagnoses gradient reach, not language-model quality or scaling.", fontsize=6.0, color=MUTED)
+    fig.tight_layout(rect=(0.03, 0.12, 0.99, 0.82))
+    out = os.path.join(os.path.dirname(__file__), "figures", "e77_depth_trainability_bootstrap.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     return fig
 
@@ -971,7 +1024,9 @@ def build():
         f"{tf_10m_final['test_bpc'] - 1.7993:.4f} above the LSTM's 1.7993 "
         "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes. "
         "E79 is a mixture of expert predictors plus copy memory, not a deep hidden event stack; E77 is the separate "
-        "deep time-vector language model, whose result is still pending.",
+        "deep time-vector language model. A depth-4 micro-pilot found its fixed threshold silenced deeper layers; "
+        "voltage-quantile calibration restored sparse activity and nonzero gradients through all four layers. This is a "
+        "trainability check only; a meaningful E77 language-model result remains pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
@@ -1641,9 +1696,20 @@ def build():
             f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after validation-based checkpoint selection. "
             f"It has 3.24M parameters and four passes, while the LSTM has "
             "1.20M parameters and six passes. "
-            "E77 has not yet produced a language-model "
-            "result.")]
+            "E77 has not yet produced a scale-level language-model result. A small depth-4 diagnostic found the fixed "
+            "threshold left the deeper event layers silent; a voltage-quantile initialization restored sparse activity "
+            "and gradients across depth. This is a trainability wiring result, not a language-model performance claim.")]
     s += fig(FM.fig_lm_topology, W)
+    s += [P("<b>E77 depth-4 trainability diagnostic (§133).</b> In a matched, one-seed, 16-update micro-pilot, fixed "
+            "thresholds produced no test spikes beyond the first layer and no gradients in layers 2–4. Calibrating "
+            "thresholds from the upper tail of actual training-input voltages set them to [0.664, 0.229, 0.429, 0.283] "
+            "and produced [0.065, 0.052, 0.044, 0.035] test spikes per character. Gradients were nonzero on 15/16, "
+            "16/16, 14/16, and 16/16 updates. Test BPC differed by 0.057 on just 512 characters; that sample is too "
+            "small for a performance conclusion. The counterfactual route term remained disabled: 64 shadows per layer "
+            "gave layerwise opening-minus-closing loss means ± minibatch-cluster SE of [−0.000034 ± 0.000237, "
+            "−0.000440 ± 0.000236, −0.000045 ± 0.000103, −0.000092 ± 0.000477]. Every approximate 95% interval "
+            "includes zero; the mean pathwise-gradient cosine was −0.0019.")]
+    s += fig(fig_e77_bootstrap_diagnostics, W * 0.96)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
             "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "
             "races (E61 at scale; E68) or by content-dependent delays (§105: exact, and as cheap as the attention is sharp; E76 "
