@@ -1,10 +1,10 @@
 """E84: depth and gradient-flow study for event-native market world models.
 
 The core is E80's time-vector event layer, now stacked at configurable depth.
-Every stage receives sparse messages from all earlier hidden event streams and
-a direct route from the raw market events.  The readout sees every stage.  The
-pilot selects on day 5 only and reports predictive log likelihood; it makes no
-trading-edge claim.
+Each hidden stage receives sparse messages only from the previous stage.
+Intermediate stages get auxiliary point-process losses through a shared
+readout; the deployed prediction uses only the deepest stage. The pilot selects
+on day 5 and reports predictive log likelihood; it makes no trading-edge claim.
 """
 import argparse
 import json
@@ -28,9 +28,7 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e84")
 
 
 class DeepTVPP(nn.Module):
-    ll = T52.THP.ll
-
-    def __init__(self, nf, nb, d, n, M, Ms, depth, fan2, dmax, seed=0):
+    def __init__(self, nf, nb, d, n, M, Ms, depth, fan2, readout_fan, dmax, seed=0):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -41,18 +39,21 @@ class DeepTVPP(nn.Module):
         self.layers = nn.ModuleList()
         self.layers.append(A.TVLayerW(NT, M, d, d, n, dmax, None, True, 0.05))
         for i in range(1, depth):
-            previous_width = i * M
-            mask = torch.zeros(previous_width + NT, M, dtype=torch.bool)
-            mask[:previous_width] = torch.rand(previous_width, M, generator=gen) < fan2
-            mask[previous_width:] = True
-            self.layers.append(A.TVLayerW(previous_width + NT, M, d, d, n, dmax,
-                                          mask, True, 0.05))
-        self.st = A.TVLayerW(depth * M, Ms, d, d, n, dmax, None, False, 0.3, gate_bias=1.0)
+            mask = torch.rand(M, M, generator=gen) < fan2
+            for j in range(M):
+                if not mask[:, j].any():
+                    mask[torch.randint(M, (), generator=gen), j] = True
+            self.layers.append(A.TVLayerW(M, M, d, d, n, dmax, mask, True, 0.05))
+        readout_mask = torch.rand(M, Ms, generator=gen) < readout_fan
+        for j in range(Ms):
+            if not readout_mask[:, j].any():
+                readout_mask[torch.randint(M, (), generator=gen), j] = True
+        self.st = A.TVLayerW(M, Ms, d, d, n, dmax, readout_mask, False, 0.3, gate_bias=1.0)
         self.norm = nn.LayerNorm(Ms)
-        self.head = nn.Linear(Ms + d, nb * NT)
+        self.head = nn.Linear(Ms, nb * NT)
         self.nb = nb
 
-    def forward(self, y, x):
+    def forward(self, y, x, return_taps=False):
         B, L = y.shape; G = L + 1
         gap = (torch.exp(5 * x[..., 0]) - 1e-4).clamp(min=0)
         w = torch.zeros(G, B); w[1:] = gap.T
@@ -66,27 +67,27 @@ class DeepTVPP(nn.Module):
             if i == 0:
                 ib, ij, it, iv = eb, raw_i, raw_t, raw_vf
             else:
-                bs, js, ts, vs = [], [], [], []
-                offset = 0
-                for (ob, oj, ot, ov) in outputs:
-                    bs.append(ob); js.append(oj + offset); ts.append(ot); vs.append(ov)
-                    offset += self.M
-                bs.append(eb); js.append(raw_i + offset); ts.append(raw_t); vs.append(raw_vf)
-                ib, ij, it, iv = (torch.cat(v) for v in (bs, js, ts, vs))
+                ib, ij, it, iv = outputs[-1]
             out, msg = layer(ib, ij, it, iv, B, G, w)
             outputs.append(out); messages.append(msg); spikes.append(len(out[2]) / (B * L))
 
-        rb, rj, rt, rv = [], [], [], []
-        offset = 0
-        for (ob, oj, ot, ov) in outputs:
-            rb.append(ob); rj.append(oj + offset); rt.append(ot); rv.append(ov)
-            offset += self.M
-        V, msg = self.st(torch.cat(rb), torch.cat(rj), torch.cat(rt), torch.cat(rv), B, G, w)
-        messages.append(msg)
-        h = torch.cat([self.norm(V[1:].permute(1, 0, 2)), raw_v], -1)
+        taps = []
+        for out in outputs:
+            V, msg = self.st(out[0], out[1], out[2], out[3], B, G, w)
+            messages.append(msg)
+            h = self.norm(V[1:].permute(1, 0, 2))
+            taps.append(nn.functional.softplus(self.head(h)).view(B, L, self.nb, NT) + 1e-6)
         self.work = {"msgs_per_event": [m / L for m in messages],
                      "spikes_per_event": spikes}
-        return nn.functional.softplus(self.head(h)).view(B, L, self.nb, NT) + 1e-6
+        return (taps[-1], taps) if return_taps else taps[-1]
+
+    @staticmethod
+    def ll_rates(rates, b, span, yn):
+        at = rates.gather(2, b[..., None, None].expand(*b.shape, 1, NT)).squeeze(2)
+        return torch.log(at.gather(2, yn[..., None]).squeeze(2)) - (rates.sum(3) * span).sum(2)
+
+    def ll(self, y, x, b, span, yn):
+        return self.ll_rates(self(y, x), b, span, yn)
 
 
 def grad_norm(module):
@@ -106,6 +107,9 @@ def main():
     ap.add_argument("--Ms", type=int, default=24)
     ap.add_argument("--depth", type=int, default=4)
     ap.add_argument("--fan2", type=float, default=0.25)
+    ap.add_argument("--readout_fan", type=float, default=0.5)
+    ap.add_argument("--aux_weight", type=float, default=0.2,
+                    help="weight per intermediate supervised readout; zero is the no-auxiliary control")
     ap.add_argument("--dmax", type=float, default=16.0)
     ap.add_argument("--epochs", type=int, default=2)
     ap.add_argument("--lr", type=float, default=1e-3)
@@ -131,9 +135,9 @@ def main():
             day_chunks = [day_chunks[k] for k in sorted(take)]
         chunks.extend(day_chunks)
     net = DeepTVPP(tr[0][2][1].shape[1], len(gaps) + 1, a.d, a.n, a.M,
-                   a.Ms, a.depth, a.fan2, a.dmax, a.seed)
+                   a.Ms, a.depth, a.fan2, a.readout_fan, a.dmax, a.seed)
     opt = torch.optim.Adam(net.parameters(), lr=a.lr)
-    tag = f"val_L{a.L}_f{a.fine}_x{a.cross}_m{a.mag}_d{a.d}_M{a.M}_e{a.epochs}_depth{a.depth}_s{a.seed}"
+    tag = f"val_L{a.L}_f{a.fine}_x{a.cross}_m{a.mag}_d{a.d}_M{a.M}_e{a.epochs}_depth{a.depth}_aux{a.aux_weight:g}_s{a.seed}"
     res = {"args": vars(a), "params": sum(p.numel() for p in net.parameters()),
            "layer_params": [sum(p.numel() for p in l.parameters()) for l in net.layers],
            "train_days": train_days, "validation_day": eval_days[0],
@@ -142,20 +146,25 @@ def main():
                       "training_windows": len(chunks), "load_s": round(time.time() - t0, 1)}), flush=True)
     best = (-float("inf"), None, 0)
     for ep in range(a.epochs):
-        net.train(); order = rng.permutation(len(chunks)); loss_sum = 0.0
+        net.train(); order = rng.permutation(len(chunks)); loss_sum = 0.0; aux_sum = 0.0
         gsum = np.zeros(a.depth); n_updates = 0
         for i0 in range(0, len(order), a.batch):
             parts = [[e[s:s + a.L] for e in tr[di][2]]
                      for di, s in (chunks[k] for k in order[i0:i0 + a.batch])]
             y, x, b, sp, yn = (torch.stack([p[j] for p in parts]) for j in range(5))
-            loss = -net.ll(y, x, b, sp, yn).mean()
+            rates, tap_rates = net(y, x, return_taps=True)
+            main_loss = -net.ll_rates(rates, b, sp, yn).mean()
+            aux_losses = [-net.ll_rates(tap, b, sp, yn).mean() for tap in tap_rates[:-1]]
+            aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
+            loss = main_loss + a.aux_weight * aux_loss
             opt.zero_grad(); loss.backward()
             gsum += np.asarray([grad_norm(l) for l in net.layers]); n_updates += 1
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step()
-            loss_sum += float(loss.detach())
+            loss_sum += float(main_loss.detach()); aux_sum += float(aux_loss.detach())
         net.eval()
         score = T52.score_day(net, ev[0][2], a.L)[0]
         row = {"epoch": ep + 1, "train_nll": round(loss_sum / max(n_updates, 1), 5),
+               "aux_train_nll": round(aux_sum / max(n_updates, 1), 5),
                "val_day5_nats_per_event": float(score),
                "layer_grad_norms": (gsum / max(n_updates, 1)).round(5).tolist(),
                "work": net.work, "wall_s": round(time.time() - t0, 1)}
