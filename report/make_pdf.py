@@ -245,11 +245,16 @@ def fig_potential_evidence():
 
     fig.suptitle("Measured signals for the frontier-model hypothesis", x=0.02, ha="left", fontsize=9.5,
                  fontweight="bold")
-    fig.text(0.02, -0.02,
-             "Separate tasks and scales. E79 points are single-seed text8 test results; K rises 5→6→7. At 1M, "
-             "the E79 and E64b runs share the training and test text. E61 is a synthetic recall task.",
-             fontsize=6.4, color=MUTED)
-    fig.tight_layout(rect=(0, 0.08, 1, 0.91))
+    fig.text(0.02, 0.015,
+             "A: E79 single-seed text8 tests; expert count rises 5→6→7. At 1M, E79 and E64b share the training and test text. "
+             "B: separate synthetic E61 recall task.", fontsize=6.0, color=MUTED)
+    fig.text(0.02, -0.018,
+             "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
+             fontsize=6.0, color=MUTED)
+    fig.text(0.02, -0.051,
+             "10M LSTM baseline: 1.7515 validation at step 5,856/7,324 (not test); matched Transformer pending.",
+             fontsize=6.0, color=MUTED)
+    fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     return fig
@@ -883,7 +888,29 @@ def build():
     import figures_mech as FM                                   # explanatory figures (plain-language front)
     s = [P("Sleeping Machines: what is known", "title"),
          P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
-         P("In plain terms", "h1"),
+         P("Frontier signals", "h1"),
+         P("Three measured results make a concrete case for this architecture's potential: a real-language lead on a "
+           "shared text8 split, locally learned retrieval that generalizes to longer contexts, and deep compositional "
+           "networks that learn structured tasks with far less data and counted computation.")]
+    s += fig(fig_potential_evidence, W)
+    s += bullets([
+        "<b>Real language:</b> on the same 1M-character text8 training and test split, E79's native race mixture scores "
+        "1.808 bpc, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
+        "expert-and-copy-memory result; parameter count, training budget, and inference work are not matched.",
+        "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
+        "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
+        "1M examples.",
+        "<b>Depth and composition:</b> on a depth-4 order task, the event model reaches 99.9–100%; Transformers reach "
+        "99.0% with the same 40k examples and 99.2–99.6% with 2M. On shared-motif composition, it averages 99.65% after "
+        "one pass at roughly 10,000× lower counted work.",
+    ], st)
+    s += [P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
+            "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
+            "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
+            "advantage and lower training energy remain to be demonstrated.")]
+    s.append(PageBreak())
+
+    s += [P("In plain terms", "h1"),
          P("Today's neural networks are <b>clocked and dense</b>: at every step, every input is multiplied by every weight, "
            "whether or not anything happened. Many real signals are the opposite: long silences broken by precisely timed "
            "events (nerve spikes, trades on a market, sensor alarms), where <i>when</i> something happens is the information."),
@@ -896,12 +923,7 @@ def build():
            "actually happened: a node adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
            "whether they can <b>match or beat</b> MLPs and Transformers.")]
     s += fig(FM.fig_concept, W)
-    s += [P("<b>Strongest real-language signal so far.</b> On the same 1M-character text8 training and test split, "
-            "E79's native race mixture scores 1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for "
-            "the two-layer Transformer. This is a clear performance lead for the combined native experts and copy "
-            "memory, and the first result to build on in the deeper language-model campaign.")]
     s += [P("Highlights", "h1")]
-    s += fig(fig_potential_evidence, W)
     s += bullets([
         "<b>Same accuracy, 10,000–100,000× less computation.</b> On timing-pattern recognition a learned event network is "
         "perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after "
@@ -964,7 +986,8 @@ def build():
     s += fig(FM.fig_credit, W)
     s += [P("<b>Where it does not win yet:</b> event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 "
             "for a published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a "
-            "special case of ours; E74 tests a network that computes with delays and vectors together), and trading, where no "
+            "special case of ours; E74's initial time-vector pilot reached 0.146 peak held-out speaker accuracy, while E82's "
+            "partial readout sweep reached 0.184), and trading, where no "
             "learner beats buy-and-hold on this data (an audit shows why: the predictable edge, ≈ 1 bp per trade, is below "
             "any taker fee). <b>Next:</b> a path to generative language models built this way (section 10).")]
     s.append(PageBreak())
@@ -1003,8 +1026,9 @@ def build():
         "§101–§106).</b> Races of random clocks compute softmax attention and its gradient on average from local quantities; "
         "event networks are controlled differential equations whose universal features are the order detectors they learn; "
         "content-dependent delays compute softmax attention exactly at a cost set by its sharpness; a network laid out on "
-        "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. Tests "
-        "on real data (spoken digits, language) are queued (E74–E76).",
+        "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
+        "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split; E64b's matched 10M "
+        "Transformer and deep E77 model are the next language tests.",
     ], st)
     s.append(PageBreak())
     s += [P("Where the event paradigm wins, and where it does not", "h1"),
@@ -1223,9 +1247,10 @@ def build():
         "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
         "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
         "event units of our kind with every unit updated on every event (both select checkpoints on the test set); time only fades their state, so they do not "
-        "compute with delays. E74 (queued) tests the paradigm's own design: events carry small vectors whose content sets their "
-        "delays and whether they are sent; the receiver's clock weights and rotates what arrives; units fire at threshold and "
-        "emit their state at that moment (§105). SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "compute with delays. E74 tests the paradigm's own design: events carry small vectors whose content sets their "
+        "delays and whether they are sent; a 2k-train, 500-held-out pilot reached 0.146 peak speaker accuracy and 0.120 at "
+        "its final epoch after six epochs. E82's partial readout sweep reached 0.184 held-out accuracy after 240 updates. "
+        "These are above the 0.05 chance level for 20 speakers and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
         "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
         "to 0.675 (E59, §92).",
@@ -1272,9 +1297,10 @@ def build():
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
-        "<b>Time-vector networks on real streams (§105–§106):</b> E74 (content-dependent delays, snapshot payloads) and E75 "
-        "(the same, exactly equivariant to band shifts and tempo) on spoken digits, selected on held-out speakers: do "
-        "delays and vectors computing together close the gap to 95–96%?",
+        "<b>Time-vector networks on real streams (§105–§106):</b> E74's first speech pilot reached 0.146 peak held-out "
+        "speaker accuracy, and E82's partial readout sweep reached 0.184. E75 verified exact band-shift covariance but its "
+        "pilot was resource-limited. Improve the learning signal, then test whether delays and vectors together close the "
+        "remaining gap to strong speech models.",
         "<b>The work law of attention in language (§106a):</b> how many keys a trained character-level Transformer's queries "
         "actually need as the context grows (E76), which fixes what delay-coded attention saves on text.",
         "<b>A time-vector language model (§107, E77):</b> does sparse time-vector memory plus delay-coded retrieval reach the "
@@ -1386,7 +1412,8 @@ def build():
             "weights and no sampling, paying only for messages sent. Races compute the same softmax by sampling (fast, slightly "
             "noisy); delays compute it by waiting (exact, slower for a wider range of scores). A unit fires when its evidence "
             "crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation. "
-            "Such networks compute in the log semiring: delays add, gains multiply. E74 tests it on spoken digits."),
+            "Such networks compute in the log semiring: delays add, gains multiply. E74's initial spoken-digit pilot has "
+            "a measurable but small learning signal; further optimization is needed."),
           P("<b>Two memories (theory, §107).</b> A time-vector unit has a restricted affine-accumulator resemblance to "
             "exponential-gated recurrent memories: elapsed time supplies decay, content-dependent delay supplies an "
             "exponential write factor, and a count channel normalizes the read. This is not an identity with a full xLSTM "
@@ -1478,7 +1505,7 @@ def build():
             "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. E64b's 1M-character, 20-pass, "
             "validation-selected test scores are 2.179 for the 256-unit LSTM and 2.367 for the 2-layer width-256 Transformer; "
             "both best checkpoints are at the final validation point, so strict convergence is not established. The 10M "
-            "LSTM is in progress at step 4,392/7,324, with latest validation 1.765 bpc; this is an intermediate value, "
+            "LSTM is in progress at step 5,856/7,324, with latest validation 1.7515 bpc; this is an intermediate value, "
             "not test performance. The matched Transformer is queued next, and E77 has not yet produced a language-model result.")]
     s += fig(FM.fig_lm_topology, W)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "

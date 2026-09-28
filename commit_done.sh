@@ -16,10 +16,12 @@ fi
 FILES=(
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
+  AWS_EXPERIMENT_RUNBOOK.md
   Dockerfile
   codex.sh
   dev.sh
   scripts/resolve-claude-version.sh
+  scripts/bootstrap_aws_experiments.sh
   experiments/FINDINGS.md
   experiments/MATHEMATICAL_PROGRAM.md
   experiments/THEORY.md
@@ -35,9 +37,23 @@ FILES=(
   experiments/results/e64/lstm_D1000000_s256_p20_dr0.2_v.json
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
   report/make_pdf.py
+  report/figures/potential_evidence.png
   report/sleeping_machines_status.pdf
   commit_done.sh
 )
+
+# Catch stale or not-yet-generated allowlist entries before git add emits a
+# generic pathspec error. The report builder creates potential_evidence.png.
+MISSING_FILES=()
+for file in "${FILES[@]}"; do
+  [[ -e "$file" || -L "$file" ]] || MISSING_FILES+=("$file")
+done
+if ((${#MISSING_FILES[@]})); then
+  echo "Refusing to commit: allowlisted paths are missing:" >&2
+  printf '  %s\n' "${MISSING_FILES[@]}" >&2
+  echo "Generate report artifacts with report/make_pdf.py, then rerun this script." >&2
+  exit 2
+fi
 
 # A previous run may have staged this allowlist and stopped at its whitespace
 # check. Permit that exact partial state, but protect any unrelated staged work.
@@ -71,5 +87,5 @@ done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Advance E77 theory, report, and safe experiment setup}"
+MESSAGE="${1:-Update frontier evidence report and AWS experiment setup}"
 git commit -m "$MESSAGE"
