@@ -233,7 +233,7 @@ def fig_potential_evidence():
                   marker="D", s=46, linewidths=1.3, zorder=5,
                   label=f"E64b Transformer · 10M val @{tf_10m_progress:.0f}%")
     ax_lm.annotate(f"10M 4L TF val {tf_10m_latest['valid_bpc']:.3f}",
-                   (10_000_000, tf_10m_latest["valid_bpc"]), xytext=(7, -12),
+                   (10_000_000, tf_10m_latest["valid_bpc"]), xytext=(7, 9),
                    textcoords="offset points", fontsize=6.2, color=INK)
     ax_lm.set_xscale("log")
     ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
@@ -925,8 +925,8 @@ def build():
         "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
         "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
         "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
-        "work are not matched. The matched 10M four-layer Transformer has reached step 976/4,882 (20%) with 2.2329 "
-        "validation bpc, down 0.3528 from its 10% checkpoint; it remains above the completed LSTM's 1.7448 validation "
+        "work are not matched. The matched 10M four-layer Transformer has reached step 1,464/4,882 (30%) with 2.1001 "
+        "validation bpc, down 0.4856 from its 10% checkpoint; it remains above the completed LSTM's 1.7448 validation "
         "bpc. This is still an early checkpoint, with final validation and test evaluation pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
@@ -1065,7 +1065,7 @@ def build():
         "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
         "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and at 10M is ahead of "
         "the completed LSTM by 0.186 bpc on the same test segment; compute is not matched. The 10M four-layer Transformer "
-        "has reached step 976/4,882 (20%) with validation BPC 2.2329, down from 2.5857 at 10%; final validation, test, "
+        "has reached step 1,464/4,882 (30%) with validation BPC 2.1001, down from 2.5857 at 10%; final validation, test, "
         "and deep E77 results are pending.",
     ], st)
     s.append(PageBreak())
@@ -1545,8 +1545,8 @@ def build():
             "both best checkpoints are at the final validation point, so strict convergence is not established. At 10M, the "
             "two-layer 512-unit LSTM scores 1.7448 validation / 1.7993 test bpc (1,199,323 parameters, six passes), also with "
             "its best checkpoint at the final validation point. E79 scores 1.613 frozen on the same test segment, a single-seed "
-            "0.186 bpc lead without matched compute. The matched four-layer Transformer has reached 20% of updates, "
-            "2.2329 validation bpc at step 976/4,882, down from 2.5857 at step 488; this is early and not a test result. "
+            "0.186 bpc lead without matched compute. The matched four-layer Transformer has reached 30% of updates, "
+            "2.1001 validation bpc at step 1,464/4,882, down from 2.5857 at step 488; this is early and not a test result. "
             "E77 has not yet produced a language-model "
             "result.")]
     s += fig(FM.fig_lm_topology, W)

@@ -15,7 +15,7 @@ structured tasks with far less data and counted computation.
   characters, E79 scores **1.613 bpc frozen** versus **1.799** for the completed two-layer, 512-unit LSTM on the same
   test segment—a **0.186 bpc lead**. This is the strongest direct language-model signal so far. Both comparisons use
   one seed; E79 combines six native experts and copy memory, compute is not matched, and the matched 10M four-layer
-  Transformer is still training. At 20% of updates its validation BPC has fallen to 2.2329 from 2.5857 at 10%; its
+  Transformer is still training. At 30% of updates its validation BPC has fallen to 2.1001 from 2.5857 at 10%; its
   final validation and test scores remain pending.
 - **Learned associative retrieval:** on E61's synthetic recall task, local race attention reaches **100% at 4× context
   after at most 4,000 examples in all five runs**. The best of seven Transformer settings reaches **71.6%** on those
@@ -596,7 +596,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer has reached 20% of its updates (step 976/4,882): validation BPC improved from 2.5857 at 10% to 2.2329, but remains above the completed LSTM's 1.7448 validation BPC. This is an interim trajectory, not a test or endpoint comparison. E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer has reached 30% of its updates (step 1,464/4,882): validation BPC fell to 2.1001 from 2.5857 at 10%, improving by 0.1328 since 20%. It remains 0.3553 above the completed LSTM's 1.7448 validation BPC. These are interim checkpoints, not a test or endpoint comparison. E77 has no completed LM result yet.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -771,7 +771,7 @@ completed 1M same-split gradient baselines score 2.179 for the 256-unit LSTM and
 At 10M, the completed two-layer, 512-unit LSTM scores 1.799 test bpc (1.7448 validation, 1,199,323 parameters, six
 passes); E79's frozen mixture scores 1.613 on the same test segment, a 0.186 bpc lead. The LSTM's best validation
 checkpoint is the final one, so convergence is not established. Its matched four-layer Transformer has reached
-976/4,882 updates (20%), with 2.2329 validation bpc, down from 2.5857 at 488 updates. It remains 0.488 bpc above the
+1,464/4,882 updates (30%), with 2.1001 validation bpc, down from 2.5857 at 488 updates. It remains 0.355 bpc above the
 completed LSTM validation score at this interim point; neither a final validation nor a test score is available.
 E79 therefore supplies the stronger completed real-language signal, while compute-matched and deep-model comparisons
 remain open.
@@ -930,8 +930,8 @@ in this design features come from the time-vector layers and the native detector
   unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
   Transformer; both best checkpoints occur at the final validation point. At 10M, the two-layer 512-unit LSTM completed
   six passes with 1.7448 validation / 1.7993 test bpc (1,199,323 parameters); its best validation checkpoint is the final
-  one, so convergence is not established. The matched four-layer 10M Transformer has reached step 976/4,882 with 2.2329
-  validation bpc (20% of updates), down from 2.5857 at step 488. It remains above the completed LSTM's 1.7448 validation
+  one, so convergence is not established. The matched four-layer 10M Transformer has reached step 1,464/4,882 with 2.1001
+  validation bpc (30% of updates), down from 2.5857 at step 488. It remains above the completed LSTM's 1.7448 validation
   bpc at this interim point; final validation and test scores are pending;
   the parameter-matched depth controls and 2/4/8/16-layer E77 comparisons remain queued. No language-model advantage
   for E77 is established yet.
@@ -997,7 +997,7 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer at step 976/4,882, validation 2.2329 (20%, early) |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer at step 1,464/4,882, validation 2.1001 (30%, early) |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
