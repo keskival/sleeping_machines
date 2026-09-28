@@ -1,3 +1,9 @@
+# E80: the market as vector events (THEORY §105): time-vector point process; own stream (fair vs the Transformer point
+# process), + transaction magnitudes in the vectors, + magnitudes and the perpetual / ETH; then test with the edge audit
+e80_val_own experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 0
+e80_val_mag experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 1
+e80_val_mag_cross experiments/e80_tv_market.py --mode val --fine 1 --cross 1 --mag 1
+e80_test experiments/e80_select_test.py
 # E68: race Transformer vs softmax Transformer (THEORY §103)
 e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
 e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
