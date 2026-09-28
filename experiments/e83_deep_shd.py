@@ -58,24 +58,35 @@ class DeepSHD(nn.Module):
         self.ro = TVLayer(readout_width, 20, d, d, n, dmax, readout_mask, False, 0.3,
                           gate_bias=1.0, normalize=True)
 
+    @staticmethod
+    def scored_pairs(layer, indices):
+        if layer.mask is None:
+            return len(indices) * layer.M
+        return int(layer.mask[indices].sum())
+
     def forward(self, eb, ei, et, B, G):
         raw_v = self.emb(ei)
         emitted = []
-        messages, spikes = [], []
+        messages, spikes, candidates = [], [], []
         for i, layer in enumerate(self.layers):
             if i == 0:
                 ib, ij, it, iv = eb, ei, et, raw_v
             else:
                 ib, ij, it, iv = emitted[-1]
+            candidates.append(self.scored_pairs(layer, ij if i else ei))
             out, msg = layer(ib, ij, it, iv, B, G)
             emitted.append(out); messages.append(msg); spikes.append(len(out[2]) / B)
 
         taps = []
         for out in emitted:
-            V, msg = self.ro(*out, B, G)
+            candidates.append(self.scored_pairs(self.ro, out[1]))
+            V, msg = self.ro(out[0], out[1], out[2], out[3], B, G)
             messages.append(msg)
             taps.append(torch.softmax(V[::4], -1).mean(0))
-        return taps[-1], {"msgs": messages, "spikes": spikes, "tap_probs": taps}
+        scan_updates = G * self.layers[0].n * (sum(self.widths) + self.depth * self.ro.M)
+        return taps[-1], {"msgs": messages, "candidates": candidates,
+                          "spikes": spikes, "tap_probs": taps,
+                          "state_vector_updates_per_utt": scan_updates}
 
 
 def grad_norm(module):
@@ -168,7 +179,8 @@ def main():
             tl += float(main_loss.detach()); aux_tl += float(aux_loss.detach())
 
         net.eval(); ok = 0; tap_ok = np.zeros(a.depth)
-        st = {"msgs": np.zeros(a.depth * 2), "spikes": np.zeros(a.depth)}
+        st = {"msgs": np.zeros(a.depth * 2), "candidates": np.zeros(a.depth * 2),
+              "spikes": np.zeros(a.depth), "state_vector_updates_per_utt": np.zeros(1)}
         for layer in net.layers:
             layer.sent.zero_()
         net.ro.sent.zero_()
@@ -188,6 +200,8 @@ def main():
                "tap_acc": (tap_ok / len(ev)).round(4).tolist(),
                "aux_train_loss": round(aux_tl / nb, 4),
                "msgs_per_utt": (st["msgs"] / len(ev)).round(0).tolist(),
+               "candidate_scores_per_utt": (st["candidates"] / len(ev)).round(0).tolist(),
+               "state_vector_updates_per_utt": int(st["state_vector_updates_per_utt"][0] / len(ev)),
                "spikes_per_utt": (st["spikes"] / len(ev)).round(0).tolist(),
                "synapses_sending": send,
                "layer_grad_norms": (gsum / nb).round(5).tolist(),
