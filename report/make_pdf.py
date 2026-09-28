@@ -55,34 +55,6 @@ def load(path):
         return json.load(f)
 
 
-def read_tf_10m_checkpoints():
-    """Merge the saved snapshot, final validation curve, and queue log."""
-    result_path = os.path.join(RES, "e64", "tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json")
-    final_path = os.path.join(RES, "e64", "tf_D10000000_s256_L4_p4_dr0.1_v.json")
-    log_path = os.path.join(ROOT, "experiments", "queue", "logs", "e64b_tf_D10M.log")
-    by_step = {}
-    if os.path.isfile(result_path):
-        for row in load(result_path).get("checkpoints", []):
-            if all(k in row for k in ("step", "of", "valid_bpc")):
-                by_step[int(row["step"])] = row
-    if os.path.isfile(final_path):
-        for row in load(final_path).get("valid_curve", []):
-            if all(k in row for k in ("step", "of", "valid_bpc")):
-                by_step[int(row["step"])] = row
-    if os.path.isfile(log_path):
-        with open(log_path) as f:
-            for line in f:
-                try:
-                    row = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if all(k in row for k in ("step", "of", "valid_bpc")):
-                    by_step[int(row["step"])] = row
-    if not by_step:
-        raise FileNotFoundError("no saved or logged 10M Transformer validation checkpoints")
-    return [by_step[step] for step in sorted(by_step)]
-
-
 def fig_image(fig, width_mm):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -299,6 +271,56 @@ def fig_potential_evidence():
              f"{tf_10m_final['steps']:,} updates.", fontsize=6.0, color=MUTED)
     fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_route_diagnostics():
+    """Summarize the matched depth-4 route-shadow and gradient diagnostics."""
+    matches = glob.glob(os.path.join(
+        RES, "e83", "*objevent_prefix_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.json"))
+    if not matches:
+        raise FileNotFoundError("missing matched E83 local-counterfactual result")
+    rows = load(matches[0])["curve"]
+    fig, (ax_delta, ax_grad) = plt.subplots(1, 2, figsize=(7.2, 2.65))
+    layers = np.arange(1, 5)
+    colors_ep = [BLUE, ORANGE]
+    offsets = [-0.08, 0.08]
+    for ei, row in enumerate(rows[:2]):
+        mean = np.asarray(row["counterfactual_layer_mean_open_minus_closed_loss"], dtype=float)
+        spread = np.asarray(row["counterfactual_layer_shadow_delta_std"], dtype=float)
+        ax_delta.errorbar(layers + offsets[ei], mean, yerr=spread, color=colors_ep[ei],
+                          marker="o", capsize=2.5, lw=1.3, label=f"epoch {ei + 1}")
+    ax_delta.axhline(0, color=INK, lw=0.9, ls=":")
+    ax_delta.set_xticks(layers)
+    ax_delta.set_xlabel("content-route layer")
+    ax_delta.set_ylabel("$L_{open}-L_{closed}$")
+    ax_delta.set_title("A · Shadow utility by layer")
+    ax_delta.legend(fontsize=6.5)
+
+    for ei, row in enumerate(rows[:2]):
+        ratio = np.asarray(row["counterfactual_layer_to_pathwise_norm_ratios"], dtype=float)
+        cosine = np.asarray(row["counterfactual_layer_pathwise_cosines"], dtype=float)
+        ax_grad.plot(layers, ratio, color=colors_ep[ei], marker="o", lw=1.3,
+                     label=f"norm ratio · epoch {ei + 1}")
+        ax_grad.plot(layers, cosine, color=colors_ep[ei], marker="^", ls="--", lw=1.0,
+                     label=f"cosine · epoch {ei + 1}")
+    ax_grad.axhline(0, color=INK, lw=0.9, ls=":")
+    ax_grad.set_xticks(layers)
+    ax_grad.set_ylim(-0.02, 0.09)
+    ax_grad.set_xlabel("hidden layer")
+    ax_grad.set_ylabel("dimensionless gradient statistic")
+    ax_grad.set_title("B · Counterfactual vs pathwise gradient")
+    ax_grad.legend(fontsize=5.8, ncol=2, loc="upper right")
+
+    fig.suptitle("E83 · matched depth-4 local counterfactual pilot", x=0.02,
+                 ha="left", fontsize=9.2, fontweight="bold")
+    fig.text(0.02, 0.005,
+             "A: positive loss difference disfavors opening; bars show ±1 SD across sampled routes. "
+             "B: norm ratio and cosine. One seed; held-out accuracy stayed near chance.",
+             fontsize=6.0, color=MUTED)
+    fig.tight_layout(rect=(0, 0.10, 1, 0.90))
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_gradient_diagnostics.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     return fig
 
@@ -947,7 +969,9 @@ def build():
         f"work are not matched. The four-layer 10M Transformer checkpoint was selected on validation and scored "
         f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after {tf_10m_final['steps']:,} updates, "
         f"{tf_10m_final['test_bpc'] - 1.7993:.4f} above the LSTM's 1.7993 "
-        "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes.",
+        "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes. "
+        "E79 is a mixture of expert predictors plus copy memory, not a deep hidden event stack; E77 is the separate "
+        "deep time-vector language model, whose result is still pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
@@ -1318,10 +1342,14 @@ def build():
         "0.981 peak confidence. A readout-only shadow probe at seed-2 initialization (not trained weights) forced 32 "
         "near-gate routes on four held-out utterances: 31 changed max-pooled CE by exactly zero and one reduced it by "
         "0.045; boundary-gradient norm was 2.2% of pathwise norm, cosine 0.012. Section 129 derives why max pooling can "
-        "erase routes that remain below the temporal winner. `TVLayer` also detaches its hard content gate and computes "
-        "spike identities in no_grad, so closed routes and silent units get no task gradient for creating events. Save a "
-        "trained checkpoint next, shadow hidden threshold crossings through the remaining layers, and compare max, "
-        "integral, and smooth-max posterior heads under sampled-prefix proper log loss before scaling data or depth. "
+        "erase routes that remain below the temporal winner. `TVLayer` still detaches its hard content gate and computes "
+        "spike identities in no_grad, so closed routes and silent units get no pathwise task gradient. E83 now trains a "
+        "causal prefix posterior with a fixed 0–1000 ms query window and shadows near-boundary routes through the full "
+        "downstream stack. The first unbiased total estimator over about 480k eligible routes and 128 shadows per epoch "
+        "destabilized the depth-4 model. A clipped normalized local rule avoided that explosion but did not improve "
+        "recognition: the matched 128/32 seed-6 run stayed at 6.25% terminal accuracy and had epoch-2 prefix NLL "
+        "[2.996, 19.735]. Only 11.6% of sampled openings helped; the counterfactual/pathwise cosine was 0.0038. "
+        "Layerwise shadow deltas and gradient norms are still noisy, so update gain needs uncertainty-aware calibration. "
         "The E74/E82 results are above the 0.05 chance level for 20 classes and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
         "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
@@ -1362,6 +1390,7 @@ def build():
         "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only; the "
         "semi-Markov network of E48 (above) closed the gap to the GRU.",
     ], st)
+    s += fig(fig_e83_route_diagnostics, W * 0.92)
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
@@ -1369,15 +1398,13 @@ def build():
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
-        "<b>Deep real-stream trainability (E83/E84):</b> E83's earlier depth-2 runs used a batch-length-confounded readout "
-        "and are not depth evidence. Its guarded depth-4, two-epoch controls remain at chance; the anytime objective "
-        "reaches full coverage by false confidence while Layer 4 activity grows. More fundamentally, the current hard "
-        "content gate is detached and spike identities are selected in no_grad, so only realized routes get pathwise "
-        "credit. The small final-readout shadow probe at random initialization found 31/32 max-pooled loss differences "
-        "exactly zero (§129), consistent with a temporal winner-gap dead zone; it does not test trained hidden route "
-        "births. Save a trained checkpoint, shadow hidden threshold crossings through the remaining layers, and compare "
-        "max/integral/smooth-max heads with sampled-prefix proper log loss. Then calibrate stopping before scaling data "
-        "and depth. E84's day-5 market queue has not run; it uses strict adjacent-layer chains and logs gradient alignment and work.",
+        "<b>Deep real-stream trainability (E83/E84):</b> E83's old depth-2 runs used a batch-length-confounded readout; "
+        "the corrected causal prefix posterior uses fixed-horizon queries. At depth 4, pathwise and normalized-route-credit "
+        "runs both remain near chance. The unbiased total route estimator destabilized training; a clipped local update "
+        "did not improve accuracy and showed low gradient alignment. The hard gate still has sampled route-boundary credit, "
+        "but silent-unit births and candidates outside the fixed mask remain uncredited. Measure layerwise gradient and "
+        "shadow uncertainty, repeat across seeds, and calibrate the stopping rule before scaling. E84's day-5 market queue "
+        "has not run; it uses strict adjacent-layer chains and logs gradient alignment and work.",
         "<b>Anytime sparse stream classification (§§119–§129):</b> if the prefix scores are calibrated posteriors, first "
         "crossing confidence 1−ε bounds error among emitted answers by ε. Calibration must hold at the policy-selected "
         "prefixes. Point-process likelihood uses both observed events and silence, so class-specific absence evidence can "

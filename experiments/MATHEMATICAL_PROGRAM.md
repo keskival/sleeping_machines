@@ -175,8 +175,8 @@ The architecture has an advantage only if its attainable loss is lower for the s
 
 ## Highest-value falsification sequence
 
-1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The report says the current 90M-character race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass validation-selected LSTM and 2-layer Transformer now score 2.179 and 2.367 test bpc respectively; both best checkpoints occur at the final validation checkpoint. The 10M four-layer Transformer completed 4,882 updates with 1.8647 best validation bpc at step 4,880 and 1.9083 held-out test bpc. It is 0.1199 above the 10M LSTM on validation and 0.1090 above it on test; the Transformer uses 3.24M parameters/four passes versus the LSTM's 1.20M/six passes, so this is data-matched but not capacity- or training-budget-matched.
-2. **Test deep Hopfield event message passing.** Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, counterfactual route coverage, score entropy, retained/new event counts, pair-scoring work, and validation loss. §§19/57 already derive and test route discovery credit; the E77 experiments need to measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. E114 completed first: 144 central finite-difference cases over sequence length, retained mass, temperature, and diffuse/reused-key patterns showed no absolute violation above 1e-8; among nontrivial bounds, the maximum Jacobian and forward ratios were 0.897 and 0.687. The safe E83/E84 queue then exposed a missing depth field in the SHD pilot; that implementation fault is fixed before resuming the guarded queue.
+1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The 90M-character E79 race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass LSTM and 2-layer Transformer score 2.179 and 2.367 held-out test bpc; the 10M four-layer Transformer scores 1.9083 held-out test bpc after validation-based checkpoint selection. It is 0.1090 above the 10M LSTM's test bpc. These are same-data, single-seed results, not capacity- or training-budget-matched comparisons.
+2. **Test deep Hopfield event message passing.** E79's successful text8 result comes from a race mixture of independent predictive experts plus copy memory; its learned expert allocation is not evidence of gradient training through deep hidden layers. E77 is the separate deep time-vector character model: content-gated/delayed vector messages, prior-event routes, event-level key/value retrieval, recurrent state, and token retrieval. Its result is pending. Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, pathwise/counterfactual norm ratios and cosines, counterfactual shadow-delta variance and coverage by layer, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, score entropy, retained/new event counts, pair-scoring work, and test loss. E77 has next-character labels at each causal position; apply the SHD lesson about lost routes by shadowing near-boundary message alternatives against the affected downstream token losses, not by copying the SHD sequence-prefix target. Begin with a weak prior on route utility, update it from fresh layer/score-stratified shadows, and cap corrections in the optimizer metric. §§19/57 derive route discovery credit; measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. E114 completed first: 144 central finite-difference cases over sequence length, retained mass, temperature, and diffuse/reused-key patterns showed no absolute violation above 1e-8; among nontrivial bounds, the maximum Jacobian and forward ratios were 0.897 and 0.687.
 3. **Separate associative recall from search cost.** Start with all-past-event softmax as the trainability/recall reference. For a candidate set, measure omitted mass and the exact query-gradient residual from §112: omitted within-group covariance plus the between-group key/advantage term. The new H-smooth extension also bounds the *full-loss* query, key, and value VJP errors, including the change in upstream gradient caused by the output error; its query bound is $\beta\epsilon D_K[(3/2-\epsilon)D_A^C+HD_V^2/4]$. Check these bounds against dense autodiff while varying support mass and downstream curvature. Mass recall alone does not guarantee gradient alignment. Use the existing near-miss route credit; its key-insertion loss estimate $rA$ has a curvature-bounded error, so allocate exact shadow execution by the resulting per-candidate remainder bound. Vary candidate budget and context, and measure route recall, output and gradient error, index maintenance, bytes moved, shadow work, and actual score operations. Top-k after dense scoring tests aggregation only.
 4. **Test race attention against softmax directly.** Match parameters and training budget, vary races per head and depth, measure output/gradient bias and variance, convergence, loss, and actual event work. This isolates whether stochastic local credit preserves the Hopfield address/value learning signal.
 5. **Only then scale tokens and hardware.** Move successful variants to larger text and longer contexts; compare energy and throughput on event-capable and GPU hardware. Include search/index construction, communication, synchronization, and training overhead.
@@ -195,8 +195,13 @@ the longest utterance in its batch. The old depth-2 runs are retained as
 debugging records but are excluded as depth or trainability evidence; the
 guarded queue was stopped before depth 4.
 
-The corrected E83 compares sequence objectives at fixed depth 4 before
-resuming a depth sweep:
+The corrected E83 now separates posterior learning from the stopping rule.
+Its `event_prefix` objective trains a class posterior with proper log loss at
+a small set of causal query times, then evaluates threshold stopping on that
+posterior. Query times are stratified in a fixed, shared 0–1000 ms physical
+window; the earlier sampler used each example's last event to set its window,
+which leaked future duration into prefix weighting. This objective is distinct
+from the earlier race-only screening experiments:
 
 - **Output race:** no answer before any class clears a confidence threshold;
   the first threshold-crossing class is emitted. THEORY §115 derives a
@@ -209,6 +214,10 @@ resuming a depth sweep:
   SHD benchmark study.
 - **Integrated potential:** cross-entropy on the time integral of readout
   potentials, another published sequence-classification scheme.
+- **Causal prefix posterior:** cross-entropy on the labeled class at sampled
+  prefixes. In expectation, this is proper for $P(Y\mid\mathcal F_t)$ even
+  though only the complete utterance label is supplied. It does not force an
+  early answer; the threshold remains a separate decision.
 
 Each sequence now has its own end time and pooling deadline, so co-batched
 padding is excluded. A tiny 80-train / 40-validation, one-epoch smoke remained
@@ -246,28 +255,41 @@ the limits of this event-driven readout.
 
 A second code audit found that `TVLayer` computes its content gate as
 `r.detach() > 0` and its spike identity mask under `no_grad`. On a fixed batch,
-a closed route has exactly zero loss derivative with respect to its gate score;
-an open route gets only its conditional delay/payload derivative, and a silent
-unit gets no end-to-end output derivative. The route masks are also fixed
-random/tonotopic buffers, so topology itself cannot be recruited. Thus the
-objective controls learn on realized support and do not test the established
-§19/§57 boundary credit.
+a closed route has exactly zero pathwise derivative with respect to its gate
+score; an open route gets only its conditional delay/payload derivative, and a
+silent unit gets no end-to-end output derivative. The candidate route masks
+remain fixed random/tonotopic buffers, so only content-gate choices within
+that candidate graph can be recruited. The new event-prefix objective adds
+sampled §19/§57 boundary credit for those gate choices; hard silent-unit
+births and edges outside the fixed candidate graph remain uncredited.
 
 The first exact shadow probe was deliberately narrow: four held-out-speaker
 utterances, 32 near-gate insertions into the final readout, and a fresh seed-2
-initialization because no trained checkpoint was saved. 31/32 interventions
-changed max-pooled terminal loss by exactly zero; one improved it by 0.045.
-The summed counterfactual gradient was only 2.2% of the pathwise norm and had
-cosine 0.012 with it. This is not a trained-model result. Section 129 explains
-one reason: max pooling gives zero loss difference to a route whose potential
-stays below that class's current temporal winner. The next useful probe is
-therefore to save a trained checkpoint, measure temporal winner gaps, and
-shadow hidden threshold crossings through downstream layers. Compare max,
-integral, and smooth-max posterior heads on the same event support and
-sampled-prefix proper log loss; report exact shadow advantages and gradient
-alignment under a fixed noise band/budget. Do not spend on another objective
-sweep before this distinguishes readout blindness from missing hidden-route
-credit.
+initialization. 31/32 interventions changed max-pooled terminal loss by
+exactly zero; one improved it by 0.045. The summed counterfactual gradient was
+2.2% of pathwise norm with cosine 0.012. Section 129 explains the max-pooling
+winner-gap dead zone. E83 now also shadows hard content routes through the
+full downstream network under the prefix objective. The unbiased
+candidate-count/shadow-count estimator destabilized the matched depth-4 run:
+about 480k near routes and 128 shadows per epoch preceded train-loss and
+activity explosion. A bounded normalized local rule avoided that runaway but
+did not improve recognition. In its matched seed-6 run, epoch-2 terminal
+accuracy remained 6.25% (2/32), prefix NLL was [2.996, 19.735], only 11.6% of
+112 sampled openings helped, and counterfactual/pathwise cosine was 0.0038.
+The matched pathwise-only control had 6.25% accuracy and prefix NLL
+[2.995, 3.202]. The local rule's raw counterfactual/pathwise gradient norm
+ratio was 1.64%; its applied update was separately capped. This establishes
+that estimator scale and layerwise route utility need attention, not that
+counterfactual learning works on SHD.
+
+Per-layer mean route effects varied, but were small relative to the sampled
+shadow spread. A weak prior at initialization should not enforce untrained
+route preferences; however, a small, noisy sample still produces a broad
+posterior, not a license to magnify its mean. §132 proposes robust
+layer/score-stratified posteriors for route utility and treats step-size as a
+separate optimizer-metric trust-region problem. More shadows or useful
+stratification are needed before increasing the gain. Hard silent-neuron
+firing still has no counterfactual boundary term.
 
 Do not then train the stop threshold as a proxy for posterior quality. For a
 prefix sampled from a declared latency distribution $t\sim\nu$, log loss

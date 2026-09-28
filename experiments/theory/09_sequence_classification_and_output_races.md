@@ -852,31 +852,208 @@ with the causal prefix-window loss. The prefix labels say which complete
 outcome was correct; the route's shadow says whether this lost message would
 have improved those time-indexed predictions.
 
-Exact shadowing every candidate is wasteful. If $S$ is the set of gate scores
-within a declared near-boundary band and $m$ candidates are sampled uniformly
-without replacement, then
+Exact shadowing every candidate is wasteful. If $S_\ell$ is the set of
+near-boundary candidates in layer $\ell$, then uniform sampling of $m_\ell$
+routes with the Horvitz–Thompson factor $|S_\ell|/m_\ell$ is unbiased for the
+sum of boundary terms restricted to $S_\ell$. That fact does not control its
+variance: a large candidate set can multiply one noisy shadow difference by a
+large $|S_\ell|/m_\ell$.
+
+E83 tested this estimator at depth four. With 128 training examples and one
+shadow per layer and minibatch, it sampled 128 shadows per epoch from about
+480,000 eligible routes. The loss then rose from 1974 to 17044, the final
+layer's activity grew from 1034 to 1691 spikes per utterance, and prefix NLL
+exploded. This is direct evidence that the unbiased sum estimator is unusably
+high-variance in this configuration; it is not evidence that the exact
+boundary derivative is wrong.
+
+The next implementation uses a bounded, normalized local rule. For each
+layer, average only the sampled route terms, clip the loss difference, and
+clip the resulting gradient norm:
 
 \[
-\widehat g_{cf}=\frac{|S|}{m}\sum_{k\in sample}
-\frac{p_k(1-p_k)}{\sigma}(L_{k,1}-L_{k,0})\nabla_\theta r_k
+\tilde g_\ell=\operatorname{clip}_{G}\!\left[
+\frac{1}{m_\ell}\sum_{k\in sample_\ell}
+\frac{p_k(1-p_k)}{\sigma}
+\operatorname{clip}_{d}(L_{k,1}-L_{k,0})\nabla_\theta r_k
+\right].
 \]
 
-is unbiased for the sum restricted to $S$. Candidates outside the band are
-omitted as a controlled approximation; a fixed random connectivity mask also
-means edges outside the candidate graph cannot be recruited by this signal.
-The E83 adaptation samples a small route budget per layer and batch, reruns the
-whole depth with that route toggled, and applies the detached loss difference
-through the live score $r=q_j^\top v+c_{ij}$. Thus the update reaches the
-gate, bias, and source payload that proposed the route. The expected update is
-not pathwise backprop through the discontinuous gate: it is the existing
-counterfactual boundary estimator. Hard silent-neuron firing still has a
-separate missing boundary term and remains uncredited by route shadows alone.
+This estimates a mean near-route signal per layer, not the full sum over
+candidates. Loss clipping also makes it biased for the original logistic-noise
+objective. The separate update $\theta\leftarrow\theta-\eta_{cf}\tilde g$
+keeps its scale explicit and prevents a rare large shadow from overwhelming
+the pathwise optimizer. Since $r=q_j^\top v+c_{ij}$, its local Jacobian
+updates the gate, bias, and the source payload computation; the shadow
+continuation itself is detached. This is a controlled heuristic motivated by
+the exact derivative, not a new unbiased estimator or a trainability theorem.
+Candidates outside the near-boundary band and edges outside the fixed
+connectivity mask remain unreachable by this signal. Hard silent-neuron firing
+still needs a separate boundary term.
 
-This answers “what teaches a route that never fired?” with two signals and two
-costs: the sampled label error travels backward on actual event paths; selected
-lost routes receive a finite-difference boundary signal from a shadow
-continuation. We must report the number of eligible near misses, shadows,
-$L_1-L_0$ distribution, and pathwise/boundary gradient magnitudes separately.
-The theory establishes the estimator, not that it has a favorable variance or
-helps SHD. A guarded run must test that question before the result is called
-trainable.
+The pathwise-only depth-four control stayed stable but near chance on its
+32-example held-out subset. Thus the current evidence identifies a concrete
+variance failure in one counterfactual estimator; it does not yet show that
+the normalized update improves recognition. Report eligible routes, shadow
+count, signed and absolute $L_{on}-L_{off}$, clipping rate, update norm,
+activity, and test accuracy separately.
+
+## 132. What gradient statistics say about the learning signal
+
+Let a sampled candidate's vector contribution be
+$u_k=b_k\nabla_\theta r_k$, where
+$b_k=p_k(1-p_k)(L_{k,1}-L_{k,0})/\sigma$. In one layer's eligible band
+$S$ of size $N$, the exact restricted gradient is $G=\sum_{k\in S}u_k$.
+Uniform sampling of $m$ candidates without replacement gives the unbiased
+total estimator
+
+\[
+\widehat G_{HT}=\frac Nm\sum_{k\in sample}u_k,
+\qquad
+\operatorname{Cov}(\widehat G_{HT})=
+\frac{N^2}{m}\left(1-\frac mN\right)S_u,
+\]
+
+where $S_u$ is the finite-population covariance of the candidate vectors.
+The standard deviation therefore carries an $N/\sqrt m$ scale. A large
+candidate count does not by itself make the estimate informative: if most
+candidate effects cancel, its signal-to-noise ratio can get worse as the
+band grows. E83's roughly 480,000 near routes and 128 shadows per epoch imply
+about 3,750 candidates per sampled route when totals are compared per layer;
+the exact per-minibatch ratio varies with the event counts. This makes the
+observed instability of the scaled total estimator analytically plausible.
+
+The normalized sample mean
+$\widehat{\bar G}=m^{-1}\sum u_k$ instead estimates $\bar G=G/N$ and has
+covariance $(1-m/N)S_u/m$. It removes the $N$ multiplier but changes the
+quantity being optimized: it does not estimate the full candidate sum. The
+loss-difference clip makes it biased even for this mean. A separate update
+with global gradient cap $G_{max}$ has Euclidean step norm at most
+$\eta_{cf}G_{max}$ per minibatch. The cap controls update size, not usefulness;
+clipping can also hide a badly scaled signal, so both raw and applied norms
+must be logged.
+
+The route coefficient has a useful local bound. Since
+$p(1-p)\le1/4$, its magnitude before clipping is at most
+$|L_{on}-L_{off}|/(4\sigma)$. With E83's $\sigma=0.25$ and loss-difference
+clip 5, each scalar coefficient is at most 5 before the global gradient
+clip. Its parameter gradient splits into direct router terms and upstream
+payload eligibility:
+
+\[
+\nabla_q r=v,\qquad \nabla_{c_{ij}}r=1,\qquad
+\nabla_{\theta_{payload}}r=q^\top
+\frac{\partial v}{\partial\theta_{payload}}.
+\]
+
+Thus a counterfactual can teach the query and route bias even when the
+message lost, while teaching the source representation depends on the
+payload Jacobian through earlier layers. Per-layer norm and cosine are needed
+to tell these channels apart.
+
+For pathwise gradient $g_p$ and counterfactual gradient $g_c$, the local
+first-order change from adding $-\eta g_c$ to ordinary SGD is
+$-\eta\langle g_p,g_c\rangle$ in the pathwise objective. Cosine sign gives
+the direction of interference; the norm ratio gives its scale. A positive
+cosine supports local cooperation, a negative cosine predicts a first-order
+increase, and a near-zero cosine means the extra update is nearly orthogonal.
+This interpretation is Euclidean: E83 uses AdamW for the pathwise step and a
+separate clipped SGD correction, so optimizer preconditioning and curvature
+can change the actual interaction. Layerwise cosines, raw norm ratios,
+clipped update norms, shadow-delta variance, and helpful-route fraction are
+therefore complementary diagnostics rather than a single “gradient quality”
+score.
+
+A Bayesian summary can separate uncertain layer means from a deliberately
+weak initialization prior. For scalar shadow utility, use a robust sampling
+model such as
+$\Delta_{\ell k}\sim t_\nu(\mu_\ell,s_\ell)$,
+$\mu_\ell\sim\mathcal N(0,\tau_0^2)$, with a broad $\tau_0$ before learning;
+report $P(\mu_\ell<0\mid data)$, since negative $L_{on}-L_{off}$ favors
+opening. A Beta-binomial model for the helpful-route fraction is a useful
+secondary check, but discards effect magnitude. The posterior should be
+updated from fresh shadows as the network changes, or discounted by recency;
+an old route-value posterior is stale after the representation moves.
+
+This posterior is a diagnostic, not the step-size rule. The action gradient
+depends on the vector $\nabla_\theta r_k$, and the scalar mean delta alone
+does not identify its direction, covariance, or optimizer-metric length.
+Estimate uncertainty of the sampled gradient or of its projection onto the
+proposed update, then use a separate trust radius in the optimizer's
+parameter metric and verify the paired loss change on held-out prefixes.
+With only about 30 shadows per layer in E83, the observed per-layer means
+are all small relative to their across-shadow standard deviations; a weak
+prior cannot turn that into confident evidence. More shadows or a better
+stratification by route score and layer are needed before tuning gain.
+
+E83 evaluates each shadow at the same sampled prefix times as its factual
+execution. This common-random-number pairing cancels part of the query-time
+Monte Carlo noise in $L_{on}-L_{off}$. Prefix-time stratification separately
+controls the variance of the window-integrated proper log score. Keeping data,
+prefix, and shadow random streams separate makes matched comparisons
+reproducible and prevents route sampling from changing the training examples.
+
+## 133. Deep language modeling already has causal labels; hidden route birth is the gap
+
+For a character stream $x_0,\ldots,x_{L-1}$, E77 predicts each next character
+from its prefix, with objective
+
+$$
+\mathcal L(\theta)=\frac{1}{BL}\sum_{b=1}^B\sum_{k=0}^{L-1}
+ -\log p_\theta(x_{b,k+1}\mid x_{b,\le k}).
+$$
+
+This is ordinary causal supervision at every prediction position. The SHD
+problem of choosing when to attach one utterance label does not transfer: the
+language model has no missing target time or unobserved class posterior. Its
+output softmax is over the small character alphabet, while hidden event
+messages and their candidate graph can remain sparse. This does not make all
+of E77 sparse: its token-retrieval module currently materializes dense causal
+$[B,H,L,L]$ query-key scores, so its retrieval search still has quadratic
+training cost. The route-credit probe isolates a separate hidden-topology
+question and does not resolve that cost.
+
+E77's content route is $g=\mathbf 1[r>0]$, where
+$r=q_j^\top v_e+c_{ej}$. A route that is open receives ordinary derivatives
+through delay and payload; a closed route has no path through those operations.
+Under logistic score perturbation of scale $\sigma$,
+$p_\sigma(r)=\operatorname{sigmoid}(r/\sigma)$, the local expected objective
+has boundary derivative
+
+$$
+\nabla_r\mathbb E[\mathcal L]
+=\frac{p_\sigma(r)(1-p_\sigma(r))}{\sigma}
+  (\mathcal L_{\rm open}-\mathcal L_{\rm closed}).
+$$
+
+The loss difference must be measured by toggling the route and replaying its
+downstream consequences, including later event generation and the causal
+token losses. For a route arriving at $t_e$, only prediction states at or
+after that arrival can change. Using the identical token batch in both runs
+cancels unrelated sample variation. The E77 probe samples near-zero scores
+separately in each layer and averages within layer; it does not multiply by
+the inverse sampling probability over the huge candidate population. It logs
+the paired loss deltas and counterfactual/pathwise gradient alignment before
+allowing a separate, clipped counterfactual update. This is deliberately a
+measurement path first: E83's near-zero cosine and unstable total estimator
+are reasons to measure transfer, not to assume it.
+
+For uncertainty, route deltas should be grouped by layer and relevant
+conditions (score band, active/closed status, event age, and token region).
+With a broad zero-centered prior on a layer mean $\mu_\ell$ and a
+Student-$t$ likelihood for heavy-tailed shadow deltas, initially weak prior
+precision lets the first observations move the estimate; posterior uncertainty
+falls only when repeated shadows agree. If the representation shifts, discount
+or reset stale observations. The posterior over route utility answers whether
+opening routes is promising; it does not set the parameter step size. Bound the
+actual update in the optimizer metric and report both its norm and its cosine
+with the causal pathwise gradient. This distinction preserves early
+responsiveness without turning a noisy first shadow into an unbounded update.
+
+**Prediction.** If route birth is a material trainability bottleneck in E77,
+the shadow term should become measurable at depth and should align with
+pathwise changes in future-token loss for some layers/conditions. If it is
+negligible, poorly aligned, or unstable across repeated batches, optimize the
+existing smooth delay/payload gradients and investigate event firing,
+conditioning, or the data/compute setup instead. A successful smoke or one
+seed is not a depth-scaling result.

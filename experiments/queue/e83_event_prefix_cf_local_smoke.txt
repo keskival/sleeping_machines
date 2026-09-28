@@ -1,0 +1,2 @@
+# One guarded wiring/stability smoke for the normalized local lost-route update.
+e83_event_prefix_cf_local_smoke_seed8 experiments/e83_deep_shd.py --limit 80 --eval_limit 40 --epochs 1 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0.2 --objective event_prefix --prefix_samples 2 --prefix_horizon_ms 1000 --prefix_window_start 0 --cf_shadows_per_layer 1 --cf_band 0.5 --cf_sigma 0.25 --cf_weight 1 --cf_delta_clip 5 --cf_lr 0.001 --cf_grad_clip 1 --race_threshold 0.6 --race_logit_temperature 2 --seed 8
