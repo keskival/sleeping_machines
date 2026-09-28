@@ -1,0 +1,37 @@
+{
+  "artifact": "interim validation checkpoint snapshot",
+  "source_log": "experiments/queue/logs/e64b_tf_D10M.log",
+  "args": {
+    "model": "tf",
+    "D": 10000000,
+    "passes": 4.0,
+    "size": 256,
+    "layers": 4,
+    "ctx": 256,
+    "lr": 0.001,
+    "valid_start": 90000000,
+    "test_start": 95000000,
+    "test": 1000000,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "valid": 200000,
+    "seed": 0,
+    "device": "cpu"
+  },
+  "checkpoints": [
+    {
+      "step": 488,
+      "of": 4882,
+      "train_bpc": 2.6372270277848338,
+      "valid_bpc": 2.585716015713098,
+      "wall_s": 1832
+    },
+    {
+      "step": 976,
+      "of": 4882,
+      "train_bpc": 2.3096005938391357,
+      "valid_bpc": 2.2329166066242667,
+      "wall_s": 3701
+    }
+  ]
+}

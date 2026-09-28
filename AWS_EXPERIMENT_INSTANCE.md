@@ -4,7 +4,7 @@
 
 ## Why this is the right first machine
 
-The queued character-LM work is currently CPU-only. The E64 and E77 scripts construct CPU tensors and models, and both set PyTorch intra-op threads to one; they do not move the model or data to CUDA. A GPU instance would therefore charge for an accelerator the present runs cannot use. A compute-optimized C7i is a sensible isolated host for the current baselines and E77 pilots while retaining enough RAM for deeper/longer runs.
+The E77 candidate and current queued work remain CPU-only; E64 now has an explicit `--device cuda` option for matched LSTM/Transformer baselines. Keep a compute-optimized C7i as the lower-cost host for E77 and the current queue. Use a GPU instance only for the E64 baseline pilot until E77's Python-side event generation and candidate scoring are ported and profiled.
 
 The recommendation is for an isolated host with RAM headroom, not a promise of 16× speedup: current scripts restrict Torch to one CPU thread. Actual speed depends on single-thread performance and Python-side event simulation. Keep the experiment queue serialized and retain the safe runner's limits.
 
@@ -19,7 +19,7 @@ Do not buy a long-term commitment for this exploratory phase. Include EBS, trans
 
 ## When to switch to a GPU instance
 
-The current code does not use CUDA. Once the matched baselines and candidate have explicit CUDA support, **`g7e.2xlarge`** is the high-memory single-GPU pilot: one NVIDIA RTX PRO Server 6000 Blackwell GPU with 96 GB GPU memory, 8 vCPUs, and 64 GiB host RAM. A lower-memory comparison is **`g6e.2xlarge`**, with one L40S (48 GB GPU memory), 8 vCPUs, and 64 GiB host RAM. AWS lists G7e on its [instance page](https://aws.amazon.com/ec2/instance-types/g7e/) and gives [accelerated-computing specifications](https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html). These machines become useful after device transfer is implemented; current E64/E77 constructors keep models and inputs on CPU, and E77's Python event/candidate-search work will need profiling before GPU benefit can be expected. Use the AWS GPU AMI with a current NVIDIA driver and first run a short matched pilot that records tokens per second, peak host/GPU memory, and full-run cost.
+For an E64 GPU baseline pilot, **`g6e.2xlarge`** is the lower-memory comparison with one L40S (48 GB GPU memory), 8 vCPUs, and 64 GiB host RAM; **`g7e.2xlarge`** provides one RTX PRO Server 6000 Blackwell GPU with 96 GB GPU memory. AWS lists G7e on its [instance page](https://aws.amazon.com/ec2/instance-types/g7e/) and gives [accelerated-computing specifications](https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html). E77 still needs a separate CUDA port and performance study. Use the AWS GPU AMI with a current NVIDIA driver and first run a short matched E64 pilot that records BPC, tokens per second, host RSS, peak allocated GPU memory, and full-run cost.
 
 ### Sources
 
