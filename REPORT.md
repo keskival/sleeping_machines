@@ -725,6 +725,13 @@ are weighted exponentially, which is exactly softmax attention over the good mat
 matches, not the length of the text. E77 builds this language model (two spiking time-vector layers, a recurrent state,
 one retrieval layer) and trains it on text8 against the converged LSTM and Transformer.
 
+**Local learning that provably suffices (theory, §108–§109).** When units predict the next character by racing (each
+candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is a *gated
+linear network*: every unit predicts the target itself and learns only its own convex loss, so no error ever has to be
+sent backwards, and such networks are known to be universal and to learn well in a single pass (Veness et al., 2021). The
+network is also never worse than its best part (a mixture's guarantee). What these units do not do is build features;
+in this design features come from the time-vector layers and the native detectors, and the race units combine them.
+
 **First evidence.**
 - Deep order is learned from about ten times less data than a Transformer needs (§4).
 - *Language, stage 1 (counting experts, copy memories, word-keyed memories, mixed by conserved multiplicative credit).*
@@ -813,6 +820,8 @@ on language itself. The stages above are how that will be decided.
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
 | E79 | race (product-of-experts) mixer of the native experts | 10M: 1.61 bpc frozen, 256-character memory (linear Hedge 1.80); baselines pending |
+| E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
+| E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 
 ## Reproducing

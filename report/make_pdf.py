@@ -1322,6 +1322,12 @@ def build():
             "the first reply opens a short window, and replies inside it are weighted exponentially, which is exactly softmax "
             "attention over the good matches. Its cost is the number of good matches, not the length of the text. E77 builds "
             "this language model and trains it on text8 against the converged LSTM and Transformer.")]
+    s += [P("<b>Local learning that provably suffices (theory, §108–§109).</b> When units predict the next character by racing "
+            "(each candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is "
+            "a gated linear network: every unit predicts the target itself and learns only its own convex loss, so no error is "
+            "sent backwards, and such networks are known to be universal and to learn well in a single pass (Veness et al., "
+            "2021). The network is never worse than its best part. These units do not build features; here features come from "
+            "the time-vector layers and native detectors, and the race units combine them.")]
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
             "Attention is learnable by local credit, from far less data: in a recall task where the network must learn which key "
             "a query refers to and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct "
