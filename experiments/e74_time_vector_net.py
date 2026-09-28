@@ -37,8 +37,9 @@ TAU_R = 20.0                                                         # reset tra
 
 class TVLayer(nn.Module):
     def __init__(self, n_in, M, d_in, d_out, n, dmax, mask=None, spiking=True, w_sd=0.1, theta=1.0, gate_bias=0.5,
-                 cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0):
+                 cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0, normalize=False):
         super().__init__()
+        self.normalize = normalize                  # non-spiking read z / (count channel + 1): the §105 normalizer
         self.cdelay, self.gate, self.snapshot, self.causal = cdelay, gate, snapshot, causal
         self.register_buffer("sent", torch.zeros(n_in, M, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.dmax, self.spiking, self.theta = M, n, dmax, spiking, theta
@@ -79,6 +80,9 @@ class TVLayer(nn.Module):
         idx = (g.long() * B + eb[pe]) * M + pj
         X = torch.zeros(G * B * M, n, dtype=torch.complex64).index_add(0, idx, val).view(G, B, M, n)
         E1 = torch.exp(lam); wc = torch.complex(self.wre, self.wim)
+        if self.normalize and not self.spiking:                                # count channel: same decay, weight 1 per message
+            Xc = torch.zeros(G * B * M, n).index_add(0, idx, torch.exp(lam.real[pj] * (g - a)[:, None])).view(G, B, M, n).unbind(0)
+            c = torch.zeros(B, M, n); Ec = torch.exp(lam.real)
         z = torch.zeros(B, M, n, dtype=torch.complex64); zs = []; Vs = []
         R = torch.zeros(B, M); Vp = torch.zeros(B, M); eR = math.exp(-1 / TAU_R)
         if self.spiking:
@@ -86,6 +90,9 @@ class TVLayer(nn.Module):
         Xk = X.unbind(0)                                                       # one backward op instead of G slices
         for k in range(G):
             z = z * E1 + Xk[k]
+            if self.normalize and not self.spiking:
+                c = c * Ec + Xc[k]
+                Vs.append((wc * z / (c + 1.0)).real.sum(-1)); continue
             V = (wc * z).real.sum(-1)
             if not self.spiking:
                 Vs.append(V); continue
@@ -127,7 +134,7 @@ class Net(nn.Module):
         ab = dict(cdelay=cdelay, gate=gate, snapshot=snapshot)
         self.l1 = TVLayer(bands, M1, d, d, n, dmax, m1, True, w_sd[0], **ab)
         self.l2 = TVLayer(M1, M2, d, d, n, dmax, m2, True, w_sd[1], **ab)
-        self.ro = TVLayer(M2, 20, d, d, n, dmax, None, False, 0.3, gate_bias=1.0, cdelay=cdelay, gate=gate)
+        self.ro = TVLayer(M2, 20, d, d, n, dmax, None, False, 0.3, gate_bias=1.0, cdelay=cdelay, gate=gate, normalize=True)
 
     def forward(self, eb, ei, et, B, G, rstep=4):
         ev = self.emb(ei)

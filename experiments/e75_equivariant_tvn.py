@@ -34,8 +34,9 @@ TAU_R = 20.0
 
 class EqLayer(nn.Module):
     """time-vector layer with offset-shared parameters; offs[i, j] = offset id of sender i -> unit j (-1: no synapse)."""
-    def __init__(self, offs, scale, d, n, spiking=True, w_sd=0.05, theta=1.0, gate_bias=0.5, dmax=50.0):
+    def __init__(self, offs, scale, d, n, spiking=True, w_sd=0.05, theta=1.0, gate_bias=0.5, dmax=50.0, per_unit=False):
         super().__init__()
+        self.per_unit = per_unit                    # readout classes: own parameters, still blind to the sender's position
         n_off = int(offs.max()) + 1
         self.register_buffer("offs", offs); self.register_buffer("scale", scale)      # scale: (M,) = rho^m
         self.register_buffer("sent", torch.zeros(offs.shape, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
@@ -43,8 +44,11 @@ class EqLayer(nn.Module):
         tau = torch.exp(torch.linspace(math.log(5.0), math.log(100.0), n))
         self.log_rate = nn.Parameter(-torch.log(tau)); self.freq = nn.Parameter(torch.rand(n) * 0.3)
         self.Bre = nn.Parameter(torch.randn(n, d) / math.sqrt(d)); self.Bim = nn.Parameter(torch.randn(n, d) / math.sqrt(d))
-        self.wre = nn.Parameter(torch.randn(n) * w_sd); self.wim = nn.Parameter(torch.randn(n) * w_sd)
-        self.q = nn.Parameter(torch.randn(d) / math.sqrt(d)); self.c = nn.Parameter(torch.full((n_off,), gate_bias))
+        M_ = offs.shape[1] if per_unit else None
+        self.wre = nn.Parameter(torch.randn(*((M_, n) if per_unit else (n,))) * w_sd)
+        self.wim = nn.Parameter(torch.randn(*((M_, n) if per_unit else (n,))) * w_sd)
+        self.q = nn.Parameter(torch.randn(*((M_, d) if per_unit else (d,))) / math.sqrt(d))
+        self.c = nn.Parameter(torch.full((M_,) if per_unit else (n_off,), gate_bias))
         self.e_off = nn.Parameter(torch.randn(n_off, d) * 0.5)                            # offset embedding written in
         self.log_td = nn.Parameter(torch.tensor(math.log(10.0)))
         if spiking:
@@ -56,7 +60,7 @@ class EqLayer(nn.Module):
         o = self.offs[ei]                                                    # (E, M)
         pe, pj = (o >= 0).nonzero(as_tuple=True); oid = o[pe, pj]
         v = ev[pe] + self.e_off[oid]                                         # payload as seen from this receiver
-        r = v @ self.q + self.c[oid]
+        r = (v * self.q[pj]).sum(-1) + self.c[pj] if self.per_unit else v @ self.q + self.c[oid]
         keep = r.detach() > 0
         pe, pj, oid, v, r = pe[keep], pj[keep], oid[keep], v[keep], r[keep]
         if not self.training:
@@ -72,6 +76,9 @@ class EqLayer(nn.Module):
         idx = (g.long() * B + eb[pe]) * M + pj
         X = torch.zeros(G * B * M, n, dtype=torch.complex64).index_add(0, idx, val).view(G, B, M, n)
         E1 = torch.exp(lamj); wc = torch.complex(self.wre, self.wim)
+        if not self.spiking:                                                    # normalized read z / (count + 1) (§105)
+            Xc = torch.zeros(G * B * M, n).index_add(0, idx, torch.exp(lamj.real[pj] * (g - a)[:, None])).view(G, B, M, n).unbind(0)
+            c = torch.zeros(B, M, n); Ec = torch.exp(lamj.real)
         eR = torch.exp(-1.0 / (TAU_R * self.scale))                          # (M,)
         z = torch.zeros(B, M, n, dtype=torch.complex64); zs = []; Vs = []
         R = torch.zeros(B, M); Vp = torch.zeros(B, M)
@@ -80,9 +87,10 @@ class EqLayer(nn.Module):
         Xk = X.unbind(0)
         for k in range(G):
             z = z * E1 + Xk[k]
-            V = (wc * z).real.sum(-1)
             if not self.spiking:
-                Vs.append(V); continue
+                c = c * Ec + Xc[k]
+                Vs.append((wc * z / (c + 1.0)).real.sum(-1)); continue
+            V = (wc * z).real.sum(-1)
             zs.append(z)
             with torch.no_grad():
                 R.mul_(eR); Vd = V - th * R
@@ -131,7 +139,7 @@ class Net(nn.Module):
         self.v0 = nn.Parameter(torch.randn(d) * 0.5); self.vc = nn.Parameter(torch.randn(d) * 0.5)
         self.l1 = EqLayer(offs1, sc1, d, n, True, w_sd[0])
         self.l2 = EqLayer(offs2, sc2, d, n, True, w_sd[1])
-        self.ro = EqLayer(torch.zeros(len(sc2), 20, dtype=torch.long), torch.ones(20), d, n, False, 0.3, gate_bias=1.0)
+        self.ro = EqLayer(torch.zeros(len(sc2), 20, dtype=torch.long), torch.ones(20), d, n, False, 0.3, gate_bias=1.0, per_unit=True)
         self.M = (len(sc1), len(sc2))
 
     def forward(self, eb, ei, et, cnt, B, G, rstep=4):
