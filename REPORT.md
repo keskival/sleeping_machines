@@ -568,6 +568,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 - **Time-vector networks on real streams (§105–§106):** E74 (content-dependent delays, snapshot payloads) and E75 (the
   same, laid out to be exactly equivariant to band shifts and tempo) on spoken digits, selected on held-out speakers;
   the question is whether computing with delays and vectors closes the gap to 95–96%.
+- **A time-vector language model (§107, E77):** does the hybrid of sparse time-vector memory and delay-coded retrieval
+  reach the converged LSTM and Transformer at equal data, and how many keys does it actually retrieve per character?
 - **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
   actually need, as the context grows (E76); this fixes how much delay-coded attention saves on text.
 - **Structure discovery for grokking:** a bank of rhythms and chain depths from which the network must pick, so that
@@ -712,6 +714,16 @@ slightly noisy); delays compute it by *waiting* (exact, slower for a wider range
 evidence crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation.
 Networks built this way compute in the log semiring: delays add, and gains multiply. E74 tests it on spoken digits.
 
+**Two memories (theory, §107).** Such a unit is, algebraically, the exponentially gated memory of xLSTM (a family
+already shown to scale to billions of parameters competitively with Transformers): elapsed time is its forget gate, the
+content-dependent delay its input gate, the count channel its normalizer. But a memory that chooses what to keep when it
+writes cannot answer arbitrary questions asked later: remembering N facts for any future question needs at least N × (bits
+per fact) of state. So a language model built this way needs a second memory, *retrieval*, done natively: a question is
+sent to stored keys, which reply sooner the better they match; the first reply opens a short window, and replies inside it
+are weighted exponentially, which is exactly softmax attention over the good matches. Its cost is the number of good
+matches, not the length of the text. E77 builds this language model (two spiking time-vector layers, a recurrent state,
+one retrieval layer) and trains it on text8 against the converged LSTM and Transformer.
+
 **First evidence.**
 - Deep order is learned from about ten times less data than a Transformer needs (§4).
 - *Language, stage 1 (counting experts, copy memories, word-keyed memories, mixed by conserved multiplicative credit).*
@@ -735,6 +747,8 @@ Networks built this way compute in the log semiring: delays add, and gains multi
    memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
 2. *Attention over the stream*, by races (the E61 mechanism at scale; E68) or by content-dependent delays (§105:
    exact, and as cheap as the attention is sharp; E76 measures how sharp a trained model's attention on text is).
+   E77 is the first full model of this kind: spiking time-vector layers for the recurrent memory and a delay-coded
+   retrieval layer (§107), with messages, spikes and retrieved keys per character reported.
 3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
 4. *Stacked layers* with credit along causal chains and near misses.
 At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
@@ -790,6 +804,7 @@ on language itself. The stages above are how that will be decided.
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | queued first |
 | E75 | SHD: equivariant time-vector network (band shift × tempo) | queued; shift covariance verified exactly |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
+| E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 
 ## Reproducing
 

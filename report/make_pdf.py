@@ -1203,6 +1203,8 @@ def build():
         "delays and vectors computing together close the gap to 95–96%?",
         "<b>The work law of attention in language (§106a):</b> how many keys a trained character-level Transformer's queries "
         "actually need as the context grows (E76), which fixes what delay-coded attention saves on text.",
+        "<b>A time-vector language model (§107, E77):</b> does sparse time-vector memory plus delay-coded retrieval reach the "
+        "converged LSTM and Transformer at equal data, and how many keys does it retrieve per character?",
         "<b>Structure discovery for grokking</b> (E45 pilot picks correctly) and <b>the data threshold of grokking</b> (7–30% "
         "of triples, far above the Occam bound; the sleep reuse filter is the candidate constraint).",
         "<b>Native learning of sparse parity</b> (§75) and <b>a real benchmark with rare, precisely timed events</b> (§55).",
@@ -1310,7 +1312,16 @@ def build():
             "weights and no sampling, paying only for messages sent. Races compute the same softmax by sampling (fast, slightly "
             "noisy); delays compute it by waiting (exact, slower for a wider range of scores). A unit fires when its evidence "
             "crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation. "
-            "Such networks compute in the log semiring: delays add, gains multiply. E74 tests it on spoken digits.")]
+            "Such networks compute in the log semiring: delays add, gains multiply. E74 tests it on spoken digits."),
+          P("<b>Two memories (theory, §107).</b> Such a unit is, algebraically, the exponentially gated memory of xLSTM (a "
+            "family already shown to scale to billions of parameters competitively with Transformers): elapsed time is its "
+            "forget gate, the content-dependent delay its input gate, the count channel its normalizer. But a memory that "
+            "chooses what to keep when it writes cannot answer arbitrary questions asked later: remembering N facts for any "
+            "future question needs at least N × (bits per fact) of state. A language model built this way needs a second "
+            "memory, retrieval, done natively: a question is sent to stored keys, which reply sooner the better they match; "
+            "the first reply opens a short window, and replies inside it are weighted exponentially, which is exactly softmax "
+            "attention over the good matches. Its cost is the number of good matches, not the length of the text. E77 builds "
+            "this language model and trains it on text8 against the converged LSTM and Transformer.")]
     s += [P("<b>First evidence.</b> Deep order is learned from about ten times less data than a Transformer needs (section 4). "
             "Attention is learnable by local credit, from far less data: in a recall task where the network must learn which key "
             "a query refers to and which neighbour to read, a race-attention layer trained by local credit alone is 100% correct "
@@ -1327,7 +1338,7 @@ def build():
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
             "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "
             "races (E61 at scale; E68) or by content-dependent delays (§105: exact, and as cheap as the attention is sharp; E76 "
-            "measures how sharp a trained model's attention on text is); (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
+            "measures how sharp a trained model's attention on text is; E77 is the first full model of this kind); (3) learned shared codes; (4) stacked layers with credit along causal chains and near "
             "misses. At each stage: a recurrent network and a Transformer trained by gradients on the same text; bits per "
             "character, examples needed, work per character.")]
     s += fig(FM.fig_lm_scaling, W)
