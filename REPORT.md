@@ -659,7 +659,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM and 1.908 for the completed 3.24M-parameter, four-layer Transformer on the shared test segment. The four-layer Transformer checkpoint was selected on validation and scored 1.9083 held-out test bpc after 4,882 updates. The E79 comparisons are single-seed and include six experts plus copy memory; the Transformer and LSTM also use different pass counts. This is a same-split language-model result, not a compute- or parameter-matched architecture comparison. E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM and 1.908 for the completed 3.24M-parameter, four-layer Transformer on the shared test segment. The four-layer Transformer checkpoint was selected on validation and scored 1.9083 held-out test bpc after 4,882 updates. The E79 comparisons are single-seed and include six experts plus copy memory; the Transformer and LSTM also use different pass counts. This is a same-split language-model result, not a compute- or parameter-matched architecture comparison. E77 has no completed scale-level LM result yet. A depth-4 micro-pilot did expose and fix a trainability blocker: with fixed threshold 1.0 the deeper event layers stayed silent, while an input-voltage quantile bootstrap restored sparse activity and nonzero gradients through all four layers. This is a small trainability diagnostic, not a language-model quality result.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -687,8 +687,10 @@ The synthesis now treats topology and representation as separate experimental ax
   gets no terminal loss credit unless it changes a temporal winner; smooth-max can soften this while retaining sparse
   event updates. This task structure covers SHD speech and event-camera
   clips with one label per stream.
-- **A time-vector language model (§107, E77):** does the hybrid of sparse time-vector memory and delay-coded retrieval
-  reach the converged LSTM and Transformer at equal data, and how many keys does it actually retrieve per character?
+- **A time-vector language model (§§107, 133; E77):** the fixed-threshold depth-4 stack was mostly silent. A data-calibrated
+  sparse firing budget restored gradients at all four layers in a micro-pilot; its route-shadow evidence remains uncertain
+  and the optimizer correction is disabled. The scale-level questions remain: does the hybrid reach the converged LSTM
+  and Transformer at equal data, and how many keys does it actually retrieve per character?
 - **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
   actually need, as the context grows (E76); this fixes how much delay-coded attention saves on text.
 - **Structure discovery for grokking:** a bank of rhythms and chain depths from which the network must pick, so that
@@ -894,6 +896,22 @@ the Hopfield residual correction when its sequence-level gain and key fan-out ar
 activity, associative score spread/entropy, update size, key/value diameter upper bounds, key fan-out, the payload
 Jacobian certificate and its residual-scaled value, and role-specific gradients. Retaining events can increase pairwise
 retrieval work with depth, so the same sweeps also report messages, events, and score candidates.
+
+The first matched depth-4 E77 micro-pilot isolates initialization. With fixed $\theta=1$, test activity was
+[0.018, 0, 0, 0] spikes/character, and only layer 1 had nonzero gradients (5/16 updates). A label-free
+voltage-quantile calibration targeting 0.1 spikes/character/layer set thresholds [0.664, 0.229, 0.429, 0.283],
+produced [0.065, 0.052, 0.044, 0.035] test spikes/character, and gave nonzero gradients on 15/16, 16/16,
+14/16, and 16/16 updates. The paired test BPCs were 4.341 and 4.284, but each was measured on only 512 characters
+after 16 updates, so this does not establish quality or scaling. The calibration is now the default in E77 and is
+included in the queued depth sweep.
+
+In the calibrated run, 64 near-boundary route shadows per layer produced minibatch-clustered mean
+$L_{open}-L_{closed}$ values and standard errors of [−0.000034 ± 0.000237, −0.000440 ± 0.000236,
+−0.000045 ± 0.000103, −0.000092 ± 0.000477]. All approximate 95% intervals include zero. The average
+counterfactual/pathwise gradient norm ratio was 0.61% and cosine was −0.0019. A weak prior therefore remains broad,
+and the counterfactual parameter update stays off pending more independent evidence.
+
+![Depth-4 E77 firing and gradient reach before and after voltage-quantile threshold calibration](report/figures/e77_depth_trainability_bootstrap.png)
 The token-level adaptive retrieval interface has a linear-time recurrent-state path, but both token retrieval and
 event-level Hopfield lookup currently score every eligible query/key pair. In addition,
 `TVLayer` simulates state in dense time-by-batch-by-unit tensors even though its synaptic connectivity is sparse. Thus
@@ -1117,7 +1135,7 @@ on language itself. The stages above are how that will be decided.
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
 | E75 | SHD: equivariant time-vector network (band shift × tempo) | symmetry check passed; two-epoch pilot reached 0.044 and did not learn; strict-depth and auxiliary-credit diagnostics follow in E83 |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
-| E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
+| E77 | time-vector language model with delay-coded retrieval (text8) | causality verified; depth-4 bootstrap micro-pilot restores gradients through all four layers; matched scale runs still queued |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |

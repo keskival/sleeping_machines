@@ -1038,6 +1038,27 @@ allowing a separate, clipped counterfactual update. This is deliberately a
 measurement path first: E83's near-zero cosine and unstable total estimator
 are reasons to measure transfer, not to assume it.
 
+There is an earlier prerequisite: a layer that never emits has no realized
+pathwise credit, and its route shadows can have exactly zero effect if toggles
+still do not create an event. Let $V_{btk}$ be a layer's pre-reset voltage
+under a short sample of actual training inputs, with $M$ receiver units. For
+an initial aggregate event budget $\rho$ per character, set
+
+$$
+\theta=\widehat F_V^{-1}(1-\rho/M),
+$$
+
+where $\widehat F_V$ is the empirical voltage CDF. Without resets this gives
+approximately $M\Pr[V>\theta]=\rho$ threshold attempts per time bin; reset,
+temporal dependence, and finite calibration samples alter the realized count,
+so log the actual firing rate. Calibrating in depth order lets each layer see
+the already-calibrated event stream below it. This is a data-derived
+initialization, not a learned posterior or proof of stable depth. It uses the
+observed conditional activity instead of a guessed threshold prior while the
+network has little task evidence. Later threshold changes should be slower or
+confidence-weighted, because noisy minibatch quantiles otherwise make event
+rates oscillate; that online homeostasis is not yet implemented.
+
 For uncertainty, route deltas should be grouped by layer and relevant
 conditions (score band, active/closed status, event age, and token region).
 With a broad zero-centered prior on a layer mean $\mu_\ell$ and a

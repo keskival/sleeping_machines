@@ -29,7 +29,7 @@ import torch.nn as nn
 
 sys.path.insert(0, os.path.dirname(__file__))
 import e62_charlm as S1  # noqa: E402
-from e74_time_vector_net import TVLayer  # noqa: E402
+from e74_time_vector_net import TAU_R, TVLayer  # noqa: E402
 
 torch.set_num_threads(1)
 OUT = os.path.join(os.path.dirname(__file__), "results", "e77")
@@ -278,13 +278,13 @@ class TVLM(nn.Module):
             self.memory = AdaptiveMemoryLayer(heads, dh, delta, coupling_rank)
         self.head = nn.Sequential(nn.Linear(f + (heads * dh if retrieval else 0), 256), nn.GELU(), nn.Linear(256, A))
 
-    def forward(self, x, collect_routes=False, route_override=None):
+    def forward(self, x, collect_routes=False, collect_voltage=False, route_override=None):
         """x: (B, L) characters -> logits (B, L, A) for x[:, 1:] (position k predicts character k + 1), and work."""
         B, L = x.shape; G = L + 1
         eb = torch.arange(B).repeat_interleave(L); ei = x.reshape(-1); et = torch.arange(L).float().repeat(B) + 0.5
         ev = self.emb(ei)
         messages, layer_spikes, hm_stats = [], [], []
-        route_candidates, route_inputs = [], []
+        route_candidates, voltage_samples = [], []
         be = je = te = ye = None
         for i, layer in enumerate(self.layers):
             if i == 0:
@@ -300,15 +300,19 @@ class TVLM(nn.Module):
                     force_route = (event_index, receiver)
                 else:
                     drop_route = (event_index, receiver)
+            needs_route_info = collect_routes or collect_voltage
             result = layer(ib, ij, it, iy, B, G, force_route=force_route,
-                           drop_route=drop_route, return_routes=collect_routes,
-                           return_route_graph=collect_routes)
-            if collect_routes:
+                           drop_route=drop_route, return_routes=needs_route_info,
+                           return_route_graph=collect_routes,
+                           return_voltage_samples=collect_voltage)
+            if needs_route_info:
                 (new_b, new_j, new_t, new_y), msg, route_info = result
-                route_candidates.append(route_info)
-                route_inputs.append((ib, ij, it, iy))
             else:
                 (new_b, new_j, new_t, new_y), msg = result
+            if collect_routes:
+                route_candidates.append(route_info)
+            if collect_voltage:
+                voltage_samples.append(route_info["voltage_samples"])
             previous_units = 0 if i == 0 else self.M1 + (i - 1) * self.M2
             new_j = new_j + previous_units
             if be is None:
@@ -328,7 +332,8 @@ class TVLM(nn.Module):
         if collect_routes:
             # Transient training-only tensors used by the optional shadow probe.
             work["route_candidates"] = route_candidates
-            work["route_inputs"] = route_inputs
+        if collect_voltage:
+            work["voltage_samples"] = voltage_samples
         if hm_stats:
             work["hopfield_pairs_per_char"] = sum(s["hopfield_pairs"] for s in hm_stats) / (B * L)
             work["hopfield_active_per_char"] = sum(s["hopfield_active"] for s in hm_stats) / (B * L)
@@ -381,6 +386,96 @@ def score(net, data, L, bs, dump=False):
     return (tot / n / math.log(2), agg, ptrue, logp) if dump else (tot / n / math.log(2), agg)
 
 
+def calibrate_spike_thresholds(net, train, a):
+    """Calibrate initial event rates from training inputs without labels.
+
+    The voltage quantile supplies a scale estimate. A local replay then applies
+    the exact threshold/reset recurrence to the saved voltage traces and finds
+    a threshold matching the realized spike rate. This avoids rerunning the
+    entire model for every search step. Calibration proceeds in depth order,
+    so each deeper layer sees the already-calibrated event stream below it.
+    """
+    if a.target_spikes_per_char <= 0:
+        return {"thresholds": [], "rates": [], "forward_batches": 0}
+    if any(a.target_spikes_per_char >= layer.M for layer in net.layers):
+        raise ValueError("target_spikes_per_char must be smaller than every hidden layer width")
+    rng = np.random.default_rng(a.seed + 77_101)
+    batches = []
+    for _ in range(a.threshold_calibration_batches):
+        idx = rng.integers(0, a.D - a.L - 1, a.bs)
+        batches.append(torch.stack([train[i:i + a.L] for i in idx]))
+    thresholds, rates, forward_batches = [], [], 0
+
+    def replay_rate(traces, threshold):
+        # Match TVLayer's reset and fractional-crossing recurrence exactly.
+        G, total_batch, M = traces.shape
+        R = torch.zeros(total_batch, M, dtype=traces.dtype, device=traces.device)
+        Vp = torch.zeros_like(R)
+        eR = math.exp(-1 / TAU_R)
+        spike_count = 0
+        with torch.no_grad():
+            for k in range(G):
+                R.mul_(eR)
+                Vd = traces[k] - threshold * R
+                fire = Vd >= threshold
+                frac = ((threshold - Vp) / (Vd - Vp).clamp(min=1e-6)).clamp(0, 1)
+                jump = fire.to(traces.dtype) * torch.exp(-(1 - frac) / TAU_R)
+                if k >= 1:
+                    spike_count += int(fire.sum())
+                Vp = Vd - threshold * jump
+                R.add_(jump)
+        return spike_count / (len(batches) * a.bs * a.L)
+
+    for layer_index, layer in enumerate(net.layers):
+        collected = []
+        for X in batches:
+            with torch.no_grad():
+                _, work = net(X, collect_voltage=True)
+            collected.append(work["voltage_samples"][layer_index])
+            forward_batches += 1
+        traces = torch.cat(collected, dim=1)
+        samples = traces.reshape(-1)
+        tail_probability = a.target_spikes_per_char / layer.M
+        quantile = torch.tensor(1.0 - tail_probability, dtype=samples.dtype, device=samples.device)
+        guess = float(torch.quantile(samples, quantile).clamp_min(1e-6))
+        best_threshold = guess
+        best_rate = replay_rate(traces, guess)
+        tolerance = max(0.25 * a.target_spikes_per_char, 1.0 / (a.bs * a.L))
+        if abs(best_rate - a.target_spikes_per_char) > tolerance:
+            low = 1e-6
+            low_rate = replay_rate(traces, low)
+            if low_rate >= a.target_spikes_per_char:
+                high = max(float(samples.max()), guess, 1.0) + 1e-6
+                high_rate = replay_rate(traces, high)
+                for _ in range(8):
+                    if high_rate <= a.target_spikes_per_char:
+                        break
+                    high *= 2.0
+                    high_rate = replay_rate(traces, high)
+                if high_rate <= a.target_spikes_per_char:
+                    if abs(low_rate - a.target_spikes_per_char) < abs(best_rate - a.target_spikes_per_char):
+                        best_threshold, best_rate = low, low_rate
+                    if abs(high_rate - a.target_spikes_per_char) < abs(best_rate - a.target_spikes_per_char):
+                        best_threshold, best_rate = high, high_rate
+                    for _ in range(a.threshold_calibration_steps):
+                        mid = 0.5 * (low + high)
+                        mid_rate = replay_rate(traces, mid)
+                        if abs(mid_rate - a.target_spikes_per_char) < abs(best_rate - a.target_spikes_per_char):
+                            best_threshold, best_rate = mid, mid_rate
+                        if abs(mid_rate - a.target_spikes_per_char) <= tolerance:
+                            break
+                        if mid_rate > a.target_spikes_per_char:
+                            low = mid
+                        else:
+                            high = mid
+            elif abs(low_rate - a.target_spikes_per_char) < abs(best_rate - a.target_spikes_per_char):
+                best_threshold, best_rate = low, low_rate
+        layer.theta = best_threshold
+        thresholds.append(layer.theta)
+        rates.append(best_rate)
+    return {"thresholds": thresholds, "rates": rates, "forward_batches": forward_batches}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--D", type=int, default=1_000_000)
@@ -420,6 +515,12 @@ def main():
                     help="separate post-Adam counterfactual step; leave at 0 until shadow statistics justify it")
     ap.add_argument("--cf_grad_clip", type=float, default=1.0,
                     help="global norm cap for an enabled counterfactual step")
+    ap.add_argument("--target_spikes_per_char", type=float, default=0.1,
+                    help="label-free initial hidden-event budget per character; 0 disables activity calibration")
+    ap.add_argument("--threshold_calibration_batches", type=int, default=1,
+                    help="fixed minibatches used to estimate and match each layer's initial event rate")
+    ap.add_argument("--threshold_calibration_steps", type=int, default=6,
+                    help="binary-search iterations after the voltage-quantile initialization")
     ap.add_argument("--lr", type=float, default=2e-3)
     ap.add_argument("--valid", type=int, default=200_000)
     ap.add_argument("--test", type=int, default=1_000_000)
@@ -428,15 +529,36 @@ def main():
     if (a.cf_shadows_per_layer < 0 or a.cf_band <= 0 or a.cf_sigma <= 0
             or a.cf_delta_clip <= 0 or a.cf_lr < 0 or a.cf_grad_clip <= 0):
         raise ValueError("counterfactual count must be nonnegative; band, sigma, delta clip, and grad clip must be positive; cf_lr must be nonnegative")
+    if (a.target_spikes_per_char < 0 or a.threshold_calibration_batches < 1
+            or a.threshold_calibration_steps < 1):
+        raise ValueError("target_spikes_per_char must be nonnegative; calibration_batches and calibration_steps must be positive")
     os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed)
     x = S1.load(); train = torch.tensor(x[:a.D]).long()
     valid = torch.tensor(x[90_000_000:90_000_000 + a.valid]).long(); test = torch.tensor(x[95_000_000:95_000_000 + a.test]).long()
     net = TVLM(a.d, a.n, a.M1, a.M2, a.Mr, a.fan2, a.dmax, [float(v) for v in a.w_sd.split(",")], a.retrieval, a.heads, a.dh,
                a.delta, a.seed, a.coupling_rank, a.depth, a.skip_fan, bool(a.event_hopfield), a.event_candidate_k)
+    calibration = calibrate_spike_thresholds(net, train, a)
+    calibrated_thresholds = calibration["thresholds"]
+    calibrated_rates = calibration["rates"]
+    calibration_token_visits = calibration["forward_batches"] * net.depth * a.bs * a.L
+    if calibrated_thresholds:
+        print(json.dumps({"threshold_calibration_target_spikes_per_char": a.target_spikes_per_char,
+                          "threshold_calibration_batches": a.threshold_calibration_batches,
+                          "threshold_calibration_steps": a.threshold_calibration_steps,
+                          "threshold_calibration_forwards": calibration["forward_batches"],
+                          "threshold_calibration_token_visits": calibration_token_visits,
+                          "initial_layer_thresholds": calibrated_thresholds,
+                          "initial_layer_spikes_per_char": calibrated_rates}), flush=True)
     opt = torch.optim.Adam(net.parameters(), lr=a.lr)
     steps = int(a.passes * a.D / (a.bs * a.L)); sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, max(steps, 1))
-    res = {"args": vars(a), "params": sum(p.numel() for p in net.parameters()), "steps": steps, "valid_curve": []}
-    print(json.dumps({"params": res["params"], "steps": steps}), flush=True)
+    res = {"args": vars(a), "params": sum(p.numel() for p in net.parameters()), "steps": steps,
+           "initial_layer_thresholds": calibrated_thresholds or [float(layer.theta) for layer in net.layers],
+           "initial_layer_calibration_spikes_per_char": calibrated_rates,
+           "threshold_calibration_forwards": calibration["forward_batches"],
+           "threshold_calibration_token_visits": calibration_token_visits,
+           "valid_curve": []}
+    print(json.dumps({"params": res["params"], "steps": steps,
+                      "threshold_calibration_token_visits": calibration_token_visits}), flush=True)
     best = (float("inf"), None, -1)
     cf_rng = np.random.default_rng(a.seed + 77_003)
     cf_interval = None
@@ -543,6 +665,19 @@ def main():
                    "wall_s": round(time.time() - t0)}
             if collect_routes:
                 count = max(cf_interval["shadows"], 1)
+                layer_means, layer_stds, layer_ses = [], [], []
+                for i in range(a.depth):
+                    ni = int(cf_interval["layer_n"][i])
+                    if ni:
+                        layer_mean = cf_interval["layer_sum"][i] / ni
+                        layer_var = max(cf_interval["layer_sq"][i] / ni - layer_mean ** 2, 0.0)
+                        layer_means.append(round(float(layer_mean), 8))
+                        layer_stds.append(round(math.sqrt(layer_var), 8))
+                        layer_ses.append(round(math.sqrt(layer_var / ni), 8))
+                    else:
+                        layer_means.append(None)
+                        layer_stds.append(None)
+                        layer_ses.append(None)
                 row.update({
                     "event_layer_peak_voltage": [round(info["peak_voltage"], 6)
                                                  for info in work["route_candidates"]],
@@ -557,9 +692,9 @@ def main():
                         cf_interval["sq"] / count - (cf_interval["sum"] / count) ** 2, 0.0)), 8),
                     "counterfactual_fraction_opening_improves": round(cf_interval["helpful"] / count, 4),
                     "counterfactual_layer_shadow_counts": cf_interval["layer_n"].tolist(),
-                    "counterfactual_layer_mean_open_minus_closed_loss": [
-                        round(float(cf_interval["layer_sum"][i] / max(cf_interval["layer_n"][i], 1)), 8)
-                        if cf_interval["layer_n"][i] else None for i in range(a.depth)],
+                    "counterfactual_layer_mean_open_minus_closed_loss": layer_means,
+                    "counterfactual_layer_shadow_delta_std": layer_stds,
+                    "counterfactual_layer_delta_standard_error": layer_ses,
                     "counterfactual_layer_fraction_opening_improves": [
                         round(float(cf_interval["layer_helpful"][i] / cf_interval["layer_n"][i]), 4)
                         if cf_interval["layer_n"][i] else None for i in range(a.depth)],
@@ -581,7 +716,11 @@ def main():
     tag = (f"tvlm_D{a.D}_p{a.passes:g}_r{a.retrieval}_M{a.M1}-{a.M2}-{a.Mr}"
            f"_depth{a.depth}_c{a.coupling_rank}_eh{a.event_hopfield}_ek{a.event_candidate_k}_s{a.seed}")
     if a.cf_shadows_per_layer:
-        tag += f"_cf{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}_lr{a.cf_lr:g}"
+        tag += (f"_cf{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}"
+                f"_w{a.cf_weight:g}_dl{a.cf_delta_clip:g}_lr{a.cf_lr:g}_gc{a.cf_grad_clip:g}")
+    if a.target_spikes_per_char:
+        tag += (f"_boot{a.target_spikes_per_char:g}_cb{a.threshold_calibration_batches}"
+                f"_cs{a.threshold_calibration_steps}")
     np.save(os.path.join(OUT, tag + "_ptrue_test.npy"), pt); np.save(os.path.join(OUT, tag + "_ptrue_valid.npy"), pv)
     np.save(os.path.join(OUT, tag + "_logp_test.npy"), lt); np.save(os.path.join(OUT, tag + "_logp_valid.npy"), lv)
     res.update({"best_step": best[2], "best_valid_bpc": best[0], "test_bpc": tb, "test_work": wk, "wall_s": round(time.time() - t0)})

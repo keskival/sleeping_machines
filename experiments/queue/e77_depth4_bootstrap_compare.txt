@@ -1,0 +1,2 @@
+e77_depth4_fixed_theta_D4096_ratematch experiments/e77_tv_lm.py --D 4096 --passes 0.25 --L 32 --bs 2 --d 8 --n 4 --M1 8 --M2 8 --Mr 8 --heads 1 --dh 8 --depth 4 --valid 512 --test 512 --seed 77 --target_spikes_per_char 0
+e77_depth4_bootstrap_ratematch_D4096 experiments/e77_tv_lm.py --D 4096 --passes 0.25 --L 32 --bs 2 --d 8 --n 4 --M1 8 --M2 8 --Mr 8 --heads 1 --dh 8 --depth 4 --valid 512 --test 512 --seed 77 --target_spikes_per_char 0.1 --threshold_calibration_batches 4 --threshold_calibration_steps 6 --cf_shadows_per_layer 4 --cf_band 0.5 --cf_sigma 0.25 --cf_lr 0

@@ -1,0 +1,1 @@
+e77_default_width_rate_match_d10k_depth4 experiments/e77_tv_lm.py --D 10000 --passes 0.5 --bs 2 --L 64 --depth 4 --valid 1000 --test 1000 --seed 77 --target_spikes_per_char 0.1 --threshold_calibration_batches 4 --threshold_calibration_steps 6
