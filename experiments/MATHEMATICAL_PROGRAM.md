@@ -185,6 +185,35 @@ The architecture has an advantage only if its attainable loss is lower for the s
 
 Advance a mechanism when its predicted intermediate statistic changes in the predicted direction and improves the equal-budget quality–resource frontier across seeds. Retire or revise it when the intermediate statistic fails, even if a single benchmark score improves. This keeps the mathematical story connected to causal evidence and directs effort toward the actual frontier: learned sparse representations, trainable deep routing, and sublinear retrieval without a quality loss.
 
+## Deep event-stream models on real data
+
+The next depth test is E83 on speaker-held-out SHD and E84 on the frozen
+market world-model protocol. Both use time-vector event layers with fixed sparse
+candidate wiring. A deeper layer sees sparse emissions from earlier layers and
+a direct raw-event route; the readout sees every layer. This is the graph in
+THEORY §110: it leaves a short path from each layer's parameters to the loss,
+without claiming that its deep composition path is well conditioned.
+
+The initial comparison is deliberately small and iso-width: depths 2, 4, and 8 use
+the same samples/windows, per-layer width, optimizer updates, and seed. E83
+stratifies the speaker-held-out training/evaluation pilot and records every
+layer's gradient norm, spike count, message count, and held-out accuracy. E84
+uses days 1–4 for training and day 5 for validation, with the same sampled
+windows at all depths; it records layer gradients, event work, and held-out
+per-event log likelihood. Neither pilot uses the untouched SHD test set or
+market confirmation days.
+
+Read the diagnostics jointly. Nonzero deep gradients with no validation gain
+point to representation or optimization quality. Vanishing deep gradients with
+healthy early-layer gradients point to a chain-conditioning problem; dead
+message or spike counts point to a route/threshold problem instead. A sparse
+candidate mask bounds candidate comparisons only if its degree is measured;
+the per-layer readout skip and raw-event skip also add work. Report peak memory
+and wall time before calling a depth gain efficient. If these pilots show a
+learning signal, the next step is a parameter-matched depth ladder with multiple
+seeds, followed by a near-miss gate ablation if hard-gate route coverage is the
+bottleneck.
+
 ## xLSTM transfer: topology and scale protocol
 
 xLSTM supplies a concrete deep-recurrent precedent, not an equivalence theorem for E77. The original family distinguishes

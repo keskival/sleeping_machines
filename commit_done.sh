@@ -30,6 +30,9 @@ FILES=(
   experiments/e74_time_vector_net.py
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
+  experiments/e83_deep_shd.py
+  experiments/e84_deep_market.py
+  experiments/queue/e83_e84_depth.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt
   experiments/queue/e71b.txt

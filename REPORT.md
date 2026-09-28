@@ -515,10 +515,16 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
   (Event-SSM, Schöne et al. 2024) and 96.3% (S7, Soydan et al. 2024); the last two process the spikes one event at a time
   with linear state-space units, which §104 shows are event units of our kind with every unit updated on every event (both
-  select checkpoints on the test set). These units do not compute with delays: time only fades their state. **E74
-  (queued)** tests the paradigm's own design instead: events carry small vectors, content sets each message's delay (and
+  select checkpoints on the test set). These units do not compute with delays: time only fades their state. **E74's first
+  time-vector pilot** tests the paradigm's own design: events carry small vectors, content sets each message's delay (and
   whether it is sent at all), the receiver's clock weights and rotates what arrives, units fire when their evidence crosses
-  threshold and emit their state at that moment (§105); selected on held-out speakers. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
+  threshold and emit their state at that moment (§105). On 2,000 training and 500 held-out-speaker utterances, its best
+  accuracy was 0.146 and its last-epoch accuracy 0.120 (20-class chance is 0.05). E82's 240-update readout diagnosis
+  reached 0.184 with a nonspiking state readout and layer normalization; the normalized spiking readout stayed near chance.
+  E75's exactly shift/tempo-covariant lattice passed its symmetry check, but its two-epoch pilot reached only 0.044 and
+  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. E83 now tests depth 2/4/8 with
+  sparse raw-event skips, a readout over every layer, and per-layer gradient/activity logs; it uses a balanced 512-example
+  pilot and held-out speakers. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
@@ -558,6 +564,11 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   at ≈ 30 operations per event. The Transformer is the better world model by 0.08–0.19 nats per event; the event network
   gets within that at ≈ 1/3000 of the computation. Estimating the slow state by counts transfers to unseen days;
   constant-step multiplicative factors track the end of training and do not (E58).
+- **Deeper market event models (E84, queued).** E57 identifies slow rate and order-flow counters as useful market state,
+  with a remaining 0.08–0.19 nats/event gap to the Transformer point process at a small fraction of its counted work.
+  E84 carries the same point-process objective into a 2/4/8-layer time-vector model. Each layer receives sparse earlier-event
+  and raw-event routes, and the readout retains every layer's events. The day-1–4/day-5 pilot logs layer gradients and event
+  work; no deeper-market result exists yet, and the untouched confirmation days remain reserved.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A
@@ -601,12 +612,11 @@ The synthesis now treats topology and representation as separate experimental ax
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
-- **Depth beyond four and denser streams:** the price of depth is activity, n·r^L events per example (§85); extending a
-  unit only toward children that carry weight cuts events by 42% at depth 3 and 75% at depth 4 with unchanged accuracy
-  (§93); depth 5 is queued, and dense streams (spoken digits, §55) are where it matters.
-- **Time-vector networks on real streams (§105–§106):** E74 (content-dependent delays, snapshot payloads) and E75 (the
-  same, laid out to be exactly equivariant to band shifts and tempo) on spoken digits, selected on held-out speakers;
-  the question is whether computing with delays and vectors closes the gap to 95–96%.
+- **Deep time-vector networks on real streams (§105–§106, §110):** E83/E84 compare 2, 4, and 8 event layers with sparse
+  raw-event skips and a readout path from every layer. The derivation shows why the readout route avoids a forced product
+  of all downstream Jacobians for each layer's direct credit; it does not prove convergence or that deep routes learn useful
+  features. E83 checks speaker-held-out spoken digits; E84 checks a frozen market-world-model split. Layerwise gradients,
+  activity, validation score, memory, and time are the decision signals.
 - **A time-vector language model (§107, E77):** does the hybrid of sparse time-vector memory and delay-coded retrieval
   reach the converged LSTM and Transformer at equal data, and how many keys does it actually retrieve per character?
 - **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
@@ -1011,6 +1021,8 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
+| E83 | deep time-vector model on speaker-held-out SHD | depth 2/4/8 pilot queued; logs layer gradients and event activity |
+| E84 | deep time-vector market world model | depth 2/4/8 day-5 pilot queued; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 
 ## 11. Potential applications and the transformation

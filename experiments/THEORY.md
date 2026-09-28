@@ -5310,6 +5310,55 @@ measures it at 1M and 10M characters.
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
 | **M20** | shadow events in the event engine reproduce the batch beam exactly, asynchronously | equality with M19 per sample; extra events and per-node branch state vs beam width |
 
+## 110. Depth without a forced gradient chain: retained event routes
+
+*Written 2026-09-28, before the E83/E84 depth pilots.*
+
+Let $H_\ell$ be the emitted event set of time-vector layer $\ell$, and let
+$F_\ell$ be its event map on a fixed candidate and firing topology. A strictly
+serial stack has $H_{\ell+1}=F_\ell(H_\ell)$, so a gradient to an early layer
+contains the product $J_{L-1}\cdots J_\ell$ of all later event-map Jacobians.
+Even when each event-time derivative is exact, this product may contract,
+amplify, or lose rank. Exact local spike-time gradients alone therefore do not
+establish deep trainability.
+
+Use two retained routes instead: (i) each layer may receive sparse edges from
+all earlier emitted events and a direct sparse edge from the raw input events;
+(ii) the readout receives the emissions of every hidden layer. For the
+concatenated representation $H=(H_1,\ldots,H_L)$, the loss gradient for a
+trainable layer has a direct contribution
+
+$$
+\nabla_{\theta_\ell} \mathcal L\supset
+J_{\theta_\ell,H_\ell}^{\top}J_{\mathrm{read},H_\ell}^{\top}\nabla_{\hat y}\mathcal L.
+$$
+
+This term does not contain the Jacobians of layers $\ell+1,\ldots,L$; adding
+depth cannot attenuate it by multiplying more layer Jacobians. It is available
+when the direct readout route is active and its local Jacobian is nonzero. The
+separate deep-composition path still has the product bound, and the expression
+does not guarantee a useful direction, adequate route coverage, or nonzero
+credit through a hard gate. It is a structural trainability floor, not a
+convergence theorem.
+
+The raw-event skips make the same point for representation access: every deep
+stage can recover a feature from the original event stream without forcing that
+feature through all preceding layers. To keep this compatible with the
+manifesto, the skip graph is a fixed sparse candidate graph, not dense attention;
+each event scores only its listed senders. This saves work only if the candidate
+degree stays bounded and routing does not hide an all-pairs scan.
+
+**Test.** E83 applies these routes to SHD; E84 applies them to the market event
+world model. Compare depths 2, 4, and 8 at equal per-layer width, data exposure,
+and optimizer updates. Log each layer's gradient norm, send fraction, messages,
+spikes, validation score, RSS and wall time. A useful depth result requires the
+new layers to receive sustained gradients and improve held-out quality. If
+gradients collapse or activity dies, first distinguish (a) the chain-path
+product, (b) dead hard-gated candidates, (c) threshold crossing sensitivity,
+and (d) insufficient task-relevant events. A follow-up can add a smooth
+near-miss gate on the same sparse candidate edges; it must be charged for the
+extra training work and evaluated with hard event gates at inference.
+
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
 on a network small enough that every term can be computed exactly. It should run
