@@ -841,7 +841,7 @@ def build():
         "query refers to (what attention learns), race attention trained by local credit is 100% correct after 1,000–4,000 "
         "examples (5 of 5 runs) and stays 100% on contexts four times longer. Of seven Transformer configurations (width "
         "64–128, 2–4 layers, absolute or relative positions), only the two largest solve it, after 400k–1M examples, and they "
-        "reach at most 72% on the longer contexts (one run each; E61).",
+        "reach at most 72% on the longer contexts (E61; the best configuration twice, solving it between 400k and 1M examples).",
         "<b>Deep order from a few thousand examples.</b> Recognizing which of 20 orders of four patterns occurred needs four "
         "levels of “this, then that”. The network finds the right detectors among 55 million candidates and is 99.9–100% "
         "correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example and only "
@@ -958,7 +958,7 @@ def build():
         ["<b>Learned retrieval from ≥ 250× less data</b>", "E61: race attention with a learned query–key match, 5/5 runs 100% "
          "after 1–4k examples, 100% on 4× longer contexts; of 7 Transformer configurations only d = 128, 4 layers solves it, "
          "after 400k–1M examples (4× length: 0.25 absolute positions, 0.72 ALiBi)", "the event learner's candidate routes are "
-         "(item, offset) pairs (ALiBi gives the Transformer relative offsets too); one run per Transformer configuration"],
+         "(item, offset) pairs (ALiBi gives the Transformer relative offsets too); one run per configuration, two for the best (solved at 400k–700k and 700k–1M)"],
         ["<b>Deep order learned from few examples</b>", "E54: 20 orders of four motifs, 0.999–1.000 (5/5) after 10–15k "
          "examples, ≈ 2,000 updates, ≈ 150 events, 80k of 5.5·10⁷ candidate synapses grown", "depth 3: a Transformer matches (0.996–0.999) at ≈ 5,000× the "
          "computation; depth 4: 0.990 at equal data, 0.992–0.996 with 2M (4–10× the error rate)"],
