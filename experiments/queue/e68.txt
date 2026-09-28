@@ -4,6 +4,9 @@ e80_val_own experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 0
 e80_val_mag experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 1
 e80_val_mag_cross experiments/e80_tv_market.py --mode val --fine 1 --cross 1 --mag 1
 e80_test experiments/e80_select_test.py
+# E81: race gated linear network over the native experts (THEORY §109)
+e81_D1M experiments/e81_race_gln.py --D 1000000 --K 5
+e81_D10M experiments/e81_race_gln.py --D 10000000 --K 6
 # E68: race Transformer vs softmax Transformer (THEORY §103)
 e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
 e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
