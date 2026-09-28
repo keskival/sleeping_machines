@@ -1,0 +1,97 @@
+{
+ "args": {
+  "bands": 140,
+  "merge": 0.002,
+  "d": 8,
+  "n": 4,
+  "M1": 16,
+  "M": 16,
+  "depth": 2,
+  "window": 30,
+  "fan2": 0.25,
+  "readout_fan": 0.5,
+  "aux_weight": 0.2,
+  "objective": "integral",
+  "race_threshold": 0.6,
+  "race_temperature": 0.03,
+  "race_logit_temperature": 2.0,
+  "race_rate": 5.0,
+  "race_latency_discount": 1.0,
+  "dmax": 50.0,
+  "w_sd": "0.05,0.05",
+  "shift": 4,
+  "drop": 0.1,
+  "epochs": 1,
+  "bs": 4,
+  "lr": 0.003,
+  "seed": 1,
+  "limit": 80,
+  "eval_limit": 40
+ },
+ "params": 7732,
+ "layer_params": [
+  3856,
+  1872
+ ],
+ "train": 80,
+ "eval": 40,
+ "curve": [
+  {
+   "epoch": 1,
+   "train_loss": 738.9641,
+   "shd_max_over_time_acc": 0.025,
+   "race_coverage": 1.0,
+   "race_acc_when_emitted": 0.075,
+   "race_mean_latency_ms": 167.35,
+   "race_mean_peak_confidence": 0.9969,
+   "tap_acc": [
+    0.075,
+    0.025
+   ],
+   "aux_train_loss": 629.9358,
+   "first_batch_gradient_routes": {
+    "final_norms": [
+     2360156.786032,
+     57277.056056
+    ],
+    "aux_norms": [
+     26542.967479,
+     0.0
+    ],
+    "cosines": [
+     0.70043,
+     null
+    ]
+   },
+   "msgs_per_utt": [
+    8109.0,
+    133.0,
+    240.0,
+    271.0
+   ],
+   "candidate_scores_per_utt": [
+    46668.0,
+    1163.0,
+    1958.0,
+    2298.0
+   ],
+   "state_vector_updates_per_utt": 292665,
+   "deep_msgs_per_utt": 8512.5,
+   "deep_candidate_scores_per_utt": 50128,
+   "deep_state_vector_updates_per_utt": 211369,
+   "spikes_per_utt": [
+    55.0,
+    62.0
+   ],
+   "synapses_sending": [
+    0.719,
+    0.81
+   ],
+   "layer_grad_norms": [
+    632958.45455,
+    65134.19033
+   ],
+   "wall_s": 29
+  }
+ ]
+}

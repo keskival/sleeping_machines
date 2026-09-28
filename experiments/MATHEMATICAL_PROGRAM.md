@@ -175,8 +175,8 @@ The architecture has an advantage only if its attainable loss is lower for the s
 
 ## Highest-value falsification sequence
 
-1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The report says the current 90M-character race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass validation-selected LSTM and 2-layer Transformer now score 2.179 and 2.367 test bpc respectively; both best checkpoints occur at the final validation checkpoint. The matched 10M, four-layer Transformer last logged step 4,392/4,882 (90%) at 1.8661 validation bpc at 18:08 UTC, 0.1213 above the completed LSTM's validation score; no test or endpoint score exists. The serialized experiment lock remains held, but its owner is not visible in the current process listing, so the E83/E84 queue was not started.
-2. **Test deep Hopfield event message passing.** Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, counterfactual route coverage, score entropy, retained/new event counts, pair-scoring work, and validation loss. §§19/57 already derive and test route discovery credit; the E77 experiments need to measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. The queued E114 diagnostic compares this bound with central finite-difference Jacobians over sequence length, retained mass, temperature, and concentrated versus diffuse key reuse before long E83/E84 pilots proceed.
+1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The report says the current 90M-character race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass validation-selected LSTM and 2-layer Transformer now score 2.179 and 2.367 test bpc respectively; both best checkpoints occur at the final validation checkpoint. The 10M four-layer Transformer completed 4,882 updates with 1.8647 best validation bpc at step 4,880 and 1.9083 held-out test bpc. It is 0.1199 above the 10M LSTM on validation and 0.1090 above it on test; the Transformer uses 3.24M parameters/four passes versus the LSTM's 1.20M/six passes, so this is data-matched but not capacity- or training-budget-matched.
+2. **Test deep Hopfield event message passing.** Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, counterfactual route coverage, score entropy, retained/new event counts, pair-scoring work, and validation loss. §§19/57 already derive and test route discovery credit; the E77 experiments need to measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. E114 completed first: 144 central finite-difference cases over sequence length, retained mass, temperature, and diffuse/reused-key patterns showed no absolute violation above 1e-8; among nontrivial bounds, the maximum Jacobian and forward ratios were 0.897 and 0.687. The safe E83/E84 queue then exposed a missing depth field in the SHD pilot; that implementation fault is fixed before resuming the guarded queue.
 3. **Separate associative recall from search cost.** Start with all-past-event softmax as the trainability/recall reference. For a candidate set, measure omitted mass and the exact query-gradient residual from §112: omitted within-group covariance plus the between-group key/advantage term. The new H-smooth extension also bounds the *full-loss* query, key, and value VJP errors, including the change in upstream gradient caused by the output error; its query bound is $\beta\epsilon D_K[(3/2-\epsilon)D_A^C+HD_V^2/4]$. Check these bounds against dense autodiff while varying support mass and downstream curvature. Mass recall alone does not guarantee gradient alignment. Use the existing near-miss route credit; its key-insertion loss estimate $rA$ has a curvature-bounded error, so allocate exact shadow execution by the resulting per-candidate remainder bound. Vary candidate budget and context, and measure route recall, output and gradient error, index maintenance, bytes moved, shadow work, and actual score operations. Top-k after dense scoring tests aggregation only.
 4. **Test race attention against softmax directly.** Match parameters and training budget, vary races per head and depth, measure output/gradient bias and variance, convergence, loss, and actual event work. This isolates whether stochastic local credit preserves the Hopfield address/value learning signal.
 5. **Only then scale tokens and hardware.** Move successful variants to larger text and longer contexts; compare energy and throughput on event-capable and GPU hardware. Include search/index construction, communication, synchronization, and training overhead.
@@ -187,34 +187,62 @@ Advance a mechanism when its predicted intermediate statistic changes in the pre
 
 ## Deep event-stream models on real data
 
-The next depth test is E83 on speaker-held-out SHD and E84 on the frozen
-market world-model protocol. Both use a strict adjacent-layer event chain with
-fixed sparse candidate wiring. During training, one shared sparse readout
-provides an auxiliary task loss at each depth; inference uses only the deepest
-readout. This is the graph in THEORY §110: auxiliary loss adds a local gradient
-term without allowing the final prediction to bypass the hierarchy.
+E83 is sequence classification: SHD gives one digit label for a complete
+utterance. A code audit found that the previous implementation averaged
+per-time softmax probabilities across a shared padded simulation grid. Silent
+bins contributed uniform guesses, and a short utterance's score depended on
+the longest utterance in its batch. The old depth-2 runs are retained as
+debugging records but are excluded as depth or trainability evidence; the
+guarded queue was stopped before depth 4.
 
-The initial comparison is deliberately small and iso-width: depths 2, 4, 8, and 16 use
-the same samples/windows, per-layer width, optimizer updates, and seed. Each
-depth is paired with auxiliary loss weight 0 and 0.2. E83 stratifies the
-speaker-held-out pilot and records layer gradient norms, intermediate and deep
-accuracy, deep/auxiliary gradient norms and cosines, candidate score pairs,
-accepted messages, and state-vector scan updates. E84 uses days 1–4 for
-training and day 5 for validation, with the same sampled windows at all depths;
-it records the same gradient-alignment and work diagnostics plus held-out
-per-event log likelihood. Neither pilot uses the untouched SHD test set or
-market confirmation days.
+The corrected E83 compares three sequence objectives at fixed depth 4 before
+resuming a depth sweep:
+
+- **Output race:** no answer before any class clears a confidence threshold;
+  the first threshold-crossing class is emitted. THEORY §115 derives a
+  competing-risk objective for the probability that the labeled class wins,
+  including the survival probability of “no output yet.” A time discount
+  rewards earlier correct answers. Validation must report emitted-answer
+  accuracy, coverage, and latency, since either premature errors or no-output
+  cases can make the race unusable.
+- **Max-over-time potential:** a full-coverage SNN control used in the original
+  SHD benchmark study.
+- **Integrated potential:** cross-entropy on the time integral of readout
+  potentials, another published sequence-classification scheme.
+
+Each sequence now has its own end time and pooling deadline, so co-batched
+padding is excluded. A tiny 80-train / 40-validation, one-epoch smoke remained
+near chance: the revised race reached 92.5% coverage but only 10.8% accuracy
+among emissions; max-over-time accuracy was 2.5%. This is a failed, low-power
+pilot, not positive evidence. A matched depth-4 comparison (512 train, 128
+held-out-speaker validation, five epochs) across race, integral, and max
+objectives is now running under the safe runner.
+
+Only after selecting a readout objective on held-out speakers should E83
+resume the iso-width depth 2/4/8/16 and auxiliary-weight 0/0.2 comparison. The
+SHD source has no phoneme alignment in this pipeline, so those depths are not
+yet matched to annotated phonetic stages. Per-layer dmax also expands the
+maximum path delay with depth; a subsequent scaling comparison must control
+the total delay horizon or treat that expansion as an explicit experimental
+factor.
+
+E84 remains a separate day-5 market likelihood experiment. It uses a strict
+adjacent-layer event chain and deepest-only prediction, with sampled windows
+matched across depths, and logs gradient alignment, candidate scores, messages,
+state scans, and held-out per-event log likelihood. It has not run since the
+guarded queue was stopped; the confirmatory market days remain untouched.
 
 Read the diagnostics jointly. Nonzero deep gradients with no validation gain
-point to representation or optimization quality. Vanishing deep gradients with
-healthy early-layer gradients point to chain conditioning; dead message or
-spike counts point to a route/threshold problem. Candidate score pairs expose
-work spent on rejected messages, while state-vector scan counts expose the
-reference implementation's grid/event-step updates. These models remain sparse
-in their message topology but still scan state cells at each step, so neither
-active messages nor sparse masks alone establish low energy. If the paired
-pilot supports auxiliary supervision, repeat across seeds and then tune its
-weight by depth.
+point to representation or optimization quality; vanished deep gradients with
+healthy early-layer gradients point to chain conditioning. For SHD, a race with
+high coverage and poor emitted accuracy is overconfident or poorly
+discriminative; low coverage indicates its threshold or evidence dynamics do
+not trigger. Candidate score pairs expose work spent on rejected messages,
+while state-vector scan counts expose the reference implementation's
+grid/event-step updates. These models remain sparse in message topology but
+still scan state cells at each step, so neither active messages nor sparse
+masks alone establish low energy. Any winning objective or auxiliary scheme
+must repeat across seeds before depth claims.
 
 ## xLSTM transfer: topology and scale protocol
 

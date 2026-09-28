@@ -10,6 +10,13 @@ This isolates the fixed-topology depth question from the separate speaker
 equivariance question in E75. It reports per-layer gradient norms, candidate
 score pairs, accepted messages, state scans, and spikes; the small pilot is not
 a benchmark claim.
+
+The classifier is utterance-to-class with an anytime output race. Before any
+class is sufficiently likely it emits nothing; the first class whose softmax
+probability crosses a confidence threshold wins. Training maximizes the
+probability that the correct class wins a differentiable competing-hazard
+relaxation of that race. Integral-potential and max-over-time readouts remain
+available as sequence-classification controls.
 """
 import argparse
 import json
@@ -29,6 +36,84 @@ from e74_time_vector_net import TVLayer, to_events  # noqa: E402
 
 torch.set_num_threads(1)
 OUT = os.path.join(os.path.dirname(__file__), "results", "e83")
+
+
+def pool_readout(V, seq_end, delay_stages, dmax, mode):
+    """Turn a (time, batch, class) potential trace into one class-score vector.
+
+    Each item is pooled only through its own last-input-time + maximum path
+    delay + settling interval. This avoids letting a longer co-batched example
+    alter a shorter item's prediction. `integral` is cross-entropy on summed
+    potentials; `max` is cross-entropy on each class's maximum potential.
+    """
+    times = torch.arange(V.shape[0], device=V.device, dtype=seq_end.dtype)
+    ends = seq_end.to(device=V.device)
+    cutoff = ends + delay_stages * dmax + 60.0
+    valid = times[:, None] <= cutoff[None, :]
+    if mode == "integral":
+        # V is sampled every millisecond. Use the 1 ms Riemann-sum factor so
+        # changing grid resolution does not arbitrarily rescale CE logits.
+        return (V * valid[:, :, None]).sum(0) * 1e-3
+    if mode == "max":
+        return V.masked_fill(~valid[:, :, None], -torch.inf).amax(0)
+    raise ValueError(f"unknown readout pooling mode: {mode}")
+
+
+def race_nll(V, seq_end, delay_stages, dmax, labels, threshold, gate_temperature,
+             logit_temperature, rate_scale, latency_discount):
+    """Negative log discounted probability that `labels` wins the confidence race.
+
+    Class-specific hazards rise smoothly as that class's instantaneous
+    probability passes `threshold`. The survival term means no class has
+    emitted yet; the cause term scores the first emitted class. Thus the label
+    is attached to the eventual winner, not copied onto every input prefix.
+    Time bins are 1 ms, matching the SHD simulation grid.
+    """
+    times = torch.arange(V.shape[0], device=V.device, dtype=seq_end.dtype)
+    cutoff = seq_end.to(V.device) + delay_stages * dmax + 60.0
+    valid = times[:, None] <= cutoff[None, :]
+    probs = torch.softmax(V / logit_temperature, dim=-1)
+    confidence = probs.amax(-1)
+    total_rate = (gate_temperature * torch.nn.functional.softplus(
+        (confidence - threshold) / gate_temperature) * rate_scale)
+    hazards = total_rate[:, :, None] * probs * valid[:, :, None]
+    total = hazards.sum(-1)
+    survival_before = torch.cat((total.new_zeros((1, total.shape[1])), -total.cumsum(0)[:-1]), 0)
+    event_mass = (-torch.expm1(-total)).clamp_min(1e-30)
+    correct_hazard = hazards.gather(2, labels[None, :, None].expand(V.shape[0], -1, 1)).squeeze(-1)
+    cause_fraction = correct_hazard / total.clamp_min(1e-30)
+    log_discount = -latency_discount * (times[:, None] / 1000.0)
+    log_terms = (survival_before + event_mass.log()
+                 + cause_fraction.clamp_min(1e-30).log() + log_discount)
+    log_terms = log_terms.masked_fill(~valid, -torch.inf)
+    log_win_probability = torch.logsumexp(log_terms, dim=0)
+    return -log_win_probability.mean()
+
+
+def race_decision(V, seq_end, delay_stages, dmax, threshold, logit_temperature):
+    """Return first threshold-crossing class, emission flag, latency, and peak confidence."""
+    times = torch.arange(V.shape[0], device=V.device, dtype=seq_end.dtype)
+    cutoff = seq_end.to(V.device) + delay_stages * dmax + 60.0
+    valid = times[:, None] <= cutoff[None, :]
+    probs = torch.softmax(V / logit_temperature, dim=-1)
+    confidence, classes = probs.max(-1)
+    crossed = (confidence >= threshold) & valid
+    emitted = crossed.any(0)
+    first = crossed.to(torch.int64).argmax(0)
+    batch = torch.arange(V.shape[1], device=V.device)
+    prediction = classes[first, batch]
+    prediction = torch.where(emitted, prediction, torch.full_like(prediction, -1))
+    latency = first.to(V.dtype)
+    peak_conf = confidence.masked_fill(~valid, -torch.inf).amax(0)
+    return prediction, emitted, latency, peak_conf
+
+
+def batch_to_events(items, bands, shift, rng, drop):
+    """Pack events while retaining each utterance's own endpoint for causal pooling."""
+    eb, ei, et, labels, _ = to_events(items, bands, shift, rng, drop)
+    seq_end = torch.tensor([float(t[-1]) * 1000.0 for _, t, _, _ in items], dtype=torch.float32)
+    max_time = int(math.ceil(float(seq_end.max()))) + 1
+    return eb, ei, et, labels, max_time, seq_end
 
 
 class DeepSHD(nn.Module):
@@ -91,13 +176,13 @@ class DeepSHD(nn.Module):
             candidates.append(self.scored_pairs(self.ro, out[1]))
             V, msg = self.ro(out[0], out[1], out[2], out[3], B, G)
             messages.append(msg)
-            taps.append(torch.softmax(V[::4], -1).mean(0))
+            taps.append(V)
         scan_updates = G * self.layers[0].n * (sum(self.widths) + len(readout_inputs) * self.ro.M)
         deep_scan_updates = G * self.layers[0].n * (sum(self.widths) + self.ro.M)
         deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
         deep_messages = sum(messages[:self.depth]) + messages[-1]
         return taps[-1], {"msgs": messages, "candidates": candidates,
-                          "spikes": spikes, "tap_probs": taps,
+                          "spikes": spikes, "tap_traces": taps,
                           "state_vector_updates_per_utt": scan_updates,
                           "deep_msgs_per_utt": deep_messages,
                           "deep_candidate_scores_per_utt": deep_candidates,
@@ -166,6 +251,18 @@ def main():
     ap.add_argument("--readout_fan", type=float, default=0.5)
     ap.add_argument("--aux_weight", type=float, default=0.2,
                     help="weight per intermediate supervised readout; zero is the no-auxiliary control")
+    ap.add_argument("--objective", choices=("race", "integral", "max"), default="race",
+                    help="race: first confident class wins; integral/max are sequence-level controls")
+    ap.add_argument("--race_threshold", type=float, default=0.6,
+                    help="minimum class softmax probability that triggers an output event")
+    ap.add_argument("--race_temperature", type=float, default=0.03,
+                    help="softness of the train-time output gate")
+    ap.add_argument("--race_logit_temperature", type=float, default=2.0,
+                    help="softmax temperature shared by train-time race and inference decisions")
+    ap.add_argument("--race_rate", type=float, default=5.0,
+                    help="per-ms scale of the train-time competing hazards")
+    ap.add_argument("--race_latency_discount", type=float, default=1.0,
+                    help="per-second discount on correct race outcomes, rewarding earlier answers")
     ap.add_argument("--dmax", type=float, default=50.0)
     ap.add_argument("--w_sd", default="0.05,0.05")
     ap.add_argument("--shift", type=int, default=4)
@@ -203,12 +300,26 @@ def main():
         perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
-            eb, ei, et, y, tmax = to_events(items, a.bands, a.shift, rng, a.drop)
+            eb, ei, et, y, tmax, seq_end = batch_to_events(items, a.bands, a.shift, rng, a.drop)
             grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
-            p, info = net(eb, ei, et, len(items), grid, return_taps=True)
-            main_loss = -torch.log(p[torch.arange(len(y)), y] + 1e-8).mean()
-            aux_losses = [-torch.log(tap[torch.arange(len(y)), y] + 1e-8).mean()
-                          for tap in info["tap_probs"][:-1]]
+            _, info = net(eb, ei, et, len(items), grid, return_taps=True)
+            traces = info["tap_traces"]
+            if a.objective == "race":
+                main_loss = race_nll(traces[-1], seq_end, a.depth + 1, a.dmax, y,
+                                     a.race_threshold, a.race_temperature,
+                                     a.race_logit_temperature, a.race_rate,
+                                     a.race_latency_discount)
+                aux_losses = [race_nll(trace, seq_end, k + 2, a.dmax, y,
+                                       a.race_threshold, a.race_temperature,
+                                       a.race_logit_temperature, a.race_rate,
+                                       a.race_latency_discount)
+                              for k, trace in enumerate(traces[:-1])]
+            else:
+                main_scores = pool_readout(traces[-1], seq_end, a.depth + 1, a.dmax, a.objective)
+                main_loss = nn.functional.cross_entropy(main_scores, y)
+                aux_losses = [nn.functional.cross_entropy(
+                                  pool_readout(trace, seq_end, k + 2, a.dmax, a.objective), y)
+                              for k, trace in enumerate(traces[:-1])]
             aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
             if i0 == 0:
                 route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
@@ -218,7 +329,12 @@ def main():
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
             tl += float(main_loss.detach()); aux_tl += float(aux_loss.detach())
 
-        net.eval(); ok = 0; tap_ok = np.zeros(a.depth)
+        net.eval(); max_ok = 0; tap_ok = np.zeros(a.depth)
+        race_emitted = race_correct = 0; race_latency_sum = race_peak_confidence_sum = 0.0
+        threshold_grid = np.asarray((0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9))
+        grid_emitted = np.zeros(len(threshold_grid), dtype=np.int64)
+        grid_correct = np.zeros(len(threshold_grid), dtype=np.int64)
+        grid_latency = np.zeros(len(threshold_grid), dtype=np.float64)
         st = {"msgs": np.zeros(a.depth * 2), "candidates": np.zeros(a.depth * 2),
               "spikes": np.zeros(a.depth), "state_vector_updates_per_utt": np.zeros(1),
               "deep_msgs_per_utt": np.zeros(1), "deep_candidate_scores_per_utt": np.zeros(1),
@@ -229,17 +345,48 @@ def main():
         with torch.no_grad():
             for i0 in range(0, len(ev), a.bs):
                 items = ev[i0:i0 + a.bs]
-                eb, ei, et, y, tmax = to_events(items, a.bands, 0, rng, 0.0)
+                eb, ei, et, y, tmax, seq_end = batch_to_events(items, a.bands, 0, rng, 0.0)
                 grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
-                p, info = net(eb, ei, et, len(items), grid, return_taps=True)
-                ok += int((p.argmax(1) == y).sum())
-                for k, tap in enumerate(info["tap_probs"]):
-                    tap_ok[k] += int((tap.argmax(1) == y).sum())
+                _, info = net(eb, ei, et, len(items), grid, return_taps=True)
+                traces = info["tap_traces"]
+                final_max = pool_readout(traces[-1], seq_end, a.depth + 1, a.dmax, "max")
+                max_ok += int((final_max.argmax(1) == y).sum())
+                for k, trace in enumerate(traces):
+                    tap_scores = pool_readout(trace, seq_end, k + 2, a.dmax, "max")
+                    tap_ok[k] += int((tap_scores.argmax(1) == y).sum())
+                pred, emitted_mask, latency, peak_confidence = race_decision(
+                    traces[-1], seq_end, a.depth + 1, a.dmax,
+                    a.race_threshold, a.race_logit_temperature)
+                race_emitted += int(emitted_mask.sum())
+                race_correct += int(((pred == y) & emitted_mask).sum())
+                race_latency_sum += float(latency[emitted_mask].sum())
+                race_peak_confidence_sum += float(peak_confidence.sum())
+                # Validation-only threshold frontier. The readout trace is
+                # computed once; changing the threshold only changes when
+                # its first class decision is emitted.
+                for ti, threshold in enumerate(threshold_grid):
+                    gp, ge, gl, _ = race_decision(
+                        traces[-1], seq_end, a.depth + 1, a.dmax,
+                        float(threshold), a.race_logit_temperature)
+                    grid_emitted[ti] += int(ge.sum())
+                    grid_correct[ti] += int(((gp == y) & ge).sum())
+                    grid_latency[ti] += float(gl[ge].sum())
                 for key in st:
                     st[key] += np.asarray(info[key]) * len(items)
         send = [round(float(l.sent[l.mask].float().mean()), 3) for l in net.layers]
         row = {"epoch": ep + 1, "train_loss": round(tl / nb, 4),
-               "spk_acc": round(ok / len(ev), 4),
+               "shd_max_over_time_acc": round(max_ok / len(ev), 4),
+               "race_coverage": round(race_emitted / len(ev), 4),
+               "race_acc_when_emitted": round(race_correct / race_emitted, 4) if race_emitted else None,
+               "race_mean_latency_ms": round(race_latency_sum / race_emitted, 2) if race_emitted else None,
+               "race_mean_peak_confidence": round(race_peak_confidence_sum / len(ev), 4),
+               "race_threshold_frontier": [
+                   {"threshold": float(threshold),
+                    "coverage": round(int(n_emit) / len(ev), 4),
+                    "accuracy_when_emitted": round(int(n_ok) / int(n_emit), 4) if n_emit else None,
+                    "mean_latency_ms": round(float(lat) / int(n_emit), 2) if n_emit else None}
+                   for threshold, n_emit, n_ok, lat in zip(
+                       threshold_grid, grid_emitted, grid_correct, grid_latency)],
                "tap_acc": (tap_ok / len(ev)).round(4).tolist(),
                "aux_train_loss": round(aux_tl / nb, 4),
                "first_batch_gradient_routes": route_probe,
@@ -254,7 +401,7 @@ def main():
                "layer_grad_norms": (gsum / nb).round(5).tolist(),
                "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_spk_s{a.seed}.json")
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}_spk_s{a.seed}.json")
     with open(path, "w") as f:
         json.dump(res, f, indent=1)
 
