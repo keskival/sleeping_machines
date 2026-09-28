@@ -1,9 +1,10 @@
 """E83: depth and gradient-flow study for Sleeping Machines on spoken digits.
 
-All layers are event layers.  Layer 1 uses local tonotopic wiring; each later
-layer receives sparse messages from every earlier hidden layer plus a local
-skip from the raw cochlear events.  The readout can inspect every layer's
-emissions, so early features keep a direct path to the loss as depth grows.
+All layers are event layers. Layer 1 uses local tonotopic wiring; each later
+layer receives sparse messages only from the immediately preceding layer. A
+shared auxiliary readout is trained at each depth, while inference uses only
+the deepest readout. This supplies local learning signals without allowing the
+prediction to bypass the event hierarchy.
 
 This isolates the fixed-topology depth question from the separate speaker
 equivariance question in E75.  It reports per-layer gradient norms, active
@@ -30,7 +31,8 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e83")
 
 
 class DeepSHD(nn.Module):
-    def __init__(self, bands, d, n, M1, M, depth, window, fan2, dmax, w_sd, seed=0):
+    def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
+                 dmax, w_sd, seed=0):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -42,14 +44,18 @@ class DeepSHD(nn.Module):
         local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
         self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0]))
         for i in range(1, depth):
-            previous_width = sum(self.widths[:i])
-            mask = torch.zeros(previous_width + bands, M, dtype=torch.bool)
-            mask[:previous_width] = torch.rand(previous_width, M, generator=gen) < fan2
-            centers = (torch.arange(M) + 0.5) * bands / M
-            raw_local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
-            mask[previous_width:] = raw_local
-            self.layers.append(TVLayer(previous_width + bands, M, d, d, n, dmax, mask, True, w_sd[1]))
-        self.ro = TVLayer(sum(self.widths), 20, d, d, n, dmax, None, False, 0.3,
+            previous_width = self.widths[i - 1]
+            mask = torch.rand(previous_width, M, generator=gen) < fan2
+            for j in range(M):
+                if not mask[:, j].any():
+                    mask[torch.randint(previous_width, (), generator=gen), j] = True
+            self.layers.append(TVLayer(previous_width, M, d, d, n, dmax, mask, True, w_sd[1]))
+        readout_width = max(self.widths)
+        readout_mask = torch.rand(readout_width, 20, generator=gen) < readout_fan
+        for j in range(20):
+            if not readout_mask[:, j].any():
+                readout_mask[torch.randint(readout_width, (), generator=gen), j] = True
+        self.ro = TVLayer(readout_width, 20, d, d, n, dmax, readout_mask, False, 0.3,
                           gate_bias=1.0, normalize=True)
 
     def forward(self, eb, ei, et, B, G):
@@ -60,25 +66,16 @@ class DeepSHD(nn.Module):
             if i == 0:
                 ib, ij, it, iv = eb, ei, et, raw_v
             else:
-                bs, js, ts, vs = [], [], [], []
-                offset = 0
-                for (ob, oj, ot, ov), width in zip(emitted, self.widths[:i]):
-                    bs.append(ob); js.append(oj + offset); ts.append(ot); vs.append(ov)
-                    offset += width
-                bs.append(eb); js.append(ei + offset); ts.append(et); vs.append(raw_v)
-                ib, ij, it, iv = (torch.cat(v) for v in (bs, js, ts, vs))
+                ib, ij, it, iv = emitted[-1]
             out, msg = layer(ib, ij, it, iv, B, G)
             emitted.append(out); messages.append(msg); spikes.append(len(out[2]) / B)
 
-        rb, rj, rt, rv = [], [], [], []
-        offset = 0
-        for (ob, oj, ot, ov), width in zip(emitted, self.widths):
-            rb.append(ob); rj.append(oj + offset); rt.append(ot); rv.append(ov)
-            offset += width
-        V, msg = self.ro(torch.cat(rb), torch.cat(rj), torch.cat(rt), torch.cat(rv), B, G)
-        messages.append(msg)
-        p = torch.softmax(V[::4], -1).mean(0)
-        return p, {"msgs": messages, "spikes": spikes}
+        taps = []
+        for out in emitted:
+            V, msg = self.ro(*out, B, G)
+            messages.append(msg)
+            taps.append(torch.softmax(V[::4], -1).mean(0))
+        return taps[-1], {"msgs": messages, "spikes": spikes, "tap_probs": taps}
 
 
 def grad_norm(module):
@@ -118,6 +115,9 @@ def main():
     ap.add_argument("--depth", type=int, default=4)
     ap.add_argument("--window", type=int, default=30)
     ap.add_argument("--fan2", type=float, default=0.25)
+    ap.add_argument("--readout_fan", type=float, default=0.5)
+    ap.add_argument("--aux_weight", type=float, default=0.2,
+                    help="weight per intermediate supervised readout; zero is the no-auxiliary control")
     ap.add_argument("--dmax", type=float, default=50.0)
     ap.add_argument("--w_sd", default="0.05,0.05")
     ap.add_argument("--shift", type=int, default=4)
@@ -140,8 +140,8 @@ def main():
     widths_sd = [float(v) for v in a.w_sd.split(",")]
     if len(widths_sd) != 2:
         raise ValueError("--w_sd requires two comma-separated values")
-    net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2, a.dmax,
-                  widths_sd, a.seed)
+    net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2,
+                  a.readout_fan, a.dmax, widths_sd, a.seed)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * nb, pct_start=0.1)
@@ -151,38 +151,49 @@ def main():
     print(json.dumps({"train": len(tr), "eval": len(ev), "params": res["params"],
                       "layer_params": res["layer_params"], "load_s": round(time.time() - t0)}), flush=True)
     for ep in range(a.epochs):
-        net.train(); tl = 0.0; perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
+        net.train(); tl = 0.0; aux_tl = 0.0
+        perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
             eb, ei, et, y, tmax = to_events(items, a.bands, a.shift, rng, a.drop)
-            p, _ = net(eb, ei, et, len(items), tmax + 2 * int(a.dmax) + 60)
-            loss = -torch.log(p[torch.arange(len(y)), y] + 1e-8).mean()
+            p, info = net(eb, ei, et, len(items), tmax + 2 * int(a.dmax) + 60)
+            main_loss = -torch.log(p[torch.arange(len(y)), y] + 1e-8).mean()
+            aux_losses = [-torch.log(tap[torch.arange(len(y)), y] + 1e-8).mean()
+                          for tap in info["tap_probs"][:-1]]
+            aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
+            loss = main_loss + a.aux_weight * aux_loss
             opt.zero_grad(); loss.backward()
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
-            tl += float(loss.detach())
+            tl += float(main_loss.detach()); aux_tl += float(aux_loss.detach())
 
-        net.eval(); ok = 0; st = {"msgs": np.zeros(a.depth + 1), "spikes": np.zeros(a.depth)}
+        net.eval(); ok = 0; tap_ok = np.zeros(a.depth)
+        st = {"msgs": np.zeros(a.depth * 2), "spikes": np.zeros(a.depth)}
         for layer in net.layers:
             layer.sent.zero_()
+        net.ro.sent.zero_()
         with torch.no_grad():
             for i0 in range(0, len(ev), a.bs):
                 items = ev[i0:i0 + a.bs]
                 eb, ei, et, y, tmax = to_events(items, a.bands, 0, rng, 0.0)
                 p, info = net(eb, ei, et, len(items), tmax + 2 * int(a.dmax) + 60)
                 ok += int((p.argmax(1) == y).sum())
+                for k, tap in enumerate(info["tap_probs"]):
+                    tap_ok[k] += int((tap.argmax(1) == y).sum())
                 for key in st:
                     st[key] += np.asarray(info[key]) * len(items)
         send = [round(float(l.sent[l.mask].float().mean()), 3) for l in net.layers]
         row = {"epoch": ep + 1, "train_loss": round(tl / nb, 4),
                "spk_acc": round(ok / len(ev), 4),
+               "tap_acc": (tap_ok / len(ev)).round(4).tolist(),
+               "aux_train_loss": round(aux_tl / nb, 4),
                "msgs_per_utt": (st["msgs"] / len(ev)).round(0).tolist(),
                "spikes_per_utt": (st["spikes"] / len(ev)).round(0).tolist(),
                "synapses_sending": send,
                "layer_grad_norms": (gsum / nb).round(5).tolist(),
                "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_spk_s{a.seed}.json")
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_spk_s{a.seed}.json")
     with open(path, "w") as f:
         json.dump(res, f, indent=1)
 
