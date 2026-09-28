@@ -1,3 +1,40 @@
+# 2026-09-28 01:55: diagnostics first (why the time-vector networks learn slowly), then the rest of e68's plan (its runner
+# was stopped between reorganizations), then E69
+e82_diag experiments/e82_tv_diag.py
+e74_pilot_fixed experiments/e74_time_vector_net.py --limit 2000 --epochs 6 --w_sd 0.05,0.05 --eval spk
+e64b_lstm_D1M experiments/e64_lm_baselines.py --model lstm --D 1000000 --size 256 --passes 20 --dropout 0.2 --valid 200000
+e64b_tf_D1M experiments/e64_lm_baselines.py --model tf --D 1000000 --size 256 --layers 2 --passes 20 --dropout 0.2 --valid 200000
+e64b_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --size 512 --passes 6 --dropout 0.1 --valid 200000
+e64b_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000
+e79wk_D1M experiments/e79_race_mixer.py --D 1000000 --K 5 --wordkeys 1 --windows 256
+e79wk_D10M experiments/e79_race_mixer.py --D 10000000 --K 6 --wordkeys 1 --windows 256
+e81_D1M experiments/e81_race_gln.py --D 1000000 --K 5
+e81_D10M experiments/e81_race_gln.py --D 10000000 --K 6
+# E80: the market as vector events (THEORY §105): own stream (fair vs the Transformer point process), + transaction
+# magnitudes, + magnitudes and the perpetual / ETH; then test with the edge audit
+e80_val_own experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 0
+e80_val_mag experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 1
+e80_val_mag_cross experiments/e80_tv_market.py --mode val --fine 1 --cross 1 --mag 1
+e80_test experiments/e80_select_test.py
+# full SHD runs (time-vector network; equivariant, batch 16 to fit memory)
+e74_full experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --eval spk
+e75_full experiments/e75_equivariant_tvn.py --epochs 20 --bs 16 --eval spk
+# E68: race Transformer vs softmax Transformer (THEORY §103)
+e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
+e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
+e68_recall_R4_s0 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 0
+e68_recall_R16_s0 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 0
+e68_recall_R0_s1 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 1
+e68_recall_R1_s1 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 1
+e68_recall_R4_s1 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 1
+e68_recall_R16_s1 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 1
+e68_recall_R0_s2 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 2
+e68_recall_R1_s2 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 2
+e68_recall_R4_s2 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 2
+e68_recall_R16_s2 experiments/e68_race_transformer.py --task recall --R 16 --steps 8000 --seed 2
+e68_text_R0 experiments/e68_race_transformer.py --task text --R 0 --steps 3000
+e68_text_R1 experiments/e68_race_transformer.py --task text --R 1 --steps 3000
+e68_text_R4 experiments/e68_race_transformer.py --task text --R 4 --steps 3000
 # E69: race-attention THP vs softmax THP on the market stream (configurations as selected in E52; only attention changes)
 e69_coarse_R0 experiments/e69_race_thp.py --mode test --R 0 --d 64 --L 32 --epochs 11 --fine 0
 e69_coarse_R4 experiments/e69_race_thp.py --mode test --R 4 --d 64 --L 32 --epochs 11 --fine 0
