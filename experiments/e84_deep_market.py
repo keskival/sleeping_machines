@@ -126,6 +126,59 @@ def grad_norm(module):
                          if p.grad is not None))
 
 
+COUNT_WORK_KEYS = {
+    "msgs_per_event", "candidate_scores_per_event",
+    "deep_msgs_per_event", "deep_candidate_scores_per_event",
+}
+
+
+def accumulate_training_work(totals, work, batch_size):
+    """Accumulate per-example work; forward counters sum pairs over the batch."""
+    for key, value in work.items():
+        array = np.asarray(value, dtype=float)
+        if key in COUNT_WORK_KEYS:
+            array = array / batch_size
+        if key not in totals:
+            totals[key] = np.zeros_like(array, dtype=float)
+        totals[key] += array * batch_size
+
+
+def average_work(totals, examples):
+    out = {}
+    for key, total in totals.items():
+        value = total / examples
+        out[key] = value.tolist() if value.ndim else float(value)
+    return out
+
+
+def score_day_with_work(net, enc, L):
+    """Match E52's day score and aggregate the full overlapping-window work."""
+    y, x, b, span, yn = enc
+    n = len(y) - 1
+    total_ll = 0.0
+    scored = 0
+    done = L // 2
+    work_totals = {}
+    with torch.no_grad():
+        for start in T52.windows(n, L, L // 2):
+            sl = slice(start, start + L)
+            rates = net(y[None, sl], x[None, sl])
+            ll = net.ll_rates(rates, b[None, sl], span[None, sl], yn[None, sl])[0]
+            lo = max(done, start + L // 2) - start
+            hi = min(start + L, n) - start
+            if hi > lo:
+                total_ll += float(ll[lo:hi].sum())
+                scored += hi - lo
+                done = start + hi
+                # DeepTVPP stores per-event counters for this one-sequence window.
+                for key, value in net.work.items():
+                    array = np.asarray(value, dtype=float) * L
+                    if key not in work_totals:
+                        work_totals[key] = np.zeros_like(array, dtype=float)
+                    work_totals[key] += array
+    return total_ll / scored, average_work(work_totals, scored)
+
+
 def route_gradient_probe(final_loss, aux_loss, layers):
     groups = [list(layer.parameters()) for layer in layers]
     params = [p for group in groups for p in group]
@@ -201,13 +254,16 @@ def main():
     best = (-float("inf"), None, 0)
     for ep in range(a.epochs):
         net.train(); order = rng.permutation(len(chunks)); loss_sum = 0.0; aux_sum = 0.0
-        route_probe = None
+        route_probe = None; work_totals = {}; work_examples = 0
         gsum = np.zeros(a.depth); n_updates = 0
         for i0 in range(0, len(order), a.batch):
             parts = [[e[s:s + a.L] for e in tr[di][2]]
                      for di, s in (chunks[k] for k in order[i0:i0 + a.batch])]
             y, x, b, sp, yn = (torch.stack([p[j] for p in parts]) for j in range(5))
             rates, tap_rates = net(y, x, return_taps=True)
+            batch_size = len(y)
+            accumulate_training_work(work_totals, net.work, batch_size)
+            work_examples += batch_size
             main_loss = -net.ll_rates(rates, b, sp, yn).mean()
             aux_losses = [-net.ll_rates(tap, b, sp, yn).mean() for tap in tap_rates[:-1]]
             aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
@@ -218,15 +274,16 @@ def main():
             gsum += np.asarray([grad_norm(l) for l in net.layers]); n_updates += 1
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step()
             loss_sum += float(main_loss.detach()); aux_sum += float(aux_loss.detach())
-        training_work = net.work
+        training_work = average_work(work_totals, work_examples)
         net.eval()
-        score = T52.score_day(net, ev[0][2], a.L)[0]
+        score, inference_work = score_day_with_work(net, ev[0][2], a.L)
         row = {"epoch": ep + 1, "train_nll": round(loss_sum / max(n_updates, 1), 5),
                "aux_train_nll": round(aux_sum / max(n_updates, 1), 5),
                "first_batch_gradient_routes": route_probe,
                "val_day5_nats_per_event": float(score),
                "layer_grad_norms": (gsum / max(n_updates, 1)).round(5).tolist(),
-               "training_work": training_work, "inference_work": net.work,
+               "training_work_per_event": training_work,
+               "inference_work_per_scored_event": inference_work,
                "wall_s": round(time.time() - t0, 1)}
         res["epochs"].append(row); print(json.dumps(row), flush=True)
         if score > best[0]:

@@ -55,6 +55,29 @@ def load(path):
         return json.load(f)
 
 
+def read_tf_10m_checkpoints():
+    """Merge saved checkpoints with the live queue log; the detached run may outlive its JSON."""
+    result_path = os.path.join(RES, "e64", "tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json")
+    log_path = os.path.join(ROOT, "experiments", "queue", "logs", "e64b_tf_D10M.log")
+    by_step = {}
+    if os.path.isfile(result_path):
+        for row in load(result_path).get("checkpoints", []):
+            if all(k in row for k in ("step", "of", "valid_bpc")):
+                by_step[int(row["step"])] = row
+    if os.path.isfile(log_path):
+        with open(log_path) as f:
+            for line in f:
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if all(k in row for k in ("step", "of", "valid_bpc")):
+                    by_step[int(row["step"])] = row
+    if not by_step:
+        raise FileNotFoundError("no saved or logged 10M Transformer validation checkpoints")
+    return [by_step[step] for step in sorted(by_step)]
+
+
 def fig_image(fig, width_mm):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -213,7 +236,7 @@ def fig_potential_evidence():
     lstm = load(os.path.join(base, "lstm_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
     lstm_10m = load(os.path.join(base, "lstm_D10000000_s512_p6_dr0.1_v.json"))["test_bpc"]
     tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
-    tf_10m_checkpoints = load(os.path.join(base, "tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json"))["checkpoints"]
+    tf_10m_checkpoints = read_tf_10m_checkpoints()
     tf_10m_latest = max(tf_10m_checkpoints, key=lambda row: row["step"])
     tf_10m_prior = max((row for row in tf_10m_checkpoints if row["step"] < tf_10m_latest["step"]),
                        key=lambda row: row["step"], default=None)
@@ -912,6 +935,14 @@ def build():
     def P(t, style="body"):
         return Paragraph(t, st[style])
 
+    tf_10m_rows = read_tf_10m_checkpoints()
+    tf_10m_latest = tf_10m_rows[-1]
+    tf_10m_prior = next((row for row in reversed(tf_10m_rows[:-1])
+                         if row["step"] < tf_10m_latest["step"]), None)
+    tf_10m_progress = 100 * tf_10m_latest["step"] / tf_10m_latest["of"]
+    tf_10m_delta = (tf_10m_prior["valid_bpc"] - tf_10m_latest["valid_bpc"]
+                    if tf_10m_prior else None)
+
     import figures_mech as FM                                   # explanatory figures (plain-language front)
     s = [P("Sleeping Machines: what is known", "title"),
          P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
@@ -925,9 +956,11 @@ def build():
         "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
         "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
         "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
-        "work are not matched. The matched 10M four-layer Transformer has reached step 1,464/4,882 (30%) with 2.1001 "
-        "validation bpc, down 0.4856 from its 10% checkpoint; it remains above the completed LSTM's 1.7448 validation "
-        "bpc. This is still an early checkpoint, with final validation and test evaluation pending.",
+        f"work are not matched. The matched 10M four-layer Transformer has reached step {tf_10m_latest['step']:,}/"
+        f"{tf_10m_latest['of']:,} ({tf_10m_progress:.0f}%) with {tf_10m_latest['valid_bpc']:.4f} validation bpc"
+        + (f", down {tf_10m_delta:.4f} from step {tf_10m_prior['step']:,}" if tf_10m_prior else "")
+        + f"; it remains {tf_10m_latest['valid_bpc'] - 1.7448:.4f} above the completed LSTM's 1.7448 validation "
+        "bpc. This is an interim checkpoint, with final validation and test evaluation pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
@@ -1065,8 +1098,11 @@ def build():
         "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
         "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and at 10M is ahead of "
         "the completed LSTM by 0.186 bpc on the same test segment; compute is not matched. The 10M four-layer Transformer "
-        "has reached step 1,464/4,882 (30%) with validation BPC 2.1001, down from 2.5857 at 10%; final validation, test, "
-        "and deep E77 results are pending.",
+        f"has reached step {tf_10m_latest['step']:,}/{tf_10m_latest['of']:,} ({tf_10m_progress:.0f}%) with validation "
+        f"BPC {tf_10m_latest['valid_bpc']:.4f}"
+        + (f", down from {tf_10m_prior['valid_bpc']:.4f} at step {tf_10m_prior['step']:,}"
+           if tf_10m_prior else "")
+        + "; final validation, test, and deep E77 results are pending.",
     ], st)
     s.append(PageBreak())
     s += [P("Where the event paradigm wins, and where it does not", "h1"),
@@ -1335,6 +1371,10 @@ def build():
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
+        "<b>Deep real-stream trainability (E83/E84):</b> paired depth 2/4/8/16 pilots with auxiliary loss off/on are queued "
+        "for speaker-held-out SHD and day-5 market likelihood. They use strict adjacent-layer chains and deepest-only inference; "
+        "no result exists yet. E84 now aggregates work across all training minibatches and overlapping validation windows, "
+        "reported per event and per scored event.",
         "<b>Time-vector networks on real streams (§105–§106):</b> E74's first speech pilot reached 0.146 peak held-out "
         "speaker accuracy, and E82's partial readout sweep reached 0.184. E75 verified exact band-shift covariance but its "
         "pilot was resource-limited. Improve the learning signal, then test whether delays and vectors together close the "
@@ -1545,8 +1585,12 @@ def build():
             "both best checkpoints are at the final validation point, so strict convergence is not established. At 10M, the "
             "two-layer 512-unit LSTM scores 1.7448 validation / 1.7993 test bpc (1,199,323 parameters, six passes), also with "
             "its best checkpoint at the final validation point. E79 scores 1.613 frozen on the same test segment, a single-seed "
-            "0.186 bpc lead without matched compute. The matched four-layer Transformer has reached 30% of updates, "
-            "2.1001 validation bpc at step 1,464/4,882, down from 2.5857 at step 488; this is early and not a test result. "
+            f"0.186 bpc lead without matched compute. The matched four-layer Transformer has reached "
+            f"{tf_10m_progress:.0f}% of updates, {tf_10m_latest['valid_bpc']:.4f} validation bpc at step "
+            f"{tf_10m_latest['step']:,}/{tf_10m_latest['of']:,}"
+            + (f", down from {tf_10m_prior['valid_bpc']:.4f} at step {tf_10m_prior['step']:,}"
+               if tf_10m_prior else "")
+            + "; this is interim and not a test result. "
             "E77 has not yet produced a language-model "
             "result.")]
     s += fig(FM.fig_lm_topology, W)
