@@ -1,32 +1,57 @@
 #!/usr/bin/env bash
 # Safe experiment runner: runs the commands in a queue file ONE AT A TIME.
 #   usage: queue/run_safe.sh queue/<name>.txt   (lines: "<name> <script.py> <args...>", run from repo root; # comments ok)
-# Watchdog measures anonymous memory (memory.stat anon), not memory.current, which includes reclaimable page cache.
-# Guards (the host hung twice from ~12 concurrent torch jobs in a 3-CPU / 10 GB no-swap container):
+# Guards (the host hung before resource limits were added):
 #   * global lock: only one runner (hence one job) at a time across all queues
 #   * BLAS/torch threads pinned to 1 per job
-#   * watchdog kills the job if the container's cgroup memory passes MEM_FRAC (default 70%)
+#   * per-process address-space cap, whole-job RSS cap, and host available-memory floor
+#   * watchdog stops this queue if a job exceeds either memory guard
+#   * successful jobs are skipped on restart; give changed configurations new job names
 set -u
 Q=${1:?queue file}
 LOCK=/tmp/experiments-runner.lock
-MEM_FRAC=${MEM_FRAC:-70}
+QUEUE_DIR=$(dirname "$Q")
+QUEUE_NAME=$(basename "${Q%.txt}")
+RUNNER_LOG="$QUEUE_DIR/runner_${QUEUE_NAME}.out"
+MEM_CAP_KB=${MEM_CAP_KB:-6000000}
+MEM_CAP_RSS_KB=${MEM_CAP_RSS_KB:-3500000}
+MIN_AVAIL_MB=${MIN_AVAIL_MB:-6000}
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 TORCH_NUM_THREADS=1
 exec 9>"$LOCK"
 flock $([ -n "${WAIT:-}" ] && echo "-w 86400" || echo -n) 9 || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
-max=$(cat /sys/fs/cgroup/memory.max); [ "$max" = max ] && max=$(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 ))
-limit=$(( max * MEM_FRAC / 100 ))
 mkdir -p "$(dirname "$0")/logs"
 while IFS= read -r line; do
   [[ -z "$line" || "$line" == \#* ]] && continue
   name=${line%% *}; cmd="/workspace/.venv-docker/bin/python ${line#* }"
+  if [ -f "$RUNNER_LOG" ] && grep -Fq "done $name (exit 0)" "$RUNNER_LOG"; then
+    echo "$(date +%T) skip $name: prior successful completion in $RUNNER_LOG"
+    continue
+  fi
+  avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
+  if [ "$avail" -lt "$MIN_AVAIL_MB" ]; then
+    echo "$(date +%T) STOP before $name: MemAvailable=${avail}MB below ${MIN_AVAIL_MB}MB"
+    exit 2
+  fi
   echo "$(date +%T) start $name"
-  nice -n 10 bash -c "cd /workspace && $cmd" > "$(dirname "$0")/logs/$name.log" 2>&1 &
+  ( ulimit -v "$MEM_CAP_KB"; exec setsid nice -n 19 bash -c "cd /workspace && $cmd" ) > "$(dirname "$0")/logs/$name.log" 2>&1 &
   pid=$!
   while kill -0 $pid 2>/dev/null; do
-    if [ "$(awk '/^anon /{print $2}' /sys/fs/cgroup/memory.stat)" -gt "$limit" ]; then
-      echo "$(date +%T) KILL $name: memory above ${MEM_FRAC}%"; pkill -TERM -P $pid; kill -TERM $pid; sleep 5; pkill -KILL -P $pid; kill -KILL $pid
+    avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
+    rss=$(ps -eo pgid=,rss= | awk -v group="$pid" '$1 == group {total += $2} END {print total + 0}')
+    if [ "$rss" -gt "$MEM_CAP_RSS_KB" ]; then
+      echo "$(date +%T) STOP $name: process group RSS=${rss}KB above ${MEM_CAP_RSS_KB}KB"
+      kill -TERM -- "-$pid" 2>/dev/null || true; sleep 5
+      kill -KILL -- "-$pid" 2>/dev/null || true
+      exit 2
+    fi
+    if [ "$avail" -lt "$MIN_AVAIL_MB" ]; then
+      echo "$(date +%T) STOP $name: MemAvailable=${avail}MB below ${MIN_AVAIL_MB}MB"
+      kill -TERM -- "-$pid" 2>/dev/null || true; sleep 5
+      kill -KILL -- "-$pid" 2>/dev/null || true
+      exit 2
     fi
     sleep 2
   done
-  wait $pid; rc=$?; echo "$(date +%T) done $name (exit $rc)"
+  wait "$pid"; rc=$?; echo "$(date +%T) done $name (exit $rc)"
+  [ "$rc" -eq 0 ] || exit "$rc"
 done < "$Q"

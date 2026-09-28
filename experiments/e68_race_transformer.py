@@ -28,12 +28,14 @@ class Attn(nn.Module):
         self.h, self.dh, self.R = h, d // h, race_R
         self.qkv = nn.Linear(d, 3 * d); self.o = nn.Linear(d, d)
 
-    def forward(self, x, causal):
+    def forward(self, x, causal, kmask=None):
         B, L, d = x.shape
         q, k, v = self.qkv(x).view(B, L, 3, self.h, self.dh).permute(2, 0, 3, 1, 4)     # (B, h, L, dh)
         s = q @ k.transpose(-1, -2) / math.sqrt(self.dh)                                # (B, h, L, L)
         if causal:
             s = s.masked_fill(torch.triu(torch.ones(L, L, dtype=torch.bool), 1), float("-inf"))
+        if kmask is not None:                                                          # padding keys never race
+            s = s.masked_fill(~kmask[:, None, None, :], float("-inf"))
         if self.R == 0:
             a = torch.softmax(s, -1)
         else:                                                                          # time-normalized races
@@ -53,8 +55,8 @@ class Block(nn.Module):
         self.n1 = nn.LayerNorm(d); self.a = Attn(d, h, R); self.n2 = nn.LayerNorm(d)
         self.f = nn.Sequential(nn.Linear(d, 4 * d), nn.GELU(), nn.Linear(4 * d, d))
 
-    def forward(self, x, causal):
-        x = x + self.a(self.n1(x), causal)
+    def forward(self, x, causal, kmask=None):
+        x = x + self.a(self.n1(x), causal, kmask)
         return x + self.f(self.n2(x))
 
 

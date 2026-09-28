@@ -79,6 +79,8 @@ def main():
     ap.add_argument("--ctx", type=int, default=256)
     ap.add_argument("--test", type=int, default=1_000_000)
     ap.add_argument("--dropout", type=float, default=0.0)
+    ap.add_argument("--batch_size", type=int, default=32,
+                    help="training sequences per optimizer update; match an event model's update count when needed")
     ap.add_argument("--valid", type=int, default=0, help="if > 0: score this many validation characters at 10 checkpoints and "
                     "test the best checkpoint (early stopping on validation)")
     a = ap.parse_args()
@@ -88,7 +90,7 @@ def main():
     valid = torch.tensor(x[90_000_000:90_000_000 + a.valid]) if a.valid else None
     best = (float("inf"), None, -1); vcurve = []
     opt = torch.optim.Adam(net.parameters(), lr=2e-3 if a.model == "lstm" else 1e-3)
-    B, T = 32, a.ctx
+    B, T = a.batch_size, a.ctx
     steps = int(a.passes * a.D / (B * T))
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, max(steps, 1))
     for step in range(steps):
@@ -111,7 +113,9 @@ def main():
     res = {"args": vars(a), "params": nparam, "test_bpc": tbpc, "steps": steps,
            "valid_curve": vcurve, "best_step": best[2], "best_valid_bpc": best[0] if best[1] is not None else None, "wall_s": round(time.time() - t0, 1)}
     print(json.dumps(res), flush=True)
-    name = f"{a.model}_D{a.D}_s{a.size}_p{a.passes:g}" + (f"_dr{a.dropout:g}_v" if a.valid else "")
+    layer_tag = f"_L{a.layers}" if a.model == "tf" else ""
+    batch_tag = f"_b{a.batch_size}" if a.batch_size != 32 else ""
+    name = f"{a.model}_D{a.D}_s{a.size}{layer_tag}_p{a.passes:g}{batch_tag}" + (f"_dr{a.dropout:g}_v" if a.valid else "")
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(res, f)
     torch.save({"args": vars(a), "state": net.state_dict()}, os.path.join(OUT, name + ".pt"))      # for E76

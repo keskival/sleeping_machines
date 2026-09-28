@@ -221,7 +221,7 @@ def main():
                                     for l_ in (net.l1, net.l2, net.ro)],
                "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    with open(os.path.join(OUT, f"tv_d{a.d}_n{a.n}_M{a.M1}-{a.M2}_w{a.window}_cd{a.cdelay}g{a.gate}sn{a.snapshot}_{a.eval}_s{a.seed}.json"), "w") as f:
+    with open(os.path.join(OUT, f"tv_d{a.d}_n{a.n}_M{a.M1}-{a.M2}_w{a.window}_cd{a.cdelay}g{a.gate}sn{a.snapshot}_bs{a.bs}_{a.eval}_s{a.seed}.json"), "w") as f:
         json.dump(res, f)
 
 
