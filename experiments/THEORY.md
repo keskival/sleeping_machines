@@ -4907,6 +4907,50 @@ It is trained with the same gradients as E74, at 1M and 10M characters, against 
 the stage-1 event model. Reported: bits per character, messages, spikes and keys per character. The ablation without
 retrieval measures what (b) predicts it loses.
 
+## 108. The lower envelope: the full event language model is never worse than its best part
+
+*Written 2026-09-28. Standard online-learning results (Cesa-Bianchi & Lugosi 2006; Herbster & Warmuth 1998; KT and
+context-tree weighting, Willems et al. 1995), applied to the design of §95–§107. They turn the scaling figure's promise, "the
+full design contains the counting stage, so it is never worse", into a theorem, and say where supremacy on language is
+guaranteed and where it has to be earned.*
+
+**Setting.** Experts e = 1..E each give a predictive distribution p_e(x_t | x_<t) over the next character. They can be the
+native counting and copy experts of E62–E66, the time-vector model of E77, or anything else. The mixer is conserved
+multiplicative credit (§83): weights w_e ∝ π_e Π_{s<t} p_e(x_s | x_<s)^η, and p_mix = Σ w_e p_e.
+
+**Theorem (lower envelope).**
+(i) With η = 1 (the Bayes mixture), for every sequence, −log₂ p_mix(x_1..T) ≤ min_e [−log₂ p_e(x_1..T)] + log₂(1/π_e).
+    Per character, with a uniform prior, L_mix ≤ min_e L_e + log₂E / T. On a 1M-character test with E = 20 experts the
+    overhead is 4·10⁻⁶ bits per character.
+(ii) With fixed share α (weights mixed toward uniform at rate α after each step), for every sequence and every partition
+    into m + 1 segments with one expert per segment, L_mix·T ≤ Σ_segments L_{e_i} + (m + 1) log₂E + (T − 1) h₂(α) +
+    m log₂(1/α) + ..., where h₂ is binary entropy. With α ≈ m/T this is O(m log(ET/m)). The mixture tracks whichever
+    expert is best *locally* (copying in a repeated passage, the time-vector model elsewhere), so it can beat every single
+    expert, not only match the best.
+*Proof.* Log loss is 1-mixable, so the Bayes mixture's regret is the log of the prior mass (Cesa-Bianchi & Lugosi, Thm
+3.2). Fixed share is the Bayes mixture over switching sequences with a Markov prior (Herbster & Warmuth). ∎
+
+**Consequences.**
+1. **The design's scaling curve is the lower envelope of its parts':** L_design(D) ≤ min(L_counting(D), L_copy(D), L_TV(D)) + ε
+   at every data size D. Adding a part never hurts, by more than log₂E/T.
+2. **Where supremacy is guaranteed: small data.** A KT counting expert over contexts of order ≤ k has redundancy
+   ≤ (|A| − 1)/2 · log₂ n_c + 1 bits per context seen n_c times. This is minimax-optimal for bounded-order Markov sources,
+   and context-tree weighting extends it to the best tree of orders. Gradient-trained networks have no such small-data
+   guarantee. Where the counting mixture already beats a converged LSTM or Transformer (E63/E66 against E64b at 1M and
+   10M), the full design beats them too, by (i).
+3. **Where it must be earned: large data.** There the time-vector expert (E77) has to reach the Transformer. By (ii), the
+   design still gains wherever the parts are locally better, for example exact copies, rare words and names.
+4. **Native and cheap.** The mixer is one multiplicative update per expert per character (conserved credit, §83), and sleeping
+   experts (those without information) neither vote nor learn (§100 E66).
+
+**What the windowed, selector-keyed Hedge of E63/E66 is.** It is a heuristic variant, tuned on validation, without the
+guarantee. E78 reports all three: the Bayes mixture (i) and fixed share (ii), which carry the guarantee, and the tuned
+variant.
+
+**Test (E78).** On the same 1M test characters: the E66 experts (counting orders, word-keyed counts, copy memories) and
+E77's time-vector model, each alone and mixed three ways, at 1M training characters and later 10M. Prediction by (i)–(ii):
+the mixture is at or below the best part everywhere, and strictly below where the parts' errors differ.
+
 ## Tests
 
 | | Claim | Test |
