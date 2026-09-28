@@ -12,7 +12,7 @@ if [[ "$(git branch --show-current)" != "main" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the small
-# E83/E84 JSON summaries so completed depth pilots are ready for host-side commit.
+# E83/E84 and E114 JSON summaries so completed pilots are ready for host-side commit.
 FILES=(
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
@@ -25,6 +25,7 @@ FILES=(
   experiments/FINDINGS.md
   experiments/MATHEMATICAL_PROGRAM.md
   experiments/THEORY.md
+  experiments/theory
   experiments/e64_lm_baselines.py
   experiments/e68_race_transformer.py
   experiments/e74_time_vector_net.py
@@ -32,6 +33,7 @@ FILES=(
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
   experiments/e84_deep_market.py
+  experiments/e114_attention_bound.py
   experiments/queue/e83_e84_depth.txt
   experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
@@ -44,6 +46,7 @@ FILES=(
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
   experiments/results/e83
   experiments/results/e84
+  experiments/results/e114
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
   experiments/results/e79/race_mixer_D10000000_K6_e77none.json
   report/make_pdf.py
@@ -78,7 +81,7 @@ fi
 while IFS= read -r -d '' staged; do
   allowed=0
   for file in "${FILES[@]}"; do
-    if [[ "$staged" == "$file" ]]; then
+    if [[ "$staged" == "$file" || ( "$file" == "experiments/theory" && "$staged" == "$file/"* ) ]]; then
       allowed=1
       break
     fi

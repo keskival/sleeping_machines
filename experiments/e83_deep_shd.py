@@ -37,6 +37,7 @@ class DeepSHD(nn.Module):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
+        self.depth = int(depth)
         gen = torch.Generator().manual_seed(seed)
         self.emb = nn.Embedding(bands, d)
         self.widths = [M1] + [M] * (depth - 1)

@@ -13,6 +13,8 @@ LOCK=/tmp/experiments-runner.lock
 QUEUE_DIR=$(dirname "$Q")
 QUEUE_NAME=$(basename "${Q%.txt}")
 RUNNER_LOG="$QUEUE_DIR/runner_${QUEUE_NAME}.out"
+# Persist lifecycle markers so successful jobs are actually skipped on restart.
+exec > >(tee -a "$RUNNER_LOG") 2>&1
 MEM_CAP_KB=${MEM_CAP_KB:-6000000}
 MEM_CAP_RSS_KB=${MEM_CAP_RSS_KB:-3500000}
 MIN_AVAIL_MB=${MIN_AVAIL_MB:-6000}

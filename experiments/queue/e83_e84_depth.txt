@@ -1,5 +1,6 @@
 # Paired depth tests: same seed/configuration, auxiliary supervision off versus on.
 # Final SHD predictions and market hazards always come from the deepest layer.
+e114_attention_bound experiments/e114_attention_bound.py
 e83_shd_d2_aux0 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0 --seed 0
 e83_shd_d2_aux02 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0.2 --seed 0
 e83_shd_d4_aux0 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0 --seed 0
