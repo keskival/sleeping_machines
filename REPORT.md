@@ -540,7 +540,8 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   Cost: ≈ 4 network events and ≈ 19 synaptic operations per market event, against thousands of multiply-adds for the
   GRU. The model class is classical (Markov renewal processes); what is shown is that the event network with window
   nodes is the right world model here and generalizes across days. A GRU trained offline for several epochs on days
-  1–5, the strongest recurrent baseline, is queued (E49); the Transformer point process is ahead (below, E52).
+  1–5, the strongest recurrent baseline, scores −2.72 / −2.53 on the held-out days: the event network is ahead of it too
+  (E49); the Transformer point process is ahead of both (below, E52).
 - **Earlier native world model (E44, pilot days).** Four event types (price up/down moves, large aggressive
   buys/sells) as a temporal point process learned online from every event (§79), scored by the prequential
   log-likelihood of each event's type and timing:
@@ -730,7 +731,12 @@ one retrieval layer) and trains it on text8 against the converged LSTM and Trans
   The stage is measured on text8 test text at 1M, 10M and 90M training characters. The mixture reaches 2.00, 1.79 and 1.65
   bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at 1M and 10M (E66). Its stored contexts grow
   as D^0.41 and its pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a floor near 1.73 bpc, which the mixture
-  already passes: that floor belongs to the component, not to the design. For scale, large Transformers reach ≈ 1.1 on
+  already passes: that floor belongs to the component, not to the design. **Mixing by a race (§108)** instead of linear
+  Hedge (each next-character candidate's clock rate is the weighted sum of the experts' log-probabilities: a product of
+  experts, as the best text compressors mix) takes the same experts at 10M training characters from 1.80 to **1.61 bits
+  per character**, with weights frozen after the validation text and the copy memory limited to the last 256 characters
+  (the Transformer baseline's context), at a few hundred operations per character (E79); fixed share, which carries the
+  §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
   text8 from 90M characters. Our first gradient-trained baselines at equal data (one pass over 10M characters: LSTM 2.17,
   Transformer 2.43) are not converged, so no comparison is claimed until converged runs (multiple passes, early stopping on
   validation, E64b) finish.
@@ -805,6 +811,9 @@ on language itself. The stages above are how that will be decided.
 | E75 | SHD: equivariant time-vector network (band shift × tempo) | queued; shift covariance verified exactly |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
+| E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
+| E79 | race (product-of-experts) mixer of the native experts | 10M: 1.61 bpc frozen, 256-character memory (linear Hedge 1.80); baselines pending |
+| E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 
 ## Reproducing
 
