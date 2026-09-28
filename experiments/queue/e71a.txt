@@ -1,5 +1,10 @@
+# language first: the lower envelope with linear mixing (E78, native only), then the race mixer (E79, §108)
+e78_native_D1M experiments/e78_envelope.py --D 1000000 --K 5 --e77 none --valid 1000000
+e79_D1M experiments/e79_race_mixer.py --D 1000000 --K 5
+e79_D10M experiments/e79_race_mixer.py --D 10000000 --K 6
 # E74 / E75: time-vector networks on SHD (THEORY §105, §106); pilots first, then full runs (held-out-speaker selection)
 e74_pilot experiments/e74_time_vector_net.py --limit 2000 --epochs 6 --w_sd 0.05,0.05 --eval spk
 e75_pilot experiments/e75_equivariant_tvn.py --limit 2000 --epochs 6 --eval spk
+e79_D90M experiments/e79_race_mixer.py --D 90000000 --K 7
 e74_full experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --eval spk
 e75_full experiments/e75_equivariant_tvn.py --epochs 20 --eval spk

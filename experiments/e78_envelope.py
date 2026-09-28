@@ -67,7 +67,10 @@ def main():
     x = S1.load(); train = x[:a.D]
     valid = x[90_000_000:90_000_000 + a.valid]; test = x[95_000_000:95_000_000 + a.test]
     R77 = os.path.join(os.path.dirname(__file__), "results", "e77")
-    tv_v = np.load(os.path.join(R77, a.e77 + "_ptrue_valid.npy")); tv_t = np.load(os.path.join(R77, a.e77 + "_ptrue_test.npy"))
+    if a.e77 == "none":                                                          # native experts only
+        tv_v = np.full(len(valid), 1.0 / A, np.float32); tv_t = np.full(len(test), 1.0 / A, np.float32)
+    else:
+        tv_v = np.load(os.path.join(R77, a.e77 + "_ptrue_valid.npy")); tv_t = np.load(os.path.join(R77, a.e77 + "_ptrue_test.npy"))
     res = {"args": vars(a)}
     data = {}
     for name, stream, tv, prev0 in (("valid", valid, tv_v, train[-1]), ("test", test, tv_t, valid[-1])):
@@ -78,7 +81,7 @@ def main():
     Pv, Pvx, sv = data["valid"]; Pt, Ptx, st = data["test"]
     res["experts_test_bpc"] = [round(bpc(Pt[:, i]), 4) for i in range(Pt.shape[1])]
     res["tv_alone_test_bpc"] = bpc(Ptx[:, -1]); res["best_native_expert_test_bpc"] = min(res["experts_test_bpc"])
-    for tag, (PV, PT) in (("native", (Pv, Pt)), ("native+tv", (Pvx, Ptx))):
+    for tag, (PV, PT) in (("native", (Pv, Pt)),) + ((("native+tv", (Pvx, Ptx)),) if a.e77 != "none" else ()):
         r = {"bayes": bpc(bayes(PT))}
         al = min((0.0001, 0.001, 0.01, 0.03), key=lambda al_: bpc(share(PV, al_)))
         r["share"] = bpc(share(PT, al)); r["share_alpha"] = al

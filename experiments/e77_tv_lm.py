@@ -88,6 +88,7 @@ def score(net, data, L, bs, dump=False):
     probability of each true character, indexed by its position in `data` (for mixing with the native experts, E78)."""
     net.eval(); tot = 0.0; n = 0; half = L // 2; starts = list(range(0, len(data) - L - 1, half)); wk = []
     ptrue = np.full(len(data), np.nan, np.float32) if dump else None
+    logp = np.full((len(data), A), np.nan, np.float16) if dump else None
     with torch.no_grad():
         for i in range(0, len(starts), bs):
             ss = starts[i:i + bs]
@@ -99,10 +100,11 @@ def score(net, data, L, bs, dump=False):
                 tot += float(ce[r, lo:].sum()); n += L - lo
                 if dump:
                     ptrue[s0 + 1 + lo:s0 + 1 + L] = torch.exp(-ce[r, lo:]).numpy()
+                    logp[s0 + 1 + lo:s0 + 1 + L] = torch.log_softmax(logits[r, lo:], -1).numpy().astype(np.float16)
     net.train()
     agg = {k: (np.mean([w[k] for w in wk], 0).round(3).tolist() if isinstance(wk[0][k], list) else round(float(np.mean([w[k] for w in wk])), 2))
            for k in wk[0]}
-    return (tot / n / math.log(2), agg, ptrue) if dump else (tot / n / math.log(2), agg)
+    return (tot / n / math.log(2), agg, ptrue, logp) if dump else (tot / n / math.log(2), agg)
 
 
 def main():
@@ -151,10 +153,11 @@ def main():
             if vb < best[0]:
                 best = (vb, {k: v.clone() for k, v in net.state_dict().items()}, step + 1)
     net.load_state_dict(best[1])
-    tb, wk, pt = score(net, test, a.L, a.bs, dump=True)
-    _, _, pv = score(net, valid, a.L, a.bs, dump=True)
+    tb, wk, pt, lt = score(net, test, a.L, a.bs, dump=True)
+    _, _, pv, lv = score(net, valid, a.L, a.bs, dump=True)
     tag = f"tvlm_D{a.D}_p{a.passes:g}_r{a.retrieval}_M{a.M1}-{a.M2}-{a.Mr}_s{a.seed}"
     np.save(os.path.join(OUT, tag + "_ptrue_test.npy"), pt); np.save(os.path.join(OUT, tag + "_ptrue_valid.npy"), pv)
+    np.save(os.path.join(OUT, tag + "_logp_test.npy"), lt); np.save(os.path.join(OUT, tag + "_logp_valid.npy"), lv)
     res.update({"best_step": best[2], "best_valid_bpc": best[0], "test_bpc": tb, "test_work": wk, "wall_s": round(time.time() - t0)})
     print(json.dumps({"test_bpc": tb, "best_step": best[2], **wk}), flush=True)
     with open(os.path.join(OUT, tag + ".json"), "w") as f:
