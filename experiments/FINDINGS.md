@@ -5,6 +5,66 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-28
 
+**E77 1M depth-8 benchmark resource screen.** The parameter-matched 8-layer
+Transformer control completed 4,882 updates on 1M text8 training characters
+(4,999,168 token positions), with 1.251M parameters. Its best validation BPC
+was 2.322 at update 4,881; the frozen 1M-character test BPC was 2.352. It ran
+for 1,617 seconds at about 3,507 token positions/second and stayed near 1.2 GB
+RSS. The matching E77 depth-8, width-128 job at 1M characters, five passes,
+batch 4 and 256-character windows was stopped by `run_safe.sh` before training
+when its process group reached 3.834 GB, above the 3.5 GB cap. `MemAvailable`
+remained above 10 GB; the host was not at risk. **Learning:** the guard caught
+a batch/activation configuration that was too large before it could become a
+host-wide failure. The 1M E77 job will not be retried. A matched 100k-character
+screen now uses batch 2 and 128-character windows for both E77 and Transformer;
+depth 16 is deferred until that runtime is measured.
+
+**E77 exact post-reset activity matching and depth-8 gradient reach (§§133–134).**
+The raw voltage-quantile estimate failed at the default E77 width: on a matched
+depth-4, 10k-character, seed-77 run it yielded selected-checkpoint test rates
+$[0,0.007,0.009,0.004]$ spikes/character. Only $[1,9,12,6]$ of 13 validation
+checkpoints had nonzero gradients by layer. We changed calibration to save
+pre-reset voltage traces and replay the exact refractory/reset recurrence,
+then search threshold against the realized event count without rerunning the
+whole network. At initialization, rates matched the 0.1 target to
+$[0.096,0.082,0.094,0.100]$; all four layers had gradients at all 13
+checkpoints. Test rates rose to $[0.204,0.190,0.456,0.802]$ as the
+representation changed. Quantile-only and exact-rate runs scored 3.765 and
+3.824 BPC, respectively, on only 1k test characters; this is not a quality
+comparison. It is evidence that the initialization statistic, not the
+language-model loss, caused the earlier silent stack.
+
+The exact-rate procedure also carried a width-8 model to depth 8. With 4,096
+training characters, 16 updates, and one seed, all eight layers had nonzero
+gradients at each of 16 validation points. Initial rates were
+$[0.102,0.086,0.109,0.102,0.086,0.102,0.098,0.102]$ and selected-checkpoint
+test rates were $[0.115,0.125,0.217,0.075,0.081,0.138,0.124,0.121]$.
+The 4-layer control under the same tiny setup had nonzero gradients on
+$[16,16,16,12]$ validation points. Test BPC was 4.319 at depth 8 and 4.254 at
+depth 4, each on 512 characters; neither supports a quality or depth
+comparison. **New learning:** the mechanism that reopened the depth-4 path
+also reaches depth 8 while keeping event activity sparse. This is a concrete
+trainability result, not scaling or supremacy evidence.
+
+A fresh depth-4 route-shadow pass sampled 64 near-boundary route openings per
+layer. The minibatch-trajectory means and cluster SEs for
+$L_{open}-L_{closed}$ were $[+0.000360\pm0.000218,-0.001115\pm0.000325,
++0.000220\pm0.000278,-0.000435\pm0.000290]$. Layer 2's openings tended to
+help, but adjacent updates share a moving model, so these are not independent
+replicates. Across the run, the counterfactual/pathwise norm ratio averaged
+0.77% and cosine 0.0040; the optimizer correction remains disabled. This
+supports continued layer/condition-stratified measurement, not a larger gain.
+
+The new local Bayesian derivation (§134) formalizes early evidence trust: for
+a locally linear conditional, posterior mean gain scales with posterior
+covariance, input-state novelty, and observation noise. Repeated observations
+shrink gain only in the state directions actually observed. Activity alone
+calibrates event scale, not task relevance; output credit is still required.
+Representation drift requires discounted precision or reset. No
+posterior-driven synaptic gain or online threshold homeostasis is implemented
+yet. All jobs ran through the memory-guarded runner; one first attempt was
+stopped at its RSS cap before the calibration search was optimized.
+
 **E77 depth-4 event bootstrap and route-credit diagnostic (§133).** A matched
 16-update, seed-77 text8 micro-pilot exposed a trainability blocker: with the
 fixed threshold $\theta=1$, test activity was [0.018, 0, 0, 0] events/character

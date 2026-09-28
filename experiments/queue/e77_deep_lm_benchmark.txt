@@ -1,0 +1,6 @@
+# The original 1M/5-pass depth-8 Transformer control completed; run_safe.sh
+# skips it from the lifecycle log. The matching E77 attempt exceeded the
+# 3.5 GB RSS cap before training and was removed. Use the bounded matched
+# 100k-character depth-8 follow-up instead:
+#   experiments/queue/e77_depth8_lm_100k.txt
+e77_deep_tf_l8_D1M_p5_b4 experiments/e64_lm_baselines.py --model tf --D 1000000 --size 112 --layers 8 --passes 5 --batch_size 4 --dropout 0 --valid 200000

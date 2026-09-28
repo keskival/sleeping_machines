@@ -327,52 +327,72 @@ def fig_e83_route_diagnostics():
 
 
 def fig_e77_bootstrap_diagnostics():
-    """Show whether activity calibration lets gradients reach a deep E77 stack."""
-    fixed_matches = glob.glob(os.path.join(
-        RES, "e77", "tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77.json"))
-    boot_matches = glob.glob(os.path.join(
-        RES, "e77", "tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4.json"))
-    if not fixed_matches or not boot_matches:
-        raise FileNotFoundError("missing matched E77 threshold-bootstrap micro-pilot results")
-    fixed, boot = load(fixed_matches[0]), load(boot_matches[0])
-    layers = np.arange(1, 5)
-    fixed_active = [100 * np.mean([r["event_layer_grad_norms"][i] > 0 for r in fixed["valid_curve"]])
-                    for i in range(4)]
-    boot_active = [100 * np.mean([r["event_layer_grad_norms"][i] > 0 for r in boot["valid_curve"]])
-                   for i in range(4)]
-    fixed_spikes = np.asarray(fixed["test_work"]["spikes_per_char"][:4], dtype=float)
-    boot_spikes = np.asarray(boot["test_work"]["spikes_per_char"][:4], dtype=float)
+    """Show exact rate calibration's effect and the depth-8 gradient-reach smoke."""
+    e77_dir = os.path.join(RES, "e77")
+    quantile = load(os.path.join(
+        e77_dir, "tvlm_D10000_p0.5_r1_M128-128-64_depth4_c0_eh1_ek0_s77_boot0.1_cb4.json"))
+    rate_match = load(os.path.join(
+        e77_dir, "tvlm_D10000_p0.5_r1_M128-128-64_depth4_c0_eh1_ek0_s77_boot0.1_cb4_cs6.json"))
+    depth4 = load(os.path.join(
+        e77_dir, "tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4_cs6.json"))
+    depth8 = load(os.path.join(
+        e77_dir, "tvlm_D4096_p0.25_r1_M8-8-8_depth8_c0_eh1_ek0_s77_boot0.1_cb4_cs6.json"))
 
-    fig, (ax_grad, ax_spikes) = plt.subplots(1, 2, figsize=(7.6, 3.0))
+    def active_fraction(result, layer):
+        curve = result["valid_curve"]
+        return 100 * np.mean([row["event_layer_grad_norms"][layer] > 0 for row in curve])
+
+    layers4 = np.arange(1, 5)
+    quantile_active = [active_fraction(quantile, i) for i in range(4)]
+    matched_active = [active_fraction(rate_match, i) for i in range(4)]
+    quantile_spikes = np.asarray(quantile["test_work"]["spikes_per_char"][:4], dtype=float)
+    matched_spikes = np.asarray(rate_match["test_work"]["spikes_per_char"][:4], dtype=float)
+    depth4_active = [active_fraction(depth4, i) for i in range(4)]
+    depth8_active = [active_fraction(depth8, i) for i in range(8)]
+
+    fig, (ax_grad, ax_spikes, ax_depth) = plt.subplots(1, 3, figsize=(10.0, 3.2))
     width = 0.34
-    ax_grad.bar(layers - width / 2, fixed_active, width, color=GRAY, label="fixed θ=1")
-    ax_grad.bar(layers + width / 2, boot_active, width, color=BLUE, label="voltage-quantile bootstrap")
-    ax_grad.set_xticks(layers)
+    ax_grad.bar(layers4 - width / 2, quantile_active, width, color=GRAY, label="raw voltage quantile")
+    ax_grad.bar(layers4 + width / 2, matched_active, width, color=BLUE, label="exact reset-rate match")
+    ax_grad.set_xticks(layers4)
     ax_grad.set_ylim(0, 108)
-    ax_grad.set_ylabel("updates with gradient (%)")
+    ax_grad.set_ylabel("validation checkpoints with gradient (%)")
     ax_grad.set_xlabel("event layer")
-    ax_grad.set_title("A · Gradient reach across depth")
+    ax_grad.set_title("A · Default width, depth 4")
 
-    ax_spikes.bar(layers - width / 2, fixed_spikes, width, color=GRAY, label="fixed θ=1")
-    ax_spikes.bar(layers + width / 2, boot_spikes, width, color=BLUE, label="voltage-quantile bootstrap")
+    ax_spikes.bar(layers4 - width / 2, quantile_spikes, width, color=GRAY)
+    ax_spikes.bar(layers4 + width / 2, matched_spikes, width, color=BLUE)
     ax_spikes.axhline(0.1, color=INK, ls=":", lw=1)
-    ax_spikes.set_xticks(layers)
-    ax_spikes.set_ylim(0, 0.12)
-    ax_spikes.set_ylabel("test spikes / character")
+    ax_spikes.set_xticks(layers4)
+    ax_spikes.set_ylim(0, 0.9)
+    ax_spikes.set_ylabel("selected-checkpoint test spikes / char")
     ax_spikes.set_xlabel("event layer")
-    ax_spikes.set_title("B · Sparse event activity")
-    fig.suptitle("E77 · a data-calibrated threshold reopens the depth-4 learning path",
+    ax_spikes.set_title("B · Activity after learning")
+
+    layers8 = np.arange(1, 9)
+    ax_depth.bar(layers8[:4] - width / 2, depth4_active, width, color=GRAY, label="depth 4")
+    ax_depth.bar(layers8 + width / 2, depth8_active, width, color=AQUA, label="depth 8")
+    ax_depth.set_xticks(layers8)
+    ax_depth.set_ylim(0, 108)
+    ax_depth.set_ylabel("validation checkpoints with gradient (%)")
+    ax_depth.set_xlabel("event layer")
+    ax_depth.set_title("C · Beyond four layers")
+    ax_depth.legend(fontsize=6.3)
+
+    fig.suptitle("E77 · matching realized firing carries gradients through eight event layers",
                  x=0.02, ha="left", fontsize=9.2, fontweight="bold")
     fig.legend(handles=[
-        matplotlib.patches.Patch(color=GRAY, label="fixed θ=1"),
-        matplotlib.patches.Patch(color=BLUE, label="voltage-quantile bootstrap"),
-        Line2D([0], [0], color=INK, ls=":", lw=1, label="target 0.1 spikes / char / layer"),
-    ], loc="upper center", bbox_to_anchor=(0.58, 0.89), ncol=3, fontsize=6.2,
-       frameon=False, handlelength=1.5, columnspacing=1.1)
+        matplotlib.patches.Patch(color=GRAY, label="raw voltage quantile / depth-4 reference"),
+        matplotlib.patches.Patch(color=BLUE, label="exact reset-rate match"),
+        matplotlib.patches.Patch(color=AQUA, label="depth-8 rate match"),
+        Line2D([0], [0], color=INK, ls=":", lw=1, label="initial target 0.1 spikes / char / layer"),
+    ], loc="upper center", bbox_to_anchor=(0.52, 0.89), ncol=4, fontsize=6.1,
+       frameon=False, handlelength=1.4, columnspacing=0.9)
     fig.text(0.02, 0.005,
-             "One seed; width 8, 4,096 training characters, 16 updates, 512 test characters. "
-             "This diagnoses gradient reach, not language-model quality or scaling.", fontsize=6.0, color=MUTED)
-    fig.tight_layout(rect=(0.03, 0.12, 0.99, 0.82))
+             "One seed. A/B: default width, 10k train characters; 39 updates; 1k test characters. "
+             "C: width 8, 4,096 train characters, 16 updates, 512 test characters. "
+             "Gradient reach only; BPC is too small-sample for a quality claim.", fontsize=5.8, color=MUTED)
+    fig.tight_layout(rect=(0.01, 0.12, 0.99, 0.82), w_pad=1.3)
     out = os.path.join(os.path.dirname(__file__), "figures", "e77_depth_trainability_bootstrap.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     return fig
@@ -1010,9 +1030,10 @@ def build():
     s = [P("Sleeping Machines: what is known", "title"),
          P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
          P("Frontier signals", "h1"),
-         P("Three measured results make a concrete case for this architecture's potential: a real-language lead on a "
-           "shared text8 split, locally learned retrieval that generalizes to longer contexts, and deep compositional "
-           "networks that learn structured tasks with far less data and counted computation.")]
+         P("Three measured capability leads make a concrete case for this architecture's potential: a real-language lead "
+           "on a shared text8 split, locally learned retrieval that generalizes to longer contexts, and deep compositional "
+           "networks that learn structured tasks with far less data and counted computation. A new E77 depth-8 pilot adds "
+           "a distinct trainability signal: gradients reached all eight event layers.")]
     s += fig(fig_potential_evidence, W)
     s += bullets([
         "<b>Real language:</b> on the same 1M-character text8 training and test split, E79's native race mixture scores "
@@ -1024,15 +1045,20 @@ def build():
         f"{tf_10m_final['test_bpc'] - 1.7993:.4f} above the LSTM's 1.7993 "
         "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes. "
         "E79 is a mixture of expert predictors plus copy memory, not a deep hidden event stack; E77 is the separate "
-        "deep time-vector language model. A depth-4 micro-pilot found its fixed threshold silenced deeper layers; "
-        "voltage-quantile calibration restored sparse activity and nonzero gradients through all four layers. This is a "
-        "trainability check only; a meaningful E77 language-model result remains pending.",
+        "deep time-vector language model. A default-width depth-4 pilot showed that a raw voltage quantile left its "
+        "deeper layers nearly silent. Matching realized post-reset activity restored gradients in all four layers, and "
+        "a width-8 depth-8 pilot reached all eight layers at every validation point. These are trainability checks; "
+        "a meaningful E77 language-model result remains pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
         "<b>Depth and composition:</b> on a depth-4 order task, the event model reaches 99.9–100% after 10–15k examples "
         "(5/5 runs); a Transformer reaches 99.0% after 40k examples repeated 50 times and 99.2–99.6% on 2M fresh "
         "examples. On shared-motif composition, it averages 99.65% after one pass at roughly 10,000× lower counted work.",
+        "<b>Deep-stack trainability (not yet a supremacy result):</b> exact replay of the spike reset dynamics gave "
+        "nonzero gradients in all eight E77 event layers at all 16 validation points. Test activity stayed between "
+        "0.075 and 0.217 spikes per character per layer. This was one width-8 seed with 4,096 training and 512 test "
+        "characters; its 4.319 BPC is only a micro-pilot diagnostic, not a quality or scaling result.",
     ], st)
     s += [P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
@@ -1446,6 +1472,13 @@ def build():
         "semi-Markov network of E48 (above) closed the gap to the GRU.",
     ], st)
     s += fig(fig_e83_route_diagnostics, W * 0.92)
+    s += [P("<b>Depth-credit redesign in evaluation (§136).</b> E83's deepest-only readout makes an early event's final-loss "
+            "effect depend on surviving every later hard route. The new sparse `all_depths` option adds the class-evidence "
+            "streams from every layer at the same causal prefix and scores lost routes against that fused objective; "
+            "deepest-only remains the matched control. This reduces the serial credit burden but could let shallow branches "
+            "carry the classifier, so the new runs report per-branch ablations and sparse readout work at depths 4 and 8. "
+            "The implementation has not yet shown an accuracy gain. A separate gap remains: class evidence does not change "
+            "during silence until another hidden event arrives or EOS is reached.", "body")]
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
@@ -1696,19 +1729,27 @@ def build():
             f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after validation-based checkpoint selection. "
             f"It has 3.24M parameters and four passes, while the LSTM has "
             "1.20M parameters and six passes. "
-            "E77 has not yet produced a scale-level language-model result. A small depth-4 diagnostic found the fixed "
-            "threshold left the deeper event layers silent; a voltage-quantile initialization restored sparse activity "
-            "and gradients across depth. This is a trainability wiring result, not a language-model performance claim.")]
+            "E77 has not yet produced a scale-level language-model result. A default-width depth-4 diagnostic found "
+            "that the raw voltage quantile left activity nearly absent: test rates were [0, 0.007, 0.009, 0.004], "
+            "with nonzero gradients at only [1, 9, 12, 6] of 13 validation points. Exact replay of threshold/reset "
+            "dynamics matched initial rates to [0.096, 0.082, 0.094, 0.100] and reached all four layers at all 13 "
+            "points. The width-8 depth-8 pilot reached all eight layers at all 16 points, with test rates "
+            "[0.115, 0.125, 0.217, 0.075, 0.081, 0.138, 0.124, 0.121]. This demonstrates gradient reach in a "
+            "small model, not language-model quality or a scaling law.")]
     s += fig(FM.fig_lm_topology, W)
-    s += [P("<b>E77 depth-4 trainability diagnostic (§133).</b> In a matched, one-seed, 16-update micro-pilot, fixed "
-            "thresholds produced no test spikes beyond the first layer and no gradients in layers 2–4. Calibrating "
-            "thresholds from the upper tail of actual training-input voltages set them to [0.664, 0.229, 0.429, 0.283] "
-            "and produced [0.065, 0.052, 0.044, 0.035] test spikes per character. Gradients were nonzero on 15/16, "
-            "16/16, 14/16, and 16/16 updates. Test BPC differed by 0.057 on just 512 characters; that sample is too "
-            "small for a performance conclusion. The counterfactual route term remained disabled: 64 shadows per layer "
-            "gave layerwise opening-minus-closing loss means ± minibatch-cluster SE of [−0.000034 ± 0.000237, "
-            "−0.000440 ± 0.000236, −0.000045 ± 0.000103, −0.000092 ± 0.000477]. Every approximate 95% interval "
-            "includes zero; the mean pathwise-gradient cosine was −0.0019.")]
+    s += [P("<b>E77 exact activity matching and depth-8 gradient reach (§§133–134).</b> At default width, the raw "
+            "voltage-quantile initialization yielded selected-checkpoint test activity [0, 0.007, 0.009, 0.004] "
+            "spikes/character and nonzero gradients at only [1, 9, 12, 6] of 13 validation points. Replaying the "
+            "exact reset recurrence on saved voltage traces matched initial activity to [0.096, 0.082, 0.094, 0.100] "
+            "around the 0.1 target and restored gradients at all four layers at all 13 points. Rates later rose to "
+            "[0.204, 0.190, 0.456, 0.802], indicating representation drift; online homeostasis is not implemented. "
+            "A width-8 depth-8 pilot gave nonzero gradients at all eight layers for all 16 validation points; test "
+            "rates were [0.115, 0.125, 0.217, 0.075, 0.081, 0.138, 0.124, 0.121]. Its test BPC was 4.319 on "
+            "512 characters (the depth-4 control was 4.254), too small to compare quality. A fresh depth-4 route "
+            "shadow pass found mean opening-minus-closing loss deltas ± trajectory-cluster SE of [+0.000360 ± "
+            "0.000218, −0.001115 ± 0.000325, +0.000220 ± 0.000278, −0.000435 ± 0.000290]; adjacent updates "
+            "share a moving model. Counterfactual/pathwise norm ratio was 0.77%, cosine 0.0040, so the correction "
+            "remains disabled. The result is a trainability indication, not model-quality or supremacy evidence.")]
     s += fig(fig_e77_bootstrap_diagnostics, W * 0.96)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
             "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "

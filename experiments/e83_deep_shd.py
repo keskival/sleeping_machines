@@ -299,6 +299,15 @@ class SparseEventReadout(nn.Module):
 
     def prefix_loss(self, layer_events, labels, seq_end, delay_stages, dmax,
                     prefix_times):
+        rows = self.prefix_logits(layer_events, seq_end, delay_stages, dmax,
+                                  prefix_times)
+        losses = [F.cross_entropy(logits, labels[b].expand(len(logits)))
+                  for b, logits in enumerate(rows)]
+        return torch.stack(losses).mean()
+
+    def prefix_logits(self, layer_events, seq_end, delay_stages, dmax,
+                      prefix_times):
+        """Return each item's causal prefix logits plus its EOS logits."""
         event_b, units, times, payload = layer_events
         per_item = []
         for b, query_times in enumerate(prefix_times):
@@ -306,8 +315,8 @@ class SparseEventReadout(nn.Module):
             deadline = seq_end[b] + delay_stages * dmax + 60.0
             logits = self.logits_at(units[select], times[select], payload[select],
                                     query_times, deadline)
-            per_item.append(F.cross_entropy(logits, labels[b].expand(len(logits))))
-        return torch.stack(per_item).mean()
+            per_item.append(logits)
+        return per_item
 
 
 def batch_to_events(items, bands, shift, rng, drop):
@@ -320,7 +329,8 @@ def batch_to_events(items, bands, shift, rng, drop):
 
 class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
-                 dmax, w_sd, seed=0, event_readout=False):
+                 dmax, w_sd, seed=0, event_readout=False,
+                 readout_fusion="deepest"):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -343,6 +353,7 @@ class DeepSHD(nn.Module):
                     mask[i0, torch.randint(M, (), generator=gen)] = True
             self.layers.append(TVLayer(previous_width, M, d, d, n, dmax, mask, True, w_sd[1]))
         self.event_readout = bool(event_readout)
+        self.readout_fusion = readout_fusion
         if self.event_readout:
             self.event_heads = nn.ModuleList([
                 SparseEventReadout(width, d, 20, readout_fan, seed + 1000 + i)
@@ -413,8 +424,14 @@ class DeepSHD(nn.Module):
                 taps.append(V)
             scan_updates = G * self.layers[0].n * (sum(self.widths) + len(readout_inputs) * self.ro.M)
             deep_scan_updates = G * self.layers[0].n * (sum(self.widths) + self.ro.M)
-        deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
-        deep_messages = sum(messages[:self.depth]) + messages[-1]
+        if self.event_readout and self.readout_fusion == "all_depths":
+            # The final classifier consumes the sparse evidence stream from
+            # every stage, so count every active readout edge in its work.
+            deep_candidates = sum(candidates)
+            deep_messages = sum(messages)
+        else:
+            deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
+            deep_messages = sum(messages[:self.depth]) + messages[-1]
         layer_events = [(out[0], out[1], out[2], out[3]) for out in emitted]
         info = {"msgs": messages, "candidates": candidates,
                           "spikes": spikes, "tap_traces": taps,
@@ -427,6 +444,86 @@ class DeepSHD(nn.Module):
             info["route_candidates"] = route_candidates
             info["route_inputs"] = route_inputs
         return (taps[-1] if taps else None), info
+
+    def infer_event_readout(self, layer_events, item, seq_end, dmax,
+                            threshold, temperature):
+        """Run the selected sparse readout, including exact multi-depth fusion."""
+        if self.readout_fusion != "all_depths":
+            event_b, units, times, payload = layer_events[-1]
+            select = event_b == item
+            deadline = float(seq_end + (self.depth + 1) * dmax + 60.0)
+            return self.event_heads[-1].infer(
+                units[select], times[select], payload[select], deadline,
+                threshold, temperature)
+
+        deadline = float(seq_end + (self.depth + 1) * dmax + 60.0)
+        edge_times, edge_classes, edge_values = [], [], []
+        initial_logits = torch.zeros(self.event_heads[0].n_classes)
+        for head, layer in zip(self.event_heads, layer_events):
+            event_b, units, times, payload = layer
+            select = event_b == item
+            et, ec, ev = head._edge_values(units[select], times[select],
+                                           payload[select], deadline)
+            edge_times.append(et); edge_classes.append(ec); edge_values.append(ev)
+            initial_logits = initial_logits + head.bias.detach().cpu()
+        edge_times = torch.cat(edge_times)
+        edge_classes = torch.cat(edge_classes)
+        edge_values = torch.cat(edge_values)
+        order = edge_times.argsort(stable=True)
+        edge_times, edge_classes, edge_values = (
+            edge_times[order], edge_classes[order], edge_values[order])
+        state = SparseAnytimeReadout(
+            self.event_heads[0].n_classes, threshold, temperature,
+            initial_logits=initial_logits.tolist())
+        peak = state.confidence()
+        group_times, group_counts = torch.unique_consecutive(
+            edge_times, return_counts=True)
+        t_cpu = group_times.detach().cpu().tolist()
+        counts_cpu = group_counts.detach().cpu().tolist()
+        class_cpu = edge_classes.detach().cpu().tolist()
+        value_cpu = edge_values.detach().cpu().tolist()
+        cursor = 0
+        for event_time, count in zip(t_cpu, counts_cpu):
+            stop = cursor + count
+            updates = [(class_cpu[j], value_cpu[j])
+                       for j in range(cursor, stop)]
+            decision = state.update(event_time, updates)
+            peak = max(peak, state.confidence())
+            if decision is not None:
+                return decision, peak
+            cursor = stop
+        decision = state.finish(deadline)
+        return decision, max(peak, max(decision.posterior))
+
+
+def sparse_event_objective(heads, layer_events, labels, seq_end, dmax,
+                           prefix_times, fusion="deepest"):
+    """Proper prefix CE, optionally summing evidence from every depth.
+
+    In the fused mode each sparse readout contributes additive class log
+    evidence at the same causal prefix. The terminal EOS evidence is aligned
+    at the full-stack deadline. Intermediate heads retain their own local
+    prefix losses as deep supervision.
+    """
+    local_losses = [head.prefix_loss(layer_events[k], labels, seq_end, k + 1,
+                                     dmax, prefix_times)
+                    for k, head in enumerate(heads)]
+    if fusion == "deepest":
+        main = local_losses[-1]
+    else:
+        full_delay = len(heads) + 1
+        all_rows = [head.prefix_logits(layer_events[k], seq_end, full_delay,
+                                       dmax, prefix_times)
+                    for k, head in enumerate(heads)]
+        fused_rows = [sum(all_rows[k][b] for k in range(len(heads)))
+                      for b in range(len(labels))]
+        main = torch.stack([
+            F.cross_entropy(rows, labels[b].expand(len(rows)))
+            for b, rows in enumerate(fused_rows)
+        ]).mean()
+    auxiliary = (sum(local_losses[:-1]) if len(local_losses) > 1
+                 else main.new_zeros(()))
+    return main, auxiliary, local_losses
 
 
 def grad_norm(module):
@@ -493,6 +590,8 @@ def main():
                     help="weight per intermediate supervised readout; zero is the no-auxiliary control")
     ap.add_argument("--objective", choices=("race", "anytime", "integral", "max", "event_prefix"), default="race",
                     help="event_prefix: sparse event-updated logits trained with sampled-prefix proper log loss")
+    ap.add_argument("--readout_fusion", choices=("deepest", "all_depths"), default="all_depths",
+                    help="event_prefix only: use the deepest event head or add sparse class evidence from every depth")
     ap.add_argument("--prefix_samples", type=int, default=4,
                     help="stratified prefix samples used to estimate the window-averaged proper score")
     ap.add_argument("--prefix_horizon_ms", type=float, default=1000.0,
@@ -562,7 +661,8 @@ def main():
         raise ValueError("--w_sd requires two comma-separated values")
     event_readout = a.objective == "event_prefix"
     net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2,
-                  a.readout_fan, a.dmax, widths_sd, a.seed, event_readout=event_readout)
+                  a.readout_fan, a.dmax, widths_sd, a.seed, event_readout=event_readout,
+                  readout_fusion=a.readout_fusion)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * nb, pct_start=0.1)
@@ -606,10 +706,9 @@ def main():
                           collect_routes=event_readout and a.cf_shadows_per_layer > 0)
             traces = info["tap_traces"]
             if event_readout:
-                head_losses = [head.prefix_loss(info["layer_events"][k], y,
-                                                seq_end, k + 1, a.dmax, prefix_times)
-                               for k, head in enumerate(net.event_heads)]
-                main_loss = head_losses[-1]
+                main_loss, aux_loss, head_losses = sparse_event_objective(
+                    net.event_heads, info["layer_events"], y, seq_end,
+                    a.dmax, prefix_times, a.readout_fusion)
                 aux_losses = head_losses[:-1]
             elif a.objective in ("race", "anytime"):
                 objective_fn = race_nll if a.objective == "race" else anytime_nll
@@ -628,7 +727,8 @@ def main():
                 aux_losses = [nn.functional.cross_entropy(
                                   pool_readout(trace, seq_end, k + 2, a.dmax, a.objective), y)
                               for k, trace in enumerate(traces[:-1])]
-            aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
+            if not event_readout:
+                aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
             if i0 == 0:
                 route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
@@ -659,12 +759,9 @@ def main():
                             _, shadow_info = net(
                                 eb, ei, et, len(items), grid, return_taps=True,
                                 route_override=(k, event_index, receiver, not active))
-                            shadow_heads = [head.prefix_loss(
-                                shadow_info["layer_events"][j], y, seq_end, j + 1,
-                                a.dmax, prefix_times)
-                                for j, head in enumerate(net.event_heads)]
-                            shadow_main = shadow_heads[-1]
-                            shadow_aux = sum(shadow_heads[:-1]) if len(shadow_heads) > 1 else shadow_main.new_zeros(())
+                            shadow_main, shadow_aux, _ = sparse_event_objective(
+                                net.event_heads, shadow_info["layer_events"], y,
+                                seq_end, a.dmax, prefix_times, a.readout_fusion)
                             shadow_total = shadow_main + a.aux_weight * shadow_aux
                         # L1-L0 is measured by toggling this route through every
                         # downstream layer. This includes changes in later spikes.
@@ -765,6 +862,8 @@ def main():
         race_payload_decode_correct = 0
         anytime_correct = fallback_count = anytime_payload_decode_correct = 0
         anytime_latency_sum = 0.0
+        fusion_ablation_ok = np.zeros(a.depth, dtype=np.int64)
+        fusion_single_ok = np.zeros(a.depth, dtype=np.int64)
         threshold_grid = np.asarray((0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9))
         if event_readout:
             threshold_grid = np.unique(np.append(threshold_grid, a.race_threshold))
@@ -809,10 +908,31 @@ def main():
                                 query_times, deadline_k))
                         head_logits.append(layer_rows)
 
-                    final_rows = head_logits[-1]
+                    if a.readout_fusion == "all_depths":
+                        full_logits = [
+                            head.prefix_logits(info["layer_events"][k], seq_end,
+                                               a.depth + 1, a.dmax, queries)
+                            for k, head in enumerate(net.event_heads)]
+                        final_rows = [sum(full_logits[k][bi]
+                                          for k in range(len(net.event_heads)))
+                                      for bi in range(len(items))]
+                    else:
+                        final_rows = head_logits[-1]
                     final_scores = torch.stack([rows[-1] for rows in final_rows])
                     terminal_pred = final_scores.argmax(-1)
                     max_ok += int((terminal_pred == y).sum())
+                    if a.readout_fusion == "all_depths":
+                        for k in range(a.depth):
+                            ablated = [final_rows[bi] - full_logits[k][bi]
+                                       for bi in range(len(items))]
+                            single = [full_logits[k][bi]
+                                      for bi in range(len(items))]
+                            fusion_ablation_ok[k] += sum(
+                                int(rows[-1].argmax() == y[bi])
+                                for bi, rows in enumerate(ablated))
+                            fusion_single_ok[k] += sum(
+                                int(rows[-1].argmax() == y[bi])
+                                for bi, rows in enumerate(single))
                     for k, layer_rows in enumerate(head_logits):
                         tap_ok[k] += sum(int((rows[-1].argmax() == y[bi]))
                                          for bi, rows in enumerate(layer_rows))
@@ -826,14 +946,12 @@ def main():
 
                     final_events = info["layer_events"][-1]
                     event_b, final_units, final_times, final_vectors = final_events
-                    final_head = net.event_heads[-1]
                     for bi in range(len(items)):
-                        select = event_b == bi
                         deadline = float(seq_end[bi] + (a.depth + 1) * a.dmax + 60.0)
                         for ti, threshold in enumerate(threshold_grid):
-                            decision, peak = final_head.infer(
-                                final_units[select], final_times[select], final_vectors[select],
-                                deadline, float(threshold), a.race_logit_temperature)
+                            decision, peak = net.infer_event_readout(
+                                info["layer_events"], bi, float(seq_end[bi]),
+                                a.dmax, float(threshold), a.race_logit_temperature)
                             early = decision.reason == "threshold" and decision.time < deadline
                             correct = int(decision.class_id == int(y[bi]))
                             grid_emitted[ti] += int(early)
@@ -980,8 +1098,20 @@ def main():
             row["prefix_window_start_fraction"] = a.prefix_window_start
             row["prefix_horizon_ms"] = a.prefix_horizon_ms
             row["prefix_samples_per_utterance"] = a.prefix_samples
+            if a.readout_fusion == "all_depths":
+                readout_updates = float(st["msgs"][a.depth:2 * a.depth].sum())
+            else:
+                readout_updates = float(st["msgs"][-1])
+            row["readout_fusion"] = a.readout_fusion
             row["sparse_readout_edge_updates_per_utterance"] = round(
-                float(st["msgs"][-1] / len(ev)), 1)
+                readout_updates / len(ev), 1)
+            row["readout_edge_updates_by_layer_per_utterance"] = (
+                st["msgs"][a.depth:2 * a.depth] / len(ev)).round(1).tolist()
+            if a.readout_fusion == "all_depths":
+                row["readout_branch_ablation_accuracy"] = (
+                    fusion_ablation_ok / len(ev)).round(4).tolist()
+                row["readout_branch_standalone_accuracy"] = (
+                    fusion_single_ok / len(ev)).round(4).tolist()
             row["counterfactual_near_routes_per_epoch"] = int(cf_eligible_ep)
             row["counterfactual_route_shadows_per_epoch"] = int(cf_shadow_ep)
             row["counterfactual_mean_abs_loss_delta"] = round(
@@ -1048,7 +1178,8 @@ def main():
     cf_tag = (f"_cfnorm{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}"
               f"_w{a.cf_weight:g}_dl{a.cf_delta_clip:g}_lr{a.cf_lr:g}_gc{a.cf_grad_clip:g}"
               if event_readout else "")
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{cf_tag}_spk_s{a.seed}.json")
+    fusion_tag = f"_rf{a.readout_fusion}" if event_readout else ""
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{cf_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"
         torch.save({"args": vars(a), "model_state_dict": net.state_dict()}, checkpoint_path)
