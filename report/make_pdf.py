@@ -1340,7 +1340,9 @@ def build():
             "<b>Mixing by a race</b> (§108: each candidate's clock rate is the weighted sum of the experts' log-probabilities, "
             "a product of experts, as the best compressors mix) takes the same experts at 10M characters from 1.80 to "
             "<b>1.61 bits per character</b>, with weights frozen after the validation text and the copy memory limited to "
-            "256 characters (the Transformer baseline's context), at a few hundred operations per character (E79). For "
+            "256 characters (the Transformer baseline's context), at a few hundred operations per character (E79), and at 90M "
+            "to 1.50 (published text8: standard LSTM ≈ 1.43, stronger recurrent models 1.27–1.36, large Transformers ≈ 1.08: "
+            "at full scale near an LSTM, behind Transformers). For "
             "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. Our first gradient-trained baselines at equal "
             "data (one pass over 10M characters: LSTM 2.17, Transformer 2.43) are not converged, so no comparison is claimed "
             "until converged runs (multiple passes, early stopping on validation, E64b) finish.")]

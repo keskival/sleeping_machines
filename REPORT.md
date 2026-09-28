@@ -742,8 +742,10 @@ in this design features come from the time-vector layers and the native detector
   Hedge (each next-character candidate's clock rate is the weighted sum of the experts' log-probabilities: a product of
   experts, as the best text compressors mix) takes the same experts at 10M training characters from 1.80 to **1.61 bits
   per character**, with weights frozen after the validation text and the copy memory limited to the last 256 characters
-  (the Transformer baseline's context), at a few hundred operations per character (E79); fixed share, which carries the
-  §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
+  (the Transformer baseline's context), at a few hundred operations per character (E79), and at 90M to **1.50** (1.65
+  linear). For scale, published text8 results: a standard LSTM ≈ 1.43, stronger recurrent models 1.27–1.36, large
+  Transformers ≈ 1.08; so at full scale the native model is near an LSTM and behind Transformers. Fixed share, which
+  carries the §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
   text8 from 90M characters. Our first gradient-trained baselines at equal data (one pass over 10M characters: LSTM 2.17,
   Transformer 2.43) are not converged, so no comparison is claimed until converged runs (multiple passes, early stopping on
   validation, E64b) finish.
@@ -819,7 +821,7 @@ on language itself. The stages above are how that will be decided.
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
-| E79 | race (product-of-experts) mixer of the native experts | 10M: 1.61 bpc frozen, 256-character memory (linear Hedge 1.80); baselines pending |
+| E79 | race (product-of-experts) mixer of the native experts | 10M: 1.61, 90M: 1.50 bpc frozen, 256-character memory (linear Hedge 1.80 / 1.65); baselines pending |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
