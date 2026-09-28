@@ -28,7 +28,7 @@ OUT = os.path.join(os.path.dirname(__file__), "results", "e84")
 
 
 class DeepTVPP(nn.Module):
-    def __init__(self, nf, nb, d, n, M, Ms, depth, fan2, readout_fan, dmax, seed=0):
+    def __init__(self, nf, nb, d, n, M, Ms, depth, fan1, fan2, readout_fan, dmax, seed=0):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -37,7 +37,11 @@ class DeepTVPP(nn.Module):
         self.tf = nn.Linear(nf, d)
         self.M, self.depth = M, depth
         self.layers = nn.ModuleList()
-        self.layers.append(A.TVLayerW(NT, M, d, d, n, dmax, None, True, 0.05))
+        mask0 = torch.rand(NT, M, generator=gen) < fan1
+        for j in range(M):
+            if not mask0[:, j].any():
+                mask0[torch.randint(NT, (), generator=gen), j] = True
+        self.layers.append(A.TVLayerW(NT, M, d, d, n, dmax, mask0, True, 0.05))
         for i in range(1, depth):
             mask = torch.rand(M, M, generator=gen) < fan2
             for j in range(M):
@@ -53,6 +57,12 @@ class DeepTVPP(nn.Module):
         self.head = nn.Linear(Ms, nb * NT)
         self.nb = nb
 
+    @staticmethod
+    def scored_pairs(layer, indices):
+        if layer.mask is None:
+            return len(indices) * layer.M
+        return int(layer.mask[indices].sum())
+
     def forward(self, y, x, return_taps=False):
         B, L = y.shape; G = L + 1
         gap = (torch.exp(5 * x[..., 0]) - 1e-4).clamp(min=0)
@@ -62,23 +72,28 @@ class DeepTVPP(nn.Module):
         raw_i = y.reshape(-1)
         raw_t = torch.arange(L).float().repeat(B) + 1 - 1e-3
         raw_vf = raw_v.reshape(B * L, -1)
-        outputs, messages, spikes = [], [], []
+        outputs, messages, spikes, candidates = [], [], [], []
         for i, layer in enumerate(self.layers):
             if i == 0:
                 ib, ij, it, iv = eb, raw_i, raw_t, raw_vf
             else:
                 ib, ij, it, iv = outputs[-1]
+            candidates.append(self.scored_pairs(layer, ij if i else raw_i))
             out, msg = layer(ib, ij, it, iv, B, G, w)
             outputs.append(out); messages.append(msg); spikes.append(len(out[2]) / (B * L))
 
         taps = []
         for out in outputs:
+            candidates.append(self.scored_pairs(self.st, out[1]))
             V, msg = self.st(out[0], out[1], out[2], out[3], B, G, w)
             messages.append(msg)
             h = self.norm(V[1:].permute(1, 0, 2))
             taps.append(nn.functional.softplus(self.head(h)).view(B, L, self.nb, NT) + 1e-6)
         self.work = {"msgs_per_event": [m / L for m in messages],
-                     "spikes_per_event": spikes}
+                     "candidate_scores_per_event": [c / L for c in candidates],
+                     "spikes_per_event": spikes,
+                     "state_vector_updates_per_event": G * self.layers[0].n *
+                         (self.depth * self.M + self.depth * self.st.M) / L}
         return (taps[-1], taps) if return_taps else taps[-1]
 
     @staticmethod
@@ -106,6 +121,7 @@ def main():
     ap.add_argument("--M", type=int, default=24)
     ap.add_argument("--Ms", type=int, default=24)
     ap.add_argument("--depth", type=int, default=4)
+    ap.add_argument("--fan1", type=float, default=0.5)
     ap.add_argument("--fan2", type=float, default=0.25)
     ap.add_argument("--readout_fan", type=float, default=0.5)
     ap.add_argument("--aux_weight", type=float, default=0.2,
@@ -135,7 +151,7 @@ def main():
             day_chunks = [day_chunks[k] for k in sorted(take)]
         chunks.extend(day_chunks)
     net = DeepTVPP(tr[0][2][1].shape[1], len(gaps) + 1, a.d, a.n, a.M,
-                   a.Ms, a.depth, a.fan2, a.readout_fan, a.dmax, a.seed)
+                   a.Ms, a.depth, a.fan1, a.fan2, a.readout_fan, a.dmax, a.seed)
     opt = torch.optim.Adam(net.parameters(), lr=a.lr)
     tag = f"val_L{a.L}_f{a.fine}_x{a.cross}_m{a.mag}_d{a.d}_M{a.M}_e{a.epochs}_depth{a.depth}_aux{a.aux_weight:g}_s{a.seed}"
     res = {"args": vars(a), "params": sum(p.numel() for p in net.parameters()),

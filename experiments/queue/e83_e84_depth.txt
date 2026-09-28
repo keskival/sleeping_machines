@@ -1,8 +1,14 @@
-# Small, serial, theory-led depth pilots. Each depth uses the same data sample,
-# optimizer steps and per-layer width; gradients and event activity are logged.
-e83_shd_depth2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --seed 0
-e83_shd_depth4 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --seed 0
-e83_shd_depth8 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 8 --seed 0
-e84_market_depth2 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 2 --epochs 2 --batch 8 --chunks_per_day 128 --seed 0
-e84_market_depth4 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 4 --epochs 2 --batch 8 --chunks_per_day 128 --seed 0
-e84_market_depth8 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 8 --epochs 2 --batch 8 --chunks_per_day 128 --seed 0
+# Paired depth tests: same seed/configuration, auxiliary supervision off versus on.
+# Final SHD predictions and market hazards always come from the deepest layer.
+e83_shd_d2_aux0 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0 --seed 0
+e83_shd_d2_aux02 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0.2 --seed 0
+e83_shd_d4_aux0 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0 --seed 0
+e83_shd_d4_aux02 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --seed 0
+e83_shd_d8_aux0 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 8 --aux_weight 0 --seed 0
+e83_shd_d8_aux02 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 8 --aux_weight 0.2 --seed 0
+e84_market_d2_aux0 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 2 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0 --seed 0
+e84_market_d2_aux02 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 2 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0.2 --seed 0
+e84_market_d4_aux0 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 4 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0 --seed 0
+e84_market_d4_aux02 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 4 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0.2 --seed 0
+e84_market_d8_aux0 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 8 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0 --seed 0
+e84_market_d8_aux02 experiments/e84_deep_market.py --L 64 --fine 1 --cross 0 --mag 0 --d 8 --n 4 --M 16 --Ms 16 --depth 8 --epochs 2 --batch 8 --chunks_per_day 128 --aux_weight 0.2 --seed 0
