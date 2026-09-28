@@ -1042,22 +1042,33 @@ There is an earlier prerequisite: a layer that never emits has no realized
 pathwise credit, and its route shadows can have exactly zero effect if toggles
 still do not create an event. Let $V_{btk}$ be a layer's pre-reset voltage
 under a short sample of actual training inputs, with $M$ receiver units. For
-an initial aggregate event budget $\rho$ per character, set
+an initial aggregate event budget $\rho$ per character, use the empirical
+voltage quantile as an initial threshold estimate,
 
 $$
 \theta=\widehat F_V^{-1}(1-\rho/M),
 $$
 
 where $\widehat F_V$ is the empirical voltage CDF. Without resets this gives
-approximately $M\Pr[V>\theta]=\rho$ threshold attempts per time bin; reset,
-temporal dependence, and finite calibration samples alter the realized count,
-so log the actual firing rate. Calibrating in depth order lets each layer see
-the already-calibrated event stream below it. This is a data-derived
-initialization, not a learned posterior or proof of stable depth. It uses the
-observed conditional activity instead of a guessed threshold prior while the
-network has little task evidence. Later threshold changes should be slower or
-confidence-weighted, because noisy minibatch quantiles otherwise make event
-rates oscillate; that online homeostasis is not yet implemented.
+approximately $M\Pr[V>\theta]=\rho$ threshold attempts per time bin. It is
+only a scale guess: reset, temporal dependence, and finite samples change the
+realized count. E77 now replays the exact threshold/reset recurrence on saved
+voltage traces, then searches the threshold against the realized per-character
+spike count. This avoids rerunning the whole network for each candidate.
+Calibration is depth ordered, so each deeper layer's traces come from the
+already calibrated event stream below it.
+
+The distinction mattered at default width. On the same one-seed, depth-4
+10k-character smoke, the quantile-only estimate produced near-silent initial
+rates and test rates $[0,0.007,0.009,0.004]$; the revised procedure matched
+the initial rates to $[0.096,0.082,0.094,0.100]$ around a target of 0.1. All
+four hidden layers had nonzero gradients at all 13 validation checkpoints,
+versus $[1,9,12,6]$ checkpoints under quantile-only calibration. By the
+selected checkpoint, event rates had moved to $[0.204,0.190,0.456,0.802]$.
+Thus activity calibration reopened the deep learning path in this smoke, but
+the learned representation changed the rate substantially. This is an
+initialization diagnostic, not evidence for language-model quality, stable
+homeostasis, or scaling. Online threshold adaptation remains unimplemented.
 
 For uncertainty, route deltas should be grouped by layer and relevant
 conditions (score band, active/closed status, event age, and token region).
@@ -1078,3 +1089,181 @@ negligible, poorly aligned, or unstable across repeated batches, optimize the
 existing smooth delay/payload gradients and investigate event firing,
 conditioning, or the data/compute setup instead. A successful smoke or one
 seed is not a depth-scaling result.
+
+## 134. Local Bayesian trust should follow conditional evidence, not a global clock
+
+The prior/evidence proposal has a precise local interpretation. Let a unit's
+conditional response be linearized around its current parameters, with local
+eligibility or state feature $z$ and scalar supervised credit $y$:
+
+$$
+y\mid z,w\sim\mathcal N(z^\top w,\sigma^2),\qquad
+w\sim\mathcal N(m_0,\Lambda_0^{-1}).
+$$
+
+After observed state/credit pairs $(z_i,y_i)$, the Gaussian posterior has
+
+$$
+\Lambda_n=\Lambda_0+\sigma^{-2}\sum_{i=1}^n z_i z_i^\top,\qquad
+m_n=\Lambda_n^{-1}\left(\Lambda_0m_0+
+\sigma^{-2}\sum_{i=1}^n z_i y_i\right).
+$$
+
+For one new observation, writing $\Sigma_n=\Lambda_n^{-1}$, the exact update
+is
+
+$$
+m_{n+1}-m_n=
+\frac{\Sigma_n z}{\sigma^2+z^\top\Sigma_n z}
+\left(y-z^\top m_n\right).
+$$
+
+This gives the proposed schedule without a global epoch clock: a broad prior
+(small $\Lambda_0$) gives a novel, informative conditional observation more
+influence; repeated consistent observations of the same state direction add
+precision and shrink its later influence. The gain also depends on observation
+noise and feature novelty. High-noise credit should not be trusted merely
+because it arrived early, and evidence in one state direction does not make an
+unvisited conditional well known. A scalar count or global learning-rate
+decay cannot express that geometry.
+
+Three qualifications matter for Sleeping Machines. First, unlabeled activity
+is evidence about voltage scale and event frequency, but not evidence about
+which class or token is correct. Task credit must still reach the conditional
+state, including counterfactual routes that did not fire. Second, the Gaussian
+formula is exact only for a fixed linear-Gaussian conditional; nonlinear
+neurons require a local Laplace/online natural-gradient approximation, and
+heavy-tailed route deltas call for robust likelihoods. Third, representation
+drift makes old precision stale. For a changing conditional, use discounted
+sufficient statistics (or a drift-triggered reset) and measure uncertainty
+per layer and state stratum. Otherwise accumulated confidence can freeze a
+unit after its input semantics have changed.
+
+This suggests a discriminating experiment, not a new optimizer setting yet:
+log local state occupancy, effective sample size, predictive residual scale,
+and posterior variance for each unit/route stratum; compare constant-gain,
+global decay, and evidence-conditioned gain at matched data and compute. Use
+held-out causal loss and gradient alignment to judge the update, and keep a
+trust radius in the optimizer metric. The scalar route-utility posterior in
+§133 and this parameter posterior are different objects: the former estimates
+whether opening a route helps; the latter estimates how much a local
+conditional parameter remains uncertain. E77 currently implements neither
+posterior-driven synaptic gains nor online homeostasis.
+
+## 135. The TV-quiz task is posterior filtering followed by a stopping rule
+
+Represent an utterance as a marked event history $\mathcal F_t$ and let $Y$
+be its one final class. The online object is the causal prefix posterior
+$\pi_t(c)=P(Y=c\mid\mathcal F_t)$. For any fixed, exogenous query-time law
+$\nu$, the proper training risk is
+
+$$
+\mathcal R_\nu(\theta)=
+\mathbb E_{(X,Y)}\mathbb E_{t\sim\nu}
+[-\log\pi_\theta(Y\mid\mathcal F_t)].
+$$
+
+Its population minimizer is the true conditional posterior at each sampled
+prefix. Reusing the utterance label at several prefixes does not assert that
+each prefix already determines the class: at an empty prefix the correct
+target is the class prior. The query-time law must be chosen without looking
+at the future endpoint. Only after posterior estimation should we calibrate
+the first-output time
+$\tau=\inf\{t:\max_c\pi_t(c)\ge1-\epsilon\}$ and emit the full vector
+$u(\tau)=\pi_\tau$. If this is a true posterior at a stopping time, conditional
+error among emitted answers is at most $\epsilon$. A no-crossing fallback at
+an observed EOS is a separate, late answer; raw softmax confidence needs
+selected-prefix calibration before the guarantee applies.
+
+For class-conditional point-process intensities, the exact log posterior is
+
+$$
+s_c(t)=\log\pi_0(c)+
+\sum_{t_i\le t}\log\lambda_c(m_i,t_i\mid\mathcal F_{t_i^-})
+-\int_0^t\Lambda_c(u\mid\mathcal F_{u^-})\,du,
+\qquad \pi_t=\operatorname{softmax}(s(t)).
+$$
+
+An event contributes a mark/time likelihood jump. An interval of silence
+contributes the negative integrated class event rate. For constant rates
+between hidden events, a silent gap of duration $\Delta$ changes class log
+odds by $-(\Lambda_c-\Lambda_d)\Delta$. The label can therefore teach the
+network from both a positive event and a missing event. At a sampled prefix,
+the posterior cross-entropy derivative is
+$\partial L/\partial s_c=p_c-\mathbf1[Y=c]$; the survival term carries this
+credit through the local state that predicted the gap. This answers how to
+train when no output has fired: score posterior error at causal prefixes and
+include no-event likelihood, instead of waiting for an output event to exist
+before assigning credit.
+
+There is a code/theory mismatch in E83's sparse event readout. Class logits
+accumulate hidden-event updates and one EOS update. Between hidden events, a
+prefix query sees no clock/survival update, so its posterior is piecewise
+constant. The gap feature is attached only when the next event arrives and
+cannot support an earlier crossing. This is correct only under
+$Y\perp\text{survival to }t+\Delta\mid\mathcal F_t$. The direct test is the
+held-out predictive value of the gap:
+
+$$
+I(Y;\text{no event in }(t,t+\Delta]\mid\mathcal F_t),
+$$
+
+measured by paired prefix log loss with and without a class-conditional
+silence update, sampling queries inside silent intervals. If this gain is
+zero, event-triggered updates suffice. If it is positive, attach a learned
+class-rate state to the current causal hidden state. Each new hidden event
+updates its mark score and rate; between events the rate integrates
+analytically, and inference schedules a timer only for a possible confidence
+crossing. Under constant rates, each logit is linear in gap duration, so a
+candidate crossing solves $\pi_c(t)=\theta$ without millisecond polling.
+
+The systematic SHD sequence is therefore: verify a small-set terminal fit and
+the speaker split; fit causal prefix posteriors with fixed-time proper log
+loss; measure event-mark and silent-survival information separately; calibrate
+first-crossing coverage, emitted accuracy, latency, and EOS fallback on
+validation speakers; then increase depth and measure pathwise and lost-route
+credit by layer. This isolates identifiability, representation, posterior
+estimation, topology credit, and stopping policy instead of asking a single
+race loss to solve all five.
+
+## 136. Sparse multi-depth evidence reduces serial credit bottlenecks
+
+E83's strict stack gives the final readout only the last layer's event stream.
+An early event can affect the objective only if it survives and is transformed
+by every later hard route. With per-layer event transmission probabilities
+$q_1,\ldots,q_D$, a simplified independent-route calculation gives the
+survival factor $\prod_{k=1}^{D-1}q_k$; actual route events are dependent, but
+the product exposes a depth-sensitive failure mode. Local auxiliary heads
+improve layerwise optimization, yet do not make early evidence part of the
+final prediction.
+
+The new `all_depths` readout gives each layer $k$ its own sparse event logit
+stream
+
+$$
+z_c^{(k)}(t)=b_c^{(k)}+
+  \sum_{e\in E_k:\,t_e\le t}\phi_{k,c}(v_e,\Delta_e,t_e),
+\qquad z_c(t)=\sum_{k=1}^{D}z_c^{(k)}(t).
+$$
+
+Cross-entropy is applied to $z(t)$ at fixed, causal physical-time prefixes.
+The terminal EOS terms from all heads are aligned at the common stack
+deadline. These are learned additive discriminative potentials; summing them
+does not assert statistical independence between levels. The existing local
+prefix losses remain as deep supervision. In the counterfactual estimator, a
+route toggle is scored by the change in this same fused objective, so an
+opened route receives credit for both its direct readout contribution and any
+downstream events it causes.
+
+This relaxes a serial credit bottleneck; it does not prove that the
+compositional stack is trainable at arbitrary depth. A model might solve the
+task mostly through its shallow branches. Therefore compare `deepest` and
+`all_depths` on matched data, seeds, widths and update budgets, report each
+layer's event contribution, and ablate branches at inference. The added work
+is sparse: it is proportional to the number of emitted events times each
+head's sparse class fan-out, not to every simulation tick. Readout work grows
+roughly with the number of active layers. This also does not fix §135's
+separate gap: class logits still wait for an event or final EOS instead of
+changing continuously with evidence from silence. Results from this design
+are pending; the implementation alone is not evidence of accuracy or
+supremacy.

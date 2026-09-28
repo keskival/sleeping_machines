@@ -45,10 +45,13 @@ FILES=(
   experiments/queue/e83_event_prefix_d4_pilot.txt
   experiments/queue/e83_event_prefix_cf_local_smoke.txt
   experiments/queue/e83_event_prefix_d4_cf_local.txt
+  experiments/queue/e83_deep_readout_fusion.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt
   experiments/queue/e77_default_width_bootstrap_smoke.txt
+  experiments/queue/e77_deep_lm_benchmark.txt
+  experiments/queue/e77_depth8_lm_100k.txt
   experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt
@@ -62,6 +65,13 @@ FILES=(
   experiments/results/e83/e83_final_layer_activity.png
   experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77.json
   experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4.json
+  experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth4_c0_eh1_ek0_s77_cf4_b0.5_sg0.25_w1_dl5_lr0_gc1_boot0.1_cb4_cs6.json
+  experiments/results/e77/tvlm_D4096_p0.25_r1_M8-8-8_depth8_c0_eh1_ek0_s77_boot0.1_cb4_cs6.json
+  experiments/results/e77/tvlm_D10000_p0.5_r1_M128-128-64_depth4_c0_eh1_ek0_s77_boot0.1_cb4.json
+  experiments/results/e77/tvlm_D10000_p0.5_r1_M128-128-64_depth4_c0_eh1_ek0_s77_boot0.1_cb4_cs6.json
+  experiments/results/e64/tf_D1000000_s112_L8_p5_b4_dr0_v.json
+  experiments/results/e64/tf_D100000_s112_L8_p1_b2_dr0_v.json
+  experiments/results/e77/tvlm_D100000_p1_r1_M128-128-64_depth8_c0_eh1_ek0_s0_boot0.1_cb4_cs6.json
   experiments/results/e84
   experiments/results/e114
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json

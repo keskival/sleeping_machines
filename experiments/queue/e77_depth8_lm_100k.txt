@@ -1,0 +1,6 @@
+# Matched depth-8 real-language screen at a bounded scale: 100k training
+# characters, one pass, 128-character windows, batch 2, same 50k valid/test
+# slices. This is four times smaller per batch than the guarded 1M E77 attempt
+# that exceeded the 3.5 GB process-group cap.
+e77_depth8_tf_D100k_p1_b2 experiments/e64_lm_baselines.py --model tf --D 100000 --size 112 --layers 8 --ctx 128 --passes 1 --batch_size 2 --dropout 0 --valid 50000 --test 50000
+e77_depth8_tv_D100k_p1_b2 experiments/e77_tv_lm.py --D 100000 --passes 1 --L 128 --bs 2 --depth 8 --target_spikes_per_char 0.1 --threshold_calibration_batches 4 --threshold_calibration_steps 6 --valid 50000 --test 50000
