@@ -15,8 +15,9 @@ structured tasks with far less data and counted computation.
   characters, E79 scores **1.613 bpc frozen** versus **1.799** for the completed two-layer, 512-unit LSTM on the same
   test segment—a **0.186 bpc lead**. This is the strongest direct language-model signal so far. Both comparisons use
   one seed; E79 combines six native experts and copy memory, compute is not matched, and the matched 10M four-layer
-  Transformer had reached 70% of updates at its latest logged checkpoint (step 3,416/4,882): validation BPC was 1.9063,
-  down from 2.5857 at 10%. The process still holds the experiment lock; final validation and test scores are pending.
+  Transformer has reached 80% of updates at its latest logged checkpoint (step 3,904/4,882): train/validation BPC is
+  1.8490/1.8831, improving validation by 0.0232 since the 70% checkpoint. It remains 0.1383 above the completed LSTM's
+  validation score. The process still holds the experiment lock; final validation and test scores are pending.
 - **Learned associative retrieval:** on E61's synthetic recall task, local race attention reaches **100% at 4× context
   after at most 4,000 examples in all five runs**. The best of seven Transformer settings reaches **71.6%** on those
   longer contexts after as many as 1M examples.
@@ -179,7 +180,8 @@ and what remains open.
    content-dependent delays compute softmax attention exactly at a cost set by its sharpness; and a network laid out on
    positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's race
    mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split and the completed 10M LSTM on
-   the same test segment. The matched 10M Transformer had reached step 3,416/4,882 (70%) at its latest logged update; validation BPC was 1.9063.
+   the same test segment. The matched 10M Transformer is at step 3,904/4,882 (80%); latest validation BPC is 1.8831,
+   0.1383 above the completed LSTM.
    Its process still holds the serialized runner lock and has no endpoint or test score.
 
 ## Where the event paradigm wins, and where it does not
@@ -523,7 +525,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   accuracy was 0.146 and its last-epoch accuracy 0.120 (20-class chance is 0.05). E82's 240-update readout diagnosis
   reached 0.184 with a nonspiking state readout and layer normalization; the normalized spiking readout stayed near chance.
   E75's exactly shift/tempo-covariant lattice passed its symmetry check, but its two-epoch pilot reached only 0.044 and
-  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. E83 now tests strict adjacent-layer event chains at depth 2/4/8, pairing no auxiliary loss with weight 0.2; inference
+  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. E83 now tests strict adjacent-layer event chains at depth 2/4/8/16, pairing no auxiliary loss with weight 0.2; inference
   reads only the deepest layer. It uses a balanced 512-example pilot and held-out speakers, with gradient, firing,
   candidate-pair, message, state-scan, and deep/auxiliary gradient-alignment counts. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
@@ -567,9 +569,11 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   constant-step multiplicative factors track the end of training and do not (E58).
 - **Deeper market event models (E84, queued).** E57 identifies slow rate and order-flow counters as useful market state,
   with a remaining 0.08–0.19 nats/event gap to the Transformer point process at a small fraction of its counted work.
-  E84 carries the same point-process objective into strict adjacent-layer event chains at depth 2/4/8. It pairs auxiliary
+  E84 carries the same point-process objective into strict adjacent-layer event chains at depth 2/4/8/16. It pairs auxiliary
   loss weights 0 and 0.2; predictions use only the deepest layer. The day-1–4/day-5 pilot logs gradients, candidate score
-  pairs, accepted messages, state scans, and gradient alignment. No deeper-market result exists yet; confirmation days remain reserved.
+  pairs, accepted messages, state scans, and gradient alignment. Its work counters now aggregate across all training
+  minibatches and overlapping day-5 windows, reporting per-event training work and per-scored-event inference work.
+  No deeper-market result exists yet; confirmation days remain reserved.
 - **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
   Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
   event comes next, not when. Count baselines located the missing information: the time since the last event. A
@@ -608,7 +612,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer had reached 3,416/4,882 updates (70%) at its latest logged checkpoint (2026-09-28 17:06 UTC): train/validation BPC was 1.9136/1.9063, down from 2.5857 validation at 10%. Its process still holds the experiment lock; it has no endpoint or test score and does not decide the final comparison. E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer is at 3,904/4,882 updates (80%) at its latest logged checkpoint (2026-09-28 17:37 UTC): train/validation BPC is 1.8490/1.8831, down from 1.9063 at 70%. It remains 0.1383 above the completed LSTM's validation score. Its process still holds the experiment lock; it has no endpoint or test score and does not decide the final comparison. E77 has no completed LM result yet.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -759,6 +763,10 @@ the already-derived attention credit and $H$ bounds downstream curvature. This s
 controlled counterfactual loss estimate for the existing sparse-expert router (§§19, 57). Substituting it into the
 existing route-boundary gradient gives an explicit counterfactual error budget; this can direct exact shadow work toward
 near-miss keys where curvature makes the local estimate least reliable. It does not reduce the cost of finding keys. The
+same analysis now closes the smooth-loss VJP gap: the query-gradient truncation error is bounded by
+$\\beta\\epsilon D_K[(3/2-\\epsilon)D_A^C+HD_V^2/4]$, with matching key- and value-VJP bounds. The curvature term accounts
+for the upstream gradient changing when retrieval changes the output; the bound remains absolute and gives no alignment
+guarantee near a zero dense gradient. This is a mathematical result awaiting autodiff checks, not an experimental result. The
 2/4/8/16-layer E77 and Transformer sweep now matches
 context length, sampled training windows, 5M-token exposure, batch size, optimizer updates, and parameter count to within
 4% (Transformer widths 104/104/112/136 at depths 2/4/8/16). A separate width-256, 20-pass depth-4 Transformer run
@@ -791,8 +799,9 @@ with online adaptation. The expert count also rises from five to seven, so this 
 completed 1M same-split gradient baselines score 2.179 for the 256-unit LSTM and 2.367 for the two-layer Transformer.
 At 10M, the completed two-layer, 512-unit LSTM scores 1.799 test bpc (1.7448 validation, 1,199,323 parameters, six
 passes); E79's frozen mixture scores 1.613 on the same test segment, a 0.186 bpc lead. The LSTM's best validation
-checkpoint is the final one, so convergence is not established. Its matched four-layer Transformer had reached
-3,416/4,882 updates (70%) at its latest logged checkpoint, with 1.9063 validation bpc, down from 2.5857 at 488 updates (17:06 UTC).
+checkpoint is the final one, so convergence is not established. Its matched four-layer Transformer has reached
+3,904/4,882 updates (80%) at its latest logged checkpoint (17:37 UTC), with 1.8831 validation bpc, down 0.0232 from
+the 70% checkpoint. It remains 0.1383 above the LSTM validation score.
 Its process still holds the experiment lock; neither a final validation nor a test score is available.
 E79 therefore supplies the stronger completed real-language signal, while compute-matched and deep-model comparisons
 remain open.
@@ -951,8 +960,8 @@ in this design features come from the time-vector layers and the native detector
   unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
   Transformer; both best checkpoints occur at the final validation point. At 10M, the two-layer 512-unit LSTM completed
   six passes with 1.7448 validation / 1.7993 test bpc (1,199,323 parameters); its best validation checkpoint is the final
-  one, so convergence is not established. The matched four-layer 10M Transformer had reached step 3,416/4,882 (70%) at its latest logged update, with 1.9063
-  validation bpc, down from 2.5857 at step 488. Its process still holds the experiment lock; it has no final validation
+  one, so convergence is not established. The matched four-layer 10M Transformer has reached step 3,904/4,882 (80%) at its latest logged update, with 1.8831
+  validation bpc, down 0.0232 from its 70% checkpoint. It remains 0.1383 above the LSTM's validation bpc. Its process still holds the experiment lock; it has no final validation
   or test score;
   the parameter-matched depth controls and 2/4/8/16-layer E77 comparisons remain queued. No language-model advantage
   for E77 is established yet.
@@ -1018,7 +1027,7 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer last logged at step 3,416/4,882 (70%), validation 1.9063 (no test/endpoint; lock held) |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer last logged at step 3,904/4,882 (80%), validation 1.8831 (no test/endpoint; lock held) |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
@@ -1032,8 +1041,8 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | paired depth 2/4/8 pilot queued (aux loss 0 vs 0.2); logs gradients, candidate scores, messages, and state scans |
-| E84 | deep time-vector market world model | paired depth 2/4/8 day-5 pilot queued (aux loss 0 vs 0.2); no confirmatory test |
+| E83 | deep time-vector model on speaker-held-out SHD | paired depth 2/4/8/16 pilot queued (aux loss 0 vs 0.2); logs gradients, candidate scores, messages, and state scans |
+| E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 
 ## 11. Potential applications and the transformation

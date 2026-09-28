@@ -5473,6 +5473,57 @@ $\epsilon D_A$ in scalar coefficient mass. These are local VJP comparisons
 at fixed support. A nonlinear downstream loss changes $g$ when $y$ changes,
 and that additional curvature term is outside this statement.
 
+### Downstream curvature: the full smooth-loss VJP error
+
+The fixed-$g$ comparison can be extended to the actual scalar objective. Let
+$F$ be twice differentiable with $\|\nabla^2F(z)\|_2\le H$ along the segment
+joining dense output $y$ to truncated output $y_C$. Write
+$g=\nabla F(y)$, $g_C=\nabla F(y_C)$, and let $D_A^C$ be the range of
+$g_C^\top v_j$ over *all* keys, with $0\le\epsilon<1$. Since
+$\|y-y_C\|\le\epsilon D_V$,
+\[
+\|g-g_C\|\le H\epsilon D_V.
+\]
+Decompose the query VJP by first holding the upstream vector at $g_C$, then
+changing it from $g_C$ to $g$. The first term is the fixed-support residual
+above. The second is the dense covariance with scalar advantage
+$(g-g_C)^\top v_j$, whose range is at most $\|g-g_C\|D_V$. Therefore
+\[
+\|\nabla_qF(y)-\nabla_qF(y_C)\|
+\le \beta\epsilon D_K\left[
+  (3/2-\epsilon)D_A^C+{H D_V^2\over4}
+\right].
+\]
+This is an absolute-error bound; when the dense query gradient is near zero it
+does not imply relative accuracy or preserve gradient direction.
+
+The same decomposition gives bounds for the other independently parameterized
+attention blocks. For values, the dense VJP is $p_jg$ and the truncated VJP
+is $p_jg_C/(1-\epsilon)$ on $C$ and zero on $O$. The $\ell_1$ difference of
+the padded probability vectors is exactly $2\epsilon$, so
+\[
+\sum_j\|\nabla_{v_j}F(y)-\nabla_{v_j}F(y_C)\|
+\le 2\epsilon\|g_C\|+H\epsilon D_V.
+\]
+For independent keys, the score-gradient coefficient is
+$p_j(a_j-\mathbb E_p a)$, with $a_j=g^\top v_j$. Changing support at fixed
+$g_C$ uses the existing bound above; changing $g_C$ to $g$ on the dense
+support adds at most $\tfrac12D_V\|g-g_C\|$ in coefficient $\ell_1$ norm,
+by the scalar range bound for mean absolute deviation. Thus
+\[
+\sum_j\|\nabla_{k_j}F(y)-\nabla_{k_j}F(y_C)\|
+\le \beta\|q\|\epsilon\left[
+  (5/2-\epsilon)D_A^C+{H D_V^2\over2}
+\right].
+\]
+These are local bounds for fixed keys, values, and candidate support. For
+gradients with respect to the inputs of linear query/key/value projections,
+multiply by the corresponding transpose operator norms; weight-gradient bounds
+also require the projection inputs' norms. They close the smooth downstream-loss
+gap left by the fixed-$g$ lemma, while retaining its main diagnosis: high
+retained mass controls an absolute error, but does not imply relative accuracy
+or gradient alignment.
+
 The exact residual identifies what a candidate rule should preserve. High mass
 recall is a useful worst-case certificate, but the query-gradient target is the
 omitted cross-covariance above. In particular, a key index can retain nearly
