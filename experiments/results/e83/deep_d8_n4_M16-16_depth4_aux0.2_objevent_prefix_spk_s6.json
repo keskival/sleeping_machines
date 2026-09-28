@@ -224,7 +224,7 @@
    "race_coverage": 0.0312,
    "race_acc_when_emitted": 0.0,
    "race_payload_dim": 20,
-   "race_payload_decode_agreement": 32.0,
+   "race_payload_decode_agreement": 1.0,
    "race_mean_latency_ms": 328.09,
    "race_mean_peak_confidence": 0.0801,
    "anytime_acc_with_terminal_fallback": 0.0625,

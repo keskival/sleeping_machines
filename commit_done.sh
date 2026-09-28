@@ -41,6 +41,11 @@ FILES=(
   experiments/queue/e83_objective_controls_2ep.txt
   experiments/queue/e83_race_stable_2ep.txt
   experiments/queue/e83_counterfactual_readout_audit.txt
+  experiments/queue/e83_event_prefix_cf_smoke.txt
+  experiments/queue/e83_event_prefix_d4_pilot.txt
+  experiments/queue/e83_event_prefix_cf_local_smoke.txt
+  experiments/queue/e83_event_prefix_d4_cf_local.txt
+  experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt
@@ -50,13 +55,15 @@ FILES=(
   experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json
   experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
-  experiments/results/e83
+  experiments/results/e83/*.json
+  experiments/results/e83/e83_final_layer_activity.png
   experiments/results/e84
   experiments/results/e114
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
   experiments/results/e79/race_mixer_D10000000_K6_e77none.json
   report/make_pdf.py
   report/figures/potential_evidence.png
+  report/figures/e83_route_gradient_diagnostics.png
   report/sleeping_machines_status.pdf
   commit_done.sh
 )
@@ -87,7 +94,7 @@ fi
 while IFS= read -r -d '' staged; do
   allowed=0
   for file in "${FILES[@]}"; do
-    if [[ "$staged" == "$file" || ( "$file" == "experiments/theory" && "$staged" == "$file/"* ) ]]; then
+    if [[ "$staged" == "$file" || "$staged" == $file || ( "$file" == "experiments/theory" && "$staged" == "$file/"* ) ]]; then
       allowed=1
       break
     fi

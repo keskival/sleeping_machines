@@ -548,11 +548,32 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   utterances: 31 changed max-pooled CE by exactly zero and one reduced it by 0.045; its boundary-gradient norm was 2.2%
   of pathwise norm with cosine 0.012. Section 129 derives the max-pooling winner-gap dead zone that can erase a route's
   effect from terminal loss. This small probe says nothing conclusive about trained weights or hidden route births.
-  `TVLayer` also detaches its hard content gate and computes spike identities inside `no_grad`, so closed routes and
-  silent units get no task gradient for creating events. The existing §§19/57 counterfactual boundary credit is not
-  wired into this stack. Next: save a trained checkpoint, shadow hidden threshold crossings through the remaining
-  layers, and compare max, integral, and smooth-max posterior heads under the same support and sampled-prefix proper
-  log loss. Measure winner gaps and gradient alignment before adding credit or expanding data/depth. Earlier: the weight race
+  `TVLayer` still detaches its hard content gate and computes spike identities inside `no_grad`, so closed routes and
+  silent units get no pathwise task gradient for creating events. The event-prefix branch now adds the existing §§19/57
+  counterfactual credit to near-boundary content routes: each shadow toggles one route through the full downstream stack
+  and compares the same fixed, stratified 0–1000 ms causal prefix queries. This removes future-duration leakage from the
+  earlier per-utterance normalized-time sampler. A PyTorch timestamp-grouping autograd bug was also fixed; the hidden
+  simulator still scans a 1 ms grid.
+
+  The matched depth-4 pathwise-only run (128 train / 32 held-out-speaker, two epochs) stayed numerically stable but near
+  chance: 6.25% terminal accuracy (2/32), with epoch-2 prefix NLL [2.995, 3.202]. The first counterfactual implementation
+  used the unbiased candidate-count/shadow-count multiplier; with about 480k eligible routes and 128 shadows per epoch,
+  train loss and final-layer activity exploded. A bounded normalized update now averages sampled signals within each
+  layer, clips the shadow loss difference to ±5 and the global correction-gradient norm to 1, then applies a separate
+  0.001 SGD step. In the matched seed-6 depth-4 pilot it avoided that runaway, but did not improve recognition: terminal
+  accuracy remained 6.25%, race coverage fell from 9.38% to 3.12% by epoch 2 with no correct emitted answers, and epoch-2
+  prefix NLL was [2.996, 19.735]. Across 112 shadows, only 11.6% of sampled route openings helped; mean signed
+  open-minus-closed loss was +0.0063 (SD 0.0644). The counterfactual/pathwise gradient cosine was 0.0038, and its raw
+  norm was 1.6% of pathwise norm. At epoch 1 the per-layer mean route effects differed, but each was small relative to
+  its shadow-to-shadow spread. A separate depth-2 smoke had a 1.17e−5 gradient-norm ratio and cosine −0.002. This is
+  new evidence about estimator scale and route heterogeneity, not above-chance learning.
+
+  THEORY §§131–132 derive why the total-estimator variance scales with candidate count, separate normalized-mean bias
+  from update magnitude, and specify layerwise loss-delta/norm/cosine diagnostics. A weak Bayesian prior is appropriate
+  at initialization, but these small shadow samples remain uncertain; the step size also needs an optimizer-metric trust
+  region. The next discriminating work is to increase shadow samples or stratify them by layer and route score, then
+  assess posterior sign and gradient variance before choosing any stronger gain. Hard silent-neuron firing still lacks
+  its own counterfactual boundary term. Earlier: the weight race
   reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
@@ -643,17 +664,15 @@ The synthesis now treats topology and representation as separate experimental ax
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
-- **Deep time-vector networks on real streams (§110–§111):** E83/E84 use strict adjacent-layer event chains and deepest-only
-  inference. E83 first compares sequence supervision schemes at depth 4 because its earlier depth-2 runs averaged softmax
-  across silent and padded time; that objective confounds sequence length and batching. Two-epoch integral and max controls
-  are near chance; the first race smoke is also near chance, so the learned deep model has not shown trainability. The
-  stable-cause race-only control also ended near chance (3.12% max accuracy and 4.8% emitted accuracy at 97.66% coverage).
-  All current objectives share fixed-support gradients. `TVLayer` hard-detaches content gates and computes spike
-  identities in `no_grad`, so silent routes/units get no boundary credit. A 32-route final-readout shadow probe on four
-  untrained examples found 31 exactly zero max-pooling loss differences; §129 derives the winner-gap dead zone. Before
-  scaling data or depth, save a trained checkpoint, shadow hidden threshold crossings through downstream layers, and
-  compare max/integral/smooth-max heads using sampled-prefix proper log loss. Then calibrate the first-crossing stopping
-  policy on held-out speakers. E84 remains the guarded
+- **Deep time-vector networks on real streams (§§130–§132):** E83/E84 use strict adjacent-layer event chains and deepest-only
+  inference. The old mean-over-silent-and-padded-time objective was confounded by sequence duration and batching. E83 now
+  trains a causal prefix posterior with proper log loss at stratified queries in a fixed physical-time window; it then
+  evaluates the first-crossing race separately. The 128/32 depth-4 pathwise control remained near chance (6.25% terminal
+  accuracy). An unbiased total counterfactual estimator over roughly 480k near routes with 128 shadows per epoch exploded
+  in loss and activity. A clipped normalized local route update avoided that runaway but did not improve accuracy; its
+  matched seed-6 run stayed at 6.25%, with epoch-2 prefix NLL [2.996, 19.735] and only 11.6% helpful openings. Shadow
+  effects varied by layer and had low gradient alignment, so gain selection remains open. Hard silent-unit firing and
+  candidate edges outside the fixed route mask still lack boundary credit. E84 remains the guarded
   day-5 market likelihood comparison;
   no new market result exists.
 - **Anytime classification of sparse streams (§§119–§129):** for a true prefix posterior, emitting at its first
@@ -863,7 +882,10 @@ mixture scores 1.613 on the same test segment, a 0.186 bpc lead. The four-layer 
 on validation and scored 1.9083 held-out test bpc after 4,882 updates, 0.1090 above the LSTM's test score. The Transformer has 3.24M parameters and used four
 passes; the LSTM has 1.20M parameters and used six. E79 combines six native experts and copy memory. These comparisons
 share data and test segments, but not model capacity or training budget. E79 supplies the strongest completed
-project-internal real-language result; compute-matched and deep-model comparisons remain open.
+project-internal real-language result; compute-matched and deep-model comparisons remain open. E79's expert-race
+mixture validates credit for allocating among component predictors, not gradient training through a deep event stack.
+E77 is the separate deep time-vector language model with vector messages, delays, and causal key–value retrieval; it has
+not produced a completed language-model result yet.
 
 Depth is now a first-class variable in E77. Each deeper layer receives the retained event stream, appends its newly
 emitted events, and also receives sparse raw-input skips; it does not add a dense per-token residual computation. THEORY
@@ -1100,7 +1122,7 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | depth-4 two-epoch controls near chance; race-only false confidence; final-readout max-pool shadows mostly invisible at random initialization (§129) |
+| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; pathwise and normalized-counterfactual depth-4 runs stayed at 6.25%; inverse-probability route credit destabilized (§§130–132) |
 | E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 

@@ -58,7 +58,8 @@ class TVLayer(nn.Module):
     def lam(self):
         return torch.complex(-torch.exp(self.log_rate), self.freq)
 
-    def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None, return_routes=False):
+    def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None, return_routes=False,
+                return_route_graph=False):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -70,6 +71,11 @@ class TVLayer(nn.Module):
         if return_routes:
             route_info = {"event_index": pe.detach(), "receiver": pj.detach(),
                           "score": r.detach()}
+            if return_route_graph:
+                # Opt-in only: lets a caller form the boundary derivative for
+                # hard-gated routes. Keeping every candidate score in the graph
+                # costs memory, so normal training and E83 probes leave this off.
+                route_info["score_live"] = r
         if self.gate:
             if force_route is not None and drop_route is not None:
                 raise ValueError("force_route and drop_route are mutually exclusive")
@@ -111,6 +117,9 @@ class TVLayer(nn.Module):
         if self.spiking:
             F = torch.zeros(G, B, M, dtype=torch.bool); FR = torch.zeros(G, B, M); RP = torch.zeros(G, B, M)
         Xk = X.unbind(0)                                                       # one backward op instead of G slices
+        if return_routes:
+            peak_voltage = Vp.new_tensor(float("-inf"))
+            peak_threshold_margin = Vp.new_tensor(float("-inf"))
         for k in range(G):
             z = z * E1 + Xk[k]
             if self.normalize and not self.spiking:
@@ -122,6 +131,10 @@ class TVLayer(nn.Module):
             zs.append(z)
             with torch.no_grad():
                 R.mul_(eR); Vd = V - th * R
+                if return_routes:
+                    peak_voltage = torch.maximum(peak_voltage, V.detach().amax())
+                    peak_threshold_margin = torch.maximum(
+                        peak_threshold_margin, (Vd - th).detach().amax())
                 fire = Vd >= th
                 frac = ((th - Vp) / (Vd - Vp).clamp(min=1e-6)).clamp(0, 1)
                 F[k] = fire; FR[k] = frac; RP[k] = R * torch.exp((1 - frac) / TAU_R) * fire
@@ -131,6 +144,10 @@ class TVLayer(nn.Module):
             output = (torch.stack(Vs), len(pe) / B)
             return (*output, route_info) if return_routes else output
         kk, bb, jj = F.nonzero(as_tuple=True)
+        if route_info is not None:
+            route_info["peak_voltage"] = float(peak_voltage)
+            route_info["peak_threshold_margin"] = float(peak_threshold_margin)
+            route_info["firing_fraction"] = float(F.float().mean())
         good = kk >= 1; kk, bb, jj = kk[good], bb[good], jj[good]
         frac, Rpre = FR[kk, bb, jj], RP[kk, bb, jj]
         Z = torch.stack(zs); zprev = Z[kk - 1, bb, jj]                          # state at the grid point before the crossing

@@ -278,12 +278,13 @@ class TVLM(nn.Module):
             self.memory = AdaptiveMemoryLayer(heads, dh, delta, coupling_rank)
         self.head = nn.Sequential(nn.Linear(f + (heads * dh if retrieval else 0), 256), nn.GELU(), nn.Linear(256, A))
 
-    def forward(self, x):
+    def forward(self, x, collect_routes=False, route_override=None):
         """x: (B, L) characters -> logits (B, L, A) for x[:, 1:] (position k predicts character k + 1), and work."""
         B, L = x.shape; G = L + 1
         eb = torch.arange(B).repeat_interleave(L); ei = x.reshape(-1); et = torch.arange(L).float().repeat(B) + 0.5
         ev = self.emb(ei)
         messages, layer_spikes, hm_stats = [], [], []
+        route_candidates, route_inputs = [], []
         be = je = te = ye = None
         for i, layer in enumerate(self.layers):
             if i == 0:
@@ -292,7 +293,22 @@ class TVLM(nn.Module):
                 previous_units = self.M1 + (i - 1) * self.M2
                 ib = torch.cat([be, eb]); ij = torch.cat([je, ei + previous_units])
                 it = torch.cat([te, et]); iy = torch.cat([ye, ev])
-            (new_b, new_j, new_t, new_y), msg = layer(ib, ij, it, iy, B, G)
+            force_route = drop_route = None
+            if route_override is not None and route_override[0] == i:
+                _, event_index, receiver, active = route_override
+                if active:
+                    force_route = (event_index, receiver)
+                else:
+                    drop_route = (event_index, receiver)
+            result = layer(ib, ij, it, iy, B, G, force_route=force_route,
+                           drop_route=drop_route, return_routes=collect_routes,
+                           return_route_graph=collect_routes)
+            if collect_routes:
+                (new_b, new_j, new_t, new_y), msg, route_info = result
+                route_candidates.append(route_info)
+                route_inputs.append((ib, ij, it, iy))
+            else:
+                (new_b, new_j, new_t, new_y), msg = result
             previous_units = 0 if i == 0 else self.M1 + (i - 1) * self.M2
             new_j = new_j + previous_units
             if be is None:
@@ -309,6 +325,10 @@ class TVLM(nn.Module):
         f = torch.cat([h, self.emb(x)], -1)
         work = {"msgs_per_char": [m / L for m in messages] + [read_msg / L],
                 "spikes_per_char": layer_spikes}
+        if collect_routes:
+            # Transient training-only tensors used by the optional shadow probe.
+            work["route_candidates"] = route_candidates
+            work["route_inputs"] = route_inputs
         if hm_stats:
             work["hopfield_pairs_per_char"] = sum(s["hopfield_pairs"] for s in hm_stats) / (B * L)
             work["hopfield_active_per_char"] = sum(s["hopfield_active"] for s in hm_stats) / (B * L)
@@ -386,11 +406,28 @@ def main():
     ap.add_argument("--event_hopfield", type=int, default=1, help="causal associative updates over emitted event payloads")
     ap.add_argument("--event_candidate_k", type=int, default=0,
                     help="optional top-k event aggregation after score computation; 0 keeps all past events")
+    ap.add_argument("--cf_shadows_per_layer", type=int, default=0,
+                    help="near-boundary hard-route toggles per hidden layer and minibatch; 0 disables the probe")
+    ap.add_argument("--cf_band", type=float, default=0.5,
+                    help="score distance from zero defining candidate routes for shadow evaluation")
+    ap.add_argument("--cf_sigma", type=float, default=0.25,
+                    help="logistic route-noise scale used by the boundary derivative")
+    ap.add_argument("--cf_weight", type=float, default=1.0,
+                    help="scale of the normalized counterfactual boundary-gradient diagnostic")
+    ap.add_argument("--cf_delta_clip", type=float, default=5.0,
+                    help="clip on batch-mean open-minus-closed token loss difference")
+    ap.add_argument("--cf_lr", type=float, default=0.0,
+                    help="separate post-Adam counterfactual step; leave at 0 until shadow statistics justify it")
+    ap.add_argument("--cf_grad_clip", type=float, default=1.0,
+                    help="global norm cap for an enabled counterfactual step")
     ap.add_argument("--lr", type=float, default=2e-3)
     ap.add_argument("--valid", type=int, default=200_000)
     ap.add_argument("--test", type=int, default=1_000_000)
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
+    if (a.cf_shadows_per_layer < 0 or a.cf_band <= 0 or a.cf_sigma <= 0
+            or a.cf_delta_clip <= 0 or a.cf_lr < 0 or a.cf_grad_clip <= 0):
+        raise ValueError("counterfactual count must be nonnegative; band, sigma, delta clip, and grad clip must be positive; cf_lr must be nonnegative")
     os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed)
     x = S1.load(); train = torch.tensor(x[:a.D]).long()
     valid = torch.tensor(x[90_000_000:90_000_000 + a.valid]).long(); test = torch.tensor(x[95_000_000:95_000_000 + a.test]).long()
@@ -401,11 +438,70 @@ def main():
     res = {"args": vars(a), "params": sum(p.numel() for p in net.parameters()), "steps": steps, "valid_curve": []}
     print(json.dumps({"params": res["params"], "steps": steps}), flush=True)
     best = (float("inf"), None, -1)
+    cf_rng = np.random.default_rng(a.seed + 77_003)
+    cf_interval = None
+    def new_cf_interval():
+        return {"eligible": 0, "shadows": 0, "sum": 0.0, "sq": 0.0,
+                "helpful": 0, "layer_n": np.zeros(a.depth, dtype=np.int64),
+                "layer_sum": np.zeros(a.depth), "layer_sq": np.zeros(a.depth),
+                "layer_helpful": np.zeros(a.depth), "cf_norm": 0.0,
+                "path_norm": 0.0, "cosine": 0.0, "grad_batches": 0,
+                "applied_norm": 0.0, "applied_batches": 0, "clipped": 0}
+    cf_interval = new_cf_interval()
     for step in range(steps):
         idx = rng.integers(0, a.D - a.L - 1, a.bs)
         X = torch.stack([train[i:i + a.L] for i in idx]); Y = torch.stack([train[i + 1:i + a.L + 1] for i in idx])
-        logits, _ = net(X)
+        collect_routes = a.cf_shadows_per_layer > 0
+        logits, work = net(X, collect_routes=collect_routes)
         loss = nn.functional.cross_entropy(logits.reshape(-1, A), Y.reshape(-1))
+        params = [p for p in net.parameters() if p.requires_grad]
+        cf_grads = None
+        if collect_routes:
+            base_loss = loss.detach()
+            cf_proxy = loss.new_zeros(())
+            step_shadows = 0
+            for layer_index, route_info in enumerate(work["route_candidates"]):
+                scores = route_info["score"].cpu().numpy()
+                near = np.flatnonzero(np.abs(scores) <= a.cf_band)
+                cf_interval["eligible"] += len(near)
+                if not len(near):
+                    continue
+                take = min(a.cf_shadows_per_layer, len(near))
+                selected = cf_rng.choice(near, size=take, replace=False)
+                for route_index in np.atleast_1d(selected):
+                    event_index = int(route_info["event_index"][route_index])
+                    receiver = int(route_info["receiver"][route_index])
+                    score_value = float(scores[route_index])
+                    active = score_value > 0.0
+                    with torch.no_grad():
+                        shadow_logits, _ = net(
+                            X, route_override=(layer_index, event_index, receiver, not active))
+                        shadow_loss = nn.functional.cross_entropy(
+                            shadow_logits.reshape(-1, A), Y.reshape(-1))
+                    # Signed effect is L(open)-L(closed), through every later
+                    # event layer, the readout state, and all causal token losses.
+                    delta = float(base_loss - shadow_loss) if active else float(shadow_loss - base_loss)
+                    clipped_delta = float(np.clip(delta, -a.cf_delta_clip, a.cf_delta_clip))
+                    cf_interval["shadows"] += 1
+                    step_shadows += 1
+                    cf_interval["sum"] += delta
+                    cf_interval["sq"] += delta * delta
+                    cf_interval["helpful"] += int(delta < 0.0)
+                    cf_interval["layer_n"][layer_index] += 1
+                    cf_interval["layer_sum"][layer_index] += delta
+                    cf_interval["layer_sq"][layer_index] += delta * delta
+                    cf_interval["layer_helpful"][layer_index] += int(delta < 0.0)
+                    cf_interval["clipped"] += int(abs(delta) > a.cf_delta_clip)
+                    live_score = route_info["score_live"][route_index]
+                    p_open = torch.sigmoid(live_score.detach() / a.cf_sigma)
+                    boundary = p_open * (1.0 - p_open) / a.cf_sigma * clipped_delta
+                    # Per-layer sample mean avoids an inverse-probability factor
+                    # over the enormous candidate set.
+                    cf_proxy = cf_proxy + a.cf_weight * boundary * (
+                        live_score - live_score.detach()) / take
+            if step_shadows:
+                cf_grads = torch.autograd.grad(cf_proxy, params, retain_graph=True,
+                                               allow_unused=True)
         opt.zero_grad(); loss.backward()
         layer_grad = [math.sqrt(sum(float(p.grad.detach().square().sum()) for p in layer.parameters() if p.grad is not None))
                       for layer in net.layers]
@@ -419,14 +515,64 @@ def main():
         for i, layer in enumerate(net.event_memories):
             hopfield_grad[i]["delay"] = (float(layer.log_delay_gain.grad.detach().abs())
                                          if layer.log_delay_gain.grad is not None else 0.0)
+        if cf_grads is not None:
+            cf_norm = math.sqrt(sum(float(g.detach().square().sum()) for g in cf_grads if g is not None))
+            path_norm = math.sqrt(sum(float(p.grad.detach().square().sum())
+                                       for p in params if p.grad is not None))
+            dot = sum(float((g.detach() * p.grad.detach()).sum())
+                      for p, g in zip(params, cf_grads) if g is not None and p.grad is not None)
+            cf_interval["cf_norm"] += cf_norm
+            cf_interval["path_norm"] += path_norm
+            cf_interval["cosine"] += dot / (cf_norm * path_norm) if cf_norm and path_norm else 0.0
+            cf_interval["grad_batches"] += 1
         nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
+        if cf_grads is not None and a.cf_lr:
+            cf_norm = math.sqrt(sum(float(g.detach().square().sum()) for g in cf_grads if g is not None))
+            cf_scale = min(1.0, a.cf_grad_clip / max(cf_norm, 1e-12))
+            with torch.no_grad():
+                for param, grad in zip(params, cf_grads):
+                    if grad is not None:
+                        param.add_(grad, alpha=-a.cf_lr * cf_scale)
+            cf_interval["applied_norm"] += a.cf_lr * min(cf_norm, a.cf_grad_clip)
+            cf_interval["applied_batches"] += 1
         if (step + 1) % max(steps // 10, 1) == 0 or step == steps - 1:
             vb, wk = score(net, valid, a.L, a.bs)
             row = {"step": step + 1, "train_bpc": loss.detach().item() / math.log(2), "valid_bpc": vb, **wk,
                    "event_layer_grad_norms": layer_grad, "retrieval_grad_norm": retrieval_grad,
                    "event_hopfield_grad_norms": hopfield_grad,
                    "wall_s": round(time.time() - t0)}
+            if collect_routes:
+                count = max(cf_interval["shadows"], 1)
+                row.update({
+                    "event_layer_peak_voltage": [round(info["peak_voltage"], 6)
+                                                 for info in work["route_candidates"]],
+                    "event_layer_peak_threshold_margin": [round(info["peak_threshold_margin"], 6)
+                                                           for info in work["route_candidates"]],
+                    "event_layer_firing_fraction": [round(info["firing_fraction"], 8)
+                                                    for info in work["route_candidates"]],
+                    "counterfactual_near_routes": int(cf_interval["eligible"]),
+                    "counterfactual_route_shadows": int(cf_interval["shadows"]),
+                    "counterfactual_mean_open_minus_closed_loss": round(cf_interval["sum"] / count, 8),
+                    "counterfactual_shadow_delta_std": round(math.sqrt(max(
+                        cf_interval["sq"] / count - (cf_interval["sum"] / count) ** 2, 0.0)), 8),
+                    "counterfactual_fraction_opening_improves": round(cf_interval["helpful"] / count, 4),
+                    "counterfactual_layer_shadow_counts": cf_interval["layer_n"].tolist(),
+                    "counterfactual_layer_mean_open_minus_closed_loss": [
+                        round(float(cf_interval["layer_sum"][i] / max(cf_interval["layer_n"][i], 1)), 8)
+                        if cf_interval["layer_n"][i] else None for i in range(a.depth)],
+                    "counterfactual_layer_fraction_opening_improves": [
+                        round(float(cf_interval["layer_helpful"][i] / cf_interval["layer_n"][i]), 4)
+                        if cf_interval["layer_n"][i] else None for i in range(a.depth)],
+                    "counterfactual_grad_norm": round(cf_interval["cf_norm"] / max(cf_interval["grad_batches"], 1), 8),
+                    "pathwise_grad_norm_on_shadow_batches": round(cf_interval["path_norm"] / max(cf_interval["grad_batches"], 1), 8),
+                    "counterfactual_to_pathwise_norm_ratio": round(cf_interval["cf_norm"] / max(cf_interval["path_norm"], 1e-12), 8),
+                    "counterfactual_pathwise_cosine": round(cf_interval["cosine"] / max(cf_interval["grad_batches"], 1), 6),
+                    "counterfactual_clipped_delta_fraction": round(cf_interval["clipped"] / count, 4),
+                    "counterfactual_applied_update_norm_per_batch": round(
+                        cf_interval["applied_norm"] / max(cf_interval["applied_batches"], 1), 8),
+                })
             res["valid_curve"].append(row); print(json.dumps(row), flush=True)
+            cf_interval = new_cf_interval()
             if vb < best[0]:
                 best = (vb, {k: v.clone() for k, v in net.state_dict().items()}, step + 1)
     net.load_state_dict(best[1])
@@ -434,6 +580,8 @@ def main():
     _, _, pv, lv = score(net, valid, a.L, a.bs, dump=True)
     tag = (f"tvlm_D{a.D}_p{a.passes:g}_r{a.retrieval}_M{a.M1}-{a.M2}-{a.Mr}"
            f"_depth{a.depth}_c{a.coupling_rank}_eh{a.event_hopfield}_ek{a.event_candidate_k}_s{a.seed}")
+    if a.cf_shadows_per_layer:
+        tag += f"_cf{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}_lr{a.cf_lr:g}"
     np.save(os.path.join(OUT, tag + "_ptrue_test.npy"), pt); np.save(os.path.join(OUT, tag + "_ptrue_valid.npy"), pv)
     np.save(os.path.join(OUT, tag + "_logp_test.npy"), lt); np.save(os.path.join(OUT, tag + "_logp_valid.npy"), lv)
     res.update({"best_step": best[2], "best_valid_bpc": best[0], "test_bpc": tb, "test_work": wk, "wall_s": round(time.time() - t0)})

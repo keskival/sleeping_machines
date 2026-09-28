@@ -506,7 +506,13 @@ def main():
     ap.add_argument("--cf_sigma", type=float, default=0.25,
                     help="logistic gate-noise scale used by the counterfactual boundary derivative")
     ap.add_argument("--cf_weight", type=float, default=1.0,
-                    help="multiplier on the sampled, inverse-probability-weighted boundary-gradient estimate")
+                    help="scale on the sampled, normalized boundary-gradient signal")
+    ap.add_argument("--cf_lr", type=float, default=1e-3,
+                    help="separate SGD step size for the clipped local counterfactual update")
+    ap.add_argument("--cf_grad_clip", type=float, default=1.0,
+                    help="global norm cap for each local counterfactual gradient")
+    ap.add_argument("--cf_delta_clip", type=float, default=5.0,
+                    help="absolute cap on the shadow loss difference in the local boundary signal")
     ap.add_argument("--race_threshold", type=float, default=0.6,
                     help="minimum class softmax probability that triggers an output event")
     ap.add_argument("--race_temperature", type=float, default=0.03,
@@ -534,8 +540,11 @@ def main():
             or not math.isfinite(a.prefix_horizon_ms) or a.prefix_horizon_ms <= 0.0):
         raise ValueError("prefix_samples and prefix_horizon_ms must be positive; prefix_window_start must be in [0, 1)")
     if (a.cf_shadows_per_layer < 0 or not math.isfinite(a.cf_band) or a.cf_band <= 0.0
-            or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0):
-        raise ValueError("counterfactual shadow count must be nonnegative; cf_band and cf_sigma must be positive")
+            or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0
+            or not math.isfinite(a.cf_lr) or a.cf_lr < 0.0
+            or not math.isfinite(a.cf_grad_clip) or a.cf_grad_clip <= 0.0
+            or not math.isfinite(a.cf_delta_clip) or a.cf_delta_clip <= 0.0):
+        raise ValueError("counterfactual count must be nonnegative; band, sigma, loss-difference clip, and gradient clip must be positive; cf_lr must be nonnegative")
     os.makedirs(OUT, exist_ok=True)
     torch.manual_seed(a.seed)
     rng = np.random.default_rng(a.seed)
@@ -568,8 +577,21 @@ def main():
         net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
         cf_eligible_ep = cf_shadow_ep = 0
         cf_abs_delta_ep = cf_signed_delta_ep = 0.0
+        cf_delta_sq_ep = cf_boundary_sensitivity_ep = cf_boundary_coeff_abs_ep = 0.0
         cf_helpful_ep = 0
-        cf_grad_norms_ep = cf_path_cosines_ep = cf_relative_norms_ep = None
+        cf_clipped_ep = cf_local_update_norm_ep = cf_local_update_batches_ep = 0
+        cf_raw_grad_norm_ep = cf_path_grad_norm_ep = cf_grad_ratio_ep = cf_grad_cosine_ep = 0.0
+        cf_grad_stats_batches_ep = 0
+        cf_layer_grad_norm_ep = np.zeros(a.depth)
+        cf_layer_path_norm_ep = np.zeros(a.depth)
+        cf_layer_grad_ratio_ep = np.zeros(a.depth)
+        cf_layer_grad_cosine_ep = np.zeros(a.depth)
+        cf_layer_stats_count_ep = np.zeros(a.depth)
+        cf_layer_shadow_count_ep = np.zeros(a.depth)
+        cf_layer_delta_sum_ep = np.zeros(a.depth)
+        cf_layer_delta_sq_ep = np.zeros(a.depth)
+        cf_layer_helpful_ep = np.zeros(a.depth)
+        cf_layer_boundary_coeff_ep = np.zeros(a.depth)
         perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
@@ -612,6 +634,8 @@ def main():
             loss = main_loss + a.aux_weight * aux_loss
             cf_eligible = cf_shadow_count = 0
             cf_abs_delta_sum = 0.0
+            cf_clipped_count = 0
+            cf_grads = None
             if event_readout and a.cf_shadows_per_layer:
                 base_total = (main_loss + a.aux_weight * aux_loss).detach()
                 cf_proxy = main_loss.new_zeros(())
@@ -647,49 +671,93 @@ def main():
                         delta = (base_total - shadow_total) if active else (shadow_total - base_total)
                         delta_value = float(delta)
                         cf_abs_delta_sum += abs(delta_value)
+                        cf_delta_sq_ep += delta_value * delta_value
                         cf_signed_delta_ep += delta_value
                         cf_helpful_ep += int(delta_value < 0.0)
                         cf_shadow_count += 1
+                        cf_clipped_count += int(abs(delta_value) > a.cf_delta_clip)
+                        cf_layer_shadow_count_ep[k] += 1
+                        cf_layer_delta_sum_ep[k] += delta_value
+                        cf_layer_delta_sq_ep[k] += delta_value * delta_value
+                        cf_layer_helpful_ep[k] += int(delta_value < 0.0)
 
                         source_unit = source_units[event_index]
                         live_score = (net.layers[k].q[receiver] * source_payload[event_index]).sum()
                         live_score = live_score + net.layers[k].c[source_unit, receiver]
                         p_open = torch.sigmoid(live_score.detach() / a.cf_sigma)
-                        boundary_derivative = (p_open * (1.0 - p_open) / a.cf_sigma) * delta.detach()
-                        # Uniformly sampled near-boundary candidates with this
-                        # multiplier estimate the sum of their boundary terms.
-                        inclusion_correction = len(near) / take
-                        cf_proxy = cf_proxy + (boundary_derivative * inclusion_correction
-                                               * (live_score - live_score.detach()))
-                loss = loss + a.cf_weight * cf_proxy
-                if i0 == 0 and cf_shadow_count:
-                    groups = [list(layer.parameters()) for layer in net.layers]
-                    params = [p for group in groups for p in group]
-                    cf_grads = torch.autograd.grad(cf_proxy, params, retain_graph=True,
+                        clipped_delta = float(np.clip(delta_value, -a.cf_delta_clip, a.cf_delta_clip))
+                        boundary_derivative = (p_open * (1.0 - p_open) / a.cf_sigma) * clipped_delta
+                        cf_boundary_sensitivity_ep += float(
+                            p_open * (1.0 - p_open) / a.cf_sigma)
+                        cf_boundary_coeff_abs_ep += abs(float(boundary_derivative))
+                        cf_layer_boundary_coeff_ep[k] += abs(float(boundary_derivative))
+                        # Average sampled boundary terms within each layer.
+                        # This deliberately estimates a normalized local
+                        # update, not the sum over every candidate in the band.
+                        cf_proxy = cf_proxy + (a.cf_weight * boundary_derivative
+                                               * (live_score - live_score.detach()) / take)
+                cf_grads = None
+                if cf_shadow_count and a.cf_lr:
+                    model_params = [p for p in net.parameters() if p.requires_grad]
+                    cf_grads = torch.autograd.grad(cf_proxy, model_params, retain_graph=True,
                                                    allow_unused=True)
-                    path_grads = torch.autograd.grad(
-                        main_loss + a.aux_weight * aux_loss, params,
-                        retain_graph=True, allow_unused=True)
-                    cf_grad_norms_ep, cf_path_cosines_ep, cf_relative_norms_ep = [], [], []
-                    start = 0
-                    for group in groups:
-                        stop = start + len(group)
-                        cg, pg = cf_grads[start:stop], path_grads[start:stop]
-                        csq = sum(float(g.detach().square().sum()) for g in cg if g is not None)
-                        psq = sum(float(g.detach().square().sum()) for g in pg if g is not None)
-                        dot = sum(float((c.detach() * p.detach()).sum())
-                                  for c, p in zip(cg, pg) if c is not None and p is not None)
-                        cn, pn = math.sqrt(csq), math.sqrt(psq)
-                        cf_grad_norms_ep.append(round(cn, 6))
-                        cf_path_cosines_ep.append(round(dot / (cn * pn), 6) if cn and pn else None)
-                        cf_relative_norms_ep.append(round(cn / pn, 6) if pn else None)
-                        start = stop
+                    cf_sq = sum(float(g.detach().square().sum()) for g in cf_grads if g is not None)
+                    cf_norm = math.sqrt(cf_sq)
+                    cf_scale = min(1.0, a.cf_grad_clip / max(cf_norm, 1e-12))
+                    cf_clipped_ep += cf_clipped_count
+                else:
+                    model_params = []
+                    cf_scale = 1.0
+                cf_clipped_ep += 0 if cf_grads is not None else cf_clipped_count
             cf_eligible_ep += cf_eligible
             cf_shadow_ep += cf_shadow_count
             cf_abs_delta_ep += cf_abs_delta_sum
             opt.zero_grad(); loss.backward()
+            if cf_grads is not None:
+                path_sq = dot = 0.0
+                for param, cf_grad in zip(model_params, cf_grads):
+                    path_grad = param.grad
+                    if path_grad is None:
+                        continue
+                    path_sq += float(path_grad.detach().square().sum())
+                    if cf_grad is not None:
+                        dot += float((cf_grad.detach() * path_grad.detach()).sum())
+                path_norm = math.sqrt(path_sq)
+                cf_raw_grad_norm_ep += cf_norm
+                cf_path_grad_norm_ep += path_norm
+                cf_grad_ratio_ep += cf_norm / path_norm if path_norm else 0.0
+                cf_grad_cosine_ep += dot / (cf_norm * path_norm) if cf_norm and path_norm else 0.0
+                cf_grad_stats_batches_ep += 1
+                cf_grad_by_id = {id(p): g for p, g in zip(model_params, cf_grads)}
+                for li, layer in enumerate(net.layers):
+                    layer_cf_sq = layer_path_sq = layer_dot = 0.0
+                    for param in layer.parameters():
+                        cf_grad = cf_grad_by_id.get(id(param))
+                        path_grad = param.grad
+                        if path_grad is not None:
+                            layer_path_sq += float(path_grad.detach().square().sum())
+                        if cf_grad is not None:
+                            layer_cf_sq += float(cf_grad.detach().square().sum())
+                            if path_grad is not None:
+                                layer_dot += float((cf_grad.detach() * path_grad.detach()).sum())
+                    layer_cf_norm = math.sqrt(layer_cf_sq)
+                    layer_path_norm = math.sqrt(layer_path_sq)
+                    cf_layer_grad_norm_ep[li] += layer_cf_norm
+                    cf_layer_path_norm_ep[li] += layer_path_norm
+                    if layer_path_norm:
+                        cf_layer_grad_ratio_ep[li] += layer_cf_norm / layer_path_norm
+                    if layer_cf_norm and layer_path_norm:
+                        cf_layer_grad_cosine_ep[li] += layer_dot / (layer_cf_norm * layer_path_norm)
+                    cf_layer_stats_count_ep[li] += 1
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
+            if cf_grads is not None:
+                with torch.no_grad():
+                    for param, grad in zip(model_params, cf_grads):
+                        if grad is not None:
+                            param.add_(grad, alpha=-a.cf_lr * cf_scale)
+                cf_local_update_norm_ep += a.cf_lr * min(cf_norm, a.cf_grad_clip)
+                cf_local_update_batches_ep += 1
             tl += float(main_loss.detach()); aux_tl += float(aux_loss.detach())
 
         net.eval(); max_ok = 0; tap_ok = np.zeros(a.depth)
@@ -782,7 +850,7 @@ def main():
                                 fallback_count += int(not early)
                                 anytime_correct += correct
                                 anytime_latency_sum += float(decision.time)
-                                race_payload_decode_correct += int(
+                                race_payload_decode_correct += int(early and
                                     max(range(len(decision.posterior)), key=decision.posterior.__getitem__)
                                     == decision.class_id)
                                 anytime_payload_decode_correct += int(
@@ -922,16 +990,65 @@ def main():
                 cf_signed_delta_ep / max(cf_shadow_ep, 1), 6)
             row["counterfactual_fraction_opening_improves_loss"] = round(
                 cf_helpful_ep / max(cf_shadow_ep, 1), 4)
-            row["first_batch_counterfactual_layer_grad_norms"] = cf_grad_norms_ep
-            row["first_batch_counterfactual_vs_pathwise_cosines"] = cf_path_cosines_ep
-            row["first_batch_counterfactual_to_pathwise_norm_ratios"] = cf_relative_norms_ep
+            row["counterfactual_shadow_delta_std"] = round(math.sqrt(
+                max(cf_delta_sq_ep / max(cf_shadow_ep, 1)
+                    - (cf_signed_delta_ep / max(cf_shadow_ep, 1)) ** 2, 0.0)), 6)
+            row["counterfactual_shadow_delta_signal_to_noise"] = round(
+                (cf_signed_delta_ep / max(cf_shadow_ep, 1)) /
+                max(math.sqrt(max(cf_delta_sq_ep / max(cf_shadow_ep, 1)
+                                  - (cf_signed_delta_ep / max(cf_shadow_ep, 1)) ** 2, 0.0)), 1e-12), 6)
+            row["counterfactual_layer_shadow_counts"] = cf_layer_shadow_count_ep.astype(int).tolist()
+            row["counterfactual_layer_mean_open_minus_closed_loss"] = [
+                round(float(cf_layer_delta_sum_ep[k] / cf_layer_shadow_count_ep[k]), 7)
+                if cf_layer_shadow_count_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_layer_shadow_delta_std"] = [
+                round(float(math.sqrt(max(cf_layer_delta_sq_ep[k] / cf_layer_shadow_count_ep[k]
+                                          - (cf_layer_delta_sum_ep[k] / cf_layer_shadow_count_ep[k]) ** 2,
+                                          0.0))), 7)
+                if cf_layer_shadow_count_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_layer_fraction_opening_improves"] = [
+                round(float(cf_layer_helpful_ep[k] / cf_layer_shadow_count_ep[k]), 4)
+                if cf_layer_shadow_count_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_layer_mean_abs_boundary_coefficient"] = [
+                round(float(cf_layer_boundary_coeff_ep[k] / cf_layer_shadow_count_ep[k]), 7)
+                if cf_layer_shadow_count_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_mean_gate_boundary_sensitivity"] = round(
+                cf_boundary_sensitivity_ep / max(cf_shadow_ep, 1), 6)
+            row["counterfactual_mean_abs_clipped_boundary_coefficient"] = round(
+                cf_boundary_coeff_abs_ep / max(cf_shadow_ep, 1), 6)
+            row["counterfactual_clipped_delta_fraction"] = round(
+                cf_clipped_ep / max(cf_shadow_ep, 1), 4)
+            row["counterfactual_local_update_norm_per_batch"] = round(
+                cf_local_update_norm_ep / max(cf_local_update_batches_ep, 1), 7)
+            row["counterfactual_local_update_batches"] = int(cf_local_update_batches_ep)
+            row["counterfactual_raw_grad_norm_per_batch"] = round(
+                cf_raw_grad_norm_ep / max(cf_grad_stats_batches_ep, 1), 7)
+            row["pathwise_grad_norm_per_counterfactual_batch"] = round(
+                cf_path_grad_norm_ep / max(cf_grad_stats_batches_ep, 1), 7)
+            row["counterfactual_to_pathwise_grad_norm_ratio"] = round(
+                cf_grad_ratio_ep / max(cf_grad_stats_batches_ep, 1), 7)
+            row["counterfactual_pathwise_grad_cosine"] = round(
+                cf_grad_cosine_ep / max(cf_grad_stats_batches_ep, 1), 6)
+            row["counterfactual_layer_grad_norms"] = np.divide(
+                cf_layer_grad_norm_ep, np.maximum(cf_layer_stats_count_ep, 1)).round(7).tolist()
+            row["pathwise_layer_grad_norms_on_counterfactual_batches"] = np.divide(
+                cf_layer_path_norm_ep, np.maximum(cf_layer_stats_count_ep, 1)).round(7).tolist()
+            row["counterfactual_layer_to_pathwise_norm_ratios"] = [
+                round(float(cf_layer_grad_ratio_ep[k] / cf_layer_stats_count_ep[k]), 7)
+                if cf_layer_stats_count_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_layer_pathwise_cosines"] = [
+                round(float(cf_layer_grad_cosine_ep[k] / cf_layer_stats_count_ep[k]), 6)
+                if cf_layer_stats_count_ep[k] else None for k in range(a.depth)]
         else:
             row["shd_max_over_time_acc"] = round(max_ok / len(ev), 4)
         res.setdefault("eval_output_payloads", []).append(epoch_output_payloads)
         res.setdefault("final_layer_firing", []).append({
             "epoch": ep + 1, "unit_count": net.widths[-1], "samples": epoch_firing_rasters})
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}_spk_s{a.seed}.json")
+    cf_tag = (f"_cfnorm{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}"
+              f"_w{a.cf_weight:g}_dl{a.cf_delta_clip:g}_lr{a.cf_lr:g}_gc{a.cf_grad_clip:g}"
+              if event_readout else "")
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{cf_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"
         torch.save({"args": vars(a), "model_state_dict": net.state_dict()}, checkpoint_path)
