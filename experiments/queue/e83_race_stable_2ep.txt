@@ -1,0 +1,3 @@
+# Isolate the stable log-cause gradient from the anytime fallback objective.
+# Same seed, split, depth-4 topology, subset, and two epochs as the controls.
+e83_d4_race_stable_2ep_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective race --race_threshold 0.6 --race_temperature 0.03 --race_logit_temperature 2 --race_rate 5 --race_latency_discount 1 --seed 2

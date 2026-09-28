@@ -32,9 +32,15 @@ FILES=(
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
+  experiments/e83_counterfactual_audit.py
+  experiments/plot_e83_firing.py
+  experiments/sparse_anytime_readout.py
   experiments/e84_deep_market.py
   experiments/e114_attention_bound.py
   experiments/queue/e83_e84_depth.txt
+  experiments/queue/e83_objective_controls_2ep.txt
+  experiments/queue/e83_race_stable_2ep.txt
+  experiments/queue/e83_counterfactual_readout_audit.txt
   experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt

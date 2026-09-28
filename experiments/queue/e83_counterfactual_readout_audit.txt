@@ -1,0 +1,2 @@
+# One-batch exact shadow test of near-closed E83 readout routes; no training.
+e83_counterfactual_readout_audit_s2 experiments/e83_counterfactual_audit.py --seed 2 --samples 4 --near-misses 8 --sigma 0.25
