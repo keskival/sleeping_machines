@@ -41,17 +41,26 @@ class DeepTVPP(nn.Module):
         for j in range(M):
             if not mask0[:, j].any():
                 mask0[torch.randint(NT, (), generator=gen), j] = True
+        for i0 in range(NT):
+            if not mask0[i0].any():
+                mask0[i0, torch.randint(M, (), generator=gen)] = True
         self.layers.append(A.TVLayerW(NT, M, d, d, n, dmax, mask0, True, 0.05))
         for i in range(1, depth):
             mask = torch.rand(M, M, generator=gen) < fan2
             for j in range(M):
                 if not mask[:, j].any():
                     mask[torch.randint(M, (), generator=gen), j] = True
+            for i0 in range(M):
+                if not mask[i0].any():
+                    mask[i0, torch.randint(M, (), generator=gen)] = True
             self.layers.append(A.TVLayerW(M, M, d, d, n, dmax, mask, True, 0.05))
         readout_mask = torch.rand(M, Ms, generator=gen) < readout_fan
         for j in range(Ms):
             if not readout_mask[:, j].any():
                 readout_mask[torch.randint(M, (), generator=gen), j] = True
+        for i0 in range(M):
+            if not readout_mask[i0].any():
+                readout_mask[i0, torch.randint(Ms, (), generator=gen)] = True
         self.st = A.TVLayerW(M, Ms, d, d, n, dmax, readout_mask, False, 0.3, gate_bias=1.0)
         self.norm = nn.LayerNorm(Ms)
         self.head = nn.Linear(Ms, nb * NT)
@@ -83,17 +92,24 @@ class DeepTVPP(nn.Module):
             outputs.append(out); messages.append(msg); spikes.append(len(out[2]) / (B * L))
 
         taps = []
-        for out in outputs:
+        readout_inputs = outputs if return_taps else outputs[-1:]
+        for out in readout_inputs:
             candidates.append(self.scored_pairs(self.st, out[1]))
             V, msg = self.st(out[0], out[1], out[2], out[3], B, G, w)
             messages.append(msg)
             h = self.norm(V[1:].permute(1, 0, 2))
             taps.append(nn.functional.softplus(self.head(h)).view(B, L, self.nb, NT) + 1e-6)
+        deep_messages = sum(messages[:self.depth]) + messages[-1]
+        deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
         self.work = {"msgs_per_event": [m / L for m in messages],
                      "candidate_scores_per_event": [c / L for c in candidates],
+                     "deep_msgs_per_event": deep_messages / L,
+                     "deep_candidate_scores_per_event": deep_candidates / L,
                      "spikes_per_event": spikes,
                      "state_vector_updates_per_event": G * self.layers[0].n *
-                         (self.depth * self.M + self.depth * self.st.M) / L}
+                         (self.depth * self.M + len(readout_inputs) * self.st.M) / L,
+                     "deep_state_vector_updates_per_event": G * self.layers[0].n *
+                         (self.depth * self.M + self.st.M) / L}
         return (taps[-1], taps) if return_taps else taps[-1]
 
     @staticmethod
@@ -108,6 +124,28 @@ class DeepTVPP(nn.Module):
 def grad_norm(module):
     return math.sqrt(sum(float(p.grad.detach().square().sum()) for p in module.parameters()
                          if p.grad is not None))
+
+
+def route_gradient_probe(final_loss, aux_loss, layers):
+    groups = [list(layer.parameters()) for layer in layers]
+    params = [p for group in groups for p in group]
+    final_grads = torch.autograd.grad(final_loss, params, retain_graph=True, allow_unused=True)
+    aux_grads = torch.autograd.grad(aux_loss, params, retain_graph=True, allow_unused=True)
+    out = {"final_norms": [], "aux_norms": [], "cosines": []}
+    start = 0
+    for group in groups:
+        stop = start + len(group)
+        gf, ga = final_grads[start:stop], aux_grads[start:stop]
+        final_sq = sum(float(g.detach().square().sum()) for g in gf if g is not None)
+        aux_sq = sum(float(g.detach().square().sum()) for g in ga if g is not None)
+        dot = sum(float((f.detach() * a.detach()).sum()) for f, a in zip(gf, ga)
+                  if f is not None and a is not None)
+        fn, an = math.sqrt(final_sq), math.sqrt(aux_sq)
+        out["final_norms"].append(round(fn, 6))
+        out["aux_norms"].append(round(an, 6))
+        out["cosines"].append(round(dot / (fn * an), 6) if fn and an else None)
+        start = stop
+    return out
 
 
 def main():
@@ -163,6 +201,7 @@ def main():
     best = (-float("inf"), None, 0)
     for ep in range(a.epochs):
         net.train(); order = rng.permutation(len(chunks)); loss_sum = 0.0; aux_sum = 0.0
+        route_probe = None
         gsum = np.zeros(a.depth); n_updates = 0
         for i0 in range(0, len(order), a.batch):
             parts = [[e[s:s + a.L] for e in tr[di][2]]
@@ -172,18 +211,23 @@ def main():
             main_loss = -net.ll_rates(rates, b, sp, yn).mean()
             aux_losses = [-net.ll_rates(tap, b, sp, yn).mean() for tap in tap_rates[:-1]]
             aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
+            if i0 == 0:
+                route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
             opt.zero_grad(); loss.backward()
             gsum += np.asarray([grad_norm(l) for l in net.layers]); n_updates += 1
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step()
             loss_sum += float(main_loss.detach()); aux_sum += float(aux_loss.detach())
+        training_work = net.work
         net.eval()
         score = T52.score_day(net, ev[0][2], a.L)[0]
         row = {"epoch": ep + 1, "train_nll": round(loss_sum / max(n_updates, 1), 5),
                "aux_train_nll": round(aux_sum / max(n_updates, 1), 5),
+               "first_batch_gradient_routes": route_probe,
                "val_day5_nats_per_event": float(score),
                "layer_grad_norms": (gsum / max(n_updates, 1)).round(5).tolist(),
-               "work": net.work, "wall_s": round(time.time() - t0, 1)}
+               "training_work": training_work, "inference_work": net.work,
+               "wall_s": round(time.time() - t0, 1)}
         res["epochs"].append(row); print(json.dumps(row), flush=True)
         if score > best[0]:
             best = (score, {k: v.clone() for k, v in net.state_dict().items()}, ep + 1)
