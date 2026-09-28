@@ -204,24 +204,44 @@ def fig_potential_evidence():
     online = np.array([x[3] for x in e79])
     ax_lm.plot(ds, frozen, color=BLUE, marker="o", label="E79 race mixture · frozen")
     ax_lm.plot(ds, online, color=AQUA, marker="o", ls="--", label="E79 · online adaptation")
+    ax_lm.annotate("E79 frozen", (ds[0], frozen[0]), xytext=(7, 8), textcoords="offset points",
+                   fontsize=5.8, color=BLUE)
+    ax_lm.annotate("E79 online", (ds[0], online[0]), xytext=(7, -12), textcoords="offset points",
+                   fontsize=5.8, color=AQUA)
 
     base = os.path.join(RES, "e64")
     lstm = load(os.path.join(base, "lstm_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
     lstm_10m = load(os.path.join(base, "lstm_D10000000_s512_p6_dr0.1_v.json"))["test_bpc"]
     tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
+    tf_10m_checkpoints = load(os.path.join(base, "tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json"))["checkpoints"]
+    tf_10m_latest = max(tf_10m_checkpoints, key=lambda row: row["step"])
+    tf_10m_prior = max((row for row in tf_10m_checkpoints if row["step"] < tf_10m_latest["step"]),
+                       key=lambda row: row["step"], default=None)
+    tf_10m_progress = 100 * tf_10m_latest["step"] / tf_10m_latest["of"]
+    tf_10m_delta = (tf_10m_prior["valid_bpc"] - tf_10m_latest["valid_bpc"]
+                    if tf_10m_prior is not None else None)
+    tf_10m_change_note = (f"down {tf_10m_delta:.4f} since step {tf_10m_prior['step']}; "
+                          if tf_10m_prior is not None else "")
     ax_lm.scatter([1_000_000, 10_000_000], [lstm, lstm_10m], color=ORANGE, marker="s", s=36, zorder=4,
                   label="E64b LSTM · 1M and 10M")
     ax_lm.annotate(f"10M LSTM {lstm_10m:.3f}", (10_000_000, lstm_10m), xytext=(5, 7),
                    textcoords="offset points", fontsize=6.8, color=ORANGE)
     ax_lm.scatter([1_000_000], [tf], color=GRAY, marker="D", s=34, zorder=4, label="E64b Transformer · 1M")
+    ax_lm.annotate(f"1M TF test {tf:.3f}", (1_000_000, tf), xytext=(6, 7),
+                   textcoords="offset points", fontsize=5.8, color=GRAY)
+    ax_lm.scatter([10_000_000], [tf_10m_latest["valid_bpc"]], facecolors="none", edgecolors=INK,
+                  marker="D", s=46, linewidths=1.3, zorder=5,
+                  label=f"E64b Transformer · 10M val @{tf_10m_progress:.0f}%")
+    ax_lm.annotate(f"10M 4L TF val {tf_10m_latest['valid_bpc']:.3f}",
+                   (10_000_000, tf_10m_latest["valid_bpc"]), xytext=(7, -12),
+                   textcoords="offset points", fontsize=6.2, color=INK)
     ax_lm.set_xscale("log")
     ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
     ax_lm.set_xlim(700_000, 130_000_000)
     ax_lm.set_ylim(1.35, 2.55)
     ax_lm.set_xlabel("training characters")
-    ax_lm.set_ylabel("test bits per character · lower is better")
+    ax_lm.set_ylabel("bits per character · lower is better")
     ax_lm.set_title("A · Real text8 language modeling")
-    ax_lm.legend(fontsize=6.2, loc="upper right", ncol=1)
 
     # Learned retrieval on E61's separate synthetic recall task.
     event = load(os.path.join(RES, "e61", "event_K32_n8.json"))
@@ -249,13 +269,17 @@ def fig_potential_evidence():
     fig.suptitle("Measured signals for the frontier-model hypothesis", x=0.02, ha="left", fontsize=9.5,
                  fontweight="bold")
     fig.text(0.02, 0.015,
-             "A: E79 single-seed text8 tests; K rises 5→6→7. E79 and E64b use the same data splits at 1M and 10M. "
-             "B: separate synthetic E61 recall task; dotted line marks chance (1/32).", fontsize=6.0, color=MUTED)
+             f"A: Filled markers = held-out test BPC; open diamond = 10M four-layer Transformer validation at "
+             f"{tf_10m_progress:.0f}% updates. "
+             "E79 K rises 5→6→7. B: synthetic E61 recall; dotted line = chance (1/32).", fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.018,
              "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
              fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.051,
-             "10M 4-layer Transformer: 2.5857 validation bpc at step 488/4,882 (early; final validation and test pending).",
+             f"10M 4-layer Transformer: {tf_10m_latest['valid_bpc']:.4f} validation bpc at step "
+             f"{tf_10m_latest['step']}/{tf_10m_latest['of']} ({tf_10m_progress:.0f}% updates; "
+             f"{tf_10m_change_note}"
+             "early, test pending).",
              fontsize=6.0, color=MUTED)
     fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
@@ -901,8 +925,9 @@ def build():
         "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
         "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
         "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
-        "work are not matched. The matched 10M four-layer Transformer has reached step 488/4,882 with 2.5857 validation "
-        "bpc; this is an early checkpoint, with test evaluation pending.",
+        "work are not matched. The matched 10M four-layer Transformer has reached step 976/4,882 (20%) with 2.2329 "
+        "validation bpc, down 0.3528 from its 10% checkpoint; it remains above the completed LSTM's 1.7448 validation "
+        "bpc. This is still an early checkpoint, with final validation and test evaluation pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
@@ -1040,7 +1065,8 @@ def build():
         "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
         "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and at 10M is ahead of "
         "the completed LSTM by 0.186 bpc on the same test segment; compute is not matched. The 10M four-layer Transformer "
-        "is at its first validation checkpoint (2.5857 bpc at step 488/4,882); final test and deep E77 results are pending.",
+        "has reached step 976/4,882 (20%) with validation BPC 2.2329, down from 2.5857 at 10%; final validation, test, "
+        "and deep E77 results are pending.",
     ], st)
     s.append(PageBreak())
     s += [P("Where the event paradigm wins, and where it does not", "h1"),
@@ -1519,8 +1545,9 @@ def build():
             "both best checkpoints are at the final validation point, so strict convergence is not established. At 10M, the "
             "two-layer 512-unit LSTM scores 1.7448 validation / 1.7993 test bpc (1,199,323 parameters, six passes), also with "
             "its best checkpoint at the final validation point. E79 scores 1.613 frozen on the same test segment, a single-seed "
-            "0.186 bpc lead without matched compute. The matched four-layer Transformer is at its first checkpoint, 2.5857 "
-            "validation bpc at step 488/4,882; this is early and not a test result. E77 has not yet produced a language-model "
+            "0.186 bpc lead without matched compute. The matched four-layer Transformer has reached 20% of updates, "
+            "2.2329 validation bpc at step 976/4,882, down from 2.5857 at step 488; this is early and not a test result. "
+            "E77 has not yet produced a language-model "
             "result.")]
     s += fig(FM.fig_lm_topology, W)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "

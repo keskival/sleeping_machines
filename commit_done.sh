@@ -36,6 +36,7 @@ FILES=(
   experiments/queue/run_safe.sh
   experiments/results/e64/lstm_D1000000_s256_p20_dr0.2_v.json
   experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json
+  experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
   experiments/results/e79/race_mixer_D10000000_K6_e77none.json
