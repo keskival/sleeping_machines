@@ -7,8 +7,9 @@ the deepest readout. This supplies local learning signals without allowing the
 prediction to bypass the event hierarchy.
 
 This isolates the fixed-topology depth question from the separate speaker
-equivariance question in E75.  It reports per-layer gradient norms, active
-messages, and spikes; the small pilot is not a benchmark claim.
+equivariance question in E75. It reports per-layer gradient norms, candidate
+score pairs, accepted messages, state scans, and spikes; the small pilot is not
+a benchmark claim.
 """
 import argparse
 import json
@@ -49,12 +50,18 @@ class DeepSHD(nn.Module):
             for j in range(M):
                 if not mask[:, j].any():
                     mask[torch.randint(previous_width, (), generator=gen), j] = True
+            for i0 in range(previous_width):
+                if not mask[i0].any():
+                    mask[i0, torch.randint(M, (), generator=gen)] = True
             self.layers.append(TVLayer(previous_width, M, d, d, n, dmax, mask, True, w_sd[1]))
         readout_width = max(self.widths)
         readout_mask = torch.rand(readout_width, 20, generator=gen) < readout_fan
         for j in range(20):
             if not readout_mask[:, j].any():
                 readout_mask[torch.randint(readout_width, (), generator=gen), j] = True
+        for i0 in range(readout_width):
+            if not readout_mask[i0].any():
+                readout_mask[i0, torch.randint(20, (), generator=gen)] = True
         self.ro = TVLayer(readout_width, 20, d, d, n, dmax, readout_mask, False, 0.3,
                           gate_bias=1.0, normalize=True)
 
@@ -64,7 +71,7 @@ class DeepSHD(nn.Module):
             return len(indices) * layer.M
         return int(layer.mask[indices].sum())
 
-    def forward(self, eb, ei, et, B, G):
+    def forward(self, eb, ei, et, B, G, return_taps=False):
         raw_v = self.emb(ei)
         emitted = []
         messages, spikes, candidates = [], [], []
@@ -73,25 +80,54 @@ class DeepSHD(nn.Module):
                 ib, ij, it, iv = eb, ei, et, raw_v
             else:
                 ib, ij, it, iv = emitted[-1]
-            candidates.append(self.scored_pairs(layer, ij if i else ei))
+            candidates.append(self.scored_pairs(layer, ij))
             out, msg = layer(ib, ij, it, iv, B, G)
             emitted.append(out); messages.append(msg); spikes.append(len(out[2]) / B)
 
         taps = []
-        for out in emitted:
+        readout_inputs = emitted if return_taps else emitted[-1:]
+        for out in readout_inputs:
             candidates.append(self.scored_pairs(self.ro, out[1]))
             V, msg = self.ro(out[0], out[1], out[2], out[3], B, G)
             messages.append(msg)
             taps.append(torch.softmax(V[::4], -1).mean(0))
-        scan_updates = G * self.layers[0].n * (sum(self.widths) + self.depth * self.ro.M)
+        scan_updates = G * self.layers[0].n * (sum(self.widths) + len(readout_inputs) * self.ro.M)
+        deep_scan_updates = G * self.layers[0].n * (sum(self.widths) + self.ro.M)
+        deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
+        deep_messages = sum(messages[:self.depth]) + messages[-1]
         return taps[-1], {"msgs": messages, "candidates": candidates,
                           "spikes": spikes, "tap_probs": taps,
-                          "state_vector_updates_per_utt": scan_updates}
+                          "state_vector_updates_per_utt": scan_updates,
+                          "deep_msgs_per_utt": deep_messages,
+                          "deep_candidate_scores_per_utt": deep_candidates,
+                          "deep_state_vector_updates_per_utt": deep_scan_updates}
 
 
 def grad_norm(module):
     return math.sqrt(sum(float(p.grad.detach().square().sum()) for p in module.parameters()
                          if p.grad is not None))
+
+
+def route_gradient_probe(final_loss, aux_loss, layers):
+    groups = [list(layer.parameters()) for layer in layers]
+    params = [p for group in groups for p in group]
+    final_grads = torch.autograd.grad(final_loss, params, retain_graph=True, allow_unused=True)
+    aux_grads = torch.autograd.grad(aux_loss, params, retain_graph=True, allow_unused=True)
+    out = {"final_norms": [], "aux_norms": [], "cosines": []}
+    start = 0
+    for group in groups:
+        stop = start + len(group)
+        gf, ga = final_grads[start:stop], aux_grads[start:stop]
+        final_sq = sum(float(g.detach().square().sum()) for g in gf if g is not None)
+        aux_sq = sum(float(g.detach().square().sum()) for g in ga if g is not None)
+        dot = sum(float((f.detach() * a.detach()).sum()) for f, a in zip(gf, ga)
+                  if f is not None and a is not None)
+        fn, an = math.sqrt(final_sq), math.sqrt(aux_sq)
+        out["final_norms"].append(round(fn, 6))
+        out["aux_norms"].append(round(an, 6))
+        out["cosines"].append(round(dot / (fn * an), 6) if fn and an else None)
+        start = stop
+    return out
 
 
 def stratified_limit(data, limit, rng):
@@ -162,16 +198,19 @@ def main():
     print(json.dumps({"train": len(tr), "eval": len(ev), "params": res["params"],
                       "layer_params": res["layer_params"], "load_s": round(time.time() - t0)}), flush=True)
     for ep in range(a.epochs):
-        net.train(); tl = 0.0; aux_tl = 0.0
+        net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
         perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
             eb, ei, et, y, tmax = to_events(items, a.bands, a.shift, rng, a.drop)
-            p, info = net(eb, ei, et, len(items), tmax + 2 * int(a.dmax) + 60)
+            grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
+            p, info = net(eb, ei, et, len(items), grid, return_taps=True)
             main_loss = -torch.log(p[torch.arange(len(y)), y] + 1e-8).mean()
             aux_losses = [-torch.log(tap[torch.arange(len(y)), y] + 1e-8).mean()
                           for tap in info["tap_probs"][:-1]]
             aux_loss = sum(aux_losses) if aux_losses else main_loss.new_zeros(())
+            if i0 == 0:
+                route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
             opt.zero_grad(); loss.backward()
             gsum += np.asarray([grad_norm(l) for l in net.layers])
@@ -180,7 +219,9 @@ def main():
 
         net.eval(); ok = 0; tap_ok = np.zeros(a.depth)
         st = {"msgs": np.zeros(a.depth * 2), "candidates": np.zeros(a.depth * 2),
-              "spikes": np.zeros(a.depth), "state_vector_updates_per_utt": np.zeros(1)}
+              "spikes": np.zeros(a.depth), "state_vector_updates_per_utt": np.zeros(1),
+              "deep_msgs_per_utt": np.zeros(1), "deep_candidate_scores_per_utt": np.zeros(1),
+              "deep_state_vector_updates_per_utt": np.zeros(1)}
         for layer in net.layers:
             layer.sent.zero_()
         net.ro.sent.zero_()
@@ -188,7 +229,8 @@ def main():
             for i0 in range(0, len(ev), a.bs):
                 items = ev[i0:i0 + a.bs]
                 eb, ei, et, y, tmax = to_events(items, a.bands, 0, rng, 0.0)
-                p, info = net(eb, ei, et, len(items), tmax + 2 * int(a.dmax) + 60)
+                grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
+                p, info = net(eb, ei, et, len(items), grid, return_taps=True)
                 ok += int((p.argmax(1) == y).sum())
                 for k, tap in enumerate(info["tap_probs"]):
                     tap_ok[k] += int((tap.argmax(1) == y).sum())
@@ -199,9 +241,13 @@ def main():
                "spk_acc": round(ok / len(ev), 4),
                "tap_acc": (tap_ok / len(ev)).round(4).tolist(),
                "aux_train_loss": round(aux_tl / nb, 4),
+               "first_batch_gradient_routes": route_probe,
                "msgs_per_utt": (st["msgs"] / len(ev)).round(0).tolist(),
                "candidate_scores_per_utt": (st["candidates"] / len(ev)).round(0).tolist(),
                "state_vector_updates_per_utt": int(st["state_vector_updates_per_utt"][0] / len(ev)),
+               "deep_msgs_per_utt": round(float(st["deep_msgs_per_utt"][0] / len(ev)), 1),
+               "deep_candidate_scores_per_utt": int(st["deep_candidate_scores_per_utt"][0] / len(ev)),
+               "deep_state_vector_updates_per_utt": int(st["deep_state_vector_updates_per_utt"][0] / len(ev)),
                "spikes_per_utt": (st["spikes"] / len(ev)).round(0).tolist(),
                "synapses_sending": send,
                "layer_grad_norms": (gsum / nb).round(5).tolist(),

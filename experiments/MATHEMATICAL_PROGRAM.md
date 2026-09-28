@@ -175,9 +175,9 @@ The architecture has an advantage only if its attainable loss is lower for the s
 
 ## Highest-value falsification sequence
 
-1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The report says the current 90M-character race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass validation-selected LSTM and 2-layer Transformer now score 2.179 and 2.367 test bpc respectively; both best checkpoints occur at the final validation checkpoint. The 10M comparisons are running.
-2. **Test deep Hopfield event message passing.** Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, route coverage, score entropy, retained/new event counts, pair-scoring work, and validation loss. The theory predicts a non-vanishing retained-payload path only while the per-layer correction gain is bounded; route discovery and event-boundary credit remain separate hypotheses.
-3. **Separate associative recall from search cost.** Start with all-past-event softmax as the trainability/recall reference. Then train a candidate index against its softmax mass and task gradient, retaining near-miss credit; vary candidate budget and context. Measure candidate recall, omitted softmax mass, output error, gradient bias, index maintenance, bytes moved, and actual score operations. Top-k after dense scoring tests aggregation only.
+1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The report says the current 90M-character race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass validation-selected LSTM and 2-layer Transformer now score 2.179 and 2.367 test bpc respectively; both best checkpoints occur at the final validation checkpoint. The matched 10M, four-layer Transformer remains incomplete at 3,416/4,882 updates (70%), validation 1.9063 bpc at 17:06 UTC; the E83/E84 safe runner is waiting behind its lock.
+2. **Test deep Hopfield event message passing.** Compare E77 at depths 2, 4, 8, and 16 against same-depth, parameter-matched Transformer baselines under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, counterfactual route coverage, score entropy, retained/new event counts, pair-scoring work, and validation loss. §§19/57 already derive and test route discovery credit; the E77 experiments need to measure its transfer to key/value support selection and its work as depth grows.
+3. **Separate associative recall from search cost.** Start with all-past-event softmax as the trainability/recall reference. For a candidate set, measure omitted mass and the exact query-gradient residual from §112: omitted within-group covariance plus the between-group key/advantage term. Mass recall alone does not guarantee gradient alignment. Use the existing near-miss route credit; its key-insertion loss estimate $rA$ has a curvature-bounded error, so allocate exact shadow execution by the resulting per-candidate remainder bound. Vary candidate budget and context, and measure route recall, output and gradient error, index maintenance, bytes moved, shadow work, and actual score operations. Top-k after dense scoring tests aggregation only.
 4. **Test race attention against softmax directly.** Match parameters and training budget, vary races per head and depth, measure output/gradient bias and variance, convergence, loss, and actual event work. This isolates whether stochastic local credit preserves the Hopfield address/value learning signal.
 5. **Only then scale tokens and hardware.** Move successful variants to larger text and longer contexts; compare energy and throughput on event-capable and GPU hardware. Include search/index construction, communication, synchronization, and training overhead.
 
@@ -188,31 +188,33 @@ Advance a mechanism when its predicted intermediate statistic changes in the pre
 ## Deep event-stream models on real data
 
 The next depth test is E83 on speaker-held-out SHD and E84 on the frozen
-market world-model protocol. Both use time-vector event layers with fixed sparse
-candidate wiring. A deeper layer sees sparse emissions from earlier layers and
-a direct raw-event route; the readout sees every layer. This is the graph in
-THEORY §110: it leaves a short path from each layer's parameters to the loss,
-without claiming that its deep composition path is well conditioned.
+market world-model protocol. Both use a strict adjacent-layer event chain with
+fixed sparse candidate wiring. During training, one shared sparse readout
+provides an auxiliary task loss at each depth; inference uses only the deepest
+readout. This is the graph in THEORY §110: auxiliary loss adds a local gradient
+term without allowing the final prediction to bypass the hierarchy.
 
-The initial comparison is deliberately small and iso-width: depths 2, 4, and 8 use
-the same samples/windows, per-layer width, optimizer updates, and seed. E83
-stratifies the speaker-held-out training/evaluation pilot and records every
-layer's gradient norm, spike count, message count, and held-out accuracy. E84
-uses days 1–4 for training and day 5 for validation, with the same sampled
-windows at all depths; it records layer gradients, event work, and held-out
+The initial comparison is deliberately small and iso-width: depths 2, 4, 8, and 16 use
+the same samples/windows, per-layer width, optimizer updates, and seed. Each
+depth is paired with auxiliary loss weight 0 and 0.2. E83 stratifies the
+speaker-held-out pilot and records layer gradient norms, intermediate and deep
+accuracy, deep/auxiliary gradient norms and cosines, candidate score pairs,
+accepted messages, and state-vector scan updates. E84 uses days 1–4 for
+training and day 5 for validation, with the same sampled windows at all depths;
+it records the same gradient-alignment and work diagnostics plus held-out
 per-event log likelihood. Neither pilot uses the untouched SHD test set or
 market confirmation days.
 
 Read the diagnostics jointly. Nonzero deep gradients with no validation gain
 point to representation or optimization quality. Vanishing deep gradients with
-healthy early-layer gradients point to a chain-conditioning problem; dead
-message or spike counts point to a route/threshold problem instead. A sparse
-candidate mask bounds candidate comparisons only if its degree is measured;
-the per-layer readout skip and raw-event skip also add work. Report peak memory
-and wall time before calling a depth gain efficient. If these pilots show a
-learning signal, the next step is a parameter-matched depth ladder with multiple
-seeds, followed by a near-miss gate ablation if hard-gate route coverage is the
-bottleneck.
+healthy early-layer gradients point to chain conditioning; dead message or
+spike counts point to a route/threshold problem. Candidate score pairs expose
+work spent on rejected messages, while state-vector scan counts expose the
+reference implementation's grid/event-step updates. These models remain sparse
+in their message topology but still scan state cells at each step, so neither
+active messages nor sparse masks alone establish low energy. If the paired
+pilot supports auxiliary supervision, repeat across seeds and then tune its
+weight by depth.
 
 ## xLSTM transfer: topology and scale protocol
 

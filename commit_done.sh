@@ -11,8 +11,8 @@ if [[ "$(git branch --show-current)" != "main" ]]; then
   exit 2
 fi
 
-# Deliberate allowlist: exclude experiment logs, checkpoints, caches, and result
-# files that have not been reviewed for the report.
+# Deliberate allowlist: exclude logs, checkpoints, and caches. Include the small
+# E83/E84 JSON summaries so completed depth pilots are ready for host-side commit.
 FILES=(
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
@@ -33,6 +33,7 @@ FILES=(
   experiments/e83_deep_shd.py
   experiments/e84_deep_market.py
   experiments/queue/e83_e84_depth.txt
+  experiments/queue/e71a.txt
   experiments/queue/chain_0928.sh
   experiments/queue/e64b.txt
   experiments/queue/e71b.txt
@@ -41,6 +42,8 @@ FILES=(
   experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json
   experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
+  experiments/results/e83
+  experiments/results/e84
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
   experiments/results/e79/race_mixer_D10000000_K6_e77none.json
   report/make_pdf.py

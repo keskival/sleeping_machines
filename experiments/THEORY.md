@@ -5086,8 +5086,12 @@ whether their measured values satisfy the sufficient condition; the proof itself
 
 There is a second structural limit. If candidate set $C(q)$ has dense softmax mass $1-\epsilon$, then
 $\|y-y_C\|\le2V_{\max}\epsilon$. But hard top-$k$ gives excluded keys zero score gradient. Therefore dense
-Hopfield retrieval is the trainability/recall reference; a sparse index is a separate learned component. It must retain
-mass and useful score credit (via near-miss or teacher-mass training) while reducing candidate search itself. Top-$k$
+Hopfield retrieval is the trainability/recall reference; a sparse index is a separate learned component. The general
+counterfactual route-learning problem is already worked out in §19 and §57: a noisy-choice boundary term credits untaken
+routes, and cancellation preserves a near-miss charge and best partial window without running another full event path.
+Section 112 specializes that existing rule to key/value mixtures and bounds the cheap local loss estimate. The remaining
+engineering question is whether a candidate mechanism can expose useful near-misses and payloads without restoring
+all-pairs scoring. Teacher-mass distillation can be a diagnostic arm. Top-$k$
 aggregation after all-pairs scoring is not a compute saving. E77's new event-level Hopfield update attends only among
 emitted events, keeps query/key/value maps separate, uses learned score-to-delay decay, and carries the retrieved
 payload into the next event layer. It runs only when events exist, but current candidate scoring is still quadratic in
@@ -5310,57 +5314,231 @@ measures it at 1M and 10M characters.
 | **M19** | backprop through a beam of histories (sum-product) beats greedy; min-sum on the same beam equals repair | small nets; accuracy, signal coverage, extra events, alignment with M3 |
 | **M20** | shadow events in the event engine reproduce the batch beam exactly, asynchronously | equality with M19 per sample; extra events and per-node branch state vs beam width |
 
-## 110. Depth without a forced gradient chain: retained event routes
+## 110. Deep event chains with local supervised credit
 
-*Written 2026-09-28, before the E83/E84 depth pilots.*
+*Revised 2026-09-28, before the E83/E84 depth pilots.*
 
-Let $H_\ell$ be the emitted event set of time-vector layer $\ell$, and let
-$F_\ell$ be its event map on a fixed candidate and firing topology. A strictly
-serial stack has $H_{\ell+1}=F_\ell(H_\ell)$, so a gradient to an early layer
-contains the product $J_{L-1}\cdots J_\ell$ of all later event-map Jacobians.
-Even when each event-time derivative is exact, this product may contract,
-amplify, or lose rank. Exact local spike-time gradients alone therefore do not
-establish deep trainability.
+Let $H_\ell=F_\ell(H_{\ell-1};\theta_\ell)$ be the event stream emitted by
+layer $\ell$, with raw events only at layer 1. In a strictly serial stack, the
+final loss gradient for an early layer contains
+$J_{F_L}\cdots J_{F_{\ell+1}}$. Exact event-time derivatives do not prevent
+this product from contracting, amplifying, or losing rank.
 
-Use two retained routes instead: (i) each layer may receive sparse edges from
-all earlier emitted events and a direct sparse edge from the raw input events;
-(ii) the readout receives the emissions of every hidden layer. For the
-concatenated representation $H=(H_1,\ldots,H_L)$, the loss gradient for a
-trainable layer has a direct contribution
+Attach the same task readout $g_\phi$ to each depth during training and use
+auxiliary losses, but use only the deepest readout at inference:
 
 $$
-\nabla_{\theta_\ell} \mathcal L\supset
-J_{\theta_\ell,H_\ell}^{\top}J_{\mathrm{read},H_\ell}^{\top}\nabla_{\hat y}\mathcal L.
+\mathcal L=\ell(g_\phi(H_L),y)+\lambda\sum_{k=1}^{L-1}\ell(g_\phi(H_k),y).
 $$
 
-This term does not contain the Jacobians of layers $\ell+1,\ldots,L$; adding
-depth cannot attenuate it by multiplying more layer Jacobians. It is available
-when the direct readout route is active and its local Jacobian is nonzero. The
-separate deep-composition path still has the product bound, and the expression
-does not guarantee a useful direction, adequate route coverage, or nonzero
-credit through a hard gate. It is a structural trainability floor, not a
-convergence theorem.
+For an early layer $\ell<L$, its gradient contains the local term
 
-The raw-event skips make the same point for representation access: every deep
-stage can recover a feature from the original event stream without forcing that
-feature through all preceding layers. To keep this compatible with the
-manifesto, the skip graph is a fixed sparse candidate graph, not dense attention;
-each event scores only its listed senders. This saves work only if the candidate
-degree stays bounded and routing does not hide an all-pairs scan.
+$$
+\lambda J_{\theta_\ell,H_\ell}^{\top}
+J_{g,H_\ell}^{\top}\nabla_{g(H_\ell)}\ell,
+$$
 
-**Test.** E83 applies these routes to SHD; E84 applies them to the market event
-world model. Compare depths 2, 4, and 8 at equal per-layer width, data exposure,
-and optimizer updates. Log each layer's gradient norm, send fraction, messages,
-spikes, validation score, RSS and wall time. A useful depth result requires the
-new layers to receive sustained gradients and improve held-out quality. If
-gradients collapse or activity dies, first distinguish (a) the chain-path
-product, (b) dead hard-gated candidates, (c) threshold crossing sensitivity,
-and (d) insufficient task-relevant events. A follow-up can add a smooth
-near-miss gate on the same sparse candidate edges; it must be charged for the
-extra training work and evaluated with hard event gates at inference.
+which has no downstream layer Jacobian product. The final-output term still
+travels through every later layer, so inference remains a true depth-$L$
+composition. Comparing $\lambda=0$ with $\lambda>0$ isolates whether local
+supervision keeps early-layer gradients and activity useful as depth grows.
+
+This is a gradient-path result, not a convergence or representation theorem.
+The direct term can still be zero when no useful event fires, all candidate
+messages are gated out, or the shared readout has no local sensitivity. The
+auxiliary objectives can also interfere: an intermediate representation may
+be pushed toward solving the final task before it has learned a useful
+composition. Held-out deepest-layer quality, per-layer gradients, and firing
+statistics are therefore all necessary.
+
+The E83/E84 hidden topology is a strict adjacent-layer chain with fixed sparse
+candidate masks; there are no raw-input skips above layer 1 and no all-past
+attention. The readout uses a fixed sparse source mask shared across taps. We
+count both candidate score pairs and accepted messages, since accepted-message
+count alone hides the cost of rejected score tests. The time-vector reference
+implementation still scans grid/event steps over its state cells; therefore
+these pilots do not claim fully asynchronous execution or an energy advantage.
+
+**Test.** E83 applies the paired $\lambda=0$ and $0.2$ conditions to
+speaker-held-out SHD; E84 uses the same pair on the frozen day-5 market
+validation protocol. At depths 2, 4, 8, and 16, width, data exposure, optimizer
+updates, and seed are held fixed. Record deepest-output quality, intermediate
+tap quality, layer gradient norms, spikes, candidate score pairs, accepted
+messages, state-vector scan updates, RSS, and wall time. A depth claim needs
+the deepest output to improve or remain competitive while gradients and event
+activity persist. If auxiliary loss helps, repeat across seeds and then tune
+its depth-dependent weight; one pilot seed is not evidence of scaling.
+
+## 111. When auxiliary credit helps the deepest objective
+
+The local term in §110 removes downstream Jacobians from an intermediate
+layer's auxiliary gradient, but nonzero credit alone is not sufficient. Fix a
+layer's parameters $\theta_\ell$ and write
+
+$$
+g_\ell=\nabla_{\theta_\ell}\mathcal L_{\mathrm{deep}},\qquad
+a_\ell=\nabla_{\theta_\ell}\mathcal L_{\mathrm{aux}}.
+$$
+
+For a small SGD step on
+$\mathcal L_{\mathrm{deep}}+\lambda\mathcal L_{\mathrm{aux}}$,
+$\theta_\ell' = \theta_\ell-\eta(g_\ell+\lambda a_\ell)$, Taylor expansion
+gives
+
+$$
+\mathcal L_{\mathrm{deep}}(\theta_\ell')-\mathcal L_{\mathrm{deep}}(\theta_\ell)
+=-\eta\left(\lVert g_\ell\rVert^2+
+\lambda\langle g_\ell,a_\ell\rangle\right)+O(\eta^2).
+$$
+
+Let $r_\ell=\lVert a_\ell\rVert/\lVert g_\ell\rVert$ and let
+$c_\ell$ be the cosine between these gradients. The first-order deep loss
+decreases exactly when $1+\lambda r_\ell c_\ell>0$. Aligned auxiliary credit
+($c_\ell\ge0$) preserves descent. If the gradients conflict, it is safe only
+when $\lambda r_\ell|c_\ell|<1$. As depth suppresses the deep gradient,
+$r_\ell$ can grow; a fixed auxiliary weight that helps at depth 2 can then
+overwhelm the objective at depth 8. If $g_\ell=0$, an auxiliary update can
+still train the intermediate prediction, but this first-order argument gives
+no guarantee that it improves the deepest prediction.
+
+This gives a direct diagnostic instead of treating larger gradient norms as
+proof of trainability: measure per-layer deep-loss norm, auxiliary-loss norm,
+and their cosine on the same batch. E83/E84 now record this probe on the first
+training batch of each epoch, alongside final-output quality and activity. The
+probe is for plain gradient directions; AdamW's adaptive preconditioning and
+weight decay can change the actual update direction, so the paired held-out
+result remains decisive. If auxiliary gradients are large and anti-aligned,
+reduce or schedule $\lambda$, or improve the intermediate targets; do not add
+depth supervision blindly.
 
 M3 is the most informative experiment in this list. It says which term carries the
 learning signal, whether our estimator of it is good, and what fired-only is missing,
 on a network small enough that every term can be computed exactly. It should run
 before E11. E11 then becomes "replace each estimated term with the better local one
+
 that M3 identifies".
+
+## 112. Mass truncation and counterfactual key recruitment
+
+The exact dense key/value score credit is already derived in §105(f) and
+§107(g), and the noisy-choice route boundary term plus cancellation-based
+near-miss credit are already derived in §§19 and 57. Here I combine them in two
+ways: an exact decomposition of the query-gradient error under support
+truncation, and a curvature bound connecting a missing key's local attention
+credit to the finite counterfactual route loss used by the existing router.
+
+### Fixed-support query-gradient error
+
+Let $p$ be the dense softmax over keys and let the retained set $C$ have mass
+$1-\epsilon$; let $O$ be its complement. Write $p_C$ and $p_O$ for the
+conditional distributions on the two groups. For one shared upstream loss
+vector $g$, set $a_j=g^\top v_j$, and define conditional means and cross
+covariances
+
+$$
+\bar k_R=\mathbb E_R[k],\qquad \bar a_R=\mathbb E_R[a],\qquad
+\Sigma_R=\mathbb E_R[(k-\bar k_R)(a-\bar a_R)],\quad R\in\{C,O\}.
+$$
+
+The dense and truncated query gradients are respectively
+$\beta\operatorname{Cov}_p(k,a)$ and $\beta\Sigma_C$. The law of total
+covariance gives the exact residual
+
+$$
+\nabla_q L_{\rm dense}-\nabla_q L_C
+=\beta\epsilon\left[\Sigma_O-\Sigma_C+
+(1-\epsilon)(\bar k_C-\bar k_O)(\bar a_C-\bar a_O)\right].
+$$
+
+So omitted mass alone is not the full optimization signal: the error contains
+both the omitted group's within-group key/advantage covariance and a
+between-group covariance. Let $D_K$ be the diameter of all keys, $D_V$ the
+diameter of all values, and $D_A=\max_j a_j-\min_j a_j\le\|g\|D_V$. The
+covariance variance bound yields
+
+$$
+\|\nabla_q L_{\rm dense}-\nabla_q L_C\|
+\le \beta\epsilon(3/2-\epsilon)D_KD_A.
+$$
+
+Also $y=(1-\epsilon)y_C+\epsilon y_O$, hence
+$\|y-y_C\|\le\epsilon D_V$. With the same $g$, the total block-norm error in
+all value gradients is exactly $2\epsilon\|g\|$; for independently
+parameterized keys, $\nabla_{k_j}L=\beta q\,p_j(a_j-\bar a)$, so the sum of
+key-gradient block errors is at most
+$\beta\epsilon(5/2-\epsilon)\|q\|D_A$. For the retained keys, this follows
+from $\mathbb E_C|a-\bar a_C|\le D_A/2$ and
+$|\bar a_C-\bar a_O|\le D_A$; the omitted keys contribute at most
+$\epsilon D_A$ in scalar coefficient mass. These are local VJP comparisons
+at fixed support. A nonlinear downstream loss changes $g$ when $y$ changes,
+and that additional curvature term is outside this statement.
+
+The exact residual identifies what a candidate rule should preserve. High mass
+recall is a useful worst-case certificate, but the query-gradient target is the
+omitted cross-covariance above. In particular, a key index can retain nearly
+all mass and still lose a directionally important between-group term; mass
+controls absolute error, not relative error or gradient alignment. For example,
+retain one key $(k,v)=(0,0)$ with mass $1-\epsilon$ and omit $(1,1)$ with mass
+$\epsilon$, using $L(y)=y$. The truncated output is zero and its query gradient
+is zero; dense attention has query gradient $\beta\epsilon(1-\epsilon)$.
+Although almost all forward mass is retained, the omitted key carries the whole
+nonzero query-learning signal. Its insertion advantage is $A=1$, so the
+existing counterfactual route mechanism sees the missing route directly.
+
+### A missing key's attention credit is a counterfactual route advantage
+
+Let the current support have partition sum $Z_C$ and output $y_C$. Add a
+proposed missing key $u$ with score $s_u$ and value $v_u$. Its resulting
+softmax mass is $r_u=e^{s_u}/(Z_C+e^{s_u})$, and the augmented output is exactly
+
+$$
+y_{C+u}=(1-r_u)y_C+r_uv_u.
+$$
+
+For the downstream loss $F(y)$, define the already-known local attention
+advantage $A_u=\nabla F(y_C)^\top(v_u-y_C)$. If the Hessian of $F$ has operator
+norm at most $H$ along the segment from $y_C$ to $y_{C+u}$, Taylor's theorem
+gives
+
+$$
+\left|F(y_{C+u})-F(y_C)-r_uA_u\right|
+\le {H\over2}r_u^2\|v_u-y_C\|^2.
+$$
+
+Moreover, along the insertion path $y_r=(1-r)y_C+rv_u$,
+$\frac{dF(y_r)}{ds_u}=r(1-r)\nabla F(y_r)^\top(v_u-y_C)$, exactly the standard
+softmax score gradient. Thus the dense attention residual is the tangent of
+the finite route-insertion loss; its approximation error is controlled by the
+curvature bound above. This gives the established §19/§57 counterfactual router
+a cheap attention-specific loss estimate $r_uA_u$. If the curvature remainder
+is large, the existing shadow execution can supply the finite loss difference.
+More specifically, substitute this estimate into the existing §19 boundary
+gradient. Let $b_u$ be the candidate-router score (it may equal the attention
+logit $s_u$), let $m_u=b_c-b_u$ be the margin to the chosen route, and let
+$\rho_\sigma(m_u)$ be its noise density. Replacing the exact route loss
+difference $\Delta F_u$ by $r_uA_u$ changes that gradient
+by at most
+
+$$
+\|G_{\rm CF}-\widehat G_{\rm CF}\|
+\le {H D_V^2\over2}\sum_{u\in N}
+\rho_\sigma(m_u)r_u^2\|\nabla_\theta(b_u-b_c)\|,
+$$
+
+for the near-miss set $N$. This yields a bound-driven compute rule: shadow-run
+the alternatives with the largest individual remainder bound, and stop when
+the sum of unshadowed bounds is below a chosen credit-error budget. It
+specializes §19's exact-versus-approximate counterfactual tradeoff to attention
+keys; it does not solve candidate generation. Score work, payload access, and
+shadow execution still need to be counted.
+
+**Falsifiable consequence.** On diagnostic batches with exact dense scores,
+first verify the covariance residual against autodiff while sweeping support
+mass and temperature. Then apply the existing counterfactual route learner to
+proposed key/value candidates. Compare the cheap $r_uA_u$ ranking with exact
+finite insertion losses, measure the omitted-gradient residual recovered by
+recruited keys, and report route recall, candidate scoring, shadow work, and
+loss across depths. Compare fixed top-$m$ shadowing against the remainder-bound
+allocation above at equal shadow budget. This measures whether curvature-aware
+counterfactual work reduces router-gradient error; separately count the search
+work needed to obtain candidates.
