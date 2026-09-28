@@ -58,7 +58,7 @@ class TVLayer(nn.Module):
     def lam(self):
         return torch.complex(-torch.exp(self.log_rate), self.freq)
 
-    def forward(self, eb, ei, et, ev, B, G, force_route=None, return_routes=False):
+    def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None, return_routes=False):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -71,6 +71,8 @@ class TVLayer(nn.Module):
             route_info = {"event_index": pe.detach(), "receiver": pj.detach(),
                           "score": r.detach()}
         if self.gate:
+            if force_route is not None and drop_route is not None:
+                raise ValueError("force_route and drop_route are mutually exclusive")
             keep = r.detach() > 0                                              # non-matching content: no message
             if force_route is not None:
                 fe, fj = map(int, force_route)
@@ -80,6 +82,14 @@ class TVLayer(nn.Module):
                 if bool((forced & keep).any()):
                     raise ValueError("force_route must name a currently closed route")
                 keep = keep | forced
+            if drop_route is not None:
+                fe, fj = map(int, drop_route)
+                dropped = (pe == fe) & (pj == fj)
+                if not bool(dropped.any()):
+                    raise ValueError("drop_route is not in the candidate connectivity mask")
+                if not bool((dropped & keep).any()):
+                    raise ValueError("drop_route must name a currently open route")
+                keep = keep & ~dropped
             pe, pj, r = pe[keep], pj[keep], r[keep]
         if not self.training:
             self.sent[ei[pe], pj] = True

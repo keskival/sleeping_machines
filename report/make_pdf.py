@@ -243,8 +243,6 @@ def fig_potential_evidence():
     tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
     tf_10m_final = load(os.path.join(base, "tf_D10000000_s256_L4_p4_dr0.1_v.json"))
     tf_10m_test = tf_10m_final["test_bpc"]
-    tf_10m_checkpoints = read_tf_10m_checkpoints()
-    tf_10m_latest = max(tf_10m_checkpoints, key=lambda row: row["step"])
     ax_lm.scatter([1_000_000, 10_000_000], [lstm, lstm_10m], color=ORANGE, marker="s", s=36, zorder=4,
                   label="E64b LSTM · 1M and 10M")
     ax_lm.annotate(f"10M LSTM {lstm_10m:.3f}", (10_000_000, lstm_10m), xytext=(5, 7),
@@ -252,12 +250,6 @@ def fig_potential_evidence():
     ax_lm.scatter([1_000_000], [tf], color=GRAY, marker="D", s=34, zorder=4, label="E64b Transformer · 1M")
     ax_lm.annotate(f"1M TF test {tf:.3f}", (1_000_000, tf), xytext=(6, 7),
                    textcoords="offset points", fontsize=5.8, color=GRAY)
-    ax_lm.scatter([10_000_000], [tf_10m_latest["valid_bpc"]], facecolors="none", edgecolors=INK,
-                  marker="D", s=46, linewidths=1.3, zorder=5,
-                  label="E64b Transformer · 10M best val")
-    ax_lm.annotate(f"10M 4L TF val {tf_10m_latest['valid_bpc']:.3f}",
-                   (10_000_000, tf_10m_latest["valid_bpc"]), xytext=(7, 9),
-                   textcoords="offset points", fontsize=6.2, color=INK)
     ax_lm.scatter([10_000_000], [tf_10m_test], color=INK, marker="^", s=38, zorder=5,
                   label="E64b Transformer · 10M test")
     ax_lm.annotate(f"10M 4L TF test {tf_10m_test:.3f}", (10_000_000, tf_10m_test), xytext=(7, -12),
@@ -296,16 +288,15 @@ def fig_potential_evidence():
     fig.suptitle("Measured signals for the frontier-model hypothesis", x=0.02, ha="left", fontsize=9.5,
                  fontweight="bold")
     fig.text(0.02, 0.015,
-             f"A: Filled markers = held-out test BPC; open diamond = four-layer Transformer best validation at "
-             f"step {tf_10m_final['best_step']:,}/{tf_10m_final['steps']:,}. "
+             f"A: Every plotted BPC is held-out test; the 10M Transformer checkpoint was selected on validation "
+             f"(step {tf_10m_final['best_step']:,}/{tf_10m_final['steps']:,}). "
              "E79 K rises 5→6→7. B: synthetic E61 recall; dotted line = chance (1/32).", fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.018,
              "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
              fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.051,
-             f"10M 4-layer Transformer: {tf_10m_final['best_valid_bpc']:.4f} best validation / "
-             f"{tf_10m_test:.4f} test bpc after {tf_10m_final['steps']:,} updates.",
-             fontsize=6.0, color=MUTED)
+             f"10M 4-layer Transformer: {tf_10m_test:.4f} held-out test bpc after "
+             f"{tf_10m_final['steps']:,} updates.", fontsize=6.0, color=MUTED)
     fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
@@ -953,10 +944,9 @@ def build():
         "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
         "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
         "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
-        f"work are not matched. The four-layer 10M Transformer completed {tf_10m_final['steps']:,} updates, with "
-        f"{tf_10m_final['best_valid_bpc']:.4f} best validation bpc at step {tf_10m_final['best_step']:,} and "
-        f"{tf_10m_final['test_bpc']:.4f} held-out test bpc. Those are {tf_10m_final['best_valid_bpc'] - 1.7448:.4f} "
-        f"above the LSTM's 1.7448 validation bpc and {tf_10m_final['test_bpc'] - 1.7993:.4f} above its 1.7993 "
+        f"work are not matched. The four-layer 10M Transformer checkpoint was selected on validation and scored "
+        f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after {tf_10m_final['steps']:,} updates, "
+        f"{tf_10m_final['test_bpc'] - 1.7993:.4f} above the LSTM's 1.7993 "
         "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
@@ -1095,7 +1085,7 @@ def build():
         "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
         "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and at 10M is ahead of "
         "the completed LSTM by 0.186 bpc on the same test segment; compute is not matched. The 10M four-layer Transformer "
-        f"completed at {tf_10m_final['best_valid_bpc']:.4f} best validation / {tf_10m_final['test_bpc']:.4f} test bpc. "
+        f"scores {tf_10m_final['test_bpc']:.4f} held-out test bpc after validation-based checkpoint selection. "
         "Deep E77 language-model results are still pending.",
     ], st)
     s.append(PageBreak())
@@ -1618,11 +1608,11 @@ def build():
             "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. E64b's 1M-character, 20-pass, "
             "validation-selected test scores are 2.179 for the 256-unit LSTM and 2.367 for the 2-layer width-256 Transformer; "
             "both best checkpoints are at the final validation point, so strict convergence is not established. At 10M, the "
-            "two-layer 512-unit LSTM scores 1.7448 validation / 1.7993 test bpc (1,199,323 parameters, six passes), also with "
+            "two-layer 512-unit LSTM scores 1.7993 held-out test bpc (1,199,323 parameters, six passes), also with "
             "its best checkpoint at the final validation point. E79 scores 1.613 frozen on the same test segment, a single-seed "
             f"0.186 bpc lead without matched compute. The four-layer Transformer completed 4,882 updates with "
-            f"{tf_10m_final['best_valid_bpc']:.4f} best validation bpc at step {tf_10m_final['best_step']:,} and "
-            f"{tf_10m_final['test_bpc']:.4f} test bpc. It has 3.24M parameters and four passes, while the LSTM has "
+            f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after validation-based checkpoint selection. "
+            f"It has 3.24M parameters and four passes, while the LSTM has "
             "1.20M parameters and six passes. "
             "E77 has not yet produced a language-model "
             "result.")]

@@ -159,29 +159,23 @@ def race_decision(V, seq_end, delay_stages, dmax, threshold, logit_temperature):
     return prediction, emitted, latency, peak_conf, payload
 
 
-def sampled_prefix_times(eb, et, batch_size, count=4, window_start=0.2, rng=None):
-    """Sample a finite set of causal prefixes from a normalized time window.
+def sampled_prefix_times(batch_size, count=4, horizon_ms=1000.0, window_start=0.0,
+                         device=None, dtype=torch.float32, rng=None):
+    """Sample causal query times from a fixed, exogenous physical-time window.
 
-    One time is drawn from each equal-width stratum of [window_start, 1] in
-    normalized utterance time. Evaluation uses stratum midpoints; training
-    uses fresh stratified samples. The label supervises the window-average
-    proper score, not a single arbitrarily chosen instant.
+    The horizon is fixed across examples; it must not be derived from the
+    utterance's last event, which is future information at a prefix. One time
+    is drawn from each equal-width stratum. Evaluation uses stratum midpoints;
+    training uses fresh stratified samples.
     """
-    out = []
-    for b in range(batch_size):
-        times = et[eb == b].sort().values
-        if not times.numel():
-            out.append(times)
-            continue
-        lo, hi = float(times[0]), float(times[-1])
-        start = lo + window_start * (hi - lo)
-        edges = np.linspace(start, hi, count + 1)
-        if rng is None:
-            samples = (edges[:-1] + edges[1:]) * 0.5
-        else:
-            samples = np.asarray([rng.uniform(edges[i], edges[i + 1]) for i in range(count)])
-        out.append(torch.as_tensor(samples, dtype=et.dtype, device=et.device))
-    return out
+    start = float(window_start) * float(horizon_ms)
+    edges = np.linspace(start, float(horizon_ms), count + 1)
+    if rng is None:
+        samples = (edges[:-1] + edges[1:]) * 0.5
+    else:
+        samples = np.asarray([rng.uniform(edges[i], edges[i + 1]) for i in range(count)])
+    shared = torch.as_tensor(samples, dtype=dtype, device=device)
+    return [shared for _ in range(batch_size)]
 
 
 class SparseEventReadout(nn.Module):
@@ -221,9 +215,18 @@ class SparseEventReadout(nn.Module):
         if times.numel():
             times, order = times.sort(stable=True)
             units, payload = units[order], payload[order]
-            unique_t, inverse = torch.unique_consecutive(times, return_inverse=True)
-            prev_t = torch.cat((unique_t.new_zeros(1), unique_t[:-1]))
-            gaps = (unique_t - prev_t).clamp_min(0)[inverse]
+            # Group identity is discrete, but the representative group time
+            # stays differentiable. `unique_consecutive` has no time-gradient
+            # implementation in PyTorch.
+            group_start = torch.ones(len(times), dtype=torch.bool, device=device)
+            group_start[1:] = times.detach()[1:] != times.detach()[:-1]
+            group_id = group_start.to(torch.long).cumsum(0) - 1
+            n_groups = int(group_id[-1]) + 1
+            group_sum = times.new_zeros(n_groups).index_add(0, group_id, times)
+            group_count = torch.bincount(group_id, minlength=n_groups).to(times.dtype)
+            group_time = group_sum / group_count
+            group_prev = torch.cat((group_time.new_zeros(1), group_time[:-1]))
+            gaps = (group_time - group_prev).clamp_min(0)[group_id]
             features = torch.cat((payload, torch.log1p(gaps[:, None] / 10.0),
                                   torch.log1p(times[:, None] / 100.0),
                                   payload.new_zeros((len(times), 1))), dim=1)
@@ -293,13 +296,11 @@ class SparseEventReadout(nn.Module):
         decision = state.finish(float(deadline))
         return decision, max(peak, max(decision.posterior))
 
-    def prefix_loss(self, layer_events, eb, et, labels, seq_end, delay_stages, dmax,
-                    prefix_samples=4, prefix_window_start=0.2, rng=None):
+    def prefix_loss(self, layer_events, labels, seq_end, delay_stages, dmax,
+                    prefix_times):
         event_b, units, times, payload = layer_events
-        prefixes = sampled_prefix_times(eb, et, len(labels), prefix_samples,
-                                        prefix_window_start, rng)
         per_item = []
-        for b, query_times in enumerate(prefixes):
+        for b, query_times in enumerate(prefix_times):
             select = event_b == b
             deadline = seq_end[b] + delay_stages * dmax + 60.0
             logits = self.logits_at(units[select], times[select], payload[select],
@@ -365,9 +366,11 @@ class DeepSHD(nn.Module):
             return len(indices) * layer.M
         return int(layer.mask[indices].sum())
 
-    def forward(self, eb, ei, et, B, G, return_taps=False):
+    def forward(self, eb, ei, et, B, G, return_taps=False, collect_routes=False,
+                route_override=None):
         raw_v = self.emb(ei)
         emitted = []
+        route_candidates, route_inputs = [], []
         messages, spikes, candidates = [], [], []
         for i, layer in enumerate(self.layers):
             if i == 0:
@@ -375,7 +378,21 @@ class DeepSHD(nn.Module):
             else:
                 ib, ij, it, iv = emitted[-1]
             candidates.append(self.scored_pairs(layer, ij))
-            out, msg = layer(ib, ij, it, iv, B, G)
+            force_route = drop_route = None
+            if route_override is not None and route_override[0] == i:
+                _, event_index, receiver, active = route_override
+                if active:
+                    force_route = (event_index, receiver)
+                else:
+                    drop_route = (event_index, receiver)
+            result = layer(ib, ij, it, iv, B, G, force_route=force_route,
+                           drop_route=drop_route, return_routes=collect_routes)
+            if collect_routes:
+                out, msg, route_info = result
+                route_candidates.append(route_info)
+                route_inputs.append((ib, ij, iv))
+            else:
+                out, msg = result
             emitted.append(out); messages.append(msg); spikes.append(len(out[2]) / B)
 
         taps = []
@@ -398,13 +415,17 @@ class DeepSHD(nn.Module):
         deep_candidates = sum(candidates[:self.depth]) + candidates[-1]
         deep_messages = sum(messages[:self.depth]) + messages[-1]
         layer_events = [(out[0], out[1], out[2], out[3]) for out in emitted]
-        return (taps[-1] if taps else None), {"msgs": messages, "candidates": candidates,
+        info = {"msgs": messages, "candidates": candidates,
                           "spikes": spikes, "tap_traces": taps,
                           "layer_events": layer_events,
                           "state_vector_updates_per_utt": scan_updates,
                           "deep_msgs_per_utt": deep_messages,
                           "deep_candidate_scores_per_utt": deep_candidates,
                           "deep_state_vector_updates_per_utt": deep_scan_updates}
+        if collect_routes:
+            info["route_candidates"] = route_candidates
+            info["route_inputs"] = route_inputs
+        return (taps[-1] if taps else None), info
 
 
 def grad_norm(module):
@@ -473,8 +494,18 @@ def main():
                     help="event_prefix: sparse event-updated logits trained with sampled-prefix proper log loss")
     ap.add_argument("--prefix_samples", type=int, default=4,
                     help="stratified prefix samples used to estimate the window-averaged proper score")
-    ap.add_argument("--prefix_window_start", type=float, default=0.2,
-                    help="start of the normalized supervision window, in [0, 1)")
+    ap.add_argument("--prefix_horizon_ms", type=float, default=1000.0,
+                    help="fixed physical-time horizon shared by all utterances")
+    ap.add_argument("--prefix_window_start", type=float, default=0.0,
+                    help="start fraction of the fixed prefix horizon, in [0, 1)")
+    ap.add_argument("--cf_shadows_per_layer", type=int, default=1,
+                    help="near-boundary route toggles shadowed per hidden layer and batch; 0 disables counterfactual credit")
+    ap.add_argument("--cf_band", type=float, default=0.5,
+                    help="route-score band around zero eligible for counterfactual shadows")
+    ap.add_argument("--cf_sigma", type=float, default=0.25,
+                    help="logistic gate-noise scale used by the counterfactual boundary derivative")
+    ap.add_argument("--cf_weight", type=float, default=1.0,
+                    help="multiplier on the sampled, inverse-probability-weighted boundary-gradient estimate")
     ap.add_argument("--race_threshold", type=float, default=0.6,
                     help="minimum class softmax probability that triggers an output event")
     ap.add_argument("--race_temperature", type=float, default=0.03,
@@ -498,8 +529,12 @@ def main():
     ap.add_argument("--save_checkpoint", action="store_true",
                     help="save final model weights beside the result JSON")
     a = ap.parse_args()
-    if a.prefix_samples < 1 or not (0.0 <= a.prefix_window_start < 1.0):
-        raise ValueError("prefix_samples must be positive and prefix_window_start must be in [0, 1)")
+    if (a.prefix_samples < 1 or not (0.0 <= a.prefix_window_start < 1.0)
+            or not math.isfinite(a.prefix_horizon_ms) or a.prefix_horizon_ms <= 0.0):
+        raise ValueError("prefix_samples and prefix_horizon_ms must be positive; prefix_window_start must be in [0, 1)")
+    if (a.cf_shadows_per_layer < 0 or not math.isfinite(a.cf_band) or a.cf_band <= 0.0
+            or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0):
+        raise ValueError("counterfactual shadow count must be nonnegative; cf_band and cf_sigma must be positive")
     os.makedirs(OUT, exist_ok=True)
     torch.manual_seed(a.seed); rng = np.random.default_rng(a.seed); t0 = time.time()
 
@@ -526,17 +561,24 @@ def main():
                       "layer_params": res["layer_params"], "load_s": round(time.time() - t0)}), flush=True)
     for ep in range(a.epochs):
         net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
+        cf_eligible_ep = cf_shadow_ep = 0
+        cf_abs_delta_ep = 0.0
         perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
             eb, ei, et, y, tmax, seq_end = batch_to_events(items, a.bands, a.shift, rng, a.drop)
             grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
-            _, info = net(eb, ei, et, len(items), grid, return_taps=True)
+            prefix_times = None
+            if event_readout:
+                prefix_times = sampled_prefix_times(len(items), a.prefix_samples,
+                                                    a.prefix_horizon_ms, a.prefix_window_start,
+                                                    et.device, et.dtype, rng)
+            _, info = net(eb, ei, et, len(items), grid, return_taps=True,
+                          collect_routes=event_readout and a.cf_shadows_per_layer > 0)
             traces = info["tap_traces"]
             if event_readout:
-                head_losses = [head.prefix_loss(info["layer_events"][k], eb, et, y,
-                                                seq_end, k + 1, a.dmax,
-                                                a.prefix_samples, a.prefix_window_start, rng)
+                head_losses = [head.prefix_loss(info["layer_events"][k], y,
+                                                seq_end, k + 1, a.dmax, prefix_times)
                                for k, head in enumerate(net.event_heads)]
                 main_loss = head_losses[-1]
                 aux_losses = head_losses[:-1]
@@ -561,6 +603,59 @@ def main():
             if i0 == 0:
                 route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
+            cf_eligible = cf_shadow_count = 0
+            cf_abs_delta_sum = 0.0
+            if event_readout and a.cf_shadows_per_layer:
+                base_total = (main_loss + a.aux_weight * aux_loss).detach()
+                cf_proxy = main_loss.new_zeros(())
+                for k, route_info in enumerate(info["route_candidates"]):
+                    scores = route_info["score"].cpu().numpy()
+                    near = np.flatnonzero(np.abs(scores) <= a.cf_band)
+                    cf_eligible += len(near)
+                    if not len(near):
+                        continue
+                    take = min(a.cf_shadows_per_layer, len(near))
+                    selected = rng.choice(near, size=take, replace=False)
+                    batch_ids, source_units, source_payload = info["route_inputs"][k]
+                    route_event_ids = route_info["event_index"]
+                    route_receivers = route_info["receiver"]
+                    for route_idx in np.atleast_1d(selected):
+                        event_index = int(route_event_ids[route_idx])
+                        receiver = int(route_receivers[route_idx])
+                        score_value = float(scores[route_idx])
+                        active = score_value > 0.0
+                        with torch.no_grad():
+                            _, shadow_info = net(
+                                eb, ei, et, len(items), grid, return_taps=True,
+                                route_override=(k, event_index, receiver, not active))
+                            shadow_heads = [head.prefix_loss(
+                                shadow_info["layer_events"][j], y, seq_end, j + 1,
+                                a.dmax, prefix_times)
+                                for j, head in enumerate(net.event_heads)]
+                            shadow_main = shadow_heads[-1]
+                            shadow_aux = sum(shadow_heads[:-1]) if len(shadow_heads) > 1 else shadow_main.new_zeros(())
+                            shadow_total = shadow_main + a.aux_weight * shadow_aux
+                        # L1-L0 is measured by toggling this route through every
+                        # downstream layer. This includes changes in later spikes.
+                        delta = (base_total - shadow_total) if active else (shadow_total - base_total)
+                        delta_value = float(delta)
+                        cf_abs_delta_sum += abs(delta_value)
+                        cf_shadow_count += 1
+
+                        source_unit = source_units[event_index]
+                        live_score = (net.layers[k].q[receiver] * source_payload[event_index]).sum()
+                        live_score = live_score + net.layers[k].c[source_unit, receiver]
+                        p_open = torch.sigmoid(live_score.detach() / a.cf_sigma)
+                        boundary_derivative = (p_open * (1.0 - p_open) / a.cf_sigma) * delta.detach()
+                        # Uniformly sampled near-boundary candidates with this
+                        # multiplier estimate the sum of their boundary terms.
+                        inclusion_correction = len(near) / take
+                        cf_proxy = cf_proxy + (boundary_derivative * inclusion_correction
+                                               * (live_score - live_score.detach()))
+                loss = loss + a.cf_weight * cf_proxy
+            cf_eligible_ep += cf_eligible
+            cf_shadow_ep += cf_shadow_count
+            cf_abs_delta_ep += cf_abs_delta_sum
             opt.zero_grad(); loss.backward()
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
@@ -600,8 +695,9 @@ def main():
                 grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
                 _, info = net(eb, ei, et, len(items), grid, return_taps=True)
                 if event_readout:
-                    queries = sampled_prefix_times(eb, et, len(items),
-                                                   a.prefix_samples, a.prefix_window_start)
+                    queries = sampled_prefix_times(len(items), a.prefix_samples,
+                                                   a.prefix_horizon_ms, a.prefix_window_start,
+                                                   et.device, et.dtype)
                     head_logits = []
                     for k, head in enumerate(net.event_heads):
                         layer_rows = []
@@ -782,10 +878,15 @@ def main():
             row["prefix_window_nll_by_stratum"] = (prefix_nll_sum / max(prefix_count, 1)).round(4).tolist()
             row["prefix_window_accuracy_by_stratum"] = (
                 prefix_correct / max(prefix_count, 1)).round(4).tolist()
-            row["prefix_window_start"] = a.prefix_window_start
+            row["prefix_window_start_fraction"] = a.prefix_window_start
+            row["prefix_horizon_ms"] = a.prefix_horizon_ms
             row["prefix_samples_per_utterance"] = a.prefix_samples
-            row["readout_updates_per_utterance"] = int(
-                st["deep_msgs_per_utt"][0] / len(ev))
+            row["sparse_readout_edge_updates_per_utterance"] = round(
+                float(st["msgs"][-1] / len(ev)), 1)
+            row["counterfactual_near_routes_per_epoch"] = int(cf_eligible_ep)
+            row["counterfactual_route_shadows_per_epoch"] = int(cf_shadow_ep)
+            row["counterfactual_mean_abs_loss_delta"] = round(
+                cf_abs_delta_ep / max(cf_shadow_ep, 1), 6)
         else:
             row["shd_max_over_time_acc"] = round(max_ok / len(ev), 4)
         res.setdefault("eval_output_payloads", []).append(epoch_output_payloads)
