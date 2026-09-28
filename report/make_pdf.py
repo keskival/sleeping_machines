@@ -1332,12 +1332,13 @@ def build():
             "of a convex log-partition function with a positive-semidefinite covariance Hessian; repeated retrieval is "
             "contractive when inverse temperature times key-diameter squared / 4 is below one. Separate keys and values "
             "enable hetero-association but need not preserve this energy structure, so E77 uses one gated update per layer."),
-          P("<b>A depth result with explicit assumptions.</b> For fixed keys and values, the query sensitivity of softmax "
-            "retrieval is a cross-covariance bounded by inverse temperature times key diameter times value diameter / 4, "
-            "independent of the number of memories. If each event-level correction has bounded full Jacobian, residual "
-            "scaling by 1/depth keeps the stack Jacobian bounded away from zero and infinity. E77 logs score spread, "
-            "retrieval entropy, update size, diameter upper bounds, the query-Jacobian bound, and role-specific gradients. Hard event "
-            "births and learned route discovery are not covered by the bound."),
+          P("<b>A depth result with explicit assumptions.</b> For fixed keys and values, one-query sensitivity is a "
+            "cross-covariance bounded by inverse temperature times key diameter times value diameter / 4. In a full "
+            "event sequence, a key reused by many later queries can amplify credit. Theory §107h gives a conservative "
+            "operator bound using this maximum accumulated key attention mass plus query/key/value, gate and output gains. "
+            "E77 logs key fan-out, the sequence-level bound, its residual-scaled value and layer sum, along with score "
+            "spread, retrieval entropy, update size, diameters and role-specific gradients. The certificate fixes event "
+            "order and candidate membership; hard event births and route discovery remain outside it."),
           P("<b>Precision and learning credit trade off.</b> With score margin m, non-winner mass is at most "
             "(N−1)e^(−βm), so sharper scores improve retrieval. For two keys, however, score sensitivity is "
             "βp(1−p): it peaks at a tie and vanishes when the route is certain. An excluded key gets no gradient. "
@@ -1352,10 +1353,12 @@ def build():
           P("<b>Cost is still a live question.</b> The event Hopfield update runs only at emitted events, but it scores "
             "every eligible event pair. Token retrieval also scores every query/key pair, and TVLayer still allocates "
             "dense time-by-batch-by-unit state. Sparse wiring is not yet sparse execution or a measured energy win."),
-          P("<b>Scaling depth.</b> E77 accepts configurable event depth. Each deeper layer receives prior events plus "
-            "sparse raw-input skips, with event-level Hopfield updates scaled by 1/depth; this is not a dense tokenwise "
-            "residual block. Depth sweeps will track route coverage and optimization; the two-layer configuration is a "
-            "starting point, not a depth limit.")]
+          P("<b>Scaling depth.</b> E77 retains earlier event payloads, appends each layer's new events, and sends sparse "
+            "raw-input skips; event-Hopfield updates use 1/depth residual scaling. This gives a fixed-topology identity "
+            "inclusion path across event layers without adding dense tokenwise residual blocks. The queued 2/4/8/16-layer "
+            "Transformer sweep matches context, training windows, token exposure, optimizer updates and parameter count "
+            "to within 4%. A wider, longer depth-4 Transformer is a separate stronger reference. The two-layer configuration "
+            "is a starting point, not a depth limit.")]
     s += [P("<b>Local learning that provably suffices (theory, §108–§109).</b> When units predict the next character by racing "
             "(each candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is "
             "a gated linear network: every unit predicts the target itself and learns only its own convex loss, so no error is "
@@ -1377,9 +1380,10 @@ def build():
             "256 characters (the Transformer baseline's context), at a few hundred operations per character (E79), and at 90M "
             "to 1.50 (published text8: standard LSTM ≈ 1.43, stronger recurrent models 1.27–1.36, large Transformers ≈ 1.08: "
             "at full scale near an LSTM, behind Transformers). For "
-            "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. Our first gradient-trained baselines at equal "
-            "data (one pass over 10M characters: LSTM 2.17, Transformer 2.43) are not converged, so no comparison is claimed "
-            "until converged runs (multiple passes, early stopping on validation, E64b) finish.")]
+            "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. E64b's 1M-character, 20-pass, "
+            "validation-selected test scores are 2.179 for the 256-unit LSTM and 2.367 for the 2-layer width-256 Transformer; "
+            "both best checkpoints are at the final validation point, so strict convergence is not established. The 10M "
+            "baselines are currently running, and E77 has not yet produced a language-model result.")]
     s += fig(FM.fig_lm_topology, W)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
             "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "

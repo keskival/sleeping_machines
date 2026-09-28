@@ -5,7 +5,7 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-28
 
-**Hopfield event-message architecture and depth bound (new, not yet measured).** E77 now applies a causal key/value
+**Hopfield event-message architecture and depth bound (not yet measured on language).** E77 now applies a causal key/value
 associative update over emitted event payloads at each event layer, then forwards the updated payloads. Queries, keys,
 and values use separate trainable maps; a gated identity path preserves the original event, with update scale 1/depth.
 Scores become arrival advantages through $\\delta=\\tau(s_{max}-s)$, whose exponential decay reproduces the softmax
@@ -13,11 +13,17 @@ weights. This connects the Hopfield address and payload operations to the projec
 For a fixed memory, the query Jacobian is a key/value cross-covariance and is bounded by
 \\beta D_KD_V/4, independent of the number of memories. If the complete fixed-topology correction Jacobian is bounded
 by $K$, 1/depth residual scaling gives singular values of the depth Jacobian in $[e^{-2K},e^K]$. E77 records key/value
-diameter upper bounds and the implied query-Jacobian bound as direct diagnostics. This is a conditional state-path
-guarantee, not proof that event routes are discovered or that hard event births are differentiable. Exact
+diameter upper bounds and the implied query-Jacobian bound as direct diagnostics. Sequence-level sensitivity also
+depends on maximum key fan-out $H=\max_j\sum_i p_{ij}$, since one stored payload may influence many later queries;
+§107(h) derives a conservative operator bound including $H$ and the query/key/value, gate, and output gains. This is a
+conditional fixed-topology state-path guarantee, not proof that event routes are discovered or that hard event births are differentiable. Exact
 all-past-event retrieval is the trainability reference; optional top-k limits aggregation but still scores every pair.
-E77 logs event pair count, retrieval entropy, score spread, update size, and query/key/value/output/gate gradient norms.
-The revised E77 architecture is queued, not yet run; deeper matched Transformer/E77 comparisons are being added.
+E77 logs event pair count, retrieval entropy, score spread, update size, key fan-out, the sequence Jacobian bound and
+residual-scaled layer sum, and query/key/value/output/gate gradient norms. The revised E77 architecture is queued, not
+yet run. A depth 2/4/8/16 Transformer control now matches E77's 256-character windows, sampled training batches, 5M token
+exposure, batch size and optimizer-update count. Widths 104/104/112/136 match E77's parameter count within 4% at all
+four depths.
+Separate ablations now turn off token retrieval and event-Hopfield updates one at a time.
 
 **Hopfield stability/precision tradeoff (derived).** With values equal to keys, softmax retrieval is $\nabla\Phi$ for
 the convex log-partition $\Phi(q)=\beta^{-1}\log\sum_j e^{\beta q^\top k_j}$, and its Hessian is the PSD key
@@ -31,15 +37,14 @@ motivate a measured temperature/near-miss sweep before claiming that sharper, sp
 
 **Existing reasons for optimism, with scope.** The completed E79 native-expert mixture scores 1.808 bpc frozen (1.782 online) at 1M text8 characters, ahead of the completed one-layer 256-unit LSTM at 2.179; at 90M it reaches 1.50. E61 learned query/key race retrieval solved its synthetic recall task in 1–4k examples and extrapolated to 4× context. These are strong signals about retrieval, compositional experts, and data efficiency. E79 includes count/copy memories and lacks matched compute/energy accounting; E61 is a synthetic task. E77 has no completed LM result yet, so these findings motivate the deeper adaptive model rather than establish its superiority.
 
-**Runner status and fair baseline.** E64b's 1M-character LSTM completed as recorded below. The Transformer log is unchanged at step 0 since 10:01 UTC, no experiment process is visible in this container, and the shared runner lock remains unavailable. The baseline therefore is not complete and no race-versus-Transformer claim is made. Do not start another runner until the lock owner/state is resolved.
+**E64b 1M baselines and runner status.** The validation-selected 20-pass LSTM completed at 2.1385 valid / 2.1794 test bpc (338,395 parameters). The 2-layer width-256 Transformer completed at 2.3403 valid / 2.3667 test bpc (1,658,907 parameters); both best checkpoints are at the final validation point, so strict convergence is not established. The LSTM is better on this 1M-character setting despite having fewer parameters; this is a baseline result, not evidence about E77 or frontier-scale comparisons. E64b's 10M LSTM is currently running under the shared safe-runner lock. Do not start another runner in parallel.
 
-**E64b LSTM versus the E79 race mixture at 1M text8 characters.** The converged 256-hidden-unit LSTM used 20 passes and early
+**E64b LSTM versus the E79 race mixture at 1M text8 characters.** The validation-selected 256-hidden-unit LSTM used 20 passes and early
 stopping on 200k validation characters: 2.138 validation / 2.179 test bits per character, 338,395 parameters. E79's frozen race
 mixture on the same 1M-character training and test segments scores 1.808 with its copy expert limited to the Transformer's 256-character
 context (1.782 when weights also adapt online). This is a substantial low-data loss lead for the native expert mixture at the same
-training data, but not yet a compute/energy-matched architecture comparison: its count tables and copy index are extra state, and the
-Transformer result is still running. **Next:** compare the converged Transformer, then report memory, scoring work, and adaptation
-policy alongside loss before making a scaling claim.
+training data, but not yet a compute/energy-matched architecture comparison: its count tables and copy index are extra state. **Next:**
+complete the 10M language baselines and E77 runs, then report memory, scoring work, and adaptation policy alongside loss before making a scaling claim.
 
 **E74/E75 — time-vector speech pilots do not yet learn well, and the memory ceiling was too tight for their default batches.**
 E74 on 2k training / 500 held-out utterances at batch 32 completed 6 epochs in 31 minutes, but held-out speaker accuracy peaked at

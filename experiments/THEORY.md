@@ -4937,23 +4937,36 @@ problem again, and the same remedy applies: near misses, meaning messages just b
 signal, and cooled noise on the cut explores. Diagnostic: the fraction of synapses that send at least once, tracked over
 training. If it collapses, the gates need a near-miss band.
 
-**(f) What event-stream skips guarantee about depth.** E77 preserves the previous layer's events and appends events
-created by the next layer. In an ideal differentiable relaxation, write this as
-\(E_{\ell+1}=\operatorname{concat}(E_\ell,F_\ell(E_\ell))\). The Jacobian is the vertical stack
-\([I;D F_\ell]\), hence \(J^T J=I+(D F_\ell)^T D F_\ell\succeq I\). Therefore its smallest singular value is at
-least one: the retained event coordinates cannot be contracted by this inclusion map. Across layers, the same argument
-preserves the original event coordinates.
+**(f) What retained event streams guarantee about depth.** E77 preserves every previous event payload and appends the
+new events emitted by the next time-vector layer. It also applies the gated Hopfield residual to that accumulated stream.
+On a region with fixed event identities, order, and spike topology, write one transition as
+\[
+U_\ell=\operatorname{concat}(E_\ell,F_\ell(E_\ell,x)),\qquad
+E_{\ell+1}=U_\ell+\alpha_\ell R_\ell(U_\ell),
+\]
+where $F_\ell$ creates the new event payloads and $R_\ell$ is the event-Hopfield correction. The Jacobian of the
+inclusion map is $D U_\ell=[I;D F_\ell]$, so
+\[
+(D U_\ell)^T D U_\ell=I+(D F_\ell)^T D F_\ell\succeq I.
+\]
+If $\|D R_\ell\|_2\le K_\ell$ and $\alpha_\ell K_\ell<1$, then
+\[
+\sigma_{\min}(D E_{\ell+1}/D E_\ell)\ge1-\alpha_\ell K_\ell.
+\]
+This follows because left multiplication by $I+\alpha_\ell D R_\ell$ has minimum singular value at least
+$1-\alpha_\ell K_\ell$, while concatenation cannot reduce the norm of any perturbation in the retained coordinates.
+Across depth the retained-payload path is bounded below by $\prod_\ell(1-\alpha_\ell K_\ell)$; with
+$\alpha_\ell=1/L$, uniformly bounded $K_\ell\le K$, and $K/L\le1/2$, it is at least $e^{-2K}$.
 
-This elementary result is deliberately narrow. It says nothing about gradients from the final loss to a particular
-newly created event, whether sparse routes receive useful credit, whether the event count explodes, or whether the
-continuous relaxation matches hard event creation/cancellation. It is not a deep trainability theorem for language
-models. Existing §97–§98 mistake bounds apply to realizable ordered-pattern learners under their stated candidate-route
-assumptions; they do not establish a bound for E77's language objective. E77 uses sparse event-stream skips rather than
-dense tokenwise residual blocks. Its prototype still uses dense time-by-batch-by-unit state tensors in `TVLayer`, and
-its attention retrieval computes all query/key scores. A genuinely sparse execution kernel and indexed candidate
-search remain necessary to realize the manifesto's energy goal. Next: depth sweeps (2, 4, 8, 16) should record loss,
-layerwise gradient norms, active events, route coverage, and simulator/search work; theory must then explain measured
-failures rather than infer trainability from the skip path alone.
+This gives E77 a real identity-inclusion path across event layers, rather than claiming that adding layers alone makes
+them trainable. It remains deliberately narrow: it bounds propagation of perturbations in already-created payloads,
+not the gradient to newly created payloads, whether useful routes are discovered, or whether hard event creation matches
+the fixed-topology derivative. The complete layer condition is addressed in §107(g–h). Existing §97–§98 mistake
+bounds apply to realizable ordered-pattern learners under their stated candidate-route assumptions; they do not
+establish a bound for E77's language objective. E77 remains sparse in event-stream structure but its `TVLayer` uses
+dense time-by-batch-by-unit state tensors and its retrieval scores all eligible query/key pairs. A genuinely sparse
+execution kernel and indexed candidate search remain necessary for the manifesto's energy goal. Depth sweeps (2, 4, 8,
+16) therefore track loss, layerwise gradients, active and retained events, route coverage, and search/simulator work.
 
 **(g) Hopfield retrieval gives a depth-scalable local credit rule.** The modern Hopfield/softmax-attention equivalence
 is a one-update statement: given stored key/value pairs $(k_j,v_j)$ and query $q$, set
@@ -5010,6 +5023,44 @@ pressure by increasing useful score margins, controlling payload diameters, or s
 a learned index that retains softmax mass. An index that secretly computes all-pairs scores does not change the work
 law.
 
+**(h) The sequence-level bound depends on key fan-out, not just one-query sensitivity.** The bound above differentiates
+one output with respect to its query while holding its memory fixed. In a stack, however, an event is also a key/value source
+for later queries. Let payloads be $x_i$, with $q_i=W_qx_i$, $k_j=W_kx_j$, $v_j=W_vx_j$, and let $p_{ij}$ be the causal
+softmax weights under a fixed event order and fixed candidate mask. Define
+
+\[
+H=\max_j\sum_i p_{ij},\qquad Q=\frac{\beta D_KD_V\|W_q\|_2}{4},\qquad
+B=\|W_v\|_2+\beta D_V\|W_k\|_2\max_i\|q_i\|_2.
+\]
+
+For $j\ne i$, direct differentiation gives
+\[
+D_{x_j}r_i=p_{ij}W_v+\beta p_{ij}(v_j-r_i)(W_k^\top q_i)^\top,
+\]
+so its operator norm is at most $p_{ij}B$. The query block on the diagonal is bounded by $Q$ from the cross-covariance
+lemma. Therefore the maximum block-row sum of the full sequence Jacobian $D R$ is at most $Q+B$, and its maximum
+block-column sum is at most $Q+BH$. The scalar block-norm majorizer obeys the Schur bound, yielding
+\[
+\|D R\|_2\le\sqrt{(Q+B)(Q+BH)}.
+\]
+This is a full sequence bound for the differentiable payload route at fixed topology, not a one-query bound. $H$ is the
+maximum attention mass received by any one event across all later queries. It is near one for diffuse use and can grow
+with sequence length when many queries reuse the same key; bounded key/value diameters alone do not control it.
+
+For E77's gated residual correction $F_i(x)=g_iW_or_i$, where
+$g_i=\sigma(w_x^\top x_i+w_r^\top r_i+b)$, $\|r_i\|\le V_{\max}$ and $\|\nabla\sigma\|\le1/4$ give
+\[
+\|DF\|_2\le K_F:=\|W_o\|_2\left(1+\frac{V_{\max}\|w_r\|_2}{4}\right)
+\sqrt{(Q+B)(Q+BH)}
++\frac{\|W_o\|_2V_{\max}\|w_x\|_2}{4}.
+\]
+Thus the residual theorem in (g) applies with the measured $K_F$, provided the per-layer step satisfies
+$\alpha_\ell K_{F,\ell}\le1/2$. This condition includes query, key, value, output, gate, and cross-query fan-out gains.
+It is conservative, but it is computable without forming the full Jacobian. E77 now logs $H$, this sequence-level bound,
+its depth-scaled value, and their sum across event layers. Hard changes in event creation/order or top-$k$ membership are
+outside the certificate; the bound is local to a region with those choices fixed. It is a condition to measure, not a
+claim that deeper E77 models already satisfy it.
+
 Now compose event updates $h_{\ell+1}=h_\ell+\alpha_\ell F_\ell(h_\ell)$, where each $F_\ell$ is
 one causal Hopfield message update plus a bounded readout/gate. If the *full fixed-topology Jacobian* obeys
 $\|DF_\ell\|_2\le K$ and $\alpha_\ell K\le1/2$, then
@@ -5022,11 +5073,8 @@ This follows by bounding each factor $I+\alpha_\ell DF_\ell$ between singular va
 $1-\alpha_\ell K$ and $1+\alpha_\ell K$, then multiplying. Choosing $\alpha_\ell=1/L$ yields
 depth-independent credit bounds $[e^{-2K},e^K]$. E77's event-Hopfield residual is initialized with this $1/L$
 scale; its learned maps and hard spike topology do **not yet enforce** the required uniform $K$. E77 logs learned
-delay gain $\beta$, diameter upper bounds, and the query-only bound; the full gate/key/value Jacobian still needs
-either a proof or direct measurement. Thus the theorem identifies exactly what to control, not a claim that the
-implementation already satisfies it. A next proof step is to
-bound the fixed-topology payload Jacobian from query/key/value diameter, gate slope, and output-map norm; a next
-experiment step is to log these gains and per-role gradients at depths 2 and 4, then 8 and 16.
+delay gain $\beta$, diameter upper bounds, and the sequence-level certificate from (h). The upcoming depth runs will show
+whether their measured values satisfy the sufficient condition; the proof itself does not imply that they will.
 
 There is a second structural limit. If candidate set $C(q)$ has dense softmax mass $1-\epsilon$, then
 $\|y-y_C\|\le2V_{\max}\epsilon$. But hard top-$k$ gives excluded keys zero score gradient. Therefore dense

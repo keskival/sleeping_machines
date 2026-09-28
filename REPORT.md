@@ -560,6 +560,10 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 ## 8. Open problems and next steps
 
+The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
+
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. The resulting predictions are hypotheses to test; current results do not establish a language-model scaling or energy advantage. E64b's 1M-character, 20-pass validation-selected LSTM scores 2.179 test bits/character; a 2-layer width-256 Transformer on the same training size and pass count scores 2.367. Both best checkpoints occur at the final validation point, so strict convergence is not established. The 10M baselines are running, and E77 has no completed LM result yet.
+
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
@@ -651,6 +655,100 @@ budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates
 **The aim** is not to approximate Transformers but to exceed them: the same or better quality, with work per word that does
 not grow with model size or text length, learned by local rules from less data.
 
+### Potential: a different route to frontier models
+
+Sleeping Machines can combine mechanisms that dense sequence models usually bundle together. Event-state layers build and
+update representations only when messages arrive. Time carries order, duration, and confidence; payload vectors carry
+content. A separate retrieval interface can learn key/value attention when a query needs stored detail, while a recurrent
+state path can carry useful summaries at linear sequence cost. Local event credit can train the active causal path, and
+near-miss credit can recruit alternatives that did not win. This gives the architecture room to choose *how* to compute
+for each input rather than forcing every layer to perform the same dense operation.
+
+The strongest opportunity is to combine these parts into a deep, heterogeneous stack: temporal feature layers, selective
+state updates, query-driven retrieval, and learned decision/readout layers. Softmax key/value attention is a one-step
+modern Hopfield retrieval rule under its associative-memory interpretation; the attention/Hopfield connection is
+established in the literature ([Ramsauer et al.](https://arxiv.org/abs/2008.02217)). E77 now applies a separate
+query/key/value associative update directly to emitted event payloads, then carries the retrieved payload onward through
+the event stream. The exact score gradient is centered around the retrieved value, so it teaches both which keys to
+address and which payloads to transmit. This gives event message passing an attention-capable associative primitive
+without making every temporal layer an attention layer.
+
+The auto-associative case has additional structure: retrieval is the gradient of a convex log-partition function, and
+its Hessian is a positive-semidefinite key covariance. Repeated retrieval is contractive when
+β × key-diameter² / 4 < 1; above that sufficient threshold, this argument no longer ensures stable settling. Decoupling
+keys from values enables hetero-associative memory but makes the query Jacobian a cross-covariance that need not be
+symmetric. E77 therefore uses one gated Hopfield update per event layer and retains an identity path instead of assuming
+that repeated associative settling will converge.
+
+There is now a useful local depth result (§107(g–h)): for fixed stored keys and values, the query sensitivity is a
+cross-covariance bounded by (inverse temperature × key diameter × value diameter / 4), independent of the number of
+memories. For a full event sequence, however, a key shared by many later queries can amplify gradients. §107(h) bounds
+the sequence Jacobian using each key's accumulated attention mass, plus query/key/value projection gains and the output
+gate. If every event-level correction satisfies the resulting bound, residual scaling by 1/depth keeps the payload-path
+Jacobian between positive, depth-independent bounds. E77 now logs key fan-out, the sequence-level bound, its scaled value
+and layer sum, score spread, retrieval entropy, update size, key/value diameter bounds, and role-specific gradients.
+The certificate is local to a fixed event order and candidate set; hard event births, route discovery, and changes in
+top-k membership remain outside it. These measurements will show whether the 2/4/8/16-layer models meet the sufficient
+condition rather than assuming they do.
+
+Retrieval precision also trades off with learning credit. If the best key leads by score margin $m$, the non-winner
+softmax mass is at most $(N-1)e^{-\beta m}$. Yet for two candidates the derivative is $\beta p(1-p)$: it is largest
+at a tie and vanishes after one route becomes certain; a hard-excluded key receives no gradient. This derives a concrete
+learning schedule: begin with broad associative retrieval and near-miss credit, then sharpen and sparsify only while
+candidate recall and score-gradient coverage remain high. The 2/4/8/16-layer E77 and Transformer sweep now matches
+context length, sampled training windows, 5M-token exposure, batch size, optimizer updates, and parameter count to within
+4% (Transformer widths 104/104/112/136 at depths 2/4/8/16). A separate width-256, 20-pass depth-4 Transformer run
+supplies a stronger convergence reference; it has a larger training budget and is reported separately from the matched sweep.
+
+#### If these mechanisms scale
+
+If deep event stacks preserve the Hopfield address/value learning signal, learn the routes that matter, and find
+retrieval candidates without scanning every stored key, frontier models could grow their useful memory and reasoning
+capacity without making every token pay for every possible interaction. Training work would follow the examples and
+routes that create predictive value; inference work would follow emitted events and retrieved candidates. The model
+could retain a large associative store while only a small, input-dependent fraction participates in each prediction.
+
+That would change the practical scaling strategy. More capability would come from composing sparse temporal features,
+event-triggered memory updates, and content-addressed retrieval—not only from increasing dense matrix size and token
+throughput. A stronger accuracy-per-compute curve would shift investment toward memory bandwidth, fast sparse routing,
+event-capable processors, and distributed associative stores. Frontier development could become less dependent on
+ever-larger dense GPU clusters, while training becomes more data- and update-efficient. The paradigm shift would be a
+new way to scale model capacity and learning together: preserve Transformer-level associative recall, compose it deeply,
+and spend computation where the learned model says information is needed.
+
+The mathematical work now points to concrete levers for that outcome: keep score credit alive near competing routes,
+bound payload and layer gains as depth grows, and reduce candidate search with an index that preserves retrieval mass.
+The depth-4/8/16 queue is the first language-model test of whether those levers work together beyond shallow stacks.
+
+Depth is now a first-class variable in E77. Each deeper layer receives the retained event stream, appends its newly
+emitted events, and also receives sparse raw-input skips; it does not add a dense per-token residual computation. THEORY
+§107(f) proves a non-contracting inclusion path for existing event payloads under fixed topology, while §107(g–h) bounds
+the Hopfield residual correction when its sequence-level gain and key fan-out are controlled. E77 logs per-layer
+activity, associative score spread/entropy, update size, key/value diameter upper bounds, key fan-out, the payload
+Jacobian certificate and its residual-scaled value, and role-specific gradients. Retaining events can increase pairwise
+retrieval work with depth, so the same sweeps also report messages, events, and score candidates.
+The token-level adaptive retrieval interface has a linear-time recurrent-state path, but both token retrieval and
+event-level Hopfield lookup currently score every eligible query/key pair. In addition,
+`TVLayer` simulates state in dense time-by-batch-by-unit tensors even though its synaptic connectivity is sparse. Thus
+the design remains event-oriented and has sparse routing, while this implementation has not yet achieved fully sparse,
+event-driven execution or demonstrated lower energy. Both simulator work and retrieval search must be measured and
+optimized before claiming a compute advantage.
+
+**Depth fairness is mandatory.** E77's two-block setting is a prototype configuration, not a frontier comparison. The
+queued text Transformer baseline has two layers; the best E61 recall Transformer used four, and the published large-model
+text8 numbers cited elsewhere are not matched in depth, parameters, or training budget. E79's 90M result is a contextual
+reference, not proof that a small native mixture has lost to a comparable frontier model. Before drawing an architectural
+conclusion, sweep event depth (2, 4, 8, 16), widen capacity, train to comparable validation convergence, and compare both
+at matched depth and matched total training work. If loss is worse, inspect training loss, residual gradient norms, event
+activity/route coverage, retrieval recall, and scaling with data; then fix the diagnosed bottleneck and rerun. Depth is a
+core capability to build and measure, not an optional ablation.
+
+The strategic upside is substantial: if learned topology keeps useful information and credit flowing while inactive
+routes remain quiet, models can grow in representational capacity without making every token pay for every possible
+interaction. That would change the practical scaling curve for both learning and inference. The E77 implementation is the
+next concrete step toward this architecture; its adaptive interaction, residual depth, and resource frontier need the
+depth and compute experiments above.
+
 **Why that is a reasonable aim** (theory; details in §96–§98):
 - *Nothing a Transformer computes is out of reach.* Every part of a Transformer layer has an event form: similarity between
   a query and stored keys is the overlap of their spike codes; a race among the stored keys picks the best match, and a
@@ -659,8 +757,8 @@ not grow with model size or text length, learned by local rules from less data.
   Stacking layers is composition. So a Sleeping Machines network can express any Transformer.
 - *It has freedoms a Transformer lacks.* The *order* in which signals fire is a second axis for information (n signals can
   carry up to log₂ n! extra bits in their order); only active units work, so a model can be very large while each word
-  stays cheap; structure is grown where it proves useful; sampling is a race, and retrieval reaches only keys that share
-  a channel with the query.
+  stays cheap; structure is grown where it proves useful; sampling is a race, and retrieval can aggregate only the keys
+  that pass its match window. Finding those keys still requires candidate search.
 - *Local learning is not a handicap in principle* (and for Transformer-style attention it is exact on average; below). A
   race computes with minima and sums; the exact gradient that
   backpropagation would compute for it runs only along the chain of spikes that caused the output, which each node can
@@ -710,7 +808,8 @@ The only nonlinearity is in *which* units fire *when*. Four consequences follow:
 decides *when* it arrives: a message whose content matches the receiver is delayed in proportion to the match, and a message
 that does not match is never sent. The receiver's state fades with time, so a later arrival counts more. Consequence, proved
 and checked: the receiver holds exactly softmax attention over the matching messages, with no multiplications for the
-weights and no sampling, and it pays only for messages that were sent. Races compute the same softmax by *sampling* (fast,
+weights and no sampling. Payload aggregation pays only for messages that were sent; an unindexed implementation still
+scores every key, so total search work can grow with context length. Races compute the same softmax by *sampling* (fast,
 slightly noisy); delays compute it by *waiting* (exact, slower for a wider range of scores). A unit then fires when its
 evidence crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation.
 Networks built this way compute in the log semiring: delays add, and gains multiply. E74 tests it on spoken digits.
@@ -721,9 +820,11 @@ content-dependent delay its input gate, the count channel its normalizer. But a 
 writes cannot answer arbitrary questions asked later: remembering N facts for any future question needs at least N × (bits
 per fact) of state. So a language model built this way needs a second memory, *retrieval*, done natively: a question is
 sent to stored keys, which reply sooner the better they match; the first reply opens a short window, and replies inside it
-are weighted exponentially, which is exactly softmax attention over the good matches. Its cost is the number of good
-matches, not the length of the text. E77 builds this language model (two spiking time-vector layers, a recurrent state,
-one retrieval layer) and trains it on text8 against the converged LSTM and Transformer.
+are weighted exponentially, which is exactly softmax attention over the good matches. Its aggregation cost is the number
+of good matches. Its search cost is still linear in the context without an index. E77 combines a configurable stack of
+spiking time-vector layers, a recurrent state, and one adaptive retrieval layer. Deeper layers have sparse raw-event
+skips; the retrieval layer can mix delay-coded attention with a linear-time state route. An indexed candidate search is
+still needed to reduce total attention search work.
 
 **Local learning that provably suffices (theory, §108–§109).** When units predict the next character by racing (each
 candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is a *gated
@@ -746,9 +847,10 @@ in this design features come from the time-vector layers and the native detector
   linear). For scale, published text8 results: a standard LSTM ≈ 1.43, stronger recurrent models 1.27–1.36, large
   Transformers ≈ 1.08; so at full scale the native model is near an LSTM and behind Transformers. Fixed share, which
   carries the §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
-  text8 from 90M characters. Our first gradient-trained baselines at equal data (one pass over 10M characters: LSTM 2.17,
-  Transformer 2.43) are not converged, so no comparison is claimed until converged runs (multiple passes, early stopping on
-  validation, E64b) finish.
+  text8 from 90M characters. The first gradient-trained 10M baselines (one pass: LSTM 2.17, Transformer 2.43) were
+  unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
+  Transformer; both best checkpoints occur at the final validation point. Multi-pass 10M controls are running, and the
+  matched 2/4/8/16-layer E77 comparisons are queued. No language-model advantage for E77 is established yet.
 - *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
   a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
   race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
@@ -761,9 +863,10 @@ in this design features come from the time-vector layers and the native detector
 1. *Counting baseline* (measured, E62–E66; above): context detectors of increasing length with counts of what follows, plus a copy
    memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
 2. *Attention over the stream*, by races (the E61 mechanism at scale; E68) or by content-dependent delays (§105:
-   exact, and as cheap as the attention is sharp; E76 measures how sharp a trained model's attention on text is).
+   exact; retrieved-value aggregation is as cheap as attention is sharp, while total search cost needs a separate index
+   (E76 measures how sharp a trained model's attention on text is).
    E77 is the first full model of this kind: spiking time-vector layers for the recurrent memory and a delay-coded
-   retrieval layer (§107), with messages, spikes and retrieved keys per character reported.
+   retrieval layer (§107), with messages, spikes, retrieved keys and score candidates per character reported.
 3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
 4. *Stacked layers* with credit along causal chains and near misses.
 At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
@@ -810,7 +913,7 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | one-pass runs unconverged; converged runs queued |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M baselines running |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |

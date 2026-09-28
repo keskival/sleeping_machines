@@ -1,5 +1,5 @@
 # after the baselines (now in e71a): attention work law in the trained Transformers, E77 at 10M, the envelope at 10M
 e79_D1M experiments/e79_race_mixer.py --D 1000000 --K 5
 e76_attention_work experiments/e76_attention_work.py --windows 200
-e77_D10M_r1 experiments/e77_tv_lm.py --D 10000000 --passes 2 --retrieval 1
-e78_D10M experiments/e78_envelope.py --D 10000000 --K 6 --e77 tvlm_D10000000_p2_r1_M128-128-64_s0
+e77_D10M_r1 experiments/e77_tv_lm.py --D 10000000 --passes 2 --bs 4 --retrieval 1
+e78_D10M experiments/e78_envelope.py --D 10000000 --K 6 --e77 tvlm_D10000000_p2_r1_M128-128-64_depth2_c0_eh1_ek0_s0

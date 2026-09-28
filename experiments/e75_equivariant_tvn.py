@@ -229,7 +229,7 @@ def main():
                "msgs_per_utt": info["msgs"], "spikes_per_utt": info["spikes"], "synapses_sending": sending,
                "wall_s": round(time.time() - t0)}
         res["curve"].append(row); print(json.dumps(row), flush=True)
-    with open(os.path.join(OUT, f"eq_S{a.scales}_rho{a.rho:g}_st{a.stride1}_w{a.win1}_sh{a.shift}_{a.eval}_s{a.seed}.json"), "w") as f:
+    with open(os.path.join(OUT, f"eq_S{a.scales}_rho{a.rho:g}_st{a.stride1}_w{a.win1}_sh{a.shift}_bs{a.bs}_{a.eval}_s{a.seed}.json"), "w") as f:
         json.dump(res, f)
 
 

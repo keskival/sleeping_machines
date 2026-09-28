@@ -57,16 +57,6 @@
 #                         ⚠️ Only applies to a NEWLY CREATED container: this
 #                         script REUSES a container by name and `docker attach`
 #                         cannot change env. See the note at the run block.
-#   DEV_MEMORY          – hard memory cap for the container (default 10g; swap
-#                         is capped to the same value, so it gets none). This
-#                         host has no swap: without a cap, a runaway experiment
-#                         froze the WHOLE HOST three times. With it, the kernel
-#                         OOM-kills inside the container instead.
-#   DEV_CPUS            – CPU cap (default 3 of 4, leaving one for the host).
-#   DEV_GPUS            – GPUs to expose via --gpus (default "all"; needs the
-#                         NVIDIA Container Toolkit on the host). DEV_GPUS= disables.
-#                         ⚠️ Like the env vars, these three only apply to a NEWLY
-#                         CREATED container, not a reattached one.
 #   IMAGE_NAME          – Docker image tag  (default: claude-code-sandbox)
 #   NO_REBUILD          – set to "1" to skip the docker build step
 #   CONTAINER_NAME      – override the derived container name entirely
@@ -109,7 +99,7 @@ elif [[ -n "${1:-}" && "${1}" != -* ]]; then
 fi
 
 # ── Config ────────────────────────────────────────────────────────────────────
-IMAGE_NAME="${IMAGE_NAME:-claude-code-sandbox}"
+IMAGE_NAME="${IMAGE_NAME:-codex-sandbox}"
 CLAUDE_VERSION="${CLAUDE_VERSION:-latest}"
 # Resolve the `latest` dist-tag to a concrete version BEFORE docker build: with
 # a constant "latest" the install layer's cache key never changes and Docker
@@ -156,11 +146,11 @@ fi
 FOLDER_NAME="$(basename "${WORKSPACE_DIR}")"
 USER_NAME="${USER:-$(id -un 2>/dev/null || echo "uid$(id -u)")}"
 # Sanitise: replace characters Docker doesn't allow in container names
-DEFAULT_NAME="claude-${USER_NAME//[^a-zA-Z0-9_.-]/-}-${FOLDER_NAME//[^a-zA-Z0-9_.-]/-}"
+DEFAULT_NAME="codex-${USER_NAME//[^a-zA-Z0-9_.-]/-}-${FOLDER_NAME//[^a-zA-Z0-9_.-]/-}"
 [[ -n "${FEATURE}" ]] && DEFAULT_NAME+="-${FEATURE}"
 CONTAINER_NAME="${CONTAINER_NAME:-${DEFAULT_NAME}}"
 # ── Run ───────────────────────────────────────────────────────────────────────
-echo "🚀  Starting Claude Code in ${WORKSPACE_DIR}"
+echo "🚀  Starting Codex in ${WORKSPACE_DIR}"
 echo "    Feature   : ${FEATURE:-(none)}"
 echo "    Container : ${CONTAINER_NAME}"
 echo "    Image     : ${IMAGE_NAME}"
@@ -169,6 +159,8 @@ echo ""
 # Key flags explained:
 #   --interactive --tty     needed for Claude Code's interactive TUI
 #   --user $(id -u):$(id -g) files written inside the container are owned by YOU
+#   --memory / --memory-swap  bound memory; host has no swap, so set them equal
+#   --cpus                  leaves CPU capacity for the host
 #   -v workspace            your code is live-mounted; no copies needed
 #   --network host          lets Claude Code reach the Anthropic API
 #   --privileged            REQUIRED for the Android emulator (KVM access).
@@ -225,7 +217,6 @@ if docker inspect "${CONTAINER_NAME}" &>/dev/null; then
   exec docker attach "${CONTAINER_NAME}"
 else
   # No container yet – create it fresh
-  DEV_GPUS=${DEV_GPUS-all}
   exec docker run \
     --interactive \
     --tty \
@@ -237,7 +228,6 @@ else
     --memory "${DEV_MEMORY:-10g}" \
     --memory-swap "${DEV_MEMORY:-10g}" \
     --cpus "${DEV_CPUS:-3}" \
-    --env "ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}" \
     --env "HOME=/home/node" \
     --env "TERM=${TERM:-xterm-256color}" \
     --env "CLAUDE_CODE_DISABLE_MOUSE_CLICKS=1" \
@@ -246,7 +236,8 @@ else
     --env "CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION=${CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION:-400}" \
     --volume "${WORKSPACE_DIR}:/workspace" \
     --workdir /workspace \
+    --entrypoint codex \
     "${IMAGE_NAME}" \
-    --effort "${CLAUDE_CODE_EFFORT:-low}" \
+    --yolo \
     ${@:+"$@"}
 fi
