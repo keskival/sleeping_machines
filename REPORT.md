@@ -536,11 +536,25 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   max-over-time SNN readout potentials, while Spyx applies cross-entropy to integrated potentials
   ([Cramer et al.](https://kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf),
   [Spyx tutorial](https://spyx.readthedocs.io/en/latest/examples/surrogate_gradient/SurrogateGradientTutorial/)).
-  A tiny 80/40-example smoke reached 92.5%
-  output coverage but only 10.8% accuracy among emitted answers after one epoch; full-sequence max-potential accuracy
-  was 2.5%. This is a failed learning pilot, not evidence of a useful race. The matched depth-4 comparison across race,
-  integral and max objectives uses 512 training examples, 128 held-out-speaker examples, and five epochs; it is running
-  under the safe runner. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
+  A tiny 80/40-example smoke reached 92.5% output coverage but only 10.8% accuracy among emitted answers after one
+  epoch; full-sequence max-potential accuracy was 2.5%. In the guarded depth-4 screen (512 train / 128 held-out-speaker
+  examples, two epochs), integral pooling ended at 4.69% max-over-time accuracy and 5.47% with terminal fallback;
+  race-only coverage was 17.97% and accuracy among emitted answers 4.35%. Max pooling ended at 4.69%; its default
+  threshold fallback accuracy was 3.91%. The stable-cause `anytime` run reached 6.25% max-over-time accuracy in epoch
+  two (8/128; chance-tail probability 0.31) and 5.47% race accuracy at 100% coverage; all tested thresholds from 0.3 to
+  0.9 emitted on every item, with peak confidence saturated at 1.0. Layer 4 activity rose from 932 to 1,024 spikes per
+  utterance. This diagnoses false-confidence/activity growth, not reliable evidence above chance. The stable-cause
+  race-only control ended at 3.12% max accuracy, 97.66% coverage, 4.8% emitted accuracy, and 0.981 peak confidence.
+  A readout-only shadow probe at seed-2 initialization (not trained weights) forced 32 near-gate routes on four held-out
+  utterances: 31 changed max-pooled CE by exactly zero and one reduced it by 0.045; its boundary-gradient norm was 2.2%
+  of pathwise norm with cosine 0.012. Section 129 derives the max-pooling winner-gap dead zone that can erase a route's
+  effect from terminal loss. This small probe says nothing conclusive about trained weights or hidden route births.
+  `TVLayer` also detaches its hard content gate and computes spike identities inside `no_grad`, so closed routes and
+  silent units get no task gradient for creating events. The existing §§19/57 counterfactual boundary credit is not
+  wired into this stack. Next: save a trained checkpoint, shadow hidden threshold crossings through the remaining
+  layers, and compare max, integral, and smooth-max posterior heads under the same support and sampled-prefix proper
+  log loss. Measure winner gaps and gradient alignment before adding credit or expanding data/depth. Earlier: the weight race
+  reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
@@ -632,10 +646,29 @@ The synthesis now treats topology and representation as separate experimental ax
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
 - **Deep time-vector networks on real streams (§110–§111):** E83/E84 use strict adjacent-layer event chains and deepest-only
   inference. E83 first compares sequence supervision schemes at depth 4 because its earlier depth-2 runs averaged softmax
-  across silent and padded time; that objective confounds sequence length and batching. The first corrected race smoke is
-  near chance, so it has not shown trainability. After selecting a validated objective, test depths 2/4/8/16 and auxiliary
-  losses off/on, logging gradient alignment, work, coverage, accuracy, and latency. E84 remains the guarded day-5 market
-  likelihood comparison; no new market result exists.
+  across silent and padded time; that objective confounds sequence length and batching. Two-epoch integral and max controls
+  are near chance; the first race smoke is also near chance, so the learned deep model has not shown trainability. The
+  stable-cause race-only control also ended near chance (3.12% max accuracy and 4.8% emitted accuracy at 97.66% coverage).
+  All current objectives share fixed-support gradients. `TVLayer` hard-detaches content gates and computes spike
+  identities in `no_grad`, so silent routes/units get no boundary credit. A 32-route final-readout shadow probe on four
+  untrained examples found 31 exactly zero max-pooling loss differences; §129 derives the winner-gap dead zone. Before
+  scaling data or depth, save a trained checkpoint, shadow hidden threshold crossings through downstream layers, and
+  compare max/integral/smooth-max heads using sampled-prefix proper log loss. Then calibrate the first-crossing stopping
+  policy on held-out speakers. E84 remains the guarded
+  day-5 market likelihood comparison;
+  no new market result exists.
+- **Anytime classification of sparse streams (§§119–§129):** for a true prefix posterior, emitting at its first
+  confidence crossing of $1-\epsilon$ bounds the error among emitted answers by $\epsilon$; this is a derived guarantee,
+  conditional on sequential calibration, not yet an E83 result. For point-process inputs, both observed events and
+  class-dependent silence carry evidence, so between-event crossings may require scheduled clock updates. When an event
+  changes only $r$ class logits, indexed max and log-sum-exp trees maintain the exact confidence threshold in
+  $O(r\log C)$ work; a reference implementation is in `experiments/sparse_anytime_readout.py`, not integrated or
+  benchmarked yet. Sampled-prefix log loss is proper for the posterior given a prefix despite having only one label per
+  complete stream; the race objective alone does not determine calibrated prefix probabilities. The staged
+  route-credit → posterior → stopping-policy plan is in §§127–§129. Max pooling can add a further dead zone: a shadow route
+  gets no terminal loss credit unless it changes a temporal winner; smooth-max can soften this while retaining sparse
+  event updates. This task structure covers SHD speech and event-camera
+  clips with one label per stream.
 - **A time-vector language model (§107, E77):** does the hybrid of sparse time-vector memory and delay-coded retrieval
   reach the converged LSTM and Transformer at equal data, and how many keys does it actually retrieve per character?
 - **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
@@ -1069,7 +1102,7 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | original depth-2 softmax-mean runs invalidated; matched depth-4 race/integral/max comparison running; first race smoke near chance |
+| E83 | deep time-vector model on speaker-held-out SHD | depth-4 two-epoch controls near chance; race-only false confidence; final-readout max-pool shadows mostly invisible at random initialization (§129) |
 | E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 

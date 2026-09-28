@@ -195,7 +195,7 @@ the longest utterance in its batch. The old depth-2 runs are retained as
 debugging records but are excluded as depth or trainability evidence; the
 guarded queue was stopped before depth 4.
 
-The corrected E83 compares three sequence objectives at fixed depth 4 before
+The corrected E83 compares sequence objectives at fixed depth 4 before
 resuming a depth sweep:
 
 - **Output race:** no answer before any class clears a confidence threshold;
@@ -214,9 +214,74 @@ Each sequence now has its own end time and pooling deadline, so co-batched
 padding is excluded. A tiny 80-train / 40-validation, one-epoch smoke remained
 near chance: the revised race reached 92.5% coverage but only 10.8% accuracy
 among emissions; max-over-time accuracy was 2.5%. This is a failed, low-power
-pilot, not positive evidence. A matched depth-4 comparison (512 train, 128
-held-out-speaker validation, five epochs) across race, integral, and max
-objectives is now running under the safe runner.
+pilot, not positive evidence. In the guarded 512-train / 128 held-out-speaker,
+two-epoch controls, integral pooling ended at 4.69% max-over-time accuracy and
+5.47% with terminal fallback; its race coverage was 17.97%, with 4.35%
+accuracy among emitted answers. Max pooling ended at 4.69% max-over-time
+accuracy and 3.91% with the default-threshold fallback. Both are at or near
+20-way chance (5%), so they have not shown recognition. The race-plus-fallback
+`anytime` control reached 6.25% max-over-time accuracy (8/128; chance-tail
+probability 0.31), 5.47% emitted accuracy, and 100% coverage at threshold 0.6;
+thresholds 0.3–0.9 all emitted every item, with confidence saturating at 1.0.
+Layer-4 activity grew from 932 to 1,024 spikes per utterance. This identifies
+false confidence and event amplification, not reliable evidence above chance.
+The matched stable-cause race-only control ended at 3.12% max-potential
+accuracy, 97.66% coverage, 4.8% emitted accuracy, and 0.981 peak confidence.
+These screening runs use two epochs and a small subset, not a competitive SHD
+benchmark.
+
+For a true prefix posterior $\pi_t(c)=P(Y=c\mid\mathcal F_t)$, the first time
+$\max_c\pi_t(c)\ge1-\epsilon$ gives conditional error at most $\epsilon$ at
+the output. This bound applies at a stopping time and needs no prefix label,
+but it requires calibration on the selected first-crossing prefixes. A
+marked-point-process posterior accumulates both event log-likelihood jumps
+and no-event survival terms; class-dependent silence can change confidence
+between arrivals and may require scheduled clock updates. If an event updates
+only $r$ class logits, indexed max and log-sum-exp trees give an exact
+$O(r\log C)$ confidence-threshold check; generating the full $C$-class
+probability vector still costs $O(C)$ on emission. The reference
+`experiments/sparse_anytime_readout.py` implements the sparse additive-update
+case, but is not yet integrated with E83. §§122–126 derive the guarantees and
+the limits of this event-driven readout.
+
+A second code audit found that `TVLayer` computes its content gate as
+`r.detach() > 0` and its spike identity mask under `no_grad`. On a fixed batch,
+a closed route has exactly zero loss derivative with respect to its gate score;
+an open route gets only its conditional delay/payload derivative, and a silent
+unit gets no end-to-end output derivative. The route masks are also fixed
+random/tonotopic buffers, so topology itself cannot be recruited. Thus the
+objective controls learn on realized support and do not test the established
+§19/§57 boundary credit.
+
+The first exact shadow probe was deliberately narrow: four held-out-speaker
+utterances, 32 near-gate insertions into the final readout, and a fresh seed-2
+initialization because no trained checkpoint was saved. 31/32 interventions
+changed max-pooled terminal loss by exactly zero; one improved it by 0.045.
+The summed counterfactual gradient was only 2.2% of the pathwise norm and had
+cosine 0.012 with it. This is not a trained-model result. Section 129 explains
+one reason: max pooling gives zero loss difference to a route whose potential
+stays below that class's current temporal winner. The next useful probe is
+therefore to save a trained checkpoint, measure temporal winner gaps, and
+shadow hidden threshold crossings through downstream layers. Compare max,
+integral, and smooth-max posterior heads on the same event support and
+sampled-prefix proper log loss; report exact shadow advantages and gradient
+alignment under a fixed noise band/budget. Do not spend on another objective
+sweep before this distinguishes readout blindness from missing hidden-route
+credit.
+
+Do not then train the stop threshold as a proxy for posterior quality. For a
+prefix sampled from a declared latency distribution $t\sim\nu$, log loss
+satisfies
+$\mathbb E[-\log q_t(Y)\mid E_{\le t}]=H(\pi_t)+D_{KL}(\pi_t\Vert q_t)$,
+so its population optimum is the actual prefix posterior even though the only
+target is the complete-stream class. Sample a limited number of prefixes per
+utterance (including its empty/prior prefix and its end), train this posterior
+with proper scoring, then calibrate and select the stopping boundary on
+held-out speakers. The race success objective can be added later as
+decision-focused fine tuning; by itself it constrains integrated win mass,
+not the probability trajectory at the first crossing. This gives a staged,
+mechanism-based plan: first verify route credit, then verify prefix posterior
+quality, then optimize early stopping.
 
 Only after selecting a readout objective on held-out speakers should E83
 resume the iso-width depth 2/4/8/16 and auxiliary-weight 0/0.2 comparison. The

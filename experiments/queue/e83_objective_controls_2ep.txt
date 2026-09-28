@@ -1,0 +1,6 @@
+# Matched depth-4 SHD screening controls: same seed, split, topology and two
+# epochs as the race's saved epoch-2 checkpoint. The anytime scheme adds an
+# explicit terminal fallback to the race objective.
+e83_d4_integral_2ep_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective integral --seed 2
+e83_d4_max_2ep_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective max --seed 2
+e83_d4_anytime_2ep_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 2 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective anytime --race_threshold 0.6 --race_temperature 0.03 --race_logit_temperature 2 --race_rate 5 --race_latency_discount 1 --seed 2

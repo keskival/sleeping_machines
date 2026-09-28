@@ -58,7 +58,7 @@ class TVLayer(nn.Module):
     def lam(self):
         return torch.complex(-torch.exp(self.log_rate), self.freq)
 
-    def forward(self, eb, ei, et, ev, B, G):
+    def forward(self, eb, ei, et, ev, B, G, force_route=None, return_routes=False):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -66,8 +66,20 @@ class TVLayer(nn.Module):
         else:
             pe = torch.arange(E).repeat_interleave(M); pj = torch.arange(M).repeat(E)
         r = (self.q[pj] * ev[pe]).sum(-1) + self.c[ei[pe], pj]                  # content score of each message
+        route_info = None
+        if return_routes:
+            route_info = {"event_index": pe.detach(), "receiver": pj.detach(),
+                          "score": r.detach()}
         if self.gate:
             keep = r.detach() > 0                                              # non-matching content: no message
+            if force_route is not None:
+                fe, fj = map(int, force_route)
+                forced = (pe == fe) & (pj == fj)
+                if not bool(forced.any()):
+                    raise ValueError("forced route is not in the candidate connectivity mask")
+                if bool((forced & keep).any()):
+                    raise ValueError("force_route must name a currently closed route")
+                keep = keep | forced
             pe, pj, r = pe[keep], pj[keep], r[keep]
         if not self.training:
             self.sent[ei[pe], pj] = True
@@ -106,7 +118,8 @@ class TVLayer(nn.Module):
                 jump = fire * torch.exp(-(1 - frac) / TAU_R)
                 R.add_(jump); Vp = Vd - th * jump
         if not self.spiking:
-            return torch.stack(Vs), len(pe) / B
+            output = (torch.stack(Vs), len(pe) / B)
+            return (*output, route_info) if return_routes else output
         kk, bb, jj = F.nonzero(as_tuple=True)
         good = kk >= 1; kk, bb, jj = kk[good], bb[good], jj[good]
         frac, Rpre = FR[kk, bb, jj], RP[kk, bb, jj]
@@ -121,7 +134,8 @@ class TVLayer(nn.Module):
         zT = torch.exp(lj * s[:, None]) * zprev                                # state at the firing time
         C = torch.complex(self.Cre, self.Cim)[jj]                              # (S, d_out, n)
         y = nn.functional.gelu((C @ zT[..., None]).squeeze(-1).real) * self.snapshot + self.emb[jj]
-        return (bb, jj, (kk - 1).float() + s, y), len(pe) / B
+        output = ((bb, jj, (kk - 1).float() + s, y), len(pe) / B)
+        return (*output, route_info) if return_routes else output
 
 
 class Net(nn.Module):
