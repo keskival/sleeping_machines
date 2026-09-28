@@ -179,7 +179,8 @@ and what remains open.
    content-dependent delays compute softmax attention exactly at a cost set by its sharpness; and a network laid out on
    positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's race
    mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split and the completed 10M LSTM on
-   the same test segment; the matched 10M Transformer is now running, followed by the deeper E77 model tests.
+   the same test segment. The matched 10M Transformer run was stopped at 30% to release the serialized runner for
+   targeted market and speech work; its validation trace has no endpoint or test score.
 
 ## Where the event paradigm wins, and where it does not
 
@@ -607,7 +608,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer has reached 30% of its updates (step 1,464/4,882): validation BPC fell to 2.1001 from 2.5857 at 10%, improving by 0.1328 since 20%. It remains 0.3553 above the completed LSTM's 1.7448 validation BPC. These are interim checkpoints, not a test or endpoint comparison. E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The matched 10M four-layer Transformer was stopped at 30% of its updates (step 1,464/4,882): validation BPC was 2.1001, down from 2.5857 at 10% and 0.3553 above the completed LSTM's 1.7448 validation BPC. It has no test or endpoint score and does not decide the final comparison. E77 has no completed LM result yet.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -940,9 +941,9 @@ in this design features come from the time-vector layers and the native detector
   unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
   Transformer; both best checkpoints occur at the final validation point. At 10M, the two-layer 512-unit LSTM completed
   six passes with 1.7448 validation / 1.7993 test bpc (1,199,323 parameters); its best validation checkpoint is the final
-  one, so convergence is not established. The matched four-layer 10M Transformer has reached step 1,464/4,882 with 2.1001
-  validation bpc (30% of updates), down from 2.5857 at step 488. It remains above the completed LSTM's 1.7448 validation
-  bpc at this interim point; final validation and test scores are pending;
+  one, so convergence is not established. The matched four-layer 10M Transformer was stopped at step 1,464/4,882 with 2.1001
+  validation bpc (30% of updates), down from 2.5857 at step 488. It remained above the completed LSTM's 1.7448 validation
+  bpc at this interim point; it has no final validation or test score;
   the parameter-matched depth controls and 2/4/8/16-layer E77 comparisons remain queued. No language-model advantage
   for E77 is established yet.
 - *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
@@ -1007,19 +1008,19 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer at step 1,464/4,882, validation 2.1001 (30%, early) |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer stopped at step 1,464/4,882, validation 2.1001 (30%, no test/endpoint) |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
 | E71, E72 | dense event-SSM units (SHD, market) | withdrawn: they do not compute with delays |
 | E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
-| E75 | SHD: equivariant time-vector network (band shift × tempo) | initial pilot was resource-limited; exact shift covariance verified; lower-batch retrial queued |
+| E75 | SHD: equivariant time-vector network (band shift × tempo) | symmetry check passed; two-epoch pilot reached 0.044 and did not learn; depth and readout route diagnostics follow in E83 |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
 | E77 | time-vector language model with delay-coded retrieval (text8) | queued; causality verified exactly |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
-| E80 | market as vector events (with transaction magnitudes): world model and edge audit | queued |
+| E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
 | E83 | deep time-vector model on speaker-held-out SHD | depth 2/4/8 pilot queued; logs layer gradients and event activity |
 | E84 | deep time-vector market world model | depth 2/4/8 day-5 pilot queued; no confirmatory test |
