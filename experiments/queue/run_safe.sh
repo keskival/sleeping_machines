@@ -35,6 +35,7 @@ while IFS= read -r line; do
   echo "$(date +%T) start $name"
   ( ulimit -v "$MEM_CAP_KB"; exec setsid nice -n 19 bash -c "cd /workspace && $cmd" ) > "$(dirname "$0")/logs/$name.log" 2>&1 &
   pid=$!
+  last_heartbeat=$SECONDS
   while kill -0 $pid 2>/dev/null; do
     avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
     rss=$(ps -eo pgid=,rss= | awk -v group="$pid" '$1 == group {total += $2} END {print total + 0}')
@@ -49,6 +50,10 @@ while IFS= read -r line; do
       kill -TERM -- "-$pid" 2>/dev/null || true; sleep 5
       kill -KILL -- "-$pid" 2>/dev/null || true
       exit 2
+    fi
+    if (( SECONDS - last_heartbeat >= 60 )); then
+      echo "$(date +%T) alive $name: process group RSS=${rss}KB, MemAvailable=${avail}MB"
+      last_heartbeat=$SECONDS
     fi
     sleep 2
   done

@@ -422,7 +422,7 @@ def main():
         nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
         if (step + 1) % max(steps // 10, 1) == 0 or step == steps - 1:
             vb, wk = score(net, valid, a.L, a.bs)
-            row = {"step": step + 1, "train_bpc": float(loss) / math.log(2), "valid_bpc": vb, **wk,
+            row = {"step": step + 1, "train_bpc": loss.detach().item() / math.log(2), "valid_bpc": vb, **wk,
                    "event_layer_grad_norms": layer_grad, "retrieval_grad_norm": retrieval_grad,
                    "event_hopfield_grad_norms": hopfield_grad,
                    "wall_s": round(time.time() - t0)}

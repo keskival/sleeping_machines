@@ -11,14 +11,17 @@ text8 split, local-credit retrieval that generalizes to longer contexts, and dee
 structured tasks with far less data and counted computation.
 
 - **Real language:** on the same 1M-character text8 training and test split, E79's native race mixture scores **1.808
-  bpc**, versus **2.179** for the completed LSTM and **2.367** for the 2-layer Transformer. This is the strongest
-  direct language-model signal so far. E79 combines native experts and copy memory; parameter count, training budget,
-  and inference work are not matched to the gradient baselines.
+  bpc frozen**, versus **2.179** for the completed LSTM and **2.367** for the 2-layer Transformer. At 10M training
+  characters, E79 scores **1.613 bpc frozen** versus **1.799** for the completed two-layer, 512-unit LSTM on the same
+  test segment—a **0.186 bpc lead**. This is the strongest direct language-model signal so far. Both comparisons use
+  one seed; E79 combines six native experts and copy memory, compute is not matched, and the matched 10M four-layer
+  Transformer is running.
 - **Learned associative retrieval:** on E61's synthetic recall task, local race attention reaches **100% at 4× context
   after at most 4,000 examples in all five runs**. The best of seven Transformer settings reaches **71.6%** on those
   longer contexts after as many as 1M examples.
-- **Depth and composition:** on a depth-4 order task, the event model reaches **99.9–100%**; Transformers reach
-  **99.0%** with the same 40k examples and **99.2–99.6%** with 2M. On a separate shared-motif composition task,
+- **Depth and composition:** on a depth-4 order task, the event model reaches **99.9–100% after 10–15k examples**
+  (5/5 runs); a Transformer reaches **99.0% after 40k examples repeated 50 times**, and **99.2–99.6%** on 2M fresh
+  examples. On a separate shared-motif composition task,
   the event model averages **99.65% after one pass**, at roughly **10,000× lower counted work** than its Transformer
   reference.
 
@@ -133,7 +136,7 @@ and what remains open.
 
 ![One race: B fires, A and C are cancelled but keep their distance to threshold](report/figures/race.png)
 
-**Contents:** [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
+**Contents:** [Frontier signals](#frontier-signals) · [In plain terms](#in-plain-terms) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
 [2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
 [4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
 [6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) · [10. Language models](#10-next-frontier-generative-language-models) ·
@@ -174,8 +177,8 @@ and what remains open.
    event networks are controlled differential equations whose universal features are the order detectors they learn;
    content-dependent delays compute softmax attention exactly at a cost set by its sharpness; and a network laid out on
    positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's race
-   mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split; E64b's matched 10M Transformer
-   and deep E77 model are the next language tests.
+   mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split and the completed 10M LSTM on
+   the same test segment; the matched 10M Transformer is now running, followed by the deeper E77 model tests.
 
 ## Where the event paradigm wins, and where it does not
 
@@ -592,7 +595,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture is the strongest current real-language signal: 1.808 bpc frozen at 1M text8 characters, against 2.179 for the completed validation-selected LSTM and 2.367 for the 2-layer width-256 Transformer on the same training and test split. The 10M LSTM baseline continues to improve, reaching 1.7515 validation bpc at step 5,856/7,324; this is an intermediate validation value, not a test result. Its matched Transformer is queued, and E77 has no completed LM result yet.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM, a 0.186 bpc lead on the shared test segment. Both are single-seed comparisons; E79 uses six native experts and copy memory, and compute is not matched. The 10M four-layer Transformer has reached its first checkpoint at step 488/4,882 (2.5857 validation bpc), only 10% of its updates; its final validation and test scores are pending. E77 has no completed LM result yet.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -764,9 +767,12 @@ The depth-4/8/16 queue is the first language-model test of whether those levers 
 The E79 text8 scores at 1M / 10M / 90M characters are 1.808 / 1.613 / 1.504 bpc frozen and 1.782 / 1.593 / 1.483
 with online adaptation. The expert count also rises from five to seven, so this is a joint data-and-capacity trend. The
 completed 1M same-split gradient baselines score 2.179 for the 256-unit LSTM and 2.367 for the two-layer Transformer.
-The 10M LSTM has reached 1.7515 validation bpc at step 5,856 / 7,324, still improving; its matched Transformer result is pending. E79
-therefore supplies a favorable real-language performance signal, while the fairest learned deep-model comparison is
-still ahead.
+At 10M, the completed two-layer, 512-unit LSTM scores 1.799 test bpc (1.7448 validation, 1,199,323 parameters, six
+passes); E79's frozen mixture scores 1.613 on the same test segment, a 0.186 bpc lead. The LSTM's best validation
+checkpoint is the final one, so convergence is not established. Its matched four-layer Transformer has reached its
+first scheduled checkpoint at 488/4,882 updates with 2.5857 validation bpc; that is an early trajectory point, not an
+endpoint. E79 therefore supplies a stronger real-language performance signal, while compute-matched and deep-model
+comparisons remain open.
 
 Depth is now a first-class variable in E77. Each deeper layer receives the retained event stream, appends its newly
 emitted events, and also receives sparse raw-input skips; it does not add a dense per-token residual computation. THEORY
@@ -920,10 +926,12 @@ in this design features come from the time-vector layers and the native detector
   carries the §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
   text8 from 90M characters. The first gradient-trained 10M baselines (one pass: LSTM 2.17, Transformer 2.43) were
   unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
-  Transformer; both best checkpoints occur at the final validation point. The 10M LSTM is in progress: its latest
-  checkpoint is step 5,856/7,324 with validation 1.7515 bpc, still improving from earlier checkpoints. This is an
-  intermediate validation value, not a test result; the matched 10M Transformer and 2/4/8/16-layer E77 comparisons are
-  still queued. No language-model advantage for E77 is established yet.
+  Transformer; both best checkpoints occur at the final validation point. At 10M, the two-layer 512-unit LSTM completed
+  six passes with 1.7448 validation / 1.7993 test bpc (1,199,323 parameters); its best validation checkpoint is the final
+  one, so convergence is not established. The matched four-layer 10M Transformer has reached step 488/4,882 with 2.5857
+  validation bpc, an early checkpoint only;
+  the parameter-matched depth controls and 2/4/8/16-layer E77 comparisons remain queued. No language-model advantage
+  for E77 is established yet.
 - *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
   a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
   race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
@@ -986,7 +994,7 @@ on language itself. The stages above are how that will be decided.
 | E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
 | E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
 | E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM mid-run at validation 1.7515, matched Transformer queued |
+| E64, E64b | LSTM and Transformer LMs at equal data | 1M, 20-pass validation-selected: LSTM 2.179, Transformer-2L 2.367; 10M LSTM: 1.7448 validation / 1.7993 test; 10M 4-layer Transformer at step 488/4,882, validation 2.5857 (early) |
 | E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
 | E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
 | E70 | SHD: race attention over onsets | queued |
@@ -1055,8 +1063,9 @@ records become core product capabilities.
 ### The evidence path to that outcome
 
 The current signals provide a reason to pursue this path: E79's native expert mixture leads the completed 1M text8
-gradient baselines on the same split; E61 learns associative retrieval and context extrapolation with local credit; and
-the theory gives exact attention and a linear-work associative scan for fixed event schedules. The decisive next step
+gradient baselines on the same split and the completed 10M LSTM on the same test segment; E61 learns associative
+retrieval and context extrapolation with local credit; and the theory gives exact attention and a linear-work associative
+scan for fixed event schedules. The decisive next step
 is to show these capabilities working together in the deeper E77 language model, then measure matched quality,
 training cost, inference work, and energy on real hardware. That is the route from a promising mechanism to a new
 frontier-computing paradigm.

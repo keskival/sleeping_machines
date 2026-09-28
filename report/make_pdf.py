@@ -207,8 +207,12 @@ def fig_potential_evidence():
 
     base = os.path.join(RES, "e64")
     lstm = load(os.path.join(base, "lstm_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
+    lstm_10m = load(os.path.join(base, "lstm_D10000000_s512_p6_dr0.1_v.json"))["test_bpc"]
     tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
-    ax_lm.scatter([1_000_000], [lstm], color=ORANGE, marker="s", s=36, zorder=4, label="E64b LSTM · 1M")
+    ax_lm.scatter([1_000_000, 10_000_000], [lstm, lstm_10m], color=ORANGE, marker="s", s=36, zorder=4,
+                  label="E64b LSTM · 1M and 10M")
+    ax_lm.annotate(f"10M LSTM {lstm_10m:.3f}", (10_000_000, lstm_10m), xytext=(5, 7),
+                   textcoords="offset points", fontsize=6.8, color=ORANGE)
     ax_lm.scatter([1_000_000], [tf], color=GRAY, marker="D", s=34, zorder=4, label="E64b Transformer · 1M")
     ax_lm.set_xscale("log")
     ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
@@ -237,7 +241,6 @@ def fig_potential_evidence():
     ax_retrieval.set_xlim(0, 1.14)
     ax_retrieval.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
     ax_retrieval.axvline(1 / 32, color=INK, ls=":", lw=1)
-    ax_retrieval.text(1 / 32 + 0.015, 1.55, "chance", fontsize=6.4, color=MUTED, va="center")
     ax_retrieval.text(vals[0] - 0.02, 0, "100% · 5/5 by 4k", ha="right", va="center", fontsize=6.5, color="white")
     ax_retrieval.text(vals[1] + 0.025, 1, f"{tf_max:.0%} · up to 1M", ha="left", va="center", fontsize=6.5, color=INK)
     ax_retrieval.set_xlabel("accuracy at 4× context")
@@ -246,13 +249,13 @@ def fig_potential_evidence():
     fig.suptitle("Measured signals for the frontier-model hypothesis", x=0.02, ha="left", fontsize=9.5,
                  fontweight="bold")
     fig.text(0.02, 0.015,
-             "A: E79 single-seed text8 tests; expert count rises 5→6→7. At 1M, E79 and E64b share the training and test text. "
-             "B: separate synthetic E61 recall task.", fontsize=6.0, color=MUTED)
+             "A: E79 single-seed text8 tests; K rises 5→6→7. E79 and E64b use the same data splits at 1M and 10M. "
+             "B: separate synthetic E61 recall task; dotted line marks chance (1/32).", fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.018,
              "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
              fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.051,
-             "10M LSTM baseline: 1.7515 validation at step 5,856/7,324 (not test); matched Transformer pending.",
+             "10M 4-layer Transformer: 2.5857 validation bpc at step 488/4,882 (early; final validation and test pending).",
              fontsize=6.0, color=MUTED)
     fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     out = os.path.join(os.path.dirname(__file__), "figures", "potential_evidence.png")
@@ -895,19 +898,28 @@ def build():
     s += fig(fig_potential_evidence, W)
     s += bullets([
         "<b>Real language:</b> on the same 1M-character text8 training and test split, E79's native race mixture scores "
-        "1.808 bpc, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
-        "expert-and-copy-memory result; parameter count, training budget, and inference work are not matched.",
+        "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
+        "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
+        "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
+        "work are not matched. The matched 10M four-layer Transformer has reached step 488/4,882 with 2.5857 validation "
+        "bpc; this is an early checkpoint, with test evaluation pending.",
         "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
         "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
         "1M examples.",
-        "<b>Depth and composition:</b> on a depth-4 order task, the event model reaches 99.9–100%; Transformers reach "
-        "99.0% with the same 40k examples and 99.2–99.6% with 2M. On shared-motif composition, it averages 99.65% after "
-        "one pass at roughly 10,000× lower counted work.",
+        "<b>Depth and composition:</b> on a depth-4 order task, the event model reaches 99.9–100% after 10–15k examples "
+        "(5/5 runs); a Transformer reaches 99.0% after 40k examples repeated 50 times and 99.2–99.6% on 2M fresh "
+        "examples. On shared-motif composition, it averages 99.65% after one pass at roughly 10,000× lower counted work.",
     ], st)
     s += [P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
             "advantage and lower training energy remain to be demonstrated.")]
+    s.append(PageBreak())
+
+    s += [P("Accuracy and work across controlled tasks", "h1")]
+    s += fig(FM.fig_supremacy_map, W)
+    s += [P("These task-level comparisons show where learned event computation has a measured lead. Operation counts "
+            "are not end-to-end energy measurements; real-stream results and current gaps appear in section 7.", "small")]
     s.append(PageBreak())
 
     s += [P("In plain terms", "h1"),
@@ -973,7 +985,6 @@ def build():
             "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
             "0.675 vs ≈ 0.70 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.08–0.19 nats behind a Transformer point process; no trading edge "
             "after fees in four markets; on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs 94–98% published.")]
-    s += fig(FM.fig_supremacy_map, W)
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
             "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
             "when C arrives. With the same motifs in another order, the “A then B” detector still fires but nothing "
@@ -1027,8 +1038,9 @@ def build():
         "event networks are controlled differential equations whose universal features are the order detectors they learn; "
         "content-dependent delays compute softmax attention exactly at a cost set by its sharpness; a network laid out on "
         "positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's "
-        "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split; E64b's matched 10M "
-        "Transformer and deep E77 model are the next language tests.",
+        "race mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and at 10M is ahead of "
+        "the completed LSTM by 0.186 bpc on the same test segment; compute is not matched. The 10M four-layer Transformer "
+        "is at its first validation checkpoint (2.5857 bpc at step 488/4,882); final test and deep E77 results are pending.",
     ], st)
     s.append(PageBreak())
     s += [P("Where the event paradigm wins, and where it does not", "h1"),
@@ -1504,9 +1516,12 @@ def build():
             "at full scale near an LSTM, behind Transformers). For "
             "scale, large Transformers reach ≈ 1.1 on text8 from 90M characters. E64b's 1M-character, 20-pass, "
             "validation-selected test scores are 2.179 for the 256-unit LSTM and 2.367 for the 2-layer width-256 Transformer; "
-            "both best checkpoints are at the final validation point, so strict convergence is not established. The 10M "
-            "LSTM is in progress at step 5,856/7,324, with latest validation 1.7515 bpc; this is an intermediate value, "
-            "not test performance. The matched Transformer is queued next, and E77 has not yet produced a language-model result.")]
+            "both best checkpoints are at the final validation point, so strict convergence is not established. At 10M, the "
+            "two-layer 512-unit LSTM scores 1.7448 validation / 1.7993 test bpc (1,199,323 parameters, six passes), also with "
+            "its best checkpoint at the final validation point. E79 scores 1.613 frozen on the same test segment, a single-seed "
+            "0.186 bpc lead without matched compute. The matched four-layer Transformer is at its first checkpoint, 2.5857 "
+            "validation bpc at step 488/4,882; this is early and not a test result. E77 has not yet produced a language-model "
+            "result.")]
     s += fig(FM.fig_lm_topology, W)
     s += [P("<b>The plan, in stages, on character-level text (text8):</b> (1) a counting baseline with a copy memory (measured, "
             "E62–E66, above), not the goal but a measurement of how memory and loss scale with data; (2) attention over the stream, by "

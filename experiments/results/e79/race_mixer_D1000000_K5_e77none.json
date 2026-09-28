@@ -1,0 +1,55 @@
+{
+ "args": {
+  "D": 1000000,
+  "K": 5,
+  "n": 1000000,
+  "nvalid": 1000000,
+  "e77": "none",
+  "windows": "0,256",
+  "wordkeys": 0
+ },
+ "copy_window_unbounded": {
+  "race_lr": 0.002,
+  "race_valid_bpc": 1.610186856329836,
+  "experts_test_bpc": [
+   4.1303,
+   3.4545,
+   2.9501,
+   2.489,
+   2.3585,
+   2.5531,
+   2.308,
+   2.4704,
+   3.7392
+  ],
+  "linear_hedge_test_bpc": 2.02246645350028,
+  "linear_hedge_choice": [
+   0.1,
+   50
+  ],
+  "race_frozen_test_bpc": 1.778705598337606,
+  "race_online_test_bpc": 1.7551184366890262
+ },
+ "copy_window_256": {
+  "race_lr": 0.002,
+  "race_valid_bpc": 1.7012217773773266,
+  "experts_test_bpc": [
+   4.1303,
+   3.4545,
+   2.9501,
+   2.489,
+   2.3585,
+   2.5531,
+   2.308,
+   2.4704,
+   4.3793
+  ],
+  "linear_hedge_test_bpc": 2.01719464618672,
+  "linear_hedge_choice": [
+   0.3,
+   25
+  ],
+  "race_frozen_test_bpc": 1.8082070769963445,
+  "race_online_test_bpc": 1.7823405045489993
+ }
+}

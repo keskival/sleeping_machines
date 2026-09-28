@@ -5,7 +5,8 @@
   "n": 1000000,
   "nvalid": 1000000,
   "e77": "none",
-  "windows": "0,256"
+  "windows": "0,256",
+  "wordkeys": 0
  },
  "copy_window_unbounded": {
   "race_lr": 0.002,

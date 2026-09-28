@@ -100,7 +100,8 @@ def main():
         loss = nn.functional.cross_entropy(logits.reshape(-1, A), yb.reshape(-1))
         opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
         if step % max(steps // 10, 1) == 0 or step == steps - 1:
-            row = {"step": step, "of": steps, "train_bpc": float(loss) / math.log(2), "wall_s": round(time.time() - t0)}
+            row = {"step": step, "of": steps, "train_bpc": loss.detach().item() / math.log(2),
+                   "wall_s": round(time.time() - t0)}
             if valid is not None and step > 0:
                 row["valid_bpc"] = score(net, valid, a, T); vcurve.append(row)
                 if row["valid_bpc"] < best[0]:

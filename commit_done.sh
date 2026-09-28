@@ -35,24 +35,35 @@ FILES=(
   experiments/queue/e71b.txt
   experiments/queue/run_safe.sh
   experiments/results/e64/lstm_D1000000_s256_p20_dr0.2_v.json
+  experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json
   experiments/results/e64/tf_D1000000_s256_p20_dr0.2_v.json
+  experiments/results/e79/race_mixer_D1000000_K5_e77none.json
+  experiments/results/e79/race_mixer_D10000000_K6_e77none.json
   report/make_pdf.py
   report/figures/potential_evidence.png
   report/sleeping_machines_status.pdf
   commit_done.sh
 )
 
-# Catch stale or not-yet-generated allowlist entries before git add emits a
-# generic pathspec error. The report builder creates potential_evidence.png.
-MISSING_FILES=()
+# The allowlist can span experiment artifacts that do not exist in every
+# checkout. Stage existing paths and tracked deletions; skip absent paths that
+# have never been tracked so git add cannot fail with a missing-pathspec error.
+STAGE_FILES=()
+SKIPPED_FILES=()
 for file in "${FILES[@]}"; do
-  [[ -e "$file" || -L "$file" ]] || MISSING_FILES+=("$file")
+  if [[ -e "$file" || -L "$file" ]] || git ls-files --error-unmatch -- "$file" >/dev/null 2>&1; then
+    STAGE_FILES+=("$file")
+  else
+    SKIPPED_FILES+=("$file")
+  fi
 done
-if ((${#MISSING_FILES[@]})); then
-  echo "Refusing to commit: allowlisted paths are missing:" >&2
-  printf '  %s\n' "${MISSING_FILES[@]}" >&2
-  echo "Generate report artifacts with report/make_pdf.py, then rerun this script." >&2
-  exit 2
+if ((${#SKIPPED_FILES[@]})); then
+  echo "Skipping allowlisted paths absent from this checkout:" >&2
+  printf '  %s\n' "${SKIPPED_FILES[@]}" >&2
+fi
+if ((${#STAGE_FILES[@]} == 0)); then
+  echo "No allowlisted paths exist in this checkout."
+  exit 0
 fi
 
 # A previous run may have staged this allowlist and stopped at its whitespace
@@ -72,7 +83,7 @@ while IFS= read -r -d '' staged; do
   fi
 done < <(git diff --cached --name-only -z)
 
-git add -- "${FILES[@]}"
+git add -A -- "${STAGE_FILES[@]}"
 
 if git diff --cached --quiet; then
   echo "No allowlisted changes to commit."
@@ -81,7 +92,7 @@ fi
 
 # PDF structure commonly uses trailing spaces; check source and prose only.
 CHECK_FILES=()
-for file in "${FILES[@]}"; do
+for file in "${STAGE_FILES[@]}"; do
   [[ "$file" == "report/sleeping_machines_status.pdf" ]] || CHECK_FILES+=("$file")
 done
 git diff --cached --check -- "${CHECK_FILES[@]}"
