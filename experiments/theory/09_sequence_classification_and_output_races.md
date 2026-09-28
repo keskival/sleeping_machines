@@ -739,3 +739,144 @@ layers separately, because those can change downstream event support and are
 not covered by a final-head intervention. Keep the route-noise scale and
 shadow budget fixed, and report the exact loss-difference distribution and
 gradient alignment before deciding which boundary estimator merits training.
+
+## 130. The label is a backward teaching pulse over a causal time window
+
+Let $\mathcal F_t$ contain exactly the marked events observed by physical
+time $t$, and let $\pi_t(c)=P(Y=c\mid\mathcal F_t)$. For a declared measure
+$\nu$ over query times, the sequence label defines the prefix-prediction risk
+
+\[
+R_\nu(q)=\mathbb E\!\left[\int -\log q_t(Y)\,\nu(dt)\right].
+\]
+
+If the query clock is fixed independently of the example's future, conditioning
+on $\mathcal F_t$ gives
+
+\[
+\mathbb E[-\log q_t(Y)\mid\mathcal F_t]
+=H(\pi_t)+D_{KL}(\pi_t\Vert q_t).
+\]
+
+Thus hard utterance labels at randomly sampled *causal prefixes* teach the
+posterior; they do not claim that every prefix already identifies its class.
+The output error at one sampled prefix is
+$\partial L/\partial z_c=(q_t(c)-\mathbf1[c=Y])/T$. In expectation it is
+zero at the correct posterior. A sample time may be scored with a one-hot
+utterance label, while the population objective still represents uncertainty
+through its posterior optimum.
+
+The time-sampling rule is part of the theorem. If a query time is chosen as a
+fraction of that same utterance's final event time, the sampling weight depends
+on future data. Under a future-dependent weight $w$, the pointwise optimum is
+
+\[
+q^*_t(c\mid\mathcal F_t)=
+\frac{\mathbb E[w\mathbf1[Y=c]\mid\mathcal F_t]}
+     {\mathbb E[w\mid\mathcal F_t]},
+\]
+
+which need not equal $\pi_t$. E83's first window sampler used each example's
+last event to set its upper bound, so it did not have the claimed causal
+posterior interpretation when duration and class covary. The corrected design
+draws stratified query times from a fixed physical-time horizon shared across
+examples, with the horizon stated in milliseconds; the terminal EOS score is
+an additional, separate target. The horizon is an experimental choice that
+sets which response times receive training weight.
+
+Here is the asynchronous credit path. Between arrivals the state follows a
+flow $h_i^- = \Phi_{\Delta_i}(h_{i-1}^+)$; at event
+$(t_i,x_i)$ it jumps by $h_i^+=\Psi(h_i^-,x_i;\theta)$. At a sampled query
+time $\tau$, inject the readout error
+$\delta_\tau=\nabla_{z_\tau}[-\log q_\tau(Y)]$. Set the state adjoint
+$a_\tau=J_G(h_\tau)^\top\delta_\tau$. Moving backward across a jump and
+the preceding silent interval gives
+
+\[
+a_i^- = J_{h}\Psi_i^\top a_i^+,
+\qquad
+a_{i-1}^+ = J_h\Phi_{\Delta_i}^\top a_i^- ,
+\]
+
+and the parameter contribution at the event is
+$J_\theta\Psi_i^\top a_i^+$ (plus the flow-parameter term, if the flow is
+learned). Only events at or before $\tau$ are traversed. With a sparse event
+graph, this reverse sweep follows stored event edges and their actual delays;
+it need not visit empty millisecond bins. The equivalent forward eligibility
+recurrence is $E_i^-=J_h\Phi_{\Delta_i}E_{i-1}^+$,
+$E_i^+=J_h\Psi_iE_i^-+J_\theta\Psi_i$, followed by the three-factor product
+$\delta_\tau J_GE_\tau$. Full eligibility is generally expensive; sparse
+event adjoints or local eligibility traces are the implementation choices.
+This is the precise meaning of a label signal traveling backward and using
+the local state: the label supplies the modulatory error, while stored local
+Jacobians or eligibility carry the credit to the events that formed that
+state.
+
+For $K$ sampled prefixes, the training gradient is their weighted sum of
+backward pulses. Stratified Monte Carlo gives an unbiased estimate of the
+window integral without a dense loss at every time bin. A sparse readout may
+materialize the $C$-class log normalizer at those few query times; inference
+can maintain its exact confidence tree only at class-logit arrivals and
+materialize the vector at emission. This saves the time-by-class sweep in the
+head. It does not make the current E83 hidden simulator asynchronous: its
+time-vector layers still scan a 1 ms grid, and autograd retains their pathwise
+graph. The current event readout is an additive logit accumulator driven by
+hidden payload, gap, elapsed time, and EOS features. Its posterior only changes
+at message or EOS events. It cannot emit a new confidence crossing during a
+silent interval unless a timer/survival update is added; §126 gives the exact
+class-conditional survival term.
+
+## 131. A losing route gets the boundary signal from its shadow
+
+The prefix pulse above differentiates the realized event path. It cannot
+credit a route that was rejected by E74's hard content gate. For candidate
+message $k$, with score $r_k$ and hard activity $h_k=\mathbf1[r_k>0]$, add
+logistic boundary noise $\xi_k$ of scale $\sigma$ during the gradient
+derivation. Then $p_k=P(h_k=1)=\operatorname{sigmoid}(r_k/\sigma)$ and the
+exact derivative of the noise-averaged loss is
+
+\[
+\nabla_\theta\mathbb E_\xi[L]
+=\text{pathwise terms}
++\sum_k \frac{p_k(1-p_k)}{\sigma}
+   (L_{k,1}-L_{k,0})\nabla_\theta r_k .
+\]
+
+$L_{k,1}$ and $L_{k,0}$ are two executions with this one route on and off,
+holding the other gates fixed. For a closed route, force it on and subtract the
+ordinary loss; for an open route, drop it and subtract the shadow loss from
+the ordinary loss. The difference must be measured after the entire remaining
+network, since inserting one vector can change later spikes and which later
+routes win. This is the same boundary term derived in §§19 and 57, now paired
+with the causal prefix-window loss. The prefix labels say which complete
+outcome was correct; the route's shadow says whether this lost message would
+have improved those time-indexed predictions.
+
+Exact shadowing every candidate is wasteful. If $S$ is the set of gate scores
+within a declared near-boundary band and $m$ candidates are sampled uniformly
+without replacement, then
+
+\[
+\widehat g_{cf}=\frac{|S|}{m}\sum_{k\in sample}
+\frac{p_k(1-p_k)}{\sigma}(L_{k,1}-L_{k,0})\nabla_\theta r_k
+\]
+
+is unbiased for the sum restricted to $S$. Candidates outside the band are
+omitted as a controlled approximation; a fixed random connectivity mask also
+means edges outside the candidate graph cannot be recruited by this signal.
+The E83 adaptation samples a small route budget per layer and batch, reruns the
+whole depth with that route toggled, and applies the detached loss difference
+through the live score $r=q_j^\top v+c_{ij}$. Thus the update reaches the
+gate, bias, and source payload that proposed the route. The expected update is
+not pathwise backprop through the discontinuous gate: it is the existing
+counterfactual boundary estimator. Hard silent-neuron firing still has a
+separate missing boundary term and remains uncredited by route shadows alone.
+
+This answers “what teaches a route that never fired?” with two signals and two
+costs: the sampled label error travels backward on actual event paths; selected
+lost routes receive a finite-difference boundary signal from a shadow
+continuation. We must report the number of eligible near misses, shadows,
+$L_1-L_0$ distribution, and pathwise/boundary gradient magnitudes separately.
+The theory establishes the estimator, not that it has a favorable variance or
+helps SHD. A guarded run must test that question before the result is called
+trainable.
