@@ -77,15 +77,20 @@ def main():
     ap.add_argument("--K", type=int, default=5)
     ap.add_argument("--n", type=int, default=1_000_000)
     ap.add_argument("--windows", default="256,0")
+    ap.add_argument("--wordkeys", type=int, default=1)
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     x = S1.load(); train = x[:a.D]
     valid = x[90_000_000:90_000_000 + a.n]; test = x[95_000_000:95_000_000 + a.n]
     orders = [S1.Order(train, k) for k in range(a.K + 1)]; word = S2.WordOrder(train)
+    tk = None
+    if a.wordkeys:
+        from e66_wordkeys import word_keys, KeyCounts
+        tk1, tk2 = word_keys(train); tk = (tk1, tk2, KeyCounts(tk1, train), KeyCounts(tk2, train))
     res = {"args": vars(a)}
     for window in [int(w) for w in a.windows.split(",")]:
         r = {}
-        LPv, sv = expert_logp(orders, word, train, valid, a.K, window)
+        LPv, sv = expert_logp(orders, word, train, valid, a.K, window, tk=tk)
         c1v, c2v = contexts(valid, train, LPv, a.K)
         best = None
         for lr in ((0.005, 0.005, 0.002), (0.01, 0.01, 0.005), (0.02, 0.02, 0.01)):
@@ -95,7 +100,7 @@ def main():
         r["valid_bpc"], r["lr"] = best[0], best[1]
         _, W1lr = race_mix(LPv, valid, sv, 0.002)                             # E79's one-neuron mixer, for reference
         del LPv
-        LPt, st = expert_logp(orders, word, train, test, a.K, window)
+        LPt, st = expert_logp(orders, word, train, test, a.K, window, tk=tk)
         c1t, c2t = contexts(test, valid, LPt, a.K)
         import copy
         g = best[2]; gf = copy.deepcopy(g)
@@ -105,7 +110,7 @@ def main():
         res[f"copy_window_{window or 'unbounded'}"] = r
         print(json.dumps({f"window_{window}": r}), flush=True)
         del LPt
-    with open(os.path.join(OUT, f"race_gln_D{a.D}_K{a.K}.json"), "w") as f:
+    with open(os.path.join(OUT, f"race_gln_D{a.D}_K{a.K}_wk{a.wordkeys}.json"), "w") as f:
         json.dump(res, f, indent=1)
 
 

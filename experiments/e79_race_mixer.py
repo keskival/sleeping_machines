@@ -53,7 +53,7 @@ def copy_pred(full_u8, start, stop, window):
     return pred, li_
 
 
-def expert_logp(orders, word, train, stream, K, window, eps=0.05):
+def expert_logp(orders, word, train, stream, K, window, eps=0.05, tk=None):
     """(T, E, A) log-probabilities of every expert, and the selector (longest copy length index * A + previous char)."""
     off = 100_000; full = np.r_[train[-off:], stream]; T = len(stream)
     E = K + 1 + 1 + 1 + 1; LP = np.empty((T, E, A), np.float32)
@@ -70,7 +70,46 @@ def expert_logp(orders, word, train, stream, K, window, eps=0.05):
     cp[has] = np.log(eps / (A - 1)); cp[np.flatnonzero(has), pred[has]] = np.log(1 - eps)
     LP[:, K + 3] = cp
     sel = li * A + np.r_[train[-1], stream[:-1]]
+    if tk is not None:                                                         # + E66's word-keyed experts
+        LP = np.concatenate([LP, wordkey_logp(train, stream, LP[:, K + 2], tk, eps)], 1)
     return LP, sel
+
+
+def keycounts_full(KC, keys):
+    """E66 KeyCounts as full count vectors: C (T, A), totals n and distinct continuations u for query keys."""
+    j = np.searchsorted(KC.ctx, keys); jj = np.clip(j, 0, len(KC.ctx) - 1); hit = KC.ctx[jj] == keys
+    n = np.where(hit, KC.n[jj], 0).astype(np.float32); u = np.where(hit, KC.u[jj], 0).astype(np.float32)
+    lo = np.searchsorted(KC.pk, keys, side="left"); hi = np.searchsorted(KC.pk, keys, side="right")
+    C = np.zeros((len(keys), A), np.float32); rows = np.arange(len(keys))
+    for k in range(A):                                                          # at most A entries per key
+        m = lo + k < hi
+        if not m.any():
+            break
+        C[rows[m], KC.py[lo[m] + k]] = KC.pc[lo[m] + k]
+    return C, n, u
+
+
+def wordkey_logp(train, stream, back_lp, tk, eps=0.05):
+    """E66's word-keyed experts as full distributions: counts keyed on (previous word, partial word) and (two previous
+    words, partial word), each backing off to the coarser expert (Witten-Bell), and copies keyed the same way."""
+    from e66_wordkeys import word_keys, KeyCounts
+    tk1, tk2, C1, C2 = tk
+    tail = 400; k1, k2 = word_keys(np.r_[train[-tail:], stream]); s1, s2 = k1[tail:], k2[tail:]
+    out = []; back = np.exp(back_lp)
+    for KC, sk in ((C1, s1), (C2, s2)):
+        C, n, u = keycounts_full(KC, sk)
+        p = np.where((n > 0)[:, None], (C + u[:, None] * back) / np.maximum(n + u, 1e-9)[:, None], back)
+        out.append(np.log(np.maximum(p, 1e-9))); back = p
+    full = np.r_[train, stream]
+    for tkk, sk in ((tk1, s1), (tk2, s2)):
+        keys = np.r_[tkk, sk]; order = np.argsort(keys, kind="stable"); ks = keys[order]
+        prev = np.full(len(keys), -1); same = np.r_[False, ks[1:] == ks[:-1]]
+        prev[order[1:][same[1:]]] = order[:-1][same[1:]]
+        pv = prev[len(train):]; has = pv >= 0
+        cp = np.full((len(stream), A), np.log(1.0 / A), np.float32); cp[has] = np.log(eps / (A - 1))
+        cp[np.flatnonzero(has), full[pv[has]]] = np.log(1 - eps)
+        out.append(cp)
+    return np.stack(out, 1).astype(np.float32)
 
 
 def race_mix(LP, y, sel, lr, W=None, update=True):
@@ -95,6 +134,7 @@ def main():
     ap.add_argument("--nvalid", type=int, default=1_000_000)
     ap.add_argument("--e77", default="none", help="E77 run tag: add its full distribution as one more racing expert")
     ap.add_argument("--windows", default="0,256")
+    ap.add_argument("--wordkeys", type=int, default=0, help="1: add E66's word-keyed counts and copies")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     x = S1.load(); train = x[:a.D]
@@ -108,10 +148,14 @@ def main():
     def with_tv(LP, nm):
         return np.concatenate([LP, tv[nm][:, None, :]], 1) if tv else LP
     orders = [S1.Order(train, k) for k in range(a.K + 1)]; word = S2.WordOrder(train)
+    tk = None
+    if a.wordkeys:
+        from e66_wordkeys import word_keys, KeyCounts
+        tk1, tk2 = word_keys(train); tk = (tk1, tk2, KeyCounts(tk1, train), KeyCounts(tk2, train))
     res = {"args": vars(a)}
     for window in [int(w) for w in a.windows.split(",")]:
         r = {}
-        LPv, sv = expert_logp(orders, word, train, valid, a.K, window); LPv = with_tv(LPv, "valid")
+        LPv, sv = expert_logp(orders, word, train, valid, a.K, window, tk=tk); LPv = with_tv(LPv, "valid")
         Pv = np.exp(LPv[np.arange(len(valid)), :, valid])
         best = min(((float(np.mean(-np.log2(S2.hedge(Pv, sv, eta, Wn)))), eta, Wn) for eta in (0.03, 0.1, 0.3) for Wn in (10, 25, 50)))
         cand = {}
@@ -120,7 +164,7 @@ def main():
         lr = min(cand, key=lambda k: cand[k][0]); Wv = cand[lr][1]
         r["race_lr"] = lr; r["race_valid_bpc"] = cand[lr][0]
         del LPv, Pv
-        LPt, st = expert_logp(orders, word, train, test, a.K, window); LPt = with_tv(LPt, "test")
+        LPt, st = expert_logp(orders, word, train, test, a.K, window, tk=tk); LPt = with_tv(LPt, "test")
         r["experts_test_bpc"] = [round(float(np.mean(-LPt[np.arange(len(test)), e, test]) / np.log(2)), 4) for e in range(LPt.shape[1])]
         Pt = np.exp(LPt[np.arange(len(test)), :, test])
         r["linear_hedge_test_bpc"] = float(np.mean(-np.log2(S2.hedge(Pt, st, best[1], best[2])))); r["linear_hedge_choice"] = best[1:]
@@ -129,7 +173,7 @@ def main():
         res[f"copy_window_{window or 'unbounded'}"] = r
         print(json.dumps({f"window_{window}": {k: v for k, v in r.items()}}), flush=True)
         del LPt, Pt
-    with open(os.path.join(OUT, f"race_mixer_D{a.D}_K{a.K}_e77{a.e77}.json"), "w") as f:
+    with open(os.path.join(OUT, f"race_mixer_D{a.D}_K{a.K}_e77{a.e77}" + ("_wk" if a.wordkeys else "") + ".json"), "w") as f:
         json.dump(res, f, indent=1)
 
 
