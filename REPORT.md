@@ -527,9 +527,20 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   accuracy was 0.146 and its last-epoch accuracy 0.120 (20-class chance is 0.05). E82's 240-update readout diagnosis
   reached 0.184 with a nonspiking state readout and layer normalization; the normalized spiking readout stayed near chance.
   E75's exactly shift/tempo-covariant lattice passed its symmetry check, but its two-epoch pilot reached only 0.044 and
-  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. E83 now tests strict adjacent-layer event chains at depth 2/4/8/16, pairing no auxiliary loss with weight 0.2; inference
-  reads only the deepest layer. It uses a balanced 512-example pilot and held-out speakers, with gradient, firing,
-  candidate-pair, message, state-scan, and deep/auxiliary gradient-alignment counts. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
+  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. An objective audit found that E83's
+  original mean-over-time softmax let silent bins pull every utterance toward uniform and let co-batched duration change
+  a sample's prediction. Its depth-2 runs are debug observations, not depth evidence; the queued depth-4 run was stopped.
+  E83 now treats SHD as an utterance label with an online output race: emit the first class whose temperature-scaled
+  softmax crosses a confidence threshold, and keep silent before that. Training maximizes the probability that the
+  correct class wins, with an explicit latency discount; no class target is copied to every prefix. Cramer et al. used
+  max-over-time SNN readout potentials, while Spyx applies cross-entropy to integrated potentials
+  ([Cramer et al.](https://kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf),
+  [Spyx tutorial](https://spyx.readthedocs.io/en/latest/examples/surrogate_gradient/SurrogateGradientTutorial/)).
+  A tiny 80/40-example smoke reached 92.5%
+  output coverage but only 10.8% accuracy among emitted answers after one epoch; full-sequence max-potential accuracy
+  was 2.5%. This is a failed learning pilot, not evidence of a useful race. The matched depth-4 comparison across race,
+  integral and max objectives uses 512 training examples, 128 held-out-speaker examples, and five epochs; it is running
+  under the safe runner. Earlier: the weight race reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
   architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
   parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
   events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
@@ -619,11 +630,12 @@ The synthesis now treats topology and representation as separate experimental ax
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
   at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
-- **Deep time-vector networks on real streams (§110–§111):** E83/E84 compare strict adjacent-layer event chains at depths
-  2, 4, 8, and 16, with auxiliary task losses off/on and inference through the deepest layer only. Auxiliary losses bypass
-  downstream Jacobians, but can conflict with the deepest objective; the first-order descent condition depends on the
-  per-layer gradient norms and cosine. Both tasks log that alignment, candidate score pairs, accepted messages, state
-  scans, activity, held-out quality, memory, and time. No depth pilot has run yet.
+- **Deep time-vector networks on real streams (§110–§111):** E83/E84 use strict adjacent-layer event chains and deepest-only
+  inference. E83 first compares sequence supervision schemes at depth 4 because its earlier depth-2 runs averaged softmax
+  across silent and padded time; that objective confounds sequence length and batching. The first corrected race smoke is
+  near chance, so it has not shown trainability. After selecting a validated objective, test depths 2/4/8/16 and auxiliary
+  losses off/on, logging gradient alignment, work, coverage, accuracy, and latency. E84 remains the guarded day-5 market
+  likelihood comparison; no new market result exists.
 - **A time-vector language model (§107, E77):** does the hybrid of sparse time-vector memory and delay-coded retrieval
   reach the converged LSTM and Transformer at equal data, and how many keys does it actually retrieve per character?
 - **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
@@ -1057,7 +1069,7 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | paired depth 2/4/8/16 pilot queued (aux loss 0 vs 0.2); logs gradients, candidate scores, messages, and state scans |
+| E83 | deep time-vector model on speaker-held-out SHD | original depth-2 softmax-mean runs invalidated; matched depth-4 race/integral/max comparison running; first race smoke near chance |
 | E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 

@@ -1,0 +1,140 @@
+{
+ "args": {
+  "bands": 140,
+  "merge": 0.002,
+  "d": 8,
+  "n": 4,
+  "M1": 16,
+  "M": 16,
+  "depth": 2,
+  "window": 30,
+  "fan2": 0.25,
+  "readout_fan": 0.5,
+  "aux_weight": 0.2,
+  "dmax": 50.0,
+  "w_sd": "0.05,0.05",
+  "shift": 4,
+  "drop": 0.1,
+  "epochs": 2,
+  "bs": 4,
+  "lr": 0.003,
+  "seed": 0,
+  "limit": 512,
+  "eval_limit": 128
+ },
+ "params": 7732,
+ "layer_params": [
+  3856,
+  1872
+ ],
+ "train": 512,
+ "eval": 128,
+ "curve": [
+  {
+   "epoch": 1,
+   "train_loss": 3.0254,
+   "spk_acc": 0.0625,
+   "tap_acc": [
+    0.0312,
+    0.0625
+   ],
+   "aux_train_loss": 3.0571,
+   "first_batch_gradient_routes": {
+    "final_norms": [
+     303.990211,
+     54.955033
+    ],
+    "aux_norms": [
+     7.273841,
+     0.0
+    ],
+    "cosines": [
+     0.402018,
+     null
+    ]
+   },
+   "msgs_per_utt": [
+    7675.0,
+    120.0,
+    664.0,
+    119.0
+   ],
+   "candidate_scores_per_utt": [
+    46137.0,
+    1172.0,
+    3643.0,
+    703.0
+   ],
+   "state_vector_updates_per_utt": 303354,
+   "deep_msgs_per_utt": 7913.4,
+   "deep_candidate_scores_per_utt": 48011,
+   "deep_state_vector_updates_per_utt": 219089,
+   "spikes_per_utt": [
+    84.0,
+    26.0
+   ],
+   "synapses_sending": [
+    0.673,
+    0.614
+   ],
+   "layer_grad_norms": [
+    226.28821,
+    31.36774
+   ],
+   "wall_s": 135
+  },
+  {
+   "epoch": 2,
+   "train_loss": 2.9902,
+   "spk_acc": 0.1016,
+   "tap_acc": [
+    0.0859,
+    0.1016
+   ],
+   "aux_train_loss": 2.9951,
+   "first_batch_gradient_routes": {
+    "final_norms": [
+     1.649143,
+     0.248489
+    ],
+    "aux_norms": [
+     3.798995,
+     0.0
+    ],
+    "cosines": [
+     -0.183586,
+     null
+    ]
+   },
+   "msgs_per_utt": [
+    7634.0,
+    120.0,
+    738.0,
+    93.0
+   ],
+   "candidate_scores_per_utt": [
+    46137.0,
+    1252.0,
+    4104.0,
+    535.0
+   ],
+   "state_vector_updates_per_utt": 303354,
+   "deep_msgs_per_utt": 7847.0,
+   "deep_candidate_scores_per_utt": 47923,
+   "deep_state_vector_updates_per_utt": 219089,
+   "spikes_per_utt": [
+    94.0,
+    19.0
+   ],
+   "synapses_sending": [
+    0.673,
+    0.557
+   ],
+   "layer_grad_norms": [
+    11.46175,
+    1.75797
+   ],
+   "wall_s": 259
+  }
+ ]
+}

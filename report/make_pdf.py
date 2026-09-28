@@ -1318,7 +1318,12 @@ def build():
         "compute with delays. E74 tests the paradigm's own design: events carry small vectors whose content sets their "
         "delays and whether they are sent; a 2k-train, 500-held-out pilot reached 0.146 peak speaker accuracy and 0.120 at "
         "its final epoch after six epochs. E82's partial readout sweep reached 0.184 held-out accuracy after 240 updates. "
-        "These are above the 0.05 chance level for 20 speakers and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "An E83 audit found its old sequence loss averaged softmax through silent and batch-padded time, so depth-2 runs are "
+        "excluded as trainability evidence. E83 now compares a first-confident-class output race with max-over-time and "
+        "integrated-potential sequence losses (used in published SHD training). Its tiny 80/40 one-epoch race smoke covered "
+        "92.5% but was only 10.8% accurate among emitted answers; max-potential accuracy was 2.5%, near chance. A matched "
+        "depth-4 objective comparison is running; no corrected SHD advantage is established. "
+        "The E74/E82 results are above the 0.05 chance level for 20 classes and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
         "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
         "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
         "to 0.675 (E59, §92).",
@@ -1365,10 +1370,11 @@ def build():
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
-        "<b>Deep real-stream trainability (E83/E84):</b> paired depth 2/4/8/16 pilots with auxiliary loss off/on are queued "
-        "for speaker-held-out SHD and day-5 market likelihood. They use strict adjacent-layer chains and deepest-only inference; "
-        "no result exists yet. E84 now aggregates work across all training minibatches and overlapping validation windows, "
-        "reported per event and per scored event.",
+        "<b>Deep real-stream trainability (E83/E84):</b> E83's earlier depth-2 runs used a batch-length-confounded readout "
+        "and are not depth evidence. Its corrected depth-4 comparison tests first-confident-class race, integral, and "
+        "max-over-time objectives on speaker-held-out SHD; the initial tiny race smoke is near chance. If a scheme learns, "
+        "continue with depths 2/4/8/16 and auxiliary losses off/on. E84's day-5 market queue has not run; it uses strict "
+        "adjacent-layer chains and logs gradient alignment and work.",
         "<b>Time-vector networks on real streams (§105–§106):</b> E74's first speech pilot reached 0.146 peak held-out "
         "speaker accuracy, and E82's partial readout sweep reached 0.184. E75 verified exact band-shift covariance but its "
         "pilot was resource-limited. Improve the learning signal, then test whether delays and vectors together close the "
@@ -1532,7 +1538,7 @@ def build():
             "(N−1)e^(−βm), so sharper scores improve retrieval. For two keys, however, score sensitivity is "
             "βp(1−p): it peaks at a tie and vanishes when the route is certain. An excluded key gets no gradient. "
             "This mathematically motivates broad early retrieval, near-miss credit, and gradual sparsification."),
-          P("<b>Deep sparse-stack stability (theory, §§113–114; derived, not yet checked experimentally).</b> "
+          P("<b>Deep sparse-stack stability (theory with the E114 diagnostic).</b> "
             "With 1/depth residual scaling and bounded local errors, §113 keeps forward and gradient perturbations "
             "depth-independent. Section 114 lifts fixed-support softmax truncation to the full sequence Jacobian: "
             "its operator error is at most √(R C), where R is a per-query row-sum bound and C is a shared-key "
@@ -1540,8 +1546,11 @@ def build():
             "closes the local-to-sequence certificate for linearly projected attention. E77 still needs uniform bounds "
             "over its state region, a sparse-Jacobian Lipschitz bound, parameter-VJP and input-dependent gate terms; "
             "route changes remain the established §§19/57 counterfactual problem. This is theory, not evidence of "
-            "training success. A small central finite-difference sweep of full-sequence Jacobians over length, retained "
-            "mass, temperature, and key reuse is queued."),
+            "training success. E114 checked 144 fixed-support synthetic cases by central finite differences: no absolute "
+            "violation exceeded 1e−8. Among cases with bounds at least 1e−8, maximum Jacobian and forward-error ratios "
+            "were 0.897 and 0.687; the largest absolute Jacobian excess was 1.32e−10. Exact-support cases have a zero "
+            "bound, so their finite-difference residue is judged absolutely. Autodiff checks, learned support changes, "
+            "and architecture-scale uniform constants remain open."),
           P("<b>If these mechanisms scale.</b> Deep event stacks that preserve associative recall and learn useful sparse "
             "routes could grow model memory and reasoning capacity without making every token pay for every possible "
             "interaction. Training would follow predictive routes; inference would follow emitted events and retrieved "

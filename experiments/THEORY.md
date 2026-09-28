@@ -60,6 +60,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Vector dynamics and scaling](theory/08_vector_memory_and_deep_stacks.md) — §§104–106
 - [Vector memory, retrieval, and deep local learning](theory/08b_memory_retrieval_and_deep_learning.md) — §§107–111
 - [Sparse attention and depth bounds](theory/08c_sparse_attention_and_depth_bounds.md) — §§112–114
+- [Sequential classification and output races](theory/09_sequence_classification_and_output_races.md) — §§115–118
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map
@@ -68,5 +69,6 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - **Attention and associative retrieval:** §§96–107 develop race/softmax equivalence, key/value gradients, and event-sequence Jacobians. §112 specializes the existing route credit to missing attention keys; it does not re-derive the generic router gradient.
 - **Depth and local learning:** §§97–98 give the ordered-pattern depth bound; §§107(f–h) treat fixed-topology payload propagation; §§110–111 analyze auxiliary gradient paths and interference.
 - **Sparse approximation through depth:** §113 composes local approximation errors with residual-stack Jacobian propagation. §114 lifts fixed-support softmax truncation bounds to the full sequence Jacobian using row and key-fan-out column sums; E114's finite-difference diagnostic supports the bound on small synthetic cases. Uniform-region constants and support changes remain open.
+- **Sequence labels and online output:** §§115–117 distinguish an utterance-level label from prefix labels, derive a competing-risk objective for first-confident-class output, and show why averaging softmax over padded time makes examples batch-length dependent. SHD max-over-time and integral-potential losses are benchmark controls; the first-output race still needs empirical validation.
 
 Read §0 for the prior-work boundary and the synthesis above for the project's working principles. The test matrix is an inventory; it is not evidence that each listed prediction has been confirmed.
