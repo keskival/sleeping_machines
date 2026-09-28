@@ -4969,6 +4969,38 @@ reported separately:
 E77's time-vector model, each alone and mixed three ways, at 1M training characters and later 10M. Prediction by (i)–(ii):
 the mixture is at or below the best part everywhere, and strictly below where the parts' errors differ.
 
+## 109. Race neurons are gated linear networks: provably sufficient local learning
+
+*Written 2026-09-28. Prior art: Gated Linear Networks (Veness, Lattimore, Budden et al., AAAI 2021), backpropagation-free
+networks in which every neuron predicts the target by geometric mixing of its inputs' predictions, with weights selected by
+a data-dependent context and learned by online convex optimization. They are universal in the limit, competitive with
+batch-trained MLPs after one online pass, and resistant to catastrophic forgetting. Their stated limit: neurons do not
+learn feature representations.*
+
+**Identity.** A race whose candidates' clock rates are exp(Σ_e w_e log p_e(c)), with the weight vector w chosen by a context
+c(t) (which weight set is awake: a sleeping-expert selector, §100), samples from the geometric mixture that a GLN neuron
+outputs. A network whose units are such races, each fed the output distributions of the layer below, *is* a GLN. The
+race samples; the distribution is also available locally, as each candidate's integrated rate at the decision (§104f).
+
+**Consequences.**
+1. **Local learning is sufficient, not merely possible.** Each race neuron minimizes its own log loss of the target, which
+   is convex in its active weights, by the exact local gradient log p_e(y) − E_neuron[log p_e]. No error is sent between
+   neurons, so there is no credit-assignment problem to solve. By Veness et al., capacity grows with network size and
+   context richness, reaching universality in the limit. This is the strongest available answer to "can event networks
+   learn without backpropagation": for prediction built from expert opinions, yes, provably.
+2. **Every layer's output is a calibrated predictor.** The final neuron's regret against its best input (§108) makes the
+   network never worse than its best neuron, which is the lower envelope once more.
+3. **Division of labour.** GLN race neurons do not build features. In the full design, features come from time-vector
+   layers (§105–§107, trained by spike-time gradients) and from native detectors (order detectors, counting experts,
+   copies). The race GLN combines them locally, with guarantees.
+4. **Forgetting.** GLNs' credit assignment is known to resist catastrophic forgetting. This bears on our open continual-
+   learning weakness (E23: the weight race forgot more than SGD). Untested here.
+
+**Measured (small check: 300k training, 30k test characters).** A three-layer race GLN (6 context-gated neurons over the
+native experts, 3 over them, 1 final) gives 2.042 bpc frozen and 1.977 online, against 2.049 and 2.006 for a single race
+neuron. The gain is small at this size, because most of the ~1,600 context-specific weight vectors see little data. E81
+measures it at 1M and 10M characters.
+
 ## Tests
 
 | | Claim | Test |
