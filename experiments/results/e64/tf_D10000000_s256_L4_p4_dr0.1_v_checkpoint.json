@@ -1,5 +1,6 @@
 {
-  "artifact": "interim validation checkpoint snapshot",
+  "artifact": "completed-run validation trace snapshot",
+  "source_result": "experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v.json",
   "source_log": "experiments/queue/logs/e64b_tf_D10M.log",
   "args": {
     "model": "tf",
@@ -8,37 +9,96 @@
     "size": 256,
     "layers": 4,
     "ctx": 256,
-    "lr": 0.001,
-    "valid_start": 90000000,
-    "test_start": 95000000,
     "test": 1000000,
     "dropout": 0.1,
     "batch_size": 32,
-    "valid": 200000,
-    "seed": 0,
-    "device": "cpu"
+    "valid": 200000
   },
+  "params": 3238427,
+  "steps": 4882,
+  "best_step": 4880,
+  "best_valid_bpc": 1.8647071892800722,
+  "test_bpc": 1.9082528934334995,
+  "wall_s": 18921.7,
   "checkpoints": [
     {
       "step": 488,
       "of": 4882,
       "train_bpc": 2.6372270277848338,
-      "valid_bpc": 2.585716015713098,
-      "wall_s": 1832
+      "wall_s": 1832,
+      "valid_bpc": 2.585716015713098
     },
     {
       "step": 976,
       "of": 4882,
       "train_bpc": 2.3096005938391357,
-      "valid_bpc": 2.2329166066242667,
-      "wall_s": 3701
+      "wall_s": 3701,
+      "valid_bpc": 2.2329166066242667
     },
     {
       "step": 1464,
       "of": 4882,
       "train_bpc": 2.1277468267474053,
-      "valid_bpc": 2.100102410373578,
-      "wall_s": 5577
+      "wall_s": 5577,
+      "valid_bpc": 2.100102410373578
+    },
+    {
+      "step": 1952,
+      "of": 4882,
+      "train_bpc": 2.122295148697705,
+      "wall_s": 7448,
+      "valid_bpc": 2.03326718808411
+    },
+    {
+      "step": 2440,
+      "of": 4882,
+      "train_bpc": 1.9312318826349224,
+      "wall_s": 9317,
+      "valid_bpc": 1.9853872810634663
+    },
+    {
+      "step": 2928,
+      "of": 4882,
+      "train_bpc": 2.0422864117592145,
+      "wall_s": 11180,
+      "valid_bpc": 1.9423225558626134
+    },
+    {
+      "step": 3416,
+      "of": 4882,
+      "train_bpc": 1.9136358216771958,
+      "wall_s": 13036,
+      "valid_bpc": 1.9063074801168498
+    },
+    {
+      "step": 3904,
+      "of": 4882,
+      "train_bpc": 1.8489784281373702,
+      "wall_s": 14899,
+      "valid_bpc": 1.8831038002999707
+    },
+    {
+      "step": 4392,
+      "of": 4882,
+      "train_bpc": 1.9247366138597866,
+      "wall_s": 16762,
+      "valid_bpc": 1.8660700480150172
+    },
+    {
+      "step": 4880,
+      "of": 4882,
+      "train_bpc": 1.896595436664407,
+      "wall_s": 18623,
+      "valid_bpc": 1.8647071892800722
+    },
+    {
+      "step": 4881,
+      "of": 4882,
+      "train_bpc": 1.928988540937068,
+      "wall_s": 18668,
+      "valid_bpc": 1.8647071913720505
     }
-  ]
+  ],
+  "snapshot_updated_utc": "2026-09-28T18:56:19.181602Z",
+  "status": "completed"
 }
