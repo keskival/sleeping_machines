@@ -3,6 +3,55 @@
 One entry per result: what we ran, what came out, what it teaches us, what changes.
 Newest first. Numbers are single seeds unless stated.
 
+## 2026-09-28
+
+**Hopfield event-message architecture and depth bound (new, not yet measured).** E77 now applies a causal key/value
+associative update over emitted event payloads at each event layer, then forwards the updated payloads. Queries, keys,
+and values use separate trainable maps; a gated identity path preserves the original event, with update scale 1/depth.
+Scores become arrival advantages through $\\delta=\\tau(s_{max}-s)$, whose exponential decay reproduces the softmax
+weights. This connects the Hopfield address and payload operations to the project's delay/vector message primitive.
+For a fixed memory, the query Jacobian is a key/value cross-covariance and is bounded by
+\\beta D_KD_V/4, independent of the number of memories. If the complete fixed-topology correction Jacobian is bounded
+by $K$, 1/depth residual scaling gives singular values of the depth Jacobian in $[e^{-2K},e^K]$. E77 records key/value
+diameter upper bounds and the implied query-Jacobian bound as direct diagnostics. This is a conditional state-path
+guarantee, not proof that event routes are discovered or that hard event births are differentiable. Exact
+all-past-event retrieval is the trainability reference; optional top-k limits aggregation but still scores every pair.
+E77 logs event pair count, retrieval entropy, score spread, update size, and query/key/value/output/gate gradient norms.
+The revised E77 architecture is queued, not yet run; deeper matched Transformer/E77 comparisons are being added.
+
+**Hopfield stability/precision tradeoff (derived).** With values equal to keys, softmax retrieval is $\nabla\Phi$ for
+the convex log-partition $\Phi(q)=\beta^{-1}\log\sum_j e^{\beta q^\top k_j}$, and its Hessian is the PSD key
+covariance. The update is contractive if $\beta D_K^2/4<1$. For two choices, score credit is $\beta p(1-p)$:
+it peaks at a tie and vanishes as retrieval becomes certain. More generally, a score margin $m$ gives non-winner mass
+at most $(N-1)e^{-\beta m}$, so raising precision narrows the region that receives learning credit. Separate key and
+value codes enable arbitrary hetero-association but remove the general energy-descent guarantee. These derivations
+motivate a measured temperature/near-miss sweep before claiming that sharper, sparser retrieval will train as well.
+
+**Adaptive retrieval and depth, theory-to-code update.** E77 has event-state layers, a recurrent state route, event-level Hopfield payload updates, and a token query/key/value retrieval interface. Event-state layers remain non-attention layers; the associative update is a separate operation at emitted events. E77 accepts configurable depth and adds sparse raw-event skips to deeper blocks. This prototype is not yet trained or validated. Sparse describes its synaptic fan-out and event-stream wiring, not a measured sparse execution kernel: `TVLayer` allocates dense time-by-batch-by-unit states, while event and token retrieval score all eligible pairs. The attention window or event top-k limits value aggregation, not candidate search. **Design correction:** sparse aggregation does not imply sparse search or low energy; indexed candidate search and an event-driven simulator remain open engineering problems.
+
+**Existing reasons for optimism, with scope.** The completed E79 native-expert mixture scores 1.808 bpc frozen (1.782 online) at 1M text8 characters, ahead of the completed one-layer 256-unit LSTM at 2.179; at 90M it reaches 1.50. E61 learned query/key race retrieval solved its synthetic recall task in 1–4k examples and extrapolated to 4× context. These are strong signals about retrieval, compositional experts, and data efficiency. E79 includes count/copy memories and lacks matched compute/energy accounting; E61 is a synthetic task. E77 has no completed LM result yet, so these findings motivate the deeper adaptive model rather than establish its superiority.
+
+**Runner status and fair baseline.** E64b's 1M-character LSTM completed as recorded below. The Transformer log is unchanged at step 0 since 10:01 UTC, no experiment process is visible in this container, and the shared runner lock remains unavailable. The baseline therefore is not complete and no race-versus-Transformer claim is made. Do not start another runner until the lock owner/state is resolved.
+
+**E64b LSTM versus the E79 race mixture at 1M text8 characters.** The converged 256-hidden-unit LSTM used 20 passes and early
+stopping on 200k validation characters: 2.138 validation / 2.179 test bits per character, 338,395 parameters. E79's frozen race
+mixture on the same 1M-character training and test segments scores 1.808 with its copy expert limited to the Transformer's 256-character
+context (1.782 when weights also adapt online). This is a substantial low-data loss lead for the native expert mixture at the same
+training data, but not yet a compute/energy-matched architecture comparison: its count tables and copy index are extra state, and the
+Transformer result is still running. **Next:** compare the converged Transformer, then report memory, scoring work, and adaptation
+policy alongside loss before making a scaling claim.
+
+**E74/E75 — time-vector speech pilots do not yet learn well, and the memory ceiling was too tight for their default batches.**
+E74 on 2k training / 500 held-out utterances at batch 32 completed 6 epochs in 31 minutes, but held-out speaker accuracy peaked at
+0.146 and ended at 0.120. E82's partial readout sweep peaked at 0.184 after 240 updates with a non-spiking state readout and layer
+normalization; the queued normalized spike readout stayed near chance. E75 at batch 16 reached only 0.044 after 2 epochs before a
+38 MB CPU allocation failed; a batch-32 restart failed on a 65 MB allocation. Host available memory remained above 10 GB, so these
+failures are consistent with the 3.5 GB per-process virtual-address limit, not host exhaustion. **Learned:** the current speech
+representation/readout and optimization are not close to a useful baseline; exact equivariance alone is not enough. Do not spend on
+full SHD runs until smaller pilots show a learning signal. **Change:** future E74/E75 pilots and ablations use batch 4, results now
+include batch size in their filenames, and the safe runner also monitors whole-job RSS. These lower-batch pilots are queued; they have
+not yet established whether the memory issue or the learning issue is resolved.
+
 ## 2026-09-26
 
 **E24 — grokking on (a + b) mod 31, half the pairs for training (first runs).** Dense MLP, full-batch AdamW
