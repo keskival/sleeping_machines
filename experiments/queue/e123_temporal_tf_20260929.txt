@@ -1,0 +1,1 @@
+e123_temporal_tf_20260929 experiments/e123_synthetic_baselines.py --task temporal --model transformer --tag temporal_tf_d32_l2_s6 --fit 1024 --dev 256 --epochs 8 --bs 16

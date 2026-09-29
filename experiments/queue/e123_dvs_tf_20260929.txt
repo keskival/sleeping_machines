@@ -1,0 +1,1 @@
+e123_dvs_tf_20260929 experiments/e123_synthetic_baselines.py --task dvs --model transformer --tag dvs_tf_d32_l2_s6 --fit 88 --dev 44 --epochs 8 --bs 4

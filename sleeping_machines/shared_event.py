@@ -12,7 +12,8 @@ from torch.nn import functional as F
 from .event_memory import segmented_memory
 
 class RaceLayer(nn.Module):
-    def __init__(self, dim, depth, beta, cf_credit, options=3, memory_backend="doubling"):
+    def __init__(self, dim, depth, beta, cf_credit, options=3, memory_backend="doubling",
+                 global_context=False):
         super().__init__()
         self.alpha, self.cf_credit = beta/depth, cf_credit
         self.options, self.dim = options, dim
@@ -28,8 +29,15 @@ class RaceLayer(nn.Module):
         self.route = nn.Parameter(torch.randn(options, 2*dim+1)*.1)
         self.route_bias = nn.Parameter(torch.zeros(options))
         self.log_tau = nn.Parameter(torch.logspace(math.log10(.02), math.log10(.8), options).log())
+        # Zero columns preserve the complete legacy computation and RNG stream.
+        # Separate normalization keeps this new map differentiable at zero.
+        self.register_parameter("bridge_value", nn.Parameter(torch.zeros(options, dim, dim+1))
+                                if global_context else None)
+        self.register_parameter("bridge_route", nn.Parameter(torch.zeros(options, dim+1))
+                                if global_context else None)
 
-    def forward(self, x, t, count, keys, sequential=False, override=None, trace=False):
+    def forward(self, x, t, count, keys, sequential=False, override=None, trace=False,
+                global_keys=None):
         # Learned delays can reorder carriers. Memory sees actual arrival
         # order within each receiver, with the original index breaking ties.
         time_order = torch.argsort(t, stable=True)
@@ -41,6 +49,19 @@ class RaceLayer(nn.Module):
         features = torch.cat((x[:, None, :].expand(-1, self.options, -1), mem,
                               (mass/(1+mass))[:, :, None]), -1)
         scores = (features*self.route[None, :, :]).sum(-1) + self.route_bias
+        bridge_features, bridge_w, global_work = None, None, 0
+        if self.bridge_value is not None:
+            if global_keys is None:
+                raise ValueError("Global context requires explicit per-query receiver keys")
+            global_mem, global_mass, global_work = self.memory(
+                x[time_order], t[time_order], count[time_order], global_keys[time_order],
+                self.log_tau.clamp(math.log(.002), math.log(4.)).exp(), sequential)
+            bridge_features = torch.cat((global_mem[inverse],
+                (global_mass[inverse]/(1+global_mass[inverse]))[:, :, None]), -1)
+            scores = scores + (bridge_features*self.bridge_route[None, :, :]).sum(-1)
+            bridge_w = self.bridge_value / self.bridge_value.abs().sum(-1, keepdim=True).clamp_min(1)
+        elif global_keys is not None:
+            raise ValueError("This layer has no global context channel")
         delay = .001 + .010*torch.sigmoid(-scores)
         winner = delay.argmin(-1)
         if override is not None:
@@ -50,7 +71,10 @@ class RaceLayer(nn.Module):
         w = self.value / self.value.abs().sum(-1, keepdim=True).clamp_min(1)
         rows = torch.arange(len(x))
         if self.training and self.cf_credit or trace:
-            alternatives = torch.tanh(torch.einsum("ekf,kdf->ekd", features, w) + self.bias)
+            preactivation = torch.einsum("ekf,kdf->ekd", features, w)
+            if bridge_features is not None:
+                preactivation = preactivation + torch.einsum("ekf,kdf->ekd", bridge_features, bridge_w)
+            alternatives = torch.tanh(preactivation + self.bias)
             correction = alternatives[rows, winner]
             value_evaluations = len(x)*self.options
         else:
@@ -58,8 +82,12 @@ class RaceLayer(nn.Module):
             correction = torch.zeros_like(x)
             for k in range(self.options):
                 selected = torch.nonzero(winner == k, as_tuple=True)[0]
-                correction = correction.index_copy(0, selected,
-                    torch.tanh(F.linear(features[selected, k], w[k], self.bias[k])))
+                if bridge_features is None:
+                    value = F.linear(features[selected, k], w[k], self.bias[k])
+                else:
+                    value = F.linear(features[selected, k], w[k], self.bias[k]) + \
+                            F.linear(bridge_features[selected, k], bridge_w[k])
+                correction = correction.index_copy(0, selected, torch.tanh(value))
             alternatives = None
             value_evaluations = len(x)
         winning_delay = delay[rows, winner]
@@ -78,10 +106,16 @@ class RaceLayer(nn.Module):
                  "mean_margin_ms": float((sorted_delay[:, 1]-sorted_delay[:, 0]).mean()*1000),
                  "mean_delay_ms": float(winning_delay.detach().mean()*1000),
                  "scan_compositions": work, "value_evaluations": value_evaluations}
+        if bridge_features is not None:
+            stats.update(global_scan_compositions=global_work,
+                         global_context_packets=len(x),
+                         global_state_receivers=int(torch.unique(global_keys).numel()))
         details = None
         if trace:
             details = {"winner": winner, "alternatives": alternatives,
                        "delays": delay, "out": out, "times": tout}
+            if bridge_features is not None:
+                details["global_features"] = bridge_features
         return out, tout, stats, details
 
 
@@ -89,7 +123,7 @@ class SharedEventModel(nn.Module):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
                  memory_backend="linear", classes=20, readout="mean", continuous_dim=0,
                  evidence_count=0, phase_period=None, phase_seed=6, phase_correction_bound=.25,
-                 phase_margin_guard=False, phase_only=False):
+                 phase_margin_guard=False, phase_only=False, global_context_layers=()):
         super().__init__()
         if bands < 1 or groups < 1 or classes < 1 or dim < 4 or evidence_count < 0 or continuous_dim < 0:
             raise ValueError("Invalid model dimensions")
@@ -99,8 +133,13 @@ class SharedEventModel(nn.Module):
         self.classes, self.evidence_count = classes, evidence_count
         self.bands, self.dim, self.groups = bands, dim, groups
         self.phase_only = bool(phase_only)
+        global_context_layers = tuple(global_context_layers)
+        if len(set(global_context_layers)) != len(global_context_layers) or any(
+                not isinstance(j, int) or j < 0 or j >= depth for j in global_context_layers):
+            raise ValueError("Invalid global context layers")
+        self.global_context_layers = global_context_layers
         if self.phase_only:
-            if phase_period is None or evidence_count or continuous_dim or depth != 0:
+            if phase_period is None or evidence_count or continuous_dim or depth != 0 or global_context_layers:
                 raise ValueError("A phase-only model has depth zero, periodic state and no other readout")
             from .phase_memory import PhaseMemory
             self.phase_memory = PhaseMemory(bands, classes, phase_period, seed=phase_seed)
@@ -120,7 +159,8 @@ class SharedEventModel(nn.Module):
         nn.init.normal_(self.head.weight, std=.01)
         nn.init.zeros_(self.head.bias)
         self.layers = nn.ModuleList([RaceLayer(dim, depth, beta, cf_credit,
-                                             memory_backend=memory_backend) for _ in range(depth)])
+                                             memory_backend=memory_backend,
+                                             global_context=j in global_context_layers) for j in range(depth)])
         self.register_buffer("time_constants", torch.tensor([.05, .2, .8]))
         self.register_buffer("center", torch.zeros(dim+1))
         self.register_buffer("scale", torch.ones(dim+1))
@@ -181,7 +221,8 @@ class SharedEventModel(nn.Module):
         for j, layer in enumerate(self.layers):
             keys = ids*(self.groups+1) + (b + (width//2 if j%2 and self.groups > 1 else 0))//width
             x, t, st, tr = layer(x, t, c, keys, sequential,
-                                 (overrides or {}).get(j), trace)
+                                 (overrides or {}).get(j), trace,
+                                 global_keys=ids if j in self.global_context_layers else None)
             stats.append(st)
             if trace:
                 traces.append(tr)
