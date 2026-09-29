@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "disconnected_additive_error": 1.862645149230957e-09,
+  "weighted_numerator_additive_error": 0.0,
+  "constructed_xor_predictions": [
+    0,
+    1,
+    1,
+    0
+  ],
+  "construction_margin": 0.003375805914402008,
+  "zero_bridge_exact_logits_summary_winners": true,
+  "legacy_gradient_max_error": 0.0,
+  "bridge_gradient_norms": {
+    "layers.3.bridge_value": 5.963082790374756,
+    "layers.3.bridge_route": 0.2360900491476059,
+    "layers.7.bridge_value": 5.71936559677124,
+    "layers.7.bridge_route": 0.7039440870285034
+  },
+  "query_separability_error": 1.430511474609375e-06,
+  "causal_first_payload_exact": true,
+  "extra_parameters": 6534,
+  "source_sha256": {
+    "/workspace/experiments/e126_topology_contracts.py": "c53c03a25fbad6ed3e836f6be7874a308892f2f15530c85bd50f109f93823e9b",
+    "sleeping_machines/shared_event.py": "788204f0e17da63e1f56393432edbc519a40b8d43bf332fcdbcccadefaca4b71",
+    "experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18"
+  },
+  "scope": "An expressivity obstruction and hand-constructed remedy, not learned XOR or SHD improvement"
+}

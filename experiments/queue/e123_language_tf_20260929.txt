@@ -1,0 +1,1 @@
+e123_language_tf_20260929 experiments/e123_synthetic_baselines.py --task language --model transformer --tag language_tf_d32_l2_s6 --fit 2048 --dev 256 --epochs 8 --bs 16

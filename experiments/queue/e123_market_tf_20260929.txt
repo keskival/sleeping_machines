@@ -1,0 +1,1 @@
+e123_market_tf_20260929 experiments/e123_synthetic_baselines.py --task market --model transformer --tag market_tf_d32_l2_s6 --fit 512 --dev 256 --epochs 8 --bs 16

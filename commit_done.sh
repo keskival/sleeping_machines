@@ -48,16 +48,19 @@ FILES=(
   experiments/e123*.py
   experiments/e124*.py
   experiments/e125*.py
+  experiments/e126*.py
   experiments/queue/e121*.txt
   experiments/queue/e122*.txt
   experiments/queue/e123*.txt
   experiments/queue/e124*.txt
   experiments/queue/e125*.txt
+  experiments/queue/e126*.txt
   experiments/results/e121/*.json
   experiments/results/e122/*.json
   experiments/results/e123/*.json
   experiments/results/e124/*.json
   experiments/results/e125/*.json
+  experiments/results/e126/*.json
   report/figures/e121_arithmetic.png
   report/figures/e122_speech.png
   report/figures/consolidated_work_frontiers.png

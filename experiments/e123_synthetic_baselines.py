@@ -21,6 +21,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from e120_shared_tasks import Example, modular, recall, prefix
 from e61_race_attention import make_perm, sample
 from e36_transformer import EventTransformer
+from e120_shared_bench import loss_for, BUILDERS
 
 
 class EventLSTM(nn.Module):
@@ -56,24 +57,33 @@ def evaluate(net,rows,bs):
     for start in range(0,len(rows),bs):
         b,t,mask,y=batch(rows[start:start+bs]);z=net(b,t,mask)
         pred+=z.argmax(-1).tolist()
-        total+=float(nn.functional.cross_entropy(z,y,reduction="sum"))
+        total+=float(loss_for(z,rows[start:start+bs],"sum"))
     correct=sum(p==r.label for p,r in zip(pred,rows))
-    return {"correct":correct,"n":len(rows),"accuracy":correct/len(rows),
-            "nll":total/len(rows),"predictions":pred}
+    result={"n":len(rows),"nll":total/len(rows)}
+    if rows[0].exposure is None:
+        result.update(correct=correct,accuracy=correct/len(rows),predictions=pred)
+    return result
 
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--task",choices=("modular","recall"),required=True)
+    p.add_argument("--task",choices=tuple(BUILDERS),required=True)
     p.add_argument("--model",choices=("lstm","transformer"),required=True)
     p.add_argument("--tag",required=True);p.add_argument("--epochs",type=int,required=True)
     p.add_argument("--bs",type=int,default=64);p.add_argument("--seed",type=int,default=6)
+    p.add_argument("--fit",type=int);p.add_argument("--dev",type=int,default=256)
     a=p.parse_args()
     out=Path("experiments/results/e123")/(a.tag+".json")
     out.parent.mkdir(exist_ok=True)
     if out.exists():raise FileExistsError(out)
     torch.set_num_threads(1);torch.manual_seed(a.seed)
-    task=modular(1473,3440,a.seed) if a.task=="modular" else recall(512,256,a.seed)
+    if a.task=="modular":
+        task=modular(1473,3440,a.seed)
+    elif a.task=="recall":
+        task=recall(512,256,a.seed)
+    else:
+        if a.fit is None:raise ValueError("A reference task needs --fit")
+        task=BUILDERS[a.task](a.fit,a.dev,a.seed)
     if a.task == "modular":
         task.protocol["note"] = "Same position-tagged triples as E121; all unseen tuples; 200-epoch dense control with no supplied phase primitive"
     fit=list(task.fit)
@@ -94,7 +104,7 @@ def main():
             "parameters":sum(p.numel() for p in net.parameters()),"protocol":task.protocol,
             "fit_ids":[r.identity for r in fit],"dev_ids":[r.identity for r in task.dev],
             "curve":[],"hardware":{"platform":platform.platform(),"threads":1,"torch":torch.__version__},
-            "scope":"Same adapters, labels and seed as the shared model; one small dense setting, not a tuned best baseline",
+            "scope":"Same adapters, labels and seed as the shared model; one small dense setting, not a tuned best baseline; language/market reference has no frozen evidence bank",
             "source_sha256":{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in
                  [Path(__file__),Path("experiments/e120_shared_tasks.py"),Path("experiments/e36_transformer.py")]},
             "energy_joules":None}
@@ -103,13 +113,14 @@ def main():
         tmp=out.with_suffix(".json.tmp");tmp.write_text(json.dumps(result,indent=2)+"\n");tmp.replace(out)
     persist()
     for epoch in range(1,a.epochs+1):
-        lr=.003*(.1+.9*(1+math.cos(math.pi*(epoch-1)/max(a.epochs-1,1)))/2)
+        denominator=max(a.epochs-1,1) if a.task in ("modular","recall") else a.epochs
+        lr=.003*(.1+.9*(1+math.cos(math.pi*(epoch-1)/denominator))/2)
         for g in opt.param_groups:g["lr"]=lr
         net.train();total=0.;order=rng.permutation(len(fit))
         for start in range(0,len(fit),a.bs):
             rows=[fit[i] for i in order[start:start+a.bs]]
             b,t,mask,y=batch(rows);z=net(b,t,mask)
-            loss=nn.functional.cross_entropy(z,y)
+            loss=loss_for(z,rows)
             if not torch.isfinite(loss):raise FloatingPointError("Nonfinite baseline loss")
             opt.zero_grad(set_to_none=True);loss.backward()
             nn.utils.clip_grad_norm_(net.parameters(),1.,error_if_nonfinite=True);opt.step()
@@ -118,7 +129,7 @@ def main():
             row={"epoch":epoch,"online_nll":total/len(fit),"fit":evaluate(net,fit,a.bs),
                  "dev":evaluate(net,task.dev,a.bs)}
             result["curve"].append(row);persist()
-            print(json.dumps({"epoch":epoch,"fit":row["fit"]["accuracy"],"dev":row["dev"]["accuracy"],
+            print(json.dumps({"epoch":epoch,"fit":row["fit"].get("accuracy",row["fit"]["nll"]),"dev":row["dev"].get("accuracy",row["dev"]["nll"]),
                               "wall_s":result["wall_s"]}),flush=True)
     result.update(status="completed",final=result["curve"][-1],
                   extra={k:evaluate(net,v,a.bs) for k,v in task.extra.items()},
