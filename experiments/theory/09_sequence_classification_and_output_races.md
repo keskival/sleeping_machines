@@ -2783,3 +2783,67 @@ Only downstream changes that improve the primary deep loss count as serial
 credit. Any prefix expansion must include its proposal probability and a
 declared replay-work cap. This pilot is not implemented; the audit establishes
 the shortcut mechanism in the tested model, not a successful remedy.
+
+## 146. Separate event propagation from pair-specific credit
+
+The L3 observation behind §145 came from only two paired spike shadows. A
+larger frozen audit used 1,024 held-out-speaker utterances, one selected
+near-threshold pair per batch, and all four binary outcomes. It found 141/69
+eligible L2 pairs in the control/late-only checkpoints and 31/11 L3 pairs.
+Among pairs whose two natural spike states were both off, opening both
+produced a positive suffix-spike-count change in 38/64 and 19/34 L2 cases,
+and 6/10 and 3/5 L3 cases. It lowered deepest-only loss in 8/64 and 4/34 L2
+cases, and 5/10 and 4/5 L3 cases. These are selected interventions from one
+checkpoint per arm, with only 15 natural-off L3 pairs; the late-only L3
+median loss change was helpful but one large harmful outlier made its mean
+harmful. This demonstrates occasional causal leverage, not reliable learning.
+
+The four outcomes give a sharper test of whether the pair itself matters. Let
+$s_i,s_j\in\{0,1\}$ denote two event decisions and let $L_{ab}$ be the
+deepest-only loss with $(s_i,s_j)=(a,b)$. Under independent logistic
+relaxations $p_k=\sigma(m_k/\tau)$, the expected loss is
+
+$$
+\widetilde L=(1-p_i)(1-p_j)L_{00}+p_i(1-p_j)L_{10}
+ +(1-p_i)p_jL_{01}+p_ip_jL_{11}.
+$$
+
+Its pair-specific mixed derivative is exactly
+
+$$
+\frac{\partial^2\widetilde L}{\partial m_i\partial m_j}
+ =\frac{p_i(1-p_i)p_j(1-p_j)}{\tau^2}\,\Gamma_{ij},
+\qquad
+\Gamma_{ij}=L_{11}-L_{10}-L_{01}+L_{00}.
+$$
+
+$\Gamma_{ij}$ is the difference-in-differences: it is the extra signal
+available from evaluating both decisions together after accounting for each
+singleton's effect. A useful double opening is not automatically pair
+synergy. Of 113 selected natural-off pairs across L2/L3 and both checkpoints,
+none had a beneficial double opening when both corresponding singleton
+openings were non-beneficial. Using $|\Gamma|>0.01$ only as a descriptive
+loss-scale threshold, there were no such L2 pairs and one each among 31
+control and 11 late-only L3 pairs; the median $|\Gamma|$ was zero. Thus the
+current sampled pool mostly exposes first-order event utility, while a rare
+L3 interaction remains possible.
+
+This audit selects two distinct near-boundary hidden-unit spikes within 50 ms;
+it does **not** require that their outgoing edges converge on a shared
+receiver. It therefore measures spike-birth composition through the
+downstream stack, not the topology-conditioned same-receiver route-pair
+mechanism from §§139–144. The distinction matters: a pair can add L3/L4
+activity while barely changing class loss, and its timing or vector payload
+can change deepest evidence even when spike counts do not. Counts alone are
+not a propagation measure.
+
+The resulting training rule is selective: use first-order boundary shadows
+for the marginal utility of individual event decisions; spend extra replay
+budget on pairs only where topology and arrival-time overlap make a shared
+nonlinearity plausible, then retain the four-corner $\Gamma$ estimate to
+decide whether pair-specific credit is actually present. Compare the
+topology-conditioned sampler with a time-matched nonshared pair control,
+logging accepted messages, receiver-state changes, event times/payloads,
+deepest loss, and replay work. A candidate route mechanism should enter
+training only after its task utility survives that comparison. This test is
+not yet implemented, and no SHD accuracy improvement follows from the audit.

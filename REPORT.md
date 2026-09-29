@@ -33,7 +33,7 @@ realized firing calibration, gradients reached all eight event layers in a depth
   test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
   optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
   4.319, so it does not establish useful language-model quality or a scaling advantage.
-- **Deep SHD route credit and depth (§§138–143; reachability plus matched route-pair screens):** with only
+- **Deep SHD route credit and depth (§§138–146; reachability plus matched route-pair screens):** with only
   1.56–7.03% layer-4 support, a size-four minibatch has a 75–94% chance of containing no layer-4 example. Yet exact
   seed-6/7 wiring has static paths for 90.2%/98.0% of first-to-fourth unit pairs, and all 140 input bands can reach
   layer 4. The bottleneck is therefore downstream of fixed connectivity: event-conditioned routes, thresholded firing,
@@ -64,7 +64,12 @@ realized firing calibration, gradients reached all eight event layers in a depth
   widest window; widening time alone does not restore deep support. Section 144 derives why pair-proposal availability
   collapses with sparse source-event occupancy and why importance weighting cannot repair missing support. Section 143
   derives a cost-constrained route utility and requires simultaneous tracking of
-  deep-example support, event multiplicity, and class-aligned prefix evidence. The current E83 SHD model still scans hidden state on a 1 ms grid;
+  deep-example support, event multiplicity, and class-aligned prefix evidence. New 1,024-example four-corner spike
+  replays separate event propagation from pair-specific credit: among natural-off L2 pairs, opening both raised
+  downstream spike counts in 38/64 control and 19/34 late-only cases, but lowered deepest-only loss in only 8/64 and
+  4/34. Of 113 natural-off L2/L3 pairs, none improved deepest loss when both singleton openings failed; only 2/42 L3
+  pairs and 0/210 L2 pairs had $|\Gamma|>0.01$. The replay chose distinct spike events without requiring a shared
+  receiver, so it is not evidence about same-receiver route-pair synergy. E83 still scans hidden state on a 1 ms grid;
   it does not demonstrate sparse asynchronous training cost.
 
   A refractory-aware spike audit compared the matched no-pair control and
@@ -92,6 +97,31 @@ realized firing calibration, gradients reached all eight event layers in a depth
   declared downstream-work cap and matched control.
 
 ![All-depth boundary utility is a shallow readout shortcut, while deepest-only L1/L2 utility is zero](report/figures/e83_spike_boundary_late.png)
+
+**Pair propagation is not pair synergy (§146).** A 1,024-example frozen
+four-corner replay found 141/69 eligible L2 spike pairs and 31/11 L3 pairs
+in control/late-only checkpoints. Among natural-off pairs, opening both
+increased downstream spike count in 38/64 and 19/34 L2 cases, but lowered
+deepest-only loss in only 8/64 and 4/34. At L3, the corresponding counts were
+6/10 versus 5/10 in control and 3/5 versus 4/5 late-only; the latter's median
+loss change was −0.032 but one +1.40 harmful outlier made its mean harmful.
+These few selected cases establish that some events can affect the deep
+objective, not a repeatable update direction.
+
+For independent logistic event risks, the pair-specific gradient is
+proportional to $\Gamma=L_{11}-L_{10}-L_{01}+L_{00}$. None of 113 sampled
+natural-off pairs improved the deepest loss when both singleton openings did
+not; $|\Gamma|>0.01$ occurred in 2/42 L3 cases and 0/210 L2 cases, with zero
+median interaction magnitude. Thus double-open utility usually came from
+first-order event effects. This audit pairs distinct hidden spikes within
+50 ms and does not require a shared receiver, so it does not test the
+topology-conditioned route-pair mechanism. The next test must compare pairs
+that actually converge on an integrating receiver with time-matched
+nonshared pairs, and track accepted messages plus event timing and payload.
+All results are validation diagnostics from one checkpoint per arm, not an
+accuracy gain or test-set result.
+
+![E83 pair-event replays: support, downstream propagation, and measured pair interaction](report/figures/e83_spike_pair_audit.png)
 
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
@@ -849,14 +879,19 @@ The synthesis now treats topology and representation as separate experimental ax
   repeatable accuracy gain is established. The depth-8 fused run was stopped after four epochs because late layers alternated
   between near-extinction and thousands of spikes per utterance. E83's separate silence gap also remains: logits do not evolve between hidden events
   until the next event or terminal EOS.
-- **Why the depth-4 SHD model stalls (§137):** seed-6 event counts and exactly zero-gradient training minibatches
+- **Why the depth-4 SHD model stalls (§§137, 145–146):** seed-6 event counts and exactly zero-gradient training minibatches
   confirm that the hard fire mask cuts off label credit when deep layers emit no events. Existing route shadows toggle
   message edges but do not estimate the distinct spike birth/death boundary term. A 128-example paired spike audit found
   deep near-threshold candidates rare and single-spike loss effects mixed, so spike credit is not yet shown to help. E83
   also has a readout-confound result (§145): the L1 all-depth loss improvement vanished under the matched deepest-only
   loss, and the event changed its own shallow readout without adding downstream hidden spikes. It also drops the merged
   event-count payload: the mark exists in preprocessing, and over 40% of held-out merged events
-  contain multiplicity. **Structural result:** with zero initial state, no bias drive, and positive firing threshold, an
+  contain multiplicity. A 1,024-example four-corner spike audit now shows that L2 event-pair openings often create
+  downstream spikes but only rarely improve deepest-only loss; none of 113 natural-off pairs showed a beneficial joint
+  opening when both singleton openings were unhelpful. Pair-specific interaction magnitude was usually exactly zero,
+  with two >0.01 L3 cases among 42 and none among 210 L2 cases. The audit selects hidden spikes without requiring a
+  shared receiver; a topology-conditioned route-pair audit remains open. **Structural result:** with zero initial state,
+  no bias drive, and positive firing threshold, an
   empty input event set produces no output events. Therefore per-utterance active-example coverage is nested across a
   strict event chain; all-depth readout cannot break this invariant. Event counts can still explode on the shrinking set of
   active utterances, so track coverage and conditional multiplicity separately. In the original 32-example depth-4
@@ -1344,7 +1379,7 @@ on language itself. The stages above are how that will be decided.
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; strict chains have nested per-utterance support; matched D4 seed 6: all-depths 17/128 versus deepest-only 7/128 terminal, paired race-plus-fallback 20 versus 7 (McNemar p=0.0146); poor late-prefix NLL and no layer-4 ablation gain; count marks restore support without class accuracy; depth-8 activity alternates between extinction and cascade (§137) |
+| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; strict chains have nested per-utterance support; matched D4 seed 6: all-depths 17/128 versus deepest-only 7/128 terminal, paired race-plus-fallback 20 versus 7 (McNemar p=0.0146); poor late-prefix NLL and no layer-4 ablation gain; count marks restore support without class accuracy; depth-8 activity alternates between extinction and cascade (§137); 1,024-example pair replay found sparse deep event utility but almost no pair-only interaction (§146) |
 | E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 

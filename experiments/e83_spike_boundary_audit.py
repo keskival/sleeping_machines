@@ -53,6 +53,8 @@ def main():
     ap.add_argument("--spike_band", type=float, default=0.25)
     ap.add_argument("--sigma", type=float, default=0.25)
     ap.add_argument("--prefix_samples", type=int, default=2)
+    ap.add_argument("--layers", default="all",
+                    help="comma-separated one-indexed hidden layers to audit, or 'all'")
     ap.add_argument("--seed", type=int, default=6)
     ap.add_argument("--run_tag", default="")
     ap.add_argument("--fusion", choices=("checkpoint", "deepest", "all_depths"),
@@ -76,6 +78,15 @@ def main():
     fusion = get("readout_fusion", None) or "deepest"
     if a.fusion != "checkpoint":
         fusion = a.fusion
+    if a.layers == "all":
+        layers_to_audit = set(range(depth))
+    else:
+        try:
+            layers_to_audit = {int(value) - 1 for value in a.layers.split(",")}
+        except ValueError as exc:
+            raise ValueError("layers must be 'all' or comma-separated layer numbers") from exc
+        if not layers_to_audit or any(k < 0 or k >= depth for k in layers_to_audit):
+            raise ValueError(f"layers must be in [1, {depth}]")
 
     torch.manual_seed(seed)
     net = DeepSHD(bands, d, n, M1, M, depth, window, fan2, readout_fan,
@@ -110,6 +121,8 @@ def main():
             base_aux_value = float(base_aux.item())
 
         for layer_id, diagnostic in enumerate(base_info["spike_diagnostics"]):
+            if layer_id not in layers_to_audit:
+                continue
             margins = diagnostic["spike_margin_trace"]
             fired = diagnostic["spike_fire_mask"]
             valid = torch.ones_like(margins, dtype=torch.bool)

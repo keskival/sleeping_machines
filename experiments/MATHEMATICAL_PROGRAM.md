@@ -636,6 +636,38 @@ work-capped sparse suffix-expansion replay and show a downstream event change
 that improves that objective. The paired replay itself is not a training
 result; L3/L4 sample sizes remain too small to estimate their utility.
 
+Section 146 expands this audit to 1,024 held-out-speaker utterances. It finds
+that event propagation and task utility are separate: among natural-off L2
+pairs, opening both increases suffix spike count in 38/64 control and 19/34
+late-only cases, but improves deepest-only loss in only 8/64 and 4/34. L3
+counts are just 10 and 5 natural-off pairs; 5/10 and 4/5 double openings
+improve deepest loss, but the late-only median is −0.032 while one harmful
+outlier is +1.40. These are frozen interventions, not a treatment effect.
+
+For independent logistic spike risks, the expected loss over the four binary
+corners has mixed derivative
+$\partial^2\widetilde L/(\partial m_i\partial m_j)=
+p_i(1-p_i)p_j(1-p_j)\Gamma_{ij}/\tau^2$, where
+$\Gamma_{ij}=L_{11}-L_{10}-L_{01}+L_{00}$. This isolates pair-specific credit
+from the two singleton utilities. None of 113 sampled natural-off pairs had a
+beneficial joint opening when both singleton openings were non-beneficial;
+only 2/42 L3 and 0/210 L2 pairs had $|\Gamma|>0.01$ (descriptive threshold).
+The sample shows rare terminal leverage but little measured pair-only
+synergy. It also corrects a mechanism distinction: this spike-pair audit picks
+two hidden-unit events within 50 ms, not two incoming message routes that
+share a receiver. A route-pair claim cannot be inferred from it.
+
+The next discriminating experiment should replay topology-conditioned pairs:
+two candidate source events must have a common next-layer receiver, and their
+candidate arrivals must overlap on its integration timescale. Compare them
+with time-matched nonshared pairs on the same checkpoint. Log accepted route
+gates, receiver-state and event-time/payload changes, all four deepest-loss
+corners, $\Gamma$, and sparse replay work. This separates structural
+coincidence from actual content-gate acceptance and class utility. Keep
+single-event boundary shadows as the baseline; train with pair credit only if
+the shared-receiver arm produces repeatable interaction signal and then
+improves a matched deepest-only control.
+
 ## Cross-domain anchors
 
 - Timed automata and timed-word languages: [Alur & Dill (1994)](https://doi.org/10.1016/0304-3975(94)90010-8).

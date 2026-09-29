@@ -1,0 +1,476 @@
+{
+  "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+  "checkpoint_args": {
+    "bands": 140,
+    "merge": 0.002,
+    "d": 8,
+    "n": 4,
+    "M1": 16,
+    "M": 16,
+    "depth": 4,
+    "window": 30,
+    "fan2": 0.25,
+    "readout_fan": 0.5,
+    "aux_weight": 0.2,
+    "objective": "event_prefix",
+    "readout_fusion": "all_depths",
+    "input_count_payload": "off",
+    "early_event_skip": false,
+    "run_tag": "bundle_control",
+    "prefix_samples": 2,
+    "prefix_horizon_ms": 1000.0,
+    "prefix_window_start": 0.0,
+    "cf_shadows_per_layer": 1,
+    "cf_band": 0.5,
+    "cf_sigma": 0.25,
+    "cf_weight": 1.0,
+    "cf_lr": 0.001,
+    "cf_grad_clip": 1.0,
+    "cf_delta_clip": 5.0,
+    "cf_pairs_per_batch": 0,
+    "cf_pair_window_ms": 25.0,
+    "race_threshold": 0.6,
+    "race_temperature": 0.03,
+    "race_logit_temperature": 2.0,
+    "race_rate": 5.0,
+    "race_latency_discount": 1.0,
+    "dmax": 50.0,
+    "w_sd": "0.05,0.05",
+    "shift": 4,
+    "drop": 0.1,
+    "epochs": 4,
+    "bs": 4,
+    "lr": 0.003,
+    "seed": 6,
+    "limit": 120,
+    "eval_limit": 128,
+    "rng_protocol": "split",
+    "save_checkpoint": true
+  },
+  "audit_args": {
+    "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+    "examples": 128,
+    "batch_size": 4,
+    "spike_band": 0.25,
+    "sigma": 0.25,
+    "layer": 3,
+    "pair_window_ms": 50,
+    "prefix_samples": 2,
+    "seed": 6,
+    "run_tag": "bundle_control"
+  },
+  "split": "train/val_spk",
+  "examples": 128,
+  "batches": 32,
+  "pairs_attempted": 2,
+  "summary": {
+    "deepest": {
+      "pairs": 2,
+      "nonzero_interactions": 0,
+      "mean_interaction_gamma": 0.0,
+      "mean_abs_interaction_gamma": 0.0,
+      "pairs_with_downstream_spike_birth": 0,
+      "pairs_with_helpful_joint_flip": 0
+    },
+    "all_depths": {
+      "pairs": 2,
+      "nonzero_interactions": 2,
+      "mean_interaction_gamma": 4.887580871582031e-06,
+      "mean_abs_interaction_gamma": 5.841255187988281e-06,
+      "pairs_with_downstream_spike_birth": 0,
+      "pairs_with_helpful_joint_flip": 0
+    }
+  },
+  "per_batch": [
+    {
+      "batch_start": 0,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 4,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 8,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 12,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 16,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 20,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 24,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 174,
+          "batch": 1,
+          "unit": 15,
+          "margin": 0.009184718132019043,
+          "naturally_firing": true
+        },
+        {
+          "time": 176,
+          "batch": 1,
+          "unit": 12,
+          "margin": -0.002937793731689453,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        1,
+        0
+      ],
+      "layer": 3,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0
+      ],
+      "deepest": {
+        "L00": 3.0156800746917725,
+        "L10": 3.0156800746917725,
+        "L01": 3.0156800746917725,
+        "L11": 3.0156800746917725,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.756218194961548,
+        "L10": 2.7501301765441895,
+        "L01": 2.756303071975708,
+        "L11": 2.750225782394409,
+        "interaction_gamma": 1.0728836059570312e-05,
+        "expected_margin_gradients": [
+          -0.006080633461496218,
+          9.033684375061531e-05
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.681446075439453,
+        "toggle_0": 8.684096336364746,
+        "toggle_1": 8.681625366210938,
+        "toggle_01": 8.684253692626953
+      },
+      "selected_example_work_by_corner": {
+        "10": {
+          "hidden_spikes": [
+            10,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            102,
+            33,
+            19,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            10,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            102,
+            33,
+            10,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            10,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            102,
+            33,
+            19,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            10,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            102,
+            33,
+            10,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.006172895431518555,
+      "valid_spike_candidates": 5
+    },
+    {
+      "batch_start": 28,
+      "pair_found": false,
+      "valid_spike_candidates": 2
+    },
+    {
+      "batch_start": 32,
+      "pair_found": false,
+      "valid_spike_candidates": 1
+    },
+    {
+      "batch_start": 36,
+      "pair_found": false,
+      "valid_spike_candidates": 3
+    },
+    {
+      "batch_start": 40,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 44,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 307,
+          "batch": 2,
+          "unit": 11,
+          "margin": -0.02682185173034668,
+          "naturally_firing": false
+        },
+        {
+          "time": 308,
+          "batch": 2,
+          "unit": 12,
+          "margin": -0.014330387115478516,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 3,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0
+      ],
+      "deepest": {
+        "L00": 2.995957851409912,
+        "L10": 2.995957851409912,
+        "L01": 2.995957851409912,
+        "L11": 2.995957851409912,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.082585334777832,
+        "L10": 3.25285267829895,
+        "L01": 3.0826029777526855,
+        "L11": 3.2528693675994873,
+        "interaction_gamma": -9.5367431640625e-07,
+        "expected_margin_gradients": [
+          0.16977785082215271,
+          1.717757828498099e-05
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.978019714355469,
+        "toggle_0": 9.143841743469238,
+        "toggle_1": 8.978090286254883,
+        "toggle_01": 9.143952369689941
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            16,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            20,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            16,
+            4,
+            3,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            28,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            16,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            20,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            16,
+            4,
+            3,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            28,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.17028403282165527,
+      "valid_spike_candidates": 10
+    },
+    {
+      "batch_start": 48,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 52,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 56,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 60,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 64,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 68,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 72,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 76,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 80,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 84,
+      "pair_found": false,
+      "valid_spike_candidates": 2
+    },
+    {
+      "batch_start": 88,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 92,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 96,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 100,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 104,
+      "pair_found": false,
+      "valid_spike_candidates": 3
+    },
+    {
+      "batch_start": 108,
+      "pair_found": false,
+      "valid_spike_candidates": 2
+    },
+    {
+      "batch_start": 112,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 116,
+      "pair_found": false,
+      "valid_spike_candidates": 1
+    },
+    {
+      "batch_start": 120,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    },
+    {
+      "batch_start": 124,
+      "pair_found": false,
+      "valid_spike_candidates": 0
+    }
+  ]
+}
