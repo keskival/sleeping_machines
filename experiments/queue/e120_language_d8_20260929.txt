@@ -1,0 +1,1 @@
+e120_language_d8_20260929 experiments/e120_shared_bench.py --task language --tag language_d8_20260929 --fit 2048 --dev 256 --depth 8 --epochs 8 --bs 16

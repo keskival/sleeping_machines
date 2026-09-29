@@ -1,0 +1,1 @@
+e120_modular_d8_20260929 experiments/e120_shared_bench.py --task modular --tag modular_d8_20260929 --fit 1473 --dev 256 --depth 8 --epochs 8 --bs 16

@@ -1,0 +1,1 @@
+e120_dvs_d8_20260929 experiments/e120_shared_bench.py --task dvs --tag dvs_d8_20260929 --fit 88 --dev 44 --depth 8 --epochs 8 --bs 4

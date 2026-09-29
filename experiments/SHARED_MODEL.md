@@ -1,0 +1,156 @@
+# Shared Sleeping Machines model
+
+**One architecture and implementation; independently trained weights per task.**
+No joint training is used. This is the first working synthesis of the deep event
+carrier, conditional evidence and learned relative retrieval mechanisms. It is
+not yet a union of every historical prototype's primitives.
+
+## Implementation
+
+| File | Responsibility |
+|---|---|
+| `sleeping_machines/shared_event.py` | Addressed temporal state; eight configurable bounded carrier layers; hard winning vector/delay; local training-only loser score credit; contextual evidence readout |
+| `sleeping_machines/event_memory.py` | Reference and linear-work segmented numerator/mass scan |
+| `sleeping_machines/event_query.py` | Explicit observed-prefix query, chronology/cutoff validation, separate examples |
+| `sleeping_machines/evidence_memory.py` | Visited-context count/exposure memory and hard relative pointer routes |
+| `sleeping_machines/objectives.py` | Categorical and exact piecewise-constant marked hazard likelihoods |
+| `sleeping_machines/readout_calibration.py` | Fit-only conditioning; project unsupported static count dependence |
+| `experiments/e120_shared_tasks.py` | Task encodings, disjoint evidence/neural fitting, target construction |
+| `experiments/e120_dvs_adapter.py` | Bounded-packet AEDAT input, causal count coalescing |
+| `experiments/e120_shared_bench.py` | The same optimizer/backbone training path for all new tasks |
+
+E118's `RaceNet` is a compatibility subclass. E119 imports the shared scan.
+Old checkpoint keys and default speech computation are preserved. The extraction
+contract compares against committed revision `de6a45a`, not a second alias of
+the new class. Its source is preserved in `reference/e118_pre_shared.py` with
+an asserted SHA-256 so rebases and fresh clones do not lose the reference.
+The check gives exact logits, parameter gradients and winners on the audited
+batch, and 151/256 unchanged development answers on the existing speech model.
+
+### Semantics and resource boundaries
+
+- Encoders supply only observations available at a query cutoff. The label,
+  next character and next gap are separate targets.
+- Learned arrival delays can reorder carriers; the shared core sorts arrivals
+  within each receiver. All current benchmarks execute on CPU, one thread.
+- Only the winning hidden vector/delay is emitted. Losing values are detached
+  training counterfactuals, never averaged into the emitted hidden message.
+- Evidence is fused at the output score. This geometric mixture is a separate
+  primitive from the hidden hard race.
+- Every supplied carrier continues through the stack. It is sparse in observed
+  events and avoids a hidden time grid, but does not yet learn to delete carriers.
+- Local vector maps and outcome readouts are small dense operations. The scan
+  has linear combines, sorting remains O(E log E), and pointer search enumerates
+  all present source/offset candidates. Count all of them.
+- A language/market query replays its entire context. Adjacent queries do not
+  yet share persistent scheduler state. No incremental throughput claim is made.
+- The generic low-level `forward` accepts already grouped arrays. Public callers
+  should use `pack_queries`, which enforces nonempty chronological prefixes.
+- Query predictions are terminal readouts, not yet confidence-triggered early
+  answers. Simulated message delays and CPU execution latency are different.
+
+## Completed coverage (E120)
+
+All newly fitted cores have depth 8, width 32, seed 6, eight epochs. Each has
+its own initialization, optimizer, input alphabet, fitted weights and checkpoint.
+The following development screens cover the eight principal data/task families;
+they do not rerun every historical experiment or compare to new dense baselines.
+
+| Task | Protocol | Completed result |
+|---|---|---|
+| SHD | Frozen E119 checkpoint; 1,024 fit, 256 held-out training speakers | 151/256 (59.0%) preserved; original best checkpoint 63.7% |
+| text8 | 32,768 evidence-fit chars, then 2,048 neural queries; 256 validation-region queries | 3.022 → 2.915 dev bpc; fixed evidence 3.024 bpc |
+| BTC event world model | 200k-raw-trade prefixes on three disjoint days; 512 neural fit / 256 dev; exact next-type/time likelihood | Combined 3.823 dev nats/event vs fixed evidence 3.670; does not improve held-out likelihood |
+| Associative recall | 4,000 memory-fit examples, 512 separate neural fit / 256 dev | Corrected core 256/256 at both standard and 4× context |
+| Temporal composition | E28 generator, 24 channels, 6 motifs, 6 classes + none; 1,024 / 256 | 249/256 (97.3%) |
+| MNIST | First 1,024 train images fit, next 256 dev; fixed 2×2 pooling, latency encoding | 194/256 (75.8%) |
+| DVS Gesture | First 1 second; 4×4 spatial cells + polarity, 50 ms packets; 88 / 44, disjoint users | 26/44 (59.1%); not a full-gesture benchmark |
+| Modular arithmetic | 30% of mod-17 triples; 1,473 / 256; no provided rhythm | 176/1473 fit, 6/256 dev; unsuccessful short screen |
+
+No official real-data test split is read by these screens. Standard/long recall
+queries are independently generated. Counts/exposure and pointer memories use
+disjoint memory-fitting data before neural fitting. Development labels update
+neither component. Evidence arrays are prepared once; evaluation wall time does
+not include that preparation. End-to-end run time does include memory fitting
+and loading. Numeric memory bytes exclude Python mapping overhead.
+
+### The count-feature failure and repair
+
+Initial recall: 100% at training length but 23/256 at 4× length, despite a
+perfect pointer. Constant training count was standardized with a 1e-4 floor;
+the longer context became a 1299.28-unit feature and produced a 78.97-point
+untrained head contribution. Projecting only that input coordinate restores
+256/256 with all weights frozen. A new run with the fitting-only support rule
+also preserves 100% on both lengths. Variable-count conditioning is unchanged.
+
+The failed result `recall_d8_20260929.json` is retained. The corrected run is
+`recall_d8_supported_20260929.json`. The initial six queues predate the correction
+and preserve their executed commands. To reproduce their former calibration
+with current code, add `--legacy-count-calibration` and use a **new tag/queue**.
+The default for new runs is the supported-count rule.
+
+### Readout diagnostics
+
+Removing the additive core head after training improves development NLL from
+2.020 to 1.942 on text and 3.823 to 3.549 on the market. This retains the learned
+deep-feature gate on the evidence. The `memory` diagnostic therefore is not an
+independent memory-only model. `fixed_evidence` uses equal evidence weights and
+no neural features. These are frozen deletions, not retrained controls.
+
+## Safe reproduction
+
+Inspect existing workloads and available memory first. Use a new output tag
+and exactly one line per queue. For example:
+
+```sh
+# Create a uniquely named one-job queue containing:
+# local_shared_recall_new experiments/e120_shared_bench.py --task recall --tag local_shared_recall_new --fit 512 --dev 256 --depth 8 --epochs 8 --bs 16
+MEM_CAP_KB=3600000 MEM_CAP_RSS_KB=2600000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=600 \
+  bash experiments/queue/run_safe.sh experiments/queue/local_shared_recall_new.txt
+```
+
+Never bypass the host lock. Completed tags refuse overwrite; successful queue
+jobs are skipped on restart. E120 peak training RSS was below 0.5 GiB on this
+host. Checkpoints contain configuration, model/optimizer/scheduler/RNG state,
+frozen evidence memories and source hashes. The current CLI does not implement
+mid-run resume. It persists result curves after every epoch and writes the
+checkpoint at completion. Checkpoints and logs are excluded from the commit
+helper; result JSON and source are included.
+
+Validation queues:
+
+- `e120_contracts_final_20260929.txt`: extraction, scan, gradients, winner-only
+  computation, prefix cutoff, query isolation, exact pointer update.
+- `e120_readout_audit_v2_20260929.txt`: frozen longer-context intervention and
+  count-calibration contracts.
+- `report_shared_readable_20260929.txt`: readable PDF and Markdown build.
+
+## AWS handoff and outstanding coverage
+
+The AWS sibling retains its existing non-SHD queues. This local work did not
+start those workloads or change their plan. Use a separate `aws/shared-*`
+branch, host-specific tags and new one-job queues for shared-model work. The
+handoff is a repository file, not a message sent to the sibling.
+
+1. Import the shared-core source and contracts; run the contracts on a host
+   with the referenced SHD checkpoint, or obtain that untracked checkpoint
+   explicitly. Do not silently substitute a randomly initialized model.
+2. Preserve the recall 4×-context and exact-scan checks before scaling.
+3. Compare **retrained** fixed-evidence, gated-evidence and additive-correction
+   arms with identical examples and selection protocols. Existing frozen
+   ablations justify this next comparison; they do not replace it.
+4. Extend bounded text/market adapters to the existing full E79/E52 splits and
+   larger evidence banks before making full-benchmark claims. The current
+   market adapter deliberately caps raw input at 200k trades/day and rejects
+   requests with insufficient target events.
+5. Port periodic-state and native hold/veto primitives, then run their existing
+   arithmetic/depth protocols. Add the continual-learning/retention suite;
+   it is not covered by the present separate stationary fits.
+6. Add a causal persistent scheduler and measure replay savings. GPU training
+   requires explicit device support and profiling; this harness currently
+   declares CPU execution and does not claim a CUDA implementation.
+
+Do not use this exploratory suite as a new best-model selection on official
+test sets. Freeze choices with validation, then measure held-out quality and
+total training/inference resources. Theory §§176–180 explains the causal query,
+natural-score credit, calibration support and periodic representation issues.

@@ -1,5 +1,27 @@
 # Mathematical program for event networks at language scale
 
+## Current synthesis: causal queries, evidence geometry and invariances (E120)
+
+A common architecture is trained separately for each task. §§176–180 provide
+its implemented formalism. The exact count-feature intervention establishes one
+root cause of failed integration: an unidentifiable static readout direction
+can overwhelm a correctly generalizing pointer. Future synthesis must preserve
+specialist invariances, not merely place their outputs beside a deep branch.
+
+The next matched coupling experiment is motivated by frozen deletions: removing
+the additive head improves development likelihood on both text and market,
+while retaining the deep-feature evidence gate. The next representation task is
+periodic state: pairwise features have zero population correlation with a uniform
+three-operand modular label, while group-character products compose correctly.
+Measure the actual higher-order feature/credit statistics and port the trainable
+rhythm primitive before claiming the shared core inherits native grokking.
+
+The implemented prefix interface is causal but replays context. Persistent event
+state and query closure are required for incremental prediction costs. All claims
+must include pointer candidate search, evidence preparation, local dense maps,
+training alternatives, sorting, optimizer work and memory.
+
+
 **Purpose.** Connect the manifesto, existing results, and derivations to a deep event architecture with a better quality–resource frontier. E79 leads the completed same-split 1M/10M language baselines; its expert mixture is a different model family from the deep vector stack. Learned retrieval and synthetic compositional depth also have measured advantages. The missing bridge is a shared representation learner that combines those capabilities with sparse execution and efficient credit.
 
 ## Current priorities, 29 September 2026

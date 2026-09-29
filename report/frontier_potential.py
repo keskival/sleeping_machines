@@ -1,4 +1,8 @@
-"""Shared editorial source for the expanded potential section in MD and PDF."""
+"""Historical potential text used by make_pdf.build_legacy.
+
+The current Markdown/PDF narrative, including expanded applications and the
+shared-model findings, is maintained together in readable_report.py.
+"""
 
 POTENTIAL_SECTIONS = [
     ("Within reach from the results already obtained",

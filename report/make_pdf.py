@@ -13,6 +13,8 @@ import json
 import os
 from datetime import date
 
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/sleeping_machines-mpl")
+
 import matplotlib
 import matplotlib.patches  # noqa: F401
 from matplotlib.lines import Line2D  # noqa: E402
