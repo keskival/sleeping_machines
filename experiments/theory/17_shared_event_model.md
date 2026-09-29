@@ -167,3 +167,89 @@ has $O(LEd)$ arithmetic and local maps $O(LEd^2)$; sorting costs
 $O(LE\log E)$ in this implementation. Pointer search is $O(ER)$ for $R$ relative
 offsets, and conditional evidence lookup returns $C$ scores per memory. These
 costs must all be counted before claiming an advantage over dense baselines.
+
+## 179. A successful memory can be destroyed by an unidentified readout direction
+
+The first E120 recall model is perfect on its development contexts of length
+17 (eight key/value pairs and a query), but only 23/256 correct at length 65.
+Its extracted pointer memory alone remains 256/256 correct at both lengths.
+This isolates integration, rather than retrieval, as the failure.
+
+Write the static count coordinate as $c=\log(1+E)/10$. Every fitting context
+has the same $E=17$, so $\operatorname{Var}_{fit}(c)=0$. The original
+standardizer nevertheless uses
+
+$$z_c=(c-\bar c)/\max(\sigma_c,10^{-4}).\tag{179.1}$$
+
+On the fitting set $z_c=0$: a readout coefficient multiplying it is
+**unidentifiable from those observations**. Its gradient is zero and its
+random initialization can persist. At length 65, however,
+
+$$z_c=\frac{\log(66)-\log(18)}{10\cdot10^{-4}}\approx1299.28.\tag{179.2}$$
+
+The following whitening factor further amplifies the unobserved direction.
+The audit measures an added head score as large as 78.97. This swamps the
+correct retrieved evidence despite successful pointer generalization.
+
+**Supported-metadata rule.** For static metadata with zero fitting variation,
+project its standardized input contribution out of the readout. This imposes
+zero dependence in an unidentifiable direction. Equivalently it chooses the
+minimum-norm coefficient for that direction instead of an arbitrary initial
+coefficient. It is an inductive assumption, not a proof that length can never
+matter; variable-length fitting can identify a genuine count dependence.
+
+E120 implements this by zeroing the input row of the whitener corresponding
+to constant log count. The rule depends only on fitting data. It does not
+project learned hidden features merely because their initial variance is
+small: those features can acquire variation as the core learns. Variable-count
+calibration is bitwise unchanged in the contract check.
+
+**Frozen intervention:** changing only that one row, without retraining any
+weight, restores 256/256 longer-context predictions; standard-context fit and
+development accuracy stay perfect. This is a causal intervention on the
+implemented failure, not an inference from correlated learning curves. A
+fresh run with the supported-count rule is recorded separately. The original
+failed result remains available.
+
+The general architectural lesson is to preserve a specialist's invariances
+when coupling it to new branches. An unconstrained additive branch can undo
+a correct specialized answer even when its training loss looks excellent.
+Test the composite on the specialist's extrapolation protocol, and inspect
+the feature support and score contributions before changing hidden routing.
+
+## 180. Why generic temporal features need not inherit modular generalization
+
+The eight-epoch modular screen fits 176/1473 tuples but recognizes only 6/256
+unseen tuples. This is a failed short generalization screen, not a long-run
+grokking experiment. The earlier successful rhythm mechanism has not been
+ported into the shared core.
+
+A useful analytic diagnostic is available without another seed sweep. For
+uniform independent $A,B,C\in\mathbb Z_p$, let $Y=A+B+C\pmod p$. Conditional
+on any two operands, the remaining operand is uniform, hence
+
+$$P(Y=y\mid A,B)=1/p.\tag{180.1}$$
+
+The same holds for the other operand pairs. Consequently every representation
+$f$ depending on at most two operands satisfies
+
+$$\mathbb E[f(\mathbf1_{Y=y}-1/p)]=0.\tag{180.2}$$
+
+Such features provide no population label correlation to a uniform categorical
+readout. Finite training-set correlations can instead support memorization.
+Simply passing information through more stable layers does not remove this
+statistical obstacle for a low-order representation.
+
+The group character $\chi_k(a)=e^{2\pi i ka/p}$ supplies a constructive contrast:
+
+$$\chi_k(A)\chi_k(B)\chi_k(C)=\chi_k(Y).\tag{180.3}$$
+
+Multiplication of unit complex payloads, or addition of their phases, composes
+all three inputs with the correct algebra. The native rhythm prototype uses
+related phase composition. This motivates a reusable trainable periodic-state
+primitive with its own tests; inserting the known arithmetic answer into an
+encoder would not demonstrate learning. The implemented deep tanh carriers can
+in principle form higher-order interactions, so (180.2) is **not** a proof of
+their incapacity or a diagnosis that every learned feature is low-order. It
+identifies a representation/credit measurement to make and an existing
+successful mechanism to preserve in the next synthesis step.

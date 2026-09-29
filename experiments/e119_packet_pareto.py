@@ -66,7 +66,8 @@ def main():
     result = {'status':'completed','args':vars(a),'checkpoint_epoch':saved.get('epoch'),
               'checkpoint_sha256':hashlib.sha256(Path(a.checkpoint).read_bytes()).hexdigest(),
               'source_sha256':{f:hashlib.sha256(Path('experiments',f).read_bytes()).hexdigest() for f in
-                               ('e119_packet_pareto.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py')},
+                               ('e119_packet_pareto.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py',
+                                '../sleeping_machines/shared_event.py','../sleeping_machines/event_memory.py')},
               'protocol':'Same frozen model, held-out speakers 3/6, 256 development examples, batch4, 3 warm repetitions; no official test access',
               'dev_ids':[x[4] for x in items],'dev_labels':[x[3] for x in items],
               'rows':rows,'max_rss_kb':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,

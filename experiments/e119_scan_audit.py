@@ -100,7 +100,8 @@ def main():
               'timings':times,'median_timings':medians, 'dev':evaluations,
               'checkpoint_sha256':hashlib.sha256(Path(a.checkpoint).read_bytes()).hexdigest(),
               'source_sha256':{name:hashlib.sha256(Path('experiments',name).read_bytes()).hexdigest() for name in
-                               ('e119_scan_audit.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py')},
+                               ('e119_scan_audit.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py',
+                                '../sleeping_machines/shared_event.py','../sleeping_machines/event_memory.py')},
               'hardware':{'platform':platform.platform(),'torch':torch.__version__,'threads':torch.get_num_threads()},
               'max_rss_kb':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
               'energy_joules':None,'energy_note':'RAPL energy_uj unreadable; wall time and work are not joules'}
