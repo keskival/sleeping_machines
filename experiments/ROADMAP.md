@@ -11,6 +11,14 @@ The analytic synthesis is [THEORY §§155–158](theory/10_trainability_and_fron
 and the revised optionality formalism is [§§159–163](theory/11_optionality_and_learning_reserve.md).
 The earlier roadmap below is historical; its old queue order is superseded.
 
+**Shared-model priority (E120):** one eight-layer implementation now has separately
+trained cross-task screens. Preserve the exact speech extraction and corrected
+recall length contracts. Next compare retrained evidence-gate/additive-head
+controls, integrate periodic state and native hold/veto composition, and make
+prefix queries incremental without future leakage. Full protocols and remaining
+coverage are in [SHARED_MODEL.md](SHARED_MODEL.md); theory §§176–180. Existing
+specialist wins remain the reference, not automatically properties of the core.
+
 **Local SHD priority:** E118 establishes fit-set learning and a positive D8/D1
 development comparison in the new winner-only carrier family. E119 removes
 redundant event-memory work while preserving the audited predictions and credit.

@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E119 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E120 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -34,6 +34,26 @@ FILES=(
   experiments/ROADMAP.md
   experiments/THEORY.md
   experiments/theory
+  experiments/SHARED_MODEL.md
+  sleeping_machines/shared_event.py
+  sleeping_machines/event_memory.py
+  sleeping_machines/event_query.py
+  sleeping_machines/evidence_memory.py
+  sleeping_machines/objectives.py
+  sleeping_machines/readout_calibration.py
+  experiments/e120*.py
+  experiments/reference/e118_pre_shared.py
+  experiments/queue/e120*.txt
+  experiments/queue/report_shared*.txt
+  experiments/results/e120/*.json
+  report/readable_report.py
+  report/archive/20260929_before_shared_model.md
+  report/figures/accomplishments.png
+  report/figures/shared_architecture.png
+  report/figures/e120_shared_learning.png
+  report/figures/e120_count_repair.png
+  report/sleeping_machines_shared_20260929.pdf
+  scripts/mirror_aws_branch_to_main.py
   experiments/e64_lm_baselines.py
   experiments/e68_race_transformer.py
   experiments/e74_time_vector_net.py
@@ -255,10 +275,10 @@ fi
 # PDF structure commonly uses trailing spaces; check source and prose only.
 CHECK_FILES=()
 for file in "${STAGE_FILES[@]}"; do
-  [[ "$file" == "report/sleeping_machines_status.pdf" ]] || CHECK_FILES+=("$file")
+  [[ "$file" == *.pdf ]] || CHECK_FILES+=("$file")
 done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Reduce event training work and advance deep SHD recognition; update theory and report}"
+MESSAGE="${1:-Unify event models, audit cross-task learning, and rebuild the accomplishments report}"
 git commit -m "$MESSAGE"

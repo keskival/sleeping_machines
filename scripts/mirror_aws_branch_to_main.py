@@ -33,14 +33,19 @@ def remove_report_worktree():
 
 
 def merge_source_tree(target_sha, source_sha):
-    """Merge commits, preferring the source's freshly built report on report-only conflicts."""
+    """Merge results; preserve main's generated report until it can be rebuilt.
+
+    Editorial/builder/theory conflicts need resolution, not an automatic choice
+    of a sibling's older source. They can otherwise undo a report redesign.
+    """
     merged = git('merge-tree', '--write-tree', target_sha, source_sha, check=False)
     if merged.returncode == 0:
         return merged.stdout.strip(), ''
     lines = merged.stdout.splitlines()
     tree_sha = lines[0].strip() if lines and re.fullmatch(r'[0-9a-f]{40,64}', lines[0].strip()) else None
     conflicts = re.findall(r'^CONFLICT \([^)]*\): Merge conflict in (.+)$', merged.stdout, re.M)
-    allowed = all(path == 'REPORT.md' or path == 'experiments/FINDINGS.md' or path.startswith('report/')
+    allowed = all(path == 'REPORT.md' or path == 'report/sleeping_machines_status.pdf' or
+                  path.startswith('report/figures/')
                   for path in conflicts)
     if not tree_sha or not conflicts or not allowed:
         return None, merged.stdout.strip()
@@ -50,7 +55,9 @@ def merge_source_tree(target_sha, source_sha):
     try:
         git('read-tree', tree_sha, env=index_env)
         for path in conflicts:
-            entry = git('ls-tree', source_sha, '--', path).stdout.strip()
+            entry = git('ls-tree', target_sha, '--', path).stdout.strip()
+            if not entry:
+                return None, 'Generated report conflict needs manual resolution: ' + path
             metadata, _ = entry.split('\t', 1)
             mode, _kind, blob = metadata.split()
             git('update-index', '--cacheinfo', f'{mode},{blob},{path}', env=index_env)
@@ -90,6 +97,10 @@ def refresh_report():
             paths = ['REPORT.md', 'experiments/FINDINGS.md', 'report/sleeping_machines_status.pdf',
                      'report/figures/supremacy_map.png', 'report/figures/potential_evidence.png',
                      'report/figures/e68_recall_training.png', 'report/figures/e76_attention_work.png']
+            paths += [path for path in (
+                'report/figures/accomplishments.png', 'report/figures/shared_architecture.png',
+                'report/figures/e120_shared_learning.png', 'report/figures/e120_count_repair.png',
+                'report/figures/e119_work_and_learning.png') if (REPORT_WORKTREE / path).exists()]
             git('add', '--', *paths, cwd=REPORT_WORKTREE)
             changed = git('diff', '--cached', '--quiet', cwd=REPORT_WORKTREE, check=False)
             if changed.returncode == 0:

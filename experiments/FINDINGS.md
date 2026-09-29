@@ -1,5 +1,62 @@
 # Findings log
 
+## E120: one shared core, separate task fits (29 September 2026)
+
+The shared package now contains the E119 deep event memory/carrier, conditional
+count/exposure evidence, E61 relative pointer routing, causal observed-prefix
+queries and categorical/hazard objectives. **There is no joint training.**
+Each task uses separate weights, memory contents and appropriate targets.
+Hidden races remain winner-only; losing payloads supply training-only score
+credit. The common eight-layer core runs on every new neural task.
+
+**Completed screens:** text8 3.022 → 2.915 development bpc (2,048 neural fit /
+256 dev, with a separate 32,768-character evidence bank); temporal composition
+249/256 (97.3%); pooled MNIST 194/256 (75.8%); first-second DVS Gesture 26/44
+(59.1%, users disjoint); corrected recall 256/256 at both standard and four-times
+context. The SHD extraction preserves 151/256 from the frozen E119 checkpoint,
+with exactly matching logits, gradients and winners on the audited batch.
+These are small development screens, not new full-scale superiority claims.
+
+**A mechanism isolated and repaired:** the first combined recall model fell to
+23/256 at four-times context although its pointer alone stayed perfect. Every
+fitting example had the same event count, so the count-feature coefficient was
+unidentified. A 1e-4 standard-deviation floor turned the longer input into a
+1299.28-unit feature, adding an untrained score as large as 78.97. Projecting
+only that count contribution restored 256/256 with every learned weight frozen.
+A new run with fitting-only count support also retained perfect extrapolation.
+Variable-count calibration is unchanged. Both failed and corrected runs remain.
+
+**Two useful failures:** market training loss fell to 1.546 nats/event while
+development loss worsened to 3.823, versus fixed evidence 3.670. A frozen deletion
+of the additive neural head improves that to 3.549; text likewise improves from
+2.020 to 1.942 nats. The deep feature gate remains in that deletion: these are
+not retrained memory-only controls. Modular addition fits 176/1473 but recognizes
+6/256 unseen tuples after eight epochs. The successful older periodic primitive
+has not been ported; this is not a long-run grokking experiment.
+
+**Theory §§176–180:** derive the common natural-score interface and its credit;
+prove explicit prefix closure; distinguish categorical shift invariance from
+hazard clock information; identify the readout-support failure; show why any
+two uniform modular operands have zero population label correlation for a
+three-operand target. This yields concrete coupling and representation tests.
+
+**Cost/protocol:** one guarded CPU job at a time, one thread, ≥8 GiB host reserve;
+new training peak RSS below 0.5 GiB. Prefixes are replayed, local maps/readouts
+remain dense, and no joules are measured. No official real-data test is read.
+Memory evidence is fitted on disjoint examples before neural fitting. Native
+hold/veto, periodic state, persistent online scheduling and continual-learning
+coverage remain to integrate. See [SHARED_MODEL.md](SHARED_MODEL.md).
+
+The report is reorganized into a concise accomplishments-first narrative;
+the previous long account is retained under report/archive/. Ongoing speech
+work remains in an appendix. The default report now builds Markdown and PDF
+from the same editorial source, with a named copy to survive cross-host status
+PDF refreshes. The host commit helper includes all new package/report sources,
+queues and result JSON, while excluding checkpoints and logs.
+
+---
+
+
 ## 2026-09-29 — Linear-work memory funds stronger eight-layer SHD recognition (E119)
 
 **Completed final endpoint: 151/256 (58.98%) development accuracy**, compared with the earlier E118
