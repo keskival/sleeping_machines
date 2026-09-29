@@ -72,6 +72,8 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Periodic memory and nuisance invariance](theory/18_periodic_memory_and_invariance.md) — §§181–184: affine circle state, occurrence credit, certified modular composition, computational ownership/work accounting and the objective changed by speech augmentation.
 - [Event readout, fixed points and class credit](theory/19_event_readout_credit.md) — §§185–187: sparse numerator/mass pooling, exact local key/value credit, covariance support and transfer alignment; a stopping proof for mistake-only teaching; a convex certificate for class-wise local descent.
 - [Active causal topology and context bridges](theory/20_causal_topology_and_bridges.md) — §§188–189: a disconnected-component expressivity obstruction; a causal linear-work remedy, exact checkpoint nesting, local teaching support and conditional depth bounds.
+- [Credit geometry and sparse differentiation](theory/21_credit_geometry_and_sparse_differentiation.md) — §§190–192: retain complete counterfactual score credit with winner-only value differentiation; separate surrogate and realized descent; certify useful directions across classes and fitting-speaker groups.
+- [Separate keys, values and race boundaries](theory/22_key_value_separation_and_race_boundaries.md) — §§194–196: isolate harmful winner changes; preserve actual routing during a smooth value-learning phase; derive joint key/value/clock counterfactual policy credit and its reachability requirements.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

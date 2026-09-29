@@ -1,5 +1,30 @@
 # Mathematical program for event networks at language scale
 
+## Current analytic advance: separate representation learning from accidental race changes (E128–E131)
+
+Balanced fitting gradients conflict across classes and disjoint speaker groups,
+yet a certified common interior direction exists for the new causal context.
+A finite probe isolates the obstruction: one winner change can spoil a step
+that decreases every conditional loss when winners remain fixed. Arrival-order
+freezing alone does not remove it. Thus supported interior transport and
+finite hard-route utility require separate treatment (§§190–194).
+
+The implemented next architecture carries separate keys and values. During a
+value-learning phase, an immutable key stream computes actual input-dependent
+hard choices/clocks; values learn joint content under that policy. Their
+bounded depth certificate applies across value updates because those updates
+cannot change the key schedule (§195). The real-checkpoint contract verifies
+nesting, unchanged keys under large value perturbations, correct finite loss
+credit and serialization. Matched same-budget SHD value-only continuations
+test the empirical effect. Both streams, their storage and execution are charged.
+
+Next key-policy training must use the joint alternative key/value/delay and
+its realized downstream utility. An interior first-order alternative score
+does not capture jumps at later hard races (§196). Reachability, a bounded
+proposal/replay budget and future adaptation utility define legitimate route
+and optionality credit. The current value phase freezes the key policy; it
+does not establish scalable joint key-policy training.
+
 ## Current advances: preserved computation, readout credit and active topology (E121–E126)
 
 **Completed structural bridge (E126):** alternating receiver groups require active

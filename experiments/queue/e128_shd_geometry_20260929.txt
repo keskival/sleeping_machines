@@ -1,0 +1,1 @@
+e128_shd_geometry_20260929 experiments/e128_shd_credit_geometry.py --tag class_speaker_geometry_20260929 --per-class-group 6 --bs 4

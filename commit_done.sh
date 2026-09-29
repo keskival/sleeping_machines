@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E126 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E131 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -49,18 +49,33 @@ FILES=(
   experiments/e124*.py
   experiments/e125*.py
   experiments/e126*.py
+  experiments/e127*.py
+  experiments/e128*.py
+  experiments/e129*.py
+  experiments/e130*.py
+  experiments/e131*.py
   experiments/queue/e121*.txt
   experiments/queue/e122*.txt
   experiments/queue/e123*.txt
   experiments/queue/e124*.txt
   experiments/queue/e125*.txt
   experiments/queue/e126*.txt
+  experiments/queue/e127*.txt
+  experiments/queue/e128*.txt
+  experiments/queue/e129*.txt
+  experiments/queue/e130*.txt
+  experiments/queue/e131*.txt
   experiments/results/e121/*.json
   experiments/results/e122/*.json
   experiments/results/e123/*.json
   experiments/results/e124/*.json
   experiments/results/e125/*.json
   experiments/results/e126/*.json
+  experiments/results/e127/*.json
+  experiments/results/e128/*.json
+  experiments/results/e129/*.json
+  experiments/results/e130/*.json
+  experiments/results/e131/*.json
   report/figures/e121_arithmetic.png
   report/figures/e122_speech.png
   report/figures/consolidated_work_frontiers.png
@@ -281,7 +296,8 @@ import json
 import sys
 from pathlib import Path
 record = json.loads(Path(sys.argv[1]).read_text())
-sys.exit(0 if isinstance(record, dict) and record.get("status") in ("running", "pending") else 1)
+sys.exit(0 if isinstance(record, dict) and record.get("status") in
+         ("running", "pending", "interrupted", "failed", "aborted") else 1)
 PY
     then
       echo "Skipping in-progress result: $file" >&2

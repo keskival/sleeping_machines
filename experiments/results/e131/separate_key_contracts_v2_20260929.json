@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "exact_initial_logits_summary_winners_clocks": true,
+  "value_gradient_norm": 8.240362167358398,
+  "radius": 0.0001,
+  "predicted_loss_change": -0.0008240362167358399,
+  "observed_loss_change": -0.0008225440979003906,
+  "keys_exact_under_small_and_large_value_updates": true,
+  "query_isolation_error": 3.814697265625e-06,
+  "checkpoint_roundtrip_exact": true,
+  "extra_frozen_key_parameters": 52616,
+  "trainable_value_parameters": 6336,
+  "source_sha256": {
+    "/workspace/experiments/e131_separate_key_contracts.py": "a5a9124eccca3ff5db742fe637f129bda44e489ebd9d5408a2f15eece0e7a24f",
+    "sleeping_machines/shared_event.py": "8fb59a8f810b0fc80a353a4b1cd8118b5355297bc893a4615b736c2bd36d6c90",
+    "experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18"
+  },
+  "scope": "Frozen routing-key learning phase; two event-driven payload streams; keys execute from actual observations; value updates do not imply learned new routing or benchmark superiority"
+}

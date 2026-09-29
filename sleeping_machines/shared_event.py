@@ -5,6 +5,7 @@ no knowledge of speech, text, markets or synthetic labels. Readout semantics
 and event units are declared by configuration; objective functions live in
 objectives.py. E118/E119 are the zero-expert, pooled-readout special case.
 """
+import copy
 import math
 import torch
 from torch import nn
@@ -13,10 +14,13 @@ from .event_memory import segmented_memory
 
 class RaceLayer(nn.Module):
     def __init__(self, dim, depth, beta, cf_credit, options=3, memory_backend="doubling",
-                 global_context=False):
+                 global_context=False, value_backward="full"):
         super().__init__()
         self.alpha, self.cf_credit = beta/depth, cf_credit
         self.options, self.dim = options, dim
+        if value_backward not in ("full", "winner"):
+            raise ValueError("value_backward must be full or winner")
+        self.value_backward = value_backward
         if memory_backend == "linear":
             from .event_memory import linear_memory as memory
             self.memory = memory
@@ -37,10 +41,15 @@ class RaceLayer(nn.Module):
                                 if global_context else None)
 
     def forward(self, x, t, count, keys, sequential=False, override=None, trace=False,
-                global_keys=None):
+                global_keys=None, order_override=None, schedule=None, emit_schedule=False):
         # Learned delays can reorder carriers. Memory sees actual arrival
         # order within each receiver, with the original index breaking ties.
-        time_order = torch.argsort(t, stable=True)
+        if order_override is not None and not trace:
+            raise ValueError("Frozen arrival order is a trace-only diagnostic")
+        time_order = torch.argsort(t, stable=True) if order_override is None else order_override
+        if order_override is not None and (time_order.shape != t.shape or not torch.equal(
+                time_order.sort().values, torch.arange(len(t),device=t.device))):
+            raise ValueError("Frozen arrival order must be an event permutation")
         inverse = torch.argsort(time_order)
         mem, mass, work = self.memory(
             x[time_order], t[time_order], count[time_order], keys[time_order],
@@ -62,38 +71,51 @@ class RaceLayer(nn.Module):
             bridge_w = self.bridge_value / self.bridge_value.abs().sum(-1, keepdim=True).clamp_min(1)
         elif global_keys is not None:
             raise ValueError("This layer has no global context channel")
-        delay = .001 + .010*torch.sigmoid(-scores)
-        winner = delay.argmin(-1)
+        delay = .001 + .010*torch.sigmoid(-scores) if schedule is None else schedule["delays"]
+        winner = delay.argmin(-1) if schedule is None else schedule["winner"]
         if override is not None:
             event, choice = override
             winner = winner.clone()
             winner[event] = choice
         w = self.value / self.value.abs().sum(-1, keepdim=True).clamp_min(1)
         rows = torch.arange(len(x))
-        if self.training and self.cf_credit or trace:
-            preactivation = torch.einsum("ekf,kdf->ekd", features, w)
-            if bridge_features is not None:
-                preactivation = preactivation + torch.einsum("ekf,kdf->ekd", bridge_features, bridge_w)
-            alternatives = torch.tanh(preactivation + self.bias)
-            correction = alternatives[rows, winner]
-            value_evaluations = len(x)*self.options
-        else:
-            # Inference and pathwise control evaluate only selected values.
-            correction = torch.zeros_like(x)
+        def selected_values():
+            selected_correction = torch.zeros_like(x)
             for k in range(self.options):
                 selected = torch.nonzero(winner == k, as_tuple=True)[0]
-                if bridge_features is None:
-                    value = F.linear(features[selected, k], w[k], self.bias[k])
-                else:
-                    value = F.linear(features[selected, k], w[k], self.bias[k]) + \
-                            F.linear(bridge_features[selected, k], bridge_w[k])
-                correction = correction.index_copy(0, selected, torch.tanh(value))
+                value = F.linear(features[selected, k], w[k], self.bias[k])
+                if bridge_features is not None:
+                    value = value + F.linear(bridge_features[selected, k], bridge_w[k])
+                selected_correction = selected_correction.index_copy(0, selected, torch.tanh(value))
+            return selected_correction
+
+        credit_active = self.training and self.cf_credit and schedule is None
+        sparse_backward = credit_active and self.value_backward == "winner" and not trace
+        if credit_active or trace:
+            # All alternatives still teach routing. Only the realized value
+            # needs ordinary differentiation; tracing keeps the full graph.
+            with torch.set_grad_enabled(torch.is_grad_enabled() and not sparse_backward):
+                preactivation = torch.einsum("ekf,kdf->ekd", features, w)
+                if bridge_features is not None:
+                    preactivation = preactivation + torch.einsum("ekf,kdf->ekd", bridge_features, bridge_w)
+                alternatives = torch.tanh(preactivation + self.bias)
+                correction = alternatives[rows, winner]
+            value_evaluations = len(x)*self.options
+            if sparse_backward:
+                selected = selected_values()
+                # Keep the exact original forward value. The zero-valued term
+                # supplies its winner-only derivative (up to contraction rounding).
+                correction = correction + (selected-selected.detach())
+                value_evaluations += len(x)  # Charge the selected forward recomputation.
+        else:
+            # Inference and pathwise control evaluate only selected values.
+            correction = selected_values()
             alternatives = None
             value_evaluations = len(x)
         winning_delay = delay[rows, winner]
         out = x + self.alpha*correction
         tout = t + winning_delay
-        if self.training and self.cf_credit:
+        if credit_active:
             p = torch.softmax(-delay/.002, -1)
             zero_forward = p-p.detach()
             # Loser values have no ordinary value-path gradient. They supply
@@ -106,6 +128,8 @@ class RaceLayer(nn.Module):
                  "mean_margin_ms": float((sorted_delay[:, 1]-sorted_delay[:, 0]).mean()*1000),
                  "mean_delay_ms": float(winning_delay.detach().mean()*1000),
                  "scan_compositions": work, "value_evaluations": value_evaluations}
+        if self.value_backward == "winner":
+            stats["differentiable_value_evaluations"] = len(x) if sparse_backward or alternatives is None else len(x)*self.options
         if bridge_features is not None:
             stats.update(global_scan_compositions=global_work,
                          global_context_packets=len(x),
@@ -113,9 +137,11 @@ class RaceLayer(nn.Module):
         details = None
         if trace:
             details = {"winner": winner, "alternatives": alternatives,
-                       "delays": delay, "out": out, "times": tout}
+                       "delays": delay, "out": out, "times": tout, "time_order": time_order}
             if bridge_features is not None:
                 details["global_features"] = bridge_features
+        elif emit_schedule:
+            details = {"winner":winner,"delays":delay,"time_order":time_order}
         return out, tout, stats, details
 
 
@@ -123,7 +149,8 @@ class SharedEventModel(nn.Module):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
                  memory_backend="linear", classes=20, readout="mean", continuous_dim=0,
                  evidence_count=0, phase_period=None, phase_seed=6, phase_correction_bound=.25,
-                 phase_margin_guard=False, phase_only=False, global_context_layers=()):
+                 phase_margin_guard=False, phase_only=False, global_context_layers=(), value_backward="full",
+                 separate_keys=False):
         super().__init__()
         if bands < 1 or groups < 1 or classes < 1 or dim < 4 or evidence_count < 0 or continuous_dim < 0:
             raise ValueError("Invalid model dimensions")
@@ -138,8 +165,9 @@ class SharedEventModel(nn.Module):
                 not isinstance(j, int) or j < 0 or j >= depth for j in global_context_layers):
             raise ValueError("Invalid global context layers")
         self.global_context_layers = global_context_layers
+        self.key_embedding, self.key_layers, self.key_continuous = None, None, None
         if self.phase_only:
-            if phase_period is None or evidence_count or continuous_dim or depth != 0 or global_context_layers:
+            if phase_period is None or evidence_count or continuous_dim or depth != 0 or global_context_layers or separate_keys:
                 raise ValueError("A phase-only model has depth zero, periodic state and no other readout")
             from .phase_memory import PhaseMemory
             self.phase_memory = PhaseMemory(bands, classes, phase_period, seed=phase_seed)
@@ -160,7 +188,8 @@ class SharedEventModel(nn.Module):
         nn.init.zeros_(self.head.bias)
         self.layers = nn.ModuleList([RaceLayer(dim, depth, beta, cf_credit,
                                              memory_backend=memory_backend,
-                                             global_context=j in global_context_layers) for j in range(depth)])
+                                             global_context=j in global_context_layers,
+                                             value_backward=value_backward) for j in range(depth)])
         self.register_buffer("time_constants", torch.tensor([.05, .2, .8]))
         self.register_buffer("center", torch.zeros(dim+1))
         self.register_buffer("scale", torch.ones(dim+1))
@@ -187,11 +216,34 @@ class SharedEventModel(nn.Module):
         if readout == "weighted":
             self.readout_gain = nn.Linear(dim, 1, bias=False)
             nn.init.zeros_(self.readout_gain.weight)
+        if separate_keys:self.freeze_keys_from_values()
+
+    def freeze_keys_from_values(self):
+        """Initialize an immutable local key stream for a value-learning phase.
+
+        Keys make actual hard choices from each observed query. Values share
+        those choices and clocks, but may learn without changing the keys.
+        No per-example cached winner or externally frozen schedule is used.
+        """
+        if self.phase_only:
+            raise ValueError("The phase-only primitive has no key/value carrier")
+        self.key_embedding = copy.deepcopy(self.embedding).requires_grad_(False)
+        self.key_layers = copy.deepcopy(self.layers).requires_grad_(False)
+        self.key_continuous = copy.deepcopy(self.continuous)
+        if self.key_continuous is not None:self.key_continuous.requires_grad_(False)
+        for layer in self.key_layers:
+            # The key stream owns the original local computation; global
+            # columns teach value interactions separately in this phase.
+            layer.register_parameter("bridge_value", None)
+            layer.register_parameter("bridge_route", None)
+            layer.cf_credit = False
 
     def forward(self, b, t, c, ids, size, sequential=False, overrides=None, trace=False,
-                continuous=None, evidence=None, expert_mode="combined"):
+                continuous=None, evidence=None, expert_mode="combined", replay_orders=None):
         if expert_mode not in ("combined", "core", "memory"):
             raise ValueError(expert_mode)
+        if replay_orders is not None and not trace:
+            raise ValueError("Frozen arrival schedules are trace-only diagnostics")
         if self.phase_only:
             if expert_mode == "core" or continuous is not None or evidence is not None or overrides:
                 raise ValueError("The phase-only path has no neural core, continuous marks or overrides")
@@ -216,13 +268,35 @@ class SharedEventModel(nn.Module):
         elif continuous is not None:
             raise ValueError("Model has no continuous input adapter")
         original_t = t
+        key_x, key_t = None, None
+        if self.key_layers is not None:
+            with torch.no_grad():
+                key_x = (self.key_embedding(b)[:, :, None]*phi[:, None, :]).flatten(1)
+                if self.key_continuous is not None:key_x = key_x+self.key_continuous(continuous)
+                key_t = t
         width = self.bands//self.groups
         stats, traces = [], []
         for j, layer in enumerate(self.layers):
             keys = ids*(self.groups+1) + (b + (width//2 if j%2 and self.groups > 1 else 0))//width
+            schedule, key_stats = None, None
+            if self.key_layers is not None:
+                key_layer = self.key_layers[j]
+                key_layer.eval()
+                with torch.no_grad():
+                    key_x,key_t,key_stats,schedule = key_layer(key_x,key_t,c,keys,sequential,
+                        (overrides or {}).get(j),False,emit_schedule=True)
             x, t, st, tr = layer(x, t, c, keys, sequential,
                                  (overrides or {}).get(j), trace,
-                                 global_keys=ids if j in self.global_context_layers else None)
+                                 global_keys=ids if j in self.global_context_layers else None,
+                                 order_override=(replay_orders or {}).get(j),schedule=schedule)
+            if key_stats is not None:
+                st["value_stream_value_evaluations"] = st["value_evaluations"]
+                st["value_stream_scan_compositions"] = st["scan_compositions"]
+                st["key_value_evaluations"] = key_stats["value_evaluations"]
+                st["key_scan_compositions"] = key_stats["scan_compositions"]
+                st["value_evaluations"] += key_stats["value_evaluations"]
+                st["scan_compositions"] += key_stats["scan_compositions"]
+                st["separate_key_stream"] = True
             stats.append(st)
             if trace:
                 traces.append(tr)
