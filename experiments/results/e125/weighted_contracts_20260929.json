@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "zero_gain_logits_exact": true,
+  "zero_gain_summary_exact": true,
+  "local_gain_gradient_relative_error": 9.833360081756837e-07,
+  "gain_gradient_norm": 2.138509750366211,
+  "batch_separability_max_error": 2.6226043701171875e-06,
+  "extra_parameters": 32,
+  "source_sha256": "9b2f94e6475e23d50a0d2b455cff83a516348bb12a9967cf39e75aa2f552521c",
+  "checkpoint_sha256": "3fc446b27a75cc0776040557f60c5bec54f6584cdb103f5658933b8d47c0a116"
+}
