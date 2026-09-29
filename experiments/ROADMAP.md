@@ -7,9 +7,11 @@ by constrained min/max composition. Compare configured operation ledgers with
 the same-example Transformer/LSTM controls, including memory search and maps.
 
 **Current SHD intervention:** the augmented deep model reaches 72.1% on 512
-held-out utterances; 4,096-example continuation reaches 72.3%. Test learned
-event pooling against an exact mean-initialized control (§185), then inspect
-teacher/covariance support and speaker/class errors. Full benchmark quality,
+held-out utterances; 4,096-example continuation reaches 72.3%. The matched extra
+epoch reaches 68.9% with mean pooling and 69.5% with learned event pooling;
+neither improves that checkpoint. Inspect teacher alignment/cancellation across
+fitting speakers and class-conditional retained information (§§185,187), then
+speaker/class errors. Full benchmark quality,
 confidence stopping and measured energy remain separate milestones.
 
 The manifesto remains sparse, asynchronous computation and learning driven by

@@ -167,8 +167,14 @@ def figures(M, tasks, ev):
             label=names[row["model"]];x=row["work"]["estimated_operations"];y=100*row["accuracy"]
             axis.scatter([x],[y],s=55,marker="D" if row["model"].startswith("shared") else
                          "s" if row["model"]=="transformer" else "o",color=colors[row["model"]],label=label,zorder=4)
-            axis.annotate(f"{y:.1f}%",(x,y),xytext=(0,6 if y<90 else -14),textcoords="offset points",ha="center",fontsize=8)
+            offset=(-12,10) if task=="modular" and row["model"]=="lstm" else \
+                   (12,10) if task=="modular" and row["model"]=="transformer" else (0,6 if y<90 else -14)
+            axis.annotate(f"{y:.1f}%",(x,y),xytext=offset,textcoords="offset points",ha="center",fontsize=8)
         axis.set(xscale="log",ylim=(-3,112),xlabel="Estimated operations per query (log)",title=title)
+        if task=="recall":
+            from matplotlib.ticker import NullFormatter
+            axis.set_xticks([700_000,1_000_000,2_000_000,4_000_000],["0.7M","1M","2M","4M"])
+            axis.xaxis.set_minor_formatter(NullFormatter())
         axis.legend(fontsize=6.4,loc="center left",bbox_to_anchor=(-.02,.6))
     axes[0].set_ylabel("Development accuracy (%)")
     f.tight_layout();save(f,"consolidated_work_frontiers")

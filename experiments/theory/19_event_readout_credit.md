@@ -88,6 +88,36 @@ checkpoint, Adam state for existing parameters, sample order, augmentation
 RNG and learning rate. Only the new gain parameters receive a fresh Adam state.
 The old fitting-only readout calibration remains fixed in both arms.
 
+The completed one-epoch result is 353/512 (68.9%) for mean pooling and
+356/512 (69.5%) for learned pooling, versus 370/512 (72.3%) at their common
+starting checkpoint. Both fitting accuracies are 79.7%; the learned key norm
+is 0.0700. Its online fitting NLL is 0.9041 versus 0.9072. Thus the key receives
+and uses credit, but this screen does not improve held-out recognition.
+The three-answer net gain over the continuing mean is insufficient evidence
+that terminal count dilution is the principal remaining bottleneck.
+
+### Supported credit and transferable credit are different conditions
+
+At mean initialization the utterance's key gradient is $C_u g_u$, where $C_u$
+is its count-weighted event covariance. For a fitting distribution $P$ and a
+held-out speaker distribution $Q$, let $G_P=\mathbb E_P[C_u g_u]$ and
+$G_Q=\mathbb E_Q[C_u g_u]$. A small plain gradient step in the key alone gives
+
+$$R_Q(q-\eta G_P)=R_Q(q)-\eta\langle G_Q,G_P\rangle
+ +O(\eta^2\|G_P\|^2).\tag{185.6}$$
+
+With a positive optimizer metric $M$, the first-order term instead is
+$-\eta G_Q^T M G_P$. Nonzero per-utterance support and a well-conditioned local
+Fisher therefore do not suffice: averaging may cancel those directions, or
+the fitting and new-speaker teachers may disagree. This identity holds with
+the carrier frozen and differentiable readout; the actual continuation also
+updates the carrier and head, whose route boundaries require separate treatment.
+It specifies a discriminating next audit—gradient alignment and cancellation
+across fitting speaker groups, plus class-conditional retained information—
+rather than assuming more keys, depth or epochs must improve generalization.
+Held-out outcomes may diagnose this screen, but must not be used as training
+updates or a substitute for a frozen official-test protocol.
+
 ## 186. A zero-update pass certifies a local teacher's fixed point
 
 The phase teacher of §181 changes state only for a mistaken deterministic
@@ -104,3 +134,59 @@ optimizer can still change confidence after every class is correct, so the
 same stopping proof does not apply to the deep neural branches or the learned
 event gain. A fixed point also need not generalize; §183 provides the additional
 task-specific certificate for the fitted phase rule.
+
+## 187. Class-wise credit exposes progress concealed by an aggregate
+
+The saved-prediction audit supplies a narrower question than overall SHD
+accuracy. At the 72.3% checkpoint, class 3 has 135/206 fitting answers correct
+but 4/26 held-out answers; class 19 has 126/204 versus 3/26. Their fitting counts
+are close to the 204.8-example average. After the additional mean-pooling pass,
+fitting correct counts fall to 82 and 86, while aggregate fitting accuracy
+barely changes. Thus both within-fit class discrimination and new-speaker
+transfer need examination. Scarce labels or universally absent deep credit
+cannot explain this particular pattern by themselves. This is descriptive
+evidence, not a proof of its causal mechanism.
+
+Let $R_c(\theta)$ be the fitting loss conditional on class $c$, with exact
+gradient $g_c$. The aggregate gradient is $\sum_c\pi_c g_c$. Even balanced
+class frequencies do not guarantee that its descent improves every class:
+for an update $\delta$, class $c$ improves to first order precisely when
+$g_c^T\delta<0$. Class-wise gradient alignment, not frequency alone, decides.
+
+### A diagnostic certificate for simultaneous local improvement
+
+Fix a set $H$ of fitting-defined difficult classes, a positive-definite
+parameter metric $M$, and a local radius $r$. The largest common first-order
+improvement is the convex program
+
+$$t^*=\max_{\delta^TM\delta\le r^2}\min_{c\in H}(-g_c^T\delta)
+ =r\min_{\lambda\in\Delta_H}
+   \left\|\sum_{c\in H}\lambda_cg_c\right\|_{M^{-1}}.\tag{187.1}$$
+
+The equality follows by replacing the minimum over classes with a minimum over
+their probability simplex, interchanging the compact convex linear game, and
+maximizing the resulting linear functional over the metric ball. Thus a strict
+common descent exists exactly when zero is outside the convex hull of these
+gradients. If a nonzero positive combination cancels to zero, no infinitesimal
+parameter update can strictly decrease all selected losses at once. This is
+the finite-dimensional theorem of alternatives specialized to class credit.
+Easy classes may instead enter as tolerated constraints
+$g_c^T\delta\le\epsilon_c$, avoiding an unnecessary strict-improvement demand
+for classes already fitted well.
+
+The measured Gram matrix $g_c^TM^{-1}g_{c'}$ distinguishes aligned support,
+conflicting credit and nearly absent directions. A useful new counterfactual
+route should add an attainable correction whose class effects improve this
+feasible region; merely duplicating correlated options cannot do so. Its
+effects must be checked by realized paired route interventions, with their
+downstream work charged, rather than inferred from route count or entropy.
+
+This is a diagnostic program, not a convergence guarantee or an implemented
+replacement optimizer. It applies inside a differentiable fixed-route region.
+Route-boundary moves, finite updates and generalization require separate
+analysis. The carrier's training-only counterfactual surrogate is not generally
+the exact gradient of its hard forward function; a surrogate Gram matrix is
+estimator telemetry, not an exact certificate for that function. Use ordinary
+pathwise gradients for the local certificate and paired shadows for route
+changes. Define interventions from fitting data; held-out classes diagnose
+transfer and remain unavailable to the training update.

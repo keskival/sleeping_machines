@@ -1,5 +1,79 @@
 # Findings log
 
+## E122–E125: deep speech improves; consolidated advantages receive explicit work ledgers (29 September 2026)
+
+**Preserved arithmetic:** the common class's phase-only configuration reaches
+3,440/3,440 unseen mod-17 triples. It stops after 47 complete fitting passes
+(69,231 presentations), at a zero-update fixed point of the local teacher.
+All 69 phase scalars exactly match the guarded E121 composite after its
+200-epoch budget; the update count remains 29,003. Training/evaluation takes
+3.29 s with peak RSS 248,440 KiB. The certificate proves the rule on all 4,913
+possible triples. No unused embedding, generic carrier or dense head executes.
+
+**New same-example dense controls and work audit:** one width-32/two-layer
+setting, seed 6; the arithmetic controls use E121's fit split and 200-epoch
+schedule. Both fit every training triple but fail to learn the unseen rule.
+Recall controls receive all 4,000 pointer-fitting and 512 neural-fitting
+examples, eight times. These are small configuration controls, not tuned best
+LSTM/Transformer models. The stronger historical retrieval controls remain
+separately documented.
+
+| Task / configuration | Held-out accuracy | Estimated logical operations / query |
+|---|---:|---:|
+| Arithmetic: common periodic path | 100% | 188 |
+| Arithmetic: common two-layer carrier + phase | 100% | 71,260 |
+| Arithmetic: LSTM | 67/3,440 (1.95%) | 104,518 |
+| Arithmetic: Transformer | 124/3,440 (3.60%) | 155,592 |
+| Recall at 4× context: common two-layer + pointer | 256/256 (100%) | 728,602 |
+| Recall at 4× context: LSTM | 19/256 (7.42%) | 2,242,695 |
+| Recall at 4× context: Transformer | 19/256 (7.42%) | 4,460,917 |
+
+The arithmetic primitive uses about 556×/828× fewer estimated operations
+than these LSTM/Transformer controls. The configured two-layer recall model
+uses about 3.08×/6.12× fewer. The ledger charges actual configured maps,
+router choices, scan combines, normalization, pointer search and clock
+diagnostics. Its units are 2 per MAC and 1 per other scalar operation,
+nonlinear function or estimated comparison; logical reads are separate.
+These are inference work estimates, not measured joules or training counts.
+The latest default-core extraction contracts still pass exact legacy logits,
+gradients and winners. Source, IDs and full ledger: `results/e123`–`e125`.
+
+**Speech:** matched 2,048-example continuations improve pooled held-out
+accuracy from 350/512 (68.4%, ordinary inputs) to 369/512 (72.1%, time/channel
+augmentation), from the same checkpoint, sample order and training budget.
+The paired gain is 36 corrected and 17 lost answers, concentrated on speaker 3.
+Adding fitting data to 4,096 and two further passes reaches 370/512 (72.3%).
+These are development utterances from held-out training speakers, not the
+official test set; the second 256 examples share those speakers.
+
+**A targeted readout experiment:** zero-initialized bounded event weighting
+has exact mean equivalence and its local covariance/teacher gradient passes
+the numerical contract. One matched extra epoch reaches 353/512 (68.9%) with
+the old mean and 356/512 (69.5%) with the learned key, both below their 72.3%
+starting point. Weighted versus mean changes five errors to correct and two
+correct answers to wrong (descriptive discordance p=0.453). Nonzero key credit
+is established; improved recognition is not.
+
+**A more specific remaining gap:** the saved-prediction class audit finds
+that the 72.3% checkpoint recognizes class 3 on 135/206 fitting utterances
+but only 4/26 held-out utterances; class 19 is 126/204 versus 3/26. Their most
+common held-out confusions are 3→8 (15 cases) and 19→9 (20). Both classes have
+ordinary fitting support, near 205 examples. The extra mean/weighted passes
+reduce fitting recognition of both classes as well, despite nearly unchanged
+aggregate fit accuracy. Weighted pooling mainly helps class 7 and leaves these
+confusions. This separates weak class fitting plus speaker transfer from a
+uniform inability to learn. It does not yet identify the representation or
+credit mechanism causing those confusions. Next inspect class/speaker gradient
+alignment and retained temporal information, using fitting-only interventions.
+Details: `e125/class_summary_20260929.json`; theory §§185–187.
+
+**Presentation:** the regenerated report is a project entry point: plain-language
+identity, strongest evidence, consolidated accuracy/work plots, principles,
+applications and frontier potential. Ongoing speech is an appendix; detailed
+diagnoses and operational material remain in research documentation. Both PDF
+editions, Markdown, figures and completed JSON summaries are in the host commit
+helper. In-progress JSON is skipped.
+
 ## E121: arithmetic capability restored in the shallow shared model (29 September 2026)
 
 The two-layer shared model now retains the missing periodic computation.
