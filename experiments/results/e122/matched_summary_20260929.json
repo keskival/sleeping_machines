@@ -1,0 +1,130 @@
+{
+  "status": "completed",
+  "matched_start_order_budget": true,
+  "comparisons": {
+    "dev_original": {
+      "starting_vs_control": {
+        "a_correct": 151,
+        "b_correct": 168,
+        "n": 256,
+        "gain_pp": 6.640625,
+        "gained": 19,
+        "lost": 2,
+        "exact_discordance_p": 0.00022125244140625,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "control_vs_invariance": {
+        "a_correct": 168,
+        "b_correct": 184,
+        "n": 256,
+        "gain_pp": 6.25,
+        "gained": 21,
+        "lost": 5,
+        "exact_discordance_p": 0.002493917942047119,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "starting_vs_invariance": {
+        "a_correct": 151,
+        "b_correct": 184,
+        "n": 256,
+        "gain_pp": 12.890625,
+        "gained": 37,
+        "lost": 4,
+        "exact_discordance_p": 1.0258372640237212e-07,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      }
+    },
+    "dev_additional": {
+      "starting_vs_control": {
+        "a_correct": 160,
+        "b_correct": 182,
+        "n": 256,
+        "gain_pp": 8.59375,
+        "gained": 26,
+        "lost": 4,
+        "exact_discordance_p": 5.947612226009369e-05,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "control_vs_invariance": {
+        "a_correct": 182,
+        "b_correct": 185,
+        "n": 256,
+        "gain_pp": 1.171875,
+        "gained": 15,
+        "lost": 12,
+        "exact_discordance_p": 0.7011080384254456,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "starting_vs_invariance": {
+        "a_correct": 160,
+        "b_correct": 185,
+        "n": 256,
+        "gain_pp": 9.765625,
+        "gained": 36,
+        "lost": 11,
+        "exact_discordance_p": 0.000346001140314911,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      }
+    },
+    "pooled": {
+      "starting_vs_control": {
+        "a_correct": 311,
+        "b_correct": 350,
+        "n": 512,
+        "gain_pp": 7.6171875,
+        "gained": 45,
+        "lost": 6,
+        "exact_discordance_p": 1.8323628836469652e-08,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "control_vs_invariance": {
+        "a_correct": 350,
+        "b_correct": 369,
+        "n": 512,
+        "gain_pp": 3.7109375,
+        "gained": 36,
+        "lost": 17,
+        "exact_discordance_p": 0.012660335802414213,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "starting_vs_invariance": {
+        "a_correct": 311,
+        "b_correct": 369,
+        "n": 512,
+        "gain_pp": 11.328125,
+        "gained": 73,
+        "lost": 15,
+        "exact_discordance_p": 2.559492715287498e-10,
+        "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+      },
+      "by_speaker": {
+        "3": {
+          "a_correct": 194,
+          "b_correct": 212,
+          "n": 314,
+          "gain_pp": 5.7324840764331215,
+          "gained": 27,
+          "lost": 9,
+          "exact_discordance_p": 0.00393317302223295,
+          "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+        },
+        "6": {
+          "a_correct": 156,
+          "b_correct": 157,
+          "n": 198,
+          "gain_pp": 0.5050505050505051,
+          "gained": 9,
+          "lost": 8,
+          "exact_discordance_p": 1.0,
+          "note": "Descriptive paired test; utterances share speakers; no correction for earlier model exploration"
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "/workspace/experiments/e122_summary.py": "1f45b2c8038a17eebdbcea1986798482a10d7ec2eb7f1270cae1ec0f5aa371cf",
+    "experiments/results/e122/d8_n2048_control_s6.json": "8bd6e7fe54b3d7445dbcc06b13212e674792fe9f656f92352407c1aa0ef8425e",
+    "experiments/results/e122/d8_n2048_invariance_s6.json": "32d634982fe6414d13dcdf327f7f7990d7b4234a7c018597ca3bd51e810516a9"
+  },
+  "scope": "One seed; clean train-file utterances from held-out speakers 3/6; official test untouched"
+}

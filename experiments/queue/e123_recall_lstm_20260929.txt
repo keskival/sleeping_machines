@@ -1,0 +1,1 @@
+e123_recall_lstm_20260929 experiments/e123_synthetic_baselines.py --task recall --model lstm --tag recall_lstm_d32_l2_s6 --epochs 8

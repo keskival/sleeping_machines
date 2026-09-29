@@ -55,8 +55,10 @@ def main():
     opt = torch.optim.Adam(net.parameters(),lr=a.lr)
     opt.load_state_dict(saved["optimizer"])
     order_rng = np.random.default_rng(a.seed+2)
-    order_rng.bit_generator.state = saved["numpy_rng"]
+    order_rng.bit_generator.state = saved.get("numpy_rng", saved.get("order_rng"))
     augmentation_rng = np.random.default_rng(a.seed+122)
+    if "augmentation_rng" in saved:
+        augmentation_rng.bit_generator.state = saved["augmentation_rng"]
     fit = load_items(40,.01,a.limit,"fit_spk",a.seed)
     held = load_items(40,.01,512,"val_spk",a.seed+1)
     if len(held) != 512: raise ValueError("Missing held-out examples")

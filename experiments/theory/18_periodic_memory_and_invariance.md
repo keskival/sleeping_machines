@@ -278,3 +278,60 @@ task computation, not discovery from every initialization or generalization
 to untrained moduli. Its useful design principle is to propagate attainable
 error ranges under a compositional constraint, rather than add unrelated
 worst-case errors across the whole tree.
+
+The E121 algebra audit succeeds for the trained seed-6 representation: winding
+$\kappa=4$, target offset $h=0.35708$, minimum clock-cell slack $0.01197$ phase
+units. The crude sum of maximum residuals is $0.58978$ and fails its sufficient
+bound, while the target-constrained min/max composition proves every class.
+Exhaustive checking finds zero errors among all 4,913 triples and agrees with
+both computed extrema. This is a concrete case where preserving reachable
+combinations in the formalism gives information lost by a single global bound.
+
+## 184. Computational ownership preserves both answers and work
+
+The guarded composite proves which primitive supplies the modular answer.
+It also reveals an unnecessary cost: the generic carrier executes and adjusts
+confidence even though it cannot change the winning class. Leaving that branch
+active cannot inherit the old rhythm computation's sparse work advantage.
+
+The common model now permits an explicit phase-only configuration: one local
+periodic state path, a class-clock race, and no generic carrier layers. It uses
+the same `SharedEventModel` query interface and the same `PhaseMemory` local
+teacher. The decision to configure this primitive is made per task before
+training, not selected per example from its label. The phase-only path returns
+a unit-circle vector payload and the class-clock scores.
+
+Because the phase teaching rule has no dependence on the neural branch, with
+identical example-order and exploration RNG states its parameter trajectory
+is identical by induction over fitting examples. E124 checks equality of the
+whole fitted phase state against E121's guarded composite. Thus removing the
+unused carrier preserves its phase computation and all class decisions.
+The resulting configuration has 69 learned phase scalars and no Adam parameters.
+It does not provide the speech model's representation capacity: the eight-layer
+speech configuration still needs the generic carrier. Configurable computational
+primitives and depth belong to the same model family; they need not all execute
+on every task.
+
+### Work accounting must follow the configured computation
+
+For a carrier width $d$, $K=3$ alternatives and $E$ packets, the inference value
+maps cost $Ed(2d+1)$ MACs per layer; routing costs $EK(2d+1)$ MACs. Training also
+evaluates the losing value maps. Each counted affine scan composition touches
+$K(d+1)$ scalar numerator/mass coordinates. Readout whitening costs $(d+1)^2$
+MACs per query, followed by $(d+1)C$ for the head. Weight normalization, memory
+division, exponential decays, sorting and lookup are additional work. E124's
+ledger includes them as declared estimates instead of calling one entire
+width-32 vector message a single scalar operation.
+
+The phase-only path has $O(E+C)$ arithmetic plus the present $O(C\log C)$
+clock-margin diagnostic. It returns all class scores; a physical event scheduler
+is not assumed. Pointer search still has $O(ER)$ candidates for $R=4$ offsets,
+even when only one winning destination is read. Compare full configured work,
+not the historical native primitive's cost attached to a different executable.
+
+The work plots use a declared logical-operation estimate: two units per MAC,
+one per other scalar arithmetic/nonlinear operation or estimated sort comparison.
+They report logical memory reads separately. These units do not give equal
+energy to a remainder, exponential, SRAM read and GPU multiply. The ledger does
+not estimate backward or optimizer work from inference counts. Hardware joules
+and latency measurements must follow the actual workload and memory boundary.

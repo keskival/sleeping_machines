@@ -1,0 +1,1 @@
+e123_recall_tf_20260929 experiments/e123_synthetic_baselines.py --task recall --model transformer --tag recall_tf_d32_l2_s6 --epochs 8

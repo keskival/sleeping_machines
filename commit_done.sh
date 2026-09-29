@@ -45,12 +45,19 @@ FILES=(
   experiments/e120*.py
   experiments/e121*.py
   experiments/e122*.py
+  experiments/e123*.py
+  experiments/e124*.py
   experiments/queue/e121*.txt
   experiments/queue/e122*.txt
+  experiments/queue/e123*.txt
+  experiments/queue/e124*.txt
   experiments/results/e121/*.json
   experiments/results/e122/*.json
+  experiments/results/e123/*.json
+  experiments/results/e124/*.json
   report/figures/e121_arithmetic.png
   report/figures/e122_speech.png
+  report/figures/consolidated_work_frontiers.png
   experiments/reference/e118_pre_shared.py
   experiments/queue/e120*.txt
   experiments/queue/report_shared*.txt

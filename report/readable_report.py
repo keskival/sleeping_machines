@@ -32,6 +32,11 @@ def results():
     tasks["plain"] = read("e121/shared_d2_plain_s6_200.json")
     tasks["shd_control"] = read("e122/d8_n2048_control_s6.json")
     tasks["shd_invariance"] = read("e122/d8_n2048_invariance_s6.json")
+    tasks["phase_only"] = read("e124/modular_phase_only_s6_200.json")
+    tasks["work_audit"] = read("e124/consolidated_work_20260929.json")
+    tasks["shd_scaled"] = read("e122/d8_n4096_invariance_continue_s6_e2.json")
+    tasks["temporal_shallow"] = read("e120/temporal_d2_20260929.json")
+    tasks["recall_shallow"] = read("e120/recall_d2_20260929.json")
     return tasks
 
 
@@ -150,6 +155,25 @@ def figures(M, tasks, ev):
         axis.legend(fontsize=7)
     axes[0].set_ylabel("Clean held-out accuracy (%)")
     f.tight_layout(); save(f,"e122_speech")
+    f, axes = plt.subplots(1,2,figsize=(7.2,3.15))
+    entries=tasks["work_audit"]["rows"]
+    names={"shared_phase_only":"Common phase path (69 scalars)","shared_d2_phase":"Common two-layer + phase",
+           "shared_d2_recall":"Common two-layer + pointer","lstm":"LSTM, width 32 / 2 layers",
+           "transformer":"Transformer, width 32 / 2 layers"}
+    colors={"shared_phase_only":blue,"shared_d2_phase":"#1baf7a","shared_d2_recall":blue,
+            "lstm":gray,"transformer":orange}
+    for axis,task,split,title in zip(axes,("modular","recall"),("unseen_all","context4x"),
+                                    ("Arithmetic: every unseen triple","Recall: four times the context")):
+        for row in entries:
+            if row["task"]!=task or row["split"]!=split:continue
+            label=names[row["model"]];x=row["work"]["estimated_operations"];y=100*row["accuracy"]
+            axis.scatter([x],[y],s=55,marker="D" if row["model"].startswith("shared") else
+                         "s" if row["model"]=="transformer" else "o",color=colors[row["model"]],label=label,zorder=4)
+            axis.annotate(f"{y:.1f}%",(x,y),xytext=(0,6 if y<90 else -14),textcoords="offset points",ha="center",fontsize=8)
+        axis.set(xscale="log",ylim=(-3,112),xlabel="Estimated operations per query (log)",title=title)
+        axis.legend(fontsize=6.4,loc="center left",bbox_to_anchor=(-.02,.6))
+    axes[0].set_ylabel("Development accuracy (%)")
+    f.tight_layout();save(f,"consolidated_work_frontiers")
     import figures_mech as historic
     historic.EVENT, historic.DENSE_T = blue, orange
     save(historic.fig_supremacy_map(), "supremacy_map")
@@ -187,7 +211,29 @@ def blocks(M, tasks, ev):
          "operations and dense multiply-adds are different work units; these are not measured energy ratios."),
         ("p", "<b>Why this matters:</b> the evidence supports a route to intelligence that learns useful structure from "
          "less experience and spends computation on selected events. The next challenge is to combine those strengths "
-         "in one scalable architecture. That synthesis now supports task-specific depth, with an eight-layer speech model and a shallow periodic-memory arithmetic model.")])
+         "in one scalable architecture. Its common implementation now preserves arithmetic and retrieval, and deeper speech learning continues to improve.")])
+
+    pages.append([
+        ("h1", "Consolidated models: quality versus operations"),
+        ("p", "The common model now reproduces perfect modular generalization and longer-context retrieval. "
+         "The plots below compare its configured computation with new small Transformer and LSTM controls on "
+         "the same examples. <b>Higher and further left is better.</b> The logarithmic axis exposes work differences."),
+        ("figure", ("consolidated_work_frontiers",174)),
+        ("h2", "Execute the computation that supplies the answer"),
+        ("p", "For arithmetic, the phase path learns 69 scalar parameters and executes directly through the common "
+         "model interface. It allocates no generic carrier or Adam parameters. Its fitted phase state matches the "
+         "two-layer composite exactly. The composite is also shown: executing its unused carrier costs extra work. "
+         "For retrieval, the measured configuration executes both the two-layer carrier and hard pointer search."),
+        ("p", "Arithmetic uses 1,473 fitting triples over 200 epochs in each new setting. Recall gives the dense "
+         "controls all 4,512 examples available to the shared pointer/neural system; the controls revisit them for "
+         "eight epochs. These runs use width 32 and two generic layers where present, seed 6 and declared optimizer "
+         "schedules. They establish the comparisons shown, rather than a search over the best dense model settings."),
+        ("small", "Work is an analytic logical-operation estimate: 2 per MAC, 1 per scalar arithmetic/nonlinear "
+         "operation or estimated sort comparison. The shared ledger includes selected vector maps, all routers, "
+         "memory scans, weight normalization, readout, clock candidates and pointer lookup. Memory reads are recorded "
+         "separately. Divisions, remainders and exponentials have unit weight; allocations, transfers and kernels are "
+         "outside the ledger. These inference counts are not backward/optimizer counts or measured joules. "
+         "Results/e123–e124 preserve protocols, configuration, split IDs and the complete ledger.")])
 
     pages.append([
         ("h1", "Quality versus computation: the strongest measured advantages"),
@@ -254,7 +300,7 @@ def blocks(M, tasks, ev):
          "remain dense. Native hold/veto detectors and learned event cancellation still "
          "need to join this shared core."),
         ("small", "Implementation: sleeping_machines/shared_event.py, event_memory.py, event_query.py, evidence_memory.py, "
-         "phase_memory.py, objectives.py and readout_calibration.py. Theory §§176–182. E118/E119 remain compatible entry points.")])
+         "phase_memory.py, objectives.py and readout_calibration.py. Theory §§176–184. E118/E119 remain compatible entry points.")])
 
     rows = []
     for task, label in (("language","Text8"),("market","Market events"),("recall","Associative recall"),
@@ -278,6 +324,8 @@ def blocks(M, tasks, ev):
         ("table", (["Task", "Neural fit / dev", "Final development result"],rows,[42,32,100])),
         ("h2", "What transfers"),
         ("p", "The common core learns temporal composition, image recognition and event-camera prefix recognition. "
+         "Two-layer follow-ups retain 100% recall at both lengths and reach 96.1% temporal composition versus 97.3% "
+         "with eight layers, using four times fewer hidden carrier emissions. "
          "Its speech checkpoint preserves all 256 checked predictions. Learned retrieval survives the synthesis "
          "after repairing an unsupported count feature. Text prediction improves from 3.022 to 2.915 development "
          "bits per character in the small run; the full E79 language mixture remains a stronger, separate result."),
@@ -302,7 +350,8 @@ def blocks(M, tasks, ev):
         ("p", "Each observed symbol rotates or reflects a learned phase. These operations compose without shrinking "
          "the phase derivative. Class clocks race from the resulting phase; a local timing error teaches their "
          "offsets. This carries the earlier rhythm mechanism into a reusable shared-model component. Its 69 phase "
-         "parameters start randomly; the labels teach it, with no formula for the answer in the update."),
+         "parameters start randomly; the labels teach it, with no formula for the answer in the update. A post-training "
+         "min-plus certificate proves the fitted rule for all 4,913 triples; exhaustive checking confirms zero errors."),
         ("p", f"The first coupled run scored {100*tasks['phase_fixed']['final']['unseen_all']['accuracy']:.1f}% despite perfect phase "
          "memory: the fixed neural correction overturned small-margin winners. The new bound is at most one quarter "
          "of each clock lead, so even opposing corrections preserve the winning class. The neural branch still "
