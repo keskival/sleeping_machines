@@ -1,0 +1,149 @@
+[
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-25.zip",
+    "bytes": 23771090,
+    "sha256": "82f9043021bd06410033b0a327958bd6bfcb473a06e48bdeb5e7821be7167c69",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-25.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-26.zip",
+    "bytes": 16369963,
+    "sha256": "b0592f5ea1f2a8f5d4ff0ff8997e9d1d15900ee37fb8f3e4cfee103993190606",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-26.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-27.zip",
+    "bytes": 17977579,
+    "sha256": "a77cd76d176f319cf2060c4912a6a46d2b288fe7f38a4b622ac77c6d403462d7",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-27.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-28.zip",
+    "bytes": 18778187,
+    "sha256": "47dd5854fbf1629cf3701f1ecceb80606b2f2d42b900f36e57e2a4610ad2fd08",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-28.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-29.zip",
+    "bytes": 8650983,
+    "sha256": "3abb3466149fc23af46b6093ae1a8b4f29166b18850a25eee4b905415125102f",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-29.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-30.zip",
+    "bytes": 10930462,
+    "sha256": "cc1a3c1fafb493ff4ff91ab472df491e918b4ee48de026f1dc02b42b6e97d1c7",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-30.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/BTCUSDT-aggTrades-2026-08-31.zip",
+    "bytes": 17775799,
+    "sha256": "e07561bb09979c5850e44401651c556027bc2a24173595bd732a09f8383b7dc0",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-31.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-25.zip",
+    "bytes": 28098410,
+    "sha256": "608297cce521035ef06e6580d31b0f64bdca0fe068c5eeefabd931b3713f84d8",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-25.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-26.zip",
+    "bytes": 17360226,
+    "sha256": "8dbeee5b71d876fbc3dc9380b53e32581671ff984b9869ffaf55e9493cce6a9d",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-26.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-27.zip",
+    "bytes": 17505955,
+    "sha256": "f775c8523545aa8a33b90b3f1a71d07b45cd33f8a5212b2e6cce797575c7a229",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-27.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-28.zip",
+    "bytes": 21386527,
+    "sha256": "918af94802638af0a0d5fd826c18d827c2e09da69e8521badd9af38df90d6e27",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-28.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-29.zip",
+    "bytes": 5578109,
+    "sha256": "0b0d0c729e027aeaa28762f2e0eea7fd99d17722337e249e10b7cce87314de19",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-29.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-30.zip",
+    "bytes": 10526225,
+    "sha256": "c342e2f94b9a17b8a48205dd35e297d346bf067c2c1c0a9d90b2b38dfcd9b99e",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-30.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/btc_perp/BTCUSDT-aggTrades-2026-08-31.zip",
+    "bytes": 16396527,
+    "sha256": "454a1448bc2d8fa54e8372a3454d8aff1505ccec981c7c9e371333697ac0cc46",
+    "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2026-08-31.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-25.zip",
+    "bytes": 15154302,
+    "sha256": "aebc12ad32004493020681e9d421435bc19bb00b794ac67e3b88d0aa521f5138",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-25.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-26.zip",
+    "bytes": 11551937,
+    "sha256": "aef08fab16af695962190cd2f3afe86c3ea6fe815cc1c16c4ee840e2f2c42230",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-26.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-27.zip",
+    "bytes": 14841837,
+    "sha256": "0935fd93e54080b40c0d834f798a3181b147289c862f011980b456a45c9bb290",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-27.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-28.zip",
+    "bytes": 14721276,
+    "sha256": "e9ce73ae9a5a1f538e6ca55ef4e06564960d932eb51553575790a49645801933",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-28.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-29.zip",
+    "bytes": 3705361,
+    "sha256": "afa802f8df7839f30b8700d5d96408e48b3634f4d8e2f302b7a31f8c550f87ca",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-29.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-30.zip",
+    "bytes": 10566039,
+    "sha256": "affde8ffb423158d5842243009862a40875368614788245eba119f0e820fb381",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-30.zip",
+    "checksum_verified": true
+  },
+  {
+    "path": "data/binance/eth_spot/ETHUSDT-aggTrades-2026-08-31.zip",
+    "bytes": 12407423,
+    "sha256": "f92273d6fb4f64a05a07e5369b25e70c79d66566febe3d9e33cef9bec6c7b5b4",
+    "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-08-31.zip",
+    "checksum_verified": true
+  }
+]
