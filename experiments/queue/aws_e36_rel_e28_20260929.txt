@@ -1,0 +1,1 @@
+aws_e36_rel_e28_20260929 experiments/aws_benchmark.py --run-tag aws_e36_rel_e28_20260929 --script experiments/e36_transformer.py -- --task e28 --reltime 1 --sizes 32x2,64x2 --episodes 2000000 --tag rel

@@ -1,0 +1,9 @@
+/workspace/experiments/e36_transformer.py:56: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, L)
+{"task": "e28", "reltime": 1, "seed": 0, "d": 32, "layers": 2, "acc": 0.9984999895095825, "params": 51988, "tokens_per_episode": 6.857, "macs_per_episode": 179561.76457600002, "wall_s": 293.2}
+/workspace/experiments/e36_transformer.py:56: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, L)
+{"task": "e28", "reltime": 1, "seed": 0, "d": 64, "layers": 2, "acc": 0.9994999766349792, "params": 202132, "tokens_per_episode": 6.857, "macs_per_episode": 691645.022048, "wall_s": 373.1}
+{"task": "e28", "reltime": 1, "seed": 1, "d": 32, "layers": 2, "acc": 0.9965000152587891, "params": 51988, "tokens_per_episode": 6.861, "macs_per_episode": 179672.359904, "wall_s": 288.1}
+{"task": "e28", "reltime": 1, "seed": 1, "d": 64, "layers": 2, "acc": 0.9990000128746033, "params": 202132, "tokens_per_episode": 6.861, "macs_per_episode": 692057.5529919999, "wall_s": 366.9}
+EXIT-OK
