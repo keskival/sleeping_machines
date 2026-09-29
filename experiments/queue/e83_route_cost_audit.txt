@@ -1,0 +1,2 @@
+# Frozen-checkpoint diagnostic: measure matched class-loss and primitive-work deltas.
+e83_route_cost_audit_pair_lbal experiments/e83_route_cost_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_lbal_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslayerbalanced_spk_s6.pt --run_tag pair_lbal

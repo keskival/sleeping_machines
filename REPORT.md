@@ -33,17 +33,65 @@ realized firing calibration, gradients reached all eight event layers in a depth
   test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
   optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
   4.319, so it does not establish useful language-model quality or a scaling advantage.
-- **Deep SHD route credit and depth (§§138–141; theory plus a route-graph audit, not an accuracy claim):** with only
+- **Deep SHD route credit and depth (§§138–143; reachability plus matched route-pair screens):** with only
   1.56–7.03% layer-4 support, a size-four minibatch has a 75–94% chance of containing no layer-4 example. Yet exact
   seed-6/7 wiring has static paths for 90.2%/98.0% of first-to-fourth unit pairs, and all 140 input bands can reach
   layer 4. The bottleneck is therefore downstream of fixed connectivity: event-conditioned routes, thresholded firing,
   and which alternatives receive label credit. Sparse skips restore 99–100% deep support without paired accuracy gain.
-  The theory now treats each missed event as a candidate with a signed failure margin (route closed, below threshold,
+  A matched D4 global route-pair pilot raised held-out anytime accuracy from 8/128 to 14/128 (paired exact McNemar
+  p=0.180), but every sampled pair was in layer 1, only 7/120 joint openings improved the matched loss, and layer-4
+  support fell to 3.9%. The layer-balanced follow-up sent 43/34/15/28 shadows to layers 1–4 and held layer-4 support
+  at 100%, but accuracy was 6/128 versus 8/128 control (paired p=0.791); its final layer emitted 1,647 events per
+  utterance, late-prefix NLL was 14,699, and predictions collapsed to two classes. This is evidence that support can
+  be recovered while useful recognition fails, with activity growth now a separate bottleneck. No SHD supremacy gain
+  is established. A frozen validation audit sampled 115 pairs by layer; joint opening improved the matched loss in
+  16%/31%/58%/50% of L1–L4 pairs. Layer-2 pairs added 4.24 layer-4 spikes and 10.76 layer-4 readout updates per
+  example on average, with outlier-sensitive means. Reconstructing the clipped pair-gradient formula points toward
+  closing early alternatives and weakly opening late ones. The matched late-layer-only arm produced only nine L3/L4
+  pair shadows in epoch 1 and none in epochs 2–4; final held-out accuracy was 6/128 (4.69%) with 0.78% L4 support,
+  versus 8/128 (6.25%) for control. Its training loss fell 59.78→3.07, but held-out prefix NLL was 2.985/3.167 in
+  the two time strata. The result exposes a second-order support bottleneck: deep events can persist in
+  a few examples while same-receiver, near-time pairs of closed routes disappear. This does not show that late routes
+  are intrinsically unhelpful; the pair estimator had no late proposals to measure for three epochs. The held-out audit
+  informed the sampler, so both are development evidence rather than untouched-test results. The theory now treats each
+  missed event as a candidate with a signed failure margin (route closed, below threshold,
   race lost, or refractory) and assigns it paired downstream loss by replay. This generalizes the lost-route counterfactual:
   more such comparisons can help routing only when useful alternatives are sampled with enough signal and without
   overwhelming variance or replay cost. Under strict chains, depth multiplies support losses; preserving half the
-  examples to depth 8 or 16 requires 90.6% or 95.5% mean survival per transition. The proposed cause-stratified shadow
-  audit has not yet been run, and neither route-pair synergy nor improved SHD accuracy is established.
+  examples to depth 8 or 16 requires 90.6% or 95.5% mean survival per transition. The proposed cause-stratified audit of
+  non-route failures has not yet been run, and neither route-pair utility nor improved SHD accuracy is established.
+  A frozen 25–1,000 ms sweep found only 6 L2, zero L3, and one L4 pair across the 120-example fit subset at the
+  widest window; widening time alone does not restore deep support. Section 144 derives why pair-proposal availability
+  collapses with sparse source-event occupancy and why importance weighting cannot repair missing support. Section 143
+  derives a cost-constrained route utility and requires simultaneous tracking of
+  deep-example support, event multiplicity, and class-aligned prefix evidence. The current E83 SHD model still scans hidden state on a 1 ms grid;
+  it does not demonstrate sparse asynchronous training cost.
+
+  A refractory-aware spike audit compared the matched no-pair control and
+  late-only checkpoint on the same held-out examples. Restricting to in-band,
+  nonrefractory candidates left L1/L2/L3/L4 counts of 22/21/8/0 in control
+  and 21/19/2/1 in late-only. On the fused main-answer loss, spike-on helped
+  12/22 control L1 candidates (mean ΔL=+0.0266) and 16/21 late-only candidates
+  (mean −0.0094, median −0.0020). The auxiliary loss has the same L1
+  direction. On only 13 batches where both arms supplied a valid candidate,
+  the mean difference between the two selected spike-on utilities was −0.037
+  (SE 0.035); the selected units/times can differ between checkpoints. This
+  is a small local signal, not a reliable treatment effect. L2 is not a robust
+  opening signal: 12/19 late-only candidates helped, but mean main-loss change
+  was +0.0040; L3/L4 samples are too sparse. A matched deepest-only replay of
+  the exact same checkpoints, examples, and valid candidates changes the
+  interpretation: every L1/L2 toggle has exactly zero deepest-only main-loss
+  delta, although L1's all-depth mean is −0.00936. The late-only L1 toggle
+  increases its own sparse readout-edge updates by 1.238/example, while its
+  hidden-spike deltas are [ +0.1429, 0, 0, 0 ] across L1–L4; no downstream
+  hidden spikes are added. The fused classifier can therefore reward a direct
+  shallow readout without credit traversing the deep stack. This audit exposes
+  an all-depth shortcut, not deep compositional credit or a training gain.
+  The next discriminating experiment must train with a deepest-only primary
+  objective or explicitly replay a sparse multi-layer event cascade, under a
+  declared downstream-work cap and matched control.
+
+![All-depth boundary utility is a shallow readout shortcut, while deepest-only L1/L2 utility is zero](report/figures/e83_spike_boundary_late.png)
 
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
@@ -194,8 +242,10 @@ and what remains open.
    4.7% in seed 6 and 22.7% versus 16.4% in seed 7. A sparse layer-1 event skip raised it to 99.2% and 100%, without
    paired accuracy gains. The all-depth race reported mean emitted confidence 63.8% / 63.1% against accuracy 23.8% / 0%
    across the two seeds; prefix NLL and calibration remain poor, and the layer-4 branch showed no stable readout gain.
-   These controlled runs identify support and calibration failures, while performance remains far below dense and
-   published event-model baselines. On the market stream, a correctly posed trading task (profit after
+   A matched spike replay now shows that the small L1 all-depth utility is a shallow-readout bypass: its deepest-only
+   loss change is exactly zero and it creates no downstream hidden spikes. These controlled runs identify support and
+   calibration failures, while performance remains far below dense and published event-model baselines. On the market
+   stream, a correctly posed trading task (profit after
    costs) is not profitable for any learner, and
    the native learner learns to stay out. An online world model of the stream, built as an event network with state and
    window nodes, beats a neural point process by 0.5–0.9 nats per event, also on held-out days, at ≈ 19 synaptic
@@ -803,7 +853,9 @@ The synthesis now treats topology and representation as separate experimental ax
   confirm that the hard fire mask cuts off label credit when deep layers emit no events. Existing route shadows toggle
   message edges but do not estimate the distinct spike birth/death boundary term. A 128-example paired spike audit found
   deep near-threshold candidates rare and single-spike loss effects mixed, so spike credit is not yet shown to help. E83
-  also drops the merged event-count payload: the mark exists in preprocessing, and over 40% of held-out merged events
+  also has a readout-confound result (§145): the L1 all-depth loss improvement vanished under the matched deepest-only
+  loss, and the event changed its own shallow readout without adding downstream hidden spikes. It also drops the merged
+  event-count payload: the mark exists in preprocessing, and over 40% of held-out merged events
   contain multiplicity. **Structural result:** with zero initial state, no bias drive, and positive firing threshold, an
   empty input event set produces no output events. Therefore per-utterance active-example coverage is nested across a
   strict event chain; all-depth readout cannot break this invariant. Event counts can still explode on the shrinking set of

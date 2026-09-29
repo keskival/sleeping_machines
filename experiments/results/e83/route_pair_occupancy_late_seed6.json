@@ -1,0 +1,107 @@
+{
+  "checkpoint": "/workspace/experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_late_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslatebalanced_spk_s6.pt",
+  "run_tag": "late_seed6",
+  "data": "same stratified fit-speaker subset used by training; frozen weights",
+  "examples": 120,
+  "batch_size": 4,
+  "batches": 30,
+  "seed": 6,
+  "closed_route_band": 0.5,
+  "windows_ms": [
+    25.0,
+    50.0,
+    100.0,
+    250.0,
+    500.0,
+    1000.0
+  ],
+  "near_closed_routes_by_layer": [
+    191787,
+    111,
+    3,
+    13
+  ],
+  "source_events_with_candidate_routes_by_layer": [
+    392488,
+    480,
+    22,
+    12
+  ],
+  "pair_candidates_by_window_layer": {
+    "25.0": [
+      181577,
+      1,
+      0,
+      0
+    ],
+    "50.0": [
+      185310,
+      2,
+      0,
+      0
+    ],
+    "100.0": [
+      188232,
+      3,
+      0,
+      1
+    ],
+    "250.0": [
+      189872,
+      4,
+      0,
+      1
+    ],
+    "500.0": [
+      189986,
+      6,
+      0,
+      1
+    ],
+    "1000.0": [
+      189987,
+      6,
+      0,
+      1
+    ]
+  },
+  "batches_with_pair_by_window_layer": {
+    "25.0": [
+      30,
+      1,
+      0,
+      0
+    ],
+    "50.0": [
+      30,
+      2,
+      0,
+      0
+    ],
+    "100.0": [
+      30,
+      3,
+      0,
+      1
+    ],
+    "250.0": [
+      30,
+      4,
+      0,
+      1
+    ],
+    "500.0": [
+      30,
+      6,
+      0,
+      1
+    ],
+    "1000.0": [
+      30,
+      6,
+      0,
+      1
+    ]
+  },
+  "interpretation_note": "Candidate counts only; widening W increases proposal availability but does not measure pair utility. A wide window may combine arrivals that do not interact under the receiver's actual integration kernel."
+}

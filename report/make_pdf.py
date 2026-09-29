@@ -610,6 +610,313 @@ def fig_e83_route_reachability():
     return fig
 
 
+def fig_e83_route_bundle_pair():
+    """Compare global, layer-balanced, and late-layer bundle sampling."""
+    by_tag = {}
+    for run_tag in ("bundle_control", "bundle_pair", "bundle_pair_lbal", "bundle_pair_late"):
+        matches = []
+        for path in glob.glob(os.path.join(RES, "e83", "*bundle*.json")):
+            result = load(path)
+            if result.get("args", {}).get("run_tag") == run_tag:
+                matches.append(result)
+        if len(matches) != 1:
+            raise FileNotFoundError(
+                f"expected one E83 route-bundle result for {run_tag}; found {len(matches)}")
+        by_tag[run_tag] = matches[0]
+
+    labels = {"bundle_control": "no pair", "bundle_pair": "global",
+              "bundle_pair_lbal": "layer-balanced", "bundle_pair_late": "late-layer-only"}
+    colors_by_tag = {"bundle_control": GRAY, "bundle_pair": BLUE,
+                     "bundle_pair_lbal": ORANGE, "bundle_pair_late": YELLOW}
+    epochs = np.arange(1, len(by_tag["bundle_control"]["curve"]) + 1)
+    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.0))
+
+    for tag in labels:
+        rows = by_tag[tag]["curve"]
+        acc = [100 * r["event_terminal_accuracy"] for r in rows]
+        support = [100 * r["event_support_coverage"][-1] for r in rows]
+        axes[0, 0].plot(epochs, acc, marker="o", color=colors_by_tag[tag],
+                        label=labels[tag], linewidth=1.6)
+        axes[0, 1].plot(epochs, support, marker="o", color=colors_by_tag[tag],
+                        label=labels[tag], linewidth=1.6)
+    activity_ax = axes[0, 1].twinx()
+    for tag, label, color in (("bundle_pair_lbal", "balanced L4 events", ORANGE),
+                              ("bundle_pair_late", "late-only L4 events", YELLOW)):
+        rows = by_tag[tag]["curve"]
+        activity_ax.plot(epochs, [r["spikes_per_utt"][-1] for r in rows],
+                         marker="x", linestyle="--", color=color, alpha=0.75, label=label)
+    axes[0, 0].axhline(5, color=GRAY, linestyle=":", linewidth=1)
+    axes[0, 0].set_ylim(0, 25)
+    axes[0, 0].set_ylabel("accuracy (%)")
+    axes[0, 0].set_title("A · Held-out SHD accuracy", fontsize=7.5)
+    axes[0, 1].set_ylim(0, 115)
+    axes[0, 1].set_ylabel("L4 support (%)")
+    activity_ax.set_ylim(0, max(100, max(r["spikes_per_utt"][-1]
+                                        for tag in labels
+                                        for r in by_tag[tag]["curve"]) * 1.12))
+    activity_ax.set_ylabel("layer-4 events / utterance", color=ORANGE)
+    activity_ax.tick_params(axis="y", labelcolor=ORANGE)
+    axes[0, 1].set_title("B · Deep support and event rate", fontsize=7.5)
+    for ax in axes[0]:
+        ax.set_xlabel("epoch")
+        ax.set_xticks(epochs)
+        ax.grid(alpha=0.2)
+        if ax is axes[0, 1]:
+            h1, l1 = ax.get_legend_handles_labels()
+            h2, l2 = activity_ax.get_legend_handles_labels()
+            ax.legend(h1 + h2, l1 + l2, fontsize=4.6, loc="best", ncol=2)
+        else:
+            ax.legend(fontsize=5.5, loc="best")
+
+    for tag, color in (("bundle_pair", BLUE), ("bundle_pair_lbal", ORANGE),
+                       ("bundle_pair_late", YELLOW)):
+        rows = by_tag[tag]["curve"]
+        sampled = [r["counterfactual_route_pairs_shadowed_per_epoch"] > 0 for r in rows]
+        helpful = [r["counterfactual_pair_fraction_joint_opening_improves"] if has_sample else np.nan
+                   for r, has_sample in zip(rows, sampled)]
+        synergistic = [r["counterfactual_pair_fraction_synergistic_gamma_negative"] if has_sample else np.nan
+                       for r, has_sample in zip(rows, sampled)]
+        axes[1, 0].plot(epochs, helpful, marker="o", color=color,
+                        label=f"{labels[tag]} · joint helps")
+        if tag != "bundle_pair_late":
+            axes[1, 0].plot(epochs, synergistic, marker="x", linestyle="--", color=color,
+                            label=f"{labels[tag]} · Γ < 0")
+    axes[1, 0].set_ylim(0, 1)
+    axes[1, 0].set_xticks(epochs)
+    axes[1, 0].set_xlabel("epoch")
+    axes[1, 0].set_ylabel("pair fraction")
+    axes[1, 0].set_title("C · Measured pair utility", fontsize=7.5)
+    axes[1, 0].grid(alpha=0.2)
+    axes[1, 0].legend(fontsize=5.0, loc="upper right")
+
+    pair_tags = ("bundle_pair", "bundle_pair_lbal", "bundle_pair_late")
+    pair_labels = ("global", "layer-balanced", "late-only")
+    pair_colors = (BLUE, ORANGE, YELLOW)
+    x = np.arange(4)
+    width = 0.23
+    for offset, tag, label, color in zip((-width, 0, width), pair_tags, pair_labels, pair_colors):
+        rows = by_tag[tag]["curve"]
+        counts = np.sum([r["counterfactual_pair_shadow_counts_by_layer"] for r in rows], axis=0)
+        bars = axes[1, 1].bar(x + offset, counts, width, color=color, label=label)
+        axes[1, 1].bar_label(bars, fmt="%.0f", padding=1, fontsize=5.2)
+    axes[1, 1].set_xticks(x, ["L1", "L2", "L3", "L4"])
+    axes[1, 1].set_ylabel("pairs")
+    axes[1, 1].set_title("D · Where route credit went", fontsize=7.5)
+    axes[1, 1].legend(fontsize=5.5)
+
+    fig.suptitle("E83 · route-pair density collapses with depth and training",
+                 x=0.02, ha="left", fontsize=8.8, fontweight="bold")
+    fig.text(0.02, 0.033,
+             "Matched seed-6 D4: 120 training examples, 120 updates, one pair budget per batch; 128 held-out examples.",
+             fontsize=5.0, color=MUTED)
+    fig.text(0.02, 0.012,
+             "Balanced: 100% L4 support but collapsed class output. Late-only: 6/128; only 9 deep pairs in epoch 1, "
+             "then none. Global: 14/128 vs control 8/128 (p=.180).",
+             fontsize=5.0, color=MUTED)
+    fig.tight_layout(rect=(0, 0.07, 1, 0.91), w_pad=2.0, h_pad=1.3)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_bundle_pair.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_route_cost_audit():
+    """Visualize validation utility and downstream work from matched pair shadows."""
+    result = load(os.path.join(RES, "e83", "route_cost_audit_pair_lbal.json"))
+    rows = result["summary_by_layer"]
+    layers = np.arange(1, len(rows) + 1)
+    n = np.asarray([row["sampled_pairs"] for row in rows], dtype=np.float64)
+    helpful = np.asarray([
+        row["fraction_joint_opening_improves_class_loss"] for row in rows
+    ], dtype=np.float64)
+    # Wilson 95% intervals keep the uncertainty visible at these small n.
+    z = 1.96
+    denom = 1.0 + z * z / np.maximum(n, 1)
+    center = (helpful + z * z / (2 * np.maximum(n, 1))) / denom
+    half = z * np.sqrt(
+        helpful * (1 - helpful) / np.maximum(n, 1)
+        + z * z / (4 * np.maximum(n, 1) ** 2)
+    ) / denom
+    lower = np.maximum(0, center - half)
+    upper = np.minimum(1, center + half)
+    # The compact JSON summary stores means; use the pair records for medians
+    # because early-layer mean deltas have a small number of large outliers.
+    pairs = result["pairs"]
+    median_delta = np.asarray([
+        np.median([pair["joint_class_loss_delta"] for pair in pairs
+                   if pair["layer"] == layer])
+        for layer in layers
+    ], dtype=np.float64)
+    l4_spikes = np.asarray([
+        row["mean_joint_work_delta_per_example"]["hidden_spikes_by_layer"][-1]
+        for row in rows
+    ], dtype=np.float64)
+    l4_readout = np.asarray([
+        row["mean_joint_work_delta_per_example"]["readout_edge_updates_by_layer"][-1]
+        for row in rows
+    ], dtype=np.float64)
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.85))
+    colors = [GRAY, BLUE, AQUA, ORANGE]
+    axes[0].bar(layers, helpful, color=colors, width=0.68)
+    axes[0].errorbar(layers, helpful,
+                     yerr=np.vstack((helpful - lower, upper - helpful)),
+                     fmt="none", ecolor=INK, capsize=2, linewidth=0.8)
+    for layer, value, count in zip(layers, helpful, n.astype(int)):
+        axes[0].text(layer, value + 0.04, f"{100 * value:.0f}%\nn={count}",
+                     ha="center", va="bottom", fontsize=5.3)
+    axes[0].set_ylim(0, 1.0)
+    axes[0].set_ylabel("pair fraction")
+    axes[0].set_title("A · Joint opening helps", fontsize=7.2)
+
+    axes[1].axhline(0, color=GRAY, linestyle=":", linewidth=1)
+    axes[1].bar(layers, median_delta, color=colors, width=0.68)
+    axes[1].set_ylabel("median Δ prefix loss")
+    axes[1].set_title("B · Matched loss change", fontsize=7.2)
+
+    width = 0.34
+    axes[2].bar(layers - width / 2, l4_spikes, width, color=BLUE,
+                label="L4 spikes")
+    axes[2].bar(layers + width / 2, l4_readout, width, color=ORANGE,
+                label="L4 readout updates")
+    axes[2].set_ylabel("added work / example")
+    axes[2].set_title("C · Downstream activity", fontsize=7.2)
+    axes[2].legend(fontsize=4.8, loc="upper right")
+
+    for ax in axes:
+        ax.set_xlabel("source layer")
+        ax.set_xticks(layers, [f"L{k}" for k in layers])
+        ax.grid(axis="y", alpha=0.2)
+        ax.set_axisbelow(True)
+    fig.suptitle("E83 · utility and event growth vary by route depth",
+                 x=0.02, ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.025,
+             "Frozen balanced checkpoint; 128 speaker-held-out examples, 115 pair shadows, no updates. "
+             "Primitive event counts are work proxies, not energy measurements.",
+             fontsize=5.0, color=MUTED)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.88), w_pad=1.1)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_cost_audit.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_pair_occupancy():
+    """Show that wider pair windows do not restore deep proposal support."""
+    result = load(os.path.join(RES, "e83", "route_pair_occupancy_late_seed6.json"))
+    windows = np.asarray(result["windows_ms"], dtype=np.float64)
+    counts = np.asarray([
+        result["pair_candidates_by_window_layer"][str(float(w))]
+        for w in windows
+    ], dtype=np.float64)
+    batches = np.asarray([
+        result["batches_with_pair_by_window_layer"][str(float(w))]
+        for w in windows
+    ], dtype=np.float64)
+    fig, axes = plt.subplots(1, 2, figsize=(7.1, 2.65))
+    axes[0].plot(windows, counts[:, 0] / 1000.0, marker="o", color=GRAY)
+    axes[0].set_xscale("log")
+    axes[0].set_xticks(windows, [f"{int(w)}" for w in windows])
+    axes[0].set_xlabel("pair arrival window (ms)")
+    axes[0].set_ylabel("candidate pairs (thousands)")
+    axes[0].set_title("A · L1 already dominates", fontsize=7.5)
+
+    for layer, color in ((1, BLUE), (2, AQUA), (3, ORANGE)):
+        axes[1].plot(windows, counts[:, layer], marker="o", color=color,
+                     label=f"L{layer + 1} candidates")
+    axes[1].set_xscale("log")
+    axes[1].set_xticks(windows, [f"{int(w)}" for w in windows])
+    axes[1].set_xlabel("pair arrival window (ms)")
+    axes[1].set_ylabel("candidate pairs across 30 batches")
+    axes[1].set_ylim(-0.35, max(7, float(counts[:, 1:].max()) + 1))
+    axes[1].set_yticks(range(0, int(axes[1].get_ylim()[1]) + 1))
+    axes[1].set_title("B · Deep pairs remain scarce", fontsize=7.5)
+    axes[1].legend(fontsize=5.5, loc="upper left")
+    for layer, color in ((1, BLUE), (2, AQUA), (3, ORANGE)):
+        for idx, value in enumerate(counts[:, layer]):
+            if value > 0:
+                axes[1].annotate(str(int(value)), (windows[idx], value),
+                                 xytext=(0, 4), textcoords="offset points",
+                                 ha="center", fontsize=5.2, color=color)
+    for ax in axes:
+        ax.grid(alpha=0.2)
+    fig.suptitle("E83 · time-window widening does not create deep pair support",
+                 x=0.02, ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.02,
+             "Frozen final late-only checkpoint on its 120-example fit subset. At 1,000 ms: L2=6, L3=0, L4=1; "
+             "only 6/30 batches had any L2 pair and 1/30 had an L4 pair. Candidate counts are not utility estimates.",
+             fontsize=4.9, color=MUTED)
+    fig.tight_layout(rect=(0, 0.14, 1, 0.88), w_pad=1.4)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_pair_occupancy.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_spike_boundary_late():
+    """Show the shallow readout shortcut in all-depth spike-boundary utility."""
+    result_paths = {
+        ("control", "all_depths"): os.path.join(RES, "e83", "spike_boundary_audit_bundle_control_refined_s6_n128.json"),
+        ("late-only", "all_depths"): os.path.join(RES, "e83", "spike_boundary_audit_late_only_s6_n128.json"),
+        ("control", "deepest"): os.path.join(RES, "e83", "spike_boundary_audit_bundle_control_deepest_s6_n128.json"),
+        ("late-only", "deepest"): os.path.join(RES, "e83", "spike_boundary_audit_late_only_deepest_s6_n128.json"),
+    }
+    results = {tag: load(path) for tag, path in result_paths.items()}
+    rows = {tag: result["paired_shadows"] for tag, result in results.items()}
+    layers = np.arange(1, len(rows[("control", "all_depths")]) + 1)
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.9))
+    tags = ("control", "late-only")
+    labels = {"control": "control", "late-only": "late-only pair"}
+    colors = {"control": GRAY, "late-only": YELLOW}
+    width = 0.34
+
+    for offset, tag in zip((-width / 2, width / 2), tags):
+        counts = []
+        for layer_rows in rows[(tag, "all_depths")]:
+            valid = [r for r in layer_rows
+                     if r["within_spike_band"] and not r["refractory_blocked"]]
+            n = len(valid)
+            counts.append(n / 32.0)
+        axes[0].bar(layers + offset, counts, width, color=colors[tag], label=labels[tag])
+        for ax_idx, fusion in ((1, "all_depths"), (2, "deepest")):
+            means, mean_errs = [], []
+            for layer_rows in rows[(tag, fusion)]:
+                valid = [r for r in layer_rows
+                         if r["within_spike_band"] and not r["refractory_blocked"]]
+                delta = np.asarray([r["main_L_on_minus_L_off"] for r in valid], dtype=float)
+                n = len(delta)
+                means.append(float(delta.mean()) if n else np.nan)
+                mean_errs.append(1.96 * float(delta.std(ddof=1)) / np.sqrt(n)
+                                 if n > 1 else 0.0)
+            means = np.asarray(means)
+            axes[ax_idx].bar(layers + offset, means, width, color=colors[tag], label=labels[tag])
+            axes[ax_idx].errorbar(layers + offset, means, yerr=mean_errs,
+                                  fmt="none", ecolor=INK, capsize=2, linewidth=0.7)
+
+    axes[0].set_ylim(0, 1.05)
+    axes[0].set_ylabel("valid candidates / 32 batches")
+    axes[0].set_title("A · Valid boundary candidates", fontsize=7.3)
+    for idx, title in ((1, "B · All-depth answer loss"), (2, "C · Deepest-only answer loss")):
+        axes[idx].axhline(0, color=GRAY, linestyle=":", linewidth=1)
+        axes[idx].set_ylabel("mean main $L_{on}-L_{off}$")
+        axes[idx].set_title(title, fontsize=7.3)
+    for ax in axes:
+        ax.set_xlabel("event layer")
+        ax.set_xticks(layers, [f"L{k}" for k in layers])
+        ax.grid(axis="y", alpha=0.2)
+        ax.set_axisbelow(True)
+    axes[0].legend(fontsize=5.0, loc="upper right")
+    axes[1].legend(fontsize=5.0, loc="upper right")
+    axes[2].legend(fontsize=5.0, loc="upper right")
+    fig.suptitle("E83 · all-depth readout exposes a shallow shortcut, not deep credit",
+                 x=0.02, ha="left", fontsize=8.4, fontweight="bold")
+    fig.text(0.02, 0.015,
+             "Same checkpoints, examples, valid nonrefractory candidates. Late-only L1: all-depth ΔL=−0.00936, "
+             "deepest-only ΔL=0. L1 toggles changed no downstream hidden spikes; only the L1 readout edges changed.",
+             fontsize=4.6, color=MUTED)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.88), w_pad=1.1)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_spike_boundary_late.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e77_bootstrap_diagnostics():
     """Show exact rate calibration's effect and the depth-8 gradient-reach smoke."""
     e77_dir = os.path.join(RES, "e77")
@@ -1343,15 +1650,48 @@ def build():
         "nonzero gradients in all eight E77 event layers at all 16 validation points. Test activity stayed between "
         "0.075 and 0.217 spikes per character per layer. This was one width-8 seed with 4,096 training and 512 test "
         "characters; its 4.319 BPC is only a micro-pilot diagnostic, not a quality or scaling result.",
-        "<b>Deep SHD route analysis (§§138–140):</b> the exact sparse masks have candidate paths from every input band "
+        "<b>Deep SHD route analysis (§§138–143):</b> the exact sparse masks have candidate paths from every input band "
         "to layer 4 in both measured seeds, yet only 1.6–7.0% of examples actually reach layer 4 in the equal-update "
         "runs. Sparse skips restore support to 99–100% but do not improve paired accuracy. The analysis shows why: "
         "path existence, event realization, and loss credit are separate; competing routes need paired outcome evaluation, "
-        "and two subthreshold messages can require a joint shadow to create a useful spike. More depth adds possible "
-        "expert compositions, while survival probabilities multiply across the stack.",
+        "and two subthreshold messages can require a joint shadow to create a useful spike. A layer-balanced pair run "
+        "restored 100% layer-4 support but finished at 6/128 versus 8/128 control (paired p=.791); it emitted 1,647 "
+        "layer-4 events per utterance and predicted only two classes. The global pair run reached 14/128 versus 8/128 "
+        "(p=.180), still inconclusive. More depth adds possible expert compositions, while both support survival and "
+        "event-rate control must be maintained. A frozen validation audit found joint pair openings helpful in "
+        "58% of sampled L3 pairs and 50% of L4 pairs, but only 16% of L1 and 31% of L2. L2 pairs added 4.24 L4 "
+        "spikes and 10.76 L4 readout updates per example on average; early-layer means are outlier-sensitive. A "
+        "matched late-only run produced nine L3/L4 pair shadows in epoch 1 and none in epochs 2–4; final accuracy "
+        "was 6/128 (4.69%) with 0.78% L4 support, versus 8/128 (6.25%) for control. Training loss fell "
+        "59.78→3.07, but held-out prefix NLL remained 2.985/3.167 across its two time strata. This isolates sparse pair "
+        "co-occupancy: occasional deep events remained, but no two near-time closed routes converged on one deep "
+        "receiver. The pair estimator had no late proposals to assess for three epochs. The current SHD implementation "
+        "scans hidden states on a 1 ms grid; it does not establish sparse asynchronous training efficiency.",
     ], st)
     s += fig(fig_e83_route_reachability, W * 0.96)
-    s += [P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
+    s += fig(fig_e83_route_bundle_pair, W * 0.96)
+    s += fig(fig_e83_route_cost_audit, W * 0.96)
+    s += fig(fig_e83_pair_occupancy, W * 0.96)
+    s += fig(fig_e83_spike_boundary_late, W * 0.96)
+    s += [P("<b>What the SHD intervention teaches:</b> exposing deeper route alternatives can restore activity, but "
+            "activity is not trainability: the layer-balanced model's classifier collapsed while event counts grew. "
+            "Section 143 derives a constrained route utility that weighs class-loss change against per-layer work. "
+            "The frozen audit found late pairs more often helpful, then a matched late-only run found just nine deep "
+            "pair proposals in epoch 1 and none afterward; its accuracy was 6/128 versus 8/128 for control. Section 144 "
+            "derives why pair availability can vanish quadratically with sparse event flux. A no-update sweep from 25 "
+            "to 1,000 ms found just 6 L2, zero L3, and one L4 pair in the 120-example fit subset at the widest "
+            "window, so widening time alone cannot restore support. Reweighting cannot repair an empty proposal set. "
+            "A refractory-aware audit compared matched control and late-only spike shadows. After filtering to "
+            "in-band, nonrefractory events, L1 main-loss spike-on helped 12/22 control cases (mean ΔL=+0.0266) "
+            "and 16/21 late-only cases (mean −0.0094, median −0.0020). The auxiliary loss agrees. Only 13 batches "
+            "had valid L1 candidates in both arms; the two selected unit/times can differ, and their mean utility "
+            "difference was −0.037 (SE 0.035), so this is promising but inconclusive. L2 late-only main-loss mean "
+            "ΔL was +0.0040 despite 12/19 improvements; "
+            "L3/L4 candidates are too sparse for deep updates. The next test is one "
+            "valid L1 boundary update per batch with a declared work cap. "
+            "These validation-informed runs are development evidence, not untouched-test "
+            "results. Neither pair strategy has established an SHD accuracy gain.", "small"),
+         P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
             "advantage and lower training energy remain to be demonstrated.")]
@@ -1785,6 +2125,14 @@ def build():
             "overconfident in both all-depth seeds (63% mean confidence; 23.8% emitted accuracy at seed 6, 0/8 correct at "
             "seed 7). These are two-speaker exploratory comparisons, not supremacy evidence. A separate gap remains: class "
             "evidence does not change during silence until another hidden event arrives or EOS is reached.", "body")]
+    s += [P("<b>Readout shortcut resolved (§145).</b> A matched frozen replay tested the same valid hidden-spike toggles "
+            "against both all-depth and deepest-only main loss. The late-only L1 all-depth delta averaged −0.00936 "
+            "(16/21 helpful), but all 21 matched deepest-only deltas were exactly zero; every valid L1/L2 deepest-only "
+            "delta was zero in both arms. The L1 toggles added 0.1429 L1 hidden spikes/example, no downstream hidden "
+            "spikes, and 1.2381 L1 readout-edge updates/example. So the fused classifier rewarded its shallow L1 head; "
+            "this local utility did not demonstrate serial credit through depth. Deepest-only L3/L4 samples were only "
+            "2/1. The next test must train with deepest-only primary loss or explicitly replay a sparse suffix and show "
+            "downstream event changes. This is a frozen audit, not a training gain.", "body")]
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
@@ -1794,8 +2142,9 @@ def build():
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
         "<b>Deep real-stream trainability (E83/E84):</b> E83 now scores proper class posteriors at sampled causal prefixes, "
         "but its strict event chain has nested per-utterance support and silent units have no pathwise firing gradient. "
-        "Depth-4 all-depth readout produced one promising paired seed-6 result that did not replicate at seed 7. A sparse "
-        "A sparse layer-1 skip restored layer-4 support to 99–100%, and an additive count mark raised it to 56–94%, "
+        "Depth-4 all-depth readout produced one paired seed-6 result that did not replicate at seed 7, and its L1 "
+        "boundary utility was a shallow-head shortcut with zero deepest-only loss change. A sparse layer-1 skip restored "
+        "layer-4 support to 99–100%, and an additive count mark raised it to 56–94%, "
         "without class improvement in either tested arm; the count-mark run ended at 0/32. The trained-checkpoint "
         "spike-boundary audit found few deep near-threshold events "
         "and mixed single-spike loss effects, so a boundary update is not yet justified. Prefix NLL and race calibration "

@@ -11,8 +11,9 @@ if [[ "$(git branch --show-current)" != "main" ]]; then
   exit 2
 fi
 
-# Deliberate allowlist: exclude logs, checkpoints, and caches. Include the small
-# E83/E84 and E114 JSON summaries so completed pilots are ready for host-side commit.
+# Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
+# E83/E84 and E114 result JSON summaries so completed pilots are ready for a
+# host-side commit.
 FILES=(
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
@@ -32,6 +33,8 @@ FILES=(
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
+  experiments/e83_route_cost_audit.py
+  experiments/e83_route_pair_occupancy_audit.py
   experiments/e83_spike_boundary_audit.py
   experiments/e83_counterfactual_audit.py
   experiments/plot_e83_firing.py
@@ -53,7 +56,12 @@ FILES=(
   experiments/queue/e83_d4_all_depths_replication.txt
   experiments/queue/e83_data_budget_equal_updates.txt
   experiments/queue/e83_spike_boundary_audit.txt
+  experiments/queue/e83_spike_boundary_late_audit.txt
   experiments/queue/e83_route_bundle_pair.txt
+  experiments/queue/e83_route_bundle_pair_layer_balanced.txt
+  experiments/queue/e83_route_bundle_pair_late_balanced.txt
+  experiments/queue/e83_route_cost_audit.txt
+  experiments/queue/e83_route_pair_occupancy_audit.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt
@@ -91,6 +99,9 @@ FILES=(
   report/figures/e83_equal_update_data_budget.png
   report/figures/e83_route_reachability.png
   report/figures/e83_route_bundle_pair.png
+  report/figures/e83_route_cost_audit.png
+  report/figures/e83_route_pair_occupancy.png
+  report/figures/e83_spike_boundary_late.png
   report/figures/e77_depth_trainability_bootstrap.png
   report/sleeping_machines_status.pdf
   commit_done.sh

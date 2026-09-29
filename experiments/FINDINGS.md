@@ -5,6 +5,182 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 layer-balanced route pairs: deep support without class learning (§143).**
+This matched D4 seed-6 follow-up changed only pair selection relative to the
+global-pair arm: same initialization, 120 examples, four epochs/120 updates,
+one pair shadow per minibatch, and 128 held-out examples. It selected
+43/34/15/28 route pairs from layers 1–4 over the run; the global sampler had
+sent all 120 pair shadows to layer 1. Layer 4 then retained 100% of held-out
+example support in every epoch. Yet final anytime-with-fallback accuracy was
+6/128 (4.69%), compared with 8/128 (6.25%) for the no-pair control and 14/128
+(10.94%) for the global-pair arm. Paired exact McNemar tests were
+$p=0.791$ (balanced vs control) and $p=0.180$ (global vs control). These
+single-seed differences are inconclusive.
+
+Support came with an unstable activity regime: the balanced run's mean
+per-utterance layer event counts at epoch 4 were [122, 189, 363, 1,647],
+and its four-epoch averages were [142, 192, 334, 1,421]. Adjacent activity
+amplification ratios from those averages were 1.35, 1.74, and 4.25. Its
+training losses stayed between 6,574 and 12,932; final late-prefix NLL was
+14,699, and the classifier predicted only two of 20 classes. Therefore
+restoring deep support did not produce a useful representation; it exposed a
+second failure mode, overactive deep event generation with collapsed class
+evidence. A matched intervention associates this with layer-balanced route
+updates, but does not isolate the pair sampler from the threshold/reset
+dynamics or noisy route utility.
+
+The paired replays give additional separation between action utility and
+learning: joint opening lowered its matched loss in 38/120 selected pairs
+(31.7%), while $\Gamma<0$ in 30/120 (25.0%). Per-epoch raw counterfactual to
+pathwise gradient norm ratios ranged 0.0011–0.0146, and their cosine ranged
+from -0.202 to +0.251. Useful counterfactuals exist, but they were neither
+common nor a reliably aligned update. The balanced policy samples layers
+uniformly by design; absent inverse-propensity weighting it estimates a
+layer-equalized objective rather than the full candidate-pool gradient.
+
+**Theory update.** §143 now formalizes the joint operating-point requirement:
+track active-example support $c_\ell$, conditional event multiplicity
+$\mu_\ell$, and total activity $n_\ell=c_\ell\mu_\ell$ separately. It
+derives a cost-constrained route utility that includes the counterfactual
+change in per-layer event/message work, and identifies the next experiment:
+collect matched class-loss/work deltas before setting any activity budget.
+E83 also scans hidden states on a 1 ms grid, so its current SHD training
+result is not evidence of sparse asynchronous training cost.
+
+**Frozen validation route/work audit (§143).** With no parameter updates, the
+balanced checkpoint was evaluated on the same 128 held-out-speaker examples.
+One pair was sampled per eligible layer and minibatch: 115 pairs total,
+32/32/19/32 from layers 1–4; eligible pool sizes were 214,920/228/38/273.
+Joint opening improved the matched prefix loss in 5/32 (15.6%), 10/32
+(31.3%), 11/19 (57.9%), and 16/32 (50.0%) pairs by layer. Median
+$L_{11}-L_{00}$ was 0.000/0.236/-0.268/-0.001, while the means were
+19.93/74.07/1.36/0.46. Early-layer means are outlier-sensitive; the audit
+does not estimate general utility from one collapsed checkpoint.
+
+The measured downstream work deltas give a sharper route hypothesis. A
+layer-2 pair added on average 4.24 L4 spikes and 10.76 L4 readout updates per
+example; layer 3 added 1.79 and 4.04; layer 4 added 0.23 and 0.45. Layer-1
+pairs added 0.78 and 1.83. Layer-2 averages conceal mostly zero late-layer
+work changes plus a small number of large cascades. Next, test a matched
+late-layer-only pair sampler (last half of the stack) to see whether it
+retains useful deep alternatives while avoiding the early-layer cascade.
+This uses validation utility to form a training hypothesis; the same
+validation results are development evidence, not final test evidence.
+
+Reconstructing the clipped four-outcome derivative from those same paired
+losses and route scores ($\sigma=0.25$) gives mean $\partial L/\partial s$
+of +0.291, +0.517, -0.013, -0.114 per route in layers 1–4. Gradient descent
+would close routes for positive derivatives and open routes for negative
+ones; negative-derivative fractions were 14.1%, 35.9%, 60.5%, 50.0%.
+Thus equal shadow allocation is not equal useful credit: early proposals
+mostly say “close,” while the late-layer signal is more favorable but weak
+and noisy. This is one checkpoint's validation-conditioned calculation,
+not a general layer ranking.
+
+**Matched late-layer pair run and second-order proposal starvation (§144).**
+The D4 seed-6 late-balanced arm changed only pair selection, restricting one
+pair shadow per minibatch to L3/L4. It produced 9 deep pair shadows in epoch
+1, then none in epochs 2–4. The per-epoch candidate-pair counts by layer were
+`[193140, 3, 6, 18]`, `[188476, 0, 0, 0]`, `[180439, 0, 0, 0]`, and
+`[180459, 0, 0, 0]`. L4 validation support was not literally zero in every
+later epoch, so the sharper explanation is pair co-occupancy failure: no two
+closed, near-time routes shared a deep receiver, despite occasional deep
+events. Final anytime accuracy was 6/128 (4.69%), versus 8/128 (6.25%) for
+the matched control. This is not evidence that late alternatives are harmful;
+the treatment had no deep pair proposals for three of four epochs.
+Training loss decreased 59.78→3.07, but held-out prefix NLL was 2.985/3.167
+in the two time strata and accuracy stayed near the 5% chance rate.
+
+For each minibatch/receiver group `g`, let `n_g` be the number of eligible
+closed routes before the code filters adjacent arrivals by time gap and
+distinct source event. The exact pair count is bounded by
+`sum_g (n_g - 1)_+`. Under a sparse Poisson occupancy model, this bound's
+expected value and the probability of at least two alternatives both scale
+as `lambda^2/2`, while single-route availability scales as `lambda`. Thus
+higher-order counterfactuals disappear faster than first-order credit as
+event flux thins. Importance weighting corrects
+sampling among existing pairs; it cannot repair a zero candidate set. The
+frozen time-window sweep tested 25, 50, 100, 250, 500, and 1,000 ms on the
+same 120-example fit subset. Pair counts at 1,000 ms were `[189987, 6, 0, 1]`
+for L1–L4, compared with `[181577, 1, 0, 0]` at 25 ms. Even across a full
+second there were no L3 pairs, only one L4 pair, and L2 pairs in just 6/30
+batches. Near-closed route records themselves were `[191787, 111, 3, 13]` by
+layer. This rules out the 25 ms cutoff as the main cause; source-route
+co-occupancy is the bottleneck. Widening the window measures candidate count,
+not counterfactual usefulness, since widely separated arrivals may not
+interact under the receiver kernel. The next design must preserve first-order
+shadows, instrument co-occupancy by layer, and use sparse prefix-expansion
+replays to create downstream counterfactual events when justified. That
+estimator is not implemented yet.
+
+**Refractory-aware spike-boundary audit.** A matched no-pair control and the
+late-only checkpoint were evaluated on the same 128 held-out-speaker examples
+(32 batches). Each batch/layer supplied its closest spike toggle; local
+boundary candidates were then restricted to margin $\le0.25$ and
+nonrefractory state. Valid candidate counts by layer were `[22, 21, 8, 0]`
+for control and `[21, 19, 2, 1]` for late-only. Separating the fused main loss
+from the weighted auxiliary losses, the L1 main-loss toggle helped 12/22
+control candidates (mean $+0.0266$) and 16/21 late-only candidates (mean
+$-0.0094$, median $-0.0020$); the auxiliary term has the same direction.
+Only 13 batches had a valid L1 candidate in both arms; the mean difference
+between the two arm-specific selected spike-on utilities was $-0.037$ (SE
+$0.035$), and the selected unit/time can differ by checkpoint. This is
+suggestive rather than a reliable treatment effect. L2 is not a robust opening signal: 12/19
+late-only candidates helped, yet mean main-loss change was $+0.0040$ (median
+$-0.00063$), with large variance. L3/L4 have only 2/1 valid late-only
+candidates. The earlier all-candidate averages were misleading because they
+included forced spikes outside the margin band. A matched deepest-only replay
+of these same toggles found exactly zero L1/L2 main-loss changes, although
+late-only L1's all-depth mean was $-0.00936$. The L1 intervention added no
+downstream hidden spikes and changed its own readout edges by 1.238/example.
+Thus the apparent L1 utility is a shallow-head shortcut, not a deep credit
+signal. The next test should use a deepest-only primary objective and/or a
+work-capped sparse suffix-expansion replay that demonstrates downstream event
+changes; neither remedy has yet been trained.
+
+**E83 receiver-bundle route-credit screen (§142).** This matched D4 seed-6
+comparison used the same initialization, 120 training examples, four epochs
+(120 optimizer updates), split RNG streams, and 128 held-out examples; both
+arms retained the one-route-per-layer counterfactual update. The treatment
+added one receiver-bundle pair shadow per minibatch, costing three replays.
+Terminal accuracy ended at 8/128 (6.25%) for control and 14/128 (10.94%) for
+the pair arm. For the actual anytime prediction with terminal fallback, the
+paired counts were 8 versus 14 correct, with 4 control-only and 10 pair-only
+correct examples (exact McNemar $p=0.180$). This is a small exploratory
+direction, not evidence of a reliable accuracy gain.
+
+The main objective issue remains visible: control training loss fell from
+1752.8 to 3.01, nearly the uninformative 20-class value $\ln20=2.996$; held-
+out late-prefix NLL finished at 3.246. The pair arm ended at train loss 3.23,
+late-prefix NLL 3.916, and 3.9% layer-4 support versus 1.6% for control. Both
+deep supports collapsed over training. The pair arm temporarily retained
+51.6% layer-4 support at epoch 2 versus 11.7% in control, but this did not
+persist or improve that epoch's accuracy (3.9% versus 9.4%). A falling scalar
+loss therefore did not mean that the classifier learned the task.
+
+The global proposal policy selected 30 pairs per epoch from 197k–206k
+eligible adjacent candidates, and all 120 selected pairs came from layer 1.
+Only 7/120 joint openings reduced the matched loss and 8/120 had negative
+interaction $\Gamma$; the first epoch accounted for most of the positive mean
+interaction. The policy paired closed scores in $[-0.5,0)$ by batch/receiver,
+kept adjacent source-time pairs within 25 ms, then sampled globally. This was
+not a threshold-margin or vector-compatibility selector. The result shows
+that generic temporal proximity produces little useful pair credit and that
+global candidate counts starve deeper layers. It does not reject cooperative
+routes; it identifies the proposal policy as the next variable to isolate.
+
+The follow-up keeps one pair per minibatch and changes only selection:
+choose uniformly among eligible layers, then uniformly among that layer's
+pairs, while logging layerwise candidate counts and inclusion probabilities.
+The route formalism also now distinguishes the hard deterministic edge gate
+from its logistic training relaxation and records two additional architectural
+limitations: the current receiver query is input-independent, and the same
+score controls both gate admission and positive delay. The four-outcome
+gradient is exact for its stated independent-gate surrogate before clipping;
+the proposal sampler, clipped contrasts, and separate local SGD step are
+explicitly identified as bounded learning heuristics. Alternate delay/value
+policies and receiver-state-conditioned queries remain untested.
+
 **E83 route-credit theory and compute-matched screen (§§138–141).** The
 analysis quantifies the pathwise-gradient penalty from sparse deep support:
 if a sample contributes gradient $X$ only when layer $\ell$ is active, then
@@ -352,6 +528,8 @@ The first race prototype failed: at 80 train / 40 held-out examples for one epoc
 **E83 gradient-graph and readout audit (§§127, 129).** The fixed-support controls all share a hard routing implementation: `TVLayer` removes nonpositive message scores using `keep = r.detach() > 0`, and computes spike identities in `no_grad`. Thus closed routes receive exactly zero task gradient; open routes can receive pathwise credit through their delay and payload; firing-time refinement differentiates a spike only after it has fired. Intermediate readouts improve credit for realized events but do not create the missing route-birth/firing boundary term. The route masks are also fixed random/tonotopic buffers, so topology itself cannot be recruited. A subsequent readout-only shadow probe forced 32 near-gate final routes at seed-2 initialization, on four held-out-speaker utterances. 31 interventions changed terminal max-pooled CE by exactly zero; the one nonzero intervention reduced it by 0.045. This is consistent with the max-pooling winner-gap dead zone derived in §129: a route can alter its local trace while remaining below the current per-class temporal maximum, leaving terminal scores and loss unchanged. The measured boundary-gradient norm was 2.2% of pathwise norm, cosine 0.012. Because this probe used untrained weights and no hidden spike insertions, it is only a mechanistic clue. **Next discriminating work:** save a trained checkpoint, shadow near-threshold hidden spikes through the remaining layers, and compare max, integral, and smooth-max posterior heads under the same event support and sampled-prefix proper log loss. Report exact loss differences, winner gaps, and gradient alignment before adding counterfactual credit. Use a fixed noise band and shadow budget. No more objective sweep answers this mechanism question.
 
 **E83 depth-four failure mechanism, spike-boundary audit, and depth-eight rate profile (§137).** The seed-6 128/32 pathwise event-prefix run reports held-out spikes per utterance rounded to `[4, 2, 0, 0]`; layers 3–4 average below 0.5 events per utterance. On epoch 2's first minibatch, the main-loss gradient norms were exactly zero for every hidden layer, while the auxiliary gradient norms for layers 3–4 were also zero. This confirms that the hard support cuts label credit on silent deep-path batches. The normalized route-shadow run had more held-out activity `[21, 15, 4, 14]` but still 6.25% terminal accuracy and late-prefix NLL 19.735: routing credit alone did not solve recognition. A paired hidden-spike audit on 128 held-out utterances found near-threshold margin candidates (within ±0.25) averaging 349/batch, 67/batch, 7.9/batch, and 6.6/batch across the four layers; layer 4 had none in 24/32 batches. Spike-on improved the loss in only 16/32, 17/32, 14/32, and 14/32 interventions, with near-zero mean effects. This confirms scarce deep support but does not justify a single-spike update. A separate input audit found that E83 drops the merged event-count mark: it is returned by preprocessing, but the network uses only band identity. Multiple raw spikes occur in 55.6% of fitting groups and 43.5% of held-out-speaker groups, so this is a concrete information bottleneck whose class value remains to be tested. The depth-eight all-depths pilot oscillated between early extinction and an activity cascade: layer counts moved from `[16, 9, 3, 6, 27, 51, 141, 250]` at epoch 1 to `[24, 3, 1, 1, 4, 6, 32, 65]` at epoch 2, surged to `[59, 35, 97, 286, 1137, 1929, 4125, 4888]` at epoch 3, and fell to `[27, 3, 2, 2, 3, 11, 47, 58]` at epoch 4. Late-prefix NLL swung 39,814.7 → 1,692.1 → 19,787,863.2 → 22.9; terminal accuracy remained 3.1–12.5%. We stopped after epoch 4 for instability. The next controlled representation test preserves the count as a sparse vector mark before adding spike credit or threshold calibration.
+
+**E83 all-depth readout audit (§145): the L1 signal is a shallow bypass.** On the same seed-6 checkpoints and held-out examples, we replayed the valid nonrefractory, in-band spike toggles against both fused all-depth and deepest-only main loss. The late-only L1 all-depth delta averaged −0.00936 (16/21 helpful), while all 21 matched deepest-only L1 deltas were exactly zero; every valid L1/L2 deepest-only delta was zero in both arms. Work deltas show why: L1 spike-on added 0.1429 L1 spikes/example but no downstream hidden spikes; it changed 1.2381 L1 sparse-readout edges/example. Thus the fused loss directly rewards the L1 classifier head even when no event cascade reaches deeper layers. The observed local utility is not evidence of deep compositional credit. Deepest-only L3/L4 counts were just 2/1 and cannot support estimates. The next depth test must train the primary deepest-only objective or explicitly create a plausible sparse prefix event, replay its suffix, and measure downstream changes under a declared work cap. This was a frozen validation replay, not an accuracy gain.
 
 **E74/E75 — time-vector speech pilots do not yet learn well, and the memory ceiling was too tight for their default batches.**
 E74 on 2k training / 500 held-out utterances at batch 32 completed 6 epochs in 31 minutes, but held-out speaker accuracy peaked at
