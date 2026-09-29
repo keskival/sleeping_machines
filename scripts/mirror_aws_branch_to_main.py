@@ -3,6 +3,7 @@
 import datetime
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -13,6 +14,7 @@ TARGET = 'refs/remotes/origin/main'
 PUSH_TARGET = 'refs/heads/main'
 BRANCH = 'aws/non-shd-benchmarks-20260929'
 REPORT_WORKTREE = Path('/tmp/sm-aws-report-worktree')
+MERGE_INDEX = Path('/tmp/sm-aws-merge-index')
 
 
 def git(*args, cwd=ROOT, check=True, env=None):
@@ -28,6 +30,34 @@ def remove_report_worktree():
     if REPORT_WORKTREE.exists():
         git('worktree', 'remove', '--force', str(REPORT_WORKTREE), check=False)
     git('worktree', 'prune', check=False)
+
+
+def merge_source_tree(target_sha, source_sha):
+    """Merge commits, preferring the source's freshly built report on report-only conflicts."""
+    merged = git('merge-tree', '--write-tree', target_sha, source_sha, check=False)
+    if merged.returncode == 0:
+        return merged.stdout.strip(), ''
+    lines = merged.stdout.splitlines()
+    tree_sha = lines[0].strip() if lines and re.fullmatch(r'[0-9a-f]{40,64}', lines[0].strip()) else None
+    conflicts = re.findall(r'^CONFLICT \([^)]*\): Merge conflict in (.+)$', merged.stdout, re.M)
+    allowed = all(path == 'REPORT.md' or path == 'experiments/FINDINGS.md' or path.startswith('report/')
+                  for path in conflicts)
+    if not tree_sha or not conflicts or not allowed:
+        return None, merged.stdout.strip()
+
+    MERGE_INDEX.unlink(missing_ok=True)
+    index_env = dict(os.environ, GIT_INDEX_FILE=str(MERGE_INDEX))
+    try:
+        git('read-tree', tree_sha, env=index_env)
+        for path in conflicts:
+            entry = git('ls-tree', source_sha, '--', path).stdout.strip()
+            metadata, _ = entry.split('\t', 1)
+            mode, _kind, blob = metadata.split()
+            git('update-index', '--cacheinfo', f'{mode},{blob},{path}', env=index_env)
+        tree = git('write-tree', env=index_env).stdout.strip()
+        return tree, ''
+    finally:
+        MERGE_INDEX.unlink(missing_ok=True)
 
 
 def refresh_report():
@@ -103,11 +133,12 @@ def main():
                 if main_in_source.returncode == 0:
                     candidate = source_sha
                 else:
-                    tree = git('merge-tree', '--write-tree', target_sha, source_sha, check=False)
-                    if tree.returncode:
-                        print(stamp(), 'merge conflict; stopped without changing main:', tree.stdout.strip(), flush=True)
-                        return 1
-                    commit = git('commit-tree', tree.stdout.strip(), '-p', target_sha, '-p', source_sha,
+                    tree, conflict = merge_source_tree(target_sha, source_sha)
+                    if not tree:
+                        print(stamp(), 'merge conflict outside generated report files; retrying later:', conflict, flush=True)
+                        time.sleep(30)
+                        continue
+                    commit = git('commit-tree', tree, '-p', target_sha, '-p', source_sha,
                                  '-m', 'Merge completed AWS benchmark work onto main')
                     candidate = commit.stdout.strip()
                 pushed = git('push', 'origin', candidate + ':' + PUSH_TARGET, check=False)
