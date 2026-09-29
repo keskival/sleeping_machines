@@ -158,6 +158,30 @@ terminal fallback.
 
 ![Scalar threshold-option training: held-out accuracy and event support by layer](report/figures/e83_spike_option_training.png)
 
+**State-conditioned optionality pilot (§152).** The next experiment made
+optionality a value of the current event state, label, remaining horizon, and
+explicit sparse continuation proposal. This is a per-state value estimated
+from route rollouts, not optimizer momentum. We also logged the proposal mass
+of futures that improve the current branch by at least 0.05 loss, so a single
+good continuation can be distinguished from a broad pool. Predictive class
+entropy, true-label surprise (negative log likelihood), route entropy, and
+future option reserve answer different questions: uncertainty is not the
+inverse likelihood, and many uncertain routes do not imply useful future
+choices.
+
+In a matched seed-6 depth-4 run, immediate-only and two-rollout
+continuation-aware threshold credit both finished at **6/128 held-out
+accuracy (4.69%)**. The continuation-aware reserve shift was only
+0.00006/0.00097 loss units per action in epochs 1/2, while the change in mass
+of futures improving by at least 0.05 was zero. At epoch 2, event support was
+83.6% / 4.7% / 1.6% / 0.8% across L1–L4; nearly all counterfactual suffix
+correction still landed in the output head. The rollout arm took 224 seconds
+versus 177 seconds for the immediate control. This is evidence that the
+state-conditioned metric and update execute safely, not that optionality
+improves recognition. Later route alternatives remain mostly unreachable.
+
+![Matched immediate and continuation-aware SHD training: accuracy, deep support, and measured option reserve](report/figures/e83_optionality_state_value.png)
+
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
 These are meaningful capability and performance signals, especially the text8 result and the ability to learn retrieval

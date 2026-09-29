@@ -5,6 +5,34 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**State-conditioned optionality pilot (§152).** We formalized optionality as a
+state-, label-, horizon-, proposal-, and rollout-budget-conditioned reserve:
+the expected best terminal loss among the factual continuation and $K$ sparse
+counterfactual futures, compared with factual loss. A separate beneficial-mass
+statistic records how much proposal probability reaches futures improving by a
+declared margin. This separates uncertainty over class labels, surprise on the
+observed label, entropy over route proposals, and future route value; none is
+the inverse of another. We also derived that signed optionality differences
+telescope along a full trajectory, so they must enter a continuation backup
+or action-selection target rather than be blindly summed as an extra reward.
+
+A matched depth-4, seed-6 experiment compared immediate-only threshold utility
+with a two-rollout, continuation-aware utility ($\lambda=1$), both with causal
+per-layer suffix-gradient substitutions, 120 training examples, 128
+held-out speakers, and two epochs. Both arms ended at 6/128 terminal accuracy
+(4.69%). The rollout arm's mean reserve change was $6.28\times10^{-5}$ then
+$9.73\times10^{-4}$ loss units/action; change in beneficial-continuation mass
+at the 0.05-loss cutoff was zero in both epochs. Epoch-2 layer support was
+83.6% / 4.7% / 1.6% / 0.8% (L1--L4), compared with 100% / 14.8% / 0% / 0% for
+immediate-only. Nearly all measured suffix-correction norm still landed on
+the output head. The treatment took 224 s versus 177 s control, at about 603
+MB peak RSS and over 11.7 GB host memory available. This validates execution
+of the estimator and matched update path, but provides no accuracy evidence
+that optionality helps. Later route alternatives are still too rarely
+reachable, and the estimator is specific to its sparse proposal. §152 records
+the state-value formulation, uncertainty distinctions, breadth diagnostic,
+potential-shaping caveat, and this negative training result.
+
 **E83 scalar option-value training pilot (§151).** We turned the frozen
 counterfactual scalar into a local threshold update and ran three serialized,
 resource-capped depth-4 arms on seed 6: pathwise control, immediate-only
