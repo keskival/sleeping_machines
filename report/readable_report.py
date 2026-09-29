@@ -144,52 +144,11 @@ def figures(M, tasks, ev):
     a.text(.1,2.85,"Conditional evidence, hard pointers and phase memory inform query readouts.",fontsize=9)
     save(f,"shared_architecture")
 
-    f, axes = plt.subplots(2, 2, figsize=(7.2, 5.0))
-    for a, task, title in zip(axes.flat[:2], ("temporal", "mnist"), ("Temporal composition", "MNIST")):
-        x = tasks[task]
-        for split, label, color in (("fit","Training",gray),("dev","Development",blue)):
-            a.plot([r["epoch"] for r in x["curve"]], [100*r[split]["accuracy"] for r in x["curve"]], "o-", label=label,color=color)
-        a.set_title(title); a.set_xlabel("Epoch"); a.set_ylabel("Accuracy (%)")
-        a.set_ylim(0, 103); a.legend(fontsize=8)
-    for a, task, title in zip(axes.flat[2:], ("language", "market"), ("Text: development loss improves", "Market: fitting does not transfer")):
-        x = tasks[task]
-        for split, label, color in (("fit","Training",gray),("dev","Development",blue)):
-            a.plot([0]+[r["epoch"] for r in x["curve"]], [x["initial"][split]["nll"]]+[r[split]["nll"] for r in x["curve"]], "o-",label=label,color=color)
-        a.set_title(title,fontsize=9); a.set_xlabel("Epoch"); a.set_ylabel("NLL (nats) ↓")
-        a.legend(fontsize=8)
-    f.tight_layout()
-    save(f,"e120_shared_learning")
-
-    audit = read("e120/readout_count_audit_v2_20260929.json")["splits"]["context4x"]
-    f, a = plt.subplots(figsize=(6.6, 2.55))
-    values = [100,100*audit["before"]["accuracy"],100*audit["count_projected"]["accuracy"]]
-    a.barh([2,1,0],values,color=[gray,orange,blue],height=.6)
-    a.set_yticks([2,1,0],["Pointer alone", "Initial combined readout", "One-coordinate correction"])
-    a.set_xlim(0,114); a.set_xlabel("Accuracy at four times the context length (%)")
-    a.set_title("An exact integration failure, then a frozen repair",fontsize=10)
-    for y,v in zip([2,1,0],values):
-        a.text(v+1,y,f"{v:.1f}%",va="center",fontsize=10)
-    a.grid(axis="y",visible=False)
-    f.tight_layout()
-    save(f,"e120_count_repair")
-    f, a = plt.subplots(figsize=(7.2, 2.9))
-    for key, label, color in (("phase", "Phase memory + margin guard", blue),
-                              ("phase_fixed", "Phase memory + fixed bound", "#1baf7a"),
-                              ("plain", "Two layers, ordinary readout", orange)):
-        row = tasks[key]
-        a.plot([0]+[r["epoch"] for r in row["curve"]],
-               [100*row["initial"]["unseen_all"]["accuracy"]]+[100*r["unseen_all"]["accuracy"] for r in row["curve"]],
-               label=label, color=color, linewidth=2)
-    a.axhline(100/17, color=gray, linestyle=":", label="Uniform chance")
-    a.set(xlabel="Epoch", ylabel="All 3,440 unseen tuples: accuracy (%)", ylim=(0, 104),
-          title="Restoring the missing periodic computation")
-    a.legend(fontsize=9); f.tight_layout(); save(f,"e121_arithmetic")
-
     f, a = plt.subplots(figsize=(6.6,2.7))
-    rows=[tasks["shd_pool_mean"],tasks["shd_pool_weighted"]]
+    rows=[tasks["shd_scaled"],tasks["shd_pool_mean"],tasks["shd_pool_weighted"]]
     values=[100*sum(r["final"][s]["correct"] for s in ("dev_original","dev_additional"))/512 for r in rows]
-    a.bar([0,1],values,color=[gray,blue],width=.55)
-    a.set(xticks=[0,1],xticklabels=["Count-weighted pool","Learned event-weighted pool"],
+    a.bar([0,1,2],values,color=["#c5ced8",gray,blue],width=.55)
+    a.set(xticks=[0,1,2],xticklabels=["Shared starting\ncheckpoint","Count pool\n+ one epoch","Learned event pool\n+ one epoch"],
           ylim=(0,100),ylabel="Held-out accuracy (%)",title="Deep speech: equal-budget readout comparison")
     for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
     f.tight_layout();save(f,"e122_speech")
@@ -216,9 +175,6 @@ def figures(M, tasks, ev):
     import figures_mech as historic
     historic.EVENT, historic.DENSE_T = blue, orange
     save(historic.fig_supremacy_map(), "supremacy_map")
-    previous = M["fig_e119_work_and_learning"]()
-    if previous is not None:
-        plt.close(previous)  # Existing helper writes its standalone figure.
 
 
 def blocks(M, tasks, ev):
@@ -274,7 +230,8 @@ def blocks(M, tasks, ev):
          "is also shown: its phase state supplies the same answers while the carrier adds cost. Speech and other "
          "representation tasks use deeper carrier configurations. The architecture chooses the required primitives "
          "and depth per task; each task has separately trained weights."),
-        ("small","Arithmetic: 1,473 fitting triples, 200 epochs, all 3,440 unseen triples; supplied period 17. Recall: "
+        ("small",f"Arithmetic: 1,473 fitting triples, a 200-epoch budget, all 3,440 unseen triples; supplied period 17. "
+         f"The phase-only path stops after {tasks['phase_only']['actual_epochs']} passes, when an entire fitting pass makes no updates. Recall: "
          "4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 "
          "examples for eight epochs. Width 32 and two generic layers where present, seed 6, one small dense setting. "
          "Work is an analytic logical-operation estimate, including configured vector maps, routers, scans, "
@@ -405,7 +362,8 @@ def blocks(M, tasks, ev):
 
     pages.append([
         ("h1","Appendix A. Deep event recognition"),
-        ("p",f"The eight-layer speech model is learning the SHD utterance-classification task. At the matched "
+        ("p",f"The eight-layer speech model reaches <b>{100*pooled(tasks['shd_scaled']):.1f}%</b> across 512 held-out "
+         "utterances. Both readout continuations start from that checkpoint. At the matched "
          f"readout comparison below, count pooling reaches <b>{100*pooled(pool_mean):.1f}%</b> and learned event "
          f"pooling reaches <b>{100*pooled(pool_weighted):.1f}%</b> across 512 held-out utterances. Each model has "
          "4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors "
