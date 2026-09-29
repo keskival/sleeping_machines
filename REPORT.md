@@ -1240,6 +1240,32 @@ Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for the gradient-train
 
 These are development diagnostics, not supremacy results. Completed recognition results are summarized in section 7.
 
+### Count marks, stable evidence, and serial depth (§§164–165)
+
+A matched D4 screen used 512 fitting and 256 held-out-speaker development utterances, two epochs, seed 6,
+corrected grid emission, a deepest-layer primary loss, auxiliary weight 0.2, and no counterfactual route updates.
+No input count mark and a shared-vector additive mark both finished at **14/256 terminal accuracy**. Their
+final L4 support was **12.11% and 0%**. A subsequent input mode keeps the routing address independent of the
+count mark while writing the mark into payload state. It retained **91.80% L4 support**, but reached only
+**13/256 terminal and 14/256 anytime accuracy**. Training loss rose **232.64 → 497.94** and late-prefix NLL
+reached **297.14**. These are development results; the third arm was selected after the pair. No recognition
+improvement is established. All jobs completed under the safe runner at about 0.6 GB RSS.
+
+![Count-mark placement changes deep support without improving recognition](report/figures/e83_countmark_coupling.png)
+
+The shared-vector design lets marks alter both message admission and payload. The new mode provides a checked
+first-layer address/payload separation. It preserves the direct count credit path but permits later firing and
+routing to change. §165 derives why uninformative evidence incurs a variance penalty under class log loss:
+suppressing it can lower loss toward log(20) before useful features learn. This is a plausible mechanism,
+not a unique causal diagnosis. Keeping events active alone also failed.
+
+The next architecture follows §157: **sparse serial event continuation with bounded residual payload updates**,
+plus optional timed branches. Each stage receives learnable information without requiring a new threshold crossing.
+Local decayed-mass normalization can control accumulation gain while a separate feature retains rate information.
+First establish deepest-layer terminal learning and retention of class information; then calibrate causal prefix
+stopping and add route optionality measured by transfer to other examples. The current 1 ms reference scans roughly
+293k hidden state-vector updates per utterance and makes no asynchronous efficiency claim.
+
 ### Event semantics: a concrete defect and its correction (§155)
 
 The legacy vector layer detects a spike from post-arrival state but reconstructs its payload from pre-arrival

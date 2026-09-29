@@ -1,5 +1,47 @@
 # Findings log
 
+## 2026-09-29 — Count placement, evidence scale, and deep support (§§164–165)
+
+A matched depth-4 screen used 512 fitting and 256 held-out-speaker development
+utterances, seed 6, two epochs, corrected grid emission, deepest primary loss,
+auxiliary weight 0.2, and no counterfactual route updates. Absent count marks
+and shared-vector additive marks both ended at **14/256 terminal and anytime
+accuracy**. Their final L4 support was **12.11% versus zero**; late-prefix NLL
+was 2.9927 versus 2.9984. The count projection learned a nonzero norm, but
+preserving multiplicity this way did not yield recognition.
+
+A subsequent, matched `address_neutral` mode routes the first input layer from
+the original embedding while adding the count only to its integrated payload.
+It ended at **13/256 terminal, 14/256 anytime**, with **91.80% L4 support** and
+late-prefix NLL **297.1397**. Training loss rose **232.64 → 497.94**. Thus high
+activity and large gradients coexist with failed learning. The shared-vector
+arm became silent; input address separation retained strongly miscalibrated
+evidence. These are one-seed development results, not an SHD accuracy gain or
+proof of a unique causal failure. The third arm was chosen after the pair.
+
+The score/payload split is opt-in. Existing behavior remains the default;
+checkpoint audit loaders preserve the new mode, and boundary-credit traces
+use the actual route vector. The executable routing contract and exact result
+paths are in `e83_countmark_summary.py` and
+`results/e83/countmark_matched_20260929.json`. The initial deepest-loss gradient
+norms matched across all three arms. Zero auxiliary gradient at L4 is expected
+because auxiliary heads exclude that layer; it is not a new defect.
+
+§165 derives the competing loss incentive: near uniform prediction,
+expected CE = log(C) − alpha A + alpha² V/2 + higher-order terms. Uninformative
+evidence has no alignment term A but pays a variance penalty V. Suppressing
+such evidence can lower loss before representations learn. This supports the
+§157 sparse serial residual continuation design, with bounded payload/state
+gain and explicit event budgets, followed by terminal learning, prefix
+calibration, and transferable route optionality. The loss calculation is
+analytical; it has not uniquely established the cause of the observed collapse.
+
+All three training jobs completed serially under `run_safe.sh`, in 311/297/322
+model-reported seconds. Observed runner heartbeats stayed below 620 MB RSS
+with over 11 GB available host memory. The current grid reference still
+reports about 293k hidden state-vector updates per utterance; these results
+establish no asynchronous execution or energy advantage.
+
 ## 2026-09-29 — Hybrid emission contract and optionality synthesis (§§155–163)
 
 - **Confirmed implementation defect:** legacy `TVLayer` detects firing after current-bin arrivals but builds the

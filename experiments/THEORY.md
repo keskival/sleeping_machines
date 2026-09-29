@@ -63,6 +63,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Sequential classification and output races](theory/09_sequence_classification_and_output_races.md) — §§115–154
 - [Trainability and frontier synthesis](theory/10_trainability_and_frontier_synthesis.md) — §§155–158
 - [Optionality and transferable learning reserve](theory/11_optionality_and_learning_reserve.md) — §§159–163
+- [Marked events and stable deep learning](theory/12_marked_events_and_learning_stability.md) — §§164–165
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

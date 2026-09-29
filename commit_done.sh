@@ -40,6 +40,13 @@ FILES=(
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
+  experiments/e83_countmark_summary.py
+  experiments/queue/e83_shd_countmark_control_20260929.txt
+  experiments/queue/e83_shd_countmark_additive_20260929.txt
+  experiments/queue/e83_shd_countmark_address_neutral_20260929.txt
+  experiments/queue/e83_countmark_summary_20260929.txt
+  experiments/queue/report_shd_countmark_20260929.txt
+  report/figures/e83_countmark_coupling.png
   experiments/e83_route_dynamics_audit.py
   experiments/e83_route_option_value_audit.py
   experiments/e83_route_cost_audit.py

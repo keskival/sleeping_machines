@@ -346,9 +346,9 @@ class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
                  dmax, w_sd, seed=0, event_readout=False,
                  readout_fusion="deepest", input_count_payload=False,
-                 input_count_route_neutral=False,
                  early_event_skip=False, route_topk=0,
-                 trainable_thresholds=False, spike_reconstruction="legacy"):
+                 trainable_thresholds=False, spike_reconstruction="legacy",
+                 input_count_route_neutral=False):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -489,7 +489,10 @@ class DeepSHD(nn.Module):
                 out, msg, route_info = result
                 if collect_routes:
                     route_candidates.append(route_info)
-                    route_inputs.append((ib, ij, iv))
+                    # Boundary credit must use the vector that actually scores
+                    # the route, including the separate input address mode.
+                    routing_input = route_v if i == 0 and self.input_count_route_neutral else iv
+                    route_inputs.append((ib, ij, routing_input))
                 if return_spike_diagnostics:
                     spike_diagnostics.append(route_info)
             else:

@@ -1893,6 +1893,45 @@ def time_pages(st, W):
     return s
 
 
+def fig_e83_countmark_coupling():
+    path = os.path.join(RES, "e83", "countmark_matched_20260929.json")
+    if not os.path.exists(path):
+        return None
+    data = load(path)
+    names = ["off", "additive", "address_neutral"]
+    labels = ["No mark", "Shared vector", "Payload only"]
+    palette = [GRAY, BLUE, ORANGE]
+    f, axes = plt.subplots(2, 2, figsize=(7.2, 5.2))
+    accuracy = [100 * data["arms"][name]["terminal_correct"] / 256 for name in names]
+    axes[0, 0].bar(labels, accuracy, color=palette)
+    axes[0, 0].axhline(5, color=INK, ls=":")
+    axes[0, 0].set_ylim(0, 10)
+    axes[0, 0].set_title("Final terminal accuracy (%)")
+    for i, name in enumerate(names):
+        rows = data["arms"][name]["curve"]
+        epochs = [row["epoch"] for row in rows]
+        axes[0, 1].plot(epochs, [100 * row["event_support_coverage"][-1] for row in rows],
+                        "o-", color=palette[i], label=labels[i])
+        axes[1, 0].plot(epochs, [row["train_loss"] for row in rows], "o-", color=palette[i])
+        axes[1, 1].plot(epochs, [row["prefix_window_nll_by_stratum"][-1] for row in rows],
+                        "o-", color=palette[i])
+    axes[0, 1].set_title("Utterances reaching layer 4 (%)")
+    axes[0, 1].set_ylim(0, 105)
+    axes[0, 1].legend(fontsize=7)
+    axes[1, 0].set_title("Training primary loss (log scale)")
+    axes[1, 1].set_title("Late-prefix validation NLL (log scale)")
+    for ax in axes[1]:
+        ax.set_yscale("log"); ax.axhline(np.log(20), color=INK, ls=":")
+    for ax in [axes[0, 1], *axes[1]]:
+        ax.set_xticks([1, 2]); ax.set_xlabel("Epoch")
+    f.suptitle("Input marks change deep activity; recognition remains at chance", fontsize=10)
+    f.text(.02, .015, "512 fit / 256 held-out-speaker utterances; D4; corrected grid emission; one seed.\n"
+           "The payload-only arm was chosen after the first pair. Dotted references: 5% accuracy and log(20) loss.", fontsize=6.5)
+    f.tight_layout(rect=(0, .095, 1, .95))
+    f.savefig(os.path.join(os.path.dirname(__file__), "figures", "e83_countmark_coupling.png"), dpi=180)
+    return f
+
+
 def fig_emission_contract():
     audit = load(os.path.join(RES, "e83", "emission_contract_s6_n128.json"))
     prefix = "deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_"
@@ -3053,6 +3092,20 @@ def build():
             "work together in deep E77 language models, then measure matched quality, training cost, inference work, and energy "
             "on real hardware. This is a concrete path from promising mechanisms to a new frontier-computing paradigm.")]
     shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
+        P("<b>Marked input and stable depth (§§164–165):</b> a matched D4 screen used 512 fitting and 256 "
+          "held-out-speaker development utterances, two epochs, corrected grid emission, deepest primary loss, "
+          "auxiliary weight 0.2, and no route shadows. No mark and a shared-vector count mark both finished at "
+          "14/256 terminal accuracy, with 12.1% versus zero L4 support. Keeping the input routing address separate "
+          "from the count payload retained 91.8% L4 support but reached 13/256 terminal and 14/256 anytime accuracy. "
+          "Its training loss rose 232.6 to 497.9 and late-prefix NLL reached 297.1. These are development outcomes; "
+          "the third arm followed the first pair. All runs used about 0.6 GB RSS under the safe runner."),
+        *fig(fig_e83_countmark_coupling, W),
+        P("The loss expansion in §165 explains a competing incentive: initially uninformative class evidence pays "
+          "a variance penalty, so suppressing it can lower loss toward log(20). This is consistent with collapse, "
+          "without uniquely proving its cause. The next architecture is the sparse serial residual continuation "
+          "specified in §157, with bounded state/payload gain and event budgets. Establish deepest-layer terminal "
+          "learning, then prefix calibration and transferable counterfactual routing. The current reference still "
+          "scans 1 ms states and establishes no asynchronous energy advantage."),
         P("<b>Event semantics (§155):</b> legacy TVLayer detects a crossing from post-arrival state but reconstructs "
           "its emitted vector from pre-arrival state. A one-message witness returns zero payload and zero derivative; "
           "the consistent grid reference returns 1.9545 and 1.0852 respectively. In a frozen SHD control, 853/892 "
