@@ -35,6 +35,8 @@ def results():
     tasks["phase_only"] = read("e124/modular_phase_only_s6_200.json")
     tasks["work_audit"] = read("e124/consolidated_work_20260929.json")
     tasks["shd_scaled"] = read("e122/d8_n4096_invariance_continue_s6_e2.json")
+    tasks["shd_pool_mean"] = read("e122/d8_n4096_pool_control_s6.json")
+    tasks["shd_pool_weighted"] = read("e122/d8_n4096_pool_weighted_s6.json")
     tasks["temporal_shallow"] = read("e120/temporal_d2_20260929.json")
     tasks["recall_shallow"] = read("e120/recall_d2_20260929.json")
     return tasks
@@ -142,19 +144,15 @@ def figures(M, tasks, ev):
           title="Restoring the missing periodic computation")
     a.legend(fontsize=9); f.tight_layout(); save(f,"e121_arithmetic")
 
-    f, axes = plt.subplots(1,2,figsize=(7.2,2.8),sharey=True)
-    for axis, split, title in zip(axes,("dev_original","dev_additional"),
-                                  ("Original 256 utterances","Additional 256 utterances")):
-        for key,label,color in (("shd_control","Unchanged input",blue),
-                                ("shd_invariance","Time + channel variation",orange)):
-            row=tasks[key]
-            axis.plot([0]+[r["epoch"] for r in row["curve"]],
-                      [100*row["initial"][split]["accuracy"]]+[100*r[split]["accuracy"] for r in row["curve"]],
-                      "o-",label=label,color=color)
-        axis.set(xlabel="Continuation epoch",title=title,ylim=(35,85))
-        axis.legend(fontsize=7)
-    axes[0].set_ylabel("Clean held-out accuracy (%)")
-    f.tight_layout(); save(f,"e122_speech")
+    f, a = plt.subplots(figsize=(6.6,2.7))
+    rows=[tasks["shd_pool_mean"],tasks["shd_pool_weighted"]]
+    values=[100*sum(r["final"][s]["correct"] for s in ("dev_original","dev_additional"))/512 for r in rows]
+    a.bar([0,1],values,color=[gray,blue],width=.55)
+    a.set(xticks=[0,1],xticklabels=["Count-weighted pool","Learned event-weighted pool"],
+          ylim=(0,100),ylabel="Held-out accuracy (%)",title="Deep speech: equal-budget readout comparison")
+    for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
+    f.tight_layout();save(f,"e122_speech")
+
     f, axes = plt.subplots(1,2,figsize=(7.2,3.15))
     entries=tasks["work_audit"]["rows"]
     names={"shared_phase_only":"Common phase path (69 scalars)","shared_d2_phase":"Common two-layer + phase",
@@ -183,372 +181,242 @@ def figures(M, tasks, ev):
 
 
 def blocks(M, tasks, ev):
-    """Pages of (kind, payload) blocks shared by the PDF and Markdown."""
-    pages = []
-    phase, plain = tasks["phase"], tasks["plain"]
-    phase_end, plain_end = phase["final"]["unseen_all"], plain["final"]["unseen_all"]
-    shd_control, shd_aug = tasks["shd_control"], tasks["shd_invariance"]
+    """Project entry point: capabilities, evidence, principles and applications."""
+    phase=tasks["phase_only"]["final"]["dev"]
+    work=tasks["work_audit"]["rows"]
+    phase_work=next(r for r in work if r["model"]=="shared_phase_only")["work"]["estimated_operations"]
+    recall_work=next(r for r in work if r["model"]=="shared_d2_recall" and r["split"]=="context4x")["work"]["estimated_operations"]
+    pool_mean,pool_weighted=tasks["shd_pool_mean"],tasks["shd_pool_weighted"]
+    def pooled(row,endpoint="final"):
+        parts=[row[endpoint][k] for k in ("dev_original","dev_additional")]
+        return sum(p["correct"] for p in parts)/sum(p["n"] for p in parts)
+    pages=[]
     pages.append([
-        ("title", "Sleeping Machines"),
-        ("sub", "Learning and computing through timed messages · 29 September 2026"),
-        ("p", "A Sleeping Machine is a network of nodes with local memory. Messages carry a vector and an arrival time. "
-         "Nodes use that content and timing to remember, compare, wait, and send a new message. Competing messages race; "
-         "the winner performs the computation, while losing alternatives can teach the network during training."),
-        ("h1", "The most significant accomplishments"),
-        ("bullets", [
-         f"<b>Better prediction on real language.</b> At 10M training characters, the native predictive mixture reaches "
+        ("title","Sleeping Machines"),
+        ("sub","Intelligence through timed messages, local memory and selective computation"),
+        ("p","A Sleeping Machine is a network whose messages carry both a vector and an arrival time. Nodes "
+         "remember what arrived, compare alternatives, wait when useful, and send a new message. Competing "
+         "messages race: the winner determines the computation, while unrealized alternatives can teach the "
+         "network how to make a better choice. The goal is capable models that spend their work where information changes."),
+        ("h1","The strongest demonstrated results"),
+        ("bullets",[
+         f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
          f"<b>{ev['e79'][10_000_000]:.3f} test bits per character</b>, ahead of the completed LSTM ({ev['lstm10']:.3f}) "
-         f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split. Lower means better prediction.",
-         "<b>Learning to retrieve from far fewer examples.</b> Local race retrieval reaches <b>100% accuracy on contexts "
-         "four times longer</b> after at most 4,000 examples in all five runs. The strongest of seven Transformer "
-         f"settings reaches {100*ev['recall_tf']:.1f}% there after up to one million examples.",
-         "<b>Deep composition with little data and work.</b> Native depth-four order models reach <b>99.9–100%</b> "
-         "after 10–15k examples in five runs. A separate shared-motif task averages <b>99.65% from one pass</b>, "
-         "at roughly <b>10,000× lower counted work</b> than its Transformer reference."]),
-        ("figure", ("accomplishments", 174)),
-        ("small", "Language: completed held-out test scores, one seed, shared data splits but different model sizes, "
-         "schedules and expert resources. Retrieval and composition: controlled synthetic tasks. Counted event "
-         "operations and dense multiply-adds are different work units; these are not measured energy ratios."),
-        ("p", "<b>Why this matters:</b> the evidence supports a route to intelligence that learns useful structure from "
-         "less experience and spends computation on selected events. The next challenge is to combine those strengths "
-         "in one scalable architecture. Its common implementation now preserves arithmetic and retrieval, and deeper speech learning continues to improve.")])
+         f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split.",
+         "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
+         "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
+         "100% on its standard and longer contexts.",
+         "<b>Rule learning and deep composition.</b> The consolidated periodic path reaches <b>100% across all "
+         "3,440 unseen modular triples</b>. Native depth-four order models reach 99.9–100%; shared-motif composition "
+         "reaches about 99.65% from one pass at roughly 10,000× lower counted work than its Transformer reference."]),
+        ("figure",("accomplishments",174)),
+        ("small","Language scores are held-out test results from the named predictive mixture, with different model "
+         "sizes and schedules. Retrieval, composition and arithmetic are controlled synthetic tasks. The following "
+         "pages distinguish the consolidated implementation from the original native components.")])
 
     pages.append([
-        ("h1", "Consolidated models: quality versus operations"),
-        ("p", "The common model now reproduces perfect modular generalization and longer-context retrieval. "
-         "The plots below compare its configured computation with new small Transformer and LSTM controls on "
-         "the same examples. <b>Higher and further left is better.</b> The logarithmic axis exposes work differences."),
-        ("figure", ("consolidated_work_frontiers",174)),
-        ("h2", "Execute the computation that supplies the answer"),
-        ("p", "For arithmetic, the phase path learns 69 scalar parameters and executes directly through the common "
-         "model interface. It allocates no generic carrier or Adam parameters. Its fitted phase state matches the "
-         "two-layer composite exactly. The composite is also shown: executing its unused carrier costs extra work. "
-         "For retrieval, the measured configuration executes both the two-layer carrier and hard pointer search."),
-        ("p", "Arithmetic uses 1,473 fitting triples over 200 epochs in each new setting. Recall gives the dense "
-         "controls all 4,512 examples available to the shared pointer/neural system; the controls revisit them for "
-         "eight epochs. These runs use width 32 and two generic layers where present, seed 6 and declared optimizer "
-         "schedules. They establish the comparisons shown, rather than a search over the best dense model settings."),
-        ("small", "Work is an analytic logical-operation estimate: 2 per MAC, 1 per scalar arithmetic/nonlinear "
-         "operation or estimated sort comparison. The shared ledger includes selected vector maps, all routers, "
-         "memory scans, weight normalization, readout, clock candidates and pointer lookup. Memory reads are recorded "
-         "separately. Divisions, remainders and exponentials have unit weight; allocations, transfers and kernels are "
-         "outside the ledger. These inference counts are not backward/optimizer counts or measured joules. "
-         "Results/e123–e124 preserve protocols, configuration, split IDs and the complete ledger.")])
+        ("h1","Consolidated models: accuracy versus computation"),
+        ("p","The common implementation now retains perfect modular generalization and longer-context retrieval. "
+         "New Transformer and LSTM controls use the same synthetic examples. <b>Higher and further left is better:</b> "
+         "more accurate answers from less counted work. The logarithmic axis makes large cost differences visible."),
+        ("figure",("consolidated_work_frontiers",174)),
+        ("table",(["Common configuration","Held-out capability","Estimated work per query"],[
+         ["Periodic path; 69 learned scalars",f"{phase['correct']:,}/{phase['n']:,} unseen triples",f"{phase_work:,.0f} logical operations"],
+         ["Two-layer carrier + hard pointer","100% at four times context",f"{recall_work:,.0f} logical operations"],
+        ],[62,57,55])),
+        ("p","The periodic path executes directly through the shared model interface. A two-layer carrier variant "
+         "is also shown: its phase state supplies the same answers while the carrier adds cost. Speech and other "
+         "representation tasks use deeper carrier configurations. The architecture chooses the required primitives "
+         "and depth per task; each task has separately trained weights."),
+        ("small","Arithmetic: 1,473 fitting triples, 200 epochs, all 3,440 unseen triples; supplied period 17. Recall: "
+         "4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 "
+         "examples for eight epochs. Width 32 and two generic layers where present, seed 6, one small dense setting. "
+         "Work is an analytic logical-operation estimate, including configured vector maps, routers, scans, "
+         "normalization, clock candidates and pointer search. These inference counts are not measured joules or "
+         "backward/optimizer counts. Full work definitions appear in the evidence appendix.")])
 
     pages.append([
-        ("h1", "Quality versus computation: the strongest measured advantages"),
-        ("p", "In the work panels, <b>higher and further left is better</b>: more accurate answers with fewer counted "
-         "operations. The logarithmic horizontal axis makes orders of magnitude visible. These restored plots "
-         "show the native prototypes that established the project's strongest efficiency results."),
-        ("figure", ("supremacy_map",174)),
-        ("small", "Timing, composition and deep order: event operations versus dense multiply-adds per example; "
-         "training budgets differ and are labeled. The data-efficiency and arithmetic panels use different horizontal "
-         "axes. Market: held-out log-likelihood (higher is better), with an online GRU and a Transformer reference. "
-         "The strongest accuracy/work panels compare Transformers and clocked convolutional nets; the recurrent "
-         "market reference is a GRU. LSTM test-loss comparisons are on the preceding page; their saved runs do not "
-         "provide a matched total-work counter. These are operation counts, not measured joules. "
-         "Sources: E32/E35/E36, E34, E53/E54, E48/E52/E57 and E41; completed AWS timing controls are included.")])
+        ("h1","Native components: quality, work and sample efficiency"),
+        ("p","The native components establish why selective temporal computation is promising. Timing patterns, "
+         "composition and deep order reach high accuracy with much less counted work. Retrieval and rule learning "
+         "also show that a reusable computation can generalize beyond the observed examples."),
+        ("figure",("supremacy_map",174)),
+        ("small","Work panels count event operations or dense multiply-adds per example; training budgets are labeled. "
+         "Data efficiency and arithmetic use different horizontal axes. Market quality is held-out log-likelihood, "
+         "with an online GRU and Transformer reference. The largest work advantages here belong to the named native "
+         "components; the preceding page measures consolidated configurations directly. Operation counts do not "
+         "assign equal hardware energy to different operations.")])
 
     pages.append([
-        ("h1", "1. What the results make possible"),
-        ("p", "The opportunity has three parts: learning from fewer examples, avoiding unnecessary arithmetic, and "
-         "retaining useful computation as context and depth grow. Each has a concrete experimental foothold."),
-        ("table", (["Capability", "Completed evidence", "Practical significance"], [
-         ["Prediction", f"Text8: E79 {ev['e79'][1_000_000]:.3f} / {ev['e79'][10_000_000]:.3f} test bpc at 1M / 10M training characters.",
-          "Local predictive memories can compete with much larger learned dense models in these comparisons."],
-         ["Retrieval", "E61: perfect 4×-context recall in 5/5 runs by 4k examples.",
-          "A learned query-to-memory rule can preserve its meaning beyond training lengths."],
-         ["Composition", "E54: 99.9–100% depth-four order recognition after 10–15k examples.",
-          "Learned parts can be reused through a hierarchy rather than relearned for every combination."],
-         ["Periodic computation", f"E41: 99.4–99.9%; E121 shared phase model: {100*phase_end['accuracy']:.1f}% across all 3,440 unseen tuples.",
-          "An appropriate temporal representation can discover a reusable rule instead of storing examples."],
-         ["Event world models", "E57: within 0.08–0.19 nats/event of its Transformer reference at about 1/3000 counted work.",
-          "Predictive state can be maintained cheaply on real streams; the Transformer is more accurate."],
-        ], [29, 70, 75])),
-        ("h2", "The common idea behind these results"),
-        ("p", "Information often arrives in bursts, with long stretches when little changes. A useful pattern may "
-         "depend on which signal came first, what followed it, and how long the gap was. Local state and learned "
-         "delays let the network express those relationships directly. A successful route can remain reusable "
-         "across many examples instead of being reconstructed through a full dense calculation each time."),
-        ("h2", "How to read the claims"),
-        ("bullets", ["<b>Established comparisons:</b> the language, retrieval and synthetic-composition results above belong to their named prototypes and protocols.",
-         "<b>New architecture evidence:</b> the shared model has small development runs across eight task families. Its results are described separately below.",
-         "<b>Potential:</b> frontier-scale quality, a better scaling law, and lower total training energy are the larger objectives. They require further measurements."]),
-        ("small", "The arithmetic prototype includes a provided rhythm resource. Its success does not imply that every "
-         "event architecture will learn arithmetic. New AWS relative-time Transformer controls also reach near-perfect "
-         "accuracy on timing/composition tasks; the large counted-work distinction remains the relevant result there.")])
+        ("h1","How the model computes and learns"),
+        ("p","The architecture combines local memory, vector payloads and timing. A message can carry a learned "
+         "representation, a pointer, evidence or a periodic state. Layers need not all perform the same operation. "
+         "Their job is to preserve useful information and recruit the computation needed for the task."),
+        ("figure",("shared_architecture",174)),
+        ("bullets",[
+         "<b>Local temporal memory</b> accumulates observed content and elapsed time without evaluating empty time ticks.",
+         "<b>Hard races</b> choose the emitted vector and delay. Losing alternatives provide training credit without becoming identical forward messages.",
+         "<b>Reusable memories</b> include conditional outcome statistics, relative pointers and learned phase transformations.",
+         "<b>Trainable depth</b> uses bounded carrier updates to preserve representations and credit through a hierarchy.",
+         "<b>Appropriate supervision</b> teaches a completed class decision or the next event's type and waiting time, including silence."]),
+        ("p","The consolidated model is trained independently on each task. Input queries contain only observations "
+         "already available at their cutoff. The label and next event remain targets. Its current query interface "
+         "processes event packets; persistent scheduling across overlapping queries is an additional systems capability."),
+        ("small","Small local vector maps and query readouts can remain dense. The intended efficiency comes from "
+         "selective event/state computation and appropriate primitives; total memory access and communication must "
+         "also be measured when assessing an implementation.")])
 
     pages.append([
-        ("h1", "2. One architecture, separately trained for each task"),
-        ("p", "The tasks do not share a training objective or a set of weights. They share an implementation: local "
-         "temporal memory, vector messages, delayed hard races, stable depth, and a query readout. Each task has its "
-         "own encoder, outcome space, memory contents and fitted parameters."),
-        ("figure", ("shared_architecture", 174)),
-        ("h2", "What has been brought together"),
-        ("bullets", [
-         "<b>Deep event representations:</b> task-configurable bounded residual layers carry information and learning credit. A layer evaluates three delayed choices and emits only the winning vector and delay.",
-         "<b>Conditional evidence:</b> sparse context tables learn local outcome counts or event counts per exposure time. A learned feature-dependent readout combines their evidence.",
-         "<b>Learned retrieval:</b> a hard pointer chooses a source and relative destination. Losing alternatives receive local mistake credit; the forward answer uses the winning pointer.",
-         "<b>Periodic state:</b> learned rotations/reflections compose the observed symbols; the first class clock supplies the phase answer, with a bounded neural score correction.",
-         "<b>Task-appropriate supervision:</b> categorical labels supervise a completed query; event prediction uses the likelihood of the next mark and waiting time, including the observed silence."]),
-        ("h2", "Causality is part of the interface"),
-        ("p", "Language and market queries receive only an explicitly observed prefix. Future tokens and future "
-         "gaps are targets, never inputs. This matters because learned delays can reorder arrivals: processing a whole "
-         "sequence and attaching a next-token loss to an older delayed carrier can otherwise leak future information."),
-        ("p", "This first implementation replays each prefix independently. It processes sparse event packets but "
-         "does not yet retain a persistent online queue across queries. Small vector maps and query output scores "
-         "remain dense. Native hold/veto detectors and learned event cancellation still "
-         "need to join this shared core."),
-        ("small", "Implementation: sleeping_machines/shared_event.py, event_memory.py, event_query.py, evidence_memory.py, "
-         "phase_memory.py, objectives.py and readout_calibration.py. Theory §§176–184. E118/E119 remain compatible entry points.")])
-
-    rows = []
-    for task, label in (("language","Text8"),("market","Market events"),("recall","Associative recall"),
-                        ("temporal","Temporal composition"),("mnist","MNIST"),("dvs","Event-camera gestures"),("modular","Modular arithmetic")):
-        x = tasks[task]; end = x["final"]["dev"]
-        value = f"{end['correct']}/{end['n']} = {100*end['accuracy']:.1f}%" if "accuracy" in end else f"{end['nll']:.3f} nats/event"
-        if task == "language": value = f"{end['nll']/math.log(2):.3f} bpc; {100*end['accuracy']:.1f}% next-character"
-        if task == "recall": value = "100% at standard and 4× context"
-        if task == "modular":
-            rows.append(["Modular arithmetic (2 layers + phase)", "1,473 / 3,440",
-                         f"{phase_end['correct']:,}/{phase_end['n']:,} = {100*phase_end['accuracy']:.1f}% unseen"])
-        else:
-            rows.append([label,f"{len(x['fit_ids']):,} / {len(x['dev_ids']):,}",value])
-    rows.insert(0,["SHD speech (preserved)","1,024 / 256","151/256 = 59.0% final; 63.7% best epoch"])
-    pages.append([
-        ("h1", "3. What the shared model does today"),
-        ("p", "The first screens use an eight-layer, width-32 core and independent weights, for eight epochs. "
-         "The arithmetic follow-up uses two layers for 200 epochs and restores periodic memory. Speech begins "
-         "from the audited checkpoint; matched eight-layer continuations are in Appendix A. "
-         "These are development screens, not new full-scale comparisons against Transformers."),
-        ("table", (["Task", "Neural fit / dev", "Final development result"],rows,[42,32,100])),
-        ("h2", "What transfers"),
-        ("p", "The common core learns temporal composition, image recognition and event-camera prefix recognition. "
-         "Two-layer follow-ups retain 100% recall at both lengths and reach 96.1% temporal composition versus 97.3% "
-         "with eight layers, using four times fewer hidden carrier emissions. "
-         "Its speech checkpoint preserves all 256 checked predictions. Learned retrieval survives the synthesis "
-         "after repairing an unsupported count feature. Text prediction improves from 3.022 to 2.915 development "
-         "bits per character in the small run; the full E79 language mixture remains a stronger, separate result."),
-        ("h2", "What the screen reveals"),
-        ("p", "Market fitting improves while development likelihood worsens. The initial arithmetic screen omitted "
-         "the successful periodic primitive. The follow-up below restores that mechanism and protects its winning "
-         "computation when coupled to the neural branch. More generic depth alone does not supply every useful representation."),
-        ("small", "One seed per screen. Text memory: 32,768 characters fitted separately, then 2,048 neural queries; dev "
-         "is a 256-character slice of the text8 validation region. Market: bounded trade prefixes on disjoint days. "
-         "Recall: an additional 4,000 examples fit the pointer memory. MNIST: 2×2 pooled training-set images. Gestures: "
-         "only the first second, 88 fit / 44 held-out-user examples. SHD holds out training speakers 3 and 6. "
-         "No official real-data test set is used by E120. Exact protocols and IDs are saved in each result JSON.")])
+        ("h1","A mathematical foundation for trainable computation"),
+        ("table",(["Principle","What it enables"],[
+         ["Stable transport through depth","Bounded residual carriers preserve payload and credit under stated fixed-route conditions. Route changes and readout geometry are analyzed separately."],
+         ["Credit to unrealized alternatives","A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race."],
+         ["Periodic state as an isometry","Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples."],
+         ["Certified composition","Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it."],
+         ["Natural supervised credit","Categorical and event likelihoods both credit predicted sufficient statistics minus observations. Silence enters through integrated exposure."],
+         ["Useful optionality","Reserve consists of distinct, attainable future corrections under a causal work budget. Reachability and transferable learning matter alongside immediate loss."],
+        ],[57,117])),
+        ("h2","From mathematics to an engineering discipline"),
+        ("p","The theory connects representation, topology, clocks and optimization. Expressivity describes what "
+         "a network can compute; transport describes whether information and credit survive; the objective describes "
+         "what the teacher asks it to learn. These pieces must agree. The periodic certificate is one concrete case "
+         "where the formal model explains and verifies a learned computation."),
+        ("p","A common implementation makes these principles reusable across tasks. Efficient primitives can own "
+         "a computation when its structure is known; a deep carrier can learn representations when it is not. "
+         "The research objective is to combine this flexibility with affordable route discovery and increasingly "
+         "capable models."),
+        ("small","Formal derivations and their assumptions are indexed in the project's theory notes. Conditional "
+         "stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law.")])
 
     pages.append([
-        ("h1", "3a. Arithmetic retained with a shallow periodic model"),
-        ("p", f"The two-layer shared model with learned phase memory reaches <b>{phase_end['correct']:,}/{phase_end['n']:,} "
-         f"({100*phase_end['accuracy']:.1f}%)</b> across every unseen mod-17 triple. The plain two-layer control reaches "
-         f"{plain_end['correct']:,}/{plain_end['n']:,} ({100*plain_end['accuracy']:.1f}%). Both use the same 1,473 fitting tuples, "
-         "example order, 200 epochs, neural optimizer schedule and width. Their weights are trained separately."),
-        ("figure", ("e121_arithmetic",174)),
-        ("h2", "What changed, and why it works"),
-        ("p", "Each observed symbol rotates or reflects a learned phase. These operations compose without shrinking "
-         "the phase derivative. Class clocks race from the resulting phase; a local timing error teaches their "
-         "offsets. This carries the earlier rhythm mechanism into a reusable shared-model component. Its 69 phase "
-         "parameters start randomly; the labels teach it, with no formula for the answer in the update. A post-training "
-         "min-plus certificate proves the fitted rule for all 4,913 triples; exhaustive checking confirms zero errors."),
-        ("p", f"The first coupled run scored {100*tasks['phase_fixed']['final']['unseen_all']['accuracy']:.1f}% despite perfect phase "
-         "memory: the fixed neural correction overturned small-margin winners. The new bound is at most one quarter "
-         "of each clock lead, so even opposing corrections preserve the winning class. The neural branch still "
-         "trains score confidence; it cannot repair a wrong phase winner in this guarded mode. This restores "
-         "arithmetic in the combined implementation without attributing it to the generic carrier."),
-        ("small", f"One seed (6); supplied period 17; position-tagged operands in both arms; all 3,440 non-fitting tuples "
-         f"are development evidence. Final phase-only accuracy: {100*phase['final']['phase']['phase_accuracy']:.1f}%; "
-         f"certified queries: {phase['final']['phase']['certified_queries']:,}; neural winner changes: "
-         f"{phase['final']['phase']['neural_winner_changes']:,}. The phase arm adds a local teaching rule and a guarded "
-         "readout, so this comparison tests the complete intervention, not phase state alone. It is not a depth or "
-         "matched-energy superiority comparison. No lookup memorizer is used. Theory §181; results/e121.")])
+        ("h1","Potential: what the demonstrated capabilities put within reach"),
+        ("p","The opportunity is intelligence that learns reusable structure and spends computation in proportion "
+         "to useful activity. Strong predictive mixtures, reliable retrieval, efficient temporal composition and "
+         "certified periodic computation already provide working foundations. The shared implementation gives "
+         "those mechanisms a common place to develop."),
+        ("h2","Compact prediction and memory"),
+        ("p","Local predictive memories can support compression, stream forecasting and adaptation to recurring "
+         "patterns. Learned pointer rules can keep their meaning as context grows. These are useful ingredients "
+         "for models that retain experience without recomputing an entire dense history at each query."),
+        ("h2","A reusable event-to-decision module"),
+        ("p","Sound, event-camera vision, touch and telemetry all arrive as evolving evidence. A capable recognizer "
+         "could maintain context, identify meaningful patterns and answer as soon as confidence is sufficient. "
+         "Deep speech learning and temporal composition establish parts of this capability; reliable early "
+         "decisions and broader generalization are central development goals."),
+        ("h2","Training efficiency creates capability"),
+        ("p","Cheaper updates can buy more data, depth and experimentation from the same budget. Better sample "
+         "efficiency makes each experience more useful. The exact event-memory scan already reduces audited "
+         "forward/backward CPU time by 1.68×, preserving the checked predictions and gradients. Local timing "
+         "and routing teachers provide additional routes to efficient learning."),
+        ("h2","Industrial and scientific applications"),
+        ("p","Machines and instruments could maintain local predictive models, recognize changes and adapt from "
+         "new operating conditions. Laboratories could use event histories to select informative measurements "
+         "and control experiments. These applications connect fast local responses with longer-term memory, "
+         "close to the source of the observations.")])
 
     pages.append([
-        ("h1", "4. Learning curves expose the remaining gaps"),
-        ("figure", ("e120_shared_learning",174)),
-        ("p", "Temporal composition reaches 99.7% fitting accuracy and 97.3% development accuracy. MNIST reaches "
-         "91.9% and 75.8%, respectively. Useful features and credit reach the eight-layer core in both tasks. "
-         "The difference between fitting and development performance still matters."),
-        ("p", "The market curve separates optimization from generalization: fitting NLL falls to 1.546 nats/event, "
-         "but development NLL ends at 3.823. Its fixed evidence baseline scores 3.670. Removing the additive neural "
-         "head after training improves development NLL to 3.549 while retaining the deep-feature evidence gate. "
-         "On text, that same frozen deletion improves NLL from 2.020 to 1.942."),
-        ("p", "These deletions are diagnostic interventions, not retrained controls. They motivate a matched test "
-         "of how much freedom the evidence gate and additive head should have. The arithmetic screen instead "
-         "pointed toward missing structure: 11.9% fit and 2.3% unseen-tuple accuracy after eight epochs. "
-         "E121 now tests that diagnosis with matched shallow runs, described on the preceding page."),
-        ("small", "Evaluation losses use the same task objective throughout each curve. A reduction in training loss "
-         "alone is not evidence of better prediction on new data. These small runs do not estimate scaling laws.")])
+        ("h1","Potential: a new foundation for frontier models"),
+        ("p","If the architecture combines frontier predictive quality, reliable deep learning and lower total "
+         "training and inference cost, it would change the practical recipe for building frontier models. "
+         "Useful capacity, active computation and learning cost could become more independently controllable."),
+        ("h2","The economics of creating intelligence"),
+        ("p","A fixed power and capital budget could produce a more capable model, more specialized models or "
+         "more research. Teams constrained by compute could enter new scales and applications. Efficient learning "
+         "would expand what is feasible, including the size and sophistication of frontier training runs."),
+        ("h2","Capacity that can remain dormant"),
+        ("p","Large stores of memories and skills could stay available while only relevant portions participate "
+         "in a decision. Straightforward situations could resolve with little work; difficult ones could recruit "
+         "more computation. Cheap search, communication and selective credit would make this a different "
+         "scaling regime from repeatedly activating an entire dense model."),
+        ("h2","Autonomy in mobile platforms"),
+        ("p","Robots, vehicles, phones, wearables and remote instruments could sustain perception, memory and "
+         "adaptation within a mobile power budget. Local intelligence could retain context continuously, react "
+         "quickly and learn from experience while reducing dependence on continuous connectivity."),
+        ("h2","Hardware and infrastructure"),
+        ("p","If sparse communication and persistent local state determine cost, processors and data centers "
+         "would increasingly optimize those operations: message delivery, delay queues, memory access, candidate "
+         "lookup and selective updates. Investment would follow measured useful learning per watt and per unit "
+         "of capital. The architecture could change which accelerators are most valuable and where capable "
+         "models can operate."),
+        ("small","These larger outcomes depend on demonstrating quality, scaling, retention and total resource "
+         "cost together. The existing results provide concrete footholds for that research program.")])
 
     pages.append([
-        ("h1", "5. A concrete failure found and repaired"),
-        ("p", "A perfect retrieval component initially became unreliable when placed inside the shared model. "
-         "At four times the context length, accuracy collapsed from 100% for the pointer alone to 9.0% for the "
-         "combined model. The failure was in how the new readout handled a feature it had never learned to use."),
-        ("figure", ("e120_count_repair",174)),
-        ("h2", "The cause, in plain terms"),
-        ("p", "Every training example had the same length, so the count feature never varied. The standardizer "
-         "divided by a tiny variance floor anyway. A longer input then became a 1,299-unit normalized feature, "
-         "which produced random, untrained score contributions as large as 79. Those scores overwhelmed the "
-         "correct answer from memory."),
-        ("h2", "The decisive check"),
-        ("p", "With every learned weight frozen, removing only that unsupported count contribution restores "
-         "256/256 correct longer-context answers. Standard-context accuracy remains 100%. A fresh training run "
-         "with the corrected calibration also reaches 100% on both lengths. The failed run is retained."),
-        ("h2", "What we learned about synthesis"),
-        ("p", "Combining successful components requires preserving the conditions under which each generalizes. "
-         "A new branch can override a correct answer through an unidentified parameter direction. The new rule "
-         "uses fitting data only: static count metadata that never varies cannot acquire an arbitrary extrapolation "
-         "effect. Variable-count calibration remains unchanged."),
-        ("small", "E120 frozen readout audit; theory §179. This repair preserves the demonstrated retrieval rule. "
-         "It does not show that the deep core independently learned that rule.")])
+        ("h1","What establishes the larger advantage"),
+        ("p","The ambition is a common model family whose strongest mechanisms remain useful as tasks, data and "
+         "capacity grow. Arithmetic and retrieval now retain their demonstrated strengths in the consolidated "
+         "implementation. Real language mixtures and native composition provide additional reference capabilities."),
+        ("table",(["Objective","Decisive evidence"],[
+         ["Preserve capabilities","Repeat established generalization and sample-efficiency results within the common model family, with task-appropriate depth and explicit resource accounting."],
+         ["Strong real-event recognition","Accurate speech and event-camera decisions on complete held-out benchmarks; calibrated confidence and time-to-answer."],
+         ["Learn routes and representations at scale","Reliable deep credit and useful counterfactual alternatives as width, depth, memory and data increase."],
+         ["Efficient persistent operation","Maintain local state and pending messages across queries, preserving causal predictions while reducing repeated work."],
+         ["Lower total energy at useful quality","Measure training and inference joules, memory traffic, latency and communication under declared hardware and quality targets."],
+        ],[57,117])),
+        ("p","Success on these dimensions would turn the current task-level advantages into a broader foundation "
+         "for frontier models. The project's distinctive resources—timing, local memory, hard selection and credit "
+         "to alternatives—remain the guide for architecture and learning.")])
 
     pages.append([
-        ("h1", "6. The theory is becoming an engineering guide"),
-        ("table", (["Question", "Current understanding", "Design consequence"],[
-         ["Can information survive depth?", "Conditional bounds control the whole event sequence and its payload credit when routing is fixed.",
-          "Use bounded residual carriers; check route changes and readout conditioning separately. §§166–170."],
-         ["How do losing routes learn?", "Detached alternative payloads and delays can provide score credit without being emitted.",
-          "Keep hard forward computation; account for the extra alternatives evaluated in training. §169."],
-         ["How is silence supervised?", "Event likelihood includes the integrated hazard over the observed waiting time.",
-          "Credit predicted event counts minus observed counts; no label at every time tick. §178."],
-         ["What is optionality?", "Useful reserve consists of distinct, attainable future corrections under a causal work budget.",
-          "Measure reachability and transfer; entropy or noisy same-sample improvement is insufficient. §§159–163, 171–172."],
-         ["Why did recall break?", "Constant training metadata leaves a readout direction unidentifiable.",
-          "Project unsupported static count dependence; retain a longer-context contract. §179."],
-         ["Why does arithmetic need more?", "For three uniform modular operands, any two are statistically independent of the label.",
-          "Compose learned phase state with unit-magnitude occurrence derivatives; protect its clock margin. §§180–181."],
-        ],[34,72,68])),
-        ("h2", "What is proved, and what experiments must establish"),
-        ("p", "The formal work supplies expressivity results, local credit identities, conditional stability bounds, "
-         "and counterexamples that expose implementation errors. Attention-like retrieval is expressible through "
-         "the event formalism under its stated assumptions. This provides a design space; it does not prove that "
-         "an optimizer will discover every useful computation efficiently."),
-        ("p", "The next proofs and measurements should meet: identify a missing representation or credit direction, "
-         "derive an intervention, then test its predicted effect. The exact scan audit and count-feature repair "
-         "are examples of that process. The full derivations remain in experiments/THEORY.md and its thematic notes.")])
+        ("h1","Appendix A. Deep event recognition"),
+        ("p",f"The eight-layer speech model is learning the SHD utterance-classification task. At the matched "
+         f"readout comparison below, count pooling reaches <b>{100*pooled(pool_mean):.1f}%</b> and learned event "
+         f"pooling reaches <b>{100*pooled(pool_weighted):.1f}%</b> across 512 held-out utterances. Each model has "
+         "4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors "
+         "and delays; the learned pool adds 32 scalar parameters."),
+        ("figure",("e122_speech",174)),
+        ("p","The learned pool scores each observed winning payload, accumulates a weighted numerator and mass, "
+         "and reads their ratio at the query. It has linear work in the number of active packets and a local "
+         "supervised score gradient. Zero initialization exactly recovers count pooling. This tests whether "
+         "informative parts of an utterance should contribute more strongly to the decision."),
+        ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
+         "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
+         "at the audited checkpoint, excluding optimizer updates."),
+        ("small","Speech scores are development evidence from training speakers 3/6; the official SHD test set "
+         "is untouched. They are not directly comparable to published official-test scores. One seed, width 32, "
+         "eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. "
+         "Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.")])
+
+    coverage=[]
+    for task,label in (("language","Text8"),("market","Market event prediction"),("temporal","Temporal composition"),
+                       ("mnist","MNIST"),("dvs","Event-camera gestures")):
+        x=tasks[task];metric=x["final"]["dev"]
+        score=f"{100*metric['accuracy']:.1f}%" if "accuracy" in metric else f"{metric['nll']:.3f} nats/event"
+        if task=="language":score=f"{metric['nll']/math.log(2):.3f} bits/character"
+        coverage.append([label,score,f"{len(x['fit_ids']):,} / {len(x['dev_ids']):,}"])
+    pages.append([
+        ("h1","Appendix B. Breadth of the common implementation"),
+        ("p","The common event backbone has independently trained development screens across language, event "
+         "prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. "
+         "These bounded screens establish implementation breadth; the stronger native comparison results use their "
+         "own complete protocols."),
+        ("table",(["Task","Development result","Fit / development"],coverage,[61,57,56])),
+        ("p","These screens use eight layers for eight epochs. Two-layer follow-ups retain 100% recall at both "
+         "context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times "
+         "fewer hidden carrier emissions. The model's depth is chosen to suit the computation."),
+        ("small","Independent task weights, seed 6. Text: 32,768 separately fitted evidence characters and 2,048 "
+         "neural queries. Market: bounded prefixes on disjoint days. MNIST: pooled training-set images. Gestures: "
+         "first-second prefixes and disjoint users. Real-data official test sets are not used in these screens. "
+         "The market screen remains behind its fixed evidence baseline (3.670 nats/event).")])
 
     pages.append([
-        ("h1", "7. Potential: the capabilities now coming into reach"),
-        ("p", "The ambition is a model whose useful capacity can grow without waking all of that capacity for every "
-         "observation. The results already show several parts of that possibility: strong predictive mixtures, "
-         "reliable selective retrieval, efficient temporal composition, and a trainable deep event core."),
-        ("h2", "Components that can become useful first"),
-        ("p", "Predictive memories can support compact stream models and compression. Learned retrieval can provide "
-         "an addressable store whose rules work beyond training context lengths. Temporal composition can recognize "
-         "sparse patterns in sensor and industrial streams. The shared implementation creates a practical way to "
-         "improve these mechanisms together while fitting a separate model for each application."),
-        ("h2", "A reusable event-to-decision module"),
-        ("p", "A strong asynchronous recognizer would accumulate evidence from sound, event cameras, touch or "
-         "telemetry and answer when confidence is sufficient. Such a module could become a common building block "
-         "for mobile perception and monitoring. The new speech and gesture results establish learning in small "
-         "deep models; the next capability is reliable, calibrated early decisions on complete benchmarks."),
-        ("h2", "Training efficiency creates capability, too"),
-        ("p", "Less work per update can buy more data, more depth and more useful experiments from the same budget. "
-         "The exact scan improvement already reduces audited forward/backward CPU time by 1.68× for the speech "
-         "core. The larger prospect combines cheap updates with better sample efficiency: each joule and each "
-         "experience would produce more learning. Training, inference, search and memory maintenance all belong "
-         "in that accounting."),
-        ("h2", "The immediate research payoff"),
-        ("p", "The project now has a common place to test whether a mechanism improves multiple kinds of "
-         "computation. A correction to causal querying, memory, depth or credit can be exercised across domains "
-         "without rebuilding each model from scratch. The value of unification is both scientific and practical: "
-         "it exposes which advantages are general and which need an additional primitive.")])
-
-    pages.append([
-        ("h1", "8. If the full architecture succeeds"),
-        ("p", "If the architecture combines frontier predictive quality, reliable deep learning and lower total "
-         "training and inference cost, it would provide a new foundation for frontier models. The potential "
-         "transformation is in how intelligence uses computation, memory and experience."),
-        ("h2", "Frontier models and the economics of training"),
-        ("p", "A fixed power budget could train a more capable model, explore more architectures or sustain more "
-         "specialized models. Large training facilities could produce more capability per unit of electricity "
-         "and capital. Smaller teams could enter areas previously constrained by compute budgets. If sparse "
-         "communication and persistent state determine cost, hardware and infrastructure design would increasingly "
-         "optimize those operations. The best use of GPUs, other accelerators and new event hardware would follow "
-         "the measured workload."),
-        ("h2", "Autonomy within a mobile power budget"),
-        ("p", "Robots, vehicles, phones, wearables and remote instruments could maintain context continuously, "
-         "react quickly to important changes and learn locally from experience. Large memories could remain "
-         "available while only the relevant portions participate in a decision. The resulting capability is "
-         "sustained perception, memory and adaptation where battery life, heat and connectivity constrain today's systems."),
-        ("h2", "Industry and science"),
-        ("p", "Factories and infrastructure could host many local predictive models that detect changes, diagnose "
-         "faults and update from new operating conditions. Instruments could choose informative measurements, "
-         "track rare events and control experiments with short feedback loops. Rich temporal models could work "
-         "close to the source of data, making intelligence a routine part of equipment and processes."),
-        ("h2", "A different scaling regime"),
-        ("p", "The most consequential outcome would separate total useful capacity from the work needed for each "
-         "decision. A growing repertoire of memories and skills could stay mostly dormant, with difficult "
-         "situations recruiting more computation and straightforward ones resolving quickly. Establishing that "
-         "regime requires jointly strong quality, affordable search, stable learning and measured resource savings. "
-         "The existing accomplishments make this a concrete research program with several working foundations.")])
-
-    pages.append([
-        ("h1", "9. The next decisive work"),
-        ("table", (["Priority", "Experiment or implementation", "What would count as progress"],[
-         ["Preserve specialist strengths", "Extend the restored phase primitive to hidden routes; integrate native hold/veto composition; retain retrieval contracts.",
-          "Retain arithmetic gains across seeds and other periods; preserve composition with the same architecture."],
-         ["Improve evidence coupling", "Train matched evidence-gate and additive-head controls for language and market; use separate selection and evaluation data.",
-          "A gain on unseen data over the fixed evidence bank, not merely a lower fitting loss."],
-         ["Advance real event recognition", "Scale SHD and gesture training with fixed speaker/user splits; calibrate confidence and time-to-answer.",
-          "Repeatable accuracy/latency gains; one final evaluation on the official test split after selection."],
-         ["Make prefixes incremental", "Maintain pending messages and local state across queries; enforce query closure without future leakage.",
-          "Equivalent predictions with less repeated prefix work, including scheduler and memory costs."],
-         ["Establish scaling and energy", "Use AWS for larger matched runs; profile both training and inference on declared hardware.",
-          "Quality versus total joules, memory, latency, data and capacity, including candidate search and credit."],
-        ],[35,76,63])),
-        ("h2", "How experiments are kept safe and independent"),
-        ("p", "Local runs use one guarded job at a time, a memory watchdog, a timeout and at least 8 GiB host "
-         "memory reserve. The E120 runs peaked below 0.5 GiB process RSS. The AWS sibling retains ownership of "
-         "its existing larger benchmark queues; the shared-model handoff uses separate tags and outputs."),
-        ("h2", "What a strong final demonstration would contain"),
-        ("p", "One architecture, trained independently on each task, should preserve the specialist wins and "
-         "improve real-stream prediction and recognition. It should show how quality changes with depth, data "
-         "and capacity, and how total resource cost changes with them. That would connect the current task-level "
-         "advantages to the larger frontier-model claim.")])
-
-    pages.append([
-        ("h1", "Appendix A. Deep speech recognition and execution"),
-        ("p", "The eight-layer speech model reaches 151/256 (59.0%) at the final epoch and 163/256 (63.7%) at "
-         "the best development checkpoint after fitting 1,024 utterances for eight epochs. Fit accuracy is 80.8%. "
-         "The official SHD test set was not used. An earlier controlled-width comparison reached 40.6% with "
-         "eight layers versus 25.4% with one layer; the deeper model had more parameters and used more work."),
-        ("figure", ("e119_work_and_learning",174)),
-        ("p", "The linear-work memory scan preserves the audited predictions and gradients. At the earlier frozen "
-         "checkpoint, scan combines fall 5.49×; median one-thread CPU inference improves 1.52× and forward/backward "
-         "computation 1.68×, excluding optimizer updates. Sorting and small dense vector maps remain."),
-        ("small", "E119: one seed, training speakers 3/6 reserved for development. Best and final checkpoints are "
-         "different endpoints. The 20 ms coalescing point saves 35.5% of input packets and loses 3.52 accuracy "
-         "points on the frozen final model. Timing and counted work are not measured joules. E120 confirms exact "
-         "logit/gradient/winner equivalence on an audited batch and preserves 151/256 after extraction.")])
-
-    pages.append([
-        ("h1", "Appendix B. Evidence and reproduction"),
-        ("table", (["Report claim", "Primary repository evidence"],[
-         ["Language comparisons", "results/e79/race_mixer_D… JSON; results/e64 LSTM and Transformer test JSON. Completed AWS controls remain under results/aws_20260929."],
-         ["Retrieval and context transfer", "results/e61/event_K32_n8.json and tf_K32_n8*.json; E120 recall and frozen count audit."],
-         ["Native depth / composition / arithmetic", "results/e53, e54, e34 and e41; Transformer controls in e36 and AWS results."],
-         ["Market world model", "results/e48, e52 and e57. These full-day protocols are separate from E120's bounded development prefixes."],
-         ["Shared model screens", "results/e120/*.json: configuration, split identities, curves, component deletions, work and memory counts, hardware and source hashes."],
-         ["Speech / exact scan", "results/e118 and e119; e120/shared_contracts_20260929.json."],
-        ],[56,118])),
-        ("h2", "Metric definitions"),
-        ("bullets", ["<b>Bits per character (bpc):</b> average negative log probability in base two. Lower means better next-character prediction.",
-         "<b>Negative log-likelihood (NLL):</b> prediction loss. For event streams it scores both the next event type and waiting time, including the absence of events before arrival.",
-         "<b>Counted work:</b> a declared count of event operations, candidates, scans or multiply-adds. Different operations can have different hardware costs.",
-         "<b>Energy:</b> total measured joules over a stated boundary. It is not interchangeable with a work count or CPU time; E120 has no joule measurements."]),
-        ("h2", "Where the detail lives"),
-        ("p", "experiments/SHARED_MODEL.md describes the common model, benchmark coverage, safe commands and AWS "
-         "handoff. experiments/THEORY.md indexes the derivations; experiments/FINDINGS.md retains the chronological "
-         "research record. report/archive/20260929_before_shared_model.md preserves the previous long narrative."),
-        ("p", "Run report/make_pdf.py through the guarded queue to rebuild this PDF and REPORT.md from the same "
-         "editorial source and completed result files. Run ./commit_done.sh from the host checkout to stage the "
-         "completed source, JSON evidence, figures and report; checkpoints and logs stay excluded."),
-        ("small", "Scope: one common backbone and optional evidence/retrieval modules, independently trained per task. "
-         "The synthesis is partial: it does not yet incorporate every historical primitive or rerun every historical "
-         "configuration. Official full-scale cross-domain comparisons and continual-learning evaluations remain outstanding.")])
+        ("h1","Appendix C. Evidence and metric definitions"),
+        ("table",(["Metric","Interpretation"],[
+         ["Bits per character","Held-out negative log probability in base two; lower is better next-character prediction."],
+         ["Accuracy","Fraction of correct class decisions on the declared development or test protocol."],
+         ["Event likelihood","Scores both the next event type and waiting time, including the observed silence."],
+         ["Logical operations","The consolidated ledger assigns 2 units per MAC and 1 per other scalar arithmetic/nonlinear operation or estimated sort comparison."],
+         ["Resource boundary","Logical memory reads are reported separately. Transfers, allocations, kernel launch and instrumentation are outside the arithmetic ledger. Division, exponential and remainder costs have unit weights."],
+         ["Energy","Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements."],
+        ],[45,129])),
+        ("p","The evidence is preserved in versioned result summaries with configurations, split identities, "
+         "learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; "
+         "E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 "
+         "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
+         "the operation ledger. E118/E119/E122/E125 support deep speech and its readout comparisons."),
+        ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
+         "analyses and the full experimental record. The model documentation describes reproducible configurations "
+         "and operational procedures. This report presents the project, its evidence and its potential.")])
     return pages
 
 
