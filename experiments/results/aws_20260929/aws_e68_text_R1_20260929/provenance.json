@@ -1,0 +1,26 @@
+{
+  "run_tag": "aws_e68_text_R1_20260929",
+  "script": "experiments/e68_race_transformer.py",
+  "arguments": [
+    "--task",
+    "text",
+    "--R",
+    "1",
+    "--steps",
+    "3000"
+  ],
+  "output_redirected": true,
+  "source_sha256": "ede167cf3f977170839cbdff159a0172f2d7e6a0f61e0f78c5130c4b192dc456",
+  "git_commit": "cbbe7d33ba349c94d5edeb348f579a16dad35961",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-09-29T14:49:03Z",
+  "status": "failed",
+  "error": "Traceback (most recent call last):\n  File \"/workspace/experiments/aws_benchmark.py\", line 71, in main\n    check_metrics(json.loads(result.read_text()), result.name)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/aws_benchmark.py\", line 65, in check_metrics\n    check_metrics(item, path + '/' + key)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/aws_benchmark.py\", line 68, in check_metrics\n    check_metrics(item, path + '/' + str(i))\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/aws_benchmark.py\", line 64, in check_metrics\n    raise ValueError(f'Non-finite benchmark metric: {path}/{key}')\nValueError: Non-finite benchmark metric: text_R1_s0.json/curve/4/test_bpc\n",
+  "wall_s": 156.552,
+  "peak_rss_kb": 1282380
+}
