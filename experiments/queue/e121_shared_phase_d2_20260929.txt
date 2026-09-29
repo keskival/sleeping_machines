@@ -1,0 +1,1 @@
+e121_shared_phase_d2_20260929 experiments/e121_shared_arithmetic.py --tag shared_d2_phase_s6_200 --phase 1 --depth 2 --epochs 200

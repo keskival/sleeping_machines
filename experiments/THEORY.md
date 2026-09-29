@@ -69,6 +69,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Optionality as reachable correction geometry](theory/15_optional_control_geometry.md) — §§171–172: local correction ellipsoids, directional reserve, Gramian propagation and shared-control cancellation.
 - [Event work and temporal credit](theory/16_event_work_and_temporal_credit.md) — §§173–175: linear-work memory and its adjoint; exact local timing eligibility; causal coalescing and its representation error.
 - [Shared event models and causal queries](theory/17_shared_event_model.md) — §§176–180: separate task weights, natural-score credit, causal prefix closure, unsupported metadata and periodic representations.
+- [Periodic memory and nuisance invariance](theory/18_periodic_memory_and_invariance.md) — §§181–183: affine circle state, exact occurrence credit, certificates for clock winners and modular composition, and the objective changed by speech augmentation.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

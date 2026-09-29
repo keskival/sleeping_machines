@@ -1,0 +1,1 @@
+e120_temporal_d2_20260929 experiments/e120_shared_bench.py --task temporal --tag temporal_d2_20260929 --fit 1024 --dev 256 --depth 2 --epochs 8

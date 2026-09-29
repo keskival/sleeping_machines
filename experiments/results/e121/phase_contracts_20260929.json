@@ -1,0 +1,20 @@
+{
+  "phase_transport": {
+    "serial_scan_phase_max_error": 3.552713678800501e-15,
+    "phase_derivatives": [
+      0.9999999992515995,
+      -0.9999999992515995,
+      1.0000000010279564
+    ]
+  },
+  "batch_chart_repeated_credit": "passed",
+  "status": "completed",
+  "margin_certificate": "passed",
+  "checkpoint_roundtrip": "exact",
+  "phase_parameters": 69,
+  "source_sha256": {
+    "/workspace/experiments/e121_phase_contracts.py": "cbd49c4a31c4efc1da417ed4e516f4149a91d379f79b10b79faa1e0329405525",
+    "sleeping_machines/phase_memory.py": "e16161aa13f63b34ee13edf5d8bf9d0bb47cf6183c0bf18ee796927350cd4c7f",
+    "sleeping_machines/shared_event.py": "2f6a62be83ef5e417bf13aa56bdb6a4de53b83a9c74e668c2bf0b68bb74bbb62"
+  }
+}

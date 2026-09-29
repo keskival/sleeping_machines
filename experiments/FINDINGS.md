@@ -1,5 +1,51 @@
 # Findings log
 
+## E121: arithmetic capability restored in the shallow shared model (29 September 2026)
+
+The two-layer shared model now retains the missing periodic computation.
+All runs use the same 1,473 mod-17 triples (30%), seed 6, width 32, example
+order and 200-epoch neural optimizer schedule. Every one of the **3,440 unseen
+triples** is evaluated; the old 256-example slice remains separately recorded.
+
+| Configuration | Fit correct / 1,473 | Unseen correct / 3,440 | Training/evaluation wall time |
+|---|---:|---:|---:|
+| Plain two-layer core | 354 | 70 (2.0%) | 63.7 s |
+| Phase memory + fixed bounded correction | 1,471 | 3,391 (98.6%) | 75.7 s |
+| Phase memory + margin guard | 1,473 | 3,440 (100%) | 77.3 s |
+
+The local phase state has 69 learned scalar parameters, initialized randomly.
+It receives position-tagged operand symbols and a supplied period of 17. Its
+rotation/reflection algebra realizes the earlier E41 chain; no arithmetic
+answer is encoded in its inputs or update. A hard class-clock race answers.
+The phase-only module is 100% correct on every unseen triple in both coupled
+runs. Both phase runs make exactly 29,003 local mistaken-example updates.
+The shared neural core has 14,060 Adam parameters and executes two layers.
+
+**An identified integration error:** the fixed correction changes 49 correct
+phase answers at small margins, while preserving all 3,224 queries covered by
+the original margin certificate. An adaptive bound `min(0.25, clock_lead/4)`
+protects every clock winner without consulting its label. The separately
+trained guarded run has 3,440 certified queries and zero winner changes. The
+neural branch can train confidence but cannot correct a wrong phase class in
+this mode. This establishes retained shared-model arithmetic, not independent
+arithmetic discovery by the generic carrier. The interventions also change
+the teaching rule and readout; this is not a phase-state-only ablation.
+
+The theory is in §§181–182. Serial/reduced state agreement, signed occurrence
+derivatives, repeated-symbol credit, the margin bound and serialization are
+checked in the guarded contracts. The old fixed-bound result is retained.
+The earlier isolated phase probe reaches perfect accuracy on the 256-example
+slice after 50 epochs in 5.8 seconds total; it omits the generic carrier.
+Peak process RSS for these shared runs is about 329 MiB. No joules were measured.
+
+This answers the representation question in the tested setting. It does not
+establish a scaling law, a global convergence theorem or a multi-seed benchmark
+lead. E41's older 99.4–99.9% figures use different seeds and a memorizer/sleep
+branch. The E120 eight-layer/eight-epoch failure remains an initial screen,
+not an equal-budget depth comparison. Task-specific depth is deliberate:
+shallow synthetic configurations and deep speech share implementation and
+primitives, with separate fitted weights.
+
 ## E120: one shared core, separate task fits (29 September 2026)
 
 The shared package now contains the E119 deep event memory/carrier, conditional
