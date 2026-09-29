@@ -72,7 +72,7 @@ class TVLayer(nn.Module):
                 return_routes=False,
                 return_route_graph=False, return_voltage_samples=False,
                 spike_override=None, return_spike_diagnostics=False,
-                route_overrides=None, spike_overrides=None):
+                route_overrides=None, spike_overrides=None, route_ev=None):
         M, n = self.M, self.n
         th = self.theta
         if self.theta_offsets is not None:
@@ -82,7 +82,10 @@ class TVLayer(nn.Module):
             pe, pj = self.mask[ei].nonzero(as_tuple=True)
         else:
             pe = torch.arange(E).repeat_interleave(M); pj = torch.arange(M).repeat(E)
-        r = (self.q[pj] * ev[pe]).sum(-1) + self.c[ei[pe], pj]                  # content score of each message
+        route_ev = ev if route_ev is None else route_ev
+        if route_ev.shape != ev.shape:
+            raise ValueError("route_ev and ev must have the same shape")
+        r = (self.q[pj] * route_ev[pe]).sum(-1) + self.c[ei[pe], pj]           # address score; ev remains payload
         route_info = None
         if return_routes:
             route_info = {"event_index": pe.detach(), "receiver": pj.detach(),
