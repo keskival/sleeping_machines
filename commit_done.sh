@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E122 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E125 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -265,6 +265,31 @@ if ((${#SKIPPED_FILES[@]})); then
 fi
 if ((${#STAGE_FILES[@]} == 0)); then
   echo "No allowlisted paths exist in this checkout."
+  exit 0
+fi
+
+# Result files are replaced atomically during training. Do not snapshot an
+# in-progress curve when the host user commits while an experiment is running.
+COMPLETED_FILES=()
+for file in "${STAGE_FILES[@]}"; do
+  if [[ "$file" == experiments/results/*.json && -f "$file" ]]; then
+    if python3 - "$file" <<'PY'
+import json
+import sys
+from pathlib import Path
+record = json.loads(Path(sys.argv[1]).read_text())
+sys.exit(0 if isinstance(record, dict) and record.get("status") in ("running", "pending") else 1)
+PY
+    then
+      echo "Skipping in-progress result: $file" >&2
+      continue
+    fi
+  fi
+  COMPLETED_FILES+=("$file")
+done
+STAGE_FILES=("${COMPLETED_FILES[@]}")
+if ((${#STAGE_FILES[@]} == 0)); then
+  echo "No completed allowlisted changes to commit."
   exit 0
 fi
 
