@@ -5,6 +5,43 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 1,024-example spike-pair audit: event propagation is not pair synergy (§146).**
+The frozen held-out-speaker audit tested every binary outcome for one selected
+near-boundary pair per batch. L2 yielded 141 control and 69 late-only pairs;
+L3 yielded 31 and 11. Among natural-off pairs, opening both raised downstream
+spike counts in 38/64 and 19/34 L2 cases, and 6/10 and 3/5 L3 cases. The same
+double opening lowered deepest-only loss in 8/64 and 4/34 L2 cases, and 5/10
+and 4/5 L3 cases. At L3 the candidate pool is tiny: the late-only median
+double-open loss change was −0.032, but a single +1.40 harmful outlier made
+the mean harmful. These are checkpoint-conditioned interventions, not an
+accuracy gain.
+
+The four-corner difference-in-differences $\Gamma=L_{11}-L_{10}-L_{01}+L_{00}$
+isolates credit specific to the pair. Across 113 natural-off pairs, no
+double-open intervention improved deepest-only loss when both singleton
+openings were individually non-helpful. With $|\Gamma|>0.01$ as a descriptive
+threshold, only 2/42 L3 pairs and 0/210 L2 pairs crossed it; median $|\Gamma|$
+was zero. L2 event openings frequently created deeper activity without
+changing class loss, so spike counts alone do not measure useful propagation.
+This spike-event audit selects any two distinct units within 50 ms; it does
+not enforce a shared downstream receiver and therefore does not test the
+topology-conditioned same-receiver route-pair mechanism.
+
+**Theory update.** §146 derives the exact mixed derivative of the independent
+logistic event relaxation: $\partial^2\tilde L/(\partial m_i\partial m_j)=
+p_i(1-p_i)p_j(1-p_j)\Gamma/\tau^2$. Pair replay work is warranted where a
+shared receiver and overlapping arrivals make an interaction plausible; the
+four-corner estimate determines whether such pair-specific credit exists.
+The next mechanism test should compare topology-matched shared-receiver pairs
+against time-matched nonshared controls and log message acceptance, event
+time/payload changes, deepest loss, and replay work. No trainable pair update
+or SHD accuracy improvement is established.
+
+The four jobs ran serially through `experiments/queue/run_safe.sh` with 3.6 GB
+virtual-memory cap, 2.6 GB process-group RSS cap, and 8 GB minimum available
+host memory. Peak observed RSS was about 334 MB; `MemAvailable` remained above
+11.1 GB. No guard tripped.
+
 **E83 layer-balanced route pairs: deep support without class learning (§143).**
 This matched D4 seed-6 follow-up changed only pair selection relative to the
 global-pair arm: same initialization, 120 examples, four epochs/120 updates,

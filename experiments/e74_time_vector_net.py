@@ -62,7 +62,7 @@ class TVLayer(nn.Module):
                 return_routes=False,
                 return_route_graph=False, return_voltage_samples=False,
                 spike_override=None, return_spike_diagnostics=False,
-                route_overrides=None):
+                route_overrides=None, spike_overrides=None):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -133,10 +133,17 @@ class TVLayer(nn.Module):
         R = torch.zeros(B, M); Vp = torch.zeros(B, M); eR = math.exp(-1 / TAU_R)
         if self.spiking:
             F = torch.zeros(G, B, M, dtype=torch.bool); FR = torch.zeros(G, B, M); RP = torch.zeros(G, B, M)
+        if spike_override is not None and spike_overrides:
+            raise ValueError("spike_override and spike_overrides are mutually exclusive")
         if spike_override is not None:
-            spike_k, spike_b, spike_j, spike_active = spike_override
-            spike_k, spike_b, spike_j = int(spike_k), int(spike_b), int(spike_j)
-            spike_active = bool(spike_active)
+            spike_specs = [spike_override]
+        else:
+            spike_specs = list(spike_overrides or [])
+        spike_specs = [(int(k), int(b), int(j), bool(active))
+                       for k, b, j, active in spike_specs]
+        if len({(k, b, j) for k, b, j, _ in spike_specs}) != len(spike_specs):
+            raise ValueError("duplicate spike override coordinate")
+        active_spike_specs = [spec for spec in spike_specs if spec[3]]
         if return_spike_diagnostics:
             spike_margin_trace = []
             refractory_trace = torch.zeros(G, B, M)
@@ -168,11 +175,12 @@ class TVLayer(nn.Module):
                         peak_threshold_margin, (Vd - th).detach().amax())
                 fire = Vd >= th
                 frac = ((th - Vp) / (Vd - Vp).clamp(min=1e-6)).clamp(0, 1)
-                if spike_override is not None and k == spike_k:
-                    fire[spike_b, spike_j] = spike_active
-                    if spike_active:
-                        # A counterfactual spike is inserted at this grid edge.
-                        frac[spike_b, spike_j] = 1.0
+                for spike_k, spike_b, spike_j, spike_active in spike_specs:
+                    if k == spike_k:
+                        fire[spike_b, spike_j] = spike_active
+                        if spike_active:
+                            # A counterfactual spike is inserted at this grid edge.
+                            frac[spike_b, spike_j] = 1.0
                 F[k] = fire; FR[k] = frac; RP[k] = R * torch.exp((1 - frac) / TAU_R) * fire
                 jump = fire * torch.exp(-(1 - frac) / TAU_R)
                 R.add_(jump); Vp = Vd - th * jump
@@ -201,8 +209,10 @@ class TVLayer(nn.Module):
         Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=self.vdot_min)
         s = frac - ((V0 - th) / Vdot).clamp(-1.0, 1.0)                         # refined time since grid point k-1
         forced_event = None
-        if spike_override is not None and spike_active:
-            forced_event = (kk == spike_k) & (bb == spike_b) & (jj == spike_j)
+        if active_spike_specs:
+            forced_event = torch.zeros_like(kk, dtype=torch.bool)
+            for spike_k, spike_b, spike_j, _ in active_spike_specs:
+                forced_event |= ((kk == spike_k) & (bb == spike_b) & (jj == spike_j))
             s = torch.where(forced_event, torch.ones_like(s), s)
         if self.causal:                                                        # never earlier than the detecting step
             s = s.clamp(1e-3, 1.0)

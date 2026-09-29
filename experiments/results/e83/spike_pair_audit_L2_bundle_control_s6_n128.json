@@ -1,0 +1,2218 @@
+{
+  "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+  "checkpoint_args": {
+    "bands": 140,
+    "merge": 0.002,
+    "d": 8,
+    "n": 4,
+    "M1": 16,
+    "M": 16,
+    "depth": 4,
+    "window": 30,
+    "fan2": 0.25,
+    "readout_fan": 0.5,
+    "aux_weight": 0.2,
+    "objective": "event_prefix",
+    "readout_fusion": "all_depths",
+    "input_count_payload": "off",
+    "early_event_skip": false,
+    "run_tag": "bundle_control",
+    "prefix_samples": 2,
+    "prefix_horizon_ms": 1000.0,
+    "prefix_window_start": 0.0,
+    "cf_shadows_per_layer": 1,
+    "cf_band": 0.5,
+    "cf_sigma": 0.25,
+    "cf_weight": 1.0,
+    "cf_lr": 0.001,
+    "cf_grad_clip": 1.0,
+    "cf_delta_clip": 5.0,
+    "cf_pairs_per_batch": 0,
+    "cf_pair_window_ms": 25.0,
+    "race_threshold": 0.6,
+    "race_temperature": 0.03,
+    "race_logit_temperature": 2.0,
+    "race_rate": 5.0,
+    "race_latency_discount": 1.0,
+    "dmax": 50.0,
+    "w_sd": "0.05,0.05",
+    "shift": 4,
+    "drop": 0.1,
+    "epochs": 4,
+    "bs": 4,
+    "lr": 0.003,
+    "seed": 6,
+    "limit": 120,
+    "eval_limit": 128,
+    "rng_protocol": "split",
+    "save_checkpoint": true
+  },
+  "audit_args": {
+    "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+    "examples": 128,
+    "batch_size": 4,
+    "spike_band": 0.25,
+    "sigma": 0.25,
+    "layer": 2,
+    "pair_window_ms": 50,
+    "prefix_samples": 2,
+    "seed": 6,
+    "run_tag": "bundle_control"
+  },
+  "split": "train/val_spk",
+  "examples": 128,
+  "batches": 32,
+  "pairs_attempted": 17,
+  "summary": {
+    "deepest": {
+      "pairs": 17,
+      "nonzero_interactions": 0,
+      "mean_interaction_gamma": 0.0,
+      "mean_abs_interaction_gamma": 0.0,
+      "pairs_with_downstream_spike_birth": 10,
+      "pairs_with_helpful_joint_flip": 0
+    },
+    "all_depths": {
+      "pairs": 17,
+      "nonzero_interactions": 16,
+      "mean_interaction_gamma": -0.0035075159633860867,
+      "mean_abs_interaction_gamma": 0.0054967403411865234,
+      "pairs_with_downstream_spike_birth": 10,
+      "pairs_with_helpful_joint_flip": 8
+    }
+  },
+  "per_batch": [
+    {
+      "batch_start": 0,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 468,
+          "batch": 1,
+          "unit": 7,
+          "margin": -0.1529076099395752,
+          "naturally_firing": false
+        },
+        {
+          "time": 494,
+          "batch": 1,
+          "unit": 14,
+          "margin": -0.20558619499206543,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 3.0106735229492188,
+        "L10": 3.0106735229492188,
+        "L01": 3.0106735229492188,
+        "L11": 3.0106735229492188,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.1255171298980713,
+        "L10": 3.0579588413238525,
+        "L01": 3.167340040206909,
+        "L11": 3.091343879699707,
+        "interaction_gamma": -0.008437871932983398,
+        "expected_margin_gradients": [
+          -0.06396322881542958,
+          0.03296163023000553
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.0555419921875,
+        "toggle_0": 9.021138191223145,
+        "toggle_1": 9.098686218261719,
+        "toggle_01": 9.056188583374023
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            0,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            1,
+            1,
+            0
+          ],
+          "readout_edges": [
+            79,
+            12,
+            10,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            7,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            8,
+            2,
+            1,
+            0
+          ],
+          "readout_edges": [
+            79,
+            19,
+            10,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.03417325019836426,
+      "valid_spike_candidates": 47
+    },
+    {
+      "batch_start": 4,
+      "pair_found": false,
+      "valid_spike_candidates": 22
+    },
+    {
+      "batch_start": 8,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 146,
+          "batch": 1,
+          "unit": 7,
+          "margin": -0.24463552236557007,
+          "naturally_firing": false
+        },
+        {
+          "time": 156,
+          "batch": 1,
+          "unit": 14,
+          "margin": -0.16614657640457153,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 2.9833195209503174,
+        "L10": 2.9833195209503174,
+        "L01": 2.9833195209503174,
+        "L11": 2.9833195209503174,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.454500198364258,
+        "L10": 3.3650331497192383,
+        "L01": 3.479511260986328,
+        "L11": 3.3844871520996094,
+        "interaction_gamma": -0.005557060241699219,
+        "expected_margin_gradients": [
+          -0.07255518702995892,
+          0.02107857244026358
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.406749725341797,
+        "toggle_0": 9.333257675170898,
+        "toggle_1": 9.43185043334961,
+        "toggle_01": 9.352088928222656
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "readout_edges": [
+            73,
+            0,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            7,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            73,
+            12,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            7,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            73,
+            7,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            7,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            73,
+            19,
+            0,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.07001304626464844,
+      "valid_spike_candidates": 65
+    },
+    {
+      "batch_start": 12,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 142,
+          "batch": 1,
+          "unit": 12,
+          "margin": 0.06358170509338379,
+          "naturally_firing": true
+        },
+        {
+          "time": 190,
+          "batch": 1,
+          "unit": 14,
+          "margin": 0.0610501766204834,
+          "naturally_firing": true
+        }
+      ],
+      "natural_state": [
+        1,
+        1
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 2.9937667846679688,
+        "L10": 2.9937667846679688,
+        "L01": 2.9937667846679688,
+        "L11": 2.9937667846679688,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.27412748336792,
+        "L10": 3.2742562294006348,
+        "L01": 3.0777885913848877,
+        "L11": 3.0779452323913574,
+        "interaction_gamma": 2.7894973754882812e-05,
+        "expected_margin_gradients": [
+          0.00014207820890202702,
+          -0.19342514340667796
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.018760681152344,
+        "toggle_0": 9.018588066101074,
+        "toggle_1": 9.203558921813965,
+        "toggle_01": 9.203411102294922
+      },
+      "selected_example_work_by_corner": {
+        "11": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            15,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            15,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            15,
+            0,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            79,
+            15,
+            0,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.1961822509765625,
+      "valid_spike_candidates": 34
+    },
+    {
+      "batch_start": 16,
+      "pair_found": false,
+      "valid_spike_candidates": 4
+    },
+    {
+      "batch_start": 20,
+      "pair_found": true,
+      "selected_example": 3,
+      "candidates": [
+        {
+          "time": 144,
+          "batch": 3,
+          "unit": 14,
+          "margin": -0.08025383949279785,
+          "naturally_firing": false
+        },
+        {
+          "time": 186,
+          "batch": 3,
+          "unit": 7,
+          "margin": -0.07084745168685913,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 2.972949981689453,
+        "L10": 2.972949981689453,
+        "L01": 2.972949981689453,
+        "L11": 2.972949981689453,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.5821189880371094,
+        "L10": 3.5848989486694336,
+        "L01": 3.67830491065979,
+        "L11": 3.6647660732269287,
+        "interaction_gamma": -0.016318798065185547,
+        "expected_margin_gradients": [
+          -0.004123812880672966,
+          0.08755535378411261
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.564056396484375,
+        "toggle_0": 9.561576843261719,
+        "toggle_1": 9.658114433288574,
+        "toggle_01": 9.637849807739258
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            9,
+            0,
+            0,
+            0
+          ],
+          "readout_edges": [
+            85,
+            0,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            9,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            85,
+            7,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            9,
+            1,
+            1,
+            0
+          ],
+          "readout_edges": [
+            85,
+            12,
+            10,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            9,
+            2,
+            1,
+            0
+          ],
+          "readout_edges": [
+            85,
+            19,
+            10,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.08264708518981934,
+      "valid_spike_candidates": 67
+    },
+    {
+      "batch_start": 24,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 170,
+          "batch": 2,
+          "unit": 7,
+          "margin": -0.09979605674743652,
+          "naturally_firing": false
+        },
+        {
+          "time": 187,
+          "batch": 2,
+          "unit": 14,
+          "margin": -0.006295502185821533,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 3.0156800746917725,
+        "L10": 3.0156800746917725,
+        "L01": 3.0156800746917725,
+        "L11": 3.0156800746917725,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.7501301765441895,
+        "L10": 2.8816139698028564,
+        "L01": 2.751296043395996,
+        "L11": 2.882855176925659,
+        "interaction_gamma": 7.534027099609375e-05,
+        "expected_margin_gradients": [
+          0.12641765679597927,
+          0.0011959269956144964
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.681446075439453,
+        "toggle_0": 8.822822570800781,
+        "toggle_1": 8.682662963867188,
+        "toggle_01": 8.824092864990234
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            9,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            83,
+            7,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            9,
+            2,
+            1,
+            0
+          ],
+          "readout_edges": [
+            83,
+            19,
+            10,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            9,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            83,
+            7,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            9,
+            2,
+            1,
+            0
+          ],
+          "readout_edges": [
+            83,
+            19,
+            10,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.13272500038146973,
+      "valid_spike_candidates": 13
+    },
+    {
+      "batch_start": 28,
+      "pair_found": false,
+      "valid_spike_candidates": 11
+    },
+    {
+      "batch_start": 32,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 240,
+          "batch": 1,
+          "unit": 11,
+          "margin": -0.1757298707962036,
+          "naturally_firing": false
+        },
+        {
+          "time": 271,
+          "batch": 1,
+          "unit": 14,
+          "margin": -0.030465543270111084,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        2,
+        3
+      ],
+      "deepest": {
+        "L00": 2.993823289871216,
+        "L10": 3.022209405899048,
+        "L01": 2.993823289871216,
+        "L11": 3.022209405899048,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.025149511800583824,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.9625301361083984,
+        "L10": 3.97944974899292,
+        "L01": 3.962289810180664,
+        "L11": 3.9791817665100098,
+        "interaction_gamma": -2.765655517578125e-05,
+        "expected_margin_gradients": [
+          0.014978921143789391,
+          -0.000248560869009916
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.934843063354492,
+        "toggle_0": 9.913946151733398,
+        "toggle_1": 9.934696197509766,
+        "toggle_01": 9.913864135742188
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            12,
+            5,
+            0,
+            0
+          ],
+          "readout_edges": [
+            129,
+            38,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            12,
+            6,
+            2,
+            3
+          ],
+          "readout_edges": [
+            129,
+            46,
+            24,
+            27
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            12,
+            5,
+            0,
+            0
+          ],
+          "readout_edges": [
+            129,
+            38,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            12,
+            6,
+            2,
+            3
+          ],
+          "readout_edges": [
+            129,
+            46,
+            24,
+            27
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.02838611602783203,
+      "pair_flip_delta_all_depths": 0.016651630401611328,
+      "valid_spike_candidates": 11
+    },
+    {
+      "batch_start": 36,
+      "pair_found": true,
+      "selected_example": 3,
+      "candidates": [
+        {
+          "time": 381,
+          "batch": 3,
+          "unit": 6,
+          "margin": -0.20631027221679688,
+          "naturally_firing": false
+        },
+        {
+          "time": 410,
+          "batch": 3,
+          "unit": 14,
+          "margin": 0.004554390907287598,
+          "naturally_firing": true
+        }
+      ],
+      "natural_state": [
+        0,
+        1
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 2.959602117538452,
+        "L10": 2.959602117538452,
+        "L01": 2.959602117538452,
+        "L11": 2.959602117538452,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.619957447052002,
+        "L10": 2.535696506500244,
+        "L01": 2.619950294494629,
+        "L11": 2.5356807708740234,
+        "interaction_gamma": -8.58306884765625e-06,
+        "expected_margin_gradients": [
+          -0.07140277041338002,
+          -9.766598306108337e-06
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.55003833770752,
+        "toggle_0": 8.475436210632324,
+        "toggle_1": 8.550050735473633,
+        "toggle_01": 8.47545051574707
+      },
+      "selected_example_work_by_corner": {
+        "01": {
+          "hidden_spikes": [
+            9,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            87,
+            14,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            9,
+            3,
+            1,
+            0
+          ],
+          "readout_edges": [
+            87,
+            24,
+            6,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            9,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            87,
+            14,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            9,
+            3,
+            1,
+            0
+          ],
+          "readout_edges": [
+            87,
+            24,
+            6,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.08425378799438477,
+      "valid_spike_candidates": 35
+    },
+    {
+      "batch_start": 40,
+      "pair_found": false,
+      "valid_spike_candidates": 17
+    },
+    {
+      "batch_start": 44,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 250,
+          "batch": 2,
+          "unit": 3,
+          "margin": -0.0960690975189209,
+          "naturally_firing": false
+        },
+        {
+          "time": 257,
+          "batch": 2,
+          "unit": 7,
+          "margin": 0.0009621381759643555,
+          "naturally_firing": true
+        }
+      ],
+      "natural_state": [
+        0,
+        1
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 2.995957851409912,
+        "L10": 2.995957851409912,
+        "L01": 2.995957851409912,
+        "L11": 2.995957851409912,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.0825915336608887,
+        "L10": 3.068107843399048,
+        "L01": 3.082585334777832,
+        "L11": 3.0681018829345703,
+        "interaction_gamma": 2.384185791015625e-07,
+        "expected_margin_gradients": [
+          -0.013961768995753854,
+          -6.102278072162036e-06
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.978019714355469,
+        "toggle_0": 8.967601776123047,
+        "toggle_1": 8.97801399230957,
+        "toggle_01": 8.967596054077148
+      },
+      "selected_example_work_by_corner": {
+        "01": {
+          "hidden_spikes": [
+            16,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            20,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            16,
+            5,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            48,
+            20,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            16,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            38,
+            20,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            16,
+            5,
+            2,
+            0
+          ],
+          "readout_edges": [
+            173,
+            48,
+            20,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.01447749137878418,
+      "valid_spike_candidates": 51
+    },
+    {
+      "batch_start": 48,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 319,
+          "batch": 2,
+          "unit": 14,
+          "margin": -0.0024300217628479004,
+          "naturally_firing": false
+        },
+        {
+          "time": 368,
+          "batch": 2,
+          "unit": 6,
+          "margin": -0.03307080268859863,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 2.9857423305511475,
+        "L10": 2.9857423305511475,
+        "L01": 2.9857423305511475,
+        "L11": 2.9857423305511475,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.91084623336792,
+        "L10": 2.91068696975708,
+        "L01": 2.854492425918579,
+        "L11": 2.854264974594116,
+        "interaction_gamma": -6.818771362304688e-05,
+        "expected_margin_gradients": [
+          -0.00019110121399151014,
+          -0.056141773165185344
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.848871231079102,
+        "toggle_0": 8.848698616027832,
+        "toggle_1": 8.779994010925293,
+        "toggle_01": 8.779813766479492
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            11,
+            3,
+            0,
+            0
+          ],
+          "readout_edges": [
+            115,
+            23,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            11,
+            3,
+            0,
+            0
+          ],
+          "readout_edges": [
+            115,
+            23,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            11,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            115,
+            33,
+            6,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            11,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            115,
+            33,
+            6,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.05658125877380371,
+      "valid_spike_candidates": 59
+    },
+    {
+      "batch_start": 52,
+      "pair_found": false,
+      "valid_spike_candidates": 27
+    },
+    {
+      "batch_start": 56,
+      "pair_found": false,
+      "valid_spike_candidates": 43
+    },
+    {
+      "batch_start": 60,
+      "pair_found": false,
+      "valid_spike_candidates": 40
+    },
+    {
+      "batch_start": 64,
+      "pair_found": false,
+      "valid_spike_candidates": 67
+    },
+    {
+      "batch_start": 68,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 386,
+          "batch": 2,
+          "unit": 7,
+          "margin": -0.027396678924560547,
+          "naturally_firing": false
+        },
+        {
+          "time": 386,
+          "batch": 2,
+          "unit": 14,
+          "margin": -0.01998084783554077,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        2,
+        0
+      ],
+      "deepest": {
+        "L00": 3.011806011199951,
+        "L10": 3.011806011199951,
+        "L01": 3.011806011199951,
+        "L11": 3.011806011199951,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.305248260498047,
+        "L10": 3.478079319000244,
+        "L01": 3.3002071380615234,
+        "L11": 3.4764585494995117,
+        "interaction_gamma": 0.0034203529357910156,
+        "expected_margin_gradients": [
+          0.17395015426321517,
+          -0.0034190956259607204
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.26521110534668,
+        "toggle_0": 9.451286315917969,
+        "toggle_1": 9.263090133666992,
+        "toggle_01": 9.449613571166992
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "readout_edges": [
+            84,
+            0,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            1,
+            2,
+            0
+          ],
+          "readout_edges": [
+            84,
+            12,
+            20,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            84,
+            7,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            8,
+            2,
+            2,
+            0
+          ],
+          "readout_edges": [
+            84,
+            19,
+            20,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.17121028900146484,
+      "valid_spike_candidates": 88
+    },
+    {
+      "batch_start": 72,
+      "pair_found": false,
+      "valid_spike_candidates": 42
+    },
+    {
+      "batch_start": 76,
+      "pair_found": false,
+      "valid_spike_candidates": 86
+    },
+    {
+      "batch_start": 80,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 474,
+          "batch": 1,
+          "unit": 7,
+          "margin": -0.03556513786315918,
+          "naturally_firing": false
+        },
+        {
+          "time": 524,
+          "batch": 1,
+          "unit": 1,
+          "margin": -0.16311514377593994,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        3,
+        0
+      ],
+      "deepest": {
+        "L00": 2.9810001850128174,
+        "L10": 2.9810001850128174,
+        "L01": 2.9810001850128174,
+        "L11": 2.9810001850128174,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.0841426849365234,
+        "L10": 3.2482542991638184,
+        "L01": 3.191277027130127,
+        "L11": 3.363433361053467,
+        "interaction_gamma": 0.008044719696044922,
+        "expected_margin_gradients": [
+          0.16602498623662396,
+          0.09986084497564833
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.10123348236084,
+        "toggle_0": 9.254566192626953,
+        "toggle_1": 9.205904960632324,
+        "toggle_01": 9.369561195373535
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            8,
+            5,
+            2,
+            0
+          ],
+          "readout_edges": [
+            97,
+            49,
+            20,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            5,
+            3,
+            0
+          ],
+          "readout_edges": [
+            97,
+            49,
+            30,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            6,
+            4,
+            0
+          ],
+          "readout_edges": [
+            97,
+            55,
+            40,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            8,
+            6,
+            5,
+            0
+          ],
+          "readout_edges": [
+            97,
+            55,
+            50,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.27929067611694336,
+      "valid_spike_candidates": 15
+    },
+    {
+      "batch_start": 84,
+      "pair_found": false,
+      "valid_spike_candidates": 30
+    },
+    {
+      "batch_start": 88,
+      "pair_found": false,
+      "valid_spike_candidates": 66
+    },
+    {
+      "batch_start": 92,
+      "pair_found": false,
+      "valid_spike_candidates": 28
+    },
+    {
+      "batch_start": 96,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 305,
+          "batch": 2,
+          "unit": 6,
+          "margin": 0.03191542625427246,
+          "naturally_firing": true
+        },
+        {
+          "time": 343,
+          "batch": 2,
+          "unit": 12,
+          "margin": -0.012999176979064941,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        1,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 3.0141422748565674,
+        "L10": 3.0141422748565674,
+        "L01": 3.0141422748565674,
+        "L11": 3.0141422748565674,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.2881171703338623,
+        "L10": 3.294377565383911,
+        "L01": 3.2720725536346436,
+        "L11": 3.28259015083313,
+        "interaction_gamma": 0.0042572021484375,
+        "expected_margin_gradients": [
+          0.008299805968429977,
+          -0.013771019304978772
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.250136375427246,
+        "toggle_0": 9.28372573852539,
+        "toggle_1": 9.231843948364258,
+        "toggle_01": 9.264456748962402
+      },
+      "selected_example_work_by_corner": {
+        "10": {
+          "hidden_spikes": [
+            6,
+            4,
+            0,
+            0
+          ],
+          "readout_edges": [
+            60,
+            31,
+            0,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            6,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            60,
+            31,
+            6,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            6,
+            5,
+            0,
+            0
+          ],
+          "readout_edges": [
+            60,
+            39,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            6,
+            5,
+            1,
+            0
+          ],
+          "readout_edges": [
+            60,
+            39,
+            6,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.022305011749267578,
+      "valid_spike_candidates": 13
+    },
+    {
+      "batch_start": 100,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 515,
+          "batch": 2,
+          "unit": 4,
+          "margin": -0.05254095792770386,
+          "naturally_firing": false
+        },
+        {
+          "time": 517,
+          "batch": 2,
+          "unit": 12,
+          "margin": -0.08998626470565796,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 2.988626480102539,
+        "L10": 2.988626480102539,
+        "L01": 2.988626480102539,
+        "L11": 2.988626480102539,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.61881160736084,
+        "L10": 2.6036839485168457,
+        "L01": 2.5773515701293945,
+        "L11": 2.525045156478882,
+        "interaction_gamma": -0.037178754806518555,
+        "expected_margin_gradients": [
+          -0.030073812818001394,
+          -0.056261102203583276
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.586997032165527,
+        "toggle_0": 8.575879096984863,
+        "toggle_1": 8.540519714355469,
+        "toggle_01": 8.507829666137695
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            89,
+            9,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            89,
+            21,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            89,
+            17,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            8,
+            3,
+            1,
+            0
+          ],
+          "readout_edges": [
+            89,
+            29,
+            5,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.09376645088195801,
+      "valid_spike_candidates": 38
+    },
+    {
+      "batch_start": 104,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 424,
+          "batch": 1,
+          "unit": 6,
+          "margin": 0.0362095832824707,
+          "naturally_firing": true
+        },
+        {
+          "time": 459,
+          "batch": 1,
+          "unit": 14,
+          "margin": 0.008620023727416992,
+          "naturally_firing": true
+        }
+      ],
+      "natural_state": [
+        1,
+        1
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 3.004728078842163,
+        "L10": 3.004728078842163,
+        "L01": 3.004728078842163,
+        "L11": 3.004728078842163,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.2610979080200195,
+        "L10": 3.248495101928711,
+        "L01": 3.2611083984375,
+        "L11": 3.2485055923461914,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          -0.012536940634852889,
+          1.0487300144303855e-05
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.172812461853027,
+        "toggle_0": 9.18820571899414,
+        "toggle_1": 9.172802925109863,
+        "toggle_01": 9.188196182250977
+      },
+      "selected_example_work_by_corner": {
+        "11": {
+          "hidden_spikes": [
+            3,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            30,
+            17,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            3,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            30,
+            7,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            3,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            30,
+            17,
+            0,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            3,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            30,
+            7,
+            0,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.012592315673828125,
+      "valid_spike_candidates": 32
+    },
+    {
+      "batch_start": 108,
+      "pair_found": false,
+      "valid_spike_candidates": 34
+    },
+    {
+      "batch_start": 112,
+      "pair_found": true,
+      "selected_example": 2,
+      "candidates": [
+        {
+          "time": 283,
+          "batch": 2,
+          "unit": 7,
+          "margin": -0.09058594703674316,
+          "naturally_firing": false
+        },
+        {
+          "time": 312,
+          "batch": 2,
+          "unit": 14,
+          "margin": -0.1606694459915161,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": true,
+      "pair_flip_downstream_spike_delta": [
+        1,
+        0
+      ],
+      "deepest": {
+        "L00": 3.019240140914917,
+        "L10": 3.019240140914917,
+        "L01": 3.019240140914917,
+        "L11": 3.019240140914917,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 2.894320249557495,
+        "L10": 3.093353033065796,
+        "L01": 2.89311146736145,
+        "L11": 3.093226671218872,
+        "interaction_gamma": 0.0010824203491210938,
+        "expected_margin_gradients": [
+          0.19300128496197788,
+          -0.0006907501848825688
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 8.82486343383789,
+        "toggle_0": 9.059361457824707,
+        "toggle_1": 8.822968482971191,
+        "toggle_01": 9.058305740356445
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            12,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            118,
+            16,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            12,
+            3,
+            1,
+            0
+          ],
+          "readout_edges": [
+            118,
+            28,
+            10,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            12,
+            3,
+            0,
+            0
+          ],
+          "readout_edges": [
+            118,
+            23,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            12,
+            4,
+            1,
+            0
+          ],
+          "readout_edges": [
+            118,
+            35,
+            10,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.19890642166137695,
+      "valid_spike_candidates": 90
+    },
+    {
+      "batch_start": 116,
+      "pair_found": true,
+      "selected_example": 1,
+      "candidates": [
+        {
+          "time": 68,
+          "batch": 1,
+          "unit": 13,
+          "margin": 0.026918411254882812,
+          "naturally_firing": true
+        },
+        {
+          "time": 80,
+          "batch": 1,
+          "unit": 12,
+          "margin": 0.026413440704345703,
+          "naturally_firing": true
+        }
+      ],
+      "natural_state": [
+        1,
+        1
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 3.006904363632202,
+        "L10": 3.006904363632202,
+        "L01": 3.006904363632202,
+        "L11": 3.006904363632202,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.395498275756836,
+        "L10": 3.3798177242279053,
+        "L01": 3.3954970836639404,
+        "L11": 3.379816770553589,
+        "interaction_gamma": 2.384185791015625e-07,
+        "expected_margin_gradients": [
+          -0.015635065501146996,
+          -1.0635012969204623e-06
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.333176612854004,
+        "toggle_0": 9.356647491455078,
+        "toggle_1": 9.33317756652832,
+        "toggle_01": 9.356647491455078
+      },
+      "selected_example_work_by_corner": {
+        "11": {
+          "hidden_spikes": [
+            7,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            72,
+            37,
+            12,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            7,
+            3,
+            2,
+            0
+          ],
+          "readout_edges": [
+            72,
+            28,
+            12,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            7,
+            4,
+            2,
+            0
+          ],
+          "readout_edges": [
+            72,
+            37,
+            12,
+            0
+          ]
+        },
+        "00": {
+          "hidden_spikes": [
+            7,
+            3,
+            2,
+            0
+          ],
+          "readout_edges": [
+            72,
+            28,
+            12,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": 0.01568150520324707,
+      "valid_spike_candidates": 8
+    },
+    {
+      "batch_start": 120,
+      "pair_found": false,
+      "valid_spike_candidates": 53
+    },
+    {
+      "batch_start": 124,
+      "pair_found": true,
+      "selected_example": 0,
+      "candidates": [
+        {
+          "time": 212,
+          "batch": 0,
+          "unit": 4,
+          "margin": -0.12939703464508057,
+          "naturally_firing": false
+        },
+        {
+          "time": 259,
+          "batch": 0,
+          "unit": 12,
+          "margin": -0.19370192289352417,
+          "naturally_firing": false
+        }
+      ],
+      "natural_state": [
+        0,
+        0
+      ],
+      "layer": 2,
+      "pair_window_ms": 50,
+      "pair_flip_downstream_spike_birth": false,
+      "pair_flip_downstream_spike_delta": [
+        0,
+        0
+      ],
+      "deepest": {
+        "L00": 3.0324809551239014,
+        "L10": 3.0324809551239014,
+        "L01": 3.0324809551239014,
+        "L11": 3.0324809551239014,
+        "interaction_gamma": 0.0,
+        "expected_margin_gradients": [
+          0.0,
+          0.0
+        ]
+      },
+      "all_depths": {
+        "L00": 3.3053696155548096,
+        "L10": 3.2061619758605957,
+        "L01": 3.2740280628204346,
+        "L11": 3.1658811569213867,
+        "interaction_gamma": -0.008939266204833984,
+        "expected_margin_gradients": [
+          -0.09548813077213845,
+          -0.029954538810316324
+        ]
+      },
+      "auxiliary_corner_losses": {
+        "factual": 9.231466293334961,
+        "toggle_0": 9.139464378356934,
+        "toggle_1": 9.200143814086914,
+        "toggle_01": 9.103204727172852
+      },
+      "selected_example_work_by_corner": {
+        "00": {
+          "hidden_spikes": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "readout_edges": [
+            90,
+            0,
+            0,
+            0
+          ]
+        },
+        "10": {
+          "hidden_spikes": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            90,
+            12,
+            0,
+            0
+          ]
+        },
+        "01": {
+          "hidden_spikes": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "readout_edges": [
+            90,
+            8,
+            0,
+            0
+          ]
+        },
+        "11": {
+          "hidden_spikes": [
+            8,
+            2,
+            0,
+            0
+          ],
+          "readout_edges": [
+            90,
+            20,
+            0,
+            0
+          ]
+        }
+      },
+      "pair_flip_delta_deepest": 0.0,
+      "pair_flip_delta_all_depths": -0.13948845863342285,
+      "valid_spike_candidates": 67
+    }
+  ]
+}

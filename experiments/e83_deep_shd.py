@@ -418,7 +418,7 @@ class DeepSHD(nn.Module):
     def forward(self, eb, ei, et, B, G, return_taps=False, collect_routes=False,
                 route_override=None, spike_override=None,
                 return_spike_diagnostics=False, input_counts=None,
-                route_overrides=None):
+                route_overrides=None, spike_overrides=None):
         raw_v = self.emb(ei)
         if self.count_proj is not None:
             if input_counts is None or input_counts.shape != et.shape:
@@ -457,11 +457,16 @@ class DeepSHD(nn.Module):
             if spike_override is not None and spike_override[0] == i:
                 _, spike_time, spike_batch, spike_unit, spike_active = spike_override
                 local_spike_override = (spike_time, spike_batch, spike_unit, spike_active)
+            local_spike_overrides = [
+                (spike_time, spike_batch, spike_unit, spike_active)
+                for layer_id, spike_time, spike_batch, spike_unit, spike_active
+                in (spike_overrides or []) if layer_id == i]
             result = layer(ib, ij, it, iv, B, G, force_route=force_route,
                            drop_route=drop_route,
                            route_overrides=local_route_overrides or None,
                            return_routes=collect_routes or return_spike_diagnostics,
                            spike_override=local_spike_override,
+                           spike_overrides=local_spike_overrides or None,
                            return_spike_diagnostics=return_spike_diagnostics)
             if collect_routes or return_spike_diagnostics:
                 out, msg, route_info = result

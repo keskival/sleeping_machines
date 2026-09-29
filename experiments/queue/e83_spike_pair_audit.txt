@@ -1,0 +1,4 @@
+# Second-order L1 spike toggles: all four outcomes, deepest and fused loss,
+# and work/cascade deltas. One matched candidate pair at most per batch.
+e83_spike_pair_late_s6_n128 experiments/e83_spike_pair_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_late_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslatebalanced_spk_s6.pt --examples 128 --batch_size 4 --spike_band 0.25 --sigma 0.25 --layer 1 --pair_window_ms 50 --prefix_samples 2 --seed 6 --run_tag late_only
+e83_spike_pair_control_s6_n128 experiments/e83_spike_pair_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 128 --batch_size 4 --spike_band 0.25 --sigma 0.25 --layer 1 --pair_window_ms 50 --prefix_samples 2 --seed 6 --run_tag bundle_control

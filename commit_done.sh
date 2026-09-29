@@ -36,6 +36,7 @@ FILES=(
   experiments/e83_route_cost_audit.py
   experiments/e83_route_pair_occupancy_audit.py
   experiments/e83_spike_boundary_audit.py
+  experiments/e83_spike_pair_audit.py
   experiments/e83_counterfactual_audit.py
   experiments/plot_e83_firing.py
   experiments/sparse_anytime_readout.py
@@ -57,6 +58,11 @@ FILES=(
   experiments/queue/e83_data_budget_equal_updates.txt
   experiments/queue/e83_spike_boundary_audit.txt
   experiments/queue/e83_spike_boundary_late_audit.txt
+  experiments/queue/e83_spike_pair_audit.txt
+  experiments/queue/e83_spike_pair_depth_audit.txt
+  experiments/queue/e83_spike_pair_l23_1024.txt
+  experiments/queue/e83_spike_boundary_l3_1024.txt
+  experiments/queue/e83_spike_pair_l23_1024.txt
   experiments/queue/e83_route_bundle_pair.txt
   experiments/queue/e83_route_bundle_pair_layer_balanced.txt
   experiments/queue/e83_route_bundle_pair_late_balanced.txt
@@ -102,6 +108,7 @@ FILES=(
   report/figures/e83_route_cost_audit.png
   report/figures/e83_route_pair_occupancy.png
   report/figures/e83_spike_boundary_late.png
+  report/figures/e83_spike_pair_audit.png
   report/figures/e77_depth_trainability_bootstrap.png
   report/sleeping_machines_status.pdf
   commit_done.sh

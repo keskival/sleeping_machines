@@ -917,6 +917,93 @@ def fig_e83_spike_boundary_late():
     return fig
 
 
+def fig_e83_spike_pair_audit():
+    """Separate downstream event propagation from pair-specific loss credit."""
+    result_paths = [
+        ("L2 control", "spike_pair_audit_L2_bundle_control_s6_n1024.json", GRAY),
+        ("L2 late-only", "spike_pair_audit_L2_late_only_s6_n1024.json", YELLOW),
+        ("L3 control", "spike_pair_audit_L3_bundle_control_s6_n1024.json", GRAY),
+        ("L3 late-only", "spike_pair_audit_L3_late_only_s6_n1024.json", YELLOW),
+    ]
+    results = [load(os.path.join(RES, "e83", filename)) for _, filename, _ in result_paths]
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.95))
+    labels = [name.replace(" ", "\n") for name, _, _ in result_paths]
+    labels_with_n = [f"{name.replace(' ', chr(10))}\nn={n}" for
+                     (name, _, _), n in zip(result_paths, [64, 34, 10, 5])]
+    colors_by_arm = [color for _, _, color in result_paths]
+
+    # Panel A: available paired spike interventions by layer/checkpoint.
+    eligible = [result["pairs_attempted"] for result in results]
+    natural_off = [sum(row.get("pair_found", False) and row["natural_state"] == [0, 0]
+                       for row in result["per_batch"]) for result in results]
+    x = np.arange(len(results))
+    axes[0].bar(x, eligible, color=colors_by_arm, width=0.62)
+    for i, (n, n00) in enumerate(zip(eligible, natural_off)):
+        axes[0].text(i, n + 3, f"{n}\n00={n00}", ha="center", va="bottom", fontsize=5.4)
+    axes[0].set_ylim(0, max(eligible) * 1.25)
+    axes[0].set_ylabel("selected pairs / 256 batches")
+    axes[0].set_title("A · Pair availability", fontsize=7.2)
+
+    # Panel B: outcomes conditional on both natural events being absent.
+    propagation, deep_help = [], []
+    pair_only_help = 0
+    for result in results:
+        rows = [row for row in result["per_batch"]
+                if row.get("pair_found", False) and row["natural_state"] == [0, 0]]
+        propagated = helped = 0
+        for row in rows:
+            work = row["selected_example_work_by_corner"]
+            before = np.asarray(work["00"]["hidden_spikes"], dtype=float)
+            after = np.asarray(work["11"]["hidden_spikes"], dtype=float)
+            layer = int(row["layer"]) - 1
+            propagated += bool(np.sum(after[layer + 1:] - before[layer + 1:]) > 0)
+            loss = row["deepest"]
+            joint = loss["L11"] - loss["L00"]
+            singleton = (loss["L10"] - loss["L00"], loss["L01"] - loss["L00"])
+            helped += joint < -1e-12
+            pair_only_help += (joint < -1e-12 and singleton[0] >= -1e-12
+                               and singleton[1] >= -1e-12)
+        propagation.append(propagated / len(rows) if rows else np.nan)
+        deep_help.append(helped / len(rows) if rows else np.nan)
+    width = 0.34
+    axes[1].bar(x - width / 2, propagation, width, color=BLUE, label="suffix spikes increase")
+    axes[1].bar(x + width / 2, deep_help, width, color=AQUA, label="deep loss improves")
+    axes[1].set_ylim(0, 1.12)
+    axes[1].set_ylabel("fraction of natural-off pairs")
+    axes[1].set_title("B · Opening both events", fontsize=7.2)
+    axes[1].legend(fontsize=5.1, loc="upper left")
+
+    # Panel C: difference-in-differences, not the raw joint intervention delta.
+    interaction_counts = [sum(abs(row["deepest"]["interaction_gamma"]) > 0.01
+                              for row in result["per_batch"] if row.get("pair_found", False))
+                          for result in results]
+    totals = [result["pairs_attempted"] for result in results]
+    axes[2].bar(x, interaction_counts, color=colors_by_arm, width=0.62)
+    for i, (n, total) in enumerate(zip(interaction_counts, totals)):
+        axes[2].text(i, n + 0.08, f"{n}/{total}", ha="center", va="bottom", fontsize=5.4)
+    axes[2].set_ylim(0, max(interaction_counts, default=0) + 1.25)
+    axes[2].set_ylabel(r"pairs with $|\Gamma|>0.01$")
+    axes[2].set_title("C · Pair-only interaction", fontsize=7.2)
+    axes[2].text(0.5, 0.88, f"joint-only helpful: {pair_only_help}/113",
+                 ha="center", va="center", transform=axes[2].transAxes, fontsize=5.6,
+                 color=MUTED)
+
+    for i, ax in enumerate(axes):
+        ax.set_xticks(x, labels_with_n if i == 1 else labels, fontsize=5.4)
+        ax.grid(axis="y", alpha=0.2)
+        ax.set_axisbelow(True)
+    fig.suptitle("E83 · downstream spikes are commoner than pair-specific class credit",
+                 x=0.02, ha="left", fontsize=8.3, fontweight="bold")
+    fig.text(0.02, 0.015,
+             "Frozen held-out-speaker checkpoints; one near-boundary pair per batch. Distinct hidden units within 50 ms; "
+             "no shared-receiver condition. Validation diagnostic, not a trainability result.",
+             fontsize=4.6, color=MUTED)
+    fig.tight_layout(rect=(0, 0.14, 1, 0.87), w_pad=1.2)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_spike_pair_audit.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e77_bootstrap_diagnostics():
     """Show exact rate calibration's effect and the depth-8 gradient-reach smoke."""
     e77_dir = os.path.join(RES, "e77")
@@ -1673,6 +1760,7 @@ def build():
     s += fig(fig_e83_route_cost_audit, W * 0.96)
     s += fig(fig_e83_pair_occupancy, W * 0.96)
     s += fig(fig_e83_spike_boundary_late, W * 0.96)
+    s += fig(fig_e83_spike_pair_audit, W * 0.96)
     s += [P("<b>What the SHD intervention teaches:</b> exposing deeper route alternatives can restore activity, but "
             "activity is not trainability: the layer-balanced model's classifier collapsed while event counts grew. "
             "Section 143 derives a constrained route utility that weighs class-loss change against per-layer work. "
@@ -1685,10 +1773,11 @@ def build():
             "in-band, nonrefractory events, L1 main-loss spike-on helped 12/22 control cases (mean ΔL=+0.0266) "
             "and 16/21 late-only cases (mean −0.0094, median −0.0020). The auxiliary loss agrees. Only 13 batches "
             "had valid L1 candidates in both arms; the two selected unit/times can differ, and their mean utility "
-            "difference was −0.037 (SE 0.035), so this is promising but inconclusive. L2 late-only main-loss mean "
-            "ΔL was +0.0040 despite 12/19 improvements; "
-            "L3/L4 candidates are too sparse for deep updates. The next test is one "
-            "valid L1 boundary update per batch with a declared work cap. "
+            "difference was −0.037 (SE 0.035), so this is inconclusive. L2 late-only main-loss mean "
+            "ΔL was +0.0040 despite 12/19 improvements; the matched deepest-only replay found zero L1/L2 utility. "
+            "A larger four-corner replay found occasional L2/L3 effects on deepest-only loss, but no pair-only helpful "
+            "case among 113 natural-off pairs. L2 openings often added downstream spikes without improving class loss. "
+            "This supports a topology-conditioned shared-receiver test, not an L1 update against the fused shallow head. "
             "These validation-informed runs are development evidence, not untouched-test "
             "results. Neither pair strategy has established an SHD accuracy gain.", "small"),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
@@ -2133,6 +2222,16 @@ def build():
             "this local utility did not demonstrate serial credit through depth. Deepest-only L3/L4 samples were only "
             "2/1. The next test must train with deepest-only primary loss or explicitly replay a sparse suffix and show "
             "downstream event changes. This is a frozen audit, not a training gain.", "body")]
+    s += [P("<b>Pair propagation is not pair synergy (§146).</b> In 1,024 held-out-speaker examples, opening both "
+            "natural-off L2 events increased suffix spike count in 38/64 control and 19/34 late-only pairs, but improved "
+            "deepest-only loss in only 8/64 and 4/34. At L3, 5/10 and 4/5 double openings improved loss, but the "
+            "late-only pool had only five cases and one +1.40 loss outlier. The four-corner interaction "
+            "Γ = L11 − L10 − L01 + L00 was zero in most sampled pairs: no natural-off pair succeeded "
+            "when both singleton openings failed, and only 2/42 L3 pairs exceeded |Γ| = 0.01; none of 210 L2 pairs did. "
+            "The audit paired distinct spike events without requiring a shared receiver. A true topology-conditioned "
+            "route-pair experiment must compare shared-receiver arrivals to time-matched nonshared controls and track "
+            "accepted messages, event payload/timing, deepest loss, and replay work. These are validation diagnostics, "
+            "not a trained accuracy gain.", "body")]
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
