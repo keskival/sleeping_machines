@@ -6,8 +6,13 @@ set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
-if [[ "$(git branch --show-current)" != "main" ]]; then
-  echo "Refusing to commit: this checkout is not on main." >&2
+BRANCH="$(git branch --show-current)"
+if [[ -z "$BRANCH" ]]; then
+  echo "Refusing to commit: this checkout has no current branch." >&2
+  exit 2
+fi
+if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
+  echo "Refusing to commit on '$BRANCH'; set ALLOW_NON_MAIN_BRANCH=1 to opt in." >&2
   exit 2
 fi
 
@@ -15,6 +20,7 @@ fi
 # E83/E84 and E114 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
+  AGENTS.md
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
   AWS_EXPERIMENT_RUNBOOK.md
@@ -75,6 +81,7 @@ FILES=(
   experiments/queue/e83_route_dynamics_audit.txt
   experiments/queue/e83_route_option_value_audit.txt
   experiments/queue/e83_spike_option_training.txt
+  experiments/queue/e83_optionality_matched_6ep.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt
@@ -118,6 +125,7 @@ FILES=(
   report/figures/e83_route_pair_occupancy.png
   report/figures/e83_spike_boundary_late.png
   report/figures/e83_spike_pair_audit.png
+  report/figures/e83_optionality_state_value.png
   report/figures/e77_depth_trainability_bootstrap.png
   report/sleeping_machines_status.pdf
   commit_done.sh
