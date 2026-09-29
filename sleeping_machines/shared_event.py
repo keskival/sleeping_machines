@@ -93,8 +93,8 @@ class SharedEventModel(nn.Module):
         super().__init__()
         if bands < 1 or groups < 1 or classes < 1 or dim < 4 or evidence_count < 0 or continuous_dim < 0:
             raise ValueError("Invalid model dimensions")
-        if readout not in ("mean", "last"):
-            raise ValueError("readout must be mean or last")
+        if readout not in ("mean", "last", "weighted"):
+            raise ValueError("readout must be mean, last or weighted")
         self.readout = readout
         self.classes, self.evidence_count = classes, evidence_count
         self.bands, self.dim, self.groups = bands, dim, groups
@@ -143,6 +143,10 @@ class SharedEventModel(nn.Module):
                 raise ValueError("Phase clocks currently use their own bounded query readout")
             from .phase_memory import PhaseMemory
             self.phase_memory = PhaseMemory(bands, classes, phase_period, seed=phase_seed)
+        self.readout_gain = None
+        if readout == "weighted":
+            self.readout_gain = nn.Linear(dim, 1, bias=False)
+            nn.init.zeros_(self.readout_gain.weight)
 
     def forward(self, b, t, c, ids, size, sequential=False, overrides=None, trace=False,
                 continuous=None, evidence=None, expert_mode="combined"):
@@ -182,7 +186,15 @@ class SharedEventModel(nn.Module):
             if trace:
                 traces.append(tr)
         mass = x.new_zeros(size).index_add(0, ids, c)
-        mean = x.new_zeros((size, self.dim)).index_add(0, ids, x*c[:, None])/mass[:, None]
+        if self.readout_gain is not None:
+            # A causal per-event gain and an associative numerator/mass state.
+            # Zero initialization exactly recovers the existing count mean.
+            gain = torch.exp(2*torch.tanh(self.readout_gain(x).squeeze(-1)/2))
+            weights = c*gain
+            weighted_mass = x.new_zeros(size).index_add(0, ids, weights)
+            mean = x.new_zeros((size,self.dim)).index_add(0,ids,x*weights[:,None])/weighted_mass[:,None]
+        else:
+            mean = x.new_zeros((size, self.dim)).index_add(0, ids, x*c[:, None])/mass[:, None]
         if self.readout == "last":
             # Inputs are grouped by example, with chronological order inside it.
             ends = torch.bincount(ids, minlength=size).cumsum(0)-1
