@@ -988,6 +988,74 @@ def fig_e83_spike_option_training():
     return fig
 
 
+def fig_e83_optionality_state_value():
+    """Compare immediate route credit with a sampled state-value reserve."""
+    patterns = {
+        "immediate": "*optionality_immediate_2ep*spk_s6.json",
+        "continuation-aware": "*optionality_rollout_aware_2ep*spk_s6.json",
+    }
+    results = {}
+    for label, pattern in patterns.items():
+        matches = glob.glob(os.path.join(RES, "e83", pattern))
+        if len(matches) != 1:
+            raise FileNotFoundError(f"expected one E83 optionality result for {label}: {pattern}")
+        results[label] = load(matches[0])
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.35, 2.85),
+                             gridspec_kw={"width_ratios": [0.9, 1.25, 1.1]})
+    epochs = np.arange(1, 3)
+    colors_by_arm = {"immediate": BLUE, "continuation-aware": AQUA}
+    for offset, (label, result) in zip((-0.045, 0.045), results.items()):
+        accuracy = [100 * row["event_terminal_accuracy"] for row in result["curve"]]
+        axes[0].plot(epochs + offset, accuracy, marker="o", color=colors_by_arm[label],
+                     label=label)
+    axes[0].axhline(5, color=ORANGE, linestyle="--", linewidth=1,
+                    label="10-class chance")
+    axes[0].set_xticks(epochs)
+    axes[0].set_ylim(0, 7)
+    axes[0].set_xlim(0.75, 2.25)
+    axes[0].set_ylabel("accuracy (%)")
+    axes[0].set_title("A · No accuracy gain")
+    axes[0].legend(fontsize=5.4, loc="lower right")
+
+    layers = np.arange(4)
+    width = 0.36
+    for offset, label in zip((-width / 2, width / 2), patterns):
+        coverage = (100 * np.asarray(results[label]["curve"][-1]["event_support_coverage"],
+                                     dtype=float))
+        axes[1].bar(layers + offset, coverage, width=width,
+                    color=colors_by_arm[label], label=label)
+    axes[1].set_xticks(layers, ["L1", "L2", "L3", "L4"])
+    axes[1].set_ylim(0, 110)
+    axes[1].set_ylabel("held-out support (%)")
+    axes[1].set_title("B · Layer support collapses")
+    axes[1].legend(fontsize=5.4, loc="upper right")
+
+    aware_curve = results["continuation-aware"]["curve"]
+    reserve_milli = [1000 * row["spike_option_mean_delta_reserve"]
+                     for row in aware_curve]
+    axes[2].bar(epochs, reserve_milli, color=AQUA, width=0.56)
+    axes[2].set_xticks(epochs)
+    axes[2].set_ylim(0, 1.25)
+    axes[2].set_ylabel(r"$\Delta\Omega$ ($10^{-3}$ loss/action)")
+    axes[2].set_title("C · Tiny reserve estimate")
+    axes[2].text(1.5, 1.06,
+                 r"$\Delta B_{0.05}=0$ in both epochs",
+                 ha="center", fontsize=5.4, color=ORANGE)
+
+    fig.suptitle("E83 · state-conditioned optionality training check",
+                 x=0.02, ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.005,
+             "Seed 6; depth 4; 120 train / 128 held-out speakers; two epochs; two matched future rollouts/action. "
+             "One seed; rollout reserve is proposal-conditioned.",
+             fontsize=4.8, color=MUTED)
+    fig.subplots_adjust(top=0.79, bottom=0.2, left=0.08, right=0.985, wspace=0.55)
+    out = os.path.join(os.path.dirname(__file__), "figures",
+                       "e83_optionality_state_value.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e83_pair_occupancy():
     """Show that wider pair windows do not restore deep proposal support."""
     result = load(os.path.join(RES, "e83", "route_pair_occupancy_late_seed6.json"))
@@ -1987,6 +2055,15 @@ def build():
            "activity but did not establish a persistent route or useful gradient "
            "at the classifier; candidate support and downstream survival remain open.", "small"),
          *fig(fig_e83_spike_option_training, W),
+         P("<b>State-conditioned optionality (§152):</b> optionality is a value of the current event state under a stated "
+           "label, route proposal, horizon, and continuation budget; rollout samples estimate that value. It is distinct "
+           "from class entropy, true-label surprise, route entropy, and optimizer momentum. A matched immediate-only and "
+           "two-rollout lambda=1 depth-4 comparison both remained at 6/128 accuracy. The rollout arm's mean reserve "
+           "change was about 0.001 loss/action by epoch 2, and no sampled future improved loss by the 0.05 cutoff. "
+           "Layer-4 support was 0.78%, and almost all measured counterfactual correction still landed in the readout. "
+           "This validates the measurement path, not a training gain; the run used one seed and the reserve depends on "
+           "the sparse proposal. The two-rollout arm took 224 s versus 177 s for control.", "small"),
+         *fig(fig_e83_optionality_state_value, W),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "

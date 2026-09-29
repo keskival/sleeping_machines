@@ -1156,7 +1156,10 @@ def main():
         option_local_immediate_sum_ep = option_local_learning_sum_ep = 0.0
         option_local_optionality_sum_ep = 0.0
         option_local_continuation_gain_sum_ep = 0.0
+        option_local_parent_beneficial_mass_sum_ep = 0.0
+        option_local_child_beneficial_mass_sum_ep = 0.0
         option_local_beneficial_mass_delta_sum_ep = 0.0
+        option_parent_beneficial_hits_ep = option_child_beneficial_hits_ep = 0
         option_rollout_count_ep = option_rollout_actions_ep = 0
         option_local_utility_actions_ep = 0
         option_local_utility_by_layer_ep = np.zeros(a.depth, dtype=np.float64)
@@ -1772,6 +1775,12 @@ def main():
                             child_beneficial_mass = float(np.mean(
                                 np.asarray(child_continuations)
                                 <= child_default - epsilon))
+                            option_parent_beneficial_hits_ep += int(np.count_nonzero(
+                                np.asarray(parent_continuations)
+                                <= parent_default - epsilon))
+                            option_child_beneficial_hits_ep += int(np.count_nonzero(
+                                np.asarray(child_continuations)
+                                <= child_default - epsilon))
                             beneficial_mass_delta = (child_beneficial_mass
                                                      - parent_beneficial_mass)
                             local_learning = 0.0
@@ -1779,6 +1788,8 @@ def main():
                                              + a.cf_spike_option_weight * optionality_gain)
                             option_local_optionality_sum_ep += optionality_gain
                             option_local_continuation_gain_sum_ep += continuation_gain
+                            option_local_parent_beneficial_mass_sum_ep += parent_beneficial_mass
+                            option_local_child_beneficial_mass_sum_ep += child_beneficial_mass
                             option_local_beneficial_mass_delta_sum_ep += beneficial_mass_delta
                             option_local_optionality_by_layer_ep[action["layer"]] += optionality_gain
                             option_local_beneficial_mass_delta_by_layer_ep[
@@ -2241,6 +2252,18 @@ def main():
                         row["spike_option_mean_delta_beneficial_continuation_mass"] = round(
                             option_local_beneficial_mass_delta_sum_ep
                             / max(option_local_utility_actions_ep, 1), 5)
+                        row["spike_option_mean_parent_beneficial_continuation_mass"] = round(
+                            option_local_parent_beneficial_mass_sum_ep
+                            / max(option_local_utility_actions_ep, 1), 5)
+                        row["spike_option_mean_child_beneficial_continuation_mass"] = round(
+                            option_local_child_beneficial_mass_sum_ep
+                            / max(option_local_utility_actions_ep, 1), 5)
+                        row["spike_option_parent_beneficial_rollout_hits"] = int(
+                            option_parent_beneficial_hits_ep)
+                        row["spike_option_child_beneficial_rollout_hits"] = int(
+                            option_child_beneficial_hits_ep)
+                        row["spike_option_rollouts_per_action_state"] = int(
+                            a.cf_spike_option_rollouts)
                         row["spike_option_improvement_epsilon"] = (
                             a.cf_spike_option_improvement_epsilon)
                         row["spike_option_delta_reserve_sum_by_layer"] = (
