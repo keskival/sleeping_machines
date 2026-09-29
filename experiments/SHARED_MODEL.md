@@ -119,11 +119,11 @@ helper; result JSON and source are included.
 
 Validation queues:
 
-- `e120_contracts_final_20260929.txt`: extraction, scan, gradients, winner-only
+- `e120_contracts_release_20260929.txt`: extraction, scan, gradients, winner-only
   computation, prefix cutoff, query isolation, exact pointer update.
 - `e120_readout_audit_v2_20260929.txt`: frozen longer-context intervention and
   count-calibration contracts.
-- `report_shared_readable_20260929.txt`: readable PDF and Markdown build.
+- `report_shared_final_20260929.txt`: readable PDF and Markdown build.
 
 ## AWS handoff and outstanding coverage
 
@@ -131,6 +131,13 @@ The AWS sibling retains its existing non-SHD queues. This local work did not
 start those workloads or change their plan. Use a separate `aws/shared-*`
 branch, host-specific tags and new one-job queues for shared-model work. The
 handoff is a repository file, not a message sent to the sibling.
+
+The report publisher now resolves conflicts automatically only for generated
+report artifacts, preserving main until regeneration; editorial/builder conflicts
+require resolution. A publisher process started before this code change must be
+restarted on its host to adopt the revised policy. The named PDF edition
+`report/sleeping_machines_shared_20260929.pdf` preserves this report independently
+of the background status-PDF refresh.
 
 1. Import the shared-core source and contracts; run the contracts on a host
    with the referenced SHD checkpoint, or obtain that untracked checkpoint
