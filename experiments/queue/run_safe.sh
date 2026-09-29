@@ -89,5 +89,8 @@ while IFS= read -r line; do
   if [ -n "${AFTER_JOB_HOOK:-}" ]; then
     AFTER_JOB_NAME="$name" AFTER_JOB_EXIT_CODE="$rc" "$AFTER_JOB_HOOK" || { echo "after-job hook failed for $name" >&2; exit 1; }
   fi
-  [ "$rc" -eq 0 ] || exit "$rc"
+  if [ "$rc" -ne 0 ]; then
+    [ "${CONTINUE_ON_FAILURE:-0}" = 1 ] && continue
+    exit "$rc"
+  fi
 done < "$Q"
