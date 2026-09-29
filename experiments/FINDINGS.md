@@ -45,6 +45,8 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**AWS run `aws_e64_tf_D1M_checkpoint_20260929`.** experiments/e64_lm_baselines.py with arguments `["--model","tf","--D","1000000","--size","256","--layers","2","--passes","20","--dropout","0.2","--valid","200000"]`. Validated metrics: test_bpc=2.367; best_valid_bpc=2.3447. Wall time 3413.784 s; peak process RSS 2248972 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
+
 **AWS run `aws_e36_rel_e28_20260929`.** experiments/e36_transformer.py with arguments `["--task","e28","--reltime","1","--sizes","32x2,64x2","--episodes","2000000","--tag","rel"]`. Validated metrics: acc=0.9985; acc=0.9995; acc=0.9965; acc=0.999. Wall time 1322.77 s; peak process RSS 562072 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
 
 **AWS run `aws_e36_rel_e27_20260929`.** experiments/e36_transformer.py with arguments `["--task","e27","--reltime","1","--sizes","16x1,32x2,64x2","--episodes","2000000","--tag","rel"]`. Validated metrics: acc=0.997; acc=0.9995; acc=1; acc=0.9975; acc=0.997; acc=0.9975. Wall time 1252.509 s; peak process RSS 556744 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
