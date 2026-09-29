@@ -1,0 +1,90 @@
+{
+ "args": {
+  "task": "e27",
+  "sizes": "16x1,32x2,64x2",
+  "episodes": 2000000,
+  "batch": 64,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "rel",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 0,
+  "reltime": 1
+ },
+ "rows": [
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 0,
+   "d": 16,
+   "layers": 1,
+   "acc": 0.996999979019165,
+   "params": 6903,
+   "tokens_per_episode": 5.8045,
+   "macs_per_episode": 20606.80162,
+   "wall_s": 138.7
+  },
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9994999766349792,
+   "params": 51497,
+   "tokens_per_episode": 5.8045,
+   "macs_per_episode": 150358.449336,
+   "wall_s": 203.7
+  },
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 0,
+   "d": 64,
+   "layers": 2,
+   "acc": 1.0,
+   "params": 201161,
+   "tokens_per_episode": 5.8045,
+   "macs_per_episode": 582785.229528,
+   "wall_s": 282.1
+  },
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 1,
+   "d": 16,
+   "layers": 1,
+   "acc": 0.9975000023841858,
+   "params": 6903,
+   "tokens_per_episode": 5.7455,
+   "macs_per_episode": 20371.03762,
+   "wall_s": 141.1
+  },
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.996999979019165,
+   "params": 51497,
+   "tokens_per_episode": 5.7455,
+   "macs_per_episode": 148755.82053599998,
+   "wall_s": 205.3
+  },
+  {
+   "task": "e27",
+   "reltime": 1,
+   "seed": 1,
+   "d": 64,
+   "layers": 2,
+   "acc": 0.9975000023841858,
+   "params": 201161,
+   "tokens_per_episode": 5.7455,
+   "macs_per_episode": 576745.423128,
+   "wall_s": 280.3
+  }
+ ]
+}
