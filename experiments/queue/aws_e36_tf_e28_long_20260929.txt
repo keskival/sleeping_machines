@@ -1,0 +1,1 @@
+aws_e36_tf_e28_long_20260929 experiments/aws_benchmark.py --run-tag aws_e36_tf_e28_long_20260929 --script experiments/e36_transformer.py -- --task e28 --sizes 32x2,64x2,64x4 --episodes 2000000 --tag long
