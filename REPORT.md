@@ -6,7 +6,7 @@ Computing with time: learned delays, vector messages and local memory
 
 ## The strongest demonstrated results
 
-- **Better real-language prediction.** With 10M training characters, the native predictive mixture reaches **1.613 test bits per character**, ahead of the completed LSTM (1.799) and four-layer Transformer (1.908) on the same text8 split. The matched 90M LSTM and Transformer controls are queued. Lower bits per character means better prediction.
+- **Better real-language prediction.** With 10M training characters, the native predictive mixture reaches **1.613 test bits per character**, ahead of the completed LSTM (1.799) and four-layer Transformer (1.908) on the same text8 split. At 90M, completed held-out test scores are 1.504 for the native mixture. The 90M LSTM and four-layer Transformer reference results are pending. These are exploratory single-seed comparisons on the same text8 split; model sizes, training passes and computation are not matched. Lower bits per character means better prediction.
 - **Accurate retrieval with far fewer examples.** Local race retrieval learns perfect recall at four times the training context within 4,000 examples in all five runs. The consolidated model preserves 100% on its standard and longer contexts.
 - **Rule learning and deep composition.** The consolidated periodic path reaches **100% across all 3,440 unseen modular triples**. Native depth-four order models reach 99.9–100%; shared-motif composition reaches about 99.65% from one pass at roughly 10,000× lower counted work than its Transformer reference.
 
