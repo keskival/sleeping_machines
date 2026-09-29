@@ -144,7 +144,7 @@ an earlier result or reuse a successful queue job name for changed settings.
 Record the exact command, instance type, CPU/GPU, memory peak, wall time, and
 benchmark metrics. Update findings and the report only from completed result
 files. Work on a dedicated AWS Git branch; commit the benchmark and report
-changes there with `ALLOW_NON_MAIN_BRANCH=1 ./commit_done.sh 'AWS benchmark results'`.
+changes there using Git, staging only that host's completed source, results and report changes.
 Do not push to main while another host may be changing it.
 ```
 

@@ -87,3 +87,6 @@
 | **§173 / E119** | pair-reduced event memory preserves the affine recurrence and credit at linear scan work | completed: five float64 stream sizes; trained-model gradient relative error 2.34e-7; all 256 predictions preserved; CPU timing in `results/e119/scan_audit_s6.json` |
 | **§174** | normalized-memory timing eligibility requires evidence overlap and loss-relevant payload contrast | analytical identity derived; layer/bank eligibility and transfer measurement remains open |
 | **§175 / E119** | causal packet coalescing preserves count, trades temporal resolution and input delay for work | frozen-model development audit at 10/20/40/80 ms; root-feature perturbation bound applies before changes to subsequent history/races |
+
+| **§§197–200 / E132** | joint mark/clock likelihood gives exact expected credit through discontinuous races; censoring scales both Fisher blocks by firing probability | completed synthetic finite-difference, quadrature and Monte Carlo contracts; 27-leaf depth-three conditional tree; no SHD/language training gain claimed |
+| **§201 / E133** | an evidence-free common backbone learns language and uses preceding observations | matched one-/eight-layer bounded language runs; track all layer updates, validation loss and frozen context deletion; generic scaling and matched tuned baselines remain separate |

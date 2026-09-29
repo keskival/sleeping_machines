@@ -1,5 +1,62 @@
 # Findings log
 
+## E133: learned deep language prediction without explicit experts (29 September 2026)
+
+The same common model, evidence_count=0, no pointer/copy/phase predictor: 8,192
+training next-character targets, 32-character causal contexts, 1,024 reserved
+validation-region targets, four passes, width 32, seed 6. The eight-layer run
+improves from 4.7523 to **3.3951 dev bpc**, versus **3.4638** with one layer.
+Fitting scores are 3.0643/3.2343. Every layer's value, route and log-time-constant
+parameters change; all eight value-gradient norms remain nonzero. This provides
+a generic neural trainability/depth foothold without an explicit statistical
+expert. It does not reproduce the strongest specialized language result.
+
+Count/time/last-character-preserving input probes increase the eight-layer loss
+to 3.8046 (shuffle preceding order) and 3.7771 (unrelated preceding context).
+One-layer scores are 3.7750/3.7251. These are frozen perturbations rather than
+retrained controls. The last-character-only deletion gives severe out-of-support
+errors (36.91/18.28 bpc) and cannot establish a useful context advantage because
+it changes length and time-feature support. The matching count-preserving probes
+are the interpretable sensitivity measurements.
+
+Depth brings additional cost: 53,430 versus 7,671 parameters; 170.52 versus
+27.44 s total CPU wall time. Recorded training-forward map/scan contractions
+are 111.38G versus 14.04G FLOPs, excluding backward/optimizer and other work.
+One instrumented 16-query training batch has forward/backward contraction
+estimates 54.01M/108.13M for depth eight and 6.82M/13.61M for depth one. These
+operator counts have incomplete coverage and are not hardware measurements.
+Physical memory traffic and energy are unavailable. Inference map/scan/head
+contractions are 1.269M/0.162M per replayed query. Both depth choices therefore
+remain quality/work tradeoffs; this is not a measured efficiency improvement.
+
+The screen is one seed, equal width/data/presentations, not matched parameter
+count or a tuned Transformer/RNN/state-space comparison. Official test data are
+untouched. Exact commands, layer diagnostics, source/data hashes and profiler
+coverage: `results/e133/generic_language_d{1,8}_s6_20260929.json` and
+`generic_language_audit_20260929.json`. The current deterministic surrogate is
+used; E132's stochastic joint score law is not deployed in this run.
+
+## E132: exact joint race credit, deadline teaching and information geometry (29 September 2026)
+
+The proposed exponential race separates mark probabilities from total arrival
+intensity. The joint likelihood includes winning identity, waiting time and
+survival when no message arrives. Its censored Fisher matrix is block diagonal
+and both mark/clock blocks scale with firing probability. This derives how a
+label window can teach arrival intensity despite nonresponse, and why silent
+initialization starves both channels of information.
+
+Numerical contracts give maximum joint-gradient finite-difference error
+8.83e-12 and Fisher quadrature error 4.86e-17. A depth-three, three-choice
+conditional tree enumerates all 27 actual leaves and matches the score gradient
+to finite differences within 1.53e-11. A discontinuous deadline loss has zero
+ordinary sampled time derivative but nonzero exact clock credit; Monte Carlo
+agrees with that expectation. Conditional candidate averaging reduces the
+measured estimator variance on the synthetic example. Actual suffix replay
+cost must still be charged. These are analytic contracts, not a trained speech
+or language result; the current deterministic model is unchanged. Theory
+§§197–201 and `results/e132/joint_race_contract_20260929.json` preserve the proof
+scope and audited quantities.
+
 ## E128–E131: useful deep credit exists; winner coupling can defeat a finite representation update (29 September 2026)
 
 **Fitting-only geometry:** 240 utterances, six per class in each of two disjoint

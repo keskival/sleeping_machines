@@ -256,3 +256,19 @@ Do not use this exploratory suite as a new best-model selection on official
 test sets. Freeze choices with validation, then measure held-out quality and
 total training/inference resources. Theory §§176–186 explains the causal query,
 natural-score credit, calibration support, periodic composition and event readout.
+
+## Generic learned language screen (E133)
+
+The shared backbone now has a bounded evidence-free language comparison:
+`evidence_count=0`, no pointer/copy/phase readout, independently fitted one- and
+eight-layer configurations. Width 32, 8,192 training targets, 32-character
+contexts, four passes and 1,024 validation-region targets yield 3.464 and 3.395
+bpc respectively. Every value, route and memory-time layer parameter set updates.
+Count/time/last-character-preserving order perturbations raise the deeper loss
+to 3.805. This supports learned context sensitivity, not competitive large-scale
+language representation. The deeper configuration has more parameters and work.
+`results/e133/generic_language_audit_20260929.json` verifies data/protocol/source
+matching and records partial forward/backward operation estimates. Physical
+memory traffic and energy remain unmeasured. Prefix replay is unchanged.
+The generic scaling criteria are in
+[LANGUAGE_SCALING_PROTOCOL.md](LANGUAGE_SCALING_PROTOCOL.md).

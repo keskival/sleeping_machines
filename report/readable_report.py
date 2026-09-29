@@ -43,6 +43,8 @@ def results():
     tasks["shd_bridge"] = read("e122/d8_n4096_bridge_s6.json")
     tasks["shd_bridge_frozen"] = read("e122/d8_n4096_bridge_frozen_s6.json")
     tasks["shd_key_value"] = read("e131/key_value_comparison_20260929.json")
+    tasks["generic_language"] = {depth: read(f"e133/generic_language_d{depth}_s6_20260929.json") for depth in (1,8)}
+    tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
     return tasks
 
 
@@ -127,6 +129,24 @@ def figures(M, tasks, ev):
     def save(fig, name):
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    f, axes = plt.subplots(1, 2, figsize=(7.2, 2.65))
+    for depth, color in ((1, gray), (8, blue)):
+        row = tasks["generic_language"][depth]
+        curve = [row["initial"]["dev"]["bpc"]] + [e["dev"]["bpc"] for e in row["curve"]]
+        axes[0].plot(range(len(curve)), curve, "o-", color=color, label=f"{depth} layer" + ("s" if depth > 1 else ""))
+        work = tasks["generic_language_audit"]["rows"][str(depth)]["training_forward_map_scan_flops"]/1e9
+        final = curve[-1]
+        axes[1].scatter(work, final, color=color, s=65)
+        axes[1].annotate(f"{depth} layer" + ("s" if depth > 1 else "") + f"\n{final:.3f} bpc", (work,final),
+                         xytext=(0,12), textcoords="offset points", ha="center", fontsize=8)
+    axes[0].set(xlabel="Passes over 8,192 training characters", ylabel="Validation bpc (lower is better)",
+                title="Learned prediction; no explicit experts", xticks=range(5))
+    axes[0].legend(fontsize=8)
+    axes[1].set(xlabel="Training-forward contractions (GFLOPs; estimate)",
+                ylabel="Validation bpc (lower is better)", title="Quality / computation tradeoff",
+                xlim=(0,135), ylim=(3.32,3.58))
+    f.tight_layout()
+    save(f, "e133_generic_language")
     f = accomplishments_figure(M, ev)
     save(f, "accomplishments")
 
@@ -457,6 +477,30 @@ def blocks(M, tasks, ev):
          "sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer updates; they "
          "are not total training FLOPs or measured energy.")])
 
+    generic = tasks["generic_language_audit"]["rows"]
+    pages.append([
+        ("h1","Appendix B (continued). Learned language without experts"),
+        ("p","A new bounded screen trains the common event backbone without explicit n-gram, pointer, copy "
+         "or periodic prediction experts. Both configurations use width 32, the same 8,192 training characters, "
+         "four passes, 32-character contexts and 1,024 validation predictions. All eight layers' value, route "
+         "and memory-time parameters update. Lower bits per character means better prediction."),
+        ("figure",("e133_generic_language",174)),
+        ("table",(["Depth","Learned parameters","Validation bpc: lower is better","Total CPU wall time"],[
+         [str(depth),f"{generic[str(depth)]['parameters']:,}",f"{generic[str(depth)]['final_dev_bpc']:.3f}",f"{generic[str(depth)]['wall_s']:.1f} s"]
+         for depth in (1,8)],[24,40,60,50])),
+        ("p","Eight layers improve validation loss from 4.752 to 3.395 bpc, versus 3.464 with one layer. "
+         "Shuffling preceding characters while preserving the last character, count and timestamps increases "
+         "the deeper model's loss to 3.805; replacing preceding context raises it to 3.777. These frozen input "
+         "probes show context sensitivity, not a retrained baseline comparison."),
+        ("p","The deeper model costs more: recorded training-forward map/scan contractions are 111.38G "
+         "versus 14.04G FLOPs. One instrumented 16-query batch estimates 108.13M versus 13.61M backward "
+         "contraction FLOPs. These partial arithmetic measures exclude unsupported operations and optimizer "
+         "work. Physical memory traffic and joules are unmeasured; contexts are still replayed."),
+        ("small","One seed; different parameter counts. This establishes a generic learned-language foothold "
+         "and a small depth gain, not competitive large-scale representation, a matched tuned dense-model "
+         "advantage or a scaling law. The native 10M-character mixture remains a separate result. Official test "
+         "data are untouched. E133 preserves commands, source/data hashes, layer diagnostics and work coverage.")])
+
     pages.append([
         ("h1","Appendix C. Evidence and metric definitions"),
         ("table",(["Metric","Interpretation"],[
@@ -472,7 +516,8 @@ def blocks(M, tasks, ev):
          "E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 "
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
          "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
-         "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning."),
+         "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks "
+         "a joint race-credit formalism and E133 supplies the expert-free language screen."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])

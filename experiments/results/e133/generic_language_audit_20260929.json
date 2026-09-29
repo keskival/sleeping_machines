@@ -1,0 +1,130 @@
+{
+  "status": "completed",
+  "rows": {
+    "1": {
+      "parameters": 7671,
+      "initial_dev_bpc": 4.7556008806770835,
+      "final_dev_bpc": 3.4637633376358106,
+      "final_fit_bpc": 3.234281981053172,
+      "layer_value_route_tau_updates_verified": [
+        0
+      ],
+      "last_character_only_bpc": 18.281517483255957,
+      "context_probes": {
+        "prefix_order_shuffled": {
+          "n": 1024,
+          "nll": 2.6166145224124193,
+          "wall_s": 0.16388889399240725,
+          "prefix_packets_processed": 32768,
+          "scan_compositions": 64832,
+          "selected_value_evaluations": 32768,
+          "correct": 229,
+          "accuracy": 0.2236328125,
+          "bpc": 3.774976795402441
+        },
+        "unrelated_prefix_same_last_character": {
+          "n": 1024,
+          "nll": 2.582028431817889,
+          "wall_s": 0.16489008101052605,
+          "prefix_packets_processed": 32768,
+          "scan_compositions": 64832,
+          "selected_value_evaluations": 32768,
+          "correct": 226,
+          "accuracy": 0.220703125,
+          "bpc": 3.725079614017976
+        }
+      },
+      "training_forward_map_scan_flops": 14035709952,
+      "inference_forward_map_scan_flops_per_query": 162095.875,
+      "profiled_contractions": {
+        "training_forward_contraction_flops_batch": 6824734,
+        "backward_contraction_flops_batch": 13609650,
+        "batch_queries": 16,
+        "coverage": "PyTorch instrumented operator FLOP estimates; unsupported operations omitted; no optimizer, calibration or dataset preprocessing."
+      },
+      "wall_s": 27.444362376001664,
+      "peak_rss_kib": 344192
+    },
+    "8": {
+      "parameters": 53430,
+      "initial_dev_bpc": 4.752305832822456,
+      "final_dev_bpc": 3.395112176413794,
+      "final_fit_bpc": 3.06432166679198,
+      "layer_value_route_tau_updates_verified": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "last_character_only_bpc": 36.91047233998447,
+      "context_probes": {
+        "prefix_order_shuffled": {
+          "n": 1024,
+          "nll": 2.637140391394496,
+          "wall_s": 1.00405841198517,
+          "prefix_packets_processed": 32768,
+          "scan_compositions": 518656,
+          "selected_value_evaluations": 262144,
+          "correct": 221,
+          "accuracy": 0.2158203125,
+          "bpc": 3.8045893647928195
+        },
+        "unrelated_prefix_same_last_character": {
+          "n": 1024,
+          "nll": 2.6180776935070753,
+          "wall_s": 1.0031360969878733,
+          "prefix_packets_processed": 32768,
+          "scan_compositions": 518656,
+          "selected_value_evaluations": 262144,
+          "correct": 233,
+          "accuracy": 0.2275390625,
+          "bpc": 3.777087705084673
+        }
+      },
+      "training_forward_map_scan_flops": 111377350656,
+      "inference_forward_map_scan_flops_per_query": 1269047.0,
+      "profiled_contractions": {
+        "training_forward_contraction_flops_batch": 54010985,
+        "backward_contraction_flops_batch": 108133744,
+        "batch_queries": 16,
+        "coverage": "PyTorch instrumented operator FLOP estimates; unsupported operations omitted; no optimizer, calibration or dataset preprocessing."
+      },
+      "wall_s": 170.51656790397828,
+      "peak_rss_kib": 367480
+    }
+  },
+  "protocol": {
+    "dataset": "text8",
+    "token_unit": "character",
+    "training_targets": [
+      32,
+      8224
+    ],
+    "validation_targets": [
+      90000032,
+      90001056
+    ],
+    "context": 32,
+    "expert_modules": [],
+    "official_test_read": false,
+    "query_execution": "Every target replays its observed context; no persistent scheduler",
+    "gradient_rule": "Current deterministic hard-race surrogate; E132 stochastic joint credit is not used"
+  },
+  "all_matching_source_ids_and_data_verified": true,
+  "scope": "One seed, equal width/data/presentations, different parameter counts. Development screen; no tuned Transformer/RNN/state-space comparison or scaling claim.",
+  "context_probe_scope": "Frozen input perturbations, not retrained controls. Shuffle/swap preserve count, timestamps and last character. Last-character-only changes count/time support and cannot establish a context advantage.",
+  "work_scope": "Map/scan/score/head forward contractions estimated from recorded executed counts, 2 FLOPs/MAC. Excludes nonlinearities, sorting, normalization arithmetic, encoding, calibration, preprocessing, backward and optimizer. Profiled backward is a separate partial operator estimate. No hardware memory/energy measurement.",
+  "physical_memory_reads": null,
+  "physical_memory_writes": null,
+  "energy_joules": null,
+  "wall_s": 5.845559711015085,
+  "source_sha256": {
+    "/workspace/experiments/e133_language_audit.py": "56447cc75ec2a0d3fe39c9ae29a567aef3772040c0dd1887544abd700b9fddd7",
+    "experiments/results/e133/generic_language_d1_s6_20260929.json": "944c8d90cf54d3d95d7da52af1e1ee70ba33ba3c563cfc17377fcbf3c0e6eacd",
+    "experiments/results/e133/generic_language_d8_s6_20260929.json": "b86b7a31902b5218515c827ec0a8fe86aa533e0bbafc11f3046b16fbee634aa0"
+  }
+}

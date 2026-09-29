@@ -16,6 +16,18 @@ requires an evidence-free learned backbone, persistent execution and measured
 physical work before a frontier scaling claim. Existing language mixture wins
 and eight-layer speech learning do not close that gap.
 
+**Generic representation priority (E132–E133):** distinguish existing specialized
+language prediction from a learned, evidence-free event backbone. Check trained
+value/key support and validation improvement in matched one-/eight-layer screens
+before scaling data. The completed expert-free depth-eight screen reaches
+3.395 dev bpc versus 3.464 at depth one; all layers update, but parameters and
+work rise with depth. This establishes a small learned-language foothold, not
+competitive scaling. Exact joint stochastic race credit now has numerical
+contracts, including silence/Fisher geometry (§§197–201); it remains a candidate
+for the key-policy implementation, with actual counterfactual suffix cost and
+variance to be measured. Persistent execution and hardware measurements are
+required by the language scaling protocol, not inferred from the short screen.
+
 **Current consolidation:** arithmetic and longer-context recall are retained.
 The common model supports a 69-scalar periodic path, two-layer synthetic
 configurations and eight-layer speech. Its learned modular rule is certified

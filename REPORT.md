@@ -171,6 +171,23 @@ Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 
 
 FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. Forward counts are per unpadded prefix. Training-forward sums the declared fitting budget and includes the common model's losing-value evaluations. These are contraction estimates, excluding nonlinearities, sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer updates; they are not total training FLOPs or measured energy.
 
+## Appendix B (continued). Learned language without experts
+
+A new bounded screen trains the common event backbone without explicit n-gram, pointer, copy or periodic prediction experts. Both configurations use width 32, the same 8,192 training characters, four passes, 32-character contexts and 1,024 validation predictions. All eight layers' value, route and memory-time parameters update. Lower bits per character means better prediction.
+
+![e133 generic language](report/figures/e133_generic_language.png)
+
+| Depth | Learned parameters | Validation bpc: lower is better | Total CPU wall time |
+| --- | --- | --- | --- |
+| 1 | 7,671 | 3.464 | 27.4 s |
+| 8 | 53,430 | 3.395 | 170.5 s |
+
+Eight layers improve validation loss from 4.752 to 3.395 bpc, versus 3.464 with one layer. Shuffling preceding characters while preserving the last character, count and timestamps increases the deeper model's loss to 3.805; replacing preceding context raises it to 3.777. These frozen input probes show context sensitivity, not a retrained baseline comparison.
+
+The deeper model costs more: recorded training-forward map/scan contractions are 111.38G versus 14.04G FLOPs. One instrumented 16-query batch estimates 108.13M versus 13.61M backward contraction FLOPs. These partial arithmetic measures exclude unsupported operations and optimizer work. Physical memory traffic and joules are unmeasured; contexts are still replayed.
+
+One seed; different parameter counts. This establishes a generic learned-language foothold and a small depth gain, not competitive large-scale representation, a matched tuned dense-model advantage or a scaling law. The native 10M-character mixture remains a separate result. Official test data are untouched. E133 preserves commands, source/data hashes, layer diagnostics and work coverage.
+
 ## Appendix C. Evidence and metric definitions
 
 | Metric | Interpretation |
@@ -182,6 +199,6 @@ FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. F
 | Resource boundary | Logical memory reads are reported separately. Transfers, allocations, kernel launch and instrumentation are outside the arithmetic ledger. Division, exponential and remainder costs have unit weights. |
 | Energy | Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements. |
 
-The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning.
+The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism and E133 supplies the expert-free language screen.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
