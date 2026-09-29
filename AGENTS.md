@@ -17,7 +17,8 @@
   result or reuse a successful queue job name for changed settings. Keep long
   runs in `tmux` and preserve their command, logs, hardware, wall time, and
   metrics.
-- When another host is changing the repository, work on a separate branch and
-  do not push to `main`. Update findings and the report from completed result
+- Work and commit on `main`, as requested by the user; do not create research
+  branches. When another host is changing the repository, preserve its changes
+  and coordinate overlapping files. Update findings and the report from completed result
   files, and distinguish exploratory single-seed evidence from benchmark
   claims.
