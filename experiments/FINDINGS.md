@@ -5,6 +5,47 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 scalar route optionality through descendants (§§149–150).** We ran six
+guarded frozen-checkpoint audits on the same stratified 32-example
+held-out-speaker subset, selecting eight factual errors. The alternatives
+included route swaps at two margin widths, closed-route birth, spike birth,
+and their combined proposal pool. Route-only, route-birth, and spike-only
+audits produced no immediate-loss or finite suffix-step advantage among their
+sampled leaves. In the spike-only arm, verified interventions added events in
+L1/L2/L3 on 13/11/3 leaves, but none reached L4. This shows that making more
+local events is insufficient unless their descendants reach the classifier.
+
+The combined action pool produced 31 leaves; all 31 forced interventions were
+verified. Five leaves added L4 events (eight added L4 events total across
+these separate replays). Four of 31 lowered deepest-head loss, four improved
+the matched one-step clipped suffix-SGD progress, and three improved both.
+One branch worsened current loss while increasing finite suffix progress.
+The recursively backed-up scalar was positive on one of eight error trees at
+each tested learning-option weight λ=0, 1, and 10, and on two trees at λ=100;
+the second tree flips only because that uncalibrated high weight values its
+larger suffix step over its worse current loss. The result is a small
+checkpoint-conditioned route to deeper label credit, not a training gain or
+SHD accuracy improvement. Action proposals were not paired with common random
+numbers across arms, and no route-birth leaf was sampled in the combined arm.
+The audit stores branch traces for inspection, while the proposed recursion
+itself propagates one scalar and does not require a global tree.
+
+**Theory update.** §149 now defines the terminal value as immediate
+label-loss advantage plus measured finite suffix-learning progress, and backs
+that scalar through counterfactual descendants. §150 distinguishes event
+propagation from reachable class utility and reports the six audits. λ needs
+calibration against real held-out loss after a sparse scalar update; this
+virtual step remains a development diagnostic. The next decisive experiment
+is a bounded update on training data with recorded proposal propensities and
+held-out-speaker evaluation after training.
+
+The jobs ran serially through `experiments/queue/run_safe.sh` with 3.6 GB
+virtual-memory cap, 2.6 GB process-group RSS cap, 8 GB host-availability
+floor, and 20-minute watchdog. Peak observed RSS was 407 MB and available host
+memory stayed above 11.8 GB; all completed jobs exited 0. The first spike-mask
+attempt exited before useful work due to a tensor-broadcast shape error; the
+mask was corrected and the guarded rerun succeeded.
+
 **E83 1,024-example spike-pair audit: event propagation is not pair synergy (§146).**
 The frozen held-out-speaker audit tested every binary outcome for one selected
 near-boundary pair per batch. L2 yielded 141 control and 69 late-only pairs;

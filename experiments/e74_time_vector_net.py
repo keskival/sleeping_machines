@@ -38,13 +38,15 @@ TAU_R = 20.0                                                         # reset tra
 class TVLayer(nn.Module):
     def __init__(self, n_in, M, d_in, d_out, n, dmax, mask=None, spiking=True, w_sd=0.1, theta=1.0, gate_bias=0.5,
                  route_topk=0,
-                 cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0, normalize=False):
+                 cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0, normalize=False,
+                 trainable_thresholds=False):
         super().__init__()
         self.normalize = normalize                  # non-spiking read z / (count channel + 1): the §105 normalizer
         self.cdelay, self.gate, self.snapshot, self.causal = cdelay, gate, snapshot, causal
         self.vdot_min = 0.02                       # floor on dV/dt at a crossing: bounds 1/V' for grazing spikes
         self.register_buffer("sent", torch.zeros(n_in, M, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.dmax, self.spiking, self.theta = M, n, dmax, spiking, theta
+        self.theta_offsets = (nn.Parameter(torch.zeros(M)) if trainable_thresholds else None)
         self.route_topk = int(route_topk)
         if self.route_topk < 0:
             raise ValueError("route_topk must be nonnegative")
@@ -67,7 +69,10 @@ class TVLayer(nn.Module):
                 return_route_graph=False, return_voltage_samples=False,
                 spike_override=None, return_spike_diagnostics=False,
                 route_overrides=None, spike_overrides=None):
-        M, n, th = self.M, self.n, self.theta
+        M, n = self.M, self.n
+        th = self.theta
+        if self.theta_offsets is not None:
+            th = th + self.theta_offsets
         E = len(et)
         if self.mask is not None:
             pe, pj = self.mask[ei].nonzero(as_tuple=True)
@@ -229,9 +234,10 @@ class TVLayer(nn.Module):
         Z = torch.stack(zs); zprev = Z[kk - 1, bb, jj]                          # state at the grid point before the crossing
         lj, wj = lam[jj], wc[jj]
         zT0 = torch.exp(lj * frac[:, None]) * zprev
-        V0 = (wj * zT0).real.sum(-1) - th * Rpre
-        Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=self.vdot_min)
-        s = frac - ((V0 - th) / Vdot).clamp(-1.0, 1.0)                         # refined time since grid point k-1
+        event_th = th[jj] if torch.is_tensor(th) else th
+        V0 = (wj * zT0).real.sum(-1) - event_th * Rpre
+        Vdot = ((wj * lj * zT0).real.sum(-1) + event_th * Rpre / TAU_R).detach().clamp(min=self.vdot_min)
+        s = frac - ((V0 - event_th) / Vdot).clamp(-1.0, 1.0)                   # refined time since grid point k-1
         forced_event = None
         if active_spike_specs:
             forced_event = torch.zeros_like(kk, dtype=torch.bool)

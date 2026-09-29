@@ -800,108 +800,101 @@ def fig_e83_route_cost_audit():
 
 
 def fig_e83_route_option_value():
-    """Show whether a sampled route branch exposes deeper supervised options."""
+    """Show how different counterfactual actions expose deep option value."""
     result_paths = [
         os.path.join(RES, "e83", "route_option_value_moe_top2_tree_paired_band0p5.json"),
         os.path.join(RES, "e83", "route_option_value_moe_top2_tree_paired_band5.json"),
+        os.path.join(RES, "e83", "route_option_value_moe_top2_tree_birth_band0p5.json"),
+        os.path.join(RES, "e83", "route_option_value_moe_top2_tree_spike_band0p5.json"),
+        os.path.join(RES, "e83", "route_option_value_moe_top2_tree_all_band0p5.json"),
     ]
     results = [load(path) for path in result_paths]
-    names = ["margin ≤ 0.5", "margin ≤ 5"]
-    colors = [BLUE, ORANGE]
-    layers = np.arange(1, results[0]["depth"] + 1)
-    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.1))
+    replacement, _, birth, spike, combined = results
+    layers = np.arange(1, replacement["depth"] + 1)
+    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.55))
 
-    width = 0.34
-    for idx, (result, name, color) in enumerate(zip(results, names, colors)):
-        values = np.asarray(result["near_boundary_candidates_seen_by_layer"],
+    proposal_results = [replacement, birth, spike, combined]
+    proposal_names = ["route swap", "route birth", "spike birth", "combined"]
+    proposal_colors = [BLUE, ORANGE, AQUA, YELLOW]
+    width = 0.18
+    for idx, (result, name, color) in enumerate(zip(
+            proposal_results, proposal_names, proposal_colors)):
+        counts = np.asarray(result["near_boundary_candidates_seen_by_layer"],
                             dtype=np.float64)
-        x = layers + (idx - 0.5) * width
-        axes[0, 0].bar(x, np.log10(values + 1), width=width, color=color,
+        x = layers + (idx - 1.5) * width
+        axes[0, 0].bar(x, np.log10(counts + 1), width=width, color=color,
                        label=name)
-        for layer, count in zip(layers, values.astype(int)):
-            y = np.log10(count + 1)
-            axes[0, 0].text(layer + (idx - 0.5) * width, y + 0.08,
-                            f"{count:,}", ha="center", va="bottom", fontsize=5.2,
-                            rotation=45 if count > 999 else 0)
+        for xpos, count in zip(x, counts.astype(int)):
+            if count:
+                label = f"{count / 1000:.1f}k" if count >= 1000 else f"{count:,}"
+                axes[0, 0].text(xpos, np.log10(count + 1) + 0.07,
+                                label, ha="center", va="bottom",
+                                fontsize=4.7, rotation=35 if count >= 1000 else 0)
     axes[0, 0].set_xticks(layers, [f"L{k}" for k in layers])
-    axes[0, 0].set_ylabel("log10(1 + swaps)")
-    axes[0, 0].set_title("A · Candidate swaps across visited states", fontsize=7.4)
-    axes[0, 0].legend(fontsize=5.0)
+    axes[0, 0].set_ylabel("log10(1 + candidate visits)")
+    axes[0, 0].set_title("A · Candidate support by action family", fontsize=7.4)
+    axes[0, 0].legend(fontsize=4.8, ncol=2)
 
-    mean_leaves, mean_option_only = [], []
-    for result in results:
-        trees = result["trees"]
-        mean_leaves.append(float(np.mean([tree["tree_leaf_count"] for tree in trees]))
-                           if trees else 0.0)
-        mean_option_only.append(float(np.mean([tree["option_only_leaf_count"]
-                                                for tree in trees])) if trees else 0.0)
-    x = np.arange(2)
-    axes[0, 1].bar(x - width / 2, mean_leaves, width, color=BLUE,
-                   label="route-path leaves / tree")
-    axes[0, 1].bar(x + width / 2, mean_option_only, width, color=AQUA,
-                   label="option-only leaves / tree")
-    axes[0, 1].set_xticks(x, names)
-    axes[0, 1].set_ylabel("mean across error-conditioned trees")
-    axes[0, 1].set_title("B · Descendant paths and learning options", fontsize=7.4)
-    axes[0, 1].legend(fontsize=4.9)
-
-    for result, name, color in zip(results, names, colors):
+    for result, name, color in ((spike, "spike only", AQUA),
+                                (combined, "combined pool", YELLOW)):
         branches = [leaf for tree in result["trees"] for leaf in tree["leaves"]
                     if leaf["swap_count"] > 0]
-        if not branches:
-            continue
-        immediate = np.asarray([row["immediate_advantage_vs_factual"]
-                                for row in branches])
-        learning = np.asarray([row["learning_option_advantage"] for row in branches])
-        axes[1, 0].scatter(immediate, learning, s=14, alpha=0.55, color=color,
-                           label=f"{name} (n={len(branches)})")
-        overlap = int(np.count_nonzero((immediate == 0) & (learning == 0)))
-        if overlap:
-            axes[1, 0].annotate(f"{name}: {overlap} exactly at (0, 0)",
-                                (0, 0), xytext=(5, 8 + 8 * len(axes[1, 0].texts)),
-                                textcoords="offset points", fontsize=5.1,
-                                color=color)
+        fractions = [100 * np.mean([
+            row["hidden_event_delta_by_layer"][i] > 0 for row in branches])
+                     if branches else 0.0 for i in range(len(layers))]
+        axes[0, 1].plot(layers, fractions, marker="o", linewidth=1.1,
+                        color=color, label=f"{name} (n={len(branches)})")
+    axes[0, 1].set_xticks(layers, [f"L{k}" for k in layers])
+    axes[0, 1].set_ylim(-3, 65)
+    axes[0, 1].set_ylabel("counterfactual leaves adding events (%)")
+    axes[0, 1].set_title("B · Verified event cascades", fontsize=7.4)
+    axes[0, 1].legend(fontsize=4.9)
+
+    all_branches = [leaf for tree in combined["trees"] for leaf in tree["leaves"]
+                    if leaf["swap_count"] > 0]
+    for has_route, name, color, marker in (
+            (False, "spike-only path", AQUA, "o"),
+            (True, "path includes route swap", ORANGE, "s")):
+        rows = [row for row in all_branches
+                if any(action["mechanism"] == "replacement"
+                       for action in row["path"]) == has_route]
+        axes[1, 0].scatter(
+            [row["immediate_advantage_vs_factual"] for row in rows],
+            [row["learning_option_advantage"] for row in rows],
+            s=18, alpha=0.7, color=color, marker=marker,
+            label=f"{name} (n={len(rows)})")
     axes[1, 0].axhline(0, color=GRAY, linewidth=0.8, linestyle=":")
     axes[1, 0].axvline(0, color=GRAY, linewidth=0.8, linestyle=":")
-    axes[1, 0].set_xlabel("immediate label-loss advantage")
-    axes[1, 0].set_ylabel("matched suffix learning advantage")
-    axes[1, 0].set_title("C · Route value can include future learning", fontsize=7.4)
-    axes[1, 0].legend(fontsize=4.9)
+    axes[1, 0].set_xlabel("immediate deepest-head loss advantage")
+    axes[1, 0].set_ylabel("matched suffix-step progress advantage")
+    axes[1, 0].set_title("C · Immediate loss vs suffix-step progress", fontsize=7.3)
+    axes[1, 0].legend(fontsize=4.7)
 
-    dynamics = [
-        load(os.path.join(RES, "e83", "route_dynamics_bundle_control.json")),
-        load(os.path.join(RES, "e83", "route_dynamics_moe_top2.json")),
-    ]
-    for result, name, color in zip(dynamics, ("independent gates", "top-2"),
-                                   (GRAY, ORANGE)):
-        support = np.asarray([row["hidden_support_fraction"]
-                              for row in result["per_layer"]])
-        axes[1, 1].plot(layers, 100 * support, marker="o", color=color,
-                        label=name)
-    control_l2 = dynamics[0]["per_layer"][1]
-    top2_l2 = dynamics[1]["per_layer"][1]
-    axes[1, 1].text(0.03, 0.03,
-                    f"L2 max receiver share: {control_l2['receiver_load_max_share']:.2f} → "
-                    f"{top2_l2['receiver_load_max_share']:.2f}; support: "
-                    f"{100*control_l2['hidden_support_fraction']:.1f}% → "
-                    f"{100*top2_l2['hidden_support_fraction']:.1f}%",
-                    transform=axes[1, 1].transAxes, fontsize=5.0,
-                    bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8})
-    axes[1, 1].set_xticks(layers, [f"L{k}" for k in layers])
-    axes[1, 1].set_ylabel("examples with a spike (%)")
-    axes[1, 1].set_title("D · Deep event support is the constraint", fontsize=7.4)
-    axes[1, 1].legend(fontsize=5.0)
+    weights = ["0.0", "1.0", "10.0", "100.0"]
+    positive_counts = [sum(tree["backup_value_by_learning_weight"][w] > 0
+                           for tree in combined["trees"]) for w in weights]
+    axes[1, 1].bar(np.arange(len(weights)), positive_counts, color=[BLUE, BLUE, BLUE, ORANGE])
+    for i, count in enumerate(positive_counts):
+        axes[1, 1].text(i, count + 0.12, f"{count}/8", ha="center", fontsize=5.6)
+    axes[1, 1].set_xticks(np.arange(len(weights)), ["0", "1", "10", "100"])
+    axes[1, 1].set_ylim(0, 3)
+    axes[1, 1].set_xlabel("learning-option weight λ")
+    axes[1, 1].set_ylabel("error trees with positive scalar value")
+    axes[1, 1].set_title("D · Scalar backup is weight-sensitive", fontsize=7.4)
+    axes[1, 1].text(0.03, 0.97, "the second positive tree flips only at λ = 100",
+                    transform=axes[1, 1].transAxes, va="top", fontsize=4.8,
+                    color=MUTED)
 
     for ax in axes.flat:
         ax.grid(axis="y", alpha=0.2)
         ax.set_axisbelow(True)
-    fig.suptitle("E83 · counterfactual route optionality through depth",
+    fig.suptitle("E83 · scalar optionality across route and spike counterfactuals",
                  x=0.02, ha="left", fontsize=8.7, fontweight="bold")
     fig.text(0.02, 0.015,
-             "Frozen top-2 seed-6 checkpoint; paired error targets; receiver swaps replayed through descendants. "
-             "One clipped suffix-SGD diagnostic step; no persistent updates. Candidate counts repeat across visited states.",
+             "Frozen seed-6 top-2 checkpoint; 8 error-conditioned held-out-speaker examples. "
+             "One clipped suffix-SGD step; no persistent updates. Candidate counts repeat across visited states; λ is uncalibrated.",
              fontsize=4.9, color=MUTED)
-    fig.tight_layout(rect=(0, 0.08, 1, 0.91), h_pad=1.3, w_pad=1.0)
+    fig.tight_layout(rect=(0, 0.08, 1, 0.91), h_pad=1.35, w_pad=1.0)
     out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_option_value.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     return fig
@@ -1889,6 +1882,14 @@ def build():
             "This supports a topology-conditioned shared-receiver test, not an L1 update against the fused shallow head. "
             "These validation-informed runs are development evidence, not untouched-test "
             "results. Neither pair strategy has established an SHD accuracy gain.", "small"),
+         P("<b>Counterfactual optionality through descendants (§§149–150):</b> six bounded audits compared route swaps, "
+           "route births, spike births, and a combined proposal pool on eight wrong held-out-speaker examples. The "
+           "single-action arms had zero measured class-loss or suffix-learning advantage. In the combined pool, "
+           "5/31 verified counterfactual leaves added layer-4 events; three leaves improved both deepest-head loss and "
+           "one-step suffix-SGD progress. The recursive scalar value was positive on one of eight error trees at "
+           "learning-option weights 0, 1, and 10, and on two only at weight 100. That additional tree's current loss "
+           "worsened, so the large weight is not calibrated. This is a small mechanism signal that a sparse cascade can "
+           "expose a deep learning option, not a trained update or SHD accuracy gain.", "small"),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "

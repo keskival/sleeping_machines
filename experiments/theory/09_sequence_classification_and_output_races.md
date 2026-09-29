@@ -3103,6 +3103,21 @@ $$
 U_\ell(a)=A^{\rm now}_\ell(a)+\lambda_\ell A^{\rm learn}_\ell(a).
 $$
 
+For a branch with $A^{\rm now}<0<A^{\rm learn}$, the scalarized preference
+changes sign at
+
+$$
+\lambda^*=-\frac{A^{\rm now}}{A^{\rm learn}}.
+$$
+
+This makes the role of the single propagated value precise: for any fixed
+$\lambda$, the Bellman recursion can pass one scalar upward without retaining
+the full branch tree. A scalar cannot also preserve the full Pareto frontier
+over immediate accuracy, future learning progress, and work when $\lambda$ is
+left free; those objectives can rank two branches in opposite orders. One
+must fix/calibrate the scalarization, or propagate a small vector/frontier if
+the tradeoff itself must remain open.
+
 This gives a route credit even when $A^{\rm now}$ is near zero or negative,
 provided the alternate branch yields greater supervised progress after a
 bounded suffix update. For categorical choices with policy $\pi(a\mid s)$,
@@ -3255,3 +3270,48 @@ $+0.471$ in control. This points toward receiver concentration and/or vector
 and temporal integration, but does not isolate the cause. Initialization
 should calibrate sparse propagation gain, receiver load, and threshold-margin
 occupancy per layer, rather than target one global top-$k$ or firing rate.
+
+### Frozen scalar-backup audit across action families (E83)
+
+We tested the recursive scalar value on one frozen seed-6 top-2 checkpoint,
+using the same stratified 32-example held-out-speaker subset and selecting
+eight factual errors. Six bounded audits compared receiver replacement at two
+margin widths, closed-route birth, mixed route actions, near-threshold spike
+birth, and a combined proposal pool. The route-only arms (including the wide
+margin) and the spike-only arm had zero immediate-loss and suffix-progress
+advantage on every sampled counterfactual leaf; their root scalar values were
+zero for all tested learning weights. Spike-only shadows nevertheless changed
+the hidden event counts at L1/L2/L3 in 13/11/3 leaves, but never created an L4
+event. Thus intervention and event propagation are not sufficient for
+label-useful continuation.
+
+The combined pool produced 31 counterfactual leaves, and all 31 forced
+interventions matched the requested route or spike state. Five leaves added
+L4 events (eight in total across these separately replayed leaves). Four of
+31 lowered the deepest-head loss, four increased the matched finite clipped
+suffix-SGD progress, and three improved both; one worsened current loss while
+improving suffix-step progress. The recursive root value was positive on one
+of eight error trees for each of $\lambda=0,1,10$, and on two trees at
+$\lambda=100$. The extra positive tree at 100 is the branch whose current
+loss worsens. On that branch the measured advantages were
+$A^{\rm now}=-0.09137$ and $A^{\rm learn}=0.009015$, giving the leaf-level
+sign threshold $\lambda^*\approx10.14$ from the scalarization formula above.
+The root value flips only at $\lambda=100$ because its descendant values are
+soft-backed up with the factual continuation as well. This demonstrates
+sensitivity to the option-value scale, not a validated training preference.
+The route-only, spike-only, and combined
+samplers did not use common random numbers for action selection, so these are
+candidate-discovery comparisons rather than paired estimates of action-family
+effects. The combined pool sampled no route-birth leaf in this small audit.
+
+This is the first checkpoint-conditioned evidence here that a chain of
+counterfactual events can expose both deeper activity and a small
+class-aligned suffix-learning option. It is not a trained update, an
+accuracy gain, or evidence of SHD supremacy. The examples were selected from
+the development validation speakers, and the scalar tree is noisy and
+unexhaustive. The next decisive test is a bounded scalar update on training
+examples with action propensities recorded, a dimensionally controlled
+learning-progress term, and held-out-speaker evaluation after real updates.
+The recursive computation returns one value at each state; the JSON audit
+retains branch traces only for diagnosis, not because the scalar recursion
+requires a globally available tree.

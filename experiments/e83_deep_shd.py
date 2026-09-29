@@ -346,13 +346,15 @@ class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
                  dmax, w_sd, seed=0, event_readout=False,
                  readout_fusion="deepest", input_count_payload=False,
-                 early_event_skip=False, route_topk=0):
+                 early_event_skip=False, route_topk=0,
+                 trainable_thresholds=False):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
         self.depth = int(depth)
         self.early_event_skip = bool(early_event_skip)
         self.route_topk = int(route_topk)
+        self.trainable_thresholds = bool(trainable_thresholds)
         if self.route_topk < 0:
             raise ValueError("route_topk must be nonnegative")
         gen = torch.Generator().manual_seed(seed)
@@ -362,7 +364,8 @@ class DeepSHD(nn.Module):
         centers = (torch.arange(M1) + 0.5) * bands / M1
         local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
         self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0],
-                                   route_topk=self.route_topk))
+                                   route_topk=self.route_topk,
+                                   trainable_thresholds=self.trainable_thresholds))
         adjacent_masks = []
         for i in range(1, depth):
             previous_width = self.widths[i - 1]
@@ -389,7 +392,8 @@ class DeepSHD(nn.Module):
                 mask = torch.cat((adjacent_mask, skip_mask), dim=0)
             n_in = mask.shape[0]
             self.layers.append(TVLayer(n_in, M, d, d, n, dmax, mask, True, w_sd[1],
-                                       route_topk=self.route_topk))
+                                       route_topk=self.route_topk,
+                                       trainable_thresholds=self.trainable_thresholds))
         self.event_readout = bool(event_readout)
         self.readout_fusion = readout_fusion
         if self.event_readout:
@@ -603,6 +607,101 @@ def sparse_event_objective(heads, layer_events, labels, seq_end, dmax,
     auxiliary = (sum(local_losses[:-1]) if len(local_losses) > 1
                  else main.new_zeros(()))
     return main, auxiliary, local_losses
+
+
+def per_item_deepest_loss(net, info, labels, seq_end, depth, dmax, prefix_times):
+    """Deepest-head prefix loss and terminal logits, one row per utterance."""
+    rows = net.event_heads[-1].prefix_logits(
+        info["layer_events"][-1], seq_end, depth, dmax, prefix_times)
+    losses = torch.stack([
+        F.cross_entropy(row, labels[b].expand(len(row)))
+        for b, row in enumerate(rows)
+    ])
+    return losses, torch.stack([row[-1] for row in rows])
+
+
+def sample_spike_option_path(net, eb, ei, et, input_counts, batch_size, grid,
+                             initial_info, target_batch, args, rng):
+    """Sample at most one near-threshold spike birth per layer, replaying descendants."""
+    overrides = []
+    actions = []
+    state_info = initial_info
+    horizon = min(grid - 1, int(getattr(args, "prefix_horizon_ms", 1000.0)))
+    for layer_id in range(net.depth):
+        if rng.random() >= args.cf_spike_option_probability:
+            continue
+        diagnostic = state_info["spike_diagnostics"][layer_id]
+        margins = diagnostic["spike_margin_trace"]
+        fired = diagnostic["spike_fire_mask"]
+        refractory = diagnostic["spike_refractory_trace"]
+        time_ids = torch.arange(margins.shape[0], device=margins.device)
+        valid_time = (time_ids > 0) & (time_ids <= horizon)
+        valid = (
+            valid_time[:, None]
+            & (margins[:, target_batch] <= 0.0)
+            & (margins[:, target_batch] >= -args.cf_spike_option_band)
+            & ~fired[:, target_batch]
+            & (refractory[:, target_batch] < 1e-3)
+        )
+        coordinates = torch.nonzero(valid, as_tuple=False).detach().cpu().numpy()
+        if not len(coordinates):
+            continue
+        candidate_margins = np.asarray([
+            float(margins[t, target_batch, unit]) for t, unit in coordinates
+        ])
+        weights = np.exp(-np.abs(candidate_margins)
+                         / max(args.cf_spike_option_temperature, 1e-8))
+        probabilities = weights / weights.sum()
+        selected = int(rng.choice(len(coordinates), p=probabilities))
+        time_id, unit_id = map(int, coordinates[selected])
+        margin = float(candidate_margins[selected])
+        action = {
+            "layer": layer_id,
+            "time": time_id,
+            "batch": target_batch,
+            "unit": unit_id,
+            "margin": margin,
+            "candidate_count": int(len(coordinates)),
+            "proposal_probability": float(probabilities[selected]),
+        }
+        actions.append(action)
+        overrides.append((layer_id, time_id, target_batch, unit_id, True))
+        with torch.no_grad():
+            _, state_info = net(
+                eb, ei, et, batch_size, grid, return_taps=True,
+                return_spike_diagnostics=True, spike_overrides=overrides,
+                input_counts=input_counts)
+    return overrides, actions
+
+
+def option_suffix_parameters(net, last_layer):
+    hidden = [p for layer in net.layers[last_layer + 1:]
+              for p in layer.parameters() if p.requires_grad]
+    return hidden + [p for p in net.event_heads[-1].parameters()
+                     if p.requires_grad]
+
+
+def clipped_virtual_progress(net, loss, params, replay_loss, lr, clip_norm,
+                             retain_graph):
+    """Measure finite one-step suffix-SGD progress while restoring all weights."""
+    grads = torch.autograd.grad(loss, params, allow_unused=True,
+                                retain_graph=retain_graph)
+    norm_sq = sum(float(g.detach().square().sum()) for g in grads if g is not None)
+    grad_norm = math.sqrt(norm_sq)
+    clip_scale = min(1.0, clip_norm / max(grad_norm, 1e-12))
+    originals = [p.detach().clone() for p in params]
+    try:
+        with torch.no_grad():
+            for param, grad in zip(params, grads):
+                if grad is not None:
+                    param.add_(grad, alpha=-lr * clip_scale)
+            after = float(replay_loss())
+    finally:
+        with torch.no_grad():
+            for param, original in zip(params, originals):
+                param.copy_(original)
+    before = float(loss.detach())
+    return before - after, grad_norm
 
 
 def grad_norm(module):
@@ -826,6 +925,30 @@ def main():
                     help="score-preserving-count route replacement shadows per layer and batch (requires --route_topk)")
     ap.add_argument("--cf_route_swap_band", type=float, default=0.5,
                     help="maximum winner-minus-loser score gap for route replacement shadows")
+    ap.add_argument("--trainable_thresholds", action="store_true",
+                    help="add zero-initialized per-unit threshold offsets (needed for the spike-option update)")
+    ap.add_argument("--cf_spike_option_updates", action="store_true",
+                    help="train per-unit thresholds from a sampled multi-layer spike-option path")
+    ap.add_argument("--cf_spike_option_weight", type=float, default=10.0,
+                    help="lambda multiplying finite suffix-learning progress in scalar option utility")
+    ap.add_argument("--cf_spike_option_probability", type=float, default=0.5,
+                    help="per-layer probability of proposing one spike birth along the sampled path")
+    ap.add_argument("--cf_spike_option_band", type=float, default=0.5,
+                    help="voltage-margin band below threshold for candidate spike births")
+    ap.add_argument("--cf_spike_option_sigma", type=float, default=0.25,
+                    help="logistic voltage scale used to convert scalar utility into threshold credit")
+    ap.add_argument("--cf_spike_option_temperature", type=float, default=0.15,
+                    help="proposal temperature over absolute subthreshold margins")
+    ap.add_argument("--cf_spike_option_lr", type=float, default=0.05,
+                    help="separate threshold-credit step multiplier")
+    ap.add_argument("--cf_spike_option_step_clip", type=float, default=0.01,
+                    help="maximum absolute per-action threshold offset change per batch")
+    ap.add_argument("--cf_spike_option_bound", type=float, default=0.1,
+                    help="trust-region bound for learned threshold offsets")
+    ap.add_argument("--cf_spike_virtual_lr", type=float, default=0.001,
+                    help="learning rate for the temporary suffix-progress measurement")
+    ap.add_argument("--cf_spike_virtual_clip", type=float, default=1.0,
+                    help="gradient-norm cap for the temporary suffix-progress measurement")
     ap.add_argument("--shift", type=int, default=4)
     ap.add_argument("--drop", type=float, default=0.1)
     ap.add_argument("--epochs", type=int, default=2)
@@ -854,6 +977,20 @@ def main():
             or not math.isfinite(a.cf_grad_clip) or a.cf_grad_clip <= 0.0
             or not math.isfinite(a.cf_delta_clip) or a.cf_delta_clip <= 0.0):
         raise ValueError("counterfactual count must be nonnegative; band, sigma, loss-difference clip, and gradient clip must be positive; cf_lr must be nonnegative")
+    if (not math.isfinite(a.cf_spike_option_weight) or a.cf_spike_option_weight < 0
+            or not 0.0 <= a.cf_spike_option_probability <= 1.0
+            or not math.isfinite(a.cf_spike_option_band) or a.cf_spike_option_band <= 0
+            or not math.isfinite(a.cf_spike_option_sigma) or a.cf_spike_option_sigma <= 0
+            or not math.isfinite(a.cf_spike_option_temperature) or a.cf_spike_option_temperature <= 0
+            or not math.isfinite(a.cf_spike_option_lr) or a.cf_spike_option_lr < 0
+            or not math.isfinite(a.cf_spike_option_step_clip) or a.cf_spike_option_step_clip <= 0
+            or not math.isfinite(a.cf_spike_option_bound) or a.cf_spike_option_bound <= 0
+            or not math.isfinite(a.cf_spike_virtual_lr) or a.cf_spike_virtual_lr <= 0
+            or not math.isfinite(a.cf_spike_virtual_clip) or a.cf_spike_virtual_clip <= 0):
+        raise ValueError("invalid spike-option update, proposal, or virtual-step parameter")
+    if a.cf_spike_option_updates and (not a.trainable_thresholds
+                                      or a.objective != "event_prefix"):
+        raise ValueError("spike-option updates require --trainable_thresholds and --objective event_prefix")
     if a.cf_route_swaps_per_layer and not a.route_topk:
         raise ValueError("--cf_route_swaps_per_layer requires --route_topk > 0")
     if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
@@ -874,6 +1011,8 @@ def main():
     counterfactual_rng = np.random.default_rng(a.seed + 200_003)
     pair_rng = np.random.default_rng(a.seed + 700_031)
     route_swap_rng = np.random.default_rng(a.seed + 900_017)
+    spike_option_rng = np.random.default_rng(a.seed + 1_100_021)
+    spike_option_target_rng = np.random.default_rng(a.seed + 1_300_027)
     t0 = time.time()
 
     def load(split, part):
@@ -890,7 +1029,8 @@ def main():
                   readout_fusion=a.readout_fusion,
                   input_count_payload=a.input_count_payload == "additive",
                   early_event_skip=a.early_event_skip,
-                  route_topk=a.route_topk)
+                  route_topk=a.route_topk,
+                  trainable_thresholds=a.trainable_thresholds)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * nb, pct_start=0.1)
@@ -903,6 +1043,11 @@ def main():
                       "layer_params": res["layer_params"], "load_s": round(time.time() - t0)}), flush=True)
     for ep in range(a.epochs):
         net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
+        option_paths_ep = option_actions_ep = option_candidates_ep = 0
+        option_immediate_ep = option_learning_ep = option_utility_ep = 0.0
+        option_grad_norm_ep = option_threshold_step_ep = 0.0
+        option_hidden_delta_ep = np.zeros(a.depth, dtype=np.float64)
+        option_action_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
         cf_eligible_ep = cf_shadow_ep = 0
         cf_abs_delta_ep = cf_signed_delta_ep = 0.0
         cf_delta_sq_ep = cf_boundary_sensitivity_ep = cf_boundary_coeff_abs_ep = 0.0
@@ -949,6 +1094,7 @@ def main():
                           collect_routes=event_readout and (
                               a.cf_shadows_per_layer > 0 or a.cf_pairs_per_batch > 0
                               or a.cf_route_swaps_per_layer > 0),
+                          return_spike_diagnostics=a.cf_spike_option_updates,
                           input_counts=input_counts)
             traces = info["tap_traces"]
             if event_readout:
@@ -978,6 +1124,110 @@ def main():
             if i0 == 0:
                 route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
+            option_threshold_deltas = []
+            if a.cf_spike_option_updates:
+                item_losses, item_logits = per_item_deepest_loss(
+                    net, info, y, seq_end, a.depth, a.dmax, prefix_times)
+                probabilities = torch.softmax(item_logits.detach(), dim=-1)
+                labels_np = y.detach().cpu().numpy()
+                predictions = probabilities.argmax(-1).cpu().numpy()
+                wrong = np.flatnonzero(predictions != labels_np)
+                if len(wrong):
+                    p_true = probabilities.detach().cpu().numpy()[
+                        np.arange(len(items)), labels_np]
+                    entropy = (-(probabilities * probabilities.clamp_min(1e-12).log()).sum(-1)
+                               / math.log(probabilities.shape[-1])).cpu().numpy()
+                    target_weights = ((1.0 - p_true[wrong])
+                                      * (0.5 + 0.5 * entropy[wrong]))
+                    target_weights = (target_weights / target_weights.sum()
+                                      if target_weights.sum() > 0
+                                      else np.full(len(wrong), 1.0 / len(wrong)))
+                    target_batch = int(spike_option_target_rng.choice(
+                        wrong, p=target_weights))
+                else:
+                    target_batch = int(item_losses.detach().argmax())
+                path_overrides, option_actions = sample_spike_option_path(
+                    net, eb, ei, et, input_counts, len(items), grid, info,
+                    target_batch, a, spike_option_rng)
+                option_candidates_ep += sum(row["candidate_count"]
+                                            for row in option_actions)
+                if option_actions:
+                    with torch.enable_grad():
+                        _, branch_info = net(
+                            eb, ei, et, len(items), grid, return_taps=True,
+                            return_spike_diagnostics=True,
+                            spike_overrides=path_overrides,
+                            input_counts=input_counts)
+                        branch_losses, _ = per_item_deepest_loss(
+                            net, branch_info, y, seq_end, a.depth, a.dmax,
+                            prefix_times)
+                        root_target_loss = item_losses[target_batch]
+                        branch_target_loss = branch_losses[target_batch]
+                        last_layer = max(action["layer"] for action in option_actions)
+                        suffix = option_suffix_parameters(net, last_layer)
+
+                        def root_replay_loss():
+                            with torch.no_grad():
+                                _, replay_info = net(
+                                    eb, ei, et, len(items), grid, return_taps=True,
+                                    input_counts=input_counts)
+                                replay_losses, _ = per_item_deepest_loss(
+                                    net, replay_info, y, seq_end, a.depth,
+                                    a.dmax, prefix_times)
+                            return float(replay_losses[target_batch])
+
+                        def branch_replay_loss():
+                            with torch.no_grad():
+                                _, replay_info = net(
+                                    eb, ei, et, len(items), grid, return_taps=True,
+                                    spike_overrides=path_overrides,
+                                    input_counts=input_counts)
+                                replay_losses, _ = per_item_deepest_loss(
+                                    net, replay_info, y, seq_end, a.depth,
+                                    a.dmax, prefix_times)
+                            return float(replay_losses[target_batch])
+
+                        factual_progress, factual_grad_norm = clipped_virtual_progress(
+                            net, root_target_loss, suffix, root_replay_loss,
+                            a.cf_spike_virtual_lr, a.cf_spike_virtual_clip,
+                            retain_graph=True)
+                        branch_progress, branch_grad_norm = clipped_virtual_progress(
+                            net, branch_target_loss, suffix, branch_replay_loss,
+                            a.cf_spike_virtual_lr, a.cf_spike_virtual_clip,
+                            retain_graph=False)
+                    immediate_advantage = float(
+                        root_target_loss.detach() - branch_target_loss.detach())
+                    learning_advantage = branch_progress - factual_progress
+                    scalar_utility = (immediate_advantage
+                                      + a.cf_spike_option_weight * learning_advantage)
+                    option_paths_ep += 1
+                    option_actions_ep += len(option_actions)
+                    option_immediate_ep += immediate_advantage
+                    option_learning_ep += learning_advantage
+                    option_utility_ep += scalar_utility
+                    option_grad_norm_ep += 0.5 * (factual_grad_norm + branch_grad_norm)
+                    root_event_counts = [
+                        int((layer_events[0] == target_batch).sum())
+                        for layer_events in info["layer_events"]]
+                    branch_event_counts = [
+                        int((layer_events[0] == target_batch).sum())
+                        for layer_events in branch_info["layer_events"]]
+                    option_hidden_delta_ep += np.asarray(branch_event_counts) - np.asarray(root_event_counts)
+                    option_threshold_deltas = []
+                    for action in option_actions:
+                        layer_id, unit_id = action["layer"], action["unit"]
+                        margin = action["margin"]
+                        fire_probability = 1.0 / (1.0 + math.exp(
+                            -margin / a.cf_spike_option_sigma))
+                        sensitivity = (fire_probability * (1.0 - fire_probability)
+                                       / a.cf_spike_option_sigma)
+                        raw_delta = (-a.cf_spike_option_lr * sensitivity
+                                     * scalar_utility / len(option_actions))
+                        delta = float(np.clip(
+                            raw_delta, -a.cf_spike_option_step_clip,
+                            a.cf_spike_option_step_clip))
+                        option_threshold_deltas.append((layer_id, unit_id, delta))
+                        option_action_by_layer_ep[layer_id] += 1
             cf_eligible = cf_shadow_count = 0
             cf_abs_delta_sum = 0.0
             cf_clipped_count = 0
@@ -1226,6 +1476,15 @@ def main():
                     cf_layer_stats_count_ep[li] += 1
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
+            if option_threshold_deltas:
+                with torch.no_grad():
+                    for layer_id, unit_id, delta in option_threshold_deltas:
+                        offsets = net.layers[layer_id].theta_offsets
+                        old_value = offsets[unit_id].clone()
+                        offsets[unit_id].add_(delta).clamp_(
+                            -a.cf_spike_option_bound, a.cf_spike_option_bound)
+                        option_threshold_step_ep += float(
+                            (offsets[unit_id] - old_value).abs())
             if cf_grads is not None:
                 with torch.no_grad():
                     for param, grad in zip(model_params, cf_grads):
@@ -1512,6 +1771,31 @@ def main():
                 readout_updates / len(ev), 1)
             row["readout_edge_updates_by_layer_per_utterance"] = (
                 st["msgs"][a.depth:2 * a.depth] / len(ev)).round(1).tolist()
+            if a.trainable_thresholds:
+                row["threshold_offset_mean_by_layer"] = [
+                    round(float(layer.theta_offsets.detach().mean()), 7)
+                    for layer in net.layers]
+                row["threshold_offset_max_abs_by_layer"] = [
+                    round(float(layer.theta_offsets.detach().abs().max()), 7)
+                    for layer in net.layers]
+            if a.cf_spike_option_updates:
+                row["spike_option_paths_per_epoch"] = int(option_paths_ep)
+                row["spike_option_actions_per_epoch"] = int(option_actions_ep)
+                row["spike_option_actions_by_layer"] = option_action_by_layer_ep.tolist()
+                row["spike_option_proposal_candidates_sum"] = int(option_candidates_ep)
+                row["spike_option_mean_immediate_advantage"] = round(
+                    option_immediate_ep / max(option_paths_ep, 1), 7)
+                row["spike_option_mean_suffix_learning_advantage"] = round(
+                    option_learning_ep / max(option_paths_ep, 1), 7)
+                row["spike_option_mean_scalar_utility"] = round(
+                    option_utility_ep / max(option_paths_ep, 1), 7)
+                row["spike_option_mean_suffix_gradient_norm"] = round(
+                    option_grad_norm_ep / max(option_paths_ep, 1), 7)
+                row["spike_option_threshold_update_l1"] = round(
+                    option_threshold_step_ep, 7)
+                row["spike_option_hidden_event_delta_sum_by_layer"] = (
+                    option_hidden_delta_ep.astype(int).tolist())
+                row["spike_option_learning_weight"] = a.cf_spike_option_weight
             if a.readout_fusion == "all_depths":
                 row["readout_branch_ablation_accuracy"] = (
                     fusion_ablation_ok / len(ev)).round(4).tolist()
