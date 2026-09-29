@@ -19,6 +19,36 @@ def git(*args):
     return subprocess.check_output(['git', *args], cwd=ROOT, text=True).strip()
 
 
+def publish_result():
+    """Keep retrying transient remote failures and rebase after concurrent main updates."""
+    delay = 15
+    while True:
+        fetched = subprocess.run(['git', 'fetch', 'origin'], cwd=ROOT, text=True,
+                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        if fetched.returncode:
+            print(datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                  'fetch failed before publish; retrying:', fetched.stdout.strip(), flush=True)
+        else:
+            rebased = subprocess.run(['git', 'rebase', 'origin/main'], cwd=ROOT, text=True,
+                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            if rebased.returncode:
+                subprocess.run(['git', 'rebase', '--abort'], cwd=ROOT, check=False,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print(datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                      'rebase onto main failed; retrying:', rebased.stdout.strip(), flush=True)
+            else:
+                pushed = subprocess.run(['git', 'push', 'origin',
+                                         'HEAD:refs/heads/' + BRANCH], cwd=ROOT, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if pushed.returncode == 0:
+                    print(pushed.stdout.strip(), flush=True)
+                    return
+                print(datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                      'push failed; retrying:', pushed.stdout.strip(), flush=True)
+        time.sleep(delay)
+        delay = min(delay * 2, 300)
+
+
 def main():
     os.chdir(ROOT)
     if git('branch', '--show-current') != BRANCH:
@@ -95,7 +125,7 @@ def main():
             raise RuntimeError('Branch changed; refusing to commit benchmark results')
         subprocess.run(['git', 'add', '--', *files], check=True)
         subprocess.run(['git', 'commit', '--only', '-m', f'Record {tag}: {record["status"]}', '--', *files], check=True)
-        subprocess.run(['git', 'push', 'origin', f'HEAD:refs/heads/{BRANCH}'], check=True)
+        publish_result()
         # A host-wide memory shortage stops the batch. A per-model failure is
         # recorded and independent configurations may still run safely.
         if result.returncode in (130, 143) or (lifecycle.exists() and 'below 8192MB' in lifecycle.read_text()):

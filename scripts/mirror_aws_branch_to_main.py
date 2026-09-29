@@ -69,7 +69,7 @@ def refresh_report():
             if pushed.returncode:
                 print(stamp(), 'main advanced during report build; rebuilding:', pushed.stdout.strip(), flush=True)
                 continue
-            print(stamp(), 'updated REPORT.md, findings, and PDF on main', flush=True)
+            print(stamp(), 'updated report visualizations and PDF on main', flush=True)
             return True
         finally:
             remove_report_worktree()
@@ -122,10 +122,10 @@ def main():
                 main_sha = target_sha
                 # Refresh from committed files, then rebase so the next result
                 # can fast-forward straight onto main.
-                refresh_report()
+                report_ok = refresh_report()
                 git('fetch', 'origin', check=False)
                 main_sha = git('rev-parse', TARGET).stdout.strip()
-                reported = main_sha
+                reported = main_sha if report_ok else None
                 # Rebase only after both the result and its report are on main.
                 if git('branch', '--show-current').stdout.strip() == BRANCH:
                     rebased = git('rebase', TARGET, check=False)
@@ -137,8 +137,8 @@ def main():
                         if synced.returncode:
                             print(stamp(), 'branch sync deferred:', synced.stdout.strip(), flush=True)
         if main_sha != reported:
-            refresh_report()
-            reported = git('rev-parse', TARGET, check=False).stdout.strip()
+            report_ok = refresh_report()
+            reported = git('rev-parse', TARGET, check=False).stdout.strip() if report_ok else None
         time.sleep(5)
 
 

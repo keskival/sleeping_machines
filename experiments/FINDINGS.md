@@ -43,40 +43,6 @@
 One entry per result: what we ran, what came out, what it teaches us, what changes.
 Newest first. Numbers are single seeds unless stated.
 
-## 2026-09-29
-
-**AWS run `aws_e68_text_R0_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","text","--R","0","--steps","3000"]`. Validated metrics: test_bpc=2.7562. Wall time 46.821 s; peak process RSS 1282272 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R16_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","16","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.19. Wall time 531.119 s; peak process RSS 516012 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R4_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","4","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.174. Wall time 169.77 s; peak process RSS 496740 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R1_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","1","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.18. Wall time 78.275 s; peak process RSS 487840 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R0_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","0","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.192. Wall time 45.971 s; peak process RSS 469924 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R16_s1_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","16","--steps","8000","--seed","1"]`. Validated metrics: test_acc=0.177. Wall time 531.527 s; peak process RSS 518276 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R4_s1_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","4","--steps","8000","--seed","1"]`. Validated metrics: test_acc=0.189. Wall time 169.795 s; peak process RSS 496316 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R1_s1_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","1","--steps","8000","--seed","1"]`. Validated metrics: test_acc=0.179. Wall time 78.469 s; peak process RSS 487528 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R0_s1_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","0","--steps","8000","--seed","1"]`. Validated metrics: test_acc=0.189. Wall time 45.6 s; peak process RSS 470124 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e68_recall_R16_s0_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","16","--steps","8000","--seed","0"]`. Validated metrics: test_acc=0.176. Wall time 531.614 s; peak process RSS 516624 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e76_attention_work_D1M_20260929`.** experiments/e76_attention_work.py with arguments `["--windows","200","--checkpoint_dir","experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929"]`. Validated metrics: Completed; inspect the saved result for measurements.. Wall time 5.997 s; peak process RSS 1281080 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e64_tf_D1M_checkpoint_20260929`.** experiments/e64_lm_baselines.py with arguments `["--model","tf","--D","1000000","--size","256","--layers","2","--passes","20","--dropout","0.2","--valid","200000"]`. Validated metrics: test_bpc=2.367; best_valid_bpc=2.3447. Wall time 3413.784 s; peak process RSS 2248972 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e36_rel_e28_20260929`.** experiments/e36_transformer.py with arguments `["--task","e28","--reltime","1","--sizes","32x2,64x2","--episodes","2000000","--tag","rel"]`. Validated metrics: acc=0.9985; acc=0.9995; acc=0.9965; acc=0.999. Wall time 1322.77 s; peak process RSS 562072 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e36_rel_e27_20260929`.** experiments/e36_transformer.py with arguments `["--task","e27","--reltime","1","--sizes","16x1,32x2,64x2","--episodes","2000000","--tag","rel"]`. Validated metrics: acc=0.997; acc=0.9995; acc=1; acc=0.9975; acc=0.997; acc=0.9975. Wall time 1252.509 s; peak process RSS 556744 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e77_route_cf_potential_d512_depth2_20260929`.** experiments/e77_tv_lm.py with arguments `["--D","512","--passes","0.125","--L","16","--bs","2","--d","8","--n","4","--M1","8","--M2","8","--Mr","8","--heads","1","--dh","8","--depth","2","--valid","128","--test","128","--seed","77","--target_spikes_per_char","0","--cf_shadows_per_layer","1","--cf_band","0.5","--cf_sigma","0.25","--cf_lr","0"]`. Validated metrics: best_valid_bpc=4.6981; test_bpc=4.7133. Wall time 1.802 s; peak process RSS 1297584 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
-**AWS run `aws_e36_tf_e28_long_20260929`.** experiments/e36_transformer.py with arguments `["--task","e28","--sizes","32x2,64x2,64x4","--episodes","2000000","--tag","long"]`. Validated metrics: acc=0.9965; acc=0.998; acc=0.995; acc=0.996; acc=0.996; acc=0.997. Wall time 2330.297 s; peak process RSS 562436 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
-
 **E83 conditioned margin-support audit (§154).** A frozen seed-6 depth-4
 control was replayed over 128 held-out-speaker utterances. We counted
 nonfiring, nonrefractory receiver-time cells only after at least one actually
