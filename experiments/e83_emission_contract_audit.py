@@ -54,7 +54,8 @@ def main():
     net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2,
                   a.readout_fan, a.dmax, [float(v) for v in a.w_sd.split(",")],
                   a.seed, event_readout=True, readout_fusion=a.readout_fusion,
-                  input_count_payload=a.input_count_payload == "additive",
+                  input_count_payload=a.input_count_payload != "off",
+                  input_count_route_neutral=a.input_count_payload == "address_neutral",
                   early_event_skip=getattr(a, "early_event_skip", False),
                   route_topk=getattr(a, "route_topk", 0),
                   spike_reconstruction=getattr(a, "spike_reconstruction", "legacy"))
