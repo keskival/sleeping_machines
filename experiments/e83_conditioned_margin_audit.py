@@ -35,6 +35,8 @@ def main():
                   early_event_skip=bool(getattr(a, 'early_event_skip', False)),
                   route_topk=int(getattr(a, 'route_topk', 0)))
     net.load_state_dict(ckpt['model_state_dict'])
+    for layer in net.layers:
+        layer.spike_reconstruction = getattr(a, "spike_reconstruction", "legacy")
     net.eval()
     # Bands are disjoint intervals in signed margin m=V-theta.
     bins = [(-0.25, 0.0), (-0.5, -0.25), (-1.0, -0.5), (-2.0, -1.0), (-float('inf'), -2.0)]

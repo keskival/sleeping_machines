@@ -12,6 +12,7 @@ import sys
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 sys.path.insert(0, os.path.dirname(__file__))
 import e51_shd_world as S  # noqa: E402
@@ -45,6 +46,38 @@ def work_delta(on, off):
     }
 
 
+def delivered_message_mask(net, info, layer_id, batch_size, grid):
+    """(time,batch,receiver) mask for a selected upstream message already delivered."""
+    layer = net.layers[layer_id]
+    width = layer.M
+    earliest = np.full((batch_size, width), np.inf, dtype=np.float64)
+    route = info["route_candidates"][layer_id]
+    active = route["active"].cpu().numpy().astype(bool)
+    if active.any():
+        receivers = route["receiver"].cpu().numpy()[active]
+        event_ids = route["event_index"].cpu().numpy()[active]
+        source_batch = route["source_batch"].cpu().numpy()[active]
+        source_times = route["source_time"].cpu().numpy()[active]
+        scores = route["score"].cpu().numpy()[active]
+        source_units = info["route_inputs"][layer_id][1].cpu().numpy()
+        receiver_t = torch.as_tensor(receivers, dtype=torch.long)
+        if layer.cdelay:
+            delay_score = torch.as_tensor(scores, dtype=layer.log_rate.dtype)
+        else:
+            source_unit_t = torch.as_tensor(source_units[event_ids], dtype=torch.long)
+            delay_score = F.softplus(layer.c[source_unit_t, receiver_t]).detach()
+        delays = (torch.exp(layer.log_td.detach()[receiver_t])
+                  * delay_score.clamp(min=0)).clamp(max=layer.dmax).cpu().numpy()
+        arrivals = np.ceil(source_times + delays).astype(np.int64)
+        for batch, receiver, arrival in zip(source_batch, receivers, arrivals):
+            if 0 <= arrival < grid:
+                earliest[int(batch), int(receiver)] = min(
+                    earliest[int(batch), int(receiver)], float(arrival))
+    time = torch.arange(grid, dtype=torch.float32)[:, None, None]
+    arrived = torch.as_tensor(earliest, dtype=torch.float32)[None, :, :] <= time
+    return arrived
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
@@ -60,6 +93,10 @@ def main():
     ap.add_argument("--fusion", choices=("checkpoint", "deepest", "all_depths"),
                     default="checkpoint",
                     help="override the checkpoint's event-readout fusion for the frozen audit")
+    ap.add_argument("--require_nonrefractory", action="store_true",
+                    help="exclude candidate coordinates with positive refractory state")
+    ap.add_argument("--require_input_arrival", action="store_true",
+                    help="require a selected upstream message to have arrived by the candidate time")
     a = ap.parse_args()
     if a.examples < 1 or a.batch_size < 1 or a.spike_band <= 0 or a.sigma <= 0:
         raise ValueError("examples, batch size, spike band, and sigma must be positive")
@@ -95,6 +132,8 @@ def main():
                   early_event_skip=bool(get("early_event_skip", False)),
                   route_topk=int(get("route_topk", 0)))
     net.load_state_dict(ckpt["model_state_dict"])
+    for layer in net.layers:
+        layer.spike_reconstruction = get("spike_reconstruction", "legacy")
     net.eval()
 
     rng = np.random.default_rng(a.seed + 71_337)
@@ -102,6 +141,7 @@ def main():
             for t, u, y in S.utterances("train", bands, "val_spk") if len(t) > 1]
     samples = stratified_limit(data, a.examples, rng)
     per_layer = [[] for _ in range(depth)]
+    eligible_batches = np.zeros(depth, dtype=np.int64)
     batches = 0
     for start in range(0, len(samples), a.batch_size):
         items = samples[start:start + a.batch_size]
@@ -112,6 +152,7 @@ def main():
                                             1000.0, 0.0, et.device, et.dtype)
         with torch.no_grad():
             _, base_info = net(eb, ei, et, len(items), grid, return_taps=True,
+                               collect_routes=a.require_input_arrival,
                                return_spike_diagnostics=True,
                                input_counts=input_counts)
             base_main, base_aux, _ = sparse_event_objective(
@@ -126,8 +167,17 @@ def main():
                 continue
             margins = diagnostic["spike_margin_trace"]
             fired = diagnostic["spike_fire_mask"]
+            refractory = diagnostic["spike_refractory_trace"]
             valid = torch.ones_like(margins, dtype=torch.bool)
             valid[0] = False  # TVLayer intentionally cannot emit at grid index 0.
+            if a.require_nonrefractory:
+                valid &= refractory < 1e-3
+            if a.require_input_arrival:
+                valid &= delivered_message_mask(
+                    net, base_info, layer_id, len(items), grid)
+            if not valid.any():
+                continue
+            eligible_batches[layer_id] += 1
             near = valid & (margins.abs() <= a.spike_band)
             eligible = int(near.sum().item())
             if eligible:
@@ -177,6 +227,8 @@ def main():
                 "naturally_firing": was_firing,
                 "refractory_state": refractory_state,
                 "refractory_blocked": refractory_state > 1e-6,
+                "require_input_arrival": bool(a.require_input_arrival),
+                "require_nonrefractory": bool(a.require_nonrefractory),
                 "within_spike_band": used_band,
                 "eligible_margins_in_batch": eligible,
                 "base_loss": base_loss,
@@ -200,6 +252,10 @@ def main():
         summary.append({
             "layer": layer_id + 1,
             "shadows": len(rows),
+            "eligible_batches": int(eligible_batches[layer_id]),
+            "batches": batches,
+            "fraction_batches_with_in_band_candidate": float(sum(
+                row["within_spike_band"] for row in rows) / batches) if batches else None,
             "fraction_within_band": float(np.mean([row["within_spike_band"] for row in rows])) if rows else None,
             "fraction_naturally_firing": float(np.mean([row["naturally_firing"] for row in rows])) if rows else None,
             "fraction_refractory_state_positive": float(np.mean([row["refractory_blocked"] for row in rows])) if rows else None,

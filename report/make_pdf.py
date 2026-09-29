@@ -989,7 +989,7 @@ def fig_e83_spike_option_training():
     fig.suptitle("E83 · scalar spike-option training pilot", x=0.02,
                  ha="left", fontsize=8.7, fontweight="bold")
     fig.text(0.02, 0.015,
-             "Seed 6; depth 4; 120 train / 128 held-out speakers; deepest readout; two epochs. "
+             "Seed 6; depth 4; 120 train / 128 held-out-speaker utterances; deepest readout; two epochs. "
              "Each arm ended at 6/128 accuracy; race coverage was zero. Zero L4 norms are plotted at the axis floor. One seed.",
              fontsize=4.9, color=MUTED)
     fig.subplots_adjust(top=0.88, bottom=0.15, left=0.1, right=0.99)
@@ -1066,7 +1066,7 @@ def fig_e83_optionality_state_value():
     fig.suptitle("E83 · six-epoch state-conditioned optionality check",
                  x=0.02, ha="left", fontsize=8.7, fontweight="bold")
     fig.text(0.02, 0.005,
-             "Seed 6; depth 4; 120 train / 128 held-out speakers; six epochs; two future rollouts/action. "
+             "Seed 6; depth 4; 120 train / 128 held-out-speaker utterances; six epochs; two future rollouts/action. "
              "One seed; rollout reserve is proposal-conditioned.",
              fontsize=4.8, color=MUTED)
     fig.subplots_adjust(top=0.79, bottom=0.2, left=0.08, right=0.985, wspace=0.55)
@@ -1113,7 +1113,7 @@ def fig_e83_conditioned_margin_support():
     fig.suptitle("E83 · near-threshold proposal support contracts with depth",
                  x=0.02, ha="left", fontsize=8.7, fontweight="bold")
     fig.text(0.02, 0.005,
-             "Frozen seed-6 depth-4 control; 128 held-out speakers. Each candidate has an actual selected upstream message arrival. "
+             "Frozen seed-6 depth-4 control; 128 held-out-speaker utterances. Each candidate has an actual selected upstream message arrival. "
              "Time cells are correlated; no updates.", fontsize=4.8, color=MUTED)
     fig.subplots_adjust(top=0.83, bottom=0.2, left=0.09, right=0.99, wspace=0.45)
     out = os.path.join(os.path.dirname(__file__), "figures",
@@ -1783,6 +1783,66 @@ def time_pages(st, W):
     return s
 
 
+def fig_emission_contract():
+    audit = load(os.path.join(RES, "e83", "emission_contract_s6_n128.json"))
+    prefix = "deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_"
+    suffix = "_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.json"
+    control = load(os.path.join(RES, "e83", prefix + "bundle_control" + suffix))
+    grid = load(os.path.join(RES, "e83", prefix + "emission_grid_recongrid" + suffix))
+    if not audit or not control or not grid:
+        return None
+    f, axes = plt.subplots(2, 2, figsize=(7.2, 5.0))
+    for ax, key, title in zip(axes[0], ["payload", "payload_derivative"],
+                              ["Single-arrival emitted payload", "Derivative with respect to payload"]):
+        vals = [r[key][0][0] for r in audit["witness"]]
+        ax.bar(["Legacy", "Grid reference"], vals, color=[GRAY, BLUE])
+        for i, v in enumerate(vals):
+            ax.text(i, v + 0.025, f"{v:.3f}", ha="center", fontsize=8)
+        ax.set_ylim(0, max(vals) * 1.25)
+        ax.set_title(title, fontsize=9)
+    for rows, label, color in [(control["curve"], "Legacy", GRAY), (grid["curve"], "Grid reference", BLUE)]:
+        epochs = [r["epoch"] for r in rows]
+        axes[1, 0].plot(epochs, [100 * r["event_support_coverage"][-1] for r in rows], "o-", color=color, label=label)
+        axes[1, 1].plot(epochs, [100 * r["event_terminal_accuracy"] for r in rows], "o-", color=color, label=label)
+    axes[1, 0].set_title("Layer-4 event coverage (%)", fontsize=9)
+    axes[1, 0].set_ylim(0, 105)
+    axes[1, 1].set_title("Held-out terminal accuracy (%)", fontsize=9)
+    axes[1, 1].axhline(5, color=INK, ls=":", label="20-class chance")
+    axes[1, 1].set_ylim(0, 20)
+    for ax in axes[1]:
+        ax.set_xlabel("Epoch"); ax.set_xticks([1, 2, 3, 4]); ax.legend(fontsize=7)
+    f.suptitle("A corrected payload contract restores propagation; recognition remains unresolved", fontsize=9)
+    f.text(0.02, 0.01, "Top: exact one-event diagnostic. Bottom: one matched seed, 120 fit / 128 held-out-speaker utterances; four epochs.\n"
+           "The grid reference also changes spike time and reset discretization. This is not a supremacy result.", fontsize=6.5)
+    f.tight_layout(rect=(0, .09, 1, .94))
+    f.savefig(os.path.join(os.path.dirname(__file__), "figures", "e83_emission_contract.png"), dpi=180)
+    return f
+
+
+def fig_optionality_contract():
+    data = load(os.path.join(RES, "e116", "optionality_contract_v2.json"))
+    if not data:
+        return None
+    f, axes = plt.subplots(1, 2, figsize=(7.2, 3.0))
+    labels = ["Complementary", "One volatile", "Duplicates"]
+    vals = [data[k]["premium"] for k in ["complementary_routes", "one_volatile_route", "duplicate_routes"]]
+    axes[0].bar(labels, vals, color=[BLUE, GRAY, GRAY]); axes[0].set_ylim(0, 1.3)
+    axes[0].set_title("Value of choosing after observed evidence", fontsize=8)
+    x = np.arange(2)
+    for i, (key, label, color) in enumerate([("same_sample", "Same-sample score", ORANGE),
+                                           ("independent_sample_transfer", "Independent transfer", BLUE)]):
+        axes[1].bar(x + (i - .5) * .32, [data[k][key] for k in ["zero_mean_noisy_gradient", "consistent_gradient"]],
+                    width=.32, label=label, color=color)
+    axes[1].set_xticks(x, ["Noisy ±2", "Consistent +1"])
+    axes[1].set_title("Virtual learning can reward gradient noise", fontsize=8)
+    axes[1].legend(fontsize=6.5)
+    f.suptitle("Optionality contracts: exact mathematical examples", fontsize=10)
+    f.text(.02, .015, "Equiprobable scenarios; identity update metric. These illustrate theory, not SHD performance.", fontsize=6.5)
+    f.tight_layout(rect=(0, .07, 1, .94))
+    f.savefig(os.path.join(os.path.dirname(__file__), "figures", "optionality_contract.png"), dpi=180)
+    return f
+
+
 def styles():
     base = ParagraphStyle("b", fontName="DV", fontSize=9.2, leading=13.2, textColor=colors.HexColor(INK),
                           spaceAfter=5)
@@ -2028,65 +2088,9 @@ def build():
     tf_10m_final = load_tf_10m_final()
 
     import figures_mech as FM                                   # explanatory figures (plain-language front)
-    s = [P("Sleeping Machines: what is known", "title"),
-         P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
-         P("Frontier signals", "h1"),
-         P("Three measured capability leads make a concrete case for this architecture's potential: a real-language lead "
-           "on a shared text8 split, locally learned retrieval that generalizes to longer contexts, and deep compositional "
-           "networks that learn structured tasks with far less data and counted computation. A new E77 depth-8 pilot adds "
-           "a distinct trainability signal: gradients reached all eight event layers.")]
-    aws_rows = []
-    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
-        try:
-            provenance = load(provenance_path)
-            if provenance.get("status") != "completed":
-                continue
-            values = []
-            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
-                if result_path == provenance_path:
-                    continue
-                result = load(result_path)
-                for row in result.get("rows", []) if isinstance(result, dict) else []:
-                    if isinstance(row, dict):
-                        values.extend(f"{k} {row[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
-                                      if isinstance(row.get(k), (int, float)))
-                if isinstance(result, dict):
-                    values.extend(f"{k} {result[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
-                                  if isinstance(result.get(k), (int, float)))
-            aws_rows.append((provenance.get("start_utc", ""), provenance.get("run_tag", ""),
-                             provenance.get("script", ""), "; ".join(values[:6]) or "completed; see saved result"))
-        except (OSError, ValueError, TypeError):
-            continue
-    if aws_rows:
-        s += [P("Latest AWS benchmark runs", "h1"),
-              P("Completed runs are checked from saved result and provenance files; failed and in-progress runs are omitted.")]
-        for _when, tag, script, values in sorted(aws_rows, reverse=True)[:12]:
-            s.append(P(f"<b>{html.escape(tag)}</b> · {html.escape(script)} · {html.escape(values)}"))
-    s += fig(fig_potential_evidence, W)
-    s += bullets([
-        "<b>Real language:</b> on the same 1M-character text8 training and test split, E79's native race mixture scores "
-        "1.808 bpc frozen, versus 2.179 for the completed LSTM and 2.367 for the 2-layer Transformer. It is a strong combined "
-        "expert-and-copy-memory result. At 10M, E79 scores 1.613 frozen versus 1.799 for the completed LSTM on the same "
-        "test segment, a 0.186 bpc lead. Both comparisons are single-seed; parameter count, training budget, and inference "
-        f"work are not matched. The four-layer 10M Transformer checkpoint was selected on validation and scored "
-        f"{tf_10m_final['test_bpc']:.4f} held-out test bpc after {tf_10m_final['steps']:,} updates, "
-        f"{tf_10m_final['test_bpc'] - 1.7993:.4f} above the LSTM's 1.7993 "
-        "test bpc. The Transformer has 3.24M parameters and four passes; the LSTM has 1.20M parameters and six passes. "
-        "E79 is a mixture of expert predictors plus copy memory, not a deep hidden event stack; E77 is the separate "
-        "deep time-vector language model. A default-width depth-4 pilot showed that a raw voltage quantile left its "
-        "deeper layers nearly silent. Matching realized post-reset activity restored gradients in all four layers, and "
-        "a width-8 depth-8 pilot reached all eight layers at every validation point. These are trainability checks; "
-        "a meaningful E77 language-model result remains pending.",
-        "<b>Learned retrieval:</b> on E61's synthetic recall task, local race attention reaches 100% at 4× context after "
-        "at most 4,000 examples in all five runs. The best of seven Transformer settings reaches 71.6% after as many as "
-        "1M examples.",
-        "<b>Depth and composition:</b> on a depth-4 order task, the event model reaches 99.9–100% after 10–15k examples "
-        "(5/5 runs); a Transformer reaches 99.0% after 40k examples repeated 50 times and 99.2–99.6% on 2M fresh "
-        "examples. On shared-motif composition, it averages 99.65% after one pass at roughly 10,000× lower counted work.",
-        "<b>Deep-stack trainability (not yet a supremacy result):</b> exact replay of the spike reset dynamics gave "
-        "nonzero gradients in all eight E77 event layers at all 16 validation points. Test activity stayed between "
-        "0.075 and 0.217 spikes per character per layer. This was one width-8 seed with 4,096 training and 512 test "
-        "characters; its 4.319 BPC is only a micro-pilot diagnostic, not a quality or scaling result.",
+    shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
+                    P("Development diagnostics and unresolved mechanisms. These are not supremacy results.")]
+    shd_appendix += bullets([
         "<b>Deep SHD route analysis (§§138–143):</b> the exact sparse masks have candidate paths from every input band "
         "to layer 4 in both measured seeds, yet only 1.6–7.0% of examples actually reach layer 4 in the equal-update "
         "runs. Sparse skips restore support to 99–100% but do not improve paired accuracy. The analysis shows why: "
@@ -2105,14 +2109,14 @@ def build():
         "receiver. The pair estimator had no late proposals to assess for three epochs. The current SHD implementation "
         "scans hidden states on a 1 ms grid; it does not establish sparse asynchronous training efficiency.",
     ], st)
-    s += fig(fig_e83_route_reachability, W * 0.96)
-    s += fig(fig_e83_route_bundle_pair, W * 0.96)
-    s += fig(fig_e83_route_cost_audit, W * 0.96)
-    s += fig(fig_e83_route_option_value, W * 0.96)
-    s += fig(fig_e83_pair_occupancy, W * 0.96)
-    s += fig(fig_e83_spike_boundary_late, W * 0.96)
-    s += fig(fig_e83_spike_pair_audit, W * 0.96)
-    s += [P("<b>What the SHD intervention teaches:</b> exposing deeper route alternatives can restore activity, but "
+    shd_appendix += fig(fig_e83_route_reachability, W * 0.96)
+    shd_appendix += fig(fig_e83_route_bundle_pair, W * 0.96)
+    shd_appendix += fig(fig_e83_route_cost_audit, W * 0.96)
+    shd_appendix += fig(fig_e83_route_option_value, W * 0.96)
+    shd_appendix += fig(fig_e83_pair_occupancy, W * 0.96)
+    shd_appendix += fig(fig_e83_spike_boundary_late, W * 0.96)
+    shd_appendix += fig(fig_e83_spike_pair_audit, W * 0.96)
+    shd_appendix += [P("<b>What the SHD intervention teaches:</b> exposing deeper route alternatives can restore activity, but "
             "activity is not trainability: the layer-balanced model's classifier collapsed while event counts grew. "
             "Section 143 derives a constrained route utility that weighs class-loss change against per-layer work. "
             "The frozen audit found late pairs more often helpful, then a matched late-only run found just nine deep "
@@ -2140,7 +2144,7 @@ def build():
            "worsened, so the large weight is not calibrated. This is a small mechanism signal that a sparse cascade can "
            "expose a deep learning option, not a trained update or SHD accuracy gain.", "small"),
          P("<b>Training check (§151):</b> the first local scalar threshold update was tested against pathwise and "
-           "immediate-only controls on the same seed, with 120 training examples and 128 held-out speakers. All three "
+           "immediate-only controls on the same seed, with 120 training examples and 128 held-out-speaker utterances. All three "
            "depth-4 arms ended at 6/128 accuracy after two epochs. The scalar arm raised held-out L2 event support to "
            "27.3% from 8.6% in control, while L4 support stayed at 0.78% in every arm. The epoch-2 suffix-learning "
            "advantage was slightly negative. Epoch-2 L3/L4 pathwise gradient norms were at most 6e−5/0 across all arms. "
@@ -2164,7 +2168,7 @@ def build():
            "support and retained more L2 activity, but finished with zero L3/L4 support and no accuracy gain. This rules "
            "out extra epochs alone as a remedy for this configuration. Section 153 derives the proposal-support limit: "
            "more rollouts cannot recover an improving route that the proposal assigns probability zero.", "small"),
-         P("<b>Conditioned margin support (§154):</b> on a frozen depth-4 control and 128 held-out speakers, count only "
+         P("<b>Conditioned margin support (§154):</b> on a frozen depth-4 control and 128 held-out-speaker utterances, count only "
            "nonfiring, nonrefractory states after an actual selected upstream message reached the receiver. In the "
            "current [−0.5, 0) band, eligible time-receiver cells fell from 22,553 / 4,313 / 195 / 50 across L1–L4; "
            "utterances with at least one candidate fell from 128 / 114 / 24 / 4. The narrower [−0.25, 0) band had "
@@ -2172,31 +2176,69 @@ def build():
            "and broadening toward the −1 reset baseline may force ungrounded spikes. This localizes a deep proposal-support "
            "bottleneck but does not show a training gain or prove it is the only cause.", "small"),
          *fig(fig_e83_conditioned_margin_support, W),
-         P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
-            "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
-            "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
-            "advantage and lower training energy remain to be demonstrated.")]
-    s.append(PageBreak())
+    ]
 
+    s = [P("Sleeping Machines: what is known", "title"),
+         P(f"Computing in time with races, holds and vetoes · report, {date.today():%d %B %Y}", "sub"),
+         P("In plain terms", "h1"),
+         P("<b>Sleeping Machines compute through timed messages.</b> A node holds local memory, receives a signal, "
+           "and may schedule, cancel, or send another signal. A message carries content as well as time: its vector "
+           "determines where it goes and how long it takes, while its arrival changes the receiver's state. Deep layers "
+           "can build features, retrieve memories, and accumulate evidence until the network can answer."),
+         P("The goal is for <b>both training and inference to spend work on relevant events and alternatives</b>. "
+           "Inactive capacity can remain asleep. Lost races and nearby unrealized routes supply credit for choices "
+           "that could have produced a better answer. Existing prototypes implement different parts of this design."),
+         P("Frontier signals", "h1"),
+         P("Three completed comparisons show the opportunity: language prediction on shared text8 splits, learned "
+           "retrieval that generalizes to longer contexts, and deep composition with much less data and counted work.")]
+    s += bullets([
+        "<b>Real language:</b> frozen E79 test loss is <b>1.808 bpc at 1M characters</b>, versus LSTM 2.179 and "
+        "Transformer 2.367. At <b>10M: 1.613</b>, versus LSTM 1.799 and four-layer Transformer 1.908. These share "
+        "data splits; model sizes and schedules differ. E79 combines native predictive experts with copy memory; one seed.",
+        "<b>Learned retrieval:</b> E61 reaches <b>100% at four times the training context</b> after at most 4,000 "
+        "examples in all five runs. The best of seven Transformer settings reaches 71.6% after up to 1M examples.",
+        "<b>Depth and composition:</b> the depth-4 order model reaches <b>99.9–100% after 10–15k examples</b> "
+        "in five runs; the Transformer reaches 99.2–99.6% on 2M fresh examples. Shared-motif composition averages "
+        "<b>99.65% after one pass</b>, at roughly <b>10,000 times lower counted work</b> than its Transformer reference.",
+    ], st)
+    s += fig(fig_potential_evidence, W)
+    aws_rows = []
+    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
+        try:
+            provenance = load(provenance_path)
+            if provenance.get("status") != "completed":
+                continue
+            values = []
+            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
+                if result_path == provenance_path:
+                    continue
+                result = load(result_path)
+                for row in result.get("rows", []) if isinstance(result, dict) else []:
+                    if isinstance(row, dict):
+                        values.extend(f"{k} {row[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
+                                      if isinstance(row.get(k), (int, float)))
+                if isinstance(result, dict):
+                    values.extend(f"{k} {result[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
+                                  if isinstance(result.get(k), (int, float)))
+            aws_rows.append((provenance.get("start_utc", ""), provenance.get("run_tag", ""),
+                             provenance.get("script", ""), "; ".join(values[:6]) or "completed; see saved result"))
+        except (OSError, ValueError, TypeError):
+            continue
+    if aws_rows:
+        s += [P("Latest AWS benchmark runs", "h1"),
+              P("Completed runs are checked from saved result and provenance files; failed and in-progress runs are omitted.")]
+        for _when, tag, script, values in sorted(aws_rows, reverse=True)[:12]:
+            s.append(P(f"<b>{html.escape(tag)}</b> · {html.escape(script)} · {html.escape(values)}"))
+    s += [P("The strongest depth and retrieval comparisons use controlled synthetic tasks. These results establish "
+            "the stated task-level advantages. Matched scaling curves and measured training energy are the next "
+            "evidence needed for frontier superiority. Ongoing SHD diagnostics are in Appendix A.", "small")]
+    s.append(PageBreak())
     s += [P("Accuracy and work across controlled tasks", "h1")]
     s += fig(FM.fig_supremacy_map, W)
-    s += [P("These task-level comparisons show where learned event computation has a measured lead. Operation counts "
-            "are not end-to-end energy measurements; real-stream results and current gaps appear in section 7.", "small")]
+    s += [P("Operation counts compare the stated primitives; they are not end-to-end energy measurements.", "small")]
+    s += fig(FM.fig_concept, W)
     s.append(PageBreak())
 
-    s += [P("In plain terms", "h1"),
-         P("Today's neural networks are <b>clocked and dense</b>: at every step, every input is multiplied by every weight, "
-           "whether or not anything happened. Many real signals are the opposite: long silences broken by precisely timed "
-           "events (nerve spikes, trades on a market, sensor alarms), where <i>when</i> something happens is the information."),
-         P("<b>Sleeping Machines are networks that only work when an event arrives.</b> A node waits. It fires when the right "
-           "inputs arrive in the right time window (“B within 1.5 s after A”), and the first node to fire gives the answer, "
-           "a <i>race</i>. Silence costs nothing, and time itself does the computing: a delay or a waiting window plays the "
-           "role that a weight matrix plays in a dense network. A signal can also carry a small vector (a few numbers), and "
-           "its content sets its own delay: when it arrives decides how much it counts."),
-         P("The questions are whether such networks can <b>learn</b> (with credit that flows only along the events that "
-           "actually happened: a node adjusts only its few connections that were active, like moving money between accounts under a fixed budget) and "
-           "whether they can <b>match or beat</b> MLPs and Transformers.")]
-    s += fig(FM.fig_concept, W)
     s += [P("Highlights", "h1")]
     s += bullets([
         "<b>Same accuracy, 10,000–100,000× less computation.</b> On timing-pattern recognition a learned event network is "
@@ -2518,37 +2560,10 @@ def build():
             "timing networks do not transfer to its weights (SHD 0.04–0.29 vs 0.35).")]
     s += [P("7. Real data", "h1")]
     s += bullets([
-        "<b>Spiking Heidelberg Digits</b> (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test "
-        "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
-        "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
-        "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
-        "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
-        "event units of our kind with every unit updated on every event (both select checkpoints on the test set); time only fades their state, so they do not "
-        "compute with delays. E74 tests the paradigm's own design: events carry small vectors whose content sets their "
-        "delays and whether they are sent; a 2k-train, 500-held-out pilot reached 0.146 peak speaker accuracy and 0.120 at "
-        "its final epoch after six epochs. E82's partial readout sweep reached 0.184 held-out accuracy after 240 updates. "
-        "An E83 audit found its old sequence loss averaged softmax through silent and batch-padded time, so depth-2 runs are "
-        "excluded as trainability evidence. In guarded depth-4 screening (512 train / 128 held-out-speaker examples, two "
-        "epochs), integral and max objectives ended at 4.69% max-over-time accuracy (20-way chance 5%). The anytime "
-        "race/fallback reached 6.25% max-potential accuracy (8/128; chance-tail p=0.31) and 5.47% emitted accuracy at "
-        "100% coverage. Every tested threshold emitted every item and confidence saturated at 1.0; Layer 4 rose from "
-        "932 to 1,024 spikes per utterance. This diagnoses false confidence/activity growth, not reliable learning. The "
-        "stable-cause race-only control ended at 3.12% max accuracy, 97.66% coverage, and 4.8% emitted accuracy with "
-        "0.981 peak confidence. A readout-only shadow probe at seed-2 initialization (not trained weights) forced 32 "
-        "near-gate routes on four held-out utterances: 31 changed max-pooled CE by exactly zero and one reduced it by "
-        "0.045; boundary-gradient norm was 2.2% of pathwise norm, cosine 0.012. Section 129 derives why max pooling can "
-        "erase routes that remain below the temporal winner. `TVLayer` still detaches its hard content gate and computes "
-        "spike identities in no_grad, so closed routes and silent units get no pathwise task gradient. E83 now trains a "
-        "causal prefix posterior with a fixed 0–1000 ms query window and shadows near-boundary routes through the full "
-        "downstream stack. The first unbiased total estimator over about 480k eligible routes and 128 shadows per epoch "
-        "destabilized the depth-4 model. A clipped normalized local rule avoided that explosion but did not improve "
-        "recognition: the matched 128/32 seed-6 run stayed at 6.25% terminal accuracy and had epoch-2 prefix NLL "
-        "[2.996, 19.735]. Only 11.6% of sampled openings helped; the counterfactual/pathwise cosine was 0.0038. "
-        "Layerwise shadow deltas and gradient norms are still noisy, so update gain needs uncertainty-aware calibration. "
-        "The E74/E82 results are above the 0.05 chance level for 20 classes and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
-        "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
-        "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
-        "to 0.675 (E59, §92).",
+        "<b>Spiking Heidelberg Digits:</b> the event world model reaches 67.5% test accuracy with speaker-relative "
+        "bands (E59). Vector-event pilots reached 14.6% peak held-out accuracy (E74) and 18.4% in a partial readout "
+        "sweep (E82). Deep E83 has not established reliable recognition or a depth benefit. Appendix A contains the "
+        "ongoing loss, route, payload, and calibration diagnostics.",
         "<b>Market stream posed as trading with costs (E42, confirmed on 21 unseen days, preregistered):</b> at 2 bp, "
         "imitating a hindsight teacher over-trades and loses (event learner −15,236 bp, logistic −24,302); the "
         "profit-priced event learner nets +226 bp with 8 changes; buy-and-hold +932; at 10 bp all stay out. "
@@ -2585,48 +2600,26 @@ def build():
         "GRU neural point process – / −2.61 / −2.52. Pair-part state neutral; learned inhibition below excitation-only; the "
         "semi-Markov network of E48 (above) closed the gap to the GRU.",
     ], st)
-    s += fig(fig_e83_route_diagnostics, W * 0.92)
-    s += fig(fig_e83_d4_support, W * 0.96)
-    s += fig(fig_e83_equal_updates, W * 0.96)
-    s += [P("<b>Route reachability and depth (§§139–140).</b> The exact D4 candidate masks connect 90.2% and 98.0% "
-            "of first-layer/fourth-layer unit pairs in seeds 6 and 7, with every input band connected to layer 4. "
-            "Realized layer-4 support is only 1.6–7.0% in the equal-update arms. This locates the loss after static "
-            "wiring: route gating and thresholded event generation determine which paths exist on a sample. A skip "
-            "raises support to 99–100% without paired recognition gain. The MoE calculation requires paired losses for "
-            "competing routes; the two-gate calculation shows how singleton shadows miss subthreshold route pairs that "
-            "jointly cause a spike. For strict chains, retaining half the samples through depth 8 or 16 requires mean "
-            "per-transition survival of 90.6% or 95.5%. So deeper stacks add combinatorial route choices, but they "
-            "need route acquisition and per-layer survival to make those choices trainable.", "body")]
-    s += [P("<b>Depth-credit redesign in evaluation (§136).</b> E83's deepest-only readout makes an early event's final-loss "
-            "effect depend on surviving every later hard route. The new sparse `all_depths` option adds the class-evidence "
-            "streams from every layer at the same causal prefix and scores lost routes against that fused objective; "
-            "deepest-only remains the matched control. This reduces the serial credit burden but could let shallow branches "
-            "carry the classifier. In the matched 128-example seed-6 pair, all-depth fusion reached 17/128 terminal and "
-            "20/128 race-plus-fallback correct versus 7/128 deepest-only (paired McNemar p=0.0146). This signal did not "
-            "replicate at seed 7: 9 versus 6 correct (p=0.607). Layer-4 removal did not hurt seed-6 fused accuracy, and "
-            "sparse layer-1 skips restored layer-4 support to 99–100% without paired classification gain. The race was "
-            "overconfident in both all-depth seeds (63% mean confidence; 23.8% emitted accuracy at seed 6, 0/8 correct at "
-            "seed 7). These are two-speaker exploratory comparisons, not supremacy evidence. A separate gap remains: class "
-            "evidence does not change during silence until another hidden event arrives or EOS is reached.", "body")]
-    s += [P("<b>Readout shortcut resolved (§145).</b> A matched frozen replay tested the same valid hidden-spike toggles "
-            "against both all-depth and deepest-only main loss. The late-only L1 all-depth delta averaged −0.00936 "
-            "(16/21 helpful), but all 21 matched deepest-only deltas were exactly zero; every valid L1/L2 deepest-only "
-            "delta was zero in both arms. The L1 toggles added 0.1429 L1 hidden spikes/example, no downstream hidden "
-            "spikes, and 1.2381 L1 readout-edge updates/example. So the fused classifier rewarded its shallow L1 head; "
-            "this local utility did not demonstrate serial credit through depth. Deepest-only L3/L4 samples were only "
-            "2/1. The next test must train with deepest-only primary loss or explicitly replay a sparse suffix and show "
-            "downstream event changes. This is a frozen audit, not a training gain.", "body")]
-    s += [P("<b>Pair propagation is not pair synergy (§146).</b> In 1,024 held-out-speaker examples, opening both "
-            "natural-off L2 events increased suffix spike count in 38/64 control and 19/34 late-only pairs, but improved "
-            "deepest-only loss in only 8/64 and 4/34. At L3, 5/10 and 4/5 double openings improved loss, but the "
-            "late-only pool had only five cases and one +1.40 loss outlier. The four-corner interaction "
-            "Γ = L11 − L10 − L01 + L00 was zero in most sampled pairs: no natural-off pair succeeded "
-            "when both singleton openings failed, and only 2/42 L3 pairs exceeded |Γ| = 0.01; none of 210 L2 pairs did. "
-            "The audit paired distinct spike events without requiring a shared receiver. A true topology-conditioned "
-            "route-pair experiment must compare shared-receiver arrivals to time-matched nonshared controls and track "
-            "accepted messages, event payload/timing, deepest loss, and replay work. These are validation diagnostics, "
-            "not a trained accuracy gain.", "body")]
     s += [P("8. Open problems and next steps", "h1")]
+    s += [P("The missing bridge", "h2"),
+          P("The manifesto calls for learned computation in time with sparse activity, local state, and credit to "
+            "unrealized alternatives. Language-mixture quality, learned retrieval, and deep synthetic composition "
+            "are demonstrated in different model families. The next goal is one deep representation learner that "
+            "combines these capabilities."),
+          P("The decisive gaps are correct hybrid event semantics; useful class information and credit through "
+            "depth; optionality that predicts transferable learning; calibrated asynchronous decisions; affordable "
+            "candidate search; and measured training/inference energy. Sections 155–162 connect these requirements. "
+            "In particular, same-sample virtual learning progress includes a gradient-noise bonus; independent "
+            "adaptation and evaluation separate that from transferable progress. Appendix A records the SHD work. "
+            "The AWS sibling owns the non-SHD benchmarks.")]
+
+    s += [P("<b>Optionality, sharpened (§§159–163):</b> optionality concerns distinct attainable futures under a "
+            "causal information and work budget. Waiting to choose is valuable only when later evidence can guide "
+            "the choice. Duplicate routes add no new option. Same-sample virtual progress contains a gradient-noise "
+            "term; independent adaptation and evaluation isolate first-order transfer. These are analytic results, "
+            "not yet an SHD training gain. Section 163 adds realizability: independent forced events may be incompatible "
+            "with shared routing controls. A local trust-region calculation identifies which margins can actually be crossed.")]
+    s += fig(fig_optionality_contract, W)
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
         "and with fixed windows but hurts when windows are learned (it entrenches early shortcuts at the firing instant and "
@@ -2797,6 +2790,11 @@ def build():
             "does not remove the current dense time-by-batch-by-unit tensors, parallelize hard event births or reset "
             "decisions, or establish an energy advantage. Next: compare outputs and gradients on fixed event schedules, "
             "then run a small, safe timing pilot.")]
+    from frontier_potential import POTENTIAL_SECTIONS
+    s += [PageBreak(), P("Potential: a different route to frontier models", "h1")]
+    for title, body in POTENTIAL_SECTIONS:
+        s += [P(title, "h2"), P(body)]
+    s += [P("The mathematical bridge", "h2")]
     s += [P("<b>Potential: a layer can choose its memory operation.</b> Softmax key/value attention is a one-step modern "
             "Hopfield retrieval rule under the associative-memory interpretation. E77 now applies a separate causal "
             "query/key/value update to emitted event payloads, then passes the retrieved vector onward through the event "
@@ -2916,10 +2914,10 @@ def build():
             "race-attention layers with learned codes, trained by local credit, match or beat a Transformer on language itself; "
             "the stages decide it.")]
     s.append(Spacer(1, 6))
-    s.append(P("Every mechanism is an event handler (local state, triggered by events, cost proportional to events); dense "
-               "procedures are diagnostics only; time-vector networks (E73–E75) are trained by gradients that flow only through "
-               "spikes that occurred, simulated on a 1 ms grid for speed (an event-driven adjoint form exists). Reproduce: python report/figures_time.py && python report/make_pdf.py.",
-               "small"))
+    s.append(P("The target is local state and computation triggered by messages and scheduled events. E83 still "
+               "scans a 1 ms grid, and E77 also has dense candidate-scoring paths. Section 155 identifies an arrival/payload "
+               "inconsistency in the legacy simulator. A native adjoint must match the actual hybrid jump/reset semantics. "
+               "Full-model asynchronous training efficiency remains unmeasured. All local jobs use the guarded runner.", "small"))
     s += [PageBreak(), P("11. Potential applications and the transformation", "h1"),
           P("If deep event models learn Transformer-level representations and remain trainable as data, depth, and memory "
             "grow, this could open a different route to frontier AI. Training and inference would spend computation on "
@@ -2967,6 +2965,100 @@ def build():
             "and a linear-work associative scan for fixed event schedules. The decisive step is to make these capabilities "
             "work together in deep E77 language models, then measure matched quality, training cost, inference work, and energy "
             "on real hardware. This is a concrete path from promising mechanisms to a new frontier-computing paradigm.")]
+    shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
+        P("<b>Event semantics (§155):</b> legacy TVLayer detects a crossing from post-arrival state but reconstructs "
+          "its emitted vector from pre-arrival state. A one-message witness returns zero payload and zero derivative; "
+          "the consistent grid reference returns 1.9545 and 1.0852 respectively. In a frozen SHD control, 853/892 "
+          "L1 spikes coincide with an incoming state jump. Coincidence is not proof of a jump-only trigger."),
+        P("The matched four-epoch correction keeps L4 coverage at 96.9% versus 1.6%, but terminal accuracy is 7/128 "
+          "versus 8/128. Training loss falls 191.46 to 17.64; held-out prefix NLL remains 22.30/128.11. Correcting "
+          "the payload contract changes propagation but does not solve recognition. The reference also changes "
+          "time/reset discretization. The guarded run took 582 s, with observed RSS around 0.6 GB and over 11 GB "
+          "host memory available."), *fig(fig_emission_contract, W),
+        P("<b>Causally eligible L4 shadows:</b> on 1,024 development utterances, 76/256 batches had an eligible "
+          "nonrefractory receiver after actual message arrival; 30 had a candidate within the 0.5 margin band. "
+          "Among 21 in-band natural-off candidates, opening helped 14 and harmed 7; mean batch-loss change was "
+          "−0.000708 (SE 0.00527). This does not establish a reliable mean gain. The 46 out-of-band fallback "
+          "candidates are separate. These are selected replay effects, not recognition results."),
+        P("Earlier routing and optionality diagnostics", "h2")] + shd_appendix[2:]
+    shd_appendix += [P("Earlier task and depth diagnostics", "h2")]
+    shd_appendix += bullets([
+        "<b>Spiking Heidelberg Digits</b> (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test "
+        "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
+        "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
+        "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
+        "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
+        "event units of our kind with every unit updated on every event (both select checkpoints on the test set); time only fades their state, so they do not "
+        "compute with delays. E74 tests the paradigm's own design: events carry small vectors whose content sets their "
+        "delays and whether they are sent; a 2k-train, 500-held-out pilot reached 0.146 peak speaker accuracy and 0.120 at "
+        "its final epoch after six epochs. E82's partial readout sweep reached 0.184 held-out accuracy after 240 updates. "
+        "An E83 audit found its old sequence loss averaged softmax through silent and batch-padded time, so depth-2 runs are "
+        "excluded as trainability evidence. In guarded depth-4 screening (512 train / 128 held-out-speaker examples, two "
+        "epochs), integral and max objectives ended at 4.69% max-over-time accuracy (20-way chance 5%). The anytime "
+        "race/fallback reached 6.25% max-potential accuracy (8/128; chance-tail p=0.31) and 5.47% emitted accuracy at "
+        "100% coverage. Every tested threshold emitted every item and confidence saturated at 1.0; Layer 4 rose from "
+        "932 to 1,024 spikes per utterance. This diagnoses false confidence/activity growth, not reliable learning. The "
+        "stable-cause race-only control ended at 3.12% max accuracy, 97.66% coverage, and 4.8% emitted accuracy with "
+        "0.981 peak confidence. A readout-only shadow probe at seed-2 initialization (not trained weights) forced 32 "
+        "near-gate routes on four held-out utterances: 31 changed max-pooled CE by exactly zero and one reduced it by "
+        "0.045; boundary-gradient norm was 2.2% of pathwise norm, cosine 0.012. Section 129 derives why max pooling can "
+        "erase routes that remain below the temporal winner. `TVLayer` still detaches its hard content gate and computes "
+        "spike identities in no_grad, so closed routes and silent units get no pathwise task gradient. E83 now trains a "
+        "causal prefix posterior with a fixed 0–1000 ms query window and shadows near-boundary routes through the full "
+        "downstream stack. The first unbiased total estimator over about 480k eligible routes and 128 shadows per epoch "
+        "destabilized the depth-4 model. A clipped normalized local rule avoided that explosion but did not improve "
+        "recognition: the matched 128/32 seed-6 run stayed at 6.25% terminal accuracy and had epoch-2 prefix NLL "
+        "[2.996, 19.735]. Only 11.6% of sampled openings helped; the counterfactual/pathwise cosine was 0.0038. "
+        "Layerwise shadow deltas and gradient norms are still noisy, so update gain needs uncertainty-aware calibration. "
+        "The E74/E82 results are above the 0.05 chance level for 20 classes and set the current learning target. SHD is only ≈ 6× sparser than a 10 ms raster, "
+        "a weak test of the paradigm's cost advantage. Validating on held-out speakers and coding bands relative to each "
+        "voice (a running centroid per utterance) raises held-out-speaker accuracy from 0.36–0.38 to 0.44–0.46 and the test "
+        "to 0.675 (E59, §92).",
+    ], st)
+    shd_appendix += fig(fig_e83_route_diagnostics, W * 0.92)
+    shd_appendix += fig(fig_e83_d4_support, W * 0.96)
+    shd_appendix += fig(fig_e83_equal_updates, W * 0.96)
+    shd_appendix += [P("<b>Route reachability and depth (§§139–140).</b> The exact D4 candidate masks connect 90.2% and 98.0% "
+            "of first-layer/fourth-layer unit pairs in seeds 6 and 7, with every input band connected to layer 4. "
+            "Realized layer-4 support is only 1.6–7.0% in the equal-update arms. This locates the loss after static "
+            "wiring: route gating and thresholded event generation determine which paths exist on a sample. A skip "
+            "raises support to 99–100% without paired recognition gain. The MoE calculation requires paired losses for "
+            "competing routes; the two-gate calculation shows how singleton shadows miss subthreshold route pairs that "
+            "jointly cause a spike. For strict chains, retaining half the samples through depth 8 or 16 requires mean "
+            "per-transition survival of 90.6% or 95.5%. So deeper stacks add combinatorial route choices, but they "
+            "need route acquisition and per-layer survival to make those choices trainable.", "body")]
+    shd_appendix += [P("<b>Depth-credit redesign in evaluation (§136).</b> E83's deepest-only readout makes an early event's final-loss "
+            "effect depend on surviving every later hard route. The new sparse `all_depths` option adds the class-evidence "
+            "streams from every layer at the same causal prefix and scores lost routes against that fused objective; "
+            "deepest-only remains the matched control. This reduces the serial credit burden but could let shallow branches "
+            "carry the classifier. In the matched 128-example seed-6 pair, all-depth fusion reached 17/128 terminal and "
+            "20/128 race-plus-fallback correct versus 7/128 deepest-only (paired McNemar p=0.0146). This signal did not "
+            "replicate at seed 7: 9 versus 6 correct (p=0.607). Layer-4 removal did not hurt seed-6 fused accuracy, and "
+            "sparse layer-1 skips restored layer-4 support to 99–100% without paired classification gain. The race was "
+            "overconfident in both all-depth seeds (63% mean confidence; 23.8% emitted accuracy at seed 6, 0/8 correct at "
+            "seed 7). These are two-speaker exploratory comparisons, not supremacy evidence. A separate gap remains: class "
+            "evidence does not change during silence until another hidden event arrives or EOS is reached.", "body")]
+    shd_appendix += [P("<b>Readout shortcut resolved (§145).</b> A matched frozen replay tested the same valid hidden-spike toggles "
+            "against both all-depth and deepest-only main loss. The late-only L1 all-depth delta averaged −0.00936 "
+            "(16/21 helpful), but all 21 matched deepest-only deltas were exactly zero; every valid L1/L2 deepest-only "
+            "delta was zero in both arms. The L1 toggles added 0.1429 L1 hidden spikes/example, no downstream hidden "
+            "spikes, and 1.2381 L1 readout-edge updates/example. So the fused classifier rewarded its shallow L1 head; "
+            "this local utility did not demonstrate serial credit through depth. Deepest-only L3/L4 samples were only "
+            "2/1. The next test must train with deepest-only primary loss or explicitly replay a sparse suffix and show "
+            "downstream event changes. This is a frozen audit, not a training gain.", "body")]
+    shd_appendix += [P("<b>Pair propagation is not pair synergy (§146).</b> In 1,024 held-out-speaker examples, opening both "
+            "natural-off L2 events increased suffix spike count in 38/64 control and 19/34 late-only pairs, but improved "
+            "deepest-only loss in only 8/64 and 4/34. At L3, 5/10 and 4/5 double openings improved loss, but the "
+            "late-only pool had only five cases and one +1.40 loss outlier. The four-corner interaction "
+            "Γ = L11 − L10 − L01 + L00 was zero in most sampled pairs: no natural-off pair succeeded "
+            "when both singleton openings failed, and only 2/42 L3 pairs exceeded |Γ| = 0.01; none of 210 L2 pairs did. "
+            "The audit paired distinct spike events without requiring a shared receiver. A true topology-conditioned "
+            "route-pair experiment must compare shared-receiver arrivals to time-matched nonshared controls and track "
+            "accepted messages, event payload/timing, deepest loss, and replay work. These are validation diagnostics, "
+            "not a trained accuracy gain.", "body")]
+    s.append(PageBreak())
+    s += shd_appendix
+
     doc = SimpleDocTemplate(OUT, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm, topMargin=16 * mm,
                             bottomMargin=16 * mm, title="Sleeping Machines — what is known",
                             author="Sleeping Machines project")

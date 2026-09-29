@@ -63,6 +63,8 @@ def main():
         route_topk=int(getattr(a, "route_topk", 0)),
     )
     net.load_state_dict(checkpoint["model_state_dict"])
+    for layer in net.layers:
+        layer.spike_reconstruction = getattr(a, "spike_reconstruction", "legacy")
     net.eval()
 
     pair_counts = {w: np.zeros(a.depth, dtype=np.int64) for w in windows}

@@ -1,0 +1,3 @@
+# Paired L4 spike shadows with actual-arrival and nonrefractory eligibility.
+# Same frozen seed-6 control, held-out speakers, and deepest-only primary loss.
+e83_spike_boundary_control_L4_causal_1024 experiments/e83_spike_boundary_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 1024 --batch_size 4 --spike_band 0.5 --sigma 0.25 --prefix_samples 2 --layers 4 --seed 6 --run_tag bundle_control_L4_causal_deepest_n1024 --fusion deepest --require_nonrefractory --require_input_arrival

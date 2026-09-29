@@ -1,0 +1,67 @@
+{
+  "scope": "Exact toy calculations, identity update metric; not learned-model results.",
+  "complementary_routes": {
+    "adaptive": 1.0,
+    "committed": 0.0,
+    "premium": 1.0,
+    "without_observing_scenario": 0.0
+  },
+  "one_volatile_route": {
+    "adaptive": 0.0,
+    "committed": 0.0,
+    "premium": 0.0,
+    "without_observing_scenario": 0.0
+  },
+  "duplicate_routes": {
+    "adaptive": 0.0,
+    "committed": 0.0,
+    "premium": 0.0,
+    "without_observing_scenario": 0.0
+  },
+  "zero_mean_noisy_gradient": {
+    "same_sample": 4.0,
+    "independent_sample_transfer": 0.0,
+    "squared_mean": 0.0,
+    "variance_trace": 4.0
+  },
+  "consistent_gradient": {
+    "same_sample": 1.0,
+    "independent_sample_transfer": 1.0,
+    "squared_mean": 1.0,
+    "variance_trace": 0.0
+  },
+  "premium_backup_counterexample": {
+    "child_premiums": [
+      0,
+      9
+    ],
+    "root_premium": 0
+  },
+  "bernoulli_half_gain_curve": [
+    {
+      "draws": 1,
+      "expected_best_gain": 0.5,
+      "next_draw_marginal_gain": 0.25
+    },
+    {
+      "draws": 2,
+      "expected_best_gain": 0.75,
+      "next_draw_marginal_gain": 0.125
+    },
+    {
+      "draws": 3,
+      "expected_best_gain": 0.875,
+      "next_draw_marginal_gain": 0.0625
+    },
+    {
+      "draws": 4,
+      "expected_best_gain": 0.9375,
+      "next_draw_marginal_gain": 0.03125
+    },
+    {
+      "draws": 5,
+      "expected_best_gain": 0.96875,
+      "next_draw_marginal_gain": 0.015625
+    }
+  ]
+}
