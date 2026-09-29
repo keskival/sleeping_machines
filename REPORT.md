@@ -150,13 +150,15 @@ Speech scores are development evidence from training speakers 3/6; the official 
 
 The common event backbone has independently trained development screens across language, event prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. These bounded screens establish implementation breadth; the stronger native comparison results use their own complete protocols.
 
-| Task | Common model | Transformer reference | Forward FLOPs per query: common / TF | Training-forward FLOPs: common / TF |
+**How to read the comparison:** accuracy is the percentage of correct answers, so **higher is better**. Bits per character (bpc) and nats/event measure prediction error, so **lower is better**. FLOPs estimate arithmetic work: **lower means less computation**. Each work pair lists the common model first and the Transformer (TF) second.
+
+| Task and quality direction | Common quality | Transformer quality | Forward FLOPs per query: common / TF; lower is better | Training-forward FLOPs: common / TF; lower is better |
 | --- | --- | --- | --- | --- |
-| Text8 | 2.915 bpc | 3.729 bpc | 1.26M / 1.84M | 55.70G / 30.09G |
-| Market event prediction | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 13.92G / 7.52G |
-| Temporal composition | 97.3% | 90.2% | 0.29M / 0.38M | 6.69G / 3.23G |
-| MNIST | 75.8% | 69.9% | 1.66M / 2.57M | 35.97G / 20.48G |
-| Event-camera gestures | 59.1% | 15.9% | 23.99M / 124.23M | 46.12G / 90.13G |
+| Text8<br/>Prediction error: lower is better | 2.915 bpc | 3.729 bpc | 1.26M / 1.84M | 55.70G / 30.09G |
+| Market event prediction<br/>Prediction error: lower is better | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 13.92G / 7.52G |
+| Temporal composition<br/>Accuracy: higher is better | 97.3% | 90.2% | 0.29M / 0.38M | 6.69G / 3.23G |
+| MNIST<br/>Accuracy: higher is better | 75.8% | 69.9% | 1.66M / 2.57M | 35.97G / 20.48G |
+| Event-camera gestures<br/>Accuracy: higher is better | 59.1% | 15.9% | 23.99M / 124.23M | 46.12G / 90.13G |
 
 The common screens use eight layers and the Transformer references two, both at width 32 for eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times fewer hidden carrier emissions. The model's depth is chosen to suit the computation.
 
@@ -175,6 +177,6 @@ FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. F
 | Resource boundary | Logical memory reads are reported separately. Transfers, allocations, kernel launch and instrumentation are outside the arithmetic ledger. Division, exponential and remainder costs have unit weights. |
 | Energy | Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements. |
 
-The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125 support deep speech and its readout comparisons.
+The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.

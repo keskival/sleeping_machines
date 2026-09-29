@@ -1,15 +1,20 @@
 # Mathematical program for event networks at language scale
 
-## Current advances: preserved computation and local readout credit (E121–E125)
+## Current advances: preserved computation, readout credit and active topology (E121–E126)
 
-**Next structural bridge (E126):** alternating receiver groups require active
+**Completed structural bridge (E126):** alternating receiver groups require active
 relay packets. A two-region XOR witness proves that depth and scalar pooling
 cannot compensate when those relays are absent (§188). A causal context state
 at selected layers removes that obstruction with linear event work. Zero value
 and route columns preserve the old checkpoint and gradients exactly; new-column
 credit is nonzero. Independent row bounds give a conditional nonvanishing
-depth bound (§189). The matched SHD continuation tests this new communication
-capability; the witness is an expressivity proof, not learned benchmark quality.
+depth bound (§189). The matched full-update SHD continuation reaches 351/512
+(68.6%); teaching only the new columns reaches 364/512 (71.1%), with all old
+state tensors unchanged and fitting accuracy 81.8%. Both remain below the
+starting 370/512 (72.3%). The new attainable subspace is teachable but has not
+improved held-out recognition. Next measure class/speaker teacher alignment and
+retained joint temporal information. The witness is an expressivity proof,
+not learned benchmark quality.
 
 The modular phase state now certifies its complete mod-17 rule. A simple global
 error bound fails, but target-constrained cyclic min/max composition proves
@@ -31,7 +36,14 @@ The consolidated work audit counts actual configured maps, router choices,
 memory scans, normalization and pointer/clock candidates. It must distinguish
 the sparse primitive from a carrier-plus-primitive configuration. New small
 Transformer/LSTM controls use the same arithmetic/recall examples. Inference
-estimates cannot establish total training-energy superiority.
+estimates cannot establish total training-energy superiority. Five new small
+Transformer controls supply breadth references on the same held-out prefixes.
+The common model has lower forward contraction counts on all five. Its
+training-forward contraction counts are higher on four short tasks and lower
+on event-camera gestures; neither ledger includes backward or optimizer work.
+The arithmetic teacher instead has 145,015 scalar update visits, versus
+92.2M/132.5M for the LSTM/Transformer controls. Keep these cost boundaries
+explicit rather than combining different measures into one efficiency claim.
 
 ## Current synthesis: causal queries, evidence geometry and invariances (E120)
 

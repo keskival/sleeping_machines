@@ -14,11 +14,25 @@ fitting speakers and class-conditional retained information (§§185,187), then
 speaker/class errors. Full benchmark quality,
 confidence stopping and measured energy remain separate milestones.
 
-**Structural test now running (E126):** two zero-initialized causal context
+**Completed structural test (E126):** two zero-initialized causal context
 channels let distant active packets interact without needing intervening relay
 packets. The disconnected-component obstruction and constructive remedy are
 proved in §§188–189, with exact initial checkpoint/gradient contracts. This is
 a more specific architecture change than adding depth or changing seeds.
+Full updates reach 351/512 (68.6%); new-column-only teaching reaches 364/512
+(71.1%) and 81.8% fitting accuracy, with all old state exactly fixed. Both
+remain below the starting 370/512. The new joint-information subspace can
+learn; its cross-speaker transfer is not established. Next measure class-wise
+teacher alignment across fitting speakers and temporal information retained
+by the context state, using fitting-only selection before further continuations.
+
+**Breadth references:** five bounded two-layer Transformer controls now use
+the common model's held-out prefixes, neural-fitting budget and input information.
+They provide quality and contraction-FLOP references in report Appendix B.
+The D8 common model has lower forward work on these screens, but higher
+training-forward work on four short tasks; local arithmetic teaching and
+event-camera gestures have distinct favorable training-work measures. Optimize
+and measure backward work separately, preserving counterfactual support.
 
 The manifesto remains sparse, asynchronous computation and learning driven by
 messages, local state, delays, and credit to unrealized alternatives. The results

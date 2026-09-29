@@ -9,7 +9,7 @@ not yet a union of every historical prototype's primitives.
 
 | File | Responsibility |
 |---|---|
-| `sleeping_machines/shared_event.py` | Configurable bounded carrier depth; hard winning vector/delay; local training-only loser score credit; contextual evidence, periodic and weighted event readouts |
+| `sleeping_machines/shared_event.py` | Configurable bounded carrier depth; hard winning vector/delay; local training-only loser score credit; optional causal context receivers; evidence, periodic and weighted event readouts |
 | `sleeping_machines/phase_memory.py` | Learned affine circle state, hard class clocks and local timing credit |
 | `sleeping_machines/event_memory.py` | Reference and linear-work segmented numerator/mass scan |
 | `sleeping_machines/event_query.py` | Explicit observed-prefix query, chronology/cutoff validation, separate examples |
@@ -34,6 +34,9 @@ batch, and 151/256 unchanged development answers on the existing speech model.
   next character and next gap are separate targets.
 - Learned arrival delays can reorder carriers; the shared core sorts arrivals
   within each receiver. All current benchmarks execute on CPU, one thread.
+- Timing performs computation: delay changes alter the causal memory seen by
+  later messages and the winning route. Dormant units alone do not explain the
+  model's computational mechanism.
 - Only the winning hidden vector/delay is emitted. Losing values are detached
   training counterfactuals, never averaged into the emitted hidden message.
 - Evidence is fused at the output score. This geometric mixture is a separate
@@ -55,7 +58,8 @@ batch, and 151/256 unchanged development answers on the existing speech model.
 The initial E120 cores have depth 8, width 32, seed 6, eight epochs. Each has
 its own initialization, optimizer, input alphabet, fitted weights and checkpoint.
 The following development screens cover the eight principal data/task families;
-they do not rerun every historical experiment or compare to new dense baselines.
+they do not rerun every historical experiment. E123 adds bounded Transformer
+references for five screens; their protocol and cost boundaries are below.
 
 | Task | Protocol | Completed result |
 |---|---|---|
