@@ -18,6 +18,11 @@ exec > >(tee -a "$RUNNER_LOG") 2>&1
 MEM_CAP_KB=${MEM_CAP_KB:-6000000}
 MEM_CAP_RSS_KB=${MEM_CAP_RSS_KB:-3500000}
 MIN_AVAIL_MB=${MIN_AVAIL_MB:-6000}
+JOB_TIMEOUT_S=${JOB_TIMEOUT_S:-1800}
+if [[ ! "$JOB_TIMEOUT_S" =~ ^[1-9][0-9]*$ ]]; then
+  echo "JOB_TIMEOUT_S must be a positive integer number of seconds" >&2
+  exit 2
+fi
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 TORCH_NUM_THREADS=1
 exec 9>"$LOCK"
 flock $([ -n "${WAIT:-}" ] && echo "-w 86400" || echo -n) 9 || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
@@ -46,7 +51,7 @@ trap 'on_signal 143' TERM HUP
 mkdir -p "$(dirname "$0")/logs"
 while IFS= read -r line; do
   [[ -z "$line" || "$line" == \#* ]] && continue
-  name=${line%% *}; cmd="/workspace/.venv-docker/bin/python ${line#* }"
+  name=${line%% *}; cmd="timeout --signal=TERM --kill-after=10s ${JOB_TIMEOUT_S}s /workspace/.venv-docker/bin/python ${line#* }"
   if [ -f "$RUNNER_LOG" ] && grep -Fq "done $name (exit 0)" "$RUNNER_LOG"; then
     echo "$(date +%T) skip $name: prior successful completion in $RUNNER_LOG"
     continue

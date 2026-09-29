@@ -1,6 +1,6 @@
 # Sleeping Machines: what is known
 
-*28 September 2026. The illustrated version is the PDF built by `report/make_pdf.py`
+*29 September 2026. The illustrated version is the PDF built by `report/make_pdf.py`
 (`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
 the experiment log is `experiments/FINDINGS.md` and git history.*
 
@@ -33,6 +33,17 @@ realized firing calibration, gradients reached all eight event layers in a depth
   test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
   optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
   4.319, so it does not establish useful language-model quality or a scaling advantage.
+- **Deep SHD route credit and depth (§§138–141; theory plus a route-graph audit, not an accuracy claim):** with only
+  1.56–7.03% layer-4 support, a size-four minibatch has a 75–94% chance of containing no layer-4 example. Yet exact
+  seed-6/7 wiring has static paths for 90.2%/98.0% of first-to-fourth unit pairs, and all 140 input bands can reach
+  layer 4. The bottleneck is therefore downstream of fixed connectivity: event-conditioned routes, thresholded firing,
+  and which alternatives receive label credit. Sparse skips restore 99–100% deep support without paired accuracy gain.
+  The theory now treats each missed event as a candidate with a signed failure margin (route closed, below threshold,
+  race lost, or refractory) and assigns it paired downstream loss by replay. This generalizes the lost-route counterfactual:
+  more such comparisons can help routing only when useful alternatives are sampled with enough signal and without
+  overwhelming variance or replay cost. Under strict chains, depth multiplies support losses; preserving half the
+  examples to depth 8 or 16 requires 90.6% or 95.5% mean survival per transition. The proposed cause-stratified shadow
+  audit has not yet been run, and neither route-pair synergy nor improved SHD accuracy is established.
 
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
@@ -176,8 +187,16 @@ and what remains open.
    also works with depth: (a + b + c) mod p through two composed rhythm stages (0.99–1.00, 3/3 seeds at p = 17 and 31).
 6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 96 channels leaves the
    number of learning mistakes flat and makes inference cheaper (§77).
-7. **Not yet: real asynchronous benchmarks.** On spoken digits (SHD) the architecture has not beaten dense baselines;
-   on the market stream, a correctly posed trading task (profit after costs) is not profitable for any learner, and
+7. **Real asynchronous benchmarks remain open, with a seed-dependent SHD signal.** In the matched four-layer E83
+   comparison, seed 6 reached 17/128 terminal accuracy versus 7/128 deepest-only; race-plus-fallback outputs were
+   correct on 20 versus 7 examples (McNemar $p=0.0146$). Seed 7 reached 9/128 versus 7/128, with 9 versus 6 paired
+   race-plus-fallback answers ($p=0.607$), so the seed-6 gain has not replicated. Layer-4 support was 61.7% versus
+   4.7% in seed 6 and 22.7% versus 16.4% in seed 7. A sparse layer-1 event skip raised it to 99.2% and 100%, without
+   paired accuracy gains. The all-depth race reported mean emitted confidence 63.8% / 63.1% against accuracy 23.8% / 0%
+   across the two seeds; prefix NLL and calibration remain poor, and the layer-4 branch showed no stable readout gain.
+   These controlled runs identify support and calibration failures, while performance remains far below dense and
+   published event-model baselines. On the market stream, a correctly posed trading task (profit after
+   costs) is not profitable for any learner, and
    the native learner learns to stay out. An online world model of the stream, built as an event network with state and
    window nodes, beats a neural point process by 0.5–0.9 nats per event, also on held-out days, at ≈ 19 synaptic
    operations per event.
@@ -573,6 +592,95 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
   norm was 1.6% of pathwise norm. At epoch 1 the per-layer mean route effects differed, but each was small relative to
   its shadow-to-shadow spread. A separate depth-2 smoke had a 1.17e−5 gradient-norm ratio and cosine −0.002. This is
   new evidence about estimator scale and route heterogeneity, not above-chance learning.
+  The layerwise trace now localizes an additional missing credit term. In the depth-4 pathwise run, held-out mean spikes
+  per utterance rounded to [4, 2, 0, 0]; on epoch 2's first training minibatch, the main-loss gradient norms were exactly
+  zero in all four hidden layers and the auxiliary gradients were zero in layers 3–4. The existing shadows toggle message
+  routes, not the separate hidden fire/no-fire gate. The route-counterfactual run did restore activity [21, 15, 4, 14],
+  yet remained at chance, so event support is a demonstrated bottleneck, not a complete explanation of recognition failure.
+  The 128-example paired spike audit on the trained depth-4 route-counterfactual checkpoint found near-threshold margins
+  (within ±0.25) averaging 349/batch in layer 1, 67 in layer 2, 7.9 in layer 3, and 6.6 in layer 4; layer 4 had none in
+  24 of 32 batches. Spike-on improved the loss in only 16/32, 17/32, 14/32, and 14/32 interventions respectively, with
+  near-zero mean effects. This confirms scarce deep boundaries but does not justify adding a single-spike update yet.
+  A separate input audit found that E83 discards the log-count mark returned when same-band spikes are merged: 55.6% of
+  fitting groups and 43.5% of held-out-speaker groups contain multiple raw spikes. This is a concrete information
+  bottleneck, not yet proven to explain the accuracy gap. The count-preserving D4 ablation did maintain deep support: held-out
+  layer-4 coverage was 56–94% and support remained nested, with zero violations. Accuracy nevertheless fell to 0/32 after
+  epoch 1 and epoch-4 prefix NLL was [8.48, 27.28]. The mark changes dynamics but did not produce class learning in this
+  single seed. The depth-8 fused run exposed the other failure mode. Its layer activity
+  changed from [16, 9, 3, 6, 27, 51, 141, 250] at epoch 1 to [24, 3, 1, 1, 4, 6, 32, 65] at epoch 2, then surged
+  to [59, 35, 97, 286, 1,137, 1,929, 4,125, 4,888] at epoch 3 and fell to [27, 3, 2, 2, 3, 11, 47, 58] at epoch 4.
+  Late-prefix NLL swung 39,815 → 1,692 → 19.8 million → 22.9, while terminal accuracy remained 3.1–12.5%. We stopped
+  the eight-epoch run after epoch 4 because its event rate and loss alternated between cascade and collapse. Section 137
+  formalizes a sharper support diagnosis: in the strict chain, a layer with no incoming events has zero state and cannot
+  fire spontaneously at the positive threshold. Thus each utterance's active-layer support is nested, even though spike
+  multiplicity among surviving utterances can cascade. The matched four-epoch depth-4 `all_depths` run did not reopen
+  support: held-out spikes per utterance rounded from [14, 6, 5, 28] to [16, 2, 1, 0], [9, 1, 0, 0], and [10, 1, 0, 0].
+  Accuracy stayed 3.1–6.25%; the first training minibatches in epochs 3 and 4 had exactly zero main-loss gradient in
+  layers 3–4. On the 32-example screen, deepest-only ended at 5/32 (15.6%), versus 2/32 for `all_depths`; the paired
+  comparison was inconclusive (exact McNemar p=0.453, five versus two discordant correct cases), and deepest-only prefix
+  NLLs [4.008, 4.741] were worse than the 20-class uniform NLL 2.996. A fresh `all_depths` run at the same training budget
+  with 128 held-out examples reached 17/128 (13.3%) at its fixed endpoint; nominal chance-tail p=0.00023, with 11/75
+  correct on one held-out speaker and 6/53 on the other. Its fixed-threshold race emitted 42 answers, 10 correct
+  (23.8%); their mean maximum class confidence was 63.8%, directly exposing severe sequential overconfidence. It reached
+  15.6% with terminal fallback. However, late-prefix NLL was still 17.57, and removing the layer-4 readout left
+  fused accuracy unchanged at 13.3%. Its standalone head accuracies were [7.0, 10.2, 8.6, 10.2]%, and leave-one-head-out
+  fused accuracies were [10.2, 7.0, 10.2, 13.3]%; the second-layer head helped most, while the fourth added no measured
+  accuracy. In the matched 128-example seed-6 comparison, `all_depths` ended at 17/128 terminal
+  accuracy and 61.7% layer-4 support; `deepest` ended at 7/128 and 4.7% support. The all-depth race emitted with mean
+  confidence 63.8% but only 23.8% accuracy among emitted answers. The fixed race-plus-fallback outputs
+  were correct on 20 versus 7 examples, with 19 versus 6 discordant correct cases favoring fusion (exact McNemar
+  p=0.0146). This is a nominal paired signal on two held-out speakers, not speaker-level replication. The all-depth
+  late-prefix NLL (17.57) was much worse than deepest-only (4.66), both above uniform 2.996; the deepest head's branch
+  ablation also left fused terminal accuracy unchanged. Thus the fused objective preserved deep support and improved
+  decisions in this seed, but the evidence is badly calibrated and the deepest branch has not shown task value.
+  The matched seed-7 pair ended at 9/128 versus 7/128 terminal accuracy and 9 versus 6 race-plus-fallback correct
+  (McNemar p=0.607); layer-4 support was 22.7% versus 16.4%. Its all-depth race emitted eight answers at mean confidence
+  63.1%, with none correct, and late-prefix NLL was 5.74. The seed-6 paired gain therefore did not replicate, while
+  overconfident stopping did.
+  The task loss is still sequence-to-class cross-entropy at two fixed causal prefixes plus EOS; it is proper for the
+  class posterior given each sampled prefix and does not demand an answer at utterance onset. The stopping threshold is
+  a separate policy. Sparse prefix sampling does not guarantee calibration at event-triggered stopping times (§128).
+  The support difference has a direct small-batch consequence: under an IID approximation, the chance that a batch of
+  four contains no layer-4-active example is (1−c)^4, where c is held-out support. It is 82.5% for seed-6 deepest-only
+  coverage 6/128, 48.8% for seed-7 deepest-only coverage 21/128, and 2.2% for seed-6 all-depth coverage 79/128. This
+  estimates support absence only; event presence is necessary but not sufficient for a useful gradient.
+  Historical runs shared evaluation-selection and training RNG, so changing `eval_limit` also changed training
+  permutations/augmentations; the 128-example run is a fresh training trajectory, not a larger re-evaluation of the
+  32-example checkpoint. E83 now defaults to separate RNG streams via `--rng_protocol split`; this implementation has
+  not yet been validated by a paired cross-evaluation-limit run. The seed-7 deepest-only control ended at 7/128 (5.5%),
+  layer-4 support 16.4%, and late
+  NLL 4.09; its fixed-threshold race emitted four answers and none were correct. Both sparse layer-1 skip controls are
+  complete. Seed 6 reached 99.2% layer-4 support for 1.8% more candidate-score work, with 9/128 terminal accuracy
+  versus 7/128 strict and no race emissions correct; paired race-plus-fallback McNemar p=0.791. Seed 7 reached 100%
+  support but only 5/128 accuracy, late NLL 48.80, and 22.3% more candidate-score work; its paired output comparison
+  was 5 vs 6 correct (p=1.0). These results restore support without improving paired classification, and the evidence
+  scale varies by seed. The skip masks use a separate topology RNG, preserving the strict adjacent masks. Candidate-score
+  differences do not measure total energy: the simulator still performs 288,008 vector-state updates per utterance on
+  a 1 ms grid. Use split RNG streams before comparing different evaluation sizes; `legacy_shared` reproduces the
+  historical coupled protocol. Useful firing-boundary credit is
+  still unestablished, and a fixed threshold/weight
+  scale does not control event gain.
+
+  The compute-matched data-diversity screen directly tested one possible
+  explanation without changing update count: 120 examples over four epochs
+  versus 480 examples over one epoch, at 120 updates per arm. Seed 6 favored
+  the larger set (20/128 versus 8/128; exact paired McNemar $p=0.0227$), while
+  seed 7 favored the smaller set (20/128 versus 8/128; $p=0.0357$). Layer-4
+  support stayed at 1.56–7.03% and late-prefix NLL at 3.02–6.58 across all
+  arms. The direction reversal means the test found no stable data-diversity
+  benefit and does not justify additional seed-only runs.
+
+  THEORY §138 derives the exact support-masked gradient moments and the
+  minibatch SNR penalty. It separately derives the smoothed spike birth/death
+  term and a sufficient firing-margin stability condition under an AdamW
+  step. Because norm clipping is applied before Adam's coordinatewise
+  preconditioner, it does not generally cap parameter or gate-margin motion.
+  E83's epoch-level activity swings are compatible with gate crossings but
+  do not establish them; log pre/post margins, predicted margin displacement,
+  actual AdamW updates, and observed gate flips before attributing the cause.
+  Support, event utility, boundary credit, and optimizer stability are four
+  different conditions for depth, and no one of them alone establishes
+  trainability.
 
   THEORY §§131–132 derive why the total-estimator variance scales with candidate count, separate normalized-mean bias
   from update magnitude, and specify layerwise loss-delta/norm/cosine diagnostics. A weak Bayesian prior is appropriate
@@ -665,7 +773,7 @@ prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
 
 The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
 
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM and 1.908 for the completed 3.24M-parameter, four-layer Transformer on the shared test segment. The four-layer Transformer checkpoint was selected on validation and scored 1.9083 held-out test bpc after 4,882 updates. The E79 comparisons are single-seed and include six experts plus copy memory; the Transformer and LSTM also use different pass counts. This is a same-split language-model result, not a compute- or parameter-matched architecture comparison. E77 has no completed scale-level LM result yet. A default-width depth-4 pilot showed why raw voltage quantiles were insufficient: they left the stack nearly silent. Matching the realized post-reset spike rate restored gradients through all four layers; an 8-layer, width-8 pilot then had gradients in every layer at all 16 validation points with sparse test activity. These are trainability diagnostics, not language-model quality or scaling results.
+The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM and 1.908 for the completed 3.24M-parameter, four-layer Transformer on the shared test segment. The four-layer Transformer checkpoint was selected on validation and scored 1.9083 held-out test bpc after 4,882 updates. The E79 comparisons are single-seed and include six experts plus copy memory; the Transformer and LSTM also use different pass counts. This is a same-split language-model result, not a compute- or parameter-matched architecture comparison. E77 has no completed scale-level LM result yet. A parameter-matched 8-layer Transformer control completed 1M training characters over five passes (1.251M parameters, 4,882 updates, 1,617 s), with 2.322 validation and 2.352 test BPC. Its E77 partner exceeded the 3.5 GB process RSS cap at 3.83 GB before training, so the guarded runner stopped it while host memory remained above 10 GB. E77's bounded 100k-character, one-pass depth-8 run is now prioritized; no new Transformer run is scheduled until we review that result. A default-width depth-4 pilot showed why raw voltage quantiles were insufficient: they left the stack nearly silent. Matching the realized post-reset spike rate restored gradients through all four layers; an 8-layer, width-8 pilot then had gradients in every layer at all 16 validation points with sparse test activity. These are trainability diagnostics, not language-model quality or scaling results.
 
 - **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
   4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
@@ -681,14 +789,39 @@ The synthesis now treats topology and representation as separate experimental ax
   candidate edges outside the fixed route mask still lack boundary credit. E84 remains the guarded
   day-5 market likelihood comparison;
   no new market result exists.
-- **Depth-credit redesign for SHD (§136; experiment pending):** the deepest-only classifier forces an early event to
+- **Depth-credit redesign for SHD (§136; completed control pairs):** the deepest-only classifier forces an early event to
   survive every later hard route before it can affect the final loss. E83 now has a sparse `all_depths` readout that adds
   causal class evidence from every layer at the same query prefix, while retaining the deepest-only control and local
   auxiliary losses. The lost-route counterfactual compares the fused end-to-end objective, so an opening can receive
   credit for its direct evidence as well as downstream changes. This relaxes serial credit but may let shallow branches
-  solve the task; matched depth-4 controls and a depth-8 run will report branch ablations and sparse readout work. No
-  accuracy gain is established yet. E83's separate silence gap also remains: logits do not evolve between hidden events
+  solve the task; branch ablations and matched seed-6/seed-7 depth-4 controls are complete. Seed 6 favored fusion on paired
+  race-plus-fallback decisions (20 versus 7; p=0.0146), but seed 7 did not replicate it (9 versus 6; p=0.607). No
+  repeatable accuracy gain is established. The depth-8 fused run was stopped after four epochs because late layers alternated
+  between near-extinction and thousands of spikes per utterance. E83's separate silence gap also remains: logits do not evolve between hidden events
   until the next event or terminal EOS.
+- **Why the depth-4 SHD model stalls (§137):** seed-6 event counts and exactly zero-gradient training minibatches
+  confirm that the hard fire mask cuts off label credit when deep layers emit no events. Existing route shadows toggle
+  message edges but do not estimate the distinct spike birth/death boundary term. A 128-example paired spike audit found
+  deep near-threshold candidates rare and single-spike loss effects mixed, so spike credit is not yet shown to help. E83
+  also drops the merged event-count payload: the mark exists in preprocessing, and over 40% of held-out merged events
+  contain multiplicity. **Structural result:** with zero initial state, no bias drive, and positive firing threshold, an
+  empty input event set produces no output events. Therefore per-utterance active-example coverage is nested across a
+  strict event chain; all-depth readout cannot break this invariant. Event counts can still explode on the shrinking set of
+  active utterances, so track coverage and conditional multiplicity separately. In the original 32-example depth-4
+  trajectory, `all_depths` stayed at 3.1–6.25% and deep activity declined to [10, 1, 0, 0] spikes per utterance by
+  epoch 4; direct readout fusion did not restore support in that trajectory. In the matched 32-example evaluation, the deepest-only arm's final
+  accuracy was 15.6% (5/32) versus 6.25% (2/32) for fusion, but paired errors were inconclusive (McNemar p=0.453) and the
+  deepest arm's prefix NLL was worse than uniform. The count-preserving ablation kept layer-4 coverage between 56% and 94%
+  but ended at 0/32 accuracy and late-prefix NLL 27.28. This rejects support restoration as a sufficient fix. A fresh
+  `all_depths` run at 128 held-out examples reached 17/128 (13.3%) but had late-prefix NLL 17.57; its nominal chance tail
+  is 0.00023, while one seed and two speakers limit generalization. In the same-subset seed-6 pair, the all-depth model
+  outperformed deepest-only on race-plus-fallback answers (20 vs 7 correct; paired exact McNemar p=0.0146) and retained
+  layer-4 support (61.7% vs 4.7%). Seed-7 deepest-only remained at 7/128, with 16.4% layer-4 support. Historical
+  evaluation-size comparisons also changed training permutations and augmentation because their RNG stream was shared;
+  new runs default to split streams, but that protocol still needs cross-evaluation-limit validation.
+  Both sparse layer-1 skip seeds restored support without paired accuracy gain. The matched seed-7 all-depths replication
+  did not reproduce the seed-6 paired gain. The depth-8 pilot
+  alternated between a late-layer activity cascade and collapse; rate calibration remains a separate requirement.
 - **Anytime classification of sparse streams (§§119–§129):** for a true prefix posterior, emitting at its first
   confidence crossing of $1-\epsilon$ bounds the error among emitted answers by $\epsilon$; this is a derived guarantee,
   conditional on sequential calibration, not yet an E83 result. For point-process inputs, both observed events and
@@ -848,11 +981,7 @@ near-miss keys where curvature makes the local estimate least reliable. It does 
 same analysis now closes the smooth-loss VJP gap: the query-gradient truncation error is bounded by
 $\\beta\\epsilon D_K[(3/2-\\epsilon)D_A^C+HD_V^2/4]$, with matching key- and value-VJP bounds. The curvature term accounts
 for the upstream gradient changing when retrieval changes the output; the bound remains absolute and gives no alignment
-guarantee near a zero dense gradient. This is a mathematical result awaiting autodiff checks, not an experimental result. The
-2/4/8/16-layer E77 and Transformer sweep now matches
-context length, sampled training windows, 5M-token exposure, batch size, optimizer updates, and parameter count to within
-4% (Transformer widths 104/104/112/136 at depths 2/4/8/16). A separate width-256, 20-pass depth-4 Transformer run
-supplies a stronger convergence reference; it has a larger training budget and is reported separately from the matched sweep.
+guarantee near a zero dense gradient. This is a mathematical result awaiting autodiff checks, not an experimental result. The proposed 1M/5-pass depth sweep did not produce an E77 result: its width-128 depth-8 attempt crossed the 3.5 GB process RSS cap before training. The matched 8-layer Transformer control completed at 2.352 test BPC, but cannot be compared with E77. A bounded 100k-character, one-pass depth-8 E77 run now takes priority; no Transformer control is scheduled until its result is reviewed.
 
 **Deep sparse-stack stability (§§113–114; derived, with a small numerical diagnostic).** Section 113 composes local output and
 Jacobian error through residual depth; under $1/L$ residual scaling and bounded per-layer constants, the error bounds
@@ -1086,8 +1215,7 @@ in this design features come from the time-vector layers and the native detector
   convergence is not established. The four-layer 10M Transformer checkpoint was selected on validation and scored
   1.9083 held-out test bpc after 4,882 updates, 0.1090 above the LSTM on test. The Transformer used four passes and
   3.24M parameters, compared with the LSTM's six passes and
-  1.20M parameters, so the scores are data-matched but not capacity- or budget-matched. The parameter-matched depth
-  controls and 2/4/8/16-layer E77 comparisons remain queued. No language-model advantage for E77 is established yet.
+  1.20M parameters, so the scores are data-matched but not capacity- or budget-matched. The 1M depth-8 Transformer control scored 2.352 test BPC, but its E77 partner was stopped before training at the 3.5 GB RSS cap, so this is not an architecture comparison. A bounded 100k-character, one-pass E77 depth-8 run now has priority; its Transformer control is deferred until we review the E77 result. The earlier 1M/5-pass E77 matrix is removed from the queue. No language-model advantage for E77 is established yet.
 - *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
   a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
   race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
@@ -1159,12 +1287,12 @@ on language itself. The stages above are how that will be decided.
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
 | E75 | SHD: equivariant time-vector network (band shift × tempo) | symmetry check passed; two-epoch pilot reached 0.044 and did not learn; strict-depth and auxiliary-credit diagnostics follow in E83 |
 | E76 | attention work law in trained character-level Transformers | queued after E64b |
-| E77 | time-vector language model with delay-coded retrieval (text8) | causality verified; depth-4 bootstrap micro-pilot restores gradients through all four layers; matched scale runs still queued |
+| E77 | time-vector language model with delay-coded retrieval (text8) | width-8 depth-8 gradient-reach pilot; 1M Transformer control scored 2.352 test BPC; matching E77 job hit the 3.5 GB cap before training; bounded 100k depth-8 E77 run prioritized |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
 | E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
 | E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; pathwise and normalized-counterfactual depth-4 runs stayed at 6.25%; inverse-probability route credit destabilized (§§130–132) |
+| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; strict chains have nested per-utterance support; matched D4 seed 6: all-depths 17/128 versus deepest-only 7/128 terminal, paired race-plus-fallback 20 versus 7 (McNemar p=0.0146); poor late-prefix NLL and no layer-4 ablation gain; count marks restore support without class accuracy; depth-8 activity alternates between extinction and cascade (§137) |
 | E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
 | E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
 

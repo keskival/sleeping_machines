@@ -1,0 +1,6 @@
+# Matched seed-6 D4 test of cooperative counterfactual route training.
+# Both arms use the same 120 examples, 120 updates, initialization, evaluation
+# set, and single-route shadows. The treatment adds at most one near-boundary,
+# same-receiver/time-overlap pair per batch; each selected pair costs 3 replays.
+e83_d4_bundle_control_seed6 experiments/e83_deep_shd.py --limit 120 --eval_limit 128 --epochs 4 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective event_prefix --readout_fusion all_depths --prefix_samples 2 --prefix_horizon_ms 1000 --prefix_window_start 0 --cf_shadows_per_layer 1 --cf_band 0.5 --cf_sigma 0.25 --cf_weight 1 --cf_delta_clip 5 --cf_lr 0.001 --cf_grad_clip 1 --cf_pairs_per_batch 0 --rng_protocol split --seed 6 --run_tag bundle_control --save_checkpoint
+e83_d4_bundle_pair_seed6 experiments/e83_deep_shd.py --limit 120 --eval_limit 128 --epochs 4 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective event_prefix --readout_fusion all_depths --prefix_samples 2 --prefix_horizon_ms 1000 --prefix_window_start 0 --cf_shadows_per_layer 1 --cf_band 0.5 --cf_sigma 0.25 --cf_weight 1 --cf_delta_clip 5 --cf_lr 0.001 --cf_grad_clip 1 --cf_pairs_per_batch 1 --cf_pair_window_ms 25 --rng_protocol split --seed 6 --run_tag bundle_pair --save_checkpoint

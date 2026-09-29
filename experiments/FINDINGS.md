@@ -3,6 +3,176 @@
 One entry per result: what we ran, what came out, what it teaches us, what changes.
 Newest first. Numbers are single seeds unless stated.
 
+## 2026-09-29
+
+**E83 route-credit theory and compute-matched screen (§§138–141).** The
+analysis quantifies the pathwise-gradient penalty from sparse deep support:
+if a sample contributes gradient $X$ only when layer $\ell$ is active, then
+$G=A X$ has mean $c_\ell\mu_\ell$ and covariance
+$c_\ell\Sigma_\ell+c_\ell(1-c_\ell)\mu_\ell\mu_\ell^\top$. For IID minibatches,
+the probability of no active example is $(1-c_\ell)^B$; with batch size four
+and measured layer-4 coverage 1.56–7.03%, this is 75–94%. Under
+conditional-gradient-noise dominance, task-direction SNR scales as
+$\sqrt{B c_\ell}$. This is exact under the stated sampling assumptions, but
+does not establish that active events carry useful class information.
+
+The compute-matched D4 comparison held architecture, initialization, and 120
+optimizer updates fixed, with nested 120-example/four-epoch versus
+480-example/one-epoch subsets and the same 128 evaluation examples within
+each seed. Seed 6 favored the larger subset (20/128 vs 8/128; paired exact
+McNemar $p=0.0227$); seed 7 reversed direction (8/128 vs 20/128;
+$p=0.0357$). Layer-4 support remained 1.56–7.03%, and late-prefix NLL was
+3.02–6.58, above uniform $\log20=2.996$. The data-diversity effect is not
+reproducible in these two runs and did not repair deep support or posterior
+quality. The optimizer-induced cascade hypothesis also remains unverified:
+global gradient clipping does not bound AdamW's gate-margin movement, and
+per-update margin traces have not been collected.
+
+Sections 139–140 separate four objects that had been conflated: the fixed
+candidate mask, the event-conditioned graph, the realized route-and-fire
+graph, and the graph receiving loss credit. Exact reconstruction of the
+seed-6/7 D4 masks gives 90.2%/98.0% first-to-fourth unit-pair reachability;
+all 140 input bands reach layer 4. Yet only 1.56–7.03% of examples actually
+reach it in the matched arms. Sparse layer-1 skips raise support to 99–100%
+without paired recognition improvement. Static disconnection is therefore
+not the broad failure; useful events and label credit still fail downstream.
+
+The route calculation makes the sparse-MoE analogy precise: a competing
+route's relaxed gradient depends on the loss difference between paired route
+outcomes. Current E83 shadows test one near-boundary route at a time, so they
+miss a possible cooperative crossing where two individually subthreshold
+messages jointly create a useful spike. A two-gate derivation identifies the
+needed four replays (00/10/01/11) and the interaction loss. This is a
+testable mechanism, not yet an established cause. Section 141 generalizes the
+idea to dormant proposals: record why a candidate did not fire, replay a
+sparse set through the full downstream state, and credit its local margin
+only when the paired loss says the alternative helped. Route closure,
+threshold failure, race loss, and refractory blocking need distinct margins;
+absence by itself is not a negative label.
+
+Finally, §140 shows why depth can add useful choices but cannot be increased
+blindly: candidate paths grow combinatorially while strict-chain sample
+support multiplies by conditional survival at every transition. Preserving
+half of full input support at depth 8 or 16 requires average per-transition
+survival of at least 0.906 or 0.955. These results motivate a fixed-checkpoint,
+margin-stratified dormant-event audit before another depth sweep; they are
+not evidence of supremacy or of route-pair synergy in the current model.
+
+**E83 all-depth D4 control and strict-chain support invariant (§137).** The
+matched four-epoch depth-4 `all_depths` run used 128 train / 32 held-out
+speakers, seed 6, and the same event-prefix objective and route shadows as its
+queued deepest-only control. Held-out spikes per utterance rounded by layer
+were `[14, 6, 5, 28]`, `[16, 2, 1, 0]`, `[9, 1, 0, 0]`, and `[10, 1, 0, 0]`.
+Terminal accuracy was 6.25%, 3.125%, 6.25%, and 6.25%; epoch-4 prefix NLL was
+`[3.1373, 3.4115]`, above the uniform 20-class NLL of 2.996. On the first
+training minibatches of epochs 3 and 4, main-loss gradient norms in layers 3
+and 4 were exactly zero. These are first-minibatch gradient measurements,
+not claims that every update in those epochs was zero.
+
+The matched deepest-only arm ended at 5/32 (15.6%) versus 2/32 (6.25%) for
+`all_depths`. This is a first above-chance-sized endpoint in the matched D4
+screen, but it is not strong evidence yet: on the shared examples there were
+five cases correct only for deepest-only and two correct only for fusion
+(exact two-sided McNemar p=0.453). The deepest-only prefix NLLs were
+`[4.0081, 4.7412]`, worse than uniform NLL 2.996, and accuracy moved
+9.4% → 0% → 3.1% → 15.6% across its four epochs. The nominal one-sided
+binomial tail for 5/32 at 5% chance is 0.020, before accounting for the
+multiple arms/epochs inspected. Larger held-out evaluation is needed.
+
+That larger readout comparison is now complete for seed 6, with 128 examples
+in both the train and held-out-speaker subsets. The `all_depths` and
+`deepest` arms used the same seed, selected examples, and training random
+stream; only the readout fusion setting differed. At the fixed fourth-epoch
+endpoint, terminal accuracy was 17/128 (13.3%) for `all_depths` and 7/128
+(5.5%) for `deepest`. Layer-4 active-example coverage was 61.7% versus 4.7%,
+respectively; layer-2 coverage was 100% versus 46.1%. For the actual
+thresholded output policy (first crossing, otherwise terminal fallback), the
+paired predictions were correct on 20/128 versus 7/128 examples, with 19
+all-depth-only and 6 deepest-only correct cases (exact McNemar p=0.0146).
+This is a nominal single-seed, two-speaker result, not a speaker-general
+claim. The fixed-threshold race emitted on 42/128 all-depth examples, 10
+correct (23.8% accuracy among emissions); their mean reported confidence was
+63.8%. Deepest-only emitted on 2/128 and neither was correct. All-depth
+late-prefix NLL was 17.57, while deepest-only
+was 4.66, both above uniform 2.996. The objective improves class decisions
+and preserves deep support in this pair, but its accumulated evidence is
+poorly calibrated. Removing the layer-4 branch left all-depth terminal
+accuracy unchanged at 13.3%, so this result does not establish that the
+deepest branch contributes the accuracy gain.
+At this endpoint, standalone head accuracies were `[7.0, 10.2, 8.6, 10.2]%`;
+removing each head in turn from the fused terminal logits left
+`[10.2, 7.0, 10.2, 13.3]%`. The second-layer head has the largest measured
+leave-one-out effect, while layer 4 has none. These are readout-head
+ablations on one trained checkpoint, not retrained depth ablations.
+
+The seed-7 matched replication narrows the claim. At the fixed endpoint,
+`all_depths` reached 9/128 terminal accuracy versus 7/128 for `deepest`; its
+race-plus-fallback outputs were correct on 9 versus 6 examples, with 9
+all-depth-only and 6 deepest-only cases (exact McNemar p=0.607). Layer-4
+coverage was 22.7% versus 16.4%, a smaller difference than seed 6. The
+all-depth race emitted 8 answers with mean confidence 63.1%, none correct;
+late-prefix NLL was 5.74 versus 4.09 for deepest-only. The seed-6 paired
+accuracy advantage therefore did not replicate, while the calibration failure
+did. Seed-7 leave-one-head-out fused accuracies were
+`[2.3, 7.8, 10.9, 7.8]%` (omitting layers 1–4) versus 7.0% with all heads;
+removing layer 4 slightly improved the endpoint. The layer contribution
+pattern varies by seed, with no stable deepest-layer gain.
+
+The seed-7 `deepest` replication has also finished: terminal accuracy was
+7/128 (5.5%), layer-4 coverage 16.4%, late-prefix NLL 4.09, and the fixed
+0.6 race emitted four answers with none correct. Thus deepest-only remains
+near chance on a second training/evaluation subset, with the same two held-out
+speakers. Its matched seed-7 `all_depths` arm completed; it did not reproduce
+the seed-6 paired advantage.
+
+The seed-6 deepest-only skip ablation has finished. A sparse layer-1 event
+skip raised layer-4 coverage from 4.7% to 99.2% and broke strict support
+nesting as intended (29 measured nesting violations); mean deep candidate
+scores rose only 1.8% (46,246 to 47,096). Terminal accuracy moved from 7/128
+to 9/128, while late-prefix NLL improved from 4.66 to 3.71, still above
+uniform 2.996. At the fixed 0.6 threshold the skip emitted five times and
+none were correct. The paired race-plus-fallback comparison had 6 strict-only
+and 8 skip-only correct cases (exact McNemar p=0.791). The skip fixes the
+intermediate support bottleneck at small sparse fan-out cost, but it does not
+yet produce useful class evidence or a reliable stopping signal. The 1.8%
+figure counts candidate event–receiver pairs; the simulator still performs
+288,008 vector-state updates per utterance on a 1 ms grid, so this is not an
+end-to-end energy measurement.
+
+The seed-7 skip replication reached 100% layer-4 coverage but only 5/128
+terminal accuracy, late-prefix NLL 48.80, and zero correct answers among
+seven fixed-threshold emissions. Total candidate-score work was 22.3% above
+its strict-chain control; paired race-plus-fallback accuracy was 5 versus 6
+correct (6 strict-only, 5 skip-only; exact McNemar p=1.0). The skip therefore
+restores support in both seeds without a paired classification gain, while
+its event activity and evidence scale vary sharply by seed. Support survival,
+event-rate control, and class credit are separate requirements.
+
+The analysis yields an exact structural invariant for this model: if a strict
+chain layer receives no events, its zero state and positive threshold produce
+no output events. Per-utterance active-example support is therefore nested
+with depth; `all_depths` changes the loss paths but cannot make a silent hidden
+layer receive input. Mean event count and active-example support are distinct:
+event multiplicity can cascade on a shrinking active subset. This clarifies
+how the D8 count cascade can coexist with deep support loss. The count-mark
+arm kept layer-4 coverage at 56–94% across its four epochs and produced zero
+support-nesting violations, yet accuracy fell to 0/32 after epoch 1 and
+epoch-4 prefix NLL was `[8.4786, 27.28]`. Thus count input changed deep
+dynamics but did not create class evidence in this seed. Added held-out
+coverage and spikes-per-active-utterance fields, plus a support-nesting
+violation counter. The seed-7 deepest-only and both sparse layer-1-skip
+controls are complete. The skip restored layer-4 support in each seed but had
+no paired accuracy gain; its seed-7 arm also had unstable late-prefix loss.
+The skip masks use a separate topology RNG
+so the matched adjacent-layer masks remain unchanged.
+E83 now defaults to `--rng_protocol split`, which separates evaluation
+selection, training subset/order, augmentation, prefix sampling, and
+route-shadow sampling. Existing results used the prior shared-stream behavior;
+pass `--rng_protocol legacy_shared` to reproduce it. The split implementation
+is not yet validated with a paired run across evaluation limits. Use split
+streams before comparing different evaluation sizes. Do not add a hidden-spike
+boundary update until its paired loss deltas show useful class credit.
+
 ## 2026-09-28
 
 **E77 1M depth-8 benchmark resource screen.** The parameter-matched 8-layer
@@ -180,6 +350,8 @@ The first race prototype failed: at 80 train / 40 held-out examples for one epoc
 **Anytime stream-to-class theory (§§122–§128).** With a true posterior at every prefix, emitting at the first crossing of $1-\epsilon$ bounds the error among emitted answers by $\epsilon$; ordinary full-recording calibration does not establish this, so first-crossing calibration must be measured. For a marked point process, posterior evidence consists of both event log-likelihood jumps and survival evidence from intervals with no event. If each message changes only $r$ class logits, indexed max and log-sum-exp trees can maintain the exact confidence threshold in $O(r\log C)$ updates, with $O(C)$ paid only when materializing a full class-probability payload. A portable reference head is added at `experiments/sparse_anytime_readout.py`; it is not yet connected to E83 or benchmarked. Section 128 separates posterior estimation from the stopping policy: sampled-prefix log loss is proper for $P(Y\mid E_{\le t})$ even with only one utterance label, while the race objective alone does not identify calibrated prefix probabilities. This applies to SHD and event-camera clips, which share one-label-per-stream supervision but differ in event marks, rates, and nuisance variation.
 
 **E83 gradient-graph and readout audit (§§127, 129).** The fixed-support controls all share a hard routing implementation: `TVLayer` removes nonpositive message scores using `keep = r.detach() > 0`, and computes spike identities in `no_grad`. Thus closed routes receive exactly zero task gradient; open routes can receive pathwise credit through their delay and payload; firing-time refinement differentiates a spike only after it has fired. Intermediate readouts improve credit for realized events but do not create the missing route-birth/firing boundary term. The route masks are also fixed random/tonotopic buffers, so topology itself cannot be recruited. A subsequent readout-only shadow probe forced 32 near-gate final routes at seed-2 initialization, on four held-out-speaker utterances. 31 interventions changed terminal max-pooled CE by exactly zero; the one nonzero intervention reduced it by 0.045. This is consistent with the max-pooling winner-gap dead zone derived in §129: a route can alter its local trace while remaining below the current per-class temporal maximum, leaving terminal scores and loss unchanged. The measured boundary-gradient norm was 2.2% of pathwise norm, cosine 0.012. Because this probe used untrained weights and no hidden spike insertions, it is only a mechanistic clue. **Next discriminating work:** save a trained checkpoint, shadow near-threshold hidden spikes through the remaining layers, and compare max, integral, and smooth-max posterior heads under the same event support and sampled-prefix proper log loss. Report exact loss differences, winner gaps, and gradient alignment before adding counterfactual credit. Use a fixed noise band and shadow budget. No more objective sweep answers this mechanism question.
+
+**E83 depth-four failure mechanism, spike-boundary audit, and depth-eight rate profile (§137).** The seed-6 128/32 pathwise event-prefix run reports held-out spikes per utterance rounded to `[4, 2, 0, 0]`; layers 3–4 average below 0.5 events per utterance. On epoch 2's first minibatch, the main-loss gradient norms were exactly zero for every hidden layer, while the auxiliary gradient norms for layers 3–4 were also zero. This confirms that the hard support cuts label credit on silent deep-path batches. The normalized route-shadow run had more held-out activity `[21, 15, 4, 14]` but still 6.25% terminal accuracy and late-prefix NLL 19.735: routing credit alone did not solve recognition. A paired hidden-spike audit on 128 held-out utterances found near-threshold margin candidates (within ±0.25) averaging 349/batch, 67/batch, 7.9/batch, and 6.6/batch across the four layers; layer 4 had none in 24/32 batches. Spike-on improved the loss in only 16/32, 17/32, 14/32, and 14/32 interventions, with near-zero mean effects. This confirms scarce deep support but does not justify a single-spike update. A separate input audit found that E83 drops the merged event-count mark: it is returned by preprocessing, but the network uses only band identity. Multiple raw spikes occur in 55.6% of fitting groups and 43.5% of held-out-speaker groups, so this is a concrete information bottleneck whose class value remains to be tested. The depth-eight all-depths pilot oscillated between early extinction and an activity cascade: layer counts moved from `[16, 9, 3, 6, 27, 51, 141, 250]` at epoch 1 to `[24, 3, 1, 1, 4, 6, 32, 65]` at epoch 2, surged to `[59, 35, 97, 286, 1137, 1929, 4125, 4888]` at epoch 3, and fell to `[27, 3, 2, 2, 3, 11, 47, 58]` at epoch 4. Late-prefix NLL swung 39,814.7 → 1,692.1 → 19,787,863.2 → 22.9; terminal accuracy remained 3.1–12.5%. We stopped after epoch 4 for instability. The next controlled representation test preserves the count as a sparse vector mark before adding spike credit or threshold calibration.
 
 **E74/E75 — time-vector speech pilots do not yet learn well, and the memory ceiling was too tight for their default batches.**
 E74 on 2k training / 500 held-out utterances at batch 32 completed 6 epochs in 31 minutes, but held-out speaker accuracy peaked at

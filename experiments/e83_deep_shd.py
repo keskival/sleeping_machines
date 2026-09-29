@@ -34,7 +34,7 @@ import torch.nn.functional as F
 sys.path.insert(0, os.path.dirname(__file__))
 import e51_shd_world as S  # noqa: E402
 from e71_event_cde import events  # noqa: E402
-from e74_time_vector_net import TVLayer, to_events  # noqa: E402
+from e74_time_vector_net import TVLayer  # noqa: E402
 from sparse_anytime_readout import SparseAnytimeReadout  # noqa: E402
 
 torch.set_num_threads(1)
@@ -320,21 +320,38 @@ class SparseEventReadout(nn.Module):
 
 
 def batch_to_events(items, bands, shift, rng, drop):
-    """Pack events while retaining each utterance's own endpoint for causal pooling."""
-    eb, ei, et, labels, _ = to_events(items, bands, shift, rng, drop)
-    seq_end = torch.tensor([float(t[-1]) * 1000.0 for _, t, _, _ in items], dtype=torch.float32)
-    max_time = int(math.ceil(float(seq_end.max()))) + 1
-    return eb, ei, et, labels, max_time, seq_end
+    """Pack events, retaining merged spike count and each item's endpoint."""
+    eb, ei, et, ec, labels = [], [], [], [], []
+    seq_ends = []
+    for item, (bands_i, times_i, log_count_i, label) in enumerate(items):
+        keep = rng.random(len(bands_i)) >= drop if drop else np.ones(len(bands_i), dtype=bool)
+        shift_i = int(rng.integers(-shift, shift + 1)) if shift else 0
+        eb.append(np.full(int(keep.sum()), item, dtype=np.int64))
+        ei.append(np.clip(bands_i[keep].astype(np.int64) + shift_i, 0, bands - 1))
+        et.append(times_i[keep] * 1000.0)
+        # Singleton groups map to zero; positive values encode repeated spikes.
+        ec.append(log_count_i[keep] - np.float32(math.log(2.0)))
+        labels.append(int(label))
+        seq_ends.append(float(times_i[-1]) * 1000.0)
+    eb = np.concatenate(eb); ei = np.concatenate(ei); et = np.concatenate(et); ec = np.concatenate(ec)
+    eb = torch.from_numpy(eb).long(); ei = torch.from_numpy(ei).long()
+    et = torch.from_numpy(et).float(); ec = torch.from_numpy(ec).float()
+    labels = torch.tensor(labels, dtype=torch.long)
+    seq_end = torch.tensor(seq_ends, dtype=torch.float32)
+    max_time = int(et.max().item()) + 1
+    return eb, ei, et, ec, labels, max_time, seq_end
 
 
 class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
                  dmax, w_sd, seed=0, event_readout=False,
-                 readout_fusion="deepest"):
+                 readout_fusion="deepest", input_count_payload=False,
+                 early_event_skip=False):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
         self.depth = int(depth)
+        self.early_event_skip = bool(early_event_skip)
         gen = torch.Generator().manual_seed(seed)
         self.emb = nn.Embedding(bands, d)
         self.widths = [M1] + [M] * (depth - 1)
@@ -342,16 +359,32 @@ class DeepSHD(nn.Module):
         centers = (torch.arange(M1) + 0.5) * bands / M1
         local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
         self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0]))
+        adjacent_masks = []
         for i in range(1, depth):
             previous_width = self.widths[i - 1]
             mask = torch.rand(previous_width, M, generator=gen) < fan2
             for j in range(M):
                 if not mask[:, j].any():
-                    mask[torch.randint(previous_width, (), generator=gen), j] = True
-            for i0 in range(previous_width):
+                    mask[torch.randint(mask.shape[0], (), generator=gen), j] = True
+            for i0 in range(mask.shape[0]):
                 if not mask[i0].any():
                     mask[i0, torch.randint(M, (), generator=gen)] = True
-            self.layers.append(TVLayer(previous_width, M, d, d, n, dmax, mask, True, w_sd[1]))
+            adjacent_masks.append(mask)
+
+        # Keep the control's adjacent topology identical when adding skips.
+        # A separate generator prevents skip draws or empty-row repairs from
+        # shifting the random masks of later adjacent layers.
+        skip_gen = torch.Generator().manual_seed(seed + 50_000_003)
+        for i, adjacent_mask in enumerate(adjacent_masks, start=1):
+            mask = adjacent_mask
+            if self.early_event_skip and i >= 2:
+                skip_mask = torch.rand(M1, M, generator=skip_gen) < fan2
+                for i0 in range(skip_mask.shape[0]):
+                    if not skip_mask[i0].any():
+                        skip_mask[i0, torch.randint(M, (), generator=skip_gen)] = True
+                mask = torch.cat((adjacent_mask, skip_mask), dim=0)
+            n_in = mask.shape[0]
+            self.layers.append(TVLayer(n_in, M, d, d, n, dmax, mask, True, w_sd[1]))
         self.event_readout = bool(event_readout)
         self.readout_fusion = readout_fusion
         if self.event_readout:
@@ -371,6 +404,10 @@ class DeepSHD(nn.Module):
             self.ro = TVLayer(readout_width, 20, d, d, n, dmax, readout_mask, False, 0.3,
                               gate_bias=1.0, normalize=True)
             self.event_heads = None
+        self.count_proj = nn.Linear(1, d, bias=False) if input_count_payload else None
+        if self.count_proj is not None:
+            # Keep the count-aware model identical to the baseline at step 0.
+            nn.init.zeros_(self.count_proj.weight)
 
     @staticmethod
     def scored_pairs(layer, indices):
@@ -379,30 +416,60 @@ class DeepSHD(nn.Module):
         return int(layer.mask[indices].sum())
 
     def forward(self, eb, ei, et, B, G, return_taps=False, collect_routes=False,
-                route_override=None):
+                route_override=None, spike_override=None,
+                return_spike_diagnostics=False, input_counts=None,
+                route_overrides=None):
         raw_v = self.emb(ei)
+        if self.count_proj is not None:
+            if input_counts is None or input_counts.shape != et.shape:
+                raise ValueError("count-aware E83 requires one merged-count mark per input event")
+            raw_v = raw_v + self.count_proj(input_counts.reshape(-1, 1))
         emitted = []
-        route_candidates, route_inputs = [], []
+        route_candidates, route_inputs, spike_diagnostics = [], [], []
         messages, spikes, candidates = [], [], []
         for i, layer in enumerate(self.layers):
             if i == 0:
                 ib, ij, it, iv = eb, ei, et, raw_v
+            elif self.early_event_skip and i >= 2:
+                prev_b, prev_j, prev_t, prev_v = emitted[-1]
+                first_b, first_j, first_t, first_v = emitted[0]
+                ib = torch.cat((prev_b, first_b))
+                ij = torch.cat((prev_j, first_j + self.widths[i - 1]))
+                it = torch.cat((prev_t, first_t))
+                iv = torch.cat((prev_v, first_v))
             else:
                 ib, ij, it, iv = emitted[-1]
             candidates.append(self.scored_pairs(layer, ij))
             force_route = drop_route = None
+            local_route_overrides = []
             if route_override is not None and route_override[0] == i:
                 _, event_index, receiver, active = route_override
                 if active:
                     force_route = (event_index, receiver)
                 else:
                     drop_route = (event_index, receiver)
+            if route_overrides is not None:
+                local_route_overrides = [
+                    (event_index, receiver, active)
+                    for layer_id, event_index, receiver, active in route_overrides
+                    if layer_id == i]
+            local_spike_override = None
+            if spike_override is not None and spike_override[0] == i:
+                _, spike_time, spike_batch, spike_unit, spike_active = spike_override
+                local_spike_override = (spike_time, spike_batch, spike_unit, spike_active)
             result = layer(ib, ij, it, iv, B, G, force_route=force_route,
-                           drop_route=drop_route, return_routes=collect_routes)
-            if collect_routes:
+                           drop_route=drop_route,
+                           route_overrides=local_route_overrides or None,
+                           return_routes=collect_routes or return_spike_diagnostics,
+                           spike_override=local_spike_override,
+                           return_spike_diagnostics=return_spike_diagnostics)
+            if collect_routes or return_spike_diagnostics:
                 out, msg, route_info = result
-                route_candidates.append(route_info)
-                route_inputs.append((ib, ij, iv))
+                if collect_routes:
+                    route_candidates.append(route_info)
+                    route_inputs.append((ib, ij, iv))
+                if return_spike_diagnostics:
+                    spike_diagnostics.append(route_info)
             else:
                 out, msg = result
             emitted.append(out); messages.append(msg); spikes.append(len(out[2]) / B)
@@ -443,6 +510,8 @@ class DeepSHD(nn.Module):
         if collect_routes:
             info["route_candidates"] = route_candidates
             info["route_inputs"] = route_inputs
+        if return_spike_diagnostics:
+            info["spike_diagnostics"] = spike_diagnostics
         return (taps[-1] if taps else None), info
 
     def infer_event_readout(self, layer_events, item, seq_end, dmax,
@@ -574,6 +643,42 @@ def stratified_limit(data, limit, rng):
     return [data[i] for i in chosen]
 
 
+def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, limit):
+    """Sample sparse pairs of closed routes to one receiver with nearby arrivals.
+
+    Grouping by batch/receiver and taking adjacent time-ordered candidates
+    keeps proposal construction linear in the candidate count; it never forms
+    the all-pairs Cartesian product. The returned route indices refer to each
+    layer's route_candidates record.
+    """
+    candidates = []
+    for layer_id, route_info in enumerate(route_candidates):
+        scores = route_info["score"].cpu().numpy()
+        source_batch = route_info["source_batch"].cpu().numpy()
+        source_time = route_info["source_time"].cpu().numpy()
+        receivers = route_info["receiver"].cpu().numpy()
+        event_ids = route_info["event_index"].cpu().numpy()
+        eligible = np.flatnonzero((scores < 0.0) & (scores >= -near_band))
+        groups = {}
+        for route_idx in eligible:
+            key = (int(source_batch[route_idx]), int(receivers[route_idx]))
+            groups.setdefault(key, []).append(int(route_idx))
+        for route_ids in groups.values():
+            route_ids.sort(key=lambda rid: float(source_time[rid]))
+            for left, right in zip(route_ids[:-1], route_ids[1:]):
+                if event_ids[left] == event_ids[right]:
+                    continue
+                gap = float(source_time[right] - source_time[left])
+                if 0.0 <= gap <= time_window:
+                    candidates.append((layer_id, left, right))
+    if len(candidates) > limit:
+        chosen = rng.choice(len(candidates), size=limit, replace=False)
+        selected = [candidates[int(i)] for i in np.atleast_1d(chosen)]
+    else:
+        selected = candidates
+    return len(candidates), selected
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bands", type=int, default=140)
@@ -592,6 +697,12 @@ def main():
                     help="event_prefix: sparse event-updated logits trained with sampled-prefix proper log loss")
     ap.add_argument("--readout_fusion", choices=("deepest", "all_depths"), default="all_depths",
                     help="event_prefix only: use the deepest event head or add sparse class evidence from every depth")
+    ap.add_argument("--input_count_payload", choices=("off", "additive"), default="off",
+                    help="preserve the merged raw-spike count as an additive sparse vector mark")
+    ap.add_argument("--early_event_skip", action="store_true",
+                    help="let layers 3+ receive a sparse skip stream from layer 1 as well as the adjacent layer")
+    ap.add_argument("--run_tag", default="",
+                    help="optional filename tag for otherwise identical runs with different evaluation protocols")
     ap.add_argument("--prefix_samples", type=int, default=4,
                     help="stratified prefix samples used to estimate the window-averaged proper score")
     ap.add_argument("--prefix_horizon_ms", type=float, default=1000.0,
@@ -612,6 +723,10 @@ def main():
                     help="global norm cap for each local counterfactual gradient")
     ap.add_argument("--cf_delta_clip", type=float, default=5.0,
                     help="absolute cap on the shadow loss difference in the local boundary signal")
+    ap.add_argument("--cf_pairs_per_batch", type=int, default=0,
+                    help="maximum receiver-bundle route pairs shadowed per batch; each pair uses 3 matched replays")
+    ap.add_argument("--cf_pair_window_ms", type=float, default=25.0,
+                    help="maximum arrival-time gap for a candidate pair targeting the same receiver")
     ap.add_argument("--race_threshold", type=float, default=0.6,
                     help="minimum class softmax probability that triggers an output event")
     ap.add_argument("--race_temperature", type=float, default=0.03,
@@ -632,13 +747,19 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--limit", type=int, default=512)
     ap.add_argument("--eval_limit", type=int, default=128)
+    ap.add_argument("--rng_protocol", choices=("legacy_shared", "split"), default="split",
+                    help="split evaluation selection from train sampling/order/augmentation (default); legacy_shared reproduces older coupled runs")
     ap.add_argument("--save_checkpoint", action="store_true",
                     help="save final model weights beside the result JSON")
     a = ap.parse_args()
+    if a.run_tag and not all(ch.isalnum() or ch in "-_" for ch in a.run_tag):
+        raise ValueError("--run_tag may contain only letters, digits, '-' and '_'")
     if (a.prefix_samples < 1 or not (0.0 <= a.prefix_window_start < 1.0)
             or not math.isfinite(a.prefix_horizon_ms) or a.prefix_horizon_ms <= 0.0):
         raise ValueError("prefix_samples and prefix_horizon_ms must be positive; prefix_window_start must be in [0, 1)")
-    if (a.cf_shadows_per_layer < 0 or not math.isfinite(a.cf_band) or a.cf_band <= 0.0
+    if (a.cf_shadows_per_layer < 0 or a.cf_pairs_per_batch < 0
+            or not math.isfinite(a.cf_pair_window_ms) or a.cf_pair_window_ms <= 0.0
+            or not math.isfinite(a.cf_band) or a.cf_band <= 0.0
             or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0
             or not math.isfinite(a.cf_lr) or a.cf_lr < 0.0
             or not math.isfinite(a.cf_grad_clip) or a.cf_grad_clip <= 0.0
@@ -646,23 +767,35 @@ def main():
         raise ValueError("counterfactual count must be nonnegative; band, sigma, loss-difference clip, and gradient clip must be positive; cf_lr must be nonnegative")
     os.makedirs(OUT, exist_ok=True)
     torch.manual_seed(a.seed)
-    rng = np.random.default_rng(a.seed)
+    if a.rng_protocol == "legacy_shared":
+        shared_rng = np.random.default_rng(a.seed)
+        train_subset_rng = eval_subset_rng = train_order_rng = augmentation_rng = shared_rng
+    else:
+        # Each stochastic stage owns a stream. In particular, evaluation-set
+        # size cannot advance the streams that select or train on examples.
+        train_subset_rng = np.random.default_rng(a.seed)
+        eval_subset_rng = np.random.default_rng(a.seed + 300_007)
+        train_order_rng = np.random.default_rng(a.seed + 400_009)
+        augmentation_rng = np.random.default_rng(a.seed + 500_009)
     prefix_rng = np.random.default_rng(a.seed + 100_003)
     counterfactual_rng = np.random.default_rng(a.seed + 200_003)
+    pair_rng = np.random.default_rng(a.seed + 700_031)
     t0 = time.time()
 
     def load(split, part):
         return [(*events(t, u, a.merge), y) for t, u, y in S.utterances(split, a.bands, part) if len(t) > 1]
 
-    tr = stratified_limit(load("train", "fit_spk"), a.limit, rng)
-    ev = stratified_limit(load("train", "val_spk"), a.eval_limit, rng)
+    tr = stratified_limit(load("train", "fit_spk"), a.limit, train_subset_rng)
+    ev = stratified_limit(load("train", "val_spk"), a.eval_limit, eval_subset_rng)
     widths_sd = [float(v) for v in a.w_sd.split(",")]
     if len(widths_sd) != 2:
         raise ValueError("--w_sd requires two comma-separated values")
     event_readout = a.objective == "event_prefix"
     net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2,
                   a.readout_fan, a.dmax, widths_sd, a.seed, event_readout=event_readout,
-                  readout_fusion=a.readout_fusion)
+                  readout_fusion=a.readout_fusion,
+                  input_count_payload=a.input_count_payload == "additive",
+                  early_event_skip=a.early_event_skip)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * nb, pct_start=0.1)
@@ -692,10 +825,16 @@ def main():
         cf_layer_delta_sq_ep = np.zeros(a.depth)
         cf_layer_helpful_ep = np.zeros(a.depth)
         cf_layer_boundary_coeff_ep = np.zeros(a.depth)
-        perm = rng.permutation(len(tr)); gsum = np.zeros(a.depth)
+        cf_pair_eligible_ep = cf_pair_shadow_ep = 0
+        cf_pair_delta_sum_ep = cf_pair_delta_sq_ep = 0.0
+        cf_pair_interaction_sum_ep = cf_pair_interaction_sq_ep = 0.0
+        cf_pair_helpful_ep = cf_pair_synergy_ep = 0
+        cf_pair_shadow_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
+        perm = train_order_rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
-            eb, ei, et, y, tmax, seq_end = batch_to_events(items, a.bands, a.shift, rng, a.drop)
+            eb, ei, et, input_counts, y, tmax, seq_end = batch_to_events(
+                items, a.bands, a.shift, augmentation_rng, a.drop)
             grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
             prefix_times = None
             if event_readout:
@@ -703,7 +842,9 @@ def main():
                                                     a.prefix_horizon_ms, a.prefix_window_start,
                                                     et.device, et.dtype, prefix_rng)
             _, info = net(eb, ei, et, len(items), grid, return_taps=True,
-                          collect_routes=event_readout and a.cf_shadows_per_layer > 0)
+                          collect_routes=event_readout and (
+                              a.cf_shadows_per_layer > 0 or a.cf_pairs_per_batch > 0),
+                          input_counts=input_counts)
             traces = info["tap_traces"]
             if event_readout:
                 main_loss, aux_loss, head_losses = sparse_event_objective(
@@ -735,8 +876,9 @@ def main():
             cf_eligible = cf_shadow_count = 0
             cf_abs_delta_sum = 0.0
             cf_clipped_count = 0
+            cf_pair_shadow_count = 0
             cf_grads = None
-            if event_readout and a.cf_shadows_per_layer:
+            if event_readout and (a.cf_shadows_per_layer or a.cf_pairs_per_batch):
                 base_total = (main_loss + a.aux_weight * aux_loss).detach()
                 cf_proxy = main_loss.new_zeros(())
                 for k, route_info in enumerate(info["route_candidates"]):
@@ -758,7 +900,8 @@ def main():
                         with torch.no_grad():
                             _, shadow_info = net(
                                 eb, ei, et, len(items), grid, return_taps=True,
-                                route_override=(k, event_index, receiver, not active))
+                                route_override=(k, event_index, receiver, not active),
+                                input_counts=input_counts)
                             shadow_main, shadow_aux, _ = sparse_event_objective(
                                 net.event_heads, shadow_info["layer_events"], y,
                                 seq_end, a.dmax, prefix_times, a.readout_fusion)
@@ -793,8 +936,82 @@ def main():
                         # update, not the sum over every candidate in the band.
                         cf_proxy = cf_proxy + (a.cf_weight * boundary_derivative
                                                * (live_score - live_score.detach()) / take)
+                if a.cf_pairs_per_batch:
+                    pair_candidate_count, eligible_pairs = nearby_closed_route_pairs(
+                        info["route_candidates"], a.cf_band, a.cf_pair_window_ms,
+                        pair_rng, a.cf_pairs_per_batch)
+                    cf_pair_eligible_ep += pair_candidate_count
+                    pair_proxy = main_loss.new_zeros(())
+                    for k, route_a, route_b in eligible_pairs:
+                        route_info = info["route_candidates"][k]
+                        event_ids = route_info["event_index"]
+                        receivers = route_info["receiver"]
+                        event_a, event_b = int(event_ids[route_a]), int(event_ids[route_b])
+                        receiver_a, receiver_b = int(receivers[route_a]), int(receivers[route_b])
+                        if receiver_a != receiver_b:
+                            raise RuntimeError("receiver-bundle proposal has mismatched targets")
+
+                        def shadow_route_loss(overrides):
+                            with torch.no_grad():
+                                _, pair_info = net(
+                                    eb, ei, et, len(items), grid, return_taps=True,
+                                    route_overrides=overrides, input_counts=input_counts)
+                                pair_main, pair_aux, _ = sparse_event_objective(
+                                    net.event_heads, pair_info["layer_events"], y,
+                                    seq_end, a.dmax, prefix_times, a.readout_fusion)
+                                return float((pair_main + a.aux_weight * pair_aux).item())
+
+                        # The factual trace is L00. Three matched downstream
+                        # replays give L10, L01, L11 for the same utterance.
+                        L00 = float(base_total)
+                        L10 = shadow_route_loss([(k, event_a, receiver_a, True)])
+                        L01 = shadow_route_loss([(k, event_b, receiver_b, True)])
+                        L11 = shadow_route_loss([
+                            (k, event_a, receiver_a, True),
+                            (k, event_b, receiver_b, True)])
+                        delta_a0 = L10 - L00
+                        delta_b0 = L01 - L00
+                        delta_a1 = L11 - L01
+                        delta_b1 = L11 - L10
+                        delta_a0 = float(np.clip(delta_a0, -a.cf_delta_clip, a.cf_delta_clip))
+                        delta_b0 = float(np.clip(delta_b0, -a.cf_delta_clip, a.cf_delta_clip))
+                        delta_a1 = float(np.clip(delta_a1, -a.cf_delta_clip, a.cf_delta_clip))
+                        delta_b1 = float(np.clip(delta_b1, -a.cf_delta_clip, a.cf_delta_clip))
+
+                        batch_ids, source_units, source_payload = info["route_inputs"][k]
+                        def live_route_score(route_idx):
+                            event_id = int(event_ids[route_idx])
+                            receiver_id = int(receivers[route_idx])
+                            source_unit = source_units[event_id]
+                            score = (net.layers[k].q[receiver_id] * source_payload[event_id]).sum()
+                            return score + net.layers[k].c[source_unit, receiver_id]
+
+                        score_a, score_b = live_route_score(route_a), live_route_score(route_b)
+                        q_a = torch.sigmoid(score_a.detach() / a.cf_sigma)
+                        q_b = torch.sigmoid(score_b.detach() / a.cf_sigma)
+                        dL_dscore_a = (q_a * (1.0 - q_a) / a.cf_sigma) * (
+                            (1.0 - q_b) * delta_a0 + q_b * delta_a1)
+                        dL_dscore_b = (q_b * (1.0 - q_b) / a.cf_sigma) * (
+                            (1.0 - q_a) * delta_b0 + q_a * delta_b1)
+                        pair_proxy = pair_proxy + a.cf_weight * (
+                            dL_dscore_a * (score_a - score_a.detach())
+                            + dL_dscore_b * (score_b - score_b.detach()))
+
+                        pair_delta = L11 - L00
+                        interaction = L11 - L10 - L01 + L00
+                        cf_pair_delta_sum_ep += pair_delta
+                        cf_pair_delta_sq_ep += pair_delta * pair_delta
+                        cf_pair_interaction_sum_ep += interaction
+                        cf_pair_interaction_sq_ep += interaction * interaction
+                        cf_pair_helpful_ep += int(pair_delta < 0.0)
+                        cf_pair_synergy_ep += int(interaction < 0.0)
+                        cf_pair_shadow_count += 1
+                        cf_pair_shadow_ep += 1
+                        cf_pair_shadow_by_layer_ep[k] += 1
+                    if eligible_pairs:
+                        cf_proxy = cf_proxy + pair_proxy / len(eligible_pairs)
                 cf_grads = None
-                if cf_shadow_count and a.cf_lr:
+                if (cf_shadow_count or cf_pair_shadow_count) and a.cf_lr:
                     model_params = [p for p in net.parameters() if p.requires_grad]
                     cf_grads = torch.autograd.grad(cf_proxy, model_params, retain_graph=True,
                                                    allow_unused=True)
@@ -882,6 +1099,22 @@ def main():
               "spikes": np.zeros(a.depth), "state_vector_updates_per_utt": np.zeros(1),
               "deep_msgs_per_utt": np.zeros(1), "deep_candidate_scores_per_utt": np.zeros(1),
               "deep_state_vector_updates_per_utt": np.zeros(1)}
+        active_utterances = np.zeros(a.depth, dtype=np.int64)
+        support_nesting_violations = 0
+
+        def update_support_counts(layer_events, batch_size):
+            nonlocal support_nesting_violations
+            active_masks = []
+            for event_b, _, _, _ in layer_events:
+                active = torch.zeros(batch_size, dtype=torch.bool, device=event_b.device)
+                if event_b.numel():
+                    active[event_b.unique()] = True
+                active_masks.append(active)
+            active_utterances[:] += np.asarray(
+                [int(active.sum()) for active in active_masks], dtype=np.int64)
+            support_nesting_violations += sum(
+                int((active_masks[k + 1] & ~active_masks[k]).sum())
+                for k in range(len(active_masks) - 1))
         for layer in net.layers:
             layer.sent.zero_()
         if not event_readout:
@@ -889,9 +1122,11 @@ def main():
         with torch.no_grad():
             for i0 in range(0, len(ev), a.bs):
                 items = ev[i0:i0 + a.bs]
-                eb, ei, et, y, tmax, seq_end = batch_to_events(items, a.bands, 0, rng, 0.0)
+                eb, ei, et, input_counts, y, tmax, seq_end = batch_to_events(
+                    items, a.bands, 0, eval_subset_rng, 0.0)
                 grid = tmax + (a.depth + 1) * math.ceil(a.dmax) + 60
-                _, info = net(eb, ei, et, len(items), grid, return_taps=True)
+                _, info = net(eb, ei, et, len(items), grid, return_taps=True,
+                              input_counts=input_counts)
                 if event_readout:
                     queries = sampled_prefix_times(len(items), a.prefix_samples,
                                                    a.prefix_horizon_ms, a.prefix_window_start,
@@ -979,8 +1214,9 @@ def main():
                                     "predicted_class": int(decision.class_id),
                                     "emission": "event_race" if early else "terminal_eos",
                                     "latency_ms": round(float(decision.time), 3),
-                                    "value_vector": [round(float(v), 6) for v in decision.posterior],
+                                "value_vector": [round(float(v), 6) for v in decision.posterior],
                                 })
+                    update_support_counts(info["layer_events"], len(items))
                     for bi in range(min(4, len(items))):
                         local = event_b == bi
                         epoch_firing_rasters.append({
@@ -1025,6 +1261,7 @@ def main():
                         "latency_ms": round(float(latency[bi] if emitted_mask[bi] else deadline[bi]), 3),
                         "value_vector": [round(float(v), 6) for v in anytime_payload[bi]],
                     })
+                update_support_counts(info["layer_events"], len(items))
                 final_batch, final_units, final_times, _ = info["layer_events"][-1]
                 for bi in range(min(4, len(items))):
                     local = final_batch == bi
@@ -1087,6 +1324,13 @@ def main():
                "deep_candidate_scores_per_utt": int(st["deep_candidate_scores_per_utt"][0] / len(ev)),
                "deep_state_vector_updates_per_utt": int(st["deep_state_vector_updates_per_utt"][0] / len(ev)),
                "spikes_per_utt": (st["spikes"] / len(ev)).round(0).tolist(),
+               "event_support_coverage": (active_utterances / len(ev)).round(4).tolist(),
+               "spikes_per_active_utterance": (
+                   st["spikes"] / np.maximum(active_utterances, 1)).round(2).tolist(),
+               "support_nesting_violations": int(support_nesting_violations),
+               "input_count_projection_norm": (
+                   round(float(net.count_proj.weight.detach().norm()), 8)
+                   if net.count_proj is not None else None),
                "synapses_sending": send,
                "layer_grad_norms": (gsum / nb).round(5).tolist(),
                "wall_s": round(time.time() - t0)}
@@ -1114,6 +1358,24 @@ def main():
                     fusion_single_ok / len(ev)).round(4).tolist()
             row["counterfactual_near_routes_per_epoch"] = int(cf_eligible_ep)
             row["counterfactual_route_shadows_per_epoch"] = int(cf_shadow_ep)
+            row["counterfactual_route_pairs_eligible_per_epoch"] = int(cf_pair_eligible_ep)
+            row["counterfactual_route_pairs_shadowed_per_epoch"] = int(cf_pair_shadow_ep)
+            row["counterfactual_route_pair_replays_per_epoch"] = int(3 * cf_pair_shadow_ep)
+            row["counterfactual_pair_mean_L11_minus_L00"] = round(
+                cf_pair_delta_sum_ep / max(cf_pair_shadow_ep, 1), 6)
+            row["counterfactual_pair_delta_std"] = round(math.sqrt(max(
+                cf_pair_delta_sq_ep / max(cf_pair_shadow_ep, 1)
+                - (cf_pair_delta_sum_ep / max(cf_pair_shadow_ep, 1)) ** 2, 0.0)), 6)
+            row["counterfactual_pair_fraction_joint_opening_improves"] = round(
+                cf_pair_helpful_ep / max(cf_pair_shadow_ep, 1), 4)
+            row["counterfactual_pair_mean_interaction_gamma"] = round(
+                cf_pair_interaction_sum_ep / max(cf_pair_shadow_ep, 1), 6)
+            row["counterfactual_pair_interaction_std"] = round(math.sqrt(max(
+                cf_pair_interaction_sq_ep / max(cf_pair_shadow_ep, 1)
+                - (cf_pair_interaction_sum_ep / max(cf_pair_shadow_ep, 1)) ** 2, 0.0)), 6)
+            row["counterfactual_pair_fraction_synergistic_gamma_negative"] = round(
+                cf_pair_synergy_ep / max(cf_pair_shadow_ep, 1), 4)
+            row["counterfactual_pair_shadow_counts_by_layer"] = cf_pair_shadow_by_layer_ep.tolist()
             row["counterfactual_mean_abs_loss_delta"] = round(
                 cf_abs_delta_ep / max(cf_shadow_ep, 1), 6)
             row["counterfactual_mean_signed_open_minus_closed_loss"] = round(
@@ -1178,8 +1440,14 @@ def main():
     cf_tag = (f"_cfnorm{a.cf_shadows_per_layer}_b{a.cf_band:g}_sg{a.cf_sigma:g}"
               f"_w{a.cf_weight:g}_dl{a.cf_delta_clip:g}_lr{a.cf_lr:g}_gc{a.cf_grad_clip:g}"
               if event_readout else "")
+    pair_tag = (f"_cpairs{a.cf_pairs_per_batch}_tw{a.cf_pair_window_ms:g}"
+                if event_readout and a.cf_pairs_per_batch else "")
     fusion_tag = f"_rf{a.readout_fusion}" if event_readout else ""
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{cf_tag}_spk_s{a.seed}.json")
+    count_tag = "_cntadd" if a.input_count_payload == "additive" else ""
+    skip_tag = "_skfirst" if a.early_event_skip else ""
+    rng_tag = "_rngsplit" if a.rng_protocol == "split" else ""
+    run_tag = f"_{a.run_tag}" if a.run_tag else ""
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"
         torch.save({"args": vars(a), "model_state_dict": net.state_dict()}, checkpoint_path)

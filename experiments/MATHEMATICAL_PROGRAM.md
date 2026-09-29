@@ -176,7 +176,7 @@ The architecture has an advantage only if its attainable loss is lower for the s
 ## Highest-value falsification sequence
 
 1. **Finish fair small language comparisons.** On identical text splits and tokenization, train converged LSTM, 2/4-layer Transformer, time-vector model, and event/native mixture at several data and compute budgets. Include frozen and online-adaptive results separately. The 90M-character E79 race mixture reaches 1.50 bpc and remains behind published Transformer results near 1.1; E77 has not established parity. E64b's 1M, 20-pass LSTM and 2-layer Transformer score 2.179 and 2.367 held-out test bpc; the 10M four-layer Transformer scores 1.9083 held-out test bpc after validation-based checkpoint selection. It is 0.1090 above the 10M LSTM's test bpc. These are same-data, single-seed results, not capacity- or training-budget-matched comparisons.
-2. **Test deep Hopfield event message passing.** E79's successful text8 result comes from a race mixture of independent predictive experts plus copy memory; its learned expert allocation is not evidence of gradient training through deep hidden layers. E77 is the separate deep time-vector character model: content-gated/delayed vector messages, prior-event routes, event-level key/value retrieval, recurrent state, and token retrieval. A 4,096-character, 16-update depth-4 pilot found that fixed $\theta=1$ silenced deeper layers. A raw voltage quantile then failed at default width: test rates were $[0,0.007,0.009,0.004]$, with gradients at only $[1,9,12,6]$ of 13 validation points. Exact replay of reset dynamics matched the initial rates to $[0.096,0.082,0.094,0.100]$ and reached all four layers at every point. A width-8 depth-8 pilot reached all eight layers at all 16 points, with test activity $[0.115,0.125,0.217,0.075,0.081,0.138,0.124,0.121]$. These are gradient-reach results, not quality or scaling evidence: 512-character test BPCs were 4.254 at depth 4 and 4.319 at depth 8. Fresh route shadows had a small, uncertain layer-2 signal; counterfactual/pathwise norm ratio was 0.77% and cosine 0.0040, so the correction remains disabled. Continue E77 at depths 2, 4, 8, and 16 against parameter-matched Transformers under matched windows, sampled updates, token exposure, and optimizer steps. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, pathwise/counterfactual norm ratios and cosines, counterfactual shadow-delta variance and coverage by layer, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, score entropy, retained/new event counts, pair-scoring work, and test loss. E77 has next-character labels at each causal position; apply the SHD lesson about lost routes by shadowing near-boundary message alternatives against the affected downstream token losses, not by copying the SHD sequence-prefix target. Begin with a weak prior on route utility, update it from fresh layer/score-stratified shadows, and cap corrections in the optimizer metric. THEORY §§133–134 distinguish route-utility uncertainty from parameter uncertainty and derive a local evidence-conditioned gain; neither posterior-driven gain nor online homeostasis is implemented. §§19/57 derive route discovery credit; measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. E114 completed first: 144 central finite-difference cases over sequence length, retained mass, temperature, and diffuse/reused-key patterns showed no absolute violation above 1e-8; among nontrivial bounds, the maximum Jacobian and forward ratios were 0.897 and 0.687. E77's token query/key retrieval still uses dense causal all-pairs scoring, so the hidden-route experiment makes no full-model sparsity claim.
+2. **Test deep Hopfield event message passing.** E79's successful text8 result comes from a race mixture of independent predictive experts plus copy memory; its learned expert allocation is not evidence of gradient training through deep hidden layers. E77 is the separate deep time-vector character model: content-gated/delayed vector messages, prior-event routes, event-level key/value retrieval, recurrent state, and token retrieval. A 4,096-character, 16-update depth-4 pilot found that fixed $\theta=1$ silenced deeper layers. A raw voltage quantile then failed at default width: test rates were $[0,0.007,0.009,0.004]$, with gradients at only $[1,9,12,6]$ of 13 validation points. Exact replay of reset dynamics matched the initial rates to $[0.096,0.082,0.094,0.100]$ and reached all four layers at every point. A width-8 depth-8 pilot reached all eight layers at all 16 points, with test activity $[0.115,0.125,0.217,0.075,0.081,0.138,0.124,0.121]$. These are gradient-reach results, not quality or scaling evidence: 512-character test BPCs were 4.254 at depth 4 and 4.319 at depth 8. Fresh route shadows had a small, uncertain layer-2 signal; counterfactual/pathwise norm ratio was 0.77% and cosine 0.0040, so the correction remains disabled. The 1M-character, five-pass, parameter-matched 8-layer Transformer control completed at 2.352 test BPC in 1,617 seconds; its width-128 E77 partner exceeded the 3.5 GB RSS cap at 3.83 GB before training. Do not retry that configuration. Prioritize the 100k-character, one-pass E77 depth-8 run at batch 2 and 128-character windows; defer another Transformer control until its result is reviewed, and attempt depth 16 only after measuring this run's memory and time. Isolate event-Hopfield and token-retrieval ablations one at a time. Record layerwise query/key/value/gate gradients, pathwise/counterfactual norm ratios and cosines, counterfactual shadow-delta variance and coverage by layer, the full fixed-topology sequence-Jacobian certificate including maximum key fan-out, payload diameters, score entropy, retained/new event counts, pair-scoring work, and test loss. E77 has next-character labels at each causal position; apply the SHD lesson about lost routes by shadowing near-boundary message alternatives against the affected downstream token losses, not by copying the SHD sequence-prefix target. Begin with a weak prior on route utility, update it from fresh layer/score-stratified shadows, and cap corrections in the optimizer metric. THEORY §§133–134 distinguish route-utility uncertainty from parameter uncertainty and derive a local evidence-conditioned gain; neither posterior-driven gain nor online homeostasis is implemented. §§19/57 derive route discovery credit; measure its transfer to key/value support selection and its work as depth grows. THEORY §113 composes local fixed-support errors through residual depth, and §114 supplies a full-sequence Jacobian bound $\sqrt{RC}$ whose column sum captures shared-key fan-out. E114 completed first: 144 central finite-difference cases over sequence length, retained mass, temperature, and diffuse/reused-key patterns showed no absolute violation above 1e-8; among nontrivial bounds, the maximum Jacobian and forward ratios were 0.897 and 0.687. E77's token query/key retrieval still uses dense causal all-pairs scoring, so the hidden-route experiment makes no full-model sparsity claim.
 3. **Separate associative recall from search cost.** Start with all-past-event softmax as the trainability/recall reference. For a candidate set, measure omitted mass and the exact query-gradient residual from §112: omitted within-group covariance plus the between-group key/advantage term. The new H-smooth extension also bounds the *full-loss* query, key, and value VJP errors, including the change in upstream gradient caused by the output error; its query bound is $\beta\epsilon D_K[(3/2-\epsilon)D_A^C+HD_V^2/4]$. Check these bounds against dense autodiff while varying support mass and downstream curvature. Mass recall alone does not guarantee gradient alignment. Use the existing near-miss route credit; its key-insertion loss estimate $rA$ has a curvature-bounded error, so allocate exact shadow execution by the resulting per-candidate remainder bound. Vary candidate budget and context, and measure route recall, output and gradient error, index maintenance, bytes moved, shadow work, and actual score operations. Top-k after dense scoring tests aggregation only.
 4. **Test race attention against softmax directly.** Match parameters and training budget, vary races per head and depth, measure output/gradient bias and variance, convergence, loss, and actual event work. This isolates whether stochastic local credit preserves the Hopfield address/value learning signal.
 5. **Only then scale tokens and hardware.** Move successful variants to larger text and longer contexts; compare energy and throughput on event-capable and GPU hardware. Include search/index construction, communication, synchronization, and training overhead.
@@ -291,6 +291,189 @@ separate optimizer-metric trust-region problem. More shadows or useful
 stratification are needed before increasing the gain. Hard silent-neuron
 firing still has no counterfactual boundary term.
 
+A paired hidden-spike audit now measures that separate boundary. On 128
+held-out-speaker examples, near-threshold margin candidates (within ±0.25)
+averaged 349 per batch in layer 1, 67 in layer 2, 7.9 in layer 3, and 6.6 in
+layer 4; layer 4 had no in-band margin in 24/32 batches. The closest
+spike-on/off intervention improved loss in only 16/32, 17/32, 14/32, and
+14/32 batches across the layers. Thus deep spike boundaries are scarce, and
+the single-event shadow is not class-useful consistently at this checkpoint.
+Separately, E83 merges repeated same-band events and then discards their
+returned log-count mark. Multi-spike groups are 55.6% of fitting events and
+43.5% of held-out-speaker events. The current event map therefore applies a
+many-to-one quotient to a potentially task-relevant mark before the first
+vector layer. The sufficiency condition $I(Y;C\mid B,T)=0$ has not been
+measured.
+
+The strict chain has an additional exact support invariant. If layer $\ell$
+receives no events, its event-driven state remains $z(t)=0$. There is no
+baseline drive, and its threshold $\theta>0$, so it cannot emit an event:
+
+$$
+E_\ell(x)=\varnothing\Rightarrow E_{\ell+1}(x)=\varnothing,
+\quad\text{hence}\quad
+\mathcal A_{\ell+1}\subseteq\mathcal A_\ell,
+\qquad \mathcal A_\ell=\{x:E_\ell(x)\ne\varnothing\}.
+$$
+
+This nesting is about the fraction of utterances with any event, not the
+mean event count. Writing $c_\ell=P(x\in\mathcal A_\ell)$ and
+$m_\ell=\mathbb E[|E_\ell|\mid x\in\mathcal A_\ell]$ gives
+$\mathbb E|E_\ell|=c_\ell m_\ell$: coverage may fall monotonically while
+multiplicity among active utterances grows sharply. In the original matched
+32-example four-epoch depth-four `all_depths` trajectory, accuracy stayed at
+3.1–6.25% and ended with mean spikes `[10, 1, 0, 0]`; on the first training minibatches of epochs
+3 and 4, main-loss gradient norms for layers 3–4 were zero. Thus direct sparse
+readout fusion did not reopen deep support in that trajectory. The implementation
+now records per-layer active-example coverage, events per active example, and
+support-nesting violations in future evaluations.
+
+The 32-example deepest-only versus `all_depths` control and the one-factor
+sparse count-mark arm are complete. Deepest-only reached 5/32 on the fixed D4
+endpoint, but the paired head comparison was inconclusive (McNemar $p=0.453$)
+and its prefix NLL was worse than uniform. The count mark kept layer-4 support
+at 56–94% but ended at 0/32 after epoch 1, with epoch-4 prefix NLL
+$[8.4786,27.28]$.
+
+The matched 128-example seed-6 comparison is now complete. `all_depths` ended
+at 17/128 terminal accuracy, versus 7/128 for `deepest`; terminal layer-4
+coverage was 61.7% versus 4.7%. On thresholded predictions with terminal
+fallback, the paired correct counts were 20 versus 7 (19 discordant cases
+favoring fusion and 6 favoring deepest-only; exact McNemar $p=0.0146$). This
+supports an effect of the multi-depth objective/readout package on this fixed
+two-speaker evaluation, not a generalization claim. The late-prefix NLLs were
+17.57 and 4.66, respectively, both worse than uniform log loss 2.996; the
+all-depth model's terminal accuracy also did not change when its layer-4
+branch was removed. The objective preserved deep support and improved
+thresholded decisions in this seed, while additive evidence remained poorly
+calibrated and the deepest branch's task contribution remains unproved.
+
+The matched seed-7 `all_depths` replication ended at 9/128 terminal accuracy
+versus 7/128 for `deepest`; race-plus-fallback predictions were 9 versus 6
+(exact McNemar $p=0.607$). Layer-4 coverage was 22.7% versus 16.4%, and
+late-prefix NLL was 5.74 versus 4.09. The all-depth race emitted eight times
+at mean confidence 63.1%, with no correct emission. Thus the seed-6 paired
+accuracy result did not replicate, while the overconfident race behavior did.
+
+A second strict-chain seed is complete: deepest-only reached 7/128, with
+16.4% layer-4 coverage and late-prefix NLL 4.09; it emitted four times at the
+fixed threshold and none were correct. Both matched sparse
+layer-1-event-skip runs are complete. At seed 6, layer-4 coverage rose from
+4.7% to 99.2%, with 1.8% more candidate scores; terminal accuracy was 9/128
+versus 7/128, while paired race-plus-fallback output accuracy was 9 versus 7
+(McNemar $p=0.791$), and no fixed-threshold emissions were correct. At seed
+7, layer-4 support reached 100%, terminal accuracy was 5/128, late-prefix
+NLL 48.80, and candidate-score work was 22.3% above strict-chain; paired
+output accuracy was 5 versus 6 ($p=1.0$), with no correct emissions. The
+added path restores support in both seeds but not useful class credit, and
+its activity scale is seed-sensitive. The skip topology now draws from its
+own RNG, leaving strict adjacent-layer
+masks identical to the control. This skip can
+break intermediate-layer absorbing silence while preserving event-driven
+fan-out, but it can also make the deeper hierarchy redundant, so compare
+branch-ablation accuracy, support, and synaptic work. E83 now defaults to the
+implemented `--rng_protocol split`: evaluation selection, training subset,
+training order, augmentation, prefix sampling, and route shadows use separate
+random streams. Existing artifacts used the old shared stream; request
+`--rng_protocol legacy_shared` for that protocol. The split implementation
+still needs paired cross-evaluation-limit validation before claiming that the
+earlier 32-versus-128 difference has been isolated. Only after these
+representation/support tests should a trained hidden-spike boundary
+estimator be considered: its paired deltas are currently noisy and not
+consistently class-useful. Threshold homeostasis is a separate control for
+event-rate impedance, not evidence of task credit.
+
+Section 138 makes the support penalty quantitative. If an example supplies a
+pathwise gradient $X$ only when its layer is active, then $G=A X$ with
+$A\sim\mathrm{Bernoulli}(c_\ell)$ has mean $c_\ell\mu_\ell$ and covariance
+$c_\ell\Sigma_\ell+c_\ell(1-c_\ell)\mu_\ell\mu_\ell^\top$. In an IID batch
+of size $B$, no active example occurs with probability $(1-c_\ell)^B$; when
+conditional gradient noise dominates, task-direction gradient SNR scales
+approximately as $\sqrt{B c_\ell}$. This establishes support as a direct
+credit bottleneck under the stated sampling assumptions, while leaving the
+conditional direction and class information in $\mu_\ell$ open.
+
+The same section separates the hidden-spike boundary term from pathwise
+credit. Under logistic threshold perturbation, it is
+$p(1-p)(L_1-L_0)\nabla g/\sigma$ for the explicitly smoothed gate objective,
+where the on/off replay includes the refractory effect. A deterministic hard
+gate has zero derivative almost everywhere, so the replay estimate is a
+surrogate learning rule whose variance and usefulness still need evidence.
+It also derives a gate-space sufficient condition for stable firing decisions
+under an AdamW step. Raw global gradient clipping does not generally bound
+AdamW's parameter displacement; the relevant quantity is the predicted
+margin movement $\nabla g_i^\top\Delta\theta$ relative to $|g_i|$ and local
+curvature. E83's epoch-level cascade/extinction sequence is consistent with
+large gate flips but cannot identify them without per-update margin traces.
+
+The new compute-matched data-diversity screen used 120 optimizer updates in
+each arm, with nested 120-example/four-epoch and 480-example/one-epoch
+subsets. Accuracy favored the larger subset in seed 6 (20/128 vs 8/128,
+paired McNemar $p=0.0227$) and the smaller subset in seed 7 (20/128 vs 8/128,
+$p=0.0357$). In all four arms, layer-4 support remained 1.56–7.03% and
+late-prefix NLL 3.02–6.58, above uniform $\log20$. This small two-speaker
+screen finds no repeatable data-diversity gain; the seed reversal is
+diagnostic of instability, not a prompt for more unstructured seed runs.
+
+Sections 139–140 refine the diagnosis with explicit route reachability and
+depth arithmetic. Reconstructing the exact E83 D4 masks shows 90.2% and
+98.0% of first-layer/fourth-layer unit pairs have a static candidate path in
+seeds 6 and 7; all 140 input bands reach at least one layer-4 unit. Yet
+realized layer-4 support in the equal-update arms is 1.56–7.03%. The sparse
+layer-1 skip controls raise it to 99–100% without paired accuracy improvement.
+Static graph disconnection and missing active examples are therefore
+separated from label usefulness; neither path existence nor path survival
+alone establishes a trainable route.
+
+For two competing routes, the relaxed router's loss gradient is proportional
+to the paired loss difference between both route outcomes. E83's shadow
+procedure replays a masked edge open/closed, but only for event-conditioned
+scores inside its near-boundary band and only one edge per replay. Far-closed
+instances get no direct shadow probability. In addition, vector contributions
+can sum across a hard firing threshold: two individually subthreshold routes
+may jointly create the class-useful event. The exact two-gate gradient shows
+that when only the pair helps, one route's gradient is proportional to the
+other route's opening probability and is zero if that partner is never
+present. A small sparse set of joint 00/10/01/11 replays, selected for
+overlapping arrivals near a receiver threshold, would test this synergy
+without executing every candidate pair.
+
+Section 142 now turns that calculation into a bounded receiver-bundle pilot.
+For two closed gates, it uses the exact four-outcome independent-gate
+gradient and logs the interaction $\Gamma=L_{11}-L_{10}-L_{01}+L_{00}$.
+Only same-receiver near-boundary pairs with close source times are proposed;
+each selected pair costs three downstream replays. This is ordinary sparse
+router counterfactual credit specialized to temporal vector messages, not a
+claim that sparse-route alternatives are generically novel. The pilot tests
+whether receiver-level cooperation supplies useful SHD credit. Even if it
+does, the exact relaxed derivative remains attenuated by the partner's
+opening probability; longer path shadows or a better justified joint
+exploration law may still be needed.
+
+One additional design risk is that E83's current content score controls both
+the hard gate and the positive delay: $a=t+\tau[s]_+$. Route credit that
+pushes a useful gate open consequently retimes it. The shadow update measures
+the presence contrast at the fixed current delay/payload; it is not a
+counterfactual timing gradient. A follow-up ablation should factor a sparse
+admission score from a conditional delay/value head, then separately test
+gate utility, delay calibration, and pair utility stratified by effective
+arrival-time difference and projected vector contribution. This preserves
+sparse execution while removing a forced monotonic coupling between
+admission and latency.
+
+The same analysis answers whether to add many layers immediately. Under
+independent random masks, expected static paths between endpoints grow as
+$M^{D-2}p^{D-1}$ with hidden width $M$, per-edge probability $p$, and $D$
+hidden layers. However, strict-chain example support is exactly
+$c_D=c_1\prod_{\ell<D}s_\ell$, where $s_\ell$ is conditional example
+survival at each transition. Keeping half the examples active at depth 8 or
+16 from full initial support requires average per-transition survival of at
+least 0.906 or 0.955. More layers add combinatorial expert compositions but
+multiply every unprotected survival bottleneck. The current evidence does
+not justify indiscriminately deepening E83; first determine why candidate
+routes are not simultaneously realized and credited, then scale depth while
+measuring both path survival and route-credit coverage.
+
 Do not then train the stop threshold as a proxy for posterior quality. For a
 prefix sampled from a declared latency distribution $t\sim\nu$, log loss
 satisfies
@@ -305,13 +488,12 @@ not the probability trajectory at the first crossing. This gives a staged,
 mechanism-based plan: first verify route credit, then verify prefix posterior
 quality, then optimize early stopping.
 
-Only after selecting a readout objective on held-out speakers should E83
-resume the iso-width depth 2/4/8/16 and auxiliary-weight 0/0.2 comparison. The
-SHD source has no phoneme alignment in this pipeline, so those depths are not
-yet matched to annotated phonetic stages. Per-layer dmax also expands the
-maximum path delay with depth; a subsequent scaling comparison must control
-the total delay horizon or treat that expansion as an explicit experimental
-factor.
+After validating the event marks and operating rates, compare iso-width
+depths and auxiliary weights on held-out speakers. The SHD source has no
+phoneme alignment in this pipeline, so those depths are not yet matched to
+annotated phonetic stages. Per-layer dmax also expands the maximum path delay
+with depth; a subsequent scaling comparison must control the total delay
+horizon or treat that expansion as an explicit experimental factor.
 
 E84 remains a separate day-5 market likelihood experiment. It uses a strict
 adjacent-layer event chain and deepest-only prediction, with sampled windows
@@ -351,6 +533,20 @@ $(A_j,x_j)\circ(A_i,x_i)=(A_jA_i,A_jx_i+x_j)$. The proposed verification sequenc
 4. Only after that passes, test a small event-sparse segmented scan that skips empty intervals. Count arrival sorting, dispatch, hidden dense buffers, and emitted-state storage in the cost.
 
 This path targets parallel training of the affine memory core. Spike threshold/reset logic and event-topology changes remain separately measured; scan speed alone would not establish an end-to-end or energy advantage.
+
+Section 141 generalizes the same lost-route comparison to all dormant event
+proposals. It assigns each candidate a signed failure margin for one cause
+(content gate, receiver threshold, timing race, or refractory availability),
+defines contextual utility $U=L_{off}-L_{on}$ from a paired replay through
+the full downstream state, and derives the smoothed margin update
+$-p(1-p)U\nabla m/\tau$. This says exactly how a counterfactual can tune the
+knob that prevented an otherwise useful event. A richer candidate pool can
+increase the chance of observing useful alternatives, but only with proposal
+coverage and repeated low-noise utility estimates. Unstratified sampling can
+dilute a fixed shadow budget; exhaustive replay can be costly and its
+inverse-probability sum high-variance. The theory therefore proposes a
+bounded, cause-stratified audit with an exploration floor and propensity
+logging. No experiment has yet shown that this update improves SHD accuracy.
 
 ## Cross-domain anchors
 

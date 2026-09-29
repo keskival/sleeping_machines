@@ -1,0 +1,170 @@
+"""Paired hidden-spike birth/death audit for an E83 checkpoint.
+
+For each hidden layer and batch, choose the closest firing-threshold margin,
+force that one spike to the opposite state, replay the same causal prefix loss,
+and record L_on - L_off. The intervention includes the changed refractory
+trace and all downstream event consequences.
+"""
+import argparse
+import json
+import os
+import sys
+
+import numpy as np
+import torch
+
+sys.path.insert(0, os.path.dirname(__file__))
+import e51_shd_world as S  # noqa: E402
+from e71_event_cde import events  # noqa: E402
+from e83_deep_shd import (  # noqa: E402
+    DeepSHD,
+    batch_to_events,
+    sampled_prefix_times,
+    sparse_event_objective,
+    stratified_limit,
+)
+
+torch.set_num_threads(1)
+OUT = os.path.join(os.path.dirname(__file__), "results", "e83")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--checkpoint", required=True)
+    ap.add_argument("--examples", type=int, default=32)
+    ap.add_argument("--batch_size", type=int, default=4)
+    ap.add_argument("--spike_band", type=float, default=0.25)
+    ap.add_argument("--sigma", type=float, default=0.25)
+    ap.add_argument("--prefix_samples", type=int, default=2)
+    ap.add_argument("--seed", type=int, default=6)
+    a = ap.parse_args()
+    if a.examples < 1 or a.batch_size < 1 or a.spike_band <= 0 or a.sigma <= 0:
+        raise ValueError("examples, batch size, spike band, and sigma must be positive")
+
+    ckpt = torch.load(a.checkpoint, map_location="cpu", weights_only=False)
+    saved = ckpt["args"]
+    get = lambda key, default: saved.get(key, default)
+    bands = int(get("bands", 140)); d = int(get("d", 8)); n = int(get("n", 4))
+    M1 = int(get("M1", 16)); M = int(get("M", 16)); depth = int(get("depth", 4))
+    window = int(get("window", 30)); fan2 = float(get("fan2", 0.25))
+    readout_fan = float(get("readout_fan", 0.5)); dmax = float(get("dmax", 50.0))
+    w_sd = [float(x) for x in str(get("w_sd", "0.05,0.05")).split(",")]
+    seed = int(get("seed", a.seed)); aux_weight = float(get("aux_weight", 0.2))
+    fusion = get("readout_fusion", None) or "deepest"
+
+    torch.manual_seed(seed)
+    net = DeepSHD(bands, d, n, M1, M, depth, window, fan2, readout_fan,
+                  dmax, w_sd, seed, event_readout=True, readout_fusion=fusion,
+                  input_count_payload=get("input_count_payload", "off") == "additive",
+                  early_event_skip=bool(get("early_event_skip", False)))
+    net.load_state_dict(ckpt["model_state_dict"])
+    net.eval()
+
+    rng = np.random.default_rng(a.seed + 71_337)
+    data = [(*events(t, u, float(get("merge", 0.002))), y)
+            for t, u, y in S.utterances("train", bands, "val_spk") if len(t) > 1]
+    samples = stratified_limit(data, a.examples, rng)
+    per_layer = [[] for _ in range(depth)]
+    batches = 0
+    for start in range(0, len(samples), a.batch_size):
+        items = samples[start:start + a.batch_size]
+        eb, ei, et, input_counts, labels, tmax, seq_end = batch_to_events(
+            items, bands, 0, rng, 0.0)
+        grid = tmax + (depth + 1) * int(np.ceil(dmax)) + 60
+        prefix_times = sampled_prefix_times(len(items), a.prefix_samples,
+                                            1000.0, 0.0, et.device, et.dtype)
+        with torch.no_grad():
+            _, base_info = net(eb, ei, et, len(items), grid, return_taps=True,
+                               return_spike_diagnostics=True,
+                               input_counts=input_counts)
+            base_main, base_aux, _ = sparse_event_objective(
+                net.event_heads, base_info["layer_events"], labels, seq_end,
+                dmax, prefix_times, fusion)
+            base_loss = float((base_main + aux_weight * base_aux).item())
+
+        for layer_id, diagnostic in enumerate(base_info["spike_diagnostics"]):
+            margins = diagnostic["spike_margin_trace"]
+            fired = diagnostic["spike_fire_mask"]
+            valid = torch.ones_like(margins, dtype=torch.bool)
+            valid[0] = False  # TVLayer intentionally cannot emit at grid index 0.
+            near = valid & (margins.abs() <= a.spike_band)
+            eligible = int(near.sum().item())
+            if eligible:
+                scores = margins.abs().masked_fill(~near, float("inf"))
+                used_band = True
+            else:
+                scores = margins.abs().masked_fill(~valid, float("inf"))
+                used_band = False
+            flat = int(scores.reshape(-1).argmin().item())
+            time_id, batch_id, unit_id = np.unravel_index(flat, tuple(scores.shape))
+            margin = float(margins[time_id, batch_id, unit_id].item())
+            was_firing = bool(fired[time_id, batch_id, unit_id].item())
+            with torch.no_grad():
+                _, shadow_info = net(
+                    eb, ei, et, len(items), grid, return_taps=True,
+                    spike_override=(layer_id, int(time_id), int(batch_id),
+                                    int(unit_id), not was_firing),
+                    input_counts=input_counts)
+                shadow_main, shadow_aux, _ = sparse_event_objective(
+                    net.event_heads, shadow_info["layer_events"], labels,
+                    seq_end, dmax, prefix_times, fusion)
+                shadow_loss = float((shadow_main + aux_weight * shadow_aux).item())
+
+            # Report the loss difference for a spike-on versus spike-off world.
+            l_on_minus_l_off = (base_loss - shadow_loss if was_firing
+                                else shadow_loss - base_loss)
+            p = 1.0 / (1.0 + np.exp(-np.clip(margin / a.sigma, -60.0, 60.0)))
+            boundary_coefficient = p * (1.0 - p) * l_on_minus_l_off / a.sigma
+            per_layer[layer_id].append({
+                "batch": batches,
+                "time_ms": int(time_id),
+                "item_in_batch": int(batch_id),
+                "unit": int(unit_id),
+                "margin": margin,
+                "naturally_firing": was_firing,
+                "within_spike_band": used_band,
+                "eligible_margins_in_batch": eligible,
+                "base_loss": base_loss,
+                "toggled_loss": shadow_loss,
+                "L_on_minus_L_off": l_on_minus_l_off,
+                "single_utterance_L_on_minus_L_off": len(items) * l_on_minus_l_off,
+                "logistic_boundary_coefficient": float(boundary_coefficient),
+            })
+        batches += 1
+
+    summary = []
+    for layer_id, rows in enumerate(per_layer):
+        deltas = np.asarray([row["L_on_minus_L_off"] for row in rows], dtype=float)
+        coeffs = np.asarray([row["logistic_boundary_coefficient"] for row in rows], dtype=float)
+        margins = np.asarray([row["margin"] for row in rows], dtype=float)
+        summary.append({
+            "layer": layer_id + 1,
+            "shadows": len(rows),
+            "fraction_within_band": float(np.mean([row["within_spike_band"] for row in rows])) if rows else None,
+            "fraction_naturally_firing": float(np.mean([row["naturally_firing"] for row in rows])) if rows else None,
+            "mean_abs_margin": float(np.mean(np.abs(margins))) if len(margins) else None,
+            "mean_L_on_minus_L_off": float(np.mean(deltas)) if len(deltas) else None,
+            "std_L_on_minus_L_off": float(np.std(deltas)) if len(deltas) else None,
+            "fraction_spike_on_improves_loss": float(np.mean(deltas < 0)) if len(deltas) else None,
+            "mean_abs_logistic_boundary_coefficient": float(np.mean(np.abs(coeffs))) if len(coeffs) else None,
+        })
+    result = {
+        "checkpoint": a.checkpoint,
+        "checkpoint_args": saved,
+        "audit_args": vars(a),
+        "split": "train/val_spk",
+        "examples": len(samples),
+        "batches": batches,
+        "prefix_loss_fusion": fusion,
+        "per_layer": summary,
+        "paired_shadows": per_layer,
+    }
+    os.makedirs(OUT, exist_ok=True)
+    path = os.path.join(OUT, f"spike_boundary_audit_s{a.seed}_n{a.examples}.json")
+    with open(path, "w") as f:
+        json.dump(result, f, indent=2)
+    print(json.dumps({"result": path, "summary": summary}), flush=True)
+
+
+if __name__ == "__main__":
+    main()
