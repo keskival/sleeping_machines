@@ -100,4 +100,4 @@ underlying script returned normally. Binary artifacts stay local.
 Monitor with `tmux attach -t aws-non-shd`,
 `tail -f /tmp/aws-non-shd-controller.log`, or the individual safe-runner logs.
 The follow-up session is `aws-non-shd-followup`; its log is
-`/tmp/aws-non-shd-followup.log`. Results are running/queued, not yet all complete.
+`/tmp/aws-non-shd-followup.log`. Results are running/queued, not yet all complete. The workstation advanced `main` while the AWS batch was active; its new commits and the existing batch were merged onto `main` in `1db698c`. `scripts/mirror_aws_branch_to_main.py` now publishes each later batch commit onto the latest `main` with a merge commit, preserving concurrent main history. The benchmark controller still records and pushes its per-job commits on the dedicated AWS branch; the mirror session updates `main` as those commits arrive.
