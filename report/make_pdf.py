@@ -2341,8 +2341,8 @@ def theory_pages(st, W):
     return s
 
 
-def build():
-    """The report: what is known, organized by claim (mirrors REPORT.md)."""
+def build_legacy():
+    """Historical chronological builder; current report uses readable_report.py."""
     st = styles()
     W = 174
 
@@ -3421,6 +3421,11 @@ def build():
                             author="Sleeping Machines project")
     doc.build(s, onFirstPage=footer, onLaterPages=footer)
     print("wrote", OUT)
+
+
+def build():
+    from readable_report import build as build_readable
+    build_readable(globals())
 
 
 if __name__ == "__main__":

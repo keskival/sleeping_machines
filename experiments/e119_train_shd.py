@@ -77,7 +77,8 @@ def main():
               'fit_labels':[x[3] for x in fit], 'dev_labels':[x[3] for x in dev],
               'curve':previous_curve, 'resume_sha256':resume_sha,
               'source_sha256':{f:hashlib.sha256(Path('experiments',f).read_bytes()).hexdigest() for f in
-                               ('e119_train_shd.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py')},
+                               ('e119_train_shd.py','e119_linear_event_scan.py','e118_race_carrier_shd.py','e117_serial_event_shd.py',
+                                '../sleeping_machines/shared_event.py','../sleeping_machines/event_memory.py')},
               'hardware':{'platform':platform.platform(),'torch':torch.__version__,'threads':torch.get_num_threads()},
               'energy_joules':None}
     result['initial'] = {'fit':evaluate(net,fit,a.bs),'dev':evaluate(net,dev,a.bs)}

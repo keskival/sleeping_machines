@@ -159,6 +159,9 @@ def main():
     result = {"args": vars(a), "status": "running", "contracts": checks,
               "readout_calibration": normalization, "parameters": sum(p.numel() for p in net.parameters()),
               "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+              "shared_source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parents[1] /
+                  "sleeping_machines" / name).read_bytes()).hexdigest()
+                  for name in ("shared_event.py", "event_memory.py")},
               "data_protocol": "SHD train only; speakers 3/6 held out; no augmentation; no test access",
               "fit_ids": [x[4] for x in fit], "dev_ids": [x[4] for x in dev],
               "fit_labels": [x[3] for x in fit], "dev_labels": [x[3] for x in dev], "curve": []}
