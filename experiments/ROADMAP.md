@@ -6,9 +6,15 @@ defeat that predicted improvement. Fitting-only frozen-winner/order comparisons
 isolate that effect. A separate immutable key stream now computes actual
 choices/clocks while new value maps learn; its query, nesting, finite-credit
 and checkpoint contracts pass. The two same-budget value-only SHD arms compare
-shared and separate streams, with all extra key work counted. Use completed
-quality results to decide the next step, then develop realized joint key/value/
-clock policy credit and compress keys. Theory §§190–196.
+shared and separate streams, with all extra key work counted. Completed scores
+are 365/512 and 364/512 respectively, below the 370/512 parent despite improved
+fitting accuracy. Preserve the verified isolation mechanism; improving general
+representations requires more than teaching two new context maps. Develop
+realized joint key/value/clock credit and measure independent value-layer credit.
+Theory §§190–196. The [generic language scaling protocol](LANGUAGE_SCALING_PROTOCOL.md)
+requires an evidence-free learned backbone, persistent execution and measured
+physical work before a frontier scaling claim. Existing language mixture wins
+and eight-layer speech learning do not close that gap.
 
 **Current consolidation:** arithmetic and longer-context recall are retained.
 The common model supports a 69-scalar periodic path, two-layer synthetic

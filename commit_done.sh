@@ -17,10 +17,13 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E131 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E133 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
+  README.md
+  HISTORICAL_MOTIVATION_MANIFESTO.md
+  experiments/LANGUAGE_SCALING_PROTOCOL.md
   REPORT.md
   AWS_EXPERIMENT_INSTANCE.md
   AWS_EXPERIMENT_RUNBOOK.md
@@ -54,6 +57,8 @@ FILES=(
   experiments/e129*.py
   experiments/e130*.py
   experiments/e131*.py
+  experiments/e132*.py
+  experiments/e133*.py
   experiments/queue/e121*.txt
   experiments/queue/e122*.txt
   experiments/queue/e123*.txt
@@ -65,6 +70,8 @@ FILES=(
   experiments/queue/e129*.txt
   experiments/queue/e130*.txt
   experiments/queue/e131*.txt
+  experiments/queue/e132*.txt
+  experiments/queue/e133*.txt
   experiments/results/e121/*.json
   experiments/results/e122/*.json
   experiments/results/e123/*.json
@@ -76,6 +83,8 @@ FILES=(
   experiments/results/e129/*.json
   experiments/results/e130/*.json
   experiments/results/e131/*.json
+  experiments/results/e132/*.json
+  experiments/results/e133/*.json
   report/figures/e121_arithmetic.png
   report/figures/e122_speech.png
   report/figures/consolidated_work_frontiers.png

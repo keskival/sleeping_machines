@@ -42,6 +42,7 @@ def results():
     tasks["breadth_work"] = read("e124/breadth_work_counted_20260929.json")
     tasks["shd_bridge"] = read("e122/d8_n4096_bridge_s6.json")
     tasks["shd_bridge_frozen"] = read("e122/d8_n4096_bridge_frozen_s6.json")
+    tasks["shd_key_value"] = read("e131/key_value_comparison_20260929.json")
     return tasks
 
 
@@ -224,7 +225,8 @@ def blocks(M, tasks, ev):
          "reaches about 99.65% from one pass at roughly 10,000× lower counted work than its Transformer reference."]),
         ("figure",("accomplishments",174)),
         ("small","Language scores are held-out test results from the named predictive mixture and gradient baselines, "
-         "with different model sizes and schedules. Retrieval, composition and arithmetic are controlled synthetic tasks. "
+         "with different model sizes and schedules. That specialized mixture is not yet reproduced by a generic "
+         "deep language model. Retrieval, composition and arithmetic are controlled synthetic tasks. "
          "The following pages distinguish the consolidated implementation from the original native components.")])
 
     pages.append([
@@ -290,7 +292,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","A mathematical foundation for trainable computation"),
         ("table",(["Principle","What it enables"],[
-         ["Stable transport through depth","Bounded residual carriers preserve payload and credit under stated fixed-route conditions. Route changes and readout geometry are analyzed separately."],
+         ["Stable transport through depth","Bounded residual carriers preserve payload and credit under stated schedule conditions. A separate key stream can keep actual races and clocks fixed while values learn; routing credit is a separate problem."],
          ["Active communication support","Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected."],
          ["Credit to unrealized alternatives","A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race."],
          ["Periodic state as an isometry","Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples."],
@@ -341,6 +343,11 @@ def blocks(M, tasks, ev):
         ("p","If the architecture combines frontier predictive quality, reliable deep learning and lower total "
          "training and inference cost, it would change the practical recipe for building frontier models. "
          "Useful capacity, active computation and learning cost could become more independently controllable."),
+        ("h2","Useful quality at a lower energy cost"),
+        ("p","A broad advantage can begin with comparable quality at substantially lower measured training or "
+         "inference energy. A modest quality tradeoff with a large energy saving can also unlock new applications. "
+         "Tenfold savings, or larger, would transform feasible deployments and research budgets; these are "
+         "conditional scenarios, not current measured energy ratios."),
         ("h2","The economics of creating intelligence"),
         ("p","A fixed power and capital budget could produce a more capable model, more specialized models or "
          "more research. Teams constrained by compute could enter new scales and applications. Efficient learning "
@@ -366,9 +373,11 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","What establishes the larger advantage"),
         ("p","The ambition is a common model family whose strongest mechanisms remain useful as tasks, data and "
-         "capacity grow. Arithmetic and retrieval now retain their demonstrated strengths in the consolidated "
-         "implementation. Real language mixtures and native composition provide additional reference capabilities."),
+         "capacity grow. Arithmetic and retrieval retain their demonstrated strengths in the consolidated "
+         "implementation. The strongest language mixture is specialized; the generic backbone still needs to "
+         "demonstrate competitive learned representations. Character and subword-token budgets must be distinguished."),
         ("table",(["Objective","Decisive evidence"],[
+         ["Generic language scaling","Train a learned event backbone without explicit n-gram/pointer experts. Scale through declared data budgets with matched Transformer, recurrent and state-space references; record loss, capacity, forward/backward work, memory traffic, time and joules."],
          ["Preserve capabilities","Repeat established generalization and sample-efficiency results within the common model family, with task-appropriate depth and explicit resource accounting."],
          ["Strong real-event recognition","Accurate speech and event-camera decisions on complete held-out benchmarks; calibrated confidence and time-to-answer."],
          ["Learn routes and representations at scale","Reliable deep credit and useful counterfactual alternatives as width, depth, memory and data increase."],
@@ -392,15 +401,17 @@ def blocks(M, tasks, ev):
          f"Their zero-initialized columns preserve the starting predictions exactly. A matched full-update "
          f"continuation reaches {100*pooled(tasks['shd_bridge']):.1f}%; training only those columns reaches "
          f"{100*pooled(tasks['shd_bridge_frozen']):.1f}%. The added state has linear event work and 6,534 learned parameters."),
-        ("p","The learned pool scores each observed winning payload, accumulates a weighted numerator and mass, "
-         "and reads their ratio at the query. It has linear work in the number of active packets and a local "
-         "supervised score gradient. Zero initialization exactly recovers count pooling. This tests whether "
-         "informative parts of an utterance should contribute more strongly to the decision."),
+        ("p","A separate key stream computes actual input-dependent winners and clocks while new value maps "
+         "learn under that schedule. Matched continuations reach 364/512 (71.1%) with separate keys and "
+         "365/512 (71.3%) with shared streams. Both improve fitting accuracy but remain below the parent. "
+         "Audited finite value credit agrees with predicted loss change; all extra key computation is charged. "
+         "This establishes a routing-isolation mechanism, not an accuracy or energy advantage."),
         ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
          "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
          "at the audited checkpoint, excluding optimizer updates."),
         ("small","Speech scores are development evidence from training speakers 3/6; the official SHD test set "
-         "is untouched. They are not directly comparable to published official-test scores. One seed, width 32, "
+         "is untouched. They demonstrate deep learning and limited transfer, not competitive speech representation. "
+         "They are not directly comparable to published official-test scores. One seed, width 32, "
          "eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. "
          "Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.")])
 
@@ -460,7 +471,8 @@ def blocks(M, tasks, ev):
          "learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; "
          "E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 "
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
-         "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons."),
+         "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
+         "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
