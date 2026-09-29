@@ -1,0 +1,16 @@
+{
+  "gramian_recursion_error": 0.0,
+  "support_error": 4.440892098500626e-16,
+  "control_budget_error": 1.1102230246251565e-16,
+  "quadratic_reserve_error": 0.0,
+  "reserve": 0.4950572717806318,
+  "shared_cancelled_gramian": 0.0,
+  "incorrect_independent_gramian": 2.0,
+  "equal_trace_directional_supports": [
+    1.0,
+    0.0
+  ],
+  "duplicate_route_union_support": 1.0,
+  "incorrect_summed_support": 1.4142135623730951,
+  "scope": "Exact finite linear witnesses; not a trained optionality estimator"
+}

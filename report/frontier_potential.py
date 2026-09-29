@@ -15,7 +15,10 @@ POTENTIAL_SECTIONS = [
      "one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates "
      "low-work streaming prediction components and better learned temporal state; it establishes no profitable "
      "trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations "
-     "extract substantial information from speech. The deeper vector model still needs a working learning scheme. "
+     "extract substantial information from speech. An eight-layer winner-only event model now reaches 40.6% on "
+     "a 256-example held-out-speaker development screen after training on 512 utterances. Stable signal transport "
+     "and conditioned credit have made deep recognition learnable in this configuration. Useful depth beyond a "
+     "shallow model and calibrated early decisions are the next SHD milestones. "
      "A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful "
      "depth on real streams, and measure their practical latency and energy. The evidence supports this focused "
      "engineering and research program more directly than it supports a general-purpose frontier model today."),

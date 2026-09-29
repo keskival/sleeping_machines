@@ -1902,6 +1902,7 @@ def fig_e118_race_carriers():
     if any(a.get("status") != "completed" for a in arms):
         return None
     probes = load(probe_path)["rows"]
+    conditioning = load(os.path.join(RES, "e117", "readout_conditioning_d8_n128_e8_s6.json"))["arms"]
     f, axes = plt.subplots(2, 2, figsize=(7.2, 5.5))
     for arm, color, label in zip(arms, [GRAY, BLUE], ["Winner pathwise", "+ loser score credit"]):
         curve = arm["curve"]
@@ -1909,7 +1910,6 @@ def fig_e118_race_carriers():
         axes[0, 0].plot(epochs, [r["fit"]["nll"] for r in curve], color=color, label=label + " fit")
         axes[0, 0].plot(epochs, [r["dev"]["nll"] for r in curve], "--", color=color)
         axes[0, 1].plot(epochs, [100*r["dev"]["accuracy"] for r in curve], "o-", color=color, label=label)
-        axes[1, 1].plot(range(1, 9), curve[-1]["route_grad_norm"], "o-", color=color, label=label)
     axes[0, 0].axhline(np.log(20), color=INK, ls=":")
     axes[0, 0].set_title("Terminal NLL: fit solid / held-out dashed")
     axes[0, 0].legend(fontsize=6)
@@ -1917,20 +1917,31 @@ def fig_e118_race_carriers():
     axes[0, 1].set_ylim(bottom=0)
     axes[0, 1].set_title("Held-out-speaker accuracy (%)")
     axes[0, 1].legend(fontsize=6)
-    axes[1, 0].plot([r["depth"] for r in probes], [100*r["fit_correct"]/r["fit_n"] for r in probes], "o-", color=AQUA, label="Probe fit")
-    axes[1, 0].plot([r["depth"] for r in probes], [100*r["dev_correct"]/r["dev_n"] for r in probes], "o--", color=AQUA, label="Probe held-out")
-    axes[1, 0].scatter([8], [100*9/128], color=ORANGE, label="E117 trained head")
-    axes[1, 0].set_title("Earlier E117: information survives depth")
-    axes[1, 0].set_xlabel("Carrier depth (0 = input features)")
+    for i, (name, label) in enumerate((("raw", "Raw features"), ("whitened", "Fit-only whitening"))):
+        last = conditioning[name][-1]
+        axes[1, 0].bar(i-.16, 100*last["fit_correct"]/128, width=.3, color=AQUA,
+                       label="Fit" if i == 0 else None)
+        axes[1, 0].bar(i+.16, 100*last["dev_correct"]/128, width=.3, color=ORANGE,
+                       label="Held-out" if i == 0 else None)
+    axes[1, 0].set_xticks([0, 1], ["Raw features", "Fit-only whitening"])
+    axes[1, 0].set_title("Frozen features: conditioning (%)")
     axes[1, 0].legend(fontsize=6)
-    axes[1, 1].set_title("Final-epoch router gradient norm")
-    axes[1, 1].set_xlabel("Race layer")
+    for i, depth in enumerate((1, 8)):
+        scaled = load(os.path.join(RES, "e118", f"race_d{depth}_cf1_n512_e4_s6.json"))
+        last = scaled["curve"][-1]
+        axes[1, 1].bar(i-.16, 100*last["fit"]["accuracy"], width=.3, color=AQUA,
+                       label="Fit" if i == 0 else None)
+        axes[1, 1].bar(i+.16, 100*last["dev"]["accuracy"], width=.3, color=BLUE,
+                       label="Held-out" if i == 0 else None)
+    axes[1, 1].set_xticks([0, 1], ["1 layer", "8 layers"])
+    axes[1, 1].set_title("More data: 1 vs 8 layers (%)")
+    axes[1, 1].legend(fontsize=6)
     axes[1, 1].set_ylim(bottom=0)
     for ax in axes[0]:
         ax.set_xlabel("Epoch")
     f.suptitle("Eight layers with real winning continuations: a development diagnostic", fontsize=10)
-    f.text(.02, .015, "128 fitting / 128 held-out-speaker utterances; one seed; no SHD test-set access.\n"
-           "Both race arms use identical fit-only readout conditioning. E117 probes use a different head; no depth advantage claimed.", fontsize=6.5)
+    f.text(.02, .015, "Top and bottom-left: 128 fit / 128 held-out, 8 epochs. Bottom-right: 512 / 256, 4 epochs. One seed.\n"
+           "Depth comparison shares width/data/updates, with 7,537 vs 53,296 parameters and more event work at depth 8.", fontsize=6.5)
     f.tight_layout(rect=(0, .095, 1, .95))
     f.savefig(os.path.join(os.path.dirname(__file__), "figures", "e118_race_carriers.png"), dpi=180)
     return f
@@ -2280,6 +2291,43 @@ def build():
     tf_10m_final = load_tf_10m_final()
 
     import figures_mech as FM                                   # explanatory figures (plain-language front)
+    latest_shd = [P("Eight layers that carry information and still race (§§166–172)", "h2"),
+        P("<b>A positive depth comparison:</b> with 512 fitting and 256 held-out-speaker utterances, four epochs, "
+          "seed 6 and loser score credit, eight layers reached <b>104/256 (40.6%)</b>, versus <b>65/256 (25.4%)</b> "
+          "for one layer. Held-out NLL was 1.7496 versus 2.2544. D8 made 50 examples correct that D1 missed and "
+          "missed 11 that D1 got right. Width, examples, update count, learning rate and conditioning procedure match; "
+          "parameters are 53,296 versus 7,537 and deep execution uses more work. This is one-seed development evidence "
+          "for useful added depth, not a matched-compute superiority claim."),
+        P("<b>Completed development result:</b> E118 uses eight layers of local memory and three competing delayed "
+          "continuations per arrival. Only the winner emits; losers supply training-only score credit. With 128 fitting "
+          "and 128 held-out-speaker utterances, eight epochs and seed 6, ordinary winner credit reached 64/128 fit "
+          "and <b>34/128 (26.6%) held-out</b>; added loser credit reached 76/128 fit and <b>30/128 (23.4%) held-out</b>. "
+          "Chance is 5%. Held-out NLL was 2.4595 versus 2.4387. Loser credit improved fit loss and slightly improved "
+          "held-out log loss, but did not improve held-out accuracy. Both arms have 53,296 parameters and identical "
+          "initial predictions, data order, fit-only conditioning and update count. Counterfactual training evaluates "
+          "three value alternatives per event; ordinary training and inference evaluate only the winner."),
+        P("The smaller depth controls are less favorable: one-layer pathwise/loser-credit accuracy was 33/128 and "
+          "41/128, versus D8's 34/128 and 30/128. Depth therefore helps in the larger completed comparison, not "
+          "uniformly across these small protocols. Residual scale follows 1/depth; the one-layer conditional lower "
+          "bound is zero, while the strict fixed-history certificate applies to D8."),
+        P("<b>A demonstrated optimization bottleneck:</b> the earlier E117 carrier stack retained class information "
+          "that its trained head did not extract. A fixed-ridge probe recovered 36/128 held-out from deepest features, "
+          "versus the trained head's 9/128. A separate matched head experiment held those features, zero initialization, "
+          "Adam and eight-epoch update budget fixed: fit-only whitening changed held-out accuracy from <b>7/128 to "
+          "39/128</b>. This isolates a conditioning effect in that frozen representation. It does not establish a depth "
+          "advantage: the input-feature ridge probe reached 39/128, slightly above the deepest probe."),
+        *fig(fig_e118_race_carriers, W),
+        P("<b>The analytical advance:</b> normalized local history is a sub-Markov operator in maximum sequence norm. "
+          "For bounded residual payload maps with frozen addresses and event times, eight stages have payload gain "
+          "between 0.3436 and 2.5658 and matching dual L1 credit bounds. Learned winners and delays add mechanisms "
+          "outside that conditional certificate. Optionality is refined into feasible, cost-normalized correction "
+          "directions: shared controls introduce cross terms that can reinforce or cancel, so independently counting "
+          "losing routes can invent learning capacity."),
+        P("<b>Scope and execution:</b> all scores above use the training split with speakers 3/6 held out; the official "
+          "test set was not opened. These are terminal predictions, not calibrated early-answer results. Count packets "
+          "are emitted at window closure to avoid exposing future counts. Memory updates follow arrivals with no silent "
+          "time grid; CPU training uses an associative event scan, whose extra work is counted. Both D8 pilots took "
+          "about 178 seconds with peak process RSS below 0.9 GB. No measured energy or benchmark supremacy is claimed.", "small")]
     shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
                     P("Development diagnostics and unresolved mechanisms. These are not supremacy results.")]
     shd_appendix += bullets([
@@ -3135,6 +3183,8 @@ def build():
             "work together in deep E77 language models, then measure matched quality, training cost, inference work, and energy "
             "on real hardware. This is a concrete path from promising mechanisms to a new frontier-computing paradigm.")]
     shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
+        *latest_shd,
+        P("Earlier marked-input and emission diagnostics", "h2"),
         P("<b>Marked input and stable depth (§§164–165):</b> a matched D4 screen used 512 fitting and 256 "
           "held-out-speaker development utterances, two epochs, corrected grid emission, deepest primary loss, "
           "auxiliary weight 0.2, and no route shadows. No mark and a shared-vector count mark both finished at "
