@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/e77_tv_lm.py", line 733, in <module>
+    main()
+    ~~~~^^
+  File "/workspace/experiments/e77_tv_lm.py", line 540, in main
+    calibration = calibrate_spike_thresholds(net, train, a)
+  File "/workspace/experiments/e77_tv_lm.py", line 433, in calibrate_spike_thresholds
+    _, work = net(X, collect_voltage=True)
+              ~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.venv-docker/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/.venv-docker/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/workspace/experiments/e77_tv_lm.py", line 325, in forward
+    ye, hs = self.event_memories[i](be, te, ye)
+             ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/workspace/.venv-docker/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/.venv-docker/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/workspace/experiments/e77_tv_lm.py", line 188, in forward
+    weights = torch.exp(-delay).masked_fill(~mask, 0.0)
+              ~~~~~~~~~^^^^^^^^
+RuntimeError: [enforce fail at alloc_cpu.cpp:127] err == 0. DefaultCPUAllocator: can't allocate memory: you tried to allocate 1124730368 bytes. Error code 12 (Cannot allocate memory)
