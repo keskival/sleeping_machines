@@ -45,6 +45,8 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**AWS run `aws_e68_recall_R16_s0_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","16","--steps","8000","--seed","0"]`. Validated metrics: test_acc=0.176. Wall time 531.614 s; peak process RSS 516624 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
+
 **AWS run `aws_e76_attention_work_D1M_20260929`.** experiments/e76_attention_work.py with arguments `["--windows","200","--checkpoint_dir","experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929"]`. Validated metrics: Completed; inspect the saved result for measurements.. Wall time 5.997 s; peak process RSS 1281080 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
 
 **AWS run `aws_e64_tf_D1M_checkpoint_20260929`.** experiments/e64_lm_baselines.py with arguments `["--model","tf","--D","1000000","--size","256","--layers","2","--passes","20","--dropout","0.2","--valid","200000"]`. Validated metrics: test_bpc=2.367; best_valid_bpc=2.3447. Wall time 3413.784 s; peak process RSS 2248972 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
