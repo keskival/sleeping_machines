@@ -1,8 +1,8 @@
 # Sleeping Machines
 
-Intelligence through timed messages, local memory and selective computation
+Computing with time: learned delays, vector messages and local memory
 
-A Sleeping Machine is a network whose messages carry both a vector and an arrival time. Nodes remember what arrived, compare alternatives, wait when useful, and send a new message. Competing messages race: the winner determines the computation, while unrealized alternatives can teach the network how to make a better choice. The goal is capable models that spend their work where information changes.
+**Time is part of the computation.** Messages carry both a vector and an arrival time. Learned delays change arrival order, shape temporal memory and decide which competing message wins. Nodes can wait, accumulate evidence and transform a message's content and timing. A clock race can select a class; learned phase transformations can compose an arithmetic rule. Unrealized alternatives teach better choices. Dormant capacity and sparse activation reduce cost, while the organizing idea is to make timing itself a trainable computational medium.
 
 ## The strongest demonstrated results
 
@@ -27,6 +27,8 @@ The common implementation now retains perfect modular generalization and longer-
 
 The periodic path executes directly through the shared model interface. A two-layer carrier variant is also shown: its phase state supplies the same answers while the carrier adds cost. Speech and other representation tasks use deeper carrier configurations. The architecture chooses the required primitives and depth per task; each task has separately trained weights.
 
+**Learning work is also selective.** The periodic teacher makes 29,003 mistaken-example updates and 145,015 learned-scalar update visits. The dense arithmetic controls make 4,800 Adam steps: 92.2M parameter visits for the LSTM and 132.5M for the Transformer. These count parameter updates, excluding optimizer state and backward arithmetic; they are not training FLOPs or joules.
+
 Arithmetic: 1,473 fitting triples, a 200-epoch budget, all 3,440 unseen triples; supplied period 17. The phase-only path stops after 47 passes, when an entire fitting pass makes no updates. Recall: 4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 examples for eight epochs. Width 32 and two generic layers where present, seed 6, one small dense setting. Work is an analytic logical-operation estimate, including configured vector maps, routers, scans, normalization, clock candidates and pointer search. These inference counts are not measured joules or backward/optimizer counts. Full work definitions appear in the evidence appendix.
 
 ## Native components: quality, work and sample efficiency
@@ -39,11 +41,12 @@ Work panels count event operations or dense multiply-adds per example; training 
 
 ## How the model computes and learns
 
-The architecture combines local memory, vector payloads and timing. A message can carry a learned representation, a pointer, evidence or a periodic state. Layers need not all perform the same operation. Their job is to preserve useful information and recruit the computation needed for the task.
+The architecture computes through local memory, vector payloads and timing. A learned delay changes which arrivals interact and which route wins; it participates in the function being learned. Activity sparsity controls how much computation occurs. A message can carry a learned representation, a pointer, evidence or a periodic state. Layers need not all perform the same operation. Their job is to preserve useful information and recruit the computation needed for the task.
 
 ![shared architecture](report/figures/shared_architecture.png)
 
 - **Local temporal memory** accumulates observed content and elapsed time without evaluating empty time ticks.
+- **Computation through delays** uses waiting times, arrival order and clock races to transform information and select outcomes.
 - **Hard races** choose the emitted vector and delay. Losing alternatives provide training credit without becoming identical forward messages.
 - **Reusable memories** include conditional outcome statistics, relative pointers and learned phase transformations.
 - **Trainable depth** uses bounded carrier updates to preserve representations and credit through a hierarchy.
@@ -58,6 +61,7 @@ Small local vector maps and query readouts can remain dense. The intended effici
 | Principle | What it enables |
 | --- | --- |
 | Stable transport through depth | Bounded residual carriers preserve payload and credit under stated fixed-route conditions. Route changes and readout geometry are analyzed separately. |
+| Active communication support | Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected. |
 | Credit to unrealized alternatives | A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race. |
 | Periodic state as an isometry | Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples. |
 | Certified composition | Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it. |
@@ -130,9 +134,11 @@ Success on these dimensions would turn the current task-level advantages into a 
 
 ## Appendix A. Deep event recognition
 
-The eight-layer speech model reaches **72.3%** across 512 held-out utterances. Both readout continuations start from that checkpoint. At the matched readout comparison below, count pooling reaches **68.9%** and learned event pooling reaches **69.5%** across 512 held-out utterances. Each model has 4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors and delays; the learned pool adds 32 scalar parameters.
+The eight-layer speech checkpoint reaches **72.3%** across 512 held-out utterances. Both readout continuations start from that checkpoint. At the matched readout comparison below, count pooling reaches **68.9%** and learned event pooling reaches **69.5%** across 512 held-out utterances. Each model has 4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors and delays; the learned pool adds 32 scalar parameters.
 
 ![e122 speech](report/figures/e122_speech.png)
+
+Two causal context channels allow distant packets to interact through accumulated state. Their zero-initialized columns preserve the starting predictions exactly. A matched full-update continuation reaches 68.6%; training only those columns reaches 71.1%. The added state has linear event work and 6,534 learned parameters.
 
 The learned pool scores each observed winning payload, accumulates a weighted numerator and mass, and reads their ratio at the query. It has linear work in the number of active packets and a local supervised score gradient. Zero initialization exactly recovers count pooling. This tests whether informative parts of an utterance should contribute more strongly to the decision.
 
@@ -144,17 +150,19 @@ Speech scores are development evidence from training speakers 3/6; the official 
 
 The common event backbone has independently trained development screens across language, event prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. These bounded screens establish implementation breadth; the stronger native comparison results use their own complete protocols.
 
-| Task | Development result | Fit / development |
-| --- | --- | --- |
-| Text8 | 2.915 bits/character | 2,048 / 256 |
-| Market event prediction | 3.823 nats/event | 512 / 256 |
-| Temporal composition | 97.3% | 1,024 / 256 |
-| MNIST | 75.8% | 1,024 / 256 |
-| Event-camera gestures | 59.1% | 88 / 44 |
+| Task | Common model | Transformer reference | Forward FLOPs per query: common / TF | Training-forward FLOPs: common / TF |
+| --- | --- | --- | --- | --- |
+| Text8 | 2.915 bpc | 3.729 bpc | 1.26M / 1.84M | 55.70G / 30.09G |
+| Market event prediction | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 13.92G / 7.52G |
+| Temporal composition | 97.3% | 90.2% | 0.29M / 0.38M | 6.69G / 3.23G |
+| MNIST | 75.8% | 69.9% | 1.66M / 2.57M | 35.97G / 20.48G |
+| Event-camera gestures | 59.1% | 15.9% | 23.99M / 124.19M | 46.12G / 90.10G |
 
-These screens use eight layers for eight epochs. Two-layer follow-ups retain 100% recall at both context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times fewer hidden carrier emissions. The model's depth is chosen to suit the computation.
+The common screens use eight layers and the Transformer references two, both at width 32 for eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times fewer hidden carrier emissions. The model's depth is chosen to suit the computation.
 
-Independent task weights, seed 6. Text: 32,768 separately fitted evidence characters and 2,048 neural queries. Market: bounded prefixes on disjoint days. MNIST: pooled training-set images. Gestures: first-second prefixes and disjoint users. Real-data official test sets are not used in these screens. The market screen remains behind its fixed evidence baseline (3.670 nats/event).
+Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character evidence bank; market evidence is fitted on a prior day. The references have no such bank. MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event.
+
+FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. Forward counts are per unpadded prefix. Training-forward sums the declared fitting budget and includes the common model's losing-value evaluations. These are contraction estimates, excluding nonlinearities, sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer updates; they are not total training FLOPs or measured energy.
 
 ## Appendix C. Evidence and metric definitions
 
