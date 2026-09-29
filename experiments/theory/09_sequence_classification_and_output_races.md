@@ -3147,6 +3147,17 @@ the proposal probability, and importance-correct if the intended target policy
 differs from $q$. This passes **option value** through route counterfactuals;
 it does not pass a raw event-count bonus.
 
+The action set must cover distinct causes of missing alternatives. A
+receiver-replacement action swaps the weakest active edge for a positive
+loser. A route-birth action opens a near-zero closed gate when that source has
+unused fan-out capacity. A spike-birth action forces one near-threshold,
+nonrefractory receiver event; its replay can create new source events and
+therefore new descendants. These are different interventions and need
+separate propensities and work caps. A deeper layer with no eligible action
+contributes no route option; the scalar recursion cannot invent support that
+the proposal mechanism did not provide. The E83 audit compares these action
+families under the same error-selected examples and scalar backup.
+
 This is a meta-learning objective, not an unbiased estimator of the original
 fixed-parameter task loss. Its validity has to be tested by held-out loss after
 actual corresponding training updates. A practical sparse estimator samples a
