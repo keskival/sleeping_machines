@@ -1,0 +1,7135 @@
+[
+  {
+    "run_tag": "aws_e36_tf_e28_long_20260929",
+    "script": "experiments/e36_transformer.py",
+    "arguments": [
+      "--task",
+      "e28",
+      "--sizes",
+      "32x2,64x2,64x4",
+      "--episodes",
+      "2000000",
+      "--tag",
+      "long"
+    ],
+    "sources": [
+      "e36c.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e36_rel_e27_20260929",
+    "script": "experiments/e36_transformer.py",
+    "arguments": [
+      "--task",
+      "e27",
+      "--reltime",
+      "1",
+      "--sizes",
+      "16x1,32x2,64x2",
+      "--episodes",
+      "2000000",
+      "--tag",
+      "rel"
+    ],
+    "sources": [
+      "e36d.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e36_rel_e28_20260929",
+    "script": "experiments/e36_transformer.py",
+    "arguments": [
+      "--task",
+      "e28",
+      "--reltime",
+      "1",
+      "--sizes",
+      "32x2,64x2",
+      "--episodes",
+      "2000000",
+      "--tag",
+      "rel"
+    ],
+    "sources": [
+      "e36d.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e64_tf_D1M_checkpoint_20260929",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "tf",
+      "--D",
+      "1000000",
+      "--size",
+      "256",
+      "--layers",
+      "2",
+      "--passes",
+      "20",
+      "--dropout",
+      "0.2",
+      "--valid",
+      "200000"
+    ],
+    "sources": [
+      "e71a.txt"
+    ],
+    "reason": "Recreate missing checkpoint required by E76"
+  },
+  {
+    "run_tag": "aws_e76_attention_work_D1M_20260929",
+    "script": "experiments/e76_attention_work.py",
+    "arguments": [
+      "--windows",
+      "200",
+      "--checkpoint_dir",
+      "experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929"
+    ],
+    "sources": [
+      "e64b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R16_s0_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "16",
+      "--steps",
+      "8000",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R0_s1_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "0",
+      "--steps",
+      "8000",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R1_s1_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "1",
+      "--steps",
+      "8000",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R4_s1_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "4",
+      "--steps",
+      "8000",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R16_s1_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "16",
+      "--steps",
+      "8000",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R0_s2_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "0",
+      "--steps",
+      "8000",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R1_s2_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "1",
+      "--steps",
+      "8000",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R4_s2_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "4",
+      "--steps",
+      "8000",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_recall_R16_s2_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "recall",
+      "--R",
+      "16",
+      "--steps",
+      "8000",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_text_R0_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "text",
+      "--R",
+      "0",
+      "--steps",
+      "3000"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_text_R1_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "text",
+      "--R",
+      "1",
+      "--steps",
+      "3000"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e68_text_R4_20260929",
+    "script": "experiments/e68_race_transformer.py",
+    "arguments": [
+      "--task",
+      "text",
+      "--R",
+      "4",
+      "--steps",
+      "3000"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e77_D10M_r1_boot0p1_20260929",
+    "script": "experiments/e77_tv_lm.py",
+    "arguments": [
+      "--D",
+      "10000000",
+      "--passes",
+      "2",
+      "--bs",
+      "4",
+      "--retrieval",
+      "1",
+      "--target_spikes_per_char",
+      "0.1",
+      "--threshold_calibration_batches",
+      "4"
+    ],
+    "sources": [
+      "e64b.txt"
+    ],
+    "mem_cap_kb": 25165824,
+    "rss_cap_kb": 20971520,
+    "timeout_s": 21600
+  },
+  {
+    "run_tag": "aws_e77_depth8_tv_D100k_p1_b2_20260929",
+    "script": "experiments/e77_tv_lm.py",
+    "arguments": [
+      "--D",
+      "100000",
+      "--passes",
+      "1",
+      "--L",
+      "128",
+      "--bs",
+      "2",
+      "--depth",
+      "8",
+      "--target_spikes_per_char",
+      "0.1",
+      "--threshold_calibration_batches",
+      "4",
+      "--threshold_calibration_steps",
+      "6",
+      "--valid",
+      "50000",
+      "--test",
+      "50000"
+    ],
+    "sources": [
+      "e77_depth8_lm_100k.txt"
+    ],
+    "mem_cap_kb": 25165824,
+    "rss_cap_kb": 20971520,
+    "timeout_s": 21600
+  },
+  {
+    "run_tag": "aws_e77_route_cf_seqcal_bootstrap_d512_depth4_20260929",
+    "script": "experiments/e77_tv_lm.py",
+    "arguments": [
+      "--D",
+      "512",
+      "--passes",
+      "0.125",
+      "--L",
+      "16",
+      "--bs",
+      "2",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M1",
+      "8",
+      "--M2",
+      "8",
+      "--Mr",
+      "8",
+      "--heads",
+      "1",
+      "--dh",
+      "8",
+      "--depth",
+      "4",
+      "--valid",
+      "128",
+      "--test",
+      "128",
+      "--seed",
+      "77",
+      "--target_spikes_per_char",
+      "0.1",
+      "--threshold_calibration_batches",
+      "2",
+      "--cf_shadows_per_layer",
+      "1",
+      "--cf_band",
+      "0.5",
+      "--cf_sigma",
+      "0.25",
+      "--cf_lr",
+      "0"
+    ],
+    "sources": [
+      "e77_route_cf_bootstrap.txt"
+    ],
+    "mem_cap_kb": 25165824,
+    "rss_cap_kb": 20971520,
+    "timeout_s": 21600
+  },
+  {
+    "run_tag": "aws_e79wk_D1M_20260929",
+    "script": "experiments/e79_race_mixer.py",
+    "arguments": [
+      "--D",
+      "1000000",
+      "--K",
+      "5",
+      "--wordkeys",
+      "1",
+      "--windows",
+      "256"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e79wk_D10M_20260929",
+    "script": "experiments/e79_race_mixer.py",
+    "arguments": [
+      "--D",
+      "10000000",
+      "--K",
+      "6",
+      "--wordkeys",
+      "1",
+      "--windows",
+      "256"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e81_D1M_20260929",
+    "script": "experiments/e81_race_gln.py",
+    "arguments": [
+      "--D",
+      "1000000",
+      "--K",
+      "5"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e81_D10M_20260929",
+    "script": "experiments/e81_race_gln.py",
+    "arguments": [
+      "--D",
+      "10000000",
+      "--K",
+      "6"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e67_exact_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--epochs",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt1_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "1",
+      "--epochs",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt4_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--epochs",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt16_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "16",
+      "--epochs",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_win_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "winner",
+      "--epochs",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_exact_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--epochs",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt1_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "1",
+      "--epochs",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt4_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--epochs",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt16_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "16",
+      "--epochs",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_win_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "winner",
+      "--epochs",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_exact_s2_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--epochs",
+      "3",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt1_s2_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "1",
+      "--epochs",
+      "3",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt4_s2_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--epochs",
+      "3",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_rt16_s2_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "16",
+      "--epochs",
+      "3",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_win_s2_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "winner",
+      "--epochs",
+      "3",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hex_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--hidden",
+      "256",
+      "--feedback",
+      "sym",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hexr_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--hidden",
+      "256",
+      "--feedback",
+      "random",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hrt4_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--hidden",
+      "256",
+      "--feedback",
+      "sym",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hrt4r_s0_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--hidden",
+      "256",
+      "--feedback",
+      "random",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hex_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--hidden",
+      "256",
+      "--feedback",
+      "sym",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hexr_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "exact",
+      "--hidden",
+      "256",
+      "--feedback",
+      "random",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hrt4_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--hidden",
+      "256",
+      "--feedback",
+      "sym",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e67_hrt4r_s1_20260929",
+    "script": "experiments/e67_race_time.py",
+    "arguments": [
+      "--rule",
+      "race_time",
+      "--races",
+      "4",
+      "--hidden",
+      "256",
+      "--feedback",
+      "random",
+      "--epochs",
+      "3",
+      "--lr",
+      "0.02",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e67.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_smoke_probe_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "60",
+      "--val",
+      "500",
+      "--train-limit",
+      "300",
+      "--epochs",
+      "1",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--probe",
+      "1",
+      "--depth",
+      "2",
+      "--tag",
+      "smokeprobe"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e20g_mnist_race_d3_20260929",
+    "script": "experiments/e20_exact.py",
+    "arguments": [
+      "--task",
+      "mnist",
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--epochs",
+      "5",
+      "--lr",
+      "1e-2",
+      "--homeo",
+      "0.1",
+      "--center",
+      "1"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e49_tn_d4_20260929",
+    "script": "experiments/e20_exact.py",
+    "arguments": [
+      "--task",
+      "mnist",
+      "--width",
+      "400",
+      "--epochs",
+      "2",
+      "--homeo",
+      "0.1",
+      "--center",
+      "1",
+      "--decay",
+      "1",
+      "--clip",
+      "3",
+      "--lr",
+      "1e-2",
+      "--winners",
+      "10",
+      "--depth",
+      "4",
+      "--tnorm",
+      "1"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e49_no_d4_20260929",
+    "script": "experiments/e20_exact.py",
+    "arguments": [
+      "--task",
+      "mnist",
+      "--width",
+      "400",
+      "--epochs",
+      "2",
+      "--homeo",
+      "0.1",
+      "--center",
+      "1",
+      "--decay",
+      "1",
+      "--clip",
+      "3",
+      "--lr",
+      "1e-2",
+      "--winners",
+      "10",
+      "--depth",
+      "4",
+      "--tnorm",
+      "0"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e20f_k10_d4_20260929",
+    "script": "experiments/e20_exact.py",
+    "arguments": [
+      "--task",
+      "mnist",
+      "--width",
+      "400",
+      "--epochs",
+      "5",
+      "--homeo",
+      "0.1",
+      "--center",
+      "1",
+      "--decay",
+      "1",
+      "--clip",
+      "3",
+      "--lr",
+      "1e-2",
+      "--depth",
+      "4",
+      "--winners",
+      "10"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e20f_mlp_d4_20260929",
+    "script": "experiments/e20_exact.py",
+    "arguments": [
+      "--task",
+      "mnist",
+      "--model",
+      "mlp",
+      "--depth",
+      "4",
+      "--width",
+      "400",
+      "--epochs",
+      "5"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d3_P4000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--residual",
+      "2",
+      "--train",
+      "4000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d4_P4000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--residual",
+      "2",
+      "--train",
+      "4000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d1_P4000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "1",
+      "--train",
+      "4000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d3_P4000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "3",
+      "--train",
+      "4000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d1_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "1",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d2_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "2",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d3_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d4_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res1_d2_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "2",
+      "--residual",
+      "1",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d2_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "2",
+      "--residual",
+      "2",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res1_d3_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--residual",
+      "1",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d3_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--residual",
+      "2",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res1_d4_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--residual",
+      "1",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d4_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--residual",
+      "2",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d1_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "1",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d3_P16000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "3",
+      "--train",
+      "16000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d1_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "1",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d2_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "2",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d3_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_d4_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d2_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "2",
+      "--residual",
+      "2",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d3_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "3",
+      "--residual",
+      "2",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_race_res_d4_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "race",
+      "--depth",
+      "4",
+      "--residual",
+      "2",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d1_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "1",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e19_mlp_d3_P64000_20260929",
+    "script": "experiments/e19_rhm.py",
+    "arguments": [
+      "--model",
+      "mlp",
+      "--depth",
+      "3",
+      "--train",
+      "64000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cons_fa_d5_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--depth",
+      "5",
+      "--tag",
+      "cons"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_res2_d1_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--residual",
+      "2",
+      "--depth",
+      "1",
+      "--tag",
+      "res2"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_res2_w200_d10_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--residual",
+      "2",
+      "--depth",
+      "10",
+      "--tag",
+      "res2"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_plain_w200_d10_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--depth",
+      "10",
+      "--tag",
+      "cons"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_res2_w200_d20_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--residual",
+      "2",
+      "--depth",
+      "20",
+      "--tag",
+      "res2"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w400_f16_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "400",
+      "--fanin-in",
+      "16"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w400_f32_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "400",
+      "--fanin-in",
+      "32"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w400_f64_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "400",
+      "--fanin-in",
+      "64"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w400_f128_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "400",
+      "--fanin-in",
+      "128"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w400_f0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "400"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w1000_f16_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "1000",
+      "--fanin-in",
+      "16"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w1000_f32_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "1000",
+      "--fanin-in",
+      "32"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w1000_f64_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "1000",
+      "--fanin-in",
+      "64"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w1000_f128_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "1000",
+      "--fanin-in",
+      "128"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e18p_w1000_f0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "e18pilot",
+      "--width",
+      "1000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_main_crl_fa_d5_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "5",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_main_crl_fired_only_d5_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "5",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e23ti_race_nohomeo_f5000_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--order",
+      "blocked",
+      "--frames",
+      "5000",
+      "--val",
+      "10000",
+      "--homeo",
+      "0",
+      "--tag",
+      "e23_nohomeo_f5000"
+    ],
+    "sources": [
+      "e14_next.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e23d_mlp_s1_f5000_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--order",
+      "blocked",
+      "--frames",
+      "5000",
+      "--val",
+      "10000",
+      "--seed",
+      "1",
+      "--tag",
+      "e23_f5000"
+    ],
+    "sources": [
+      "e23_diag.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e23p_race_price01_f5000_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--order",
+      "blocked",
+      "--frames",
+      "5000",
+      "--val",
+      "10000",
+      "--price",
+      "0.01",
+      "--tag",
+      "e23p_price01_f5000"
+    ],
+    "sources": [
+      "e23_diag.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e23p_race_price03_f5000_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--order",
+      "blocked",
+      "--frames",
+      "5000",
+      "--val",
+      "10000",
+      "--price",
+      "0.03",
+      "--tag",
+      "e23p_price03_f5000"
+    ],
+    "sources": [
+      "e23_diag.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e23p_race_price003_f5000_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--order",
+      "blocked",
+      "--frames",
+      "5000",
+      "--val",
+      "10000",
+      "--price",
+      "0.003",
+      "--tag",
+      "e23p_price003_f5000"
+    ],
+    "sources": [
+      "e23_diag.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_mlp_p97_f0.5_20260929",
+    "script": "experiments/e24_grok.py",
+    "arguments": [
+      "mlp",
+      "--frac",
+      "0.5",
+      "--p",
+      "97",
+      "--hidden",
+      "256",
+      "--every",
+      "3000",
+      "--steps",
+      "30000",
+      "--tag",
+      "p97_f0.5"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_mlp_p31_f0.2_20260929",
+    "script": "experiments/e24_grok.py",
+    "arguments": [
+      "mlp",
+      "--frac",
+      "0.2",
+      "--p",
+      "31",
+      "--hidden",
+      "256",
+      "--every",
+      "3000",
+      "--steps",
+      "30000",
+      "--tag",
+      "p31_f0.2"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_mlp_p31_f0.3_20260929",
+    "script": "experiments/e24_grok.py",
+    "arguments": [
+      "mlp",
+      "--frac",
+      "0.3",
+      "--p",
+      "31",
+      "--hidden",
+      "256",
+      "--every",
+      "3000",
+      "--steps",
+      "30000",
+      "--tag",
+      "p31_f0.3"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_trace_p97_d0_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "trace",
+      "--p",
+      "97",
+      "--fracs",
+      "0.05,0.07,0.1,0.15,0.2,0.3",
+      "--seeds",
+      "5",
+      "--epochs",
+      "100",
+      "--restarts",
+      "4",
+      "--decay",
+      "0",
+      "--tag",
+      "d0"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_trace_p97_d0.5_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "trace",
+      "--p",
+      "97",
+      "--fracs",
+      "0.05,0.07,0.1,0.15,0.2,0.3",
+      "--seeds",
+      "5",
+      "--epochs",
+      "100",
+      "--restarts",
+      "4",
+      "--decay",
+      "0.5",
+      "--tag",
+      "d0.5"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_trace_p97_d0.9_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "trace",
+      "--p",
+      "97",
+      "--fracs",
+      "0.05,0.07,0.1,0.15,0.2,0.3",
+      "--seeds",
+      "5",
+      "--epochs",
+      "100",
+      "--restarts",
+      "4",
+      "--decay",
+      "0.9",
+      "--tag",
+      "d0.9"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p23_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "23",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p31_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "31",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p47_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "47",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p59_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "59",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p73_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "73",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p97_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "97",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p131_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "131",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e25_scal_p181_20260929",
+    "script": "experiments/e25_delay_ring.py",
+    "arguments": [
+      "sync",
+      "--p",
+      "181",
+      "--fracs",
+      "0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.12,0.14,0.16,0.18,0.2,0.25",
+      "--seeds",
+      "10",
+      "--tag",
+      "scal"
+    ],
+    "sources": [
+      "e25.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e26b_grok_nc_20260929",
+    "script": "experiments/e24_grok.py",
+    "arguments": [
+      "race",
+      "--p",
+      "31",
+      "--frac",
+      "0.5",
+      "--hidden",
+      "250",
+      "--every",
+      "100",
+      "--epochs",
+      "2000",
+      "--homeo",
+      "0.001",
+      "--deadline",
+      "1",
+      "--compete",
+      "0",
+      "--tag",
+      "nc_sleep0"
+    ],
+    "sources": [
+      "e26b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e26b_grok_nc_sleep_20260929",
+    "script": "experiments/e24_grok.py",
+    "arguments": [
+      "race",
+      "--p",
+      "31",
+      "--frac",
+      "0.5",
+      "--hidden",
+      "250",
+      "--every",
+      "100",
+      "--epochs",
+      "2000",
+      "--homeo",
+      "0.001",
+      "--deadline",
+      "1",
+      "--compete",
+      "0",
+      "--sleep",
+      "1e-3",
+      "--tag",
+      "nc_sleep1e-3"
+    ],
+    "sources": [
+      "e26b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e29_L4_nearmiss_20260929",
+    "script": "experiments/e29_grok_loops.py",
+    "arguments": [
+      "--hidden",
+      "384",
+      "--group",
+      "16",
+      "--k",
+      "1",
+      "--W",
+      "1.0",
+      "--budget",
+      "16",
+      "--eta",
+      "0.02",
+      "--kappa",
+      "0.02",
+      "--veto",
+      "0",
+      "--epochs",
+      "80",
+      "--every",
+      "10",
+      "--loops",
+      "4",
+      "--credit",
+      "nearmiss",
+      "--tag",
+      "h384"
+    ],
+    "sources": [
+      "e29.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e29_L0_nearmiss_20260929",
+    "script": "experiments/e29_grok_loops.py",
+    "arguments": [
+      "--hidden",
+      "384",
+      "--group",
+      "16",
+      "--k",
+      "1",
+      "--W",
+      "1.0",
+      "--budget",
+      "16",
+      "--eta",
+      "0.02",
+      "--kappa",
+      "0.02",
+      "--veto",
+      "0",
+      "--epochs",
+      "80",
+      "--every",
+      "10",
+      "--loops",
+      "0",
+      "--credit",
+      "nearmiss",
+      "--tag",
+      "h384"
+    ],
+    "sources": [
+      "e29.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e29_L4_frozen_20260929",
+    "script": "experiments/e29_grok_loops.py",
+    "arguments": [
+      "--hidden",
+      "384",
+      "--group",
+      "16",
+      "--k",
+      "1",
+      "--W",
+      "1.0",
+      "--budget",
+      "16",
+      "--eta",
+      "0.02",
+      "--kappa",
+      "0.02",
+      "--veto",
+      "0",
+      "--epochs",
+      "80",
+      "--every",
+      "10",
+      "--loops",
+      "4",
+      "--credit",
+      "frozen",
+      "--tag",
+      "h384"
+    ],
+    "sources": [
+      "e29.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e34L_bank_1M_20260929",
+    "script": "experiments/e34_compose.py",
+    "arguments": [
+      "--seeds",
+      "5",
+      "--steps",
+      "1000000",
+      "--scales",
+      "1,2,4",
+      "--seeds",
+      "3",
+      "--tag",
+      "L1M"
+    ],
+    "sources": [
+      "e34L.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e45_ab_20260929",
+    "script": "experiments/e45_discover.py",
+    "arguments": [
+      "--epochs",
+      "200",
+      "--seeds",
+      "5",
+      "--task",
+      "ab"
+    ],
+    "sources": [
+      "e45.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e45_abc_20260929",
+    "script": "experiments/e45_discover.py",
+    "arguments": [
+      "--epochs",
+      "200",
+      "--seeds",
+      "5",
+      "--task",
+      "abc"
+    ],
+    "sources": [
+      "e45.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e45_rand_20260929",
+    "script": "experiments/e45_discover.py",
+    "arguments": [
+      "--epochs",
+      "200",
+      "--seeds",
+      "5",
+      "--task",
+      "rand"
+    ],
+    "sources": [
+      "e45.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46_M4_40k_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4"
+    ],
+    "sources": [
+      "e46.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46_M8_40k_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "8"
+    ],
+    "sources": [
+      "e46.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46_M4_200k_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "200000",
+      "--M",
+      "4"
+    ],
+    "sources": [
+      "e46.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46q_0.1_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--q",
+      "0.1",
+      "--tag",
+      "qsweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46q_0.2_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--q",
+      "0.2",
+      "--tag",
+      "qsweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46q_0.3_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--q",
+      "0.3",
+      "--tag",
+      "qsweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46q_0.4_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--q",
+      "0.4",
+      "--tag",
+      "qsweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46s_1_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--scales",
+      "1",
+      "--tag",
+      "ssweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46s_1-2_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--scales",
+      "1,2",
+      "--tag",
+      "ssweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46s_1-2-4_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--scales",
+      "1,2,4",
+      "--tag",
+      "ssweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e46s_0.5-1-2-4-8_20260929",
+    "script": "experiments/e46_menu.py",
+    "arguments": [
+      "--steps",
+      "40000",
+      "--M",
+      "4",
+      "--seeds",
+      "5",
+      "--scales",
+      "0.5,1,2,4,8",
+      "--tag",
+      "ssweep"
+    ],
+    "sources": [
+      "e46q.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c2_k1_H300_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "2",
+      "--kappa",
+      "1",
+      "--H",
+      "300",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c2_k3_H60_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "2",
+      "--kappa",
+      "3",
+      "--H",
+      "60",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c2_k3_H300_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "2",
+      "--kappa",
+      "3",
+      "--H",
+      "300",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c10_k1_H60_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "10",
+      "--kappa",
+      "1",
+      "--H",
+      "60",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c10_k1_H300_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "10",
+      "--kappa",
+      "1",
+      "--H",
+      "300",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c10_k3_H60_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "10",
+      "--kappa",
+      "3",
+      "--H",
+      "60",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e50_c10_k3_H300_20260929",
+    "script": "experiments/e50_mbpolicy.py",
+    "arguments": [
+      "--c",
+      "10",
+      "--kappa",
+      "3",
+      "--H",
+      "300",
+      "--every",
+      "10"
+    ],
+    "sources": [
+      "e50.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e93_D5_20260929",
+    "script": "experiments/e54_chains.py",
+    "arguments": [
+      "--D",
+      "5",
+      "--prune-after",
+      "3000",
+      "--steps",
+      "12000",
+      "--seeds",
+      "3"
+    ],
+    "sources": [
+      "e53.txt",
+      "e93b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e54_D5_20260929",
+    "script": "experiments/e54_chains.py",
+    "arguments": [
+      "--D",
+      "5",
+      "--steps",
+      "12000",
+      "--seeds",
+      "3"
+    ],
+    "sources": [
+      "e54.txt",
+      "e93b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e62_D90M_20260929",
+    "script": "experiments/e62_charlm.py",
+    "arguments": [
+      "--D",
+      "90000000",
+      "--K",
+      "7",
+      "--test",
+      "1000000"
+    ],
+    "sources": [
+      "e62.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e63_D1M_20260929",
+    "script": "experiments/e63_mixlm.py",
+    "arguments": [
+      "--D",
+      "1000000",
+      "--K",
+      "5",
+      "--test",
+      "1000000"
+    ],
+    "sources": [
+      "e62.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e63_D10M_20260929",
+    "script": "experiments/e63_mixlm.py",
+    "arguments": [
+      "--D",
+      "10000000",
+      "--K",
+      "6",
+      "--test",
+      "1000000"
+    ],
+    "sources": [
+      "e62.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e63_D90M_20260929",
+    "script": "experiments/e63_mixlm.py",
+    "arguments": [
+      "--D",
+      "90000000",
+      "--K",
+      "7",
+      "--test",
+      "1000000"
+    ],
+    "sources": [
+      "e62.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_e66_D90M_20260929",
+    "script": "experiments/e66_wordkeys.py",
+    "arguments": [
+      "--D",
+      "90000000",
+      "--K",
+      "7",
+      "--test",
+      "1000000"
+    ],
+    "sources": [
+      "e62.txt",
+      "e70.txt"
+    ],
+    "mem_cap_kb": 16777216,
+    "rss_cap_kb": 12582912
+  },
+  {
+    "run_tag": "aws_r4_dense_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "2",
+      "--variant",
+      "crl_shadow",
+      "--window",
+      "0.4",
+      "--zero-sum",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "r4dense"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_r4_sparse_32_8_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "2",
+      "--variant",
+      "crl_shadow",
+      "--window",
+      "0.4",
+      "--zero-sum",
+      "1",
+      "--seed",
+      "0",
+      "--fanin-in",
+      "32",
+      "--fanin",
+      "8",
+      "--tag",
+      "r4s32"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_r4_sparse_64_16_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "2",
+      "--variant",
+      "crl_shadow",
+      "--window",
+      "0.4",
+      "--zero-sum",
+      "1",
+      "--seed",
+      "0",
+      "--fanin-in",
+      "64",
+      "--fanin",
+      "16",
+      "--tag",
+      "r4s64"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sym_s0_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sym",
+      "--seed",
+      "0",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sign_s0_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sign",
+      "--seed",
+      "0",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_fa_s0_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_frozen_hidden_s0_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "frozen_hidden",
+      "--seed",
+      "0",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sym_s1_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sym",
+      "--seed",
+      "1",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sign_s1_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sign",
+      "--seed",
+      "1",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_fa_s1_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_frozen_hidden_s1_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "frozen_hidden",
+      "--seed",
+      "1",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sym_s2_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sym",
+      "--seed",
+      "2",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_sign_s2_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_sign",
+      "--seed",
+      "2",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_fa_s2_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_fa",
+      "--seed",
+      "2",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_frozen_hidden_s2_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "frozen_hidden",
+      "--seed",
+      "2",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_drtp_s0_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_drtp",
+      "--seed",
+      "0",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_drtp_s1_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_drtp",
+      "--seed",
+      "1",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m22_crl_drtp_s2_20260929",
+    "script": "experiments/m18_repair.py",
+    "arguments": [
+      "--rule",
+      "crl_drtp",
+      "--seed",
+      "2",
+      "--tag",
+      "m22"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e14_d1_crl_drtp_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "1",
+      "--variant",
+      "crl_drtp",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e14_d3_crl_drtp_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--variant",
+      "crl_drtp",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e14_d1_crl_drtp_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "1",
+      "--variant",
+      "crl_drtp",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e14_d3_crl_drtp_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--variant",
+      "crl_drtp",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f1_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f1_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "1",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f2_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "2",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f2_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "2",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f8_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "8",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f8_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "8",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f16_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "16",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f16_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "16",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f64_crl_fa_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "64",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f64_crl_fired_only_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "64",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg002_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.02",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg005_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.05",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg03_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.3",
+      "--seed",
+      "0",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f1_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f1_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "1",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f2_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "2",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f2_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "2",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f8_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "8",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f8_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "8",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f16_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "16",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f16_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "16",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f64_crl_fa_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "64",
+      "--variant",
+      "crl_fa",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f64_crl_fired_only_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "64",
+      "--variant",
+      "crl_fired_only",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg002_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.02",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg005_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.05",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e15_f4_sg03_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--depth",
+      "3",
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--feedback",
+      "local",
+      "--fanin",
+      "4",
+      "--variant",
+      "crl_fa",
+      "--sigma",
+      "0.3",
+      "--seed",
+      "1",
+      "--tag",
+      "e15"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_rstdp_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "rstdp",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_pool_pg_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "pool_pg",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_nearmiss_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "nearmiss",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_supervised_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "supervised",
+      "--seed",
+      "0",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_rstdp_s1_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "rstdp",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_pool_pg_s1_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "pool_pg",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_nearmiss_s1_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "nearmiss",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_supervised_s1_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "supervised",
+      "--seed",
+      "1",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_rstdp_s2_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "rstdp",
+      "--seed",
+      "2",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_pool_pg_s2_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "pool_pg",
+      "--seed",
+      "2",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_nearmiss_s2_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "nearmiss",
+      "--seed",
+      "2",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_supervised_s2_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "supervised",
+      "--seed",
+      "2",
+      "--tag",
+      "main"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_pool_pg_sig005_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "pool_pg",
+      "--sigma",
+      "0.05",
+      "--seed",
+      "0",
+      "--tag",
+      "sig005"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e13_pool_pg_sig05_s0_20260929",
+    "script": "experiments/e13_bandit.py",
+    "arguments": [
+      "--rule",
+      "pool_pg",
+      "--sigma",
+      "0.5",
+      "--seed",
+      "0",
+      "--tag",
+      "sig05"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_dense_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--tag",
+      "e9dense"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f16_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "16",
+      "--tag",
+      "e9f16"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f16_grow_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "16",
+      "--grow",
+      "2",
+      "--tag",
+      "e9f16g"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f32_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "32",
+      "--tag",
+      "e9f32"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f32_grow_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "32",
+      "--grow",
+      "2",
+      "--tag",
+      "e9f32g"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f64_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "64",
+      "--tag",
+      "e9f64"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e9_f64_grow_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--fanin",
+      "64",
+      "--grow",
+      "2",
+      "--tag",
+      "e9f64g"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b32_s0_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "32",
+      "--tag",
+      "s0_b32",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b1_s0_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "1",
+      "--homeo",
+      "3.125e-05",
+      "--tag",
+      "s0_b1",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b32_s1_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "32",
+      "--tag",
+      "s0_b32",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b1_s1_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "1",
+      "--homeo",
+      "3.125e-05",
+      "--tag",
+      "s0_b1",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b32_s2_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "32",
+      "--tag",
+      "s0_b32",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_s0_b1_s2_20260929",
+    "script": "experiments/e6_hidden.py",
+    "arguments": [
+      "mnist",
+      "--winners",
+      "3",
+      "--hid-frac",
+      "0.6",
+      "--eta-out",
+      "0.01",
+      "--eta-hid",
+      "0.01",
+      "--lr-decay",
+      "0.7",
+      "--deadline",
+      "1",
+      "--psp",
+      "ramp",
+      "--variant",
+      "crl_fa",
+      "--val",
+      "10000",
+      "--epochs",
+      "1",
+      "--batch",
+      "1",
+      "--homeo",
+      "3.125e-05",
+      "--tag",
+      "s0_b1",
+      "--seed",
+      "2"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep_full_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--tag",
+      "p_ep_full"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep_prior2_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--prior",
+      "0.2",
+      "--tag",
+      "p_ep_prior2"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep_prior4_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--prior",
+      "0.4",
+      "--tag",
+      "p_ep_prior4"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_base_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--tag",
+      "p_ep10_base"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_carry_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--tag",
+      "p_ep10_carry"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_cont1_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--continuity",
+      "0.001",
+      "--tag",
+      "p_ep10_cont1"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_cont3_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--continuity",
+      "0.003",
+      "--tag",
+      "p_ep10_cont3"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_cc_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--continuity",
+      "0.001",
+      "--tag",
+      "p_ep10_cc"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_ep10_ask_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--labels",
+      "ask",
+      "--tag",
+      "p_ep10_ask"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_sh10_carry_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "shuffled",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--tag",
+      "p_sh10_carry"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_sh10_cont1_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "shuffled",
+      "--label-rate",
+      "0.1",
+      "--continuity",
+      "0.001",
+      "--tag",
+      "p_sh10_cont1"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_d2_tags_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--delay",
+      "2",
+      "--tag",
+      "p_d2_tags"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_d2_notags_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--delay",
+      "2",
+      "--tags",
+      "0",
+      "--tag",
+      "p_d2_notags"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_bl_base_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "blocked",
+      "--length",
+      "1",
+      "--tag",
+      "p_bl_base"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_bl_cons10_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "blocked",
+      "--length",
+      "1",
+      "--consolidation",
+      "10",
+      "--tag",
+      "p_bl_cons10"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_bl_cons100_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "blocked",
+      "--length",
+      "1",
+      "--consolidation",
+      "100",
+      "--tag",
+      "p_bl_cons100"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_p_iid_full_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "race",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "iid",
+      "--tag",
+      "p_iid_full"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m_iid_full_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "iid",
+      "--tag",
+      "p_iid_full"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m_ep10_carry_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--tag",
+      "p_ep10_carry"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m_ep10_ask_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "episodes",
+      "--label-rate",
+      "0.1",
+      "--carry",
+      "1",
+      "--labels",
+      "ask",
+      "--tag",
+      "p_ep10_ask"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m_bl_base_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "blocked",
+      "--length",
+      "1",
+      "--tag",
+      "p_bl_base"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_m_bl_replay_20260929",
+    "script": "experiments/e7_stream.py",
+    "arguments": [
+      "mlp",
+      "--val",
+      "10000",
+      "--frames",
+      "10000",
+      "--order",
+      "blocked",
+      "--length",
+      "1",
+      "--replay",
+      "1000",
+      "--tag",
+      "p_bl_replay"
+    ],
+    "sources": [
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivot_d2_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1",
+      "--zero-sum",
+      "1",
+      "--tag",
+      "pivot",
+      "--depth",
+      "2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt",
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivot_d3_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1",
+      "--zero-sum",
+      "1",
+      "--tag",
+      "pivot",
+      "--depth",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt",
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivot_d1_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1",
+      "--zero-sum",
+      "1",
+      "--tag",
+      "pivot",
+      "--depth",
+      "1",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt",
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivot_d2_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1",
+      "--zero-sum",
+      "1",
+      "--tag",
+      "pivot",
+      "--depth",
+      "2",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt",
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivot_d3_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1",
+      "--zero-sum",
+      "1",
+      "--tag",
+      "pivot",
+      "--depth",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt",
+      "e7_pilots.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d1_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "1",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d2_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d3_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "3",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d1_ss0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "1",
+      "--self-sigma",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d1_ss1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "1",
+      "--self-sigma",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d3_ss0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "3",
+      "--self-sigma",
+      "0"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d3_ss1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "3",
+      "--self-sigma",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d1_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "1",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d2_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "2",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pivotcc_d3_s1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--variant",
+      "crl_pivot",
+      "--zero-sum",
+      "1",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pivotcc",
+      "--depth",
+      "3",
+      "--seed",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d1_ss2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "1",
+      "--self-sigma",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ssdbg_d3_ss2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "ssdbg",
+      "--depth",
+      "3",
+      "--self-sigma",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cm_fa_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--tag",
+      "cmdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cm_pivot_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--tag",
+      "cmdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cm_pivotcc_ho001_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "1",
+      "--tag",
+      "cmdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pc2_ho001_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "2",
+      "--tag",
+      "pcdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pc2_ho003_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "2",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pcdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pc1_ho003_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "1",
+      "--homeo",
+      "0.03",
+      "--tag",
+      "pcdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pc2_ho001_d2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "2",
+      "--tag",
+      "pcdbg",
+      "--depth",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_pc1_ho001_d2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--center-credit",
+      "1",
+      "--tag",
+      "pcdbg",
+      "--depth",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ward_sj_cc0_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--share-jac",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ward_sj_cc1_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--share-jac",
+      "1",
+      "--center-credit",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_ward_sj_cc1_d2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--share-jac",
+      "1",
+      "--center-credit",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_gauge_pivot_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--gauge",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_gauge_pivot_cc1_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_pivot",
+      "--gauge",
+      "1",
+      "--center-credit",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_gauge_fa_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--gauge",
+      "1",
+      "--tag",
+      "wdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_nonneg_d1_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--zero-sum",
+      "1",
+      "--nonneg",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "nonneg"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cons_fa_d5_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "5",
+      "--variant",
+      "crl_fa",
+      "--zero-sum",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "cons"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_nonneg_d5_s0_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "400",
+      "--val",
+      "10000",
+      "--epochs",
+      "3",
+      "--depth",
+      "5",
+      "--variant",
+      "crl_fa",
+      "--zero-sum",
+      "1",
+      "--nonneg",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "nonneg"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_nn_d1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--nonneg",
+      "1",
+      "--depth",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_nn_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--nonneg",
+      "1",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_sg_d1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--depth",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_sg_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_fa_0.001_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_fa",
+      "--homeo",
+      "0.001"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_pivot_0.001_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_pivot",
+      "--homeo",
+      "0.001"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_fa_0.003_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_fa",
+      "--homeo",
+      "0.003"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_pivot_0.003_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_pivot",
+      "--homeo",
+      "0.003"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_fa_0.01_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_fa",
+      "--homeo",
+      "0.01"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_pivot_0.01_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_pivot",
+      "--homeo",
+      "0.01"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_fa_0.03_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_fa",
+      "--homeo",
+      "0.03"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_pivot_0.03_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_pivot",
+      "--homeo",
+      "0.03"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_fa_0.1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_fa",
+      "--homeo",
+      "0.1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_kap_pivot_0.1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "kdbg",
+      "--variant",
+      "crl_pivot",
+      "--homeo",
+      "0.1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_f16_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--fanin",
+      "16"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_f64_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--fanin",
+      "64"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_f8_k1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--fanin",
+      "8",
+      "--winners",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_f8_k2_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--fanin",
+      "8",
+      "--winners",
+      "2"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_f8_k3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--fanin",
+      "8",
+      "--winners",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_pyr_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--widths",
+      "400,200,100"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_inv_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--widths",
+      "100,200,400"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_pyr_f16_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--widths",
+      "400,200,100",
+      "--fanin",
+      "16"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_dense_k1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--winners",
+      "1",
+      "--certify",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_topo_dense_k3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--depth",
+      "3",
+      "--tag",
+      "topo",
+      "--width",
+      "200",
+      "--winners",
+      "3",
+      "--certify",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_speed_d1_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--speed",
+      "1",
+      "--tag",
+      "spdbg",
+      "--depth",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_speed_d3_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--speed",
+      "1",
+      "--tag",
+      "spdbg",
+      "--depth",
+      "3"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_sg_d5_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--depth",
+      "5"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_cert_nn_d5_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--variant",
+      "crl_fa",
+      "--certify",
+      "1",
+      "--tag",
+      "certdbg",
+      "--nonneg",
+      "1",
+      "--depth",
+      "5"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_probe_fa_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--probe",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "probe",
+      "--variant",
+      "crl_fa"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_probe_frozen_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--probe",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "probe",
+      "--variant",
+      "frozen_hidden"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_probe_local_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--probe",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "probe",
+      "--variant",
+      "crl_fa",
+      "--feedback",
+      "local"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_probe_pivot_20260929",
+    "script": "experiments/e14_depth.py",
+    "arguments": [
+      "--width",
+      "200",
+      "--val",
+      "10000",
+      "--train-limit",
+      "10000",
+      "--epochs",
+      "2",
+      "--zero-sum",
+      "1",
+      "--probe",
+      "1",
+      "--depth",
+      "3",
+      "--tag",
+      "probe",
+      "--variant",
+      "crl_pivot",
+      "--pivot-top",
+      "1"
+    ],
+    "sources": [
+      "deferred_theory.txt"
+    ]
+  }
+]
