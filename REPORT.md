@@ -172,8 +172,9 @@ choices.
 In a matched seed-6 depth-4 run, immediate-only and two-rollout
 continuation-aware threshold credit both finished at **6/128 held-out
 accuracy (4.69%)**. The continuation-aware reserve shift was only
-0.00006/0.00097 loss units per action in epochs 1/2, while the change in mass
-of futures improving by at least 0.05 was zero. At epoch 2, event support was
+0.00006/0.00097 loss units per action in epochs 1/2. At the 0.05 cutoff,
+neither parent nor child had a helpful sampled continuation: 0/48 rollouts per
+side in epoch 1 and 0/54 per side in epoch 2. At epoch 2, event support was
 83.6% / 4.7% / 1.6% / 0.8% across L1–L4; nearly all counterfactual suffix
 correction still landed in the output head. The rollout arm took 224 seconds
 versus 177 seconds for the immediate control. This is evidence that the

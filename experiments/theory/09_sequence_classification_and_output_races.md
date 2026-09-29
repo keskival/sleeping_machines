@@ -3492,7 +3492,9 @@ held-out speakers, and two epochs. Both remained at 6/128 terminal accuracy
 $6.28\times10^{-5}$ then $9.73\times10^{-4}$ loss units per sampled action;
 the change in $B_{0.05}$ was zero in both epochs. Held-out support at epoch 2
 was [83.6%, 4.7%, 1.6%, 0.8%] across L1--L4, versus [100%, 14.8%, 0%, 0%]
-in the immediate arm. Almost all suffix correction norm still landed in the
+in the immediate arm. At the declared $0.05$ loss cutoff, neither parent nor
+child states had an improving sampled continuation: 0/48 per side in epoch 1
+and 0/54 per side in epoch 2. Almost all suffix correction norm still landed in the
 readout head. The additional two-rollout treatment took 224 s versus 177 s for
 the control in this run, with peak process-group RSS around 603 MB and host
 available memory above 11.7 GB. These are one-seed diagnostics: they verify

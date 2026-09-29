@@ -991,12 +991,16 @@ def fig_e83_spike_option_training():
 def fig_e83_optionality_state_value():
     """Compare immediate route credit with a sampled state-value reserve."""
     patterns = {
-        "immediate": "*optionality_immediate_2ep*spk_s6.json",
-        "continuation-aware": "*optionality_rollout_aware_2ep*spk_s6.json",
+        "immediate": ("*optionality_immediate_2ep*spk_s6.json",
+                      "optionality_immediate_2ep"),
+        "continuation-aware": ("*optionality_rollout_aware_2ep*spk_s6.json",
+                               "optionality_rollout_aware_2ep"),
     }
     results = {}
-    for label, pattern in patterns.items():
-        matches = glob.glob(os.path.join(RES, "e83", pattern))
+    for label, (pattern, run_tag) in patterns.items():
+        candidates = glob.glob(os.path.join(RES, "e83", pattern))
+        matches = [path for path in candidates
+                   if load(path).get("args", {}).get("run_tag") == run_tag]
         if len(matches) != 1:
             raise FileNotFoundError(f"expected one E83 optionality result for {label}: {pattern}")
         results[label] = load(matches[0])
@@ -1040,7 +1044,7 @@ def fig_e83_optionality_state_value():
     axes[2].set_ylabel(r"$\Delta\Omega$ ($10^{-3}$ loss/action)")
     axes[2].set_title("C · Tiny reserve estimate")
     axes[2].text(1.5, 1.06,
-                 r"$\Delta B_{0.05}=0$ in both epochs",
+                 "0/48 then 0/54 parent/child rollouts\nbeat the 0.05-loss cutoff",
                  ha="center", fontsize=5.4, color=ORANGE)
 
     fig.suptitle("E83 · state-conditioned optionality training check",
@@ -2059,7 +2063,8 @@ def build():
            "label, route proposal, horizon, and continuation budget; rollout samples estimate that value. It is distinct "
            "from class entropy, true-label surprise, route entropy, and optimizer momentum. A matched immediate-only and "
            "two-rollout lambda=1 depth-4 comparison both remained at 6/128 accuracy. The rollout arm's mean reserve "
-           "change was about 0.001 loss/action by epoch 2, and no sampled future improved loss by the 0.05 cutoff. "
+           "change was about 0.001 loss/action by epoch 2. Neither parent nor child had a sampled future beat the "
+           "0.05 cutoff: 0/48 per side in epoch 1 and 0/54 per side in epoch 2. "
            "Layer-4 support was 0.78%, and almost all measured counterfactual correction still landed in the readout. "
            "This validates the measurement path, not a training gain; the run used one seed and the reserve depends on "
            "the sparse proposal. The two-rollout arm took 224 s versus 177 s for control.", "small"),

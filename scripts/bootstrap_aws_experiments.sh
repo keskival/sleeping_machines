@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Provision the Sleeping Machines experiment host on Ubuntu 24.04 x86_64.
+# Provision the Sleeping Machines experiment host on Ubuntu 24.04/26.04 x86_64.
 # Run from the checkout at /workspace; this installs packages and text8 data,
 # but it never starts an experiment.
 set -Eeuo pipefail
@@ -11,7 +11,7 @@ Usage: scripts/bootstrap_aws_experiments.sh [--cpu|--gpu]
   --cpu  Install the CPU-only PyTorch wheel (default; c7i experiment host).
   --gpu  Install the current PyTorch GPU wheel. Requires an NVIDIA GPU and a
          working driver (use an AWS GPU AMI with a current driver, such as the
-         AWS Deep Learning Base OSS Nvidia Driver GPU AMI for Ubuntu 24.04).
+         AWS Deep Learning Base OSS Nvidia Driver GPU AMI for Ubuntu 24.04 or 26.04).
 EOF
 }
 
@@ -39,13 +39,13 @@ if [[ ! -w "$ROOT" ]]; then
 fi
 
 if [[ ! -r /etc/os-release ]]; then
-  echo "Cannot identify the OS; Ubuntu 24.04 LTS is required." >&2
+  echo "Cannot identify the OS; Ubuntu 24.04 or 26.04 LTS is required." >&2
   exit 2
 fi
 # shellcheck disable=SC1091
 source /etc/os-release
-if [[ "${ID:-}" != ubuntu || "${VERSION_ID:-}" != 24.04 ]]; then
-  echo "Expected Ubuntu 24.04 LTS; found ${PRETTY_NAME:-unknown}." >&2
+if [[ "${ID:-}" != ubuntu || ( "${VERSION_ID:-}" != 24.04 && "${VERSION_ID:-}" != 26.04 ) ]]; then
+  echo "Expected Ubuntu 24.04 or 26.04 LTS; found ${PRETTY_NAME:-unknown}." >&2
   exit 2
 fi
 if [[ "$(dpkg --print-architecture)" != amd64 ]]; then
