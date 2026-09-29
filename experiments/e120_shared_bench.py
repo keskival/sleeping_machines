@@ -85,6 +85,7 @@ def main():
     p.add_argument("--bs", type=int, default=16)
     p.add_argument("--lr", type=float, default=.003)
     p.add_argument("--seed", type=int, default=6)
+    p.add_argument("--value-backward", choices=("full", "winner"), default="full")
     p.add_argument("--legacy-count-calibration", action="store_true",
                    help="reproduce the initial screen's unsupported count scaling")
     args = p.parse_args()
@@ -98,7 +99,8 @@ def main():
     torch.set_num_threads(1)
     torch.manual_seed(args.seed)
     task = BUILDERS[args.task](args.fit, args.dev, args.seed)
-    config = {**task.config, "dim": args.dim, "depth": args.depth, "memory_backend": "linear"}
+    config = {**task.config, "dim": args.dim, "depth": args.depth, "memory_backend": "linear",
+              "value_backward": args.value_backward}
     model = SharedEventModel(**config)
     calibration = calibrate(model, task.fit, args.bs, not args.legacy_count_calibration)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)

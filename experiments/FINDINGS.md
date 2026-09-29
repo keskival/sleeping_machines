@@ -1,5 +1,55 @@
 # Findings log
 
+## E128–E131: useful deep credit exists; winner coupling can defeat a finite representation update (29 September 2026)
+
+**Fitting-only geometry:** 240 utterances, six per class in each of two disjoint
+fitting-speaker groups, at the 72.3% checkpoint with zero context columns.
+Exact and surrogate aggregate group cosines are -0.1183/-0.1228; their mean
+gradient norms are about 10% of the average individual norm. Ordinary balanced
+descent would worsen eight sampled class losses. Nevertheless, an exact
+common-direction certificate across all 20 classes has lower/upper improvement
+bounds 0.08692/0.08994 per unit parameter radius. Exact/surrogate class-gradient
+cosines are 0.9928–0.9992. New context credit has useful support; interference
+and realized boundary changes remain separate issues. No held-out labels were
+used. Full matrices: `results/e128/class_speaker_geometry_20260929.json`.
+
+**A finite counterfactual teacher:** E129 combines exact common descent with
+the surrogate increment while preserving half of each predicted conditional
+improvement. All 40 class/group predicted derivatives are negative, but twelve
+dyadic finite radii fail the declared hard-loss constraints. Every trial lowers
+average fitting loss. No update is accepted; the restored checkpoint retains
+370/512 held-out answers. This is a failed stringent local constraint, not
+evidence that ordinary aggregate-loss training is impossible.
+
+**Causal isolation of the discrepancy:** E130 applies the same fitting-only
+direction with realized choices, frozen winners, frozen arrival order and both
+frozen. At radius 2.44e-5, one realized winner changes and the worst conditional
+loss rises by 3.01e-5. Frozen winners make every condition improve; freezing
+only order leaves that increase. At radius 0.001, fixing winners cuts prediction
+error from 0.00251 to 0.0000451. This establishes the winner-change obstruction
+for the tested update, not the cause of every recognition error. Frozen
+histories are diagnostics rather than deployment models.
+
+**Architecture guided by that isolation:** E131 introduces a separate local
+key stream. It computes actual hard choices/clocks from each observed query;
+the value stream learns new joint content under those computed choices.
+Initial predictions match all 4,096 fitting and 512 held-out parent answers.
+Small/large value perturbations leave audited key winners and clocks exactly
+unchanged. A value step predicts loss change -0.0008240 and realizes -0.0008225.
+Query isolation and checkpoint roundtrip pass. Two added value maps contain
+6,336 trainable scalars; the key stream adds 52,616 frozen parameters and real
+execution cost. Matched value-only continuations use the same source, examples,
+augmentation, calibration, Adam state and update budget. Their quality remains
+an empirical test. Theory §§190–196 separates supported credit, finite utility,
+key/value learning and future optionality.
+
+**Equivalent credit, different runtime (E127):** winner-only value
+differentiation retains every loser score comparison and exact forward values;
+real-checkpoint gradient errors are below 9e-8 relative L2. It reduces estimated
+value-map forward/backward contractions by one third, including recomputation,
+but is about 12% slower on this one-thread CPU. The default stays `full`.
+Neither contraction work nor CPU time is a joule measurement.
+
 ## E122–E125: deep speech improves; consolidated advantages receive explicit work ledgers (29 September 2026)
 
 **Preserved arithmetic:** the common class's phase-only configuration reaches

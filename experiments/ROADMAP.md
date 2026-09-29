@@ -1,5 +1,15 @@
 # Current frontier priorities — 29 September 2026
 
+**Current hardest-gap intervention (E128–E131):** useful common interior
+credit exists, but finite representation updates can change a hard winner and
+defeat that predicted improvement. Fitting-only frozen-winner/order comparisons
+isolate that effect. A separate immutable key stream now computes actual
+choices/clocks while new value maps learn; its query, nesting, finite-credit
+and checkpoint contracts pass. The two same-budget value-only SHD arms compare
+shared and separate streams, with all extra key work counted. Use completed
+quality results to decide the next step, then develop realized joint key/value/
+clock policy credit and compress keys. Theory §§190–196.
+
 **Current consolidation:** arithmetic and longer-context recall are retained.
 The common model supports a 69-scalar periodic path, two-layer synthetic
 configurations and eight-layer speech. Its learned modular rule is certified

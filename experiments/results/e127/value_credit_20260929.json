@@ -1,0 +1,558 @@
+{
+  "status": "completed",
+  "contracts": [
+    {
+      "context": false,
+      "empty_losing_options": false,
+      "options": 3,
+      "exact_forward": true,
+      "gradient_error": {
+        "max_absolute": 4.440892098500626e-16,
+        "relative_l2": 4.129802552231391e-17
+      },
+      "work": [
+        {
+          "winner_counts": [
+            9,
+            13,
+            1
+          ],
+          "mean_margin_ms": 0.7296550057140607,
+          "mean_delay_ms": 5.643399807327761,
+          "scan_compositions": 37,
+          "value_evaluations": 69
+        },
+        {
+          "winner_counts": [
+            9,
+            13,
+            1
+          ],
+          "mean_margin_ms": 0.7296550057140607,
+          "mean_delay_ms": 5.643399807327761,
+          "scan_compositions": 37,
+          "value_evaluations": 92,
+          "differentiable_value_evaluations": 23
+        }
+      ],
+      "full_trace_graph_preserved": true
+    },
+    {
+      "context": true,
+      "empty_losing_options": false,
+      "options": 3,
+      "exact_forward": true,
+      "gradient_error": {
+        "max_absolute": 1.6653345369377348e-16,
+        "relative_l2": 4.017092925678467e-17
+      },
+      "work": [
+        {
+          "winner_counts": [
+            3,
+            13,
+            7
+          ],
+          "mean_margin_ms": 0.9482929733418966,
+          "mean_delay_ms": 5.01416558699716,
+          "scan_compositions": 37,
+          "value_evaluations": 69,
+          "global_scan_compositions": 37,
+          "global_context_packets": 23,
+          "global_state_receivers": 1
+        },
+        {
+          "winner_counts": [
+            3,
+            13,
+            7
+          ],
+          "mean_margin_ms": 0.9482929733418966,
+          "mean_delay_ms": 5.01416558699716,
+          "scan_compositions": 37,
+          "value_evaluations": 92,
+          "differentiable_value_evaluations": 23,
+          "global_scan_compositions": 37,
+          "global_context_packets": 23,
+          "global_state_receivers": 1
+        }
+      ],
+      "full_trace_graph_preserved": true
+    },
+    {
+      "context": true,
+      "empty_losing_options": true,
+      "options": 3,
+      "exact_forward": true,
+      "gradient_error": {
+        "max_absolute": 2.220446049250313e-16,
+        "relative_l2": 4.9361094753772195e-17
+      },
+      "work": [
+        {
+          "winner_counts": [
+            23,
+            0,
+            0
+          ],
+          "mean_margin_ms": 9.999999999999998,
+          "mean_delay_ms": 1.0000000000000002,
+          "scan_compositions": 37,
+          "value_evaluations": 69,
+          "global_scan_compositions": 37,
+          "global_context_packets": 23,
+          "global_state_receivers": 1
+        },
+        {
+          "winner_counts": [
+            23,
+            0,
+            0
+          ],
+          "mean_margin_ms": 9.999999999999998,
+          "mean_delay_ms": 1.0000000000000002,
+          "scan_compositions": 37,
+          "value_evaluations": 92,
+          "differentiable_value_evaluations": 23,
+          "global_scan_compositions": 37,
+          "global_context_packets": 23,
+          "global_state_receivers": 1
+        }
+      ],
+      "full_trace_graph_preserved": true
+    },
+    {
+      "context": false,
+      "empty_losing_options": false,
+      "options": 7,
+      "exact_forward": true,
+      "gradient_error": {
+        "max_absolute": 2.220446049250313e-16,
+        "relative_l2": 3.3363757996839534e-17
+      },
+      "work": [
+        {
+          "winner_counts": [
+            0,
+            0,
+            3,
+            0,
+            6,
+            4,
+            10
+          ],
+          "mean_margin_ms": 0.5898038158342926,
+          "mean_delay_ms": 4.810829935448994,
+          "scan_compositions": 37,
+          "value_evaluations": 161
+        },
+        {
+          "winner_counts": [
+            0,
+            0,
+            3,
+            0,
+            6,
+            4,
+            10
+          ],
+          "mean_margin_ms": 0.5898038158342926,
+          "mean_delay_ms": 4.810829935448994,
+          "scan_compositions": 37,
+          "value_evaluations": 184,
+          "differentiable_value_evaluations": 23
+        }
+      ],
+      "full_trace_graph_preserved": true
+    }
+  ],
+  "cases": [
+    {
+      "checkpoint": "experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt",
+      "checkpoint_sha256": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18",
+      "config": {
+        "global_context_layers": []
+      },
+      "events": 4191,
+      "queries": 4,
+      "depth": 8,
+      "exact_training_logits_summary": true,
+      "gradient_error": {
+        "max_absolute": 3.5762786865234375e-07,
+        "relative_l2": 7.233630583414197e-08
+      },
+      "route_gradient_errors": {
+        "layers.0.route": {
+          "max_absolute": 3.725290298461914e-09,
+          "relative_l2": 1.1740917571501086e-08
+        },
+        "layers.0.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.1.route": {
+          "max_absolute": 2.3283064365386963e-10,
+          "relative_l2": 1.3675921506361988e-10
+        },
+        "layers.1.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.2.route": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 1.5105802830817083e-08
+        },
+        "layers.2.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.3.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.3.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.4.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.4.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.5.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.5.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.6.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.6.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.7.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.7.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      "timings": {
+        "full": {
+          "forward_s": [
+            0.09789075099979527,
+            0.09653543100284878,
+            0.0985094920033589,
+            0.0986389780009631,
+            0.09610330799478106,
+            0.10517665201041382,
+            0.09661326398781966,
+            0.0967094470106531,
+            0.0989971529925242
+          ],
+          "backward_s": [
+            0.14895655500004068,
+            0.1505770299991127,
+            0.15211739699589089,
+            0.1471366290061269,
+            0.15882472399971448,
+            0.15361811900220346,
+            0.1511289790068986,
+            0.15201322599023115,
+            0.15617783900233917
+          ],
+          "forward_backward_s": [
+            0.24684730599983595,
+            0.2471124610019615,
+            0.2506268889992498,
+            0.24577560700709,
+            0.25492803199449554,
+            0.2587947710126173,
+            0.24774224299471825,
+            0.24872267300088424,
+            0.2551749919948634
+          ]
+        },
+        "winner": {
+          "forward_s": [
+            0.11215110898774583,
+            0.11524004700186197,
+            0.11308810900663957,
+            0.11007112999504898,
+            0.11105858800874557,
+            0.11202510599105153,
+            0.11074310200638138,
+            0.11257636900700163,
+            0.11233522499969695
+          ],
+          "backward_s": [
+            0.17774185701273382,
+            0.16251280000142287,
+            0.1698505389940692,
+            0.16183901300246362,
+            0.16818140499526635,
+            0.1710286849993281,
+            0.16577709998819046,
+            0.1765058259916259,
+            0.1635343429952627
+          ],
+          "forward_backward_s": [
+            0.28989296600047965,
+            0.27775284700328484,
+            0.2829386480007088,
+            0.2719101429975126,
+            0.2792399930040119,
+            0.28305379099037964,
+            0.27652020199457183,
+            0.28908219499862753,
+            0.27586956799495965
+          ]
+        }
+      },
+      "median_timings": {
+        "full": {
+          "forward_s": 0.09789075099979527,
+          "backward_s": 0.15201322599023115,
+          "forward_backward_s": 0.24872267300088424
+        },
+        "winner": {
+          "forward_s": 0.11215110898774583,
+          "backward_s": 0.16818140499526635,
+          "forward_backward_s": 0.2792399930040119
+        }
+      },
+      "forward_backward_speedup": 0.8907129323603399,
+      "value_map_forward_backward_flops": {
+        "full": 1255288320,
+        "winner": 836858880
+      },
+      "value_work_boundary": "2 per contraction MAC; all candidate forward + selected recomputation + feature/weight VJPs; excludes other training work",
+      "work": {
+        "full": {
+          "forward_values": 100584,
+          "differentiable_values": 100584
+        },
+        "winner": {
+          "forward_values": 134112,
+          "differentiable_values": 33528
+        }
+      }
+    },
+    {
+      "checkpoint": "experiments/results/e122/d8_n4096_bridge_frozen_s6.pt",
+      "checkpoint_sha256": "5ab414ccbdcb9a38e10396da0c3a81d57be8a0c8d4acced1616059f50c06159d",
+      "config": {
+        "global_context_layers": [
+          3,
+          7
+        ]
+      },
+      "events": 4191,
+      "queries": 4,
+      "depth": 8,
+      "exact_training_logits_summary": true,
+      "gradient_error": {
+        "max_absolute": 4.76837158203125e-07,
+        "relative_l2": 8.86992452819868e-08
+      },
+      "route_gradient_errors": {
+        "layers.0.route": {
+          "max_absolute": 7.450580596923828e-09,
+          "relative_l2": 5.144029202597267e-08
+        },
+        "layers.0.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.1.route": {
+          "max_absolute": 2.9802322387695312e-08,
+          "relative_l2": 2.6128422092597248e-08
+        },
+        "layers.1.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.2.route": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 3.067041021154182e-08
+        },
+        "layers.2.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.3.route": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 2.7832321336518362e-08
+        },
+        "layers.3.route_bias": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 8.976577703379007e-08
+        },
+        "layers.3.bridge_route": {
+          "max_absolute": 3.725290298461914e-09,
+          "relative_l2": 2.6756456605880885e-08
+        },
+        "layers.4.route": {
+          "max_absolute": 7.450580596923828e-09,
+          "relative_l2": 1.69070180078279e-08
+        },
+        "layers.4.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.5.route": {
+          "max_absolute": 7.450580596923828e-09,
+          "relative_l2": 1.7011350550433235e-08
+        },
+        "layers.5.route_bias": {
+          "max_absolute": 9.313225746154785e-10,
+          "relative_l2": 2.144374011692207e-09
+        },
+        "layers.6.route": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 1.65686060427106e-08
+        },
+        "layers.6.route_bias": {
+          "max_absolute": 1.4901161193847656e-08,
+          "relative_l2": 4.1515086479648744e-08
+        },
+        "layers.7.route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.7.route_bias": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "layers.7.bridge_route": {
+          "max_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      "timings": {
+        "full": {
+          "forward_s": [
+            0.1121330939931795,
+            0.11312889299006201,
+            0.11064057299518026,
+            0.1179457079997519,
+            0.11601765699742828,
+            0.1143693420017371,
+            0.11359010598971508,
+            0.11679705999267753,
+            0.11495194400777109
+          ],
+          "backward_s": [
+            0.17633185800514184,
+            0.1793241190025583,
+            0.17837775700900238,
+            0.18062870101130102,
+            0.17738559500139672,
+            0.17985265199968126,
+            0.17803664100938477,
+            0.18024766001326498,
+            0.17865674899076112
+          ],
+          "forward_backward_s": [
+            0.28846495199832134,
+            0.2924530119926203,
+            0.28901833000418264,
+            0.2985744090110529,
+            0.293403251998825,
+            0.29422199400141835,
+            0.29162674699909985,
+            0.2970447200059425,
+            0.2936086929985322
+          ]
+        },
+        "winner": {
+          "forward_s": [
+            0.12963767799374182,
+            0.12611729800119065,
+            0.12633497999922838,
+            0.12771955798962153,
+            0.1244594390009297,
+            0.13394998000876512,
+            0.1269525379902916,
+            0.1269007709925063,
+            0.12833332401351072
+          ],
+          "backward_s": [
+            0.19821147700713482,
+            0.19427104500937276,
+            0.19594241300364956,
+            0.19723857899953146,
+            0.21315306500764564,
+            0.19465584499994293,
+            0.1986384750052821,
+            0.2027805150137283,
+            0.20261297898832709
+          ],
+          "forward_backward_s": [
+            0.32784915500087664,
+            0.3203883430105634,
+            0.32227739300287794,
+            0.324958136989153,
+            0.33761250400857534,
+            0.32860582500870805,
+            0.3255910129955737,
+            0.3296812860062346,
+            0.3309463030018378
+          ]
+        }
+      },
+      "median_timings": {
+        "full": {
+          "forward_s": 0.1143693420017371,
+          "backward_s": 0.17865674899076112,
+          "forward_backward_s": 0.293403251998825
+        },
+        "winner": {
+          "forward_s": 0.1269525379902916,
+          "backward_s": 0.19821147700713482,
+          "forward_backward_s": 0.32784915500087664
+        }
+      },
+      "forward_backward_speedup": 0.8949336837486754,
+      "value_map_forward_backward_flops": {
+        "full": 1414613376,
+        "winner": 943075584
+      },
+      "value_work_boundary": "2 per contraction MAC; all candidate forward + selected recomputation + feature/weight VJPs; excludes other training work",
+      "work": {
+        "full": {
+          "forward_values": 100584,
+          "differentiable_values": 100584
+        },
+        "winner": {
+          "forward_values": 134112,
+          "differentiable_values": 33528
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "/workspace/experiments/e127_value_credit_audit.py": "93f1f14044fbd95e927b6b40d8c70336806cbbdfcdd9aad510961704b771685d",
+    "sleeping_machines/shared_event.py": "e4a84122ca420c7df4467da20ed07998f585df5e3283d6d8a13afa4f8cb7bbc4",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "threads": 1,
+    "device": "cpu"
+  },
+  "max_rss_kb": 483524,
+  "energy_joules": null,
+  "scope": "First-order backend equivalence and alternating one-thread timing; no fitting updates, optimizer or energy measurement"
+}

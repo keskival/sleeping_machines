@@ -177,6 +177,23 @@ nonzero credit but this intervention does not yet improve recognition.
 
 ## Safe reproduction
 
+### Separate key/value learning phase (E131)
+
+`freeze_keys_from_values()` snapshots a local key stream from the initialized
+value carrier. Initialize added context columns to zero before this operation.
+The keys run actual causal local hard races on each observed query. Values
+share their winning choices and clocks, with independently learned global
+content maps. A value update cannot change the key schedule. The method keeps
+winner computation active; it does not use per-example stored winner labels.
+
+Checkpoints use `separate_keys=True` in their model configuration to recreate
+the modules before loading their states. The frozen key stream adds 52,616
+parameters at width 32/depth eight; context value maps add 6,336 trainable
+parameters. Key maps/scans are included in aggregate statistics and also
+reported separately. Keys stay frozen in this learning phase. Joint key-policy
+learning needs counterfactual utility for paired key/value/delay alternatives.
+The original default shared-payload computation remains the compatibility path.
+
 Inspect existing workloads and available memory first. Use a new output tag
 and exactly one line per queue. For example:
 

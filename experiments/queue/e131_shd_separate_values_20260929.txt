@@ -1,0 +1,1 @@
+e131_shd_separate_values_20260929 experiments/e122_shd_continuation.py --tag d8_n4096_separate_values_s6 --augment 1 --limit 4096 --epochs 1 --bs 4 --lr .0003 --seed 6 --checkpoint experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt --global-context-layers 3,7 --train-value-only --separate-keys
