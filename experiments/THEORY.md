@@ -64,6 +64,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Trainability and frontier synthesis](theory/10_trainability_and_frontier_synthesis.md) — §§155–158
 - [Optionality and transferable learning reserve](theory/11_optionality_and_learning_reserve.md) — §§159–163
 - [Marked events and stable deep learning](theory/12_marked_events_and_learning_stability.md) — §§164–165
+- [Serial event transport and sequence credit](theory/13_serial_event_credit.md) — §§166–168: normalized local history, a whole-sequence payload/credit bound, and causal count packets.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map
