@@ -1,0 +1,145 @@
+{
+  "checkpoint": "/workspace/experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+  "split": "train/val_spk",
+  "examples": 128,
+  "batch_size": 4,
+  "conditioning": "nonfiring, nonrefractory at a receiver with at least one actual selected upstream message already arrived; candidate time limited to seq_end + (layer+1)*dmax",
+  "margin_definition": "signed pre-reset voltage margin m=Vd-theta from actual frozen forward pass",
+  "bins": [
+    "[-.25,0)",
+    "[-.5,-.25)",
+    "[-1,-.5)",
+    "[-2,-1)",
+    "(-inf,-2)"
+  ],
+  "per_layer": [
+    {
+      "layer": 1,
+      "valid_cells": 1530192,
+      "nonrefractory_cells": 1434028,
+      "cells_after_input": 1399677,
+      "candidate_counts": [
+        4205,
+        18348,
+        537333,
+        760328,
+        79463
+      ],
+      "examples_with_candidate": [
+        128,
+        128,
+        128,
+        128,
+        128
+      ],
+      "min_margin": -7.705747604370117,
+      "quantile_sample": null,
+      "examples_with_candidate_within_0p25": 128,
+      "examples_with_candidate_within_0p5": 128,
+      "candidate_margin_quantiles_min_p10_p50_p90_p99_max": [
+        -7.512938499450684,
+        -1.6535692930221557,
+        -1.0281804203987122,
+        -0.8092412889003754,
+        -0.42636294841766464,
+        -0.00982046127319336
+      ]
+    },
+    {
+      "layer": 2,
+      "valid_cells": 1632592,
+      "nonrefractory_cells": 1616879,
+      "cells_after_input": 429150,
+      "candidate_counts": [
+        1074,
+        3239,
+        242123,
+        182117,
+        597
+      ],
+      "examples_with_candidate": [
+        81,
+        112,
+        128,
+        128,
+        51
+      ],
+      "min_margin": -3.3269972801208496,
+      "quantile_sample": null,
+      "examples_with_candidate_within_0p25": 81,
+      "examples_with_candidate_within_0p5": 114,
+      "candidate_margin_quantiles_min_p10_p50_p90_p99_max": [
+        -3.1476125717163086,
+        -1.0447834730148315,
+        -1.0,
+        -0.9375975608825684,
+        -0.5027793395519259,
+        -0.011690974235534668
+      ]
+    },
+    {
+      "layer": 3,
+      "valid_cells": 1734992,
+      "nonrefractory_cells": 1732712,
+      "cells_after_input": 108225,
+      "candidate_counts": [
+        57,
+        138,
+        61202,
+        46750,
+        78
+      ],
+      "examples_with_candidate": [
+        13,
+        24,
+        69,
+        69,
+        2
+      ],
+      "min_margin": -7.1580963134765625,
+      "quantile_sample": null,
+      "examples_with_candidate_within_0p25": 13,
+      "examples_with_candidate_within_0p5": 24,
+      "candidate_margin_quantiles_min_p10_p50_p90_p99_max": [
+        -7.076023101806641,
+        -1.0098010778427124,
+        -0.9999998211860657,
+        -0.9828719735145569,
+        -0.76912392616272,
+        -0.010933458805084229
+      ]
+    },
+    {
+      "layer": 4,
+      "valid_cells": 1837392,
+      "nonrefractory_cells": 1835996,
+      "cells_after_input": 18175,
+      "candidate_counts": [
+        7,
+        43,
+        9742,
+        8347,
+        36
+      ],
+      "examples_with_candidate": [
+        2,
+        4,
+        9,
+        9,
+        2
+      ],
+      "min_margin": -6.661708354949951,
+      "quantile_sample": null,
+      "examples_with_candidate_within_0p25": 2,
+      "examples_with_candidate_within_0p5": 4,
+      "candidate_margin_quantiles_min_p10_p50_p90_p99_max": [
+        -5.521471977233887,
+        -1.0144693374633789,
+        -1.0,
+        -0.9883015215396881,
+        -0.7182926642894741,
+        -0.024148941040039062
+      ]
+    }
+  ]
+}

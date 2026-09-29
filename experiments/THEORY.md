@@ -60,7 +60,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Vector dynamics and scaling](theory/08_vector_memory_and_deep_stacks.md) — §§104–106
 - [Vector memory, retrieval, and deep local learning](theory/08b_memory_retrieval_and_deep_learning.md) — §§107–111
 - [Sparse attention and depth bounds](theory/08c_sparse_attention_and_depth_bounds.md) — §§112–114
-- [Sequential classification and output races](theory/09_sequence_classification_and_output_races.md) — §§115–153
+- [Sequential classification and output races](theory/09_sequence_classification_and_output_races.md) — §§115–154
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

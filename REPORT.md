@@ -198,6 +198,21 @@ L3/L4 events or improve recognition. This points to route-proposal support
 and event survival as the bottleneck; simply training the current configuration
 longer is not a remedy. The estimate is still a one-seed, 128-example pilot.
 
+**Conditioned spike-margin support (§154).** A frozen pass now counts only
+nonfiring, nonrefractory margin states after an actually selected upstream
+message reached the receiver. In the current −0.5-to-0 proposal band, eligible
+time-receiver cells fell from **22,553 / 4,313 / 195 / 50** across L1–L4;
+utterances with at least one candidate fell from **128 / 114 / 24 / 4**. In the
+narrower −0.25-to-0 band, the counts were 4,205 / 1,074 / 57 / 7 across
+128 / 81 / 13 / 2 utterances. These time cells are correlated and are not
+independent route choices. Many broader-band margins sit at the −1 reset
+baseline, so widening the sampler indiscriminately could create unsupported
+spikes. This is a direct measurement of a sharp loss of near-threshold
+proposal support with depth, not evidence of improved accuracy or proof that
+this is the only bottleneck.
+
+![E83 near-threshold spike proposal support after actual upstream messages](report/figures/e83_conditioned_margin_support.png)
+
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
 These are meaningful capability and performance signals, especially the text8 result and the ability to learn retrieval
