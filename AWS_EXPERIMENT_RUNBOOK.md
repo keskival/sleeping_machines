@@ -4,7 +4,7 @@ This provisions a single-purpose EC2 host for the Sleeping Machines queues. The 
 
 ## Choose the instance
 
-- **CPU queue and E77:** `c7i.4xlarge`, On-Demand, x86_64 Ubuntu 24.04 LTS. It has 16 vCPUs and 32 GiB RAM. E77 still runs on CPU.
+- **CPU queue and E77:** `c7i.4xlarge`, On-Demand, x86_64 Ubuntu 24.04 or 26.04 LTS. It has 16 vCPUs and 32 GiB RAM. E77 still runs on CPU.
 - **E64 CUDA baseline pilot:** `g7e.2xlarge` for one RTX PRO Server 6000 Blackwell GPU with 96 GB GPU memory and 64 GiB host RAM. `g6e.2xlarge` is the lower-memory comparison: one L40S with 48 GB GPU memory and the same host RAM. Confirm regional availability and compare current rates in the [AWS Pricing Calculator](https://calculator.aws/#/). AWS publishes the current [G7e specifications](https://aws.amazon.com/ec2/instance-types/g7e/) and [accelerated instance table](https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html).
 
 The E64 baseline source accepts `--device cuda`; CPU remains the default. The CUDA path limits PyTorch's caching allocator to half of total visible VRAM by default and saves CPU-portable checkpoints for E76. This cap covers PyTorch allocator use, not memory already used by other GPU processes; inspect `nvidia-smi` first. CUDA execution has not yet been validated on this CPU-only workspace, so begin with the short pilot below. E77 is not CUDA-enabled. The safe runner does not monitor GPU VRAM, so keep `nvidia-smi` visible during any GPU pilot. PyTorch documents the allocator limit [here](https://docs.pytorch.org/docs/stable/generated/torch.cuda.memory.set_per_process_memory_fraction.html).
@@ -13,7 +13,7 @@ Use On-Demand for the first runs because the current training scripts do not sav
 
 ## Launch and secure the host
 
-1. In EC2, choose the instance above and Ubuntu 24.04 x86_64. For the GPU route, choose the current **Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 24.04)**; its [AWS documentation](https://docs.aws.amazon.com/dlami/latest/devguide/aws-deep-learning-x86-base-gpu-ami-ubuntu-24-04.html) publishes the latest AMI lookup and driver releases. Confirm `nvidia-smi` works after boot.
+1. In EC2, choose the instance above and Ubuntu 24.04 or 26.04 x86_64. For the GPU route, choose the current **Deep Learning Base OSS Nvidia Driver GPU AMI** for the same Ubuntu version; AWS publishes the [Ubuntu 24.04](https://docs.aws.amazon.com/dlami/latest/devguide/aws-deep-learning-x86-base-gpu-ami-ubuntu-24-04.html) and [Ubuntu 26.04](https://docs.aws.amazon.com/dlami/latest/devguide/aws-deep-learning-x86-base-gpu-ami-ubuntu-26-04.html) AMI lookups and driver releases. Confirm `nvidia-smi` works after boot.
 2. Set the root EBS volume to 100 GiB gp3. Add an inbound SSH rule restricted to your current IP. Use an EC2 instance profile if the host needs S3; do not put AWS keys or Git tokens in this script or shell history.
 3. Create a budget alert before leaving the instance running. Stop it when experiments are idle; export results first if the EBS volume may be deleted.
 
@@ -31,7 +31,7 @@ Use your approved Git authentication method if the repository is private. Do not
 
 ## Install the experiment environment
 
-The installer is idempotent and does not start any experiment. It installs OS utilities used by the safe runner, creates `.venv-docker`, installs repository requirements plus `h5py` and the selected PyTorch wheel, and downloads the 100 MB text8 file expected at `data/text8/text8`.
+The installer supports Ubuntu 24.04 and 26.04 LTS on x86_64 and does not start any experiment. It installs OS utilities used by the safe runner, creates `.venv-docker`, installs repository requirements plus `h5py` and the selected PyTorch wheel, and downloads the 100 MB text8 file expected at `data/text8/text8`.
 
 For the CPU host:
 
@@ -115,5 +115,6 @@ When a queue finishes, review `experiments/FINDINGS.md` and the relevant result 
 - [AWS G7e](https://aws.amazon.com/ec2/instance-types/g7e/)
 - [AWS accelerated instance specifications](https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html)
 - [AWS Deep Learning Base GPU AMI, Ubuntu 24.04](https://docs.aws.amazon.com/dlami/latest/devguide/aws-deep-learning-x86-base-gpu-ami-ubuntu-24-04.html)
+- [AWS Deep Learning Base GPU AMI, Ubuntu 26.04](https://docs.aws.amazon.com/dlami/latest/devguide/aws-deep-learning-x86-base-gpu-ami-ubuntu-26-04.html)
 - [PyTorch Linux installation guidance](https://pytorch.org/get-started/locally/)
 - [text8 source archive](https://mattmahoney.net/dc/text8.zip)

@@ -21,8 +21,9 @@ with a two-rollout, continuation-aware utility ($\lambda=1$), both with causal
 per-layer suffix-gradient substitutions, 120 training examples, 128
 held-out speakers, and two epochs. Both arms ended at 6/128 terminal accuracy
 (4.69%). The rollout arm's mean reserve change was $6.28\times10^{-5}$ then
-$9.73\times10^{-4}$ loss units/action; change in beneficial-continuation mass
-at the 0.05-loss cutoff was zero in both epochs. Epoch-2 layer support was
+$9.73\times10^{-4}$ loss units/action. At the 0.05-loss cutoff, both parent
+and child had zero improving sampled futures: 0/48 per side in epoch 1 and
+0/54 per side in epoch 2. Epoch-2 layer support was
 83.6% / 4.7% / 1.6% / 0.8% (L1--L4), compared with 100% / 14.8% / 0% / 0% for
 immediate-only. Nearly all measured suffix-correction norm still landed on
 the output head. The treatment took 224 s versus 177 s control, at about 603

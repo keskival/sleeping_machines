@@ -15,7 +15,7 @@
   "readout_fusion": "deepest",
   "input_count_payload": "off",
   "early_event_skip": false,
-  "run_tag": "optionality_immediate_2ep",
+  "run_tag": "optionality_immediate_6ep",
   "prefix_samples": 2,
   "prefix_horizon_ms": 1000.0,
   "prefix_window_start": 0.0,
