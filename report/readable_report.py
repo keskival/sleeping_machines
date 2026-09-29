@@ -68,7 +68,8 @@ def evidence(M):
                     if result_path.name == "provenance.json":
                         continue
                     value = json.loads(result_path.read_text()).get("test_bpc")
-                    if isinstance(value, (int, float)):
+                    if (isinstance(value, (int, float)) and not isinstance(value, bool)
+                            and math.isfinite(value) and value > 0):
                         return float(value)
             except (OSError, ValueError, TypeError, IndexError):
                 continue
@@ -82,6 +83,23 @@ def evidence(M):
             "tf90": aws_e64_bpc("tf", 90_000_000),
             "recall_tf": max(p["n32"] for f in (RES/"e61").glob("tf_K32_n8*.json")
                              for row in json.loads(f.read_text())["rows"] for p in row["curve"])}
+
+
+def language_90m_reference_text(ev):
+    """Publish each completed control without treating validation logs as test evidence."""
+    scores = [f"{ev['e79'][90_000_000]:.3f} for the native mixture"]
+    pending = []
+    for key, label in (("lstm90", "LSTM"), ("tf90", "four-layer Transformer")):
+        if ev[key] is None:
+            pending.append(label)
+        else:
+            scores.append(f"{ev[key]:.3f} for the {label}")
+    text = "At 90M, completed held-out test scores are " + ", ".join(scores) + ". "
+    if pending:
+        text += "The 90M " + " and ".join(pending) + " reference results are pending. "
+    text += ("These are exploratory single-seed comparisons on the same text8 split; "
+             "model sizes, training passes and computation are not matched. ")
+    return text
 
 
 def accomplishments_figure(M, ev):
@@ -241,10 +259,7 @@ def blocks(M, tasks, ev):
          f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
          f"<b>{ev['e79'][10_000_000]:.3f} test bits per character</b>, ahead of the completed LSTM ({ev['lstm10']:.3f}) "
          f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split. "
-         + (f"At 90M, the held-out scores are {ev['e79'][90_000_000]:.3f} for the native mixture, "
-            f"{ev['lstm90']:.3f} for the LSTM, and {ev['tf90']:.3f} for the four-layer Transformer. "
-            if ev["lstm90"] is not None and ev["tf90"] is not None else
-            "The matched 90M LSTM and Transformer controls are queued. ")
+         + language_90m_reference_text(ev)
          + "Lower bits per character means better prediction.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
          "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
