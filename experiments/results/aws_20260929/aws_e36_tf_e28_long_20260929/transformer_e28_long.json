@@ -1,0 +1,90 @@
+{
+ "args": {
+  "task": "e28",
+  "sizes": "32x2,64x2,64x4",
+  "episodes": 2000000,
+  "batch": 64,
+  "lr": 0.001,
+  "seeds": 2,
+  "tag": "long",
+  "p": 17,
+  "frac": 0.3,
+  "wd": 0.0,
+  "ntrain": 0,
+  "reltime": 0
+ },
+ "rows": [
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 0,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9965000152587891,
+   "params": 26448,
+   "tokens_per_episode": 6.857,
+   "macs_per_episode": 175047.993472,
+   "wall_s": 268.1
+  },
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 0,
+   "d": 64,
+   "layers": 2,
+   "acc": 0.9980000257492065,
+   "params": 102032,
+   "tokens_per_episode": 6.857,
+   "macs_per_episode": 687131.250944,
+   "wall_s": 352.1
+  },
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 0,
+   "d": 64,
+   "layers": 4,
+   "acc": 0.9950000047683716,
+   "params": 202000,
+   "tokens_per_episode": 6.857,
+   "macs_per_episode": 1373238.501888,
+   "wall_s": 540.8
+  },
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 1,
+   "d": 32,
+   "layers": 2,
+   "acc": 0.9959999918937683,
+   "params": 26448,
+   "tokens_per_episode": 6.861,
+   "macs_per_episode": 175153.321088,
+   "wall_s": 271.3
+  },
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 1,
+   "d": 64,
+   "layers": 2,
+   "acc": 0.9959999918937683,
+   "params": 102032,
+   "tokens_per_episode": 6.861,
+   "macs_per_episode": 687538.5141759999,
+   "wall_s": 354.7
+  },
+  {
+   "task": "e28",
+   "reltime": 0,
+   "seed": 1,
+   "d": 64,
+   "layers": 4,
+   "acc": 0.996999979019165,
+   "params": 202000,
+   "tokens_per_episode": 6.861,
+   "macs_per_episode": 1374053.0283519998,
+   "wall_s": 541.8
+  }
+ ]
+}
