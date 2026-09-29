@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import numpy as np
@@ -55,7 +56,18 @@ def main():
             "common_neural_presentations":len(task.fit)*8,"reference_presentations":len(task.fit)*8,
             "epochs":8,"common_depth":8,"reference_depth":2,"width":32,
             "memory_fitting":common["protocol"],"same_examples":True})
-    result={"status":"completed","rows":rows,
+    phase=read(Path("experiments/results/e124/modular_phase_only_s6_200.json"))
+    teachers={"phase":{"fitting_presentations":phase["fitting_presentations"],
+                        "mistaken_updates":phase["local_updates"],
+                        "learned_scalar_update_visits":5*phase["local_updates"],
+                        "note":"Three position-tagged symbol offsets, one global offset and one class clock per mistaken update; integer counter excluded"}}
+    for name in ("lstm","tf"):
+        ref=read(Path("experiments/results/e123")/f"modular_{name}_d32_l2_s6.json")
+        steps=ref["args"]["epochs"]*math.ceil(len(ref["fit_ids"])/ref["args"]["bs"])
+        teachers[name]={"fitting_presentations":ref["fitting_presentations"],"optimizer_steps":steps,
+                        "parameters":ref["parameters"],"learned_scalar_update_visits":steps*ref["parameters"],
+                        "note":"Dense Adam parameter visits; excludes momentum/variance state updates and backward arithmetic"}
+    result={"status":"completed","rows":rows,"arithmetic_teacher_work":teachers,
         "scope":"FLOPs count 2 per dense contraction/scan MAC; per-prefix inference without padding. Training-forward uses recorded carrier packets, all winning/losing values and scan combines. These are estimates for these contractions, not total runtime FLOPs or joules. Nonlinearities, sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer excluded. Reference uses same neural examples/schedule but no common model's separately fitted evidence bank.",
         "source_sha256":{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in
                          [Path(__file__),Path("experiments/e124_work_audit.py")]}}

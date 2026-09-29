@@ -78,3 +78,71 @@ Equal bits give larger $|S|$ than opposite bits. An affine head separates
 their bump values. E126 constructs this computation and classifies all four
 patterns with positive margin 0.00338. This is a representability witness,
 not an empirical claim that gradient descent learned XOR.
+
+### Conditional stability through depth
+
+Fix receiver choices, winning choices, counts and arrival times. Normalized
+memory is a causal positive averaging operator with row sums at most one.
+The separately bounded local and context maps therefore make the residual
+correction $F_l$ at most 2-Lipschitz in the maximum norm across packet payloads;
+without context its bound is one. For $x\mapsto x+\alpha F_l(x)$,
+
+$$(1-a_l\alpha)\|x-y\|_\infty\le
+ \|x+\alpha F_l(x)-y-\alpha F_l(y)\|_\infty\le
+ (1+a_l\alpha)\|x-y\|_\infty,\tag{189.2}$$
+
+where $a_l=2$ for context layers and one otherwise. If $a_l\alpha<1$,
+the inverse is Lipschitz; the adjoint Jacobian has corresponding lower/upper
+bounds in the dual $\ell_1$ norm wherever differentiable. With $\alpha=\beta/L$
+and $m$ context layers, the composed bounds are
+
+$$\prod_l(1-a_l\beta/L)
+ =(1-\beta/L)^{L-m}(1-2\beta/L)^m,
+\quad \prod_l(1+a_l\beta/L).\tag{189.3}$$
+
+These stay finite and nonzero as depth grows at fixed $\beta$, including the
+all-context limit $e^{-2\beta}$ to $e^{2\beta}$. The eight-layer/two-context
+configuration has lower bound approximately 0.252 and upper bound 3.168.
+This protects payload/adjoint transport under the stated frozen topology and
+clock conditions. It does not prove route discovery, individual parameter
+gradient support, Euclidean conditioning independent of packet dimension,
+generalization or optimization across changing arrival orders.
+
+### Teaching a zero-initialized context map
+
+For a realized choice, value-map credit at zero is the outer product of its
+local preactivation teacher with $f^G_{ik}$, scaled by $\alpha$ and the tanh
+derivative. The independent normalization is constant around the new zero
+matrix. Existing parameters therefore retain their old exact gradients while
+the added columns can receive a nonzero first-order signal. The new route
+columns likewise receive score/timing and the existing detached loser credit
+multiplied by global features. That surrogate remains distinct from an exact
+gradient at a discrete route boundary.
+
+The real-checkpoint E126 contract gives exact initial logits, summaries,
+winners and existing parameter gradients. The four new map gradient norms
+are 5.963, 0.236, 5.719 and 0.704. Query isolation is preserved within
+$1.43\times10^{-6}$; changing a future input leaves the first context payload
+exactly unchanged. Two width-32 context layers add 6,534 parameters. A matched
+one-epoch SHD continuation starts from the 72.3% checkpoint with the old Adam
+state, identical fitting/augmentation RNG and learning rate. Only new columns
+receive fresh Adam state. The contract proves a reachable teaching direction
+and removes the stated expressivity obstruction; held-out improvement remains
+an empirical question.
+
+This also constrains optionality. If every alternative at every layer stays
+inside the same disconnected active components, adding more race alternatives
+or shadow samples cannot represent the excluded joint decision. Their attainable
+correction space inherits the same information restriction. The context columns
+add a different source of conditional information while leaving the initial
+forward choice unchanged. Count useful counterfactuals by independent attainable
+corrections and communication support, not by nominal alternatives times depth.
+
+The full-update continuation finishes at 351/512 (68.6%) versus the unchanged
+starting checkpoint's 370/512. The added maps learn nonzero norms, but this
+screen does not improve SHD. The next arm imposes the optimization constraint
+$\Delta\theta_{\rm old}=0$ and teaches only the added context columns. Both
+arms share initial predictions, examples, augmentation RNG and update schedule.
+This tests whether the new attainable subspace helps without drift of existing
+parameters. Holding those parameters fixed is not a guarantee of preserving
+their predictions once new context changes the winning computation.
