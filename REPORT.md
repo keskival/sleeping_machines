@@ -18,6 +18,7 @@ Runs below passed the runner and finite-metric checks. These early outcomes are 
 | `aws_e64_tf_D1M_checkpoint_20260929` | `experiments/e64_lm_baselines.py` | test_bpc=2.367; best_valid_bpc=2.3447 | 3413.784 s | 2248972 KB |
 | `aws_e76_attention_work_D1M_20260929` | `experiments/e76_attention_work.py` | Completed; inspect the saved result for measurements. | 5.997 s | 1281080 KB |
 | `aws_e68_recall_R16_s0_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.176 | 531.614 s | 516624 KB |
+| `aws_e68_recall_R0_s1_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.189 | 45.6 s | 470124 KB |
 
 E68 seed-0 synthetic recall, 8,000 updates (512,000 sequences): R=0: 18.5%, R=1: 18.4%, R=4: 18.2%.
 <!-- AWS_BENCHMARKS_END -->
