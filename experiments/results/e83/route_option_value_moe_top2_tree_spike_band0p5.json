@@ -1,0 +1,3070 @@
+{
+  "checkpoint": "/workspace/experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_moe_top2_route_swap_cfnorm0_b0.5_sg0.25_w1_dl5_lr0.001_gc1_topk2_swaps1_sb0.5_spk_s6.pt",
+  "run_tag": "moe_top2_tree_spike_band0p5",
+  "split": "train/val_spk",
+  "examples_requested": 32,
+  "examples_used": 32,
+  "trees_with_factual_errors": 8,
+  "batch_size": 4,
+  "depth": 4,
+  "route_topk": 2,
+  "proposal": {
+    "condition": "target selected among factual errors by error and entropy",
+    "route_candidate_weights": "exp(-route_margin / temperature)",
+    "route_mode": "spike",
+    "route_birth": "activate a near-zero closed gate only when source event has unused top-k capacity",
+    "spike_birth": "force one nonfiring, near-threshold, nonrefractory receiver at an exogenous prefix horizon",
+    "temperature": "base_temperature + temperature_span * mean(normalized_entropy, 1-p_true)",
+    "swap_probability": "swap_floor + swap_uncertainty_span * mean(normalized_entropy, 1-p_true)",
+    "base_temperature": 0.05,
+    "temperature_span": 0.45,
+    "swap_floor": 0.05,
+    "swap_uncertainty_span": 0.45,
+    "max_swap_probability": 0.5,
+    "sampled_route_probability_recorded": true
+  },
+  "tree_backup": {
+    "rule": "tau*log((1-rho)*exp(V_no/tau) + rho*exp(V_swap/tau))",
+    "temperature": 0.1,
+    "learning_weights": [
+      0.0,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "interpretation": "one scalar is recursively propagated from each descendant; one route alternative is sampled from q at each state, not exhaustive over all candidates"
+  },
+  "virtual_update": {
+    "optimizer": "one-step suffix-only clipped SGD diagnostic",
+    "learning_rate": 0.001,
+    "gradient_clip_norm": 1.0,
+    "suffix": "layers strictly after the last forced swap plus deepest event head",
+    "weights_restored_after_each_replay": true,
+    "forced_route_indices_stable": "all layers through the last forced swap are frozen during its suffix update"
+  },
+  "trees": [
+    {
+      "subset_index": 1,
+      "batch_index": 0,
+      "label": 5,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.05561098828911781,
+      "factual_normalized_entropy": 0.9975995421409607,
+      "factual_loss": 2.9613780975341797,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          10,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          10,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.9613780975341797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          10,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          10,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.9613780975341797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 31,
+              "sampled_route_probability": 0.032543901388435,
+              "spike_time": 148,
+              "spike_unit": 14,
+              "threshold_margin": -0.413826048374176
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            10,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 197,
+              "sampled_route_probability": 0.00679981441785333,
+              "spike_time": 491,
+              "spike_unit": 0,
+              "threshold_margin": -0.19087690114974976
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 197,
+              "sampled_route_probability": 0.00679981441785333,
+              "spike_time": 491,
+              "spike_unit": 0,
+              "threshold_margin": -0.19087690114974976
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 31,
+              "sampled_route_probability": 0.028953024387503738,
+              "spike_time": 154,
+              "spike_unit": 7,
+              "threshold_margin": -0.4707576632499695
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            10,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            11,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 31,
+            "sampled_route_probability": 0.032543901388435,
+            "spike_time": 148,
+            "spike_unit": 14,
+            "threshold_margin": -0.413826048374176
+          },
+          "candidate_count": 31,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 31,
+            "sampled_route_probability": 0.028953024387503738,
+            "spike_time": 154,
+            "spike_unit": 7,
+            "threshold_margin": -0.4707576632499695
+          },
+          "candidate_count": 31,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 197,
+            "sampled_route_probability": 0.00679981441785333,
+            "spike_time": 491,
+            "spike_unit": 0,
+            "threshold_margin": -0.19087690114974976
+          },
+          "candidate_count": 197,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 7,
+      "batch_index": 1,
+      "label": 7,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04139810428023338,
+      "factual_normalized_entropy": 0.9973629117012024,
+      "factual_loss": 3.0503673553466797,
+      "tree_node_count": 13,
+      "tree_leaf_count": 6,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          11,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          11,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 3.0503673553466797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          11,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          11,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 3.0503673553466797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 3,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 18,
+              "sampled_route_probability": 0.056003441750737785,
+              "spike_time": 237,
+              "spike_unit": 7,
+              "threshold_margin": -0.28286224603652954
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            11,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 18,
+              "sampled_route_probability": 0.056003441750737785,
+              "spike_time": 237,
+              "spike_unit": 7,
+              "threshold_margin": -0.28286224603652954
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 3,
+              "candidate_count": 7,
+              "sampled_route_probability": 0.14237084923188614,
+              "spike_time": 304,
+              "spike_unit": 12,
+              "threshold_margin": -0.4813117980957031
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 3,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            11,
+            1,
+            1,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            1,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 3,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 137,
+              "sampled_route_probability": 0.006313691621476174,
+              "spike_time": 315,
+              "spike_unit": 0,
+              "threshold_margin": -0.39318084716796875
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            12,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 4,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 137,
+              "sampled_route_probability": 0.006313691621476174,
+              "spike_time": 315,
+              "spike_unit": 0,
+              "threshold_margin": -0.39318084716796875
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 18,
+              "sampled_route_probability": 0.07358120030395247,
+              "spike_time": 234,
+              "spike_unit": 7,
+              "threshold_margin": -0.14907866716384888
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            12,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 5,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 137,
+              "sampled_route_probability": 0.006313691621476174,
+              "spike_time": 315,
+              "spike_unit": 0,
+              "threshold_margin": -0.39318084716796875
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 18,
+              "sampled_route_probability": 0.07358120030395247,
+              "spike_time": 234,
+              "spike_unit": 7,
+              "threshold_margin": -0.14907866716384888
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 3,
+              "candidate_count": 17,
+              "sampled_route_probability": 0.056487125417120025,
+              "spike_time": 296,
+              "spike_unit": 12,
+              "threshold_margin": -0.3951016068458557
+            }
+          ],
+          "swap_count": 3,
+          "last_swapped_layer": 3,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            11,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            12,
+            1,
+            1,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            1,
+            1,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 3,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 3,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 3,
+            "candidate_count": 7,
+            "sampled_route_probability": 0.14237084923188614,
+            "spike_time": 304,
+            "spike_unit": 12,
+            "threshold_margin": -0.4813117980957031
+          },
+          "candidate_count": 7,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 18,
+            "sampled_route_probability": 0.056003441750737785,
+            "spike_time": 237,
+            "spike_unit": 7,
+            "threshold_margin": -0.28286224603652954
+          },
+          "candidate_count": 18,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 3,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 3,
+            "candidate_count": 17,
+            "sampled_route_probability": 0.056487125417120025,
+            "spike_time": 296,
+            "spike_unit": 12,
+            "threshold_margin": -0.3951016068458557
+          },
+          "candidate_count": 17,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 18,
+            "sampled_route_probability": 0.07358120030395247,
+            "spike_time": 234,
+            "spike_unit": 7,
+            "threshold_margin": -0.14907866716384888
+          },
+          "candidate_count": 18,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 137,
+            "sampled_route_probability": 0.006313691621476174,
+            "spike_time": 315,
+            "spike_unit": 0,
+            "threshold_margin": -0.39318084716796875
+          },
+          "candidate_count": 137,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 11,
+      "batch_index": 2,
+      "label": 15,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.05338585749268532,
+      "factual_normalized_entropy": 0.9974689483642578,
+      "factual_loss": 2.974764823913574,
+      "tree_node_count": 7,
+      "tree_leaf_count": 2,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          6,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          6,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.974764823913574,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          6,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          6,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.974764823913574,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 0,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 111,
+              "sampled_route_probability": 0.007450026309210876,
+              "spike_time": 231,
+              "spike_unit": 10,
+              "threshold_margin": -0.45134449005126953
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019648075103759766,
+          "counterfactual_suffix_progress": 0.0019648075103759766,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.964959871110467,
+          "counterfactual_suffix_gradient_norm": 1.964959871110467,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 111,
+            "sampled_route_probability": 0.007450026309210876,
+            "spike_time": 231,
+            "spike_unit": 10,
+            "threshold_margin": -0.45134449005126953
+          },
+          "candidate_count": 111,
+          "p_true": 0.05338585749268532,
+          "normalized_entropy": 0.9974689483642578,
+          "error": 0.9466141425073147,
+          "swap_probability": 0.48741869544610383,
+          "proposal_temperature": 0.48741869544610383,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 12,
+      "batch_index": 3,
+      "label": 14,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.050731807947158813,
+      "factual_normalized_entropy": 0.9975073933601379,
+      "factual_loss": 2.984109878540039,
+      "tree_node_count": 7,
+      "tree_leaf_count": 2,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          4,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          4,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.984109878540039,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          4,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          4,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.984109878540039,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 0,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            4,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            4,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 130,
+              "sampled_route_probability": 0.009132981237403411,
+              "spike_time": 407,
+              "spike_unit": 8,
+              "threshold_margin": -0.272943377494812
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            4,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            5,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.001955747604370117,
+          "counterfactual_suffix_progress": 0.001955747604370117,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.955900402335898,
+          "counterfactual_suffix_gradient_norm": 1.955900402335898,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 130,
+            "sampled_route_probability": 0.009132981237403411,
+            "spike_time": 407,
+            "spike_unit": 8,
+            "threshold_margin": -0.272943377494812
+          },
+          "candidate_count": 130,
+          "p_true": 0.050731807947158813,
+          "normalized_entropy": 0.9975073933601379,
+          "error": 0.9492681920528412,
+          "swap_probability": 0.4880245067179203,
+          "proposal_temperature": 0.4880245067179203,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 18,
+      "batch_index": 4,
+      "label": 17,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04999999701976776,
+      "factual_normalized_entropy": 0.9973781704902649,
+      "factual_loss": 2.994420289993286,
+      "tree_node_count": 12,
+      "tree_leaf_count": 5,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.994420289993286,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.994420289993286,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 2,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 1,
+              "sampled_route_probability": 1.0,
+              "spike_time": 603,
+              "spike_unit": 5,
+              "threshold_margin": -0.4980107545852661
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            8,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 1,
+              "sampled_route_probability": 1.0,
+              "spike_time": 603,
+              "spike_unit": 5,
+              "threshold_margin": -0.4980107545852661
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 3,
+              "candidate_count": 9,
+              "sampled_route_probability": 0.12137648162815369,
+              "spike_time": 655,
+              "spike_unit": 12,
+              "threshold_margin": -0.33594048023223877
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 3,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            8,
+            1,
+            1,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            1,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 3,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 160,
+              "sampled_route_probability": 0.006319115250983524,
+              "spike_time": 188,
+              "spike_unit": 2,
+              "threshold_margin": -0.36422961950302124
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            9,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        },
+        {
+          "leaf_index": 4,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 160,
+              "sampled_route_probability": 0.006319115250983524,
+              "spike_time": 188,
+              "spike_unit": 2,
+              "threshold_margin": -0.36422961950302124
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 2,
+              "sampled_route_probability": 0.49944364879895653,
+              "spike_time": 216,
+              "spike_unit": 5,
+              "threshold_margin": -0.4990970492362976
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            9,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 3,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 3,
+            "candidate_count": 9,
+            "sampled_route_probability": 0.12137648162815369,
+            "spike_time": 655,
+            "spike_unit": 12,
+            "threshold_margin": -0.33594048023223877
+          },
+          "candidate_count": 9,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 1,
+            "sampled_route_probability": 1.0,
+            "spike_time": 603,
+            "spike_unit": 5,
+            "threshold_margin": -0.4980107545852661
+          },
+          "candidate_count": 1,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 2,
+            "sampled_route_probability": 0.49944364879895653,
+            "spike_time": 216,
+            "spike_unit": 5,
+            "threshold_margin": -0.4990970492362976
+          },
+          "candidate_count": 2,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 160,
+            "sampled_route_probability": 0.006319115250983524,
+            "spike_time": 188,
+            "spike_unit": 2,
+            "threshold_margin": -0.36422961950302124
+          },
+          "candidate_count": 160,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 23,
+      "batch_index": 5,
+      "label": 0,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.048966266214847565,
+      "factual_normalized_entropy": 0.9974875450134277,
+      "factual_loss": 2.997814893722534,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.997814893722534,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.997814893722534,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 20,
+              "sampled_route_probability": 0.049866109485062385,
+              "spike_time": 289,
+              "spike_unit": 14,
+              "threshold_margin": -0.465915322303772
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            3,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 210,
+              "sampled_route_probability": 0.009041162405129912,
+              "spike_time": 199,
+              "spike_unit": 5,
+              "threshold_margin": -0.03290426731109619
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            4,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 210,
+              "sampled_route_probability": 0.009041162405129912,
+              "spike_time": 199,
+              "spike_unit": 5,
+              "threshold_margin": -0.03290426731109619
+            },
+            {
+              "mechanism": "spike_birth",
+              "layer": 2,
+              "candidate_count": 27,
+              "sampled_route_probability": 0.037312692300776745,
+              "spike_time": 289,
+              "spike_unit": 14,
+              "threshold_margin": -0.4377490282058716
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            4,
+            1,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            1,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            },
+            {
+              "layer": 2,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 20,
+            "sampled_route_probability": 0.049866109485062385,
+            "spike_time": 289,
+            "spike_unit": 14,
+            "threshold_margin": -0.465915322303772
+          },
+          "candidate_count": 20,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 2,
+            "candidate_count": 27,
+            "sampled_route_probability": 0.037312692300776745,
+            "spike_time": 289,
+            "spike_unit": 14,
+            "threshold_margin": -0.4377490282058716
+          },
+          "candidate_count": 27,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 210,
+            "sampled_route_probability": 0.009041162405129912,
+            "spike_time": 199,
+            "spike_unit": 5,
+            "threshold_margin": -0.03290426731109619
+          },
+          "candidate_count": 210,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 26,
+      "batch_index": 6,
+      "label": 0,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04889850690960884,
+      "factual_normalized_entropy": 0.997279167175293,
+      "factual_loss": 2.998276472091675,
+      "tree_node_count": 7,
+      "tree_leaf_count": 2,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          7,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          7,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.998276472091675,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          7,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          7,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 2.998276472091675,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 0,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 213,
+              "sampled_route_probability": 0.004933686469260742,
+              "spike_time": 784,
+              "spike_unit": 4,
+              "threshold_margin": -0.3427172303199768
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020380020141601562,
+          "counterfactual_suffix_progress": 0.0020380020141601562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0383550651755913,
+          "counterfactual_suffix_gradient_norm": 2.0383550651755913,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 213,
+            "sampled_route_probability": 0.004933686469260742,
+            "spike_time": 784,
+            "spike_unit": 4,
+            "threshold_margin": -0.3427172303199768
+          },
+          "candidate_count": 213,
+          "p_true": 0.04889850690960884,
+          "normalized_entropy": 0.997279167175293,
+          "error": 0.9511014930903912,
+          "swap_probability": 0.48838564855977895,
+          "proposal_temperature": 0.48838564855977895,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 29,
+      "batch_index": 7,
+      "label": 7,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.041352562606334686,
+      "factual_normalized_entropy": 0.9973399043083191,
+      "factual_loss": 3.050734281539917,
+      "tree_node_count": 7,
+      "tree_leaf_count": 2,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 3.050734281539917,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "factual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "counterfactual_hidden_events_by_layer": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "hidden_event_delta_by_layer": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced_interventions_verified": [],
+        "label_loss": 3.050734281539917,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 0,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [],
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "mechanism": "spike_birth",
+              "layer": 1,
+              "candidate_count": 143,
+              "sampled_route_probability": 0.006160298225278158,
+              "spike_time": 208,
+              "spike_unit": 8,
+              "threshold_margin": -0.44132184982299805
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "factual_hidden_events_by_layer": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "counterfactual_hidden_events_by_layer": [
+            9,
+            0,
+            0,
+            0
+          ],
+          "hidden_event_delta_by_layer": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "forced_interventions_verified": [
+            {
+              "layer": 1,
+              "mechanism": "spike_birth",
+              "forced_state_matches_intervention": true
+            }
+          ],
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002031087875366211,
+          "counterfactual_suffix_progress": 0.002031087875366211,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0308360484948658,
+          "counterfactual_suffix_gradient_norm": 2.0308360484948658,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 1,
+          "action": {
+            "mechanism": "spike_birth",
+            "layer": 1,
+            "candidate_count": 143,
+            "sampled_route_probability": 0.006160298225278158,
+            "spike_time": 208,
+            "spike_unit": 8,
+            "threshold_margin": -0.44132184982299805
+          },
+          "candidate_count": 143,
+          "p_true": 0.041352562606334686,
+          "normalized_entropy": 0.9973399043083191,
+          "error": 0.9586474373936653,
+          "swap_probability": 0.4900971518829465,
+          "proposal_temperature": 0.4900971518829465,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "decision_nodes_by_layer": [
+    8,
+    16,
+    24,
+    27
+  ],
+  "near_boundary_candidates_seen_by_layer": [
+    1301,
+    148,
+    33,
+    0
+  ],
+  "sampled_route_actions": [
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 31,
+      "sampled_route_probability": 0.032543901388435,
+      "spike_time": 148,
+      "spike_unit": 14,
+      "threshold_margin": -0.413826048374176
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 197,
+      "sampled_route_probability": 0.00679981441785333,
+      "spike_time": 491,
+      "spike_unit": 0,
+      "threshold_margin": -0.19087690114974976
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 31,
+      "sampled_route_probability": 0.028953024387503738,
+      "spike_time": 154,
+      "spike_unit": 7,
+      "threshold_margin": -0.4707576632499695
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 18,
+      "sampled_route_probability": 0.056003441750737785,
+      "spike_time": 237,
+      "spike_unit": 7,
+      "threshold_margin": -0.28286224603652954
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 3,
+      "candidate_count": 7,
+      "sampled_route_probability": 0.14237084923188614,
+      "spike_time": 304,
+      "spike_unit": 12,
+      "threshold_margin": -0.4813117980957031
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 137,
+      "sampled_route_probability": 0.006313691621476174,
+      "spike_time": 315,
+      "spike_unit": 0,
+      "threshold_margin": -0.39318084716796875
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 18,
+      "sampled_route_probability": 0.07358120030395247,
+      "spike_time": 234,
+      "spike_unit": 7,
+      "threshold_margin": -0.14907866716384888
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 3,
+      "candidate_count": 17,
+      "sampled_route_probability": 0.056487125417120025,
+      "spike_time": 296,
+      "spike_unit": 12,
+      "threshold_margin": -0.3951016068458557
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 111,
+      "sampled_route_probability": 0.007450026309210876,
+      "spike_time": 231,
+      "spike_unit": 10,
+      "threshold_margin": -0.45134449005126953
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 130,
+      "sampled_route_probability": 0.009132981237403411,
+      "spike_time": 407,
+      "spike_unit": 8,
+      "threshold_margin": -0.272943377494812
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 1,
+      "sampled_route_probability": 1.0,
+      "spike_time": 603,
+      "spike_unit": 5,
+      "threshold_margin": -0.4980107545852661
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 3,
+      "candidate_count": 9,
+      "sampled_route_probability": 0.12137648162815369,
+      "spike_time": 655,
+      "spike_unit": 12,
+      "threshold_margin": -0.33594048023223877
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 160,
+      "sampled_route_probability": 0.006319115250983524,
+      "spike_time": 188,
+      "spike_unit": 2,
+      "threshold_margin": -0.36422961950302124
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 2,
+      "sampled_route_probability": 0.49944364879895653,
+      "spike_time": 216,
+      "spike_unit": 5,
+      "threshold_margin": -0.4990970492362976
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 20,
+      "sampled_route_probability": 0.049866109485062385,
+      "spike_time": 289,
+      "spike_unit": 14,
+      "threshold_margin": -0.465915322303772
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 210,
+      "sampled_route_probability": 0.009041162405129912,
+      "spike_time": 199,
+      "spike_unit": 5,
+      "threshold_margin": -0.03290426731109619
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 2,
+      "candidate_count": 27,
+      "sampled_route_probability": 0.037312692300776745,
+      "spike_time": 289,
+      "spike_unit": 14,
+      "threshold_margin": -0.4377490282058716
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 213,
+      "sampled_route_probability": 0.004933686469260742,
+      "spike_time": 784,
+      "spike_unit": 4,
+      "threshold_margin": -0.3427172303199768
+    },
+    {
+      "mechanism": "spike_birth",
+      "layer": 1,
+      "candidate_count": 143,
+      "sampled_route_probability": 0.006160298225278158,
+      "spike_time": 208,
+      "spike_unit": 8,
+      "threshold_margin": -0.44132184982299805
+    }
+  ],
+  "interpretation_note": "A sampled receiver swap, route birth, or spike birth is rerun through all deeper layers, and only scalar option values are propagated back; This is a frozen diagnostic, not trained accuracy, an AdamW update, or an exhaustive route expectation."
+}

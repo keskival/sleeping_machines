@@ -130,9 +130,10 @@ def choose_option(info, layer_id, target_batch, target_class, logits,
         fired = diagnostic["spike_fire_mask"]
         refractory = diagnostic["spike_refractory_trace"]
         time_ids = torch.arange(margins.shape[0], device=margins.device)
-        valid_time = ((time_ids > 0) & (time_ids.to(margins.dtype) <= query_horizon))
+        valid_time = ((time_ids > 0)
+                      & (time_ids.to(margins.dtype) <= query_horizon))
         valid = (
-            valid_time[:, None, None]
+            valid_time[:, None]
             & (margins[:, target_batch] <= 0.0)
             & (margins[:, target_batch] >= -args.spike_band)
             & ~fired[:, target_batch]
