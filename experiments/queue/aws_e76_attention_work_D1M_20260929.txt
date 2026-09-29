@@ -1,0 +1,1 @@
+aws_e76_attention_work_D1M_20260929 experiments/aws_benchmark.py --run-tag aws_e76_attention_work_D1M_20260929 --script experiments/e76_attention_work.py -- --windows 200 --checkpoint_dir experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929
