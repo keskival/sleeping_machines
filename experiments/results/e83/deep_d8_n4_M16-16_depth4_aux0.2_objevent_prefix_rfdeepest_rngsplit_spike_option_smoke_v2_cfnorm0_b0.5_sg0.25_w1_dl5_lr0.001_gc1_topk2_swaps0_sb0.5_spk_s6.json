@@ -1,0 +1,1172 @@
+{
+ "args": {
+  "bands": 140,
+  "merge": 0.002,
+  "d": 8,
+  "n": 4,
+  "M1": 16,
+  "M": 16,
+  "depth": 4,
+  "window": 30,
+  "fan2": 0.25,
+  "readout_fan": 0.5,
+  "aux_weight": 0.2,
+  "objective": "event_prefix",
+  "readout_fusion": "deepest",
+  "input_count_payload": "off",
+  "early_event_skip": false,
+  "run_tag": "spike_option_smoke_v2",
+  "prefix_samples": 2,
+  "prefix_horizon_ms": 1000.0,
+  "prefix_window_start": 0.0,
+  "cf_shadows_per_layer": 0,
+  "cf_band": 0.5,
+  "cf_sigma": 0.25,
+  "cf_weight": 1.0,
+  "cf_lr": 0.001,
+  "cf_grad_clip": 1.0,
+  "cf_delta_clip": 5.0,
+  "cf_pairs_per_batch": 0,
+  "cf_pair_window_ms": 25.0,
+  "cf_pair_sampling": "global",
+  "race_threshold": 0.6,
+  "race_temperature": 0.03,
+  "race_logit_temperature": 2.0,
+  "race_rate": 5.0,
+  "race_latency_discount": 1.0,
+  "dmax": 50.0,
+  "w_sd": "0.05,0.05",
+  "route_topk": 2,
+  "cf_route_swaps_per_layer": 0,
+  "cf_route_swap_band": 0.5,
+  "trainable_thresholds": true,
+  "cf_spike_option_updates": true,
+  "cf_spike_option_weight": 10.0,
+  "cf_spike_option_probability": 0.5,
+  "cf_spike_option_band": 0.5,
+  "cf_spike_option_sigma": 0.25,
+  "cf_spike_option_temperature": 0.15,
+  "cf_spike_option_lr": 0.05,
+  "cf_spike_option_step_clip": 0.01,
+  "cf_spike_option_bound": 0.1,
+  "cf_spike_virtual_lr": 0.001,
+  "cf_spike_virtual_clip": 1.0,
+  "shift": 4,
+  "drop": 0.1,
+  "epochs": 1,
+  "bs": 4,
+  "lr": 0.003,
+  "seed": 6,
+  "limit": 16,
+  "eval_limit": 16,
+  "rng_protocol": "split",
+  "save_checkpoint": false
+ },
+ "params": 18414,
+ "layer_params": [
+  3872,
+  1888,
+  1888,
+  1888
+ ],
+ "readout_params": 7758,
+ "train": 16,
+ "eval": 16,
+ "curve": [
+  {
+   "epoch": 1,
+   "train_loss": 2.9996,
+   "race_coverage": 0.0625,
+   "race_acc_when_emitted": 0.0,
+   "race_payload_dim": 20,
+   "race_payload_decode_agreement": 1.0,
+   "race_mean_latency_ms": 340.23,
+   "race_mean_peak_confidence": 0.0943,
+   "anytime_acc_with_terminal_fallback": 0.0,
+   "anytime_fallback_rate": 0.9375,
+   "anytime_mean_response_latency_ms": 946.26,
+   "anytime_payload_dim": 20,
+   "anytime_payload_decode_agreement": 1.0,
+   "race_threshold_frontier": [
+    {
+     "threshold": 0.3,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 321.0,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 945.06
+    },
+    {
+     "threshold": 0.4,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 322.0,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 945.12
+    },
+    {
+     "threshold": 0.5,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 335.92,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 945.99
+    },
+    {
+     "threshold": 0.6,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 340.23,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 946.26
+    },
+    {
+     "threshold": 0.7,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 343.4,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 946.46
+    },
+    {
+     "threshold": 0.8,
+     "coverage": 0.0625,
+     "accuracy_when_emitted": 0.0,
+     "mean_latency_ms": 353.16,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 0.9375,
+     "mean_response_latency_ms": 947.07
+    },
+    {
+     "threshold": 0.9,
+     "coverage": 0.0,
+     "accuracy_when_emitted": null,
+     "mean_latency_ms": null,
+     "anytime_accuracy_with_fallback": 0.0,
+     "fallback_rate": 1.0,
+     "mean_response_latency_ms": 999.79
+    }
+   ],
+   "tap_acc": [
+    0.0625,
+    0.0625,
+    0.125,
+    0.0
+   ],
+   "aux_train_loss": 9.2088,
+   "first_batch_gradient_routes": {
+    "final_norms": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "aux_norms": [
+     0.954006,
+     1.692201,
+     0.0,
+     0.0
+    ],
+    "cosines": [
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "msgs_per_utt": [
+    6809.0,
+    19.0,
+    5.0,
+    3.0,
+    95.0,
+    31.0,
+    16.0,
+    27.0
+   ],
+   "candidate_scores_per_utt": [
+    48892.0,
+    126.0,
+    19.0,
+    34.0,
+    380.0,
+    124.0,
+    63.0,
+    110.0
+   ],
+   "state_vector_updates_per_utt": 296000,
+   "deep_msgs_per_utt": 6863.4,
+   "deep_candidate_scores_per_utt": 49181,
+   "deep_state_vector_updates_per_utt": 296000,
+   "spikes_per_utt": [
+    10.0,
+    4.0,
+    1.0,
+    3.0
+   ],
+   "event_support_coverage": [
+    1.0,
+    0.75,
+    0.25,
+    0.1875
+   ],
+   "spikes_per_active_utterance": [
+    10.06,
+    5.83,
+    5.75,
+    16.0
+   ],
+   "support_nesting_violations": 0,
+   "input_count_projection_norm": null,
+   "synapses_sending": [
+    0.575,
+    0.296,
+    0.049,
+    0.054
+   ],
+   "layer_grad_norms": [
+    3.17882,
+    3.37034,
+    0.02977,
+    0.0
+   ],
+   "wall_s": 24,
+   "event_terminal_accuracy": 0.0,
+   "prefix_window_nll_by_stratum": [
+    2.9948,
+    4.0029
+   ],
+   "prefix_window_accuracy_by_stratum": [
+    0.0625,
+    0.0
+   ],
+   "prefix_window_start_fraction": 0.0,
+   "prefix_horizon_ms": 1000.0,
+   "prefix_samples_per_utterance": 2,
+   "readout_fusion": "deepest",
+   "sparse_readout_edge_updates_per_utterance": 27.4,
+   "readout_edge_updates_by_layer_per_utterance": [
+    95.1,
+    31.1,
+    15.8,
+    27.4
+   ],
+   "threshold_offset_mean_by_layer": [
+    0.0001927,
+    0.0001208,
+    -3.91e-05,
+    -7.66e-05
+   ],
+   "threshold_offset_max_abs_by_layer": [
+    0.004928,
+    0.0019333,
+    0.0006258,
+    0.0012253
+   ],
+   "spike_option_paths_per_epoch": 2,
+   "spike_option_actions_per_epoch": 7,
+   "spike_option_actions_by_layer": [
+    2,
+    2,
+    2,
+    1
+   ],
+   "spike_option_proposal_candidates_sum": 513,
+   "spike_option_mean_immediate_advantage": 0.0189233,
+   "spike_option_mean_suffix_learning_advantage": 0.004918,
+   "spike_option_mean_scalar_utility": 0.0681031,
+   "spike_option_mean_suffix_gradient_norm": 4.399374,
+   "spike_option_threshold_update_l1": 0.005162,
+   "spike_option_hidden_event_delta_sum_by_layer": [
+    1,
+    4,
+    2,
+    1
+   ],
+   "spike_option_learning_weight": 10.0,
+   "counterfactual_near_routes_per_epoch": 0,
+   "counterfactual_route_shadows_per_epoch": 0,
+   "counterfactual_route_pairs_eligible_per_epoch": 0,
+   "counterfactual_route_pairs_shadowed_per_epoch": 0,
+   "counterfactual_route_pair_replays_per_epoch": 0,
+   "counterfactual_route_pair_sampler": "global",
+   "counterfactual_route_pair_candidates_by_layer": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "counterfactual_route_pair_mean_inclusion_probability": 0.0,
+   "counterfactual_route_pair_min_inclusion_probability": null,
+   "counterfactual_route_pair_max_inclusion_probability": null,
+   "counterfactual_pair_mean_L11_minus_L00": 0.0,
+   "counterfactual_pair_delta_std": 0.0,
+   "counterfactual_pair_fraction_joint_opening_improves": 0.0,
+   "counterfactual_pair_mean_interaction_gamma": 0.0,
+   "counterfactual_pair_interaction_std": 0.0,
+   "counterfactual_pair_fraction_synergistic_gamma_negative": 0.0,
+   "counterfactual_pair_shadow_counts_by_layer": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "route_topk": 2,
+   "counterfactual_route_swap_eligible_by_layer": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "counterfactual_route_swap_shadowed_by_layer": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "counterfactual_route_swap_replays": 0,
+   "counterfactual_route_swap_mean_alternative_minus_current_loss_by_layer": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_route_swap_fraction_alternative_helpful_by_layer": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_route_swap_mean_score_gap_by_layer": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_mean_abs_loss_delta": 0.0,
+   "counterfactual_mean_signed_open_minus_closed_loss": 0.0,
+   "counterfactual_fraction_opening_improves_loss": 0.0,
+   "counterfactual_shadow_delta_std": 0.0,
+   "counterfactual_shadow_delta_signal_to_noise": 0.0,
+   "counterfactual_layer_shadow_counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "counterfactual_layer_mean_open_minus_closed_loss": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_layer_shadow_delta_std": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_layer_fraction_opening_improves": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_layer_mean_abs_boundary_coefficient": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_mean_gate_boundary_sensitivity": 0.0,
+   "counterfactual_mean_abs_clipped_boundary_coefficient": 0.0,
+   "counterfactual_clipped_delta_fraction": 0.0,
+   "counterfactual_local_update_norm_per_batch": 0.0,
+   "counterfactual_local_update_batches": 0,
+   "counterfactual_raw_grad_norm_per_batch": 0.0,
+   "pathwise_grad_norm_per_counterfactual_batch": 0.0,
+   "counterfactual_to_pathwise_grad_norm_ratio": 0.0,
+   "counterfactual_pathwise_grad_cosine": 0.0,
+   "counterfactual_layer_grad_norms": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "pathwise_layer_grad_norms_on_counterfactual_batches": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "counterfactual_layer_to_pathwise_norm_ratios": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "counterfactual_layer_pathwise_cosines": [
+    null,
+    null,
+    null,
+    null
+   ]
+  }
+ ],
+ "eval_output_payloads": [
+  [
+   {
+    "true_class": 0,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1205.508,
+    "value_vector": [
+     0.049526,
+     0.049874,
+     0.050739,
+     0.050852,
+     0.051617,
+     0.050368,
+     0.048785,
+     0.048255,
+     0.048601,
+     0.048007,
+     0.052523,
+     0.051055,
+     0.050003,
+     0.049619,
+     0.05008,
+     0.050033,
+     0.04924,
+     0.050234,
+     0.047753,
+     0.052836
+    ]
+   },
+   {
+    "true_class": 13,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1112.734,
+    "value_vector": [
+     0.049532,
+     0.049883,
+     0.050723,
+     0.050849,
+     0.051589,
+     0.050368,
+     0.048812,
+     0.048292,
+     0.04862,
+     0.048046,
+     0.052471,
+     0.051032,
+     0.049998,
+     0.049633,
+     0.050082,
+     0.050026,
+     0.049248,
+     0.050227,
+     0.047791,
+     0.052779
+    ]
+   },
+   {
+    "true_class": 7,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1073.184,
+    "value_vector": [
+     0.049535,
+     0.049887,
+     0.050716,
+     0.050847,
+     0.051577,
+     0.050368,
+     0.048823,
+     0.048309,
+     0.048629,
+     0.048064,
+     0.052448,
+     0.051022,
+     0.049995,
+     0.049639,
+     0.050082,
+     0.050023,
+     0.049251,
+     0.050224,
+     0.047807,
+     0.052753
+    ]
+   },
+   {
+    "true_class": 12,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1134.219,
+    "value_vector": [
+     0.049531,
+     0.049881,
+     0.050727,
+     0.05085,
+     0.051596,
+     0.050368,
+     0.048805,
+     0.048283,
+     0.048616,
+     0.048037,
+     0.052484,
+     0.051038,
+     0.049999,
+     0.049629,
+     0.050081,
+     0.050028,
+     0.049246,
+     0.050229,
+     0.047782,
+     0.052792
+    ]
+   },
+   {
+    "true_class": 17,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1196.719,
+    "value_vector": [
+     0.049526,
+     0.049875,
+     0.050738,
+     0.050852,
+     0.051614,
+     0.050368,
+     0.048788,
+     0.048258,
+     0.048602,
+     0.048011,
+     0.052519,
+     0.051053,
+     0.050003,
+     0.04962,
+     0.05008,
+     0.050032,
+     0.049241,
+     0.050233,
+     0.047756,
+     0.052831
+    ]
+   },
+   {
+    "true_class": 3,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 790.957,
+    "value_vector": [
+     0.04956,
+     0.049923,
+     0.050655,
+     0.050834,
+     0.051472,
+     0.050368,
+     0.048922,
+     0.048449,
+     0.048704,
+     0.048211,
+     0.05225,
+     0.050936,
+     0.049974,
+     0.049692,
+     0.050087,
+     0.049998,
+     0.049279,
+     0.050199,
+     0.04795,
+     0.052537
+    ]
+   },
+   {
+    "true_class": 6,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 697.695,
+    "value_vector": [
+     0.049571,
+     0.049937,
+     0.05063,
+     0.050828,
+     0.05143,
+     0.050368,
+     0.048961,
+     0.048507,
+     0.048735,
+     0.048271,
+     0.05217,
+     0.050902,
+     0.049966,
+     0.049713,
+     0.050089,
+     0.049987,
+     0.049291,
+     0.050189,
+     0.048008,
+     0.052449
+    ]
+   },
+   {
+    "true_class": 11,
+    "predicted_class": 4,
+    "emission": "terminal_eos",
+    "latency_ms": 1133.73,
+    "value_vector": [
+     0.05568,
+     0.067753,
+     0.070535,
+     0.009448,
+     0.105532,
+     0.06696,
+     0.064982,
+     0.064581,
+     0.063783,
+     0.067101,
+     0.01538,
+     0.010189,
+     0.057593,
+     0.036542,
+     0.064808,
+     0.066507,
+     0.04742,
+     0.007793,
+     0.001006,
+     0.056409
+    ]
+   },
+   {
+    "true_class": 2,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 774.111,
+    "value_vector": [
+     0.049562,
+     0.049925,
+     0.050651,
+     0.050833,
+     0.051465,
+     0.050368,
+     0.048928,
+     0.048459,
+     0.048709,
+     0.048222,
+     0.052236,
+     0.05093,
+     0.049973,
+     0.049695,
+     0.050088,
+     0.049996,
+     0.049281,
+     0.050197,
+     0.04796,
+     0.052522
+    ]
+   },
+   {
+    "true_class": 10,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 980.898,
+    "value_vector": [
+     0.049543,
+     0.049897,
+     0.050698,
+     0.050843,
+     0.051546,
+     0.050368,
+     0.048853,
+     0.04835,
+     0.048651,
+     0.048108,
+     0.052389,
+     0.050996,
+     0.049989,
+     0.049655,
+     0.050084,
+     0.050016,
+     0.04926,
+     0.050217,
+     0.047849,
+     0.052689
+    ]
+   },
+   {
+    "true_class": 18,
+    "predicted_class": 4,
+    "emission": "terminal_eos",
+    "latency_ms": 750.43,
+    "value_vector": [
+     0.047935,
+     0.050967,
+     0.049612,
+     0.045658,
+     0.058994,
+     0.051176,
+     0.049822,
+     0.049642,
+     0.049734,
+     0.049194,
+     0.049075,
+     0.05381,
+     0.049584,
+     0.053835,
+     0.051083,
+     0.050794,
+     0.047186,
+     0.045545,
+     0.046966,
+     0.049386
+    ]
+   },
+   {
+    "true_class": 8,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 732.607,
+    "value_vector": [
+     0.049567,
+     0.049932,
+     0.05064,
+     0.05083,
+     0.051446,
+     0.050368,
+     0.048946,
+     0.048484,
+     0.048723,
+     0.048248,
+     0.052201,
+     0.050915,
+     0.049969,
+     0.049705,
+     0.050088,
+     0.049991,
+     0.049287,
+     0.050193,
+     0.047985,
+     0.052483
+    ]
+   },
+   {
+    "true_class": 11,
+    "predicted_class": 4,
+    "emission": "event_race",
+    "latency_ms": 340.233,
+    "value_vector": [
+     0.005553,
+     0.019383,
+     0.010429,
+     7e-06,
+     0.659272,
+     0.035761,
+     0.035759,
+     0.035833,
+     0.028395,
+     0.072102,
+     0.000249,
+     0.002976,
+     0.003022,
+     0.024964,
+     0.016955,
+     0.035761,
+     0.001663,
+     1.7e-05,
+     1e-06,
+     0.011899
+    ]
+   },
+   {
+    "true_class": 0,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1240.176,
+    "value_vector": [
+     0.049523,
+     0.04987,
+     0.050745,
+     0.050854,
+     0.051626,
+     0.050367,
+     0.048776,
+     0.048242,
+     0.048594,
+     0.047993,
+     0.052542,
+     0.051063,
+     0.050005,
+     0.049614,
+     0.05008,
+     0.050035,
+     0.049238,
+     0.050236,
+     0.04774,
+     0.052857
+    ]
+   },
+   {
+    "true_class": 2,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 967.715,
+    "value_vector": [
+     0.049544,
+     0.049899,
+     0.050695,
+     0.050843,
+     0.051541,
+     0.050368,
+     0.048857,
+     0.048356,
+     0.048655,
+     0.048114,
+     0.05238,
+     0.050992,
+     0.049988,
+     0.049657,
+     0.050084,
+     0.050015,
+     0.049261,
+     0.050215,
+     0.047856,
+     0.052679
+    ]
+   },
+   {
+    "true_class": 14,
+    "predicted_class": 19,
+    "emission": "terminal_eos",
+    "latency_ms": 1009.219,
+    "value_vector": [
+     0.04954,
+     0.049894,
+     0.050704,
+     0.050845,
+     0.051555,
+     0.050368,
+     0.048843,
+     0.048337,
+     0.048644,
+     0.048094,
+     0.052408,
+     0.051004,
+     0.049991,
+     0.04965,
+     0.050083,
+     0.050018,
+     0.049257,
+     0.050219,
+     0.047836,
+     0.052709
+    ]
+   }
+  ]
+ ],
+ "final_layer_firing": [
+  {
+   "epoch": 1,
+   "unit_count": 16,
+   "samples": [
+    {
+     "eval_index": 0,
+     "true_class": 0,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 1,
+     "true_class": 13,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 2,
+     "true_class": 7,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 3,
+     "true_class": 12,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 4,
+     "true_class": 17,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 5,
+     "true_class": 3,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 6,
+     "true_class": 6,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 7,
+     "true_class": 11,
+     "predicted_class": 4,
+     "spikes": [
+      [
+       450.854,
+       2
+      ],
+      [
+       452.366,
+       2
+      ],
+      [
+       453.193,
+       2
+      ],
+      [
+       454.095,
+       2
+      ],
+      [
+       455.192,
+       2
+      ],
+      [
+       455.949,
+       2
+      ],
+      [
+       465.117,
+       1
+      ],
+      [
+       472.79,
+       11
+      ],
+      [
+       477.532,
+       2
+      ],
+      [
+       538.862,
+       2
+      ],
+      [
+       539.999,
+       1
+      ]
+     ]
+    },
+    {
+     "eval_index": 8,
+     "true_class": 2,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 9,
+     "true_class": 10,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 10,
+     "true_class": 18,
+     "predicted_class": 4,
+     "spikes": [
+      [
+       417.765,
+       2
+      ],
+      [
+       428.334,
+       1
+      ]
+     ]
+    },
+    {
+     "eval_index": 11,
+     "true_class": 8,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 12,
+     "true_class": 11,
+     "predicted_class": 4,
+     "spikes": [
+      [
+       271.59,
+       2
+      ],
+      [
+       272.818,
+       2
+      ],
+      [
+       274.454,
+       2
+      ],
+      [
+       298.234,
+       1
+      ],
+      [
+       297.0,
+       1
+      ],
+      [
+       309.557,
+       2
+      ],
+      [
+       309.167,
+       11
+      ],
+      [
+       309.482,
+       2
+      ],
+      [
+       310.0,
+       2
+      ],
+      [
+       311.544,
+       11
+      ],
+      [
+       311.0,
+       2
+      ],
+      [
+       312.0,
+       2
+      ],
+      [
+       313.0,
+       2
+      ],
+      [
+       314.0,
+       2
+      ],
+      [
+       315.0,
+       2
+      ],
+      [
+       316.0,
+       2
+      ],
+      [
+       320.944,
+       1
+      ],
+      [
+       320.0,
+       1
+      ],
+      [
+       321.0,
+       1
+      ],
+      [
+       322.0,
+       1
+      ],
+      [
+       334.82,
+       2
+      ],
+      [
+       335.922,
+       2
+      ],
+      [
+       337.492,
+       2
+      ],
+      [
+       340.233,
+       1
+      ],
+      [
+       339.0,
+       1
+      ],
+      [
+       343.396,
+       1
+      ],
+      [
+       350.998,
+       10
+      ],
+      [
+       353.157,
+       10
+      ],
+      [
+       356.491,
+       10
+      ],
+      [
+       384.926,
+       2
+      ],
+      [
+       390.908,
+       10
+      ],
+      [
+       393.939,
+       10
+      ],
+      [
+       398.132,
+       10
+      ],
+      [
+       406.272,
+       2
+      ],
+      [
+       483.277,
+       10
+      ]
+     ]
+    },
+    {
+     "eval_index": 13,
+     "true_class": 0,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 14,
+     "true_class": 2,
+     "predicted_class": 19,
+     "spikes": []
+    },
+    {
+     "eval_index": 15,
+     "true_class": 14,
+     "predicted_class": 19,
+     "spikes": []
+    }
+   ]
+  }
+ ]
+}
