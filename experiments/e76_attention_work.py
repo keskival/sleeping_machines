@@ -27,11 +27,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--windows", type=int, default=200)
     ap.add_argument("--eps", default="0.01,0.05")
+    ap.add_argument("--checkpoint_dir", default=os.path.join(os.path.dirname(__file__), "results", "e64"),
+                    help="Directory containing the completed E64 Transformer checkpoints")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     x = S1.load(); valid = torch.tensor(x[90_000_000:90_000_000 + 1_000_000])
     ND = NormalDist(); res = {}
-    for ck in sorted(glob.glob(os.path.join(os.path.dirname(__file__), "results", "e64", "tf_*_v.pt"))):
+    checkpoints = sorted(glob.glob(os.path.join(a.checkpoint_dir, "tf_*_v.pt")))
+    if not checkpoints:
+        raise FileNotFoundError(f"No completed Transformer checkpoints in {a.checkpoint_dir}")
+    for ck in checkpoints:
         c = torch.load(ck); ar = c["args"]
         net = B64.TfLM(ar["size"], ar["layers"], ar["ctx"]); net.load_state_dict(c["state"]); net.eval()
         T = ar["ctx"]; H = 4; dh = ar["size"] // H

@@ -60,13 +60,14 @@ def main():
     ap.add_argument("--D", type=int, default=1_000_000)
     ap.add_argument("--K", type=int, default=5)
     ap.add_argument("--e77", default="tvlm_D1000000_p5_r1_M128-128-64_s0")
+    ap.add_argument("--e77_dir", default=os.path.join(os.path.dirname(__file__), "results", "e77"))
     ap.add_argument("--valid", type=int, default=200_000)
     ap.add_argument("--test", type=int, default=1_000_000)
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     x = S1.load(); train = x[:a.D]
     valid = x[90_000_000:90_000_000 + a.valid]; test = x[95_000_000:95_000_000 + a.test]
-    R77 = os.path.join(os.path.dirname(__file__), "results", "e77")
+    R77 = a.e77_dir
     if a.e77 == "none":                                                          # native experts only
         tv_v = np.full(len(valid), 1.0 / A, np.float32); tv_t = np.full(len(test), 1.0 / A, np.float32)
     else:

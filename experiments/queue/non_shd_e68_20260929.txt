@@ -1,0 +1,4 @@
+# Non-SHD E68 recall and text8 benchmarks; extracted from e69.txt.
+e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
+e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0
+e68_recall_R4_s0 experiments/e68_race_transformer.py --task recall --R 4 --steps 8000 --seed 0
