@@ -1460,31 +1460,6 @@
     ]
   },
   {
-    "run_tag": "aws_cons_fa_d5_s0_20260929",
-    "script": "experiments/e14_depth.py",
-    "arguments": [
-      "--width",
-      "400",
-      "--val",
-      "10000",
-      "--epochs",
-      "3",
-      "--zero-sum",
-      "1",
-      "--variant",
-      "crl_fa",
-      "--seed",
-      "0",
-      "--depth",
-      "5",
-      "--tag",
-      "cons"
-    ],
-    "sources": [
-      "e14_next.txt"
-    ]
-  },
-  {
     "run_tag": "aws_res2_d1_s0_20260929",
     "script": "experiments/e14_depth.py",
     "arguments": [
@@ -6210,19 +6185,19 @@
       "10000",
       "--epochs",
       "3",
-      "--depth",
-      "5",
-      "--variant",
-      "crl_fa",
       "--zero-sum",
       "1",
+      "--variant",
+      "crl_fa",
       "--seed",
       "0",
+      "--depth",
+      "5",
       "--tag",
       "cons"
     ],
     "sources": [
-      "deferred_theory.txt"
+      "e14_next.txt"
     ]
   },
   {
@@ -7130,6 +7105,602 @@
     ],
     "sources": [
       "deferred_theory.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_val_own_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [
+      "--mode",
+      "val",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_val_mag_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [
+      "--mode",
+      "val",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_val_mag_cross_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [
+      "--mode",
+      "val",
+      "--fine",
+      "1",
+      "--cross",
+      "1",
+      "--mag",
+      "1"
+    ],
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e69_coarse_R0_20260929",
+    "script": "experiments/e69_race_thp.py",
+    "arguments": [
+      "--mode",
+      "test",
+      "--R",
+      "0",
+      "--d",
+      "64",
+      "--L",
+      "32",
+      "--epochs",
+      "11",
+      "--fine",
+      "0"
+    ],
+    "sources": [
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e69_coarse_R4_20260929",
+    "script": "experiments/e69_race_thp.py",
+    "arguments": [
+      "--mode",
+      "test",
+      "--R",
+      "4",
+      "--d",
+      "64",
+      "--L",
+      "32",
+      "--epochs",
+      "11",
+      "--fine",
+      "0"
+    ],
+    "sources": [
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e69_coarse_R1_20260929",
+    "script": "experiments/e69_race_thp.py",
+    "arguments": [
+      "--mode",
+      "test",
+      "--R",
+      "1",
+      "--d",
+      "64",
+      "--L",
+      "32",
+      "--epochs",
+      "11",
+      "--fine",
+      "0"
+    ],
+    "sources": [
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e69_fine_R4_20260929",
+    "script": "experiments/e69_race_thp.py",
+    "arguments": [
+      "--mode",
+      "test",
+      "--R",
+      "4",
+      "--d",
+      "64",
+      "--L",
+      "128",
+      "--epochs",
+      "29",
+      "--fine",
+      "1"
+    ],
+    "sources": [
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e71_dvs_sel1_spk_20260929",
+    "script": "experiments/e71_event_cde.py",
+    "arguments": [
+      "--data",
+      "dvs",
+      "--grid",
+      "16",
+      "--merge",
+      "0.03",
+      "--sel",
+      "1",
+      "--bs",
+      "4",
+      "--lr",
+      "1e-3",
+      "--shift",
+      "2",
+      "--epochs",
+      "20",
+      "--eval",
+      "spk"
+    ],
+    "sources": [
+      "e71.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d2_aux0_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "2",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d2_aux02_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "2",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0.2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d4_aux0_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "4",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d4_aux02_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "4",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0.2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d8_aux0_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "8",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d8_aux02_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "8",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0.2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d16_aux0_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "16",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e84_market_d16_aux02_20260929",
+    "script": "experiments/e84_deep_market.py",
+    "arguments": [
+      "--L",
+      "64",
+      "--fine",
+      "1",
+      "--cross",
+      "0",
+      "--mag",
+      "0",
+      "--d",
+      "8",
+      "--n",
+      "4",
+      "--M",
+      "16",
+      "--Ms",
+      "16",
+      "--depth",
+      "16",
+      "--epochs",
+      "2",
+      "--batch",
+      "8",
+      "--chunks_per_day",
+      "128",
+      "--aux_weight",
+      "0.2",
+      "--seed",
+      "0"
+    ],
+    "sources": [
+      "e83_e84_depth.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e64_tf_D10M_checkpoint_20260929",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "tf",
+      "--D",
+      "10000000",
+      "--size",
+      "256",
+      "--layers",
+      "4",
+      "--passes",
+      "4",
+      "--dropout",
+      "0.1",
+      "--valid",
+      "200000"
+    ],
+    "reason": "Recreate missing checkpoint for E76",
+    "sources": [
+      "e71a.txt",
+      "e77_deep_lm_benchmark.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e76_attention_work_tf_D10M_20260929",
+    "script": "experiments/e76_attention_work.py",
+    "arguments": [
+      "--windows",
+      "200",
+      "--checkpoint_dir",
+      "experiments/results/aws_20260929/aws_e64_tf_D10M_checkpoint_20260929"
+    ],
+    "sources": [
+      "e64b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e64_tf_l8_D1M_checkpoint_20260929",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "tf",
+      "--D",
+      "1000000",
+      "--size",
+      "112",
+      "--layers",
+      "8",
+      "--passes",
+      "5",
+      "--batch_size",
+      "4",
+      "--dropout",
+      "0",
+      "--valid",
+      "200000"
+    ],
+    "reason": "Recreate missing checkpoint for E76",
+    "sources": [
+      "e71a.txt",
+      "e77_deep_lm_benchmark.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e76_attention_work_tf_l8_D1M_20260929",
+    "script": "experiments/e76_attention_work.py",
+    "arguments": [
+      "--windows",
+      "200",
+      "--checkpoint_dir",
+      "experiments/results/aws_20260929/aws_e64_tf_l8_D1M_checkpoint_20260929"
+    ],
+    "sources": [
+      "e64b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e78_D10M_20260929",
+    "script": "experiments/e78_envelope.py",
+    "arguments": [
+      "--D",
+      "10000000",
+      "--K",
+      "6"
+    ],
+    "prepare": "e78",
+    "dependency_tag": "aws_e77_D10M_r1_boot0p1_20260929",
+    "sources": [
+      "e64b.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_test_own_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [],
+    "prepare": "e80",
+    "dependency_tag": "aws_e80_val_own_20260929",
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_test_mag_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [],
+    "prepare": "e80",
+    "dependency_tag": "aws_e80_val_mag_20260929",
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_e80_test_mag_cross_20260929",
+    "script": "experiments/e80_tv_market.py",
+    "arguments": [],
+    "prepare": "e80",
+    "dependency_tag": "aws_e80_val_mag_cross_20260929",
+    "sources": [
+      "e68.txt",
+      "e69.txt"
+    ]
+  },
+  {
+    "run_tag": "aws_diag_dips53_20260929",
+    "script": "experiments/diag/dips53.py",
+    "arguments": [],
+    "stdout_only": true,
+    "sources": [
+      "e53.txt"
     ]
   }
 ]

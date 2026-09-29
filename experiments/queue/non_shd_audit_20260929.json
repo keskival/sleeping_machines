@@ -4984,8 +4984,9 @@
       "e53.txt",
       "e53.txt"
     ],
-    "status": "needs_manual_output_routing",
-    "evidence": []
+    "status": "scheduled_followup",
+    "evidence": [],
+    "dependency": "stdout-only diagnostic"
   },
   {
     "name": "e34x_tuned_union",
@@ -5911,8 +5912,10 @@
     "sources": [
       "e60.txt"
     ],
-    "status": "blocked_dependency",
-    "evidence": [],
+    "status": "completed_result",
+    "evidence": [
+      "experiments/results/e60/dvs_G32_R10_S50_lo2_hi80_rel0_O6_test.json"
+    ],
     "dependency": "DVS Gesture data absent"
   },
   {
@@ -5987,8 +5990,10 @@
     "sources": [
       "e60.txt"
     ],
-    "status": "blocked_dependency",
-    "evidence": [],
+    "status": "completed_result",
+    "evidence": [
+      "experiments/results/e60/depth_G32_reg8_T100_eta0.05_tri_test.json"
+    ],
     "dependency": "DVS Gesture data absent"
   },
   {
@@ -6334,8 +6339,10 @@
     "sources": [
       "e64b.txt"
     ],
-    "status": "blocked_dependency",
-    "evidence": [],
+    "status": "scheduled_replacement",
+    "evidence": [
+      "aws_e76_attention_work_D1M_20260929"
+    ],
     "dependency": "trained E64 Transformer checkpoints absent"
   },
   {
@@ -6357,9 +6364,9 @@
     "sources": [
       "e64b.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "E77 probability arrays absent",
+    "dependency": "Run after required AWS result files exist",
     "expected_outputs": [
       "experiments/results/e78/envelope_D10000000_tvlm_D10000000_p2_r1_M128-128-64_depth2_c0_eh1_ek0_s0.json"
     ]
@@ -6722,9 +6729,9 @@
       "e68.txt",
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e80_val_own_20260929"
   },
   {
     "name": "e80_val_mag",
@@ -6733,9 +6740,9 @@
       "e68.txt",
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e80_val_mag_20260929"
   },
   {
     "name": "e80_val_mag_cross",
@@ -6744,9 +6751,9 @@
       "e68.txt",
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e80_val_mag_cross_20260929"
   },
   {
     "name": "e80_test",
@@ -6755,9 +6762,9 @@
       "e68.txt",
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "dependency": "Run after required AWS result files exist"
   },
   {
     "name": "e74_full",
@@ -7004,9 +7011,9 @@
     "sources": [
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e69_coarse_R0_20260929"
   },
   {
     "name": "e69_coarse_R4",
@@ -7014,9 +7021,9 @@
     "sources": [
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e69_coarse_R4_20260929"
   },
   {
     "name": "e69_coarse_R1",
@@ -7024,9 +7031,9 @@
     "sources": [
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e69_coarse_R1_20260929"
   },
   {
     "name": "e69_fine_R4",
@@ -7034,9 +7041,9 @@
     "sources": [
       "e69.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e69_fine_R4_20260929"
   },
   {
     "name": "e70_R4_spk",
@@ -7116,9 +7123,9 @@
     "sources": [
       "e71.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "DVS Gesture data absent"
+    "run_tag": "aws_e71_dvs_sel1_spk_20260929"
   },
   {
     "name": "e78_native_D1M",
@@ -9640,9 +9647,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d2_aux0_20260929"
   },
   {
     "name": "e84_market_d2_aux02",
@@ -9650,9 +9657,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d2_aux02_20260929"
   },
   {
     "name": "e84_market_d4_aux0",
@@ -9660,9 +9667,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d4_aux0_20260929"
   },
   {
     "name": "e84_market_d4_aux02",
@@ -9670,9 +9677,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d4_aux02_20260929"
   },
   {
     "name": "e84_market_d8_aux0",
@@ -9680,9 +9687,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d8_aux0_20260929"
   },
   {
     "name": "e84_market_d8_aux02",
@@ -9690,9 +9697,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d8_aux02_20260929"
   },
   {
     "name": "e84_market_d16_aux0",
@@ -9700,9 +9707,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d16_aux0_20260929"
   },
   {
     "name": "e84_market_d16_aux02",
@@ -9710,9 +9717,9 @@
     "sources": [
       "e83_e84_depth.txt"
     ],
-    "status": "blocked_dependency",
+    "status": "scheduled_followup",
     "evidence": [],
-    "dependency": "market data absent"
+    "run_tag": "aws_e84_market_d16_aux02_20260929"
   },
   {
     "name": "e83_event_prefix_cf_local_smoke_seed8",
