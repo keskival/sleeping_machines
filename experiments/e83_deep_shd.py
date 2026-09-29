@@ -946,6 +946,8 @@ def main():
                     help="learning rate for the temporary suffix-progress measurement")
     ap.add_argument("--cf_spike_virtual_clip", type=float, default=1.0,
                     help="gradient-norm cap for the temporary suffix-progress measurement")
+    ap.add_argument("--cf_spike_suffix_weight", type=float, default=0.0,
+                    help="replace one sampled example's factual suffix gradient with its forced-spike branch gradient")
     ap.add_argument("--shift", type=int, default=4)
     ap.add_argument("--drop", type=float, default=0.1)
     ap.add_argument("--epochs", type=int, default=2)
@@ -983,11 +985,14 @@ def main():
             or not math.isfinite(a.cf_spike_option_step_clip) or a.cf_spike_option_step_clip <= 0
             or not math.isfinite(a.cf_spike_option_bound) or a.cf_spike_option_bound <= 0
             or not math.isfinite(a.cf_spike_virtual_lr) or a.cf_spike_virtual_lr <= 0
-            or not math.isfinite(a.cf_spike_virtual_clip) or a.cf_spike_virtual_clip <= 0):
+            or not math.isfinite(a.cf_spike_virtual_clip) or a.cf_spike_virtual_clip <= 0
+            or not math.isfinite(a.cf_spike_suffix_weight) or a.cf_spike_suffix_weight < 0):
         raise ValueError("invalid spike-option update, proposal, or virtual-step parameter")
     if a.cf_spike_option_updates and (not a.trainable_thresholds
                                       or a.objective != "event_prefix"):
         raise ValueError("spike-option updates require --trainable_thresholds and --objective event_prefix")
+    if a.cf_spike_suffix_weight > 0 and not a.cf_spike_option_updates:
+        raise ValueError("counterfactual suffix-gradient substitution requires --cf_spike_option_updates")
     if a.cf_route_swaps_per_layer and not a.route_topk:
         raise ValueError("--cf_route_swaps_per_layer requires --route_topk > 0")
     if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
@@ -1043,6 +1048,9 @@ def main():
         option_paths_ep = option_actions_ep = option_candidates_ep = 0
         option_immediate_ep = option_learning_ep = option_utility_ep = 0.0
         option_grad_norm_ep = option_threshold_step_ep = 0.0
+        option_suffix_batches_ep = 0
+        option_suffix_correction_norm_ep = 0.0
+        option_suffix_correction_by_layer_ep = np.zeros(a.depth + 1)
         option_hidden_delta_ep = np.zeros(a.depth, dtype=np.float64)
         option_action_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
         cf_eligible_ep = cf_shadow_ep = 0
@@ -1077,6 +1085,7 @@ def main():
         cf_route_swap_gap_sum_ep = np.zeros(a.depth, dtype=np.float64)
         cf_route_swap_helpful_ep = np.zeros(a.depth, dtype=np.int64)
         perm = train_order_rng.permutation(len(tr)); gsum = np.zeros(a.depth)
+        gsum_with_spike_cf = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
             eb, ei, et, input_counts, y, tmax, seq_end = batch_to_events(
@@ -1510,6 +1519,44 @@ def main():
                     option_threshold_deltas.append((layer_id, unit_id, delta))
                     option_action_by_layer_ep[layer_id] += 1
             gsum += np.asarray([grad_norm(l) for l in net.layers])
+            if option_pending is not None and a.cf_spike_suffix_weight > 0:
+                suffix = option_pending["suffix"]
+                factual_grads = option_pending["root_grads"]
+                branch_grads = option_pending["branch_grads"]
+                correction_scale = a.cf_spike_suffix_weight / max(len(items), 1)
+                correction_by_id = {}
+                correction_sq = 0.0
+                for param, factual_grad, branch_grad in zip(
+                        suffix, factual_grads, branch_grads):
+                    if factual_grad is None and branch_grad is None:
+                        continue
+                    if factual_grad is None:
+                        correction = branch_grad.detach().clone()
+                    elif branch_grad is None:
+                        correction = -factual_grad.detach().clone()
+                    else:
+                        correction = branch_grad.detach() - factual_grad.detach()
+                    correction.mul_(correction_scale)
+                    correction_by_id[id(param)] = correction
+                    correction_sq += float(correction.square().sum())
+                    if param.grad is None:
+                        param.grad = correction
+                    else:
+                        param.grad.add_(correction)
+                option_suffix_batches_ep += 1
+                option_suffix_correction_norm_ep += math.sqrt(correction_sq)
+                for layer_id, layer in enumerate(net.layers):
+                    layer_sq = sum(
+                        float(correction_by_id[id(param)].square().sum())
+                        for param in layer.parameters()
+                        if id(param) in correction_by_id)
+                    option_suffix_correction_by_layer_ep[layer_id] += math.sqrt(layer_sq)
+                head_sq = sum(
+                    float(correction_by_id[id(param)].square().sum())
+                    for param in net.event_heads[-1].parameters()
+                    if id(param) in correction_by_id)
+                option_suffix_correction_by_layer_ep[a.depth] += math.sqrt(head_sq)
+            gsum_with_spike_cf += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
             if option_threshold_deltas:
                 with torch.no_grad():
@@ -1831,6 +1878,17 @@ def main():
                 row["spike_option_hidden_event_delta_sum_by_layer"] = (
                     option_hidden_delta_ep.astype(int).tolist())
                 row["spike_option_learning_weight"] = a.cf_spike_option_weight
+                if a.cf_spike_suffix_weight > 0:
+                    row["spike_option_suffix_weight"] = a.cf_spike_suffix_weight
+                    row["spike_option_suffix_substitution_batches"] = int(
+                        option_suffix_batches_ep)
+                    row["spike_option_suffix_correction_norm_per_batch"] = round(
+                        option_suffix_correction_norm_ep / max(option_suffix_batches_ep, 1), 7)
+                    row["spike_option_suffix_correction_norm_by_layer"] = (
+                        option_suffix_correction_by_layer_ep
+                        / max(option_suffix_batches_ep, 1)).round(7).tolist()
+                    row["layer_grad_norms_with_spike_suffix_cf"] = (
+                        gsum_with_spike_cf / nb).round(7).tolist()
             if a.readout_fusion == "all_depths":
                 row["readout_branch_ablation_accuracy"] = (
                     fusion_ablation_ok / len(ev)).round(4).tolist()
