@@ -272,3 +272,21 @@ matching and records partial forward/backward operation estimates. Physical
 memory traffic and energy remain unmeasured. Prefix replay is unchanged.
 The generic scaling criteria are in
 [LANGUAGE_SCALING_PROTOCOL.md](LANGUAGE_SCALING_PROTOCOL.md).
+
+## Full value phases and content retrieval candidate
+
+E134 teaches all eight value layers, embeddings, memory time constants and
+readout under either fixed functional keys or coupled inputs. Both matched
+58,048-parameter phases reach 349/512 held-speaker accuracy; the parent remains
+370/512. Stable routes and nonzero layer gradients are supported mechanisms,
+not a sufficient recipe for transfer.
+
+The E135 research adapter replaces value-stream temporal means with a positive
+bounded content kernel while keeping the immutable key program intact. Query
+zero initialization reproduces the parent exactly. A mean plus four signed
+key/value moments implements retrieval with 165 state scalars per receiver/
+time bank, versus 33 for the plain memory. No event-pair matrix is used in the
+candidate implementation. Only winning payloads propagate. New query/key
+parameters and expanded scan/projection costs are explicitly recorded; the
+adapter is not yet a default or an energy advantage. See theory §205 and
+`experiments/e135_content_memory.py`.
