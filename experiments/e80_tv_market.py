@@ -249,6 +249,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--fees", default="0,2,5")
+    ap.add_argument("--policy_file", default="", help="Completed validation result supplying the frozen test policy")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True); t0 = time.time(); torch.manual_seed(0); rng = np.random.default_rng(0)
     fees = [float(f) for f in a.fees.split(",")]
@@ -288,7 +289,7 @@ def main():
         res["policy"] = {str(f): (None if v is None else {"net_bp_day5": v[0], "h": v[1], "thr": v[2], "trades": v[3]}) for f, v in pol.items()}
     else:                                                                     # read once, with the policy chosen on day 5
         vtag = f"val_L{a.L}_f{a.fine}_x{a.cross}_m{a.mag}_d{a.d}_M{a.M}_e30"
-        pol = json.load(open(os.path.join(OUT, f"tv_market_{vtag}.json")))["policy"]
+        pol = json.load(open(a.policy_file or os.path.join(OUT, f"tv_market_{vtag}.json")))["policy"]
         res["audit"] = {}
         for di, d in enumerate(eval_days):
             T, Y, enc = ev[di]; P = p_up_day(net, enc, a.L, gaps); R = returns_at(d, T, Y)

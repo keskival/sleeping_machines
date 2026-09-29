@@ -46,7 +46,7 @@ are rerun into isolated AWS paths, preserving historical results.
 
 `queue/aws_plan_20260929.json` is the ordered runnable plan. Large Transformer
 controls lead, followed by language, MNIST, synthetic, and deferred theory jobs.
-The missing 1M E64 Transformer checkpoint is recreated for E76's attention audit;
+The missing E64 Transformer checkpoints (1M two-layer, 10M four-layer, and 1M eight-layer) are recreated for E76's attention audit;
 the old E64 metric is preserved. E76 now accepts an explicit checkpoint directory
 and fails on an empty checkpoint set rather than saving an empty success result.
 
@@ -68,5 +68,36 @@ other jobs retain the original memory caps. These are ceilings, not reservations
 JSON results, provenance, and logs are committed and pushed to the AWS branch.
 Binary checkpoints and probability arrays remain on the host for dependent
 analyses; they are not automatically added to Git. Preserve them before host
-termination. DVS data, unavailable reference checkpoints, and dependent selectors
-must be resolved before their blocked audit entries can be run.
+termination. 
+
+## Data and dependent follow-up
+
+The expanded manifest contains 339 unique AWS job tags. The initial controller
+loaded the earlier plan before data preparation completed; a second tmux session
+waits for its normal completion and then runs the expanded plan, skipping every
+recorded outcome. It refuses to continue if the first controller stops early.
+
+All 21 Binance pilot archives (BTC spot, ETH spot, BTC perpetual; August 25–31)
+were downloaded and verified against the publisher's SHA-256 checksums. Raw DVS
+Gesture was downloaded from the mirror documented by snnTorch, verified against
+MD5 8a5c71fb11e24e5ca5b11866ca6c00a1, and extracted; all 98 train and 24 test
+recordings and labels are present. Dataset manifests are in
+`queue/aws_market_data_20260929.json` and `queue/aws_dvs_data_20260929.json`.
+The previous E60/E60b selected test results already exist and are not rerun.
+
+The remaining DVS job explicitly selects `--data dvs`; no SHD jobs are scheduled.
+E78 consumes the completed AWS E77 probability arrays, if available. E80's test
+epochs and frozen policy come only from its completed validation results. New
+optional reference-path arguments allow these analyses without copying over
+legacy outputs. A failed prerequisite leaves its analysis blocked.
+
+The output-isolation wrapper has three passing tests covering preservation of
+legacy files, refusal to reuse an AWS output directory, exception provenance, and
+non-finite accuracy/BPC rejection. The tiny E77 smoke also exercised it through
+the real safe runner. Non-finite BPC/accuracy marks a job failed even if the
+underlying script returned normally. Binary artifacts stay local.
+
+Monitor with `tmux attach -t aws-non-shd`,
+`tail -f /tmp/aws-non-shd-controller.log`, or the individual safe-runner logs.
+The follow-up session is `aws-non-shd-followup`; its log is
+`/tmp/aws-non-shd-followup.log`. Results are running/queued, not yet all complete.

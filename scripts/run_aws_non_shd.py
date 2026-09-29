@@ -29,11 +29,37 @@ def main():
         tag = job['run_tag']
         if tag in progress:
             continue
+        arguments = list(job['arguments'])
+        if job.get('prepare'):
+            dependency = ROOT / 'experiments/results/aws_20260929' / job['dependency_tag']
+            provenance = dependency / 'provenance.json'
+            if not provenance.exists() or json.loads(provenance.read_text())['status'] != 'completed':
+                progress[tag] = dict(status='blocked', dependency=str(dependency),
+                                     reason='Required benchmark did not complete')
+                PROGRESS.write_text(json.dumps(progress, indent=2)+'\n')
+                print(tag, 'blocked on', dependency, flush=True)
+                continue
+            if job['prepare'] == 'e78':
+                arrays = list(dependency.glob('*_ptrue_valid.npy'))
+                if len(arrays) != 1:
+                    raise RuntimeError(f'Expected one E77 probability array in {dependency}')
+                arguments += ['--e77_dir', str(dependency), '--e77', arrays[0].name.removesuffix('_ptrue_valid.npy')]
+            elif job['prepare'] == 'e80':
+                results = list(dependency.glob('tv_market_val_*.json'))
+                if len(results) != 1:
+                    raise RuntimeError(f'Expected one E80 validation result in {dependency}')
+                result = json.loads(results[0].read_text())
+                arguments += ['--mode', 'test', '--epochs', str(result['best_epoch']), '--policy_file', str(results[0])]
+                for key in ('L', 'fine', 'cross', 'mag', 'd', 'M', 'lr', 'batch', 'fees'):
+                    arguments += ['--' + key, str(result['args'][key])]
         out = ROOT / 'experiments/results/aws_20260929' / tag
         if out.exists():
             raise RuntimeError(f'Unreviewed existing output: {out}')
         q = QUEUE / (tag + '.txt')
-        command = ['experiments/aws_benchmark.py', '--run-tag', tag, '--script', job['script'], '--', *job['arguments']]
+        command = ['experiments/aws_benchmark.py', '--run-tag', tag, '--script', job['script']]
+        if job.get('stdout_only'):
+            command.append('--stdout-only')
+        command += ['--', *arguments]
         q.write_text(tag + ' ' + shlex.join(command) + '\n')
         env = dict(os.environ, WAIT='1', PYTHONUNBUFFERED='1', MIN_AVAIL_MB='8192',
                    MEM_CAP_KB=str(job.get('mem_cap_kb', 6000000)),
@@ -41,7 +67,9 @@ def main():
                    JOB_TIMEOUT_S=str(job.get('timeout_s', 21600)))
         print(datetime.datetime.now(datetime.timezone.utc).isoformat(), tag, flush=True)
         subprocess.run(['free', '-h'], check=True)
-        subprocess.run(['ps', '-eo', 'pid,etime,comm'], stdout=subprocess.DEVNULL, check=True)
+        processes = subprocess.check_output(['ps', '-eo', 'pid,etime,args'], text=True)
+        print('\n'.join(line for line in processes.splitlines()
+                        if 'run_safe.sh' in line or 'python experiments/' in line), flush=True)
         if Path('/usr/bin/nvidia-smi').exists():
             subprocess.run(['nvidia-smi'], check=True)
         started = time.monotonic()
