@@ -181,7 +181,7 @@ versus 177 seconds for the immediate control. This is evidence that the
 state-conditioned metric and update execute safely, not that optionality
 improves recognition. Later route alternatives remain mostly unreachable.
 
-![Matched immediate and continuation-aware SHD training: accuracy, deep support, and measured option reserve](report/figures/e83_optionality_state_value.png)
+![Matched immediate and continuation-aware SHD training: accuracy, final layer support, and sampled helpful continuations](report/figures/e83_optionality_state_value.png)
 
 **Six-epoch depth check (§153).** To test whether the two-epoch result was
 simply undertraining, we extended the same seed-6, depth-4, 120-train/128-held
