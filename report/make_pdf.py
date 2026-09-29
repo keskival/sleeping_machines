@@ -900,6 +900,94 @@ def fig_e83_route_option_value():
     return fig
 
 
+def fig_e83_spike_option_training():
+    """Compare trained scalar threshold-option arms on SHD."""
+    specs = [
+        ("*spike_option_pathwise_control*spk_s6.json", "pathwise", GRAY),
+        ("*spike_option_immediate*spk_s6.json", "immediate", BLUE),
+        ("*spike_option_scalar_lambda10*spk_s6.json", "scalar λ=10", AQUA),
+    ]
+    rows = []
+    for pattern, label, color in specs:
+        matches = glob.glob(os.path.join(RES, "e83", pattern))
+        if not matches:
+            raise FileNotFoundError(f"missing E83 spike-option result: {pattern}")
+        result = load(matches[0])
+        rows.append((label, color, result["curve"]))
+
+    fig = plt.figure(figsize=(7.1, 4.2))
+    grid = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.05],
+                            width_ratios=[1.0, 1.25], hspace=0.48, wspace=0.32)
+    axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1]),
+            fig.add_subplot(grid[1, :])]
+    x = np.arange(len(rows))
+    width = 0.28
+    for idx, (label, color, curve) in enumerate(rows):
+        accuracy = [100 * row["event_terminal_accuracy"] for row in curve]
+        axes[0].bar(idx - width / 2, accuracy[0], width, facecolor="white",
+                    edgecolor=color, linewidth=1.2,
+                    label="epoch 1" if idx == 0 else None)
+        axes[0].bar(idx + width / 2, accuracy[-1], width, color=color,
+                    label="epoch 2" if idx == 0 else None)
+        axes[0].text(idx + width / 2, accuracy[-1] + 0.3, "6/128",
+                     ha="center", va="bottom", fontsize=5.0, color=INK)
+    axes[0].axhline(5, color=ORANGE, linewidth=1.0, linestyle="--",
+                    label="5% chance")
+    axes[0].set_xticks(x, ["control", "immediate", "λ=10"])
+    axes[0].set_ylim(0, 9)
+    axes[0].set_ylabel("accuracy (%)", fontsize=6)
+    axes[0].set_title("A · No recognition gain", fontsize=7.5)
+    axes[0].tick_params(axis="x", labelsize=5.7)
+    axes[0].legend(fontsize=4.6, ncol=2, loc="upper right")
+
+    offsets = [-0.23, 0.0, 0.23]
+    for offset, (label, color, curve) in zip(offsets, rows):
+        coverage = np.asarray(curve[-1]["event_support_coverage"], dtype=float) * 100
+        axes[1].bar(np.arange(len(coverage)) + offset, coverage, width=0.22,
+                    color=color, label=label)
+        if len(coverage) >= 4:
+            axes[1].text(3 + offset, coverage[3] + 1.2,
+                         f"{coverage[3]:.2f}%", ha="center", fontsize=4.8,
+                         color=color, rotation=45)
+    axes[1].set_xticks(np.arange(4), ["L1", "L2", "L3", "L4"])
+    axes[1].set_ylim(0, 112)
+    axes[1].set_ylabel("examples with an event (%)", fontsize=6)
+    axes[1].set_title("B · L2 moves; L4 stays scarce", fontsize=7.5)
+    axes[1].legend(fontsize=4.6, ncol=1, loc="upper right")
+    axes[1].tick_params(axis="x", labelsize=5.7)
+
+    for offset, (label, color, curve) in zip(offsets, rows):
+        norms = np.asarray(curve[-1]["layer_grad_norms"], dtype=float)
+        plotted = np.maximum(norms, 1e-6)
+        axes[2].bar(np.arange(len(norms)) + offset, plotted, width=0.22,
+                    color=color, label=label)
+        for li, norm in enumerate(norms):
+            if norm == 0:
+                axes[2].text(li + offset, 1.3e-6, "0", ha="center",
+                             va="bottom", fontsize=4.4, color=color)
+    axes[2].set_yscale("log")
+    axes[2].set_ylim(1e-6, 3)
+    axes[2].set_xticks(np.arange(4), ["L1", "L2", "L3", "L4"])
+    axes[2].set_ylabel("pathwise gradient norm (log scale)", fontsize=6)
+    axes[2].set_title("C · Credit vanishes at L3/L4", fontsize=7.5)
+    axes[2].legend(fontsize=4.8, ncol=3, loc="upper right")
+    axes[2].tick_params(axis="x", labelsize=6)
+    for ax in axes:
+        ax.grid(axis="y", alpha=0.2)
+        ax.set_axisbelow(True)
+    fig.suptitle("E83 · scalar spike-option training pilot", x=0.02,
+                 ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.015,
+             "Seed 6; depth 4; 120 train / 128 held-out speakers; deepest readout; two epochs. "
+             "Each arm ended at 6/128 accuracy; race coverage was zero. Zero L4 norms are plotted at the axis floor. One seed.",
+             fontsize=4.9, color=MUTED)
+    fig.subplots_adjust(top=0.88, bottom=0.15, left=0.1, right=0.99)
+    out = os.path.join(os.path.dirname(__file__), "figures",
+                       "e83_spike_option_training.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e83_pair_occupancy():
     """Show that wider pair windows do not restore deep proposal support."""
     result = load(os.path.join(RES, "e83", "route_pair_occupancy_late_seed6.json"))
@@ -1890,6 +1978,15 @@ def build():
            "learning-option weights 0, 1, and 10, and on two only at weight 100. That additional tree's current loss "
            "worsened, so the large weight is not calibrated. This is a small mechanism signal that a sparse cascade can "
            "expose a deep learning option, not a trained update or SHD accuracy gain.", "small"),
+         P("<b>Training check (§151):</b> the first local scalar threshold update was tested against pathwise and "
+           "immediate-only controls on the same seed, with 120 training examples and 128 held-out speakers. All three "
+           "depth-4 arms ended at 6/128 accuracy after two epochs. The scalar arm raised held-out L2 event support to "
+           "27.3% from 8.6% in control, while L4 support stayed at 0.78% in every arm. The epoch-2 suffix-learning "
+           "advantage was slightly negative. Epoch-2 L3/L4 pathwise gradient norms were at most 6e−5/0 across all arms. "
+           "Race coverage was zero, so all answers used the terminal fallback. The scalar update moved intermediate "
+           "activity but did not establish a persistent route or useful gradient "
+           "at the classifier; candidate support and downstream survival remain open.", "small"),
+         *fig(fig_e83_spike_option_training, W),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "

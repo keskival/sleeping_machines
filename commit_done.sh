@@ -114,6 +114,7 @@ FILES=(
   report/figures/e83_route_bundle_pair.png
   report/figures/e83_route_cost_audit.png
   report/figures/e83_route_option_value.png
+  report/figures/e83_spike_option_training.png
   report/figures/e83_route_pair_occupancy.png
   report/figures/e83_spike_boundary_late.png
   report/figures/e83_spike_pair_audit.png
@@ -122,13 +123,27 @@ FILES=(
   commit_done.sh
 )
 
-# The allowlist can span experiment artifacts that do not exist in every
-# checkout. Stage existing paths and tracked deletions; skip absent paths that
-# have never been tracked so git add cannot fail with a missing-pathspec error.
+# Expand allowlisted globs to their matching files, and retain tracked
+# deletions. Skip absent literal paths and unmatched globs so git add never
+# fails with a missing-pathspec error.
 STAGE_FILES=()
 SKIPPED_FILES=()
 for file in "${FILES[@]}"; do
-  if [[ -e "$file" || -L "$file" ]] || git ls-files --error-unmatch -- "$file" >/dev/null 2>&1; then
+  if [[ "$file" == *'*'* || "$file" == *'?'* || "$file" == *'['* ]]; then
+    found=0
+    while IFS= read -r match; do
+      [[ -e "$match" || -L "$match" ]] || continue
+      STAGE_FILES+=("$match")
+      found=1
+    done < <(compgen -G "$file" || true)
+    while IFS= read -r -d '' match; do
+      STAGE_FILES+=("$match")
+      found=1
+    done < <(git ls-files -z -- "$file")
+    if (( ! found )); then
+      SKIPPED_FILES+=("$file")
+    fi
+  elif [[ -e "$file" || -L "$file" ]] || git ls-files --error-unmatch -- "$file" >/dev/null 2>&1; then
     STAGE_FILES+=("$file")
   else
     SKIPPED_FILES+=("$file")

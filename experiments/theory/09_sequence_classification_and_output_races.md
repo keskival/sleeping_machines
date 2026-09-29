@@ -3315,3 +3315,75 @@ learning-progress term, and held-out-speaker evaluation after real updates.
 The recursive computation returns one value at each state; the JSON audit
 retains branch traces only for diagnosis, not because the scalar recursion
 requires a globally available tree.
+
+### §151 — Scalar optionality as a local threshold update (E83 pilot)
+
+Let a candidate event have signed voltage margin $m=v-\theta$ and relaxed
+firing probability $q=\sigma(m/\tau)$. A forced-open replay gives a scalar
+utility relative to the factual closed branch,
+
+$$U_j=A_j^{\rm now}+\lambda A_j^{\rm learn},$$
+
+where $A^{\rm now}=L_{\rm closed}-L_{\rm open}$ and $A^{\rm learn}$ is the
+difference in finite one-step suffix-SGD loss reduction. For a fixed scalar
+tradeoff and a detached branch utility, maximizing expected utility
+$qU_j$ gives
+
+$$\Delta\theta_j=-\eta\frac{q(1-q)}{\tau}U_j.$$
+
+The sign has the intended meaning: a helpful open branch ($U_j>0$) lowers its
+threshold; a harmful one raises it. A scalar can therefore pass one chosen
+immediate-versus-learning tradeoff without retaining the full future tree.
+This update does not preserve the Pareto frontier: changing $\lambda$ can
+change the preferred route, and a single value cannot encode all such
+preferences at once.
+
+The first bounded training pilot implemented this rule on one sampled
+near-threshold, nonfiring event per selected layer. Candidate times/units were
+sampled with a margin-weighted proposal, examples were chosen from current
+errors, and the option update changed per-unit thresholds only. Three
+same-seed, split-RNG depth-4 arms (120 training examples, 128 held-out speakers,
+two epochs) compared pathwise control, $\lambda=0$, and $\lambda=10$. All
+finished at 6/128 (4.69%) accuracy, the observed chance-level outcome. The
+race emitted no early answers in any arm; all classifications used the
+terminal fallback. The
+$\lambda=10$ run increased epoch-2 held-out L2 support to 27.3% from 8.6% in
+the control, but L4 support remained 0.78% in both and accuracy did not move.
+Its epoch-2 mean suffix-learning advantage was $-3.1\times10^{-6}$; the
+positive epoch-1 value did not persist. Thus this pilot did not validate a
+learned option-value gain. It does show that local threshold credit can move
+an intermediate support statistic without creating a durable deep route to
+the classifier.
+
+The epoch-2 pathwise gradient norms localize the same collapse: the L3/L4
+norms were $6\times10^{-5}/0$ in the control, $0/0$ under immediate-only
+credit, and $3\times10^{-5}/0$ under $\lambda=10$. L2 activity rose in the
+scalar arm to about 0.47 spikes per held-out utterance (27.3% support, 1.71
+spikes per active example), while L4 remained at 0.78% support and about 0.02
+spikes per example. The useful task gradient did not reach L4. In this run
+the failure was not merely that the
+scalar value picked a weak direction; the available event path and its
+pathwise credit had already vanished at the last layers. The scalar rule
+updates a sampled threshold and cannot by itself repair missing payload
+gradients, downstream receiver weights, or persistent event support.
+
+The proposal sampler chose a layer with a Bernoulli probability, then chose a
+candidate with probability proportional to $e^{-|m|/T}$. The implemented
+update did not divide by these propensities, so it estimates a
+proposal-weighted objective rather than the uniform sum over eligible
+counterfactuals. This is a deliberate bounded discovery rule, not an unbiased
+gradient for every candidate. A future estimator must either define that
+proposal-weighted policy as its objective or apply logged inclusion weights
+with clipping/control variates; the latter trades bias for variance. Moreover,
+the suffix-progress term is a one-step proxy whose scale is optimizer- and
+data-dependent. Calibrate $\lambda$ on training-only counterfactuals and
+measure persistent held-out gains before treating it as a learning objective.
+
+The dominant observed obstruction remains support survival: after two epochs,
+all three arms had just one of 128 held-out examples active at L4. Threshold
+option credit cannot help a deep layer whose useful candidate events are
+absent or whose recruited events fail to persist through downstream layers.
+The next diagnostic should separate (i) candidate availability by depth,
+(ii) event survival from each forced birth, and (iii) the deepest-head loss
+and suffix-step change for those surviving paths. This single-seed pilot is a
+mechanistic update, not evidence of SHD accuracy, scalable depth, or supremacy.

@@ -70,7 +70,12 @@ realized firing calibration, gradients reached all eight event layers in a depth
   4/34. Of 113 natural-off L2/L3 pairs, none improved deepest loss when both singleton openings failed; only 2/42 L3
   pairs and 0/210 L2 pairs had $|\Gamma|>0.01$. The replay chose distinct spike events without requiring a shared
   receiver, so it is not evidence about same-receiver route-pair synergy. E83 still scans hidden state on a 1 ms grid;
-  it does not demonstrate sparse asynchronous training cost.
+  it does not demonstrate sparse asynchronous training cost. A first trained scalar-option threshold pilot compared
+  pathwise, immediate-only, and $\lambda=10$ updates at depth 4; all three ended at 6/128 held-out accuracy. Scalar
+  credit raised L2 support from 8.6% to 27.3%, but L4 support remained 0.78% and the epoch-2 suffix-learning advantage
+  was slightly negative. Epoch-2 L3/L4 pathwise gradient norms were at most $6\times10^{-5}/0$ across arms. This points
+  to event and gradient survival through depth as the next bottleneck, not a demonstrated gain. Race coverage was zero,
+  so the network emitted no early answer in any arm.
 
   A refractory-aware spike audit compared the matched no-pair control and
   late-only checkpoint on the same held-out examples. Restricting to in-band,
@@ -138,6 +143,20 @@ development diagnostic, not a trained update, an SHD accuracy gain, or
 supremacy evidence. SHD remains a major open performance gap.
 
 ![Scalar optionality through route and spike counterfactuals](report/figures/e83_route_option_value.png)
+
+**Trained scalar optionality check (§151).** We converted the frozen option
+value into a local per-unit firing-threshold update and compared a pathwise
+control with immediate-only and scalar-option arms. All three depth-4 seed-6
+runs ended at 6/128 held-out accuracy after two epochs. The scalar arm raised
+L2 event support from 8.6% to 27.3%, but L4 support stayed at 0.78% in every
+arm. Its suffix-learning advantage was slightly negative in epoch 2. Local
+credit can change intermediate activity without creating durable deep task
+utility. This first pilot does not establish an accuracy improvement; it
+identifies event survival through depth as the next mechanism to resolve.
+Race coverage was zero in all three arms, so each answer came from the
+terminal fallback.
+
+![Scalar threshold-option training: held-out accuracy and event support by layer](report/figures/e83_spike_option_training.png)
 
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
