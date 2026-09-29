@@ -5,6 +5,22 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 six-epoch continuation check (§153).** We extended the matched seed-6
+depth-4, 120-train/128-held-out-speaker immediate-credit and two-rollout
+continuation-value runs from two to six epochs. Both stayed at 6/128 held-out
+terminal accuracy in every epoch except the option arm's first epoch (7/128);
+race coverage was zero throughout. Final training loss was 2.9950 and 2.9957,
+near uniform 20-class loss. The immediate arm's L1--L4 support moved from
+98.4% / 40.6% / 2.3% / 0% to 100% / 1.6% / 0% / 0%. The option arm began at
+98.4% / 56.3% / 11.7% / 2.3% and ended at 100% / 8.6% / 0% / 0%; its L4
+activity appeared again at epoch 3 but was absent at the end. Thus the update
+briefly expands deep support and leaves more L2 activity, but this does not
+carry class signal or create a persistent deep path. L4 pathwise gradient
+norm was zero at the end in both arms. The added epochs reject simple
+undertraining as the sole explanation for this configuration. The result
+points toward censored proposal support and route survival; §153 derives why
+increasing rollouts cannot recover a useful route omitted by the proposal.
+
 **State-conditioned optionality pilot (§152).** We formalized optionality as a
 state-, label-, horizon-, proposal-, and rollout-budget-conditioned reserve:
 the expected best terminal loss among the factual continuation and $K$ sparse

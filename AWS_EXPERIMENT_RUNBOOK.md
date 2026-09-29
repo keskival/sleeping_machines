@@ -112,6 +112,10 @@ run tags distinct (for example, include `aws`) so results from two machines do
 not overwrite one another when copied or merged. Use a separate Git branch on
 AWS while the workstation checkout is also changing.
 
+Codex CLI automatically reads repository `AGENTS.md` instructions, so the
+checkout's [host rules](AGENTS.md) apply at session start. The prompt below
+sets the current AWS task and the larger benchmark priority.
+
 Give Codex this instruction at the start of its AWS session:
 
 ```text
