@@ -26,6 +26,7 @@ Runs below passed the runner and finite-metric checks. These early outcomes are 
 | `aws_e68_recall_R1_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.18 | 78.275 s | 487840 KB |
 | `aws_e68_recall_R4_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.174 | 169.77 s | 496740 KB |
 | `aws_e68_recall_R16_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.19 | 531.119 s | 516012 KB |
+| `aws_e68_text_R0_20260929` | `experiments/e68_race_transformer.py` | test_bpc=2.7562 | 46.821 s | 1282272 KB |
 
 E68 seed-0 synthetic recall, 8,000 updates (512,000 sequences): R=0: 18.5%, R=1: 18.4%, R=4: 18.2%.
 <!-- AWS_BENCHMARKS_END -->
