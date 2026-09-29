@@ -45,6 +45,8 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**AWS run `aws_e68_recall_R16_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","16","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.19. Wall time 531.119 s; peak process RSS 516012 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
+
 **AWS run `aws_e68_recall_R4_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","4","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.174. Wall time 169.77 s; peak process RSS 496740 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
 
 **AWS run `aws_e68_recall_R1_s2_20260929`.** experiments/e68_race_transformer.py with arguments `["--task","recall","--R","1","--steps","8000","--seed","2"]`. Validated metrics: test_acc=0.18. Wall time 78.275 s; peak process RSS 487840 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
