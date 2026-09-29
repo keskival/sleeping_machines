@@ -68,7 +68,7 @@ other jobs retain the original memory caps. These are ceilings, not reservations
 JSON results, provenance, and logs are committed and pushed to the AWS branch.
 Binary checkpoints and probability arrays remain on the host for dependent
 analyses; they are not automatically added to Git. Preserve them before host
-termination. 
+termination.
 
 ## Data and dependent follow-up
 
