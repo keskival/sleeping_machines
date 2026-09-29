@@ -87,7 +87,9 @@ def refresh_report():
             if built.returncode:
                 print(stamp(), 'PDF build failed:', built.stdout.strip(), flush=True)
                 return False
-            paths = ['REPORT.md', 'experiments/FINDINGS.md', 'report/sleeping_machines_status.pdf']
+            paths = ['REPORT.md', 'experiments/FINDINGS.md', 'report/sleeping_machines_status.pdf',
+                     'report/figures/supremacy_map.png', 'report/figures/potential_evidence.png',
+                     'report/figures/e68_recall_training.png', 'report/figures/e76_attention_work.png']
             git('add', '--', *paths, cwd=REPORT_WORKTREE)
             changed = git('diff', '--cached', '--quiet', cwd=REPORT_WORKTREE, check=False)
             if changed.returncode == 0:
