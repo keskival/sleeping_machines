@@ -1,0 +1,2 @@
+# Historical v1 fixture: completed output is results/e116/optionality_contract.json.
+# Current source adds §163; run e116_optionality_contract_v2.txt for that version.

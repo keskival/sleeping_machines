@@ -1,3 +1,28 @@
+# Current frontier priorities — 29 September 2026
+
+The manifesto remains sparse, asynchronous computation and learning driven by
+messages, local state, delays, and credit to unrealized alternatives. The results
+now include language-mixture and learned-retrieval leads plus deep synthetic
+composition. These are different model families; integrating their capabilities
+is the central architecture task.
+
+The current decision sequence is in [MATHEMATICAL_PROGRAM.md](MATHEMATICAL_PROGRAM.md).
+The analytic synthesis is [THEORY §§155–158](theory/10_trainability_and_frontier_synthesis.md),
+and the revised optionality formalism is [§§159–163](theory/11_optionality_and_learning_reserve.md).
+The earlier roadmap below is historical; its old queue order is superseded.
+
+**Local SHD priority:** correct the arrival/payload/credit contract before more
+router tuning; demonstrate fit-set learning, speaker transfer, and a useful deep
+path. Compare optionality using independent adaptation and evaluation to expose
+gradient-noise bonuses. Preserve explicit search, replay, event, and memory budgets.
+
+**AWS ownership:** the sibling runs non-SHD benchmarks and heavier controls.
+Do not duplicate those queues here. Run every local job through
+`experiments/queue/run_safe.sh`, one workload at a time, with at least 8 GiB
+host memory available and RSS/timeout guards enabled.
+
+---
+
 # Decision, 2026-09-26: the project's identity is local, sparse, error-gated learning
 
 **Goal:** learning whose cost follows events and errors (E4, E5, M18), decisions that take as long as the
@@ -90,4 +115,4 @@ THEORY.md sets out what the learning rules are gradients *of*, which parts are k
 (EventProp, perturbed argmax, surrogate gradients), and what is new: the residue
 boundary term, boundaries shared by two competing nodes, shadow continuation, work
 as a loss, and recruitment as the fallback when no boundary is within reach.
-Every job runs through `experiments/run_queue.sh`, one at a time.
+Every job now runs through `experiments/queue/run_safe.sh`, one at a time.

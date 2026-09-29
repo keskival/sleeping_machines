@@ -1,0 +1,84 @@
+{
+  "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+  "examples": 128,
+  "split": "train/val_spk",
+  "witness": [
+    {
+      "mode": "legacy",
+      "events": 1,
+      "time": [
+        1.500000238418579
+      ],
+      "payload": [
+        [
+          0.0
+        ]
+      ],
+      "payload_derivative": [
+        [
+          0.0
+        ]
+      ],
+      "post_arrival_grid_payload": 1.9544986486434937,
+      "post_arrival_grid_derivative": 1.0852314233779907
+    },
+    {
+      "mode": "grid",
+      "events": 1,
+      "time": [
+        1.0
+      ],
+      "payload": [
+        [
+          1.9544986486434937
+        ]
+      ],
+      "payload_derivative": [
+        [
+          1.0852314233779907
+        ]
+      ],
+      "post_arrival_grid_payload": 1.9544986486434937,
+      "post_arrival_grid_derivative": 1.0852314233779907
+    }
+  ],
+  "per_layer": [
+    {
+      "layer": 1,
+      "events": 892,
+      "same_bin_arrival": 853,
+      "zero_prior_state": 0,
+      "payload_changed": 892,
+      "outside_detection_interval": 793,
+      "payload_difference_sum": 5992.563575744629
+    },
+    {
+      "layer": 2,
+      "events": 171,
+      "same_bin_arrival": 81,
+      "zero_prior_state": 26,
+      "payload_changed": 171,
+      "outside_detection_interval": 86,
+      "payload_difference_sum": 1745.2820134162903
+    },
+    {
+      "layer": 3,
+      "events": 36,
+      "same_bin_arrival": 10,
+      "zero_prior_state": 2,
+      "payload_changed": 36,
+      "outside_detection_interval": 12,
+      "payload_difference_sum": 334.3163192272186
+    },
+    {
+      "layer": 4,
+      "events": 32,
+      "same_bin_arrival": 8,
+      "zero_prior_state": 4,
+      "payload_changed": 32,
+      "outside_detection_interval": 13,
+      "payload_difference_sum": 710.5710716247559
+    }
+  ],
+  "scope": "Frozen legacy checkpoint; grid comparison includes time and reset discretization changes. No accuracy claim."
+}

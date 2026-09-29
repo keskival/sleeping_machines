@@ -1,0 +1,2 @@
+# Isolate payload credit at an arrival-triggered spike, then audit the frozen D4 control.
+e83_emission_contract_s6_n128 experiments/e83_emission_contract_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 128 --output experiments/results/e83/emission_contract_s6_n128.json

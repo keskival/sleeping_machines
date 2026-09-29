@@ -241,6 +241,8 @@ def main():
         early_event_skip=bool(getattr(a, "early_event_skip", False)),
         route_topk=int(a.route_topk))
     net.load_state_dict(checkpoint["model_state_dict"])
+    for layer in net.layers:
+        layer.spike_reconstruction = getattr(a, "spike_reconstruction", "legacy")
     net.eval()
 
     tree_rows = []

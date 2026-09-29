@@ -9,11 +9,12 @@ Event: (t, v), v in R^d. Synapse sender -> unit j:
                     age after its content-dependent delay
   content -> time   the unit fires when its potential Re<w_j, z_j(t)> crosses the threshold (reset by subtraction)
   time -> content   it emits the snapshot y = GELU(Re C_j z_j(T)) + e_j at its firing time T
-All four couplings are differentiable: spike times by the implicit-function step T = T0 - (V(T0) - theta) / V'(T0) (§104d),
-payloads through z(T) (including its dependence on T), arrival times through the content-dependent delays.
+Smooth transverse crossings admit implicit-time derivatives (§104d); arrival-triggered jumps require
+right-limit payloads and a different timing derivative (§155). Legacy reconstruction omits current-bin
+arrivals from natural-spike payloads. The opt-in grid reference uses consistent post-arrival state/time/reset.
 Layer 1 units listen to tonotopic windows of bands; layer 2 units to a random quarter of layer 1; a non-spiking readout layer
 (20 class units) is trained by -log mean_t softmax_c V_c(t). Training simulates on a 1 ms grid (arrivals keep their exact
-sub-bin phase); inference is event-driven. Reported: messages sent and spikes per utterance per layer.
+sub-bin phase); this simulator is clocked at inference too. Reported: messages sent and spikes per utterance per layer.
 """
 import argparse
 import json
@@ -39,8 +40,11 @@ class TVLayer(nn.Module):
     def __init__(self, n_in, M, d_in, d_out, n, dmax, mask=None, spiking=True, w_sd=0.1, theta=1.0, gate_bias=0.5,
                  route_topk=0,
                  cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0, normalize=False,
-                 trainable_thresholds=False):
+                 trainable_thresholds=False, spike_reconstruction="legacy"):
         super().__init__()
+        if spike_reconstruction not in ("legacy", "grid"):
+            raise ValueError("spike_reconstruction must be legacy or grid")
+        self.spike_reconstruction = spike_reconstruction
         self.normalize = normalize                  # non-spiking read z / (count channel + 1): the §105 normalizer
         self.cdelay, self.gate, self.snapshot, self.causal = cdelay, gate, snapshot, causal
         self.vdot_min = 0.02                       # floor on dV/dt at a crossing: bounds 1/V' for grazing spikes
@@ -204,6 +208,8 @@ class TVLayer(nn.Module):
                         peak_threshold_margin, (Vd - th).detach().amax())
                 fire = Vd >= th
                 frac = ((th - Vp) / (Vd - Vp).clamp(min=1e-6)).clamp(0, 1)
+                if self.spike_reconstruction == "grid":
+                    frac = torch.ones_like(frac)
                 for spike_k, spike_b, spike_j, spike_active in spike_specs:
                     if k == spike_k:
                         fire[spike_b, spike_j] = spike_active
@@ -250,8 +256,24 @@ class TVLayer(nn.Module):
         if forced_event is not None and bool(forced_event.any()):
             # Include arrivals placed on the same grid edge as the inserted spike.
             zT = torch.where(forced_event[:, None], Z[kk, bb, jj], zT)
+        if self.spike_reconstruction == "grid":
+            # A causal reference for the existing clocked simulator: detection,
+            # reset and payload all use the post-arrival state at grid edge k.
+            # This retains payload/delay derivatives through X, but makes no
+            # continuous spike-time derivative claim. Legacy reconstruction can
+            # discard X[k], even when that impulse caused the crossing.
+            s = torch.ones_like(s)
+            zT = Z[kk, bb, jj]
         C = torch.complex(self.Cre, self.Cim)[jj]                              # (S, d_out, n)
         y = nn.functional.gelu((C @ zT[..., None]).squeeze(-1).real) * self.snapshot + self.emb[jj]
+        if return_spike_diagnostics:
+            grid_y = nn.functional.gelu((C @ Z[kk, bb, jj, :, None]).squeeze(-1).real) * self.snapshot + self.emb[jj]
+            route_info["emission_audit"] = {
+                "prior_state_norm": zprev.detach().abs().square().sum(-1).sqrt(),
+                "arrival_jump_norm": X[kk, bb, jj].detach().abs().square().sum(-1).sqrt(),
+                "payload_grid_difference_norm": (y - grid_y).detach().norm(dim=-1),
+                "time_minus_detection_grid": (s - 1).detach(),
+            }
         output = ((bb, jj, (kk - 1).float() + s, y), len(pe) / B)
         return (*output, route_info) if route_info is not None else output
 

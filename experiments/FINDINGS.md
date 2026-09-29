@@ -1,5 +1,45 @@
 # Findings log
 
+## 2026-09-29 — Hybrid emission contract and optionality synthesis (§§155–163)
+
+- **Confirmed implementation defect:** legacy `TVLayer` detects firing after current-bin arrivals but builds the
+  outgoing payload from the previous state. The one-arrival witness returns payload 0 and derivative 0 instead of
+  the consistent grid values 1.9544986 and 1.0852314. Arrival crossings require jump semantics, not an autonomous
+  implicit-crossing derivative. Added opt-in `--spike_reconstruction grid`, with matching detection/reset/payload
+  timestamps. Legacy remains the reproducibility default; this is a clocked reference, not an async solver.
+- **Frozen prevalence audit:** 128 held-out-speaker development utterances; L1–L4 emitted events 892/171/36/32;
+  current-bin state jumps coincide with 853/81/10/8; zero prior state occurs in 0/26/2/4. Coincidence does not
+  establish that the jump alone triggered a spike. Result: `results/e83/emission_contract_s6_n128.json`.
+- **Matched correction training completed:** seed 6, depth 4, 120 fit / 128 held-out, four epochs, same optimizer
+  and route-credit configuration as `bundle_control`. L4 coverage ends at 96.88% versus 1.56%; terminal accuracy
+  7/128 versus 8/128; race-plus-fallback 11/128 versus 8/128. No reliable recognition improvement is established.
+  Grid train loss 191.46 → 60.51 → 25.06 → 17.64; held-out prefix NLL 22.30/128.11 versus 3.02/3.25 control.
+  Post-arrival propagation survives, but evidence scale remains poor. The intervention also changes timing/reset
+  discretization. Runner completed safely; 582 s model wall time, observed heartbeat RSS about 0.6 GB and host
+  available memory above 11 GB. Result tag `emission_grid_recongrid`; no trained checkpoint was requested.
+- **Causally eligible L4 boundary replay:** 1,024 development utterances, 256 batches. 76 batches have eligible
+  nonrefractory receivers after a real selected-message arrival; 30 have a nearest candidate in the ±0.5 band.
+  Of 21 in-band natural-off toggles, 14 help and 7 harm; mean batch-mean deepest loss delta −0.000708, SE 0.00527.
+  The 46 out-of-band fallbacks have mean +0.005173, SE 0.002432. Do not pool these into a claim about near-boundary
+  births or interpret the selected replay effects as accuracy improvement.
+- **Analytical advance in optionality:** §§159–163 define budgeted attainable futures and distinguish information
+  arriving before a choice from an oracle choosing on hidden future information. A standalone premium cannot in
+  general use the same scalar backup as continuation value. Same-sample virtual progress has first-order expectation
+  η[mᵀMm + tr(MΣ)], while independent adapt/evaluate progress has ηmᵀMm under fixed metric and iid assumptions.
+  Thus the old metric can reward gradient noise. This is a derived mechanism to investigate, not a measured causal
+  explanation of prior SHD failures. Exact E116 examples illustrate duplicate-route invariance and the noise term.
+- **Actionable optionality (§163):** forced births in the legacy kernel used different payload semantics from natural
+  births. A shadow must correspond to allowed controls, not just a forced event. Derived the minimum local
+  control cost m²/(2aᵀMa) to cross an affine margin; shared-control constraints can make individually reachable
+  events jointly impossible. This is a new proposal-design criterion, not a trained result.
+- **Bird's-eye synthesis:** current task advantages belong to different model families. Priorities are correct
+  hybrid credit, retained class information, useful serial depth, transferable optionality, calibrated stopping,
+  affordable candidate search, and measured energy. Local work remains SHD; the AWS sibling owns non-SHD runs.
+- **Report:** plain-language introduction and measured advantages now lead; SHD development moved to Appendix A.
+  Expanded potential covers training economics, dormant capacity, persistent mobile learning, science/industry,
+  hardware and infrastructure, and learned computational optionality. New results are visualized in the appendix.
+
+
 One entry per result: what we ran, what came out, what it teaches us, what changes.
 Newest first. Numbers are single seeds unless stated.
 

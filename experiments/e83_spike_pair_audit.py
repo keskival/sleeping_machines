@@ -197,6 +197,8 @@ def main():
                   early_event_skip=bool(get("early_event_skip", False)),
                   route_topk=int(get("route_topk", 0)))
     net.load_state_dict(ckpt["model_state_dict"])
+    for layer in net.layers:
+        layer.spike_reconstruction = get("spike_reconstruction", "legacy")
     net.eval()
     if a.require_shared_receiver:
         full_mask = net.layers[layer_id + 1].mask

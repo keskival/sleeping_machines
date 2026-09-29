@@ -347,7 +347,7 @@ class DeepSHD(nn.Module):
                  dmax, w_sd, seed=0, event_readout=False,
                  readout_fusion="deepest", input_count_payload=False,
                  early_event_skip=False, route_topk=0,
-                 trainable_thresholds=False):
+                 trainable_thresholds=False, spike_reconstruction="legacy"):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
@@ -365,6 +365,7 @@ class DeepSHD(nn.Module):
         local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
         self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0],
                                    route_topk=self.route_topk,
+                                   spike_reconstruction=spike_reconstruction,
                                    trainable_thresholds=self.trainable_thresholds))
         adjacent_masks = []
         for i in range(1, depth):
@@ -393,6 +394,7 @@ class DeepSHD(nn.Module):
             n_in = mask.shape[0]
             self.layers.append(TVLayer(n_in, M, d, d, n, dmax, mask, True, w_sd[1],
                                        route_topk=self.route_topk,
+                                       spike_reconstruction=spike_reconstruction,
                                        trainable_thresholds=self.trainable_thresholds))
         self.event_readout = bool(event_readout)
         self.readout_fusion = readout_fusion
@@ -950,6 +952,8 @@ def main():
                     help="event_prefix only: use the deepest event head or add sparse class evidence from every depth")
     ap.add_argument("--input_count_payload", choices=("off", "additive"), default="off",
                     help="preserve the merged raw-spike count as an additive sparse vector mark")
+    ap.add_argument("--spike_reconstruction", choices=("legacy", "grid"), default="legacy",
+                    help="grid: use the detected post-arrival state/time and grid-edge reset consistently")
     ap.add_argument("--early_event_skip", action="store_true",
                     help="let layers 3+ receive a sparse skip stream from layer 1 as well as the adjacent layer")
     ap.add_argument("--run_tag", default="",
@@ -1137,6 +1141,7 @@ def main():
                   input_count_payload=a.input_count_payload == "additive",
                   early_event_skip=a.early_event_skip,
                   route_topk=a.route_topk,
+                  spike_reconstruction=a.spike_reconstruction,
                   trainable_thresholds=a.trainable_thresholds)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
@@ -2416,6 +2421,8 @@ def main():
     skip_tag = "_skfirst" if a.early_event_skip else ""
     rng_tag = "_rngsplit" if a.rng_protocol == "split" else ""
     run_tag = f"_{a.run_tag}" if a.run_tag else ""
+    if a.spike_reconstruction != "legacy":
+        run_tag += f"_recon{a.spike_reconstruction}"
     path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}{pair_sampling_tag}{route_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"

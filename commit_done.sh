@@ -31,6 +31,7 @@ FILES=(
   scripts/bootstrap_aws_experiments.sh
   experiments/FINDINGS.md
   experiments/MATHEMATICAL_PROGRAM.md
+  experiments/ROADMAP.md
   experiments/THEORY.md
   experiments/theory
   experiments/e64_lm_baselines.py
@@ -44,6 +45,15 @@ FILES=(
   experiments/e83_route_cost_audit.py
   experiments/e83_route_pair_occupancy_audit.py
   experiments/e83_spike_boundary_audit.py
+  experiments/e83_emission_contract_audit.py
+  experiments/queue/e83_emission_contract_audit.txt
+  experiments/queue/e83_emission_grid.txt
+  experiments/e116_optionality_contract.py
+  experiments/queue/e116_optionality_contract.txt
+  experiments/queue/e116_optionality_contract_v2.txt
+  experiments/results/e116/optionality_contract.json
+  experiments/results/e116/optionality_contract_v2.json
+  experiments/queue/e83_spike_boundary_l4_causal_1024.txt
   experiments/e83_spike_pair_audit.py
   experiments/e83_conditioned_margin_audit.py
   experiments/e83_counterfactual_audit.py
@@ -115,6 +125,9 @@ FILES=(
   experiments/results/e79/race_mixer_D1000000_K5_e77none.json
   experiments/results/e79/race_mixer_D10000000_K6_e77none.json
   report/make_pdf.py
+  report/frontier_potential.py
+  report/figures/e83_emission_contract.png
+  report/figures/optionality_contract.png
   report/figures/potential_evidence.png
   report/figures/e83_route_gradient_diagnostics.png
   report/figures/e83_d4_readout_support.png
@@ -201,5 +214,5 @@ done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Update frontier evidence report and AWS experiment setup}"
+MESSAGE="${1:-Advance event semantics and optionality theory; reorganize frontier report}"
 git commit -m "$MESSAGE"

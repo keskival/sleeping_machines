@@ -1,6 +1,31 @@
 # Mathematical program for event networks at language scale
 
-**Purpose.** This note connects the project's existing results to mathematical tools that can explain when an event network should learn or compute better than a Transformer. It is a program of derivations and falsifiable tests, not a claim that frontier superiority has been established. The strongest language result in the current report is still behind Transformer quality, and several proposed mechanisms have not been tested at language scale.
+**Purpose.** Connect the manifesto, existing results, and derivations to a deep event architecture with a better quality–resource frontier. E79 leads the completed same-split 1M/10M language baselines; its expert mixture is a different model family from the deep vector stack. Learned retrieval and synthetic compositional depth also have measured advantages. The missing bridge is a shared representation learner that combines those capabilities with sparse execution and efficient credit.
+
+## Current priorities, 29 September 2026
+
+The latest analytic synthesis is in [§§155–158](theory/10_trainability_and_frontier_synthesis.md);
+[§§159–163](theory/11_optionality_and_learning_reserve.md) refine optionality. These supersede
+older next-run suggestions below. The AWS sibling owns non-SHD benchmarks; this host owns SHD.
+
+1. **Repair the hybrid event contract.** Legacy TVLayer detects crossings after arrivals but reconstructs
+   payloads from before those arrivals. A minimal witness gives zero payload and zero payload gradient;
+   the consistent grid reference restores both. Audit and compare this correction before more router tuning.
+2. **Separate information from optimization.** Probe input and hidden representations, establish small
+   fit-set learning with the deepest terminal head, then measure speaker transfer and useful depth.
+   Event activity and nonzero auxiliary gradients alone have already failed as success criteria.
+3. **Measure transferable optionality.** Same-sample virtual progress contains a gradient-variance bonus
+   tr(MΣ). Adapt on one training subset and evaluate on another; retain future route choices, explicitly
+   accounting for when their selection information is available. Do not reward duplicate choices or noise.
+4. **Build bounded serial event continuations.** Preserve a payload/credit path through each learned
+   transformation, bound event and shadow work, and use arrival-driven state updates. A sparse skip
+   around deep layers is insufficient evidence that the deep transformations learn.
+5. **Complete the frontier evidence.** AWS completes the non-SHD scale/baseline work. Compare matched
+   quality, training cost, inference latency, memory, and measured energy; include indexing and credit.
+
+SHD gates are: causal kernel correctness → fit-set learning → held-out-speaker generalization → useful
+2/4/8-layer composition → calibrated early decisions → matched quality/work advantage. Optionality and
+new depth are mechanism changes to cross those gates, not independent reasons to claim superiority.
 
 ## The target is a quality–resource frontier
 

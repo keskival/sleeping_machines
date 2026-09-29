@@ -61,9 +61,14 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Vector memory, retrieval, and deep local learning](theory/08b_memory_retrieval_and_deep_learning.md) — §§107–111
 - [Sparse attention and depth bounds](theory/08c_sparse_attention_and_depth_bounds.md) — §§112–114
 - [Sequential classification and output races](theory/09_sequence_classification_and_output_races.md) — §§115–154
+- [Trainability and frontier synthesis](theory/10_trainability_and_frontier_synthesis.md) — §§155–158
+- [Optionality and transferable learning reserve](theory/11_optionality_and_learning_reserve.md) — §§159–163
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map
+
+- **Current synthesis:** §§155–158 connect the manifesto to the remaining gaps. §155 distinguishes smooth threshold crossings from arrival-triggered jumps and documents a reproducible payload/gradient defect in legacy TVLayer. §§156–157 distinguish event support, class information, and label-aligned descent, and specify a bounded sparse continuation architecture.
+- **Optionality refinement:** §§159–163 distinguish attainable correction sets from route entropy, derive the value of retaining a choice until information arrives, show why an isolated option premium cannot generally be backed up as one scalar, and derive the gradient-variance term that contaminates same-sample virtual learning progress. Independent adaptation/evaluation measures transferable reserve; the finite-budget gain curve measures useful breadth under an explicit proposal. §163 derives a control-normalized margin and distinguishes realizable parameter changes from incompatible forced-event bundles.
 
 - **Route changes and credit to unrealized alternatives:** §§19 and 57 are the canonical counterfactual routing derivations. Sparse experts and attention-key recruitment use this same mechanism.
 - **Attention and associative retrieval:** §§96–107 develop race/softmax equivalence, key/value gradients, and event-sequence Jacobians. §112 specializes the existing route credit to missing attention keys; it does not re-derive the generic router gradient.
