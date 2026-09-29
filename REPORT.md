@@ -156,7 +156,7 @@ The common event backbone has independently trained development screens across l
 | Market event prediction | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 13.92G / 7.52G |
 | Temporal composition | 97.3% | 90.2% | 0.29M / 0.38M | 6.69G / 3.23G |
 | MNIST | 75.8% | 69.9% | 1.66M / 2.57M | 35.97G / 20.48G |
-| Event-camera gestures | 59.1% | 15.9% | 23.99M / 124.19M | 46.12G / 90.10G |
+| Event-camera gestures | 59.1% | 15.9% | 23.99M / 124.23M | 46.12G / 90.13G |
 
 The common screens use eight layers and the Transformer references two, both at width 32 for eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times fewer hidden carrier emissions. The model's depth is chosen to suit the computation.
 
