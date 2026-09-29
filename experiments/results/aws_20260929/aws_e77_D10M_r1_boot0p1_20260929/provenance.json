@@ -1,0 +1,30 @@
+{
+  "run_tag": "aws_e77_D10M_r1_boot0p1_20260929",
+  "script": "experiments/e77_tv_lm.py",
+  "arguments": [
+    "--D",
+    "10000000",
+    "--passes",
+    "2",
+    "--bs",
+    "4",
+    "--retrieval",
+    "1",
+    "--target_spikes_per_char",
+    "0.1",
+    "--threshold_calibration_batches",
+    "4"
+  ],
+  "output_redirected": true,
+  "source_sha256": "970e11bbc5c1dd9e529669bf8423b9ae5863ca7f88dc04abadb0127121350bd9",
+  "git_commit": "9ab9254be1d2df42f3354117de7f4b54ab40c5c6",
+  "limits": {
+    "MEM_CAP_KB": "25165824",
+    "MEM_CAP_RSS_KB": "20971520",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-09-29T15:33:05Z",
+  "status": "terminated",
+  "exit_code": 124
+}

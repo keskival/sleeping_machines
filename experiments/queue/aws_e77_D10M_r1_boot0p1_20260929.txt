@@ -1,0 +1,1 @@
+aws_e77_D10M_r1_boot0p1_20260929 experiments/aws_benchmark.py --run-tag aws_e77_D10M_r1_boot0p1_20260929 --script experiments/e77_tv_lm.py -- --D 10000000 --passes 2 --bs 4 --retrieval 1 --target_spikes_per_char 0.1 --threshold_calibration_batches 4
