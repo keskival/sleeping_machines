@@ -1,0 +1,9 @@
+15:22:09 start aws_e68_text_R4_20260929
+15:23:09 alive aws_e68_text_R4_20260929: process group RSS=1301400KB, MemAvailable=29341MB
+15:24:10 alive aws_e68_text_R4_20260929: process group RSS=1311000KB, MemAvailable=29378MB
+15:25:10 alive aws_e68_text_R4_20260929: process group RSS=1306520KB, MemAvailable=29397MB
+15:26:10 alive aws_e68_text_R4_20260929: process group RSS=1303248KB, MemAvailable=29385MB
+15:27:11 alive aws_e68_text_R4_20260929: process group RSS=1294576KB, MemAvailable=29390MB
+15:28:11 alive aws_e68_text_R4_20260929: process group RSS=1306392KB, MemAvailable=29335MB
+15:29:11 alive aws_e68_text_R4_20260929: process group RSS=1291032KB, MemAvailable=29393MB
+15:29:13 done aws_e68_text_R4_20260929 (exit 1)
