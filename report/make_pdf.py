@@ -91,6 +91,31 @@ def aws_tf_1m_test_bpc():
     return values
 
 
+def aws_e68_text_test_bpc():
+    """Return completed E68 text8 controls as (race count, test BPC) pairs."""
+    values = []
+    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
+        try:
+            provenance = load(provenance_path)
+            args = provenance.get("arguments", [])
+            if (provenance.get("status") != "completed" or
+                    provenance.get("script") != "experiments/e68_race_transformer.py" or
+                    "--task" not in args or args[args.index("--task") + 1] != "text" or
+                    "--R" not in args):
+                continue
+            races = int(args[args.index("--R") + 1])
+            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "text_R*_s*.json")):
+                result = load(result_path)
+                curve = result.get("curve", [])
+                if curve and isinstance(curve[-1].get("test_bpc"), (int, float)):
+                    value = float(curve[-1]["test_bpc"])
+                    if np.isfinite(value):
+                        values.append((races, value))
+        except (OSError, ValueError, TypeError, IndexError):
+            continue
+    return values
+
+
 def fig_image(fig, width_mm):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -264,6 +289,16 @@ def fig_potential_evidence():
         ax_lm.scatter(1_000_000 * (1 + offsets), aws_tf, facecolors="white", edgecolors=GRAY,
                       marker="o", s=28, linewidths=1.2, zorder=5,
                       label="AWS validation-selected rerun(s) · 1M")
+    e68_text = aws_e68_text_test_bpc()
+    e68_colors = {0: GRAY, 1: BLUE, 4: AQUA, 16: ORANGE}
+    if e68_text:
+        offsets = np.linspace(-0.02, 0.02, len(e68_text))
+        for i, (races, value) in enumerate(e68_text):
+            x = 1_000_000 * (1 + offsets[i])
+            color = e68_colors.get(races, INK)
+            ax_lm.scatter([x], [value], color=color, marker="X", s=34, zorder=6)
+            ax_lm.annotate(f"E68 R={races}", (x, value), xytext=(6, 4 + 8 * (i % 3)),
+                           textcoords="offset points", fontsize=5.8, color=color)
     ax_lm.scatter([10_000_000], [tf_10m_test], color=INK, marker="^", s=38, zorder=5,
                   label="E64b Transformer · 10M test")
     ax_lm.annotate(f"10M 4L TF test {tf_10m_test:.3f}", (10_000_000, tf_10m_test), xytext=(7, -12),
@@ -271,7 +306,7 @@ def fig_potential_evidence():
     ax_lm.set_xscale("log")
     ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
     ax_lm.set_xlim(700_000, 130_000_000)
-    ax_lm.set_ylim(1.35, 2.55)
+    ax_lm.set_ylim(1.35, 3.15)
     ax_lm.set_xlabel("training characters")
     ax_lm.set_ylabel("bits per character · lower is better")
     ax_lm.set_title("A · Real text8 language modeling")
@@ -304,7 +339,8 @@ def fig_potential_evidence():
     fig.text(0.02, 0.015,
              f"A: Every plotted BPC is held-out test; the 10M Transformer checkpoint was selected on validation "
              f"(step {tf_10m_final['best_step']:,}/{tf_10m_final['steps']:,}). "
-             "E79 K rises 5→6→7. B: synthetic E61 recall; dotted line = chance (1/32).", fontsize=6.0, color=MUTED)
+             "E79 K rises 5→6→7. E68 crosses are 3k-update race-attention controls on the same 1M/held-out text8 split. "
+             "B: synthetic E61 recall; dotted line = chance (1/32).", fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.018,
              "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
              fontsize=6.0, color=MUTED)
@@ -2900,6 +2936,8 @@ def build():
             "[0.115, 0.125, 0.217, 0.075, 0.081, 0.138, 0.124, 0.121]. This demonstrates gradient reach in a "
             "small model, not language-model quality or a scaling law.")]
     s += fig(FM.fig_lm_topology, W)
+    s += [P("<b>Measured retrieval demand (E76).</b> A 1M-character, two-layer Transformer concentrates each target attention mass into a subset of its visible context. The plot counts the keys needed for 95% and 99% of softmax mass and compares them with a tilted-Gaussian estimate; it measures candidate demand, not indexed search cost or an event-model speedup.", "small")]
+    s += fig(FM.fig_e76_attention_work, W)
     s += [P("<b>E77 exact activity matching and depth-8 gradient reach (§§133–134).</b> At default width, the raw "
             "voltage-quantile initialization yielded selected-checkpoint test activity [0, 0.007, 0.009, 0.004] "
             "spikes/character and nonzero gradients at only [1, 9, 12, 6] of 13 validation points. Replaying the "

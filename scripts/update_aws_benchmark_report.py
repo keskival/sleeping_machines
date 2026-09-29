@@ -19,7 +19,8 @@ def main():
     FIGURES.mkdir(parents=True, exist_ok=True)
     rendered = []
     for name, build in (("supremacy_map", figures.fig_supremacy_map),
-                        ("e68_recall_training", figures.fig_e68_recall_training)):
+                        ("e68_recall_training", figures.fig_e68_recall_training),
+                        ("e76_attention_work", figures.fig_e76_attention_work)):
         fig = build()
         if fig is None:
             continue

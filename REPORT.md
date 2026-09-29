@@ -1085,6 +1085,11 @@ in this design features come from the time-vector layers and the native detector
 
 ![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
 
+E76 audits candidate demand on the trained 1M-character Transformer. It measures the number of visible keys needed to capture
+95% or 99% of softmax attention mass; this does not include the cost of finding those keys with an index.
+
+![E76 measured keys needed for target softmax mass as the causal context grows, compared with a tilted-Gaussian estimate](report/figures/e76_attention_work.png)
+
 **The plan, in stages, each measured on character-level text (text8):**
 1. *Counting baseline* (measured, E62–E66; above): context detectors of increasing length with counts of what follows, plus a copy
    memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
@@ -1147,7 +1152,7 @@ on language itself. The stages above are how that will be decided.
 | E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
 | E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
 | E75 | SHD: equivariant time-vector network (band shift × tempo) | symmetry check passed; two-epoch pilot reached 0.044 and did not learn; strict-depth and auxiliary-credit diagnostics follow in E83 |
-| E76 | attention work law in trained character-level Transformers | queued after E64b |
+| E76 | attention work law in trained character-level Transformers | measured keys needed for 95%/99% softmax mass across a 1M-character, 2-layer Transformer; candidate demand only, no indexed-search cost |
 | E77 | time-vector language model with delay-coded retrieval (text8) | width-8 depth-8 gradient-reach pilot; 1M Transformer control scored 2.352 test BPC; matching E77 job hit the 3.5 GB cap before training; bounded 100k depth-8 E77 run prioritized |
 | E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
 | E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
