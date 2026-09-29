@@ -1,0 +1,1 @@
+aws_e68_text_R4_20260929 experiments/aws_benchmark.py --run-tag aws_e68_text_R4_20260929 --script experiments/e68_race_transformer.py -- --task text --R 4 --steps 3000
