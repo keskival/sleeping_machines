@@ -12,7 +12,7 @@ Computing with time: learned delays, vector messages and local memory
 
 ![accomplishments](report/figures/accomplishments.png)
 
-Language scores are held-out test results from the named predictive mixture and gradient baselines, with different model sizes and schedules. Retrieval, composition and arithmetic are controlled synthetic tasks. The following pages distinguish the consolidated implementation from the original native components.
+Language scores are held-out test results from the named predictive mixture and gradient baselines, with different model sizes and schedules. That specialized mixture is not yet reproduced by a generic deep language model. Retrieval, composition and arithmetic are controlled synthetic tasks. The following pages distinguish the consolidated implementation from the original native components.
 
 ## Consolidated models: accuracy versus computation
 
@@ -60,7 +60,7 @@ Small local vector maps and query readouts can remain dense. The intended effici
 
 | Principle | What it enables |
 | --- | --- |
-| Stable transport through depth | Bounded residual carriers preserve payload and credit under stated fixed-route conditions. Route changes and readout geometry are analyzed separately. |
+| Stable transport through depth | Bounded residual carriers preserve payload and credit under stated schedule conditions. A separate key stream can keep actual races and clocks fixed while values learn; routing credit is a separate problem. |
 | Active communication support | Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected. |
 | Credit to unrealized alternatives | A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race. |
 | Periodic state as an isometry | Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples. |
@@ -100,6 +100,10 @@ Machines and instruments could maintain local predictive models, recognize chang
 
 If the architecture combines frontier predictive quality, reliable deep learning and lower total training and inference cost, it would change the practical recipe for building frontier models. Useful capacity, active computation and learning cost could become more independently controllable.
 
+### Useful quality at a lower energy cost
+
+A broad advantage can begin with comparable quality at substantially lower measured training or inference energy. A modest quality tradeoff with a large energy saving can also unlock new applications. Tenfold savings, or larger, would transform feasible deployments and research budgets; these are conditional scenarios, not current measured energy ratios.
+
 ### The economics of creating intelligence
 
 A fixed power and capital budget could produce a more capable model, more specialized models or more research. Teams constrained by compute could enter new scales and applications. Efficient learning would expand what is feasible, including the size and sophistication of frontier training runs.
@@ -120,10 +124,11 @@ These larger outcomes depend on demonstrating quality, scaling, retention and to
 
 ## What establishes the larger advantage
 
-The ambition is a common model family whose strongest mechanisms remain useful as tasks, data and capacity grow. Arithmetic and retrieval now retain their demonstrated strengths in the consolidated implementation. Real language mixtures and native composition provide additional reference capabilities.
+The ambition is a common model family whose strongest mechanisms remain useful as tasks, data and capacity grow. Arithmetic and retrieval retain their demonstrated strengths in the consolidated implementation. The strongest language mixture is specialized; the generic backbone still needs to demonstrate competitive learned representations. Character and subword-token budgets must be distinguished.
 
 | Objective | Decisive evidence |
 | --- | --- |
+| Generic language scaling | Train a learned event backbone without explicit n-gram/pointer experts. Scale through declared data budgets with matched Transformer, recurrent and state-space references; record loss, capacity, forward/backward work, memory traffic, time and joules. |
 | Preserve capabilities | Repeat established generalization and sample-efficiency results within the common model family, with task-appropriate depth and explicit resource accounting. |
 | Strong real-event recognition | Accurate speech and event-camera decisions on complete held-out benchmarks; calibrated confidence and time-to-answer. |
 | Learn routes and representations at scale | Reliable deep credit and useful counterfactual alternatives as width, depth, memory and data increase. |
@@ -140,11 +145,11 @@ The eight-layer speech checkpoint reaches **72.3%** across 512 held-out utteranc
 
 Two causal context channels allow distant packets to interact through accumulated state. Their zero-initialized columns preserve the starting predictions exactly. A matched full-update continuation reaches 68.6%; training only those columns reaches 71.1%. The added state has linear event work and 6,534 learned parameters.
 
-The learned pool scores each observed winning payload, accumulates a weighted numerator and mass, and reads their ratio at the query. It has linear work in the number of active packets and a local supervised score gradient. Zero initialization exactly recovers count pooling. This tests whether informative parts of an utterance should contribute more strongly to the decision.
+A separate key stream computes actual input-dependent winners and clocks while new value maps learn under that schedule. Matched continuations reach 364/512 (71.1%) with separate keys and 365/512 (71.3%) with shared streams. Both improve fitting accuracy but remain below the parent. Audited finite value credit agrees with predicted loss change; all extra key computation is charged. This establishes a routing-isolation mechanism, not an accuracy or energy advantage.
 
 The exact linear-work memory scan preserves audited predictions and gradients while reducing scan combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× at the audited checkpoint, excluding optimizer updates.
 
-Speech scores are development evidence from training speakers 3/6; the official SHD test set is untouched. They are not directly comparable to published official-test scores. One seed, width 32, eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.
+Speech scores are development evidence from training speakers 3/6; the official SHD test set is untouched. They demonstrate deep learning and limited transfer, not competitive speech representation. They are not directly comparable to published official-test scores. One seed, width 32, eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.
 
 ## Appendix B. Breadth of the common implementation
 
@@ -177,6 +182,6 @@ FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. F
 | Resource boundary | Logical memory reads are reported separately. Transfers, allocations, kernel launch and instrumentation are outside the arithmetic ledger. Division, exponential and remainder costs have unit weights. |
 | Energy | Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements. |
 
-The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons.
+The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
