@@ -134,6 +134,7 @@ def main():
                 refresh_report()
                 git('fetch', 'origin', check=False)
                 main_sha = git('rev-parse', TARGET).stdout.strip()
+                reported = main_sha
         if main_sha != reported:
             refresh_report()
             reported = git('rev-parse', TARGET, check=False).stdout.strip()
