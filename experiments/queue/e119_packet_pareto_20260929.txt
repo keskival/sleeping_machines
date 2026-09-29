@@ -1,0 +1,1 @@
+e119_packet_pareto_20260929 experiments/e119_packet_pareto.py --tag packet_pareto_d8_n1024_s6 --checkpoint experiments/results/e119/race_d8_linear_n1024_e8_s6.pt

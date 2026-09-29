@@ -1893,6 +1893,71 @@ def time_pages(st, W):
     return s
 
 
+def fig_e119_work_and_learning():
+    audit_path = os.path.join(RES, "e119", "scan_audit_s6.json")
+    training_path = os.path.join(RES, "e119", "race_d8_linear_n1024_e8_s6.json")
+    if not all(os.path.exists(p) for p in (audit_path, training_path)):
+        return None
+    audit, training = load(audit_path), load(training_path)
+    if any(x.get("status") != "completed" for x in (audit, training)):
+        return None
+    f, axes = plt.subplots(2, 2, figsize=(7.2, 5.5))
+    curve = training["curve"]
+    epochs = [r["epoch"] for r in curve]
+    for split, label, color in (("fit", "Fitting speakers", AQUA), ("dev", "Held-out speakers", BLUE)):
+        axes[0, 0].plot(epochs, [r[split]["nll"] for r in curve], "o-", color=color, label=label)
+        axes[0, 1].plot(epochs, [100*r[split]["accuracy"] for r in curve], "o-", color=color, label=label)
+    axes[0, 0].set_title("Terminal classification loss")
+    axes[0, 0].set_ylabel("NLL (nats)")
+    axes[0, 1].set_title("Eight-layer recognition")
+    axes[0, 1].set_ylabel("Accuracy (%)")
+    axes[0, 1].axhline(40.625, ls=":", color=GRAY, label="Earlier 512-fit pilot")
+    for ax in axes[0]:
+        ax.set_xlabel("Epoch")
+        ax.legend(fontsize=6)
+    for i, kind in enumerate(("doubling", "linear")):
+        timing = audit["median_timings"][kind]
+        axes[1, 0].bar(i-.16, timing["inference_s"]*1000, width=.3, color=AQUA,
+                       label="Inference" if i == 0 else None)
+        axes[1, 0].bar(i+.16, timing["training_step_s"]*1000, width=.3, color=BLUE,
+                       label="Forward + backward" if i == 0 else None)
+        count = audit["dev"][kind]["scan_compositions"]/1e6
+        axes[1, 1].bar(i, count, color=(GRAY, BLUE)[i])
+        axes[1, 1].text(i, count+.3, f"{count:.2f}", ha="center", fontsize=8)
+    axes[1, 0].set_title("Same checkpoint: measured CPU time")
+    axes[1, 0].set_ylabel("ms / batch of 4")
+    axes[1, 0].legend(fontsize=6)
+    for ax in axes[1]:
+        ax.set_xticks([0, 1], ["Doubling scan", "Linear-work scan"])
+    pareto_path = os.path.join(RES, "e119", "packet_pareto_d8_n1024_s6.json")
+    pareto = load(pareto_path) if os.path.exists(pareto_path) else None
+    if pareto and pareto.get("status") == "completed":
+        ax = axes[1, 1]
+        ax.clear()
+        rows = [pareto["rows"][str(k)] for k in (1, 2, 4, 8)]
+        ax.plot([100*r["packet_ratio_to_10ms"] for r in rows],
+                [100*r["accuracy"] for r in rows], "o-", color=BLUE)
+        for row in rows:
+            ax.annotate(f'{row["packet_window_ms"]} ms',
+                        (100*row["packet_ratio_to_10ms"], 100*row["accuracy"]),
+                        xytext=(0, 6), textcoords="offset points", ha="center", fontsize=7)
+        ax.set_title("Frozen final model: causal coalescing")
+        ax.set_xlabel("Packets (% of 10 ms input)")
+        ax.set_ylabel("Held-out accuracy (%)")
+        ax.margins(x=.16, y=.3)
+    else:
+        axes[1, 1].set_title("Memory scan: counted work")
+        axes[1, 1].set_ylabel("Million vector combines / 256 examples")
+        axes[1, 1].set_ylim(0, 25)
+    f.suptitle("More learning per unit of event computation", fontsize=11)
+    f.text(.02, .015, "Top: 1,024 fitting / 256 development examples; fixed cosine schedule, seed 6; no official test access.\n"
+           "Bottom-left: exact scan change, earlier checkpoint, 8 warm timing repeats. Bottom-right: input coalescing changes the model's input.\n"
+           "CPU timing and packet counts are distinct from joules. Coalescing can add input delay; official test set remains untouched.", fontsize=6.5)
+    f.tight_layout(rect=(0, .095, 1, .95))
+    f.savefig(os.path.join(os.path.dirname(__file__), "figures", "e119_work_and_learning.png"), dpi=180)
+    return f
+
+
 def fig_e118_race_carriers():
     paths = [os.path.join(RES, "e118", f"race_d8_cf{k}_n128_e8_s6.json") for k in (0, 1)]
     probe_path = os.path.join(RES, "e117", "probe_serial_d8_n128_e8_s6.json")
@@ -2328,6 +2393,65 @@ def build():
           "are emitted at window closure to avoid exposing future counts. Memory updates follow arrivals with no silent "
           "time grid; CPU training uses an associative event scan, whose extra work is counted. Both D8 pilots took "
           "about 178 seconds with peak process RSS below 0.9 GB. No measured energy or benchmark supremacy is claimed.", "small")]
+    e119_path = os.path.join(RES, "e119", "race_d8_linear_n1024_e8_s6.json")
+    if os.path.exists(e119_path) and load(e119_path).get("status") == "completed":
+        e119 = load(e119_path)
+        final = e119["curve"][-1]
+        best = max(e119["curve"], key=lambda r: r["dev"]["accuracy"])
+        latest_shd = [
+            P("Faster event credit and a larger recognition run (§§173–175)", "h2"),
+            P(f"<b>Eight-layer terminal recognition:</b> the completed E119 run reaches "
+              f"<b>{final['dev']['correct']}/256 ({100*final['dev']['accuracy']:.1f}%)</b> on the same "
+              f"held-out-speaker development examples as the earlier 104/256 result. Fitting accuracy is "
+              f"{final['fit']['correct']}/1024 ({100*final['fit']['accuracy']:.1f}%); held-out NLL is "
+              f"{final['dev']['nll']:.4f}. It uses 1,024 fitting utterances, eight epochs, seed 6, and a fixed "
+              "cosine learning-rate schedule from 0.003 to 0.0003. The architecture still has 53,296 parameters, "
+              "local temporal memories and three competing continuations, with only the winner emitting. "
+              "More data, more updates and the schedule change together; this is a progression in capability, "
+              "not an isolated causal attribution to one of those changes."),
+            P(f"The figure shows every epoch, including fluctuations. Best development accuracy is "
+              f"{100*best['dev']['accuracy']:.1f}% at epoch {best['epoch']}; the stated endpoint uses the final "
+              "epoch. The official test file remains unopened. This score is separate from E59's 67.5% test result."),
+            P("<b>Less computation for the same race:</b> replacing the doubling memory scan with pair reduction "
+              "and prefix reconstruction reduces its work from O(E log E) to O(E) for E arriving packets. "
+              "On the frozen earlier checkpoint, all 256 development predictions agree, as do the audited race "
+              "winners. Parameter-gradient relative error is 2.34e-7. Forward memory combines fall from 21.55 "
+              "million to 3.93 million (5.49x fewer). Warm median CPU times per batch of four fall from 97.1 "
+              "to 63.8 ms for inference and 347.2 to 206.8 ms for forward/backward (1.52x and 1.68x faster). "
+              "The timing excludes optimizer updates. Sorting and local dense projections remain."),
+            *fig(fig_e119_work_and_learning, W),
+            P("<b>What the theory adds:</b> reverse credit through memory is itself an event recurrence, with "
+              "linear work and no silent-time grid. Timing eligibility factors into old/new evidence balance, "
+              "payload contrast and temporal scale. This specifies measurements that can distinguish missing "
+              "temporal sensitivity from credit that points in an unhelpful direction. The scan construction "
+              "applies established parallel-prefix methods; it does not invent a new scan primitive. Causal "
+              "input coalescing is a separate, approximate intervention whose root-feature error can be bounded; "
+              "the resulting classifier still requires direct evaluation."),
+            P("<b>Published targets:</b> the <link href='https://www.kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf'>original dataset paper</link> "
+              "reports 85.7% for an LSTM, correcting the earlier approximately 70% summary. <link href='https://github.com/Efficient-Scalable-Machine-Learning/event-ssm'>"
+              "EventSSM</link> reports 95.9%, <link href='https://arxiv.org/html/2410.03464v1'>S7</link> 96.3%, "
+              "and the <link href='https://zenkelab.org/resources/spiking-heidelberg-datasets-shd/'>dataset leaderboard</link> "
+              "lists 96.26 ± 0.08% for Sun et al. These are standard SHD references, separate from our development split. "
+              "<link href='https://arxiv.org/html/2511.01158v1'>Chen et al.'s FPGA</link> reports 93.4% deployed "
+              "accuracy, 282 mW processor power and 1.71 W whole-SoC power at about 104 utterances/s. Dividing "
+              "power by throughput yields 2.71 mJ/utterance for the processor or 16.44 mJ for the whole SoC; "
+              "the measurement boundaries differ. These are verified reference points, not an exhaustive leaderboard."),
+            P(f"<b>Resource accounting:</b> E119 completed in {e119['wall_s']:.0f} seconds with peak process RSS "
+              f"{e119['max_rss_kb']/1024:.0f} MiB. One CPU thread and the guarded runner preserved the host memory "
+              "reserve. RAPL energy counters are unreadable here. The established gain is internal work and CPU "
+              "latency, with recognition results recorded separately; measured energy supremacy remains open.", "small"),
+        ] + latest_shd
+        pareto_path = os.path.join(RES, "e119", "packet_pareto_d8_n1024_s6.json")
+        if os.path.exists(pareto_path) and load(pareto_path).get("status") == "completed":
+            pareto = load(pareto_path)
+            text_rows = [f"{r['packet_window_ms']} ms: {r['correct']}/256 correct, "
+                         f"{100*r['packet_ratio_to_10ms']:.1f}% of packets, "
+                         f"{r['median_wall_s']:.2f} s per 256 examples"
+                         for r in (pareto["rows"][str(k)] for k in (1, 2, 4, 8))]
+            latest_shd.insert(5, P("<b>Frozen-model packet tradeoff:</b> " + "; ".join(text_rows) +
+                ". These are causal closures at the input; maximum extra input delay is 0/10/30/70 ms. "
+                "Three warm passes measure model evaluation only, excluding coalescing and data loading. "
+                "Weights remain fixed. Choosing a window on these scores is development selection."))
     shd_appendix = [P("Appendix A. Ongoing SHD research", "h1"),
                     P("Development diagnostics and unresolved mechanisms. These are not supremacy results.")]
     shd_appendix += bullets([
@@ -2500,7 +2624,7 @@ def build():
             "behind them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) "
             "is not task-specific: the reason to expect them to carry over to sparse, precisely timed real streams. On the real "
             "data tested so far the event network is competitive at a small fraction of the computation, not ahead: spoken digits "
-            "0.675 vs ≈ 0.70 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.08–0.19 nats behind a Transformer point process; no trading edge "
+            "0.675 vs 0.857 (LSTM) and 95–96% (event-by-event state-space models); a market world model 0.08–0.19 nats behind a Transformer point process; no trading edge "
             "after fees in four markets; on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs 94–98% published.")]
     s += [P("<b>What the network actually does</b> on one example: spikes arrive; part detectors fire when two spikes are "
             "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
@@ -2596,7 +2720,7 @@ def build():
          "0.990–0.999 (mean 0.9965) from 40k examples once (E89); Transformer 0.9955–0.998 after 2M, 0.9935–0.9965 given the "
          "same 40k × 50", "one seed at 0.990; dips without a margin"],
         ["<i>Not supremacy:</i> spoken digits (SHD)", "E59 class-conditional event world models, speaker-relative bands, selected on held-out speakers: "
-         "0.675 test (E51 0.647); LSTM ≈ 0.70; state of the art 95.9–96.3% (event-by-event state-space models)", "unseen test speakers"],
+         "0.675 test (E51 0.647); LSTM 0.857; state of the art 95.9–96.3% (event-by-event state-space models)", "unseen test speakers"],
         ["<i>Not supremacy:</i> trading profit", "E42 (21 unseen days): no learner beats buy-and-hold (+932 bp); the priced native one +226 bp, others lose",
          "the predictable edge is ≈ 1 bp per trade, below any taker fee (E55, E55b): staying out is correct"],
     ], [48, 76, 50], st))
@@ -3219,7 +3343,7 @@ def build():
         "<b>Spiking Heidelberg Digits</b> (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test "
         "speakers): class-conditional event world models (E51; state = last spike's band, time since it, time since onset; "
         "one counting pass) reach 0.647 test (0.734 on held-in speakers); timing +0.06, onset reference +0.21. The weight "
-        "race reached 0.35; a published LSTM ≈ 0.70; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
+        "race reached 0.35; a published LSTM 0.857; the state of the art is 95.1% (learned delays), 95.9% (Event-SSM) and "
         "96.3% (S7): the last two process spikes one event at a time with linear state-space units, which §104 shows are "
         "event units of our kind with every unit updated on every event (both select checkpoints on the test set); time only fades their state, so they do not "
         "compute with delays. E74 tests the paradigm's own design: events carry small vectors whose content sets their "

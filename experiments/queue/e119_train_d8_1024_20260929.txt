@@ -1,0 +1,1 @@
+e119_train_d8_1024_20260929 experiments/e119_train_shd.py --tag race_d8_linear_n1024_e8_s6 --limit 1024 --eval-limit 256 --epochs 8 --depth 8

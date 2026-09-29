@@ -11,10 +11,17 @@ The analytic synthesis is [THEORY §§155–158](theory/10_trainability_and_fron
 and the revised optionality formalism is [§§159–163](theory/11_optionality_and_learning_reserve.md).
 The earlier roadmap below is historical; its old queue order is superseded.
 
-**Local SHD priority:** correct the arrival/payload/credit contract before more
-router tuning; demonstrate fit-set learning, speaker transfer, and a useful deep
-path. Compare optionality using independent adaptation and evaluation to expose
-gradient-noise bonuses. Preserve explicit search, replay, event, and memory budgets.
+**Local SHD priority:** E118 establishes fit-set learning and a positive D8/D1
+development comparison in the new winner-only carrier family. E119 removes
+redundant event-memory work while preserving the audited predictions and credit.
+Use that saving to increase the training/data budget and measure speaker transfer;
+inspect temporal eligibility before changing delays. Measure causal packet
+coalescing as an accuracy/work/latency tradeoff. The official test and measured
+joules comparisons remain separate milestones. Compare optionality using
+independent adaptation and evaluation to expose gradient-noise bonuses. Preserve
+explicit search, replay, event, and memory budgets. See the concrete
+[SHD frontier protocol](SHD_FRONTIER_PROTOCOL.md) and
+[THEORY §§173–175](theory/16_event_work_and_temporal_credit.md).
 
 **AWS ownership:** the sibling runs non-SHD benchmarks and heavier controls.
 Do not duplicate those queues here. Run every local job through

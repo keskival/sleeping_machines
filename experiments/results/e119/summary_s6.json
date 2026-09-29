@@ -1,0 +1,42 @@
+{
+  "status": "completed",
+  "input_sha256": {
+    "earlier": "c9f063055b3f74db4cb455777d2ee362d02f7558e0a26720f598f893cf924df4",
+    "training": "929cfcff8ae2093770869d0126c82850d00c405fd96d17362f852aa215672ade",
+    "scan": "01565ed27ef5800e415fdecfea4c67dd906ad9245523f7eba9237d88d046311d",
+    "packets": "ca5cfbc517c0c81541e0192699b4b737d291c398879576a79cee019cc6b3a21a"
+  },
+  "data_checks": "same development IDs/labels; earlier fitting subset is prefix; final checkpoint packet audit agrees",
+  "earlier_dev": {
+    "correct": 104,
+    "n": 256,
+    "accuracy": 0.40625,
+    "nll": 1.749562812037766
+  },
+  "final_dev": {
+    "correct": 151,
+    "n": 256,
+    "accuracy": 0.58984375,
+    "nll": 1.6600146829150617
+  },
+  "final_fit": {
+    "correct": 827,
+    "n": 1024,
+    "accuracy": 0.8076171875,
+    "nll": 0.5570328715402866
+  },
+  "paired_corrected": 64,
+  "paired_lost": 17,
+  "comparison_scope": "same architecture and seed; more fitting data/updates and changed schedule/fit-only calibration values; not a single-factor causal comparison",
+  "scan_combine_reduction": 5.491224565916137,
+  "training_forward_backward_speedup": 1.6785101275619514,
+  "inference_speedup": 1.5220127201833453,
+  "training_wall_s": 739.4628182250017,
+  "training_max_rss_kb": 599480,
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "cpu_model": "Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz"
+  },
+  "energy_joules": null,
+  "official_test_access": false
+}

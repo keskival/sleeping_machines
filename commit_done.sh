@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E118 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E119 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -48,6 +48,20 @@ FILES=(
   experiments/e118_credit_audit.py
   experiments/e118_geometry_contract.py
   experiments/e118_summary.py
+  experiments/e119_linear_event_scan.py
+  experiments/e119_scan_audit.py
+  experiments/e119_train_shd.py
+  experiments/e119_packet_pareto.py
+  experiments/e119_summary.py
+  experiments/queue/e119_summary_20260929.txt
+  experiments/queue/e119_packet_pareto_20260929.txt
+  experiments/SHD_FRONTIER_PROTOCOL.md
+  experiments/queue/e119_scan_audit_20260929.txt
+  experiments/queue/e119_scan_audit_v2_20260929.txt
+  experiments/queue/e119_train_d8_1024_20260929.txt
+  experiments/queue/report_e119_20260929.txt
+  experiments/results/e119/*.json
+  report/figures/e119_work_and_learning.png
   experiments/queue/e117_serial_d8_20260929.txt
   experiments/queue/e117_probe_serial_20260929.txt
   experiments/queue/e117_readout_conditioning_20260929.txt
@@ -246,5 +260,5 @@ done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Build bounded event carriers and winner-only races; diagnose SHD credit conditioning}"
+MESSAGE="${1:-Reduce event training work and advance deep SHD recognition; update theory and report}"
 git commit -m "$MESSAGE"

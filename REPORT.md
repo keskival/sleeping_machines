@@ -98,7 +98,7 @@ to test one capability at a time, where the target is exactly expressible by the
 them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) is not
 task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
 tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
-0.675 vs ≈ 0.70 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.08–0.19 nats per event behind a Transformer point process; and
+0.675 vs 0.857 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.08–0.19 nats per event behind a Transformer point process; and
 no trading edge after fees in four markets; and on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs
 94–98% published.
 
@@ -204,7 +204,7 @@ networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
 | **Learned retrieval from ≥ 250× less data** | E61: race attention with a learned query–key match, 5/5 runs 100% after 1–4k examples (64–68 mistakes), 100% on 4× longer contexts; Transformers (7 configurations): only d = 128 with 4 layers solves it, after 400k–1M examples (absolute positions: 0.25 on 4× length; relative ALiBi: 0.72) | the event learner's candidate routes are (item, offset) pairs, i.e. relative offsets are its native coordinates (ALiBi gives the Transformer the same); one run per Transformer configuration, two for the best (solved between 400k–700k and 700k–1M examples) |
 | **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: 0.990 given 40k × 50 and 0.992–0.996 given 2M fresh examples (4–10× the error rate) at ≈ 7,000× the computation |
 | **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
-| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (≈ 0.70) and far below the state of the art (95.9–96.3%, event-by-event state-space models) | unseen test speakers expose overfitting to training speakers |
+| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (0.857) and far below the state of the art (95.9–96.3%, event-by-event state-space models) | unseen test speakers expose overfitting to training speakers |
 | *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
 
 ## 1. What an event node computes
@@ -604,7 +604,7 @@ one deep representation learner that combines them.
 | Correct event computation and credit | Exact race/route calculus; arrival reconstruction defect now isolated | Correct jump/reset/payload semantics and matching derivatives |
 | Useful learned depth | Synthetic depth-4 wins; E77 eight-layer gradient reach | Deep transformations improve real-data predictions under matched budgets |
 | Productive counterfactual choices | Lost-race credit works in controlled tasks | Optionality predicts transferable learning, with search/replay cost counted |
-| Asynchronous recognition | E59 reaches 67.5% SHD test; E118 depth-8 reaches 40.6% on a 256-example held-out-speaker development screen | Useful depth under matched protocols, full-data speaker generalization, calibrated early answers |
+| Asynchronous recognition | E59 reaches 67.5% SHD test; E119 depth-8 reaches 59.0% final / 63.7% best-checkpoint on 256 held-out-speaker development examples | Useful depth under matched protocols, full-data speaker generalization, calibrated early answers |
 | Sparse frontier scaling | Language-mixture and retrieval advantages | Learned shared representations, affordable candidate search, matched scaling curves |
 | Systems advantage | Large counted-work leads on controlled tasks | Lower measured training and inference energy at matched quality |
 
@@ -749,7 +749,7 @@ The nearest opportunity is a set of useful specialized components. On controlled
 
 #### The next capability gains the evidence motivates
 
-The market event world model approaches its Transformer reference within 0.08–0.19 nats per event at roughly one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates low-work streaming prediction components and better learned temporal state; it establishes no profitable trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations extract substantial information from speech. An eight-layer winner-only event model now reaches 40.6% on a 256-example held-out-speaker development screen after training on 512 utterances. Stable signal transport and conditioned credit have made deep recognition learnable in this configuration. Useful depth beyond a shallow model and calibrated early decisions are the next SHD milestones. A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful depth on real streams, and measure their practical latency and energy. The evidence supports this focused engineering and research program more directly than it supports a general-purpose frontier model today.
+The market event world model approaches its Transformer reference within 0.08–0.19 nats per event at roughly one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates low-work streaming prediction components and better learned temporal state; it establishes no profitable trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations extract substantial information from speech. An eight-layer winner-only event model now reaches 59.0% at its final epoch, with a best development checkpoint of 63.7%, on 256 held-out-speaker examples after training on 1,024 utterances. An earlier controlled depth comparison favored eight layers by 15.2 percentage points. Stable signal transport and conditioned credit have made deep recognition learnable in this configuration. An exact event-memory implementation also makes its audited forward/backward computation 1.68 times faster on this CPU while preserving the checked predictions and gradients. This gives a concrete way to spend less computation per update and use the saving for more learning. Full-data speaker generalization, measured joules and calibrated early decisions are the next SHD milestones. A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful depth on real streams, and measure their practical latency and energy. The evidence supports this focused engineering and research program more directly than it supports a general-purpose frontier model today.
 
 #### What could become reachable in principle
 
@@ -1240,6 +1240,84 @@ Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for the gradient-train
 
 These are development diagnostics, not supremacy results. Completed recognition results are summarized in section 7.
 
+### More learning per unit of event computation (§§173–175)
+
+**The completed eight-layer run reaches 151/256 (58.98%) at its final epoch**, up from 104/256
+(40.625%) on the same development examples: 64 earlier mistakes are corrected and 17 earlier correct answers are lost. It fits **827/1024 (80.76%)** training utterances.
+The best development checkpoint is epoch 7 at **163/256 (63.67%)**; we distinguish this selected
+checkpoint from the final endpoint. Final held-out NLL is **1.6600**, versus **1.7496** in the earlier
+512-example run; best-checkpoint NLL is 1.4007. This is terminal classification with the official
+test file unopened, separate from E59's 67.5% test score.
+
+The model still has 53,296 parameters and eight winner-only layers. The new run uses 1,024 fitting
+utterances, eight epochs and a fixed cosine learning rate from 0.003 to 0.0003. The larger data budget,
+more updates, schedule and resulting fit-only conditioning values change together; this is an
+engineering progression, not a single-factor ablation. Online training NLL falls from **2.5123 to
+0.5786** across epochs. Fitting and development curves fluctuate, so checkpoint selection and
+cross-speaker generalization still matter. All eight routers receive nonzero credit and all three
+options are realized at every layer in the final development pass. No new optionality bonus was added.
+
+The guarded run completed in **739 seconds** with **585 MiB peak process RSS**, one CPU thread,
+and more than 11 GiB host memory available in the watchdog samples. Optimizer and random-generator
+states are saved after every epoch so interrupted runs can resume correctly.
+
+**An exact execution improvement is established.** E119 replaces the doubling memory scan with
+pair reduction and prefix reconstruction. Memory work is O(events), including its reverse credit,
+instead of O(events × log events). On the same frozen E118 checkpoint, all 256 development predictions
+agree at 104 correct. The audited race winners agree; relative parameter-gradient L2 error is
+2.34 × 10⁻⁷. Only the actual winning continuation emits in both implementations.
+
+| Frozen-checkpoint measure | Earlier doubling scan | Linear-work scan | Improvement |
+|---|---:|---:|---:|
+| Forward memory vector combines / 256 examples | 21,553,320 | 3,925,048 | 5.49× fewer |
+| Median inference / batch of four | 97.1 ms | 63.8 ms | 1.52× faster |
+| Median forward/backward / batch of four | 347.2 ms | 206.8 ms | 1.68× faster |
+
+Timings use one CPU thread and eight warm repetitions with alternating order; training-step timing
+excludes optimizer updates. Sorting still costs O(events × log events), local vector projections remain
+dense, and loser credit evaluates three candidate values during training. These are improvements to
+our own implementation. RAPL energy counters are unreadable in this container, so these are **work and
+latency gains, not measured joules or an external energy-frontier win**.
+
+**Causal packet coalescing yields a measured tradeoff.** With the completed final model frozen:
+
+| Input window | Held-out correct | Input packets relative to 10 ms | Median evaluation / 256 examples | Maximum extra input delay |
+|---|---:|---:|---:|---:|
+| 10 ms | 151/256 (59.0%) | 100.0% | 5.11 s | 0 ms |
+| 20 ms | 142/256 (55.5%) | 64.5% | 2.79 s | 10 ms |
+| 40 ms | 130/256 (50.8%) | 42.5% | 2.03 s | 30 ms |
+| 80 ms | 114/256 (44.5%) | 27.9% | 1.56 s | 70 ms |
+
+The 20 ms setting loses nine net correct examples (three corrected, twelve lost) while reducing
+packet work by 35.5% and model evaluation time by about 45%. Three warm timing repetitions exclude
+loading and input coalescing. The final model is unchanged; coarser inputs change its race histories
+and predictions. Choosing a window here is development selection. Temporal resolution carries real
+class information, so unconditional event reduction is not a free accuracy improvement.
+
+![Deep learning progression and the accuracy/work tradeoff](report/figures/e119_work_and_learning.png)
+
+**New analytical understanding.** The exact reverse memory adjoint is another event recurrence: credit
+crosses only the realized receiver history, with no silent-time updates. Local delay eligibility factors
+into old/new evidence balance, temporal scale, and payload contrast. A memory that contains only old
+or only new evidence, or whose alternatives look identical to the loss, supplies little timing credit.
+This gives a concrete diagnostic before changing delay initialization or increasing route counts.
+Terminal pooling remains insensitive to the final emitted time; calibrated early answering needs its
+own causal stopping objective. See [the derivations](experiments/theory/16_event_work_and_temporal_credit.md).
+The implementation applies established [parallel-prefix scan machinery](https://www.cs.cmu.edu/~scandal/papers/CMU-CS-90-190.html).
+
+**The external targets are explicit.** The original dataset paper reports **85.7% LSTM accuracy**, correcting
+the earlier report summary of approximately 70% ([Cramer et al., Section III](https://www.kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf)). Verified references include
+[EventSSM at 95.9%](https://github.com/Efficient-Scalable-Machine-Learning/event-ssm),
+[S7 at 96.3%](https://arxiv.org/html/2410.03464v1), and the
+[dataset leaderboard's 96.26 ± 0.08% for Sun et al.](https://zenkelab.org/resources/spiking-heidelberg-datasets-shd/).
+These standard SHD results use a different evaluation split from our development screens.
+[Chen et al.'s FPGA implementation](https://arxiv.org/html/2511.01158v1) reports 93.4% deployed accuracy,
+282 mW processor power and 1.71 W whole-SoC power at about 104 utterances/s. Power divided by throughput
+gives **2.71 mJ/utterance at the processor boundary**, or **16.44 mJ for the whole SoC**. Those derived
+numbers illustrate why accuracy, hardware and energy boundaries must travel together. They are verified
+reference points, not an exhaustive leaderboard. The [SHD frontier protocol](experiments/SHD_FRONTIER_PROTOCOL.md)
+records the comparisons and the next accuracy/energy measurements.
+
 ### Eight-layer learning with genuine winning continuations (§§166–172)
 
 E118 uses local normalized temporal memory and three competing delayed continuations per arrival. Only the
@@ -1550,7 +1628,7 @@ this is the only bottleneck.
   bands relative to the voice** (each utterance keeps a running sum and count of its spikes' bands; context and
   prediction are relative to that centroid) raises accuracy on held-out speakers from 0.36–0.38 to 0.44–0.46 at every
   configuration and, selected on held-out speakers only, reaches **0.675 on the test set** (absolute coding under the
-  same protocol 0.657; E59). A published LSTM reaches ≈ 0.70; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
+  same protocol 0.657; E59). A published LSTM reaches 0.857; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
   (Event-SSM, Schöne et al. 2024) and 96.3% (S7, Soydan et al. 2024); the last two process the spikes one event at a time
   with linear state-space units, which §104 shows are event units of our kind with every unit updated on every event (both
   select checkpoints on the test set). These units do not compute with delays: time only fades their state. **E74's first
