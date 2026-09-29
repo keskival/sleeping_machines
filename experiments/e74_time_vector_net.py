@@ -58,8 +58,11 @@ class TVLayer(nn.Module):
     def lam(self):
         return torch.complex(-torch.exp(self.log_rate), self.freq)
 
-    def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None, return_routes=False,
-                return_route_graph=False, return_voltage_samples=False):
+    def forward(self, eb, ei, et, ev, B, G, force_route=None, drop_route=None,
+                return_routes=False,
+                return_route_graph=False, return_voltage_samples=False,
+                spike_override=None, return_spike_diagnostics=False,
+                route_overrides=None):
         M, n, th = self.M, self.n, self.theta
         E = len(et)
         if self.mask is not None:
@@ -70,15 +73,20 @@ class TVLayer(nn.Module):
         route_info = None
         if return_routes:
             route_info = {"event_index": pe.detach(), "receiver": pj.detach(),
-                          "score": r.detach()}
+                          "score": r.detach(), "source_batch": eb[pe].detach(),
+                          "source_time": et[pe].detach()}
             if return_route_graph:
                 # Opt-in only: lets a caller form the boundary derivative for
                 # hard-gated routes. Keeping every candidate score in the graph
                 # costs memory, so normal training and E83 probes leave this off.
                 route_info["score_live"] = r
+        elif return_spike_diagnostics:
+            route_info = {}
         if self.gate:
             if force_route is not None and drop_route is not None:
                 raise ValueError("force_route and drop_route are mutually exclusive")
+            if route_overrides and (force_route is not None or drop_route is not None):
+                raise ValueError("route_overrides cannot be combined with force_route/drop_route")
             keep = r.detach() > 0                                              # non-matching content: no message
             if force_route is not None:
                 fe, fj = map(int, force_route)
@@ -96,6 +104,15 @@ class TVLayer(nn.Module):
                 if not bool((dropped & keep).any()):
                     raise ValueError("drop_route must name a currently open route")
                 keep = keep & ~dropped
+            if route_overrides:
+                for event_id, receiver_id, active in route_overrides:
+                    changed = (pe == int(event_id)) & (pj == int(receiver_id))
+                    if not bool(changed.any()):
+                        raise ValueError("route override is not in the candidate connectivity mask")
+                    was_active = bool((changed & keep).any())
+                    if bool(active) == was_active:
+                        raise ValueError("route override must change the current gate state")
+                    keep = (keep | changed) if active else (keep & ~changed)
             pe, pj, r = pe[keep], pj[keep], r[keep]
         if not self.training:
             self.sent[ei[pe], pj] = True
@@ -116,6 +133,13 @@ class TVLayer(nn.Module):
         R = torch.zeros(B, M); Vp = torch.zeros(B, M); eR = math.exp(-1 / TAU_R)
         if self.spiking:
             F = torch.zeros(G, B, M, dtype=torch.bool); FR = torch.zeros(G, B, M); RP = torch.zeros(G, B, M)
+        if spike_override is not None:
+            spike_k, spike_b, spike_j, spike_active = spike_override
+            spike_k, spike_b, spike_j = int(spike_k), int(spike_b), int(spike_j)
+            spike_active = bool(spike_active)
+        if return_spike_diagnostics:
+            spike_margin_trace = []
+            refractory_trace = torch.zeros(G, B, M)
         Xk = X.unbind(0)                                                       # one backward op instead of G slices
         if return_voltage_samples:
             voltage_samples = []
@@ -135,12 +159,20 @@ class TVLayer(nn.Module):
             zs.append(z)
             with torch.no_grad():
                 R.mul_(eR); Vd = V - th * R
+                if return_spike_diagnostics:
+                    spike_margin_trace.append((Vd - th).detach())
+                    refractory_trace[k] = R
                 if return_routes:
                     peak_voltage = torch.maximum(peak_voltage, V.detach().amax())
                     peak_threshold_margin = torch.maximum(
                         peak_threshold_margin, (Vd - th).detach().amax())
                 fire = Vd >= th
                 frac = ((th - Vp) / (Vd - Vp).clamp(min=1e-6)).clamp(0, 1)
+                if spike_override is not None and k == spike_k:
+                    fire[spike_b, spike_j] = spike_active
+                    if spike_active:
+                        # A counterfactual spike is inserted at this grid edge.
+                        frac[spike_b, spike_j] = 1.0
                 F[k] = fire; FR[k] = frac; RP[k] = R * torch.exp((1 - frac) / TAU_R) * fire
                 jump = fire * torch.exp(-(1 - frac) / TAU_R)
                 R.add_(jump); Vp = Vd - th * jump
@@ -148,7 +180,7 @@ class TVLayer(nn.Module):
             output = (torch.stack(Vs), len(pe) / B)
             return (*output, route_info) if return_routes else output
         kk, bb, jj = F.nonzero(as_tuple=True)
-        if route_info is not None:
+        if return_routes:
             route_info["peak_voltage"] = float(peak_voltage)
             route_info["peak_threshold_margin"] = float(peak_threshold_margin)
             route_info["firing_fraction"] = float(F.float().mean())
@@ -156,6 +188,10 @@ class TVLayer(nn.Module):
                 # Preserve (time, batch, unit) axes so threshold calibration can
                 # replay the exact reset dynamics without rerunning the network.
                 route_info["voltage_samples"] = torch.stack(voltage_samples, dim=0)
+        if return_spike_diagnostics:
+            route_info["spike_margin_trace"] = torch.stack(spike_margin_trace)
+            route_info["spike_fire_mask"] = F.detach()
+            route_info["spike_refractory_trace"] = refractory_trace
         good = kk >= 1; kk, bb, jj = kk[good], bb[good], jj[good]
         frac, Rpre = FR[kk, bb, jj], RP[kk, bb, jj]
         Z = torch.stack(zs); zprev = Z[kk - 1, bb, jj]                          # state at the grid point before the crossing
@@ -164,13 +200,20 @@ class TVLayer(nn.Module):
         V0 = (wj * zT0).real.sum(-1) - th * Rpre
         Vdot = ((wj * lj * zT0).real.sum(-1) + th * Rpre / TAU_R).detach().clamp(min=self.vdot_min)
         s = frac - ((V0 - th) / Vdot).clamp(-1.0, 1.0)                         # refined time since grid point k-1
+        forced_event = None
+        if spike_override is not None and spike_active:
+            forced_event = (kk == spike_k) & (bb == spike_b) & (jj == spike_j)
+            s = torch.where(forced_event, torch.ones_like(s), s)
         if self.causal:                                                        # never earlier than the detecting step
             s = s.clamp(1e-3, 1.0)
         zT = torch.exp(lj * s[:, None]) * zprev                                # state at the firing time
+        if forced_event is not None and bool(forced_event.any()):
+            # Include arrivals placed on the same grid edge as the inserted spike.
+            zT = torch.where(forced_event[:, None], Z[kk, bb, jj], zT)
         C = torch.complex(self.Cre, self.Cim)[jj]                              # (S, d_out, n)
         y = nn.functional.gelu((C @ zT[..., None]).squeeze(-1).real) * self.snapshot + self.emb[jj]
         output = ((bb, jj, (kk - 1).float() + s, y), len(pe) / B)
-        return (*output, route_info) if return_routes else output
+        return (*output, route_info) if route_info is not None else output
 
 
 class Net(nn.Module):

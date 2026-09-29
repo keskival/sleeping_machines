@@ -326,6 +326,290 @@ def fig_e83_route_diagnostics():
     return fig
 
 
+def fig_e83_d4_support():
+    """Show matched 128-example D4 support, accuracy, race, and calibration."""
+    runs = {}
+    for fusion in ("all_depths", "deepest"):
+        pattern = os.path.join(RES, "e83", f"*rf{fusion}*_eval128*_spk_s6.json")
+        matches = []
+        for path in glob.glob(pattern):
+            result = load(path)
+            args = result.get("args", {})
+            if (args.get("eval_limit") == 128 and args.get("epochs") == 4
+                    and args.get("seed") == 6
+                    and args.get("input_count_payload", "off") == "off"
+                    and not args.get("early_event_skip", False)):
+                matches.append((path, result))
+        if not matches:
+            raise FileNotFoundError(f"missing seed-6 eval128 D4 {fusion} run")
+        runs[fusion] = sorted(matches, key=lambda row: row[0])[0][1]["curve"]
+        result = sorted(matches, key=lambda row: row[0])[0][1]
+        runs[f"{fusion}_outputs"] = result["eval_output_payloads"]
+    skip_matches = []
+    for path in glob.glob(os.path.join(RES, "e83", "*rfdeepest_skfirst*eval128*_spk_s6.json")):
+        result = load(path)
+        args = result.get("args", {})
+        if (args.get("eval_limit") == 128 and args.get("epochs") == 4
+                and args.get("seed") == 6 and args.get("early_event_skip", False)):
+            skip_matches.append((path, result))
+    if not skip_matches:
+        raise FileNotFoundError("missing seed-6 eval128 D4 sparse-skip run")
+    skip_result = sorted(skip_matches, key=lambda row: row[0])[0][1]
+    runs["skipfirst"] = skip_result["curve"]
+    runs["skipfirst_outputs"] = skip_result["eval_output_payloads"]
+
+    fig, axes = plt.subplots(2, 2, figsize=(7.3, 4.5))
+    ax_support, ax_acc, ax_race, ax_nll = axes.flat
+    layers = np.arange(1, 5)
+    width = 0.25
+    end_support = {
+        key: np.asarray(runs[key][-1]["event_support_coverage"], dtype=float) * 100
+        for key in ("all_depths", "deepest", "skipfirst")}
+    ax_support.bar(layers - width, end_support["all_depths"], width,
+                   color=BLUE, label="all depths")
+    ax_support.bar(layers, end_support["deepest"], width,
+                   color=ORANGE, label="deepest only")
+    ax_support.bar(layers + width, end_support["skipfirst"], width,
+                   color=AQUA, label="layer-1 skip")
+    ax_support.set_xticks(layers)
+    ax_support.set_ylim(0, 108)
+    ax_support.set_xlabel("hidden layer")
+    ax_support.set_ylabel("examples with ≥1 event (%)")
+    ax_support.set_title("A · Endpoint event support", fontsize=8)
+    for x, key in ((layers - width, "all_depths"), (layers, "deepest"),
+                   (layers + width, "skipfirst")):
+        for xi, yi in zip(x, end_support[key]):
+            ax_support.text(xi, yi + 2, f"{yi:.0f}", ha="center", fontsize=6, color=INK)
+
+    epochs = np.arange(1, len(runs["all_depths"]) + 1)
+    for key, color, name in (("all_depths", BLUE, "all depths"),
+                             ("deepest", ORANGE, "deepest only"),
+                             ("skipfirst", AQUA, "layer-1 skip")):
+        terminal = [100 * row["event_terminal_accuracy"] for row in runs[key]]
+        anytime = [100 * sum(x["predicted_class"] == x["true_class"]
+                             for x in outputs) / len(outputs)
+                   for outputs in runs[f"{key}_outputs"]]
+        ax_acc.plot(epochs, terminal, color=color, marker="o", label=f"{name} · terminal")
+        ax_acc.plot(epochs, anytime, color=color, marker="s", ls="--",
+                    label=f"{name} · race + fallback")
+        late_nll = [row["prefix_window_nll_by_stratum"][-1] for row in runs[key]]
+        ax_nll.plot(epochs, late_nll, color=color, marker="o", label=name)
+    ax_acc.axhline(5, color=GRAY, ls=":", lw=1, label="20-class chance")
+    ax_acc.set_xticks(epochs)
+    ax_acc.set_ylim(0, 24)
+    ax_acc.set_xlabel("epoch")
+    ax_acc.set_ylabel("held-out accuracy (%)")
+    ax_acc.set_title("B · Accuracy (solid: terminal; dashed: race + fallback)", fontsize=7.4)
+    model_handles = [Line2D([0], [0], color=color, marker="o", label=name)
+                     for color, name in ((BLUE, "all depths"), (ORANGE, "deepest"),
+                                         (AQUA, "layer-1 skip"))]
+    ax_acc.legend(handles=model_handles, fontsize=5.5, ncol=3, loc="upper left")
+    model_keys = ("all_depths", "deepest", "skipfirst")
+    last = [runs[key][-1] for key in model_keys]
+    x = np.arange(len(model_keys))
+    race_width = 0.19
+    coverage = [100 * row["race_coverage"] for row in last]
+    emitted_accuracy = [100 * (row["race_acc_when_emitted"] or 0) for row in last]
+    mean_confidence = []
+    for key in model_keys:
+        emitted = [row for row in runs[f"{key}_outputs"][-1]
+                   if row["emission"] == "event_race"]
+        mean_confidence.append(100 * np.mean([
+            max(row["value_vector"]) for row in emitted]) if emitted else 0.0)
+    ax_race.bar(x - race_width, coverage, race_width,
+                color=BLUE, label="emission coverage")
+    ax_race.bar(x, emitted_accuracy, race_width,
+                color=ORANGE, label="accuracy if emitted")
+    ax_race.bar(x + race_width, mean_confidence, race_width,
+                color=AQUA, label="mean emitted confidence")
+    ax_race.set_xticks(x, ["all depths", "deepest only", "layer-1 skip"])
+    ax_race.set_ylim(0, 90)
+    ax_race.set_ylabel("fixed 0.6 threshold (%)")
+    ax_race.set_title("C · Race bars: coverage · accuracy · confidence", fontsize=7.4)
+    for xi, values in enumerate(zip(coverage, emitted_accuracy, mean_confidence)):
+        for offset, val in zip((-race_width, 0, race_width), values):
+            ax_race.text(xi + offset, val + 0.8, f"{val:.1f}", ha="center", fontsize=6)
+
+    ax_nll.axhline(np.log(20), color=GRAY, ls=":", lw=1, label="uniform NLL")
+    ax_nll.set_yscale("log")
+    ax_nll.set_xticks(epochs)
+    ax_nll.set_xlabel("epoch")
+    ax_nll.set_ylabel("late-prefix NLL · log scale")
+    ax_nll.set_title("D · Posterior quality", fontsize=8)
+    ax_nll.legend(fontsize=6.2, loc="upper right")
+
+    fig.suptitle("E83 · matched depth-4 readout comparison", x=0.02,
+                 ha="left", fontsize=9.2, fontweight="bold")
+    fig.text(0.02, 0.095,
+             "Seed 6; 128 train / 128 held-out examples from two speakers; fixed epoch 4. All-depth: 17/128 terminal, "
+             "20/128 race + fallback; deepest: 7/128; skip: 9/128, 99.2% layer-4 support.",
+             fontsize=5.2, color=MUTED)
+    fig.text(0.02, 0.068,
+             "Paired race + fallback: all-depth vs deepest p=0.0146; skip vs strict p=0.791. Emitted confidence "
+             "63.8%, accuracy 23.8%.", fontsize=5.2, color=MUTED)
+    fig.text(0.02, 0.041,
+             "Seed 7 did not replicate the paired gain: 9 vs 6 race + fallback correct (p=0.607); layer-4 support "
+             "22.7% vs 16.4%; 0/8 emissions correct at 63.1% mean confidence.",
+             fontsize=5.2, color=MUTED)
+    fig.text(0.02, 0.014,
+             "Leave-one-head-out terminal accuracy in seed 6 (omit layers 1–4): 10.2 / 7.0 / 10.2 / 13.3%. "
+             "Poor NLL; two-speaker validation; candidate-score work is not energy.",
+             fontsize=5.2, color=MUTED)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.93), h_pad=1.0, w_pad=1.0)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_d4_readout_support.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_equal_updates():
+    """Compare data diversity at a fixed update budget, showing both seed directions."""
+    arms = {}
+    for seed in (6, 7):
+        for limit, tag in ((120, "120x4"), (480, "480x1")):
+            pattern = os.path.join(
+                RES, "e83", f"*rngsplit_split_u120_d{limit}*_s{seed}.json")
+            matches = []
+            for path in glob.glob(pattern):
+                result = load(path)
+                args = result.get("args", {})
+                expected_epochs = 4 if limit == 120 else 1
+                if (args.get("seed") == seed and args.get("limit") == limit
+                        and args.get("epochs") == expected_epochs
+                        and args.get("eval_limit") == 128
+                        and args.get("rng_protocol") == "split"):
+                    matches.append(result)
+            if len(matches) != 1:
+                raise FileNotFoundError(
+                    f"expected one equal-update E83 arm for seed {seed}, limit {limit}; found {len(matches)}")
+            arms[(seed, tag)] = matches[0]["curve"][-1]
+
+    x = np.arange(2)
+    width = 0.32
+    series = (("120x4", "120 examples × 4 epochs", BLUE, -width / 2),
+              ("480x1", "480 examples × 1 epoch", ORANGE, width / 2))
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.25))
+    metrics = (
+        ("event_terminal_accuracy", "A · Terminal accuracy (%)", 100, (0, 24)),
+        ("event_support_coverage", "B · Layer-4 support (%)", None, (0, 10)),
+        ("prefix_window_nll_by_stratum", "C · Late-prefix NLL", None, None),
+    )
+    for ax, (key, title, scale, ylim) in zip(axes, metrics):
+        for tag, label, color, offset in series:
+            vals = []
+            for seed in (6, 7):
+                record = arms[(seed, tag)]
+                if key == "event_support_coverage":
+                    value = 100 * record[key][-1]
+                elif key == "prefix_window_nll_by_stratum":
+                    value = record[key][-1]
+                else:
+                    value = 100 * record[key]
+                vals.append(value)
+            bars = ax.bar(x + offset, vals, width, color=color, label=label)
+            for bar, value in zip(bars, vals):
+                ax.text(bar.get_x() + bar.get_width() / 2,
+                        bar.get_height() + (0.15 if key != "prefix_window_nll_by_stratum" else 0.08),
+                        f"{value:.1f}", ha="center", va="bottom", fontsize=6)
+        ax.set_title(title, fontsize=7.4)
+        ax.set_xticks(x, ["seed 6", "seed 7"])
+        if ylim:
+            ax.set_ylim(*ylim)
+        if key == "event_terminal_accuracy":
+            ax.axhline(5, color=GRAY, ls=":", lw=1)
+            ax.set_ylabel("accuracy (%)")
+        elif key == "event_support_coverage":
+            ax.set_ylabel("active examples (%)")
+        else:
+            ax.axhline(np.log(20), color=GRAY, ls=":", lw=1)
+            ax.set_ylim(0, 7.5)
+            ax.set_ylabel("NLL (uniform = ln 20)")
+    axes[0].legend(fontsize=5.3, loc="upper left")
+    fig.suptitle("E83 · more data at equal optimizer updates does not give a stable gain",
+                 x=0.02, ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.015,
+             "120 updates per arm; nested 120/480 training examples; same held-out set within seed. Accuracy direction "
+             "reverses: seed 6 favors 480 (20 vs 8, p=.023), seed 7 favors 120 (20 vs 8, p=.036). Two held-out speakers.",
+             fontsize=5.2, color=MUTED)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.88), w_pad=1.5)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_equal_update_data_budget.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
+def fig_e83_route_reachability():
+    """Contrast static mask paths with realized deep support and depth survival needs."""
+    arms = {}
+    for seed in (6, 7):
+        for limit, tag in ((120, "120x4"), (480, "480x1")):
+            pattern = os.path.join(
+                RES, "e83", f"*rngsplit_split_u120_d{limit}*_s{seed}.json")
+            matches = []
+            for path in glob.glob(pattern):
+                result = load(path)
+                args = result.get("args", {})
+                if (args.get("seed") == seed and args.get("limit") == limit
+                        and args.get("eval_limit") == 128):
+                    matches.append(result)
+            if len(matches) != 1:
+                raise FileNotFoundError(
+                    f"expected one E83 support record for seed {seed}, limit {limit}; found {len(matches)}")
+            arms[(seed, tag)] = matches[0]["curve"][-1]["event_support_coverage"][-1] * 100
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.35))
+    x = np.arange(2)
+    width = 0.31
+    axes[0].bar(x - width / 2, [90.2, 98.0], width,
+                 color=BLUE, label="L1→L4 unit pairs with a path")
+    axes[0].bar(x + width / 2, [100, 100], width,
+                 color=AQUA, label="input bands reaching any L4 unit")
+    axes[0].set_xticks(x, ["seed 6", "seed 7"])
+    axes[0].set_ylim(0, 112)
+    axes[0].set_ylabel("candidate-graph reachability (%)")
+    axes[0].set_title("A · Static routes exist", fontsize=7.4)
+    axes[0].legend(fontsize=4.8, loc="lower right")
+    for ax in axes[:1]:
+        for bars in ax.containers:
+            ax.bar_label(bars, fmt="%.0f", padding=2, fontsize=5.8)
+
+    for tag, label, color, offset in (
+            ("120x4", "120 × 4 epochs", BLUE, -width / 2),
+            ("480x1", "480 × 1 epoch", ORANGE, width / 2)):
+        vals = [arms[(seed, tag)] for seed in (6, 7)]
+        bars = axes[1].bar(x + offset, vals, width, color=color, label=label)
+        axes[1].bar_label(bars, fmt="%.1f", padding=2, fontsize=5.8)
+    axes[1].set_xticks(x, ["seed 6", "seed 7"])
+    axes[1].set_ylim(0, 10)
+    axes[1].set_ylabel("active examples (%)")
+    axes[1].set_title("B · Realized layer-4 support", fontsize=7.4)
+    axes[1].legend(fontsize=5.1, loc="upper left")
+    axes[1].text(0.5, 0.48, "Sparse layer-1 skip: 99–100% support\nwithout paired accuracy gain",
+                 transform=axes[1].transAxes, ha="center", va="center", fontsize=5.3,
+                 color=MUTED, bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85})
+
+    depths = np.array([4, 8, 16])
+    survival = 100 * 0.5 ** (1 / (depths - 1))
+    axes[2].plot(depths, survival, marker="o", color=ORANGE)
+    for d, s in zip(depths, survival):
+        axes[2].annotate(f"{s:.1f}%", (d, s), xytext=(0, 6),
+                         textcoords="offset points", ha="center", fontsize=5.8)
+    axes[2].set_xticks(depths)
+    axes[2].set_ylim(72, 100)
+    axes[2].set_xlabel("hidden depth")
+    axes[2].set_ylabel("per-layer survival needed")
+    axes[2].set_title("C · Keep half alive to the end", fontsize=7.4)
+
+    fig.suptitle("E83 · candidate connectivity is broad; event support is not",
+                 x=0.02, ha="left", fontsize=8.8, fontweight="bold")
+    fig.text(0.02, 0.015,
+             "Exact seed-6/7 masks: 90.2%/98.0% of first-to-fourth unit pairs connected; all 140 bands reach L4. "
+             "Equal-update arms have 1.6–7.0% L4 support. Panel C assumes equal conditional survival and full L1 support.",
+             fontsize=5.1, color=MUTED)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.88), w_pad=1.25)
+    out = os.path.join(os.path.dirname(__file__), "figures", "e83_route_reachability.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e77_bootstrap_diagnostics():
     """Show exact rate calibration's effect and the depth-8 gradient-reach smoke."""
     e77_dir = os.path.join(RES, "e77")
@@ -1059,7 +1343,14 @@ def build():
         "nonzero gradients in all eight E77 event layers at all 16 validation points. Test activity stayed between "
         "0.075 and 0.217 spikes per character per layer. This was one width-8 seed with 4,096 training and 512 test "
         "characters; its 4.319 BPC is only a micro-pilot diagnostic, not a quality or scaling result.",
+        "<b>Deep SHD route analysis (§§138–140):</b> the exact sparse masks have candidate paths from every input band "
+        "to layer 4 in both measured seeds, yet only 1.6–7.0% of examples actually reach layer 4 in the equal-update "
+        "runs. Sparse skips restore support to 99–100% but do not improve paired accuracy. The analysis shows why: "
+        "path existence, event realization, and loss credit are separate; competing routes need paired outcome evaluation, "
+        "and two subthreshold messages can require a joint shadow to create a useful spike. More depth adds possible "
+        "expert compositions, while survival probabilities multiply across the stack.",
     ], st)
+    s += fig(fig_e83_route_reachability, W * 0.96)
     s += [P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
@@ -1472,13 +1763,28 @@ def build():
         "semi-Markov network of E48 (above) closed the gap to the GRU.",
     ], st)
     s += fig(fig_e83_route_diagnostics, W * 0.92)
+    s += fig(fig_e83_d4_support, W * 0.96)
+    s += fig(fig_e83_equal_updates, W * 0.96)
+    s += [P("<b>Route reachability and depth (§§139–140).</b> The exact D4 candidate masks connect 90.2% and 98.0% "
+            "of first-layer/fourth-layer unit pairs in seeds 6 and 7, with every input band connected to layer 4. "
+            "Realized layer-4 support is only 1.6–7.0% in the equal-update arms. This locates the loss after static "
+            "wiring: route gating and thresholded event generation determine which paths exist on a sample. A skip "
+            "raises support to 99–100% without paired recognition gain. The MoE calculation requires paired losses for "
+            "competing routes; the two-gate calculation shows how singleton shadows miss subthreshold route pairs that "
+            "jointly cause a spike. For strict chains, retaining half the samples through depth 8 or 16 requires mean "
+            "per-transition survival of 90.6% or 95.5%. So deeper stacks add combinatorial route choices, but they "
+            "need route acquisition and per-layer survival to make those choices trainable.", "body")]
     s += [P("<b>Depth-credit redesign in evaluation (§136).</b> E83's deepest-only readout makes an early event's final-loss "
             "effect depend on surviving every later hard route. The new sparse `all_depths` option adds the class-evidence "
             "streams from every layer at the same causal prefix and scores lost routes against that fused objective; "
             "deepest-only remains the matched control. This reduces the serial credit burden but could let shallow branches "
-            "carry the classifier, so the new runs report per-branch ablations and sparse readout work at depths 4 and 8. "
-            "The implementation has not yet shown an accuracy gain. A separate gap remains: class evidence does not change "
-            "during silence until another hidden event arrives or EOS is reached.", "body")]
+            "carry the classifier. In the matched 128-example seed-6 pair, all-depth fusion reached 17/128 terminal and "
+            "20/128 race-plus-fallback correct versus 7/128 deepest-only (paired McNemar p=0.0146). This signal did not "
+            "replicate at seed 7: 9 versus 6 correct (p=0.607). Layer-4 removal did not hurt seed-6 fused accuracy, and "
+            "sparse layer-1 skips restored layer-4 support to 99–100% without paired classification gain. The race was "
+            "overconfident in both all-depth seeds (63% mean confidence; 23.8% emitted accuracy at seed 6, 0/8 correct at "
+            "seed 7). These are two-speaker exploratory comparisons, not supremacy evidence. A separate gap remains: class "
+            "evidence does not change during silence until another hidden event arrives or EOS is reached.", "body")]
     s += [P("8. Open problems and next steps", "h1")]
     s += bullets([
         "<b>Stability of the full rule set on every task at once:</b> the margin earned by reliability is stable at depth 3–4 "
@@ -1486,13 +1792,17 @@ def build():
         "promotes trailing noise at the latest instant, §89): the margin needs another anchor.",
         "<b>Depth beyond four and denser streams:</b> depth costs activity n·r^L (§85); extending a unit only toward children "
         "that carry weight cuts events by 42% at depth 3 and 75% at depth 4 at unchanged accuracy (§93); depth 5 is queued.",
-        "<b>Deep real-stream trainability (E83/E84):</b> E83's old depth-2 runs used a batch-length-confounded readout; "
-        "the corrected causal prefix posterior uses fixed-horizon queries. At depth 4, pathwise and normalized-route-credit "
-        "runs both remain near chance. The unbiased total route estimator destabilized training; a clipped local update "
-        "did not improve accuracy and showed low gradient alignment. The hard gate still has sampled route-boundary credit, "
-        "but silent-unit births and candidates outside the fixed mask remain uncredited. Measure layerwise gradient and "
-        "shadow uncertainty, repeat across seeds, and calibrate the stopping rule before scaling. E84's day-5 market queue "
-        "has not run; it uses strict adjacent-layer chains and logs gradient alignment and work.",
+        "<b>Deep real-stream trainability (E83/E84):</b> E83 now scores proper class posteriors at sampled causal prefixes, "
+        "but its strict event chain has nested per-utterance support and silent units have no pathwise firing gradient. "
+        "Depth-4 all-depth readout produced one promising paired seed-6 result that did not replicate at seed 7. A sparse "
+        "A sparse layer-1 skip restored layer-4 support to 99–100%, and an additive count mark raised it to 56–94%, "
+        "without class improvement in either tested arm; the count-mark run ended at 0/32. The trained-checkpoint "
+        "spike-boundary audit found few deep near-threshold events "
+        "and mixed single-spike loss effects, so a boundary update is not yet justified. Prefix NLL and race calibration "
+        "remain poor. Historical eval-size runs coupled evaluation selection to training RNG; new runs default to split "
+        "streams, pending cross-limit validation. Next tests should hold the training stream fixed while expanding speaker "
+        "coverage, then compare a calibrated event representation and boundary-credit rule against matched controls. E84's "
+        "market stream remains a separate depth experiment.",
         "<b>Anytime sparse stream classification (§§119–§129):</b> if the prefix scores are calibrated posteriors, first "
         "crossing confidence 1−ε bounds error among emitted answers by ε. Calibration must hold at the policy-selected "
         "prefixes. Point-process likelihood uses both observed events and silence, so class-specific absence evidence can "

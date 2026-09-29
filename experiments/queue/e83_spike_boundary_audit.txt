@@ -1,0 +1,4 @@
+# Paired hidden-spike birth/death shadows on a trained seed-6 E83 checkpoint.
+# Each batch contributes at most one closest-to-threshold spike toggle per layer.
+e83_spike_boundary_audit_seed6 experiments/e83_spike_boundary_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 32 --batch_size 4 --spike_band 0.25 --sigma 0.25 --prefix_samples 2 --seed 6
+e83_spike_boundary_audit_seed6_n128 experiments/e83_spike_boundary_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 128 --batch_size 4 --spike_band 0.25 --sigma 0.25 --prefix_samples 2 --seed 6

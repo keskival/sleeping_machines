@@ -1267,3 +1267,1102 @@ separate gap: class logits still wait for an event or final EOS instead of
 changing continuously with evidence from silence. Results from this design
 are pending; the implementation alone is not evidence of accuracy or
 supremacy.
+
+## 137. Deep event trainability requires support survival and boundary credit
+
+Section 127 predicted two distinct hard-support gaps in E83: a closed message
+route and a hidden unit's absent spike. The seed-6 depth-four measurements now
+separate them. Write a hidden firing margin as
+
+$$
+g_{bjt}=V_{bjt}-\theta(1+R_{bjt}),\qquad h_{bjt}=\mathbf 1[g_{bjt}\ge0],
+$$
+
+where $R$ is the refractory trace used by `TVLayer`. The ordinary autograd
+path differentiates payloads and the refined time of a spike conditional on
+$h=1$; it does not differentiate the Boolean fire mask, which is constructed
+under `no_grad`. If a unit has no emitted event, its payload is absent from the
+downstream event list, so that example supplies no task gradient through that
+unit's firing decision. An auxiliary classifier at that depth still sees its
+EOS/bias features, but it cannot recover the missing input-dependent event
+path.
+
+There is a stronger support invariant for the current strict chain. With no
+incoming events, the layer's state is identically zero, its membrane potential
+is zero, and its positive threshold prevents a spontaneous spike. Therefore,
+for every utterance $x$,
+
+$$
+E_\ell(x)=\varnothing\;\Longrightarrow\;E_{\ell+1}(x)=\varnothing,
+\qquad
+\mathcal A_{\ell+1}\subseteq\mathcal A_\ell,
+$$
+
+where $E_\ell(x)$ is the emitted event set and
+$\mathcal A_\ell=\{x:E_\ell(x)\ne\varnothing\}$ is the active-example
+support. Hence event coverage $c_\ell=P(x\in\mathcal A_\ell)$ cannot
+increase with depth in this architecture. This is exact, not a mean-field
+approximation. Mean event count has a different factorization,
+$n_\ell=c_\ell\,\mathbb E[|E_\ell|\mid x\in\mathcal A_\ell]$: coverage can
+shrink while event multiplicity on the surviving examples explodes. Thus
+depth-eight spike-count cascades do not contradict support extinction. Sparse
+`all_depths` readout supplies direct losses at existing layers but does not
+alter this hidden support invariant. A sparse skip from the raw event stream,
+a skip from an earlier active representation, a nonzero baseline drive, or
+another explicit support-recruitment mechanism would change the invariant;
+each has different work and stability costs and must be compared as an
+architectural ablation. E83 now has an optional sparse layer-1-to-deeper-layer
+event skip for that controlled comparison. It still cannot recover an example
+on which layer 1 itself emits nothing, so the experiment isolates intermediate
+chain extinction rather than solving every possible silence state.
+
+This is the exact boundary term for a smoothed fire decision. Add independent
+logistic perturbation $\epsilon$ of scale $\sigma$ to $g$, so
+$p=\Pr[g+\epsilon\ge0]=\operatorname{sigmoid}(g/\sigma)$. Let $L_1$ and
+$L_0$ be the same causal prefix objective after forcing this spike on or off,
+replaying its refractory effect, and running the remaining network. Then
+
+$$
+\frac{\partial\mathbb E[L]}{\partial g}
+=\frac{p(1-p)}{\sigma}(L_1-L_0).
+$$
+
+The existing E83 counterfactual code estimates this form for content routes,
+not for hidden spike birth/death. Its route shadow cannot substitute for a
+spike shadow: the two binary variables have different margins and different
+state consequences. A spike shadow must include the changed refractory trace
+in its layer and every downstream event it causes. If only $m$ of $N$ eligible
+margins are sampled uniformly, the Horvitz–Thompson estimate of the total
+boundary sum is $(N/m)\sum_{i\in S}p_i(1-p_i)(L_{i,1}-L_{i,0})\nabla g_i/\sigma$.
+That total can have high variance; a clipped layer-mean update is more stable
+but is a different, biased objective, as §132 already establishes for routes.
+
+The other condition is event-rate impedance. Define
+$n_\ell=\mathbb E[N_\ell]$, the mean number of layer-$\ell$ events per
+utterance, and $\rho_\ell=n_{\ell+1}/n_\ell$ when $n_\ell>0$. The product of
+these ratios is only a first-moment branching approximation because events
+are correlated and one unit may fire repeatedly. Still, a near-zero $n_\ell$
+removes most downstream examples from the pathwise credit support, while
+repeated $\rho_\ell\gg1$ grows event work and accumulated class evidence.
+Section 120 explains why a fixed threshold and weight scale do not preserve
+this operating point: the input rate, payload covariance, decay, and reset
+change with depth.
+
+The E83 evidence matches both predicted regimes:
+
+| Run and evaluation event counts per utterance | Held-out result | Reading |
+|---|---:|---|
+| Depth-4 pathwise, `[4, 2, 0, 0]` after rounding to whole events | 6.25% (2/32) | Layers 3–4 averaged below 0.5 events per utterance. In epoch 2's first training minibatch, the main-loss gradient norms for all four hidden layers were exactly zero; the auxiliary norms were 5.72, 1.48, 0, 0. |
+| Depth-4 route-counterfactual, `[21, 15, 4, 14]` | 6.25% (2/32) | Route openings restored some deep activity, but the model remained at chance; the route update still did not measure spike birth/death. Late-prefix NLL reached 19.735. |
+| Depth-8 `all_depths`, epoch 1 `[16, 9, 3, 6, 27, 51, 141, 250]` | 12.5% (4/32), preliminary | Early event attenuation is followed by late amplification; training loss was $2.78\times10^6$ and late-prefix NLL 39,814.7. |
+| Matched D4 seed-6, eval128: `all_depths` `[39, 16, 7, 22]`; `deepest` `[12, 1, 1, 1]` | 17/128 vs 7/128 terminal; race-plus-fallback 20 vs 7 | Multi-depth loss preserves support and improves paired decisions; layer-4 ablation has no terminal-accuracy effect and late-prefix NLL is 17.57. |
+| D4 layer-1 skip, seeds 6 and 7 | 9/128 and 5/128 terminal | Layer-4 support rises to 99.2% and 100%, but paired accuracy does not improve; seed-7 late-prefix NLL reaches 48.80. |
+
+In the original 32-example screen, the matched depth-four `all_depths` run
+shows that adding direct sparse
+readouts does not itself reopen hidden support. Across its four epochs,
+held-out event means rounded from `[14, 6, 5, 28]` to `[16, 2, 1, 0]`,
+`[9, 1, 0, 0]`, and `[10, 1, 0, 0]` per utterance. Terminal accuracy was
+6.25%, 3.125%, 6.25%, and 6.25%. On the first training minibatches of epochs
+3 and 4, the main-loss gradient norms in layers 3 and 4 were exactly zero.
+Readout fusion alone therefore did not solve the event-support problem in
+that trajectory; the
+matched deepest-only control below shows a different, still inconclusive
+accuracy signal.
+
+The matched deepest-only control has now finished. At its fixed fourth-epoch
+endpoint it classified 5/32 held-out utterances correctly (15.6%), versus
+2/32 (6.25%) for `all_depths`; the first three deepest-only epochs were
+9.4%, 0%, and 3.1%. Conditional on a fixed 5% chance classifier, 5/32 has an
+uncorrected one-sided binomial tail of 0.020, but this was one of several
+arms/epochs inspected. More directly, on the same 32 examples the arms had 5
+deepest-only-only correct cases and 2 `all_depths`-only correct cases, with an
+exact two-sided McNemar $p=0.453$. The final deepest-only prefix NLLs were
+`[4.008, 4.741]`, worse than the uniform 20-class NLL $\log 20\approx2.996$.
+This is a first above-chance-sized accuracy signal in the matched D4 readout
+screen, not a validated performance result: it is small-sample, statistically
+inconclusive as a paired head comparison, and poorly calibrated. The larger
+held-out evaluation must use a fixed endpoint and report both accuracy and
+proper loss.
+
+A fresh 128-example held-out run of the `all_depths` arm has now reached
+17/128 terminal accuracy (13.3%) at its fixed fourth-epoch endpoint. Under
+the simple independent 5% chance model, the one-sided binomial tail is
+$2.31\times10^{-4}$; the observed rates were 11/75 (14.7%) and 6/53 (11.3%)
+on the two held-out speakers, rather than coming from only one voice. At the
+fixed 0.6 stopping threshold, the output race emitted on 42/128 examples,
+with 10/42 correct (23.8%). The emitted class payloads had mean maximum
+confidence 63.8%, so this is a direct sequential-calibration failure, not
+merely a low-coverage policy. Mean emission latency was 377 ms, and anytime
+accuracy was 15.6% with terminal fallback. The final late-prefix NLL remained 17.57, and the
+epoch-4 layer-4 standalone head was 10.2%; removing it from the fused logits
+left fused accuracy at 13.3%. Standalone head accuracies were
+`[7.0, 10.2, 8.6, 10.2]%`; leave-one-head-out fused accuracies were
+`[10.2, 7.0, 10.2, 13.3]%`. The layer-2 head has the largest measured
+leave-one-out contribution, while layer 4 has none. These are readout
+ablations on one checkpoint, not retrained depth ablations. This is a
+discrimination lead but not calibrated posterior learning or evidence of a
+deepest-branch gain. The
+nominal chance tail is exploratory: only two held-out speakers, one seed,
+multiple prior arms, and repeated epoch inspection limit its interpretation.
+
+The seed-6 128-example control is now paired against `deepest` at the same
+training and evaluation limits. These two commands have identical selected
+examples and training RNG streams; `readout_fusion` is the changed factor.
+At epoch 4, terminal accuracy was 17/128 for `all_depths` and 7/128 for
+`deepest`; layer-4 active-example coverage was 61.7% and 4.7%, respectively.
+For the deployed output rule (first threshold crossing, otherwise terminal
+fallback), saved paired predictions were correct on 20/128 versus 7/128
+examples: 19 discordant cases favored `all_depths` and 6 favored `deepest`
+(exact McNemar $p=0.0146$). This is nominal evidence for the fused
+objective/readout package on this fixed evaluation subset; the examples come
+from only two held-out speakers, so utterance-level pairing does not establish
+speaker-level replication. At threshold 0.6, `all_depths` emitted 42 answers,
+10 correct, versus 2 answers and no correct emission for `deepest`. Despite
+the accuracy difference, late-prefix NLL favored `deepest` (4.66 versus
+17.57), with both above uniform 2.996. Thus additive evidence from multiple
+depths preserves support and changes decisions, but also yields severe
+overconfidence. Removing the deepest head from fused terminal logits left
+`all_depths` accuracy at 13.3%; deeper-branch utility has not been shown.
+
+The same-seed-7 all-depths comparison did not reproduce that paired result.
+At the fixed endpoint it reached 9/128 terminal accuracy versus 7/128 for
+`deepest`; race-plus-fallback predictions were 9 versus 6 correct (exact
+McNemar $p=0.607$). Layer-4 coverage was 22.7% versus 16.4%, and late-prefix
+NLL was 5.74 versus 4.09. The all-depth race emitted 8 answers at mean
+confidence 63.1%, with none correct. Thus the seed-6 classification advantage
+is unconfirmed across seeds, while race overconfidence appears in both.
+Seed-7 leave-one-head-out terminal accuracies were `[2.3, 7.8, 10.9, 7.8]%`
+versus 7.0% fused; removing layer 1 reduced accuracy, while removing layers
+2–4 slightly or substantially improved it. The contribution pattern differs
+from seed 6, where removing layer 2 had the largest negative effect and layer
+4 was neutral. There is no stable evidence yet that the deepest layer
+contributes useful class evidence.
+
+The supervision scheme remains appropriate for sequence-to-class recognition.
+At an exogenous causal prefix $T$, let $p_T=P(Y\mid\mathcal F_T)$ be the
+true posterior and $q_T$ the model output. The population risk decomposes as
+$\mathbb E[-\log q_T(Y)]=\mathbb E[H(p_T)+D_{KL}(p_T\Vert q_T)]$,
+so its optimum is the conditional class posterior; it does not require an
+output at utterance onset. E83 samples two fixed-time prefixes plus EOS, then
+applies the 0.6 race as a separate stopping policy. The loss is proper at its
+sampled times, but two samples do not establish posterior quality at
+event-triggered stopping times. The observed confidence/accuracy gaps
+identify posterior estimation and calibration as current failure modes, not
+a need to force a class event while the network is silent.
+
+This support difference predicts how often a small minibatch cannot carry
+deep evidence at all. If utterances independently activate the deepest layer
+with probability $c$, a batch of size $B$ has
+$N_{\rm active}\sim\mathrm{Binomial}(B,c)$ and
+$P(N_{\rm active}=0)=(1-c)^B$. With $B=4$, the observed seed-6 deepest-only
+coverage $6/128$ implies $P(N_{\rm active}=0)=0.825$; seed-7 coverage $21/128$
+implies $0.488$; all-depth seed-6 coverage $79/128$ implies $0.0215$. This is
+a support-only approximation, assuming training examples follow the held-out
+coverage: an active event is necessary for hidden task credit, but it does
+not guarantee a nonzero or useful gradient. It quantifies why batch size four
+can make support collapse dominate stochastic updates.
+
+The seed-7 deepest-only control reached 7/128 terminal accuracy (5.5%),
+16.4% layer-4 coverage, and late-prefix NLL 4.09. At the fixed 0.6 threshold
+it emitted four times with no correct answer. This second seed supports the
+deepest-only failure diagnosis. Together with its matched all-depth arm, it
+shows that the apparent fusion benefit varies across seeds.
+
+The seed-6 deepest-only test of an earlier-layer event skip now falsifies the
+claim that support survival alone will solve recognition. Sending layer-1
+events directly to layers 3–4 raised final layer-4 coverage from 4.7% to
+99.2%; the measured nesting-violation counter rose to 29, as expected when
+the strict-chain condition is relaxed. Deep candidate scores increased only
+1.8% (46,246 to 47,096 per utterance), while terminal accuracy moved from
+7/128 to 9/128 and late-prefix NLL improved from 4.66 to 3.71, still worse
+than uniform. The fixed-threshold race emitted five times and got none right.
+On paired race-plus-fallback predictions, 6 examples favored strict-chain
+and 8 favored skip (exact McNemar $p=0.791$). This isolates a real support
+mechanism with a small sparse work increment, while showing that the newly
+recruited paths have not yet acquired useful class evidence. Seed 7 repeated
+the support effect without accuracy gain. The 1.8% work change is in candidate event–receiver scores, not
+total inference energy: the current simulator still performs 288,008 vector
+state updates per utterance on its 1 ms grid.
+
+The seed-7 skip result reproduced the coverage change, reaching 100% layer-4
+support, but terminal accuracy was 5/128, late-prefix NLL was 48.80, and
+none of seven fixed-threshold emissions were correct. Candidate-score work
+was 22.3% above its strict-chain seed-7 control. Paired race-plus-fallback
+predictions were correct on 5 versus 6 examples (6 strict-only, 5 skip-only;
+exact McNemar $p=1.0$). The two seeds support a causal effect on event
+support, not class accuracy; seed-dependent event rates and poor evidence
+calibration remain. Therefore support survival, activity impedance, and
+label-useful credit must be diagnosed as distinct mechanisms.
+
+The larger-evaluation command is a fresh training run, not a re-evaluation of
+the original 32-example checkpoint. All historical E83 artifacts used one
+NumPy generator for held-out subset selection and subsequent training
+permutations and augmentations. Changing `eval_limit` therefore changed the
+training random stream after initialization. The matched 128-example arms
+share the same `eval_limit` and are valid within-protocol comparisons, but
+their contrast with the earlier 32-example screen cannot be attributed to
+evaluation size alone. The implementation now defaults to
+`--rng_protocol split`, assigning evaluation selection, training subset/order,
+augmentation, prefix sampling, and route-shadow sampling to separate streams;
+`legacy_shared` remains available for historical reproduction. The split
+protocol has not yet been validated by a paired run across evaluation limits.
+
+The first row establishes a concrete cause of the pathwise depth-four failure:
+on many examples the network has no realized deep event path for the label to
+train. The second row prevents overclaiming: event absence is not the only
+cause of chance accuracy. The pathwise prefix cross-entropy is proper at its
+fixed causal query times, but properness does not supply derivatives for
+missing support. The third row shows why merely lowering thresholds is not a
+complete solution: the same small stack can move from early extinction to a
+late activity cascade, and additive event logits then become badly scaled.
+
+The depth-eight fused run was stopped after four of its eight requested
+epochs. Its event counts swung from `[16, 9, 3, 6, 27, 51, 141, 250]` at epoch
+1, to `[24, 3, 1, 1, 4, 6, 32, 65]` at epoch 2, to
+`[59, 35, 97, 286, 1137, 1929, 4125, 4888]` at epoch 3, then back to
+`[27, 3, 2, 2, 3, 11, 47, 58]` at epoch 4. Terminal accuracy was
+12.5%, 3.1%, 9.4%, and 6.25%; late-prefix NLL was 39,814.7, 1,692.1,
+19,787,863.2, and 22.9. This alternating extinction/cascade is the measured
+instability; further epochs of the same setting were not useful evidence.
+
+A paired spike audit used 128 held-out-speaker utterances (32 batches) from
+the trained depth-four route-counterfactual checkpoint. It shadowed the
+closest firing margin once per layer and batch, toggling the spike and
+replaying the full stack. Candidate margins within $\pm0.25$ averaged 349 per
+batch in layer 1, 67 in layer 2, 7.9 in layer 3, and 6.6 in layer 4. Median
+counts were 347.5, 64.5, 1, and 0; no layer-3 margin was in-band in 8/32
+batches, and no layer-4 margin was in-band in 24/32. Spike-on improved the
+batch loss in 16/32, 17/32, 14/32, and 14/32 interventions. Mean batch
+objective $L_1-L_0$ was $+0.00047$, $-0.00055$, $+0.00202$, and $+0.00260$,
+with standard deviations $0.00842$, $0.00274$, $0.02249$, and $0.01027$.
+These selected local interventions do not estimate the total boundary
+gradient, but they reject the simple claim that a useful single spike
+insertion consistently improves the current model's class loss. Deep support
+is scarce, and where an event can be toggled its present payload is not
+reliably class-useful.
+
+There is also a concrete input-information bottleneck. `events()` groups
+same-band spikes within 2 ms and returns $c_i=\log(1+n_i)$ as an event mark.
+E83's `to_events` unpacks this count but forms the input only as the band
+embedding $e_{b_i}$; $c_i$ is discarded before the first vector state.
+Across the full fitting split, 55.6% of merged groups contained multiple raw
+spikes (2.25-fold count compression); on held-out speakers, 43.5% did (1.79-
+fold compression). The per-class held-out share ranged from 0.343 to 0.528.
+The coarsening $(b,t,c)\mapsto(b,t)$ obeys
+$I(Y;B,T)\le I(Y;B,T,C)$, with equality only if
+$I(Y;C\mid B,T)=0$; that sufficiency condition has not been tested. This is
+not proof that the count mark explains the accuracy gap, but it is input
+information the current model cannot reconstruct after preprocessing.
+
+The one-factor additive-count ablation has completed at the same D4,
+128-train/32-held-out, seed-6 budget. It confirms a dynamical effect: layer-4
+held-out support coverage was 0.625, 0.9375, 0.6562, and 0.5625 over the four
+epochs, with zero support-nesting violations; conditional layer-4 events per
+active utterance were 29.3, 80.5, 25.3, and 22.1. Yet terminal accuracy was
+9.4%, then 0% for the remaining three epochs, and epoch-4 prefix NLL was
+$[8.4786, 27.28]$. The count mark can keep a deeper path active, but this
+single-seed run did not turn that activity into class evidence. This rules out
+the dropped count as a sufficient explanation and argues for measuring
+coverage and class utility separately.
+
+The next comparisons separate the remaining causes. The matched deepest-only
+versus `all_depths` readout controls and 128-example paired evaluations are
+complete. Continue measuring active-example coverage
+$c_\ell$ and conditional event multiplicity alongside mean spikes per
+utterance; the exact nesting invariant predicts zero support violations for
+the strict chain. If larger held-out checks do not validate the current
+deepest-only signal, compare a sparse raw-event skip to the strict chain at
+the same depth, seed, loss, and optimizer budget. Such a skip can break
+absorbing silence without making the layer dense, but may let deep layers
+shortcut the learned hierarchy, so include per-depth branch ablations and
+event-work counts. Keep the 128-example spike audit as a measurement baseline;
+do not add its noisy single-spike update until its utility is replicated.
+Threshold calibration and boundary credit come after representation and
+support, with a declared throughput target and fresh paired deltas. Count
+restoration has shown that support can change without accuracy changing; rate
+calibration must likewise be evaluated for class utility, not event count. If
+neither input marks nor support paths help, move to topology or
+speaker-invariant representation analysis instead of another
+classification-loss sweep.
+
+## 138. Deep event learning has a support-weighted gradient and a gate-space stability problem
+
+Section 137 proves that strict-chain support is nested. The consequence for
+learning is stronger than a count of zero-gradient batches: support changes
+the mean and variance of the pathwise gradient itself. Fix a layer's
+input-dependent pathwise parameter gradient on one example, and write it as
+
+$$
+G=A X,\qquad A=\mathbf 1[x\in\mathcal A_\ell],\qquad
+c_\ell=\Pr(A=1),
+$$
+
+where $X$ is the gradient conditional on that layer having an event path.
+Let $\mu_\ell=\mathbb E[X\mid A=1]$ and
+$\Sigma_\ell=\operatorname{Cov}(X\mid A=1)$. Then, exactly,
+
+$$
+\mathbb E[G]=c_\ell\mu_\ell,\qquad
+\operatorname{Cov}(G)=c_\ell\Sigma_\ell+
+c_\ell(1-c_\ell)\mu_\ell\mu_\ell^\top.
+$$
+
+For a minibatch of $B$ independent examples,
+$\Pr(M_\ell=0)=(1-c_\ell)^B$. In any task-relevant direction $u$,
+the minibatch signal-to-noise ratio is
+
+$$
+\operatorname{SNR}_u=
+\frac{\sqrt{B}\,c_\ell|u^\top\mu_\ell|}
+{\sqrt{c_\ell u^\top\Sigma_\ell u+
+c_\ell(1-c_\ell)(u^\top\mu_\ell)^2}}.
+$$
+
+When conditional gradient noise dominates, this scales approximately as
+$\sqrt{B c_\ell}$; meanwhile the expected gradient magnitude scales as
+$c_\ell$. This is a support penalty even when each active example has a
+perfectly ordinary gradient. It does not assert that the conditional signal
+$\mu_\ell$ points in a useful direction. If $u^\top\mu_\ell$ is near zero,
+raising event coverage alone cannot fix label learning.
+
+For the four equal-update depth-four arms, measured layer-4 coverage ranged
+from 1.56% to 7.03%. If those rates represent training minibatches of size
+four, the binomial approximation gives a 75–94% chance that a batch contains
+no layer-4 example. This estimate assumes independent, representative
+examples; the exact per-utterance support nesting does not require that
+assumption. It explains why a small batch can repeatedly omit the deepest
+pathwise signal, but not why accuracy is poor when a deep event does occur.
+
+The omitted signal at a hard spike boundary can be written separately. For a
+margin $g(\theta)$ and a logistic threshold perturbation of scale $\sigma$,
+let $p=\operatorname{sigmoid}(g/\sigma)$ and let $L_1,L_0$ be downstream
+losses after replaying the network with the event forced on or off,
+including its refractory effect. The smoothed expected loss is
+$\bar L=pL_1+(1-p)L_0$, so its derivative decomposes as
+
+$$
+\nabla_\theta\bar L=
+p\nabla_\theta L_1+(1-p)\nabla_\theta L_0+
+\frac{p(1-p)}{\sigma}(L_1-L_0)\nabla_\theta g.
+$$
+
+The first two terms are pathwise credit inside the two fixed event outcomes;
+the last is the spike birth/death boundary credit. E83's ordinary gradient
+does not contain that last term because the hard event identity is detached.
+A replay shadow can estimate its loss difference, but inserting this term
+would train the explicitly randomized/smoothed gate objective. It is not the
+ordinary derivative of the deterministic hard-gate loss, which is zero almost
+everywhere and discontinuous at the boundary. Thus the theory identifies the
+missing credit and the objective it would optimize; it does not yet justify
+the estimator's variance or its gain on SHD.
+
+A further mechanism can make support change abruptly even when global gradient
+clipping is enabled. AdamW takes a coordinatewise preconditioned step
+
+$$
+\Delta\theta_t=-\eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
+-\eta\lambda\theta_t.
+$$
+
+Clipping the raw gradient norm does not generally bound
+$\|\Delta\theta_t\|$ or a gate's margin change in this optimizer geometry.
+On an isolated first step, multiplying every gradient by a clipping factor
+$\alpha$ also multiplies $\hat m$ by $\alpha$ and $\hat v$ by $\alpha^2$;
+when $\epsilon$ is small, the Adam ratio is nearly unchanged. This is a
+direct algebraic reason that a raw-gradient clip is not a trust region for
+hard events.
+
+Within a fixed event pattern, take a firing margin $g_i(\theta)$ with
+Hessian spectral norm bounded locally by $H_i$. A step cannot change that
+gate's sign if
+
+$$
+|g_i(\theta)|>
+|\nabla g_i(\theta)^\top\Delta\theta|
++\tfrac12 H_i\|\Delta\theta\|_2^2.
+$$
+
+The ratio of the right side to $|g_i|$ is a gate-space step-size diagnostic:
+values below one certify local sign stability under the stated curvature
+bound; values above one identify margins that may flip. E83's alternating
+extinction and activity cascades make optimizer-induced gate changes a
+plausible explanation, but epoch-level event counts do not establish that
+cause. The required evidence is a per-update record of pre/post margin
+histograms, actual AdamW displacement, predicted margin displacement
+$\nabla g_i^\top\Delta\theta$, and observed gate flips. No such trace has yet
+been collected.
+
+This yields four separate necessary checks for deeper supervised event
+models: (1) examples survive to the layer that should learn; (2) active
+messages carry label-useful information; (3) missing useful spikes receive a
+measured boundary signal; and (4) optimizer steps preserve useful gates long
+enough for that signal to accumulate. They are not interchangeable. The
+layer-1 skip raises layer-4 support without accuracy, the spike audit finds
+mixed utility among selected candidates, and data-diversity effects reverse
+direction across the two equal-update seeds. These results locate distinct
+open conditions instead of selecting one universal cause.
+
+### Compute-matched data diversity screen
+
+The two-arm comparison at each seed held optimizer updates to 120, architecture
+and initialization fixed, and used a nested 120-example versus 480-example
+training subset; both arms evaluated on the same 128 examples within each
+seed. In seed 6, terminal accuracy was 8/128 for 120 examples over four epochs
+and 20/128 for 480 examples over one epoch (paired exact McNemar $p=0.0227$).
+In seed 7, the direction reversed: 20/128 versus 8/128
+($p=0.0357$). Each arm pair therefore changes example diversity while keeping
+updates fixed, but the sign reversal means these two small runs do not
+establish a repeatable data-diversity benefit. Across all four arms,
+layer-4 support was only 1.56–7.03% and late-prefix NLL was 3.02–6.58, above
+the 20-class uniform value $\log 20\approx2.996$. The screen points to strong
+initialization/optimization sensitivity and leaves the gate-space mechanism
+unresolved; it is not a reason to launch more seed-only repetitions.
+## 139. Route reachability is not route credit: the missing comparison may be a pair
+
+For sparse routing, distinguish four graphs: (1) the **candidate graph** in
+the fixed connectivity mask; (2) the **event-conditioned graph** whose edges
+are scored for a realized source event and payload; (3) the **realized graph**
+whose content routes open and whose receiver units fire; and (4) the **credit
+graph** whose alternatives are actually evaluated by the supervised loss.
+Only the first is captured by a static adjacency mask. A path in that graph
+is necessary for learning through that path, but does not imply an event,
+message, spike, or gradient occurred there.
+
+For E83's D4 settings, each of the three later 16-by-16 masks is sampled at
+fan probability 0.25 and repaired if any row or column is empty. Recreating
+the exact masks from the two recorded seeds gives edge counts \([54,61,74]\)
+for seed 6 and \([64,70,73]\) for seed 7. A static path exists between 90.2%
+of first-layer/fourth-layer unit pairs in seed 6 and 98.0% in seed 7. After
+including the actual local first-layer frequency mask, all 140 input bands
+have a candidate path to layer 4 in both seeds; the median band reaches 16 of
+16 layer-4 units. These are exact reachability counts for these two
+initializations, not proof that any path is semantically useful.
+
+The matched D4 runs nevertheless have just 1.56–7.03% realized layer-4
+support. The bottleneck therefore occurs after static path construction:
+source events disappear, content gates close, or arriving vector messages
+fail to create a threshold crossing. This rules out a broad static
+disconnection in these two masks as the explanation for near-silent depth.
+It does not distinguish dynamic route selection from insufficient membrane
+drive or unhelpful payloads.
+
+The MoE analogy identifies an additional learning condition. Let two competing
+routes have scores \(s_a,s_b\) and relaxed choice probability
+\(q=\operatorname{sigmoid}((s_a-s_b)/\tau)\). If their full downstream losses
+under matched input/context are \(L_a,L_b\), then
+
+$$
+\frac{\partial\mathbb E[L]}{\partial(s_a-s_b)}
+=\frac{q(1-q)}{\tau}(L_a-L_b).
+$$
+
+When \(L_a<L_b\), gradient descent raises the relative score for route \(a\).
+This gradient needs both route outcomes: if the losing route is never executed
+or shadowed, \(L_b\) is unknown and its comparative utility cannot be learned.
+Training does not require both routes on every example; it does require a
+sparse sample of paired route evaluations with the same example, prefix
+times, and downstream randomness. This is the same requirement that appears
+in sparse mixture-of-experts routing.
+
+E83's current shadow toggles one masked message route open/closed and replays
+the downstream network, but only when the event-conditioned score satisfies
+\(|r|\leq\texttt{cf\_band}\). Far-closed route instances have zero direct
+shadow probability under that estimator; a candidate edge outside the fixed
+mask has no proposal at all. Shared receiver vectors can move some scores
+indirectly, but do not guarantee that every suppressed route is discovered.
+Hence static path existence alone is not enough: every potentially useful
+route, or a structured proposal for it, must have nonzero counterfactual
+sampling probability.
+
+The single-edge comparison also misses synergistic routes. E83's receiver
+adds arriving vector contributions before applying a hard firing threshold.
+Under a fixed event ordering, let two incoming candidate routes contribute
+margin increments \(h_a,h_b\) to baseline margin \(g_0\). It can happen that
+
+$$
+g_0<0,\quad g_0+h_a<0,\quad g_0+h_b<0,\quad
+g_0+h_a+h_b\geq0.
+$$
+
+Each route alone leaves the receiver silent; together they create a spike.
+The one-route loss deltas are then zero even though the pair changes the
+downstream class evidence.
+
+This complementarity is exact in a two-gate relaxation. Let independent
+candidate gates open with probabilities \(q_a=\operatorname{sigmoid}(s_a/\tau)\)
+and \(q_b=\operatorname{sigmoid}(s_b/\tau)\); let \(L_{ij}\) be the complete
+replay loss when gate states are \(i,j\in\{0,1\}\). Then
+
+$$
+\frac{\partial\mathbb E[L]}{\partial s_a}=
+\frac{q_a(1-q_a)}{\tau}
+\left[(1-q_b)(L_{10}-L_{00})+q_b(L_{11}-L_{01})\right].
+$$
+
+If neither singleton helps but the pair does, so \(L_{10}=L_{01}=L_{00}\) and
+\(L_{11}<L_{00}\), gate \(a\) receives credit proportional to \(q_b\). If
+route \(b\) is never present in a rollout or forced shadow, \(q_b=0\) and the
+gradient to \(a\) is exactly zero; the same holds symmetrically. The missing
+object is the four-way comparison \(L_{00},L_{10},L_{01},L_{11}\), not
+another scalar update to a route that has never jointly participated.
+
+The principled sparse option is to preserve proposal support over plausible
+masked routes and add a small number of cooperative shadows targeted at a
+common receiver: sample pairs whose arrivals overlap in its temporal window
+and whose combined potential approaches its firing margin. Replay the four
+gate states 00, 10, 01, and 11 on the same utterance/prefix, estimate each
+single-route utility and the interaction
+\(\Gamma_{ab}=L_{11}-L_{10}-L_{01}+L_{00}\), then shrink uncertain estimates
+and limit the change in gate and firing margins. A negative \(\Gamma_{ab}\)
+means the pair reduces loss beyond its isolated effects. Pair selection must
+stay sparse; enumerating every edge pair would replace the architecture's
+advantage with dense work.
+
+The next informative audit is a fixed-checkpoint route-reachability and
+cooperation test, not another seed sweep: measure all four graph levels, and
+test a predeclared sparse set of singleton/pair shadows near receiver
+thresholds. Record pair-created spikes, class-loss deltas, route proposal
+probabilities, and shadow cost. This would tell us whether the unresolved
+failure is absent source events, far-closed routes, cooperative threshold
+crossing, or payload/class utility. The present evidence establishes broad
+candidate-graph reachability and poor realized support; it does not yet
+establish that route-pair synergy is the cause.
+
+## 140. More depth creates combinatorial choices, but path survival multiplies
+
+Depth is useful because it composes choices: a width-\(M\) hidden stack with
+per-edge candidate density \(p\) has, under independent random masks, an
+expected
+
+$$
+\mathbb E[P_{u\to v}^{(D)}]=M^{D-2}p^{D-1}
+$$
+
+static routes between a fixed first-layer unit \(u\) and final-layer unit \(v\)
+over \(D-1\) transitions. For the current \(D=4\), \(M=16\), \(p=0.25\)
+setting, this expectation is 4; adding layers makes the number of candidate
+compositions grow rapidly. Each extra layer can therefore create more
+possible expert compositions for the same input.
+
+But more **candidate** compositions are not more realized or trainable
+choices. Let \(s_\ell=\Pr(x\in\mathcal A_{\ell+1}\mid x\in\mathcal A_\ell)\)
+be the conditional example-survival probability. Under the strict chain,
+
+$$
+c_D=c_1\prod_{\ell=1}^{D-1}s_\ell.
+$$
+
+If survival were constant at \(s\), then \(c_D=c_1s^{D-1}\). To preserve at
+least half the examples at layer 8 from full layer-1 support requires
+\(s\geq0.5^{1/7}\approx0.906\) at every transition; at depth 16 the
+requirement is \(s\geq0.5^{1/15}\approx0.955\). This is a simple survival
+identity, not an assertion that examples are independent across layers.
+The gradient to a deepest-only loss is subject to the same support product.
+All-depth supervision shortens that path for each head, but does not restore
+the final hidden layer's support.
+
+Thus depth should follow, not precede, route acquisition and survival. Simply
+stacking more layers raises the number of possible expert sequences while
+making any specific sequence less likely to be active and credited. More
+width adds local alternatives but also raises candidate fan-out and possible
+threshold bursts. Sparse skips can protect support but earlier E83 tests
+showed that restoring support alone did not teach the class. A trainable deep
+design needs (a) broad but sparse candidate reachability, (b) paired or
+cooperative counterfactual evaluation so losing choices receive label
+utility, and (c) a calibrated survival/threshold mechanism. Then increase
+depth while monitoring per-layer conditional survival and route-credit
+coverage. This predicts a path to deep models; it is not yet a proof that the
+current E83 cell scales.
+
+## 141. A non-event should carry its failure margin and a counterfactual loss
+
+A useful training signal can originate at a candidate event that did not
+occur. But “did not fire” is not one state with one correction: an existing
+source may have had its edge closed, the receiver may have stayed below its
+threshold, the message may have lost a timing race, or the receiver may have
+been refractory. These decisions have different local controls. A zero or
+negative label sent backward without identifying the cause could push the
+wrong control and make event rates unstable.
+
+Represent a candidate event $e$ by its source, target, proposed arrival time
+$t_e$, payload $v_e$, and local decision margin $m_e$. Choose the sign so the
+candidate is admitted when $m_e>0$. Examples are
+
+$$
+m_e=r_e \quad\text{(content route)},\qquad
+m_e=V_e-\theta_j \quad\text{(receiver threshold)},
+$$
+
+$$
+m_e=t_{\mathrm{competitor}}-t_e \quad\text{(earliest-arrival race)},\qquad
+m_e=t_e-(t_{\mathrm{last},j}+R_j) \quad\text{(refractory availability)}.
+$$
+
+For a fixed factual trace, let $L_{e,0}$ be the causal prefix loss when the
+candidate stays absent, and $L_{e,1}$ the loss when it is admitted and the
+network is replayed through all downstream state changes: later events,
+refractory/reset state, route winners, and readout. Define its contextual
+utility as
+
+$$
+U_e=L_{e,0}-L_{e,1}.
+$$
+
+$U_e>0$ means this specific event would have helped on this example and
+prefix. It does not mean every event of its class is useful. If a smooth
+Bernoulli relaxation $z_e\sim\mathrm{Bernoulli}(p_e)$ is used to derive an
+update, with $p_e=\operatorname{sigmoid}(m_e/\tau)$, then
+
+$$
+\nabla_\theta \mathbb E[L_e]
+=-\frac{p_e(1-p_e)}{\tau}U_e\nabla_\theta m_e.
+$$
+
+Loss descent therefore moves the margin toward admitting a helpful
+candidate and away from admitting a harmful one. The deployed computation
+can remain a hard event decision; the shadow estimates a boundary update for
+the smoothed decision rule, not the almost-everywhere derivative of the
+deterministic threshold. For an actual race, the alternate replay must change
+the winning event consistently, including cancellation of the former
+winner, rather than append a second event to a trace that allows only one
+winner.
+
+This gives a precise interpretation of propagating “did not fire” events:
+carry a sparse record of the dormant candidate and its cause/margin, obtain a
+paired downstream loss by forcing the relevant alternative, then send the
+signed utility through the local eligibility $\nabla m_e$. The
+counterfactual event need not be inserted into the factual state. If it
+would create a downstream event that also did not occur, replay or shadow
+that changed continuation as part of the same intervention; otherwise
+$U_e$ omits the event's actual consequence. Cooperative proposals still
+need joint shadows as in §139.
+
+This rule has a support condition. A margin update can teach only controls
+with nonzero sensitivity to $m_e$, and the counterfactual can evaluate only
+events generated from an available source and a legal candidate edge. A
+candidate edge outside the fixed mask needs a separate sparse structural
+proposal. If deterministic routing never samples or shadows a dormant
+candidate, its utility is unobserved; a small exploration probability over
+eligible candidates prevents its proposal probability becoming exactly
+zero. Sampling probabilities must be recorded. Reweighting every rare
+shadow to estimate the full candidate sum is unbiased in principle but can
+have the high variance observed in §131; bounded, normalized, stratified
+utility updates are a safer first test, with their bias reported.
+
+The sparsity constraint is substantive: enumerate proposals only from
+realized source events and sparse candidate neighbors, then spend a bounded
+shadow budget on near-margin cases plus a small exploration sample. Do not
+form all absent source-target-time combinations. For each sampled shadow,
+record cause, margin, sampling probability, paired loss delta, whether a new
+spike/race winner appeared, downstream event count, and replay work. Keep
+separate statistics for route closure, threshold failure, race loss, and
+refractory blocking so a useful threshold correction is not mistaken for a
+useful routing correction.
+
+This makes the benefit of a richer pool conditional, not automatic. Suppose
+there are $N$ eligible dormant proposals on a fixed example and $K$ have
+positive, task-useful utility, so $\rho=K/N$. If $m$ proposals are sampled
+uniformly without replacement, the probability of observing at least one
+useful alternative is exactly
+
+$$
+1-\frac{\binom{N-K}{m}}{\binom{N}{m}}
+\;\approx\;1-(1-\rho)^m.
+$$
+
+At fixed shadow budget $m$, adding mostly unhelpful candidates can lower
+$\rho$ and reduce discovery probability. If instead samples are drawn from a
+useful margin/cause stratum, repeated paired utility estimates with
+conditional variance $\sigma_U^2$ have standard error $\sigma_U/\sqrt m$
+under independent sampling. Thus the pool helps through *coverage* and
+utility SNR, not raw cardinality. Stratified sampling improves coverage but
+changes the target distribution; record propensities and either report
+stratum-conditional utility or use bounded importance weights. Candidate
+pair discovery is stricter: a singleton pool does not reveal a synergistic
+pair, so overlapping proposals near one receiver must be explicitly paired
+and sampled.
+
+**What this advances and what remains open.** Sections 19, 57, 131, 138,
+and 139 establish why hard decisions need paired counterfactual outcomes,
+why support and event-boundary credit are distinct, and why joint
+alternatives can matter. The new unification is to index each dormant
+proposal by its causal failure margin and differentiate that margin using
+end-to-end paired utility. No E83 run has yet measured this four-cause
+candidate record or shown that its updates improve class accuracy. The next
+informative test is a fixed-checkpoint audit: sample non-events by cause and
+margin, replay singletons and a small set of threshold-overlap pairs, and
+report utility, variance, event-rate effects, and sparse replay cost before
+enabling updates.
+
+## 142. Counterfactual-rich topology needs route alternatives, not dense firing
+
+This is the same core problem as routing in sparse differentiable computation
+graphs, including sparse expert models: the forward pass selects only a small
+set of branches, while the learner needs comparative utility for plausible
+alternatives. The event-network-specific questions are how message time,
+vector payload, receiver integration, threshold firing, race arbitration, and
+refractory state change that utility. Merely naming a route counterfactual is
+not a new routing principle.
+
+The previous section treats one dormant proposal. In a deep stack, a useful
+event may require several gates in series, or a small bundle of messages in
+parallel. A topology that stores only the realized event trace loses both
+kinds of alternative. The design target is therefore a sparse *proposal
+topology*: it keeps a bounded set of legal route alternatives and enough
+local state to explain why each was rejected, while the factual forward pass
+still emits only events that won the actual decisions.
+
+For a source event $i$ and candidate receiver $j$, store a sparse proposal
+
+$$
+e=(i,j,t_e,v_e, m_e^{route},m_e^{fire},m_e^{race},m_e^{ref},\pi_e),
+$$
+
+where $t_e$ and $v_e$ are its proposed arrival time and payload; the four
+margins are conditional on the preceding decisions being opened; and
+$\pi_e$ is its counterfactual sampling probability. The proposal index is
+the sparse candidate graph, not a dense source-by-target matrix. The factual
+event is produced only if the route is legal/admitted, the receiver can fire,
+the refractory state permits it, and the relevant race is won. These causes
+are not mutually exclusive: opening a route may still leave its receiver
+subthreshold, so causal utility must be measured by interventions, not
+assigned from a single categorical “failure label.”
+
+This topology admits four counterfactual sizes, in increasing cost:
+
+1. **Single proposal:** open/close one existing edge, or add/drop one
+   contribution at a receiver. This estimates the conditional utility of a
+   route in the current context.
+2. **Receiver bundle:** replay a small pair or tuple of temporally
+  overlapping messages together. This measures threshold cooperation such
+  as §139's $L_{00},L_{10},L_{01},L_{11}$ interaction.
+3. **Short path:** start from a dormant near-threshold source or route, open
+   a bounded sequence of gates through depth, then replay its entire
+   downstream continuation. This tests a useful path whose individual
+   gates cannot get a signal because their partners are absent.
+4. **Structural proposal:** test a sparse edge outside the current mask.
+   Promote it to the trainable candidate graph only after repeated paired
+  evidence supports it; otherwise the current mask makes its proposal
+  probability exactly zero.
+
+For two currently closed gates $a,b$, let $q_a,q_b$ be their independent
+smoothed opening probabilities and let $L_{00},L_{10},L_{01},L_{11}$ be the
+four losses after replaying the same input with neither, either singleton,
+or both routes open. Their expected loss is
+
+$$
+\bar L=(1-q_a)(1-q_b)L_{00}+q_a(1-q_b)L_{10}
+ +(1-q_a)q_bL_{01}+q_aq_bL_{11}.
+$$
+
+If $q_i=\operatorname{sigmoid}(s_i/\tau)$, the exact relaxed gradient is
+
+$$
+\frac{\partial\bar L}{\partial s_a}=\frac{q_a(1-q_a)}{\tau}
+ [(1-q_b)(L_{10}-L_{00})+q_b(L_{11}-L_{01})],
+$$
+
+with the symmetric expression for $b$. The interaction
+$\Gamma=L_{11}-L_{10}-L_{01}+L_{00}$ is negative when joint opening gives a
+super-additive reduction in loss. Four matched outcomes distinguish that
+cooperation from two helpful singleton routes. They also show a limit: the
+exact independent-gate gradient still weights a route's conditional paired
+utility by the partner's opening probability. Pair shadows reveal the
+conditional utility; escaping a very small partner probability requires a
+separately justified exploration distribution or a different joint gate,
+not a claim that replay alone removes the attenuation.
+
+The E83 pilot implements one bounded instance: it pairs two near-boundary
+closed routes that target the same receiver and have source times within a
+fixed window, then replays the three non-factual outcomes. At most one pair is
+sampled per minibatch; the pair sample uses an independent random stream, so
+the matched pathwise control has the same data order and initialization.
+This specifically tests receiver-level cooperation. It does not test
+cross-layer short paths, out-of-mask topology growth, or threshold/race/
+refractory alternatives, and three replays per pair add training work while
+leaving inference routing unchanged.
+
+The proposal rule in this pilot is a screening heuristic, and is now stated
+precisely so it is not confused with the derivation: retain closed route
+scores $s\in[-0.5,0)$; group by batch and receiver; sort each group by source
+time; keep only adjacent pairs with a gap at most 25 ms; then sample at most
+one candidate pair uniformly per minibatch. If a minibatch has $N$ such
+candidates and samples $m=\min(1,N)$, each candidate's inclusion probability
+is $m/N$. Uniform sampling makes the selected mean an estimator for this
+filtered stratum, but the positive near-boundary/receiver/time filters give
+zero support to other alternatives. The current JSON records total eligible
+and selected counts but not each minibatch's inclusion propensity, so it
+cannot recover an importance-corrected utility over a broader route
+population. The rule is not chosen from the receiver's threshold margin or
+the vector messages' projected effects. The gate-gradient contrasts are also
+clipped to $[-5,5]$, averaged over selected pairs, globally norm-clipped to
+1, and applied as a separate SGD step after AdamW. Therefore the four-loss
+derivative is exact before those stated sampling/clipping/update choices;
+the complete optimizer is a deliberately bounded local-credit heuristic.
+
+The general within-layer object is a **conditional marked-message policy**.
+Let $x_i=(t_i,v_i)$ be a source event, $h_j(t^-)$ the receiver's local state
+just before a candidate arrival (decaying vector state, refractory state, and
+pending-event summary), and let $r_i$ denote an action. An action may suppress
+the message, choose a receiver, or choose a delay/value mode. The policy is
+$\pi_\theta(r_i\mid x_i,h_j)$ and emits a marked event
+
+$$
+m_i(r_i;h_j)=\big(a_i,u_i\big),\qquad
+a_i=t_i+\delta_\theta(x_i,h_j,r_i),\quad
+u_i=V_\theta(v_i,h_j,r_i).
+$$
+
+For E74/E83's present edge, $r_i$ is simply admit/suppress,
+$u_i=B_jv_i$, and $\delta_\theta=\tau_j[s_{ij}]_+$. The inference policy is
+currently the hard threshold; the logistic $\pi$ is a local training
+relaxation, not sampled stochastic inference. Since a source may fan out,
+the default choice is a vector of per-edge gates, allowing several messages
+to be active in parallel. A categorical target choice is appropriate only
+when the hardware or model explicitly imposes one-route capacity.
+
+The present E74/E83 gate is an especially restricted case: its score is
+$s_{ij}=q_j^\top v_i+c_{x_i,j}$, where $q_j$ is a learned but
+input-independent receiver vector. Thus it is a content-matched sparse edge
+filter, not yet a state-conditioned attention query; the score does not read
+$h_j(t^-)$ when deciding whether or when to admit the message. The conditional
+policy above is the broader formalism. A state-conditioned version could use
+$q_j(t^-)=Q_\theta(h_j(t^-))$ and score
+$s_{ij}=q_j(t^-)^\top K_\theta(v_i)$ only over the receiver's sparse legal
+candidate list. That retains event-driven candidate work while allowing
+context-dependent retrieval, but requires route decisions to be processed in
+time order against the receiver state they actually change.
+
+For two proposed messages arriving at $a_1,a_2$, their contribution to a
+linear pre-fire state at time $T$ is
+
+$$
+\Delta z_j(T)=
+\mathbf1[T\ge a_1]e^{\lambda_j(T-a_1)}B_jv_1+
+\mathbf1[T\ge a_2]e^{\lambda_j(T-a_2)}B_jv_2,
+\quad
+\Delta V_j(T)=\operatorname{Re}\langle w_j,\Delta z_j(T)\rangle.
+$$
+
+Thus the counterfactual is not “the same signal with an arbitrary second
+delay”: each candidate has its own conditional $(a_i,u_i)$, and the receiver
+integrates both at their own times. The linear state contribution is
+additive, but threshold crossing time, reset/refractory state, emitted
+payload, and all downstream routes are nonlinear functions of the pair.
+When action 2 is chosen after action 1 changes the receiver state, its policy
+must condition on that replayed state; an independent-gate product is then
+only a declared approximation. A faithful shadow replays the ordered pair
+through the state transition and measures the resulting full loss.
+
+An expanded experiment can factor each action into edge admission, a small
+delay alternative $\delta$, and a payload mode $\eta$, with
+$m_i=(t_i+\delta_i,V_{\eta_i}(v_i,h_j))$. It should first stratify
+counterfactual pairs by relative arrival $a_2-a_1$ and vector alignment after
+the receiver's decay/rotation, then evaluate matched singleton and joint
+replays. The current SHD pilot does neither delay-mode nor payload-mode
+interventions: for its near-closed routes, $[s]_+=0$, so forced-open messages
+arrive at their source times with the existing payload transform. This
+distinction prevents the present gate-pair result from being overread as
+evidence about learned timing or vector alternatives.
+
+There is also a concrete parameter coupling to audit in the current layer:
+the same score $s_{ij}$ decides whether the route exists and sets its delay
+$\delta_{ij}=\tau_j[s_{ij}]_+$. On the open side, before delay saturation,
+$\partial a_{ij}/\partial s_{ij}=\tau_j$; on the closed side the message is
+absent and this delay derivative is zero. A route-credit update that raises
+$s_{ij}$ to make a useful edge more likely therefore also retimes its message
+later. The current shadow measures the finite presence contrast at fixed
+parameters; its local logistic derivative does not measure a separate
+counterfactual delay policy. This can make the learned gate gradient fight
+the temporal objective, especially when the receiver is sensitive to a narrow
+arrival window.
+
+A clean architecture ablation would factor admission and timing into separate
+scores, $s^g_{ij}$ and $d_{ij}$:
+
+$$
+z_{ij}=\mathbf1[s^g_{ij}>0],\qquad
+a_{ij}=t_i+\operatorname{softplus}(d_{ij}),\qquad
+u_{ij}=B_{ij}v_i.
+$$
+
+Only admitted messages instantiate or execute their payload path, so this
+does not require dense firing. Gate shadows can then estimate route utility,
+while ordinary active-path gradients train delay and value maps; paired
+delay/value alternatives can separately test timing or representational
+interactions. Whether this factorization improves SHD is an open experiment,
+not a presumed fix.
+
+The path case exposes an additional credit bottleneck. Suppose a candidate
+path needs $K$ independent gates $z_k\sim\mathrm{Bernoulli}(p_k)$, and for
+this local derivation its complete activation changes the loss from $L_0$
+to $L_1$. With $p_k=\operatorname{sigmoid}(m_k/\tau_k)$,
+
+$$
+\mathbb E[L]=L_0+\left(\prod_{k=1}^{K}p_k\right)(L_1-L_0),
+$$
+
+and therefore
+
+$$
+\frac{\partial\mathbb E[L]}{\partial m_k}
+=\frac{p_k(1-p_k)}{\tau_k}
+  \left(\prod_{q\ne k}p_q\right)(L_1-L_0).
+$$
+
+If the whole path is useful ($L_1<L_0$) but its other gates are almost
+never open, the isolated gradient to gate $k$ is almost zero. For equal
+opening probability $p$, the path utility is attenuated by $p^{K-1}$ in each
+gate's gradient. This is a direct mathematical reason that merely adding
+depth or more independent route choices need not make a useful path
+discoverable. A sampled **joint path shadow** can reveal $L_1-L_0$ even when
+ordinary executions never realize the path; its local gate updates then
+need a credit-allocation rule. The simplest bounded option is to use each
+gate's conditional marginal while the other path gates are forced open. If
+strong interactions make that order-dependent, average marginal utilities
+over a small sample of opening orders (a sampled Shapley allocation) or
+retain only an explicit small bundle gate. This is a proposal for testing,
+not a proven optimizer.
+
+The topology should make these audits naturally sparse:
+
+- Each active source event visits its bounded outgoing candidate list and
+  records the best few rejected proposals plus a small exploration sample;
+  it does not score every possible target.
+- A receiver keeps the local pre-threshold potential, threshold margin,
+  earliest arrival and runner-up gap, refractory-availability margin, and
+  compact IDs for the contributions that formed those values. These are
+  sufficient to propose targeted singleton and overlap shadows.
+- A bounded shadow queue stores candidate payload/time and causal ancestry,
+  then replays only selected branches through downstream state. Counterfactual
+  state stays separate from the factual state; at inference it is not
+  propagated or paid for.
+- A small reservoir of absent structural edges supports topology growth.
+  It is sampled by sparse co-activity/arrival compatibility, then admitted
+  only if repeated held-out paired utility justifies the added degree and
+  work. Fixed-mask edges with no exploration can never be discovered by
+  gradient descent alone.
+- Credit is local to the margin that controls the intervention, but utility
+  is measured end-to-end. Keep cause-specific utility statistics and cap
+  changes in the optimizer metric and in predicted firing/race margins.
+
+This creates a hierarchy of actual and counterfactual routes without making
+the inference graph dense: realized event paths remain sparse; dormant
+alternatives are metadata plus a bounded training-time shadow budget. The
+cost of training is $O(E_{active}+S\,C_{shadow})$ for $S$ selected shadows,
+not all possible edges or edge pairs. A short path shadow can still be
+expensive because it replays downstream state, so report both $S$ and
+measured replay work.
+
+**Systematic validation order.** First, at a fixed checkpoint, inventory
+proposal counts and failure margins by layer/cause, including proposals
+created only by opening a prior dormant path. Second, compare factual loss
+with paired singleton, receiver-bundle, and short-path replays on the same
+utterance and prefix, using common random numbers for any stochastic parts.
+Third, estimate utility sign, variance, coverage, pair/path interaction,
+event-rate changes, and shadow work under a fixed budget. Fourth, enable only
+the best-supported local margin updates with a trust region; compare against
+pathwise-only learning on the same initialization and examples. Finally,
+grow the candidate topology only where held-out counterfactual utility
+repeats. This is how richer counterfactuals can improve route learning
+without replacing sparse event computation with dense synchronous activity.
+
+**Known versus open.** The product attenuation above is exact for the stated
+independent-gate, single-path relaxation; it proves why a useful deep route
+can be invisible to ordinary gate gradients. Existing experiments establish
+that static E83 paths are plentiful while realized deep support is low, and
+that single-edge shadows do not test joint threshold crossings. They do not
+yet show that paired or path shadows have useful SHD utility, that local
+credit allocation trains those routes, or that the additional training-time
+work is offset by inference savings. Those are the next falsifiable claims.
+
+### A route's decision-boundary counterpart
+
+For a hard router choosing $a=\arg\max_k s_k(\theta)$, compare the winner
+with each alternative $b$, not just with one generic “off” state. The pairwise
+margin is $m_{ab}=s_a-s_b>0$. A counterfactual flip is a perturbation
+$\delta\theta$ such that $m_{ab}(\theta+\delta\theta)\leq0$. Linearizing
+with $g_{ab}=\nabla_\theta m_{ab}$, the smallest flip under a
+positive-definite optimizer metric $H$ is
+
+$$
+\delta\theta^*=-\frac{m_{ab}}{g_{ab}^\top H^{-1}g_{ab}}H^{-1}g_{ab},
+\qquad
+d_{ab}^2=\frac{m_{ab}^2}{g_{ab}^\top H^{-1}g_{ab}}.
+$$
+
+$d_{ab}$ measures local accessibility of the alternative; it does not say
+whether that alternative is useful. For that, replay both choices on the
+same input and compare $U_{b|a}=L(a)-L(b)$. Route exploration should measure
+boundary distance, utility, and utility uncertainty separately. A close
+alternative may be useless or harmful, and a far alternative may be useful
+but invisible to a policy that samples only near boundaries. For event
+networks, the same contrast can be a firing-threshold margin, race winner
+gap, refractory-availability gap, or joint path boundary.
+
+“Dual” is appropriate as a conceptual name for this choice/alternative
+pair, but it is not automatically a formal convex dual. In the constrained
+minimum-change problem above, a Lagrange multiplier is the strict
+optimization-theory dual variable. If multiple gates, delays, and receiver
+conditions must change together, the counterfactual is an intervention set
+or alternate path, not one scalar opposite route.
+
+### A route has several independent axes of alternatives
+
+A richer route family should factorize what can change:
+
+| axis | actual choice | counterfactual alternative |
+|---|---|---|
+| topology | which legal sender–receiver edge exists | a sparse dormant edge is opened or grown |
+| gate | whether a message is admitted | toggle its content score across the gate margin |
+| payload | which vector transform/value is sent | alternate value map, sign, gain, or subspace |
+| time | message delay/arrival | an alternate delay or timing window |
+| integration | which contributions jointly charge a receiver | add/drop a temporally overlapping bundle |
+| firing | whether integrated state crosses threshold | counterfactually create/delete the receiver event |
+| arbitration | which event wins a race | replace the winner with a specific competitor |
+| state | whether refractory/reset permits the event | replay with the matched availability intervention |
+| continuation | which downstream path follows | shadow a short multi-layer path or path bundle |
+| readout | whether/when a class emits | compare class alternatives and stopping times |
+
+These are not mutually exclusive choices. A single candidate can lose its
+edge, be too late, arrive during refractory state, and remain insufficient
+to cross threshold. So store a *margin vector* and define alternatives by
+interventions on one coordinate or a small set of coordinates; let the
+downstream replay reveal whether changing that coordinate was sufficient.
+When the mechanism is nonseparable, test interactions explicitly using
+paired bundles or short paths. The number of possible configurations is
+combinatorial, but the proposal graph and shadow sample can remain sparse.
+
+For a multiway router with chosen route $a$ and alternatives $b_1,\dots,b_K$,
+the correct counterfactual object is the set of matched route utilities
+$U_{b_j|a}$, not a binary “wrong” flag. When routes are sets (top-$k$ keys,
+multiple arriving messages), compare selected set replacements and additions;
+when payloads and delays are continuous, probe local perturbations as well as
+discrete alternatives. Attention gives a useful instance: competing keys
+change retrieval content, while key/value representation, delay, and
+whether two retrieved values combine are separate axes. The mechanism must
+preserve matched compute when comparing alternatives, or extra active work
+will be confounded with better routing.
+
+### Literature boundary and novelty
+
+Counterfactual route comparison itself is not new. A 2026 MoE study samples
+equal-compute expert alternatives, measures token-level loss utility, and
+reports that a router-only update can help on difficult tokens
+([Yoon et al., arXiv:2605.07260](https://arxiv.org/abs/2605.07260)). A separate
+2026 preprint uses counterfactual expert impact to alter inference-time
+routing ([Hu et al., arXiv:2604.14246](https://arxiv.org/abs/2604.14246)).
+HNCA derives lower-variance credit for discrete stochastic units
+([Young, AAAI 2022](https://ojs.aaai.org/index.php/AAAI/article/view/20874));
+EventProp derives exact event-based gradients for particular spiking
+dynamics ([Wunderlich & Pehle, 2021](https://arxiv.org/abs/2009.08378)).
+These works mean we should not claim generic novelty for “try an alternate
+route and measure the loss.” The potentially distinct contribution is a
+cause-factorized, temporally structured counterfactual topology for sparse
+vector messages—covering edge admission, payload, delays, threshold
+cooperation, race winners, refractory state, and path alternatives under a
+bounded shadow budget. That combination is a research hypothesis, not an
+established novelty claim or a demonstrated result; a fuller literature
+review and direct comparisons are required. The paired E83 pilot only tests
+the receiver-bundle slice of that hypothesis.

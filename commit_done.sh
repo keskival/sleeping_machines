@@ -32,6 +32,7 @@ FILES=(
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
+  experiments/e83_spike_boundary_audit.py
   experiments/e83_counterfactual_audit.py
   experiments/plot_e83_firing.py
   experiments/sparse_anytime_readout.py
@@ -46,6 +47,13 @@ FILES=(
   experiments/queue/e83_event_prefix_cf_local_smoke.txt
   experiments/queue/e83_event_prefix_d4_cf_local.txt
   experiments/queue/e83_deep_readout_fusion.txt
+  experiments/queue/e83_count_mark_ablation.txt
+  experiments/queue/e83_d4_readout_validation.txt
+  experiments/queue/e83_d4_early_skip.txt
+  experiments/queue/e83_d4_all_depths_replication.txt
+  experiments/queue/e83_data_budget_equal_updates.txt
+  experiments/queue/e83_spike_boundary_audit.txt
+  experiments/queue/e83_route_bundle_pair.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt
@@ -79,6 +87,10 @@ FILES=(
   report/make_pdf.py
   report/figures/potential_evidence.png
   report/figures/e83_route_gradient_diagnostics.png
+  report/figures/e83_d4_readout_support.png
+  report/figures/e83_equal_update_data_budget.png
+  report/figures/e83_route_reachability.png
+  report/figures/e83_route_bundle_pair.png
   report/figures/e77_depth_trainability_bootstrap.png
   report/sleeping_machines_status.pdf
   commit_done.sh
