@@ -14,6 +14,7 @@ Runs below passed the runner and finite-metric checks. These early outcomes are 
 | `aws_e77_route_cf_potential_d512_depth2_20260929` | `experiments/e77_tv_lm.py` | best_valid_bpc=4.6981; test_bpc=4.7133 | 1.802 s | 1297584 KB |
 | `aws_e36_tf_e28_long_20260929` | `experiments/e36_transformer.py` | acc=0.9965; acc=0.998; acc=0.995; acc=0.996; acc=0.996; acc=0.997 | 2330.297 s | 562436 KB |
 | `aws_e36_rel_e27_20260929` | `experiments/e36_transformer.py` | acc=0.997; acc=0.9995; acc=1; acc=0.9975; acc=0.997; acc=0.9975 | 1252.509 s | 556744 KB |
+| `aws_e36_rel_e28_20260929` | `experiments/e36_transformer.py` | acc=0.9985; acc=0.9995; acc=0.9965; acc=0.999 | 1322.77 s | 562072 KB |
 
 E68 seed-0 synthetic recall, 8,000 updates (512,000 sequences): R=0: 18.5%, R=1: 18.4%, R=4: 18.2%.
 <!-- AWS_BENCHMARKS_END -->
