@@ -14,7 +14,9 @@ continuation reaches 72.3%. The next analytic intervention targets the count
 mean: a causal scalar key weights winning event payloads in an associative
 numerator/mass state. At mean initialization its gradient is covariance times
 the teacher direction, which is nonzero on the measured batch (§185). A matched
-continuation tests whether this support improves held-out class decisions.
+continuation finishes at 69.5% versus 68.9% with the old mean, both below the
+72.3% starting checkpoint. Supported local credit alone does not establish
+transfer: §185 derives the fitting/new-speaker gradient-alignment condition.
 
 The consolidated work audit counts actual configured maps, router choices,
 memory scans, normalization and pointer/clock candidates. It must distinguish

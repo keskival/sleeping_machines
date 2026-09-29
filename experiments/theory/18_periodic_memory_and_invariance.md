@@ -220,6 +220,14 @@ means and choose the winding with the smallest sum of worst residual magnitudes.
 All quantities are read from the trained parameters, without outcome-based
 selection on development examples.
 
+For a composite period the exact condition is $\gcd(\kappa,p)=1$: multiplication
+by $\kappa$ is an automorphism of $\mathbb Z_p$ precisely for those windings.
+Otherwise distinct sums differing by $p/\gcd(\kappa,p)$ have the same ideal
+phase. No readout of that ideal phase alone can distinguish them. Residual
+features could add information, but would no longer inherit the equally spaced
+clock guarantee. This gives an explicit representation constraint when extending
+the primitive to other periods, independently of carrier depth or optimizer.
+
 Let $c=c_1-c_2+c_3+d$, $h=(c_\theta-c)\bmod p$ and
 $E(A,B,C)=\epsilon_1(A)-\epsilon_2(B)+\epsilon_3(C)$. For
 $y=A+B+C\pmod p$, the unwrapped target wait is

@@ -134,7 +134,9 @@ three-symbol arithmetic task, not a substitute for a deep speech representation.
 
 A complete fitting pass with zero mistaken-example updates certifies a fixed
 point of this deterministic local teacher. E124 stops at that condition and
-checks exact equality with E121's final coupled phase state. Its per-query
+checks exact equality with E121's final coupled phase state: 47 passes,
+69,231 fitting presentations, 29,003 mistaken-example updates, and all 3,440
+unseen triples correct in 3.29 s. Its per-query
 work ledger separately charges symbol reduction and class-clock selection.
 The carrier-plus-phase configuration remains available and its additional work
 is included in the comparison. Theory §§183–184 and §186 give the certificate,
@@ -165,6 +167,9 @@ matched learned-pooling arm tests a specific terminal-statistic hypothesis;
 it is not a new seed search. Both arms preserve the frozen fitting-only
 calibration and use the same initial state, data, augmentation and update budget.
 The retained results distinguish fitting progress from held-out improvement.
+The learned pool finishes at 356/512 (69.5%), just three net answers above
+the continuing mean and below the common starting checkpoint. Its key receives
+nonzero credit but this intervention does not yet improve recognition.
 
 ## Safe reproduction
 

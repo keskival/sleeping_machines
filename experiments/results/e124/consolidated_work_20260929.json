@@ -1,0 +1,199 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "model": "shared_phase_only",
+      "task": "modular",
+      "split": "unseen_all",
+      "n": 3440,
+      "accuracy": 1.0,
+      "work": {
+        "dense_macs": 0.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 71.0,
+        "sort_and_race_comparisons": 117.0,
+        "logical_state_reads": 20.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 188.0
+      },
+      "result_path": "experiments/results/e124/modular_phase_only_s6_200.json",
+      "fitting_presentations": 69231,
+      "count_scope": "Full configured common forward; pointer lookup charged including precomputed evidence"
+    },
+    {
+      "model": "shared_d2_phase",
+      "task": "modular",
+      "split": "unseen_all",
+      "n": 3440,
+      "accuracy": 1.0,
+      "work": {
+        "dense_macs": 15300.0,
+        "memory_scan_macs": 396.0,
+        "scalar_ops": 39655.0,
+        "sort_and_race_comparisons": 213.0,
+        "logical_state_reads": 16136.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 71260.0
+      },
+      "result_path": "experiments/results/e121/shared_d2_guard_s6_200.json",
+      "fitting_presentations": null,
+      "count_scope": "Full configured common forward; pointer lookup charged including precomputed evidence"
+    },
+    {
+      "model": "shared_d2_recall",
+      "task": "recall",
+      "split": "dev",
+      "n": 256,
+      "accuracy": 1.0,
+      "work": {
+        "dense_macs": 79560.0,
+        "memory_scan_macs": 5346.0,
+        "scalar_ops": 48745.0,
+        "sort_and_race_comparisons": 1009.0,
+        "logical_state_reads": 90414.0,
+        "pointer_candidates": 58.0,
+        "estimated_operations": 219566.0
+      },
+      "result_path": "experiments/results/e120/recall_d2_20260929.json",
+      "fitting_presentations": null,
+      "count_scope": "Full configured common forward; pointer lookup charged including precomputed evidence"
+    },
+    {
+      "model": "shared_d2_recall",
+      "task": "recall",
+      "split": "context4x",
+      "n": 256,
+      "accuracy": 1.0,
+      "work": {
+        "dense_macs": 297960.0,
+        "memory_scan_macs": 23958.0,
+        "scalar_ops": 79837.0,
+        "sort_and_race_comparisons": 4929.0,
+        "logical_state_reads": 346614.0,
+        "pointer_candidates": 250.0,
+        "estimated_operations": 728602.0
+      },
+      "result_path": "experiments/results/e120/recall_d2_20260929.json",
+      "fitting_presentations": null,
+      "count_scope": "Full configured common forward; pointer lookup charged including precomputed evidence"
+    },
+    {
+      "model": "lstm",
+      "task": "modular",
+      "split": "unseen_all",
+      "n": 3440,
+      "accuracy": 0.019476744186046512,
+      "work": {
+        "dense_macs": 50080.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 4358.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 50080.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 104518.0
+      },
+      "result_path": "experiments/results/e123/modular_lstm_d32_l2_s6.json",
+      "fitting_presentations": 294600,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    },
+    {
+      "model": "transformer",
+      "task": "modular",
+      "split": "unseen_all",
+      "n": 3440,
+      "accuracy": 0.03604651162790698,
+      "work": {
+        "dense_macs": 75424.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 4744.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 75424.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 155592.0
+      },
+      "result_path": "experiments/results/e123/modular_tf_d32_l2_s6.json",
+      "fitting_presentations": 294600,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    },
+    {
+      "model": "lstm",
+      "task": "recall",
+      "split": "dev",
+      "n": 256,
+      "accuracy": 0.1015625,
+      "work": {
+        "dense_macs": 281728.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 24631.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 281728.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 588087.0
+      },
+      "result_path": "experiments/results/e123/recall_lstm_d32_l2_s6.json",
+      "fitting_presentations": 36096,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    },
+    {
+      "model": "lstm",
+      "task": "recall",
+      "split": "context4x",
+      "n": 256,
+      "accuracy": 0.07421875,
+      "work": {
+        "dense_macs": 1074304.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 94087.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 1074304.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 2242695.0
+      },
+      "result_path": "experiments/results/e123/recall_lstm_d32_l2_s6.json",
+      "fitting_presentations": 36096,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    },
+    {
+      "model": "transformer",
+      "task": "recall",
+      "split": "dev",
+      "n": 256,
+      "accuracy": 0.18359375,
+      "work": {
+        "dense_macs": 455808.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 31429.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 455808.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 943045.0
+      },
+      "result_path": "experiments/results/e123/recall_tf_d32_l2_s6.json",
+      "fitting_presentations": 36096,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    },
+    {
+      "model": "transformer",
+      "task": "recall",
+      "split": "context4x",
+      "n": 256,
+      "accuracy": 0.07421875,
+      "work": {
+        "dense_macs": 2139264.0,
+        "memory_scan_macs": 0.0,
+        "scalar_ops": 182389.0,
+        "sort_and_race_comparisons": 0.0,
+        "logical_state_reads": 2139264.0,
+        "pointer_candidates": 0.0,
+        "estimated_operations": 4460917.0
+      },
+      "result_path": "experiments/results/e123/recall_tf_d32_l2_s6.json",
+      "fitting_presentations": 36096,
+      "count_scope": "No padding, per-query recurrent/attention maps and scalar-operation estimate"
+    }
+  ],
+  "source_sha256": "60c7e6c4353199a2974378515dfad22610b155a0d2c553bf9e833b11be20bb89",
+  "units": "Estimated logical operations: 2 per MAC; 1 per other scalar operation, nonlinear function, or estimated sort comparison",
+  "limitations": "Not measured joules, executed CPU instructions or a latency prediction. Memory reads reported separately; transfers, allocations, kernel launch and instrumentation not charged. Transcendental/division costs are unit-weighted. Shared weight normalization included. Backward/optimizer work is not inferred from forward counts.",
+  "protocol": "Exact common-model development examples; modular 1473 fit, 200-epoch budget (phase-only stops at its zero-update fixed point); recall pointer4000 + neural512\u00d78 versus dense4512\u00d78; one seed, width32/depth2 where present; no dense hyperparameter search"
+}
