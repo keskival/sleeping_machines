@@ -1,0 +1,4 @@
+# Frozen same-example audit to distinguish top-k receiver overload from
+# temporal integration/firing-margin failure. These jobs do not train.
+e83_route_dynamics_control_seed6 experiments/e83_route_dynamics_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 128 --batch_size 4 --seed 6 --run_tag bundle_control
+e83_route_dynamics_top2_seed6 experiments/e83_route_dynamics_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_moe_top2_route_swap_cfnorm0_b0.5_sg0.25_w1_dl5_lr0.001_gc1_topk2_swaps1_sb0.5_spk_s6.pt --examples 128 --batch_size 4 --seed 6 --run_tag moe_top2

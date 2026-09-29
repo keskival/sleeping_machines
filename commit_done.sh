@@ -33,6 +33,8 @@ FILES=(
   experiments/e75_equivariant_tvn.py
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
+  experiments/e83_route_dynamics_audit.py
+  experiments/e83_route_option_value_audit.py
   experiments/e83_route_cost_audit.py
   experiments/e83_route_pair_occupancy_audit.py
   experiments/e83_spike_boundary_audit.py
@@ -61,6 +63,7 @@ FILES=(
   experiments/queue/e83_spike_pair_audit.txt
   experiments/queue/e83_spike_pair_depth_audit.txt
   experiments/queue/e83_spike_pair_l23_1024.txt
+  experiments/queue/e83_spike_pair_shared_receiver_1024.txt
   experiments/queue/e83_spike_boundary_l3_1024.txt
   experiments/queue/e83_spike_pair_l23_1024.txt
   experiments/queue/e83_route_bundle_pair.txt
@@ -68,6 +71,9 @@ FILES=(
   experiments/queue/e83_route_bundle_pair_late_balanced.txt
   experiments/queue/e83_route_cost_audit.txt
   experiments/queue/e83_route_pair_occupancy_audit.txt
+  experiments/queue/e83_moe_top2_route_swap.txt
+  experiments/queue/e83_route_dynamics_audit.txt
+  experiments/queue/e83_route_option_value_audit.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt
@@ -106,6 +112,7 @@ FILES=(
   report/figures/e83_route_reachability.png
   report/figures/e83_route_bundle_pair.png
   report/figures/e83_route_cost_audit.png
+  report/figures/e83_route_option_value.png
   report/figures/e83_route_pair_occupancy.png
   report/figures/e83_spike_boundary_late.png
   report/figures/e83_spike_pair_audit.png

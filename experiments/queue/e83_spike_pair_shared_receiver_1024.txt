@@ -1,0 +1,5 @@
+# Test whether spike-pair utility is concentrated when both source events can
+# reach the same next-layer receiver. Shared topology is required; accepted
+# content gates and exact delay-coded arrival gaps are recorded in the result.
+e83_shared_receiver_pair_control_L2_s6_n1024 experiments/e83_spike_pair_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 1024 --batch_size 4 --spike_band 0.25 --sigma 0.25 --layer 2 --pair_window_ms 50 --prefix_samples 2 --seed 6 --run_tag shared_receiver_control --require_shared_receiver
+e83_shared_receiver_pair_late_L2_s6_n1024 experiments/e83_spike_pair_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_late_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslatebalanced_spk_s6.pt --examples 1024 --batch_size 4 --spike_band 0.25 --sigma 0.25 --layer 2 --pair_window_ms 50 --prefix_samples 2 --seed 6 --run_tag shared_receiver_late_only --require_shared_receiver

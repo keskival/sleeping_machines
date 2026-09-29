@@ -2847,3 +2847,400 @@ logging accepted messages, receiver-state changes, event times/payloads,
 deepest loss, and replay work. A candidate route mechanism should enter
 training only after its task utility survives that comparison. This test is
 not yet implemented, and no SHD accuracy improvement follows from the audit.
+
+## 147. Critical routing means preserving both event influence and credit
+
+“Edge of chaos” is a useful prompt, but it is not yet the right mathematical
+claim for E83. The model is feed-forward across layers; its complex receiver
+state decays and rotates in time, but the layers do not form a recurrent
+feedback loop. The immediate depth failure is better described as extinction
+or amplification of *causal event influence*. Classical order-to-chaos results
+for random deep networks motivate looking at initialization and Jacobian gain,
+but the hard route and threshold decisions add boundary terms that an ordinary
+pathwise Jacobian misses [Poole et al., 2016; Schoenholz et al., 2017].
+
+For a receiver $j$, between its hard spike/reset decisions the vector state is
+linear in the accepted messages:
+
+$$
+z_j(t)=\sum_{e:a_{ej}\le t}
+  e^{\Lambda_j(t-a_{ej})}B_jv_e,
+\qquad
+u_j(t)=\operatorname{Re}\langle w_j,z_j(t)\rangle-\theta R_j(t).
+$$
+
+Thus a message's effect depends jointly on its accepted route, arrival time,
+payload direction, the receiver's existing state, and the later threshold and
+reset. For two arrivals at $a_1,a_2$, the relevant overlap is not just
+$|a_1-a_2|$: it includes the signed projections
+$\operatorname{Re}\langle w_j,e^{\Lambda_j(t-a_k)}B_jv_k\rangle$ and their
+interaction with $R_j$. Two events can arrive together and cancel in vector
+space; far-apart events can still interact if the learned decay is slow.
+Therefore the 2.2 ms and 6.1 ms gaps in the two pair-only helpful examples
+below are leads for a payload/decay-conditioned test, not a universal timing
+threshold.
+
+An approximate forward branching diagnostic for a sparse, locally tree-like
+layer is
+
+$$
+\mathcal R_\ell^{\rm fwd}
+  =F_\ell^{\rm out}\,q_\ell\,h_\ell,
+$$
+
+where $F_\ell^{\rm out}$ is the available receiver fan-out per source event,
+$q_\ell$ is the fraction of candidate messages accepted by the content gate,
+and $h_\ell$ is the conditional probability that an accepted message or
+message bundle creates a new receiver event. If these factors are roughly
+stationary, expected event count changes as
+$\mathbb E[N_{\ell+1}]\approx \mathcal R_\ell^{\rm fwd}\mathbb E[N_\ell]$.
+Values well below one extinguish event influence; values well above one create
+cascades and growing work. A value near one is a useful *mean-field operating
+point*, not a theorem of useful learning: offspring variance can still make
+most examples go silent while a few explode.
+
+Forward activity and backward route credit have a second, distinct branching
+factor. Let $e_\ell$ be the fraction of structurally available predecessor
+choices that are reachable by a real event or by a sampled, margin-stratified
+counterfactual. Then the crude backward reach factor is
+
+$$
+\mathcal R_\ell^{\rm credit}\approx F_\ell^{\rm in}e_\ell.
+$$
+
+Fired-only learning sets $e_\ell$ to the realized support and can fall below
+one at every layer. Counterfactual shadows can raise $e_\ell$ without making
+all those alternatives real messages. This suggests a more useful design
+target than simply pushing the forward network “to chaos”: keep actual
+message/event work bounded and the forward cascade near its measured support
+target, while maintaining enough sparse counterfactual coverage that the
+backward credit process does not die. The approximation assumes weakly
+dependent paths; shared receivers, temporal overlap, and payload correlation
+break the tree model and must be measured directly. This extends the
+reachability threshold in §17 and the support/work split in §143.
+
+Initialization sets these operating points. At a fixed time before reset, if
+$w_j$ is isotropic Gaussian with scale $\sigma_{w,\ell}$ and the incoming
+state is treated as fixed, then the no-reset voltage is Gaussian with
+variance proportional to
+$\sigma_{w,\ell}^2\|z_j(t)\|^2$. Its one-time threshold-crossing probability
+is approximately
+
+$$
+P(u_j(t)+\theta R_j(t)\ge\theta\mid z_j(t))
+  =\bar\Phi\!\left(\frac{\theta}{\sigma_{w,\ell}\,\|z_j(t)\|}\right),
+$$
+
+up to the real/complex parameterization convention. Meanwhile, for a Gaussian
+content score $r_{ej}=q_j^\top v_e+c_{ej}$,
+$P(r_{ej}>0)=\Phi(\mathbb E[r]/\operatorname{sd}(r))$. Reusing the same
+initialization scale and gate bias at each depth ignores changes in accepted
+event count, payload covariance, temporal decay, and fan-in. A principled
+initializer should therefore calibrate *empirical margins on the training
+stream*, layer by layer: (i) gate-score quantiles and accepted-message rate;
+(ii) pre-threshold drive scale and spike-margin density; (iii) per-example
+support $c_\ell$ and conditional event multiplicity $\mu_\ell$; and (iv)
+counterfactual reach and task-loss utility. The target is not equal firing
+rates. It is nonvanishing deep support and credit under a declared sparse-work
+budget, without the activity cascade seen in the layer-balanced run.
+
+The content score currently controls both admission and delay,
+$a_{ej}=t_e+\exp(\log t_{d,j})\max(r_{ej},0)$. Changing the score bias or
+scale consequently changes *which* messages arrive and *when* they arrive.
+Initialization sweeps must record the joint distribution of route margin,
+arrival time, vector projection, and receiver firing margin; a gate-open-rate
+ablation alone would confound routing with temporal alignment. A later
+architectural comparison can separate an admission logit from a delay code,
+but the first experiment should calibrate the existing coupled rule so that
+it identifies rather than hides this effect.
+
+The topology-conditioned L2 replay gives a first operating-point clue. It
+selected 79 control and 53 late-only pairs with a structural common receiver.
+In the all-on replay, both messages passed a common receiver gate for 74/79
+control pairs but only 6/53 late-only pairs. Among natural-off pairs the
+counts were 28/32 and 1/22. Yet gate co-acceptance did not guarantee useful
+credit: among those natural-off samples, deepest-only loss improved in 7/32
+control and 3/22 late-only cases. Two control pairs improved only when both
+events opened (their singleton openings did not help); both had a common
+accepted receiver and arrival gaps of 2.21 and 6.10 ms. Their loss changes
+were small, $-0.0140$ and $-0.0089$. There were no such pair-only cases in the
+22 late-only rows. Conversely, the one late-only natural-off pair accepted at
+a common receiver was harmful by $+0.00176$. This is a sparse mechanism
+signal: topology, dynamic gate acceptance, temporal/vector integration, and
+task utility are four separate filters. The selected pairs are not a matched
+nonshared control and do not establish an initialization or training gain.
+
+## 148. MoE routing is a choice model; event routing is a choice over bundles
+
+Sparse mixture-of-experts models offer a precise comparison. Their router
+scores input-dependent expert choices, then activates only a small selected
+set. Noisy top-$k$ routing and load/importance penalties were introduced to
+keep alternatives discoverable and prevent severe expert under-use;
+top-1 Switch routing showed that $k=1$ can be efficient when capacity and
+balancing are handled; expert-choice routing reverses the assignment so
+experts choose a bounded set of tokens, allowing a variable number of experts
+per token [Shazeer et al., 2017; Fedus et al., 2021; Zhou et al., 2022].
+These are established mechanisms, not evidence for E83.
+
+The correspondence is:
+
+| Sparse MoE | E74/E83 event model |
+|---|---|
+| token representation | emitted vector event $(t_e,v_e)$ |
+| expert | candidate receiver or downstream route bundle |
+| router logit | content compatibility score $r_{ej}$ |
+| dispatch | accepted message with payload and delay |
+| expert output | receiver's integrated state and any emitted event |
+| capacity overflow | route/event rejected by a work or receiver budget |
+| load statistic | receiver event multiplicity and sparse message work |
+| unselected expert | closed, lost, or unsampled counterfactual route |
+
+There is a crucial mathematical difference. Standard MoE usually chooses one
+or a few experts and combines their outputs. E83's current gate is an
+independent threshold on each sparse edge; it may admit zero, one, or several
+messages, and the vectors can jointly push a receiver over threshold. It is
+therefore not a categorical router. Copying top-1 would erase useful vector
+superposition; copying independent sigmoids without a budget risks the
+cascades already seen. The natural generalization is a *budgeted stochastic
+route bundle*: for event $e$, choose a sparse subset $S$ of its structurally
+available receivers, with probabilities conditioned on $v_e$, receiver
+state, arrival-time compatibility, and remaining work budget. Its support can
+include the empty set and sets of different sizes, so it contains top-1,
+top-$k$, and independent edge gates as limiting cases.
+
+For a categorical one-of-$K$ choice with probabilities
+$p_j=\mathrm{softmax}(s/T)_j$ and fully replayed route losses $L_j$, the exact
+expected loss $\tilde L=\sum_jp_jL_j$ has router derivative
+
+$$
+\frac{\partial\tilde L}{\partial s_k}
+  =\frac{p_k}{T}(L_k-\tilde L).
+$$
+
+Thus a losing alternative receives a *relative* counterfactual signal. For
+subset routes $S$, the analogous score-function estimator is
+$\nabla_s\tilde L=\mathbb E[(L(S)-b)\nabla_s\log P(S)]$, with a baseline $b$
+to reduce variance. If receiver interactions matter, single-route outcomes
+do not identify the value of a bundle: the pair term $\Gamma_{ij}$ from §146
+and, for larger bundles, higher-order differences are required. This ties
+MoE's choice gradient to the project's lost-race counterfactuals rather than
+replacing them.
+
+The project-specific route policy should preserve four properties:
+
+1. **Sparse candidate generation.** Score only neighbors in the stored
+   topology or an event-indexed candidate set; do not form a dense
+   event-by-receiver matrix.
+2. **Competitive but variable-cardinality choices.** Compare alternatives
+   under a per-event or per-receiver work budget; allow multiple messages when
+   their vector contributions cooperate, and permit no message when none has
+   positive estimated utility.
+3. **Credit to rejected choices.** Sample near-margin losers, capacity
+   rejections, and plausible message bundles with recorded propensities; replay
+   their delayed vector effects through a sparse suffix and use relative
+   task-loss utility. A load-balance term may maintain an exploration floor,
+   but uniform utilization is not the objective and can oppose class utility.
+4. **Causal receiver-side selection as a distinct option.** MoE expert-choice
+   suggests letting a receiver choose among currently available messages to
+   bound receiver work. In an asynchronous stream this must use only the
+   messages already arrived (or a bounded past-time queue); choosing among a
+   future-complete batch would violate causality and add synchronization.
+
+The first implementation should not add every mechanism at once. On matched
+training data, compare the existing independent edge gate with (a) a
+budgeted top-$1$ baseline, (b) a variable-size top-$k$/subset router, and (c)
+the subset router plus sparse losing-route shadows. Hold candidate topology,
+payload and delay equations, total accepted messages, optimizer updates, and
+work cap fixed. Log per-layer support and multiplicity, route entropy and
+load, route-margin occupancy, dropped/capacity events, counterfactual
+proposal coverage/variance, receiver-state and vector changes, deepest-only
+loss, class accuracy, and measured training work. Initialization must be
+calibrated before this comparison; otherwise a routing ablation can merely
+compare one live operating point with one extinct or saturated point.
+
+This is a research plan, not a completed result. The shared-receiver replay
+above provides a concrete reason to test route competition and bundle
+credit, while the current SHD accuracy remains far below a useful benchmark.
+
+## 149. A route can be valuable because it makes later learning possible
+
+The usual route shadow measures *present-policy utility*: force one route,
+replay the sparse suffix with every downstream parameter held fixed, and
+compare the final supervised loss. This asks whether the alternate route is
+already better under today's downstream policy. It does not ask whether the
+alternate route exposes a downstream parameter or event state that can learn
+the label after an update. A route may therefore have little immediate
+classification value while still carrying useful *learning optionality*.
+
+Make this distinction explicit. Let $s_\ell$ be the realized vector-event
+state at layer $\ell$, $a$ a route bundle, $\theta_{>\ell}$ the parameters in
+its reachable suffix, and $L(a;\theta,y)$ the label loss after the causal
+suffix replay. The ordinary shadow estimates
+
+$$
+A^{\rm now}_\ell(a)=L(a_0;\theta,y)-L(a;\theta,y),
+$$
+
+where $a_0$ is the factual route. Define the one-step learning progress
+available under the counterfactual branch by
+
+$$
+P_\ell(a)=L(a;\theta,y)-
+L\!\left(a;\theta-\eta M_\ell g_a,y\right),\qquad
+g_a=\nabla_{\theta_{>\ell}}L(a;\theta,y).
+$$
+
+$M_\ell$ is a positive semidefinite, sparse suffix update metric: it may be
+the optimizer's diagonal preconditioner restricted to parameters reached by
+the shadow, or the identity for an SGD diagnostic. For small $\eta$,
+$P_\ell(a)=\eta g_a^\top M_\ell g_a+O(\eta^2)$, but the finite virtual-step
+loss difference is the stronger measurement because curvature and clipping
+can make the quadratic approximation poor. The learning-option advantage is
+$A^{\rm learn}_\ell(a)=P_\ell(a)-P_\ell(a_0)$. A label-aligned route utility
+can then be defined as
+
+$$
+U_\ell(a)=A^{\rm now}_\ell(a)+\lambda_\ell A^{\rm learn}_\ell(a).
+$$
+
+This gives a route credit even when $A^{\rm now}$ is near zero or negative,
+provided the alternate branch yields greater supervised progress after a
+bounded suffix update. For categorical choices with policy $\pi(a\mid s)$,
+the exact derivative of expected utility is
+
+$$
+\nabla_{s_k}\mathbb E_\pi[U]
+=\frac{1}{T}\sum_a\pi(a\mid s)(U(a)-\mathbb E_\pi U)
+\nabla_{s_k} s_a,
+$$
+
+with the usual coordinate form $\pi_k(U_k-\bar U)/T$ for logits. Thus
+counterfactual optionality is comparative: an alternative is credited for
+making more useful, label-directed learning possible than the factual branch,
+not for merely producing more events, more routes, or a larger raw gradient.
+
+The option must propagate through the **counterfactual descendants**. A swap
+at layer $\ell$ changes the vector-event state seen later, which changes the
+later route candidates and their possible learning progress. Let
+$F_\ell(s,a)$ be the causal next-layer state after route choice $a$, and let
+$V_{\ell+1}$ be the backed-up value of that state. The terminal value at depth
+$L$ is its immediate label advantage plus its matched-suffix learning
+advantage. A soft recursive value is
+
+$$
+V_\ell(s)=\tau\log\!\left[
+(1-\rho_\ell(s))e^{V_{\ell+1}(F_\ell(s,a_0))/\tau}
++\rho_\ell(s)\,\mathbb E_{a\sim q_\ell(\cdot\mid s)}
+e^{V_{\ell+1}(F_\ell(s,a))/\tau}\right].
+$$
+
+$q_\ell$ proposes a sparse alternate and $\rho_\ell$ is its exploration
+probability; both can increase with true-class error and predictive entropy.
+The route's optionality credit is the backed-up difference between its
+counterfactual and factual continuation values. This is the desired
+single-scalar propagation: each recursive call returns a value, so training
+need not retain a globally materialized route tree. A bounded implementation
+can replay only the selected branch, sample $a\sim q$, and return the scalar
+upward. The one-sample soft backup is noisy and nonlinear; independent route
+samples or a small multi-sample log-mean-exp estimate its uncertainty. Record
+the proposal probability, and importance-correct if the intended target policy
+differs from $q$. This passes **option value** through route counterfactuals;
+it does not pass a raw event-count bonus.
+
+This is a meta-learning objective, not an unbiased estimator of the original
+fixed-parameter task loss. Its validity has to be tested by held-out loss after
+actual corresponding training updates. A practical sparse estimator samples a
+small number of route bundles, recomputes each bundle's descendants, measures
+its ordinary terminal utility and finite suffix update, then passes the
+backed-up scalar to the local route decision. A final factual update still
+uses the ordinary supervised objective. The event-driven forward model stays
+sparse; only sampled training shadows branch.
+
+Counterfactual selection should also depend on the label error. Let $p_y$ be
+the current true-class probability and $H(p)$ the predictive entropy. Under a
+fixed replay budget, increase proposal entropy or sample count when $1-p_y$
+and/or $H(p)$ is large, while retaining route-margin and causal-reach filters.
+For example,
+
+$$
+q_i(a)\propto \pi(a\mid s_i)
+\exp\!\left(\frac{\widehat U_i(a)}{T_i}
++\kappa_i\widehat\sigma_i(a)\right),\quad
+T_i=T_0+\alpha H(p_i)+\beta(1-p_{y_i}),
+$$
+
+where $\widehat\sigma_i(a)$ is uncertainty in the route utility. This assigns
+more exploration to wrong, uncertain cases and still responds to confidently
+wrong cases through their low $p_y$. Maximum-class confidence alone is
+insufficient: it treats a confident error as if there were no need to search.
+Record $q_i(a)$ and either importance-correct to the intended route policy or
+state explicitly that the proposal itself defines the new training policy.
+Do not let an entropy bonus or activity count substitute for label-aligned
+progress.
+
+The existing E83 route-swap training replay does **not** measure $P_\ell(a)$:
+it compares immediate suffix loss at frozen parameters and updates route
+scores from that difference. It can capture downstream events that the current
+suffix policy emits, but not option value that appears only along adapted
+descendants. The frozen route-tree diagnostic samples error- and
+entropy-conditioned alternatives, reruns each branch through the remaining
+layers, and compares finite clipped suffix-SGD progress against a factual
+branch with the same suffix. This is still a diagnostic—not a trained
+meta-gradient or held-out gain—and a real update experiment must validate the
+scalar credit.
+
+## 150. More route candidates do not imply more reachable learning choices
+
+If there are $n_\ell$ candidate alternatives at each of $L$ layers, the raw
+number of local proposals is $N_{\rm raw}=\sum_\ell n_\ell$ (or $nL$ when
+uniform). Under the unrealistic assumption that each proposal is an
+independent chance $p$ of improving the supervised objective, the chance at
+least one is immediately helpful is $1-(1-p)^{N_{\rm raw}}$. This is a useful
+upper-level intuition, not a training guarantee. Alternatives share source
+events and receivers, often have correlated effects, may differ only in
+irrelevant payload directions, and can be invisible to the label through a
+silent or saturated suffix. Coordinated bundles can also be useful when no
+singleton is.
+
+The measured quantity must therefore be *reachable task utility*, not the
+number of static edges. For layer $\ell$, define support
+$S_\ell=\Pr[N_\ell>0]$, conditional message-to-spike gain
+$R_\ell=\mathbb E[N_{\ell+1}\mid N_\ell>0]/
+\mathbb E[N_\ell\mid N_\ell>0]$, and reachable-option coverage
+$C_\ell=\Pr[\exists a\in\mathcal A_\ell:\nabla_{\theta_{>\ell}}L(a)
+\text{ is label-useful}]$. $R_\ell$ diagnoses event propagation, while
+$C_\ell$ diagnoses whether a route choice creates a trainable suffix; neither
+can replace the other. A multi-type branching approximation can predict
+extinction or activity growth, but the actual $R_\ell$ is payload-, arrival-,
+receiver-, and refractory-conditioned. The voltage-margin trace and
+counterfactual suffix replay are the operational measurements.
+
+The first fixed-budget top-2 SHD run makes this distinction concrete. On the
+matched seed-6 setup, the final anytime answer was correct on 13/128 examples
+(10.16%) versus 8/128 (6.25%) for the independent-gate control, a +3.91
+percentage-point point estimate; the paired exact McNemar test was not
+significant ($12$ treatment-only correct versus $7$ control-only correct,
+$p=0.359$). This is an encouraging small signal, not evidence of a robust
+gain. It did not establish deep learning: the top-2 model averaged only
+$[9,0,0,0]$ hidden spikes per utterance in its final epoch, and its layerwise
+standalone accuracies were $[10.16,7.03,4.69,4.69]\%$. The independent-gate
+control also ended with nearly extinct deeper activity, despite a first-epoch
+layer-4 cascade of 586 spikes/utterance. Top-2 reduced the first-layer hidden
+messages but failed to stabilize propagation through depth.
+
+The route-swap sampler found 103,837 near-boundary alternatives in layer 1
+but only 185 in layer 2, 3 in layer 3, and none in layer 4 during the final
+epoch; its 62 sampled replays had no helpful alternatives in that epoch. The
+counterfactual/pathwise gradient norm ratio fell to $7.2\times10^{-6}$. The
+important result is not that more than 100,000 local proposals guarantee an
+improvement: almost all were concentrated before the deep event bottleneck,
+and their frozen-weight task utility gave essentially no learning signal.
+The same-example receiver-load and arrival-margin audit found that top-2 L2
+sent 2,055 selected messages versus 1,728 in the control and had more close
+arrival pairs (4.758 versus 1.539 per example within 10 ms), yet its L2 support
+was only 11.72% versus 57.03%. Top-2 routed 86.4% of those L2 messages to two
+of 16 receivers; its 99th-percentile max voltage margin was $-0.017$, versus
+$+0.471$ in control. This points toward receiver concentration and/or vector
+and temporal integration, but does not isolate the cause. Initialization
+should calibrate sparse propagation gain, receiver load, and threshold-margin
+occupancy per layer, rather than target one global top-$k$ or firing rate.
