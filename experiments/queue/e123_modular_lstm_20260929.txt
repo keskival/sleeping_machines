@@ -1,0 +1,1 @@
+e123_modular_lstm_20260929 experiments/e123_synthetic_baselines.py --task modular --model lstm --tag modular_lstm_d32_l2_s6 --epochs 200

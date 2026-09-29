@@ -89,7 +89,7 @@ class SharedEventModel(nn.Module):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
                  memory_backend="linear", classes=20, readout="mean", continuous_dim=0,
                  evidence_count=0, phase_period=None, phase_seed=6, phase_correction_bound=.25,
-                 phase_margin_guard=False):
+                 phase_margin_guard=False, phase_only=False):
         super().__init__()
         if bands < 1 or groups < 1 or classes < 1 or dim < 4 or evidence_count < 0 or continuous_dim < 0:
             raise ValueError("Invalid model dimensions")
@@ -97,6 +97,17 @@ class SharedEventModel(nn.Module):
             raise ValueError("readout must be mean or last")
         self.readout = readout
         self.classes, self.evidence_count = classes, evidence_count
+        self.bands, self.dim, self.groups = bands, dim, groups
+        self.phase_only = bool(phase_only)
+        if self.phase_only:
+            if phase_period is None or evidence_count or continuous_dim or depth != 0:
+                raise ValueError("A phase-only model has depth zero, periodic state and no other readout")
+            from .phase_memory import PhaseMemory
+            self.phase_memory = PhaseMemory(bands, classes, phase_period, seed=phase_seed)
+            self.layers = nn.ModuleList([])
+            self.phase_margin_guard = True
+            self.phase_correction_bound = 0.
+            return
         if depth < 1 or dim % 4 or bands % groups or not 0 < beta/depth <= 1:
             raise ValueError("Invalid dimensions or residual bound")
         # The depth-1 control uses alpha=1 under the same beta/depth rule.
@@ -137,6 +148,21 @@ class SharedEventModel(nn.Module):
                 continuous=None, evidence=None, expert_mode="combined"):
         if expert_mode not in ("combined", "core", "memory"):
             raise ValueError(expert_mode)
+        if self.phase_only:
+            if expert_mode == "core" or continuous is not None or evidence is not None or overrides:
+                raise ValueError("The phase-only path has no neural core, continuous marks or overrides")
+            if not torch.all(c == 1):
+                raise ValueError("Phase state requires unit-count occurrence events")
+            scores, phase = self.phase_memory(b, ids, size)
+            gap = scores.sort(-1, descending=True).values
+            gap = gap[:, 0]-gap[:, 1]
+            angle = 2*math.pi*phase/self.phase_memory.period
+            payload = torch.stack((angle.cos(), angle.sin()), -1)
+            return scores, payload, {"layers":[],"packets":len(b),"max_payload":1.,
+                "mean_added_delay_ms":0.,"phase_symbols":len(b),
+                "phase_clock_candidates":size*self.classes,"phase_winners":scores.argmax(-1).tolist(),
+                "phase_margin":gap.tolist(),"phase_effective_bound":[0.]*size,
+                "phase_certified":int((gap>0).sum())}, []
         phi = torch.cat((t.new_ones((len(t), 1)), torch.exp(-t[:, None]/self.time_constants)), -1)
         x = (self.embedding(b)[:, :, None]*phi[:, None, :]).flatten(1)
         if self.continuous is not None:

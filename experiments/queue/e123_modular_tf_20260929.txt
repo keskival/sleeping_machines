@@ -1,0 +1,1 @@
+e123_modular_tf_20260929 experiments/e123_synthetic_baselines.py --task modular --model transformer --tag modular_tf_d32_l2_s6 --epochs 200
