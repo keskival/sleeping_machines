@@ -7,6 +7,7 @@ import time
 
 SOURCE = 'refs/remotes/origin/aws/non-shd-benchmarks-20260929'
 TARGET = 'refs/remotes/origin/main'
+PUSH_TARGET = 'refs/heads/main'
 
 def git(*args, check=True):
     return subprocess.run(['git', *args], check=check, text=True,
@@ -44,7 +45,7 @@ def main():
             return 1
         commit = git('commit-tree', tree.stdout.strip(), '-p', target_sha, '-p', source_sha,
                      '-m', 'Merge completed AWS benchmark work onto main')
-        pushed = git('push', 'origin', commit.stdout.strip() + ':' + TARGET, check=False)
+        pushed = git('push', 'origin', commit.stdout.strip() + ':' + PUSH_TARGET, check=False)
         if pushed.returncode:
             print(stamp(), 'main moved during push; retrying:', pushed.stdout.strip(), flush=True)
             time.sleep(2)
