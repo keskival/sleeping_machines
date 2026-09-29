@@ -1,0 +1,1 @@
+{"task": "recall", "R": 0, "seed": 1, "step": 8000, "sequences": 512000, "test_acc": 0.1889999955892563, "wall_s": 44.9}
