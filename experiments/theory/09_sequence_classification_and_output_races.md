@@ -3387,3 +3387,116 @@ The next diagnostic should separate (i) candidate availability by depth,
 (ii) event survival from each forced birth, and (iii) the deepest-head loss
 and suffix-step change for those surviving paths. This single-seed pilot is a
 mechanistic update, not evidence of SHD accuracy, scalable depth, or supremacy.
+
+## 152. Optionality is a state-conditioned continuation value, not uncertainty
+
+Let $s$ denote the causal event state at a routing decision: active messages
+and payloads, accumulated receiver state, event times, refractory state, and
+remaining horizon. Let $y$ be the supervised label, and let $\rho$ be an
+explicit sparse proposal over future event/route continuations. A continuation
+$\omega$ produces terminal task loss $J_H(s,\omega;y)$ after horizon $H$.
+The ordinary continuation uses the realized routes and has loss $J_0(s;y)$.
+If the learner can inspect $K$ candidate futures and retain the best one, the
+proposal-conditioned attainable loss and option reserve are
+
+$$
+V_{H,K}(s;y)=\mathbb E_{\omega_1,\ldots,\omega_K\sim\rho(\cdot\mid s)}
+ \left[\min\{J_0(s;y),J_H(s,\omega_1;y),\ldots,J_H(s,\omega_K;y)\}\right],
+\qquad
+\Omega_{H,K}(s;y)=J_0(s;y)-V_{H,K}(s;y)\ge0.
+$$
+
+Thus $\Omega$ belongs to a state, label, horizon, continuation budget, and
+proposal. A per-example rollout is a noisy estimate of that function at one
+observed state; it is not an optimizer-history statistic. An exponentially
+smoothed estimate may reduce Monte Carlo noise, but it must remain indexed by
+state (or represented by a learned value function over state). Adam momentum,
+by contrast, is a parameter-space moving average of past gradients. Conflating
+the two would erase the dependence on which continuations are reachable now.
+
+The pilot uses a normalized entropic relaxation of the sampled minimum,
+clamped above by the no-op loss, as its finite-$K$ backup. Alongside it, the
+code logs a breadth statistic
+
+$$
+B_\epsilon(s)=\Pr_{\omega\sim\rho(\cdot\mid s)}
+  [J_H(s,\omega;y)\le J_0(s;y)-\epsilon],
+$$
+
+estimated from the sampled futures. $\Omega$ measures the gain available in
+the lower tail; $B_\epsilon$ measures proposal mass on futures that clear a
+declared improvement threshold. The distinction matters: one lucky route can
+lower the best-of-$K$ loss while a broad pool of useful routes has not been
+found. Neither quantity is invariant to $\rho$, $H$, $K$, or $\epsilon$; these
+are part of the estimand, not implementation trivia. The sampler is
+margin-weighted and layer-subsampled, so the current number estimates
+optionality under that sparse exploratory policy, not over all possible
+networks or uniformly over eligible spikes.
+
+For a local event action with parent state $s$ and child state $s'$, the
+tested threshold utility is
+
+$$
+U_\lambda(s,s')=J_0(s;y)-J_0(s';y)
+ +\lambda[\Omega_{H,K}(s';y)-\Omega_{H,K}(s;y)].
+$$
+
+The first term is immediate task improvement; the second asks whether taking
+the action leaves the system with better future choices. With $\lambda=1$ and
+an exact common value definition, this expression reduces to the difference
+between the two continuation values. It is therefore a local value backup,
+not a second independent source of label evidence. The experiment computes
+matched Monte Carlo estimates for parent and child using common random draws
+per future layer, so proposal noise is partly cancelled. The relaxed estimate
+is not an unbiased policy gradient and the detached threshold update is not
+yet a Bellman-consistent value-learning algorithm.
+
+There is also a structural caveat to using optionality as a per-action bonus.
+If the signed state-potential differences are simply summed along a complete
+trajectory,
+
+$$
+\sum_{t=0}^{T-1}[\Omega(s_{t+1})-\Omega(s_t)]
+   =\Omega(s_T)-\Omega(s_0).
+$$
+
+For a fixed initial state and a terminal potential set to zero, this telescopes
+to a constant and cannot by itself change the globally preferred trajectory.
+To make optionality useful, it must enter the continuation backup or the
+action-selection/training target while future choices remain available; merely
+adding a potential difference to every local loss can collapse it back into
+ordinary credit assignment. The present per-boundary rule tests a bounded
+local approximation, not a proof that a one-number bonus solves this temporal
+credit problem. A value function over event state and remaining horizon is the
+natural object to learn; its internal representation may be scalar, a small
+distribution over future losses, or a compact option set if the scalar backup
+loses important breadth information.
+
+Uncertainty is separate from both losses and option reserve. Predictive class
+entropy $H[p(Y\mid x)]$ measures spread over labels; realized-label surprise
+$-\log p(y\mid x)$ is a monotone transform of the likelihood of the observed
+label; route entropy $H[\rho(A\mid s)]$ measures spread over proposed routes;
+and posterior/epistemic uncertainty measures uncertainty about model
+parameters. In a ten-class task, predicting $0.99$ on a wrong label and $0.01$
+on the true label gives low class entropy but true-label NLL $4.61$ and inverse
+likelihood $100$. A uniform prediction has higher entropy but true-label NLL
+$2.30$ and inverse likelihood $10$. So inverse likelihood (or NLL) is not
+predictive uncertainty. Likewise, high route entropy does not imply
+optionality when the routes lead to identical future losses.
+
+The matched seed-6 depth-4 training test compared immediate-only threshold
+utility with $\lambda=1$ continuation reserve, both with causal per-layer
+counterfactual suffix-gradient substitution, 120 training examples, 128
+held-out speakers, and two epochs. Both remained at 6/128 terminal accuracy
+(4.69%). In the continuation-aware arm the mean change in option reserve was
+$6.28\times10^{-5}$ then $9.73\times10^{-4}$ loss units per sampled action;
+the change in $B_{0.05}$ was zero in both epochs. Held-out support at epoch 2
+was [83.6%, 4.7%, 1.6%, 0.8%] across L1--L4, versus [100%, 14.8%, 0%, 0%]
+in the immediate arm. Almost all suffix correction norm still landed in the
+readout head. The additional two-rollout treatment took 224 s versus 177 s for
+the control in this run, with peak process-group RSS around 603 MB and host
+available memory above 11.7 GB. These are one-seed diagnostics: they verify
+that the state-conditioned estimator and layerwise credit path execute, but
+they show no accuracy gain and do not establish that the rollout metric
+improves learning. Deep route support and reachable improving continuations
+remain the limiting evidence.
