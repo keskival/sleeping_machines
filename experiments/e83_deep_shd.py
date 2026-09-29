@@ -686,7 +686,12 @@ def continue_spike_option_rollout(net, eb, ei, et, input_counts, batch_size,
     actions = []
     horizon = min(grid - 1, int(getattr(args, "prefix_horizon_ms", 1000.0)))
     for layer_id in range(start_layer, net.depth):
-        if rng.random() >= args.cf_spike_option_probability:
+        # Consume the same pair of random numbers at every layer so paired
+        # parent/child rollouts share proposal randomness even when one arm
+        # has no eligible candidates.
+        include_draw = rng.random()
+        proposal_draw = rng.random()
+        if include_draw >= args.cf_spike_option_probability:
             continue
         diagnostic = state_info["spike_diagnostics"][layer_id]
         margins = diagnostic["spike_margin_trace"]
@@ -710,7 +715,9 @@ def continue_spike_option_rollout(net, eb, ei, et, input_counts, batch_size,
         weights = np.exp(-np.abs(candidate_margins)
                          / max(args.cf_spike_option_temperature, 1e-8))
         probabilities = weights / weights.sum()
-        selected = int(rng.choice(len(coordinates), p=probabilities))
+        selected = min(int(np.searchsorted(
+            np.cumsum(probabilities), proposal_draw, side="right")),
+            len(coordinates) - 1)
         time_id, unit_id = map(int, coordinates[selected])
         overrides.append((layer_id, time_id, target_batch, unit_id, True))
         actions.append({
@@ -1023,6 +1030,14 @@ def main():
                     help="credit each sampled spike by its conditional parent-to-child loss and suffix-learning change")
     ap.add_argument("--cf_spike_option_transfer_utility", action="store_true",
                     help="measure option learning value on other minibatch examples, not self-fit on the forced example")
+    ap.add_argument("--cf_spike_option_rollout_value", action="store_true",
+                    help="score optionality by proposal-conditioned future route continuations")
+    ap.add_argument("--cf_spike_option_rollouts", type=int, default=2,
+                    help="matched future route continuations per parent/child state")
+    ap.add_argument("--cf_spike_option_backup_temperature", type=float, default=0.1,
+                    help="temperature for the normalized entropic soft-min continuation backup")
+    ap.add_argument("--cf_spike_option_improvement_epsilon", type=float, default=0.05,
+                    help="loss improvement cutoff for the separate continuation-breadth diagnostic")
     ap.add_argument("--shift", type=int, default=4)
     ap.add_argument("--drop", type=float, default=0.1)
     ap.add_argument("--epochs", type=int, default=2)
@@ -1074,6 +1089,14 @@ def main():
         raise ValueError("local option utility requires --cf_spike_option_updates")
     if a.cf_spike_option_transfer_utility and not a.cf_spike_option_local_utility:
         raise ValueError("transfer utility requires --cf_spike_option_local_utility")
+    if a.cf_spike_option_rollout_value and not a.cf_spike_option_local_utility:
+        raise ValueError("continuation optionality requires --cf_spike_option_local_utility")
+    if (a.cf_spike_option_rollouts < 1
+            or not math.isfinite(a.cf_spike_option_backup_temperature)
+            or a.cf_spike_option_backup_temperature < 0
+            or not math.isfinite(a.cf_spike_option_improvement_epsilon)
+            or a.cf_spike_option_improvement_epsilon < 0):
+        raise ValueError("continuation rollouts must be positive; backup temperature and improvement cutoff must be nonnegative")
     if a.cf_route_swaps_per_layer and not a.route_topk:
         raise ValueError("--cf_route_swaps_per_layer requires --route_topk > 0")
     if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
@@ -1095,6 +1118,7 @@ def main():
     pair_rng = np.random.default_rng(a.seed + 700_031)
     route_swap_rng = np.random.default_rng(a.seed + 900_017)
     spike_option_rng = np.random.default_rng(a.seed + 1_100_021)
+    spike_option_rollout_rng = np.random.default_rng(a.seed + 1_100_023)
     spike_option_target_rng = np.random.default_rng(a.seed + 1_300_027)
     t0 = time.time()
 
@@ -1130,8 +1154,14 @@ def main():
         option_immediate_ep = option_learning_ep = option_utility_ep = 0.0
         option_local_utility_sum_ep = 0.0
         option_local_immediate_sum_ep = option_local_learning_sum_ep = 0.0
+        option_local_optionality_sum_ep = 0.0
+        option_local_continuation_gain_sum_ep = 0.0
+        option_local_beneficial_mass_delta_sum_ep = 0.0
+        option_rollout_count_ep = option_rollout_actions_ep = 0
         option_local_utility_actions_ep = 0
         option_local_utility_by_layer_ep = np.zeros(a.depth, dtype=np.float64)
+        option_local_optionality_by_layer_ep = np.zeros(a.depth, dtype=np.float64)
+        option_local_beneficial_mass_delta_by_layer_ep = np.zeros(a.depth, dtype=np.float64)
         option_local_actions_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
         option_grad_norm_ep = option_threshold_step_ep = 0.0
         option_suffix_batches_ep = 0
@@ -1635,23 +1665,37 @@ def main():
                 root_rng = torch.random.get_rng_state()
                 root_cuda_rng = (torch.cuda.get_rng_state_all()
                                  if torch.cuda.is_available() else None)
-                factual_progress, factual_grad_norm = finite_progress_from_grads(
-                    option_pending["root_loss"], suffix, option_pending["root_grads"],
-                    option_pending["root_replay"], a.cf_spike_virtual_lr,
-                    a.cf_spike_virtual_clip)
-                after_root_rng = torch.random.get_rng_state()
-                after_root_cuda_rng = (torch.cuda.get_rng_state_all()
-                                       if torch.cuda.is_available() else None)
-                torch.random.set_rng_state(root_rng)
-                if root_cuda_rng is not None:
-                    torch.cuda.set_rng_state_all(root_cuda_rng)
-                branch_progress, branch_grad_norm = finite_progress_from_grads(
-                    option_pending["branch_loss"], suffix, option_pending["branch_grads"],
-                    option_pending["branch_replay"], a.cf_spike_virtual_lr,
-                    a.cf_spike_virtual_clip)
-                torch.random.set_rng_state(after_root_rng)
-                if after_root_cuda_rng is not None:
-                    torch.cuda.set_rng_state_all(after_root_cuda_rng)
+                measure_suffix_progress = (
+                    not a.cf_spike_option_rollout_value
+                    and not (a.cf_spike_option_local_utility
+                             and a.cf_spike_option_weight == 0.0))
+                if measure_suffix_progress:
+                    factual_progress, factual_grad_norm = finite_progress_from_grads(
+                        option_pending["root_loss"], suffix, option_pending["root_grads"],
+                        option_pending["root_replay"], a.cf_spike_virtual_lr,
+                        a.cf_spike_virtual_clip)
+                    after_root_rng = torch.random.get_rng_state()
+                    after_root_cuda_rng = (torch.cuda.get_rng_state_all()
+                                           if torch.cuda.is_available() else None)
+                    torch.random.set_rng_state(root_rng)
+                    if root_cuda_rng is not None:
+                        torch.cuda.set_rng_state_all(root_cuda_rng)
+                    branch_progress, branch_grad_norm = finite_progress_from_grads(
+                        option_pending["branch_loss"], suffix, option_pending["branch_grads"],
+                        option_pending["branch_replay"], a.cf_spike_virtual_lr,
+                        a.cf_spike_virtual_clip)
+                    torch.random.set_rng_state(after_root_rng)
+                    if after_root_cuda_rng is not None:
+                        torch.cuda.set_rng_state_all(after_root_cuda_rng)
+                else:
+                    factual_progress = 0.0
+                    factual_grad_norm = math.sqrt(sum(
+                        float(g.detach().square().sum())
+                        for g in option_pending["root_grads"] if g is not None))
+                    branch_progress = 0.0
+                    branch_grad_norm = math.sqrt(sum(
+                        float(g.detach().square().sum())
+                        for g in option_pending["branch_grads"] if g is not None))
                 immediate_advantage = float(
                     option_pending["root_loss"].detach()
                     - option_pending["branch_loss"].detach())
@@ -1680,19 +1724,80 @@ def main():
                         parent_grads = tuple(
                             parent_grad_by_id.get(id(param))
                             for param in suffix_params)
-                        parent_progress, parent_norm = finite_progress_from_grads(
-                            parent_loss, suffix_params, parent_grads,
-                            parent_replay, a.cf_spike_virtual_lr,
-                            a.cf_spike_virtual_clip)
-                        child_progress, child_norm = finite_progress_from_grads(
-                            child["loss"], suffix_params, child["grads"],
-                            child["replay"], a.cf_spike_virtual_lr,
-                            a.cf_spike_virtual_clip)
                         local_immediate = float(
                             parent_loss.detach() - child["loss"].detach())
-                        local_learning = child_progress - parent_progress
-                        local_utility = (local_immediate
-                                         + a.cf_spike_option_weight * local_learning)
+                        if a.cf_spike_option_rollout_value:
+                            parent_info = info if action_index == 0 else parent["info"]
+                            parent_overrides = (() if action_index == 0
+                                                else parent["overrides"])
+                            parent_continuations = []
+                            child_continuations = []
+                            for _ in range(a.cf_spike_option_rollouts):
+                                common_seed = int(spike_option_rollout_rng.integers(
+                                    0, 2**32 - 1))
+                                parent_loss_rollout, _, parent_future_actions = (
+                                    continue_spike_option_rollout(
+                                        net, eb, ei, et, input_counts, len(items),
+                                        grid, y, seq_end, a.depth, a.dmax,
+                                        prefix_times, parent_info, parent_overrides,
+                                        action["layer"] + 1, target_batch, a,
+                                        np.random.default_rng(common_seed)))
+                                child_loss_rollout, _, child_future_actions = (
+                                    continue_spike_option_rollout(
+                                        net, eb, ei, et, input_counts, len(items),
+                                        grid, y, seq_end, a.depth, a.dmax,
+                                        prefix_times, child["info"], child["overrides"],
+                                        action["layer"] + 1, target_batch, a,
+                                        np.random.default_rng(common_seed)))
+                                parent_continuations.append(parent_loss_rollout)
+                                child_continuations.append(child_loss_rollout)
+                                option_rollout_actions_ep += (
+                                    len(parent_future_actions) + len(child_future_actions))
+                                option_rollout_count_ep += 2
+                            parent_default = float(parent_loss.detach())
+                            child_default = float(child["loss"].detach())
+                            temperature = a.cf_spike_option_backup_temperature
+                            parent_value = min(parent_default, soft_minimum(
+                                [parent_default, *parent_continuations], temperature))
+                            child_value = min(child_default, soft_minimum(
+                                [child_default, *child_continuations], temperature))
+                            parent_optionality = parent_default - parent_value
+                            child_optionality = child_default - child_value
+                            optionality_gain = child_optionality - parent_optionality
+                            continuation_gain = parent_value - child_value
+                            epsilon = a.cf_spike_option_improvement_epsilon
+                            parent_beneficial_mass = float(np.mean(
+                                np.asarray(parent_continuations)
+                                <= parent_default - epsilon))
+                            child_beneficial_mass = float(np.mean(
+                                np.asarray(child_continuations)
+                                <= child_default - epsilon))
+                            beneficial_mass_delta = (child_beneficial_mass
+                                                     - parent_beneficial_mass)
+                            local_learning = 0.0
+                            local_utility = (local_immediate
+                                             + a.cf_spike_option_weight * optionality_gain)
+                            option_local_optionality_sum_ep += optionality_gain
+                            option_local_continuation_gain_sum_ep += continuation_gain
+                            option_local_beneficial_mass_delta_sum_ep += beneficial_mass_delta
+                            option_local_optionality_by_layer_ep[action["layer"]] += optionality_gain
+                            option_local_beneficial_mass_delta_by_layer_ep[
+                                action["layer"]] += beneficial_mass_delta
+                        else:
+                            if a.cf_spike_option_weight == 0.0:
+                                parent_progress = child_progress = 0.0
+                            else:
+                                parent_progress, _ = finite_progress_from_grads(
+                                    parent_loss, suffix_params, parent_grads,
+                                    parent_replay, a.cf_spike_virtual_lr,
+                                    a.cf_spike_virtual_clip)
+                                child_progress, _ = finite_progress_from_grads(
+                                    child["loss"], suffix_params, child["grads"],
+                                    child["replay"], a.cf_spike_virtual_lr,
+                                    a.cf_spike_virtual_clip)
+                            local_learning = child_progress - parent_progress
+                            local_utility = (local_immediate
+                                             + a.cf_spike_option_weight * local_learning)
                         local_action_utilities.append(local_utility)
                         layer_id = action["layer"]
                         option_local_utility_by_layer_ep[layer_id] += local_utility
@@ -2122,6 +2227,28 @@ def main():
                         option_local_learning_sum_ep, 7)
                     row["spike_option_local_utility_sum_by_layer"] = (
                         option_local_utility_by_layer_ep.round(7).tolist())
+                    if a.cf_spike_option_rollout_value:
+                        row["spike_option_metric"] = "proposal_conditioned_continuation_reserve"
+                        row["spike_option_rollout_count"] = int(option_rollout_count_ep)
+                        row["spike_option_rollout_mean_future_actions"] = round(
+                            option_rollout_actions_ep / max(option_rollout_count_ep, 1), 4)
+                        row["spike_option_mean_delta_reserve"] = round(
+                            option_local_optionality_sum_ep
+                            / max(option_local_utility_actions_ep, 1), 7)
+                        row["spike_option_mean_continuation_value_gain"] = round(
+                            option_local_continuation_gain_sum_ep
+                            / max(option_local_utility_actions_ep, 1), 7)
+                        row["spike_option_mean_delta_beneficial_continuation_mass"] = round(
+                            option_local_beneficial_mass_delta_sum_ep
+                            / max(option_local_utility_actions_ep, 1), 5)
+                        row["spike_option_improvement_epsilon"] = (
+                            a.cf_spike_option_improvement_epsilon)
+                        row["spike_option_delta_reserve_sum_by_layer"] = (
+                            option_local_optionality_by_layer_ep.round(7).tolist())
+                        row["spike_option_delta_beneficial_mass_sum_by_layer"] = (
+                            option_local_beneficial_mass_delta_by_layer_ep.round(5).tolist())
+                        row["spike_option_backup_temperature"] = (
+                            a.cf_spike_option_backup_temperature)
                     row["spike_option_local_actions_by_layer"] = (
                         option_local_actions_by_layer_ep.tolist())
                 row["spike_option_mean_suffix_gradient_norm"] = round(
