@@ -1,0 +1,221 @@
+{
+  "scope": "Single-seed held-out-speaker development comparisons, not official SHD test",
+  "pairs": {
+    "credit_d8_n128": {
+      "arms": [
+        {
+          "path": "/workspace/experiments/results/e118/race_d8_cf0_n128_e8_s6.json",
+          "sha256": "d1dc8ba480b2dd6243c66d384082afe4ab9c65a7aa298200e59d3d9ee3b80ea4",
+          "args": {
+            "tag": "race_d8_cf0_n128_e8_s6",
+            "credit": 0,
+            "depth": 8,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 53296,
+          "fit_correct": 64,
+          "fit_n": 128,
+          "dev_correct": 34,
+          "dev_n": 128,
+          "fit_nll": 1.5178842563182116,
+          "dev_nll": 2.45945742726326,
+          "wall_s": 177.70672345161438,
+          "max_rss_kb": 858764
+        },
+        {
+          "path": "/workspace/experiments/results/e118/race_d8_cf1_n128_e8_s6.json",
+          "sha256": "ec31b35759002e724bcc9dfff615c5417c7a318e0c337fa0867b72000b519b8c",
+          "args": {
+            "tag": "race_d8_cf1_n128_e8_s6",
+            "credit": 1,
+            "depth": 8,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 53296,
+          "fit_correct": 76,
+          "fit_n": 128,
+          "dev_correct": 30,
+          "dev_n": 128,
+          "fit_nll": 1.2816898487508297,
+          "dev_nll": 2.4386552534997463,
+          "wall_s": 178.32428359985352,
+          "max_rss_kb": 875536
+        }
+      ],
+      "right_only_correct": 5,
+      "left_only_correct": 9
+    },
+    "depth_cf0_n128": {
+      "arms": [
+        {
+          "path": "/workspace/experiments/results/e118/race_d1_cf0_n128_e8_s6.json",
+          "sha256": "7ae89e146a481e332263588a978d2a5efd89b7b6a4c596407d461fff1792f1a3",
+          "args": {
+            "tag": "race_d1_cf0_n128_e8_s6",
+            "credit": 0,
+            "depth": 1,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 7537,
+          "fit_correct": 70,
+          "fit_n": 128,
+          "dev_correct": 33,
+          "dev_n": 128,
+          "fit_nll": 1.3932202626019716,
+          "dev_nll": 2.398784950375557,
+          "wall_s": 25.835288047790527,
+          "max_rss_kb": 424236
+        },
+        {
+          "path": "/workspace/experiments/results/e118/race_d8_cf0_n128_e8_s6.json",
+          "sha256": "d1dc8ba480b2dd6243c66d384082afe4ab9c65a7aa298200e59d3d9ee3b80ea4",
+          "args": {
+            "tag": "race_d8_cf0_n128_e8_s6",
+            "credit": 0,
+            "depth": 8,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 53296,
+          "fit_correct": 64,
+          "fit_n": 128,
+          "dev_correct": 34,
+          "dev_n": 128,
+          "fit_nll": 1.5178842563182116,
+          "dev_nll": 2.45945742726326,
+          "wall_s": 177.70672345161438,
+          "max_rss_kb": 858764
+        }
+      ],
+      "right_only_correct": 16,
+      "left_only_correct": 15
+    },
+    "depth_cf1_n128": {
+      "arms": [
+        {
+          "path": "/workspace/experiments/results/e118/race_d1_cf1_n128_e8_s6.json",
+          "sha256": "d5e15e451072650277a691cd011106302263d1b40d7f6112a47b03a38fc37ccc",
+          "args": {
+            "tag": "race_d1_cf1_n128_e8_s6",
+            "credit": 1,
+            "depth": 1,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 7537,
+          "fit_correct": 70,
+          "fit_n": 128,
+          "dev_correct": 41,
+          "dev_n": 128,
+          "fit_nll": 1.533286588266492,
+          "dev_nll": 2.35000491887331,
+          "wall_s": 26.753413915634155,
+          "max_rss_kb": 423444
+        },
+        {
+          "path": "/workspace/experiments/results/e118/race_d8_cf1_n128_e8_s6.json",
+          "sha256": "ec31b35759002e724bcc9dfff615c5417c7a318e0c337fa0867b72000b519b8c",
+          "args": {
+            "tag": "race_d8_cf1_n128_e8_s6",
+            "credit": 1,
+            "depth": 8,
+            "limit": 128,
+            "eval_limit": 128,
+            "epochs": 8,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 53296,
+          "fit_correct": 76,
+          "fit_n": 128,
+          "dev_correct": 30,
+          "dev_n": 128,
+          "fit_nll": 1.2816898487508297,
+          "dev_nll": 2.4386552534997463,
+          "wall_s": 178.32428359985352,
+          "max_rss_kb": 875536
+        }
+      ],
+      "right_only_correct": 6,
+      "left_only_correct": 17
+    },
+    "depth_cf1_n512": {
+      "arms": [
+        {
+          "path": "/workspace/experiments/results/e118/race_d1_cf1_n512_e4_s6.json",
+          "sha256": "510249efeab74ba8bd3d420d0dc0f0c5d51acddb7cd2785c6085822deab88559",
+          "args": {
+            "tag": "race_d1_cf1_n512_e4_s6",
+            "credit": 1,
+            "depth": 1,
+            "limit": 512,
+            "eval_limit": 256,
+            "epochs": 4,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 7537,
+          "fit_correct": 229,
+          "fit_n": 512,
+          "dev_correct": 65,
+          "dev_n": 256,
+          "fit_nll": 1.6325962182600051,
+          "dev_nll": 2.254444253630936,
+          "wall_s": 49.826263427734375,
+          "max_rss_kb": 433368
+        },
+        {
+          "path": "/workspace/experiments/results/e118/race_d8_cf1_n512_e4_s6.json",
+          "sha256": "c9f063055b3f74db4cb455777d2ee362d02f7558e0a26720f598f893cf924df4",
+          "args": {
+            "tag": "race_d8_cf1_n512_e4_s6",
+            "credit": 1,
+            "depth": 8,
+            "limit": 512,
+            "eval_limit": 256,
+            "epochs": 4,
+            "bs": 4,
+            "lr": 0.003,
+            "seed": 6
+          },
+          "parameters": 53296,
+          "fit_correct": 258,
+          "fit_n": 512,
+          "dev_correct": 104,
+          "dev_n": 256,
+          "fit_nll": 1.4240309481974691,
+          "dev_nll": 1.749562812037766,
+          "wall_s": 335.35394287109375,
+          "max_rss_kb": 861892
+        }
+      ],
+      "right_only_correct": 50,
+      "left_only_correct": 11
+    }
+  }
+}

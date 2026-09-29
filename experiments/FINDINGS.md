@@ -1,5 +1,62 @@
 # Findings log
 
+## 2026-09-29 — Eight-layer race learning, useful depth, and a conditioning diagnosis (§§166–172)
+
+**First positive depth comparison in the new E118 carrier architecture:** 512 fitting / 256 held-out-speaker
+development utterances, four epochs, seed 6, width 32 and counterfactual loser score credit. Depth 8 reaches
+**104/256 (40.625%)**, versus **65/256 (25.391%)** for depth 1. Fitting accuracy is 258/512 versus 229/512;
+held-out NLL is **1.7496 versus 2.2544**. Of the same held-out examples, D8 corrects 50 and loses 11 relative
+to D1. Data/order/update count and conditioning procedure match. D8 has 53,296 parameters versus 7,537 and
+does more event work. This is a development result with extra capacity, not matched-compute supremacy.
+
+The smaller 128-fit/128-held-out, eight-epoch comparison does **not** show a consistent depth gain:
+
+| Depth | Credit | Fit correct | Held-out correct | Held-out NLL |
+|---|---|---:|---:|---:|
+| 1 | Winner pathwise | 70/128 | 33/128 | 2.3988 |
+| 8 | Winner pathwise | 64/128 | 34/128 | 2.4595 |
+| 1 | Plus loser score | 70/128 | 41/128 | 2.3500 |
+| 8 | Plus loser score | 76/128 | 30/128 | 2.4387 |
+
+For D8, adding loser credit improves fitting and slightly improves held-out log loss but loses four correct
+classifications. The initial predictions, conditioning statistics and data order match exactly between these
+two arms. Last-layer router gradient is zero for ordinary terminal pathwise credit (winning delay cannot
+change the terminal pooled class score), and nonzero for loser credit; this expected distinction is explicit.
+All alternatives are locally scored, only the winner emits, and losing values get no ordinary value-path
+gradient. Counterfactual training evaluates three value alternatives instead of one. A contract checks that
+changing only losing value maps leaves the actual forward answer unchanged.
+
+**Concrete conditioning intervention:** E117's fixed-route D8 carrier pilot reached 23/128 fitting and 9/128
+held-out. A frozen deepest-feature ridge probe recovered 84/128 and 36/128, so information survived despite
+the poor trained head. Input-feature probes were slightly better held-out (39/128), not evidence for useful
+depth. A matched head-only experiment then held the deepest features, zero initialization, Adam and eight
+epochs fixed. Fit-only covariance conditioning changed held-out accuracy **7/128 → 39/128** and NLL
+**2.9728 → 2.2408**, isolating head optimization geometry as a real bottleneck in this representation.
+
+**Analytical advances:** §§166–167 construct a normalized causal history operator with a whole-sequence
+maximum-norm bound and dual L1 payload-credit bound, including history reuse. The D8 fixed-history gain
+interval is [0.3436, 2.5658]. Real race switches/delays are outside that conditional certificate. §§169–170
+derive timed losing-route score credit and the class-head covariance curvature. §§171–172 model optionality
+as budgeted reachable correction directions. A local Gramian recursion is exact for independent controls;
+shared router parameters add cross terms that can cancel, invalidating a naive sum over event alternatives.
+Finite linear contracts check the support function, quadratic reserve and shared-control cancellation.
+
+**Counterfactual transfer is still open:** actual shared-router replays on four fitting/four held-out examples
+show loser-credit steps helping the former and hurting the latter at all three tested step norms. At norm
+0.01, loss changes are −0.02898 / +0.05080. Ordinary pathwise credit has the opposite signs, +0.01464 / −0.00608.
+These tiny diagnostics cannot estimate population utility. They motivate measuring transferable correction
+directions, rather than rewarding same-sample gradient energy or merely more near-tied routes.
+
+All scores are terminal, on the SHD training split with speakers 3/6 held out; no official test access.
+Input packets release counts at the end of causal 10 ms windows. There is no silent-unit time grid;
+CPU training uses an associative scan over actual arrivals and local dense vector projections. D8 runs took
+178 s each for 128 examples and 335 s for 512; the runner kept process RSS below 0.9 GB and more than 11 GB
+host memory available. Results and exact pair checks: `results/e118/matched_summary_20260929.json`.
+
+Next: distinguish depth from parameter capacity, determine which deeper transformations add class-relevant
+information, expand speaker coverage, and calibrate early decisions. Stable transport, useful depth and
+transferable optionality are distinct questions; this run advances the first two without declaring them solved.
+
 ## 2026-09-29 — Count placement, evidence scale, and deep support (§§164–165)
 
 A matched depth-4 screen used 512 fitting and 256 held-out-speaker development

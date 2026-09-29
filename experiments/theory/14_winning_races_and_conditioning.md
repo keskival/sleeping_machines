@@ -131,3 +131,45 @@ credit; the other additionally gets the explicit losing-route contrast.
 Report both endpoints, their losses and routing utilization. A gain in this
 pair would isolate the added surrogate within this new model, while a
 comparison with E83 or E117 changes several structural choices at once.
+
+### Completed conditioning and race outcomes
+
+The matched frozen-E117-feature head comparison starts from the same zero
+head, uses the same Adam rate (0.003), batches and eight epochs. Raw features
+end at 19/128 fit and 7/128 held-out correct; fit-only whitening ends at
+77/128 and 39/128. Held-out NLL falls from 2.9728 to 2.2408. This is a direct
+conditioning intervention with features fixed, unlike the earlier ridge
+probe, and it isolates a genuine optimization bottleneck for that model.
+
+The eight-layer E118 pair uses 53,296 parameters and identical initial
+predictions, calibration statistics and example order. Ordinary pathwise
+winner credit ends at 64/128 fit and 34/128 held-out; added loser score credit
+ends at 76/128 and 30/128. Held-out NLL is 2.4595 versus 2.4387. Thus the
+surrogate helps fitting and slightly helps held-out log loss but has not
+improved held-out accuracy. In the latter arm 5 examples become correct and
+9 become wrong relative to control. Counterfactual training evaluates three
+candidate values per arrival, versus one in ordinary training/inference;
+the optimizer budgets match, not all operation counts.
+
+A subsequent eight-layer run with 512 fitting and 256 held-out-speaker
+examples, four epochs and loser credit reaches 258/512 fit and 104/256
+held-out correct (40.625%), with held-out NLL 1.7496. It uses the same seed
+and architecture and changes both data coverage and update count. This is
+broader development evidence of learning, not a matched scaling law or a
+result on the official test set. One-layer controls assess whether depth
+adds useful computation under these protocols.
+
+The one-layer comparison at 512/256, four epochs, gives 229/512 fitting and
+65/256 held-out correct (25.39%), NLL 2.2544. D8's gain is 15.23 points and
+0.5049 nats. The same 256 examples give 50 D8-only successes and 11 D1-only
+successes. Both use width 32, the same example order and update count; D1
+has 7,537 parameters and D8 has 53,296. This is evidence of useful depth in
+one development protocol, with additional capacity/work, not supremacy.
+
+At 128/128 and eight epochs, one-layer pathwise/loser-credit scores are
+33/128 and 41/128, versus D8's 34/128 and 30/128. Thus the result depends on
+data coverage and optimization, and simply increasing depth does not help
+every screen. Alpha=1/depth is used throughout; D1's conditional lower
+bound is zero and has no strict invertibility certificate. Layer widths,
+head initialization and the conditioning procedure are matched, while
+the resulting feature statistics naturally differ across depths.

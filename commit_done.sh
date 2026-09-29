@@ -46,14 +46,23 @@ FILES=(
   experiments/e117_readout_conditioning.py
   experiments/e118_race_carrier_shd.py
   experiments/e118_credit_audit.py
+  experiments/e118_geometry_contract.py
+  experiments/e118_summary.py
   experiments/queue/e117_serial_d8_20260929.txt
   experiments/queue/e117_probe_serial_20260929.txt
   experiments/queue/e117_readout_conditioning_20260929.txt
   experiments/queue/e118_race_cf_20260929.txt
   experiments/queue/e118_race_cf_512_20260929.txt
   experiments/queue/e118_race_pathwise_20260929.txt
+  experiments/queue/e118_race_d1_cf_20260929.txt
+  experiments/queue/e118_race_d1_cf_512_20260929.txt
+  experiments/queue/e118_race_d1_pathwise_20260929.txt
   experiments/queue/e118_credit_audit_20260929.txt
+  experiments/queue/e118_geometry_contract_20260929.txt
+  experiments/queue/e118_summary_20260929.txt
   experiments/queue/report_race_carriers_20260929.txt
+  experiments/queue/report_race_carriers_v2_20260929.txt
+  experiments/queue/report_race_carriers_v3_20260929.txt
   experiments/results/e117/*.json
   experiments/results/e118/*.json
   report/figures/e118_race_carriers.png

@@ -604,7 +604,7 @@ one deep representation learner that combines them.
 | Correct event computation and credit | Exact race/route calculus; arrival reconstruction defect now isolated | Correct jump/reset/payload semantics and matching derivatives |
 | Useful learned depth | Synthetic depth-4 wins; E77 eight-layer gradient reach | Deep transformations improve real-data predictions under matched budgets |
 | Productive counterfactual choices | Lost-race credit works in controlled tasks | Optionality predicts transferable learning, with search/replay cost counted |
-| Asynchronous recognition | E59 reaches 67.5% SHD test; deeper vector network unresolved | Fit-set learning, speaker generalization, calibrated early answers |
+| Asynchronous recognition | E59 reaches 67.5% SHD test; E118 depth-8 reaches 40.6% on a 256-example held-out-speaker development screen | Useful depth under matched protocols, full-data speaker generalization, calibrated early answers |
 | Sparse frontier scaling | Language-mixture and retrieval advantages | Learned shared representations, affordable candidate search, matched scaling curves |
 | Systems advantage | Large counted-work leads on controlled tasks | Lower measured training and inference energy at matched quality |
 
@@ -749,7 +749,7 @@ The nearest opportunity is a set of useful specialized components. On controlled
 
 #### The next capability gains the evidence motivates
 
-The market event world model approaches its Transformer reference within 0.08–0.19 nats per event at roughly one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates low-work streaming prediction components and better learned temporal state; it establishes no profitable trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations extract substantial information from speech. The deeper vector model still needs a working learning scheme. A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful depth on real streams, and measure their practical latency and energy. The evidence supports this focused engineering and research program more directly than it supports a general-purpose frontier model today.
+The market event world model approaches its Transformer reference within 0.08–0.19 nats per event at roughly one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates low-work streaming prediction components and better learned temporal state; it establishes no profitable trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations extract substantial information from speech. An eight-layer winner-only event model now reaches 40.6% on a 256-example held-out-speaker development screen after training on 512 utterances. Stable signal transport and conditioned credit have made deep recognition learnable in this configuration. Useful depth beyond a shallow model and calibrated early decisions are the next SHD milestones. A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful depth on real streams, and measure their practical latency and energy. The evidence supports this focused engineering and research program more directly than it supports a general-purpose frontier model today.
 
 #### What could become reachable in principle
 
@@ -1239,6 +1239,70 @@ Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for the gradient-train
 ## Appendix A. Ongoing SHD research
 
 These are development diagnostics, not supremacy results. Completed recognition results are summarized in section 7.
+
+### Eight-layer learning with genuine winning continuations (§§166–172)
+
+E118 uses local normalized temporal memory and three competing delayed continuations per arrival. Only the
+winner emits a vector to the next layer. Losing values do not contribute to the forward answer; they can supply
+a zero-forward counterfactual score gradient during training. The winner chooses both the actual payload
+transformation and its downstream arrival time. Every arrival has one winner, so layers retain signal support
+without treating losing routes as active computations.
+
+**Deep recognition now learns above chance.** With 512 fitting utterances, 256 held-out-speaker development
+utterances, four epochs, seed 6, and loser score credit, the eight-layer model reached **258/512 fitting and
+104/256 held-out correct (40.625%)**, with held-out NLL **1.7496**. This is terminal classification; the official
+SHD test set was not opened. It is a new architecture and protocol, not a one-variable repair of E83.
+
+**The matched larger-data depth comparison favors eight layers:** one layer reached **229/512 fitting and
+65/256 held-out correct (25.391%)**, with held-out NLL **2.2544**. Eight layers therefore gained **15.23 percentage
+points** and reduced NLL by **0.5049**. Of the same 256 examples, 50 became correct and 11 became wrong.
+Both use width 32, the same examples/order, four epochs, learning rate and conditioning procedure. D1 has
+7,537 parameters versus D8's 53,296 and uses less event work. This is positive evidence for added depth in
+this development protocol, not a matched-compute or parameter-matched claim.
+
+The smaller matched screen used 128 fitting / 128 held-out utterances and eight epochs:
+
+| Depth | Race credit | Fit correct | Held-out correct | Held-out NLL |
+|---|---|---:|---:|---:|
+| 1 | Winner pathwise | 70/128 | 33/128 (25.8%) | 2.3988 |
+| 8 | Winner pathwise | 64/128 | 34/128 (26.6%) | 2.4595 |
+| 1 | Plus loser score credit | 70/128 | 41/128 (32.0%) | 2.3500 |
+| 8 | Plus loser score credit | 76/128 | 30/128 (23.4%) | 2.4387 |
+
+There is **no established depth advantage** in that screen. The one-example edge for D8 pathwise is not
+convincing evidence; with loser credit, D1 performs better. Width, data order, epochs, learning rate and
+conditioning procedure are shared; parameter count and event work grow with depth. Residual scaling is 1/depth;
+at depth 1 the strict invertibility lower bound is zero. Within the D8 credit pair, initial predictions and
+calibration statistics match exactly. Loser credit improves fitting and slightly improves held-out log loss,
+but not held-out accuracy. Training evaluates three candidate values per arrival instead of one.
+
+**A causal optimization diagnosis.** An earlier fixed-route D8 carrier model (E117) scored 9/128 held-out
+with its trained head. A ridge probe recovered 36/128 from frozen deepest features (the input-feature probe
+reached 39/128). A subsequent head-only experiment held those features, zero initialization, Adam and the
+eight-epoch budget fixed. Changing only fit-only covariance conditioning changed held-out accuracy from
+**7/128 to 39/128** and NLL from **2.9728 to 2.2408**. Thus class information survived the stack while the
+raw head optimized poorly. This isolates conditioning for those frozen features; it does not assign all
+earlier E83 failures to the same cause.
+
+![Eight-layer race learning and the matched conditioning diagnosis](report/figures/e118_race_carriers.png)
+
+**Analytical advance.** The normalized history operator is nonexpansive in maximum sequence norm. For
+bounded residual corrections with fixed addresses and times, the entire D8 payload map has gain between
+0.3436 and 2.5658, with a matching dual L1 credit bound. This includes persistent history reuse, closing the
+earlier per-event gap. Learned race changes and delays require additional analysis. Optionality now has a
+constructive correction-ellipsoid formalism: it values feasible directions under a control budget, and its
+composition includes cross terms from shared trainable knobs. Those terms can cancel, so adding independent
+per-event optionality scores can invent unavailable capacity.
+
+**Execution and limits.** Input counts are released at the end of causal 10 ms windows, rather than attached
+to an earlier spike. Only addressed local memories update; there is no silent-unit time grid. The CPU
+training reference uses an associative event scan, with O(depth × events × log events) scan compositions;
+the serial recurrence has linear event work. Local vector projections remain dense. The D8 128-example
+pilots took about 178 seconds each, and the 512-example run took 335 seconds, with peak process RSS below
+0.9 GB and host available memory above 11 GB. These are one-seed development results, not measured energy
+or benchmark supremacy. Next: reproduce and explain the useful-depth gain under larger and matched-capacity
+protocols, improve cross-speaker transfer of race updates, and
+calibrate causal early decisions once terminal recognition is strong.
 
 ### Count marks, stable evidence, and serial depth (§§164–165)
 

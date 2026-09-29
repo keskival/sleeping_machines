@@ -95,8 +95,11 @@ class RaceLayer(nn.Module):
 class RaceNet(nn.Module):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True):
         super().__init__()
-        if dim % 4 or bands % groups or not 0 < beta/depth < 1:
+        if depth < 1 or dim % 4 or bands % groups or not 0 < beta/depth <= 1:
             raise ValueError("Invalid dimensions or residual bound")
+        # The depth-1 control uses alpha=1 under the same beta/depth rule.
+        # Its conditional lower bound is zero; the strict invertibility
+        # certificate applies only when alpha<1, as in the depth-8 model.
         self.bands, self.dim, self.groups = bands, dim, groups
         self.embedding = nn.Embedding(bands, dim//4)
         nn.init.normal_(self.embedding.weight, std=.5)
