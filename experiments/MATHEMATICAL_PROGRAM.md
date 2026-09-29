@@ -8,6 +8,18 @@ The latest analytic synthesis is in [§§155–158](theory/10_trainability_and_f
 [§§159–163](theory/11_optionality_and_learning_reserve.md) refine optionality. These supersede
 older next-run suggestions below. The AWS sibling owns non-SHD benchmarks; this host owns SHD.
 
+**Completed bridge, E117–E119:** frozen-feature experiments isolate a readout-conditioning
+bottleneck; bounded winner-only carriers establish a positive D8/D1 development comparison.
+The larger D8 run reaches 151/256 (59.0%) at its final epoch and 163/256 (63.7%) at its best
+development checkpoint, with 827/1024 fitting examples correct. Exact linear-work event
+memory preserves the audited predictions/gradients and speeds forward/backward by 1.68x
+on this CPU. We can now investigate generalization and temporal credit in a model that
+learns. [§§173–175](theory/16_event_work_and_temporal_credit.md) derive its event adjoint,
+timing eligibility and causal coalescing error. The
+[frontier protocol](SHD_FRONTIER_PROTOCOL.md) separates development accuracy, official
+test targets, CPU time and measured energy. The remaining numbered items describe
+mechanisms to retain or develop, rather than claiming the new carrier is still at chance.
+
 1. **Repair the hybrid event contract.** Legacy TVLayer detects crossings after arrivals but reconstructs
    payloads from before those arrivals. A minimal witness gives zero payload and zero payload gradient;
    the consistent grid reference restores both. Audit and compare this correction before more router tuning.

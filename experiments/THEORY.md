@@ -67,6 +67,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Serial event transport and sequence credit](theory/13_serial_event_credit.md) — §§166–168: normalized local history, a whole-sequence payload/credit bound, and causal count packets.
 - [Winning races and conditioning](theory/14_winning_races_and_conditioning.md) — §§169–170: winner-only delayed continuations, explicit loser-score credit, and the feature-covariance bottleneck.
 - [Optionality as reachable correction geometry](theory/15_optional_control_geometry.md) — §§171–172: local correction ellipsoids, directional reserve, Gramian propagation and shared-control cancellation.
+- [Event work and temporal credit](theory/16_event_work_and_temporal_credit.md) — §§173–175: linear-work memory and its adjoint; exact local timing eligibility; causal coalescing and its representation error.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

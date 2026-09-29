@@ -26,10 +26,17 @@ OUT = Path(__file__).parent / "results" / "e118"
 
 
 class RaceLayer(nn.Module):
-    def __init__(self, dim, depth, beta, cf_credit, options=3):
+    def __init__(self, dim, depth, beta, cf_credit, options=3, memory_backend="doubling"):
         super().__init__()
         self.alpha, self.cf_credit = beta/depth, cf_credit
         self.options, self.dim = options, dim
+        if memory_backend == "linear":
+            from e119_linear_event_scan import segmented_memory as memory
+            self.memory = memory
+        elif memory_backend == "doubling":
+            self.memory = segmented_memory
+        else:
+            raise ValueError(memory_backend)
         self.value = nn.Parameter(torch.randn(options, dim, 2*dim+1)*.03)
         self.bias = nn.Parameter(torch.zeros(options, dim))
         self.route = nn.Parameter(torch.randn(options, 2*dim+1)*.1)
@@ -41,7 +48,7 @@ class RaceLayer(nn.Module):
         # order within each receiver, with the original index breaking ties.
         time_order = torch.argsort(t, stable=True)
         inverse = torch.argsort(time_order)
-        mem, mass, work = segmented_memory(
+        mem, mass, work = self.memory(
             x[time_order], t[time_order], count[time_order], keys[time_order],
             self.log_tau.clamp(math.log(.002), math.log(4.)).exp(), sequential)
         mem, mass = mem[inverse], mass[inverse]
@@ -93,7 +100,8 @@ class RaceLayer(nn.Module):
 
 
 class RaceNet(nn.Module):
-    def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True):
+    def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
+                 memory_backend="doubling"):
         super().__init__()
         if depth < 1 or dim % 4 or bands % groups or not 0 < beta/depth <= 1:
             raise ValueError("Invalid dimensions or residual bound")
@@ -106,7 +114,8 @@ class RaceNet(nn.Module):
         self.head = nn.Linear(dim+1, 20)
         nn.init.normal_(self.head.weight, std=.01)
         nn.init.zeros_(self.head.bias)
-        self.layers = nn.ModuleList([RaceLayer(dim, depth, beta, cf_credit) for _ in range(depth)])
+        self.layers = nn.ModuleList([RaceLayer(dim, depth, beta, cf_credit,
+                                             memory_backend=memory_backend) for _ in range(depth)])
         self.register_buffer("time_constants", torch.tensor([.05, .2, .8]))
         self.register_buffer("center", torch.zeros(dim+1))
         self.register_buffer("scale", torch.ones(dim+1))

@@ -1,5 +1,58 @@
 # Findings log
 
+## 2026-09-29 — Linear-work memory funds stronger eight-layer SHD recognition (E119)
+
+**Completed final endpoint: 151/256 (58.98%) development accuracy**, compared with the earlier E118
+104/256 (40.625%) on identical held-out-speaker examples. Sixty-four earlier errors are corrected and
+seventeen earlier correct answers are lost. Fit accuracy is **827/1024 (80.76%)**. Best development
+checkpoint is epoch 7 at **163/256 (63.67%)**, distinct from the final epoch 8. Final fit/dev NLL is
+0.5570/1.6600; the earlier dev NLL was 1.7496. Online training NLL falls from 2.5123 to 0.5786.
+The endpoint is selected by the predeclared eight-epoch budget, not by the peak development score.
+
+The architecture is unchanged: width 32, eight bounded carrier layers, three local competing options,
+only the winning value/delay emitted, with loser score credit during training. All eight routers
+receive nonzero gradient and all three options win some events in each layer. There is no new
+optionality reward. The progression increases fitting data from 512 to 1,024 and epochs from four
+to eight, and uses a fixed cosine learning-rate schedule .003 → .0003. Conditioning remains fit-only.
+This is a larger-budget learning result, not a single-factor attribution or a comparison to a
+published official-test score. The official SHD test file remains unopened.
+
+**An exact execution improvement:** pair reduction/prefix reconstruction replaces the O(E log E)
+doubling memory scan with O(E) memory combines and an O(E) autograd graph. Sorting remains
+O(E log E), and local vector maps remain dense. On the same earlier checkpoint and 256 examples,
+all predictions agree, as do winners on the audited batch; relative parameter-gradient L2 error is
+2.34e-7. Memory combines fall **21,553,320 → 3,925,048 (5.49x)**. Eight warm timing repetitions
+on one Intel i5-4690 CPU thread give median inference **97.1 → 63.8 ms/batch of four (1.52x)**,
+and forward/backward **347.2 → 206.8 ms (1.68x)**, excluding optimizer updates.
+The singleton diagnostic initially rejected disconnected time/tau autograd inputs; these are exactly
+zero derivatives for one event. Handling that mathematical zero allowed the full five-size audit to
+complete. The failed first queue log is retained; it was not a failed model-equivalence result.
+
+**Frozen final model, causal coalescing:** 10/20/40/80 ms windows give 151/142/130/114 correct out of
+256, at 100/64.49/42.49/27.85% of the original input packets. Median model evaluation times are
+5.109/2.791/2.030/1.563 seconds over 256 examples (three warm repetitions, loading/coalescing excluded).
+Extra input delay is at most 0/10/30/70 ms. Counts are preserved and released only at closure.
+The 20 ms setting saves 35.5% of packets and about 45% of CPU evaluation time while losing 3.52
+accuracy points. This is an internal accuracy/work/latency tradeoff, not a measured energy win.
+
+**Theory §§173–175:** derive linear-work memory and its exact reverse recurrence; factor local
+log-time-constant eligibility into gap/time-scale, evidence mixture, and payload contrast; bound
+root temporal-feature perturbation under causal coalescing. The latter is not a whole-model bound
+because event histories and winners can change. Prefix scanning is established prior machinery;
+its application removes redundant work from this event model without softening forward races.
+
+**External references refreshed:** EventSSM 95.9%, S7 96.3%, and the dataset-maintainer leaderboard's
+96.26 ± 0.08% provide accuracy targets. Chen et al.'s FPGA gives 93.4% with reported powers whose
+power/throughput ratios are approximately 2.71 mJ/utterance (processor) and 16.44 mJ (whole SoC).
+The original dataset paper reports an 85.7% LSTM, correcting the report's earlier approximately 70%
+summary. Primary sources and comparison boundaries are in `SHD_FRONTIER_PROTOCOL.md`.
+
+The guarded training run took **739 seconds**, peak process RSS **599,480 KiB (585 MiB)**, with one
+thread and over 11 GiB available host memory in the watchdog samples. Per-epoch checkpoints now
+include Adam and RNG state for true continuation. RAPL energy counters are unreadable here; no
+joules claim is made. `results/e119/summary_s6.json` verifies data/prediction correspondence and
+hashes all completed input artifacts. The report/PDF place this development evidence in Appendix A.
+
 ## 2026-09-29 — Eight-layer race learning, useful depth, and a conditioning diagnosis (§§166–172)
 
 **First positive depth comparison in the new E118 carrier architecture:** 512 fitting / 256 held-out-speaker
