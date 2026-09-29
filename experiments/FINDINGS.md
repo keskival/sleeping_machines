@@ -39,9 +39,19 @@ unchanged. A value step predicts loss change -0.0008240 and realizes -0.0008225.
 Query isolation and checkpoint roundtrip pass. Two added value maps contain
 6,336 trainable scalars; the key stream adds 52,616 frozen parameters and real
 execution cost. Matched value-only continuations use the same source, examples,
-augmentation, calibration, Adam state and update budget. Their quality remains
-an empirical test. Theory §§190–196 separates supported credit, finite utility,
-key/value learning and future optionality.
+augmentation, calibration, Adam state and update budget. The separate-key arm
+finishes at 364/512 (71.1%), compared with 365/512 (71.3%) for the shared-stream
+arm and 370/512 (72.3%) at the parent. Fitting accuracy increases to 81.84%/81.64%
+from 80.08%; held-out NLL worsens to 1.0176/1.0173 from 0.9827. Every old value
+parameter and cloned key parameter remains unchanged. Separate-key winners and
+clocks stay fixed on all three clean evaluation splits, while shared-stream
+choices change. This validates structural decoupling, not a held-out gain.
+Forward value-map evaluations are 65.30M versus 97.95M, with 32.65M of the former
+belonging to keys; the separate key scan adds 65.14M compositions. Wall times
+have different initial-evaluation reuse, so they cannot establish a speedup.
+No energy is measured. `results/e131/key_value_comparison_20260929.json` records
+the matched contracts and work. Theory §§190–196 separates supported credit,
+finite utility, key/value learning and future optionality.
 
 **Equivalent credit, different runtime (E127):** winner-only value
 differentiation retains every loser score comparison and exact forward values;

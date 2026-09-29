@@ -15,8 +15,14 @@ hard choices/clocks; values learn joint content under that policy. Their
 bounded depth certificate applies across value updates because those updates
 cannot change the key schedule (§195). The real-checkpoint contract verifies
 nesting, unchanged keys under large value perturbations, correct finite loss
-credit and serialization. Matched same-budget SHD value-only continuations
-test the empirical effect. Both streams, their storage and execution are charged.
+credit and serialization. Matched same-budget SHD value-only continuations reach 364/512 with separate
+keys and 365/512 with shared values, below the 370/512 parent. Fitting accuracy
+improves but held-out likelihood degrades. Routing isolation is established;
+better transferable representations are not. Both streams, their storage and
+execution are charged. The next generic-language milestone and measurement
+boundaries are specified in [LANGUAGE_SCALING_PROTOCOL.md](LANGUAGE_SCALING_PROTOCOL.md).
+The strongest native language mixture remains a specialized reference, not proof
+that the current common backbone learns competitive deep language features.
 
 Next key-policy training must use the joint alternative key/value/delay and
 its realized downstream utility. An interior first-order alternative score
