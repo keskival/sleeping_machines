@@ -622,8 +622,9 @@ def per_item_deepest_loss(net, info, labels, seq_end, depth, dmax, prefix_times)
 
 def sample_spike_option_path(net, eb, ei, et, input_counts, batch_size, grid,
                              initial_info, target_batch, args, rng):
-    """Sample at most one near-threshold spike birth per layer, replaying descendants."""
+    """Sample near-threshold births and retain each causal prefix of the path."""
     overrides = []
+    prefix_overrides = []
     actions = []
     state_info = initial_info
     horizon = min(grid - 1, int(getattr(args, "prefix_horizon_ms", 1000.0)))
@@ -666,12 +667,80 @@ def sample_spike_option_path(net, eb, ei, et, input_counts, batch_size, grid,
         }
         actions.append(action)
         overrides.append((layer_id, time_id, target_batch, unit_id, True))
+        prefix_overrides.append(list(overrides))
         with torch.no_grad():
             _, state_info = net(
                 eb, ei, et, batch_size, grid, return_taps=True,
                 return_spike_diagnostics=True, spike_overrides=overrides,
                 input_counts=input_counts)
-    return overrides, actions
+    return overrides, actions, prefix_overrides
+
+
+def continue_spike_option_rollout(net, eb, ei, et, input_counts, batch_size,
+                                 grid, labels, seq_end, depth, dmax,
+                                 prefix_times, initial_info, initial_overrides,
+                                 start_layer, target_batch, args, rng):
+    """Sample one sparse future route continuation from a counterfactual state."""
+    overrides = list(initial_overrides)
+    state_info = initial_info
+    actions = []
+    horizon = min(grid - 1, int(getattr(args, "prefix_horizon_ms", 1000.0)))
+    for layer_id in range(start_layer, net.depth):
+        if rng.random() >= args.cf_spike_option_probability:
+            continue
+        diagnostic = state_info["spike_diagnostics"][layer_id]
+        margins = diagnostic["spike_margin_trace"]
+        fired = diagnostic["spike_fire_mask"]
+        refractory = diagnostic["spike_refractory_trace"]
+        time_ids = torch.arange(margins.shape[0], device=margins.device)
+        valid_time = (time_ids > 0) & (time_ids <= horizon)
+        valid = (
+            valid_time[:, None]
+            & (margins[:, target_batch] <= 0.0)
+            & (margins[:, target_batch] >= -args.cf_spike_option_band)
+            & ~fired[:, target_batch]
+            & (refractory[:, target_batch] < 1e-3)
+        )
+        coordinates = torch.nonzero(valid, as_tuple=False).detach().cpu().numpy()
+        if not len(coordinates):
+            continue
+        candidate_margins = np.asarray([
+            float(margins[t, target_batch, unit]) for t, unit in coordinates
+        ])
+        weights = np.exp(-np.abs(candidate_margins)
+                         / max(args.cf_spike_option_temperature, 1e-8))
+        probabilities = weights / weights.sum()
+        selected = int(rng.choice(len(coordinates), p=probabilities))
+        time_id, unit_id = map(int, coordinates[selected])
+        overrides.append((layer_id, time_id, target_batch, unit_id, True))
+        actions.append({
+            "layer": layer_id,
+            "time": time_id,
+            "unit": unit_id,
+            "candidate_count": int(len(coordinates)),
+            "proposal_probability": float(probabilities[selected]),
+        })
+        with torch.no_grad():
+            _, state_info = net(
+                eb, ei, et, batch_size, grid, return_taps=True,
+                return_spike_diagnostics=True, spike_overrides=overrides,
+                input_counts=input_counts)
+    with torch.no_grad():
+        terminal_losses, _ = per_item_deepest_loss(
+            net, state_info, labels, seq_end, depth, dmax, prefix_times)
+    return float(terminal_losses[target_batch]), state_info, actions
+
+
+def soft_minimum(values, temperature):
+    """Normalized entropic continuation value for loss minimization."""
+    values = np.asarray(values, dtype=np.float64)
+    if values.size == 0:
+        raise ValueError("soft minimum requires at least one continuation")
+    if temperature <= 0:
+        return float(values.min())
+    minimum = float(values.min())
+    return minimum - temperature * math.log(float(np.exp(
+        -(values - minimum) / temperature).mean()))
 
 
 def option_suffix_parameters(net, last_layer):
@@ -948,6 +1017,12 @@ def main():
                     help="gradient-norm cap for the temporary suffix-progress measurement")
     ap.add_argument("--cf_spike_suffix_weight", type=float, default=0.0,
                     help="replace one sampled example's factual suffix gradient with its forced-spike branch gradient")
+    ap.add_argument("--cf_spike_suffix_causal", action="store_true",
+                    help="choose each hidden layer's counterfactual gradient from the latest forced prefix strictly before that layer")
+    ap.add_argument("--cf_spike_option_local_utility", action="store_true",
+                    help="credit each sampled spike by its conditional parent-to-child loss and suffix-learning change")
+    ap.add_argument("--cf_spike_option_transfer_utility", action="store_true",
+                    help="measure option learning value on other minibatch examples, not self-fit on the forced example")
     ap.add_argument("--shift", type=int, default=4)
     ap.add_argument("--drop", type=float, default=0.1)
     ap.add_argument("--epochs", type=int, default=2)
@@ -993,6 +1068,12 @@ def main():
         raise ValueError("spike-option updates require --trainable_thresholds and --objective event_prefix")
     if a.cf_spike_suffix_weight > 0 and not a.cf_spike_option_updates:
         raise ValueError("counterfactual suffix-gradient substitution requires --cf_spike_option_updates")
+    if a.cf_spike_suffix_causal and a.cf_spike_suffix_weight <= 0:
+        raise ValueError("causal suffix credit requires --cf_spike_suffix_weight > 0")
+    if a.cf_spike_option_local_utility and not a.cf_spike_option_updates:
+        raise ValueError("local option utility requires --cf_spike_option_updates")
+    if a.cf_spike_option_transfer_utility and not a.cf_spike_option_local_utility:
+        raise ValueError("transfer utility requires --cf_spike_option_local_utility")
     if a.cf_route_swaps_per_layer and not a.route_topk:
         raise ValueError("--cf_route_swaps_per_layer requires --route_topk > 0")
     if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
@@ -1047,6 +1128,11 @@ def main():
         net.train(); tl = 0.0; aux_tl = 0.0; route_probe = None
         option_paths_ep = option_actions_ep = option_candidates_ep = 0
         option_immediate_ep = option_learning_ep = option_utility_ep = 0.0
+        option_local_utility_sum_ep = 0.0
+        option_local_immediate_sum_ep = option_local_learning_sum_ep = 0.0
+        option_local_utility_actions_ep = 0
+        option_local_utility_by_layer_ep = np.zeros(a.depth, dtype=np.float64)
+        option_local_actions_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
         option_grad_norm_ep = option_threshold_step_ep = 0.0
         option_suffix_batches_ep = 0
         option_suffix_correction_norm_ep = 0.0
@@ -1153,32 +1239,111 @@ def main():
                         wrong, p=target_weights))
                 else:
                     target_batch = int(item_losses.detach().argmax())
-                path_overrides, option_actions = sample_spike_option_path(
+                path_overrides, option_actions, prefix_overrides = sample_spike_option_path(
                     net, eb, ei, et, input_counts, len(items), grid, info,
                     target_batch, a, spike_option_rng)
                 option_candidates_ep += sum(row["candidate_count"]
                                             for row in option_actions)
                 if option_actions:
+                    peer_indices = [index for index in range(len(items))
+                                    if index != target_batch]
+                    peer_loss = (item_losses[peer_indices].mean()
+                                 if peer_indices else None)
+
+                    def peer_replay_loss(indices=tuple(peer_indices)):
+                        if not indices:
+                            return 0.0
+                        with torch.no_grad():
+                            _, replay_info = net(
+                                eb, ei, et, len(items), grid, return_taps=True,
+                                input_counts=input_counts)
+                            replay_losses, _ = per_item_deepest_loss(
+                                net, replay_info, y, seq_end, a.depth, a.dmax,
+                                prefix_times)
+                        return float(replay_losses[list(indices)].mean())
+
                     with torch.enable_grad():
-                        _, branch_info = net(
-                            eb, ei, et, len(items), grid, return_taps=True,
-                            return_spike_diagnostics=True,
-                            spike_overrides=path_overrides,
-                            input_counts=input_counts)
-                        branch_losses, _ = per_item_deepest_loss(
-                            net, branch_info, y, seq_end, a.depth, a.dmax,
-                            prefix_times)
                         root_target_loss = item_losses[target_batch]
-                        branch_target_loss = branch_losses[target_batch]
                         last_layer = max(action["layer"] for action in option_actions)
                         suffix = option_suffix_parameters(net, last_layer)
+                        causal_contexts = None
+                        if a.cf_spike_suffix_causal or a.cf_spike_option_local_utility:
+                            first_layer = min(action["layer"] for action in option_actions)
+                            root_suffix = option_suffix_parameters(net, first_layer)
+                            root_grad_values = torch.autograd.grad(
+                                root_target_loss, root_suffix, allow_unused=True,
+                                retain_graph=True)
+                            root_grad_by_id = {
+                                id(param): grad for param, grad
+                                in zip(root_suffix, root_grad_values)}
+                            causal_contexts = []
+                            for action, branch_overrides in zip(
+                                    option_actions, prefix_overrides):
+                                _, prefix_info = net(
+                                    eb, ei, et, len(items), grid, return_taps=True,
+                                    return_spike_diagnostics=True,
+                                    spike_overrides=branch_overrides,
+                                    input_counts=input_counts)
+                                prefix_losses, _ = per_item_deepest_loss(
+                                    net, prefix_info, y, seq_end, a.depth, a.dmax,
+                                    prefix_times)
+                                prefix_loss = prefix_losses[target_batch]
+                                prefix_layer = action["layer"]
+                                prefix_suffix = option_suffix_parameters(
+                                    net, prefix_layer)
+                                prefix_grad_values = torch.autograd.grad(
+                                    prefix_loss, prefix_suffix, allow_unused=True,
+                                    retain_graph=False)
+                                prefix_grad_by_id = {
+                                    id(param): grad for param, grad
+                                    in zip(prefix_suffix, prefix_grad_values)}
+                                frozen_overrides = tuple(branch_overrides)
 
-                        factual_grads = torch.autograd.grad(
-                            root_target_loss, suffix, allow_unused=True,
-                            retain_graph=True)
-                        branch_grads = torch.autograd.grad(
-                            branch_target_loss, suffix, allow_unused=True,
-                            retain_graph=False)
+                                def prefix_replay_loss(overrides=frozen_overrides):
+                                    with torch.no_grad():
+                                        _, replay_info = net(
+                                            eb, ei, et, len(items), grid,
+                                            return_taps=True,
+                                            spike_overrides=list(overrides) or None,
+                                            input_counts=input_counts)
+                                        replay_losses, _ = per_item_deepest_loss(
+                                            net, replay_info, y, seq_end, a.depth,
+                                            a.dmax, prefix_times)
+                                    return float(replay_losses[target_batch])
+
+                                causal_contexts.append({
+                                    "last_layer": prefix_layer,
+                                    "loss": prefix_loss,
+                                    "suffix": prefix_suffix,
+                                    "grads": prefix_grad_values,
+                                    "grad_by_id": prefix_grad_by_id,
+                                    "replay": prefix_replay_loss,
+                                    "overrides": frozen_overrides,
+                                    "info": prefix_info,
+                                })
+                            branch_info = causal_contexts[-1]["info"]
+                            branch_target_loss = causal_contexts[-1]["loss"]
+                            branch_grads = tuple(
+                                causal_contexts[-1]["grad_by_id"].get(id(param))
+                                for param in suffix)
+                            factual_grads = tuple(
+                                root_grad_by_id.get(id(param)) for param in suffix)
+                        else:
+                            _, branch_info = net(
+                                eb, ei, et, len(items), grid, return_taps=True,
+                                return_spike_diagnostics=True,
+                                spike_overrides=path_overrides,
+                                input_counts=input_counts)
+                            branch_losses, _ = per_item_deepest_loss(
+                                net, branch_info, y, seq_end, a.depth, a.dmax,
+                                prefix_times)
+                            branch_target_loss = branch_losses[target_batch]
+                            factual_grads = torch.autograd.grad(
+                                root_target_loss, suffix, allow_unused=True,
+                                retain_graph=True)
+                            branch_grads = torch.autograd.grad(
+                                branch_target_loss, suffix, allow_unused=True,
+                                retain_graph=False)
 
                         def root_replay_loss():
                             with torch.no_grad():
@@ -1209,6 +1374,11 @@ def main():
                         "branch_loss": branch_target_loss,
                         "root_grads": factual_grads,
                         "branch_grads": branch_grads,
+                        "root_grad_by_id": (root_grad_by_id
+                                            if causal_contexts is not None else None),
+                        "causal_contexts": causal_contexts,
+                        "peer_loss": peer_loss,
+                        "peer_replay": peer_replay_loss,
                         "root_replay": root_replay_loss,
                         "branch_replay": branch_replay_loss,
                         "root_events": info["layer_events"],
@@ -1489,11 +1659,55 @@ def main():
                 scalar_utility = (immediate_advantage
                                   + a.cf_spike_option_weight * learning_advantage)
                 actions = option_pending["actions"]
+                local_action_utilities = None
+                if a.cf_spike_option_local_utility:
+                    contexts = option_pending["causal_contexts"]
+                    root_grad_by_id = option_pending["root_grad_by_id"]
+                    root_replay = option_pending["root_replay"]
+                    local_action_utilities = []
+                    for action_index, (action, child) in enumerate(
+                            zip(actions, contexts)):
+                        if action_index == 0:
+                            parent_loss = option_pending["root_loss"]
+                            parent_grad_by_id = root_grad_by_id
+                            parent_replay = root_replay
+                        else:
+                            parent = contexts[action_index - 1]
+                            parent_loss = parent["loss"]
+                            parent_grad_by_id = parent["grad_by_id"]
+                            parent_replay = parent["replay"]
+                        suffix_params = child["suffix"]
+                        parent_grads = tuple(
+                            parent_grad_by_id.get(id(param))
+                            for param in suffix_params)
+                        parent_progress, parent_norm = finite_progress_from_grads(
+                            parent_loss, suffix_params, parent_grads,
+                            parent_replay, a.cf_spike_virtual_lr,
+                            a.cf_spike_virtual_clip)
+                        child_progress, child_norm = finite_progress_from_grads(
+                            child["loss"], suffix_params, child["grads"],
+                            child["replay"], a.cf_spike_virtual_lr,
+                            a.cf_spike_virtual_clip)
+                        local_immediate = float(
+                            parent_loss.detach() - child["loss"].detach())
+                        local_learning = child_progress - parent_progress
+                        local_utility = (local_immediate
+                                         + a.cf_spike_option_weight * local_learning)
+                        local_action_utilities.append(local_utility)
+                        layer_id = action["layer"]
+                        option_local_utility_by_layer_ep[layer_id] += local_utility
+                        option_local_actions_by_layer_ep[layer_id] += 1
+                        option_local_immediate_sum_ep += local_immediate
+                        option_local_learning_sum_ep += local_learning
+                    option_local_utility_sum_ep += sum(local_action_utilities)
+                    option_local_utility_actions_ep += len(local_action_utilities)
                 option_paths_ep += 1
                 option_actions_ep += len(actions)
                 option_immediate_ep += immediate_advantage
                 option_learning_ep += learning_advantage
-                option_utility_ep += scalar_utility
+                option_utility_ep += (sum(local_action_utilities)
+                                      if local_action_utilities is not None
+                                      else scalar_utility)
                 option_grad_norm_ep += 0.5 * (factual_grad_norm + branch_grad_norm)
                 target_batch = option_pending["target_batch"]
                 root_event_counts = [
@@ -1504,15 +1718,19 @@ def main():
                     for layer_events in option_pending["branch_events"]]
                 option_hidden_delta_ep += (
                     np.asarray(branch_event_counts) - np.asarray(root_event_counts))
-                for action in actions:
+                for action_index, action in enumerate(actions):
                     layer_id, unit_id = action["layer"], action["unit"]
                     margin = action["margin"]
                     fire_probability = 1.0 / (1.0 + math.exp(
                         -margin / a.cf_spike_option_sigma))
                     sensitivity = (fire_probability * (1.0 - fire_probability)
                                    / a.cf_spike_option_sigma)
+                    action_utility = (
+                        local_action_utilities[action_index]
+                        if local_action_utilities is not None
+                        else scalar_utility / len(actions))
                     raw_delta = (-a.cf_spike_option_lr * sensitivity
-                                 * scalar_utility / len(actions))
+                                 * action_utility)
                     delta = float(np.clip(
                         raw_delta, -a.cf_spike_option_step_clip,
                         a.cf_spike_option_step_clip))
@@ -1520,14 +1738,35 @@ def main():
                     option_action_by_layer_ep[layer_id] += 1
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             if option_pending is not None and a.cf_spike_suffix_weight > 0:
-                suffix = option_pending["suffix"]
-                factual_grads = option_pending["root_grads"]
-                branch_grads = option_pending["branch_grads"]
                 correction_scale = a.cf_spike_suffix_weight / max(len(items), 1)
                 correction_by_id = {}
                 correction_sq = 0.0
-                for param, factual_grad, branch_grad in zip(
-                        suffix, factual_grads, branch_grads):
+                substitutions = []
+                if a.cf_spike_suffix_causal:
+                    contexts = option_pending["causal_contexts"]
+                    for layer_index, layer in enumerate(net.layers):
+                        eligible = [context for context in contexts
+                                    if context["last_layer"] < layer_index]
+                        if eligible:
+                            chosen = max(eligible,
+                                         key=lambda context: context["last_layer"])
+                            for param in layer.parameters():
+                                substitutions.append((
+                                    param,
+                                    option_pending["root_grad_by_id"].get(id(param)),
+                                    chosen["grad_by_id"].get(id(param))))
+                    chosen = max(contexts,
+                                 key=lambda context: context["last_layer"])
+                    for param in net.event_heads[-1].parameters():
+                        substitutions.append((
+                            param,
+                            option_pending["root_grad_by_id"].get(id(param)),
+                            chosen["grad_by_id"].get(id(param))))
+                else:
+                    substitutions = list(zip(
+                        option_pending["suffix"], option_pending["root_grads"],
+                        option_pending["branch_grads"]))
+                for param, factual_grad, branch_grad in substitutions:
                     if factual_grad is None and branch_grad is None:
                         continue
                     if factual_grad is None:
@@ -1871,6 +2110,20 @@ def main():
                     option_learning_ep / max(option_paths_ep, 1), 7)
                 row["spike_option_mean_scalar_utility"] = round(
                     option_utility_ep / max(option_paths_ep, 1), 7)
+                row["spike_option_local_utility_actions"] = int(
+                    option_local_utility_actions_ep)
+                if a.cf_spike_option_local_utility:
+                    row["spike_option_mean_local_scalar_utility"] = round(
+                        option_local_utility_sum_ep
+                        / max(option_local_utility_actions_ep, 1), 7)
+                    row["spike_option_local_immediate_sum"] = round(
+                        option_local_immediate_sum_ep, 7)
+                    row["spike_option_local_learning_sum"] = round(
+                        option_local_learning_sum_ep, 7)
+                    row["spike_option_local_utility_sum_by_layer"] = (
+                        option_local_utility_by_layer_ep.round(7).tolist())
+                    row["spike_option_local_actions_by_layer"] = (
+                        option_local_actions_by_layer_ep.tolist())
                 row["spike_option_mean_suffix_gradient_norm"] = round(
                     option_grad_norm_ep / max(option_paths_ep, 1), 7)
                 row["spike_option_threshold_update_l1"] = round(
