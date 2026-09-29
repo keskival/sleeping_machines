@@ -5,6 +5,51 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 scalar option-value training pilot (§151).** We turned the frozen
+counterfactual scalar into a local threshold update and ran three serialized,
+resource-capped depth-4 arms on seed 6: pathwise control, immediate-only
+counterfactual updates ($\lambda=0$), and scalar optionality ($\lambda=10$).
+All used the same 120-example training split, 128 held-out speakers, deepest
+readout, and two epochs. Every arm ended at 6/128 held-out accuracy (4.69%),
+the chance-level outcome; no recognition gain appeared. Race coverage was zero
+in all arms, so every answer came from the terminal fallback rather than an
+early confidence-triggered emission.
+
+The scalar arm did move intermediate support: by epoch 2, held-out L2 support
+was 27.3%, versus 8.6% in the pathwise control and 13.3% in the immediate-only
+arm. L4 support was 0.78% (1/128) in all three. The sampled intervention
+cascades added hidden events during training, but those events did not become
+a sustained path to the deepest classifier. The scalar arm's mean suffix-step
+advantage was positive but small in epoch 1 (+0.000143), then slightly
+negative in epoch 2 (−0.0000031); its scalar utility also changed from
++0.00297 to −0.000252. This is an informative failure of the first update
+rule, not a rejection of all scalar option-value methods: it localizes the
+remaining problem to candidate availability, depth survival, and persistence
+of task utility.
+
+Epoch-2 pathwise gradient norms directly track this loss of credit to depth:
+L3/L4 norms were 6e−5/0 for pathwise control, 0/0 for immediate-only credit,
+and 3e−5/0 for scalar optionality. The scalar arm's mean L2 event count was
+about 0.47 per held-out utterance (27.3% support and 1.71 spikes per active
+example); L4 stayed at 0.78% support and about 0.02 events per example. The
+integer-rounded `spikes_per_utt` field reports zero for sub-half counts, so
+that display must not be read as zero events. Intermediate support therefore
+did not imply a sustained event path or useful gradient at the deepest layer.
+The next analysis should trace forced event births through their exact
+descendants and measure both event survival and deepest-loss gradients,
+rather than counting added events alone.
+
+The implementation samples a layer and then a near-threshold event with
+margin-weighted probability, but does not apply inverse-propensity weights.
+Its expected update is therefore proposal-weighted. The scalar rule is exact
+for its chosen local relaxation, while unbiasedness for a uniform candidate
+objective is not established. The branch utility also uses a one-step clipped
+suffix-SGD proxy; its scale is optimizer-dependent and $\lambda$ remains
+uncalibrated. Next compare logged-propensity updates against the current
+proposal-weighted rule while separately measuring forced-event survival to
+L4 and deepest-head loss. All jobs ran under the serialized safe runner at
+about 600 MB RSS and over 11 GB available host memory.
+
 **E83 scalar route optionality through descendants (§§149–150).** We ran six
 guarded frozen-checkpoint audits on the same stratified 32-example
 held-out-speaker subset, selecting eight factual errors. The alternatives
