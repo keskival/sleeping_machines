@@ -116,6 +116,32 @@ def aws_e68_text_test_bpc():
     return values
 
 
+def aws_e77_scale_test_bpc():
+    """Return completed E77 text8 runs with at least 1M training characters."""
+    values = []
+    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
+        try:
+            provenance = load(provenance_path)
+            args = provenance.get("arguments", [])
+            if (provenance.get("status") != "completed" or
+                    provenance.get("script") != "experiments/e77_tv_lm.py" or
+                    "--D" not in args):
+                continue
+            data_size = int(args[args.index("--D") + 1])
+            if data_size < 1_000_000:
+                continue
+            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
+                if result_path == provenance_path:
+                    continue
+                result = load(result_path)
+                value = result.get("test_bpc")
+                if isinstance(value, (int, float)) and np.isfinite(value):
+                    values.append((data_size, float(value)))
+        except (OSError, ValueError, TypeError, IndexError):
+            continue
+    return values
+
+
 def fig_image(fig, width_mm):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -299,6 +325,15 @@ def fig_potential_evidence():
             ax_lm.scatter([x], [value], color=color, marker="X", s=34, zorder=6)
             ax_lm.annotate(f"E68 R={races}", (x, value), xytext=(6, 4 + 8 * (i % 3)),
                            textcoords="offset points", fontsize=5.8, color=color)
+    e77_text = aws_e77_scale_test_bpc()
+    if e77_text:
+        offsets = np.linspace(-0.012, 0.012, len(e77_text))
+        for i, (data_size, value) in enumerate(e77_text):
+            x = data_size * (1 + offsets[i])
+            color = "#8b65b3"
+            ax_lm.scatter([x], [value], color=color, marker="P", s=34, zorder=6)
+            ax_lm.annotate(f"E77 {data_size / 1e6:g}M", (x, value), xytext=(6, 4 + 8 * (i % 3)),
+                           textcoords="offset points", fontsize=5.8, color=color)
     ax_lm.scatter([10_000_000], [tf_10m_test], color=INK, marker="^", s=38, zorder=5,
                   label="E64b Transformer · 10M test")
     ax_lm.annotate(f"10M 4L TF test {tf_10m_test:.3f}", (10_000_000, tf_10m_test), xytext=(7, -12),
@@ -306,7 +341,7 @@ def fig_potential_evidence():
     ax_lm.set_xscale("log")
     ax_lm.set_xticks([1_000_000, 10_000_000, 90_000_000], ["1M", "10M", "90M"])
     ax_lm.set_xlim(700_000, 130_000_000)
-    ax_lm.set_ylim(1.35, 3.15)
+    ax_lm.set_ylim(1.35, max(3.15, max((v for _, v in e77_text), default=0) + 0.15))
     ax_lm.set_xlabel("training characters")
     ax_lm.set_ylabel("bits per character · lower is better")
     ax_lm.set_title("A · Real text8 language modeling")
@@ -339,7 +374,8 @@ def fig_potential_evidence():
     fig.text(0.02, 0.015,
              f"A: Every plotted BPC is held-out test; the 10M Transformer checkpoint was selected on validation "
              f"(step {tf_10m_final['best_step']:,}/{tf_10m_final['steps']:,}). "
-             "E79 K rises 5→6→7. E68 crosses are 3k-update race-attention controls on the same 1M/held-out text8 split. "
+             "E79 K rises 5→6→7. E68 crosses are 3k-update race-attention controls on the same 1M/held-out text8 split; "
+             "E77 markers are scale runs with ≥1M training characters. "
              "B: synthetic E61 recall; dotted line = chance (1/32).", fontsize=6.0, color=MUTED)
     fig.text(0.02, -0.018,
              "Theory: vector-delay retrieval computes exact softmax; fixed-schedule memory scan has O(G) work and O(log G) span.",
