@@ -681,11 +681,8 @@ def option_suffix_parameters(net, last_layer):
                      if p.requires_grad]
 
 
-def clipped_virtual_progress(net, loss, params, replay_loss, lr, clip_norm,
-                             retain_graph):
-    """Measure finite one-step suffix-SGD progress while restoring all weights."""
-    grads = torch.autograd.grad(loss, params, allow_unused=True,
-                                retain_graph=retain_graph)
+def finite_progress_from_grads(loss, params, grads, replay_loss, lr, clip_norm):
+    """Measure finite one-step suffix-SGD progress after its graph was consumed."""
     norm_sq = sum(float(g.detach().square().sum()) for g in grads if g is not None)
     grad_norm = math.sqrt(norm_sq)
     clip_scale = min(1.0, clip_norm / max(grad_norm, 1e-12))
@@ -1125,6 +1122,7 @@ def main():
                 route_probe = route_gradient_probe(main_loss, aux_loss, net.layers)
             loss = main_loss + a.aux_weight * aux_loss
             option_threshold_deltas = []
+            option_pending = None
             if a.cf_spike_option_updates:
                 item_losses, item_logits = per_item_deepest_loss(
                     net, info, y, seq_end, a.depth, a.dmax, prefix_times)
@@ -1166,6 +1164,13 @@ def main():
                         last_layer = max(action["layer"] for action in option_actions)
                         suffix = option_suffix_parameters(net, last_layer)
 
+                        factual_grads = torch.autograd.grad(
+                            root_target_loss, suffix, allow_unused=True,
+                            retain_graph=True)
+                        branch_grads = torch.autograd.grad(
+                            branch_target_loss, suffix, allow_unused=True,
+                            retain_graph=False)
+
                         def root_replay_loss():
                             with torch.no_grad():
                                 _, replay_info = net(
@@ -1186,48 +1191,20 @@ def main():
                                     net, replay_info, y, seq_end, a.depth,
                                     a.dmax, prefix_times)
                             return float(replay_losses[target_batch])
-
-                        factual_progress, factual_grad_norm = clipped_virtual_progress(
-                            net, root_target_loss, suffix, root_replay_loss,
-                            a.cf_spike_virtual_lr, a.cf_spike_virtual_clip,
-                            retain_graph=True)
-                        branch_progress, branch_grad_norm = clipped_virtual_progress(
-                            net, branch_target_loss, suffix, branch_replay_loss,
-                            a.cf_spike_virtual_lr, a.cf_spike_virtual_clip,
-                            retain_graph=False)
-                    immediate_advantage = float(
-                        root_target_loss.detach() - branch_target_loss.detach())
-                    learning_advantage = branch_progress - factual_progress
-                    scalar_utility = (immediate_advantage
-                                      + a.cf_spike_option_weight * learning_advantage)
-                    option_paths_ep += 1
-                    option_actions_ep += len(option_actions)
-                    option_immediate_ep += immediate_advantage
-                    option_learning_ep += learning_advantage
-                    option_utility_ep += scalar_utility
-                    option_grad_norm_ep += 0.5 * (factual_grad_norm + branch_grad_norm)
-                    root_event_counts = [
-                        int((layer_events[0] == target_batch).sum())
-                        for layer_events in info["layer_events"]]
-                    branch_event_counts = [
-                        int((layer_events[0] == target_batch).sum())
-                        for layer_events in branch_info["layer_events"]]
-                    option_hidden_delta_ep += np.asarray(branch_event_counts) - np.asarray(root_event_counts)
-                    option_threshold_deltas = []
-                    for action in option_actions:
-                        layer_id, unit_id = action["layer"], action["unit"]
-                        margin = action["margin"]
-                        fire_probability = 1.0 / (1.0 + math.exp(
-                            -margin / a.cf_spike_option_sigma))
-                        sensitivity = (fire_probability * (1.0 - fire_probability)
-                                       / a.cf_spike_option_sigma)
-                        raw_delta = (-a.cf_spike_option_lr * sensitivity
-                                     * scalar_utility / len(option_actions))
-                        delta = float(np.clip(
-                            raw_delta, -a.cf_spike_option_step_clip,
-                            a.cf_spike_option_step_clip))
-                        option_threshold_deltas.append((layer_id, unit_id, delta))
-                        option_action_by_layer_ep[layer_id] += 1
+                    option_pending = {
+                        "target_batch": target_batch,
+                        "actions": option_actions,
+                        "last_layer": last_layer,
+                        "suffix": suffix,
+                        "root_loss": root_target_loss,
+                        "branch_loss": branch_target_loss,
+                        "root_grads": factual_grads,
+                        "branch_grads": branch_grads,
+                        "root_replay": root_replay_loss,
+                        "branch_replay": branch_replay_loss,
+                        "root_events": info["layer_events"],
+                        "branch_events": branch_info["layer_events"],
+                    }
             cf_eligible = cf_shadow_count = 0
             cf_abs_delta_sum = 0.0
             cf_clipped_count = 0
@@ -1474,6 +1451,64 @@ def main():
                     if layer_cf_norm and layer_path_norm:
                         cf_layer_grad_cosine_ep[li] += layer_dot / (layer_cf_norm * layer_path_norm)
                     cf_layer_stats_count_ep[li] += 1
+            if option_pending is not None:
+                suffix = option_pending["suffix"]
+                root_rng = torch.random.get_rng_state()
+                root_cuda_rng = (torch.cuda.get_rng_state_all()
+                                 if torch.cuda.is_available() else None)
+                factual_progress, factual_grad_norm = finite_progress_from_grads(
+                    option_pending["root_loss"], suffix, option_pending["root_grads"],
+                    option_pending["root_replay"], a.cf_spike_virtual_lr,
+                    a.cf_spike_virtual_clip)
+                after_root_rng = torch.random.get_rng_state()
+                after_root_cuda_rng = (torch.cuda.get_rng_state_all()
+                                       if torch.cuda.is_available() else None)
+                torch.random.set_rng_state(root_rng)
+                if root_cuda_rng is not None:
+                    torch.cuda.set_rng_state_all(root_cuda_rng)
+                branch_progress, branch_grad_norm = finite_progress_from_grads(
+                    option_pending["branch_loss"], suffix, option_pending["branch_grads"],
+                    option_pending["branch_replay"], a.cf_spike_virtual_lr,
+                    a.cf_spike_virtual_clip)
+                torch.random.set_rng_state(after_root_rng)
+                if after_root_cuda_rng is not None:
+                    torch.cuda.set_rng_state_all(after_root_cuda_rng)
+                immediate_advantage = float(
+                    option_pending["root_loss"].detach()
+                    - option_pending["branch_loss"].detach())
+                learning_advantage = branch_progress - factual_progress
+                scalar_utility = (immediate_advantage
+                                  + a.cf_spike_option_weight * learning_advantage)
+                actions = option_pending["actions"]
+                option_paths_ep += 1
+                option_actions_ep += len(actions)
+                option_immediate_ep += immediate_advantage
+                option_learning_ep += learning_advantage
+                option_utility_ep += scalar_utility
+                option_grad_norm_ep += 0.5 * (factual_grad_norm + branch_grad_norm)
+                target_batch = option_pending["target_batch"]
+                root_event_counts = [
+                    int((layer_events[0] == target_batch).sum())
+                    for layer_events in option_pending["root_events"]]
+                branch_event_counts = [
+                    int((layer_events[0] == target_batch).sum())
+                    for layer_events in option_pending["branch_events"]]
+                option_hidden_delta_ep += (
+                    np.asarray(branch_event_counts) - np.asarray(root_event_counts))
+                for action in actions:
+                    layer_id, unit_id = action["layer"], action["unit"]
+                    margin = action["margin"]
+                    fire_probability = 1.0 / (1.0 + math.exp(
+                        -margin / a.cf_spike_option_sigma))
+                    sensitivity = (fire_probability * (1.0 - fire_probability)
+                                   / a.cf_spike_option_sigma)
+                    raw_delta = (-a.cf_spike_option_lr * sensitivity
+                                 * scalar_utility / len(actions))
+                    delta = float(np.clip(
+                        raw_delta, -a.cf_spike_option_step_clip,
+                        a.cf_spike_option_step_clip))
+                    option_threshold_deltas.append((layer_id, unit_id, delta))
+                    option_action_by_layer_ep[layer_id] += 1
             gsum += np.asarray([grad_norm(l) for l in net.layers])
             nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step(); sched.step()
             if option_threshold_deltas:
