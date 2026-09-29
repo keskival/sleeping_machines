@@ -1,0 +1,317 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "task": "language",
+      "common_result": "experiments/results/e120/language_d8_20260929.json",
+      "reference_result": "experiments/results/e123/language_tf_d32_l2_s6.json",
+      "common_metric": {
+        "n": 256,
+        "nll": 2.0204592123627663,
+        "correct": 107,
+        "accuracy": 0.41796875
+      },
+      "reference_metric": {
+        "n": 256,
+        "nll": 2.5845886021852493,
+        "correct": 76,
+        "accuracy": 0.296875
+      },
+      "common_forward_map_scan_flops": 1259528.0,
+      "reference_forward_map_attention_flops": 1836736.0,
+      "common_training_forward_map_scan_flops": 55696539648,
+      "reference_training_forward_map_attention_flops": 30093082624,
+      "common_neural_presentations": 16384,
+      "reference_presentations": 16384,
+      "epochs": 8,
+      "common_depth": 8,
+      "reference_depth": 2,
+      "width": 32,
+      "memory_fitting": {
+        "dataset": "text8",
+        "memory_fit_bytes": [
+          0,
+          32768
+        ],
+        "neural_fit_bytes": [
+          32800,
+          34848
+        ],
+        "dev_bytes": [
+          90000032,
+          90000288
+        ],
+        "context": 32,
+        "official_test_read": false,
+        "time_unit": "one character = 10 ms (declared encoding)",
+        "evidence": "frozen KT counts, orders 0..3; disjoint memory/neural fit; no copy/word expert",
+        "cost_scope": "each next-character query replays its 32-character prefix"
+      },
+      "same_examples": true
+    },
+    {
+      "task": "market",
+      "common_result": "experiments/results/e120/market_d8_20260929.json",
+      "reference_result": "experiments/results/e123/market_tf_d32_l2_s6.json",
+      "common_metric": {
+        "n": 256,
+        "nll": 3.8232259452342987
+      },
+      "reference_metric": {
+        "n": 256,
+        "nll": 4.207972388714552
+      },
+      "common_forward_map_scan_flops": 1259192.0,
+      "reference_forward_map_attention_flops": 1836544.0,
+      "common_training_forward_map_scan_flops": 13922758656,
+      "reference_training_forward_map_attention_flops": 7522484224,
+      "common_neural_presentations": 4096,
+      "reference_presentations": 4096,
+      "epochs": 8,
+      "common_depth": 8,
+      "reference_depth": 2,
+      "width": 32,
+      "memory_fitting": {
+        "dataset": "BTCUSDT event TPP",
+        "memory_day": "2026-08-25",
+        "fit_day": "2026-08-26",
+        "dev_day": "2026-08-29",
+        "raw_trade_limit_per_day": 200000,
+        "size_threshold": 0.2910216000000015,
+        "threshold_fit": "first training day prefix only",
+        "gap_edges_seconds": [
+          0.01,
+          0.05,
+          0.2,
+          1.0,
+          5.0
+        ],
+        "time_unit": "physical seconds",
+        "objective": "exact marked hazard NLL",
+        "official_test_read": false,
+        "context": 32,
+        "note": "bounded prefixes, not full E48/E52 day protocol; next gap/type are targets only"
+      },
+      "same_examples": true
+    },
+    {
+      "task": "temporal",
+      "common_result": "experiments/results/e120/temporal_d8_20260929.json",
+      "reference_result": "experiments/results/e123/temporal_tf_d32_l2_s6.json",
+      "common_metric": {
+        "n": 256,
+        "nll": 0.06934030691627413,
+        "correct": 249,
+        "accuracy": 0.97265625
+      },
+      "reference_metric": {
+        "n": 256,
+        "nll": 0.4446887457743287,
+        "correct": 231,
+        "accuracy": 0.90234375
+      },
+      "common_forward_map_scan_flops": 291176.4375,
+      "reference_forward_map_attention_flops": 384889.0,
+      "common_training_forward_map_scan_flops": 6693113328,
+      "reference_training_forward_map_attention_flops": 3228686336,
+      "common_neural_presentations": 8192,
+      "reference_presentations": 8192,
+      "epochs": 8,
+      "common_depth": 8,
+      "reference_depth": 2,
+      "width": 32,
+      "memory_fitting": {
+        "dataset": "E28 shared-motif composition",
+        "channels": 24,
+        "motifs": [
+          [
+            10,
+            12,
+            1.0583470678567648
+          ],
+          [
+            15,
+            7,
+            1.4912114931305265
+          ],
+          [
+            15,
+            4,
+            1.0309744187698209
+          ],
+          [
+            15,
+            16,
+            0.8860806624210331
+          ],
+          [
+            14,
+            1,
+            0.8062270638748044
+          ],
+          [
+            19,
+            23,
+            1.3789021180733374
+          ]
+        ],
+        "classes": [
+          [
+            4,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "time_unit": "E28 time divided by 10",
+        "q": 0.15,
+        "note": "same generator, smaller configuration; no handcrafted motif detector"
+      },
+      "same_examples": true
+    },
+    {
+      "task": "mnist",
+      "common_result": "experiments/results/e120/mnist_d8_20260929.json",
+      "reference_result": "experiments/results/e123/mnist_tf_d32_l2_s6.json",
+      "common_metric": {
+        "n": 256,
+        "nll": 0.7574829254299402,
+        "correct": 194,
+        "accuracy": 0.7578125
+      },
+      "reference_metric": {
+        "n": 256,
+        "nll": 1.2440044172108173,
+        "correct": 179,
+        "accuracy": 0.69921875
+      },
+      "common_forward_map_scan_flops": 1657918.75,
+      "reference_forward_map_attention_flops": 2567475.0,
+      "common_training_forward_map_scan_flops": 35966276016,
+      "reference_training_forward_map_attention_flops": 20483524608,
+      "common_neural_presentations": 8192,
+      "reference_presentations": 8192,
+      "epochs": 8,
+      "common_depth": 8,
+      "reference_depth": 2,
+      "width": 32,
+      "memory_fitting": {
+        "dataset": "MNIST training prefix",
+        "neural_fit_indices": [
+          0,
+          1024
+        ],
+        "dev_indices": [
+          1024,
+          1280
+        ],
+        "encoding": "2x2 average pool, intensity > 0.1, latency = 0.8*(1-intensity) seconds",
+        "official_test_read": false
+      },
+      "same_examples": true
+    },
+    {
+      "task": "dvs",
+      "common_result": "experiments/results/e120/dvs_d8_20260929.json",
+      "reference_result": "experiments/results/e123/dvs_tf_counts_d32_l2_s6.json",
+      "common_metric": {
+        "n": 44,
+        "nll": 1.3435472656380048,
+        "correct": 26,
+        "accuracy": 0.5909090909090909
+      },
+      "reference_metric": {
+        "n": 44,
+        "nll": 2.367378690026023,
+        "correct": 7,
+        "accuracy": 0.1590909090909091
+      },
+      "common_forward_map_scan_flops": 23991488.363636363,
+      "reference_forward_map_attention_flops": 124228983.27272727,
+      "common_training_forward_map_scan_flops": 46123665456,
+      "reference_training_forward_map_attention_flops": 90129209856,
+      "common_neural_presentations": 704,
+      "reference_presentations": 704,
+      "epochs": 8,
+      "common_depth": 8,
+      "reference_depth": 2,
+      "width": 32,
+      "memory_fitting": {
+        "dataset": "DVS128 Gesture",
+        "fit_users": "1..19",
+        "dev_users": "20..23",
+        "official_test_read": false,
+        "observation": "first 1 second of each gesture",
+        "encoding": "4x4 cells, polarity, count packets released at 50 ms closure, explicit end marker",
+        "fit_recordings": [
+          "user01_fluorescent.aedat",
+          "user02_fluorescent.aedat",
+          "user03_fluorescent.aedat",
+          "user04_fluorescent.aedat",
+          "user05_fluorescent.aedat",
+          "user06_fluorescent.aedat",
+          "user07_fluorescent.aedat",
+          "user08_fluorescent.aedat"
+        ],
+        "dev_recordings": [
+          "user20_fluorescent.aedat",
+          "user21_fluorescent.aedat",
+          "user22_fluorescent.aedat",
+          "user23_fluorescent.aedat"
+        ],
+        "raw_events_in_loaded_prefixes": {
+          "fit": 5334688,
+          "dev": 2208750
+        },
+        "time_unit": "physical seconds",
+        "scope": "small prefix-recognition screen, not full-gesture benchmark"
+      },
+      "same_examples": true
+    }
+  ],
+  "arithmetic_teacher_work": {
+    "phase": {
+      "fitting_presentations": 69231,
+      "mistaken_updates": 29003,
+      "learned_scalar_update_visits": 145015,
+      "note": "Three position-tagged symbol offsets, one global offset and one class clock per mistaken update; integer counter excluded"
+    },
+    "lstm": {
+      "fitting_presentations": 294600,
+      "optimizer_steps": 4800,
+      "parameters": 19217,
+      "learned_scalar_update_visits": 92241600,
+      "note": "Dense Adam parameter visits; excludes momentum/variance state updates and backward arithmetic"
+    },
+    "tf": {
+      "fitting_presentations": 294600,
+      "optimizer_steps": 4800,
+      "parameters": 27601,
+      "learned_scalar_update_visits": 132484800,
+      "note": "Dense Adam parameter visits; excludes momentum/variance state updates and backward arithmetic"
+    }
+  },
+  "scope": "FLOPs count 2 per dense contraction/scan MAC; per-prefix inference without padding. Training-forward uses recorded carrier packets, all winning/losing values and scan combines. These are estimates for these contractions, not total runtime FLOPs or joules. Nonlinearities, sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer excluded. Reference uses same neural examples/schedule but no common model's separately fitted evidence bank.",
+  "source_sha256": {
+    "/workspace/experiments/e124_breadth_work.py": "54f9eaa54274404894cfa1d797298fe6665fbb404ced6b5f884fae9670ad5180",
+    "experiments/e124_work_audit.py": "60c7e6c4353199a2974378515dfad22610b155a0d2c553bf9e833b11be20bb89"
+  }
+}
