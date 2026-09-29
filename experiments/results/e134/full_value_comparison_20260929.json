@@ -1,0 +1,99 @@
+{
+  "status": "completed",
+  "rows": {
+    "parent": {
+      "fit_correct": 3280,
+      "fit_n": 4096,
+      "fit_accuracy": 0.80078125,
+      "fit_nll": 0.6203543809615439,
+      "held_correct": 370,
+      "held_n": 512,
+      "held_accuracy": 0.72265625,
+      "held_nll": 0.9827303827914875
+    },
+    "fixed": {
+      "fit_correct": 3273,
+      "fit_n": 4096,
+      "fit_accuracy": 0.799072265625,
+      "fit_nll": 0.6075689801764383,
+      "held_correct": 349,
+      "held_n": 512,
+      "held_accuracy": 0.681640625,
+      "held_nll": 1.1070949735876638,
+      "online_nll": 0.8949152740278805,
+      "steps": 1024,
+      "clipped_steps": 1023,
+      "packets": 4081134,
+      "values": 65298144,
+      "scans": 130286032,
+      "key_values": 32649072,
+      "key_scans": 65143016,
+      "global_scans": 16285754,
+      "value_layer_gradient_norms": [
+        2.840766092587728,
+        2.7726764983381145,
+        2.644482774165226,
+        4.031451166971237,
+        2.836266456739395,
+        2.7828836831031367,
+        2.7542359339568065,
+        3.817124658744433
+      ],
+      "clean_key_schedules_preserved": {
+        "fit": true,
+        "dev_original": true,
+        "dev_additional": true
+      },
+      "wall_s": 511.2570638930192,
+      "peak_rss_kib": 582340,
+      "train_parameters": 58048
+    },
+    "coupled": {
+      "fit_correct": 3265,
+      "fit_n": 4096,
+      "fit_accuracy": 0.797119140625,
+      "fit_nll": 0.6108181542113016,
+      "held_correct": 349,
+      "held_n": 512,
+      "held_accuracy": 0.681640625,
+      "held_nll": 1.1006346731737722,
+      "online_nll": 0.8949720656510181,
+      "steps": 1024,
+      "clipped_steps": 1023,
+      "packets": 4081134,
+      "values": 32649072,
+      "scans": 65143016,
+      "key_values": 0,
+      "key_scans": 0,
+      "global_scans": 16285754,
+      "value_layer_gradient_norms": [
+        2.8393042989919195,
+        2.7716356029413873,
+        2.640924347753753,
+        4.0251847209146945,
+        2.841807040356798,
+        2.784622999752173,
+        2.7556094799365383,
+        3.8099193779198686
+      ],
+      "clean_key_schedules_preserved": {
+        "fit": false,
+        "dev_original": false,
+        "dev_additional": false
+      },
+      "wall_s": 370.1695866230002,
+      "peak_rss_kib": 588060,
+      "train_parameters": 58048
+    }
+  },
+  "same_samples_augmentation_mask_and_update_budget": true,
+  "all_eight_value_maps_changed": true,
+  "fixed_clean_winner_counts_and_clocks_preserved": true,
+  "source_sha256": {
+    "/workspace/experiments/e134_comparison.py": "edc95d3e63ed45be82e965084573b7c0fe15cf8aa861ed07533285d5095647c0",
+    "experiments/results/e134/full_value_fixed_s6_20260929.json": "7ca8a57677aea0fdbc6040723c4e0310cecc0d61b2f43e714baa34630e0d28f9",
+    "experiments/results/e134/full_value_coupled_s6_20260929.json": "7cb64129ec413b68609e954c0cebad71dab3937ee571e92d702d98f5f59303eb"
+  },
+  "scope": "One seed; training-file held speakers, no official test. Frozen policy tensors in both; functional keys fixed in only one. Gradient reach and finite-step credit are separate from generalization.",
+  "work_boundary": "Both wall times exclude initial evaluation and use identical cached baseline. Value/scan counts include both streams; global scans listed separately. No total FLOP, memory traffic or energy measurement."
+}

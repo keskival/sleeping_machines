@@ -1,0 +1,60 @@
+{
+  "status": "completed",
+  "mean_nesting_max_error": 0.0,
+  "linear_vs_direct_max_error": 6.661338147750939e-16,
+  "credit_errors_payload_time_count_tau_query_key": [
+    1.3322676295501878e-15,
+    2.4868995751603507e-14,
+    2.220446049250313e-15,
+    7.105427357601002e-15,
+    1.6653345369377348e-16,
+    1.3877787807814457e-16
+  ],
+  "balanced_query_gradient_norm": 0.4862708708055306,
+  "balanced_key_gradient_norm": 0.0,
+  "key_gradient_after_query_step": 0.07086403738481616,
+  "scan_work_ledger_example": {
+    "events": 17,
+    "banks": 3,
+    "features": 5,
+    "receivers": 3,
+    "positive_feature_width": 8,
+    "scan_compositions": 27,
+    "state_width": 45,
+    "scan_scalar_multiply_adds": 3645,
+    "plain_scan_scalar_multiply_adds": 729,
+    "projection_multiply_adds": 1088,
+    "retrieval_multiply_adds": 1836,
+    "persistent_state_scalars": 405,
+    "materialized_state_scalars": 2295,
+    "scope": "Partial forward ledger; nonlinearities, marking, sorting, backward and optimizer additional"
+  },
+  "parent_logits_nesting_max_error": 0.0,
+  "actual_keys_winners_clocks_preserved": true,
+  "payload_bound_at_initial_embedding": 3.0362486839294434,
+  "content_input_lipschitz_bound": 3.0241657892862954,
+  "conditional_value_state_transport_bounds": [
+    0.003445780307318102,
+    21.115628740498725
+  ],
+  "parent_checkpoint_sha256": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18",
+  "source_sha256": {
+    "/workspace/experiments/e135_content_contract.py": "6d6734a0736a44f8c7676996a51488e66388788607ac19402e6ee410ebcbc7a2",
+    "/workspace/experiments/e134_value_phase.py": "5a0ffb5301a4721a097a73d5b5cf64bc16ffe759be2d392f80cf40bad284a3ab",
+    "experiments/e122_shd_continuation.py": "76e97504eec79145a8f7f2c2a2c894d33ee33c79d715ff85c3f55ecb446d77c7",
+    "experiments/e117_serial_event_shd.py": "683dda1feee90fa64c82e28593d9d01ccc4a64536888c6ccf0115bf57e8d3ed6",
+    "experiments/e118_race_carrier_shd.py": "d756f556b09b064a36ea2bc81dbcd648625a157e9b01c5bdec310651e2093892",
+    "sleeping_machines/event_query.py": "43dccd3a40a82f980e74eb8a5e58d05a2bd8a6dc1f2dc37b626b9c219a951ee5",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314",
+    "sleeping_machines/evidence_memory.py": "f4548b16d6f9ec03db5543c579221ec368074894766b4368a66e1a479ed1497a",
+    "sleeping_machines/energy.py": "1346a497d9c5f28e8c996dd8d7584641c3bd7c0c07e408753669662dbe2cd596",
+    "sleeping_machines/sim.py": "c68910dd05316d099dae95adc03d298b71f3768cfbcb75579006804c0300a3f2",
+    "sleeping_machines/phase_memory.py": "e16161aa13f63b34ee13edf5d8bf9d0bb47cf6183c0bf18ee796927350cd4c7f",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/readout_calibration.py": "037621374c3600e8613241814ec5e857545fcd41794019cac82a3ff1986653dc",
+    "sleeping_machines/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sleeping_machines/objectives.py": "5ab73ee498e29220230cbd768816d8aaef27606bb41309587f472b5a2897d9f7",
+    "experiments/e135_content_memory.py": "030256202dbd3e0930b7831a799cdc9e0fafb359a1ca4282bb58cbf8f0e43c31"
+  },
+  "scope": "Contracts and a candidate layer, not speech accuracy or energy. Bounds require fixed schedules and the stated payload/projection bounds."
+}
