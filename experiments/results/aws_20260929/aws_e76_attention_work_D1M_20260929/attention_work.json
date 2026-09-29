@@ -1,0 +1,211 @@
+{
+ "tf_D1000000_s256_L2_p20_dr0.2_v.pt": {
+  "ckpt": "tf_D1000000_s256_L2_p20_dr0.2_v.pt",
+  "args": {
+   "model": "tf",
+   "D": 1000000,
+   "passes": 20.0,
+   "size": 256,
+   "layers": 2,
+   "ctx": 256,
+   "test": 1000000,
+   "dropout": 0.2,
+   "batch_size": 32,
+   "valid": 200000,
+   "device": "cpu",
+   "gpu_memory_fraction": 0.5
+  },
+  "by_eps": {
+   "0.01": {
+    "table": [
+     {
+      "keys_visible": [
+       8,
+       15
+      ],
+      "median_needed": 8.0,
+      "mean_needed": 8.276640625,
+      "median_fraction": 0.7777777777777778,
+      "median_sigma": 1.634796380996704,
+      "median_tilted_pred": 7.987012248037356,
+      "per_layer_median": [
+       9.0,
+       8.0
+      ]
+     },
+     {
+      "keys_visible": [
+       16,
+       31
+      ],
+      "median_needed": 14.0,
+      "mean_needed": 13.9490234375,
+      "median_fraction": 0.6470588235294118,
+      "median_sigma": 1.8419512510299683,
+      "median_tilted_pred": 14.885036139975691,
+      "per_layer_median": [
+       16.0,
+       12.0
+      ]
+     },
+     {
+      "keys_visible": [
+       32,
+       63
+      ],
+      "median_needed": 25.0,
+      "mean_needed": 24.71017578125,
+      "median_fraction": 0.5645161290322581,
+      "median_sigma": 1.9452204704284668,
+      "median_tilted_pred": 28.908941861466943,
+      "per_layer_median": [
+       29.0,
+       20.0
+      ]
+     },
+     {
+      "keys_visible": [
+       64,
+       127
+      ],
+      "median_needed": 43.0,
+      "mean_needed": 42.11248046875,
+      "median_fraction": 0.46774193548387094,
+      "median_sigma": 2.0788393020629883,
+      "median_tilted_pred": 54.33335076936963,
+      "per_layer_median": [
+       51.0,
+       32.0
+      ]
+     },
+     {
+      "keys_visible": [
+       128,
+       255
+      ],
+      "median_needed": 62.0,
+      "mean_needed": 64.5604150390625,
+      "median_fraction": 0.3333333333333333,
+      "median_sigma": 2.3755154609680176,
+      "median_tilted_pred": 88.88938282143053,
+      "per_layer_median": [
+       78.0,
+       43.0
+      ]
+     },
+     {
+      "keys_visible": [
+       256,
+       256
+      ],
+      "median_needed": 64.0,
+      "mean_needed": 76.136875,
+      "median_fraction": 0.25,
+      "median_sigma": 2.5710062980651855,
+      "median_tilted_pred": 103.26027809430505,
+      "per_layer_median": [
+       79.0,
+       52.0
+      ]
+     }
+    ],
+    "work_exponent_alpha": 0.7237856282510736
+   },
+   "0.05": {
+    "table": [
+     {
+      "keys_visible": [
+       8,
+       15
+      ],
+      "median_needed": 5.0,
+      "mean_needed": 5.194921875,
+      "median_fraction": 0.46153846153846156,
+      "median_sigma": 1.634796380996704,
+      "median_tilted_pred": 5.379807450204691,
+      "per_layer_median": [
+       5.0,
+       5.0
+      ]
+     },
+     {
+      "keys_visible": [
+       16,
+       31
+      ],
+      "median_needed": 7.0,
+      "mean_needed": 7.684296875,
+      "median_fraction": 0.3225806451612903,
+      "median_sigma": 1.8419512510299683,
+      "median_tilted_pred": 9.47526939536859,
+      "per_layer_median": [
+       8.0,
+       6.0
+      ]
+     },
+     {
+      "keys_visible": [
+       32,
+       63
+      ],
+      "median_needed": 12.0,
+      "mean_needed": 12.60056640625,
+      "median_fraction": 0.2549019607843137,
+      "median_sigma": 1.9452204704284668,
+      "median_tilted_pred": 17.661575954465356,
+      "per_layer_median": [
+       14.0,
+       9.0
+      ]
+     },
+     {
+      "keys_visible": [
+       64,
+       127
+      ],
+      "median_needed": 17.0,
+      "mean_needed": 19.463603515625,
+      "median_fraction": 0.18085106382978725,
+      "median_sigma": 2.0788393020629883,
+      "median_tilted_pred": 31.154337871523616,
+      "per_layer_median": [
+       21.0,
+       13.0
+      ]
+     },
+     {
+      "keys_visible": [
+       128,
+       255
+      ],
+      "median_needed": 20.0,
+      "mean_needed": 28.139921875,
+      "median_fraction": 0.10952380952380952,
+      "median_sigma": 2.3755154609680176,
+      "median_tilted_pred": 43.70860705352442,
+      "per_layer_median": [
+       27.0,
+       15.0
+      ]
+     },
+     {
+      "keys_visible": [
+       256,
+       256
+      ],
+      "median_needed": 21.0,
+      "mean_needed": 32.9575,
+      "median_fraction": 0.08203125,
+      "median_sigma": 2.5710062980651855,
+      "median_tilted_pred": 45.35893053179811,
+      "per_layer_median": [
+       23.0,
+       19.0
+      ]
+     }
+    ],
+    "work_exponent_alpha": 0.604181507245585
+   }
+  }
+ }
+}
