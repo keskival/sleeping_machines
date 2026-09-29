@@ -1,0 +1,27 @@
+{
+  "run_tag": "aws_e68_recall_R1_s2_20260929",
+  "script": "experiments/e68_race_transformer.py",
+  "arguments": [
+    "--task",
+    "recall",
+    "--R",
+    "1",
+    "--steps",
+    "8000",
+    "--seed",
+    "2"
+  ],
+  "output_redirected": true,
+  "source_sha256": "ede167cf3f977170839cbdff159a0172f2d7e6a0f61e0f78c5130c4b192dc456",
+  "git_commit": "fd22f5153194a3fc63b24cb0f11d977a3c63e142",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-09-29T14:35:04Z",
+  "status": "completed",
+  "wall_s": 78.275,
+  "peak_rss_kb": 487840
+}
