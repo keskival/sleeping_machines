@@ -74,6 +74,7 @@ FILES=(
   experiments/queue/e83_moe_top2_route_swap.txt
   experiments/queue/e83_route_dynamics_audit.txt
   experiments/queue/e83_route_option_value_audit.txt
+  experiments/queue/e83_spike_option_training.txt
   experiments/queue/e77_route_cf_smoke.txt
   experiments/queue/e77_route_cf_bootstrap.txt
   experiments/queue/e77_depth4_bootstrap_compare.txt

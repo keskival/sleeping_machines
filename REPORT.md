@@ -33,7 +33,7 @@ realized firing calibration, gradients reached all eight event layers in a depth
   test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
   optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
   4.319, so it does not establish useful language-model quality or a scaling advantage.
-- **Deep SHD route credit and depth (§§138–146; reachability plus matched route-pair screens):** with only
+- **Deep SHD route credit and depth (§§138–150; reachability, matched route-pair screens, and scalar optionality):** with only
   1.56–7.03% layer-4 support, a size-four minibatch has a 75–94% chance of containing no layer-4 example. Yet exact
   seed-6/7 wiring has static paths for 90.2%/98.0% of first-to-fourth unit pairs, and all 140 input bands can reach
   layer 4. The bottleneck is therefore downstream of fixed connectivity: event-conditioned routes, thresholded firing,
@@ -122,6 +122,22 @@ All results are validation diagnostics from one checkpoint per arm, not an
 accuracy gain or test-set result.
 
 ![E83 pair-event replays: support, downstream propagation, and measured pair interaction](report/figures/e83_spike_pair_audit.png)
+
+**Counterfactual optionality through descendants (§§149–150).** A new frozen
+audit compared route swaps, route births, spike births, and a combined proposal
+pool on eight wrong held-out-speaker examples. The single-mechanism arms had
+zero measured class-loss or suffix-learning advantage. The combined pool
+created verified counterfactual paths with added layer-4 activity in 5/31
+leaves; three leaves improved both deepest-head loss and one-step suffix-SGD
+progress. Its recursively propagated scalar value was positive on one of the
+eight error trees at learning-option weights 0, 1, and 10, and two only at
+weight 100. That second tree's current loss worsens, so the large weight is
+not calibrated. This is a small but concrete signal that a sparse cascade of
+counterfactual events can expose a useful deep learning option. It is a frozen
+development diagnostic, not a trained update, an SHD accuracy gain, or
+supremacy evidence. SHD remains a major open performance gap.
+
+![Scalar optionality through route and spike counterfactuals](report/figures/e83_route_option_value.png)
 
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
