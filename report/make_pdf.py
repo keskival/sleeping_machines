@@ -67,6 +67,30 @@ def load_tf_10m_final():
     raise FileNotFoundError("No completed E64 10M Transformer result JSON")
 
 
+def aws_tf_1m_test_bpc():
+    """Return held-out scores from completed AWS reruns of the E64 1M Transformer."""
+    values = []
+    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
+        try:
+            provenance = load(provenance_path)
+            args = provenance.get("arguments", [])
+            if (provenance.get("status") != "completed" or
+                    provenance.get("script") != "experiments/e64_lm_baselines.py" or
+                    "--model" not in args or args[args.index("--model") + 1] != "tf" or
+                    "--D" not in args or args[args.index("--D") + 1] != "1000000"):
+                continue
+            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
+                if result_path == provenance_path:
+                    continue
+                result = load(result_path)
+                value = result.get("test_bpc")
+                if isinstance(value, (int, float)) and np.isfinite(value):
+                    values.append(float(value))
+        except (OSError, ValueError, TypeError, IndexError):
+            continue
+    return values
+
+
 def fig_image(fig, width_mm):
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -234,6 +258,12 @@ def fig_potential_evidence():
     ax_lm.scatter([1_000_000], [tf], color=GRAY, marker="D", s=34, zorder=4, label="E64b Transformer · 1M")
     ax_lm.annotate(f"1M TF test {tf:.3f}", (1_000_000, tf), xytext=(6, 7),
                    textcoords="offset points", fontsize=5.8, color=GRAY)
+    aws_tf = aws_tf_1m_test_bpc()
+    if aws_tf:
+        offsets = np.linspace(-0.012, 0.012, len(aws_tf))
+        ax_lm.scatter(1_000_000 * (1 + offsets), aws_tf, facecolors="white", edgecolors=GRAY,
+                      marker="o", s=28, linewidths=1.2, zorder=5,
+                      label="AWS validation-selected rerun(s) · 1M")
     ax_lm.scatter([10_000_000], [tf_10m_test], color=INK, marker="^", s=38, zorder=5,
                   label="E64b Transformer · 10M test")
     ax_lm.annotate(f"10M 4L TF test {tf_10m_test:.3f}", (10_000_000, tf_10m_test), xytext=(7, -12),
@@ -1519,7 +1549,15 @@ def fig_e32():
         xs = [np.mean([m for _, m in v]) for v in pts.values()]; ys = [np.mean([a for a, _ in v]) for v in pts.values()]
         ax.scatter(xs, ys, color=GRAY, s=18, label="clocked conv net (backprop, 200k episodes)", zorder=3)
     tf = {}
-    for path in glob.glob(os.path.join(RES, "e36", "transformer_e27*.json")):
+    paths = glob.glob(os.path.join(RES, "e36", "transformer_e27*.json"))
+    paths += glob.glob(os.path.join(RES, "aws_20260929", "*", "transformer_e27*.json"))
+    for path in paths:
+        if os.path.join("aws_20260929", "") in path:
+            try:
+                if load(os.path.join(os.path.dirname(path), "provenance.json")).get("status") != "completed":
+                    continue
+            except (OSError, ValueError, TypeError):
+                continue
         long = "long" in path or "rel" in path
         for r in load(path)["rows"]:
             tf.setdefault((long, r["d"], r["layers"], r.get("reltime", 0)), []).append((r["acc"], r["macs_per_episode"]))
@@ -2202,33 +2240,6 @@ def build():
         "<b>99.65% after one pass</b>, at roughly <b>10,000 times lower counted work</b> than its Transformer reference.",
     ], st)
     s += fig(fig_potential_evidence, W)
-    aws_rows = []
-    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
-        try:
-            provenance = load(provenance_path)
-            if provenance.get("status") != "completed":
-                continue
-            values = []
-            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
-                if result_path == provenance_path:
-                    continue
-                result = load(result_path)
-                for row in result.get("rows", []) if isinstance(result, dict) else []:
-                    if isinstance(row, dict):
-                        values.extend(f"{k} {row[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
-                                      if isinstance(row.get(k), (int, float)))
-                if isinstance(result, dict):
-                    values.extend(f"{k} {result[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
-                                  if isinstance(result.get(k), (int, float)))
-            aws_rows.append((provenance.get("start_utc", ""), provenance.get("run_tag", ""),
-                             provenance.get("script", ""), "; ".join(values[:6]) or "completed; see saved result"))
-        except (OSError, ValueError, TypeError):
-            continue
-    if aws_rows:
-        s += [P("Latest AWS benchmark runs", "h1"),
-              P("Completed runs are checked from saved result and provenance files; failed and in-progress runs are omitted.")]
-        for _when, tag, script, values in sorted(aws_rows, reverse=True)[:12]:
-            s.append(P(f"<b>{html.escape(tag)}</b> · {html.escape(script)} · {html.escape(values)}"))
     s += [P("The strongest depth and retrieval comparisons use controlled synthetic tasks. These results establish "
             "the stated task-level advantages. Matched scaling curves and measured training energy are the next "
             "evidence needed for frontier superiority. Ongoing SHD diagnostics are in Appendix A.", "small")]
@@ -2730,8 +2741,10 @@ def build():
             "locally computed gradient of this race is, on average, exactly the gradient of softmax attention. A network of such "
             "races with small dense cores is trained by local message passing as stochastic gradient descent on the Transformer "
             "objective, up to an error shrinking as 1/R with R races per head: Transformers, including their training, are a "
-            "limit of these networks. Numerical check below; training curves compared in E68 (queued).")]
+            "limit of these networks. Numerical check below; the E68 recall-learning curves show completed controls, with "
+            "additional seeds still in progress.")]
     s += fig(FM.fig_race_theory, W)
+    s += fig(FM.fig_e68_recall_training, W)
     s += [P("<b>Time and content, one system (theory, §104).</b> Continuous-time neural models describe a hidden state that "
             "flows and is pushed by its input: neural ODEs, controlled differential equations, and the state-space models "
             "behind Mamba-class language models. An event network is exactly such a system. Between events its state flows in "

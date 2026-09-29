@@ -4,33 +4,6 @@
 (`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
 the experiment log is `experiments/FINDINGS.md` and git history.*
 
-<!-- AWS_BENCHMARKS_START -->
-## AWS benchmark updates
-
-Runs below passed the runner and finite-metric checks. These early outcomes are diagnostics; single seeds do not establish a comparative advantage.
-
-| Run | Benchmark | Result | Wall time | Peak RSS |
-|---|---|---|---:|---:|
-| `aws_e77_route_cf_potential_d512_depth2_20260929` | `experiments/e77_tv_lm.py` | best_valid_bpc=4.6981; test_bpc=4.7133 | 1.802 s | 1297584 KB |
-| `aws_e36_tf_e28_long_20260929` | `experiments/e36_transformer.py` | acc=0.9965; acc=0.998; acc=0.995; acc=0.996; acc=0.996; acc=0.997 | 2330.297 s | 562436 KB |
-| `aws_e36_rel_e27_20260929` | `experiments/e36_transformer.py` | acc=0.997; acc=0.9995; acc=1; acc=0.9975; acc=0.997; acc=0.9975 | 1252.509 s | 556744 KB |
-| `aws_e36_rel_e28_20260929` | `experiments/e36_transformer.py` | acc=0.9985; acc=0.9995; acc=0.9965; acc=0.999 | 1322.77 s | 562072 KB |
-| `aws_e64_tf_D1M_checkpoint_20260929` | `experiments/e64_lm_baselines.py` | test_bpc=2.367; best_valid_bpc=2.3447 | 3413.784 s | 2248972 KB |
-| `aws_e76_attention_work_D1M_20260929` | `experiments/e76_attention_work.py` | Completed; inspect the saved result for measurements. | 5.997 s | 1281080 KB |
-| `aws_e68_recall_R16_s0_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.176 | 531.614 s | 516624 KB |
-| `aws_e68_recall_R0_s1_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.189 | 45.6 s | 470124 KB |
-| `aws_e68_recall_R1_s1_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.179 | 78.469 s | 487528 KB |
-| `aws_e68_recall_R4_s1_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.189 | 169.795 s | 496316 KB |
-| `aws_e68_recall_R16_s1_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.177 | 531.527 s | 518276 KB |
-| `aws_e68_recall_R0_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.192 | 45.971 s | 469924 KB |
-| `aws_e68_recall_R1_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.18 | 78.275 s | 487840 KB |
-| `aws_e68_recall_R4_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.174 | 169.77 s | 496740 KB |
-| `aws_e68_recall_R16_s2_20260929` | `experiments/e68_race_transformer.py` | test_acc=0.19 | 531.119 s | 516012 KB |
-| `aws_e68_text_R0_20260929` | `experiments/e68_race_transformer.py` | test_bpc=2.7562 | 46.821 s | 1282272 KB |
-
-E68 seed-0 synthetic recall, 8,000 updates (512,000 sequences): R=0: 18.5%, R=1: 18.4%, R=4: 18.2%.
-<!-- AWS_BENCHMARKS_END -->
-
 ## In plain terms
 
 **Sleeping Machines compute through timed messages.** A node holds a local memory, receives a signal,
@@ -1003,9 +976,11 @@ normalizer). Three consequences, each proved:
 So a network built from such races, with small dense cores for the rest, is trained by local message passing as stochastic
 gradient descent on the Transformer objective, up to an error that shrinks as 1/R with R races per head. Transformers are,
 in this precise sense, a limit of these networks, including how they are trained. The figure checks the three statements
-numerically; E68 compares training curves directly (queued).
+numerically; completed E68 recall-learning controls are plotted below, with the text benchmark still in progress.
 
 ![Race estimates against exact softmax quantities: attention outputs, softmax probabilities from rate times decision time, and pathwise attention gradients all lie on the diagonal](report/figures/race_theory.png)
+
+![E68 race-count ablation on synthetic recall; lines are completed seeds and dots mark final checkpoints](report/figures/e68_recall_training.png)
 
 **Time and content, one system (theory, §104).** Continuous-time neural models describe a hidden state that flows and is
 pushed by its input: neural ODEs, controlled differential equations, and the state-space models behind Mamba-class language

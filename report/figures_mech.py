@@ -26,6 +26,16 @@ def _load(p):
         return json.load(f)
 
 
+def _completed_aws_result(path):
+    if os.path.join("aws_20260929", "") not in path:
+        return True
+    provenance_path = os.path.join(os.path.dirname(path), "provenance.json")
+    try:
+        return _load(provenance_path).get("status") == "completed"
+    except (OSError, ValueError, TypeError):
+        return False
+
+
 # ── 1. The idea: clocked dense computation vs an event race ──────────────────────────────────────────────
 def fig_concept():
     C, T = 12, 48
@@ -68,11 +78,55 @@ def fig_concept():
 # ── 2. The supremacy map: one panel per task, accuracy against work ───────────────────────────────────────
 def _tf_points(pattern, long_only=None):
     pts = []
-    for path in glob.glob(os.path.join(RES, "e36", pattern)):
+    paths = glob.glob(os.path.join(RES, "e36", pattern))
+    paths += glob.glob(os.path.join(RES, "aws_20260929", "*", pattern))
+    for path in paths:
+        if not _completed_aws_result(path):
+            continue
         rows = _load(path)["rows"] if path.endswith(".json") else [json.loads(l) for l in open(path)]
         for r in rows:
             pts.append((r["macs_per_episode"], r["acc"], r.get("reltime", 0)))
     return pts
+
+
+def fig_e68_recall_training():
+    """E68 seed-level recall curves; only completed runs enter the plot."""
+    paths = glob.glob(os.path.join(RES, "e68", "recall_R*_s*.json"))
+    paths += glob.glob(os.path.join(RES, "aws_20260929", "*", "recall_R*_s*.json"))
+    colors = {0: DENSE_O, 1: DENSE_T, 4: EVENT, 16: "#8b65b3"}
+    fig, ax = plt.subplots(figsize=(6.4, 2.8))
+    seen = set()
+    for path in sorted(paths):
+        try:
+            if not _completed_aws_result(path):
+                continue
+            result = _load(path)
+            args = result.get("args", {})
+            if args.get("task") != "recall" or not result.get("curve"):
+                continue
+            r = int(args["R"])
+            curve = result["curve"]
+            steps = [point["step"] for point in curve]
+            accuracy = [point["test_acc"] for point in curve]
+            label = f"R = {r}" if r not in seen else None
+            seen.add(r)
+            ax.plot(steps, accuracy, color=colors.get(r, GRAY), alpha=0.38 if label is None else 0.9,
+                    lw=1.2, label=label)
+            ax.scatter([steps[-1]], [accuracy[-1]], color=colors.get(r, GRAY), s=13, zorder=3)
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+    if not seen:
+        plt.close(fig)
+        return None
+    ax.set_xscale("log")
+    ax.set_xlabel("training updates (log scale)")
+    ax.set_ylabel("held-out recall accuracy")
+    ax.set_ylim(0, 1.02)
+    ax.set_title("E68 · race-count ablation on synthetic recall (lines = seeds)")
+    ax.legend(fontsize=7, ncol=4, loc="lower right")
+    ax.text(0.01, 0.02, "Completed runs only; dots mark the final checkpoint.", transform=ax.transAxes,
+            fontsize=6.5, color=MUTED)
+    return fig
 
 
 def _panel(ax, title, xlabel, ylabel):
@@ -91,8 +145,15 @@ def fig_supremacy_map():
         conv += [(r["macs_per_episode"], r["acc"]) for r in _load(path)["rows"] if r["pad"] == 0.0]
     conv = [p for p in conv if p[1] > 0.9]
     ax.scatter(*zip(*conv), s=14, color=DENSE_O, label="clocked conv nets", zorder=3)
-    tf = [p for p in _tf_points("transformer_e27_long.json")] + [p for p in _tf_points("transformer_e27_rel.json")]
-    ax.scatter([p[0] for p in tf], [p[1] for p in tf], s=16, marker="s", color=DENSE_T, label="Transformers (1–2M examples)", zorder=3)
+    tf = _tf_points("transformer_e27_long.json") + _tf_points("transformer_e27_rel.json")
+    ordinary = [p for p in tf if not p[2]]
+    relative = [p for p in tf if p[2]]
+    if ordinary:
+        ax.scatter([p[0] for p in ordinary], [p[1] for p in ordinary], s=16, marker="s", color=DENSE_T,
+                   label="Transformers (1–2M examples)", zorder=3)
+    if relative:
+        ax.scatter([p[0] for p in relative], [p[1] for p in relative], s=22, marker="^", color=AQUA,
+                   label="+ relative-time bias", zorder=4)
     ax.scatter([7.5], [1.0], s=70, marker="D", color=EVENT, label="event network", zorder=4)
     ax.annotate("1.000 at 7.5 events", (7.5, 1.0), xytext=(9, -12), textcoords="offset points", fontsize=7, color=INK)
     ax.set_ylim(0.9, 1.006); ax.set_xlim(2, 1e7)
@@ -107,13 +168,16 @@ def fig_supremacy_map():
         if os.path.exists(p):
             fixed += [(r["macs_per_episode"], r["acc"]) for r in _load(p)["rows"]]
     big = [(p[0], p[1]) for p in _tf_points("transformer_e28_long_partial.jsonl")] + \
-          [(p[0], p[1]) for p in _tf_points("transformer_e28_rel.json")]
+          [(p[0], p[1]) for p in _tf_points("transformer_e28_long.json")]
+    relative = [(p[0], p[1]) for p in _tf_points("transformer_e28_rel.json")]
     lo_s, hi_s = min(a for _, a in small), max(a for _, a in small)
     ax.text(0.98, 0.04, f"Transformer, 40k examples once: {lo_s:.2f}–{hi_s:.2f} (below the axis)", transform=ax.transAxes,
             ha="right", fontsize=6.6, color=MUTED)
     if fixed:
         ax.scatter(*zip(*fixed), s=18, marker="s", color="#86b6ef", label="Transformer, 10k–40k examples × 50–200 passes", zorder=3)
     ax.scatter(*zip(*big), s=16, marker="s", color=DENSE_T, label="Transformer, 1–2M examples", zorder=3)
+    if relative:
+        ax.scatter(*zip(*relative), s=22, marker="^", color=AQUA, label="+ relative-time bias", zorder=4)
     chains = _chain_plateau()
     if chains:
         ax.scatter([20] * len(chains), chains, s=40, marker="D", color=EVENT, label="event chains, 40k examples once", zorder=4)
@@ -501,6 +565,8 @@ def fig_race_time():
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "figures")
     for name, fn in (("concept", fig_concept), ("supremacy_map", fig_supremacy_map), ("anatomy", fig_anatomy),
-                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling), ("race_theory", fig_race_theory), ("race_time", fig_race_time)):
+                     ("credit_dynamics", fig_credit), ("theory_thresholds", fig_theory), ("drift_law", fig_drift), ("lm_topology", fig_lm_topology), ("lm_scaling", fig_lm_scaling), ("race_theory", fig_race_theory), ("race_time", fig_race_time), ("e68_recall_training", fig_e68_recall_training)):
+        if fn is None:
+            continue
         fig = fn(); fig.savefig(os.path.join(out, name + ".png"), bbox_inches="tight", facecolor="white"); plt.close(fig)
         print("wrote", name)
