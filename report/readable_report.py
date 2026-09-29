@@ -39,6 +39,9 @@ def results():
     tasks["shd_pool_weighted"] = read("e122/d8_n4096_pool_weighted_s6.json")
     tasks["temporal_shallow"] = read("e120/temporal_d2_20260929.json")
     tasks["recall_shallow"] = read("e120/recall_d2_20260929.json")
+    tasks["breadth_work"] = read("e124/breadth_work_20260929.json")
+    tasks["shd_bridge"] = read("e122/d8_n4096_bridge_s6.json")
+    tasks["shd_bridge_frozen"] = read("e122/d8_n4096_bridge_frozen_s6.json")
     return tasks
 
 
@@ -129,7 +132,7 @@ def figures(M, tasks, ev):
     f, a = plt.subplots(figsize=(7.2, 2.65))
     a.set_xlim(0, 10); a.set_ylim(0, 4); a.axis("off")
     boxes = [(0.1, 1.55, 1.8, .9, "Input events\nvector + time"),
-             (2.45, 1.55, 2.4, .9, "Local memory\n3 delayed choices"),
+             (2.45, 1.55, 2.4, .9, "Local memory + context\n3 delayed choices"),
              (5.5, 1.55, 1.8, .9, "Winning vector\nand delay"),
              (7.95, 1.55, 1.9, .9, "Next layer\nthen a query"),
              (2.45, .05, 2.4, .85, "Losing alternatives\ntraining credit only")]
@@ -144,12 +147,12 @@ def figures(M, tasks, ev):
     a.text(.1,2.85,"Conditional evidence, hard pointers and phase memory inform query readouts.",fontsize=9)
     save(f,"shared_architecture")
 
-    f, a = plt.subplots(figsize=(6.6,2.7))
-    rows=[tasks["shd_scaled"],tasks["shd_pool_mean"],tasks["shd_pool_weighted"]]
+    f, a = plt.subplots(figsize=(7.2,2.85))
+    rows=[tasks["shd_scaled"],tasks["shd_pool_mean"],tasks["shd_pool_weighted"],tasks["shd_bridge"],tasks["shd_bridge_frozen"]]
     values=[100*sum(r["final"][s]["correct"] for s in ("dev_original","dev_additional"))/512 for r in rows]
-    a.bar([0,1,2],values,color=["#c5ced8",gray,blue],width=.55)
-    a.set(xticks=[0,1,2],xticklabels=["Shared starting\ncheckpoint","Count pool\n+ one epoch","Learned event pool\n+ one epoch"],
-          ylim=(0,100),ylabel="Held-out accuracy (%)",title="Deep speech: equal-budget readout comparison")
+    a.bar(range(5),values,color=["#c5ced8",gray,"#5f9be3",orange,blue],width=.55)
+    a.set(xticks=range(5),xticklabels=["Starting\ncheckpoint","Mean\npool","Learned\npool","Context:\nfull updates","Context:\nnew columns"],
+          ylim=(0,100),ylabel="Held-out accuracy (%)",title="Deep speech: one-epoch continuation comparisons")
     for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
     f.tight_layout();save(f,"e122_speech")
 
@@ -196,11 +199,13 @@ def blocks(M, tasks, ev):
     pages=[]
     pages.append([
         ("title","Sleeping Machines"),
-        ("sub","Intelligence through timed messages, local memory and selective computation"),
-        ("p","A Sleeping Machine is a network whose messages carry both a vector and an arrival time. Nodes "
-         "remember what arrived, compare alternatives, wait when useful, and send a new message. Competing "
-         "messages race: the winner determines the computation, while unrealized alternatives can teach the "
-         "network how to make a better choice. The goal is capable models that spend their work where information changes."),
+        ("sub","Computing with time: learned delays, vector messages and local memory"),
+        ("p","<b>Time is part of the computation.</b> Messages carry both a vector and an arrival time. Learned "
+         "delays change arrival order, shape temporal memory and decide which competing message wins. Nodes "
+         "can wait, accumulate evidence and transform a message's content and timing. A clock race can select "
+         "a class; learned phase transformations can compose an arithmetic rule. Unrealized alternatives "
+         "teach better choices. Dormant capacity and sparse activation reduce cost, while the organizing idea "
+         "is to make timing itself a trainable computational medium."),
         ("h1","The strongest demonstrated results"),
         ("bullets",[
          f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
@@ -236,6 +241,10 @@ def blocks(M, tasks, ev):
          "is also shown: its phase state supplies the same answers while the carrier adds cost. Speech and other "
          "representation tasks use deeper carrier configurations. The architecture chooses the required primitives "
          "and depth per task; each task has separately trained weights."),
+        ("p","<b>Learning work is also selective.</b> The periodic teacher makes 29,003 mistaken-example updates "
+         "and 145,015 learned-scalar update visits. The dense arithmetic controls make 4,800 Adam steps: "
+         "92.2M parameter visits for the LSTM and 132.5M for the Transformer. These count parameter updates, "
+         "excluding optimizer state and backward arithmetic; they are not training FLOPs or joules."),
         ("small",f"Arithmetic: 1,473 fitting triples, a 200-epoch budget, all 3,440 unseen triples; supplied period 17. "
          f"The phase-only path stops after {tasks['phase_only']['actual_epochs']} passes, when an entire fitting pass makes no updates. Recall: "
          "4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 "
@@ -258,12 +267,15 @@ def blocks(M, tasks, ev):
 
     pages.append([
         ("h1","How the model computes and learns"),
-        ("p","The architecture combines local memory, vector payloads and timing. A message can carry a learned "
+        ("p","The architecture computes through local memory, vector payloads and timing. A learned delay "
+         "changes which arrivals interact and which route wins; it participates in the function being learned. "
+         "Activity sparsity controls how much computation occurs. A message can carry a learned "
          "representation, a pointer, evidence or a periodic state. Layers need not all perform the same operation. "
          "Their job is to preserve useful information and recruit the computation needed for the task."),
         ("figure",("shared_architecture",174)),
         ("bullets",[
          "<b>Local temporal memory</b> accumulates observed content and elapsed time without evaluating empty time ticks.",
+         "<b>Computation through delays</b> uses waiting times, arrival order and clock races to transform information and select outcomes.",
          "<b>Hard races</b> choose the emitted vector and delay. Losing alternatives provide training credit without becoming identical forward messages.",
          "<b>Reusable memories</b> include conditional outcome statistics, relative pointers and learned phase transformations.",
          "<b>Trainable depth</b> uses bounded carrier updates to preserve representations and credit through a hierarchy.",
@@ -279,6 +291,7 @@ def blocks(M, tasks, ev):
         ("h1","A mathematical foundation for trainable computation"),
         ("table",(["Principle","What it enables"],[
          ["Stable transport through depth","Bounded residual carriers preserve payload and credit under stated fixed-route conditions. Route changes and readout geometry are analyzed separately."],
+         ["Active communication support","Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected."],
          ["Credit to unrealized alternatives","A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race."],
          ["Periodic state as an isometry","Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples."],
          ["Certified composition","Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it."],
@@ -368,13 +381,17 @@ def blocks(M, tasks, ev):
 
     pages.append([
         ("h1","Appendix A. Deep event recognition"),
-        ("p",f"The eight-layer speech model reaches <b>{100*pooled(tasks['shd_scaled']):.1f}%</b> across 512 held-out "
+        ("p",f"The eight-layer speech checkpoint reaches <b>{100*pooled(tasks['shd_scaled']):.1f}%</b> across 512 held-out "
          "utterances. Both readout continuations start from that checkpoint. At the matched "
          f"readout comparison below, count pooling reaches <b>{100*pooled(pool_mean):.1f}%</b> and learned event "
          f"pooling reaches <b>{100*pooled(pool_weighted):.1f}%</b> across 512 held-out utterances. Each model has "
          "4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors "
          "and delays; the learned pool adds 32 scalar parameters."),
         ("figure",("e122_speech",174)),
+        ("p",f"Two causal context channels allow distant packets to interact through accumulated state. "
+         f"Their zero-initialized columns preserve the starting predictions exactly. A matched full-update "
+         f"continuation reaches {100*pooled(tasks['shd_bridge']):.1f}%; training only those columns reaches "
+         f"{100*pooled(tasks['shd_bridge_frozen']):.1f}%. The added state has linear event work and 6,534 learned parameters."),
         ("p","The learned pool scores each observed winning payload, accumulates a weighted numerator and mass, "
          "and reads their ratio at the query. It has linear work in the number of active packets and a local "
          "supervised score gradient. Zero initialization exactly recovers count pooling. This tests whether "
@@ -388,26 +405,41 @@ def blocks(M, tasks, ev):
          "Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.")])
 
     coverage=[]
+    def compact_work(value):
+        return f"{value/1e9:.2f}G" if value>=1e9 else f"{value/1e6:.2f}M"
+    breadth={row["task"]:row for row in tasks["breadth_work"]["rows"]}
     for task,label in (("language","Text8"),("market","Market event prediction"),("temporal","Temporal composition"),
                        ("mnist","MNIST"),("dvs","Event-camera gestures")):
-        x=tasks[task];metric=x["final"]["dev"]
-        score=f"{100*metric['accuracy']:.1f}%" if "accuracy" in metric else f"{metric['nll']:.3f} nats/event"
-        if task=="language":score=f"{metric['nll']/math.log(2):.3f} bits/character"
-        coverage.append([label,score,f"{len(x['fit_ids']):,} / {len(x['dev_ids']):,}"])
+        row=breadth[task]
+        def score(metric):
+            if task=="language":return f"{metric['nll']/math.log(2):.3f} bpc"
+            if "accuracy" in metric:return f"{100*metric['accuracy']:.1f}%"
+            return f"{metric['nll']:.3f} nats/event"
+        coverage.append([label,score(row["common_metric"]),score(row["reference_metric"]),
+             compact_work(row["common_forward_map_scan_flops"])+" / "+compact_work(row["reference_forward_map_attention_flops"]),
+             compact_work(row["common_training_forward_map_scan_flops"])+" / "+compact_work(row["reference_training_forward_map_attention_flops"])])
     pages.append([
         ("h1","Appendix B. Breadth of the common implementation"),
         ("p","The common event backbone has independently trained development screens across language, event "
          "prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. "
          "These bounded screens establish implementation breadth; the stronger native comparison results use their "
          "own complete protocols."),
-        ("table",(["Task","Development result","Fit / development"],coverage,[61,57,56])),
-        ("p","These screens use eight layers for eight epochs. Two-layer follow-ups retain 100% recall at both "
+        ("table",(["Task","Common model","Transformer reference","Forward FLOPs per query: common / TF","Training-forward FLOPs: common / TF"],coverage,[35,26,29,43,41])),
+        ("p","The common screens use eight layers and the Transformer references two, both at width 32 for "
+         "eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and "
+         "learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both "
          "context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times "
          "fewer hidden carrier emissions. The model's depth is chosen to suit the computation."),
-        ("small","Independent task weights, seed 6. Text: 32,768 separately fitted evidence characters and 2,048 "
-         "neural queries. Market: bounded prefixes on disjoint days. MNIST: pooled training-set images. Gestures: "
-         "first-second prefixes and disjoint users. Real-data official test sets are not used in these screens. "
-         "The market screen remains behind its fixed evidence baseline (3.670 nats/event).")])
+        ("small","Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, "
+         "MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character "
+         "evidence bank; market evidence is fitted on a prior day. The references have no such bank. "
+         "MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. "
+         "No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event."),
+        ("small","FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. Forward "
+         "counts are per unpadded prefix. Training-forward sums the declared fitting budget and includes the "
+         "common model's losing-value evaluations. These are contraction estimates, excluding nonlinearities, "
+         "sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer updates; they "
+         "are not total training FLOPs or measured energy.")])
 
     pages.append([
         ("h1","Appendix C. Evidence and metric definitions"),

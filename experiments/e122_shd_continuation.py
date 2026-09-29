@@ -44,6 +44,8 @@ def main():
     p.add_argument("--readout", choices=("mean","weighted"), default="mean")
     p.add_argument("--global-context-layers", default="",
                    help="Comma-separated zero-initialized causal context layers, e.g. 3,7")
+    p.add_argument("--train-new-only", action="store_true",
+                   help="Hold checkpoint parameters fixed; teach only added context/key columns")
     p.add_argument("--checkpoint", default="experiments/results/e119/race_d8_linear_n1024_e8_s6.pt")
     a = p.parse_args()
     if Path(a.tag).name != a.tag or min(a.limit,a.epochs,a.bs)<1:
@@ -78,6 +80,9 @@ def main():
     if missing:
         groups = groups + [missing]
         opt.add_param_group({"params": [named[n] for n in missing], "lr": a.lr})
+    if a.train_new_only:
+        if not allowed_new:raise ValueError("There are no new components to train")
+        for name,param in named.items():param.requires_grad_(name in allowed_new)
     order_rng = np.random.default_rng(a.seed+2)
     order_rng.bit_generator.state = saved.get("numpy_rng", saved.get("order_rng"))
     augmentation_rng = np.random.default_rng(a.seed+122)
@@ -125,7 +130,8 @@ def main():
             loss=F.cross_entropy(scores,x[-1])
             if not torch.isfinite(loss): raise FloatingPointError("Nonfinite SHD loss")
             loss.backward()
-            grads += [float(layer.route.grad.norm()) for layer in net.layers]
+            grads += [float(layer.route.grad.norm()) if layer.route.grad is not None else 0.
+                      for layer in net.layers]
             torch.nn.utils.clip_grad_norm_(net.parameters(),1.,error_if_nonfinite=True)
             opt.step()
             nll+=float(loss.detach())*len(rows); steps+=1; packets+=stats["packets"]

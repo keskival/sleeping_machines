@@ -1,0 +1,1 @@
+e126_shd_bridge_frozen_20260929 experiments/e122_shd_continuation.py --tag d8_n4096_bridge_frozen_s6 --augment 1 --limit 4096 --epochs 1 --lr 0.0003 --global-context-layers 3,7 --train-new-only --checkpoint experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt

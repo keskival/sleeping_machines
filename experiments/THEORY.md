@@ -71,6 +71,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Shared event models and causal queries](theory/17_shared_event_model.md) — §§176–180: separate task weights, natural-score credit, causal prefix closure, unsupported metadata and periodic representations.
 - [Periodic memory and nuisance invariance](theory/18_periodic_memory_and_invariance.md) — §§181–184: affine circle state, occurrence credit, certified modular composition, computational ownership/work accounting and the objective changed by speech augmentation.
 - [Event readout, fixed points and class credit](theory/19_event_readout_credit.md) — §§185–187: sparse numerator/mass pooling, exact local key/value credit, covariance support and transfer alignment; a stopping proof for mistake-only teaching; a convex certificate for class-wise local descent.
+- [Active causal topology and context bridges](theory/20_causal_topology_and_bridges.md) — §§188–189: a disconnected-component expressivity obstruction; a causal linear-work remedy, exact checkpoint nesting, local teaching support and conditional depth bounds.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

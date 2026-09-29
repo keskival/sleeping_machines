@@ -2,6 +2,15 @@
 
 ## Current advances: preserved computation and local readout credit (E121–E125)
 
+**Next structural bridge (E126):** alternating receiver groups require active
+relay packets. A two-region XOR witness proves that depth and scalar pooling
+cannot compensate when those relays are absent (§188). A causal context state
+at selected layers removes that obstruction with linear event work. Zero value
+and route columns preserve the old checkpoint and gradients exactly; new-column
+credit is nonzero. Independent row bounds give a conditional nonvanishing
+depth bound (§189). The matched SHD continuation tests this new communication
+capability; the witness is an expressivity proof, not learned benchmark quality.
+
 The modular phase state now certifies its complete mod-17 rule. A simple global
 error bound fails, but target-constrained cyclic min/max composition proves
 every clock cell with positive slack (§183). The common class can execute this

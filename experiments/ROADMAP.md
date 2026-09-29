@@ -14,6 +14,12 @@ fitting speakers and class-conditional retained information (§§185,187), then
 speaker/class errors. Full benchmark quality,
 confidence stopping and measured energy remain separate milestones.
 
+**Structural test now running (E126):** two zero-initialized causal context
+channels let distant active packets interact without needing intervening relay
+packets. The disconnected-component obstruction and constructive remedy are
+proved in §§188–189, with exact initial checkpoint/gradient contracts. This is
+a more specific architecture change than adding depth or changing seeds.
+
 The manifesto remains sparse, asynchronous computation and learning driven by
 messages, local state, delays, and credit to unrealized alternatives. The results
 now include language-mixture and learned-retrieval leads plus deep synthetic
