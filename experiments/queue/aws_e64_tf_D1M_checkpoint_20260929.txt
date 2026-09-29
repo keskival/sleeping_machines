@@ -1,0 +1,1 @@
+aws_e64_tf_D1M_checkpoint_20260929 experiments/aws_benchmark.py --run-tag aws_e64_tf_D1M_checkpoint_20260929 --script experiments/e64_lm_baselines.py -- --model tf --D 1000000 --size 256 --layers 2 --passes 20 --dropout 0.2 --valid 200000
