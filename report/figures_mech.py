@@ -129,6 +129,55 @@ def fig_e68_recall_training():
     return fig
 
 
+def fig_e76_attention_work():
+    """E76: measured number of keys needed to capture a target share of attention."""
+    paths = glob.glob(os.path.join(RES, "e76", "attention_work.json"))
+    paths += glob.glob(os.path.join(RES, "aws_20260929", "*", "attention_work.json"))
+    result = None
+    for path in sorted(paths):
+        if not _completed_aws_result(path):
+            continue
+        try:
+            candidate = _load(path)
+            if candidate:
+                result = candidate
+        except (OSError, ValueError, TypeError):
+            continue
+    if not result:
+        return None
+    checkpoint = next(iter(result.values()))
+    by_eps = checkpoint.get("by_eps", {})
+    fig, ax = plt.subplots(figsize=(6.4, 2.8))
+    palette = {"0.01": DENSE_T, "0.05": EVENT}
+    plotted = False
+    for eps in ("0.01", "0.05"):
+        rows = by_eps.get(eps, {}).get("table", [])
+        if not rows:
+            continue
+        x = [np.mean(row["keys_visible"]) for row in rows]
+        y = [row["median_needed"] for row in rows]
+        pred = [row["median_tilted_pred"] for row in rows]
+        color = palette[eps]
+        ax.plot(x, y, color=color, marker="o", ms=4, label=f"measured · {100 * (1-float(eps)):.0f}% mass")
+        ax.plot(x, pred, color=color, marker="x", ls="--", lw=1.1,
+                label=f"tilted-Gaussian estimate · {100 * (1-float(eps)):.0f}%")
+        plotted = True
+    if not plotted:
+        plt.close(fig)
+        return None
+    upper = max(row["keys_visible"][1] for group in by_eps.values() for row in group.get("table", []))
+    ax.plot([1, upper], [1, upper], color=MUTED, ls=":", lw=1, label="scan every visible key")
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlim(6, upper * 1.12); ax.set_ylim(1, upper * 1.12)
+    ax.set_xlabel("visible keys in the causal context")
+    ax.set_ylabel("keys needed to capture the target softmax mass")
+    ax.set_title("E76 · attention sharpness in the trained 1M-character Transformer")
+    ax.legend(fontsize=6.5, ncol=2, loc="upper left")
+    ax.text(0.99, 0.02, "200 sampled validation windows; points aggregate layers, heads and query positions.",
+            transform=ax.transAxes, ha="right", fontsize=6.2, color=MUTED)
+    return fig
+
+
 def _panel(ax, title, xlabel, ylabel):
     ax.set_xscale("log"); ax.set_title(title, fontsize=8.6)
     ax.set_xlabel(xlabel, fontsize=7.5); ax.set_ylabel(ylabel, fontsize=7.5)
