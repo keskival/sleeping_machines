@@ -120,7 +120,13 @@ def main():
                 git('fetch', 'origin', check=False)
                 target_sha = git('rev-parse', TARGET).stdout.strip()
                 main_sha = target_sha
-                # Rebase the shared AWS branch to current main between benchmark jobs.
+                # Refresh from committed files, then rebase so the next result
+                # can fast-forward straight onto main.
+                refresh_report()
+                git('fetch', 'origin', check=False)
+                main_sha = git('rev-parse', TARGET).stdout.strip()
+                reported = main_sha
+                # Rebase only after both the result and its report are on main.
                 if git('branch', '--show-current').stdout.strip() == BRANCH:
                     rebased = git('rebase', TARGET, check=False)
                     if rebased.returncode:
@@ -130,11 +136,6 @@ def main():
                         synced = git('push', 'origin', 'HEAD:refs/heads/' + BRANCH, check=False)
                         if synced.returncode:
                             print(stamp(), 'branch sync deferred:', synced.stdout.strip(), flush=True)
-                # Reports are based on the committed result tree, never on live files.
-                refresh_report()
-                git('fetch', 'origin', check=False)
-                main_sha = git('rev-parse', TARGET).stdout.strip()
-                reported = main_sha
         if main_sha != reported:
             refresh_report()
             reported = git('rev-parse', TARGET, check=False).stdout.strip()
