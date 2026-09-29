@@ -1,0 +1,10 @@
+14:25:20 start aws_e68_recall_R16_s1_20260929
+14:26:20 alive aws_e68_recall_R16_s1_20260929: process group RSS=471400KB, MemAvailable=30183MB
+14:27:20 alive aws_e68_recall_R16_s1_20260929: process group RSS=482824KB, MemAvailable=30207MB
+14:28:21 alive aws_e68_recall_R16_s1_20260929: process group RSS=482828KB, MemAvailable=30208MB
+14:29:21 alive aws_e68_recall_R16_s1_20260929: process group RSS=482828KB, MemAvailable=30211MB
+14:30:21 alive aws_e68_recall_R16_s1_20260929: process group RSS=482844KB, MemAvailable=30211MB
+14:31:22 alive aws_e68_recall_R16_s1_20260929: process group RSS=474472KB, MemAvailable=30220MB
+14:32:22 alive aws_e68_recall_R16_s1_20260929: process group RSS=485096KB, MemAvailable=30208MB
+14:33:22 alive aws_e68_recall_R16_s1_20260929: process group RSS=478720KB, MemAvailable=30186MB
+14:34:13 done aws_e68_recall_R16_s1_20260929 (exit 0)
