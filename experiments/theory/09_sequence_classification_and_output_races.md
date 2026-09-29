@@ -3502,3 +3502,88 @@ that the state-conditioned estimator and layerwise credit path execute, but
 they show no accuracy gain and do not establish that the rollout metric
 improves learning. Deep route support and reachable improving continuations
 remain the limiting evidence.
+
+## 153. Finite proposal support and depth-wise route extinction
+
+Let $s$ be the current event state and let $\rho(\omega\mid s)$ be the
+counterfactual-continuation proposal. For a fixed label $y$, factual terminal
+loss $J_0(s;y)$, and improvement threshold $\epsilon>0$, define
+
+$$
+A_\epsilon(s)=\{\omega:J_H(s,\omega;y)\le J_0(s;y)-\epsilon\},\qquad
+p_\epsilon(s)=\rho(A_\epsilon(s)\mid s).
+$$
+
+With $K$ independent proposal samples, the chance of seeing at least one
+continuation that clears the threshold is exactly
+
+$$
+\Pr[\text{hit }A_\epsilon\mid s]=1-(1-p_\epsilon(s))^K.
+$$
+
+The clipped best-of-$K$ improvement is at least $\epsilon$ whenever such a
+hit occurs, hence
+
+$$
+\mathbb E[J_0-\min(J_0,J_1,\dots,J_K)]
+\ge \epsilon\,[1-(1-p_\epsilon)^K].
+$$
+
+This bound identifies a hard support limit: if $p_\epsilon(s)=0$, increasing
+$K$, an option-value coefficient, or an importance weight cannot expose that
+improving continuation from state $s$. If $p_\epsilon=0.05$, at least 59
+independent samples are needed for a 95% hit probability; at $p_\epsilon=0.01$,
+the corresponding number is 299. These counts are not a recommendation to
+sample more blindly. They show why a proposal that excludes relevant
+multi-layer routes needs redesigned support before Monte Carlo precision is
+the bottleneck. The current sampler only admits nonfiring events whose margin
+lies in $[-0.5,0]$ and proposes one layer at a time. A useful route requiring a
+farther-subthreshold birth has zero probability under that proposal, even if
+its descendants would make the final classifier correct.
+
+Depth introduces a second support factor. In a strict feed-forward event chain,
+let $E_\ell$ mean that at least one event reaches layer $\ell$. Then
+$E_D\subseteq\cdots\subseteq E_1$ and
+
+$$
+\Pr(E_D)=\Pr(E_1)\prod_{\ell=2}^D\Pr(E_\ell\mid E_{\ell-1}).
+$$
+
+The product is a data-support identity, not an independence assumption. A
+small conditional survival rate at any transition dominates downstream
+coverage; adding depth adds possible compositions but also adds factors that
+must stay nonzero. More importantly for learning, this code's hard event masks
+are detached from the task loss. For a deepest-only objective, if a sample
+has no event at a layer and no suffix replay opens an alternative event, its
+downstream state is locally independent of parameters upstream of that absent
+route. The pathwise derivative through that route is therefore exactly zero.
+If this holds for every training example at a transition, ordinary pathwise
+updates cannot recruit a route across that transition; a separate local loss,
+surrogate, or counterfactual proposal with nonzero support is required. This
+is a conditional statement about hard support, not a claim that every layer
+with a zero gradient is globally or permanently dead.
+
+The six-epoch seed-6 extension directly tests whether this pilot was merely
+undertrained. It keeps the depth-4, 120-train/128-held-out setup and compares
+immediate-only credit with the two-rollout continuation reserve. Both arms
+remain at 6/128 terminal accuracy through epoch 6 (the continuation arm is
+7/128 at epoch 1 only); both have zero race coverage, and final training loss
+is approximately $\log 20$. Immediate-only support moves from
+[98.4%, 40.6%, 2.3%, 0%] in epoch 1 to [100%, 1.6%, 0%, 0%] in epoch 6.
+Continuation-aware support moves from [98.4%, 56.3%, 11.7%, 2.3%] to
+[100%, 8.6%, 0%, 0%]. Thus the option update briefly makes deeper routes
+observable and retains more L2 support, but it does not create persistent L3/L4
+support or improve the answer. At final epoch, the continuation arm's L3
+pathwise gradient norm is 0.0058 and L4 is zero; in the immediate arm both
+are zero. A transient L4 event in early epochs is evidence of activity, not a
+trainable deep route.
+
+The observed zero support is a finite held-out estimate, and the rollout hit
+rates are proposal- and state-dependent. In particular, the earlier 0/48 and
+0/54 helpful-future counts do not prove $p_\epsilon=0$ for all states. The
+next discriminating measurement is to log, per layer and conditional on an
+upstream event: (1) whether any candidate lies inside the proposal band,
+(2) the full distribution of subthreshold margins beyond that band,
+(3) survival after a forced candidate event, and (4) the deepest-head loss
+change after replaying its actual suffix. That distinguishes absent proposal
+support from candidates whose realized descendants simply fail to help.

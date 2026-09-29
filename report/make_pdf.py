@@ -989,12 +989,12 @@ def fig_e83_spike_option_training():
 
 
 def fig_e83_optionality_state_value():
-    """Compare immediate route credit with a sampled state-value reserve."""
+    """Compare six-epoch immediate and state-value route-credit runs."""
     patterns = {
-        "immediate": ("*optionality_immediate_2ep*spk_s6.json",
-                      "optionality_immediate_2ep"),
-        "continuation-aware": ("*optionality_rollout_aware_2ep*spk_s6.json",
-                               "optionality_rollout_aware_2ep"),
+        "immediate": ("*optionality_immediate_6ep*spk_s6.json",
+                      "optionality_immediate_6ep"),
+        "continuation-aware": ("*optionality_rollout_aware_6ep*spk_s6.json",
+                               "optionality_rollout_aware_6ep"),
     }
     results = {}
     for label, (pattern, run_tag) in patterns.items():
@@ -1007,19 +1007,20 @@ def fig_e83_optionality_state_value():
 
     fig, axes = plt.subplots(1, 3, figsize=(7.35, 2.85),
                              gridspec_kw={"width_ratios": [0.9, 1.25, 1.1]})
-    epochs = np.arange(1, 3)
+    epochs = np.arange(1, 7)
     colors_by_arm = {"immediate": BLUE, "continuation-aware": AQUA}
-    for offset, (label, result) in zip((-0.045, 0.045), results.items()):
+    for label, result in results.items():
         accuracy = [100 * row["event_terminal_accuracy"] for row in result["curve"]]
-        axes[0].plot(epochs + offset, accuracy, marker="o", color=colors_by_arm[label],
+        axes[0].plot(epochs, accuracy, marker="o", linewidth=1.2,
+                     color=colors_by_arm[label],
                      label=label)
     axes[0].axhline(5, color=ORANGE, linestyle="--", linewidth=1,
-                    label="10-class chance")
+                    label="20-class chance")
     axes[0].set_xticks(epochs)
     axes[0].set_ylim(0, 7)
-    axes[0].set_xlim(0.75, 2.25)
+    axes[0].set_xlim(0.75, 6.25)
     axes[0].set_ylabel("accuracy (%)")
-    axes[0].set_title("A · No accuracy gain")
+    axes[0].set_title("A · Chance through epoch 6")
     axes[0].legend(fontsize=5.4, loc="lower right")
 
     layers = np.arange(4)
@@ -1032,25 +1033,29 @@ def fig_e83_optionality_state_value():
     axes[1].set_xticks(layers, ["L1", "L2", "L3", "L4"])
     axes[1].set_ylim(0, 110)
     axes[1].set_ylabel("held-out support (%)")
-    axes[1].set_title("B · Layer support collapses")
+    axes[1].set_title("B · Final support remains shallow")
     axes[1].legend(fontsize=5.4, loc="upper right")
 
     aware_curve = results["continuation-aware"]["curve"]
-    reserve_milli = [1000 * row["spike_option_mean_delta_reserve"]
-                     for row in aware_curve]
-    axes[2].bar(epochs, reserve_milli, color=AQUA, width=0.56)
+    parent_mass = [100 * row["spike_option_mean_parent_beneficial_continuation_mass"]
+                   for row in aware_curve]
+    child_mass = [100 * row["spike_option_mean_child_beneficial_continuation_mass"]
+                  for row in aware_curve]
+    axes[2].plot(epochs, parent_mass, marker="o", linewidth=1.2,
+                 color=BLUE, label="parent state")
+    axes[2].plot(epochs, child_mass, marker="o", linewidth=1.2,
+                 color=AQUA, label="child state")
     axes[2].set_xticks(epochs)
-    axes[2].set_ylim(0, 1.25)
-    axes[2].set_ylabel(r"$\Delta\Omega$ ($10^{-3}$ loss/action)")
-    axes[2].set_title("C · Tiny reserve estimate")
-    axes[2].text(1.5, 1.06,
-                 "0/48 then 0/54 parent/child rollouts\nbeat the 0.05-loss cutoff",
-                 ha="center", fontsize=5.4, color=ORANGE)
+    axes[2].set_xlim(0.75, 6.25)
+    axes[2].set_ylim(bottom=0)
+    axes[2].set_ylabel("sampled helpful futures (%)")
+    axes[2].set_title("C · Few futures clear the loss cutoff")
+    axes[2].legend(fontsize=5.4, loc="upper left")
 
-    fig.suptitle("E83 · state-conditioned optionality training check",
+    fig.suptitle("E83 · six-epoch state-conditioned optionality check",
                  x=0.02, ha="left", fontsize=8.7, fontweight="bold")
     fig.text(0.02, 0.005,
-             "Seed 6; depth 4; 120 train / 128 held-out speakers; two epochs; two matched future rollouts/action. "
+             "Seed 6; depth 4; 120 train / 128 held-out speakers; six epochs; two future rollouts/action. "
              "One seed; rollout reserve is proposal-conditioned.",
              fontsize=4.8, color=MUTED)
     fig.subplots_adjust(top=0.79, bottom=0.2, left=0.08, right=0.985, wspace=0.55)
@@ -2069,6 +2074,12 @@ def build():
            "This validates the measurement path, not a training gain; the run used one seed and the reserve depends on "
            "the sparse proposal. The two-rollout arm took 224 s versus 177 s for control.", "small"),
          *fig(fig_e83_optionality_state_value, W),
+         P("<b>Six-epoch follow-up (§153):</b> both matched depth-4 arms remained at 6/128 held-out accuracy through "
+           "epoch 6 (the continuation arm reached 7/128 only in epoch 1); race coverage stayed at zero and final loss "
+           "was approximately the uniform 20-class value, log 20. The continuation update briefly expanded L3/L4 "
+           "support and retained more L2 activity, but finished with zero L3/L4 support and no accuracy gain. This rules "
+           "out extra epochs alone as a remedy for this configuration. Section 153 derives the proposal-support limit: "
+           "more rollouts cannot recover an improving route that the proposal assigns probability zero.", "small"),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "

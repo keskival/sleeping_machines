@@ -183,6 +183,21 @@ improves recognition. Later route alternatives remain mostly unreachable.
 
 ![Matched immediate and continuation-aware SHD training: accuracy, deep support, and measured option reserve](report/figures/e83_optionality_state_value.png)
 
+**Six-epoch depth check (§153).** To test whether the two-epoch result was
+simply undertraining, we extended the same seed-6, depth-4, 120-train/128-held
+out-speaker comparison to six epochs. Both arms remained at 6/128 (4.69%) held
+out terminal accuracy in every epoch except the continuation-aware arm's first
+epoch (7/128); neither arm emitted an early race answer. Training loss finished
+at 2.9950 and 2.9957, both essentially uniform 20-class loss ($\log 20$).
+The immediate arm's per-layer held-out event support fell from
+98.4% / 40.6% / 2.3% / 0% in epoch 1 to 100% / 1.6% / 0% / 0% in epoch 6.
+The option arm started higher at 98.4% / 56.3% / 11.7% / 2.3%, but finished
+at 100% / 8.6% / 0% / 0%. The option update therefore gives a short-lived
+deep-activity signal and modestly retains L2 support, but does not sustain
+L3/L4 events or improve recognition. This points to route-proposal support
+and event survival as the bottleneck; simply training the current configuration
+longer is not a remedy. The estimate is still a one-seed, 128-example pilot.
+
 ![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
 
 These are meaningful capability and performance signals, especially the text8 result and the ability to learn retrieval
