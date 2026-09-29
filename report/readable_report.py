@@ -46,7 +46,8 @@ def results():
     tasks["generic_language"] = {depth: read(f"e133/generic_language_d{depth}_s6_20260929.json") for depth in (1,8)}
     tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
     tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
-    tasks["shd_content"] = read("e135/content_comparison_20260929.json")
+    content_path = "e135/content_comparison_20260929.json"
+    tasks["shd_content"] = read(content_path) if (RES/content_path).exists() else None
     return tasks
 
 
@@ -173,11 +174,13 @@ def figures(M, tasks, ev):
     f, a = plt.subplots(figsize=(7.2,2.85))
     values=[100*tasks['shd_full_values']['rows']['parent']['held_accuracy'],
             100*tasks['shd_key_value']['rows']['separate']['held_accuracy'],
-            100*tasks['shd_full_values']['rows']['fixed']['held_accuracy'],
-            100*tasks['shd_content']['rows']['content']['held_accuracy']]
-    a.bar(range(4),values,color=["#c5ced8",gray,orange,blue],width=.55)
-    a.set(xticks=range(4),xticklabels=["Starting\ncheckpoint","New context maps\n6,336 taught parameters",
-           "All value layers\n58,048 taught parameters","Content retrieval\n60,096 taught parameters"],
+            100*tasks['shd_full_values']['rows']['fixed']['held_accuracy']]
+    labels=["Starting\ncheckpoint","New context maps\n6,336 taught parameters","All value layers\n58,048 taught parameters"]
+    if tasks['shd_content'] is not None:
+        values.append(100*tasks['shd_content']['rows']['content']['held_accuracy'])
+        labels.append("Content retrieval\n60,096 taught parameters")
+    a.bar(range(len(values)),values,color=["#c5ced8",gray,orange,blue][:len(values)],width=.55)
+    a.set(xticks=range(len(values)),xticklabels=labels,
           ylim=(0,100),ylabel="Held-speaker accuracy (%) — higher is better",title="Eight-layer event classifier: same parent, one-pass continuations")
     a.tick_params(axis='x',labelsize=8)
     for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
@@ -431,11 +434,11 @@ def blocks(M, tasks, ev):
          "Training only new context maps reaches 71.1% with separate keys and 71.3% with shared streams. "
          "Training all eight value layers reaches 68.2% in both routing conditions. Every value layer receives "
          "credit; route stability alone is insufficient for better transfer."),
-        ("p",f"Content-selective temporal memory starts with identical parent predictions and preserves hard "
+        *([("p",f"Content-selective temporal memory starts with identical parent predictions and preserves hard "
          f"winning signals. Its full-value continuation reaches <b>{100*tasks['shd_content']['rows']['content']['held_accuracy']:.1f}%</b>, "
          "versus 68.2% for the plain full-value control. It adds 2,048 learned query/key parameters and "
          "uses 165 state scalars per time bank versus 33. Its retrieval and gradient identities are audited; "
-         "this additional state and computation must earn their cost in task quality."),
+         "this additional state and computation must earn their cost in task quality.")] if tasks['shd_content'] is not None else []),
         ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
          "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
          "at the audited checkpoint, excluding optimizer updates."),
