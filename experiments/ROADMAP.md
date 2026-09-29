@@ -1,5 +1,17 @@
 # Current frontier priorities — 29 September 2026
 
+**Current consolidation:** arithmetic and longer-context recall are retained.
+The common model supports a 69-scalar periodic path, two-layer synthetic
+configurations and eight-layer speech. Its learned modular rule is certified
+by constrained min/max composition. Compare configured operation ledgers with
+the same-example Transformer/LSTM controls, including memory search and maps.
+
+**Current SHD intervention:** the augmented deep model reaches 72.1% on 512
+held-out utterances; 4,096-example continuation reaches 72.3%. Test learned
+event pooling against an exact mean-initialized control (§185), then inspect
+teacher/covariance support and speaker/class errors. Full benchmark quality,
+confidence stopping and measured energy remain separate milestones.
+
 The manifesto remains sparse, asynchronous computation and learning driven by
 messages, local state, delays, and credit to unrealized alternatives. The results
 now include language-mixture and learned-retrieval leads plus deep synthetic

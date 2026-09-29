@@ -70,6 +70,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Event work and temporal credit](theory/16_event_work_and_temporal_credit.md) — §§173–175: linear-work memory and its adjoint; exact local timing eligibility; causal coalescing and its representation error.
 - [Shared event models and causal queries](theory/17_shared_event_model.md) — §§176–180: separate task weights, natural-score credit, causal prefix closure, unsupported metadata and periodic representations.
 - [Periodic memory and nuisance invariance](theory/18_periodic_memory_and_invariance.md) — §§181–184: affine circle state, occurrence credit, certified modular composition, computational ownership/work accounting and the objective changed by speech augmentation.
+- [Event readout and teacher fixed points](theory/19_event_readout_credit.md) — §§185–186: sparse numerator/mass pooling, exact local key/value credit, covariance support at initialization and a stopping proof for mistake-only teaching.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

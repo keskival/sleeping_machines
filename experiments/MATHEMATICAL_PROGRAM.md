@@ -1,5 +1,27 @@
 # Mathematical program for event networks at language scale
 
+## Current advances: preserved computation and local readout credit (E121–E125)
+
+The modular phase state now certifies its complete mod-17 rule. A simple global
+error bound fails, but target-constrained cyclic min/max composition proves
+every clock cell with positive slack (§183). The common class can execute this
+69-scalar primitive without an unused generic carrier (§184). A zero-update
+fitting pass certifies a fixed point of its local teacher (§186).
+
+For speech, input nuisance variation improves the matched pooled development
+score from 68.4% to 72.1%, mostly on one speaker. The larger 4,096-example
+continuation reaches 72.3%. The next analytic intervention targets the count
+mean: a causal scalar key weights winning event payloads in an associative
+numerator/mass state. At mean initialization its gradient is covariance times
+the teacher direction, which is nonzero on the measured batch (§185). A matched
+continuation tests whether this support improves held-out class decisions.
+
+The consolidated work audit counts actual configured maps, router choices,
+memory scans, normalization and pointer/clock candidates. It must distinguish
+the sparse primitive from a carrier-plus-primitive configuration. New small
+Transformer/LSTM controls use the same arithmetic/recall examples. Inference
+estimates cannot establish total training-energy superiority.
+
 ## Current synthesis: causal queries, evidence geometry and invariances (E120)
 
 A common architecture is trained separately for each task. §§176–180 provide
