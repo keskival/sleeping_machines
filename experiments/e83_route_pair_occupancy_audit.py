@@ -58,7 +58,8 @@ def main():
         a.readout_fan, a.dmax, widths_sd, a.seed,
         event_readout=True,
         readout_fusion=a.readout_fusion,
-        input_count_payload=a.input_count_payload == "additive",
+        input_count_payload=a.input_count_payload != "off",
+        input_count_route_neutral=a.input_count_payload == "address_neutral",
         early_event_skip=a.early_event_skip,
         route_topk=int(getattr(a, "route_topk", 0)),
     )
