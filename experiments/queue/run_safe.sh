@@ -25,7 +25,7 @@ if [[ ! "$JOB_TIMEOUT_S" =~ ^[1-9][0-9]*$ ]]; then
 fi
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 TORCH_NUM_THREADS=1
 exec 9>"$LOCK"
-flock $([ -n "${WAIT:-}" ] && echo "-w 86400" || echo -n) 9 || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
+flock $([ -n "${WAIT:-}" ] && echo "-w ${WAIT_TIMEOUT_S:-86400}" || echo -n) 9 || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
 job_pid=""
 stop_job() {
   local pid=${job_pid:-}
@@ -86,5 +86,8 @@ while IFS= read -r line; do
     sleep 2
   done
   wait "$pid"; rc=$?; job_pid=""; echo "$(date +%T) done $name (exit $rc)"
+  if [ -n "${AFTER_JOB_HOOK:-}" ]; then
+    AFTER_JOB_NAME="$name" AFTER_JOB_EXIT_CODE="$rc" "$AFTER_JOB_HOOK" || { echo "after-job hook failed for $name" >&2; exit 1; }
+  fi
   [ "$rc" -eq 0 ] || exit "$rc"
 done < "$Q"

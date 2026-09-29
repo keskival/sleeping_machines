@@ -45,13 +45,73 @@ def results():
 def evidence(M):
     e79 = {n: read(f"e79/race_mixer_D{n}_K{k}_e77none.json")["copy_window_256"]["race_frozen_test_bpc"]
            for n, k in ((1_000_000, 5), (10_000_000, 6), (90_000_000, 7))}
+    def aws_e64_bpc(model, data_size):
+        for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
+            try:
+                meta = json.loads(provenance_path.read_text())
+                args = meta.get("arguments", [])
+                if (meta.get("status") != "completed" or
+                        meta.get("script") != "experiments/e64_lm_baselines.py" or
+                        "--model" not in args or args[args.index("--model") + 1] != model or
+                        "--D" not in args or int(args[args.index("--D") + 1]) != data_size):
+                    continue
+                for result_path in sorted(provenance_path.parent.glob("*.json")):
+                    if result_path.name == "provenance.json":
+                        continue
+                    value = json.loads(result_path.read_text()).get("test_bpc")
+                    if isinstance(value, (int, float)):
+                        return float(value)
+            except (OSError, ValueError, TypeError, IndexError):
+                continue
+        return None
     return {"e79": e79,
             "lstm1": read("e64/lstm_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
             "lstm10": read("e64/lstm_D10000000_s512_p6_dr0.1_v.json")["test_bpc"],
+            "lstm90": aws_e64_bpc("lstm", 90_000_000),
             "tf1": read("e64/tf_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
             "tf10": M["load_tf_10m_final"]()["test_bpc"],
+            "tf90": aws_e64_bpc("tf", 90_000_000),
             "recall_tf": max(p["n32"] for f in (RES/"e61").glob("tf_K32_n8*.json")
                              for row in json.loads(f.read_text())["rows"] for p in row["curve"])}
+
+
+def accomplishments_figure(M, ev):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
+    f, ax = plt.subplots(1, 2, figsize=(7.2, 2.65), gridspec_kw={"width_ratios": [1.2, 1]})
+    labels = ["Sleeping\nMachines", "LSTM", "Transformer"]
+    ten_m = [ev["e79"][10_000_000], ev["lstm10"], ev["tf10"]]
+    ninety_m = [ev["e79"][90_000_000], ev["lstm90"], ev["tf90"]]
+    x = np.arange(3)
+    width = .34
+    colors = [blue, gray, orange]
+    for i, (label, color) in enumerate(zip(labels, colors)):
+        ax[0].bar(x[i] - width/2, ten_m[i], width, color=color,
+                  label="10M training" if i == 0 else None)
+        ax[0].text(x[i] - width/2, ten_m[i] + .035, f"{ten_m[i]:.3f}",
+                   ha="center", fontsize=8)
+        if ninety_m[i] is not None:
+            ax[0].bar(x[i] + width/2, ninety_m[i], width, color=color, hatch="//",
+                      label="90M training" if i == 0 else None)
+            ax[0].text(x[i] + width/2, ninety_m[i] + .035, f"{ninety_m[i]:.3f}",
+                       ha="center", fontsize=8)
+    ax[0].set_xticks(x, labels)
+    ax[0].set_ylim(0, 2.5)
+    ax[0].set_ylabel("Test bits per character ↓")
+    ax[0].set_title("Better real-text prediction\ntext8 test score by training scale", fontsize=10)
+    ax[0].legend(fontsize=7, loc="upper left")
+    ax[1].bar(range(2), [100, 100*ev["recall_tf"]], color=[blue, orange], width=.55)
+    ax[1].set_xticks([0, 1], ["Local race\nretrieval", "Best of 7\nTransformers"])
+    ax[1].set_ylim(0, 118)
+    ax[1].set_ylabel("Accuracy at 4× context (%) ↑")
+    for i, value in enumerate([100, 100*ev["recall_tf"]]):
+        ax[1].text(i, value+2, f"{value:.1f}%", ha="center", fontsize=10)
+    ax[1].set_title("Retrieval that generalizes\nSynthetic key/value task", fontsize=10)
+    for a in ax:
+        a.grid(axis="x", visible=False)
+    f.tight_layout(w_pad=2.5)
+    return f
 
 
 def figures(M, tasks, ev):
@@ -63,26 +123,7 @@ def figures(M, tasks, ev):
     def save(fig, name):
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
-    f, ax = plt.subplots(1, 2, figsize=(7.2, 2.65), gridspec_kw={"width_ratios": [1.2, 1]})
-    labels = ["Sleeping\nMachines", "LSTM", "Transformer"]
-    values = [ev["e79"][10_000_000], ev["lstm10"], ev["tf10"]]
-    ax[0].bar(range(3), values, color=[blue, gray, orange], width=.6)
-    for i, value in enumerate(values):
-        ax[0].text(i, value+.035, f"{value:.3f}", ha="center", fontsize=10)
-    ax[0].set_xticks(range(3), labels)
-    ax[0].set_ylim(0, 2.2)
-    ax[0].set_ylabel("Test bits per character ↓")
-    ax[0].set_title("Better real-text prediction\n10M training characters", fontsize=10)
-    ax[1].bar(range(2), [100, 100*ev["recall_tf"]], color=[blue, orange], width=.55)
-    ax[1].set_xticks([0, 1], ["Local race\nretrieval", "Best of 7\nTransformers"])
-    ax[1].set_ylim(0, 118)
-    ax[1].set_ylabel("Accuracy at 4× context (%) ↑")
-    for i, value in enumerate([100, 100*ev["recall_tf"]]):
-        ax[1].text(i, value+2, f"{value:.1f}%", ha="center", fontsize=10)
-    ax[1].set_title("Retrieval that generalizes\nSynthetic key/value task", fontsize=10)
-    for a in ax:
-        a.grid(axis="x", visible=False)
-    f.tight_layout(w_pad=2.5)
+    f = accomplishments_figure(M, ev)
     save(f, "accomplishments")
 
     f, a = plt.subplots(figsize=(7.2, 2.65))
@@ -202,7 +243,12 @@ def blocks(M, tasks, ev):
         ("bullets",[
          f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
          f"<b>{ev['e79'][10_000_000]:.3f} test bits per character</b>, ahead of the completed LSTM ({ev['lstm10']:.3f}) "
-         f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split.",
+         f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split. "
+         + (f"At 90M, the held-out scores are {ev['e79'][90_000_000]:.3f} for the native mixture, "
+            f"{ev['lstm90']:.3f} for the LSTM, and {ev['tf90']:.3f} for the four-layer Transformer. "
+            if ev["lstm90"] is not None and ev["tf90"] is not None else
+            "The matched 90M LSTM and Transformer controls are queued. ")
+         + "Lower bits per character means better prediction.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
          "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
          "100% on its standard and longer contexts.",
@@ -210,9 +256,9 @@ def blocks(M, tasks, ev):
          "3,440 unseen modular triples</b>. Native depth-four order models reach 99.9–100%; shared-motif composition "
          "reaches about 99.65% from one pass at roughly 10,000× lower counted work than its Transformer reference."]),
         ("figure",("accomplishments",174)),
-        ("small","Language scores are held-out test results from the named predictive mixture, with different model "
-         "sizes and schedules. Retrieval, composition and arithmetic are controlled synthetic tasks. The following "
-         "pages distinguish the consolidated implementation from the original native components.")])
+        ("small","Language scores are held-out test results from the named predictive mixture and gradient baselines, "
+         "with different model sizes and schedules. Retrieval, composition and arithmetic are controlled synthetic tasks. "
+         "The following pages distinguish the consolidated implementation from the original native components.")])
 
     pages.append([
         ("h1","Consolidated models: accuracy versus computation"),

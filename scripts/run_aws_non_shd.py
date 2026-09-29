@@ -55,6 +55,9 @@ def main():
         raise RuntimeError('Use the dedicated AWS benchmark branch')
     jobs = json.loads(PLAN.read_text())
     progress = json.loads(PROGRESS.read_text()) if PROGRESS.exists() else {}
+    supplemental_progress = QUEUE / 'aws_progress_90m_baselines.json'
+    if supplemental_progress.exists():
+        progress.update(json.loads(supplemental_progress.read_text()))
     for job in jobs:
         tag = job['run_tag']
         if tag in progress:
