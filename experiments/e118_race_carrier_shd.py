@@ -25,123 +25,16 @@ torch.set_num_threads(1)
 OUT = Path(__file__).parent / "results" / "e118"
 
 
-class RaceLayer(nn.Module):
-    def __init__(self, dim, depth, beta, cf_credit, options=3, memory_backend="doubling"):
-        super().__init__()
-        self.alpha, self.cf_credit = beta/depth, cf_credit
-        self.options, self.dim = options, dim
-        if memory_backend == "linear":
-            from e119_linear_event_scan import segmented_memory as memory
-            self.memory = memory
-        elif memory_backend == "doubling":
-            self.memory = segmented_memory
-        else:
-            raise ValueError(memory_backend)
-        self.value = nn.Parameter(torch.randn(options, dim, 2*dim+1)*.03)
-        self.bias = nn.Parameter(torch.zeros(options, dim))
-        self.route = nn.Parameter(torch.randn(options, 2*dim+1)*.1)
-        self.route_bias = nn.Parameter(torch.zeros(options))
-        self.log_tau = nn.Parameter(torch.logspace(math.log10(.02), math.log10(.8), options).log())
-
-    def forward(self, x, t, count, keys, sequential=False, override=None, trace=False):
-        # Learned delays can reorder carriers. Memory sees actual arrival
-        # order within each receiver, with the original index breaking ties.
-        time_order = torch.argsort(t, stable=True)
-        inverse = torch.argsort(time_order)
-        mem, mass, work = self.memory(
-            x[time_order], t[time_order], count[time_order], keys[time_order],
-            self.log_tau.clamp(math.log(.002), math.log(4.)).exp(), sequential)
-        mem, mass = mem[inverse], mass[inverse]
-        features = torch.cat((x[:, None, :].expand(-1, self.options, -1), mem,
-                              (mass/(1+mass))[:, :, None]), -1)
-        scores = (features*self.route[None, :, :]).sum(-1) + self.route_bias
-        delay = .001 + .010*torch.sigmoid(-scores)
-        winner = delay.argmin(-1)
-        if override is not None:
-            event, choice = override
-            winner = winner.clone()
-            winner[event] = choice
-        w = self.value / self.value.abs().sum(-1, keepdim=True).clamp_min(1)
-        rows = torch.arange(len(x))
-        if self.training and self.cf_credit or trace:
-            alternatives = torch.tanh(torch.einsum("ekf,kdf->ekd", features, w) + self.bias)
-            correction = alternatives[rows, winner]
-            value_evaluations = len(x)*self.options
-        else:
-            # Inference and pathwise control evaluate only selected values.
-            correction = torch.zeros_like(x)
-            for k in range(self.options):
-                selected = torch.nonzero(winner == k, as_tuple=True)[0]
-                correction = correction.index_copy(0, selected,
-                    torch.tanh(F.linear(features[selected, k], w[k], self.bias[k])))
-            alternatives = None
-            value_evaluations = len(x)
-        winning_delay = delay[rows, winner]
-        out = x + self.alpha*correction
-        tout = t + winning_delay
-        if self.training and self.cf_credit:
-            p = torch.softmax(-delay/.002, -1)
-            zero_forward = p-p.detach()
-            # Loser values have no ordinary value-path gradient. They supply
-            # only a score direction comparing alternative and winner.
-            out = out + self.alpha * (zero_forward[:, :, None] *
-                (alternatives-correction[:, None, :]).detach()).sum(1)
-            tout = tout + (zero_forward * (delay-winning_delay[:, None]).detach()).sum(1)
-        sorted_delay = delay.detach().sort(-1).values
-        stats = {"winner_counts": torch.bincount(winner, minlength=self.options).tolist(),
-                 "mean_margin_ms": float((sorted_delay[:, 1]-sorted_delay[:, 0]).mean()*1000),
-                 "mean_delay_ms": float(winning_delay.detach().mean()*1000),
-                 "scan_compositions": work, "value_evaluations": value_evaluations}
-        details = None
-        if trace:
-            details = {"winner": winner, "alternatives": alternatives,
-                       "delays": delay, "out": out, "times": tout}
-        return out, tout, stats, details
+# Keep historical experiment entry points/checkpoint schemas compatible.
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from sleeping_machines.shared_event import RaceLayer, SharedEventModel
 
 
-class RaceNet(nn.Module):
+class RaceNet(SharedEventModel):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
                  memory_backend="doubling"):
-        super().__init__()
-        if depth < 1 or dim % 4 or bands % groups or not 0 < beta/depth <= 1:
-            raise ValueError("Invalid dimensions or residual bound")
-        # The depth-1 control uses alpha=1 under the same beta/depth rule.
-        # Its conditional lower bound is zero; the strict invertibility
-        # certificate applies only when alpha<1, as in the depth-8 model.
-        self.bands, self.dim, self.groups = bands, dim, groups
-        self.embedding = nn.Embedding(bands, dim//4)
-        nn.init.normal_(self.embedding.weight, std=.5)
-        self.head = nn.Linear(dim+1, 20)
-        nn.init.normal_(self.head.weight, std=.01)
-        nn.init.zeros_(self.head.bias)
-        self.layers = nn.ModuleList([RaceLayer(dim, depth, beta, cf_credit,
-                                             memory_backend=memory_backend) for _ in range(depth)])
-        self.register_buffer("time_constants", torch.tensor([.05, .2, .8]))
-        self.register_buffer("center", torch.zeros(dim+1))
-        self.register_buffer("scale", torch.ones(dim+1))
-        self.register_buffer("whitener", torch.eye(dim+1))
-
-    def forward(self, b, t, c, ids, size, sequential=False, overrides=None, trace=False):
-        phi = torch.cat((t.new_ones((len(t), 1)), torch.exp(-t[:, None]/self.time_constants)), -1)
-        x = (self.embedding(b)[:, :, None]*phi[:, None, :]).flatten(1)
-        original_t = t
-        width = self.bands//self.groups
-        stats, traces = [], []
-        for j, layer in enumerate(self.layers):
-            keys = ids*(self.groups+1) + (b + (width//2 if j%2 else 0))//width
-            x, t, st, tr = layer(x, t, c, keys, sequential,
-                                 (overrides or {}).get(j), trace)
-            stats.append(st)
-            if trace:
-                traces.append(tr)
-        mass = x.new_zeros(size).index_add(0, ids, c)
-        mean = x.new_zeros((size, self.dim)).index_add(0, ids, x*c[:, None])/mass[:, None]
-        summary = torch.cat((mean, torch.log1p(mass[:, None])/10), -1)
-        features = ((summary-self.center)/self.scale) @ self.whitener
-        logits = self.head(features)
-        return logits, summary, {"layers": stats, "packets": len(t),
-                                 "max_payload": float(x.detach().abs().max()),
-                                 "mean_added_delay_ms": float((t-original_t).detach().mean()*1000)}, traces
+        super().__init__(bands, dim, depth, groups, beta, cf_credit, memory_backend)
 
 
 @torch.no_grad()
