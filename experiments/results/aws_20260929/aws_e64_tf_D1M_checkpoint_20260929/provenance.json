@@ -1,0 +1,33 @@
+{
+  "run_tag": "aws_e64_tf_D1M_checkpoint_20260929",
+  "script": "experiments/e64_lm_baselines.py",
+  "arguments": [
+    "--model",
+    "tf",
+    "--D",
+    "1000000",
+    "--size",
+    "256",
+    "--layers",
+    "2",
+    "--passes",
+    "20",
+    "--dropout",
+    "0.2",
+    "--valid",
+    "200000"
+  ],
+  "output_redirected": true,
+  "source_sha256": "af9c4bb99832a83365e26378db9afaad72ed9bdf4ea493e223d187128d350fc6",
+  "git_commit": "ef27a472ddd2afc6877f8a2c553a630064e4dcdc",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-09-29T13:14:15Z",
+  "status": "completed",
+  "wall_s": 3413.784,
+  "peak_rss_kb": 2248972
+}
