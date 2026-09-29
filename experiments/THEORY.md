@@ -75,6 +75,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Credit geometry and sparse differentiation](theory/21_credit_geometry_and_sparse_differentiation.md) — §§190–193: retain complete counterfactual score credit with winner-only value differentiation; separate surrogate and realized descent; certify useful directions across classes and fitting-speaker groups.
 - [Separate keys, values and race boundaries](theory/22_key_value_separation_and_race_boundaries.md) — §§194–196: isolate harmful winner changes; preserve actual routing during a smooth value-learning phase; derive joint key/value/clock counterfactual policy credit and its reachability requirements.
 - [Joint race likelihood and generic scaling](theory/23_joint_race_likelihood_and_scaling.md) — §§197–201: separate route and clock scores; exact deep credit across discontinuous suffixes; budgeted counterfactual proposals; censored Fisher information and silence teaching; generic quality/physical-work criteria.
+- [Full value credit and content retrieval](theory/24_content_retrieval_and_full_value_credit.md) — §§202–205: whole-value teaching, pooled-label dual norms, persistent-prefix scheduling and bounded content-key temporal state with a trainable mean-preserving initialization.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map
