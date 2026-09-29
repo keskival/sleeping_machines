@@ -1,5 +1,17 @@
 # Current frontier priorities — 29 September 2026
 
+**Full-value result and next structural intervention (E134–E135):** both matched
+whole-value phases end at 349/512, below the 370/512 parent. Every value layer
+learns, and functional key freezing does not improve this continuation. The
+next representation change is content-selective temporal retrieval rather than
+another seed or a depth-only sweep. A balanced kernel nests the old means
+exactly, has an available query teacher, then unlocks key teaching. Compressed
+state, direct retrieval/gradient contracts and the stricter conditional depth
+bound are audited. Charge its additional feature state and projection work;
+measure held-speaker utility independently of fitting gradient reach. Theory
+§§202–205 also identifies pooled-label covariance/cancellation and the missing
+persistent-prefix scheduling equivalence.
+
 **Current hardest-gap intervention (E128–E131):** useful common interior
 credit exists, but finite representation updates can change a hard winner and
 defeat that predicted improvement. Fitting-only frozen-winner/order comparisons

@@ -45,6 +45,8 @@ def results():
     tasks["shd_key_value"] = read("e131/key_value_comparison_20260929.json")
     tasks["generic_language"] = {depth: read(f"e133/generic_language_d{depth}_s6_20260929.json") for depth in (1,8)}
     tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
+    tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
+    tasks["shd_content"] = read("e135/content_comparison_20260929.json")
     return tasks
 
 
@@ -169,11 +171,15 @@ def figures(M, tasks, ev):
     save(f,"shared_architecture")
 
     f, a = plt.subplots(figsize=(7.2,2.85))
-    rows=[tasks["shd_scaled"],tasks["shd_pool_mean"],tasks["shd_pool_weighted"],tasks["shd_bridge"],tasks["shd_bridge_frozen"]]
-    values=[100*sum(r["final"][s]["correct"] for s in ("dev_original","dev_additional"))/512 for r in rows]
-    a.bar(range(5),values,color=["#c5ced8",gray,"#5f9be3",orange,blue],width=.55)
-    a.set(xticks=range(5),xticklabels=["Starting\ncheckpoint","Mean\npool","Learned\npool","Context:\nfull updates","Context:\nnew columns"],
-          ylim=(0,100),ylabel="Held-out accuracy (%)",title="Deep speech: one-epoch continuation comparisons")
+    values=[100*tasks['shd_full_values']['rows']['parent']['held_accuracy'],
+            100*tasks['shd_key_value']['rows']['separate']['held_accuracy'],
+            100*tasks['shd_full_values']['rows']['fixed']['held_accuracy'],
+            100*tasks['shd_content']['rows']['content']['held_accuracy']]
+    a.bar(range(4),values,color=["#c5ced8",gray,orange,blue],width=.55)
+    a.set(xticks=range(4),xticklabels=["Starting\ncheckpoint","New context maps\n6,336 taught parameters",
+           "All value layers\n58,048 taught parameters","Content retrieval\n60,096 taught parameters"],
+          ylim=(0,100),ylabel="Held-speaker accuracy (%) — higher is better",title="Eight-layer event classifier: same parent, one-pass continuations")
+    a.tick_params(axis='x',labelsize=8)
     for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
     f.tight_layout();save(f,"e122_speech")
 
@@ -421,11 +427,15 @@ def blocks(M, tasks, ev):
          f"Their zero-initialized columns preserve the starting predictions exactly. A matched full-update "
          f"continuation reaches {100*pooled(tasks['shd_bridge']):.1f}%; training only those columns reaches "
          f"{100*pooled(tasks['shd_bridge_frozen']):.1f}%. The added state has linear event work and 6,534 learned parameters."),
-        ("p","A separate key stream computes actual input-dependent winners and clocks while new value maps "
-         "learn under that schedule. Matched continuations reach 364/512 (71.1%) with separate keys and "
-         "365/512 (71.3%) with shared streams. Both improve fitting accuracy but remain below the parent. "
-         "Audited finite value credit agrees with predicted loss change; all extra key computation is charged. "
-         "This establishes a routing-isolation mechanism, not an accuracy or energy advantage."),
+        ("p","A separate key stream computes actual input-dependent winners and clocks while values learn. "
+         "Training only new context maps reaches 71.1% with separate keys and 71.3% with shared streams. "
+         "Training all eight value layers reaches 68.2% in both routing conditions. Every value layer receives "
+         "credit; route stability alone is insufficient for better transfer."),
+        ("p",f"Content-selective temporal memory starts with identical parent predictions and preserves hard "
+         f"winning signals. Its full-value continuation reaches <b>{100*tasks['shd_content']['rows']['content']['held_accuracy']:.1f}%</b>, "
+         "versus 68.2% for the plain full-value control. It adds 2,048 learned query/key parameters and "
+         "uses 165 state scalars per time bank versus 33. Its retrieval and gradient identities are audited; "
+         "this additional state and computation must earn their cost in task quality."),
         ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
          "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
          "at the audited checkpoint, excluding optimizer updates."),
@@ -517,7 +527,8 @@ def blocks(M, tasks, ev):
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
          "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
          "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks "
-         "a joint race-credit formalism and E133 supplies the expert-free language screen."),
+         "a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test "
+         "whole-value credit and content-selective temporal memory."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])

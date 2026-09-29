@@ -1,5 +1,63 @@
 # Findings log
 
+## E134: full value learning separates gradient support from transfer (29 September 2026)
+
+Eight layers, 4,096 fitting utterances, 512 held-out training-file speakers,
+one augmented pass, the same parent checkpoint, fresh Adam at 0.0003, batch
+four, seed six. Both arms train the same 58,048 value/embedding/memory-time/head
+parameters, with no local loser surrogate. Policy tensors are frozen in both;
+only one computes functional keys from an immutable separate program. Initial
+predictions, sample order, augmentation and update budget match exactly.
+
+Both arms finish at **349/512 (68.16%)**, below the parent's **370/512 (72.27%)**.
+Fixed/coupled held NLL is 1.1071/1.1006 versus 0.9827 at the parent. Clean fitting
+NLL improves to 0.6076/0.6108 from 0.6204; fitting accuracy is 79.91%/79.71%.
+Every value map changes and receives nonzero gradients. Fixed key winner counts
+and clocks are preserved exactly; coupled functional schedules change. The
+finite credit contract agrees with predicted loss reduction at a small step.
+
+This rules out a gain from functional key freezing **in this full-value phase**.
+It does not erase E130's isolated harmful boundary crossing, and it does not
+attribute all remaining errors to routing. Interior credit support, optimizer
+behavior, representation selectivity and transfer are distinct gaps. The
+parent remains the strongest common SHD result. Fresh-optimizer continuation
+differs from the earlier parent training; this is not a matched initialization
+or from-scratch architecture comparison.
+
+1023/1024 fitting steps clip the total gradient in each arm. Fixed/coupled
+wall times are 511.3/370.2 seconds with the same cached initial-evaluation
+boundary, and peak RSS is 582,340/588,060 KiB respectively (read result files
+for recorded hardware). Extra immutable key computation is charged. No total
+training FLOPs, memory-traffic or joule measurement is available. Completed
+audit: `results/e134/full_value_comparison_20260929.json`.
+
+## E135: content-key temporal memory contracts (29 September 2026)
+
+A bounded positive retrieval kernel is accumulated in affine temporal state
+inside the existing winning-value stream. A paired-feature initialization
+recovers the old temporal mean **exactly**, while diverse keys provide a
+nonzero query teacher. Query teaching then unlocks key teaching. Algebraically
+compressing paired features to a mean plus four signed content moments reduces
+the candidate's state from 265 to **165 scalars per time bank** at width 32;
+the old plain memory uses 33. Kernel weights remain positive, and the event
+scan has linear payload work with no production event-pair matrix.
+
+The contract nests the parent's logits exactly, preserves actual hard winners
+and clocks, and matches a direct reference to 6.7e-16. Payload/time/count/tau/
+query/key gradient discrepancies are at most 2.5e-14. Initial query/key gradient
+norms are 0.4863/0; after a query step the key norm becomes 0.07086. These are
+small deterministic mechanism checks, not speech accuracy. The conditional
+depth bound must include content-dependent memory feedback: the conservative
+initial transport interval is [0.00345, 21.12], substantially looser than for
+plain means. This does not establish well-conditioned optimization.
+
+Theory §205 derives the covariance that actually teaches query selection and
+the extra state/projection/retrieval work. The speech continuation uses the
+same parent, augmented fitting pass and full-value optimizer budget as E134,
+plus 2,048 content query/key parameters; completed outcomes are recorded
+separately. Core hard races and sparse event packet semantics are unchanged.
+Contract: `results/e135/content_contract_20260929.json`.
+
 ## E133: learned deep language prediction without explicit experts (29 September 2026)
 
 The same common model, evidence_count=0, no pointer/copy/phase predictor: 8,192

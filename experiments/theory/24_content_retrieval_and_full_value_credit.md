@@ -124,6 +124,26 @@ available after a query update. This is a specific, testable learning order.
 The kernel remains between $1-\eta^2$ and $1+\eta^2$; the initial candidate
 is deliberately a bounded content reweighting, not an arbitrary sharp softmax.
 
+In particular, for two eligible packets with base temporal/count weights
+$b_i,b_j$, their attention ratio obeys
+$w_i/w_j\le[(1+\eta^2)/(1-\eta^2)](b_i/b_j)$. At $\eta=0.5$ this
+content-only multiplier is at most **5/3**. On $E$ equal-weight packets the
+largest possible individual probability, ignoring the positive prior, is
+at most $(1+\eta^2)/[(1+\eta^2)+(E-1)(1-\eta^2)]$. Thus this first-order
+kernel tests learnable content correction; it has a precise limitation on
+sharp item selection. Its feature rank and its selectivity are different
+properties and must be measured separately.
+
+A positive degree-$m$ kernel $[1+(\eta^2/P)q^Tk]^m$ increases that ratio to
+$[(1+\eta^2)/(1-\eta^2)]^m$ and multiplies the relative-input bound by $m$.
+Exact symmetric polynomial state needs up to $\binom{P+m}{m}$ features,
+rather than $P+1$. Its mean-preserving balanced initialization remains valid,
+with a query teacher multiplied by $m$. This is an explicit selectivity/
+state/conditioning tradeoff, not a cost-free cure. Sparse addressed candidate
+selection offers a different tradeoff and requires credit for those addressing
+decisions. The bounded first-order candidate should be evaluated within its
+actual selectivity range before escalating either state degree or route count.
+
 The paired kernel expands exactly to
 $1+(\eta^2/P)\sum_j\tanh(Q_jx)\tanh(W_jx_i)$. Its affine state therefore
 needs only the plain numerator/mass and $P$ signed key moments, with
@@ -157,3 +177,50 @@ The implementation records expanded scan width, projections, retrieval and
 materialized state. It must not hide its extra work inside an unchanged count
 of scalar scan *compositions*. E135 audits these identities and learning
 directions before interpreting a speech continuation.
+
+A tighter certificate uses the actual normalized value-row partitions.
+For row $r$ of candidate $k$, let $w_x,w_m$ be its direct and local-memory
+blocks and $b_m$ its global-memory block. With fixed counts and schedules the
+mass features have zero payload derivative. A sufficient bound is
+
+\[
+ a_l=\max_{k,r}\{\|w_x\|_1+L_y\|w_m\|_1+L_y\|b_m\|_1\}.
+ \tag{205.6}
+\]
+
+The global term is zero where that channel is absent. This avoids assigning
+unit gain to a small or zero global map and avoids assigning memory gain to
+direct payload columns. It gives a parameter-aware **global** certificate on
+the declared payload ball, rather than a Jacobian measurement at one sample.
+The E135 checkpoint ablation records this interval alongside the conservative
+whole-map bound. Gain budgets can consequently be allocated to the memory
+columns that actually use sharper retrieval, with their work and content
+selection measured separately.
+
+### The query teacher is a content/value covariance, not activity alone
+
+At balanced initialization define $p_i=c_i e^{-(t-t_i)/\tau}/(C+\epsilon)$,
+add a prior outcome of mass $\epsilon/(C+\epsilon)$ with zero key/value, and
+let $k_{ij}=\tanh(W_jx_i)$, $m=\mathbb E_p[v]$. Then
+
+\[
+ C_j=\mathbb E_p[k_jv]-\mathbb E_p[k_j]\,m,
+ \qquad \partial_{Q_j} y=(\eta^2/P)C_j x^T,
+ \qquad \nabla_{Q_j}L=(\eta^2/P)(g^TC_j)x. \tag{205.5}
+\]
+
+An active receiver with many events can still have zero query teacher: equal
+payloads give zero covariance in the unregularized limit, and a teacher
+orthogonal to all $C_j$ gives zero loss derivative. Extra event activity or key
+entropy does not fix that missing alignment. Conversely, diverse content
+moments plus a supported teacher give a concrete route to retrieval learning
+without changing the current hard winner.
+
+For a single query, the matrix of available vectors $[C_1,\ldots,C_P]$ has
+rank at most $P$. Wider features enlarge the possible local correction space,
+but cost additional state and do not ensure useful covariance. Tied query
+parameters aggregate these derivatives across packets and examples; the
+conditional cancellation problem from §203 remains. A measured local reserve
+can use the pullback $J_Q J_Q^T$ and its alignment with the supervised teacher.
+This is reserve for an immediate content update; continuation optionality must
+still specify its future teacher, learning budget and proposal distribution.
