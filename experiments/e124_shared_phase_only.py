@@ -47,13 +47,22 @@ def main():
         mistakes=0
         for i in order_rng.permutation(len(task.fit)):
             row=task.fit[i];mistakes+=model.phase_memory.teach(row.prefix.channels,row.label,phase_rng)
-        if epoch in (1,8) or epoch%10==0 or epoch==a.epochs:
+        if epoch in (1,8) or epoch%10==0 or epoch==a.epochs or mistakes==0:
             row={"epoch":epoch,"mistakes":mistakes,"fit":evaluate(model,task.fit),"dev":evaluate(model,task.dev)}
             result["curve"].append(row)
             print(json.dumps({"epoch":epoch,"dev":row["dev"]["accuracy"]}),flush=True)
+        if mistakes==0:
+            # A complete pass with no updates is a fixed point of this
+            # mistake-only teacher. Every later fitting order leaves it unchanged.
+            break
     result.update(status="completed",final=result["curve"][-1],wall_s=time.perf_counter()-started,
                   max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
                   local_updates=int(model.phase_memory.updates))
+    result.update(actual_epochs=epoch,fitting_presentations=len(task.fit)*epoch,
+                  stop_reason="zero-update complete fitting pass" if mistakes==0 else "epoch budget",
+                  teacher_serial_queries=len(task.fit)*epoch+int(model.phase_memory.updates),
+                  teacher_forward_operations_estimate=61*(len(task.fit)*epoch+int(model.phase_memory.updates)),
+                  teacher_work_note="61 logical units per three-symbol serial phase/clock query; excludes local updates, random exploration, evaluation and interpreter overhead")
     # This extraction should preserve the independently taught phase state exactly.
     parent=Path("experiments/results/e121/shared_d2_guard_s6_200.pt")
     if parent.exists() and a.seed==6 and a.epochs==200:
