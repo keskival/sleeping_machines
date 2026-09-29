@@ -39,7 +39,7 @@ def results():
     tasks["shd_pool_weighted"] = read("e122/d8_n4096_pool_weighted_s6.json")
     tasks["temporal_shallow"] = read("e120/temporal_d2_20260929.json")
     tasks["recall_shallow"] = read("e120/recall_d2_20260929.json")
-    tasks["breadth_work"] = read("e124/breadth_work_20260929.json")
+    tasks["breadth_work"] = read("e124/breadth_work_counted_20260929.json")
     tasks["shd_bridge"] = read("e122/d8_n4096_bridge_s6.json")
     tasks["shd_bridge_frozen"] = read("e122/d8_n4096_bridge_frozen_s6.json")
     return tasks

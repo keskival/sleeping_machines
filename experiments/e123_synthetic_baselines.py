@@ -40,6 +40,29 @@ class EventLSTM(nn.Module):
         return self.head(hidden[-1])
 
 
+class CountedTransformer(EventTransformer):
+    """Expose the count mark available to the common gesture encoder."""
+    def __init__(self,bands,classes,dim,depth):
+        super().__init__(bands,classes,dim,depth,1.2)
+        self.count_map=nn.Linear(1,dim,bias=False)
+        nn.init.zeros_(self.count_map.weight)
+    def forward(self,b,t,mask,counts):
+        angle=t[:,:,None]*self.freq
+        x=self.ch(b)+torch.cat((angle.sin(),angle.cos()),-1)
+        x=x+self.count_map(torch.log1p(counts[:,:,None])/10)
+        x=self.enc(x,src_key_padding_mask=mask)
+        x=x.masked_fill(mask[:,:,None],0).sum(1)/(~mask).sum(1,keepdim=True)
+        return self.out(x)
+
+
+def predict(net,b,t,mask,rows):
+    if not isinstance(net,CountedTransformer):return net(b,t,mask)
+    counts=torch.zeros_like(t)
+    for i,row in enumerate(rows):
+        counts[i,:len(row.prefix.counts)]=torch.from_numpy(row.prefix.counts.copy()).float()
+    return net(b,t,mask,counts)
+
+
 def batch(rows):
     lengths=[len(r.prefix.channels) for r in rows]
     b=torch.zeros(len(rows),max(lengths),dtype=torch.long)
@@ -55,7 +78,8 @@ def batch(rows):
 def evaluate(net,rows,bs):
     net.eval();total=0.;pred=[]
     for start in range(0,len(rows),bs):
-        b,t,mask,y=batch(rows[start:start+bs]);z=net(b,t,mask)
+        part=rows[start:start+bs]
+        b,t,mask,y=batch(part);z=predict(net,b,t,mask,part)
         pred+=z.argmax(-1).tolist()
         total+=float(loss_for(z,rows[start:start+bs],"sum"))
     correct=sum(p==r.label for p,r in zip(pred,rows))
@@ -96,7 +120,8 @@ def main():
             memory_rows.append(Example(prefix(np.r_[seq,64+q]),y,f"memory:{j}"))
         fit=memory_rows+fit
     dim,depth=32,2
-    net=(EventLSTM(task.config["bands"],task.config["classes"],dim,depth) if a.model=="lstm" else
+    net=(CountedTransformer(task.config["bands"],task.config["classes"],dim,depth) if a.task=="dvs" and a.model=="transformer" else
+         EventLSTM(task.config["bands"],task.config["classes"],dim,depth) if a.model=="lstm" else
          EventTransformer(task.config["bands"],task.config["classes"],dim,depth,1.2))
     opt=torch.optim.Adam(net.parameters(),lr=.003)
     rng=np.random.default_rng(a.seed+10);started=time.perf_counter()
@@ -119,7 +144,7 @@ def main():
         net.train();total=0.;order=rng.permutation(len(fit))
         for start in range(0,len(fit),a.bs):
             rows=[fit[i] for i in order[start:start+a.bs]]
-            b,t,mask,y=batch(rows);z=net(b,t,mask)
+            b,t,mask,y=batch(rows);z=predict(net,b,t,mask,rows)
             loss=loss_for(z,rows)
             if not torch.isfinite(loss):raise FloatingPointError("Nonfinite baseline loss")
             opt.zero_grad(set_to_none=True);loss.backward()

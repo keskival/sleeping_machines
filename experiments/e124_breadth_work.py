@@ -21,7 +21,7 @@ def main():
     torch.set_num_threads(1);rows=[]
     for name in ("language","market","temporal","mnist","dvs"):
         common_path=Path("experiments/results/e120")/f"{name}_d8_20260929.json"
-        reference_path=Path("experiments/results/e123")/f"{name}_tf_d32_l2_s6.json"
+        reference_path=Path("experiments/results/e123")/(f"{name}_tf_counts_d32_l2_s6.json" if name=="dvs" else f"{name}_tf_d32_l2_s6.json")
         common,reference=read(common_path),read(reference_path)
         task=BUILDERS[name](common["args"]["fit"],common["args"]["dev"],6)
         assert common["fit_ids"]==reference["fit_ids"]==[r.identity for r in task.fit]
@@ -44,8 +44,12 @@ def main():
             training_forward_macs+=L*E*K*F+V*d*F+K*(d+1)*S
             training_forward_macs+=len(task.fit)*((d+1)**2+(d+1)*C+J*(d+1+C))
         dense=[dense_work("transformer",32,2,len(r.prefix.channels),C) for r in task.dev]
+        if name=="dvs":
+            for ledger,sample in zip(dense,task.dev):
+                ledger["dense_macs"]+=32*len(sample.prefix.channels)
         dense_training_macs=sum(dense_work("transformer",32,2,len(r.prefix.channels),C)["dense_macs"]
                                 for r in task.fit)*reference["args"]["epochs"]
+        if name=="dvs":dense_training_macs+=32*sum(len(r.prefix.channels) for r in task.fit)*8
         rows.append({"task":name,"common_result":str(common_path),"reference_result":str(reference_path),
             "common_metric":{k:v for k,v in common["final"]["dev"].items() if k in ("accuracy","nll","correct","n")},
             "reference_metric":{k:v for k,v in reference["final"]["dev"].items() if k in ("accuracy","nll","correct","n")},
