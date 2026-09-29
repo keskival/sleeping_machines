@@ -103,6 +103,53 @@ tail -n 10 experiments/queue/logs/<active-job>.log
 
 Do not raise `MEM_CAP_KB`, `MEM_CAP_RSS_KB`, or lower `MIN_AVAIL_MB` until a measured run justifies it. On a GPU, also monitor `watch -n 2 nvidia-smi`; the safe runner does not cap GPU memory.
 
+## Use Codex on AWS for heavier benchmarks
+
+Run Codex from the AWS checkout and use it for one benchmark at a time. The
+queue lock at `/tmp/experiments-runner.lock` serializes jobs on that EC2 host;
+it does not coordinate with the workstation or another EC2 instance. Keep AWS
+run tags distinct (for example, include `aws`) so results from two machines do
+not overwrite one another when copied or merged. Use a separate Git branch on
+AWS while the workstation checkout is also changing.
+
+Give Codex this instruction at the start of its AWS session:
+
+```text
+This EC2 host is for completing the larger, previously deferred Transformer
+benchmarks. Start with the existing benchmark configurations and results; do
+not invent a new comparison before checking REPORT.md, experiments/FINDINGS.md,
+and experiments/queue. Prioritize the most informative deferred large run.
+
+Before each run, inspect free -h, MemAvailable, running experiment processes,
+the GPU with nvidia-smi if present, and the intended queue/log/result paths. Run
+only one training job at a time. Never launch a benchmark directly with Python:
+put it in a uniquely named one-job queue and use
+experiments/queue/run_safe.sh, which owns the host-local lock. If the lock is
+busy, wait or report that; never bypass or delete it. The lock is local to this
+EC2 host and does not coordinate with the workstation.
+
+Choose MEM_CAP_KB, MEM_CAP_RSS_KB, MIN_AVAIL_MB, and JOB_TIMEOUT_S from the
+actual instance capacity and the model's measured needs. Keep at least 8 GiB
+MemAvailable for the OS and other services, retain the RSS watchdog, and use
+tmux for long runs. For CUDA, check that the GPU is otherwise idle, monitor
+nvidia-smi, and set the PyTorch GPU-memory fraction explicitly. Do not run two
+GPU jobs concurrently.
+
+Give every run a unique AWS-specific run_tag and output name. Never overwrite
+an earlier result or reuse a successful queue job name for changed settings.
+Record the exact command, instance type, CPU/GPU, memory peak, wall time, and
+benchmark metrics. Update findings and the report only from completed result
+files. Work on a dedicated AWS Git branch; commit the benchmark and report
+changes there, and do not push to main while another host may be changing it.
+```
+
+The checkout's `run_safe.sh` defaults protect a small host and may be too
+restrictive for a large Transformer. Raise the per-job caps only after reading
+the instance memory and confirming that the chosen RSS cap still leaves the
+8 GiB floor. For a CUDA process, the runbook's `MEM_CAP_KB=unlimited` example
+removes only the virtual-address-space cap; the process RSS ceiling and
+available-memory floor must remain active.
+
 ## Preserve results and shut down
 
 Copy reviewed results and logs off the instance before termination, using your own S3 bucket or `scp` to your workstation. Keep the data and checkpoints needed to reproduce any reported metric. Training state is not resumable for the present E64 scripts until they finish.
