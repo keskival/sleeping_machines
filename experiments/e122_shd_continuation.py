@@ -18,6 +18,7 @@ import torch
 from torch.nn import functional as F
 from e117_serial_event_shd import batch, load_items
 from e118_race_carrier_shd import RaceNet, evaluate
+from sleeping_machines.shared_event import SharedEventModel
 
 
 def augment(item, rng):
@@ -40,6 +41,7 @@ def main():
     p.add_argument("--bs", type=int, default=4)
     p.add_argument("--lr", type=float, default=.001)
     p.add_argument("--seed", type=int, default=6)
+    p.add_argument("--readout", choices=("mean","weighted"), default="mean")
     p.add_argument("--checkpoint", default="experiments/results/e119/race_d8_linear_n1024_e8_s6.pt")
     a = p.parse_args()
     if Path(a.tag).name != a.tag or min(a.limit,a.epochs,a.bs)<1:
@@ -50,10 +52,23 @@ def main():
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
     saved = torch.load(a.checkpoint,weights_only=False,map_location="cpu")
-    net = RaceNet(depth=8,memory_backend="linear")
-    net.load_state_dict(saved["state_dict"],strict=True)
-    opt = torch.optim.Adam(net.parameters(),lr=a.lr)
-    opt.load_state_dict(saved["optimizer"])
+    net = SharedEventModel(depth=8,memory_backend="linear",readout=a.readout)
+    missing,unexpected = net.load_state_dict(saved["state_dict"],strict=False)
+    new_gain = missing == ["readout_gain.weight"] and a.readout == "weighted"
+    if unexpected or (missing and not new_gain):
+        raise ValueError(f"Checkpoint mismatch: {missing}, {unexpected}")
+    if a.readout == "weighted":
+        gate = net.readout_gain.weight
+        opt = torch.optim.Adam([p for p in net.parameters() if p is not gate],lr=a.lr)
+        if new_gain:
+            opt.load_state_dict(saved["optimizer"])
+            opt.add_param_group({"params":[gate],"lr":a.lr})
+        else:
+            opt.add_param_group({"params":[gate],"lr":a.lr})
+            opt.load_state_dict(saved["optimizer"])
+    else:
+        opt = torch.optim.Adam(net.parameters(),lr=a.lr)
+        opt.load_state_dict(saved["optimizer"])
     order_rng = np.random.default_rng(a.seed+2)
     order_rng.bit_generator.state = saved.get("numpy_rng", saved.get("order_rng"))
     augmentation_rng = np.random.default_rng(a.seed+122)
@@ -107,6 +122,8 @@ def main():
             values+=sum(s["value_evaluations"] for s in stats["layers"])
         row={"epoch":epoch,"lr":lr,"online_nll":nll/len(fit),"route_grad_norm":(grads/steps).tolist(),
              "training_input_packets":packets,"training_value_evaluations":values,**eval_splits()}
+        if net.readout_gain is not None:
+            row["readout_gain_norm"] = float(net.readout_gain.weight.detach().norm())
         result["curve"].append(row)
         checkpoint={"args":vars(a),"state_dict":net.state_dict(),"optimizer":opt.state_dict(),
                     "epoch":epoch,"order_rng":order_rng.bit_generator.state,

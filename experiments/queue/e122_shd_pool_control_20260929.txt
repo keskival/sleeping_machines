@@ -1,0 +1,1 @@
+e122_shd_pool_control_20260929 experiments/e122_shd_continuation.py --tag d8_n4096_pool_control_s6 --augment 1 --limit 4096 --epochs 1 --lr 0.0003 --readout mean --checkpoint experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt
