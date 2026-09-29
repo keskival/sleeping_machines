@@ -37,6 +37,7 @@ TAU_R = 20.0                                                         # reset tra
 
 class TVLayer(nn.Module):
     def __init__(self, n_in, M, d_in, d_out, n, dmax, mask=None, spiking=True, w_sd=0.1, theta=1.0, gate_bias=0.5,
+                 route_topk=0,
                  cdelay=1, gate=1, snapshot=1, causal=False, tau_range=(5.0, 100.0), td0=10.0, normalize=False):
         super().__init__()
         self.normalize = normalize                  # non-spiking read z / (count channel + 1): the §105 normalizer
@@ -44,6 +45,9 @@ class TVLayer(nn.Module):
         self.vdot_min = 0.02                       # floor on dV/dt at a crossing: bounds 1/V' for grazing spikes
         self.register_buffer("sent", torch.zeros(n_in, M, dtype=torch.bool), persistent=False)   # §107(e) diagnostic
         self.M, self.n, self.dmax, self.spiking, self.theta = M, n, dmax, spiking, theta
+        self.route_topk = int(route_topk)
+        if self.route_topk < 0:
+            raise ValueError("route_topk must be nonnegative")
         tau = torch.exp(torch.empty(M, n).uniform_(math.log(tau_range[0]), math.log(tau_range[1])))
         self.log_rate = nn.Parameter(-torch.log(tau)); self.freq = nn.Parameter(torch.rand(M, n) * 0.3)   # rad per time unit
         self.Bre = nn.Parameter(torch.randn(n, d_in) / math.sqrt(d_in)); self.Bim = nn.Parameter(torch.randn(n, d_in) / math.sqrt(d_in))
@@ -88,6 +92,24 @@ class TVLayer(nn.Module):
             if route_overrides and (force_route is not None or drop_route is not None):
                 raise ValueError("route_overrides cannot be combined with force_route/drop_route")
             keep = r.detach() > 0                                              # non-matching content: no message
+            if self.route_topk and len(pe):
+                # Sparse segmented top-k: each source event sends to at most K
+                # positive-score neighbours. Two stable sorts group by event,
+                # then rank only the existing sparse candidate edges.
+                order_score = torch.argsort(r.detach(), descending=True, stable=True)
+                order = order_score[torch.argsort(pe[order_score], stable=True)]
+                sorted_event = pe[order]
+                positions = torch.arange(len(order), device=order.device)
+                starts = torch.where(
+                    torch.cat((torch.ones(1, dtype=torch.bool, device=order.device),
+                               sorted_event[1:] != sorted_event[:-1])),
+                    positions, torch.zeros_like(positions))
+                segment_start = torch.cummax(starts, dim=0).values
+                rank = positions - segment_start
+                selected = (rank < self.route_topk) & (r.detach()[order] > 0)
+                topk_keep = torch.zeros_like(keep)
+                topk_keep[order] = selected
+                keep = topk_keep
             if force_route is not None:
                 fe, fj = map(int, force_route)
                 forced = (pe == fe) & (pj == fj)
@@ -113,6 +135,8 @@ class TVLayer(nn.Module):
                     if bool(active) == was_active:
                         raise ValueError("route override must change the current gate state")
                     keep = (keep | changed) if active else (keep & ~changed)
+            if route_info is not None:
+                route_info["active"] = keep.detach()
             pe, pj, r = pe[keep], pj[keep], r[keep]
         if not self.training:
             self.sent[ei[pe], pj] = True

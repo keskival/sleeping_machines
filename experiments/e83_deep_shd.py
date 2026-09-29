@@ -346,19 +346,23 @@ class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
                  dmax, w_sd, seed=0, event_readout=False,
                  readout_fusion="deepest", input_count_payload=False,
-                 early_event_skip=False):
+                 early_event_skip=False, route_topk=0):
         super().__init__()
         if depth < 1:
             raise ValueError("depth must be at least one")
         self.depth = int(depth)
         self.early_event_skip = bool(early_event_skip)
+        self.route_topk = int(route_topk)
+        if self.route_topk < 0:
+            raise ValueError("route_topk must be nonnegative")
         gen = torch.Generator().manual_seed(seed)
         self.emb = nn.Embedding(bands, d)
         self.widths = [M1] + [M] * (depth - 1)
         self.layers = nn.ModuleList()
         centers = (torch.arange(M1) + 0.5) * bands / M1
         local = (torch.arange(bands)[:, None] - centers[None]).abs() <= window / 2
-        self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0]))
+        self.layers.append(TVLayer(bands, M1, d, d, n, dmax, local, True, w_sd[0],
+                                   route_topk=self.route_topk))
         adjacent_masks = []
         for i in range(1, depth):
             previous_width = self.widths[i - 1]
@@ -384,7 +388,8 @@ class DeepSHD(nn.Module):
                         skip_mask[i0, torch.randint(M, (), generator=skip_gen)] = True
                 mask = torch.cat((adjacent_mask, skip_mask), dim=0)
             n_in = mask.shape[0]
-            self.layers.append(TVLayer(n_in, M, d, d, n, dmax, mask, True, w_sd[1]))
+            self.layers.append(TVLayer(n_in, M, d, d, n, dmax, mask, True, w_sd[1],
+                                       route_topk=self.route_topk))
         self.event_readout = bool(event_readout)
         self.readout_fusion = readout_fusion
         if self.event_readout:
@@ -710,6 +715,49 @@ def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, lim
     return len(candidates), per_layer_count, selected
 
 
+def route_replacement_candidates(route_candidates, score_gap, route_topk):
+    """Find top-k boundary swaps: weakest selected route vs strongest loser.
+
+    Candidate construction is linear in the sparse edge list. A swap keeps
+    the source event's outgoing message count fixed and changes only its
+    receiver, making the counterfactual comparable to a categorical MoE choice.
+    """
+    by_layer = [[] for _ in route_candidates]
+    for layer_id, route_info in enumerate(route_candidates):
+        scores = route_info["score"].detach().cpu().numpy()
+        event_ids = route_info["event_index"].detach().cpu().numpy()
+        receivers = route_info["receiver"].detach().cpu().numpy()
+        active = route_info.get("active")
+        if active is None:
+            continue
+        active = active.detach().cpu().numpy().astype(bool)
+        groups = {}
+        for route_idx, event_id in enumerate(event_ids):
+            groups.setdefault(int(event_id), []).append(route_idx)
+        for event_id, route_ids in groups.items():
+            on = [idx for idx in route_ids if active[idx]]
+            if len(on) != route_topk:
+                continue
+            off = [idx for idx in route_ids if not active[idx]]
+            if not off:
+                continue
+            weakest = min(on, key=lambda idx: scores[idx])
+            # Top-k is applied only to positive content gates. A negative
+            # loser is the null/no-message alternative, not a competing route;
+            # keep this experiment specifically about receiver replacement.
+            positive_off = [idx for idx in off if scores[idx] > 0.0]
+            if not positive_off:
+                continue
+            strongest_loser = max(positive_off, key=lambda idx: scores[idx])
+            gap = float(scores[weakest] - scores[strongest_loser])
+            if 0.0 <= gap <= score_gap:
+                by_layer[layer_id].append((
+                    layer_id, event_id, int(receivers[weakest]),
+                    int(receivers[strongest_loser]), weakest,
+                    strongest_loser, gap))
+    return by_layer
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bands", type=int, default=140)
@@ -772,6 +820,12 @@ def main():
                     help="per-second discount on correct race outcomes, rewarding earlier answers")
     ap.add_argument("--dmax", type=float, default=50.0)
     ap.add_argument("--w_sd", default="0.05,0.05")
+    ap.add_argument("--route_topk", type=int, default=0,
+                    help="cap each event to its top-K positive-score sparse receivers; 0 keeps independent gates")
+    ap.add_argument("--cf_route_swaps_per_layer", type=int, default=0,
+                    help="score-preserving-count route replacement shadows per layer and batch (requires --route_topk)")
+    ap.add_argument("--cf_route_swap_band", type=float, default=0.5,
+                    help="maximum winner-minus-loser score gap for route replacement shadows")
     ap.add_argument("--shift", type=int, default=4)
     ap.add_argument("--drop", type=float, default=0.1)
     ap.add_argument("--epochs", type=int, default=2)
@@ -791,6 +845,8 @@ def main():
             or not math.isfinite(a.prefix_horizon_ms) or a.prefix_horizon_ms <= 0.0):
         raise ValueError("prefix_samples and prefix_horizon_ms must be positive; prefix_window_start must be in [0, 1)")
     if (a.cf_shadows_per_layer < 0 or a.cf_pairs_per_batch < 0
+            or a.cf_route_swaps_per_layer < 0 or a.route_topk < 0
+            or not math.isfinite(a.cf_route_swap_band) or a.cf_route_swap_band <= 0.0
             or not math.isfinite(a.cf_pair_window_ms) or a.cf_pair_window_ms <= 0.0
             or not math.isfinite(a.cf_band) or a.cf_band <= 0.0
             or not math.isfinite(a.cf_sigma) or a.cf_sigma <= 0.0
@@ -798,6 +854,8 @@ def main():
             or not math.isfinite(a.cf_grad_clip) or a.cf_grad_clip <= 0.0
             or not math.isfinite(a.cf_delta_clip) or a.cf_delta_clip <= 0.0):
         raise ValueError("counterfactual count must be nonnegative; band, sigma, loss-difference clip, and gradient clip must be positive; cf_lr must be nonnegative")
+    if a.cf_route_swaps_per_layer and not a.route_topk:
+        raise ValueError("--cf_route_swaps_per_layer requires --route_topk > 0")
     if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
         raise ValueError(f"{a.cf_pair_sampling} pair sampling requires --cf_pairs_per_batch 1")
     os.makedirs(OUT, exist_ok=True)
@@ -815,6 +873,7 @@ def main():
     prefix_rng = np.random.default_rng(a.seed + 100_003)
     counterfactual_rng = np.random.default_rng(a.seed + 200_003)
     pair_rng = np.random.default_rng(a.seed + 700_031)
+    route_swap_rng = np.random.default_rng(a.seed + 900_017)
     t0 = time.time()
 
     def load(split, part):
@@ -830,7 +889,8 @@ def main():
                   a.readout_fan, a.dmax, widths_sd, a.seed, event_readout=event_readout,
                   readout_fusion=a.readout_fusion,
                   input_count_payload=a.input_count_payload == "additive",
-                  early_event_skip=a.early_event_skip)
+                  early_event_skip=a.early_event_skip,
+                  route_topk=a.route_topk)
     opt = torch.optim.AdamW(net.parameters(), lr=a.lr, weight_decay=0.01)
     nb = math.ceil(len(tr) / a.bs)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, a.lr, total_steps=a.epochs * nb, pct_start=0.1)
@@ -869,6 +929,11 @@ def main():
         cf_pair_sample_prob_sum_ep = 0.0
         cf_pair_sample_prob_min_ep = float("inf")
         cf_pair_sample_prob_max_ep = 0.0
+        cf_route_swap_eligible_ep = np.zeros(a.depth, dtype=np.int64)
+        cf_route_swap_shadow_ep = np.zeros(a.depth, dtype=np.int64)
+        cf_route_swap_delta_sum_ep = np.zeros(a.depth, dtype=np.float64)
+        cf_route_swap_gap_sum_ep = np.zeros(a.depth, dtype=np.float64)
+        cf_route_swap_helpful_ep = np.zeros(a.depth, dtype=np.int64)
         perm = train_order_rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
@@ -882,7 +947,8 @@ def main():
                                                     et.device, et.dtype, prefix_rng)
             _, info = net(eb, ei, et, len(items), grid, return_taps=True,
                           collect_routes=event_readout and (
-                              a.cf_shadows_per_layer > 0 or a.cf_pairs_per_batch > 0),
+                              a.cf_shadows_per_layer > 0 or a.cf_pairs_per_batch > 0
+                              or a.cf_route_swaps_per_layer > 0),
                           input_counts=input_counts)
             traces = info["tap_traces"]
             if event_readout:
@@ -916,8 +982,10 @@ def main():
             cf_abs_delta_sum = 0.0
             cf_clipped_count = 0
             cf_pair_shadow_count = 0
+            cf_route_swap_count = 0
             cf_grads = None
-            if event_readout and (a.cf_shadows_per_layer or a.cf_pairs_per_batch):
+            if event_readout and (a.cf_shadows_per_layer or a.cf_pairs_per_batch
+                                  or a.cf_route_swaps_per_layer):
                 base_total = (main_loss + a.aux_weight * aux_loss).detach()
                 cf_proxy = main_loss.new_zeros(())
                 for k, route_info in enumerate(info["route_candidates"]):
@@ -975,6 +1043,54 @@ def main():
                         # update, not the sum over every candidate in the band.
                         cf_proxy = cf_proxy + (a.cf_weight * boundary_derivative
                                                * (live_score - live_score.detach()) / take)
+                if a.cf_route_swaps_per_layer:
+                    swap_candidates = route_replacement_candidates(
+                        info["route_candidates"], a.cf_route_swap_band, a.route_topk)
+                    for k, candidates_k in enumerate(swap_candidates):
+                        cf_route_swap_eligible_ep[k] += len(candidates_k)
+                        take = min(a.cf_route_swaps_per_layer, len(candidates_k))
+                        if not take:
+                            continue
+                        chosen = route_swap_rng.choice(len(candidates_k), size=take,
+                                                       replace=False)
+                        batch_ids, source_units, source_payload = info["route_inputs"][k]
+                        for chosen_idx in np.atleast_1d(chosen):
+                            (layer_id, event_id, winner_receiver, loser_receiver,
+                             winner_idx, loser_idx, score_gap) = candidates_k[int(chosen_idx)]
+                            overrides = [
+                                (layer_id, event_id, winner_receiver, False),
+                                (layer_id, event_id, loser_receiver, True)]
+                            with torch.no_grad():
+                                _, swap_info = net(
+                                    eb, ei, et, len(items), grid, return_taps=True,
+                                    route_overrides=overrides, input_counts=input_counts)
+                                swap_main, swap_aux, _ = sparse_event_objective(
+                                    net.event_heads, swap_info["layer_events"], y,
+                                    seq_end, a.dmax, prefix_times, a.readout_fusion)
+                                alt_loss = swap_main + a.aux_weight * swap_aux
+                            event_unit = source_units[event_id]
+
+                            def live_score(receiver_id):
+                                return ((net.layers[layer_id].q[receiver_id]
+                                         * source_payload[event_id]).sum()
+                                        + net.layers[layer_id].c[event_unit, receiver_id])
+
+                            score_win = live_score(winner_receiver)
+                            score_loser = live_score(loser_receiver)
+                            score_difference = score_win - score_loser
+                            p_win = torch.sigmoid(score_difference.detach() / a.cf_sigma)
+                            delta_win_vs_loser = float(base_total) - float(alt_loss.item())
+                            dloss_dgap = (p_win * (1.0 - p_win) / a.cf_sigma) * delta_win_vs_loser
+                            cf_proxy = cf_proxy + (a.cf_weight * dloss_dgap
+                                                   * (score_difference - score_difference.detach())
+                                                   / take)
+                            alt_delta = float(alt_loss.item()) - float(base_total)
+                            cf_route_swap_delta_sum_ep[layer_id] += alt_delta
+                            cf_route_swap_gap_sum_ep[layer_id] += score_gap
+                            cf_route_swap_helpful_ep[layer_id] += int(alt_delta < 0.0)
+                            cf_route_swap_shadow_ep[layer_id] += 1
+                            cf_route_swap_count += 1
+
                 if a.cf_pairs_per_batch:
                     pair_candidate_count, pair_candidates_by_layer, eligible_pairs = nearby_closed_route_pairs(
                         info["route_candidates"], a.cf_band, a.cf_pair_window_ms,
@@ -1056,7 +1172,7 @@ def main():
                     if eligible_pairs:
                         cf_proxy = cf_proxy + pair_proxy / len(eligible_pairs)
                 cf_grads = None
-                if (cf_shadow_count or cf_pair_shadow_count) and a.cf_lr:
+                if (cf_shadow_count or cf_pair_shadow_count or cf_route_swap_count) and a.cf_lr:
                     model_params = [p for p in net.parameters() if p.requires_grad]
                     cf_grads = torch.autograd.grad(cf_proxy, model_params, retain_graph=True,
                                                    allow_unused=True)
@@ -1429,6 +1545,19 @@ def main():
             row["counterfactual_pair_fraction_synergistic_gamma_negative"] = round(
                 cf_pair_synergy_ep / max(cf_pair_shadow_ep, 1), 4)
             row["counterfactual_pair_shadow_counts_by_layer"] = cf_pair_shadow_by_layer_ep.tolist()
+            row["route_topk"] = a.route_topk
+            row["counterfactual_route_swap_eligible_by_layer"] = cf_route_swap_eligible_ep.tolist()
+            row["counterfactual_route_swap_shadowed_by_layer"] = cf_route_swap_shadow_ep.tolist()
+            row["counterfactual_route_swap_replays"] = int(cf_route_swap_shadow_ep.sum())
+            row["counterfactual_route_swap_mean_alternative_minus_current_loss_by_layer"] = [
+                round(float(cf_route_swap_delta_sum_ep[k] / cf_route_swap_shadow_ep[k]), 7)
+                if cf_route_swap_shadow_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_route_swap_fraction_alternative_helpful_by_layer"] = [
+                round(float(cf_route_swap_helpful_ep[k] / cf_route_swap_shadow_ep[k]), 4)
+                if cf_route_swap_shadow_ep[k] else None for k in range(a.depth)]
+            row["counterfactual_route_swap_mean_score_gap_by_layer"] = [
+                round(float(cf_route_swap_gap_sum_ep[k] / cf_route_swap_shadow_ep[k]), 6)
+                if cf_route_swap_shadow_ep[k] else None for k in range(a.depth)]
             row["counterfactual_mean_abs_loss_delta"] = round(
                 cf_abs_delta_ep / max(cf_shadow_ep, 1), 6)
             row["counterfactual_mean_signed_open_minus_closed_loss"] = round(
@@ -1500,12 +1629,14 @@ def main():
         "layer_balanced": "_pslayerbalanced",
         "late_balanced": "_pslatebalanced",
     }[a.cf_pair_sampling] if event_readout else ""
+    route_tag = (f"_topk{a.route_topk}_swaps{a.cf_route_swaps_per_layer}"
+                 f"_sb{a.cf_route_swap_band:g}" if event_readout and a.route_topk else "")
     fusion_tag = f"_rf{a.readout_fusion}" if event_readout else ""
     count_tag = "_cntadd" if a.input_count_payload == "additive" else ""
     skip_tag = "_skfirst" if a.early_event_skip else ""
     rng_tag = "_rngsplit" if a.rng_protocol == "split" else ""
     run_tag = f"_{a.run_tag}" if a.run_tag else ""
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}{pair_sampling_tag}_spk_s{a.seed}.json")
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}{pair_sampling_tag}{route_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"
         torch.save({"args": vars(a), "model_state_dict": net.state_dict()}, checkpoint_path)

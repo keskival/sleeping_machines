@@ -2,8 +2,8 @@
 
 Select one pair of distinct, in-band, nonrefractory threshold candidates from
 one hidden layer per batch, then replay all four binary outcomes through the
-ordinary suffix. This tests whether joint events create downstream activity
-and deepest-only credit that neither event receives alone. Diagnostic only.
+ordinary suffix. Optional shared-receiver selection tests whether both source
+events can reach a common next-layer unit. Diagnostic only.
 """
 import argparse
 import json
@@ -103,12 +103,11 @@ def shared_receiver_delivery(net, info, source_layer, pair, shared_receivers, ba
     if source_layer + 1 >= net.depth:
         return {"accepted_shared_receivers": [], "arrival_gaps_ms": []}
     out_b, out_units, out_times, _ = info["layer_events"][source_layer]
-    input_b, input_units, _ = info["route_inputs"][source_layer + 1]
+    _, input_units, _ = info["route_inputs"][source_layer + 1]
     route = info["route_candidates"][source_layer + 1]
     out_b = out_b.detach().cpu().numpy()
     out_units = out_units.detach().cpu().numpy()
     out_times = out_times.detach().cpu().numpy()
-    input_b = input_b.detach().cpu().numpy()
     input_units = input_units.detach().cpu().numpy()
     event_index = route["event_index"].detach().cpu().numpy()
     receiver = route["receiver"].detach().cpu().numpy()
@@ -137,7 +136,13 @@ def shared_receiver_delivery(net, info, source_layer, pair, shared_receivers, ba
             if score[row] <= 0:
                 arrivals = []
                 break
-            delay = min(float(delay_scale[target] * max(score[row], 0.0)), child_layer.dmax)
+            if child_layer.cdelay:
+                delay_score = max(score[row], 0.0)
+            else:
+                source_unit = int(input_units[source_event])
+                static_gate = float(child_layer.c[source_unit, target].detach())
+                delay_score = float(np.logaddexp(0.0, static_gate))
+            delay = min(float(delay_scale[target] * delay_score), child_layer.dmax)
             arrivals.append(float(source_time[row] + delay))
         if len(arrivals) == 2:
             accepted.append(int(target))
@@ -182,7 +187,6 @@ def main():
     if a.require_shared_receiver:
         if layer_id + 1 >= depth:
             raise ValueError("shared-receiver pairing requires a following hidden layer")
-        full_mask = net_mask = None
     w_sd = [float(x) for x in str(get("w_sd", "0.05,0.05")).split(",")]
     seed = int(get("seed", a.seed)); aux_weight = float(get("aux_weight", 0.2))
     fusion = get("readout_fusion", None) or "deepest"
@@ -190,9 +194,15 @@ def main():
     net = DeepSHD(bands, d, n, M1, M, depth, window, fan2, readout_fan,
                   dmax, w_sd, seed, event_readout=True, readout_fusion=fusion,
                   input_count_payload=get("input_count_payload", "off") == "additive",
-                  early_event_skip=bool(get("early_event_skip", False)))
+                  early_event_skip=bool(get("early_event_skip", False)),
+                  route_topk=int(get("route_topk", 0)))
     net.load_state_dict(ckpt["model_state_dict"])
     net.eval()
+    if a.require_shared_receiver:
+        full_mask = net.layers[layer_id + 1].mask
+        if full_mask is None:
+            raise ValueError("shared-receiver pairing requires explicit sparse connectivity")
+        shared_receiver_mask = full_mask[:net.widths[layer_id]].detach().cpu().numpy().astype(bool)
 
     rng = np.random.default_rng(a.seed + 71_337)
     data = [(*events(t, u, float(get("merge", 0.002))), y)
@@ -209,36 +219,47 @@ def main():
                                             1000.0, 0.0, et.device, et.dtype)
         with torch.no_grad():
             _, base_info = net(eb, ei, et, len(items), grid, return_taps=True,
+                               collect_routes=a.require_shared_receiver,
                                return_spike_diagnostics=True,
                                input_counts=input_counts)
             base_loss = loss_parts(net, base_info, labels, seq_end, dmax, prefix_times)
             base_work = event_work(net, base_info, len(items))
         pair, candidate_count = select_pair(base_info["spike_diagnostics"][layer_id],
-                                            a.spike_band, a.pair_window_ms)
+                                            a.spike_band, a.pair_window_ms,
+                                            shared_receiver_mask)
         if pair is None:
             records.append({"batch_start": start, "valid_spike_candidates": candidate_count,
                             "pair_found": False})
             continue
         attempted += 1
         states = {}
+        a_candidate, b_candidate = pair[:2]
+        natural = (int(a_candidate["naturally_firing"]),
+                   int(b_candidate["naturally_firing"]))
+        all_on_info = base_info if natural == (1, 1) else None
         for toggles in ((), (0,), (1,), (0, 1)):
             if not toggles:
                 states["factual"] = (base_loss, base_work)
                 continue
             selected = [pair[i] for i in toggles]
+            outcome = list(natural)
+            for i in toggles:
+                outcome[i] = 1 - outcome[i]
             overrides = [(layer_id, item["time"], item["batch"], item["unit"],
                           not item["naturally_firing"]) for item in selected]
             with torch.no_grad():
                 _, shadow_info = net(eb, ei, et, len(items), grid, return_taps=True,
+                                     collect_routes=a.require_shared_receiver,
                                      spike_overrides=overrides,
                                      input_counts=input_counts)
                 states["toggle_" + "".join(str(i) for i in toggles)] = (
                     loss_parts(net, shadow_info, labels, seq_end, dmax, prefix_times),
                     event_work(net, shadow_info, len(items)))
+            if tuple(outcome) == (1, 1):
+                all_on_info = shadow_info
 
-        a_candidate, b_candidate = pair
-        natural = (int(a_candidate["naturally_firing"]),
-                   int(b_candidate["naturally_firing"]))
+        if all_on_info is None:
+            raise RuntimeError("failed to replay the both-spikes-on outcome")
         corner_losses, corner_work = {}, {}
         corner_losses[natural] = states["factual"][0]
         corner_work[natural] = states["factual"][1]
@@ -286,7 +307,7 @@ def main():
             "valid_spike_candidates": candidate_count,
             "pair_found": True,
             "selected_example": int(example_id),
-            "candidates": pair,
+            "candidates": pair[:2],
             "natural_state": list(natural),
             "layer": a.layer,
             "pair_window_ms": a.pair_window_ms,
@@ -303,6 +324,11 @@ def main():
             "pair_flip_delta_deepest": states["toggle_01"][0]["deepest_main"] - base_loss["deepest_main"],
             "pair_flip_delta_all_depths": states["toggle_01"][0]["all_depths_main"] - base_loss["all_depths_main"],
         })
+        if a.require_shared_receiver:
+            shared = shared_receiver_delivery(net, all_on_info, layer_id, pair[:2],
+                                              pair[2], int(example_id))
+            records[-1]["shared_topology_receivers"] = pair[2]
+            records[-1].update(shared)
 
     flat = [r for r in records if r.get("pair_found")]
     summary = {}
@@ -316,6 +342,16 @@ def main():
             "pairs_with_downstream_spike_birth": sum(
                 r["pair_flip_downstream_spike_birth"] for r in flat),
             "pairs_with_helpful_joint_flip": sum(r[f"pair_flip_delta_{metric}"] < 0 for r in flat),
+        }
+    if a.require_shared_receiver:
+        summary["shared_receiver"] = {
+            "pairs_with_accepted_common_receiver": sum(
+                bool(r.get("accepted_shared_receivers")) for r in flat),
+            "accepted_common_receiver_count": sum(
+                len(r.get("accepted_shared_receivers", [])) for r in flat),
+            "median_arrival_gap_ms": float(np.median([
+                gap for r in flat for gap in r.get("arrival_gaps_ms", [])]))
+                if any(r.get("arrival_gaps_ms") for r in flat) else None,
         }
     result = {"checkpoint": a.checkpoint, "checkpoint_args": saved,
               "audit_args": vars(a), "split": "train/val_spk",

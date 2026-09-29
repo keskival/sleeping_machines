@@ -1,0 +1,2451 @@
+{
+  "checkpoint": "/workspace/experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_moe_top2_route_swap_cfnorm0_b0.5_sg0.25_w1_dl5_lr0.001_gc1_topk2_swaps1_sb0.5_spk_s6.pt",
+  "run_tag": "moe_top2_tree_paired_band5",
+  "split": "train/val_spk",
+  "examples_requested": 32,
+  "examples_used": 32,
+  "trees_with_factual_errors": 8,
+  "batch_size": 4,
+  "depth": 4,
+  "route_topk": 2,
+  "proposal": {
+    "condition": "target selected among factual errors by error and entropy",
+    "route_candidate_weights": "exp(-score_gap / temperature)",
+    "temperature": "base_temperature + temperature_span * mean(normalized_entropy, 1-p_true)",
+    "swap_probability": "swap_floor + swap_uncertainty_span * mean(normalized_entropy, 1-p_true)",
+    "base_temperature": 0.05,
+    "temperature_span": 0.45,
+    "swap_floor": 0.05,
+    "swap_uncertainty_span": 0.45,
+    "max_swap_probability": 0.5,
+    "sampled_route_probability_recorded": true
+  },
+  "tree_backup": {
+    "rule": "tau*log((1-rho)*exp(V_no/tau) + rho*exp(V_swap/tau))",
+    "temperature": 0.1,
+    "learning_weights": [
+      0.0,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "interpretation": "one scalar is recursively propagated from each descendant; one route alternative is sampled from q at each state, not exhaustive over all candidates"
+  },
+  "virtual_update": {
+    "optimizer": "one-step suffix-only clipped SGD diagnostic",
+    "learning_rate": 0.001,
+    "gradient_clip_norm": 1.0,
+    "suffix": "layers strictly after the last forced swap plus deepest event head",
+    "weights_restored_after_each_replay": true,
+    "forced_route_indices_stable": "all layers through the last forced swap are frozen during its suffix update"
+  },
+  "trees": [
+    {
+      "subset_index": 1,
+      "batch_index": 0,
+      "label": 5,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.05561098828911781,
+      "factual_normalized_entropy": 0.9975995421409607,
+      "factual_loss": 2.9613780975341797,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.9613780975341797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.9613780975341797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 20,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.46509459614753723,
+              "candidate_count": 6,
+              "sampled_route_probability": 0.15392726562957085
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 6196,
+              "winner_receiver": 3,
+              "loser_receiver": 5,
+              "score_gap": 0.571770966053009,
+              "candidate_count": 1639,
+              "sampled_route_probability": 0.00037476929260321325
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 6196,
+              "winner_receiver": 3,
+              "loser_receiver": 5,
+              "score_gap": 0.571770966053009,
+              "candidate_count": 1639,
+              "sampled_route_probability": 0.00037476929260321325
+            },
+            {
+              "layer": 2,
+              "event_id": 23,
+              "winner_receiver": 14,
+              "loser_receiver": 0,
+              "score_gap": 0.13182401657104492,
+              "candidate_count": 6,
+              "sampled_route_probability": 0.30517577307290533
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.9613780975341797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.00191497802734375,
+          "counterfactual_suffix_progress": 0.00191497802734375,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.91534178664288,
+          "counterfactual_suffix_gradient_norm": 1.91534178664288,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 20,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.46509459614753723,
+            "candidate_count": 6,
+            "sampled_route_probability": 0.15392726562957085
+          },
+          "candidate_count": 6,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 23,
+            "winner_receiver": 14,
+            "loser_receiver": 0,
+            "score_gap": 0.13182401657104492,
+            "candidate_count": 6,
+            "sampled_route_probability": 0.30517577307290533
+          },
+          "candidate_count": 6,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 6196,
+            "winner_receiver": 3,
+            "loser_receiver": 5,
+            "score_gap": 0.571770966053009,
+            "candidate_count": 1639,
+            "sampled_route_probability": 0.00037476929260321325
+          },
+          "candidate_count": 1639,
+          "p_true": 0.05561098828911781,
+          "normalized_entropy": 0.9975995421409607,
+          "error": 0.9443890117108822,
+          "swap_probability": 0.4869474246166646,
+          "proposal_temperature": 0.4869474246166646,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 7,
+      "batch_index": 1,
+      "label": 7,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04139810428023338,
+      "factual_normalized_entropy": 0.9973629117012024,
+      "factual_loss": 3.0503673553466797,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 3.0503673553466797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 3.0503673553466797,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 32,
+              "winner_receiver": 14,
+              "loser_receiver": 0,
+              "score_gap": 0.19469928741455078,
+              "candidate_count": 7,
+              "sampled_route_probability": 0.15033206812288233
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 11146,
+              "winner_receiver": 10,
+              "loser_receiver": 8,
+              "score_gap": 0.17452752590179443,
+              "candidate_count": 2051,
+              "sampled_route_probability": 0.0006784547411150165
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 11146,
+              "winner_receiver": 10,
+              "loser_receiver": 8,
+              "score_gap": 0.17452752590179443,
+              "candidate_count": 2051,
+              "sampled_route_probability": 0.0006784547411150165
+            },
+            {
+              "layer": 2,
+              "event_id": 23,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.3716098666191101,
+              "candidate_count": 7,
+              "sampled_route_probability": 0.10478100142013495
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.0503673553466797,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020227432250976562,
+          "counterfactual_suffix_progress": 0.0020227432250976562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.022715686500923,
+          "counterfactual_suffix_gradient_norm": 2.022715686500923,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 32,
+            "winner_receiver": 14,
+            "loser_receiver": 0,
+            "score_gap": 0.19469928741455078,
+            "candidate_count": 7,
+            "sampled_route_probability": 0.15033206812288233
+          },
+          "candidate_count": 7,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 23,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.3716098666191101,
+            "candidate_count": 7,
+            "sampled_route_probability": 0.10478100142013495
+          },
+          "candidate_count": 7,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 11146,
+            "winner_receiver": 10,
+            "loser_receiver": 8,
+            "score_gap": 0.17452752590179443,
+            "candidate_count": 2051,
+            "sampled_route_probability": 0.0006784547411150165
+          },
+          "candidate_count": 2051,
+          "p_true": 0.04139810428023338,
+          "normalized_entropy": 0.9973629117012024,
+          "error": 0.9586018957197666,
+          "swap_probability": 0.490092081669718,
+          "proposal_temperature": 0.490092081669718,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 11,
+      "batch_index": 2,
+      "label": 15,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.05338585749268532,
+      "factual_normalized_entropy": 0.9974689483642578,
+      "factual_loss": 2.974764823913574,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.974764823913574,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.974764823913574,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 21,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.416384220123291,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.3155133371141894
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019648075103759766,
+          "counterfactual_suffix_progress": 0.0019648075103759766,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.964959871110467,
+          "counterfactual_suffix_gradient_norm": 1.964959871110467,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 9755,
+              "winner_receiver": 11,
+              "loser_receiver": 13,
+              "score_gap": 0.10601496696472168,
+              "candidate_count": 1251,
+              "sampled_route_probability": 0.0012520664340901102
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019648075103759766,
+          "counterfactual_suffix_progress": 0.0019648075103759766,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.964959871110467,
+          "counterfactual_suffix_gradient_norm": 1.964959871110467,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 9755,
+              "winner_receiver": 11,
+              "loser_receiver": 13,
+              "score_gap": 0.10601496696472168,
+              "candidate_count": 1251,
+              "sampled_route_probability": 0.0012520664340901102
+            },
+            {
+              "layer": 2,
+              "event_id": 11,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.46946024894714355,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.28296094593479504
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.974764823913574,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019648075103759766,
+          "counterfactual_suffix_progress": 0.0019648075103759766,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.964959871110467,
+          "counterfactual_suffix_gradient_norm": 1.964959871110467,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 21,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.416384220123291,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.3155133371141894
+          },
+          "candidate_count": 3,
+          "p_true": 0.05338585749268532,
+          "normalized_entropy": 0.9974689483642578,
+          "error": 0.9466141425073147,
+          "swap_probability": 0.48741869544610383,
+          "proposal_temperature": 0.48741869544610383,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 11,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.46946024894714355,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.28296094593479504
+          },
+          "candidate_count": 3,
+          "p_true": 0.05338585749268532,
+          "normalized_entropy": 0.9974689483642578,
+          "error": 0.9466141425073147,
+          "swap_probability": 0.48741869544610383,
+          "proposal_temperature": 0.48741869544610383,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 9755,
+            "winner_receiver": 11,
+            "loser_receiver": 13,
+            "score_gap": 0.10601496696472168,
+            "candidate_count": 1251,
+            "sampled_route_probability": 0.0012520664340901102
+          },
+          "candidate_count": 1251,
+          "p_true": 0.05338585749268532,
+          "normalized_entropy": 0.9974689483642578,
+          "error": 0.9466141425073147,
+          "swap_probability": 0.48741869544610383,
+          "proposal_temperature": 0.48741869544610383,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 12,
+      "batch_index": 3,
+      "label": 14,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.050731807947158813,
+      "factual_normalized_entropy": 0.9975073933601379,
+      "factual_loss": 2.984109878540039,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.984109878540039,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.984109878540039,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 22,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.20789968967437744,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.6827487874726775
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.001955747604370117,
+          "counterfactual_suffix_progress": 0.001955747604370117,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.955900402335898,
+          "counterfactual_suffix_gradient_norm": 1.955900402335898,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 1829,
+              "winner_receiver": 10,
+              "loser_receiver": 9,
+              "score_gap": 0.01082313060760498,
+              "candidate_count": 1968,
+              "sampled_route_probability": 0.0009586840889967001
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.001955747604370117,
+          "counterfactual_suffix_progress": 0.001955747604370117,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.955900402335898,
+          "counterfactual_suffix_gradient_norm": 1.955900402335898,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 1829,
+              "winner_receiver": 10,
+              "loser_receiver": 9,
+              "score_gap": 0.01082313060760498,
+              "candidate_count": 1968,
+              "sampled_route_probability": 0.0009586840889967001
+            },
+            {
+              "layer": 2,
+              "event_id": 23,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.6387251615524292,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.28240218292099023
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.984109878540039,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.001955747604370117,
+          "counterfactual_suffix_progress": 0.001955747604370117,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.955900402335898,
+          "counterfactual_suffix_gradient_norm": 1.955900402335898,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 22,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.20789968967437744,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.6827487874726775
+          },
+          "candidate_count": 3,
+          "p_true": 0.050731807947158813,
+          "normalized_entropy": 0.9975073933601379,
+          "error": 0.9492681920528412,
+          "swap_probability": 0.4880245067179203,
+          "proposal_temperature": 0.4880245067179203,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 23,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.6387251615524292,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.28240218292099023
+          },
+          "candidate_count": 3,
+          "p_true": 0.050731807947158813,
+          "normalized_entropy": 0.9975073933601379,
+          "error": 0.9492681920528412,
+          "swap_probability": 0.4880245067179203,
+          "proposal_temperature": 0.4880245067179203,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 1829,
+            "winner_receiver": 10,
+            "loser_receiver": 9,
+            "score_gap": 0.01082313060760498,
+            "candidate_count": 1968,
+            "sampled_route_probability": 0.0009586840889967001
+          },
+          "candidate_count": 1968,
+          "p_true": 0.050731807947158813,
+          "normalized_entropy": 0.9975073933601379,
+          "error": 0.9492681920528412,
+          "swap_probability": 0.4880245067179203,
+          "proposal_temperature": 0.4880245067179203,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 18,
+      "batch_index": 4,
+      "label": 17,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04999999701976776,
+      "factual_normalized_entropy": 0.9973781704902649,
+      "factual_loss": 2.994420289993286,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.994420289993286,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.994420289993286,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 44,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.309118390083313,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.8170065293022429
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 8136,
+              "winner_receiver": 10,
+              "loser_receiver": 9,
+              "score_gap": 0.01082313060760498,
+              "candidate_count": 2553,
+              "sampled_route_probability": 0.0007558979429835524
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 8136,
+              "winner_receiver": 10,
+              "loser_receiver": 9,
+              "score_gap": 0.01082313060760498,
+              "candidate_count": 2553,
+              "sampled_route_probability": 0.0007558979429835524
+            },
+            {
+              "layer": 2,
+              "event_id": 44,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.309118390083313,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.8170065293022429
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.994420289993286,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002002239227294922,
+          "counterfactual_suffix_progress": 0.002002239227294922,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0023570774332886,
+          "counterfactual_suffix_gradient_norm": 2.0023570774332886,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 44,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.309118390083313,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.8170065293022429
+          },
+          "candidate_count": 3,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 44,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.309118390083313,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.8170065293022429
+          },
+          "candidate_count": 3,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 8136,
+            "winner_receiver": 10,
+            "loser_receiver": 9,
+            "score_gap": 0.01082313060760498,
+            "candidate_count": 2553,
+            "sampled_route_probability": 0.0007558979429835524
+          },
+          "candidate_count": 2553,
+          "p_true": 0.04999999701976776,
+          "normalized_entropy": 0.9973781704902649,
+          "error": 0.9500000029802322,
+          "swap_probability": 0.48816008903086183,
+          "proposal_temperature": 0.48816008903086183,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 23,
+      "batch_index": 5,
+      "label": 0,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.048966266214847565,
+      "factual_normalized_entropy": 0.9974875450134277,
+      "factual_loss": 2.997814893722534,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.997814893722534,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.997814893722534,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 11,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.44541969895362854,
+              "candidate_count": 1,
+              "sampled_route_probability": 1.0
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 12111,
+              "winner_receiver": 11,
+              "loser_receiver": 10,
+              "score_gap": 0.7807826995849609,
+              "candidate_count": 1741,
+              "sampled_route_probability": 0.0002178424617580022
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 12111,
+              "winner_receiver": 11,
+              "loser_receiver": 10,
+              "score_gap": 0.7807826995849609,
+              "candidate_count": 1741,
+              "sampled_route_probability": 0.0002178424617580022
+            },
+            {
+              "layer": 2,
+              "event_id": 11,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.44541969895362854,
+              "candidate_count": 1,
+              "sampled_route_probability": 1.0
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.997814893722534,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0019659996032714844,
+          "counterfactual_suffix_progress": 0.0019659996032714844,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 1.965974273944076,
+          "counterfactual_suffix_gradient_norm": 1.965974273944076,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 11,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.44541969895362854,
+            "candidate_count": 1,
+            "sampled_route_probability": 1.0
+          },
+          "candidate_count": 1,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 11,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.44541969895362854,
+            "candidate_count": 1,
+            "sampled_route_probability": 1.0
+          },
+          "candidate_count": 1,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 12111,
+            "winner_receiver": 11,
+            "loser_receiver": 10,
+            "score_gap": 0.7807826995849609,
+            "candidate_count": 1741,
+            "sampled_route_probability": 0.0002178424617580022
+          },
+          "candidate_count": 1741,
+          "p_true": 0.048966266214847565,
+          "normalized_entropy": 0.9974875450134277,
+          "error": 0.9510337337851524,
+          "swap_probability": 0.4884172877296805,
+          "proposal_temperature": 0.4884172877296805,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 26,
+      "batch_index": 6,
+      "label": 0,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.04889850690960884,
+      "factual_normalized_entropy": 0.997279167175293,
+      "factual_loss": 2.998276472091675,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.998276472091675,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 2.998276472091675,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 25,
+              "winner_receiver": 14,
+              "loser_receiver": 0,
+              "score_gap": 0.24936306476593018,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.5237036006428374
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020380020141601562,
+          "counterfactual_suffix_progress": 0.0020380020141601562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0383550651755913,
+          "counterfactual_suffix_gradient_norm": 2.0383550651755913,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 8225,
+              "winner_receiver": 11,
+              "loser_receiver": 12,
+              "score_gap": 0.746631383895874,
+              "candidate_count": 1943,
+              "sampled_route_probability": 0.00021229458250784366
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020380020141601562,
+          "counterfactual_suffix_progress": 0.0020380020141601562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0383550651755913,
+          "counterfactual_suffix_gradient_norm": 2.0383550651755913,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 8225,
+              "winner_receiver": 11,
+              "loser_receiver": 12,
+              "score_gap": 0.746631383895874,
+              "candidate_count": 1943,
+              "sampled_route_probability": 0.00021229458250784366
+            },
+            {
+              "layer": 2,
+              "event_id": 26,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.48754191398620605,
+              "candidate_count": 3,
+              "sampled_route_probability": 0.32157791566266075
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 2.998276472091675,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.0020380020141601562,
+          "counterfactual_suffix_progress": 0.0020380020141601562,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0383550651755913,
+          "counterfactual_suffix_gradient_norm": 2.0383550651755913,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 25,
+            "winner_receiver": 14,
+            "loser_receiver": 0,
+            "score_gap": 0.24936306476593018,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.5237036006428374
+          },
+          "candidate_count": 3,
+          "p_true": 0.04889850690960884,
+          "normalized_entropy": 0.997279167175293,
+          "error": 0.9511014930903912,
+          "swap_probability": 0.48838564855977895,
+          "proposal_temperature": 0.48838564855977895,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 26,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.48754191398620605,
+            "candidate_count": 3,
+            "sampled_route_probability": 0.32157791566266075
+          },
+          "candidate_count": 3,
+          "p_true": 0.04889850690960884,
+          "normalized_entropy": 0.997279167175293,
+          "error": 0.9511014930903912,
+          "swap_probability": 0.48838564855977895,
+          "proposal_temperature": 0.48838564855977895,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 8225,
+            "winner_receiver": 11,
+            "loser_receiver": 12,
+            "score_gap": 0.746631383895874,
+            "candidate_count": 1943,
+            "sampled_route_probability": 0.00021229458250784366
+          },
+          "candidate_count": 1943,
+          "p_true": 0.04889850690960884,
+          "normalized_entropy": 0.997279167175293,
+          "error": 0.9511014930903912,
+          "swap_probability": 0.48838564855977895,
+          "proposal_temperature": 0.48838564855977895,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "subset_index": 29,
+      "batch_index": 7,
+      "label": 7,
+      "factual_prediction": 19,
+      "factual_true_class_probability": 0.041352562606334686,
+      "factual_normalized_entropy": 0.9973399043083191,
+      "factual_loss": 3.050734281539917,
+      "tree_node_count": 11,
+      "tree_leaf_count": 4,
+      "backup_value_by_learning_weight": {
+        "0.0": 0.0,
+        "1.0": 0.0,
+        "10.0": 0.0,
+        "100.0": 0.0
+      },
+      "best_immediate_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 3.050734281539917,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_learning_option_leaf": {
+        "leaf_index": 0,
+        "path": [],
+        "swap_count": 0,
+        "last_swapped_layer": null,
+        "prediction": 19,
+        "correct": false,
+        "label_loss": 3.050734281539917,
+        "immediate_advantage_vs_factual": 0.0,
+        "factual_suffix_progress": null,
+        "counterfactual_suffix_progress": null,
+        "learning_option_advantage": 0.0,
+        "factual_suffix_gradient_norm": null,
+        "counterfactual_suffix_gradient_norm": null,
+        "option_only": false
+      },
+      "best_combined_leaf_index_by_weight": {
+        "0.0": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "option_only_leaf_count": 0,
+      "multi_swap_leaf_count": 1,
+      "leaves": [
+        {
+          "leaf_index": 0,
+          "path": [],
+          "swap_count": 0,
+          "last_swapped_layer": null,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": null,
+          "counterfactual_suffix_progress": null,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": null,
+          "counterfactual_suffix_gradient_norm": null,
+          "option_only": false
+        },
+        {
+          "leaf_index": 1,
+          "path": [
+            {
+              "layer": 2,
+              "event_id": 10,
+              "winner_receiver": 3,
+              "loser_receiver": 0,
+              "score_gap": 0.3278149366378784,
+              "candidate_count": 5,
+              "sampled_route_probability": 0.24676156444907657
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002031087875366211,
+          "counterfactual_suffix_progress": 0.002031087875366211,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0308360484948658,
+          "counterfactual_suffix_gradient_norm": 2.0308360484948658,
+          "option_only": false
+        },
+        {
+          "leaf_index": 2,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 4693,
+              "winner_receiver": 10,
+              "loser_receiver": 8,
+              "score_gap": 0.17452752590179443,
+              "candidate_count": 2260,
+              "sampled_route_probability": 0.0006298422016635822
+            }
+          ],
+          "swap_count": 1,
+          "last_swapped_layer": 1,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002031087875366211,
+          "counterfactual_suffix_progress": 0.002031087875366211,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0308360484948658,
+          "counterfactual_suffix_gradient_norm": 2.0308360484948658,
+          "option_only": false
+        },
+        {
+          "leaf_index": 3,
+          "path": [
+            {
+              "layer": 1,
+              "event_id": 4693,
+              "winner_receiver": 10,
+              "loser_receiver": 8,
+              "score_gap": 0.17452752590179443,
+              "candidate_count": 2260,
+              "sampled_route_probability": 0.0006298422016635822
+            },
+            {
+              "layer": 2,
+              "event_id": 14,
+              "winner_receiver": 0,
+              "loser_receiver": 14,
+              "score_gap": 0.3199741840362549,
+              "candidate_count": 5,
+              "sampled_route_probability": 0.25074109386450144
+            }
+          ],
+          "swap_count": 2,
+          "last_swapped_layer": 2,
+          "prediction": 19,
+          "correct": false,
+          "label_loss": 3.050734281539917,
+          "immediate_advantage_vs_factual": 0.0,
+          "factual_suffix_progress": 0.002031087875366211,
+          "counterfactual_suffix_progress": 0.002031087875366211,
+          "learning_option_advantage": 0.0,
+          "factual_suffix_gradient_norm": 2.0308360484948658,
+          "counterfactual_suffix_gradient_norm": 2.0308360484948658,
+          "option_only": false
+        }
+      ],
+      "recursive_decisions": [
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 10,
+            "winner_receiver": 3,
+            "loser_receiver": 0,
+            "score_gap": 0.3278149366378784,
+            "candidate_count": 5,
+            "sampled_route_probability": 0.24676156444907657
+          },
+          "candidate_count": 5,
+          "p_true": 0.041352562606334686,
+          "normalized_entropy": 0.9973399043083191,
+          "error": 0.9586474373936653,
+          "swap_probability": 0.4900971518829465,
+          "proposal_temperature": 0.4900971518829465,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 2,
+          "action": {
+            "layer": 2,
+            "event_id": 14,
+            "winner_receiver": 0,
+            "loser_receiver": 14,
+            "score_gap": 0.3199741840362549,
+            "candidate_count": 5,
+            "sampled_route_probability": 0.25074109386450144
+          },
+          "candidate_count": 5,
+          "p_true": 0.041352562606334686,
+          "normalized_entropy": 0.9973399043083191,
+          "error": 0.9586474373936653,
+          "swap_probability": 0.4900971518829465,
+          "proposal_temperature": 0.4900971518829465,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        },
+        {
+          "layer": 1,
+          "action": {
+            "layer": 1,
+            "event_id": 4693,
+            "winner_receiver": 10,
+            "loser_receiver": 8,
+            "score_gap": 0.17452752590179443,
+            "candidate_count": 2260,
+            "sampled_route_probability": 0.0006298422016635822
+          },
+          "candidate_count": 2260,
+          "p_true": 0.041352562606334686,
+          "normalized_entropy": 0.9973399043083191,
+          "error": 0.9586474373936653,
+          "swap_probability": 0.4900971518829465,
+          "proposal_temperature": 0.4900971518829465,
+          "no_swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "swap_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          },
+          "backed_value_by_learning_weight": {
+            "0.0": 0.0,
+            "1.0": 0.0,
+            "10.0": 0.0,
+            "100.0": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "decision_nodes_by_layer": [
+    8,
+    16,
+    32,
+    32
+  ],
+  "near_boundary_candidates_seen_by_layer": [
+    15406,
+    62,
+    0,
+    0
+  ],
+  "sampled_route_actions": [
+    {
+      "layer": 2,
+      "event_id": 20,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.46509459614753723,
+      "candidate_count": 6,
+      "sampled_route_probability": 0.15392726562957085
+    },
+    {
+      "layer": 1,
+      "event_id": 6196,
+      "winner_receiver": 3,
+      "loser_receiver": 5,
+      "score_gap": 0.571770966053009,
+      "candidate_count": 1639,
+      "sampled_route_probability": 0.00037476929260321325
+    },
+    {
+      "layer": 2,
+      "event_id": 23,
+      "winner_receiver": 14,
+      "loser_receiver": 0,
+      "score_gap": 0.13182401657104492,
+      "candidate_count": 6,
+      "sampled_route_probability": 0.30517577307290533
+    },
+    {
+      "layer": 2,
+      "event_id": 32,
+      "winner_receiver": 14,
+      "loser_receiver": 0,
+      "score_gap": 0.19469928741455078,
+      "candidate_count": 7,
+      "sampled_route_probability": 0.15033206812288233
+    },
+    {
+      "layer": 1,
+      "event_id": 11146,
+      "winner_receiver": 10,
+      "loser_receiver": 8,
+      "score_gap": 0.17452752590179443,
+      "candidate_count": 2051,
+      "sampled_route_probability": 0.0006784547411150165
+    },
+    {
+      "layer": 2,
+      "event_id": 23,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.3716098666191101,
+      "candidate_count": 7,
+      "sampled_route_probability": 0.10478100142013495
+    },
+    {
+      "layer": 2,
+      "event_id": 21,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.416384220123291,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.3155133371141894
+    },
+    {
+      "layer": 1,
+      "event_id": 9755,
+      "winner_receiver": 11,
+      "loser_receiver": 13,
+      "score_gap": 0.10601496696472168,
+      "candidate_count": 1251,
+      "sampled_route_probability": 0.0012520664340901102
+    },
+    {
+      "layer": 2,
+      "event_id": 11,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.46946024894714355,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.28296094593479504
+    },
+    {
+      "layer": 2,
+      "event_id": 22,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.20789968967437744,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.6827487874726775
+    },
+    {
+      "layer": 1,
+      "event_id": 1829,
+      "winner_receiver": 10,
+      "loser_receiver": 9,
+      "score_gap": 0.01082313060760498,
+      "candidate_count": 1968,
+      "sampled_route_probability": 0.0009586840889967001
+    },
+    {
+      "layer": 2,
+      "event_id": 23,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.6387251615524292,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.28240218292099023
+    },
+    {
+      "layer": 2,
+      "event_id": 44,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.309118390083313,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.8170065293022429
+    },
+    {
+      "layer": 1,
+      "event_id": 8136,
+      "winner_receiver": 10,
+      "loser_receiver": 9,
+      "score_gap": 0.01082313060760498,
+      "candidate_count": 2553,
+      "sampled_route_probability": 0.0007558979429835524
+    },
+    {
+      "layer": 2,
+      "event_id": 44,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.309118390083313,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.8170065293022429
+    },
+    {
+      "layer": 2,
+      "event_id": 11,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.44541969895362854,
+      "candidate_count": 1,
+      "sampled_route_probability": 1.0
+    },
+    {
+      "layer": 1,
+      "event_id": 12111,
+      "winner_receiver": 11,
+      "loser_receiver": 10,
+      "score_gap": 0.7807826995849609,
+      "candidate_count": 1741,
+      "sampled_route_probability": 0.0002178424617580022
+    },
+    {
+      "layer": 2,
+      "event_id": 11,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.44541969895362854,
+      "candidate_count": 1,
+      "sampled_route_probability": 1.0
+    },
+    {
+      "layer": 2,
+      "event_id": 25,
+      "winner_receiver": 14,
+      "loser_receiver": 0,
+      "score_gap": 0.24936306476593018,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.5237036006428374
+    },
+    {
+      "layer": 1,
+      "event_id": 8225,
+      "winner_receiver": 11,
+      "loser_receiver": 12,
+      "score_gap": 0.746631383895874,
+      "candidate_count": 1943,
+      "sampled_route_probability": 0.00021229458250784366
+    },
+    {
+      "layer": 2,
+      "event_id": 26,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.48754191398620605,
+      "candidate_count": 3,
+      "sampled_route_probability": 0.32157791566266075
+    },
+    {
+      "layer": 2,
+      "event_id": 10,
+      "winner_receiver": 3,
+      "loser_receiver": 0,
+      "score_gap": 0.3278149366378784,
+      "candidate_count": 5,
+      "sampled_route_probability": 0.24676156444907657
+    },
+    {
+      "layer": 1,
+      "event_id": 4693,
+      "winner_receiver": 10,
+      "loser_receiver": 8,
+      "score_gap": 0.17452752590179443,
+      "candidate_count": 2260,
+      "sampled_route_probability": 0.0006298422016635822
+    },
+    {
+      "layer": 2,
+      "event_id": 14,
+      "winner_receiver": 0,
+      "loser_receiver": 14,
+      "score_gap": 0.3199741840362549,
+      "candidate_count": 5,
+      "sampled_route_probability": 0.25074109386450144
+    }
+  ],
+  "interpretation_note": "A sampled swap is rerun through all deeper layers, and only scalar option values are propagated back; This is a frozen diagnostic, not trained accuracy, an AdamW update, or an exhaustive route expectation."
+}

@@ -60,6 +60,7 @@ def main():
         readout_fusion=a.readout_fusion,
         input_count_payload=a.input_count_payload == "additive",
         early_event_skip=a.early_event_skip,
+        route_topk=int(getattr(a, "route_topk", 0)),
     )
     net.load_state_dict(checkpoint["model_state_dict"])
     net.eval()

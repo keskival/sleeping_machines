@@ -92,7 +92,8 @@ def main():
     net = DeepSHD(bands, d, n, M1, M, depth, window, fan2, readout_fan,
                   dmax, w_sd, seed, event_readout=True, readout_fusion=fusion,
                   input_count_payload=get("input_count_payload", "off") == "additive",
-                  early_event_skip=bool(get("early_event_skip", False)))
+                  early_event_skip=bool(get("early_event_skip", False)),
+                  route_topk=int(get("route_topk", 0)))
     net.load_state_dict(ckpt["model_state_dict"])
     net.eval()
 
