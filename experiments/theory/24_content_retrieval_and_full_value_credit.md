@@ -144,6 +144,21 @@ selection offers a different tradeoff and requires credit for those addressing
 decisions. The bounded first-order candidate should be evaluated within its
 actual selectivity range before escalating either state degree or route count.
 
+The actual content effect can be much smaller than this worst-case ratio.
+Write $K_i=1+\delta_i$ and use the old mean $m$ and regularized base
+probabilities $p_i$. Then the exact content displacement is
+
+\[
+ y-m=\frac{\mathbb E_p[\delta(v-m)]}{1+\mathbb E_p[\delta]}.
+ \tag{205.7}
+\]
+
+Nonzero parameter gradients do not imply a substantial displacement. Measure
+this payload change and its downstream logit effect with trained values held
+fixed. The E135 content-removal ablation provides that intervention. It
+separates weakly exercised retrieval from ineffective trained retrieval;
+fitting loss, parameter movement and activity counts alone cannot do so.
+
 The paired kernel expands exactly to
 $1+(\eta^2/P)\sum_j\tanh(Q_jx)\tanh(W_jx_i)$. Its affine state therefore
 needs only the plain numerator/mass and $P$ signed key moments, with

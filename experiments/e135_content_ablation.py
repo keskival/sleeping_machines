@@ -51,6 +51,11 @@ def main():
         assert neutral[n]['mean_added_delay_ms']==original[n]['mean_added_delay_ms']
     fit=load_items(40,.01,64,'fit_spk',6)
     max_logit_change=0.;mean_abs_change=0.;query_grads=torch.zeros(8);key_grads=torch.zeros(8)
+    payload_changes=[]
+    def observe_content(module, inputs, output):
+        with torch.no_grad():base,_,_=linear_memory(*inputs)
+        payload_changes.append(float((output[0].detach()-base).abs().max()))
+    handles=[layer.memory.register_forward_hook(observe_content) for layer in model.layers]
     for start in range(0,len(fit),4):
         rows=fit[start:start+4];data=batch(rows)
         logits,_,_,_=model(*data[:4],len(rows))
@@ -62,12 +67,14 @@ def main():
             query_grads[j]+=layer.memory.query.grad.norm().detach()/16
             key_grads[j]+=layer.memory.key.grad.norm().detach()/16
             layer.memory.pop_calls()
+    for handle in handles:handle.remove()
     def row(parts):
         correct=sum(p['correct'] for p in parts.values());n=sum(p['n'] for p in parts.values())
         return {'held_correct':correct,'held_n':n,'held_accuracy':correct/n,
           'held_nll':sum(p['nll']*p['n'] for p in parts.values())/n}
     result={'status':'completed','learned_content':row(original),'content_removed_same_values':row(neutral),
       'maximum_clean_fit_logit_change_64':max_logit_change,'mean_absolute_clean_fit_logit_change_64':mean_abs_change/len(fit),
+      'maximum_content_memory_payload_change_clean_fit_64':max(payload_changes),
       'clean_fit_content_query_gradient_norms':query_grads.tolist(),'clean_fit_content_key_gradient_norms':key_grads.tolist(),
       'partitioned_row_gains':row_gains,
       'partitioned_conditional_transport_bounds':[math.prod(1-layer.alpha*row_gains[j] for j,layer in enumerate(model.layers)),
