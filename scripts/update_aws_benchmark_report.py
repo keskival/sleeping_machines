@@ -15,9 +15,16 @@ FIGURES = REPORT / "figures"
 def main():
     sys.path.insert(0, str(REPORT))
     import figures_mech as figures
+    import make_pdf
+    import readable_report
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     rendered = []
+    ev = readable_report.evidence(vars(make_pdf))
+    accomplishments = readable_report.accomplishments_figure(vars(make_pdf), ev)
+    accomplishments.savefig(FIGURES / "accomplishments.png", dpi=190, bbox_inches="tight", facecolor="white")
+    plt.close(accomplishments)
+    rendered.append("accomplishments")
     for name, build in (("supremacy_map", figures.fig_supremacy_map),
                         ("e68_recall_training", figures.fig_e68_recall_training),
                         ("e76_attention_work", figures.fig_e76_attention_work)):

@@ -1,5 +1,51 @@
 [
   {
+    "run_tag": "aws_e64_lstm_D90M_baseline_20260929",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "lstm",
+      "--D",
+      "90000000",
+      "--size",
+      "512",
+      "--passes",
+      "6",
+      "--dropout",
+      "0.1",
+      "--valid",
+      "200000"
+    ],
+    "sources": [
+      "e64b.txt"
+    ],
+    "timeout_s": 108000
+  },
+  {
+    "run_tag": "aws_e64_tf_D90M_baseline_20260929",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "tf",
+      "--D",
+      "90000000",
+      "--size",
+      "256",
+      "--layers",
+      "4",
+      "--passes",
+      "4",
+      "--dropout",
+      "0.1",
+      "--valid",
+      "200000"
+    ],
+    "sources": [
+      "e64b.txt"
+    ],
+    "timeout_s": 259200
+  },
+  {
     "run_tag": "aws_e36_tf_e28_long_20260929",
     "script": "experiments/e36_transformer.py",
     "arguments": [
