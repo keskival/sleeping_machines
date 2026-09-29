@@ -1,0 +1,1 @@
+e118_credit_audit_20260929 experiments/e118_credit_audit.py --checkpoint experiments/results/e118/race_d8_cf1_n128_e8_s6.pt --tag credit_audit_race_d8_cf1_n128_e8_s6

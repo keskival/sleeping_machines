@@ -65,6 +65,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Optionality and transferable learning reserve](theory/11_optionality_and_learning_reserve.md) — §§159–163
 - [Marked events and stable deep learning](theory/12_marked_events_and_learning_stability.md) — §§164–165
 - [Serial event transport and sequence credit](theory/13_serial_event_credit.md) — §§166–168: normalized local history, a whole-sequence payload/credit bound, and causal count packets.
+- [Winning races and conditioning](theory/14_winning_races_and_conditioning.md) — §§169–170: winner-only delayed continuations, explicit loser-score credit, and the feature-covariance bottleneck.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

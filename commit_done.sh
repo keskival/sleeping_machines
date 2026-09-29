@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E118 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -41,6 +41,22 @@ FILES=(
   experiments/e77_tv_lm.py
   experiments/e83_deep_shd.py
   experiments/e83_countmark_summary.py
+  experiments/e117_serial_event_shd.py
+  experiments/e117_feature_probe.py
+  experiments/e117_readout_conditioning.py
+  experiments/e118_race_carrier_shd.py
+  experiments/e118_credit_audit.py
+  experiments/queue/e117_serial_d8_20260929.txt
+  experiments/queue/e117_probe_serial_20260929.txt
+  experiments/queue/e117_readout_conditioning_20260929.txt
+  experiments/queue/e118_race_cf_20260929.txt
+  experiments/queue/e118_race_cf_512_20260929.txt
+  experiments/queue/e118_race_pathwise_20260929.txt
+  experiments/queue/e118_credit_audit_20260929.txt
+  experiments/queue/report_race_carriers_20260929.txt
+  experiments/results/e117/*.json
+  experiments/results/e118/*.json
+  report/figures/e118_race_carriers.png
   experiments/queue/e83_shd_countmark_control_20260929.txt
   experiments/queue/e83_shd_countmark_additive_20260929.txt
   experiments/queue/e83_shd_countmark_address_neutral_20260929.txt
@@ -221,5 +237,5 @@ done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Advance event semantics and optionality theory; reorganize frontier report}"
+MESSAGE="${1:-Build bounded event carriers and winner-only races; diagnose SHD credit conditioning}"
 git commit -m "$MESSAGE"

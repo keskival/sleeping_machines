@@ -1,0 +1,1 @@
+e117_probe_serial_20260929 experiments/e117_feature_probe.py --checkpoint experiments/results/e117/serial_d8_n128_e8_s6.pt --tag probe_serial_d8_n128_e8_s6

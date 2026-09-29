@@ -1,0 +1,1 @@
+e118_race_cf_20260929 experiments/e118_race_carrier_shd.py --tag race_d8_cf1_n128_e8_s6 --credit 1 --depth 8 --limit 128 --eval-limit 128 --epochs 8 --bs 4
