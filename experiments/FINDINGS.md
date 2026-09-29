@@ -5,6 +5,24 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**E83 conditioned margin-support audit (§154).** A frozen seed-6 depth-4
+control was replayed over 128 held-out-speaker utterances. We counted
+nonfiring, nonrefractory receiver-time cells only after at least one actually
+selected upstream message had arrived, and restricted candidate times to the
+causal delay horizon. In the current $[-0.5,0)$ spike-proposal band, counts
+were 22,553 / 4,313 / 195 / 50 across L1--L4, while the number of utterances
+with at least one candidate was 128 / 114 / 24 / 4. In $[-0.25,0)$ the counts
+were 4,205 / 1,074 / 57 / 7 across 128 / 81 / 13 / 2 utterances. Adjacent
+time cells are correlated, so they are not independent route alternatives.
+Many wider-band margins cluster at the $-1$ zero-voltage baseline; blindly
+expanding the proposal could force ungrounded events. This measures a sharp
+loss of near-threshold candidate support with depth, not candidate utility or
+an accuracy gain. The next causal test must replay sampled births through the
+actual suffix and measure deepest-head loss and descendant work. The read-only
+audit ran through `run_safe.sh` in 35 seconds with the RSS cap at 1.8 GB and
+host available memory above 12 GB. See §154 and
+`experiments/queue/e83_conditioned_margin_audit.txt`.
+
 **E83 six-epoch continuation check (§153).** We extended the matched seed-6
 depth-4, 120-train/128-held-out-speaker immediate-credit and two-rollout
 continuation-value runs from two to six epochs. Both stayed at 6/128 held-out

@@ -3581,9 +3581,56 @@ trainable deep route.
 The observed zero support is a finite held-out estimate, and the rollout hit
 rates are proposal- and state-dependent. In particular, the earlier 0/48 and
 0/54 helpful-future counts do not prove $p_\epsilon=0$ for all states. The
-next discriminating measurement is to log, per layer and conditional on an
-upstream event: (1) whether any candidate lies inside the proposal band,
-(2) the full distribution of subthreshold margins beyond that band,
-(3) survival after a forced candidate event, and (4) the deepest-head loss
-change after replaying its actual suffix. That distinguishes absent proposal
-support from candidates whose realized descendants simply fail to help.
+first missing measurement—margin support conditioned on an actually delivered
+upstream message—is now available in §154. Forced-candidate suffix utility
+and the deepest-head loss change remain unmeasured for the broader margin
+bands.
+
+## 154. Deep spike proposals lose near-threshold support after real messages (E83)
+
+For receiver $j$ at layer $\ell$, let $m_{\ell jt}=V^{\rm decayed}_{\ell jt}-\theta_{\ell j}$
+be the signed pre-reset voltage margin, $r_{\ell jt}$ its refractory state,
+and let $A_{\ell j}(t)=1$ when at least one actually selected message from
+the preceding layer has arrived at that receiver by time $t$. A margin-band
+proposal with a real upstream cause is
+
+$$
+\mathcal C_{\ell,[a,b)}(x)=\{(t,j):0<t\le T_x+\ell d_{\max},\;
+ m_{\ell jt}\in[a,b),\;r_{\ell jt}<10^{-3},\;A_{\ell j}(t)=1\}.
+$$
+
+The message-arrival condition is essential: the unrestricted voltage grid
+contains many nominal near-misses that do not correspond to a route that
+actually delivered evidence. It is still only a necessary support test, not a
+label-utility test; arrival may be old, time cells are correlated, and a
+candidate's descendants must be replayed before calling it a useful route.
+
+A frozen seed-6 depth-4 control was audited on 128 held-out-speaker utterances.
+Within the currently sampled band $[-0.5,0)$, counts of eligible
+time-receiver cells were $[22{,}553, 4{,}313, 195, 50]$ across L1–L4. The
+number of utterances with at least one such cell was $[128,114,24,4]$. In the
+narrower $[-0.25,0)$ band, counts were $[4{,}205,1{,}074,57,7]$ and example
+coverage was $[128,81,13,2]$. Thus an ordinary one-layer proposal can find
+some real-message-conditioned L4 births, but it reaches only a few examples
+in this frozen sample. The contraction in candidate support is substantial
+before asking whether any candidate improves classification loss.
+
+These counts are not independent alternatives: adjacent time cells for one
+receiver share the same decaying state. Broadening the proposal also needs
+care. Most eligible margins outside $[-0.5,0)$ cluster near $-1$, the
+zero-voltage/reset baseline for this checkpoint; forcing births there could
+insert events without useful evidence. This rules out both simplistic claims
+that the deeper proposal is empty and that raw candidate counts guarantee
+trainability. It does not establish a trained accuracy gain, and the audit is
+one frozen checkpoint and one held-out subset.
+
+The next discriminating step is to sample a small number of candidates from
+each depth and margin band, replay each through its actual causal suffix, and
+record deepest-head loss change and descendant work. In parallel, a matched
+initialization study should target non-extinct conditional event propagation
+without imposing a dense firing target. The sequence objective also needs an
+explicit comparison: current training applies the class label at fixed
+stratified prefixes starting at time zero as well as at EOS, while the
+inference race emitted no answers in the six-epoch check. Terminal
+sequence-to-class learning and confidence-triggered stopping should be
+evaluated separately before their combination is tuned.

@@ -1,0 +1,2 @@
+# Frozen, no-update margin support audit; counts only after an actual selected upstream message arrives.
+e83_conditioned_margin_support_bundle_control_s6_n128 experiments/e83_conditioned_margin_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt --examples 128 --batch_size 4 --seed 6 --output experiments/results/e83/conditioned_margin_support_bundle_control_s6_n128.json

@@ -1065,6 +1065,52 @@ def fig_e83_optionality_state_value():
     return fig
 
 
+def fig_e83_conditioned_margin_support():
+    """Show the depthwise collapse in actual-message-conditioned spike support."""
+    result = load(os.path.join(
+        RES, "e83", "conditioned_margin_support_bundle_control_s6_n128.json"))
+    layers = np.arange(1, 5)
+    examples = result["examples"]
+    strict = np.asarray([x["examples_with_candidate"][0]
+                         for x in result["per_layer"]], dtype=float)
+    band = np.asarray([x["examples_with_candidate_within_0p5"]
+                       for x in result["per_layer"]], dtype=float)
+    strict_cells = np.asarray([x["candidate_counts"][0]
+                               for x in result["per_layer"]], dtype=float)
+    extra_cells = np.asarray([x["candidate_counts"][1]
+                              for x in result["per_layer"]], dtype=float)
+    fig, axes = plt.subplots(1, 2, figsize=(7.35, 2.65))
+    axes[0].plot(layers, 100 * strict / examples, marker="o", linewidth=1.3,
+                 color=BLUE, label="margin [−0.25, 0)")
+    axes[0].plot(layers, 100 * band / examples, marker="o", linewidth=1.3,
+                 color=ORANGE, label="margin [−0.5, 0)")
+    axes[0].set_xticks(layers, ["L1", "L2", "L3", "L4"])
+    axes[0].set_ylim(0, 105)
+    axes[0].set_ylabel("utterances with ≥1 candidate (%)")
+    axes[0].set_title("A · In-band proposal coverage")
+    axes[0].legend(fontsize=5.8, loc="upper right")
+    width = 0.34
+    axes[1].bar(layers - width / 2, strict_cells, width=width, color=BLUE,
+                label="[−0.25, 0)")
+    axes[1].bar(layers + width / 2, extra_cells, width=width, color=ORANGE,
+                label="[−0.5, −0.25)")
+    axes[1].set_yscale("log")
+    axes[1].set_xticks(layers, ["L1", "L2", "L3", "L4"])
+    axes[1].set_ylabel("time-receiver cells (log scale)")
+    axes[1].set_title("B · Candidate cells by margin")
+    axes[1].legend(fontsize=5.8, loc="upper right")
+    fig.suptitle("E83 · near-threshold proposal support contracts with depth",
+                 x=0.02, ha="left", fontsize=8.7, fontweight="bold")
+    fig.text(0.02, 0.005,
+             "Frozen seed-6 depth-4 control; 128 held-out speakers. Each candidate has an actual selected upstream message arrival. "
+             "Time cells are correlated; no updates.", fontsize=4.8, color=MUTED)
+    fig.subplots_adjust(top=0.83, bottom=0.2, left=0.09, right=0.99, wspace=0.45)
+    out = os.path.join(os.path.dirname(__file__), "figures",
+                       "e83_conditioned_margin_support.png")
+    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
+    return fig
+
+
 def fig_e83_pair_occupancy():
     """Show that wider pair windows do not restore deep proposal support."""
     result = load(os.path.join(RES, "e83", "route_pair_occupancy_late_seed6.json"))
@@ -2080,6 +2126,14 @@ def build():
            "support and retained more L2 activity, but finished with zero L3/L4 support and no accuracy gain. This rules "
            "out extra epochs alone as a remedy for this configuration. Section 153 derives the proposal-support limit: "
            "more rollouts cannot recover an improving route that the proposal assigns probability zero.", "small"),
+         P("<b>Conditioned margin support (§154):</b> on a frozen depth-4 control and 128 held-out speakers, count only "
+           "nonfiring, nonrefractory states after an actual selected upstream message reached the receiver. In the "
+           "current [−0.5, 0) band, eligible time-receiver cells fell from 22,553 / 4,313 / 195 / 50 across L1–L4; "
+           "utterances with at least one candidate fell from 128 / 114 / 24 / 4. The narrower [−0.25, 0) band had "
+           "4,205 / 1,074 / 57 / 7 cells across 128 / 81 / 13 / 2 utterances. These cells are correlated in time, "
+           "and broadening toward the −1 reset baseline may force ungrounded spikes. This localizes a deep proposal-support "
+           "bottleneck but does not show a training gain or prove it is the only cause.", "small"),
+         *fig(fig_e83_conditioned_margin_support, W),
          P("<b>What this establishes:</b> these are clear measured capability leads on the tested tasks and a promising "
             "real-language result. E79 is a single-seed expert mixture without matched compute, while the strongest depth "
             "and retrieval comparisons are synthetic tasks built around event primitives. A general-language-model scaling "
