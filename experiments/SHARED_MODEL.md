@@ -2,7 +2,7 @@
 
 **One architecture and implementation; independently trained weights per task.**
 No joint training is used. This is the first working synthesis of the deep event
-carrier, conditional evidence and learned relative retrieval mechanisms. It is
+carrier, conditional evidence, learned relative retrieval and periodic phase mechanisms. It is
 not yet a union of every historical prototype's primitives.
 
 ## Implementation
@@ -10,6 +10,7 @@ not yet a union of every historical prototype's primitives.
 | File | Responsibility |
 |---|---|
 | `sleeping_machines/shared_event.py` | Addressed temporal state; eight configurable bounded carrier layers; hard winning vector/delay; local training-only loser score credit; contextual evidence readout |
+| `sleeping_machines/phase_memory.py` | Learned affine circle state, hard class clocks and local timing credit |
 | `sleeping_machines/event_memory.py` | Reference and linear-work segmented numerator/mass scan |
 | `sleeping_machines/event_query.py` | Explicit observed-prefix query, chronology/cutoff validation, separate examples |
 | `sleeping_machines/evidence_memory.py` | Visited-context count/exposure memory and hard relative pointer routes |
@@ -51,7 +52,7 @@ batch, and 151/256 unchanged development answers on the existing speech model.
 
 ## Completed coverage (E120)
 
-All newly fitted cores have depth 8, width 32, seed 6, eight epochs. Each has
+The initial E120 cores have depth 8, width 32, seed 6, eight epochs. Each has
 its own initialization, optimizer, input alphabet, fitted weights and checkpoint.
 The following development screens cover the eight principal data/task families;
 they do not rerun every historical experiment or compare to new dense baselines.
@@ -96,6 +97,31 @@ Removing the additive core head after training improves development NLL from
 deep-feature gate on the evidence. The `memory` diagnostic therefore is not an
 independent memory-only model. `fixed_evidence` uses equal evidence weights and
 no neural features. These are frozen deletions, not retrained controls.
+
+## Shallow arithmetic follow-up (E121)
+
+Depth is configurable by task. E121 compares two-layer, width-32 cores over
+200 epochs with identical mod-17 fitting IDs, neural schedule and sample order.
+The phase memory adds 69 local timing parameters to the 14,060 neural weights.
+The plain core ends at 70/3,440 unseen tuples. Phase memory with a fixed bounded
+neural correction ends at 3,391/3,440; its phase memory alone is 3,440/3,440.
+The corrected `phase_margin_guard=True` configuration finishes at **3,440/3,440**
+with all winners certified. Both fit and old development slice are perfect.
+
+The guarded readout bounds each correction by one quarter of the clock lead.
+It can calibrate class confidence but cannot overturn the phase winner. Phase
+teaching must fix any wrong phase answer. Hidden carrier winners still execute
+and learn; the arithmetic capability is supplied by the periodic branch. It
+is not currently an internal hidden routing primitive, and cannot yet be
+configured alongside conditional evidence in the same readout. Phase teaching
+is CPU-only and expects unit-count occurrence events. Phase-clock units are
+abstract phase units, not calibrated physical latency seconds.
+
+Use `experiments/e121_shared_arithmetic.py --phase 1 --margin-guard 1 --depth 2`
+through a new one-job safe queue. The exact completed commands and source hashes
+are saved under `queue/e121*` and `results/e121`. The fixed-bound and plain runs
+remain available. Three-input arithmetic does not require an eight-layer generic
+stack; deeper speech continues to use eight. Full theory and scope: §181.
 
 ## Safe reproduction
 
@@ -150,8 +176,8 @@ of the background status-PDF refresh.
    larger evidence banks before making full-benchmark claims. The current
    market adapter deliberately caps raw input at 200k trades/day and rejects
    requests with insufficient target events.
-5. Port periodic-state and native hold/veto primitives, then run their existing
-   arithmetic/depth protocols. Add the continual-learning/retention suite;
+5. Extend the integrated periodic state to hidden routes and other periods;
+   port native hold/veto composition and preserve arithmetic/depth protocols. Add the continual-learning/retention suite;
    it is not covered by the present separate stationary fits.
 6. Add a causal persistent scheduler and measure replay savings. GPU training
    requires explicit device support and profiling; this harness currently
@@ -159,5 +185,5 @@ of the background status-PDF refresh.
 
 Do not use this exploratory suite as a new best-model selection on official
 test sets. Freeze choices with validation, then measure held-out quality and
-total training/inference resources. Theory §§176–180 explains the causal query,
+total training/inference resources. Theory §§176–182 explains the causal query,
 natural-score credit, calibration support and periodic representation issues.

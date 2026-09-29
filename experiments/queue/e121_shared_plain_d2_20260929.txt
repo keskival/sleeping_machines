@@ -1,0 +1,1 @@
+e121_shared_plain_d2_20260929 experiments/e121_shared_arithmetic.py --tag shared_d2_plain_s6_200 --phase 0 --depth 2 --epochs 200

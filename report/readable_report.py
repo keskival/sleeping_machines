@@ -27,6 +27,11 @@ def results():
     tasks = {task: read(f"e120/{task}_d8_20260929.json")
              for task in ("language", "market", "temporal", "mnist", "modular", "dvs")}
     tasks["recall"] = read("e120/recall_d8_supported_20260929.json")
+    tasks["phase_fixed"] = read("e121/shared_d2_phase_s6_200.json")
+    tasks["phase"] = read("e121/shared_d2_guard_s6_200.json")
+    tasks["plain"] = read("e121/shared_d2_plain_s6_200.json")
+    tasks["shd_control"] = read("e122/d8_n2048_control_s6.json")
+    tasks["shd_invariance"] = read("e122/d8_n2048_invariance_s6.json")
     return tasks
 
 
@@ -87,8 +92,8 @@ def figures(M, tasks, ev):
         a.add_patch(FancyArrowPatch((x1,2),(x2,2),arrowstyle="-|>",mutation_scale=14,color=blue))
     a.annotate("", (3.65,.94), (3.65,1.5), arrowprops={"arrowstyle":"->","linestyle":"--","color":orange})
     a.text(5.65,.47,"Only the winner is emitted.\nLabels teach the completed query.",fontsize=9,va="center")
-    a.text(.1,3.3,"Eight shared layers; separate weights for each task",fontsize=11,fontweight="bold")
-    a.text(.1,2.85,"Conditional evidence and hard pointer memory can inform the query readout.",fontsize=9)
+    a.text(.1,3.3,"Shared layers; depth and weights configured per task",fontsize=11,fontweight="bold")
+    a.text(.1,2.85,"Conditional evidence, hard pointers and phase memory inform query readouts.",fontsize=9)
     save(f,"shared_architecture")
 
     f, axes = plt.subplots(2, 2, figsize=(7.2, 5.0))
@@ -119,6 +124,35 @@ def figures(M, tasks, ev):
     a.grid(axis="y",visible=False)
     f.tight_layout()
     save(f,"e120_count_repair")
+    f, a = plt.subplots(figsize=(7.2, 2.9))
+    for key, label, color in (("phase", "Phase memory + margin guard", blue),
+                              ("phase_fixed", "Phase memory + fixed bound", "#1baf7a"),
+                              ("plain", "Two layers, ordinary readout", orange)):
+        row = tasks[key]
+        a.plot([0]+[r["epoch"] for r in row["curve"]],
+               [100*row["initial"]["unseen_all"]["accuracy"]]+[100*r["unseen_all"]["accuracy"] for r in row["curve"]],
+               label=label, color=color, linewidth=2)
+    a.axhline(100/17, color=gray, linestyle=":", label="Uniform chance")
+    a.set(xlabel="Epoch", ylabel="All 3,440 unseen tuples: accuracy (%)", ylim=(0, 104),
+          title="Restoring the missing periodic computation")
+    a.legend(fontsize=9); f.tight_layout(); save(f,"e121_arithmetic")
+
+    f, axes = plt.subplots(1,2,figsize=(7.2,2.8),sharey=True)
+    for axis, split, title in zip(axes,("dev_original","dev_additional"),
+                                  ("Original 256 utterances","Additional 256 utterances")):
+        for key,label,color in (("shd_control","Unchanged input",blue),
+                                ("shd_invariance","Time + channel variation",orange)):
+            row=tasks[key]
+            axis.plot([0]+[r["epoch"] for r in row["curve"]],
+                      [100*row["initial"][split]["accuracy"]]+[100*r[split]["accuracy"] for r in row["curve"]],
+                      "o-",label=label,color=color)
+        axis.set(xlabel="Continuation epoch",title=title,ylim=(35,85))
+        axis.legend(fontsize=7)
+    axes[0].set_ylabel("Clean held-out accuracy (%)")
+    f.tight_layout(); save(f,"e122_speech")
+    import figures_mech as historic
+    historic.EVENT, historic.DENSE_T = blue, orange
+    save(historic.fig_supremacy_map(), "supremacy_map")
     previous = M["fig_e119_work_and_learning"]()
     if previous is not None:
         plt.close(previous)  # Existing helper writes its standalone figure.
@@ -127,6 +161,9 @@ def figures(M, tasks, ev):
 def blocks(M, tasks, ev):
     """Pages of (kind, payload) blocks shared by the PDF and Markdown."""
     pages = []
+    phase, plain = tasks["phase"], tasks["plain"]
+    phase_end, plain_end = phase["final"]["unseen_all"], plain["final"]["unseen_all"]
+    shd_control, shd_aug = tasks["shd_control"], tasks["shd_invariance"]
     pages.append([
         ("title", "Sleeping Machines"),
         ("sub", "Learning and computing through timed messages · 29 September 2026"),
@@ -150,7 +187,21 @@ def blocks(M, tasks, ev):
          "operations and dense multiply-adds are different work units; these are not measured energy ratios."),
         ("p", "<b>Why this matters:</b> the evidence supports a route to intelligence that learns useful structure from "
          "less experience and spends computation on selected events. The next challenge is to combine those strengths "
-         "in one scalable architecture. That synthesis now has a working eight-layer implementation and cross-task results.")])
+         "in one scalable architecture. That synthesis now supports task-specific depth, with an eight-layer speech model and a shallow periodic-memory arithmetic model.")])
+
+    pages.append([
+        ("h1", "Quality versus computation: the strongest measured advantages"),
+        ("p", "In the work panels, <b>higher and further left is better</b>: more accurate answers with fewer counted "
+         "operations. The logarithmic horizontal axis makes orders of magnitude visible. These restored plots "
+         "show the native prototypes that established the project's strongest efficiency results."),
+        ("figure", ("supremacy_map",174)),
+        ("small", "Timing, composition and deep order: event operations versus dense multiply-adds per example; "
+         "training budgets differ and are labeled. The data-efficiency and arithmetic panels use different horizontal "
+         "axes. Market: held-out log-likelihood (higher is better), with an online GRU and a Transformer reference. "
+         "The strongest accuracy/work panels compare Transformers and clocked convolutional nets; the recurrent "
+         "market reference is a GRU. LSTM test-loss comparisons are on the preceding page; their saved runs do not "
+         "provide a matched total-work counter. These are operation counts, not measured joules. "
+         "Sources: E32/E35/E36, E34, E53/E54, E48/E52/E57 and E41; completed AWS timing controls are included.")])
 
     pages.append([
         ("h1", "1. What the results make possible"),
@@ -163,7 +214,7 @@ def blocks(M, tasks, ev):
           "A learned query-to-memory rule can preserve its meaning beyond training lengths."],
          ["Composition", "E54: 99.9–100% depth-four order recognition after 10–15k examples.",
           "Learned parts can be reused through a hierarchy rather than relearned for every combination."],
-         ["Periodic computation", "E41: 99.4–99.9% unseen modular triples, training on 30% of tuples.",
+         ["Periodic computation", f"E41: 99.4–99.9%; E121 shared phase model: {100*phase_end['accuracy']:.1f}% across all 3,440 unseen tuples.",
           "An appropriate temporal representation can discover a reusable rule instead of storing examples."],
          ["Event world models", "E57: within 0.08–0.19 nats/event of its Transformer reference at about 1/3000 counted work.",
           "Predictive state can be maintained cheaply on real streams; the Transformer is more accurate."],
@@ -189,9 +240,10 @@ def blocks(M, tasks, ev):
         ("figure", ("shared_architecture", 174)),
         ("h2", "What has been brought together"),
         ("bullets", [
-         "<b>Deep event representations:</b> eight bounded residual layers carry information and learning credit. A layer evaluates three delayed choices and emits only the winning vector and delay.",
+         "<b>Deep event representations:</b> task-configurable bounded residual layers carry information and learning credit. A layer evaluates three delayed choices and emits only the winning vector and delay.",
          "<b>Conditional evidence:</b> sparse context tables learn local outcome counts or event counts per exposure time. A learned feature-dependent readout combines their evidence.",
          "<b>Learned retrieval:</b> a hard pointer chooses a source and relative destination. Losing alternatives receive local mistake credit; the forward answer uses the winning pointer.",
+         "<b>Periodic state:</b> learned rotations/reflections compose the observed symbols; the first class clock supplies the phase answer, with a bounded neural score correction.",
          "<b>Task-appropriate supervision:</b> categorical labels supervise a completed query; event prediction uses the likelihood of the next mark and waiting time, including the observed silence."]),
         ("h2", "Causality is part of the interface"),
         ("p", "Language and market queries receive only an explicitly observed prefix. Future tokens and future "
@@ -199,10 +251,10 @@ def blocks(M, tasks, ev):
          "sequence and attaching a next-token loss to an older delayed carrier can otherwise leak future information."),
         ("p", "This first implementation replays each prefix independently. It processes sparse event packets but "
          "does not yet retain a persistent online queue across queries. Small vector maps and query output scores "
-         "remain dense. Native hold/veto detectors, periodic phase computation and learned event cancellation still "
+         "remain dense. Native hold/veto detectors and learned event cancellation still "
          "need to join this shared core."),
         ("small", "Implementation: sleeping_machines/shared_event.py, event_memory.py, event_query.py, evidence_memory.py, "
-         "objectives.py and readout_calibration.py. Theory §§176–180. E118/E119 remain compatible entry points.")])
+         "phase_memory.py, objectives.py and readout_calibration.py. Theory §§176–182. E118/E119 remain compatible entry points.")])
 
     rows = []
     for task, label in (("language","Text8"),("market","Market events"),("recall","Associative recall"),
@@ -211,12 +263,17 @@ def blocks(M, tasks, ev):
         value = f"{end['correct']}/{end['n']} = {100*end['accuracy']:.1f}%" if "accuracy" in end else f"{end['nll']:.3f} nats/event"
         if task == "language": value = f"{end['nll']/math.log(2):.3f} bpc; {100*end['accuracy']:.1f}% next-character"
         if task == "recall": value = "100% at standard and 4× context"
-        rows.append([label,f"{len(x['fit_ids']):,} / {len(x['dev_ids']):,}",value])
+        if task == "modular":
+            rows.append(["Modular arithmetic (2 layers + phase)", "1,473 / 3,440",
+                         f"{phase_end['correct']:,}/{phase_end['n']:,} = {100*phase_end['accuracy']:.1f}% unseen"])
+        else:
+            rows.append([label,f"{len(x['fit_ids']):,} / {len(x['dev_ids']):,}",value])
     rows.insert(0,["SHD speech (preserved)","1,024 / 256","151/256 = 59.0% final; 63.7% best epoch"])
     pages.append([
         ("h1", "3. What the shared model does today"),
-        ("p", "All new runs use the same eight-layer, width-32 core and independent task weights. The new tasks run "
-         "for eight epochs. Speech uses the existing trained checkpoint after an exact implementation-extraction audit. "
+        ("p", "The first screens use an eight-layer, width-32 core and independent weights, for eight epochs. "
+         "The arithmetic follow-up uses two layers for 200 epochs and restores periodic memory. Speech begins "
+         "from the audited checkpoint; matched eight-layer continuations are in Appendix A. "
          "These are development screens, not new full-scale comparisons against Transformers."),
         ("table", (["Task", "Neural fit / dev", "Final development result"],rows,[42,32,100])),
         ("h2", "What transfers"),
@@ -225,15 +282,38 @@ def blocks(M, tasks, ev):
          "after repairing an unsupported count feature. Text prediction improves from 3.022 to 2.915 development "
          "bits per character in the small run; the full E79 language mixture remains a stronger, separate result."),
         ("h2", "What the screen reveals"),
-        ("p", "Market fitting improves while development likelihood worsens. Modular arithmetic does not generalize. "
-         "Those results identify work for the common architecture: control the interaction between evidence and "
-         "neural corrections, and incorporate the earlier periodic computation mechanism. Additional depth alone "
-         "has not supplied every specialist's useful representation."),
+        ("p", "Market fitting improves while development likelihood worsens. The initial arithmetic screen omitted "
+         "the successful periodic primitive. The follow-up below restores that mechanism and protects its winning "
+         "computation when coupled to the neural branch. More generic depth alone does not supply every useful representation."),
         ("small", "One seed per screen. Text memory: 32,768 characters fitted separately, then 2,048 neural queries; dev "
          "is a 256-character slice of the text8 validation region. Market: bounded trade prefixes on disjoint days. "
          "Recall: an additional 4,000 examples fit the pointer memory. MNIST: 2×2 pooled training-set images. Gestures: "
          "only the first second, 88 fit / 44 held-out-user examples. SHD holds out training speakers 3 and 6. "
          "No official real-data test set is used by E120. Exact protocols and IDs are saved in each result JSON.")])
+
+    pages.append([
+        ("h1", "3a. Arithmetic retained with a shallow periodic model"),
+        ("p", f"The two-layer shared model with learned phase memory reaches <b>{phase_end['correct']:,}/{phase_end['n']:,} "
+         f"({100*phase_end['accuracy']:.1f}%)</b> across every unseen mod-17 triple. The plain two-layer control reaches "
+         f"{plain_end['correct']:,}/{plain_end['n']:,} ({100*plain_end['accuracy']:.1f}%). Both use the same 1,473 fitting tuples, "
+         "example order, 200 epochs, neural optimizer schedule and width. Their weights are trained separately."),
+        ("figure", ("e121_arithmetic",174)),
+        ("h2", "What changed, and why it works"),
+        ("p", "Each observed symbol rotates or reflects a learned phase. These operations compose without shrinking "
+         "the phase derivative. Class clocks race from the resulting phase; a local timing error teaches their "
+         "offsets. This carries the earlier rhythm mechanism into a reusable shared-model component. Its 69 phase "
+         "parameters start randomly; the labels teach it, with no formula for the answer in the update."),
+        ("p", f"The first coupled run scored {100*tasks['phase_fixed']['final']['unseen_all']['accuracy']:.1f}% despite perfect phase "
+         "memory: the fixed neural correction overturned small-margin winners. The new bound is at most one quarter "
+         "of each clock lead, so even opposing corrections preserve the winning class. The neural branch still "
+         "trains score confidence; it cannot repair a wrong phase winner in this guarded mode. This restores "
+         "arithmetic in the combined implementation without attributing it to the generic carrier."),
+        ("small", f"One seed (6); supplied period 17; position-tagged operands in both arms; all 3,440 non-fitting tuples "
+         f"are development evidence. Final phase-only accuracy: {100*phase['final']['phase']['phase_accuracy']:.1f}%; "
+         f"certified queries: {phase['final']['phase']['certified_queries']:,}; neural winner changes: "
+         f"{phase['final']['phase']['neural_winner_changes']:,}. The phase arm adds a local teaching rule and a guarded "
+         "readout, so this comparison tests the complete intervention, not phase state alone. It is not a depth or "
+         "matched-energy superiority comparison. No lookup memorizer is used. Theory §181; results/e121.")])
 
     pages.append([
         ("h1", "4. Learning curves expose the remaining gaps"),
@@ -247,8 +327,8 @@ def blocks(M, tasks, ev):
          "On text, that same frozen deletion improves NLL from 2.020 to 1.942."),
         ("p", "These deletions are diagnostic interventions, not retrained controls. They motivate a matched test "
          "of how much freedom the evidence gate and additive head should have. The arithmetic screen instead "
-         "points toward missing structure: 11.9% fit and 2.3% unseen-tuple accuracy after eight epochs, versus "
-         "5.9% chance. The earlier rhythm model's success has not yet transferred."),
+         "pointed toward missing structure: 11.9% fit and 2.3% unseen-tuple accuracy after eight epochs. "
+         "E121 now tests that diagnosis with matched shallow runs, described on the preceding page."),
         ("small", "Evaluation losses use the same task objective throughout each curve. A reduction in training loss "
          "alone is not evidence of better prediction on new data. These small runs do not estimate scaling laws.")])
 
@@ -289,7 +369,7 @@ def blocks(M, tasks, ev):
          ["Why did recall break?", "Constant training metadata leaves a readout direction unidentifiable.",
           "Project unsupported static count dependence; retain a longer-context contract. §179."],
          ["Why does arithmetic need more?", "For three uniform modular operands, any two are statistically independent of the label.",
-          "Test higher-order features and restore trainable periodic state. Depth alone is no guarantee. §180."],
+          "Compose learned phase state with unit-magnitude occurrence derivatives; protect its clock margin. §§180–181."],
         ],[34,72,68])),
         ("h2", "What is proved, and what experiments must establish"),
         ("p", "The formal work supplies expressivity results, local credit identities, conditional stability bounds, "
@@ -359,8 +439,8 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1", "9. The next decisive work"),
         ("table", (["Priority", "Experiment or implementation", "What would count as progress"],[
-         ["Preserve specialist strengths", "Integrate trainable phase state and native hold/veto composition; retain retrieval length contracts.",
-          "Shared model inherits the earlier arithmetic and composition generalization under matched protocols."],
+         ["Preserve specialist strengths", "Extend the restored phase primitive to hidden routes; integrate native hold/veto composition; retain retrieval contracts.",
+          "Retain arithmetic gains across seeds and other periods; preserve composition with the same architecture."],
          ["Improve evidence coupling", "Train matched evidence-gate and additive-head controls for language and market; use separate selection and evaluation data.",
           "A gain on unseen data over the fixed evidence bank, not merely a lower fitting loss."],
          ["Advance real event recognition", "Scale SHD and gesture training with fixed speaker/user splits; calibrate confidence and time-to-answer.",

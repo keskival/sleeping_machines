@@ -88,7 +88,8 @@ class RaceLayer(nn.Module):
 class SharedEventModel(nn.Module):
     def __init__(self, bands=40, dim=32, depth=8, groups=5, beta=1., cf_credit=True,
                  memory_backend="linear", classes=20, readout="mean", continuous_dim=0,
-                 evidence_count=0):
+                 evidence_count=0, phase_period=None, phase_seed=6, phase_correction_bound=.25,
+                 phase_margin_guard=False):
         super().__init__()
         if bands < 1 or groups < 1 or classes < 1 or dim < 4 or evidence_count < 0 or continuous_dim < 0:
             raise ValueError("Invalid model dimensions")
@@ -123,6 +124,14 @@ class SharedEventModel(nn.Module):
         else:
             self.register_parameter("evidence_weights", None)
             self.evidence_gate = None
+        self.phase_memory = None
+        self.phase_correction_bound = float(phase_correction_bound)
+        self.phase_margin_guard = bool(phase_margin_guard)
+        if phase_period is not None:
+            if evidence_count or phase_correction_bound < 0:
+                raise ValueError("Phase clocks currently use their own bounded query readout")
+            from .phase_memory import PhaseMemory
+            self.phase_memory = PhaseMemory(bands, classes, phase_period, seed=phase_seed)
 
     def forward(self, b, t, c, ids, size, sequential=False, overrides=None, trace=False,
                 continuous=None, evidence=None, expert_mode="combined"):
@@ -166,8 +175,34 @@ class SharedEventModel(nn.Module):
                 logits = core_logits
             elif expert_mode == "memory":
                 logits = memory_logits
-        elif expert_mode == "memory":
+        elif expert_mode == "memory" and self.phase_memory is None:
             raise ValueError("No evidence memory configured")
+        phase_stats = {}
+        if self.phase_memory is not None:
+            if not torch.all(c == 1):
+                raise ValueError("The initial phase adapter expects one occurrence per input event")
+            phase_scores, _ = self.phase_memory(b, ids, size)
+            phase_scores = phase_scores.to(core_logits.dtype)
+            margins = phase_scores.sort(-1, descending=True).values
+            gap = margins[:, 0]-margins[:, 1]
+            bound = self.phase_correction_bound
+            bounds = gap.new_full((size,), bound)
+            if self.phase_margin_guard:
+                # Reserve half the phase lead, even under opposing corrections.
+                # This mode can calibrate confidence but cannot change the class.
+                bounds = torch.minimum(bounds, gap/4)
+            correction = bounds[:, None]*torch.tanh(core_logits/bounds[:, None].clamp_min(1e-12))
+            logits = phase_scores+correction
+            if expert_mode == "core":
+                logits = core_logits
+            elif expert_mode == "memory":
+                logits = phase_scores
+            phase_stats = {"phase_symbols":len(b),"phase_clock_candidates":size*self.classes,
+                           "phase_winners":phase_scores.argmax(-1).tolist(),
+                           "phase_margin":gap.detach().tolist(),
+                           "phase_effective_bound":bounds.detach().tolist(),
+                           "phase_certified":int((gap>2*bounds).sum())}
         return logits, summary, {"layers": stats, "packets": len(t),
                                  "max_payload": float(x.detach().abs().max()),
-                                 "mean_added_delay_ms": float((t-original_t).detach().mean()*1000)}, traces
+                                 "mean_added_delay_ms": float((t-original_t).detach().mean()*1000),
+                                 **phase_stats}, traces

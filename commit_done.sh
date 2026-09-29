@@ -17,7 +17,7 @@ if [[ "$BRANCH" != "main" && "${ALLOW_NON_MAIN_BRANCH:-0}" != "1" ]]; then
 fi
 
 # Deliberate allowlist: exclude logs, checkpoints, and caches. Include the
-# E83/E84 and E114–E120 result JSON summaries so completed pilots are ready for a
+# E83/E84 and E114–E122 result JSON summaries so completed pilots are ready for a
 # host-side commit.
 FILES=(
   AGENTS.md
@@ -36,18 +36,28 @@ FILES=(
   experiments/theory
   experiments/SHARED_MODEL.md
   sleeping_machines/shared_event.py
+  sleeping_machines/phase_memory.py
   sleeping_machines/event_memory.py
   sleeping_machines/event_query.py
   sleeping_machines/evidence_memory.py
   sleeping_machines/objectives.py
   sleeping_machines/readout_calibration.py
   experiments/e120*.py
+  experiments/e121*.py
+  experiments/e122*.py
+  experiments/queue/e121*.txt
+  experiments/queue/e122*.txt
+  experiments/results/e121/*.json
+  experiments/results/e122/*.json
+  report/figures/e121_arithmetic.png
+  report/figures/e122_speech.png
   experiments/reference/e118_pre_shared.py
   experiments/queue/e120*.txt
   experiments/queue/report_shared*.txt
   experiments/results/e120/*.json
   report/readable_report.py
   report/archive/20260929_before_shared_model.md
+  report/figures/supremacy_map.png
   report/figures/accomplishments.png
   report/figures/shared_architecture.png
   report/figures/e120_shared_learning.png
@@ -280,5 +290,5 @@ done
 git diff --cached --check -- "${CHECK_FILES[@]}"
 git diff --cached --stat
 
-MESSAGE="${1:-Unify event models, audit cross-task learning, and rebuild the accomplishments report}"
+MESSAGE="${1:-Restore shared arithmetic, compare deep speech continuations, and restore work frontiers}"
 git commit -m "$MESSAGE"
