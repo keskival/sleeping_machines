@@ -1,0 +1,1 @@
+e117_serial_d8_20260929 experiments/e117_serial_event_shd.py --tag serial_d8_n128_e8_s6 --depth 8 --limit 128 --eval-limit 128 --epochs 8 --bs 4

@@ -1893,6 +1893,49 @@ def time_pages(st, W):
     return s
 
 
+def fig_e118_race_carriers():
+    paths = [os.path.join(RES, "e118", f"race_d8_cf{k}_n128_e8_s6.json") for k in (0, 1)]
+    probe_path = os.path.join(RES, "e117", "probe_serial_d8_n128_e8_s6.json")
+    if not all(os.path.exists(p) for p in [*paths, probe_path]):
+        return None
+    arms = [load(p) for p in paths]
+    if any(a.get("status") != "completed" for a in arms):
+        return None
+    probes = load(probe_path)["rows"]
+    f, axes = plt.subplots(2, 2, figsize=(7.2, 5.5))
+    for arm, color, label in zip(arms, [GRAY, BLUE], ["Winner pathwise", "+ loser score credit"]):
+        curve = arm["curve"]
+        epochs = [row["epoch"] for row in curve]
+        axes[0, 0].plot(epochs, [r["fit"]["nll"] for r in curve], color=color, label=label + " fit")
+        axes[0, 0].plot(epochs, [r["dev"]["nll"] for r in curve], "--", color=color)
+        axes[0, 1].plot(epochs, [100*r["dev"]["accuracy"] for r in curve], "o-", color=color, label=label)
+        axes[1, 1].plot(range(1, 9), curve[-1]["route_grad_norm"], "o-", color=color, label=label)
+    axes[0, 0].axhline(np.log(20), color=INK, ls=":")
+    axes[0, 0].set_title("Terminal NLL: fit solid / held-out dashed")
+    axes[0, 0].legend(fontsize=6)
+    axes[0, 1].axhline(5, color=INK, ls=":")
+    axes[0, 1].set_ylim(bottom=0)
+    axes[0, 1].set_title("Held-out-speaker accuracy (%)")
+    axes[0, 1].legend(fontsize=6)
+    axes[1, 0].plot([r["depth"] for r in probes], [100*r["fit_correct"]/r["fit_n"] for r in probes], "o-", color=AQUA, label="Probe fit")
+    axes[1, 0].plot([r["depth"] for r in probes], [100*r["dev_correct"]/r["dev_n"] for r in probes], "o--", color=AQUA, label="Probe held-out")
+    axes[1, 0].scatter([8], [100*9/128], color=ORANGE, label="E117 trained head")
+    axes[1, 0].set_title("Earlier E117: information survives depth")
+    axes[1, 0].set_xlabel("Carrier depth (0 = input features)")
+    axes[1, 0].legend(fontsize=6)
+    axes[1, 1].set_title("Final-epoch router gradient norm")
+    axes[1, 1].set_xlabel("Race layer")
+    axes[1, 1].set_ylim(bottom=0)
+    for ax in axes[0]:
+        ax.set_xlabel("Epoch")
+    f.suptitle("Eight layers with real winning continuations: a development diagnostic", fontsize=10)
+    f.text(.02, .015, "128 fitting / 128 held-out-speaker utterances; one seed; no SHD test-set access.\n"
+           "Both race arms use identical fit-only readout conditioning. E117 probes use a different head; no depth advantage claimed.", fontsize=6.5)
+    f.tight_layout(rect=(0, .095, 1, .95))
+    f.savefig(os.path.join(os.path.dirname(__file__), "figures", "e118_race_carriers.png"), dpi=180)
+    return f
+
+
 def fig_e83_countmark_coupling():
     path = os.path.join(RES, "e83", "countmark_matched_20260929.json")
     if not os.path.exists(path):

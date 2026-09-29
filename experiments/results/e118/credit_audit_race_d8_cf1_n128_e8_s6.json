@@ -1,0 +1,188 @@
+{
+  "checkpoint": "experiments/results/e118/race_d8_cf1_n128_e8_s6.pt",
+  "protocol": "4 fitting to choose direction, 4 held-out to evaluate transfer; no saved model mutation",
+  "base_adapt_nll": 1.6018086671829224,
+  "base_development_nll": 2.4242942333221436,
+  "fit_ids": [
+    6444,
+    2610,
+    639,
+    3896
+  ],
+  "dev_ids": [
+    1048,
+    88,
+    598,
+    894
+  ],
+  "rows": [
+    {
+      "counterfactual_credit": false,
+      "router_step_l2": 0.001,
+      "router_gradient_l2": 0.09292729198932648,
+      "predicted_adapt_loss_change": -9.292729198932648e-05,
+      "actual_adapt_loss_change": 0.000993490219116211,
+      "actual_development_loss_change": -0.004117727279663086,
+      "adapt_winner_changes": [
+        3,
+        2,
+        8,
+        1,
+        4,
+        2,
+        2,
+        1
+      ],
+      "development_winner_changes": [
+        0,
+        4,
+        2,
+        0,
+        2,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "counterfactual_credit": false,
+      "router_step_l2": 0.01,
+      "router_gradient_l2": 0.09292729198932648,
+      "predicted_adapt_loss_change": -0.0009292729198932648,
+      "actual_adapt_loss_change": 0.014638185501098633,
+      "actual_development_loss_change": -0.006076812744140625,
+      "adapt_winner_changes": [
+        21,
+        31,
+        45,
+        12,
+        20,
+        13,
+        26,
+        13
+      ],
+      "development_winner_changes": [
+        18,
+        19,
+        21,
+        2,
+        13,
+        14,
+        17,
+        7
+      ]
+    },
+    {
+      "counterfactual_credit": false,
+      "router_step_l2": 0.1,
+      "router_gradient_l2": 0.09292729198932648,
+      "predicted_adapt_loss_change": -0.009292729198932648,
+      "actual_adapt_loss_change": 0.11996006965637207,
+      "actual_development_loss_change": -0.12460112571716309,
+      "adapt_winner_changes": [
+        234,
+        232,
+        379,
+        103,
+        89,
+        173,
+        174,
+        96
+      ],
+      "development_winner_changes": [
+        174,
+        175,
+        226,
+        82,
+        95,
+        148,
+        145,
+        53
+      ]
+    },
+    {
+      "counterfactual_credit": true,
+      "router_step_l2": 0.001,
+      "router_gradient_l2": 0.7972437143325806,
+      "predicted_adapt_loss_change": -0.0007972437143325806,
+      "actual_adapt_loss_change": -0.005876660346984863,
+      "actual_development_loss_change": 0.0017764568328857422,
+      "adapt_winner_changes": [
+        5,
+        2,
+        1,
+        5,
+        5,
+        1,
+        4,
+        3
+      ],
+      "development_winner_changes": [
+        3,
+        4,
+        1,
+        2,
+        4,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "counterfactual_credit": true,
+      "router_step_l2": 0.01,
+      "router_gradient_l2": 0.7972437143325806,
+      "predicted_adapt_loss_change": -0.007972437143325805,
+      "actual_adapt_loss_change": -0.028980255126953125,
+      "actual_development_loss_change": 0.050795555114746094,
+      "adapt_winner_changes": [
+        30,
+        39,
+        29,
+        36,
+        23,
+        15,
+        19,
+        35
+      ],
+      "development_winner_changes": [
+        28,
+        25,
+        21,
+        8,
+        21,
+        15,
+        21,
+        18
+      ]
+    },
+    {
+      "counterfactual_credit": true,
+      "router_step_l2": 0.1,
+      "router_gradient_l2": 0.7972437143325806,
+      "predicted_adapt_loss_change": -0.07972437143325806,
+      "actual_adapt_loss_change": -0.23208117485046387,
+      "actual_development_loss_change": 0.3929581642150879,
+      "adapt_winner_changes": [
+        290,
+        356,
+        268,
+        301,
+        230,
+        162,
+        274,
+        253
+      ],
+      "development_winner_changes": [
+        233,
+        204,
+        191,
+        89,
+        185,
+        163,
+        228,
+        181
+      ]
+    }
+  ]
+}
