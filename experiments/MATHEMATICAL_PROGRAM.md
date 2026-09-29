@@ -1,5 +1,29 @@
 # Mathematical program for event networks at language scale
 
+## Exact joint mark/clock credit and the generic language criterion (E132)
+
+A local tangent cannot account for a hard downstream jump. Theory §§197–200
+instead gives a joint stochastic mark/clock likelihood, including censored
+survival, and an exact expected deep score gradient. Mark confidence and arrival
+intensity have orthogonal Fisher blocks; both lose information in proportion to
+the firing probability. This unifies route choice, silence teaching and the
+failure of purely interior clock credit. E132 checks finite differences,
+integrated moments and a three-level conditional choice tree. It does not
+implement stochastic policy learning in the common model or prove favorable
+optimization variance. Budgeted actual suffix alternatives, proposal support
+and stochastic/deterministic deployment differences remain explicit tasks.
+
+The primary empirical target is a learned event language model with no explicit
+count/pointer predictor. E133's bounded evidence-free comparison reaches 3.395 dev bpc with eight layers
+and 3.464 with one. All layers learn and ordered context changes the prediction;
+the deeper model uses more computation. Both use the existing deterministic
+surrogate, so this does not test the new stochastic credit law or competitive
+large-scale representation. Read
+[LANGUAGE_SCALING_PROTOCOL.md](LANGUAGE_SCALING_PROTOCOL.md) for the full quality,
+capacity, memory, forward/backward work, time and energy criteria. Native mixture
+quality and eight-layer SHD learning remain distinct from competitive generic
+representation learning.
+
 ## Current analytic advance: separate representation learning from accidental race changes (E128–E131)
 
 Balanced fitting gradients conflict across classes and disjoint speaker groups,

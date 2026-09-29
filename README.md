@@ -43,6 +43,16 @@ explicit context-count or pointer experts. The common implementation currently
 covers multiple independently trained tasks; sharing an implementation does not
 by itself establish general representation learning.
 
+A bounded **expert-free language screen** now reaches **3.395 validation
+bits/character with eight layers**, versus **3.464 with one layer**. It uses
+8,192 training characters, four passes and 1,024 validation predictions; all
+layers' value, route and memory-time parameters update. Shuffling preceding
+characters while preserving the last character, count and timestamps increases
+the deeper model's loss to 3.805. This is evidence of trainability and context
+sensitivity, with higher computation cost for the deeper model. It is a small
+development result, not the 10M-character mixture result or a scaling claim.
+[Results and work audit](experiments/results/e133/generic_language_audit_20260929.json).
+
 An eight-layer event/race model reaches **72.3% on 512 held-out SHD utterances**
 from reserved training-file speakers. This demonstrates deep learning and some
 speaker transfer. It does not establish competitive speech recognition; the
@@ -127,19 +137,6 @@ These caps suit the bounded CPU check on a host with enough free memory. Trainin
 runs need their own measured memory budget and timeout. Completed experiment
 commands are preserved under `experiments/queue/`; use a new tag when reproducing
 them. Logs and result records carry the executed settings and measured metrics.
-
-## Commit completed work
-
-Run [commit_done.sh](commit_done.sh) from the writable host checkout:
-
-```bash
-./commit_done.sh "Update Sleeping Machines documentation and completed findings"
-```
-
-Its allowlist includes this README, the historical manifesto, source, theory,
-completed result summaries and report PDFs. It excludes running result records,
-checkpoints and logs, and protects unrelated staged changes. When another host
-is working, use a separate branch and follow the repository collaboration rules.
 
 ## Citing
 

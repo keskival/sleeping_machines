@@ -253,5 +253,9 @@ At a collapse, every competing strand has a projected crossing time
 6. **Exact expectations instead of sampling.** Stochastic spiking networks estimate
    expected gradients by sampling spikes. With the pool, the first-order expectation
    over alternatives is a sum over projected strands with known probabilities (a
-   Rao-Blackwellised estimator): the boundary term of §4 is evaluated analytically, not
-   sampled. That means lower-variance gradients at no extra forward work.
+   Rao-Blackwellised estimator): the local first-order approximation to the
+   boundary term of §4 is averaged rather than sampled. Projected strands can
+   supply that local approximation without extra forward continuation. Exact
+   whole-network alternative utility generally needs its actual downstream
+   execution and must charge that work (§§196,199). Lower variance of a local
+   estimator does not establish that its approximation is unbiased.

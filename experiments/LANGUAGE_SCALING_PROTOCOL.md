@@ -42,8 +42,10 @@ Before increasing the data budget:
 5. Verify state reset, chunk boundaries, delayed messages, teacher alignment and
    truncated credit. Input character i must never depend on target i+1.
 
-An evidence-free short screen can diagnose trainability now. It is a prerequisite,
-not an extrapolated 10M-character or billion-token result. A mathematically exact
+The completed E133 evidence-free screen reaches 3.395 dev bpc at depth eight
+versus 3.464 at depth one, with more work for the deeper model. All layer parameter
+sets update, and count-preserving context probes establish sensitivity. It is a
+prerequisite, not an extrapolated 10M-character or billion-token result. A mathematically exact
 local race-credit option is developed in theory §§197–200; it is not yet the
 current hard-race training implementation.
 
