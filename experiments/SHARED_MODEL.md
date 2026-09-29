@@ -9,7 +9,7 @@ not yet a union of every historical prototype's primitives.
 
 | File | Responsibility |
 |---|---|
-| `sleeping_machines/shared_event.py` | Addressed temporal state; eight configurable bounded carrier layers; hard winning vector/delay; local training-only loser score credit; contextual evidence readout |
+| `sleeping_machines/shared_event.py` | Configurable bounded carrier depth; hard winning vector/delay; local training-only loser score credit; contextual evidence, periodic and weighted event readouts |
 | `sleeping_machines/phase_memory.py` | Learned affine circle state, hard class clocks and local timing credit |
 | `sleeping_machines/event_memory.py` | Reference and linear-work segmented numerator/mass scan |
 | `sleeping_machines/event_query.py` | Explicit observed-prefix query, chronology/cutoff validation, separate examples |
@@ -123,6 +123,49 @@ are saved under `queue/e121*` and `results/e121`. The fixed-bound and plain runs
 remain available. Three-input arithmetic does not require an eight-layer generic
 stack; deeper speech continues to use eight. Full theory and scope: §181.
 
+## Computational ownership and event readout (E124–E125)
+
+`phase_only=True, depth=0` executes the same fitted periodic primitive directly
+through the common model interface. It allocates no unused neural embedding,
+carrier or head. The algebraic state has 69 learned scalars and emits a
+two-coordinate unit-circle payload. The supplied period is 17; phase units
+are abstract, not calibrated seconds. This configuration is suitable for the
+three-symbol arithmetic task, not a substitute for a deep speech representation.
+
+A complete fitting pass with zero mistaken-example updates certifies a fixed
+point of this deterministic local teacher. E124 stops at that condition and
+checks exact equality with E121's final coupled phase state. Its per-query
+work ledger separately charges symbol reduction and class-clock selection.
+The carrier-plus-phase configuration remains available and its additional work
+is included in the comparison. Theory §§183–184 and §186 give the certificate,
+ownership rule and stopping proof.
+
+`readout="weighted"` adds a scalar content key to the final winning payloads.
+It accumulates a count-times-bounded-gain numerator and mass with linear event
+work. The key initializes to zero, exactly preserving the old mean. The label's
+local score credit is its event weight times the teacher's projection onto
+that payload minus the pooled payload. At initialization, key credit equals
+event covariance times the teacher. E125 verifies this equation numerically,
+with nonzero key credit and exact initial checkpoint predictions. It does not
+turn losing hidden messages into winners or add event-pair dense attention.
+Theory §185 distinguishes this terminal statistic from a hard hidden race.
+
+## Deep speech continuation (E122)
+
+The matched 2,048-example, four-epoch continuations share the E119 checkpoint,
+Adam state, fitting order and evaluation IDs. Training-only time scaling and
+small channel shifts improve pooled clean development accuracy from **350/512
+(68.4%) to 369/512 (72.1%)**. Most of the paired gain is on speaker 3; speaker 6
+changes little. Expanding to 4,096 fitting examples for two further passes
+reaches **370/512 (72.3%)**. These are train-file held-out speakers, not official
+test results or a published-score parity claim.
+
+An additional mean-pooling continuation regresses to 353/512 (68.9%). Its
+matched learned-pooling arm tests a specific terminal-statistic hypothesis;
+it is not a new seed search. Both arms preserve the frozen fitting-only
+calibration and use the same initial state, data, augmentation and update budget.
+The retained results distinguish fitting progress from held-out improvement.
+
 ## Safe reproduction
 
 Inspect existing workloads and available memory first. Use a new output tag
@@ -185,5 +228,5 @@ of the background status-PDF refresh.
 
 Do not use this exploratory suite as a new best-model selection on official
 test sets. Freeze choices with validation, then measure held-out quality and
-total training/inference resources. Theory §§176–182 explains the causal query,
-natural-score credit, calibration support and periodic representation issues.
+total training/inference resources. Theory §§176–186 explains the causal query,
+natural-score credit, calibration support, periodic composition and event readout.
