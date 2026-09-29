@@ -1,0 +1,3 @@
+14:21:05 start aws_e68_recall_R1_s1_20260929
+14:22:05 alive aws_e68_recall_R1_s1_20260929: process group RSS=463872KB, MemAvailable=30080MB
+14:22:26 done aws_e68_recall_R1_s1_20260929 (exit 0)
