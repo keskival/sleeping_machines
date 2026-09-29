@@ -643,7 +643,8 @@ def stratified_limit(data, limit, rng):
     return [data[i] for i in chosen]
 
 
-def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, limit):
+def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, limit,
+                              sampling="global"):
     """Sample sparse pairs of closed routes to one receiver with nearby arrivals.
 
     Grouping by batch/receiver and taking adjacent time-ordered candidates
@@ -651,7 +652,7 @@ def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, lim
     the all-pairs Cartesian product. The returned route indices refer to each
     layer's route_candidates record.
     """
-    candidates = []
+    candidates_by_layer = [[] for _ in route_candidates]
     for layer_id, route_info in enumerate(route_candidates):
         scores = route_info["score"].cpu().numpy()
         source_batch = route_info["source_batch"].cpu().numpy()
@@ -670,13 +671,38 @@ def nearby_closed_route_pairs(route_candidates, near_band, time_window, rng, lim
                     continue
                 gap = float(source_time[right] - source_time[left])
                 if 0.0 <= gap <= time_window:
-                    candidates.append((layer_id, left, right))
-    if len(candidates) > limit:
-        chosen = rng.choice(len(candidates), size=limit, replace=False)
-        selected = [candidates[int(i)] for i in np.atleast_1d(chosen)]
+                    candidates_by_layer[layer_id].append((layer_id, left, right))
+    per_layer_count = np.asarray([len(rows) for rows in candidates_by_layer], dtype=np.int64)
+    candidates = [row for layer_rows in candidates_by_layer for row in layer_rows]
+    if sampling == "global":
+        take = min(limit, len(candidates))
+        if len(candidates) > take:
+            chosen = rng.choice(len(candidates), size=take, replace=False)
+            selected_rows = [candidates[int(i)] for i in np.atleast_1d(chosen)]
+        else:
+            selected_rows = candidates
+        inclusion_probability = (take / len(candidates)) if candidates else 0.0
+        selected = [(*row, inclusion_probability) for row in selected_rows]
+    elif sampling in ("layer_balanced", "late_balanced"):
+        if limit != 1:
+            raise ValueError(f"{sampling} pair sampling requires --cf_pairs_per_batch 1")
+        eligible_layers = np.flatnonzero(per_layer_count)
+        if sampling == "late_balanced":
+            # D4 selects L3/L4; for a general D, use the last half of the
+            # stack. Do not fall back to early layers when none are eligible.
+            first_late_layer = len(candidates_by_layer) // 2
+            eligible_layers = eligible_layers[eligible_layers >= first_late_layer]
+        if len(eligible_layers):
+            layer_id = int(rng.choice(eligible_layers))
+            layer_rows = candidates_by_layer[layer_id]
+            row = layer_rows[int(rng.integers(len(layer_rows)))]
+            inclusion_probability = 1.0 / (len(eligible_layers) * len(layer_rows))
+            selected = [(*row, inclusion_probability)]
+        else:
+            selected = []
     else:
-        selected = candidates
-    return len(candidates), selected
+        raise ValueError(f"unknown pair-sampling mode: {sampling}")
+    return len(candidates), per_layer_count, selected
 
 
 def main():
@@ -727,6 +753,8 @@ def main():
                     help="maximum receiver-bundle route pairs shadowed per batch; each pair uses 3 matched replays")
     ap.add_argument("--cf_pair_window_ms", type=float, default=25.0,
                     help="maximum arrival-time gap for a candidate pair targeting the same receiver")
+    ap.add_argument("--cf_pair_sampling", choices=("global", "layer_balanced", "late_balanced"), default="global",
+                    help="sample globally, balance across eligible layers, or balance across the last half of layers")
     ap.add_argument("--race_threshold", type=float, default=0.6,
                     help="minimum class softmax probability that triggers an output event")
     ap.add_argument("--race_temperature", type=float, default=0.03,
@@ -765,6 +793,8 @@ def main():
             or not math.isfinite(a.cf_grad_clip) or a.cf_grad_clip <= 0.0
             or not math.isfinite(a.cf_delta_clip) or a.cf_delta_clip <= 0.0):
         raise ValueError("counterfactual count must be nonnegative; band, sigma, loss-difference clip, and gradient clip must be positive; cf_lr must be nonnegative")
+    if a.cf_pair_sampling in ("layer_balanced", "late_balanced") and a.cf_pairs_per_batch != 1:
+        raise ValueError(f"{a.cf_pair_sampling} pair sampling requires --cf_pairs_per_batch 1")
     os.makedirs(OUT, exist_ok=True)
     torch.manual_seed(a.seed)
     if a.rng_protocol == "legacy_shared":
@@ -830,6 +860,10 @@ def main():
         cf_pair_interaction_sum_ep = cf_pair_interaction_sq_ep = 0.0
         cf_pair_helpful_ep = cf_pair_synergy_ep = 0
         cf_pair_shadow_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
+        cf_pair_candidate_by_layer_ep = np.zeros(a.depth, dtype=np.int64)
+        cf_pair_sample_prob_sum_ep = 0.0
+        cf_pair_sample_prob_min_ep = float("inf")
+        cf_pair_sample_prob_max_ep = 0.0
         perm = train_order_rng.permutation(len(tr)); gsum = np.zeros(a.depth)
         for i0 in range(0, len(tr), a.bs):
             items = [tr[j] for j in perm[i0:i0 + a.bs]]
@@ -937,12 +971,18 @@ def main():
                         cf_proxy = cf_proxy + (a.cf_weight * boundary_derivative
                                                * (live_score - live_score.detach()) / take)
                 if a.cf_pairs_per_batch:
-                    pair_candidate_count, eligible_pairs = nearby_closed_route_pairs(
+                    pair_candidate_count, pair_candidates_by_layer, eligible_pairs = nearby_closed_route_pairs(
                         info["route_candidates"], a.cf_band, a.cf_pair_window_ms,
-                        pair_rng, a.cf_pairs_per_batch)
+                        pair_rng, a.cf_pairs_per_batch, a.cf_pair_sampling)
                     cf_pair_eligible_ep += pair_candidate_count
+                    cf_pair_candidate_by_layer_ep += pair_candidates_by_layer
                     pair_proxy = main_loss.new_zeros(())
-                    for k, route_a, route_b in eligible_pairs:
+                    for k, route_a, route_b, sample_probability in eligible_pairs:
+                        cf_pair_sample_prob_sum_ep += sample_probability
+                        cf_pair_sample_prob_min_ep = min(cf_pair_sample_prob_min_ep,
+                                                         sample_probability)
+                        cf_pair_sample_prob_max_ep = max(cf_pair_sample_prob_max_ep,
+                                                         sample_probability)
                         route_info = info["route_candidates"][k]
                         event_ids = route_info["event_index"]
                         receivers = route_info["receiver"]
@@ -1361,6 +1401,14 @@ def main():
             row["counterfactual_route_pairs_eligible_per_epoch"] = int(cf_pair_eligible_ep)
             row["counterfactual_route_pairs_shadowed_per_epoch"] = int(cf_pair_shadow_ep)
             row["counterfactual_route_pair_replays_per_epoch"] = int(3 * cf_pair_shadow_ep)
+            row["counterfactual_route_pair_sampler"] = a.cf_pair_sampling
+            row["counterfactual_route_pair_candidates_by_layer"] = cf_pair_candidate_by_layer_ep.tolist()
+            row["counterfactual_route_pair_mean_inclusion_probability"] = round(
+                cf_pair_sample_prob_sum_ep / max(cf_pair_shadow_ep, 1), 8)
+            row["counterfactual_route_pair_min_inclusion_probability"] = round(
+                cf_pair_sample_prob_min_ep, 8) if cf_pair_shadow_ep else None
+            row["counterfactual_route_pair_max_inclusion_probability"] = round(
+                cf_pair_sample_prob_max_ep, 8) if cf_pair_shadow_ep else None
             row["counterfactual_pair_mean_L11_minus_L00"] = round(
                 cf_pair_delta_sum_ep / max(cf_pair_shadow_ep, 1), 6)
             row["counterfactual_pair_delta_std"] = round(math.sqrt(max(
@@ -1442,12 +1490,17 @@ def main():
               if event_readout else "")
     pair_tag = (f"_cpairs{a.cf_pairs_per_batch}_tw{a.cf_pair_window_ms:g}"
                 if event_readout and a.cf_pairs_per_batch else "")
+    pair_sampling_tag = {
+        "global": "",
+        "layer_balanced": "_pslayerbalanced",
+        "late_balanced": "_pslatebalanced",
+    }[a.cf_pair_sampling] if event_readout else ""
     fusion_tag = f"_rf{a.readout_fusion}" if event_readout else ""
     count_tag = "_cntadd" if a.input_count_payload == "additive" else ""
     skip_tag = "_skfirst" if a.early_event_skip else ""
     rng_tag = "_rngsplit" if a.rng_protocol == "split" else ""
     run_tag = f"_{a.run_tag}" if a.run_tag else ""
-    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}_spk_s{a.seed}.json")
+    path = os.path.join(OUT, f"deep_d{a.d}_n{a.n}_M{a.M1}-{a.M}_depth{a.depth}_aux{a.aux_weight:g}_obj{a.objective}{fusion_tag}{count_tag}{skip_tag}{rng_tag}{run_tag}{cf_tag}{pair_tag}{pair_sampling_tag}_spk_s{a.seed}.json")
     if a.save_checkpoint:
         checkpoint_path = os.path.splitext(path)[0] + ".pt"
         torch.save({"args": vars(a), "model_state_dict": net.state_dict()}, checkpoint_path)

@@ -2101,6 +2101,44 @@ clipped to $[-5,5]$, averaged over selected pairs, globally norm-clipped to
 derivative is exact before those stated sampling/clipping/update choices;
 the complete optimizer is a deliberately bounded local-credit heuristic.
 
+The follow-up layer-balanced sampler keeps the one-pair budget but first
+chooses uniformly among layers with at least one eligible pair, then chooses
+uniformly among that layer's eligible adjacent pairs. A selected pair in a
+layer with $N_\ell$ proposals and $K$ eligible layers has inclusion
+probability $1/(K N_\ell)$; the implementation logs the eligible counts by
+layer and these propensities. This deliberately changes the target from the
+global pair-population mean to equal opportunity for each eligible depth.
+The comparison with the global sampler therefore tests a credit-allocation
+policy, not an unbiased estimate of one shared population gradient.
+
+A mechanism-based proposal can use the receiver's actual threshold geometry.
+Before an intervening spike/reset, let its factual state be $z_j^0(T)$ with
+refractory trace $R_j(T)$, and define the gap to firing as
+
+$$
+g_j(T)=\theta_j(1+R_j(T))-\operatorname{Re}\langle w_j,z_j^0(T)\rangle.
+$$
+
+For a closed route from source vector $v_i$ with proposed arrival $a_i$,
+its linearized drive at $T$ is
+
+$$
+\phi_i(T)=\mathbf1[T\ge a_i]\operatorname{Re}\langle
+w_j,e^{\lambda_j(T-a_i)}B_jv_i\rangle.
+$$
+
+A candidate pair is a plausible threshold-cooperation proposal when each
+singleton remains below the positive gap but
+$\phi_i(T)+\phi_k(T)\ge g_j(T)$ for some nearby $T$. This score incorporates
+relative delays, decay/rotation, and the signed vector projections that
+actually drive the receiver. It is only a proposal approximation: another
+event or a counterfactual reset can change $z_j,R_j$, so exact joint replay
+still determines utility. A principled next sampler should reserve a
+nonzero uniform exploration share, allocate the rest to these predicted
+threshold crossings, log the resulting inclusion probabilities, and
+stratify by layer/cause. That tests whether the route is locally able to
+fire before asking whether its emitted payload improves the class loss.
+
 The general within-layer object is a **conditional marked-message policy**.
 Let $x_i=(t_i,v_i)$ be a source event, $h_j(t^-)$ the receiver's local state
 just before a candidate arrival (decaying vector state, refractory state, and
@@ -2366,3 +2404,382 @@ bounded shadow budget. That combination is a research hypothesis, not an
 established novelty claim or a demonstrated result; a fuller literature
 review and direct comparisons are required. The paired E83 pilot only tests
 the receiver-bundle slice of that hypothesis.
+
+## 143. Deep event learning needs both support and an activity operating point
+
+The strict-chain support invariant in §137 tracks whether an utterance has
+any event at depth $\ell$, but that binary statistic is only half of the
+trainability problem. Let $N_\ell(x)$ be the number of emitted events,
+$c_\ell=\Pr[N_\ell>0]$ the example support, and
+$\mu_\ell=\mathbb E[N_\ell\mid N_\ell>0]$ the conditional event
+multiplicity. Then
+
+$$
+n_\ell=\mathbb E[N_\ell]=c_\ell\mu_\ell.
+$$
+
+In a strict chain, $c_{\ell+1}\le c_\ell$ even when $n_{\ell+1}$ grows:
+the surviving examples can emit many more events. Define the measured
+activity amplification $\rho_\ell=n_{\ell+1}/n_\ell$ when $n_\ell>0$.
+The product $\prod_\ell\rho_\ell=n_D/n_1$ is an exact identity for these
+empirical means; interpreting each factor as a branching reproduction number
+is only an approximation because messages combine, neurons can fire
+repeatedly, and refractory state couples events. It is nevertheless a useful
+warning signal: a layer may be support-starved while the work and downstream
+evidence on the surviving examples are exploding.
+
+There is a matching readout issue. If the class state is additive,
+
+$$
+\ell(T)=b+\sum_{e:t_e\le T} m_e,
+$$
+
+then $\|\ell(T)-b\|\le\sum_e\|m_e\|$. Thus raw per-event class
+increments can grow linearly with event count when their signed means align;
+zero-mean independent increments instead have a square-root scale. Which
+regime holds is a representation question, not guaranteed by sparse fanout.
+Consequently a usable deep operating point needs three diagnostics together:
+nonzero example support, bounded event/work growth, and class-aligned
+per-prefix evidence. Raising support alone is not a success criterion.
+
+### Matched E83 intervention: support recovery versus useful computation
+
+The layer-balanced follow-up to §142 changed only the pair proposal policy
+in a matched D4 seed-6 run: same initialization, 120 training examples, 120
+updates, one pair replay per minibatch, and 128 held-out examples. It selected
+43, 34, 15, and 28 pairs from layers 1–4, respectively, whereas the global
+sampler's 120/120 choices came from layer 1. The balanced policy therefore
+did what it was designed to do—expose deeper route gates to pair credit—but
+that intervention alone did not learn the classifier.
+
+Layer-4 example support stayed at 100% in every balanced epoch, but final
+held-out accuracy was 6/128 (4.69%), versus 8/128 (6.25%) for the matched
+no-pair control; paired exact McNemar $p=0.791$. The global-pair arm scored
+14/128 (10.94%), but its paired comparison with control was inconclusive
+($p=0.180$). The balanced arm ended with only two predicted classes, a
+late-prefix NLL of 14,699, and mean per-utterance layer event counts
+$(122,189,363,1647)$. Averaged over its four epochs, the counts were
+$(142,192,334,1421)$, so the measured adjacent-layer amplification ratios
+were approximately $(1.35,1.74,4.25)$. This is a high-activity, collapsed
+classifier, not a useful deep sparse representation. The one-seed matched
+comparison implicates layer-balanced route updates in this activity regime,
+but it does not isolate whether the cause is pair selection, noisy utility,
+or the pre-existing threshold/reset dynamics.
+
+The pair replays themselves were not consistently helpful: joint opening
+reduced the matched class loss in 38/120 selected pairs (31.7%), and the
+interaction $\Gamma<0$ in 30/120 (25.0%). Across epochs the raw
+counterfactual-gradient/pathwise-gradient norm ratios were 0.0011–0.0146 and
+cosines ranged from $-0.202$ to $+0.251$. These measurements separate three
+claims that should not be conflated: deep alternatives were proposed; some
+replays had positive local utility; the resulting update did not produce
+reliable task accuracy. The layer-balanced sampler estimates a deliberately
+layer-equalized proposal objective; without propensity weighting it is not
+an unbiased estimate of the global candidate-pool gradient.
+
+### Frozen validation audit: utility and descendant work depend on depth
+
+The balanced checkpoint was next evaluated without updates on the same 128
+speaker-held-out validation examples. One pair was sampled uniformly within
+each layer/minibatch when eligible, giving 115 matched pairs: 32/32/19/32
+from layers 1–4. The eligible pair pool sizes were
+214,920/228/38/273. Layer 2 and 3 therefore offered far fewer alternatives
+than layer 1, and layer 3 was absent in some minibatches.
+
+The fraction whose joint opening lowered the matched prefix loss increased
+with depth: 5/32 (15.6%) in layer 1, 10/32 (31.3%) in layer 2, 11/19 (57.9%)
+in layer 3, and 16/32 (50.0%) in layer 4. Median $L_{11}-L_{00}$ was
+0.000/0.236/-0.268/-0.001 respectively; the corresponding means were
+19.93/74.07/1.36/0.46. The large early-layer means are outlier-sensitive,
+so medians and helpful fractions are reported alongside them. These are
+properties of one collapsed checkpoint, not estimates of general route
+utility.
+
+The same replay measures downstream work. A layer-2 pair added on average
+4.24 layer-4 spikes and 10.76 layer-4 readout updates per example; a layer-3
+pair added 1.79 and 4.04; a layer-4 pair added 0.23 and 0.45. Layer-1 pairs
+added 0.78 layer-4 spikes and 1.83 layer-4 readout updates on average. The
+layer-2 means hide a highly sparse distribution (median work deltas are zero
+for its later-layer spikes/readout): a small number of shadows create large
+cascades. This supports a specific next intervention—sample pair credit
+from the last half of the stack while measuring its accuracy and event
+growth—rather than uniformly pushing all layers. It is still an exploratory
+selection hypothesis; the held-out outcomes have informed the proposal and
+must not be presented as an untouched final test.
+
+The four-outcome gate derivative also makes the layer difference explicit.
+Reconstructing it from the same shadows using the logged route scores,
+$\sigma=0.25$, and the training rule's $\pm5$ clipping gives mean
+$\partial L/\partial s$ per route of $+0.291,+0.517,-0.013,-0.114$ for
+layers 1–4. The fraction of sampled route margins with negative derivative
+(so gradient descent would open the route) was 14.1%, 35.9%, 60.5%, and
+50.0%. Early-layer pair credit points toward closing most sampled routes;
+late-layer credit is more often favorable but close to zero in mean and
+high-variance. Uniformly allocating the same shadow count to each layer
+therefore does not imply a uniform useful update. This is a descriptive
+calculation on held-out labels and one final checkpoint; it does not establish
+that layer-3/4 routing will generalize or that this local gradient can win
+against the pathwise update.
+
+### Cost-constrained route utility
+
+The §142 utility compares class loss alone. It assigns no penalty to a route
+that lowers one batch's loss while multiplying downstream event count and
+readout work. A direct extension is a constrained objective with per-layer
+work $C_\ell$:
+
+$$
+\min_\theta\;\mathbb E[L_{\rm class}]
+\quad\text{subject to}\quad
+\mathbb E[C_\ell]\le B_\ell,
+$$
+
+whose Lagrangian is
+
+$$
+\mathcal J=\mathbb E[L_{\rm class}]
++\sum_\ell\lambda_\ell(\mathbb E[C_\ell]-B_\ell),\qquad
+\lambda_\ell\ge0.
+$$
+
+For a matched route or pair shadow, use the same replay to measure both
+$\Delta L_{\rm class}$ and $\Delta C_\ell$; the local utility then becomes
+$U=-(\Delta L_{\rm class}+\sum_\ell\lambda_\ell\Delta C_\ell)$.
+This gives the route gate a principled reason to recruit an event only when
+its class benefit justifies its marginal downstream cost. Dual ascent on
+$\lambda_\ell$ can enforce declared work budgets, but its stability depends
+on the measured response of work to the chosen gate/threshold controls; that
+monotonicity has not been established for the current reset dynamics.
+Coverage should be monitored separately so the upper work constraint does
+not reward the all-silent solution. A first experiment should collect
+matched per-layer event, message, and replay-work deltas before selecting
+budgets or multipliers. The frozen validation audit above now provides those
+primitive deltas for receiver-bundle pairs, but not hardware-calibrated cost
+weights or an optimal budget. Thus it narrows the next sampler and supplies
+the data for a later constrained update; it does not yet validate that
+training method.
+
+## 144. Deep counterfactual support is itself sparse
+
+The late-layer-only run (§143) isolates a limitation that is distinct from
+ordinary layer support. In the implementation, a pair proposal requires two
+distinct source events whose closed routes both target the same receiver and
+whose arrival times are within a window $W$. The implementation groups
+eligible routes by example and receiver, sorts them by source-event time,
+and retains only adjacent entries within $W$ that come from distinct events.
+Let $n_g$ be the eligible-route count in one example/receiver group. Its
+exact pair count is
+
+$$
+P_\ell=\sum_g\sum_{j=1}^{n_g-1}
+\mathbf 1\{t_{g,j+1}-t_{g,j}\le W\}
+\mathbf 1\{e_{g,j+1}\ne e_{g,j}}.
+$$
+
+Therefore $P_\ell\le\sum_g(n_g-1)_+$. A single-route shadow needs only
+$n_g\ge1$; a pair shadow needs $n_g\ge2$ plus valid time and event
+identities. Under the sparse-occupancy approximation
+$n_g\sim\operatorname{Poisson}(\lambda_g)$, the upper envelope is
+
+$$
+\mathbb E[(n_g-1)_+]=\lambda_g-1+e^{-\lambda_g}
+=\tfrac12\lambda_g^2+O(\lambda_g^3),
+\qquad
+\Pr[n_g\ge2]=1-e^{-\lambda_g}(1+\lambda_g)
+=\tfrac12\lambda_g^2+O(\lambda_g^3).
+$$
+
+Thus, at low event flux, the pair pool has a quadratic sparse-occupancy upper
+envelope while the first-order pool shrinks linearly; the actual time and
+event-identity filters can only reduce pair availability further. In a strict
+chain, if source-event flux into layer $\ell$ is proportional to the previous
+layer's realized support, the pair proposal bound compounds this support
+loss. This is a conditional occupancy result, not a claim that every deep
+model follows the Poisson approximation; the exact diagnostic is to count
+$n_g$ by layer and receiver, then retain the observed gap and source identity
+filters.
+
+The matched late-only run demonstrates the distinction. It found 27 candidate
+pairs across L3/L4 in epoch 1 and shadowed 9 of them. In epochs 2–4 it found
+zero L3/L4 pairs, even though held-out L4 support remained nonzero in all
+three epochs (3.1%, 0.8%, 0.8%). Candidate counts were overwhelmingly at L1: the per-epoch
+layer counts were $[193140,3,6,18]$ in epoch 1, then $[188476,0,0,0]$,
+$[180439,0,0,0]$, and $[180459,0,0,0]$. Final anytime accuracy was 6/128
+(4.69%), versus 8/128 (6.25%) for the matched control. The run therefore
+shows pair-proposal starvation, not that late route alternatives have
+negative utility. The frozen validation audit found late pairs often helpful,
+but that audit's one-checkpoint outcomes cannot create training support.
+
+A no-update audit of the final late-only checkpoint tested windows from 25 to
+1,000 ms on the same 120-example fit subset. Pair counts were
+$[181577,1,0,0]$ at 25 ms and $[189987,6,0,1]$ at 1,000 ms across L1–L4.
+At the widest window, L2 pairs occurred in only 6/30 batches, L3 in 0/30,
+and L4 in 1/30. The near-closed route record counts were
+$[191787,111,3,13]$. Widening the window therefore recovers almost no deep
+co-occupancy; the 25 ms rule is not the dominant bottleneck. A full-second
+window is only a candidate-count diagnostic, since late arrivals may no
+longer interact under the receiver's integration kernel. Future ablations
+must report both pair propensity and the state-dependent pair utility.
+
+This makes the support condition in counterfactual gradient estimators
+explicit. If $\mathcal P_\ell(x,\theta)$ is the available pair set and
+$\pi(i\mid\mathcal P_\ell)$ is a sampling probability, inverse-probability
+weighting can correct which available pair was selected. It cannot recover
+the contribution of a missing pair set:
+
+$$
+\widehat g_\ell=
+\mathbf 1\{\mathcal P_\ell\ne\varnothing\}
+\sum_{i\in S_\ell}
+\frac{\Delta_i\nabla p_i}{\pi(i\mid\mathcal P_\ell)},
+\qquad
+\mathbb E[\widehat g_\ell\mid x]
+=\Pr(\mathcal P_\ell\ne\varnothing\mid x)\,
+\mathbb E[\widehat g_\ell\mid\mathcal P_\ell\ne\varnothing,x].
+$$
+
+Increasing the pair budget or changing layer weights has no effect when the
+indicator is zero. Conversely, broadening proposals without controlling the
+resulting event cascade can recreate the layer-balanced arm's activity
+explosion. A principled next design therefore keeps first-order route shadows
+available when pairs are absent, measures pair occupancy separately from
+event support, and adds higher-order shadows only where the observed
+co-occupancy supports them. To give a deep route credit before factual
+upstream activity exists, a shadow must create a plausible prefix event and
+replay its sparse descendants; its proposal probability and event-work cost
+must be logged. Such a prefix-expansion estimator is a design requirement,
+not yet an implemented or validated method. An arbitrary larger time window
+is not a principled substitute: choose $W$ from the receiver's integration
+kernel and test its effect on both proposal availability and class-loss
+utility.
+
+### A first-failure spike can seed a sparse suffix replay
+
+A refractory-aware paired audit compared the late-only checkpoint with its
+matched no-pair control on the same 128 held-out speakers. For each layer and
+batch, it toggled the closest threshold candidate, but local-boundary
+analysis retains only candidates within $\pm0.25$ and outside refractory
+state. The valid counts in L1–L4 were $[22,21,8,0]$ for control and
+$[21,19,2,1]$ for late-only. Separating fused main-posterior loss from
+weighted auxiliary losses, L1 main-loss spike-on helped 12/22 control
+candidates (mean $+0.0266$) and 16/21 late-only candidates (mean $-0.0094$,
+median $-0.0020$); the auxiliary loss moved in the same direction. Only 13
+batches had valid candidates in both arms; the mean difference between the
+two arm-specific selected spike-on utilities was $-0.037$ (SE $0.035$), and
+the selected unit/time can differ by checkpoint. This is a
+validation-conditioned lead, not a reliable treatment effect. For L2, 12/19
+late-only main-loss toggles
+helped individually, but their mean was $+0.0040$ (median $-0.00063$); the
+control mean was $+0.0179$. L3/L4 have only 2/1 valid late-only candidates.
+Raw helpful fractions across all selected spikes were misleading because
+most deep toggles were outside the margin band. At this point, L1 appeared to
+be a candidate prefix-credit hypothesis; §145 tests whether that utility
+actually traverses the deep stack.
+
+For a candidate spike with margin $m$, define the local randomized event risk
+on the fused main-posterior loss, keeping deep-supervision loss separate:
+
+$$
+\widetilde L_{main}(m)=p_\tau(m)L_{main,on}
+ +[1-p_\tau(m)]L_{main,off},
+\qquad p_\tau(m)=\sigma(m/\tau),
+\qquad
+\frac{\partial\widetilde L_{main}}{\partial m}
+=\frac{p_\tau(1-p_\tau)}{\tau}
+(L_{main,on}-L_{main,off}).
+$$
+
+The training objective may also add $\alpha L_{aux}$, but its shadow delta
+must be logged separately so an auxiliary win cannot masquerade as improved
+sequence classification. A negative main-loss on-minus-off utility raises
+the margin under gradient descent. The current evidence
+supports a controlled L1-focused pilot: sample genuinely in-band,
+nonrefractory first-layer failures, replay their ordinary sparse suffix, and
+record per-layer event-work changes and the local-update/pathwise-gradient
+alignment. Do not force out-of-band deep spikes. The per-layer work constraint
+and prefix-expansion update remain unimplemented; this audit is not a
+training result.
+
+## Scope of the evidence
+
+The D4 E83 implementation hard-gates message candidates but advances hidden
+states on a 1 ms simulation grid; its reported state scans scale with grid
+length times hidden width. The successful small E77 depth-8 check establishes
+gradient reach for a different language-model setup, not SHD recognition,
+and neither result establishes low-cost event-driven training. An
+asynchronous sparse implementation, a stable per-layer activity regime, and
+repeatable class learning remain separate requirements. The matched deepest-
+only replay in §145 rules out treating the all-depth L1 utility as evidence
+for a deep boundary update: it changes the shallow head but has no measured
+deep loss effect. The next falsifiable depth experiment should either train a
+deepest-only primary objective and diagnose the resulting support/gradient
+failure, or use a sparse prefix-expansion counterfactual that explicitly
+creates an in-band event and replays its suffix through ordinary dynamics.
+It must compare deep and fused losses, log downstream spike/message/readout
+work, boundary/pathwise gradient norms and cosine, layer support and event
+multiplicity, prefix NLL, and anytime accuracy against a matched control. Any
+shadow update needs a declared replay-work cap; the audit does not yet supply
+or validate such a training mechanism.
+
+## 145. All-depth readout can create a shallow counterfactual shortcut
+
+The preceding audit measured spike-on utility against an all-depth fused
+classifier. That objective directly exposes every hidden layer to its own
+sparse class readout. Write the causal prefix logits as
+
+$$
+z_{all}(t)=\sum_{\ell=1}^{D}z_\ell(t),\qquad
+L_{all}(t)=\operatorname{CE}(y,z_{all}(t)),
+$$
+
+whereas the matched deepest-only objective is
+
+$$
+z_{deep}(t)=z_D(t),\qquad
+L_{deep}(t)=\operatorname{CE}(y,z_D(t)).
+$$
+
+For a layer-1 spike intervention, decompose the induced logit change as
+$\delta z_{all}=\delta z_1+\sum_{\ell=2}^{D}\delta z_\ell$. If the event
+changes the layer-1 head but no downstream hidden event or readout evidence,
+then $\delta z_\ell=0$ for $\ell\ge2$. The all-depth loss can still change:
+
+$$
+\Delta L_{all}=
+\operatorname{CE}(y,z_{all}+\delta z_1)-\operatorname{CE}(y,z_{all}),
+$$
+
+while $\Delta L_{deep}=0$ exactly whenever $\delta z_D=0$. Thus a nonzero
+all-depth shadow delta does not by itself demonstrate credit through a deep
+composition. It may be credit for a shallow classifier branch. This is a
+causal distinction between direct readout utility and serial route utility,
+not a general criticism of deep supervision; auxiliary heads can aid
+optimization, but their contribution must be distinguished from the primary
+deep output.
+
+The matched frozen audit used the same seed-6 control and late-only checkpoints,
+128 held-out-speaker examples, margin band $|m|\le0.25$, nonrefractory
+candidates, and selected interventions under both fusion rules. For late-only
+L1, 16/21 all-depth main-loss toggles helped and their mean was $-0.00936$;
+under deepest-only loss, all 21 deltas were exactly zero. All valid L1/L2
+deepest-only deltas were zero in both arms. The late-only L3/L4 deepest-only
+counts were only 2/1, so they are not estimable. The L1 interventions changed
+hidden-spike counts per example by $[+0.1429,0,0,0]$, accepted hidden messages
+by $[0,+0.2857,0,0]$, and sparse readout-edge updates by
+$[+1.2381,0,0,0]$. In particular, the L1 event did not create a downstream
+hidden-spike cascade; it activated its own readout path. These exact zeros are
+specific to the tested counterfactuals/checkpoints and do not prove that a
+different architecture cannot propagate a useful L1 change.
+
+This resolves the prior ambiguity: the all-depth L1 result is a shallow
+readout shortcut, not evidence that the learned early event is composable
+through layers 2–4. It also sharpens the experiment needed to test depth.
+Train a matched primary deepest-only objective, or define a sparse
+prefix-expansion counterfactual that explicitly inserts a plausible event and
+replays its suffix through ordinary receiver, threshold, and refractory
+dynamics. For every intervention, log both $\Delta L_{deep}$ and
+$\Delta L_{all}$ together with per-layer event/message/readout-work deltas.
+Only downstream changes that improve the primary deep loss count as serial
+credit. Any prefix expansion must include its proposal probability and a
+declared replay-work cap. This pilot is not implemented; the audit establishes
+the shortcut mechanism in the tested model, not a successful remedy.

@@ -1,0 +1,2 @@
+# Frozen diagnostic: test whether wider arrival windows restore deep pair proposal support.
+e83_route_pair_occupancy_late_seed6 experiments/e83_route_pair_occupancy_audit.py --checkpoint experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_late_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslatebalanced_spk_s6.pt --windows_ms 25,50,100,250,500,1000 --run_tag late_seed6

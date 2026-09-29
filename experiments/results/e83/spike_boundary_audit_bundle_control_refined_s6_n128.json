@@ -1,0 +1,5145 @@
+{
+  "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+  "checkpoint_args": {
+    "bands": 140,
+    "merge": 0.002,
+    "d": 8,
+    "n": 4,
+    "M1": 16,
+    "M": 16,
+    "depth": 4,
+    "window": 30,
+    "fan2": 0.25,
+    "readout_fan": 0.5,
+    "aux_weight": 0.2,
+    "objective": "event_prefix",
+    "readout_fusion": "all_depths",
+    "input_count_payload": "off",
+    "early_event_skip": false,
+    "run_tag": "bundle_control",
+    "prefix_samples": 2,
+    "prefix_horizon_ms": 1000.0,
+    "prefix_window_start": 0.0,
+    "cf_shadows_per_layer": 1,
+    "cf_band": 0.5,
+    "cf_sigma": 0.25,
+    "cf_weight": 1.0,
+    "cf_lr": 0.001,
+    "cf_grad_clip": 1.0,
+    "cf_delta_clip": 5.0,
+    "cf_pairs_per_batch": 0,
+    "cf_pair_window_ms": 25.0,
+    "race_threshold": 0.6,
+    "race_temperature": 0.03,
+    "race_logit_temperature": 2.0,
+    "race_rate": 5.0,
+    "race_latency_discount": 1.0,
+    "dmax": 50.0,
+    "w_sd": "0.05,0.05",
+    "shift": 4,
+    "drop": 0.1,
+    "epochs": 4,
+    "bs": 4,
+    "lr": 0.003,
+    "seed": 6,
+    "limit": 120,
+    "eval_limit": 128,
+    "rng_protocol": "split",
+    "save_checkpoint": true
+  },
+  "audit_args": {
+    "checkpoint": "experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_control_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_spk_s6.pt",
+    "examples": 128,
+    "batch_size": 4,
+    "spike_band": 0.25,
+    "sigma": 0.25,
+    "prefix_samples": 2,
+    "seed": 6,
+    "run_tag": "bundle_control_refined"
+  },
+  "run_tag": "bundle_control_refined",
+  "split": "train/val_spk",
+  "examples": 128,
+  "batches": 32,
+  "prefix_loss_fusion": "all_depths",
+  "per_layer": [
+    {
+      "layer": 1,
+      "shadows": 32,
+      "fraction_within_band": 1.0,
+      "fraction_naturally_firing": 0.375,
+      "fraction_refractory_state_positive": 0.3125,
+      "fraction_in_band_and_not_refractory": 0.6875,
+      "mean_abs_margin": 0.0017709601670503616,
+      "mean_L_on_minus_L_off": 0.04093180596828461,
+      "std_L_on_minus_L_off": 0.1182382575496064,
+      "fraction_spike_on_improves_loss": 0.5,
+      "mean_main_L_on_minus_L_off": 0.03416135907173157,
+      "std_main_L_on_minus_L_off": 0.09863119090897614,
+      "fraction_spike_on_improves_main_loss": 0.5,
+      "mean_aux_L_on_minus_L_off": 0.033852338790893555,
+      "std_aux_L_on_minus_L_off": 0.09806202852640895,
+      "fraction_spike_on_improves_aux_loss": 0.46875,
+      "mean_abs_logistic_boundary_coefficient": 0.04951498220806819
+    },
+    {
+      "layer": 2,
+      "shadows": 32,
+      "fraction_within_band": 1.0,
+      "fraction_naturally_firing": 0.3125,
+      "fraction_refractory_state_positive": 0.34375,
+      "fraction_in_band_and_not_refractory": 0.65625,
+      "mean_abs_margin": 0.015894321724772453,
+      "mean_L_on_minus_L_off": 0.014354482293128967,
+      "std_L_on_minus_L_off": 0.07467482837955716,
+      "fraction_spike_on_improves_loss": 0.53125,
+      "mean_main_L_on_minus_L_off": 0.011759348213672638,
+      "std_main_L_on_minus_L_off": 0.06187650051069146,
+      "fraction_spike_on_improves_main_loss": 0.53125,
+      "mean_aux_L_on_minus_L_off": 0.012975931167602539,
+      "std_aux_L_on_minus_L_off": 0.06460820086679761,
+      "fraction_spike_on_improves_aux_loss": 0.46875,
+      "mean_abs_logistic_boundary_coefficient": 0.02324633996048799
+    },
+    {
+      "layer": 3,
+      "shadows": 32,
+      "fraction_within_band": 0.34375,
+      "fraction_naturally_firing": 0.125,
+      "fraction_refractory_state_positive": 0.09375,
+      "fraction_in_band_and_not_refractory": 0.25,
+      "mean_abs_margin": 0.4441015087068081,
+      "mean_L_on_minus_L_off": 0.009128272533416748,
+      "std_L_on_minus_L_off": 0.05526672273366945,
+      "fraction_spike_on_improves_loss": 0.5625,
+      "mean_main_L_on_minus_L_off": 0.007378861308097839,
+      "std_main_L_on_minus_L_off": 0.04713554494901008,
+      "fraction_spike_on_improves_main_loss": 0.5625,
+      "mean_aux_L_on_minus_L_off": 0.008747249841690063,
+      "std_aux_L_on_minus_L_off": 0.04131057685836958,
+      "fraction_spike_on_improves_aux_loss": 0.5625,
+      "mean_abs_logistic_boundary_coefficient": 0.02098343669551201
+    },
+    {
+      "layer": 4,
+      "shadows": 32,
+      "fraction_within_band": 0.0,
+      "fraction_naturally_firing": 0.0,
+      "fraction_refractory_state_positive": 0.0,
+      "fraction_in_band_and_not_refractory": 0.0,
+      "mean_abs_margin": 0.9135372638702393,
+      "mean_L_on_minus_L_off": 0.00035785138607025146,
+      "std_L_on_minus_L_off": 0.013758178436366935,
+      "fraction_spike_on_improves_loss": 0.40625,
+      "mean_main_L_on_minus_L_off": 0.000357896089553833,
+      "std_main_L_on_minus_L_off": 0.013758174153154277,
+      "fraction_spike_on_improves_main_loss": 0.40625,
+      "mean_aux_L_on_minus_L_off": 0.0,
+      "std_aux_L_on_minus_L_off": 0.0,
+      "fraction_spike_on_improves_aux_loss": 0.0,
+      "mean_abs_logistic_boundary_coefficient": 0.0010848426800354031
+    }
+  ],
+  "paired_shadows": [
+    [
+      {
+        "batch": 0,
+        "time_ms": 429,
+        "item_in_batch": 1,
+        "unit": 13,
+        "margin": 0.0036612749099731445,
+        "naturally_firing": true,
+        "refractory_state": 0.00022662186529487371,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 230,
+        "base_loss": 4.9366254806518555,
+        "toggled_loss": 4.759590148925781,
+        "L_on_minus_L_off": 0.17703533172607422,
+        "main_L_on_minus_L_off": 0.1479341983795166,
+        "aux_L_on_minus_L_off": 0.1455068588256836,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.75,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.7081413269042969,
+        "logistic_boundary_coefficient": 0.1770258394776646
+      },
+      {
+        "batch": 1,
+        "time_ms": 481,
+        "item_in_batch": 2,
+        "unit": 10,
+        "margin": 0.001082777976989746,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 165,
+        "base_loss": 6.069509983062744,
+        "toggled_loss": 6.089219093322754,
+        "L_on_minus_L_off": -0.019709110260009766,
+        "main_L_on_minus_L_off": -0.016423702239990234,
+        "aux_L_on_minus_L_off": -0.01642894744873047,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.07883644104003906,
+        "logistic_boundary_coefficient": -0.019709017831812944
+      },
+      {
+        "batch": 2,
+        "time_ms": 175,
+        "item_in_batch": 1,
+        "unit": 2,
+        "margin": 0.0001500844955444336,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 140,
+        "base_loss": 5.335850238800049,
+        "toggled_loss": 5.316400051116943,
+        "L_on_minus_L_off": 0.01945018768310547,
+        "main_L_on_minus_L_off": 0.016566753387451172,
+        "aux_L_on_minus_L_off": 0.014417648315429688,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            3.75,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.07780075073242188,
+        "logistic_boundary_coefficient": 0.019450185930615982
+      },
+      {
+        "batch": 3,
+        "time_ms": 125,
+        "item_in_batch": 1,
+        "unit": 5,
+        "margin": -0.0028617382049560547,
+        "naturally_firing": false,
+        "refractory_state": 0.4189457893371582,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 208,
+        "base_loss": 4.881697654724121,
+        "toggled_loss": 4.876163482666016,
+        "L_on_minus_L_off": -0.005534172058105469,
+        "main_L_on_minus_L_off": -0.0045032501220703125,
+        "aux_L_on_minus_L_off": -0.005153656005859375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.022136688232421875,
+        "logistic_boundary_coefficient": -0.005533990772647849
+      },
+      {
+        "batch": 4,
+        "time_ms": 109,
+        "item_in_batch": 1,
+        "unit": 5,
+        "margin": -0.001981496810913086,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 174,
+        "base_loss": 4.402917861938477,
+        "toggled_loss": 4.412547588348389,
+        "L_on_minus_L_off": 0.00962972640991211,
+        "main_L_on_minus_L_off": 0.007986068725585938,
+        "aux_L_on_minus_L_off": 0.008217811584472656,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.03851890563964844,
+        "logistic_boundary_coefficient": 0.009629575173575766
+      },
+      {
+        "batch": 5,
+        "time_ms": 42,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.0050296783447265625,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 160,
+        "base_loss": 5.494930267333984,
+        "toggled_loss": 5.485764503479004,
+        "L_on_minus_L_off": -0.009165763854980469,
+        "main_L_on_minus_L_off": -0.0076274871826171875,
+        "aux_L_on_minus_L_off": -0.0076904296875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.036663055419921875,
+        "logistic_boundary_coefficient": -0.009164836427879295
+      },
+      {
+        "batch": 6,
+        "time_ms": 462,
+        "item_in_batch": 1,
+        "unit": 2,
+        "margin": 0.0007239580154418945,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 185,
+        "base_loss": 4.486419677734375,
+        "toggled_loss": 4.486419677734375,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 7,
+        "time_ms": 311,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.0013364553451538086,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 133,
+        "base_loss": 4.462932109832764,
+        "toggled_loss": 4.4559173583984375,
+        "L_on_minus_L_off": -0.007014751434326172,
+        "main_L_on_minus_L_off": -0.0049304962158203125,
+        "aux_L_on_minus_L_off": -0.010420799255371094,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.028059005737304688,
+        "logistic_boundary_coefficient": -0.0070147013180130585
+      },
+      {
+        "batch": 8,
+        "time_ms": 59,
+        "item_in_batch": 2,
+        "unit": 12,
+        "margin": 0.0010955333709716797,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 216,
+        "base_loss": 5.949498653411865,
+        "toggled_loss": 5.9469194412231445,
+        "L_on_minus_L_off": 0.002579212188720703,
+        "main_L_on_minus_L_off": 0.0007266998291015625,
+        "aux_L_on_minus_L_off": 0.0092620849609375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.010316848754882812,
+        "logistic_boundary_coefficient": 0.0025791998065468895
+      },
+      {
+        "batch": 9,
+        "time_ms": 489,
+        "item_in_batch": 1,
+        "unit": 10,
+        "margin": -0.001093149185180664,
+        "naturally_firing": false,
+        "refractory_state": 0.11341977119445801,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 215,
+        "base_loss": 4.329957962036133,
+        "toggled_loss": 4.3712921142578125,
+        "L_on_minus_L_off": 0.04133415222167969,
+        "main_L_on_minus_L_off": 0.0344538688659668,
+        "aux_L_on_minus_L_off": 0.034399986267089844,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.25,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.0,
+            1.75,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.16533660888671875,
+        "logistic_boundary_coefficient": 0.04133395464917175
+      },
+      {
+        "batch": 10,
+        "time_ms": 131,
+        "item_in_batch": 0,
+        "unit": 5,
+        "margin": 0.002244234085083008,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 172,
+        "base_loss": 4.767877578735352,
+        "toggled_loss": 4.7711358070373535,
+        "L_on_minus_L_off": -0.003258228302001953,
+        "main_L_on_minus_L_off": -0.0026335716247558594,
+        "aux_L_on_minus_L_off": -0.0031223297119140625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            -0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.013032913208007812,
+        "logistic_boundary_coefficient": -0.0032581626614871704
+      },
+      {
+        "batch": 11,
+        "time_ms": 38,
+        "item_in_batch": 3,
+        "unit": 13,
+        "margin": -0.002963423728942871,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 198,
+        "base_loss": 4.8781890869140625,
+        "toggled_loss": 4.876476764678955,
+        "L_on_minus_L_off": -0.0017123222351074219,
+        "main_L_on_minus_L_off": -0.0014264583587646484,
+        "aux_L_on_minus_L_off": -0.0014295578002929688,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0068492889404296875,
+        "logistic_boundary_coefficient": -0.0017122620868810874
+      },
+      {
+        "batch": 12,
+        "time_ms": 48,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": 0.0031180381774902344,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 151,
+        "base_loss": 4.6806206703186035,
+        "toggled_loss": 4.655601978302002,
+        "L_on_minus_L_off": 0.025018692016601562,
+        "main_L_on_minus_L_off": 0.0209653377532959,
+        "aux_L_on_minus_L_off": 0.02026653289794922,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            -0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.10007476806640625,
+        "logistic_boundary_coefficient": 0.025017719098710412
+      },
+      {
+        "batch": 13,
+        "time_ms": 223,
+        "item_in_batch": 3,
+        "unit": 6,
+        "margin": -0.003547191619873047,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 162,
+        "base_loss": 4.857705116271973,
+        "toggled_loss": 5.3996124267578125,
+        "L_on_minus_L_off": 0.5419073104858398,
+        "main_L_on_minus_L_off": 0.4513413906097412,
+        "aux_L_on_minus_L_off": 0.45282936096191406,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.5,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 2.1676292419433594,
+        "logistic_boundary_coefficient": 0.5418800370577871
+      },
+      {
+        "batch": 14,
+        "time_ms": 200,
+        "item_in_batch": 3,
+        "unit": 5,
+        "margin": -0.00011229515075683594,
+        "naturally_firing": false,
+        "refractory_state": 0.30925846099853516,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 202,
+        "base_loss": 6.061565399169922,
+        "toggled_loss": 6.071582794189453,
+        "L_on_minus_L_off": 0.01001739501953125,
+        "main_L_on_minus_L_off": 0.008364677429199219,
+        "aux_L_on_minus_L_off": 0.008263587951660156,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.040069580078125,
+        "logistic_boundary_coefficient": 0.010017394514245813
+      },
+      {
+        "batch": 15,
+        "time_ms": 150,
+        "item_in_batch": 2,
+        "unit": 2,
+        "margin": 0.004467487335205078,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 245,
+        "base_loss": 4.964749336242676,
+        "toggled_loss": 4.964749813079834,
+        "L_on_minus_L_off": -4.76837158203125e-07,
+        "main_L_on_minus_L_off": -2.384185791015625e-07,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -1.9073486328125e-06,
+        "logistic_boundary_coefficient": -4.7679909251995136e-07
+      },
+      {
+        "batch": 16,
+        "time_ms": 178,
+        "item_in_batch": 1,
+        "unit": 13,
+        "margin": -0.0014013051986694336,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 157,
+        "base_loss": 4.472196578979492,
+        "toggled_loss": 4.472380638122559,
+        "L_on_minus_L_off": 0.00018405914306640625,
+        "main_L_on_minus_L_off": 0.0001537799835205078,
+        "aux_L_on_minus_L_off": 0.000152587890625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.000736236572265625,
+        "logistic_boundary_coefficient": 0.00018405769735842275
+      },
+      {
+        "batch": 17,
+        "time_ms": 443,
+        "item_in_batch": 2,
+        "unit": 13,
+        "margin": -0.0006964206695556641,
+        "naturally_firing": false,
+        "refractory_state": 0.026890991255640984,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 193,
+        "base_loss": 5.158290386199951,
+        "toggled_loss": 5.158381938934326,
+        "L_on_minus_L_off": 9.1552734375e-05,
+        "main_L_on_minus_L_off": 7.62939453125e-05,
+        "aux_L_on_minus_L_off": 7.534027099609375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0003662109375,
+        "logistic_boundary_coefficient": 9.155255676228452e-05
+      },
+      {
+        "batch": 18,
+        "time_ms": 284,
+        "item_in_batch": 2,
+        "unit": 6,
+        "margin": 0.0006951093673706055,
+        "naturally_firing": true,
+        "refractory_state": 0.04889679700136185,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 216,
+        "base_loss": 5.755395889282227,
+        "toggled_loss": 5.708481788635254,
+        "L_on_minus_L_off": 0.046914100646972656,
+        "main_L_on_minus_L_off": 0.0393223762512207,
+        "aux_L_on_minus_L_off": 0.03795909881591797,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.5,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.18765640258789062,
+        "logistic_boundary_coefficient": 0.04691400997582573
+      },
+      {
+        "batch": 19,
+        "time_ms": 491,
+        "item_in_batch": 1,
+        "unit": 5,
+        "margin": -0.0007476210594177246,
+        "naturally_firing": false,
+        "refractory_state": 1.746278940117918e-06,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 218,
+        "base_loss": 4.655326843261719,
+        "toggled_loss": 4.6505584716796875,
+        "L_on_minus_L_off": -0.00476837158203125,
+        "main_L_on_minus_L_off": -0.003969669342041016,
+        "aux_L_on_minus_L_off": -0.003994941711425781,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.5,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.019073486328125,
+        "logistic_boundary_coefficient": -0.004768360921165172
+      },
+      {
+        "batch": 20,
+        "time_ms": 384,
+        "item_in_batch": 3,
+        "unit": 10,
+        "margin": -0.0012472867965698242,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 205,
+        "base_loss": 4.904389381408691,
+        "toggled_loss": 4.90336799621582,
+        "L_on_minus_L_off": -0.0010213851928710938,
+        "main_L_on_minus_L_off": -0.0008456707000732422,
+        "aux_L_on_minus_L_off": -0.0008792877197265625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            -0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.004085540771484375,
+        "logistic_boundary_coefficient": -0.0010213788369221892
+      },
+      {
+        "batch": 21,
+        "time_ms": 69,
+        "item_in_batch": 3,
+        "unit": 5,
+        "margin": -0.001078486442565918,
+        "naturally_firing": false,
+        "refractory_state": 1.2563649415969849,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 220,
+        "base_loss": 4.822394847869873,
+        "toggled_loss": 4.812798500061035,
+        "L_on_minus_L_off": -0.00959634780883789,
+        "main_L_on_minus_L_off": -0.008808612823486328,
+        "aux_L_on_minus_L_off": -0.003937721252441406,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            1.75,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.03838539123535156,
+        "logistic_boundary_coefficient": -0.009596303161660848
+      },
+      {
+        "batch": 22,
+        "time_ms": 211,
+        "item_in_batch": 2,
+        "unit": 5,
+        "margin": 0.000859379768371582,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 150,
+        "base_loss": 5.689897537231445,
+        "toggled_loss": 5.674010276794434,
+        "L_on_minus_L_off": 0.01588726043701172,
+        "main_L_on_minus_L_off": 0.013389110565185547,
+        "aux_L_on_minus_L_off": 0.01248931884765625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.06354904174804688,
+        "logistic_boundary_coefficient": 0.01588721350400244
+      },
+      {
+        "batch": 23,
+        "time_ms": 481,
+        "item_in_batch": 1,
+        "unit": 13,
+        "margin": -0.0037844181060791016,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 182,
+        "base_loss": 5.1661577224731445,
+        "toggled_loss": 5.166245460510254,
+        "L_on_minus_L_off": 8.7738037109375e-05,
+        "main_L_on_minus_L_off": 7.462501525878906e-05,
+        "aux_L_on_minus_L_off": 6.771087646484375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0003509521484375,
+        "logistic_boundary_coefficient": 8.773301102769031e-05
+      },
+      {
+        "batch": 24,
+        "time_ms": 86,
+        "item_in_batch": 0,
+        "unit": 5,
+        "margin": -0.0063703060150146484,
+        "naturally_firing": false,
+        "refractory_state": 1.1170134544372559,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 167,
+        "base_loss": 5.144404888153076,
+        "toggled_loss": 5.139033317565918,
+        "L_on_minus_L_off": -0.005371570587158203,
+        "main_L_on_minus_L_off": -0.004351615905761719,
+        "aux_L_on_minus_L_off": -0.005100250244140625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.021486282348632812,
+        "logistic_boundary_coefficient": -0.0053706987510065505
+      },
+      {
+        "batch": 25,
+        "time_ms": 133,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": -0.0001900196075439453,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 166,
+        "base_loss": 4.336211204528809,
+        "toggled_loss": 4.336149215698242,
+        "L_on_minus_L_off": -6.198883056640625e-05,
+        "main_L_on_minus_L_off": -5.316734313964844e-05,
+        "aux_L_on_minus_L_off": -4.38690185546875e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.000247955322265625,
+        "logistic_boundary_coefficient": -6.198882161337239e-05
+      },
+      {
+        "batch": 26,
+        "time_ms": 441,
+        "item_in_batch": 3,
+        "unit": 6,
+        "margin": 0.00030350685119628906,
+        "naturally_firing": true,
+        "refractory_state": 0.002553376602008939,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 187,
+        "base_loss": 5.083067893981934,
+        "toggled_loss": 4.724090099334717,
+        "L_on_minus_L_off": 0.3589777946472168,
+        "main_L_on_minus_L_off": 0.30050134658813477,
+        "aux_L_on_minus_L_off": 0.29238414764404297,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.5,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 1.4359111785888672,
+        "logistic_boundary_coefficient": 0.35897766237626827
+      },
+      {
+        "batch": 27,
+        "time_ms": 204,
+        "item_in_batch": 0,
+        "unit": 5,
+        "margin": -0.0012388229370117188,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 221,
+        "base_loss": 4.969694137573242,
+        "toggled_loss": 4.957418918609619,
+        "L_on_minus_L_off": -0.012275218963623047,
+        "main_L_on_minus_L_off": -0.010212182998657227,
+        "aux_L_on_minus_L_off": -0.01031494140625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.04910087585449219,
+        "logistic_boundary_coefficient": -0.012275143609687855
+      },
+      {
+        "batch": 28,
+        "time_ms": 392,
+        "item_in_batch": 2,
+        "unit": 10,
+        "margin": -0.0010189414024353027,
+        "naturally_firing": false,
+        "refractory_state": 4.7467671038248227e-07,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 163,
+        "base_loss": 4.659293174743652,
+        "toggled_loss": 4.62826681137085,
+        "L_on_minus_L_off": -0.031026363372802734,
+        "main_L_on_minus_L_off": -0.026003360748291016,
+        "aux_L_on_minus_L_off": -0.025114059448242188,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.25,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.0,
+            1.75,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.12410545349121094,
+        "logistic_boundary_coefficient": -0.03102623452171716
+      },
+      {
+        "batch": 29,
+        "time_ms": 96,
+        "item_in_batch": 2,
+        "unit": 6,
+        "margin": -0.0007871389389038086,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 190,
+        "base_loss": 5.246452331542969,
+        "toggled_loss": 5.444507122039795,
+        "L_on_minus_L_off": 0.19805479049682617,
+        "main_L_on_minus_L_off": 0.1650397777557373,
+        "aux_L_on_minus_L_off": 0.16507625579833984,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.5,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.7922191619873047,
+        "logistic_boundary_coefficient": 0.19805429964838145
+      },
+      {
+        "batch": 30,
+        "time_ms": 396,
+        "item_in_batch": 0,
+        "unit": 2,
+        "margin": 0.0006805658340454102,
+        "naturally_firing": true,
+        "refractory_state": 1.7102745175634482e-07,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 142,
+        "base_loss": 4.328271865844727,
+        "toggled_loss": 4.328714370727539,
+        "L_on_minus_L_off": -0.0004425048828125,
+        "main_L_on_minus_L_off": -0.00015115737915039062,
+        "aux_L_on_minus_L_off": -0.00145721435546875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            -0.25,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.00177001953125,
+        "logistic_boundary_coefficient": -0.0004425040629938239
+      },
+      {
+        "batch": 31,
+        "time_ms": 457,
+        "item_in_batch": 2,
+        "unit": 10,
+        "margin": -0.00010257959365844727,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 273,
+        "base_loss": 5.151662826538086,
+        "toggled_loss": 5.125269889831543,
+        "L_on_minus_L_off": -0.02639293670654297,
+        "main_L_on_minus_L_off": -0.021792173385620117,
+        "aux_L_on_minus_L_off": -0.02300548553466797,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.25,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.5,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            2.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.10557174682617188,
+        "logistic_boundary_coefficient": -0.026392935595656586
+      }
+    ],
+    [
+      {
+        "batch": 0,
+        "time_ms": 159,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.04182243347167969,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 47,
+        "base_loss": 4.9366254806518555,
+        "toggled_loss": 4.800119400024414,
+        "L_on_minus_L_off": -0.1365060806274414,
+        "main_L_on_minus_L_off": -0.11424756050109863,
+        "aux_L_on_minus_L_off": -0.11129379272460938,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            1.0,
+            0.5
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            3.0,
+            1.5,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.5460243225097656,
+        "logistic_boundary_coefficient": -0.1355554578777015
+      },
+      {
+        "batch": 1,
+        "time_ms": 366,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": -0.00949716567993164,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 22,
+        "base_loss": 6.069509983062744,
+        "toggled_loss": 6.0692033767700195,
+        "L_on_minus_L_off": -0.0003066062927246094,
+        "main_L_on_minus_L_off": -0.0002675056457519531,
+        "aux_L_on_minus_L_off": -0.00019359588623046875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0012264251708984375,
+        "logistic_boundary_coefficient": -0.00030649570048957634
+      },
+      {
+        "batch": 2,
+        "time_ms": 332,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.002060830593109131,
+        "naturally_firing": false,
+        "refractory_state": 9.133093954005744e-06,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 83,
+        "base_loss": 5.335850238800049,
+        "toggled_loss": 5.335875511169434,
+        "L_on_minus_L_off": 2.5272369384765625e-05,
+        "main_L_on_minus_L_off": 2.193450927734375e-05,
+        "aux_L_on_minus_L_off": 1.621246337890625e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0001010894775390625,
+        "logistic_boundary_coefficient": 2.527194006031868e-05
+      },
+      {
+        "batch": 3,
+        "time_ms": 293,
+        "item_in_batch": 0,
+        "unit": 14,
+        "margin": -0.0031448006629943848,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 57,
+        "base_loss": 4.881697654724121,
+        "toggled_loss": 4.881669044494629,
+        "L_on_minus_L_off": -2.86102294921875e-05,
+        "main_L_on_minus_L_off": -1.9073486328125e-06,
+        "aux_L_on_minus_L_off": -0.0001316070556640625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.00011444091796875,
+        "logistic_boundary_coefficient": -2.8609097727539565e-05
+      },
+      {
+        "batch": 4,
+        "time_ms": 170,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.1483612060546875,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 4,
+        "base_loss": 4.402917861938477,
+        "toggled_loss": 4.769563674926758,
+        "L_on_minus_L_off": 0.36664581298828125,
+        "main_L_on_minus_L_off": 0.3048365116119385,
+        "aux_L_on_minus_L_off": 0.30904674530029297,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 1.466583251953125,
+        "logistic_boundary_coefficient": 0.33616917261621876
+      },
+      {
+        "batch": 5,
+        "time_ms": 200,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": -0.0012627840042114258,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 69,
+        "base_loss": 5.494930267333984,
+        "toggled_loss": 5.494951248168945,
+        "L_on_minus_L_off": 2.09808349609375e-05,
+        "main_L_on_minus_L_off": 1.5974044799804688e-05,
+        "aux_L_on_minus_L_off": 2.47955322265625e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 8.392333984375e-05,
+        "logistic_boundary_coefficient": 2.098070113538158e-05
+      },
+      {
+        "batch": 6,
+        "time_ms": 149,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": -0.0024143457412719727,
+        "naturally_firing": false,
+        "refractory_state": 0.7541688680648804,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 44,
+        "base_loss": 4.486419677734375,
+        "toggled_loss": 4.487005710601807,
+        "L_on_minus_L_off": 0.0005860328674316406,
+        "main_L_on_minus_L_off": 0.0004868507385253906,
+        "aux_L_on_minus_L_off": 0.0004978179931640625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0023441314697265625,
+        "logistic_boundary_coefficient": 0.0005860192035484892
+      },
+      {
+        "batch": 7,
+        "time_ms": 441,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": -0.003123462200164795,
+        "naturally_firing": false,
+        "refractory_state": 0.5379112362861633,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 21,
+        "base_loss": 4.462932109832764,
+        "toggled_loss": 4.4628801345825195,
+        "L_on_minus_L_off": -5.1975250244140625e-05,
+        "main_L_on_minus_L_off": -4.1484832763671875e-05,
+        "aux_L_on_minus_L_off": -5.054473876953125e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0002079010009765625,
+        "logistic_boundary_coefficient": -5.197322201139139e-05
+      },
+      {
+        "batch": 8,
+        "time_ms": 143,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": -0.0027285218238830566,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 118,
+        "base_loss": 5.949498653411865,
+        "toggled_loss": 5.9496588706970215,
+        "L_on_minus_L_off": 0.00016021728515625,
+        "main_L_on_minus_L_off": 0.0001418590545654297,
+        "aux_L_on_minus_L_off": 9.1552734375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.000640869140625,
+        "logistic_boundary_coefficient": 0.00016021251408830458
+      },
+      {
+        "batch": 9,
+        "time_ms": 428,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": 0.0038690567016601562,
+        "naturally_firing": true,
+        "refractory_state": 0.40516725182533264,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 127,
+        "base_loss": 4.329957962036133,
+        "toggled_loss": 4.329957962036133,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 10,
+        "time_ms": 392,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -7.712841033935547e-05,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 46,
+        "base_loss": 4.767877578735352,
+        "toggled_loss": 4.76785135269165,
+        "L_on_minus_L_off": -2.6226043701171875e-05,
+        "main_L_on_minus_L_off": -2.2172927856445312e-05,
+        "aux_L_on_minus_L_off": -2.193450927734375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0001049041748046875,
+        "logistic_boundary_coefficient": -2.62260430771188e-05
+      },
+      {
+        "batch": 11,
+        "time_ms": 257,
+        "item_in_batch": 2,
+        "unit": 7,
+        "margin": 0.0009621381759643555,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 121,
+        "base_loss": 4.8781890869140625,
+        "toggled_loss": 4.878194332122803,
+        "L_on_minus_L_off": -5.245208740234375e-06,
+        "main_L_on_minus_L_off": -6.198883056640625e-06,
+        "aux_L_on_minus_L_off": 5.7220458984375e-06,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -2.09808349609375e-05,
+        "logistic_boundary_coefficient": -5.245189318116323e-06
+      },
+      {
+        "batch": 12,
+        "time_ms": 319,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": -0.0024300217628479004,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 65,
+        "base_loss": 4.6806206703186035,
+        "toggled_loss": 4.680426597595215,
+        "L_on_minus_L_off": -0.00019407272338867188,
+        "main_L_on_minus_L_off": -0.00015926361083984375,
+        "aux_L_on_minus_L_off": -0.00017261505126953125,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0007762908935546875,
+        "logistic_boundary_coefficient": -0.00019406813945864972
+      },
+      {
+        "batch": 13,
+        "time_ms": 220,
+        "item_in_batch": 0,
+        "unit": 14,
+        "margin": -0.10436975955963135,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 27,
+        "base_loss": 4.857705116271973,
+        "toggled_loss": 4.856233596801758,
+        "L_on_minus_L_off": -0.0014715194702148438,
+        "main_L_on_minus_L_off": -0.0010526180267333984,
+        "aux_L_on_minus_L_off": -0.0020923614501953125,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            1.75,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.005886077880859375,
+        "logistic_boundary_coefficient": -0.0014092196722287633
+      },
+      {
+        "batch": 14,
+        "time_ms": 655,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.020916402339935303,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 43,
+        "base_loss": 6.061565399169922,
+        "toggled_loss": 6.060179710388184,
+        "L_on_minus_L_off": -0.0013856887817382812,
+        "main_L_on_minus_L_off": -0.0010766983032226562,
+        "aux_L_on_minus_L_off": -0.001544952392578125,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            1.75,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.005542755126953125,
+        "logistic_boundary_coefficient": -0.001383266675426941
+      },
+      {
+        "batch": 15,
+        "time_ms": 829,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": 9.989738464355469e-05,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 40,
+        "base_loss": 4.964749336242676,
+        "toggled_loss": 4.964754104614258,
+        "L_on_minus_L_off": -4.76837158203125e-06,
+        "main_L_on_minus_L_off": -2.6226043701171875e-06,
+        "aux_L_on_minus_L_off": -9.5367431640625e-06,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -1.9073486328125e-05,
+        "logistic_boundary_coefficient": -4.7683713916876375e-06
+      },
+      {
+        "batch": 16,
+        "time_ms": 317,
+        "item_in_batch": 0,
+        "unit": 14,
+        "margin": -0.004459977149963379,
+        "naturally_firing": false,
+        "refractory_state": 0.008043183013796806,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 83,
+        "base_loss": 4.472196578979492,
+        "toggled_loss": 4.472744464874268,
+        "L_on_minus_L_off": 0.0005478858947753906,
+        "main_L_on_minus_L_off": 0.0004825592041015625,
+        "aux_L_on_minus_L_off": 0.00032806396484375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0021915435791015625,
+        "logistic_boundary_coefficient": 0.0005478423042260404
+      },
+      {
+        "batch": 17,
+        "time_ms": 648,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": 0.0011495351791381836,
+        "naturally_firing": true,
+        "refractory_state": 1.0341513188905083e-05,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 124,
+        "base_loss": 5.158290386199951,
+        "toggled_loss": 5.158290386199951,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 18,
+        "time_ms": 125,
+        "item_in_batch": 2,
+        "unit": 12,
+        "margin": 0.008726835250854492,
+        "naturally_firing": true,
+        "refractory_state": 0.321595162153244,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 57,
+        "base_loss": 5.755395889282227,
+        "toggled_loss": 5.755399227142334,
+        "L_on_minus_L_off": -3.337860107421875e-06,
+        "main_L_on_minus_L_off": -2.86102294921875e-06,
+        "aux_L_on_minus_L_off": -2.86102294921875e-06,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -1.33514404296875e-05,
+        "logistic_boundary_coefficient": -3.3368434995141807e-06
+      },
+      {
+        "batch": 19,
+        "time_ms": 426,
+        "item_in_batch": 1,
+        "unit": 7,
+        "margin": -0.037220001220703125,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 86,
+        "base_loss": 4.655326843261719,
+        "toggled_loss": 4.796131134033203,
+        "L_on_minus_L_off": 0.14080429077148438,
+        "main_L_on_minus_L_off": 0.10870146751403809,
+        "aux_L_on_minus_L_off": 0.16051292419433594,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.5632171630859375,
+        "logistic_boundary_coefficient": 0.1400269233368611
+      },
+      {
+        "batch": 20,
+        "time_ms": 298,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": 0.012723565101623535,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 20,
+        "base_loss": 4.904389381408691,
+        "toggled_loss": 4.9043779373168945,
+        "L_on_minus_L_off": 1.1444091796875e-05,
+        "main_L_on_minus_L_off": 9.298324584960938e-06,
+        "aux_L_on_minus_L_off": 9.5367431640625e-06,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 4.57763671875e-05,
+        "logistic_boundary_coefficient": 1.1436684299637949e-05
+      },
+      {
+        "batch": 21,
+        "time_ms": 361,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.011441171169281006,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 44,
+        "base_loss": 4.822394847869873,
+        "toggled_loss": 4.821565628051758,
+        "L_on_minus_L_off": -0.0008292198181152344,
+        "main_L_on_minus_L_off": -0.0007107257843017578,
+        "aux_L_on_minus_L_off": -0.0005922317504882812,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0033168792724609375,
+        "logistic_boundary_coefficient": -0.0008287857888128184
+      },
+      {
+        "batch": 22,
+        "time_ms": 246,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": -0.005588710308074951,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 104,
+        "base_loss": 5.689897537231445,
+        "toggled_loss": 5.689891815185547,
+        "L_on_minus_L_off": -5.7220458984375e-06,
+        "main_L_on_minus_L_off": -1.4066696166992188e-05,
+        "aux_L_on_minus_L_off": 4.1961669921875e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -2.288818359375e-05,
+        "logistic_boundary_coefficient": -5.721331075707004e-06
+      },
+      {
+        "batch": 23,
+        "time_ms": 303,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.0036658644676208496,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 59,
+        "base_loss": 5.1661577224731445,
+        "toggled_loss": 5.165943145751953,
+        "L_on_minus_L_off": -0.00021457672119140625,
+        "main_L_on_minus_L_off": -0.00018453598022460938,
+        "aux_L_on_minus_L_off": -0.0001506805419921875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.000858306884765625,
+        "logistic_boundary_coefficient": -0.0002145651871942036
+      },
+      {
+        "batch": 24,
+        "time_ms": 473,
+        "item_in_batch": 2,
+        "unit": 14,
+        "margin": 0.0012888908386230469,
+        "naturally_firing": true,
+        "refractory_state": 0.8325577974319458,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 33,
+        "base_loss": 5.144404888153076,
+        "toggled_loss": 5.144404888153076,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 25,
+        "time_ms": 515,
+        "item_in_batch": 2,
+        "unit": 4,
+        "margin": -0.05254095792770386,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 40,
+        "base_loss": 4.336211204528809,
+        "toggled_loss": 4.318860054016113,
+        "L_on_minus_L_off": -0.017351150512695312,
+        "main_L_on_minus_L_off": -0.01512765884399414,
+        "aux_L_on_minus_L_off": -0.011117935180664062,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.25,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.06940460205078125,
+        "logistic_boundary_coefficient": -0.017160957128375325
+      },
+      {
+        "batch": 26,
+        "time_ms": 253,
+        "item_in_batch": 0,
+        "unit": 14,
+        "margin": -0.00046825408935546875,
+        "naturally_firing": false,
+        "refractory_state": 2.113642692565918,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 86,
+        "base_loss": 5.083067893981934,
+        "toggled_loss": 5.083290100097656,
+        "L_on_minus_L_off": 0.00022220611572265625,
+        "main_L_on_minus_L_off": 0.00018024444580078125,
+        "aux_L_on_minus_L_off": 0.00020885467529296875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.000888824462890625,
+        "logistic_boundary_coefficient": 0.00022220592083743666
+      },
+      {
+        "batch": 27,
+        "time_ms": 483,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": 0.005947589874267578,
+        "naturally_firing": true,
+        "refractory_state": 0.4034535586833954,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 83,
+        "base_loss": 4.969694137573242,
+        "toggled_loss": 4.969694137573242,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 28,
+        "time_ms": 509,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.00356447696685791,
+        "naturally_firing": false,
+        "refractory_state": 0.0008421379025094211,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 123,
+        "base_loss": 4.659293174743652,
+        "toggled_loss": 4.659277439117432,
+        "L_on_minus_L_off": -1.5735626220703125e-05,
+        "main_L_on_minus_L_off": -1.2874603271484375e-05,
+        "aux_L_on_minus_L_off": -1.33514404296875e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -6.29425048828125e-05,
+        "logistic_boundary_coefficient": -1.5734826532050778e-05
+      },
+      {
+        "batch": 29,
+        "time_ms": 542,
+        "item_in_batch": 0,
+        "unit": 7,
+        "margin": 0.0019835233688354492,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 12,
+        "base_loss": 5.246452331542969,
+        "toggled_loss": 5.137638092041016,
+        "L_on_minus_L_off": 0.10881423950195312,
+        "main_L_on_minus_L_off": 0.09443187713623047,
+        "aux_L_on_minus_L_off": 0.07191085815429688,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            -0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            -0.5
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            -2.5,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.4352569580078125,
+        "logistic_boundary_coefficient": 0.10881252706019759
+      },
+      {
+        "batch": 30,
+        "time_ms": 390,
+        "item_in_batch": 3,
+        "unit": 14,
+        "margin": -0.0007067322731018066,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 53,
+        "base_loss": 4.328271865844727,
+        "toggled_loss": 4.328171730041504,
+        "L_on_minus_L_off": -0.00010013580322265625,
+        "main_L_on_minus_L_off": -8.344650268554688e-05,
+        "aux_L_on_minus_L_off": -8.20159912109375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.000400543212890625,
+        "logistic_boundary_coefficient": -0.00010013560316340157
+      },
+      {
+        "batch": 31,
+        "time_ms": 666,
+        "item_in_batch": 1,
+        "unit": 14,
+        "margin": 0.0100022554397583,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 67,
+        "base_loss": 5.151662826538086,
+        "toggled_loss": 5.1516571044921875,
+        "L_on_minus_L_off": 5.7220458984375e-06,
+        "main_L_on_minus_L_off": 4.76837158203125e-06,
+        "aux_L_on_minus_L_off": 4.76837158203125e-06,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 2.288818359375e-05,
+        "logistic_boundary_coefficient": 5.719756658267196e-06
+      }
+    ],
+    [
+      {
+        "batch": 0,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.9366254806518555,
+        "toggled_loss": 4.936959743499756,
+        "L_on_minus_L_off": 0.0003342628479003906,
+        "main_L_on_minus_L_off": 0.00035881996154785156,
+        "aux_L_on_minus_L_off": -0.00012302398681640625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0013370513916015625,
+        "logistic_boundary_coefficient": 2.361594592193045e-05
+      },
+      {
+        "batch": 1,
+        "time_ms": 417,
+        "item_in_batch": 2,
+        "unit": 4,
+        "margin": -0.7093669176101685,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 6.069509983062744,
+        "toggled_loss": 6.139190673828125,
+        "L_on_minus_L_off": 0.06968069076538086,
+        "main_L_on_minus_L_off": 0.05801963806152344,
+        "aux_L_on_minus_L_off": 0.05830574035644531,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.27872276306152344,
+        "logistic_boundary_coefficient": 0.014569129368796351
+      },
+      {
+        "batch": 2,
+        "time_ms": 385,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.7067999243736267,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.335850238800049,
+        "toggled_loss": 5.377548694610596,
+        "L_on_minus_L_off": 0.041698455810546875,
+        "main_L_on_minus_L_off": 0.035004377365112305,
+        "aux_L_on_minus_L_off": 0.033471107482910156,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.1667938232421875,
+        "logistic_boundary_coefficient": 0.008798417267263013
+      },
+      {
+        "batch": 3,
+        "time_ms": 206,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.6795269250869751,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.881697654724121,
+        "toggled_loss": 4.859428405761719,
+        "L_on_minus_L_off": -0.022269248962402344,
+        "main_L_on_minus_L_off": -0.01934361457824707,
+        "aux_L_on_minus_L_off": -0.01462554931640625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.08907699584960938,
+        "logistic_boundary_coefficient": -0.005173594214218069
+      },
+      {
+        "batch": 4,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.402917861938477,
+        "toggled_loss": 4.40233039855957,
+        "L_on_minus_L_off": -0.00058746337890625,
+        "main_L_on_minus_L_off": -0.0005652904510498047,
+        "aux_L_on_minus_L_off": -0.00011157989501953125,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.002349853515625,
+        "logistic_boundary_coefficient": -4.150477229075366e-05
+      },
+      {
+        "batch": 5,
+        "time_ms": 251,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.41923725605010986,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.494930267333984,
+        "toggled_loss": 5.466222763061523,
+        "L_on_minus_L_off": -0.028707504272460938,
+        "main_L_on_minus_L_off": -0.025043964385986328,
+        "aux_L_on_minus_L_off": -0.018317222595214844,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.11483001708984375,
+        "logistic_boundary_coefficient": -0.015237217018965956
+      },
+      {
+        "batch": 6,
+        "time_ms": 176,
+        "item_in_batch": 1,
+        "unit": 12,
+        "margin": -0.002937793731689453,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 5,
+        "base_loss": 4.486419677734375,
+        "toggled_loss": 4.486550807952881,
+        "L_on_minus_L_off": 0.00013113021850585938,
+        "main_L_on_minus_L_off": 9.560585021972656e-05,
+        "aux_L_on_minus_L_off": 0.000179290771484375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0005245208740234375,
+        "logistic_boundary_coefficient": 0.00013112569166339987
+      },
+      {
+        "batch": 7,
+        "time_ms": 479,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.08871376514434814,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 2,
+        "base_loss": 4.462932109832764,
+        "toggled_loss": 4.510960578918457,
+        "L_on_minus_L_off": 0.04802846908569336,
+        "main_L_on_minus_L_off": 0.041796207427978516,
+        "aux_L_on_minus_L_off": 0.03116130828857422,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.19211387634277344,
+        "logistic_boundary_coefficient": 0.04654768214555061
+      },
+      {
+        "batch": 8,
+        "time_ms": 184,
+        "item_in_batch": 3,
+        "unit": 13,
+        "margin": 0.03968501091003418,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 7,
+        "base_loss": 5.949498653411865,
+        "toggled_loss": 5.949851036071777,
+        "L_on_minus_L_off": -0.0003523826599121094,
+        "main_L_on_minus_L_off": -0.0016415119171142578,
+        "aux_L_on_minus_L_off": 0.0064449310302734375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            -0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0014095306396484375,
+        "logistic_boundary_coefficient": -0.0003501720796702333
+      },
+      {
+        "batch": 9,
+        "time_ms": 134,
+        "item_in_batch": 0,
+        "unit": 13,
+        "margin": 0.003934144973754883,
+        "naturally_firing": true,
+        "refractory_state": 1.66377592086792,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 11,
+        "base_loss": 4.329957962036133,
+        "toggled_loss": 4.329957962036133,
+        "L_on_minus_L_off": 0.0,
+        "main_L_on_minus_L_off": 0.0,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0,
+        "logistic_boundary_coefficient": 0.0
+      },
+      {
+        "batch": 10,
+        "time_ms": 518,
+        "item_in_batch": 0,
+        "unit": 4,
+        "margin": -0.31388014554977417,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.767877578735352,
+        "toggled_loss": 4.808381080627441,
+        "L_on_minus_L_off": 0.040503501892089844,
+        "main_L_on_minus_L_off": 0.03301811218261719,
+        "aux_L_on_minus_L_off": 0.03742694854736328,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.16201400756835938,
+        "logistic_boundary_coefficient": 0.02795951725392276
+      },
+      {
+        "batch": 11,
+        "time_ms": 308,
+        "item_in_batch": 2,
+        "unit": 12,
+        "margin": -0.014330387115478516,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 10,
+        "base_loss": 4.8781890869140625,
+        "toggled_loss": 4.878221035003662,
+        "L_on_minus_L_off": 3.1948089599609375e-05,
+        "main_L_on_minus_L_off": 1.7642974853515625e-05,
+        "aux_L_on_minus_L_off": 7.05718994140625e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0001277923583984375,
+        "logistic_boundary_coefficient": 3.192186052646232e-05
+      },
+      {
+        "batch": 12,
+        "time_ms": 235,
+        "item_in_batch": 1,
+        "unit": 8,
+        "margin": -0.6227548718452454,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.6806206703186035,
+        "toggled_loss": 4.6679463386535645,
+        "L_on_minus_L_off": -0.012674331665039062,
+        "main_L_on_minus_L_off": -0.010879755020141602,
+        "aux_L_on_minus_L_off": -0.00897216796875,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.5
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            1.25,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.05069732666015625,
+        "logistic_boundary_coefficient": -0.0035812291008218383
+      },
+      {
+        "batch": 13,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.857705116271973,
+        "toggled_loss": 4.857182502746582,
+        "L_on_minus_L_off": -0.000522613525390625,
+        "main_L_on_minus_L_off": -0.0004999637603759766,
+        "aux_L_on_minus_L_off": -0.0001125335693359375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0020904541015625,
+        "logistic_boundary_coefficient": -3.692307664826787e-05
+      },
+      {
+        "batch": 14,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 6.061565399169922,
+        "toggled_loss": 6.0596466064453125,
+        "L_on_minus_L_off": -0.001918792724609375,
+        "main_L_on_minus_L_off": -0.0016179084777832031,
+        "aux_L_on_minus_L_off": -0.0015048980712890625,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0076751708984375,
+        "logistic_boundary_coefficient": -0.0001355642887159032
+      },
+      {
+        "batch": 15,
+        "time_ms": 768,
+        "item_in_batch": 2,
+        "unit": 12,
+        "margin": -0.1972883939743042,
+        "naturally_firing": false,
+        "refractory_state": 1.7817012071609497,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 3,
+        "base_loss": 4.964749336242676,
+        "toggled_loss": 4.959668159484863,
+        "L_on_minus_L_off": -0.0050811767578125,
+        "main_L_on_minus_L_off": -0.0038290023803710938,
+        "aux_L_on_minus_L_off": -0.0062618255615234375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.5,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.02032470703125,
+        "logistic_boundary_coefficient": -0.004365495925477848
+      },
+      {
+        "batch": 16,
+        "time_ms": 229,
+        "item_in_batch": 0,
+        "unit": 4,
+        "margin": -0.37303489446640015,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.472196578979492,
+        "toggled_loss": 4.457655429840088,
+        "L_on_minus_L_off": -0.014541149139404297,
+        "main_L_on_minus_L_off": -0.010446786880493164,
+        "aux_L_on_minus_L_off": -0.020470619201660156,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.05816459655761719,
+        "logistic_boundary_coefficient": -0.00871838152230292
+      },
+      {
+        "batch": 17,
+        "time_ms": 698,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.6304481029510498,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.158290386199951,
+        "toggled_loss": 5.132424354553223,
+        "L_on_minus_L_off": -0.025866031646728516,
+        "main_L_on_minus_L_off": -0.021867036819458008,
+        "aux_L_on_minus_L_off": -0.019994735717773438,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.10346412658691406,
+        "logistic_boundary_coefficient": -0.007120131868399407
+      },
+      {
+        "batch": 18,
+        "time_ms": 175,
+        "item_in_batch": 2,
+        "unit": 15,
+        "margin": -0.4717864394187927,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.755395889282227,
+        "toggled_loss": 5.700617790222168,
+        "L_on_minus_L_off": -0.054778099060058594,
+        "main_L_on_minus_L_off": -0.047136783599853516,
+        "aux_L_on_minus_L_off": -0.038207054138183594,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.25,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.21911239624023438,
+        "logistic_boundary_coefficient": -0.02503567722980249
+      },
+      {
+        "batch": 19,
+        "time_ms": 90,
+        "item_in_batch": 3,
+        "unit": 9,
+        "margin": -0.957763135433197,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.655326843261719,
+        "toggled_loss": 4.678380012512207,
+        "L_on_minus_L_off": 0.02305316925048828,
+        "main_L_on_minus_L_off": 0.019382476806640625,
+        "aux_L_on_minus_L_off": 0.01835346221923828,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.09221267700195312,
+        "logistic_boundary_coefficient": 0.001915799721296986
+      },
+      {
+        "batch": 20,
+        "time_ms": 527,
+        "item_in_batch": 1,
+        "unit": 12,
+        "margin": -0.09987306594848633,
+        "naturally_firing": false,
+        "refractory_state": 1.7810077667236328,
+        "refractory_blocked": true,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 3,
+        "base_loss": 4.904389381408691,
+        "toggled_loss": 5.094778060913086,
+        "L_on_minus_L_off": 0.19038867950439453,
+        "main_L_on_minus_L_off": 0.16025590896606445,
+        "aux_L_on_minus_L_off": 0.15066242218017578,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.5,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.7615547180175781,
+        "logistic_boundary_coefficient": 0.1829900304937288
+      },
+      {
+        "batch": 21,
+        "time_ms": 344,
+        "item_in_batch": 0,
+        "unit": 7,
+        "margin": 0.02528834342956543,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 3,
+        "base_loss": 4.822394847869873,
+        "toggled_loss": 4.827509880065918,
+        "L_on_minus_L_off": -0.005115032196044922,
+        "main_L_on_minus_L_off": -0.004102230072021484,
+        "aux_L_on_minus_L_off": -0.005063056945800781,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.020460128784179688,
+        "logistic_boundary_coefficient": -0.005101970218008103
+      },
+      {
+        "batch": 22,
+        "time_ms": 404,
+        "item_in_batch": 2,
+        "unit": 4,
+        "margin": -0.3076832890510559,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.689897537231445,
+        "toggled_loss": 5.669568061828613,
+        "L_on_minus_L_off": -0.02032947540283203,
+        "main_L_on_minus_L_off": -0.01786017417907715,
+        "aux_L_on_minus_L_off": -0.012345314025878906,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.08131790161132812,
+        "logistic_boundary_coefficient": -0.014226820071619498
+      },
+      {
+        "batch": 23,
+        "time_ms": 354,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.3067329525947571,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.1661577224731445,
+        "toggled_loss": 5.100593090057373,
+        "L_on_minus_L_off": -0.06556463241577148,
+        "main_L_on_minus_L_off": -0.057271718978881836,
+        "aux_L_on_minus_L_off": -0.04146385192871094,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.26225852966308594,
+        "logistic_boundary_coefficient": -0.045978491528007995
+      },
+      {
+        "batch": 24,
+        "time_ms": 500,
+        "item_in_batch": 2,
+        "unit": 4,
+        "margin": -0.323053240776062,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.144404888153076,
+        "toggled_loss": 5.302928447723389,
+        "L_on_minus_L_off": 0.1585235595703125,
+        "main_L_on_minus_L_off": 0.13558673858642578,
+        "aux_L_on_minus_L_off": 0.1146841049194336,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.63409423828125,
+        "logistic_boundary_coefficient": 0.10719204847972313
+      },
+      {
+        "batch": 25,
+        "time_ms": 168,
+        "item_in_batch": 2,
+        "unit": 9,
+        "margin": -0.9576358795166016,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.336211204528809,
+        "toggled_loss": 4.367466449737549,
+        "L_on_minus_L_off": 0.031255245208740234,
+        "main_L_on_minus_L_off": 0.026844263076782227,
+        "aux_L_on_minus_L_off": 0.02205657958984375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.12502098083496094,
+        "logistic_boundary_coefficient": 0.00259868749365743
+      },
+      {
+        "batch": 26,
+        "time_ms": 738,
+        "item_in_batch": 3,
+        "unit": 6,
+        "margin": -0.040502309799194336,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 3,
+        "base_loss": 5.083067893981934,
+        "toggled_loss": 5.060645580291748,
+        "L_on_minus_L_off": -0.022422313690185547,
+        "main_L_on_minus_L_off": -0.016242504119873047,
+        "aux_L_on_minus_L_off": -0.030900955200195312,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            3.25,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.08968925476074219,
+        "logistic_boundary_coefficient": -0.022275825342456507
+      },
+      {
+        "batch": 27,
+        "time_ms": 533,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.11218893527984619,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 2,
+        "base_loss": 4.969694137573242,
+        "toggled_loss": 4.909584999084473,
+        "L_on_minus_L_off": -0.06010913848876953,
+        "main_L_on_minus_L_off": -0.05540347099304199,
+        "aux_L_on_minus_L_off": -0.023528099060058594,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.24043655395507812,
+        "logistic_boundary_coefficient": -0.057181665477853846
+      },
+      {
+        "batch": 28,
+        "time_ms": 413,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.4500214457511902,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.659293174743652,
+        "toggled_loss": 4.757148742675781,
+        "L_on_minus_L_off": 0.0978555679321289,
+        "main_L_on_minus_L_off": 0.08166170120239258,
+        "aux_L_on_minus_L_off": 0.08096981048583984,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.3914222717285156,
+        "logistic_boundary_coefficient": 0.0476446471968181
+      },
+      {
+        "batch": 29,
+        "time_ms": 98,
+        "item_in_batch": 1,
+        "unit": 13,
+        "margin": 0.021401286125183105,
+        "naturally_firing": true,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": true,
+        "eligible_margins_in_batch": 3,
+        "base_loss": 5.246452331542969,
+        "toggled_loss": 5.246444225311279,
+        "L_on_minus_L_off": 8.106231689453125e-06,
+        "main_L_on_minus_L_off": 3.814697265625e-06,
+        "aux_L_on_minus_L_off": 2.09808349609375e-05,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 3.24249267578125e-05,
+        "logistic_boundary_coefficient": 8.091398705005503e-06
+      },
+      {
+        "batch": 30,
+        "time_ms": 441,
+        "item_in_batch": 3,
+        "unit": 4,
+        "margin": -0.6647483110427856,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.328271865844727,
+        "toggled_loss": 4.314107418060303,
+        "L_on_minus_L_off": -0.014164447784423828,
+        "main_L_on_minus_L_off": -0.011747360229492188,
+        "aux_L_on_minus_L_off": -0.0120849609375,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.05665779113769531,
+        "logistic_boundary_coefficient": -0.0034649009840363337
+      },
+      {
+        "batch": 31,
+        "time_ms": 716,
+        "item_in_batch": 1,
+        "unit": 4,
+        "margin": -0.6706311106681824,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.151662826538086,
+        "toggled_loss": 5.097278594970703,
+        "L_on_minus_L_off": -0.05438423156738281,
+        "main_L_on_minus_L_off": -0.05042266845703125,
+        "aux_L_on_minus_L_off": -0.019807815551757812,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.25,
+            0.0
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            2.75,
+            0.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.21753692626953125,
+        "logistic_boundary_coefficient": -0.013033695219514412
+      }
+    ],
+    [
+      {
+        "batch": 0,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.9366254806518555,
+        "toggled_loss": 4.941354751586914,
+        "L_on_minus_L_off": 0.004729270935058594,
+        "main_L_on_minus_L_off": 0.004729032516479492,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.018917083740234375,
+        "logistic_boundary_coefficient": 0.00033412689251598605
+      },
+      {
+        "batch": 1,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 6.069509983062744,
+        "toggled_loss": 6.067967414855957,
+        "L_on_minus_L_off": -0.0015425682067871094,
+        "main_L_on_minus_L_off": -0.0015425682067871094,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0061702728271484375,
+        "logistic_boundary_coefficient": -0.00010898371620177606
+      },
+      {
+        "batch": 2,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.335850238800049,
+        "toggled_loss": 5.3345489501953125,
+        "L_on_minus_L_off": -0.0013012886047363281,
+        "main_L_on_minus_L_off": -0.0013010501861572266,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0052051544189453125,
+        "logistic_boundary_coefficient": -9.19371132966451e-05
+      },
+      {
+        "batch": 3,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.881697654724121,
+        "toggled_loss": 4.8775529861450195,
+        "L_on_minus_L_off": -0.0041446685791015625,
+        "main_L_on_minus_L_off": -0.004144430160522461,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.01657867431640625,
+        "logistic_boundary_coefficient": -0.00029282425385651856
+      },
+      {
+        "batch": 4,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.402917861938477,
+        "toggled_loss": 4.407192230224609,
+        "L_on_minus_L_off": 0.0042743682861328125,
+        "main_L_on_minus_L_off": 0.0042743682861328125,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.01709747314453125,
+        "logistic_boundary_coefficient": 0.0003019876451414901
+      },
+      {
+        "batch": 5,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.494930267333984,
+        "toggled_loss": 5.49563455581665,
+        "L_on_minus_L_off": 0.0007042884826660156,
+        "main_L_on_minus_L_off": 0.0007042884826660156,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0028171539306640625,
+        "logistic_boundary_coefficient": 4.975856223493763e-05
+      },
+      {
+        "batch": 6,
+        "time_ms": 235,
+        "item_in_batch": 1,
+        "unit": 11,
+        "margin": -0.8204966187477112,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.486419677734375,
+        "toggled_loss": 4.481908798217773,
+        "L_on_minus_L_off": -0.0045108795166015625,
+        "main_L_on_minus_L_off": -0.004510402679443359,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.01804351806640625,
+        "logistic_boundary_coefficient": -0.0006294359352676683
+      },
+      {
+        "batch": 7,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.462932109832764,
+        "toggled_loss": 4.472984313964844,
+        "L_on_minus_L_off": 0.010052204132080078,
+        "main_L_on_minus_L_off": 0.01005244255065918,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.04020881652832031,
+        "logistic_boundary_coefficient": 0.0007101965135238458
+      },
+      {
+        "batch": 8,
+        "time_ms": 206,
+        "item_in_batch": 3,
+        "unit": 2,
+        "margin": -0.7847578525543213,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.949498653411865,
+        "toggled_loss": 5.999790668487549,
+        "L_on_minus_L_off": 0.050292015075683594,
+        "main_L_on_minus_L_off": 0.050292015075683594,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            1.75
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.20116806030273438,
+        "logistic_boundary_coefficient": 0.008006744969884553
+      },
+      {
+        "batch": 9,
+        "time_ms": 144,
+        "item_in_batch": 0,
+        "unit": 11,
+        "margin": -0.6158857941627502,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.329957962036133,
+        "toggled_loss": 4.3332390785217285,
+        "L_on_minus_L_off": 0.003281116485595703,
+        "main_L_on_minus_L_off": 0.003281116485595703,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.013124465942382812,
+        "logistic_boundary_coefficient": 0.0009488830095646362
+      },
+      {
+        "batch": 10,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.767877578735352,
+        "toggled_loss": 4.779136657714844,
+        "L_on_minus_L_off": 0.011259078979492188,
+        "main_L_on_minus_L_off": 0.011259078979492188,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.04503631591796875,
+        "logistic_boundary_coefficient": 0.0007954632169880483
+      },
+      {
+        "batch": 11,
+        "time_ms": 356,
+        "item_in_batch": 2,
+        "unit": 8,
+        "margin": -0.6581770777702332,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.8781890869140625,
+        "toggled_loss": 4.826732635498047,
+        "L_on_minus_L_off": -0.051456451416015625,
+        "main_L_on_minus_L_off": -0.051456451416015625,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.25
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.2058258056640625,
+        "logistic_boundary_coefficient": -0.012877570857221507
+      },
+      {
+        "batch": 12,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.6806206703186035,
+        "toggled_loss": 4.680760383605957,
+        "L_on_minus_L_off": 0.00013971328735351562,
+        "main_L_on_minus_L_off": 0.0001399517059326172,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0005588531494140625,
+        "logistic_boundary_coefficient": 9.870858994473071e-06
+      },
+      {
+        "batch": 13,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.857705116271973,
+        "toggled_loss": 4.857964992523193,
+        "L_on_minus_L_off": 0.0002598762512207031,
+        "main_L_on_minus_L_off": 0.0002601146697998047,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0010395050048828125,
+        "logistic_boundary_coefficient": 1.8360471508490865e-05
+      },
+      {
+        "batch": 14,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 6.061565399169922,
+        "toggled_loss": 6.06202507019043,
+        "L_on_minus_L_off": 0.0004596710205078125,
+        "main_L_on_minus_L_off": 0.0004591941833496094,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.00183868408203125,
+        "logistic_boundary_coefficient": 3.247613675997283e-05
+      },
+      {
+        "batch": 15,
+        "time_ms": 823,
+        "item_in_batch": 2,
+        "unit": 3,
+        "margin": -0.8386474847793579,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.964749336242676,
+        "toggled_loss": 4.967135906219482,
+        "L_on_minus_L_off": 0.0023865699768066406,
+        "main_L_on_minus_L_off": 0.0023865699768066406,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.009546279907226562,
+        "logistic_boundary_coefficient": 0.00031127024649720594
+      },
+      {
+        "batch": 16,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.472196578979492,
+        "toggled_loss": 4.4727582931518555,
+        "L_on_minus_L_off": 0.0005617141723632812,
+        "main_L_on_minus_L_off": 0.0005619525909423828,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.002246856689453125,
+        "logistic_boundary_coefficient": 3.9685569609178425e-05
+      },
+      {
+        "batch": 17,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.158290386199951,
+        "toggled_loss": 5.169100284576416,
+        "L_on_minus_L_off": 0.010809898376464844,
+        "main_L_on_minus_L_off": 0.010809898376464844,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.043239593505859375,
+        "logistic_boundary_coefficient": 0.0007637282368761246
+      },
+      {
+        "batch": 18,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.755395889282227,
+        "toggled_loss": 5.757110118865967,
+        "L_on_minus_L_off": 0.0017142295837402344,
+        "main_L_on_minus_L_off": 0.0017142295837402344,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0068569183349609375,
+        "logistic_boundary_coefficient": 0.00012111173407894433
+      },
+      {
+        "batch": 19,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.655326843261719,
+        "toggled_loss": 4.660338401794434,
+        "L_on_minus_L_off": 0.005011558532714844,
+        "main_L_on_minus_L_off": 0.005011796951293945,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.020046234130859375,
+        "logistic_boundary_coefficient": 0.00035407074413621836
+      },
+      {
+        "batch": 20,
+        "time_ms": 582,
+        "item_in_batch": 1,
+        "unit": 3,
+        "margin": -0.7039437294006348,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.904389381408691,
+        "toggled_loss": 4.9057297706604,
+        "L_on_minus_L_off": 0.0013403892517089844,
+        "main_L_on_minus_L_off": 0.0013403892517089844,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0053615570068359375,
+        "logistic_boundary_coefficient": 0.0002857062861137838
+      },
+      {
+        "batch": 21,
+        "time_ms": 443,
+        "item_in_batch": 0,
+        "unit": 3,
+        "margin": -0.2610657215118408,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.822394847869873,
+        "toggled_loss": 4.816590309143066,
+        "L_on_minus_L_off": -0.005804538726806641,
+        "main_L_on_minus_L_off": -0.005804538726806641,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.0
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.023218154907226562,
+        "logistic_boundary_coefficient": -0.0044708293676837775
+      },
+      {
+        "batch": 22,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.689897537231445,
+        "toggled_loss": 5.689497947692871,
+        "L_on_minus_L_off": -0.00039958953857421875,
+        "main_L_on_minus_L_off": -0.0003998279571533203,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.001598358154296875,
+        "logistic_boundary_coefficient": -2.8231330502963936e-05
+      },
+      {
+        "batch": 23,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.1661577224731445,
+        "toggled_loss": 5.170553684234619,
+        "L_on_minus_L_off": 0.004395961761474609,
+        "main_L_on_minus_L_off": 0.004396200180053711,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.017583847045898438,
+        "logistic_boundary_coefficient": 0.000310578324471151
+      },
+      {
+        "batch": 24,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.144404888153076,
+        "toggled_loss": 5.14509391784668,
+        "L_on_minus_L_off": 0.0006890296936035156,
+        "main_L_on_minus_L_off": 0.0006892681121826172,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.0027561187744140625,
+        "logistic_boundary_coefficient": 4.868051620141156e-05
+      },
+      {
+        "batch": 25,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.336211204528809,
+        "toggled_loss": 4.334987163543701,
+        "L_on_minus_L_off": -0.0012240409851074219,
+        "main_L_on_minus_L_off": -0.0012240409851074219,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0048961639404296875,
+        "logistic_boundary_coefficient": -8.647950525191936e-05
+      },
+      {
+        "batch": 26,
+        "time_ms": 291,
+        "item_in_batch": 0,
+        "unit": 1,
+        "margin": -0.6106374263763428,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.083067893981934,
+        "toggled_loss": 5.082045555114746,
+        "L_on_minus_L_off": -0.0010223388671875,
+        "main_L_on_minus_L_off": -0.0010228157043457031,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.25
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.00408935546875,
+        "logistic_boundary_coefficient": -0.00030092532682445575
+      },
+      {
+        "batch": 27,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.969694137573242,
+        "toggled_loss": 4.969806671142578,
+        "L_on_minus_L_off": 0.0001125335693359375,
+        "main_L_on_minus_L_off": 0.00011229515075683594,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": 0.00045013427734375,
+        "logistic_boundary_coefficient": 7.95058949725476e-06
+      },
+      {
+        "batch": 28,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.659293174743652,
+        "toggled_loss": 4.65627384185791,
+        "L_on_minus_L_off": -0.0030193328857421875,
+        "main_L_on_minus_L_off": -0.003019094467163086,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.01207733154296875,
+        "logistic_boundary_coefficient": -0.00021331835888397093
+      },
+      {
+        "batch": 29,
+        "time_ms": 124,
+        "item_in_batch": 1,
+        "unit": 8,
+        "margin": -0.9395807385444641,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.246452331542969,
+        "toggled_loss": 5.231009483337402,
+        "L_on_minus_L_off": -0.015442848205566406,
+        "main_L_on_minus_L_off": -0.015442609786987305,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            2.25
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.061771392822265625,
+        "logistic_boundary_coefficient": -0.0013757615099749849
+      },
+      {
+        "batch": 30,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 4.328271865844727,
+        "toggled_loss": 4.327380657196045,
+        "L_on_minus_L_off": -0.0008912086486816406,
+        "main_L_on_minus_L_off": -0.0008909702301025391,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.0035648345947265625,
+        "logistic_boundary_coefficient": -6.296462614563198e-05
+      },
+      {
+        "batch": 31,
+        "time_ms": 1,
+        "item_in_batch": 0,
+        "unit": 0,
+        "margin": -1.0,
+        "naturally_firing": false,
+        "refractory_state": 0.0,
+        "refractory_blocked": false,
+        "within_spike_band": false,
+        "eligible_margins_in_batch": 0,
+        "base_loss": 5.151662826538086,
+        "toggled_loss": 5.141400337219238,
+        "L_on_minus_L_off": -0.010262489318847656,
+        "main_L_on_minus_L_off": -0.010262727737426758,
+        "aux_L_on_minus_L_off": 0.0,
+        "spike_on_minus_off_work": {
+          "hidden_spikes_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ],
+          "hidden_messages_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "readout_edge_updates_per_example": [
+            0.0,
+            0.0,
+            0.0,
+            3.5
+          ]
+        },
+        "single_utterance_L_on_minus_L_off": -0.041049957275390625,
+        "logistic_boundary_coefficient": -0.0007250533354233769
+      }
+    ]
+  ]
+}

@@ -548,6 +548,94 @@ inverse-probability sum high-variance. The theory therefore proposes a
 bounded, cause-stratified audit with an exploration floor and propensity
 logging. No experiment has yet shown that this update improves SHD accuracy.
 
+Section 143 uses the matched layer-balanced follow-up to separate support
+from useful computation. Per-utterance event count is $n_\ell=c_\ell\mu_\ell$,
+where $c_\ell$ is the active-example fraction and $\mu_\ell$ is conditional
+event multiplicity. Support can remain 100% while event count grows by
+factors above four across one layer; this is a distinct failure from
+vanishing route support. Because E83's readout adds per-event class evidence,
+activity amplification can also amplify misaligned logits. The balanced
+pair run kept all examples active at layer 4 but ended at 4.69% accuracy,
+with 1,647 layer-4 events per utterance and only two predicted classes.
+
+The immediate mathematical extension is a constrained expected-work
+objective $\min \mathbb E[L_{class}]$ subject to
+$\mathbb E[C_\ell]\le B_\ell$. Its Lagrangian adds
+$\lambda_\ell(C_\ell-B_\ell)$; a matched shadow should replay class loss
+and per-layer event/message work together, then use their weighted utility
+for gate credit. The next experiment first logs those joint deltas so the
+budgets/multipliers can be calibrated rather than guessed. Coverage and
+conditional activity must both be monitored to avoid the all-silent solution.
+This analysis also records that current E83 hidden-state training scans a
+1 ms grid and is not evidence for asynchronous training efficiency.
+
+The frozen validation audit in §143 finds a layer-dependent utility/work
+tradeoff on the collapsed layer-balanced checkpoint. Only 15.6% of sampled
+L1 pairs and 31.3% of L2 pairs improve the matched prefix loss, versus 57.9%
+of the 19 sampled L3 pairs and 50.0% of L4 pairs. A layer-2 pair adds 4.24
+L4 spikes and 10.76 L4 readout updates per example on average; corresponding
+L3 deltas are 1.79 and 4.04. Reconstructing the clipped two-gate derivative
+gives mean $\partial L/\partial s$ of +0.291/+0.517/-0.013/-0.114 across
+L1–L4, so the exact local rule tends to close early alternatives and weakly
+open late ones. This motivated a matched sampler restricted to the last half
+of layers. It was validation-informed development work, not a final test.
+
+The late-balanced follow-up generated only 9 L3/L4 pair shadows in epoch 1
+and zero in epochs 2–4, even though L4 validation support remained nonzero in
+epochs 2–3. The exact bottleneck is pair co-occupancy: two distinct,
+near-time, closed routes must converge on one receiver. For each
+minibatch/receiver group $g$ with $n_g$ eligible routes, the sampler filters
+adjacent sorted arrivals by gap and source-event identity, so its pair count
+is at most $P_\ell=\sum_g(n_g-1)_+$. If $n_g$ is approximately Poisson with
+low mean $\lambda_g$, this bound has expectation
+$\lambda_g-1+e^{-\lambda_g}\approx\lambda_g^2/2$, compared with
+$\Pr[n_g\ge1]\approx\lambda_g$ for a single-route shadow. Pair opportunities
+therefore have a quadratic sparse-flux upper envelope. Importance weighting
+cannot recover a gradient when the candidate set is empty. Preserve
+first-order shadows when pair support is absent; for deep credit before
+upstream activity exists, a sparse prefix-expansion replay must explicitly
+create and propagate a candidate event, with its proposal probability and
+marginal event work logged. This is a derived design constraint, not a
+validated training method.
+
+A no-update occupancy audit then swept the pair window from 25 to 1,000 ms on
+the same 120-example fit subset. At 25 ms, per-layer pair counts were
+$[181577,1,0,0]$; at 1,000 ms they were $[189987,6,0,1]$. No L3 pair appeared
+even with a full-second window, while L2 and L4 pairs appeared in only 6/30
+and 1/30 batches. The near-closed route records were
+$[191787,111,3,13]$ across L1–L4. This rules out the current 25 ms cutoff as
+the main source of late-layer pair starvation. Extending a window beyond the
+receiver's integration times could add implausible pairs, so any later window
+change must measure both utility and receiver-state interaction. The more
+direct missing quantity is deep source-route co-occupancy.
+
+The refractory-aware spike audit narrows a candidate training mechanism. It
+compared the matched no-pair and late-only checkpoints on identical
+held-out-speaker batches, retaining only toggles with $|m|\le0.25$ and no
+refractory block. The valid L1/L2/L3/L4 counts were $[22,21,8,0]$ for control
+and $[21,19,2,1]$ for late-only. The audit separates the fused main-posterior
+loss from weighted auxiliary losses. In L1, spike-on helped 16/21 late-only
+main-loss candidates (mean $-0.0094$, median $-0.0020$), versus 12/22 control
+candidates (mean $+0.0266$); the auxiliary term has the same direction. Only
+13 batches had valid L1 candidates in both arms; the mean difference between
+the arm-specific selected spike-on utilities was $-0.037$ (SE $0.035$), and
+the selected unit/time can differ between checkpoints. This is a single
+validation-conditioned signal, not a reliable treatment effect. The L2
+late-only main-loss mean was $+0.0040$ despite 12/19 individual improvements;
+this does not support opening that layer on average. L3/L4 do not have enough
+valid samples. A paired deepest-only replay changes the interpretation: every
+valid L1/L2 delta is exactly zero in both arms. Late-only L1 has all-depth mean
+$-0.00936$, but its toggles add no downstream hidden spikes; hidden-spike
+changes per example are $[+0.1429,0,0,0]$, and only L1 readout edges change
+($+1.2381$ updates/example). Because all-depth fusion sums evidence from every
+layer, its main loss can reward a shallow readout branch without any serial
+credit reaching the deepest head. This is a measured shortcut on these
+checkpoints, not evidence that deep composition is impossible. A depth test
+must train against the deepest-only primary objective or use an explicit,
+work-capped sparse suffix-expansion replay and show a downstream event change
+that improves that objective. The paired replay itself is not a training
+result; L3/L4 sample sizes remain too small to estimate their utility.
+
 ## Cross-domain anchors
 
 - Timed automata and timed-word languages: [Alur & Dill (1994)](https://doi.org/10.1016/0304-3975(94)90010-8).

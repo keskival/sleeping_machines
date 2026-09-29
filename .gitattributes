@@ -3,3 +3,4 @@
 /experiments/results/e38/feats_p2_s0.01,0.03.npz filter=lfs diff=lfs merge=lfs -text
 /experiments/results/e38/feats_p2_s0.01,0.03_o0.05_d0_np0.npz filter=lfs diff=lfs merge=lfs -text
 /experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objanytime_spk_s2.json filter=lfs diff=lfs merge=lfs -text
+/experiments/results/e83/deep_d8_n4_M16-16_depth4_aux0.2_objevent_prefix_rfall_depths_rngsplit_bundle_pair_lbal_cfnorm1_b0.5_sg0.25_w1_dl5_lr0.001_gc1_cpairs1_tw25_pslayerbalanced_spk_s6.json filter=lfs diff=lfs merge=lfs -text
