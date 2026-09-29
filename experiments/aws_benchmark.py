@@ -59,7 +59,7 @@ def main():
         def check_metrics(value, path=''):
             if isinstance(value, dict):
                 for key, item in value.items():
-                    if isinstance(item, float) and (key.endswith('_bpc') or key.endswith('_acc')):
+                    if isinstance(item, float) and (key == 'acc' or key.endswith('_bpc') or key.endswith('_acc')):
                         if not math.isfinite(item):
                             raise ValueError(f'Non-finite benchmark metric: {path}/{key}')
                     check_metrics(item, path + '/' + key)

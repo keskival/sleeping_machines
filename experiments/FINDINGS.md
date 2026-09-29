@@ -5,6 +5,10 @@ Newest first. Numbers are single seeds unless stated.
 
 ## 2026-09-29
 
+**AWS run `aws_e77_route_cf_potential_d512_depth2_20260929`.** experiments/e77_tv_lm.py with arguments `["--D","512","--passes","0.125","--L","16","--bs","2","--d","8","--n","4","--M1","8","--M2","8","--Mr","8","--heads","1","--dh","8","--depth","2","--valid","128","--test","128","--seed","77","--target_spikes_per_char","0","--cf_shadows_per_layer","1","--cf_band","0.5","--cf_sigma","0.25","--cf_lr","0"]`. Validated metrics: best_valid_bpc=4.6981; test_bpc=4.7133. Wall time 1.802 s; peak process RSS 1297584 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
+
+**AWS run `aws_e36_tf_e28_long_20260929`.** experiments/e36_transformer.py with arguments `["--task","e28","--sizes","32x2,64x2,64x4","--episodes","2000000","--tag","long"]`. Validated metrics: acc=0.9965; acc=0.998; acc=0.995; acc=0.996; acc=0.996; acc=0.997. Wall time 2330.297 s; peak process RSS 562436 KB. Single-run result; interpret under the experiment's preregistered comparisons and limits.
+
 **E83 conditioned margin-support audit (§154).** A frozen seed-6 depth-4
 control was replayed over 128 held-out-speaker utterances. We counted
 nonfiring, nonrefractory receiver-time cells only after at least one actually

@@ -4,6 +4,19 @@
 (`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
 the experiment log is `experiments/FINDINGS.md` and git history.*
 
+<!-- AWS_BENCHMARKS_START -->
+## AWS benchmark updates
+
+Runs below passed the runner and finite-metric checks. These early outcomes are diagnostics; single seeds do not establish a comparative advantage.
+
+| Run | Benchmark | Result | Wall time | Peak RSS |
+|---|---|---|---:|---:|
+| `aws_e77_route_cf_potential_d512_depth2_20260929` | `experiments/e77_tv_lm.py` | best_valid_bpc=4.6981; test_bpc=4.7133 | 1.802 s | 1297584 KB |
+| `aws_e36_tf_e28_long_20260929` | `experiments/e36_transformer.py` | acc=0.9965; acc=0.998; acc=0.995; acc=0.996; acc=0.996; acc=0.997 | 2330.297 s | 562436 KB |
+
+E68 seed-0 synthetic recall, 8,000 updates (512,000 sequences): R=0: 18.5%, R=1: 18.4%, R=4: 18.2%.
+<!-- AWS_BENCHMARKS_END -->
+
 ## Frontier signals
 
 Three measured capability leads make a concrete case for this architecture's potential: a real-language lead on a small

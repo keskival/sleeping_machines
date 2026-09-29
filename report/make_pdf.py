@@ -7,6 +7,7 @@ Charts are drawn with matplotlib from experiments/results and report/data.json;
 the document is assembled with reportlab. Rerun after new results arrive.
 """
 import glob
+import html
 import io
 import json
 import os
@@ -54,6 +55,16 @@ plt.rcParams.update({
 def load(path):
     with open(path) as f:
         return json.load(f)
+
+
+def load_tf_10m_final():
+    base = os.path.join(RES, "e64")
+    for name in ("tf_D10000000_s256_L4_p4_dr0.1_v.json",
+                 "tf_D10000000_s256_L4_p4_dr0.1_v_checkpoint.json"):
+        path = os.path.join(base, name)
+        if os.path.exists(path):
+            return load(path)
+    raise FileNotFoundError("No completed E64 10M Transformer result JSON")
 
 
 def fig_image(fig, width_mm):
@@ -214,7 +225,7 @@ def fig_potential_evidence():
     lstm = load(os.path.join(base, "lstm_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
     lstm_10m = load(os.path.join(base, "lstm_D10000000_s512_p6_dr0.1_v.json"))["test_bpc"]
     tf = load(os.path.join(base, "tf_D1000000_s256_p20_dr0.2_v.json"))["test_bpc"]
-    tf_10m_final = load(os.path.join(base, "tf_D10000000_s256_L4_p4_dr0.1_v.json"))
+    tf_10m_final = load_tf_10m_final()
     tf_10m_test = tf_10m_final["test_bpc"]
     ax_lm.scatter([1_000_000, 10_000_000], [lstm, lstm_10m], color=ORANGE, marker="s", s=36, zorder=4,
                   label="E64b LSTM · 1M and 10M")
@@ -2014,7 +2025,7 @@ def build():
     def P(t, style="body"):
         return Paragraph(t, st[style])
 
-    tf_10m_final = load(os.path.join(RES, "e64", "tf_D10000000_s256_L4_p4_dr0.1_v.json"))
+    tf_10m_final = load_tf_10m_final()
 
     import figures_mech as FM                                   # explanatory figures (plain-language front)
     s = [P("Sleeping Machines: what is known", "title"),
@@ -2024,6 +2035,33 @@ def build():
            "on a shared text8 split, locally learned retrieval that generalizes to longer contexts, and deep compositional "
            "networks that learn structured tasks with far less data and counted computation. A new E77 depth-8 pilot adds "
            "a distinct trainability signal: gradients reached all eight event layers.")]
+    aws_rows = []
+    for provenance_path in glob.glob(os.path.join(RES, "aws_20260929", "*", "provenance.json")):
+        try:
+            provenance = load(provenance_path)
+            if provenance.get("status") != "completed":
+                continue
+            values = []
+            for result_path in glob.glob(os.path.join(os.path.dirname(provenance_path), "*.json")):
+                if result_path == provenance_path:
+                    continue
+                result = load(result_path)
+                for row in result.get("rows", []) if isinstance(result, dict) else []:
+                    if isinstance(row, dict):
+                        values.extend(f"{k} {row[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
+                                      if isinstance(row.get(k), (int, float)))
+                if isinstance(result, dict):
+                    values.extend(f"{k} {result[k]:.4g}" for k in ("acc", "test_acc", "test_bpc", "best_valid_bpc")
+                                  if isinstance(result.get(k), (int, float)))
+            aws_rows.append((provenance.get("start_utc", ""), provenance.get("run_tag", ""),
+                             provenance.get("script", ""), "; ".join(values[:6]) or "completed; see saved result"))
+        except (OSError, ValueError, TypeError):
+            continue
+    if aws_rows:
+        s += [P("Latest AWS benchmark runs", "h1"),
+              P("Completed runs are checked from saved result and provenance files; failed and in-progress runs are omitted.")]
+        for _when, tag, script, values in sorted(aws_rows, reverse=True)[:12]:
+            s.append(P(f"<b>{html.escape(tag)}</b> · {html.escape(script)} · {html.escape(values)}"))
     s += fig(fig_potential_evidence, W)
     s += bullets([
         "<b>Real language:</b> on the same 1M-character text8 training and test split, E79's native race mixture scores "
@@ -2213,12 +2251,14 @@ def build():
             "close enough in time; an order detector fires when part B follows part A; the class node holds that and fires "
             "when C arrives. With the same motifs in another order, the “A then B” detector still fires but nothing "
             "completes the pattern.")]
-    s += fig(FM.fig_anatomy, W)
+    if os.path.exists(FM.MECH):
+        s += fig(FM.fig_anatomy, W)
     s += [P("<b>Why learning it is not trivial.</b> When a detector for “A, then B, then C” fails to fire, which of its "
             "connections should change? Crediting every candidate spreads the weight so thinly that the node never fires; "
             "crediting the tempting shortcut (“A, then B” is shared with another class) traps it; exploring a little, then "
             "settling, finds the right order and keeps it (§84).")]
-    s += fig(FM.fig_credit, W)
+    if os.path.exists(FM.MECH):
+        s += fig(FM.fig_credit, W)
     s += [P("<b>Where it does not win yet:</b> event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 "
             "for a published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a "
             "special case of ours; E74's initial time-vector pilot reached 0.146 peak held-out speaker accuracy, while E82's "
