@@ -346,6 +346,7 @@ class DeepSHD(nn.Module):
     def __init__(self, bands, d, n, M1, M, depth, window, fan2, readout_fan,
                  dmax, w_sd, seed=0, event_readout=False,
                  readout_fusion="deepest", input_count_payload=False,
+                 input_count_route_neutral=False,
                  early_event_skip=False, route_topk=0,
                  trainable_thresholds=False, spike_reconstruction="legacy"):
         super().__init__()
@@ -353,6 +354,7 @@ class DeepSHD(nn.Module):
             raise ValueError("depth must be at least one")
         self.depth = int(depth)
         self.early_event_skip = bool(early_event_skip)
+        self.input_count_route_neutral = bool(input_count_route_neutral)
         self.route_topk = int(route_topk)
         self.trainable_thresholds = bool(trainable_thresholds)
         if self.route_topk < 0:
@@ -416,6 +418,8 @@ class DeepSHD(nn.Module):
                               gate_bias=1.0, normalize=True)
             self.event_heads = None
         self.count_proj = nn.Linear(1, d, bias=False) if input_count_payload else None
+        if self.input_count_route_neutral and self.count_proj is None:
+            raise ValueError("route-neutral count marks require input_count_payload")
         if self.count_proj is not None:
             # Keep the count-aware model identical to the baseline at step 0.
             nn.init.zeros_(self.count_proj.weight)
@@ -431,6 +435,7 @@ class DeepSHD(nn.Module):
                 return_spike_diagnostics=False, input_counts=None,
                 route_overrides=None, spike_overrides=None):
         raw_v = self.emb(ei)
+        route_v = raw_v
         if self.count_proj is not None:
             if input_counts is None or input_counts.shape != et.shape:
                 raise ValueError("count-aware E83 requires one merged-count mark per input event")
@@ -478,7 +483,8 @@ class DeepSHD(nn.Module):
                            return_routes=collect_routes or return_spike_diagnostics,
                            spike_override=local_spike_override,
                            spike_overrides=local_spike_overrides or None,
-                           return_spike_diagnostics=return_spike_diagnostics)
+                           return_spike_diagnostics=return_spike_diagnostics,
+                           route_ev=(route_v if i == 0 and self.input_count_route_neutral else None))
             if collect_routes or return_spike_diagnostics:
                 out, msg, route_info = result
                 if collect_routes:
@@ -950,8 +956,8 @@ def main():
                     help="event_prefix: sparse event-updated logits trained with sampled-prefix proper log loss")
     ap.add_argument("--readout_fusion", choices=("deepest", "all_depths"), default="all_depths",
                     help="event_prefix only: use the deepest event head or add sparse class evidence from every depth")
-    ap.add_argument("--input_count_payload", choices=("off", "additive"), default="off",
-                    help="preserve the merged raw-spike count as an additive sparse vector mark")
+    ap.add_argument("--input_count_payload", choices=("off", "additive", "address_neutral"), default="off",
+                    help="off, add count to routing and payload vectors, or keep first-layer routing address-neutral")
     ap.add_argument("--spike_reconstruction", choices=("legacy", "grid"), default="legacy",
                     help="grid: use the detected post-arrival state/time and grid-edge reset consistently")
     ap.add_argument("--early_event_skip", action="store_true",
@@ -1138,7 +1144,8 @@ def main():
     net = DeepSHD(a.bands, a.d, a.n, a.M1, a.M, a.depth, a.window, a.fan2,
                   a.readout_fan, a.dmax, widths_sd, a.seed, event_readout=event_readout,
                   readout_fusion=a.readout_fusion,
-                  input_count_payload=a.input_count_payload == "additive",
+                  input_count_payload=a.input_count_payload != "off",
+                  input_count_route_neutral=a.input_count_payload == "address_neutral",
                   early_event_skip=a.early_event_skip,
                   route_topk=a.route_topk,
                   spike_reconstruction=a.spike_reconstruction,
@@ -2417,7 +2424,7 @@ def main():
     route_tag = (f"_topk{a.route_topk}_swaps{a.cf_route_swaps_per_layer}"
                  f"_sb{a.cf_route_swap_band:g}" if event_readout and a.route_topk else "")
     fusion_tag = f"_rf{a.readout_fusion}" if event_readout else ""
-    count_tag = "_cntadd" if a.input_count_payload == "additive" else ""
+    count_tag = {"off": "", "additive": "_cntadd", "address_neutral": "_cntaddr"}[a.input_count_payload]
     skip_tag = "_skfirst" if a.early_event_skip else ""
     rng_tag = "_rngsplit" if a.rng_protocol == "split" else ""
     run_tag = f"_{a.run_tag}" if a.run_tag else ""
