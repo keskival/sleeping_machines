@@ -74,6 +74,8 @@ def main():
     if out.exists():raise FileExistsError(out)
     torch.set_num_threads(1);torch.manual_seed(a.seed)
     task=modular(1473,3440,a.seed) if a.task=="modular" else recall(512,256,a.seed)
+    if a.task == "modular":
+        task.protocol["note"] = "Same position-tagged triples as E121; all unseen tuples; 200-epoch dense control with no supplied phase primitive"
     fit=list(task.fit)
     if a.task=="recall":
         rng=np.random.default_rng(a.seed);perm=make_perm(32,rng)

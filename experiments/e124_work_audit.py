@@ -120,7 +120,7 @@ def main():
     result={"status":"completed","rows":rows,"source_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             "units":"Estimated logical operations: 2 per MAC; 1 per other scalar operation, nonlinear function, or estimated sort comparison",
             "limitations":"Not measured joules, executed CPU instructions or a latency prediction. Memory reads reported separately; transfers, allocations, kernel launch and instrumentation not charged. Transcendental/division costs are unit-weighted. Shared weight normalization included. Backward/optimizer work is not inferred from forward counts.",
-            "protocol":"Exact common-model development examples; modular 1473 fit ×200; recall pointer4000 + neural512×8 versus dense4512×8; one seed, width32/depth2; no dense hyperparameter search"}
+            "protocol":"Exact common-model development examples; modular 1473 fit, 200-epoch budget (phase-only stops at its zero-update fixed point); recall pointer4000 + neural512×8 versus dense4512×8; one seed, width32/depth2 where present; no dense hyperparameter search"}
     out.write_text(json.dumps(result,indent=2)+"\n");print(json.dumps(result),flush=True)
 
 
