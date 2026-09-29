@@ -140,9 +140,23 @@ corrections and communication support, not by nominal alternatives times depth.
 
 The full-update continuation finishes at 351/512 (68.6%) versus the unchanged
 starting checkpoint's 370/512. The added maps learn nonzero norms, but this
-screen does not improve SHD. The next arm imposes the optimization constraint
-$\Delta\theta_{\rm old}=0$ and teaches only the added context columns. Both
-arms share initial predictions, examples, augmentation RNG and update schedule.
-This tests whether the new attainable subspace helps without drift of existing
-parameters. Holding those parameters fixed is not a guarantee of preserving
-their predictions once new context changes the winning computation.
+screen does not improve SHD. A second arm imposes the optimization constraint
+$\Delta\theta_{\rm old}=0$ and teaches only the added context columns. All old
+state tensors remain bit-for-bit fixed. It finishes at 3,349/4,096 fitting
+utterances (81.8%) and 364/512 held-out utterances (71.1%). Both arms share
+initial predictions, examples, augmentation RNG and update schedule. New-only
+teaching performs better than the full-update arm and the matched old-model
+continuation (353/512), but remains below the starting checkpoint. Thus the
+new subspace is empirically teachable, without a new generalization best.
+Holding old parameters fixed does not preserve their predictions once new
+context changes the winning computation.
+
+The class audit sharpens the distinction. New-only teaching recognizes class 3
+on 121/206 fitting utterances and 4/26 held-out utterances, versus 82/206 and
+1/26 for the matched mean continuation. Class 19 is 99/204 fitting and 1/26
+held out, versus 86/204 and 2/26. Extra conditional information and supported
+credit are therefore separate from cross-speaker transfer. The next diagnostic
+must measure class/speaker teacher alignment and temporal information retained
+in the added causal state, rather than infer transfer from parameter gradient
+norm or aggregate fitting accuracy. Results and paired class counts are in
+`results/e126/summary_20260929.json`.

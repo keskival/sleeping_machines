@@ -415,7 +415,8 @@ def blocks(M, tasks, ev):
             if task=="language":return f"{metric['nll']/math.log(2):.3f} bpc"
             if "accuracy" in metric:return f"{100*metric['accuracy']:.1f}%"
             return f"{metric['nll']:.3f} nats/event"
-        coverage.append([label,score(row["common_metric"]),score(row["reference_metric"]),
+        direction = "Prediction error: lower is better" if task in ("language", "market") else "Accuracy: higher is better"
+        coverage.append([label+"<br/>"+direction,score(row["common_metric"]),score(row["reference_metric"]),
              compact_work(row["common_forward_map_scan_flops"])+" / "+compact_work(row["reference_forward_map_attention_flops"]),
              compact_work(row["common_training_forward_map_scan_flops"])+" / "+compact_work(row["reference_training_forward_map_attention_flops"])])
     pages.append([
@@ -424,7 +425,11 @@ def blocks(M, tasks, ev):
          "prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. "
          "These bounded screens establish implementation breadth; the stronger native comparison results use their "
          "own complete protocols."),
-        ("table",(["Task","Common model","Transformer reference","Forward FLOPs per query: common / TF","Training-forward FLOPs: common / TF"],coverage,[35,26,29,43,41])),
+        ("p","<b>How to read the comparison:</b> accuracy is the percentage of correct answers, so <b>higher is better</b>. "
+         "Bits per character (bpc) and nats/event measure prediction error, so <b>lower is better</b>. "
+         "FLOPs estimate arithmetic work: <b>lower means less computation</b>. Each work pair lists the common model "
+         "first and the Transformer (TF) second."),
+        ("table",(["Task and quality direction","Common quality","Transformer quality","Forward FLOPs per query: common / TF; lower is better","Training-forward FLOPs: common / TF; lower is better"],coverage,[40,24,26,43,41])),
         ("p","The common screens use eight layers and the Transformer references two, both at width 32 for "
          "eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and "
          "learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both "
@@ -455,7 +460,7 @@ def blocks(M, tasks, ev):
          "learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; "
          "E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 "
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
-         "the operation ledger. E118/E119/E122/E125 support deep speech and its readout comparisons."),
+         "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
@@ -518,7 +523,9 @@ def build(M):
                 flow.extend(M["bullets"](value, st))
             elif kind == "table":
                 header, rows, widths = value
-                data = [[Paragraph(html.escape(t), st["cell"]) for t in row] for row in [header]+rows]
+                # Escape data text while preserving our explicit table line breaks.
+                data = [[Paragraph(html.escape(t).replace("&lt;br/&gt;", "<br/>"), st["cell"])
+                         for t in row] for row in [header]+rows]
                 table = Table(data,colWidths=[w*mm for w in widths],repeatRows=1,hAlign="LEFT")
                 table.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),
                     ("BACKGROUND",(0,0),(-1,0),colors.HexColor("#edf3fb")),
