@@ -1,0 +1,1 @@
+e136_scattering_shd_state_20260929 experiments/e136_scattering_shd.py --tag scattering_state_d12_n1024_s6_e3_20260929 --readout state

@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "queue": "experiments/queue/e134_full_value_fixed_20260929.txt",
+  "command": "e134_full_value_fixed_20260929 experiments/e134_full_value_continuation.py --tag full_value_fixed_s6_20260929 --key-mode fixed",
+  "guards": {
+    "MEM_CAP_KB": 3600000,
+    "MEM_CAP_RSS_KB": 2600000,
+    "MIN_AVAIL_MB": 8192,
+    "JOB_TIMEOUT_S": 1200
+  },
+  "sampled_peak_process_group_rss_kib": 568368,
+  "sampled_min_mem_available_mib": 11670,
+  "rss_watchdog_and_available_floor_enabled": true,
+  "runner_start_and_completion": [
+    "22:44:38 start e134_full_value_fixed_20260929",
+    "22:53:36 done e134_full_value_fixed_20260929 (exit 0)"
+  ],
+  "runner_sha256": "b1ea7f529351d24c0eb06fd1b8b361033180fdb9f371dab631f7c1653fb6aed7",
+  "device": "cpu",
+  "gpu_utility_available": false,
+  "scope": "Watchdog samples every 2 seconds; persisted heartbeat samples every minute. These are partial samples, not the exact host-memory minimum. Job markers include startup excluded by the driver wall metric."
+}

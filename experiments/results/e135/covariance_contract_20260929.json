@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "covariance_teacher_max_error": 4.163336342344337e-17,
+  "covariance_teacher_norm": 0.15332409500598693,
+  "fixed_schedule_residual_jacobian_max_row_sum": 0.02806643930762812,
+  "partitioned_residual_bound": 0.053470976587383756,
+  "actual_inverse_max_row_sum": 1.0281269464414118,
+  "certified_inverse_max_row_sum_bound": 1.056491639732926,
+  "first_order_content_weight_ratio_bound": 1.6666666666666667,
+  "source_sha256": {
+    "/workspace/experiments/e135_covariance_contract.py": "3496a4cfb927e632d99e41f88e35f96a916e1a33e6cef3a8e794a6187c8bc761",
+    "experiments/e135_content_memory.py": "030256202dbd3e0930b7831a799cdc9e0fafb359a1ca4282bb58cbf8f0e43c31",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  },
+  "scope": "Small deterministic numerical checks of equations 205.5/205.6, not a global proof or SHD optimization/quality result."
+}

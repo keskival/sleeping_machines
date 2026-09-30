@@ -1,5 +1,27 @@
 # Mathematical program for event networks at language scale
 
+## Usable deep credit and the supervised memory boundary (E134–E136)
+
+Priority is useful finite function updates and transfer. Both full-value SHD
+phases reach 349/512, and the content variant also reaches 349/512 despite
+nonzero query/key credit at every layer. Its frozen-checkpoint ablation shows
+very small logit movement. Theory §205 identifies the available teacher as a
+key/value covariance, derives the 5/3 selectivity cap and gives tighter
+parameter-partitioned depth bounds. Check useful covariance, realized update
+size and class/speaker alignment; gradient reach alone is insufficient.
+
+The reversible packet/state exchange in §§206–208 gives a separate route to
+conditional depth transport: the complete augmented program is orthogonal for
+any depth with independent realized keys/angles. The implemented twelve-layer
+contract verifies its Jacobian and exact local angle teacher. A complete swap
+can hide all information in retained state, so the completed-utterance query
+must expose the appropriate receiver memory. Tied-parameter cancellation,
+key-policy support and readout alignment remain explicit research questions.
+Build the classifier around an observable memory boundary before using this
+primitive's norm theorem as a claim about supervised learnability. Timing phase
+evolution can remain orthogonal; intentional leakage is a separately measured
+forgetting mechanism. No classifier result is attributed to E136.
+
 ## Exact joint mark/clock credit and the generic language criterion (E132)
 
 A local tangent cannot account for a hard downstream jump. Theory §§197–200

@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "depth": 12,
+  "all_angle_layer_gradient_norms": [
+    0.8645056486129761,
+    0.38120052218437195,
+    0.5840875506401062,
+    0.4418805241584778,
+    0.19814762473106384,
+    0.24172088503837585,
+    0.31175824999809265,
+    0.3109399974346161,
+    0.241169735789299,
+    0.1576155722141266,
+    0.23641912639141083,
+    0.1251053810119629
+  ],
+  "train_parameters": 140428,
+  "frozen_key_parameters": 53296,
+  "summary_features": 6945,
+  "actual_winners_clocks_preserved": true,
+  "query_reads_retained_state": true,
+  "source_sha256": {
+    "/workspace/experiments/e136_scattering_shd_contract.py": "b6ebc54e17c8bdcb95e5ffef6a65e7d624851d9d03fb83e160d8f5238543b284",
+    "experiments/e136_scattering_shd_model.py": "3f3de8e54c618c26f5c7ea0f3d2e51b73093752cd48fa670fa8293cc0fd8474d",
+    "experiments/e136_event_scattering.py": "33df0f69e0103d62922e48d9b010ec05165074c808d48dc9251193a23d1c07e2",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  },
+  "scope": "Four fitting utterances; supervised loss only at completed query. Prototype with pretrained independent eight-layer key weights reused through twelve value exchanges. Not an accuracy or convergence claim."
+}

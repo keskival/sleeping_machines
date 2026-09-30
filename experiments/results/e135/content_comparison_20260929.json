@@ -1,0 +1,77 @@
+{
+  "status": "completed",
+  "rows": {
+    "plain": {
+      "held_correct": 349,
+      "held_n": 512,
+      "held_accuracy": 0.681640625,
+      "held_nll": 1.1070949735876638,
+      "fit_accuracy": 0.799072265625,
+      "fit_nll": 0.6075689801764383,
+      "train_parameters": 58048,
+      "wall_s": 511.2570638930192,
+      "peak_rss_kib": 582340,
+      "clean_key_schedules_preserved": {
+        "fit": true,
+        "dev_original": true,
+        "dev_additional": true
+      },
+      "value_layer_gradient_norms": [
+        2.840766092587728,
+        2.7726764983381145,
+        2.644482774165226,
+        4.031451166971237,
+        2.836266456739395,
+        2.7828836831031367,
+        2.7542359339568065,
+        3.817124658744433
+      ],
+      "content_work": null,
+      "clipped_steps": 1023
+    },
+    "content": {
+      "held_correct": 349,
+      "held_n": 512,
+      "held_accuracy": 0.681640625,
+      "held_nll": 1.1070077777694678,
+      "fit_accuracy": 0.798828125,
+      "fit_nll": 0.6075673712875869,
+      "train_parameters": 60096,
+      "wall_s": 1580.870117301005,
+      "peak_rss_kib": 1270016,
+      "clean_key_schedules_preserved": {
+        "fit": true,
+        "dev_original": true,
+        "dev_additional": true
+      },
+      "value_layer_gradient_norms": [
+        2.8407887874927837,
+        2.7727033861301607,
+        2.6445061077247374,
+        4.031481735975831,
+        2.836297292742529,
+        2.7829013095615664,
+        2.754251919584931,
+        3.8171367644536076
+      ],
+      "content_work": {
+        "scan_scalar_multiply_adds": 40307241150,
+        "plain_scan_scalar_multiply_adds": 8061448230,
+        "projection_multiply_adds": 10447703040,
+        "retrieval_multiply_adds": 16161290640,
+        "materialized_state_scalars": 20201613300
+      },
+      "clipped_steps": 1023
+    }
+  },
+  "same_parent_ids_augmentation_and_optimizer_budget": true,
+  "all_eight_content_query_key_matrices_updated": true,
+  "immutable_policy_programs_exact": true,
+  "source_sha256": {
+    "/workspace/experiments/e135_comparison.py": "2b051d91622689fbfa51e4f7ff2a960a332bf4c6e9412d531eb1b5b2a8007dbc",
+    "experiments/results/e134/full_value_fixed_s6_20260929.json": "7ca8a57677aea0fdbc6040723c4e0310cecc0d61b2f43e714baa34630e0d28f9",
+    "experiments/results/e135/content_full_value_s6_20260929.json": "1656b5493989a9959ee28238603bb7814c622eaa095e2b09a1f11eabd90d66e9"
+  },
+  "scope": "Exploratory one-seed continuation; content adds 2048 parameters and extra state/work. Training-file held speakers, no official test. Not a matched parameter/physical-work or state-of-the-art comparison.",
+  "work_boundary": "Content ledger is partial forward scalar multiply-adds; multiply by two for contraction FLOPs. Additional nonlinearities, marking, sorting, normalization, backward, optimizer and memory traffic are unmeasured. Wall time excludes initial evaluation equally; no joule claim."
+}

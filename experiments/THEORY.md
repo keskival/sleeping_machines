@@ -76,6 +76,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Separate keys, values and race boundaries](theory/22_key_value_separation_and_race_boundaries.md) — §§194–196: isolate harmful winner changes; preserve actual routing during a smooth value-learning phase; derive joint key/value/clock counterfactual policy credit and its reachability requirements.
 - [Joint race likelihood and generic scaling](theory/23_joint_race_likelihood_and_scaling.md) — §§197–201: separate route and clock scores; exact deep credit across discontinuous suffixes; budgeted counterfactual proposals; censored Fisher information and silence teaching; generic quality/physical-work criteria.
 - [Full value credit and content retrieval](theory/24_content_retrieval_and_full_value_credit.md) — §§202–205: whole-value teaching, pooled-label dual norms, persistent-prefix scheduling and bounded content-key temporal state with a trainable mean-preserving initialization.
+- [Reversible event memory and depth](theory/25_reversible_event_memory_and_depth.md) — §§206–209: addressed packet/state exchange, exact augmented isometry and local angle teachers; affine scans, phase computation, supervised memory observability and angular/Lie reachability with a scalar-reserve criterion.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

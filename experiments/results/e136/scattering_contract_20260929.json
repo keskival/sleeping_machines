@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "depth": 12,
+  "augmented_jacobian_dimension": 180,
+  "scan_vs_sequential_max_error": 0.0,
+  "scan_compositions": 12,
+  "payload_state_energy_error": 7.105427357601002e-15,
+  "adjoint_norm_squared_error": 1.7763568394002505e-15,
+  "angle_gradient_finite_difference_max_error": 3.264108983103142e-10,
+  "local_angle_teacher_error": 0.0,
+  "deep_augmented_orthogonality_max_error": 3.3306690738754696e-16,
+  "deep_singular_value_range": [
+    0.9999999999999989,
+    1.0000000000000007
+  ],
+  "hidden_state_boundary_counterexample_verified": true,
+  "source_sha256": {
+    "/workspace/experiments/e136_scattering_contract.py": "3fb38774eee3b1249ec3bf9bff43d2a390176c8543382bd185bd369d1c4dc580",
+    "experiments/e136_event_scattering.py": "33df0f69e0103d62922e48d9b010ec05165074c808d48dc9251193a23d1c07e2",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  },
+  "scope": "Conditional reversible value transport prototype with all local initial/final states included. No accuracy, arbitrary nonlinear-policy gradient, optimizer convergence or complete shared-model claim."
+}
