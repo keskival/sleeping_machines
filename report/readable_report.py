@@ -766,10 +766,11 @@ def blocks(M, tasks, ev):
          "are recorded separately; the table includes unit-weight specials for comparison with the older "
          "neural estimates. Architecture/capacity and optimization differ. " if official else
          "The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters "
-         "and the same 1M test interval. Completed development stages select width 128 or 256. The "
-         "six-layer content-gated candidates have 309,561 or 1,208,889 parameters. The earlier sequential "
-         "run was paused after a clock-precision error; precise-clock staged fitting precedes promotion. "
-         "The full test score and training work remain pending. ")+
+         "and the same 1M test interval. Priority is the integrated sparse/timed architecture documented "
+         "in the next appendix. Completed dense-carrier fits remain diagnostic controls; their quality "
+         "does not establish sparse-model performance. Numerical contracts and progressively larger "
+         "integrated development fits precede promotion. The aligned full-test result and its fitting "
+         "work remain pending. ")+
          "The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget "
          "and different split; it is not a comparable test result."),
         ("p",f"Earlier 1M-character references also remain saved: LSTM <b>{ev['lstm1']:.3f}</b> "

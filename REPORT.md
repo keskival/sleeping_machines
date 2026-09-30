@@ -438,7 +438,7 @@ Training estimates include every fitting step, forward/loss, backpropagation, gr
 
 ### Ours: learned-language benchmark status
 
-The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Completed development stages select width 128 or 256. The six-layer content-gated candidates have 309,561 or 1,208,889 parameters. The earlier sequential run was paused after a clock-precision error; precise-clock staged fitting precedes promotion. The full test score and training work remain pending. The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget and different split; it is not a comparable test result.
+The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Priority is the integrated sparse/timed architecture documented in the next appendix. Completed dense-carrier fits remain diagnostic controls; their quality does not establish sparse-model performance. Numerical contracts and progressively larger integrated development fits precede promotion. The aligned full-test result and its fitting work remain pending. The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget and different split; it is not a comparable test result.
 
 Earlier 1M-character references also remain saved: LSTM **2.179** and Transformer **2.367 test bpc**, each with twenty fitting passes. The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons remain in their labeled sections and Appendix B.
 
