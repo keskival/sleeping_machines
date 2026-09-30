@@ -658,6 +658,28 @@ def figures(M, tasks, ev):
     a.legend(loc='lower center',fontsize=6.5,frameon=False)
     f.tight_layout(w_pad=1.6);save(f,'full_sparse_language_path')
 
+    f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+    for a,title,labels,color in (
+        (axes[0],'Transformer: attention over token entries',[
+            'Current representation produces query',
+            'Score separate keys for past positions',
+            'Softmax-weighted sum of their values',
+            'KV storage grows with retained positions'],orange),
+        (axes[1],'Ours: race over persistent memory units',[
+            'Incoming content produces query at each depth',
+            'Score two state-dependent addressed keys',
+            'First arrival selects one content-bearing unit',
+            'Mix / update fixed-size state; emit message'],blue)):
+        a.set(xlim=(0,1),ylim=(0,1));a.axis('off');a.set_title(title,fontsize=8.4)
+        for y,label in zip((.81,.57,.33,.09),labels):
+            a.add_patch(FancyBboxPatch((.02,y),.96,.13,boxstyle='round,pad=.01',
+                facecolor='#eef3f7',edgecolor=color,linewidth=.8))
+            a.text(.5,y+.065,label,ha='center',va='center',fontsize=7)
+        for y in (.79,.55,.31):
+            a.annotate('',xy=(.5,y-.07),xytext=(.5,y),
+                arrowprops=dict(arrowstyle='->',color=color))
+    f.tight_layout(w_pad=1.5);save(f,'language_queries_and_memory')
+
     full=tasks['language_full_sparse']
     if full:
         latest=max(full,key=lambda row:(row['args']['fit'],-row['final']['dev']['bpc']))
@@ -1014,6 +1036,35 @@ def blocks(M, tasks, ev):
          'and optimizer work; representative sparse traces do not certify whole-run instruction or '
          'energy counts. Theory §§299–302; source: sleeping_machines/sparse_race_language.py.')]
     pages.append(full_blocks)
+    pages.append([
+        ('h1','Ours: queries, memory and context'),
+        ('p','Race attention specifies how a candidate wins; memory organization specifies what '
+         'the candidates represent. The integrated language model races between compressed '
+         'persistent receivers. It does not replace a Transformer token KV cache entry for entry.'),
+        ('figure',('language_queries_and_memory',164)),
+        ('p','At each depth, a learned map turns the incoming message into a query. A candidate key '
+         'combines its learned prototype and a read of its retained state. Query–key compatibility '
+         'sets an exponential clock rate; the first arrival wins with the corresponding softmax '
+         'probability. The observed character addresses two candidates per depth. Queries cannot '
+         'search arbitrary past-token keys in this construction. Winner-only delivery also differs '
+         'from a deterministic softmax-weighted sum, although its one-step expectation equals that sum.'),
+        ('table',(['Model / storage formula','Raw state / one stream','Forward history'],[
+            ['Ours: width 16, 324 states + clocks + last message','22.84 KiB','Carried until stream reset'],
+            ['Ours: width 32, 324 states + clocks + last message','43.16 KiB','Carried until stream reset'],
+            ['Transformer: conceptual FP32 KV, 4 layers × 256 positions × width 256','2,048 KiB','At most 256 characters'],
+        ],[80,38,56])),
+        ('p','The raw width-32 state is about 47× smaller than this conceptual KV allocation and '
+         'does not grow with history length. This is a storage-formula comparison, not matched recall '
+         'capacity or measured total RAM: ours compresses history, whereas KV entries retain separate '
+         'position-addressable representations. The saved Transformer actually recomputes windows '
+         'without an implemented KV cache. Its 256-character window is a model setting, not an '
+         'intrinsic dataset limit. Ours retains forward state beyond its 16-character training-credit horizon.'),
+        ('small','Ours raw bytes = 324 × (4d + 8) + 4d; conceptual Transformer KV bytes = '
+         '2 × 4 × 256 × 256 × 4. Excludes weights, gradients, optimizer, activations, object/index '
+         'overhead and traffic. Long-range recall and comparable-quality memory advantages remain '
+         'to be measured. Recurrent compression resembles the memory organization of selective '
+         'state-space models (Mamba, Gu & Dao, arXiv:2312.00752); our hard temporal races and '
+         'counterfactual route teacher are separate mechanisms. Theory §§308–309.')])
     if full_rows:
         pages.append([
             ('h1','Ours: completed integrated-language stages'),

@@ -46,6 +46,21 @@ width-16 control. The larger 1M stage requires >=0.1 bpc gain over width-32/32K
 and <=3.0 development bpc. All larger-data stages use width 32.
 The superseded payload-16 long jobs do not resume automatically.
 
+The supervisor actually started at 20:30:20 UTC. The online job holds the
+host-local guarded training lock; initial RSS is about 432 MiB, with about
+12 GiB MemAvailable before launch. There is no NVIDIA GPU. Inspect live state
+before relaunching: completion automatically publishes online then starts the
+seed-7 capacity ladder. Pending manifest status during online is expected.
+
+The report now separates queries/race selection from memory organization.
+The integrated primary model races over two compressed receiver states per
+observed character/depth, not arbitrary historical token KV entries. It carries
+forward state beyond the 16-character credit horizon. Width-32 raw persistent
+tensors are 43.16 KiB versus a conceptual 2 MiB FP32 KV allocation for the saved
+four-layer/width-256/256-character Transformer (~47×); this is not equal recall
+capacity, measured RSS or a measured cache speedup. The reference recomputes
+windows and does not implement a KV cache. Theory §§308–309 records this scope.
+
 New width-32 model: 1,388,871 parameters; still 324 units / six selected state
 updates. Theory §§303–307 explains the width intervention, the 16-versus-26
 centered-logit rank restriction, causal online evaluation and conditional

@@ -106,3 +106,103 @@ targets with width 32. It is a defined benchmark, not a completed result. The
 CPU emulator's runtime must be estimated from the larger-model pilot on that
 host; a GPU provision alone does not accelerate the serial implementation.
 FLOPs, elapsed time, traffic and physical joules remain separate quantities.
+
+## 308. Queries and temporal softmax do not specify the memory bank
+
+At depth l, the implemented query is q_l = Q_l layer_norm(x_l). The candidate
+key is k_i = prototype_i + K_i h_i, using that receiver's persistent state.
+The score s_i = clamp(q_l dot k_i / sqrt(d) + bias_i, -12, 12) sets rate
+lambda_i = exp(s_i). With independent Exp(1) samples E_i, the winner minimizes
+E_i/lambda_i. Exactly P(W=i) = softmax(s)_i. Clipping changes the scored
+distribution, not this identity. The clock bounds preserve winner identity.
+
+Each depth addresses only the pool associated with the currently observed
+character: two candidates in the primary configuration, twelve scored keys and
+six selected state updates per character. A query cannot search arbitrary past
+positions or other character pools. The winner mixes incoming content with
+retained state and emits a new value; it does not discard the incoming vector.
+
+For fixed candidates, E[v_W] = sum_i softmax(s)_i v_i. One sampled winner is
+not the deterministic weighted sum, and nonlinear downstream layers/losses do
+not commute with this expectation. The local counterfactual teacher has the
+restricted scope of §§296 and 301. No proof of equivalence to a full
+Transformer follows from the race identity alone.
+
+The earlier `sleeping_machines/race_language.py` probe really does keep separate
+historical prefix keys and observed-successor values, using a bounded inverted
+index and race versus softmax aggregation controls. It also executes a dense
+carrier and was smoke-tested, not established as the integrated benchmark.
+Do not describe the prioritized sparse receiver model as that cached-token
+attention experiment. Temporal competition and memory organization are two
+independent design choices; a token bank could also use temporal competition.
+
+## 309. Bounded persistent storage is not equal recall capacity
+
+The saved four-layer, width-256 Transformer has `ctx=256` characters, learned
+positions and sliding-window scoring. Its implementation recomputes windows;
+there is no persistent KV cache. This window is a reference-model hyperparameter,
+not an intrinsic text8 limit. The integrated model carries recurrent state until
+the fitting pass or evaluation stream resets. Its sixteen-character truncated
+gradient horizon is not a forward-history limit. Learned decay and compression
+still restrict which earlier information remains usefully recoverable.
+
+Counting only raw tensors for one stream with all 324 receivers populated:
+
+    bytes_ours(d) = 324 (4d + 8) + 4d.
+
+Float32 state vectors, float64 last-arrival clocks and the last deep message give
+23,392 bytes (22.84 KiB) at d=16, and 44,192 bytes (43.16 KiB) at d=32.
+These upper bounds on the declared state-tensor layout do not grow with stream
+length; Python dictionaries, tensor objects, integer indices and counters are
+additional. Parameters, optimizer, gradients and temporary activations are
+excluded. This is not a measured process-RSS claim.
+
+A conceptual standard FP32 KV cache for the saved Transformer shape would hold
+2 L T d floats: 2 × 4 × 256 × 256 × 4 = 2,097,152 bytes, or 2 MiB.
+That is 47.46 times the width-32 raw recurrent state. The denominator is not
+equal usable memory capacity: per-token keys/values and compressed receiver
+state retain different information. Quantization, sharing and changed context
+would change the KV allocation. The existing reference has no measured cache
+allocation, so this ratio must be labelled conceptual.
+
+Fixed-size recurrent compression has a structural resemblance to selective
+state-space memory; see Gu and Dao, Mamba, https://arxiv.org/abs/2312.00752.
+That does not make the integrated hard-race, addressed-unit construction a Mamba
+implementation. Separate learned clocks, sparse receiver updates and conserved
+counterfactual route credit remain its proposed construction. Establish useful
+long-context retention with matched retrieval/recall tests before asserting a
+comparable-capacity memory advantage. Preserved structured pointer results
+remain evidence for those earlier models, not a substitute for this test.
+
+## 310. Test episodic race memory without replacing the sparse backbone
+
+The user requests a per-position KV analogue, small data first, and a separate
+architectural FLOP estimate even if emulation is inefficient. Compression is
+not required by temporal races. Retaining separate historical keys and values
+uses storage linear in history, but selected value delivery can remain bounded.
+Candidate discovery and scoring require their own explicit cost/coverage model.
+
+The proposed small intervention adds learned query/key/value maps at each of
+the integrated model's six event depths, retaining receiver races, content
+mixing, sparse state updates and counterfactual teaching. Historical entries
+are created only from already observed input messages. Each depth races over
+a shortlist of recent entries and matching-character indexed entries, then
+gates one historical value into the next message. All entries are retained;
+the index does not claim access to arbitrary semantic matches. The candidate
+budget, coverage, age and stored bytes are reported separately from deliveries.
+
+Inference reads only the selected value. Training reads all admitted values
+for the conserved teacher and charges that work. Token keys/values are frozen
+when the truncated credit boundary passes, as cached activations are not
+recomputed after each parameter update. Future targets are never inserted.
+Winner selection remains stochastic and is not equivalent to deterministic
+Transformer attention. The causal delay bound must include the added races.
+
+Compare against the existing integrated backbone at the same small fitting
+characters, passes, development interval, width and seed. Record every result,
+including a negative intervention. Final-architecture arithmetic counts actual
+query/key/value projections, candidate dot products, gated winner delivery,
+counterfactual learning, clipping and optimizer; index/RNG/traffic are separate.
+Architectural normalization via physical competition can remove the explicit
+normalizing sum and clock-simulation arithmetic, but not all query/key work.
+No measured joules or quality advantage is implied by this allocation model.
