@@ -86,6 +86,13 @@
   FLOPs, wall time, traffic and measured energy. Report isolated or projected
   advantages as such. Fix accounting errors without treating familiar dense
   computation as the preferred architecture by default.
+- After each completed integrated stage, update the report appendix with
+  quality, data/passes, capacity/selected activity, full fitting FLOPs,
+  per-target fitting work and inference work. Show supported raw work gaps
+  against saved references while marking unequal quality/data and estimate
+  conventions. Reserve comparable-quality or iso-FLOP supremacy claims for
+  completed evidence under the relevant protocol; never fill a pending cell
+  with a prediction or an ongoing training score.
 - At handoff, name the prioritized integrated model and queue, the remaining
   gaps in mechanism coverage, and any proposed departure from this direction.
   Read `experiments/THEORY.md` and its relevant notes before redesigning a core

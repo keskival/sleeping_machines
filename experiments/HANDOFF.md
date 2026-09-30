@@ -83,6 +83,22 @@ is active. Source contracts are unchanged. Core setup/report commits:
 `fe0a451`, `aaa2a8f`, `a99a403`. The user pushes from the authenticated host.
 Future completion hooks should see clean report files; avoid overlapping edits.
 
+### Continuity guidance and evolving work appendix — 18:30 UTC
+
+`AGENTS.md` now explicitly guards architectural continuity, evidence-based
+substitutions, integrated-experiment priority and clear presentation of strong
+results. It requires the evolving completed-stage cost/quality appendix.
+The PDF has 31 validated pages. The new appendix records full fitting work,
+per-target fitting work, inference arithmetic and saved neural reference costs.
+Graphs/ratios use arithmetic plus one unit per special function, matching the
+historical neural estimate convention; the detailed ours table keeps specials
+separate. The first completed stage's raw configuration gaps versus the larger
+10M Transformer are ~291× forward and ~93× fitting work per target. Quality,
+targets and data budgets differ; these are not matched-quality supremacy or
+physical energy claims. The appendix updates only from completed result JSONs.
+Full pool-2/32K remains active; after two completed epochs it scores 3.251387
+development bpc. This is live epoch evidence, not a completed stage to publish.
+
 Work on `main`. The user authorized committing and pushing all work, wants one
 presentable PDF, and intends to start a fresh session. Preserve the established
 architecture, theory and historical results; extend them with new evidence.

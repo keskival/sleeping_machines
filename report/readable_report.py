@@ -610,6 +610,31 @@ def figures(M, tasks, ev):
     a.legend(loc='lower center',fontsize=6.5,frameon=False)
     f.tight_layout(w_pad=1.6);save(f,'full_sparse_language_path')
 
+    full=tasks['language_full_sparse']
+    if full:
+        latest=max(full,key=lambda row:(row['args']['fit'],-row['args']['pool']))
+        neural={r['model']:r for r in tasks['training_work']['language_rows']}
+        ours=latest['work']
+        fitting=[ours['total_training_unit_special_flops']/ours['fitting_targets']/1e6]
+        forward=[(ours['inference_arithmetic_flops_per_character']+
+                  ours['inference_special_functions_per_character'])/1e6]
+        for name in ('lstm','tf'):
+            r=neural[name]
+            fitting.append(r['total_training_flops']/r['training_token_positions']/1e6)
+            forward.append(r['forward_flops']/r['training_token_positions']/1e6)
+        labels=[f"Ours: integrated / {latest['args']['fit']:,} fit",
+                'LSTM / 10M fit','Transformer / 10M fit']
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.55))
+        for a,values,title in zip(axes,(fitting,forward),
+            ('Fitting work per target','Forward / scoring work per position')):
+            a.barh(range(3),values,color=[blue,gray,orange],height=.65)
+            a.set_yticks(range(3),labels);a.invert_yaxis();a.set_xscale('log')
+            a.set_xlim(.015,50);a.set_xlabel('MFLOPs; log scale ↓',fontsize=8)
+            a.set_title(title,fontsize=9)
+            for i,v in enumerate(values):a.text(v*1.13,i,f'{v:.3f}',va='center',fontsize=8)
+        f.suptitle('Work estimates; data, model size and quality differ',fontsize=9,y=1.01)
+        f.tight_layout(w_pad=1.3);save(f,'integrated_language_work_progress')
+
     if tasks['language_representation']:
         audit=tasks['language_representation']
         names=('full','reset_history_every_token','zero_incoming_embeddings','remove_all_memory_corrections')
@@ -1490,6 +1515,48 @@ def blocks(M, tasks, ev):
          '<a href="experiments/estimate_training_work.py">estimate_training_work.py</a>.')])
 
     pages.append(language_reference_page)
+
+    if full_rows:
+        latest=max(full_rows,key=lambda row:(row['args']['fit'],-row['args']['pool']))
+        w=latest['work'];ours_fit=w['total_training_unit_special_flops']/w['fitting_targets']
+        ours_forward=w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character']
+        tf=lm_costs['tf'];tf_fit=tf['total_training_flops']/tf['training_token_positions']
+        tf_forward=tf['forward_flops']/tf['training_token_positions']
+        pages.append([
+            ('h1','Appendix B (continued). Ours: language work as scaling develops'),
+            ('p','This ledger updates from completed integrated-model stages. It shows the emerging '
+             'work advantage alongside its quality and data budget. Per-target fitting work removes '
+             'the difference in the number of presentations; it does not establish equal-quality superiority.'),
+            ('figure',('integrated_language_work_progress',152)),
+            ('table',(['Ours: fit / pool','Development bpc ↓','Full fitting GFLOPs ↓',
+                      'Inference KFLOPs / char ↓','Fitting KFLOPs / target ↓'],[
+             [f"{r['args']['fit']:,} / {r['args']['pool']}",f"{r['final']['dev']['bpc']:.3f}",
+              f"{r['work']['total_training_arithmetic_flops']/1e9:.3f}",
+              f"{r['work']['inference_arithmetic_flops_per_character']/1e3:.3f}",
+              f"{r['work']['total_training_arithmetic_flops']/r['work']['fitting_targets']/1e3:.3f}"]
+             for r in full_rows],[35,25,35,39,40])),
+            ('small','The table contains arithmetic FLOPs; additional special-function counts are in '
+             'each result. The figure and ratios add one operation per special function to align with '
+             'the historical neural estimate convention. This unit assignment is not its physical energy cost.'),
+            ('table',(['Saved reference','Fit / passes','Official test bpc ↓',
+                      'Fitting MFLOPs / target ↓','Forward MFLOPs / position ↓'],[
+             [label,budget,f"{score:.3f}",
+              f"{lm_costs[name]['total_training_flops']/lm_costs[name]['training_token_positions']/1e6:.3f}",
+              f"{lm_costs[name]['forward_flops']/lm_costs[name]['training_token_positions']/1e6:.3f}"]
+             for name,label,budget,score in [('lstm','LSTM; width 512','10M / six',ev['lstm10']),
+                                            ('tf','Transformer; width 256','10M / four',ev['tf10'])]],
+             [41,29,31,37,36])),
+            ('p',f"<b>The raw work gap is substantial.</b> The completed {latest['args']['fit']:,}-character "
+             f"integrated stage's representative forward estimate is <b>{tf_forward/ours_forward:.0f}× smaller</b> "
+             f"than the larger saved Transformer estimate; fitting work per target is <b>{tf_fit/ours_fit:.0f}× smaller</b>. "
+             'These are configuration-level arithmetic ratios. Our development score and the reference official '
+             'test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.'),
+            ('small','Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development '
+             'targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, '
+             '256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative '
+             'operator traces including counterfactual credit, backward, clipping and Adam; neural references '
+             'use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation '
+             'passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.')])
     language_rows=[
         ["Ours: separate statistical count/copy baseline",f"{ev['native10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_without_word']['total_training_flops'])+" + integer count construction"],
         ["Ours: count/copy plus causal word context",f"{ev['native_word10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_with_causal_word']['total_training_flops'])+" + integer count construction"],

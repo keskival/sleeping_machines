@@ -444,6 +444,27 @@ Earlier 1M-character references also remain saved: LSTM **2.179** and Transforme
 
 Saved evidence: [10M LSTM aligned result](experiments/results/e174/aligned_lstm_10m_20260930.json); [10M Transformer aligned result](experiments/results/e174/aligned_tf_10m_20260930.json); [90M LSTM saved result](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json). An earlier 90M Transformer attempt was interrupted by its RSS watchdog before producing a completed test result; its provenance is preserved.
 
+## Appendix B (continued). Ours: language work as scaling develops
+
+This ledger updates from completed integrated-model stages. It shows the emerging work advantage alongside its quality and data budget. Per-target fitting work removes the difference in the number of presentations; it does not establish equal-quality superiority.
+
+![integrated language work progress](report/figures/integrated_language_work_progress.png)
+
+| Ours: fit / pool | Development bpc ↓ | Full fitting GFLOPs ↓ | Inference KFLOPs / char ↓ | Fitting KFLOPs / target ↓ |
+| --- | --- | --- | --- | --- |
+| 8,192 / 2 | 3.398 | 7.492 | 25.027 | 228.673 |
+
+The table contains arithmetic FLOPs; additional special-function counts are in each result. The figure and ratios add one operation per special function to align with the historical neural estimate convention. This unit assignment is not its physical energy cost.
+
+| Saved reference | Fit / passes | Official test bpc ↓ | Fitting MFLOPs / target ↓ | Forward MFLOPs / position ↓ |
+| --- | --- | --- | --- | --- |
+| LSTM; width 512 | 10M / six | 1.799 | 7.210 | 2.402 |
+| Transformer; width 256 | 10M / four | 1.908 | 22.223 | 7.405 |
+
+**The raw work gap is substantial.** The completed 8,192-character integrated stage's representative forward estimate is **291× smaller** than the larger saved Transformer estimate; fitting work per target is **93× smaller**. These are configuration-level arithmetic ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
+
+Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
+
 ## Appendix B (continued). Separate statistical language baseline
 
 This count/copy predictor does not use the learned Sleeping Machines event backbone. It is a separate statistical system: order-0 through order-6 counts, backoff probabilities and a bounded causal copy cache, combined by learned mixing weights. Its quality/work results must not be attributed to the event architecture.
