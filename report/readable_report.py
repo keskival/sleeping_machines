@@ -116,17 +116,11 @@ def evidence(M):
 def language_90m_reference_text(ev):
     """Publish each completed control without treating validation logs as test evidence."""
     scores = []
-    pending = []
     for key, label in (("lstm90", "LSTM"), ("tf90", "four-layer Transformer")):
-        if ev[key] is None:
-            pending.append(label)
-        else:
+        if ev[key] is not None:
             scores.append(f"{ev[key]:.3f} for the {label}")
     text = ("At 90M training characters, reference test scores are " + ", ".join(scores) + ". "
             if scores else "")
-    if pending:
-        text += "The 90M " + " and ".join(pending) + " reference results are pending. "
-    text += "A same-protocol native comparison at this scale remains to be measured. "
     return text
 
 
@@ -135,7 +129,7 @@ def accomplishments_figure(M, ev):
     import numpy as np
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
     f, ax = plt.subplots(1, 2, figsize=(7.2, 2.65), gridspec_kw={"width_ratios": [1.2, 1]})
-    labels = ["Native mixture\nno word expert", "LSTM", "Transformer"]
+    labels = ["Native\ncount/copy", "LSTM", "Transformer"]
     ten_m = [ev["native10"], ev["lstm10"], ev["tf10"]]
     x = np.arange(3)
     width = .58
@@ -175,7 +169,7 @@ def figures(M, tasks, ev):
         row = tasks["generic_language"][depth]
         curve = [row["initial"]["dev"]["bpc"]] + [e["dev"]["bpc"] for e in row["curve"]]
         axes[0].plot(range(len(curve)), curve, "o-", color=color, label=f"{depth} layer" + ("s" if depth > 1 else ""))
-        work = tasks["generic_language_audit"]["rows"][str(depth)]["training_forward_map_scan_flops"]/1e9
+        work = tasks["generic_language_audit"]["rows"][str(depth)]["wall_s"]
         final = curve[-1]
         axes[1].scatter(work, final, color=color, s=65)
         axes[1].annotate(f"{depth} layer" + ("s" if depth > 1 else "") + f"\n{final:.3f} bpc", (work,final),
@@ -183,9 +177,9 @@ def figures(M, tasks, ev):
     axes[0].set(xlabel="Passes over 8,192 training characters", ylabel="Validation bpc (lower is better)",
                 title="Learned prediction through event layers", xticks=range(5))
     axes[0].legend(fontsize=8)
-    axes[1].set(xlabel="Training-forward contractions (GFLOPs; estimate)",
-                ylabel="Validation bpc (lower is better)", title="Quality / computation tradeoff",
-                xlim=(0,135), ylim=(3.32,3.58))
+    axes[1].set(xlabel="Total CPU wall time (s; fitting + evaluation)",
+                ylabel="Validation bpc (lower is better)", title="Quality / observed time tradeoff",
+                ylim=(3.32,3.58))
     f.tight_layout()
     save(f, "e133_generic_language")
     stream = tasks["stream_training"]
@@ -475,8 +469,8 @@ def blocks(M, tasks, ev):
          "is to make timing itself a trainable computational medium."),
         ("h1","The strongest demonstrated results"),
         ("bullets",[
-         f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
-         f"<b>{ev['native10']:.3f} test bits per character without a word expert</b>, ahead of LSTM ({ev['lstm10']:.3f}) "
+         f"<b>Better real-language prediction.</b> With 10M training characters, the native count/copy mixture reaches "
+         f"<b>{ev['native10']:.3f} test bits per character</b>, ahead of LSTM ({ev['lstm10']:.3f}) "
          f"and four-layer Transformer ({ev['tf10']:.3f}) on identical text8 test targets. "
          "Lower bits per character means better prediction.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
@@ -487,7 +481,7 @@ def blocks(M, tasks, ev):
          "reaches about 99.65% from one pass."]),
         ("figure",("accomplishments",174)),
         ("small",f"Language: 999,999 identical targets, frozen test parameters and cold test context. "
-         f"The optional causal word expert gives {ev['native_word10']:.3f} bpc. Counts fit 10M characters; mixture "
+         "Counts fit 10M characters; mixture "
          "weights additionally fit 1M validation labels. Neural baselines use different capacities, fitting passes "
          "and validation budgets. This is a specialized count/copy mixture result. Generic deep-language learning "
          "is measured separately. Retrieval, composition and arithmetic are controlled synthetic tasks.")])
@@ -644,7 +638,7 @@ def blocks(M, tasks, ev):
          "implementation. The strongest language mixture is specialized; the generic backbone still needs to "
          "demonstrate competitive learned representations. Character and subword-token budgets must be distinguished."),
         ("table",(["Objective","Decisive evidence"],[
-         ["Generic language scaling","Train a learned event backbone without explicit n-gram/pointer experts. Scale through declared data budgets with matched Transformer, recurrent and state-space references; record loss, capacity, forward/backward work, memory traffic, time and joules."],
+         ["Generic language scaling","Train a learned event backbone that owns the prediction. Scale through declared data budgets with matched Transformer, recurrent and state-space references; record loss, capacity, complete training work, memory traffic, time and joules."],
          ["Preserve capabilities","Repeat established generalization and sample-efficiency results within the common model family, with task-appropriate depth and explicit resource accounting."],
          ["Strong real-event recognition","Accurate speech and event-camera decisions on complete held-out benchmarks; calibrated confidence and time-to-answer."],
          ["Learn routes and representations at scale","Reliable deep credit and useful counterfactual alternatives as width, depth, memory and data increase."],
@@ -925,7 +919,7 @@ def blocks(M, tasks, ev):
          "with fitting batches of 16/64 respectively. These are small reference settings. Two-layer follow-ups "
          "retain 100% recall at both context lengths and reach 96.1% composition versus 97.3% at depth eight, "
          "using four times fewer hidden carrier emissions."),
-        ("p","<b>Why training can cost more:</b> this older race core evaluates all three candidate vector payloads "
+        ("p","<b>Why training can cost more:</b> the race core evaluates all three candidate vector payloads "
          "during training, versus only the winner during inference. Its eight layers also exceed the reference's two. "
          "With short contexts, that work outweighs the saved attention cost; these rows do not show a training "
          "efficiency advantage. On the longer event-camera prefixes, the common model's complete step uses "
@@ -970,7 +964,6 @@ def blocks(M, tasks, ev):
 
     language_rows=[
         ["Native count/copy mixture",f"{ev['native10']:.3f}","10M count fitting + 1M mixing-weight fitting"],
-        ["Mixture + causal word context",f"{ev['native_word10']:.3f}","Same data budgets; independent validation selection"],
         ["LSTM, width 512; one recurrent layer",f"{ev['lstm10']:.3f}","10M characters, six passes; 200k validation selection"],
         ["Transformer, width 256; four layers",f"{ev['tf10']:.3f}","10M characters, four passes; 200k validation selection"],
     ]
@@ -981,12 +974,11 @@ def blocks(M, tasks, ev):
          "can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per "
          "character means better prediction."),
         ("table",(["Predictor","Test bpc ↓","Fitting and selection budget"],language_rows,[68,24,82])),
-        ("p",f"The mixture without a word expert improves on LSTM by {ev['lstm10']-ev['native10']:.3f} bpc "
-         f"and Transformer by {ev['tf10']-ev['native10']:.3f} bpc. Adding causal word context gives a further "
-         f"{ev['native10']-ev['native_word10']:.4f} bpc. These results establish useful specialized prediction; "
+        ("p",f"The count/copy mixture improves on LSTM by {ev['lstm10']-ev['native10']:.3f} bpc "
+         f"and Transformer by {ev['tf10']-ev['native10']:.3f} bpc. These results establish useful specialized prediction; "
          "generic learned representations are assessed in the separate language screen."),
         ("p","The native mixture combines order-0 through order-6 conditional counts, Witten–Bell prediction "
-         "and a bounded copy predictor. Its count arrays occupy 66.55 MB; optional word arrays add 7.39 MB. "
+         "and a bounded copy predictor. Its count arrays occupy 66.55 MB. "
          "Vocabulary, capacities, optimization and fitting budgets differ from the neural references. "
          "The comparison does not measure total training energy or a matched-capacity advantage."),
         ("h2","Characters, subwords and a persistent stream"),
@@ -1000,8 +992,8 @@ def blocks(M, tasks, ev):
          "layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches "
          f"{tasks['stream_training']['final']['dev']['bpc']:.3f} validation bpc in the separately described small screen."),
         ("small","One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation "
-         "[90M,91M), test [95M,96M); test index zero is excluded for all four predictors. Each mixture arm "
-         "selects its update rate independently on validation. Saved neural weights are unchanged. "
+         "[90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture "
+         "selects its update rate on validation. Saved neural weights are unchanged. "
          "Results: E173/E174; stream contract: E175. "+language_90m_reference_text(ev))])
 
     generic = tasks["generic_language_audit"]["rows"]
@@ -1019,10 +1011,10 @@ def blocks(M, tasks, ev):
          "Shuffling preceding characters while preserving the last character, count and timestamps increases "
          "the deeper model's loss to 3.805; replacing preceding context raises it to 3.777. These frozen input "
          "probes show context sensitivity, not a retrained baseline comparison."),
-        ("p","The deeper model costs more: recorded training-forward map/scan contractions are 111.38G "
-         "versus 14.04G FLOPs. One instrumented 16-query batch estimates 108.13M versus 13.61M backward "
-         "contraction FLOPs. These partial arithmetic measures exclude unsupported operations and optimizer "
-         "work. Physical memory traffic and joules are unmeasured; contexts are still replayed."),
+        ("p","The deeper model has more parameters and takes more CPU time. The quality/time panel includes "
+         "fitting and evaluation, with backpropagation and optimizer updates executed during fitting. These "
+         "bounded-query models replay preceding context. The following persistent implementation consumes "
+         "each character once. Physical memory traffic and joules remain unmeasured."),
         ("small","One seed; different parameter counts. This establishes a generic learned-language foothold "
          "and a small depth gain, not competitive large-scale representation, a matched tuned dense-model "
          "advantage or a scaling law. The native 10M-character mixture remains a separate result. Official test "
@@ -1067,7 +1059,7 @@ def blocks(M, tasks, ev):
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
          "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
          "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks "
-         "a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test "
+         "a joint race-credit formalism, E133 supplies the language/depth screen, and E134–E135 test "
          "whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport "
          "and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests "
          "compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages "

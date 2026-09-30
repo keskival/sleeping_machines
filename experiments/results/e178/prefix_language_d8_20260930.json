@@ -1,0 +1,753 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "prefix_language_d8_20260930",
+    "fit": 8192,
+    "dev": 1024,
+    "epochs": 4,
+    "chunk": 64,
+    "expansions": 4
+  },
+  "curve": [
+    {
+      "epoch": 1,
+      "online_bpc": 4.661967108444711,
+      "optimizer_steps": 128,
+      "consumed_characters": 8223,
+      "released_tokens": 5727,
+      "training_layer_deliveries": 45816,
+      "layer_teacher_norm_sum": [
+        4.108412661617897,
+        4.11576634923543,
+        3.7133587956249463,
+        3.7549833797451955,
+        3.598483629024431,
+        3.471985564121185,
+        3.1340204194920607,
+        3.0562813566580362
+      ],
+      "fit": {
+        "n": 8192,
+        "nll": 2.8342662435170496,
+        "bpc": 4.088981854081038,
+        "consumed_characters": 8223,
+        "released_tokens": 5727,
+        "layer_deliveries": 45816,
+        "unfinished_prefix": []
+      },
+      "dev": {
+        "n": 1024,
+        "nll": 2.8868070943281054,
+        "bpc": 4.164782278990236,
+        "consumed_characters": 1055,
+        "released_tokens": 724,
+        "layer_deliveries": 5792,
+        "unfinished_prefix": []
+      }
+    },
+    {
+      "epoch": 2,
+      "online_bpc": 3.770449709519924,
+      "optimizer_steps": 128,
+      "consumed_characters": 8223,
+      "released_tokens": 5727,
+      "training_layer_deliveries": 45816,
+      "layer_teacher_norm_sum": [
+        6.272748682504248,
+        6.1043726599893695,
+        5.041291217476435,
+        5.165839508273227,
+        4.684864775443278,
+        4.295724625946,
+        3.928440973670052,
+        3.7342530478928535
+      ],
+      "fit": {
+        "n": 8192,
+        "nll": 2.4181170569718233,
+        "bpc": 3.4886054863822644,
+        "consumed_characters": 8223,
+        "released_tokens": 5727,
+        "layer_deliveries": 45816,
+        "unfinished_prefix": []
+      },
+      "dev": {
+        "n": 1024,
+        "nll": 2.5937397524539847,
+        "bpc": 3.7419754782219314,
+        "consumed_characters": 1055,
+        "released_tokens": 724,
+        "layer_deliveries": 5792,
+        "unfinished_prefix": []
+      }
+    },
+    {
+      "epoch": 3,
+      "online_bpc": 3.4029634249326692,
+      "optimizer_steps": 128,
+      "consumed_characters": 8223,
+      "released_tokens": 5727,
+      "training_layer_deliveries": 45816,
+      "layer_teacher_norm_sum": [
+        8.43075426835501,
+        7.796154615966442,
+        6.380406320943327,
+        6.331585528332918,
+        5.532823638022596,
+        5.022930435944518,
+        4.680212557327628,
+        4.463402572702789
+      ],
+      "fit": {
+        "n": 8192,
+        "nll": 2.252256695035612,
+        "bpc": 3.2493195647368442,
+        "consumed_characters": 8223,
+        "released_tokens": 5727,
+        "layer_deliveries": 45816,
+        "unfinished_prefix": []
+      },
+      "dev": {
+        "n": 1024,
+        "nll": 2.4938186750514433,
+        "bpc": 3.5978198353730027,
+        "consumed_characters": 1055,
+        "released_tokens": 724,
+        "layer_deliveries": 5792,
+        "unfinished_prefix": []
+      }
+    },
+    {
+      "epoch": 4,
+      "online_bpc": 3.209392424749463,
+      "optimizer_steps": 128,
+      "consumed_characters": 8223,
+      "released_tokens": 5727,
+      "training_layer_deliveries": 45816,
+      "layer_teacher_norm_sum": [
+        10.916772189716648,
+        10.020436861825036,
+        8.074534983677879,
+        7.75610987992772,
+        6.877970574819028,
+        6.336746213033614,
+        5.931365972890587,
+        5.614183281833222
+      ],
+      "fit": {
+        "n": 8192,
+        "nll": 2.1380392559385655,
+        "bpc": 3.0845386317684977,
+        "consumed_characters": 8223,
+        "released_tokens": 5727,
+        "layer_deliveries": 45816,
+        "unfinished_prefix": []
+      },
+      "dev": {
+        "n": 1024,
+        "nll": 2.4380279264441924,
+        "bpc": 3.517330799029839,
+        "consumed_characters": 1055,
+        "released_tokens": 724,
+        "layer_deliveries": 5792,
+        "unfinished_prefix": []
+      }
+    }
+  ],
+  "initial": {
+    "n": 1024,
+    "nll": 3.5445511718280613,
+    "bpc": 5.113706397773508,
+    "consumed_characters": 1055,
+    "released_tokens": 724,
+    "layer_deliveries": 5792,
+    "unfinished_prefix": []
+  },
+  "vocabulary": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      0,
+      9
+    ],
+    [
+      0,
+      10
+    ],
+    [
+      0,
+      11
+    ],
+    [
+      0,
+      12
+    ],
+    [
+      0,
+      13
+    ],
+    [
+      0,
+      14
+    ],
+    [
+      0,
+      15
+    ],
+    [
+      0,
+      16
+    ],
+    [
+      0,
+      17
+    ],
+    [
+      0,
+      18
+    ],
+    [
+      0,
+      19
+    ],
+    [
+      0,
+      20
+    ],
+    [
+      0,
+      21
+    ],
+    [
+      0,
+      22
+    ],
+    [
+      0,
+      23
+    ],
+    [
+      0,
+      24
+    ],
+    [
+      0,
+      25
+    ],
+    [
+      0,
+      26
+    ],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      4
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      5,
+      1
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      5,
+      3
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      5,
+      7
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      5,
+      11
+    ],
+    [
+      5,
+      12
+    ],
+    [
+      5,
+      13
+    ],
+    [
+      5,
+      14
+    ],
+    [
+      5,
+      15
+    ],
+    [
+      5,
+      16
+    ],
+    [
+      5,
+      17
+    ],
+    [
+      5,
+      18
+    ],
+    [
+      5,
+      19
+    ],
+    [
+      5,
+      20
+    ],
+    [
+      5,
+      21
+    ],
+    [
+      5,
+      22
+    ],
+    [
+      5,
+      23
+    ],
+    [
+      5,
+      24
+    ],
+    [
+      5,
+      25
+    ],
+    [
+      5,
+      26
+    ],
+    [
+      6
+    ],
+    [
+      7
+    ],
+    [
+      8
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      9,
+      2
+    ],
+    [
+      9,
+      3
+    ],
+    [
+      9,
+      4
+    ],
+    [
+      9,
+      5
+    ],
+    [
+      9,
+      6
+    ],
+    [
+      9,
+      7
+    ],
+    [
+      9,
+      8
+    ],
+    [
+      9,
+      9
+    ],
+    [
+      9,
+      10
+    ],
+    [
+      9,
+      11
+    ],
+    [
+      9,
+      12
+    ],
+    [
+      9,
+      13
+    ],
+    [
+      9,
+      14
+    ],
+    [
+      9,
+      15
+    ],
+    [
+      9,
+      16
+    ],
+    [
+      9,
+      17
+    ],
+    [
+      9,
+      18
+    ],
+    [
+      9,
+      19
+    ],
+    [
+      9,
+      20
+    ],
+    [
+      9,
+      21
+    ],
+    [
+      9,
+      22
+    ],
+    [
+      9,
+      23
+    ],
+    [
+      9,
+      24
+    ],
+    [
+      9,
+      25
+    ],
+    [
+      9,
+      26
+    ],
+    [
+      10
+    ],
+    [
+      11
+    ],
+    [
+      12
+    ],
+    [
+      13
+    ],
+    [
+      14
+    ],
+    [
+      15
+    ],
+    [
+      16
+    ],
+    [
+      17
+    ],
+    [
+      18
+    ],
+    [
+      19
+    ],
+    [
+      20,
+      0
+    ],
+    [
+      20,
+      1
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      20,
+      3
+    ],
+    [
+      20,
+      4
+    ],
+    [
+      20,
+      5
+    ],
+    [
+      20,
+      6
+    ],
+    [
+      20,
+      7
+    ],
+    [
+      20,
+      8
+    ],
+    [
+      20,
+      9
+    ],
+    [
+      20,
+      10
+    ],
+    [
+      20,
+      11
+    ],
+    [
+      20,
+      12
+    ],
+    [
+      20,
+      13
+    ],
+    [
+      20,
+      14
+    ],
+    [
+      20,
+      15
+    ],
+    [
+      20,
+      16
+    ],
+    [
+      20,
+      17
+    ],
+    [
+      20,
+      18
+    ],
+    [
+      20,
+      19
+    ],
+    [
+      20,
+      20
+    ],
+    [
+      20,
+      21
+    ],
+    [
+      20,
+      22
+    ],
+    [
+      20,
+      23
+    ],
+    [
+      20,
+      24
+    ],
+    [
+      20,
+      25
+    ],
+    [
+      20,
+      26
+    ],
+    [
+      21
+    ],
+    [
+      22
+    ],
+    [
+      23
+    ],
+    [
+      24
+    ],
+    [
+      25
+    ],
+    [
+      26
+    ]
+  ],
+  "parameters": 35163,
+  "protocol": {
+    "fitting_targets": [
+      32,
+      8224
+    ],
+    "development_targets": [
+      90000032,
+      90001056
+    ],
+    "tokenizer_fitting": [
+      0,
+      8224
+    ],
+    "tokenizer": "frequency-prioritized complete 27-ary prefix dictionary",
+    "fitted_on_held_data": false,
+    "official_test_read": false,
+    "prediction_experts": [],
+    "credit_truncation_raw_characters": 64,
+    "warm_characters": 31,
+    "time_unit": "raw-character arrival index; token released at final character",
+    "query_budget": 0.5,
+    "body_initialization_matches_e176": true
+  },
+  "scope": "One small generic tokenization control. Same raw targets/body initialization/depth/passes/credit window as E176; vocabulary/head capacities differ. No count/copy/word prediction expert. Exact character marginal likelihood including unfinished phrases; no energy or frontier claim.",
+  "source_sha256": {
+    "/workspace/experiments/e178_prefix_token_language.py": "67a71e9fa3310423154dfde7480daadac4afb85c48dd6b505405744a03722ac1",
+    "sleeping_machines/prefix_tokenizer.py": "8f58e4643e1112781b2f0ea696bd1d134aa017e818dbd7c9225dfc043d08a712",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708"
+  },
+  "data_sha256": {
+    "fit": "08cec765511fc757a85d2a409927166b914a3f6c7857156e895d66715bb79670",
+    "dev": "48b8d419dc2710b90ca50396b2980e97217d9576a60a3f71eb86c65230302e6c"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "threads": 1,
+    "device": "cpu"
+  },
+  "energy_joules": null,
+  "wall_s": 269.3090240750171,
+  "max_rss_kb": 361572,
+  "progress": {
+    "epoch": 4,
+    "targets": 8192,
+    "online_bpc": 3.209392424749463
+  },
+  "final": {
+    "epoch": 4,
+    "online_bpc": 3.209392424749463,
+    "optimizer_steps": 128,
+    "consumed_characters": 8223,
+    "released_tokens": 5727,
+    "training_layer_deliveries": 45816,
+    "layer_teacher_norm_sum": [
+      10.916772189716648,
+      10.020436861825036,
+      8.074534983677879,
+      7.75610987992772,
+      6.877970574819028,
+      6.336746213033614,
+      5.931365972890587,
+      5.614183281833222
+    ],
+    "fit": {
+      "n": 8192,
+      "nll": 2.1380392559385655,
+      "bpc": 3.0845386317684977,
+      "consumed_characters": 8223,
+      "released_tokens": 5727,
+      "layer_deliveries": 45816,
+      "unfinished_prefix": []
+    },
+    "dev": {
+      "n": 1024,
+      "nll": 2.4380279264441924,
+      "bpc": 3.517330799029839,
+      "consumed_characters": 1055,
+      "released_tokens": 724,
+      "layer_deliveries": 5792,
+      "unfinished_prefix": []
+    }
+  }
+}
