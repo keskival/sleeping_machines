@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "needs_review",
   "created_utc": "2026-09-30T17:54:56.448016+00:00",
   "tmux_session": "local_full_sparse_ladder_20260930T175400Z",
   "suite_log": "experiments/queue/local_full_sparse_ladder_20260930T175400Z.out",
@@ -67,8 +67,14 @@
       "dev": 8192,
       "kind": "capacity",
       "timeout_s": 28800,
-      "status": "running",
-      "started_utc": "2026-09-30T18:58:02.638117+00:00"
+      "status": "completed",
+      "started_utc": "2026-09-30T18:58:02.638117+00:00",
+      "finished_utc": "2026-09-30T19:22:18.647489+00:00",
+      "development_bpc": 3.4264249632034547,
+      "parameters": 720035,
+      "training_flops": 14152417024,
+      "wall_s": 1452.331599247991,
+      "max_rss_kb": 481280
     },
     {
       "tag": "local_full_sparse_language_D131072_p2_20260930T175400Z",
@@ -82,13 +88,14 @@
       "dev": 8192,
       "kind": "data",
       "timeout_s": 172800,
-      "status": "pending",
+      "status": "running",
       "promotion_gate": {
         "previous_result": "experiments/results/parallel_language/local_full_sparse_language_D32768_p2_20260930T175400Z.json",
         "compare_result": "experiments/results/parallel_language/local_full_sparse_language_D8192_p2_20260930T175400Z.json",
         "minimum_gain_bpc": 0.1,
         "maximum_development_bpc": 3.5
-      }
+      },
+      "started_utc": "2026-09-30T19:22:26.336873+00:00"
     },
     {
       "tag": "local_full_sparse_language_D1048576_p2_20260930T175400Z",
@@ -130,8 +137,9 @@
     "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
     "scripts/run_full_sparse_ladder.py": "25696a6310271a1d665d77d7f61edbb86f6b7555843d9642837e26fe64255614"
   },
-  "updated_utc": "2026-09-30T18:58:02.638136+00:00",
-  "current_job": "local_full_sparse_language_D8192_p4_20260930T175400Z",
+  "updated_utc": "2026-09-30T19:30:15.445520+00:00",
+  "current_job": "local_full_sparse_language_D131072_p2_20260930T175400Z",
   "review_resolution": "Report hook preserved evidence while diagram edits overlapped completion; clean-tree publication completed and layout checked before resumption",
-  "resolved_utc": "2026-09-30T18:10:55.321263+00:00"
+  "resolved_utc": "2026-09-30T18:10:55.321263+00:00",
+  "reason": "Guarded job exited 143; retain its checkpoint and logs"
 }

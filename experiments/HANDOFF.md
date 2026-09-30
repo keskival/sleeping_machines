@@ -1,5 +1,38 @@
 # Session handoff — 2026-09-30
 
+## Priority update — larger messages and AWS 10M, 19:35 UTC
+
+The user requests the larger integrated model for larger-data runs, conditional
+on a useful small matched capacity test. Use payload 32/depth 6/pool 2, compare
+at 32K against the completed payload-16 result (3.120653 development bpc), then
+promote to 131K and 1M only after the larger model demonstrates benefit.
+The AWS 10M/four-pass/200K-validation/1M-test run is now defined separately in
+`experiments/AWS_INTEGRATED_10M.md` and its committed AWS one-job queue. The new
+resumable driver is `experiments/integrated_language_benchmark.py`; never launch
+it outside `experiments/queue/run_safe.sh`. Official scores are frozen and read
+only after the full fixed fitting budget. Preserve its source snapshot.
+
+The old pool-4/8K capacity arm completed at 3.426425 development bpc, 720,035
+parameters and 1,452.33 seconds. At this small data budget, doubling addressed
+alternatives did not improve the leading pool-2 score (3.398284). This is not
+the message-width intervention. Its report/evidence commit is `a7422a4`.
+The old payload-16/131K job had already begun when the user redirected larger
+runs. It was stopped through its guarded runner after preserving the early
+checkpoint/log/result progress; it has no completed score. The old coordinator
+was held during this change, then released to record the stop and exit. No
+coordinator remains suspended. The old manifest is superseded for large runs.
+
+Width-32 guarded smoke `local_integrated_benchmark_smoke_d32_20260930T193500Z`
+completed. Configuration-specific checks passed: causal forward, identical
+teacher/inference values, precise 10M clocks, prediction-before-update and exact
+next-update recovery from model/Adam/event state/RNG. This is smoke evidence,
+not language quality. A separate online experiment is being queued with two
+arms: inherited frozen weights versus all-neural-parameter adaptation, both
+with persistent event memory and predictions before block-delayed updates.
+
+The following older priority sections are historical. Inspect live queues and
+the newer larger-message campaign before resuming them.
+
 ## Priority update — integrated architecture, 17:54 UTC
 
 The user explicitly prioritizes full architectural experiments over carrier-only
