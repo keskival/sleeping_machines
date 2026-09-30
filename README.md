@@ -24,8 +24,8 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
-| Native language prediction | **1.727 test bits/character** without a word expert, versus **1.799 LSTM / 1.908 Transformer**; lower is better | 10M-character count/copy mixture; identical test positions; capacities and fitting budgets differ |
-| Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small expert-free development screen; no frontier language claim |
+| Native language prediction | **1.727 test bits/character**, versus **1.799 LSTM / 1.908 Transformer**; lower is better | 10M-character count/copy mixture; identical test positions; capacities and fitting budgets differ |
+| Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small language/depth development screen |
 | Rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
 | Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
 | Temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
@@ -42,7 +42,7 @@ The common implementation currently
 covers multiple independently trained tasks; sharing an implementation does not
 by itself establish general representation learning.
 
-A bounded **expert-free language screen** now reaches **3.395 validation
+A bounded **language/depth screen** now reaches **3.395 validation
 bits/character with eight layers**, versus **3.464 with one layer**. It uses
 8,192 training characters, four passes and 1,024 validation predictions; all
 layers' value, route and memory-time parameters update. Shuffling preceding
