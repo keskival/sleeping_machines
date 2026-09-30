@@ -1,0 +1,1 @@
+local_episodic_contracts_20260930T204500Z experiments/episodic_race_language_screen.py --tag local_episodic_contracts_20260930T204500Z --contracts-only --payload 32 --depth 6 --pool 2 --matching 8 --recent 4

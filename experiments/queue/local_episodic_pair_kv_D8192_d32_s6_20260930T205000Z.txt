@@ -1,0 +1,1 @@
+local_episodic_pair_kv_D8192_d32_s6_20260930T205000Z experiments/episodic_race_language_screen.py --tag local_episodic_pair_kv_D8192_d32_s6_20260930T205000Z --memory kv --fit 8192 --dev 8192 --epochs 4 --payload 32 --depth 6 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6 --lr 0.001

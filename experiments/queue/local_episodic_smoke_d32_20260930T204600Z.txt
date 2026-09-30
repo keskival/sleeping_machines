@@ -1,0 +1,1 @@
+local_episodic_smoke_d32_20260930T204600Z experiments/episodic_race_language_screen.py --tag local_episodic_smoke_d32_20260930T204600Z --memory kv --fit 129 --dev 65 --epochs 1 --payload 32 --depth 6 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6

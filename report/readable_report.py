@@ -68,6 +68,8 @@ def results():
                             *(RES/'parallel_language').glob('aws_full_sparse_language_*Z.json')])]
     tasks['integrated_online_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
+    tasks['episodic_language'] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/'episodic_language').glob('local_episodic_pair_*Z.json'))]
     audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
     tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")
@@ -125,6 +127,13 @@ def language_work_points(tasks, ev):
             fit=a['fit'],passes=a['epochs'],split='test' if official else 'dev',
             bpc=r['final']['official_test' if official else 'dev']['bpc'],
             total=w['total_training_unit_special_flops'],targets=w['fitting_targets']))
+    for r in tasks['episodic_language']:
+        a=r['args'];w=r['work'];kv=a['memory']=='kv'
+        rows.append(dict(model='Ours: '+('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}",
+            family='integrated',label=f"{'IKV' if kv else 'I'}{a['payload']}D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
+            parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],split='dev',
+            bpc=r['final']['dev']['bpc'],total=w['cpu_emulator']['total_training_unit_special_flops'],
+            targets=w['fitting_targets']))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -155,6 +164,22 @@ def language_work_points(tasks, ev):
             parameters=r['params'],fit=a['D'],passes=a['passes'],split='test',bpc=quality,
             total=w['total_training_flops'],targets=w['training_token_positions']))
     return rows
+
+
+def episodic_pairs(tasks):
+    grouped={}
+    for r in tasks['episodic_language']:
+        a=r['args']
+        key=tuple(a[k] for k in ('fit','dev','epochs','chunk','payload','depth','pool','seed','lr'))
+        grouped.setdefault(key,{})[a['memory']]=r
+    pairs=[]
+    for group in grouped.values():
+        if set(group)=={'receiver','kv'}:
+            left,right=group['receiver'],group['kv']
+            for name in ('fitting_data_sha256','development_data_sha256'):
+                if left[name]!=right[name]:raise ValueError('Unmatched episodic data: '+name)
+            pairs.append(group)
+    return sorted(pairs,key=lambda group:group['kv']['args']['fit'])
 
 
 def aws_e64_reference(model, data_size):
@@ -729,7 +754,7 @@ def figures(M, tasks, ev):
             a.annotate(str(points.index(r)+1),(r['total']/1e9,r['bpc']),xytext=offset,
                 textcoords='offset points',fontsize=7,
                 arrowprops=dict(arrowstyle='-',color='#8a8984',lw=.4))
-        a.set_xscale('log');a.set_xlim(.8,2e7);a.set_ylim(1.45,3.75)
+        a.set_xscale('log');a.set_xlim(.8,2e7);a.set_ylim(1.45,max(3.75,max(p['bpc'] for p in points)+.2))
         a.set_title(title,fontsize=9);a.set_xlabel('Whole fitting GFLOPs; log scale ↓',fontsize=8)
         a.legend(loc='upper right',fontsize=6.3,frameon=False)
     axes[0].set_ylabel('Bits per character ↓',fontsize=8)
@@ -753,6 +778,25 @@ def figures(M, tasks, ev):
         axes[1].set_xlim(0,max(costs)*1.3)
         for i,cost in enumerate(costs):axes[1].text(cost+max(costs)*.02,i,f'{cost:,.1f}',va='center',fontsize=8)
         f.tight_layout(w_pad=1.2);save(f,'integrated_online_language')
+
+    pairs=episodic_pairs(tasks)
+    for pair in pairs:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+        for mode,color,label in [('receiver',gray,'Ours: receiver memory'),('kv',blue,'Ours: episodic race KV')]:
+            r=pair[mode]
+            axes[0].plot([0]+[row['epoch'] for row in r['curve']],
+                [r['initial_dev']['bpc']]+[row['dev']['bpc'] for row in r['curve']],
+                'o-',color=color,label=label,ms=3)
+        axes[0].set(xlabel='Fitting passes',ylabel='Frozen development bpc ↓',title='Matched small-data intervention')
+        axes[0].legend(fontsize=6.4,loc='upper right')
+        a=pair['kv']['final']['dev']['activity'];mean=a['kv_scores']/max(1,a['kv_queries'])
+        axes[1].bar([0,1],[mean,1],color=[orange,blue],width=.6)
+        axes[1].set(xticks=[0,1],xticklabels=['Dense aggregation\n(same shortlist)','Ours: one\nrace winner'],
+            ylabel='Value vectors read / retrieval query ↓',title='KV value reads at inference')
+        for i,value in enumerate([mean,1]):axes[1].text(i,value+.15,f'{value:.2f}',ha='center',fontsize=8)
+        axes[1].set_ylim(0,mean*1.2);axes[1].tick_params(axis='x',labelsize=7)
+        a=pair['kv']['args']
+        f.tight_layout(w_pad=1.1);save(f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}")
 
     if tasks['language_representation']:
         audit=tasks['language_representation']
@@ -1064,7 +1108,9 @@ def blocks(M, tasks, ev):
          'overhead and traffic. Long-range recall and comparable-quality memory advantages remain '
          'to be measured. Recurrent compression resembles the memory organization of selective '
          'state-space models (Mamba, Gu & Dao, arXiv:2312.00752); our hard temporal races and '
-         'counterfactual route teacher are separate mechanisms. Theory §§308–309.')])
+         'counterfactual route teacher are separate mechanisms. Compression is not required by '
+         'races: a separate integrated per-position KV experiment retains historical entries and '
+         'tests sparse value delivery. Theory §§308–310.')])
     if full_rows:
         pages.append([
             ('h1','Ours: completed integrated-language stages'),
@@ -1735,7 +1781,7 @@ def blocks(M, tasks, ev):
             [43,33,25,33,40])),
         ('small','The table selects the largest fitting budget currently completed for each family; '
          'the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted '
-         'variants. Variant labels: I = ours integrated payload/pool/data; '
+         'variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory; '
          'C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer '
          'width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.'),
         ('small','Estimates include learning, clipping and Adam, with unit-weight special functions. '
@@ -1758,7 +1804,47 @@ def blocks(M, tasks, ev):
              'Carrier and integrated development scores use frozen evaluation; integrated official scores '
              'appear only after their full test completes. Validation/test work, RNG and physical traffic '
              'are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed '
-             'parallel_language JSON records. No new dense model was trained.')])
+             'parallel_language and episodic_language JSON records. The global ledger uses emulator '
+             'floating arithmetic consistently; the separate KV page reports architectural projections. '
+             'No new dense model was trained.')])
+    for pair in episodic_pairs(tasks):
+        kv=pair['kv'];a=kv['args'];act=kv['final']['dev']['activity']
+        rows=[pair[mode] for mode in ('receiver','kv')]
+        gain=rows[0]['final']['dev']['bpc']-kv['final']['dev']['bpc']
+        mean_candidates=act['kv_scores']/max(1,act['kv_queries'])
+        pages.append([
+            ('h1','Appendix B (continued). Ours: per-position race KV memory'),
+            ('p',f"Both integrated models fit {a['fit']:,} characters for {a['epochs']} passes, with "
+             f"payload {a['payload']}, {a['depth']} sparse receiver depths, seed {a['seed']} and "
+             f"{a['dev']-1:,} identical cold development targets. The KV arm retains separate historical "
+             'keys and values at every depth; learned queries select one value through time. '
+             'Incoming content is retained and gated with the retrieved message. No dense carrier is added.'),
+            ('figure',(f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}",148)),
+            ('table',(['Ours: memory','Dev bpc ↓','Projected fit GFLOPs ↓','CPU fit GFLOPs ↓','Projected forward MFLOPs/char ↓'],[
+                [r['args']['memory'],f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['projected_event_architecture']['total_training_unit_special_flops']/1e9:,.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:,.3f}",
+                 f"{(r['work']['projected_event_architecture']['inference_arithmetic_flops_per_character']+r['work']['projected_event_architecture']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],
+                [30,24,40,36,44])),
+            ('p',f"Completed KV improvement over receiver memory: {gain:+.3f} bpc (positive is better). "
+             f"The index admits up to {a['matching']} matching-character entries plus {a['recent']} recent "
+             f"positions; duplicates are removed. Development averages {mean_candidates:.2f} keys scored "
+             f"and one value delivered per retrieval query. All {act['kv_stored_entries']:,} entries remain "
+             f"stored ({act['kv_raw_key_value_bytes']/2**20:.2f} MiB raw keys/values); the oldest selected "
+             f"entry is {act['kv_winner_age_max']:,} characters old. This bounds reads, not stored history."),
+            ('small','Physical clock competition replaces explicit numerical rate exponentiation and '
+             'noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value '
+             'maps, scored candidates, gated content, backward, counterfactual teaching, clipping and '
+             'actual Adam remain charged. Counts are representative first/mature/partial traces; '
+             'special functions have unit weight here and are separate in JSON. Physical rate setting, '
+             'clock circuits, index/address operations, RNG and traffic need their own implementation '
+             'costs; FLOPs do not certify energy.'),
+            ('small','Temporal races avoid the explicit normalizing reduction/division and deliver one '
+             'value at inference; training reads all admitted values for route credit. The orange bar '
+             'is an analytical same-shortlist aggregation comparison, not another trained model. '
+             'Candidate coverage is fixed-index, not arbitrary semantic search. Historical activations '
+             'are detached at the credit boundary and are not recomputed after parameter updates. '
+             'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
     if tasks['integrated_online_language']:
         row=tasks['integrated_online_language'][-1];a=row['args']
         pages.append([

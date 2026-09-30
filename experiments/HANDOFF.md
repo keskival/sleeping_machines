@@ -1,5 +1,64 @@
 # Session handoff — 2026-09-30
 
+## Latest priority — per-position race KV experiment, 20:50 UTC
+
+Depth steering: the user now requests eight event blocks. The six-depth KV
+pair is preserved to completion, but its coordinator was suspended (only the
+coordinator, never the active guard/watchdog) to prevent more six-depth jobs.
+After its guarded child exits, terminate that superseded coordinator and launch
+`scripts/run_episodic_depth8_pairs.py` in tmux
+`local_episodic_depth8_pairs_20260930T210000Z`. Its separately named plan/queues
+compare receiver/KV at depth eight on 2K, then gated 8K. Numeric contracts are
+configuration-specific and run inside each guarded job. Eight receiver plus
+eight KV races give sixteen selections; eight persistent receiver updates;
+432 receiver units. The doubled delay bound is 8 × .022 = .176 < .5.
+Depth six remains evidence, not the longer-run default for this KV comparison.
+AWS six-depth prepared/running queues and sources remain preserved.
+
+The user requested a more appropriate KV-cache analogue, with small data first,
+and architectural FLOPs distinguished from CPU simulation. The new integrated
+`sleeping_machines/episodic_race_language.py` preserves the sparse receiver
+backbone and adds historical token-position keys/values at each of six depths.
+All entries survive until stream reset. Up to eight matching-character and four
+recent positions form a deduplicated shortlist; this is an explicit coverage
+prior, not arbitrary semantic search. One historical value is read/delivered at
+inference; training charges all admitted counterfactual values. Six receiver
+races plus six KV races give twelve selections per character after warmup.
+The extra delays satisfy the doubled causal bound. Gradients into recent cached
+activations end at the sixteen-character boundary; old keys/values stay cached.
+
+Guarded contracts `local_episodic_contracts_20260930T204500Z` and full-gradient /
+accounting smoke `local_episodic_smoke_d32_20260930T204600Z` passed: causal and
+chunk-identical forward, exact teacher/inference values, precise 10M clocks,
+all-entry retention, candidate bounds, query/key/value/gate gradients, temporal
+softmax frequencies, prediction-before-update and exact next-update recovery.
+Smoke loss is not quality evidence. Do not edit these model/driver sources while
+their queued jobs run; the new source hashes are separate from existing AWS.
+
+Tmux/plan/log: `local_episodic_pairs_20260930T205000Z`. It fits receiver-only and
+episodic KV variants at width 32, seed 6, 2,048 fitting / 2,048 development
+characters, four passes. They share backbone initialization/data/learning rate;
+extra races change RNG consumption. An exploratory >=0.03-bpc KV gain permits
+a new matched 8K/8K pair. Every run uses its own one-job queue and guarded runner,
+virtual/RSS caps 4,000,000/2,500,000 KiB and 8,192 MiB available-memory floor.
+Completed pairs publish separate projected-event versus emulator FLOP ledgers
+and inference value-read savings; physical clock/index/traffic costs are not
+claimed free. Existing dense references are retained; no new dense local fit.
+
+To prioritize this user-requested experiment, the seed-7 width-16/32K scaling
+job was stopped through its guard. Its exact checkpoint at epoch 1 / 27,648
+targets is preserved. No coordinator remains suspended. The original manifest
+now names a unique recovery queue with --resume; the KV supervisor resumes
+that scaling ladder only after the small pair and any justified 8K pair. It
+stops for review on failures instead of blindly launching more training.
+
+The separate online-backbone 8K experiment completed: frozen 3.190859 versus
+online 3.095738 prequential bpc, 512 block-delayed updates. Its initial publishing
+hook correctly preserved overlapping report edits; manual combined publication
+with context/query explanations committed `85e308b`. The report has 35 pages
+before completed KV evidence adds an appendix page. Current references to the
+older follow-up manifest being active are historical; inspect the latest tmux.
+
 ## Priority update — larger messages and AWS 10M, 19:35 UTC
 
 The user requests the larger integrated model for larger-data runs, conditional

@@ -1,0 +1,1 @@
+local_episodic_pair_receiver_D8192_d32_s6_depth8_20260930T210000Z experiments/episodic_race_language_screen.py --tag local_episodic_pair_receiver_D8192_d32_s6_depth8_20260930T210000Z --memory receiver --fit 8192 --dev 8192 --epochs 4 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6 --lr 0.001

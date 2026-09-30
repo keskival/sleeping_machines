@@ -1,5 +1,5 @@
 {
-  "status": "pending",
+  "status": "waiting_for_requested_KV_experiment",
   "created_utc": "2026-09-30T19:53:32.809833+00:00",
   "tmux_session": "local_integrated_followups_20260930T200000Z",
   "suite_log": "experiments/queue/local_integrated_followups_20260930T200000Z.out",
@@ -36,7 +36,7 @@
   "jobs": [
     {
       "tag": "local_full_sparse_language_D32768_d16_p2_seed7_20260930T200000Z",
-      "queue": "experiments/queue/local_full_sparse_language_D32768_d16_p2_seed7_20260930T200000Z.txt",
+      "queue": "experiments/queue/local_full_sparse_language_D32768_d16_p2_seed7_20260930T200000Z_recovery_after_kv.txt",
       "result": "experiments/results/parallel_language/local_full_sparse_language_D32768_d16_p2_seed7_20260930T200000Z.json",
       "fit": 32768,
       "pool": 2,
@@ -47,7 +47,9 @@
       "seed": 7,
       "kind": "replication_baseline",
       "timeout_s": 14400,
-      "status": "pending"
+      "status": "pending_exact_recovery",
+      "started_utc": "2026-09-30T20:33:51.654593+00:00",
+      "preserved_checkpoint_targets": 27648
     },
     {
       "tag": "local_full_sparse_language_D32768_d32_p2_seed7_20260930T200000Z",
@@ -109,5 +111,8 @@
   ],
   "priority": "Separate online experiment, then paired seed-7 integrated width replication; larger data uses width 32 after measured benefit",
   "gate_scope": "Exploratory single-seed progress gates, not statistical significance or frontier guarantees",
-  "coordination": "AWS prepared campaign owns seed 6; local comparisons use seed 7 to add independent evidence"
+  "coordination": "AWS prepared campaign owns seed 6; local comparisons use seed 7 to add independent evidence",
+  "updated_utc": "2026-09-30T20:44:29.633097+00:00",
+  "current_job": null,
+  "reason": "User requested integrated per-position race KV small-data pair before further scaling; exact prior recovery is prepared"
 }
