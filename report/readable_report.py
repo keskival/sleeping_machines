@@ -122,6 +122,22 @@ def language_90m_reference_text(ev):
             scores.append(f"{ev[key]:.3f} for the {label}")
     text = ("At 90M training characters, reference test scores are " + ", ".join(scores) + ". "
             if scores else "")
+    costs = []
+    for provenance in sorted((RES / 'aws_20260929').glob('aws_e64_*/provenance.json')):
+        meta = json.loads(provenance.read_text())
+        if meta.get('status') != 'completed':
+            continue
+        for path in provenance.parent.glob('*.json'):
+            result = json.loads(path.read_text())
+            if result.get('args', {}).get('D') != 90_000_000:
+                continue
+            estimate = result.get('training_flops_estimate', {})
+            if estimate.get('total_training_flops'):
+                costs.append(f"{result['args']['model'].upper()}: {estimate['total_training_flops'] / 1e15:.2f} PFLOP")
+    if costs:
+        text += ('Estimated training work (forward, backward, Adam and gradient clipping): '
+                 + ', '.join(costs) + '. Shape-based estimates count multiply-add as two operations; '
+                 'backward is approximated as twice forward. Validation/test inference is excluded. ')
     return text
 
 
