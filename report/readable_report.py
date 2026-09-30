@@ -45,6 +45,8 @@ def results():
     tasks["shd_key_value"] = read("e131/key_value_comparison_20260929.json")
     tasks["generic_language"] = {depth: read(f"e133/generic_language_d{depth}_s6_20260929.json") for depth in (1,8)}
     tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
+    tasks["complete_work"] = read("e172/complete_work_v2_20260930.json")
+    tasks["stream_contract"] = read("e175/stream_language_contract_20260930.json")
     tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
     content_path = "e135/content_comparison_20260929.json"
     tasks["shd_content"] = read(content_path) if (RES/content_path).exists() else None
@@ -77,8 +79,7 @@ def results():
 
 
 def evidence(M):
-    e79 = {n: read(f"e79/race_mixer_D{n}_K{k}_e77none.json")["copy_window_256"]["race_frozen_test_bpc"]
-           for n, k in ((1_000_000, 5), (10_000_000, 6), (90_000_000, 7))}
+    causal = read("e173/causal_language_10m_20260930.json")
     def aws_e64_bpc(model, data_size):
         for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
             try:
@@ -99,12 +100,13 @@ def evidence(M):
             except (OSError, ValueError, TypeError, IndexError):
                 continue
         return None
-    return {"e79": e79,
+    return {"native10": causal["arms"]["without_word"]["test_bpc"],
+            "native_word10": causal["arms"]["with_causal_word"]["test_bpc"],
             "lstm1": read("e64/lstm_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
-            "lstm10": read("e64/lstm_D10000000_s512_p6_dr0.1_v.json")["test_bpc"],
+            "lstm10": read("e174/aligned_lstm_10m_20260930.json")["test_bpc"],
             "lstm90": aws_e64_bpc("lstm", 90_000_000),
             "tf1": read("e64/tf_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
-            "tf10": M["load_tf_10m_final"]()["test_bpc"],
+            "tf10": read("e174/aligned_tf_10m_20260930.json")["test_bpc"],
             "tf90": aws_e64_bpc("tf", 90_000_000),
             "recall_tf": max(p["n32"] for f in (RES/"e61").glob("tf_K32_n8*.json")
                              for row in json.loads(f.read_text())["rows"] for p in row["curve"])}
@@ -112,18 +114,18 @@ def evidence(M):
 
 def language_90m_reference_text(ev):
     """Publish each completed control without treating validation logs as test evidence."""
-    scores = [f"{ev['e79'][90_000_000]:.3f} for the native mixture"]
+    scores = []
     pending = []
     for key, label in (("lstm90", "LSTM"), ("tf90", "four-layer Transformer")):
         if ev[key] is None:
             pending.append(label)
         else:
             scores.append(f"{ev[key]:.3f} for the {label}")
-    text = "At 90M, completed held-out test scores are " + ", ".join(scores) + ". "
+    text = ("At 90M training characters, reference test scores are " + ", ".join(scores) + ". "
+            if scores else "")
     if pending:
         text += "The 90M " + " and ".join(pending) + " reference results are pending. "
-    text += ("These are exploratory single-seed comparisons on the same text8 split; "
-             "model sizes, training passes and computation are not matched. ")
+    text += "A same-protocol native comparison at this scale remains to be measured. "
     return text
 
 
@@ -132,27 +134,19 @@ def accomplishments_figure(M, ev):
     import numpy as np
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
     f, ax = plt.subplots(1, 2, figsize=(7.2, 2.65), gridspec_kw={"width_ratios": [1.2, 1]})
-    labels = ["Sleeping\nMachines", "LSTM", "Transformer"]
-    ten_m = [ev["e79"][10_000_000], ev["lstm10"], ev["tf10"]]
-    ninety_m = [ev["e79"][90_000_000], ev["lstm90"], ev["tf90"]]
+    labels = ["Native mixture\nno word expert", "LSTM", "Transformer"]
+    ten_m = [ev["native10"], ev["lstm10"], ev["tf10"]]
     x = np.arange(3)
-    width = .34
+    width = .58
     colors = [blue, gray, orange]
     for i, (label, color) in enumerate(zip(labels, colors)):
-        ax[0].bar(x[i] - width/2, ten_m[i], width, color=color,
-                  label="10M training" if i == 0 else None)
-        ax[0].text(x[i] - width/2, ten_m[i] + .035, f"{ten_m[i]:.3f}",
+        ax[0].bar(x[i], ten_m[i], width, color=color)
+        ax[0].text(x[i], ten_m[i] + .035, f"{ten_m[i]:.3f}",
                    ha="center", fontsize=8)
-        if ninety_m[i] is not None:
-            ax[0].bar(x[i] + width/2, ninety_m[i], width, color=color, hatch="//",
-                      label="90M training" if i == 0 else None)
-            ax[0].text(x[i] + width/2, ninety_m[i] + .035, f"{ninety_m[i]:.3f}",
-                       ha="center", fontsize=8)
     ax[0].set_xticks(x, labels)
     ax[0].set_ylim(0, 2.5)
     ax[0].set_ylabel("Test bits per character ↓")
-    ax[0].set_title("Better real-text prediction\ntext8 test score by training scale", fontsize=10)
-    ax[0].legend(fontsize=7, loc="upper left")
+    ax[0].set_title("Better real-text prediction\n10M fit; identical test targets", fontsize=10)
     ax[1].bar(range(2), [100, 100*ev["recall_tf"]], color=[blue, orange], width=.55)
     ax[1].set_xticks([0, 1], ["Local race\nretrieval", "Best of 7\nTransformers"])
     ax[1].set_ylim(0, 118)
@@ -401,7 +395,47 @@ def figures(M, tasks, ev):
     f.tight_layout();save(f,"consolidated_work_frontiers")
     import figures_mech as historic
     historic.EVENT, historic.DENSE_T = blue, orange
-    save(historic.fig_supremacy_map(), "supremacy_map")
+    native = historic.fig_supremacy_map()
+    native.axes[0].set_title("Timing patterns: accurate event detection\nNative activity versus dense MACs", fontsize=8.4)
+    native.axes[1].set_title("Temporal composition from one pass\nNative activity versus dense MACs", fontsize=8.4)
+    for index in (0, 1, 2):
+        native.axes[index].set_xlabel("Event deliveries / dense MACs (log)", fontsize=7.5)
+        native.axes[index].set_ylabel("Synthetic evaluation accuracy ↑", fontsize=7.5)
+    native.axes[3].set_ylabel("Synthetic evaluation accuracy ↑", fontsize=7.5)
+    market = native.axes[4]
+    market.clear()
+    market.set_axis_off()
+    market.set_title("Causal market event prediction\nDevelopment NLL: lower is better", fontsize=8.4)
+    market.text(.05, .78, "Common event model       3.823 nats/event\n"
+                "Transformer reference      4.208 nats/event\n"
+                "Fixed evidence only           3.670 nats/event", transform=market.transAxes,
+                fontsize=8.3, va="top", linespacing=1.8)
+    market.text(.05, .25, "Prior-day evidence; disjoint fitting/development days.\n"
+                "Complete step work appears in Appendix B.\n"
+                "Predictive likelihood; no trading-return claim.", transform=market.transAxes,
+                fontsize=7, va="top", linespacing=1.6)
+    save(native, "supremacy_map")
+
+    f, axes = plt.subplots(1, 2, figsize=(7.2, 2.9))
+    stages = ("forward_and_loss", "backward", "gradient_clipping", "optimizer")
+    names = ("Forward + loss", "Backward", "Clip", "Adam")
+    colors = (blue, orange, gray, "#8c73aa")
+    rows = tasks["complete_work"]["rows"]
+    for a, model, title in zip(axes, ("common", "transformer"), ("Common: 8 layers", "Transformer: 2 layers")):
+        bottom = np.zeros(len(rows))
+        for stage, label, color in zip(stages, names, colors):
+            values = np.array([row[model]["stages"][stage]["arithmetic_flops"]/row[model]["queries"]/1e6 for row in rows])
+            a.barh(range(len(rows)), values, left=bottom, label=label, color=color)
+            bottom += values
+        a.set_yticks(range(len(rows)), ["Text", "Market", "Composition", "MNIST", "Gestures"])
+        a.set_xscale("log")
+        a.set_xlim(.01, 800)
+        a.invert_yaxis()
+        a.set_xlabel("MFLOPs per query in one step ↓", fontsize=8)
+        a.set_title(title, fontsize=10)
+    axes[1].legend(fontsize=6.5, loc="lower right")
+    f.tight_layout(w_pad=2)
+    save(f, "e172_complete_training_work")
 
 
 def blocks(M, tasks, ev):
@@ -430,21 +464,21 @@ def blocks(M, tasks, ev):
         ("h1","The strongest demonstrated results"),
         ("bullets",[
          f"<b>Better real-language prediction.</b> With 10M training characters, the native predictive mixture reaches "
-         f"<b>{ev['e79'][10_000_000]:.3f} test bits per character</b>, ahead of the completed LSTM ({ev['lstm10']:.3f}) "
-         f"and four-layer Transformer ({ev['tf10']:.3f}) on the same text8 split. "
-         + language_90m_reference_text(ev)
-         + "Lower bits per character means better prediction.",
+         f"<b>{ev['native10']:.3f} test bits per character without a word expert</b>, ahead of LSTM ({ev['lstm10']:.3f}) "
+         f"and four-layer Transformer ({ev['tf10']:.3f}) on identical text8 test targets. "
+         "Lower bits per character means better prediction.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
          "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
          "100% on its standard and longer contexts.",
          "<b>Rule learning and deep composition.</b> The consolidated periodic path reaches <b>100% across all "
          "3,440 unseen modular triples</b>. Native depth-four order models reach 99.9–100%; shared-motif composition "
-         "reaches about 99.65% from one pass at roughly 10,000× lower counted work than its Transformer reference."]),
+         "reaches about 99.65% from one pass."]),
         ("figure",("accomplishments",174)),
-        ("small","Language scores are held-out test results from the named predictive mixture and gradient baselines, "
-         "with different model sizes and schedules. That specialized mixture is not yet reproduced by a generic "
-         "deep language model. Retrieval, composition and arithmetic are controlled synthetic tasks. "
-         "The following pages distinguish the consolidated implementation from the original native components.")])
+        ("small",f"Language: 999,999 identical targets, frozen test parameters and cold test context. "
+         f"The optional causal word expert gives {ev['native_word10']:.3f} bpc. Counts fit 10M characters; mixture "
+         "weights additionally fit 1M validation labels. Neural baselines use different capacities, fitting passes "
+         "and validation budgets. This is a specialized count/copy mixture result. Generic deep-language learning "
+         "is measured separately. Retrieval, composition and arithmetic are controlled synthetic tasks.")])
 
     pages.append([
         ("h1","Consolidated models: accuracy versus computation"),
@@ -475,14 +509,14 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","Native components: quality, work and sample efficiency"),
         ("p","The native components establish why selective temporal computation is promising. Timing patterns, "
-         "composition and deep order reach high accuracy with much less counted work. Retrieval and rule learning "
+         "composition and deep order reach high accuracy with sparse event activity. Retrieval and rule learning "
          "also show that a reusable computation can generalize beyond the observed examples."),
         ("figure",("supremacy_map",174)),
-        ("small","Work panels count event operations or dense multiply-adds per example; training budgets are labeled. "
-         "Data efficiency and arithmetic use different horizontal axes. Market quality is held-out log-likelihood, "
-         "with an online GRU and Transformer reference. The largest work advantages here belong to the named native "
-         "components; the preceding page measures consolidated configurations directly. Operation counts do not "
-         "assign equal hardware energy to different operations.")])
+        ("small","Native work panels show event deliveries and dense multiply-adds: different activity measures. "
+         "Native delivery counts omit candidate scans and local array arithmetic, so their ratios do not measure "
+         "total work or energy savings. Synthetic evaluation sets were reused during development. Market points "
+         "are causal development screens with prior-day evidence. The preceding page uses a common logical "
+         "operation ledger; Appendix B includes complete optimizer-step arithmetic estimates.")])
 
     pages.append([
         ("h1","How the model computes and learns"),
@@ -656,7 +690,7 @@ def blocks(M, tasks, ev):
          "Accurate general recognition remains an open capability; published official-test results below "
          "are reference targets, evaluated on a different partition."),
         ("table",(["Private development configuration","Correct","Accuracy ↑"],speech_rows,[108,32,34])),
-        ("figure",("e143_temporal_residual_learning" if state_residual is not None else "e139_source_information",174)),
+        ("figure",("e143_temporal_residual_learning" if state_residual is not None else "e139_source_information",152)),
         ("p",("A six-block width-128 temporal encoder learns corrections while the inherited eight-layer parent "
          "stays frozen. It adds 395,814 parameters to the parent's 53,296. Signed modal states, nonlinear gates "
          "and residual vectors learn from all source identities and original event times before causal pooling. "
