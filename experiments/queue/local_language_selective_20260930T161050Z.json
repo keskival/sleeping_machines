@@ -1,0 +1,112 @@
+{
+  "status": "running",
+  "created_utc": "2026-09-30T16:10:50.223245+00:00",
+  "tmux_session": "local_language_selective_20260930T161050Z",
+  "suite_log": "experiments/queue/local_language_selective_20260930T161050Z.out",
+  "jobs": [
+    {
+      "kind": "contract",
+      "tag": "local_selective_contract_constant_20260930T161050Z",
+      "queue": "experiments/queue/local_selective_contract_constant_20260930T161050Z.txt",
+      "result": "experiments/results/parallel_language/local_selective_contract_constant_20260930T161050Z.json",
+      "timeout_s": 180,
+      "command": "experiments/parallel_language_contracts.py --tag local_selective_contract_constant_20260930T161050Z --width 256 --memory-profile inherited",
+      "status": "completed",
+      "started_utc": "2026-09-30T16:11:04.382857+00:00",
+      "finished_utc": "2026-09-30T16:11:16.446756+00:00",
+      "wall_s": 9.019603690016083
+    },
+    {
+      "kind": "contract",
+      "tag": "local_selective_contract_selective_20260930T161050Z",
+      "queue": "experiments/queue/local_selective_contract_selective_20260930T161050Z.txt",
+      "result": "experiments/results/parallel_language/local_selective_contract_selective_20260930T161050Z.json",
+      "timeout_s": 180,
+      "command": "experiments/parallel_language_contracts.py --tag local_selective_contract_selective_20260930T161050Z --width 256 --memory-profile inherited --content-memory",
+      "status": "completed",
+      "started_utc": "2026-09-30T16:11:16.447144+00:00",
+      "finished_utc": "2026-09-30T16:11:28.505600+00:00",
+      "wall_s": 10.48000455199508
+    },
+    {
+      "kind": "contract",
+      "tag": "local_selective_contract_selective_long_20260930T161050Z",
+      "queue": "experiments/queue/local_selective_contract_selective_long_20260930T161050Z.txt",
+      "result": "experiments/results/parallel_language/local_selective_contract_selective_long_20260930T161050Z.json",
+      "timeout_s": 180,
+      "command": "experiments/parallel_language_contracts.py --tag local_selective_contract_selective_long_20260930T161050Z --width 256 --memory-profile long_decay --content-memory",
+      "status": "completed",
+      "started_utc": "2026-09-30T16:11:28.506038+00:00",
+      "finished_utc": "2026-09-30T16:11:42.574232+00:00",
+      "wall_s": 10.567459796991898
+    },
+    {
+      "kind": "content_memory_ablation",
+      "tag": "local_selective_w128_D131072_selective_20260930T161050Z",
+      "queue": "experiments/queue/local_selective_w128_D131072_selective_20260930T161050Z.txt",
+      "result": "experiments/results/parallel_language/local_selective_w128_D131072_selective_20260930T161050Z.json",
+      "width": 128,
+      "modes": 64,
+      "depth": 6,
+      "fit": 131072,
+      "dev": 8192,
+      "epochs": 4,
+      "memory_profile": "inherited",
+      "content_memory": true,
+      "timeout_s": 1800,
+      "command": "experiments/parallel_event_language.py --tag local_selective_w128_D131072_selective_20260930T161050Z --contracts experiments/results/parallel_language/local_selective_contract_selective_20260930T161050Z.json --fit 131072 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume --memory-profile inherited --content-memory",
+      "status": "completed",
+      "started_utc": "2026-09-30T16:11:42.574685+00:00",
+      "finished_utc": "2026-09-30T16:16:25.915186+00:00",
+      "development_bpc": 2.586650391781479,
+      "parameters": 309561,
+      "training_flops": 1040608261136,
+      "wall_s": 280.88047349700355,
+      "max_rss_kb": 347960
+    },
+    {
+      "kind": "content_memory_ablation",
+      "tag": "local_selective_w128_D131072_selective_long_20260930T161050Z",
+      "queue": "experiments/queue/local_selective_w128_D131072_selective_long_20260930T161050Z.txt",
+      "result": "experiments/results/parallel_language/local_selective_w128_D131072_selective_long_20260930T161050Z.json",
+      "width": 128,
+      "modes": 64,
+      "depth": 6,
+      "fit": 131072,
+      "dev": 8192,
+      "epochs": 4,
+      "memory_profile": "long_decay",
+      "content_memory": true,
+      "timeout_s": 1800,
+      "command": "experiments/parallel_event_language.py --tag local_selective_w128_D131072_selective_long_20260930T161050Z --contracts experiments/results/parallel_language/local_selective_contract_selective_long_20260930T161050Z.json --fit 131072 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume --memory-profile long_decay --content-memory",
+      "status": "running",
+      "started_utc": "2026-09-30T16:16:25.915650+00:00"
+    }
+  ],
+  "resource_caps": {
+    "MEM_CAP_KB": 4000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "host_mem_available_mib": 12179,
+  "host": "CPU-only; one guarded job at a time",
+  "source_sha256": {
+    "experiments/parallel_language_contracts.py": "bb7cd1abe2d40d53e9fd997aa66d6a3856dded295c76be3fd81108ec0a9ad341",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  },
+  "protocol": "Matched seed-6, width-128, six-layer, four-pass fits on identical 131072 characters and 8192 development characters. Scalar input-dependent write/forget controls initialized at exact identity add 1548 parameters. Compare saved constant-memory inherited and long-decay arms from the completed memory campaign. Full fitting work includes gates. No official test.",
+  "comparison_results": [
+    "experiments/results/parallel_language/local_memory_w128_D131072_inherited_20260930T155000Z.json",
+    "experiments/results/parallel_language/local_memory_w128_D131072_long_decay_20260930T155000Z.json"
+  ],
+  "decision": "Promote only a completed useful development result; otherwise retain the stronger existing model. No automatic official-test promotion.",
+  "constant_contract": "experiments/results/parallel_language/local_selective_contract_constant_20260930T161050Z.json",
+  "updated_utc": "2026-09-30T16:16:25.915640+00:00",
+  "current_job": "local_selective_w128_D131072_selective_long_20260930T161050Z"
+}

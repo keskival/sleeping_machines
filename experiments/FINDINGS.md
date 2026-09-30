@@ -2560,3 +2560,21 @@ reproduces the previous result exactly. Longer individual retention worsened
 this screen; no longer-memory result replaces the leading valid result.
 Interference and useful content selection need further diagnosis. Longer
 context remains a design requirement, not a demonstrated gain from these poles.
+
+### Content-dependent memory controls (2026-09-30)
+
+Following the failed longer-decay initialization intervention, a separate
+candidate makes write strength and forgetting depend on normalized incoming
+content. Two zero-initialized scalar controls per block preserve the preceding
+model at initialization. Controls are input-known within each layer, so the
+bounded-delay causal affine scan still applies. Serial/parallel contracts test
+nonzero gates, warm state, predictions, modal states, parameter gradients,
+chunk partitions and future perturbations. Theory §293 gives the recurrence.
+
+The first matched 131K-character/four-pass width-128 fit completes at 2.586650
+bpc, versus 2.643410 for the saved constant-memory arm. It has 309,561 versus
+308,013 parameters (+0.50%) and 1,040.61G versus 1,026.18G fitting arithmetic
+(+1.41%). These are single-seed development results with differing architectures,
+not an isocompute comparison, official test or frontier claim. The constant
+baseline and all unsuccessful longer-memory runs remain preserved. The second
+longer-decay gated arm and frozen representation interventions are pending.

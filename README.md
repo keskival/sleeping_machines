@@ -2,8 +2,9 @@
 
 **Deep learning that computes with time.**
 
-Sleeping Machines explores models in which an event carries a learned vector and
-an arrival time. Nodes accumulate local evidence, transform messages and compete
+Sleeping Machines explores models in which an event carries content and an
+arrival time. Nodes mix incoming vectors with persistent memory, gate their
+updates, transform messages and compete
 through learned delays. The winning message determines what happens next;
 unrealized alternatives can teach the network to make better choices.
 
@@ -33,11 +34,11 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
-| Learned event language model | **3.351 validation bits/character** with persistent eight-layer state; lower is better | 8,192 fitting characters, four passes, 1,024 development targets; no count/copy/word experts or matched neural comparison |
-| Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small language/depth development screen |
-| Rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
-| Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
-| Temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
+| Ours: learned event language | **3.351 validation bpc** in the eight-layer pilot; staged six-layer fits reach **2.858 / 2.727 / 2.643 development bpc** at widths 32 / 64 / 128 | Pilot: 8K fit / 1,024 development targets. Staged fits: identical 131K fit / 8,191 development targets, four passes, one seed. No statistical experts; comparable 10M test pending |
+| Ours: learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small language/depth development screen |
+| Ours: rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
+| Ours: longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
+| Ours: temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
 
 The completed language references remain available for the full learned-event
 benchmark; lower test bits/character is better:

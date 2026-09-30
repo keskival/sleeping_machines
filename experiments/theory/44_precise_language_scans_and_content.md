@@ -126,3 +126,51 @@ interventions. A longer-credit experiment must also account for changed
 optimizer step frequency, total work and host memory. Small-scale gates are
 practical promotion rules; they cannot guarantee superiority over a larger
 language model or over contemporary frontier systems.
+
+## 293. Input-known selective writing and forgetting preserve the scan
+
+A finite memory must decide which content deserves retention. The new candidate
+uses normalized incoming content to compute two scalar controls per block:
+
+\[
+ (z_f,z_w)=W_c\operatorname{LayerNorm}(x_i)+b_c,\quad
+ f_i=\operatorname{softplus}(z_f)/\log 2,\quad
+ w_i=2\sigma(z_w).
+\]
+
+It changes the recurrence to
+
+\[
+ h_i=\operatorname{diag}(e^{-r\Delta t_i f_i})
+ R(\omega\Delta t_i)h_{i-1}+w_i W x_i.
+\]
+
+Both controls equal one at zero initialization, reproducing the preceding
+constant-write/rate model's predictions with identical shared parameters.
+The controls are positive, write gain is below two and the carry operator has
+norm at most one for nonnegative elapsed time. These statements concern the
+conditional state transition; they do not bound the whole nonlinear network's
+optimization or guarantee better retention.
+
+At a given layer x_i and its incoming time are known from the completed causal
+previous layer. Thus f_i and w_i are input-known coefficients, and rotation into
+relative coordinates leaves an associative affine scan with
+a_i=exp(-r delta_t_i f_i) and b_i=w_i R(-relative_angle_i)W x_i. Content-dependent
+forgetting does not require a state-dependent sequential recurrence here.
+Cross-chunk initial state uses the first token's forget control as well.
+
+The adjoint of h_i credits both controls: the write teacher contracts with
+W x_i, scaled by 2 sigma(z_w)(1-sigma(z_w)); the forget teacher contracts with
+the carried old state, scaled per mode by -r delta_t_i sigma(z_f)/log 2.
+Control-map parameters receive ordinary content teachers. Hard clock credit
+remains the previously declared local surrogate. Numerical contracts test
+nonzero controls, warm state, outputs, gradients, causality and chunk partitions,
+not just the identity initialization.
+
+This is an adaptation of established selective state-space reasoning (Mamba),
+not a claim that input gates are novel. A width-128, six-layer model adds only
+1,548 control parameters (0.50% of the preceding 308,013), but its normalization,
+projections, nonlinearities and backward work must all be charged. The matched
+131K-character fit compares quality and total work before larger promotion.
+The current language driver still activates every layer for every character;
+selective content memory is not demonstrated dormant-unit execution.

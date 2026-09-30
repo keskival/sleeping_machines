@@ -1,0 +1,1 @@
+local_selective_contract_selective_long_20260930T161050Z experiments/parallel_language_contracts.py --tag local_selective_contract_selective_long_20260930T161050Z --width 256 --memory-profile long_decay --content-memory

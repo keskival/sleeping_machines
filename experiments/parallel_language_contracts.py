@@ -18,6 +18,7 @@ from sleeping_machines.parallel_stream_language import ParallelEventLanguageMode
 from sleeping_machines.stream_language import StreamingEventLanguageModel
 from sleeping_machines.operation_audit import OperationAudit
 from sleeping_machines.language_memory import PROFILES, initialize_language_memory
+from sleeping_machines.selective_stream_language import SelectiveEventLanguageModel
 
 
 def serial(model, tokens, state):
@@ -50,17 +51,32 @@ def main():
     parser.add_argument('--tag', required=True)
     parser.add_argument('--width', type=int, default=32)
     parser.add_argument('--memory-profile',choices=PROFILES,default='inherited')
+    parser.add_argument('--content-memory',action='store_true')
     args = parser.parse_args()
     output = ROOT/'experiments/results/parallel_language'/f'{args.tag}.json'
     if Path(args.tag).name != args.tag or output.exists():
         raise ValueError('A unique plain tag is required')
     torch.set_num_threads(1); torch.manual_seed(6)
     start = time.perf_counter()
-    model = ParallelEventLanguageModel(width=args.width, modes=args.width//2, depth=6)
+    model_class = SelectiveEventLanguageModel if args.content_memory else ParallelEventLanguageModel
+    model = model_class(width=args.width, modes=args.width//2, depth=6)
     initialize_language_memory(model,args.memory_profile)
+    identity_error = None
+    if args.content_memory:
+        plain = ParallelEventLanguageModel(width=args.width,modes=args.width//2,depth=6)
+        plain.load_state_dict({name:value for name,value in model.state_dict().items()
+                               if '.memory_control.' not in name})
+        sample = torch.tensor([1,3,5,3,8,0,4,2])
+        initial_plain,_ = plain.forward_chunk(sample)
+        initial_selective,_ = model.forward_chunk(sample)
+        torch.testing.assert_close(initial_selective,initial_plain,rtol=3e-4,atol=3e-5)
+        identity_error = error(initial_selective,initial_plain)
     with torch.no_grad():
         for layer in model.layers:
             layer.clock.weight.normal_(0, .05); layer.clock.bias.normal_(0, .1)
+            if args.content_memory:
+                layer.memory_control.weight.normal_(0,.05)
+                layer.memory_control.bias.normal_(0,.1)
     tokens = torch.randint(0, 27, (48,))
     cases = []
     for position in (0, 10_000_000):
@@ -105,7 +121,8 @@ def main():
                           future_perturbation_prefix_error=error(perturbed[:39], whole[:39])))
     with torch.no_grad():
         old = StreamingEventLanguageModel(width=args.width, modes=args.width//2, depth=6)
-        old.load_state_dict(model.state_dict())
+        old.load_state_dict({name:value for name,value in model.state_dict().items()
+                             if '.memory_control.' not in name})
         old_state, precise_state = old.new_state(), model.new_state()
         old_state.position = precise_state.position = 10_000_000
         old.consume(3, old_state); model.consume(3, precise_state)
@@ -114,8 +131,9 @@ def main():
         assert old_delay == 0 and .001 <= precise_delay <= .011
         early_old, _ = old.forward_chunk(tokens[:16])
         early_new, _ = model.forward_chunk(tokens[:16])
-        torch.testing.assert_close(early_new, early_old, rtol=5e-4, atol=1e-4)
-    benchmark_model = ParallelEventLanguageModel(width=256, modes=128, depth=6)
+        if not args.content_memory:
+            torch.testing.assert_close(early_new, early_old, rtol=5e-4, atol=1e-4)
+    benchmark_model = model_class(width=256, modes=128, depth=6)
     initialize_language_memory(benchmark_model,args.memory_profile)
     sample = torch.randint(0, 27, (65,))
     speed = {name:[timed_step(benchmark_model, sample, parallel) for _ in range(3)]
@@ -133,6 +151,7 @@ def main():
         if not traces[name]['formula_coverage_complete']:
             raise ValueError(traces[name]['unsupported_floating_operators'])
     result = dict(status='completed', args=vars(args), cases=cases,
+                  initial_constant_memory_equivalence_error=identity_error,
                   clock_precision=dict(position=10_000_000, legacy_first_delay=old_delay,
                                        corrected_first_delay=precise_delay),
                   speed=speed, measured_step_speedup=throughput_ratio, traces=traces,
@@ -142,7 +161,8 @@ def main():
                   source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in (Path(__file__),ROOT/'sleeping_machines/parallel_stream_language.py',
                                 ROOT/'sleeping_machines/stream_language.py',ROOT/'sleeping_machines/event_state.py',
-                                ROOT/'sleeping_machines/event_memory.py',ROOT/'sleeping_machines/language_memory.py')},
+                                ROOT/'sleeping_machines/event_memory.py',ROOT/'sleeping_machines/language_memory.py',
+                                ROOT/'sleeping_machines/selective_stream_language.py')},
                   wall_s=time.perf_counter()-start,max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     output.parent.mkdir(exist_ok=True)
     output.write_text(json.dumps(result,indent=2)+'\n')

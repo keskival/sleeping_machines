@@ -57,7 +57,7 @@ state and checked predictions/gradients. Original model files remain unchanged.
 - Width 128 also completed: 308,013 parameters, 2.643 development bpc. The old
   orchestrator was terminated after that job completed. Its remaining queues
   are superseded, since model-driver contract sources have since changed.
-- Active tmux: `local_language_memory_20260930T155000Z`; manifest and suite log
+- Completed tmux: `local_language_memory_20260930T155000Z`; manifest and suite log
   are in `experiments/queue/` with the same stem. Three width-256 numerical
   contracts passed for inherited, long-decay and long-spectrum initialization.
   The campaign fits those three profiles serially at width 128, fixed 131,072
@@ -66,12 +66,22 @@ state and checked predictions/gradients. Original model files remain unchanged.
   2.858 development bpc. Retain inherited as the leading matched result.
   Longer modal retention alone worsened this screen. Investigate content-aware
   write/forget selection in a small matched fit before larger promotion.
+- Active tmux: `local_language_selective_20260930T161050Z`; manifest/log use
+  the same stem. Three new numerical contracts passed, including nonzero
+  input-dependent controls and their identity initialization. The first gated
+  width-128 fit completed at 2.586650 bpc, 309,561 parameters and 1,040.61G
+  fitting arithmetic, versus 2.643410, 308,013 and 1,026.18G for constant memory.
+  The longer-decay gated arm is next. Compare all completed arms, audit fitted
+  dependence on content/history, then prepare the larger staged campaign.
 - The inherited event initialization has mostly sub-character modal timescales.
   `sleeping_machines/language_memory.py` adds explicit token-unit alternatives;
   `experiments/theory/44_precise_language_scans_and_content.md` derives the
   schedule, precision and content-mixing contracts. The input vector is
-  retained, mixed with memory, gated and passed through a residual. Rates and
-  output gates are learned; selective write/forget gates are not present.
+  retained, mixed with memory, gated and passed through a residual. The new
+  `selective_stream_language.py` candidate additionally learns input-dependent
+  scalar write and forget controls; the preceding model remains a distinct
+  constant-memory baseline. Current language models still activate every layer
+  for each character. No measured energy or general dormant-unit claim.
 - All jobs use unique one-job queues and `run_safe.sh`; caps are 4,000,000 KiB
   virtual memory, 2,500,000 KiB group RSS and at least 8,192 MiB MemAvailable.
   The host is CPU-only. Do not train new Transformer/LSTM controls here.
