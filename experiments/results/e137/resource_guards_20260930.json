@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "jobs": [
+    {
+      "job": "e137_compact_learned_20260930",
+      "completed": false,
+      "status": "interrupted_by_daemon_restart",
+      "sampled_peak_process_group_rss_kib": 494900,
+      "sampled_min_memavailable_mib": 11824,
+      "log_sha256": "97729babd3e7e05b3380b9e0bb9208b96b36c4366d6b84b3774b10b32cad8a8d"
+    },
+    {
+      "job": "e137_compact_learned_resume_20260930",
+      "completed": true,
+      "status": "completed",
+      "sampled_peak_process_group_rss_kib": 496908,
+      "sampled_min_memavailable_mib": 11765,
+      "log_sha256": "73b9c7ba85bf02d2d347dc4461aa9a86795a52ec1a186ffb0e595a5f54bf9259"
+    },
+    {
+      "job": "e137_compact_frozen_20260930",
+      "completed": true,
+      "status": "completed",
+      "sampled_peak_process_group_rss_kib": 422252,
+      "sampled_min_memavailable_mib": 11846,
+      "log_sha256": "83f296f880c74bda270618711abe5cab330a7b10e6778508fa7694153e31bce9"
+    }
+  ],
+  "configured_guards": {
+    "address_space_cap_kib": 3600000,
+    "rss_cap_kib": 2600000,
+    "min_memavailable_mib": 8192,
+    "timeout_s": 1200
+  },
+  "scope": "Runner heartbeat observations and configured guards, not continuous memory tracing or an energy measurement. Interrupted run is preserved and resumed only from its completed epoch checkpoint under a fresh tag."
+}

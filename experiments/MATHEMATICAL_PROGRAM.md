@@ -1,5 +1,159 @@
 # Mathematical program for event networks at language scale
 
+## Current frontier: useful credit in the observed function, not just its norm
+
+Sections 237–264 distinguish four conditions with constructive mathematics:
+preserving a trained categorical function while absorbing a branch; preserving
+old gradients while adding live residual depth; suppressing label-preserving
+nuisance variation in the query; and realizing a finite optimizer step that
+actually improves fitting loss. None alone implies cross-speaker transfer or
+global deep convergence.
+
+- **Readout ownership (§§237–240):** class-gauge projection yields finite KL
+  and margin certificates. Folded affine whitening changes no inference work,
+  but absorption changes hidden teachers and their observed control kernel.
+- **Live depth (§§241–244, 253–256):** zero output maps with nonzero modal states
+  retain old predictions and teachers while giving new maps immediate label
+  credit. The existing head determines a finite residual-amplitude bound and
+  the gain's optimizer units. E151/E157 check these constructions numerically.
+- **Nuisance geometry (§§245–248):** finite-view CE excess is exactly a mean
+  categorical KL. Its covariance bound leads to a robust paired-view head;
+  E152 gains 32 held decisions over the clean-only head without encoder changes.
+  Useful future counterfactual reserve is not arbitrary augmentation variance.
+- **Realized step geometry (§§249–252, 257–260):** diagonal Adam plus clipping
+  does not bound complete query-Fisher distortion. E156 finite replays isolate
+  an excessive first step. E159 fixes a restored-scheduler rate bug and verifies
+  actual group rates before training. E158's bounded full replay policy is
+  implemented but is not an established empirical improvement.
+
+The corrected D12 pass has online NLL 0.3968, 90.72% fitting accuracy and
+78.125% private development accuracy, below the 79.30% starting single head.
+The matched D6 has the same fitting/development decisions. Deleting D12's
+new blocks changes zero decisions on the 657 reused audit utterances. Live
+output teachers have not yielded useful new depth in this fitted construction.
+Sections 261–264 derives the radial normalization teacher, a pre-normalized
+feature output map and invertible observer conditioning that retains hidden
+null directions. E161 checks exact old/live teachers and deployment folding;
+E162's actual first fitting step passes at the derived new-coordinate rate.
+Completed E163/E164 must establish whether this remedies the practical gap.
+Next distinguish task-relevant covariance and cross-example update transfer
+from raw teacher transport. Exact nonlinear/pooling inclusion, robust finite
+route-boundary utility and generic language scaling remain substantive gaps.
+
+## Primary SHD intervention: source and temporal representation (E138–E143)
+
+E143 now exceeds the 370/512 target, reaching 408/512 and improving the disjoint
+657-utterance audit by 47 correct answers. The next criterion is official-test
+parity and a transferable single generic encoder. More fit data at the terminal warm learning rate ends at 368/512;
+E138 provides no record improvement. The next intervention learns fine raw
+source marks before the existing sparse packet coalescing. It retains all 700
+channel identities in a local contrast embedding, original event-time features,
+an additive 32-component message and the original deep packet schedule. The
+zero branch reproduces the parent exactly and receives immediate label credit.
+Actual quality, transfer and full source work must be read from completed runs.
+
+New §§215–219 distinguishes input Bayes-risk loss from optimization failure,
+derives exact coalescing when affine update descriptors close, and gives the
+fine-source adjoint and the new block's observed control kernel. More fitting
+capacity cannot ensure positive cross-speaker gradient transfer. A constructive
+stable diagonal/oscillatory state-mode update supplies an explicit SSM inclusion
+target; its local adjoints are given, while hard route changes require paired
+state/output/clock continuation credit. This is the mathematical route toward
+subsuming competitive temporal learners, not a claim of existing parity.
+
+E139 finishes at 369/512, below the 370/512 parent. It does not improve the
+accuracy record. E140 makes the existing mean a zero-phase member of a signed
+temporal-memory family. Pair rotations expose a first-order phase teacher at
+zero, whereas a cosine-only kernel would be stationary there. The local
+adjoint, parent predictions and all eight phase-gradient blocks are audited.
+The operator retains linear event work and adds no emitted packets. Its
+conditional value-depth bound is explicit; full route/schedule credit and
+transfer are separate conditions. A residual-parameterized widening preserves
+old optimizer objects/moments and avoids a double-zero hidden/readout gate;
+this is the specified capacity mechanism after the phase intervention.
+The completed E140 score is 368/512 despite nonzero learned phase at every
+layer. Improving source contrast and a fixed temporal-mode family is not
+sufficient at this budget. A full reference-block inclusion requires learned
+content-dependent retention/injection and nonlinear output/query, not only the
+affine temporal primitive. Preserve source identity, exact local state credit
+and explicit route-boundary semantics when implementing that richer learner.
+
+The frozen-parent E141 control likewise fails to exceed the record (369/512),
+despite 0/1,536 clipped new-block updates. Clipping statistics alone cannot
+explain the quality plateau. Sections 226–230 now give a precise mapping from
+the EventSSM linear operator into real signed state pairs, including the
+event-independent normalization absorbed into its input matrix. They explicitly
+retain the changed optimizer geometry and nonlinear/pooling differences.
+Exact packet endpoint identities also imply equality of source and modal
+adjoints; E142 verifies these numerically and exposes the unobserved final clock.
+
+E143 implements the larger nonlinear learner as a zero-head residual around the
+unchanged strong checkpoint: 395,814 new parameters, six width-128 blocks, 64
+state pairs, full-source learning before causal pooling. Its declared three-pass
+experiment improves held accuracy by 7.42 points; clock and state-stack resets
+lose 13 and 50 decisions respectively. It is a parallel inherited
+architecture, not fourteen sequential layers. Selective affine coefficients
+computed from incoming messages can still compose in linear event work (§230);
+this extension and exact changed-order policy teachers are not in E143.
+
+Sections 231–233 closes another concrete reference gap: an augmented affine
+descriptor retains both final state and a weighted raw-state query, with exact
+local adjoints and linear event work. E144 verifies its state and teacher
+identities. Sections 234–236 explains temporal counterfactual reserve through
+Krylov orbits: nearby clock alternatives can be nearly collinear, with higher
+singular directions shrinking as higher powers of their delay spread. E148
+verifies the finite clock displacement, adjacent-interval teacher cancellation
+and singular exponents. Task-visible conditioning and attainable finite suffix
+utility must guide richer proposals; counting choices or rewarding entropy
+does not supply the future-learning optionality target.
+
+## Class-visible control and compact supervision (E136–E137)
+
+Section 214 derives the expressivity/transport design boundary: a smooth square
+map with orthogonal Jacobian everywhere is affine. Rich input-dependent keys
+can select conditional orthogonal programs; their full Jacobian and routing
+credit must be counted. Channel-specific exchanges and sparse channel rotations
+have exact local teachers and enlarge the current scalar-exchange family. This
+is a concrete next payload mechanism, with a conditional guarantee, rather than
+an assumption that norm conservation alone makes arbitrary nonlinear depth safe.
+
+The completed matched compact query reaches **47.46%** held accuracy with
+learned exchanges versus **35.35%** with frozen angles: +12.11 points with the
+same decoder. A restored 0.001-L2 angle update decreases fitting loss and
+slightly increases held loss, agreeing with its gradient prediction; the query
+step decreases both. This establishes useful adaptation across training and
+local transfer interference at the final checkpoint. Measure fitting-speaker
+invariance and independent-batch alignment alongside further fitting progress.
+The 6,476 trainable parameters exclude 53,296 inherited frozen key parameters;
+complete capacity, policy work and energy remain part of the scaling boundary.
+
+Twelve-layer exchanges now fit the completed-utterance loss, but their large
+state head retains 100% fitting accuracy when learned angles are reset. Held
+accuracy changes from 57.8% to 54.3%. This isolates decoder capacity and useful
+hidden adaptation as separate questions. A rank-16 bank/channel/class query
+reduces the model to 6,476 trainable parameters; a 5,288-parameter control freezes
+only exchange angles, with the same initial predictions and head capacity.
+The matched three-pass comparison, followed by restored finite-update and
+cross-speaker gradient probes, tests angular contribution and transferable
+credit instead of adding depth or varying seeds.
+
+Theory §§210–213 supplies the observed control kernel K=P J D^-1 J^T P^T,
+where P includes query calibration and class-contrast geometry. Orthogonal
+suffix transport preserves raw tangent norms but does not bound their alignment
+with P. The exact compact state teacher remains local at the query and can
+return through the winning exchanges. Parameter sharing/rank is a declared
+constraint with measured fitting and transfer costs, not universal compression.
+
+Optionality must use future directional reachability, not route count or error
+magnitude. Exclusive route covariance is unchanged by duplicating a route and
+splitting its probability; log-determinant increments discount redundant
+control directions. Mean correction and covariance reserve are separated as
+already required by §161. Packet/state cross-covariance can change where useful
+reserve goes even when both input scalars and total variance agree. Propagate
+shared directional sketches or learn a state-conditioned continuation critic;
+independent scalar variances cannot give a universal exact backup. These are
+analytic mechanisms and contracts, not a trained optionality policy yet.
+
 ## Usable deep credit and the supervised memory boundary (E134–E136)
 
 Priority is useful finite function updates and transfer. Both full-value SHD
@@ -20,7 +174,8 @@ key-policy support and readout alignment remain explicit research questions.
 Build the classifier around an observable memory boundary before using this
 primitive's norm theorem as a claim about supervised learnability. Timing phase
 evolution can remain orthogonal; intentional leakage is a separately measured
-forgetting mechanism. No classifier result is attributed to E136.
+forgetting mechanism. The subsequent E136 classifier fits with a large
+observable-state head; its attribution and compact intervention are described above.
 
 ## Exact joint mark/clock credit and the generic language criterion (E132)
 

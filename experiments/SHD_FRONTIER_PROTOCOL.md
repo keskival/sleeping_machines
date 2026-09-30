@@ -1,6 +1,6 @@
 # SHD: accuracy and energy reference points
 
-Updated 2026-09-29. These are verified primary-source reference points, not an
+Updated 2026-09-30. These are verified primary-source reference points, not an
 exhaustive claim about the highest result anywhere in the literature.
 
 ## What must be compared
@@ -13,6 +13,7 @@ speakers. Their scores must remain separate from official test accuracy.
 
 | Reference | Reported SHD accuracy | Resource evidence and scope |
 |---|---:|---|
+| Zhang, Wang and Shen 2026, multiscale residual encoding | 96.44% | Publisher abstract; full architecture/training/selection protocol not yet inspected |
 | Cramer et al., original dataset paper | 85.7% LSTM | Corrects the earlier report summary of approximately 70% |
 | EventSSM | 95.9% | Official implementation; asynchronous event input |
 | S7 | 96.3% | Paper reports 0.5M parameters; event input |
@@ -20,6 +21,7 @@ speakers. Their scores must remain separate from official test accuracy.
 | Chen et al. 2025, delay SNN on FPGA | 93.4% deployed | 8-bit weights; processor 282 mW, complete SoC 1.71 W, approximately 104 samples/s |
 
 Sources: [Cramer et al., Section III](https://www.kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf),
+[Zhang et al., publisher abstract](https://www.sciencedirect.com/science/article/abs/pii/S0893608026003345),
 [EventSSM code and results](https://github.com/Efficient-Scalable-Machine-Learning/event-ssm),
 [S7 Table 1](https://arxiv.org/html/2410.03464v1#S4.T1),
 [dataset leaderboard](https://zenkelab.org/resources/spiking-heidelberg-datasets-shd/),
@@ -33,6 +35,95 @@ from the strongest accuracy references. This is a concrete engineering target,
 not evidence that our CPU model currently beats it.
 
 ## What the completed local experiment establishes
+
+**Current accuracy gate:** E143's inherited D8 parent plus parallel D6 temporal
+encoder reaches 408/512 (79.6875%) on our fixed private speaker-held-out sample.
+E152 retains 406/512 (79.296875%) after deployment consolidation to one six-block
+encoder. E159's corrected twelve-block continuation reaches 400/512 (78.125%)
+after one matched fitting pass. The strongest historical eight-layer parent
+alone is 370/512 (72.265625%); architectural controls do not replace the new gate.
+Published parity requires a comparable result on the 2,264 official test
+utterances, not a numerical comparison between different held-out partitions.
+
+All head projection, paired-view whitening and finite optimizer calibration
+use fitting IDs only. The 657 additional same-speaker utterances audited in
+E147/E154 are disjoint from current fitting and development, but reused across
+investigations. They are not an untouched test. Report model inheritance,
+extra head-fitting views, exact actual optimizer rates and completed source
+hashes; E155's scheduler-overwritten rates must not be presented as calibrated.
+
+### What the reference learning structure includes
+
+EventSSM uses learned raw-event embeddings, six state-space blocks, nonlinear
+output gates and residual/normalization paths. Its temporal transition depends
+on actual event intervals. The paper reports 64/128 state sizes and several
+event augmentations. [Primary paper, methods and experimental setup](https://arxiv.org/html/2404.18508v2).
+
+S7 adds input-dependent transitions and reports 96.3% with 0.5M parameters.
+It includes event pooling and asynchronous integration; processing raw event
+identities need not require every deep layer to process every source event.
+[Primary paper, sections 3.3–4.2](https://arxiv.org/html/2410.03464v1).
+
+Our existing core has 32-component carriers, three normalized exponential
+memory scales per receiver and fixed alternating frequency partitions. Its
+hard winner/surrogate credit is not an exact inclusion of the above smooth
+temporal learners. Theory §§215–219 defines both an information-preserving
+source intervention and an explicit learned temporal-mode inclusion target.
+E139's new branch learns fine source identities/times before the original
+packet coalescing. It preserves the best checkpoint at zero, but is not claimed
+to preserve every raw-event ordering or implement the complete reference model.
+Its completed one-pass score is 369/512 (72.07%), below the 370/512 best.
+E140 adds trainable signed rotations over elapsed time, nesting the old memory
+at zero phase. Its local teacher, initialization and serial/parallel contracts
+pass; the completed one-pass result is 368/512 (71.875%), also below the best.
+**Updated development result:** E143's inherited D8 parent plus parallel D6
+width-128 signed-state encoder reaches **408/512 (79.69%)** after three passes,
+with 449,110 total parameters. The original parent stays unchanged. On all 657
+disjoint remaining utterances of the same held speakers, it improves from
+463/657 to 510/657. Architecture/checkpoint selection uses the original private
+sample; the added audit has no updates or reselection. This is not an official
+test result or a from-scratch comparison. Clock-only reset loses 13 correct
+answers and state-stack reset loses 50, holding the trained head fixed.
+
+Earlier native E51 records include official-test evaluations. The current
+common-model continuations do not access that partition; do not describe the
+entire project's test history as untouched.
+
+E141's frozen-parent source/phase continuation also finishes below the best,
+at 369/512 (72.0703%). It leaves the entire inherited parent state unchanged
+and clips none of the 1,536 active-new-block updates. This does not identify
+joint clipping as the cause of the accuracy plateau. The next E143 architecture
+adds a six-block signed temporal-state encoder as an initially zero logit
+residual; it is a larger inherited parallel model, not a from-scratch result
+for the original core. Published parity still requires the official protocol.
+
+### Evaluation protocol and acceptance gates
+
+1. Use the existing disjoint training-speaker development sample during
+   architectural work. Record accuracy, NLL, absolute utterance IDs, model and
+   optimizer lineage, preprocessing and work. Select on fitting/development
+   data; never retain an update computed from development labels.
+2. Before the official evaluation, freeze architecture, preprocessing,
+   augmentation, training schedule and model-selection rule. A fitting-only
+   validation partition or a predetermined epoch budget supplies selection.
+   Refit on the designated official training data; keep the official test out
+   of routine tuning. Record all official-test accesses.
+3. Mark reference protocol differences. EventSSM's paper explicitly selected
+   its best epoch on the test set; the delay-learning paper also used the SHD
+   test set for validation. S7 describes validation-epoch selection while
+   following EventSSM's setup. This is a comparability detail, not an excuse
+   for our present quality gap. [EventSSM §4](https://arxiv.org/html/2404.18508v2),
+   [learned delays §4.2](https://arxiv.org/html/2306.17670v3).
+4. E143 now exceeds 370/512 on the existing development sample, reaching
+   408/512. Retain this gain in a single generic learner and reach the
+   leading verified official-test range (about 96%); specify the named
+   reference, selection procedure and uncertainty when claiming parity.
+   Recheck the primary literature at that point: the table is not an exhaustive
+   or permanent global state-of-the-art claim.
+5. Report forward/backward source projection, packet aggregation, all race
+   alternatives, state updates, optimizer work, wall time and memory. Measured
+   joules to a fixed quality target is a separate acceptance gate. Low work
+   does not substitute for the requested accuracy parity.
 
 `results/e119/scan_audit_s6.json` compares the same trained eight-layer E118
 checkpoint under two event-memory implementations. All 256 development

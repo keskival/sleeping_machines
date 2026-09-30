@@ -1,0 +1,220 @@
+{
+  "status": "completed",
+  "selected_epoch": 3,
+  "parent_correct": 370,
+  "selected_correct": 408,
+  "final_correct": 408,
+  "n": 512,
+  "selected_gain_percentage_points": 7.421875,
+  "new_only_correct": 49,
+  "parent_only_correct": 11,
+  "selection": "Best of three private-development epochs, one seed, two held training speakers; no official-test or global SOTA claim",
+  "curve": [
+    {
+      "epoch": 1,
+      "fit_correct": 5203,
+      "fit_n": 6144,
+      "fit_nll": 0.497159902922552,
+      "held_correct": 389,
+      "held_n": 512,
+      "held_nll": 0.795070784042764,
+      "learning_rate": 0.001,
+      "old_packets": 6123083,
+      "new_packets": 444775,
+      "source_events": 49437469,
+      "source_table_projection_macs": 18119393280,
+      "new_event_projection_macs": 80159129600,
+      "new_gate_macs": 43723161600,
+      "new_state_compositions": 5215578,
+      "new_clock_candidates": 8005950,
+      "training_wall_s": 417.39526609901804,
+      "layer_gradient_norm_sums": [
+        118.97508630529046,
+        83.89489013471757,
+        70.17044538236223,
+        63.77771963807754,
+        58.8034950052097,
+        53.11888582381653
+      ]
+    },
+    {
+      "epoch": 2,
+      "fit_correct": 5346,
+      "fit_n": 6144,
+      "fit_nll": 0.4229421208633539,
+      "held_correct": 402,
+      "held_n": 512,
+      "held_nll": 0.7035396102510276,
+      "learning_rate": 0.0007750000000000001,
+      "old_packets": 6124068,
+      "new_packets": 443741,
+      "source_events": 49457954,
+      "source_table_projection_macs": 18119393280,
+      "new_event_projection_macs": 79972777984,
+      "new_gate_macs": 43621515264,
+      "new_state_compositions": 5203602,
+      "new_clock_candidates": 7987338,
+      "training_wall_s": 414.6092041369993,
+      "layer_gradient_norm_sums": [
+        277.3214803659357,
+        193.30892556812614,
+        139.2135773106711,
+        141.07665071287192,
+        122.62234074878506,
+        108.26267878257204
+      ]
+    },
+    {
+      "epoch": 3,
+      "fit_correct": 5394,
+      "fit_n": 6144,
+      "fit_nll": 0.3808333162193473,
+      "held_correct": 408,
+      "held_n": 512,
+      "held_nll": 0.6842755495454185,
+      "learning_rate": 0.0003250000000000001,
+      "old_packets": 6125853,
+      "new_packets": 445721,
+      "source_events": 49482873,
+      "source_table_projection_macs": 18119393280,
+      "new_event_projection_macs": 80329621504,
+      "new_gate_macs": 43816157184,
+      "new_state_compositions": 5227956,
+      "new_clock_candidates": 8022978,
+      "training_wall_s": 414.6987079530081,
+      "layer_gradient_norm_sums": [
+        390.0126272556372,
+        297.3415919209365,
+        198.1870014804881,
+        203.21284031891264,
+        177.97003801050596,
+        153.73964589368552
+      ]
+    }
+  ],
+  "old_parameters": 53296,
+  "new_parameters": 395814,
+  "total_parameters": 449110,
+  "wall_s": 1982.2404958400002,
+  "max_rss_kb": 1881256,
+  "ablation": {
+    "trained": {
+      "correct": 408,
+      "nll": 0.6842755495454185,
+      "paired_vs_trained": {
+        "trained_only_correct": 0,
+        "reset_only_correct": 0,
+        "changed_predictions": 0
+      }
+    },
+    "reset_state_stack": {
+      "correct": 358,
+      "nll": 0.9773323440167587,
+      "paired_vs_trained": {
+        "trained_only_correct": 58,
+        "reset_only_correct": 8,
+        "changed_predictions": 79
+      }
+    },
+    "reset_source_embedding": {
+      "correct": 373,
+      "nll": 0.958681684180192,
+      "paired_vs_trained": {
+        "trained_only_correct": 39,
+        "reset_only_correct": 4,
+        "changed_predictions": 69
+      }
+    },
+    "reset_clocks": {
+      "correct": 395,
+      "nll": 0.7245344695165841,
+      "paired_vs_trained": {
+        "trained_only_correct": 14,
+        "reset_only_correct": 1,
+        "changed_predictions": 20
+      }
+    },
+    "reset_modal_dynamics": {
+      "correct": 407,
+      "nll": 0.6838459690625314,
+      "paired_vs_trained": {
+        "trained_only_correct": 1,
+        "reset_only_correct": 0,
+        "changed_predictions": 1
+      }
+    },
+    "reset_all_hidden": {
+      "correct": 374,
+      "nll": 0.9687659246847034,
+      "paired_vs_trained": {
+        "trained_only_correct": 49,
+        "reset_only_correct": 15,
+        "changed_predictions": 77
+      }
+    }
+  },
+  "reset_scope": "Uncoordinated subsystem resets with trained head fixed. Tests dependence of this fitted solution, not a matched training intervention or architectural necessity. No optimizer updates; no official test",
+  "resource_guards": {
+    "e143_event_state_residual_20260930": {
+      "log": "experiments/queue/runner_e143_event_state_residual_20260930.out",
+      "memory_floor_mib": 8192,
+      "rss_cap_kib": 2600000,
+      "address_space_cap_kib": 4200000,
+      "timeout_s": 3600,
+      "minimum_sampled_available_mib": 10361
+    },
+    "e144_affine_pooling_contract_20260930": {
+      "log": "experiments/queue/runner_e144_affine_pooling_contract_20260930.out",
+      "memory_floor_mib": 8192,
+      "rss_cap_kib": 2600000,
+      "address_space_cap_kib": 3600000,
+      "timeout_s": 600,
+      "minimum_sampled_available_mib": null
+    },
+    "e145_event_state_ablation_20260930": {
+      "log": "experiments/queue/runner_e145_event_state_ablation_20260930.out",
+      "memory_floor_mib": 8192,
+      "rss_cap_kib": 2600000,
+      "address_space_cap_kib": 3600000,
+      "timeout_s": 600,
+      "minimum_sampled_available_mib": 11790
+    },
+    "e147_disjoint_speaker_audit_20260930": {
+      "log": "experiments/queue/runner_e147_disjoint_speaker_audit_20260930.out",
+      "memory_floor_mib": 8192,
+      "rss_cap_kib": 2600000,
+      "address_space_cap_kib": 3600000,
+      "timeout_s": 600,
+      "minimum_sampled_available_mib": null
+    }
+  },
+  "work_scope": "Partial training-forward counts: new source table MACs, transported/summed scalars, new event projection/gate MACs, state compositions and clock candidates; old packets counted separately. Excludes complete old-core arithmetic, nonlinearities, sorting, memory traffic, backward and optimizer. Not total FLOPs or measured energy",
+  "disjoint_audit": {
+    "n": 657,
+    "parent_correct": 463,
+    "residual_correct": 510,
+    "parent_nll": 0.9972346021228184,
+    "residual_nll": 0.686446244754691,
+    "gain_percentage_points": 7.153729071537291,
+    "scope": "Evaluate the selected E143 model on all remaining speaker3/6 utterances.\n\nDisjoint from the current 512-example development sample and all current fit\nexamples. This is a same-speaker transfer audit, not a new-speaker or official\ntest result; historical project-wide non-exposure is not asserted."
+  },
+  "timing_scope": "E143 timer includes preparation, training and initial/epoch evaluation; per-epoch training_wall_s excludes evaluation",
+  "energy_joules": null,
+  "result_files": {
+    "training": "experiments/results/e143/d8_parent_d6_state_residual_n6144_s6_e3_20260930.json",
+    "ablation": "experiments/results/e145/state_residual_ablation_20260930.json",
+    "coalescing": "experiments/results/e142/event_state_contract_v2_20260930.json",
+    "pooling": "experiments/results/e144/affine_pooling_contract_20260930.json",
+    "disjoint_audit": "experiments/results/e147/disjoint_speaker_audit_20260930.json"
+  },
+  "result_sha256": {
+    "training": "c304384045881ac9ace056d15b6adb681f55cb641f4398fde61195a97ae43c25",
+    "ablation": "9f46953b21f63e99ac049404c341542383ff781d3101d6da9fa05e59455243af",
+    "coalescing": "d52f79f35e7784d1050bec35988c37ab1177695d690a61737d99ba5ac2614a77",
+    "pooling": "35db647379cf993c6898b8c68c6c0e9665d15cdfd43423b7300cc29893908ef3",
+    "disjoint_audit": "6ee1524d39ab433f91b81aac8e9bd3133e24a5885ebef7a8a1a2e5f66b426cbd"
+  },
+  "source_sha256": {
+    "/workspace/experiments/e146_event_state_summary.py": "cc325304dd6f7d45b1f7fa7f2566e3ff2305274e2790982ff03d2df9d83a6aac"
+  }
+}

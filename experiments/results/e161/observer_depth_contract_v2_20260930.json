@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "function_max_error": 0.0,
+  "payload_max_error": 0.0,
+  "added_delay_max_error": 3.469446951953614e-17,
+  "old_teacher_max_error": 0.0,
+  "new_output_teacher_norms": [
+    0.04210153284112646,
+    0.048352409877249,
+    0.04467394438846029,
+    0.03983101744906756,
+    0.0426017210705398,
+    0.04238868876540452
+  ],
+  "explicit_output_teacher_max_error": 1.1102230246251565e-16,
+  "observed_output_operator_norm": 0.5533930837005958,
+  "output_coordinate_inverse_error": 4.440892098500626e-16,
+  "maximum_finite_kl": 3.467248882702695e-06,
+  "finite_kl_bound": 0.0008863997334762584,
+  "deployment_fold_max_error": 0.0,
+  "normalization_radial_teacher_max_error": 4.0624494243704295e-19,
+  "growth_geometry": {
+    "policy": "Pre-normalized states; zero output maps in fixed observer units",
+    "norm_learning_rate_scale": 1.0,
+    "initial_norm_gain": 1.0,
+    "class_contrast_head_operator_norm": 0.664401066997692,
+    "largest_observed_output_sensitivity": 0.5533930837005958,
+    "output_coordinate_minimum_scale": 0.8329202212171015,
+    "observer_rank_upper_bound": 3,
+    "preserved_hidden_nullspace": true,
+    "inference_fold": "Materialize physical output maps once; no observer transform per packet"
+  },
+  "scope": "Numerical local/identity/full-rank/fixed-observer contracts; no speech-quality or global optimization claim",
+  "source_sha256": {
+    "/workspace/experiments/e161_observer_depth_contract.py": "0d511d9dafd0cf2ad714c03b86794e319deb7e928517374a49e087c958f74e69",
+    "sleeping_machines/observer_conditioned_depth.py": "867a528ff432319122ba3d8b9422740f911c66de620f3072277597c30721a65d",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  },
+  "wall_s": 0.3836483389895875,
+  "max_rss_kb": 288448
+}

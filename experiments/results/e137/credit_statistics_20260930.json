@@ -1,0 +1,261 @@
+{
+  "status": "completed",
+  "fit_held_nll": {
+    "fit": 1.3358691185712814,
+    "held": 1.8624305464327335
+  },
+  "gradient_statistics": {
+    "angles": {
+      "fit": {
+        "batches": 16,
+        "parameters": 1188,
+        "mean_batch_squared_norm": 49.93342266226613,
+        "squared_mean_gradient": 2.932648093392178,
+        "distinct_batch_inner_product_mean": -0.20073687786608568,
+        "mean_direction_fraction": 0.058731165160211055,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "held": {
+        "batches": 16,
+        "parameters": 1188,
+        "mean_batch_squared_norm": 149.6352609757549,
+        "squared_mean_gradient": 15.235826292768555,
+        "distinct_batch_inner_product_mean": 6.275863980569466,
+        "mean_direction_fraction": 0.10181975955010487,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "cross_speaker": {
+        "mean_gradient_inner_product": -0.2665689083902747,
+        "mean_gradient_cosine": -0.03987920675218172,
+        "negative_batch_pair_fraction": 0.4765625,
+        "batch_pair_inner_product_quantiles": [
+          -205.04516569813154,
+          -37.88825160361682,
+          1.542189677252955,
+          31.795090940656475,
+          165.71368559152938
+        ]
+      }
+    },
+    "embedding": {
+      "fit": {
+        "batches": 16,
+        "parameters": 320,
+        "mean_batch_squared_norm": 0.13273800227678162,
+        "squared_mean_gradient": 0.014903907428606922,
+        "distinct_batch_inner_product_mean": 0.007048301105395275,
+        "mean_direction_fraction": 0.11228063684075722,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "held": {
+        "batches": 16,
+        "parameters": 320,
+        "mean_batch_squared_norm": 0.30977764590318296,
+        "squared_mean_gradient": 0.03999006424852512,
+        "distinct_batch_inner_product_mean": 0.022004225471547935,
+        "mean_direction_fraction": 0.1290928018125088,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "cross_speaker": {
+        "mean_gradient_inner_product": 0.0032329434651525574,
+        "mean_gradient_cosine": 0.13242561148015042,
+        "negative_batch_pair_fraction": 0.4375,
+        "batch_pair_inner_product_quantiles": [
+          -0.17627677188371732,
+          -0.03824493216469408,
+          0.0043695340050073405,
+          0.037210520521621285,
+          0.14885514921156692
+        ]
+      }
+    },
+    "query": {
+      "fit": {
+        "batches": 16,
+        "parameters": 4968,
+        "mean_batch_squared_norm": 61.24557668283187,
+        "squared_mean_gradient": 3.5850151721759724,
+        "distinct_batch_inner_product_mean": -0.2590222618677539,
+        "mean_direction_fraction": 0.05853508720705557,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "held": {
+        "batches": 16,
+        "parameters": 4968,
+        "mean_batch_squared_norm": 90.42406986609933,
+        "squared_mean_gradient": 9.905706787974372,
+        "distinct_batch_inner_product_mean": 4.537815916099375,
+        "mean_direction_fraction": 0.10954723452110506,
+        "scope": "Descriptive sampled minibatches, Euclidean parameter metric. Distinct-batch statistic estimates transferable first-order signal under an IID assumption; it can be negative in a finite sample."
+      },
+      "cross_speaker": {
+        "mean_gradient_inner_product": 0.2068420483708749,
+        "mean_gradient_cosine": 0.03470967895276721,
+        "negative_batch_pair_fraction": 0.60546875,
+        "batch_pair_inner_product_quantiles": [
+          -25.967674926017356,
+          -7.55932302168716,
+          -1.0262066870974569,
+          9.766485856896292,
+          52.350404037224806
+        ]
+      }
+    }
+  },
+  "finite_virtual_steps": {
+    "angles": {
+      "parameter_step_l2": 0.001,
+      "fit_predicted_nll_change": -0.0017124976185070098,
+      "held_predicted_nll_change": 0.00015566089290254022,
+      "fit_actual_nll_change": -0.0016820281744003296,
+      "held_actual_nll_change": 0.00018958747386932373
+    },
+    "query": {
+      "parameter_step_l2": 0.001,
+      "fit_predicted_nll_change": -0.0018934136294470817,
+      "held_predicted_nll_change": -0.00010924292777552112,
+      "fit_actual_nll_change": -0.0018907226622104645,
+      "held_actual_nll_change": -0.0001077018678188324
+    }
+  },
+  "sample_ids": {
+    "fit": [
+      6444,
+      2610,
+      639,
+      3896,
+      1736,
+      1985,
+      3811,
+      4834,
+      1900,
+      5240,
+      5929,
+      4764,
+      6610,
+      1637,
+      3940,
+      2228,
+      6818,
+      4527,
+      43,
+      5124,
+      3064,
+      5391,
+      2454,
+      2925,
+      2654,
+      5448,
+      2415,
+      6155,
+      3585,
+      382,
+      3330,
+      2974,
+      6100,
+      4108,
+      2625,
+      3121,
+      5933,
+      825,
+      5540,
+      3091,
+      6563,
+      1026,
+      4467,
+      2431,
+      779,
+      6918,
+      2588,
+      1283,
+      3936,
+      4110,
+      4207,
+      3867,
+      6096,
+      742,
+      2035,
+      1089,
+      1332,
+      6832,
+      5151,
+      4621,
+      3924,
+      6128,
+      4203,
+      5152
+    ],
+    "held": [
+      1048,
+      88,
+      598,
+      894,
+      621,
+      637,
+      273,
+      631,
+      392,
+      5,
+      35,
+      358,
+      94,
+      1013,
+      357,
+      888,
+      566,
+      100,
+      360,
+      1105,
+      1017,
+      311,
+      691,
+      590,
+      588,
+      992,
+      328,
+      982,
+      849,
+      931,
+      140,
+      1128,
+      967,
+      1072,
+      24,
+      314,
+      521,
+      167,
+      468,
+      125,
+      405,
+      1018,
+      151,
+      814,
+      763,
+      461,
+      867,
+      9,
+      779,
+      524,
+      1112,
+      492,
+      581,
+      169,
+      332,
+      381,
+      692,
+      456,
+      31,
+      944,
+      721,
+      1062,
+      547,
+      228
+    ]
+  },
+  "source_sha256": {
+    "/workspace/experiments/e137_credit_statistics.py": "cf8959e036d22dc0e4990861a68ed7131f13cbd1f748ef41a1373ac3440035a7",
+    "experiments/results/e137/compact_learned_d12_r16_n1024_s6_e3_resume_20260930.json": "5701283ce9c57e17f5a75b0a0155a8c7eb6fb9d513f0ad9efd5bf5386b29a11e",
+    "experiments/results/e137/compact_learned_d12_r16_n1024_s6_e3_resume_20260930.pt": "e0de34ad458c9950581ddda5e0920d4e2337c07f9594aaed6b73519ea4e77d06"
+  },
+  "scope": "Frozen final checkpoint, first 64 declared fit/held utterances, 16 minibatches each. Virtual perturbations are restored and do not train on development labels. Not population/seed uncertainty or an optimizer convergence proof."
+}

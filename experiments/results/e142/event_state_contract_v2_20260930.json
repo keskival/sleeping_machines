@@ -1,0 +1,110 @@
+{
+  "status": "completed",
+  "primitive_state_error": 3.9968028886505635e-15,
+  "primitive_serial_error": 1.3322676295501878e-15,
+  "primitive_teacher_error": 5.773159728050814e-15,
+  "coalesced_endpoint_error": 1.1102230246251565e-16,
+  "coalesced_teacher_error": 7.771561172376096e-16,
+  "causal_prefix_error": 1.7763568394002505e-15,
+  "linear_operator_inclusion_error": 2.220446049250313e-16,
+  "six_layer_gradient_norms": [
+    {
+      "raw_rate": 0.0005571269211561346,
+      "frequency": 0.0007635871460910294,
+      "direct": 0.04580087566130751,
+      "input.weight": 0.4373386910957792,
+      "output.weight": 0.3308476878324581,
+      "norm.weight": 0.05088666195700917,
+      "norm.bias": 0.10205787455556647,
+      "gate.weight": 0.08215110324310007,
+      "gate.bias": 0.024555983504865035,
+      "clock.weight": 0.0012378071806128364,
+      "clock.bias": 8.673617379884035e-19
+    },
+    {
+      "raw_rate": 0.00012369840330541388,
+      "frequency": 0.00033997364928567864,
+      "direct": 0.03039637265500641,
+      "input.weight": 0.2235128268057989,
+      "output.weight": 0.23561141323000476,
+      "norm.weight": 0.04624734785090474,
+      "norm.bias": 0.06988770720340695,
+      "gate.weight": 0.05585272782628218,
+      "gate.bias": 0.023336048390201536,
+      "clock.weight": 0.0015455664336498005,
+      "clock.bias": 6.505213034913027e-19
+    },
+    {
+      "raw_rate": 0.000157088505854672,
+      "frequency": 0.000282621673944807,
+      "direct": 0.016915644314496006,
+      "input.weight": 0.23422557728102125,
+      "output.weight": 0.22803644449068988,
+      "norm.weight": 0.04308399922866518,
+      "norm.bias": 0.058295606068539986,
+      "gate.weight": 0.04827434134346156,
+      "gate.bias": 0.019405239596775575,
+      "clock.weight": 0.0016683153204899302,
+      "clock.bias": 2.168404344971009e-19
+    },
+    {
+      "raw_rate": 0.00014179309938227856,
+      "frequency": 0.00033650309521809923,
+      "direct": 0.015017300716829239,
+      "input.weight": 0.1830377390079445,
+      "output.weight": 0.20635983970998834,
+      "norm.weight": 0.03969564014266228,
+      "norm.bias": 0.04539353468318584,
+      "gate.weight": 0.045245725553727495,
+      "gate.bias": 0.020498958267526946,
+      "clock.weight": 0.0016634185043380501,
+      "clock.bias": 2.168404344971009e-19
+    },
+    {
+      "raw_rate": 0.00016972690504492798,
+      "frequency": 0.00041329258837416986,
+      "direct": 0.011592937983650825,
+      "input.weight": 0.2295774383581687,
+      "output.weight": 0.11919931250169714,
+      "norm.weight": 0.033929211156682564,
+      "norm.bias": 0.03778928415475541,
+      "gate.weight": 0.04841051164044324,
+      "gate.bias": 0.01891796036113673,
+      "clock.weight": 0.0022480671630209764,
+      "clock.bias": 2.168404344971009e-19
+    },
+    {
+      "raw_rate": 0.00016524482675624194,
+      "frequency": 0.0003969970407847137,
+      "direct": 0.015204274614142558,
+      "input.weight": 0.1805068630122183,
+      "output.weight": 0.17142370911596364,
+      "norm.weight": 0.027787626529345594,
+      "norm.bias": 0.03292685584589362,
+      "gate.weight": 0.03425333499952967,
+      "gate.bias": 0.014755109300051236
+    }
+  ],
+  "events": 18,
+  "packets": 6,
+  "final_clock_teacher": "None: completed-query loss has no emission-time dependence",
+  "emitted_vectors_per_layer": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+  ],
+  "primitive_scan_compositions": 52,
+  "fitting_loss": 1.5285429584059278,
+  "scope": "Numerical identities and nonzero credit, not SHD accuracy or global optimization proof. First affine endpoints/teachers exact; nonlinear output only at packet closures; clock credit is a local surrogate.",
+  "wall_s": 0.03185539899277501,
+  "max_rss_kb": 249560,
+  "source_sha256": {
+    "/workspace/experiments/e142_event_state_contract.py": "af1a49cadf0652d904e074bd93eee2b916a707de5994b5e41e184418bf23517d",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/rotating_memory.py": "d5b0308a9a28593310673683638fa9f4162aceba94ce79ca58db87e4ba5323b4"
+  }
+}

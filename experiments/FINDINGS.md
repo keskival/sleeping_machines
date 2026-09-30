@@ -1,5 +1,550 @@
 # Findings log
 
+## E161–E166: directional depth and a stronger single deployment encoder
+
+**Deployment improvement, not a new overall accuracy record:** the selected
+single six-block encoder matches E143's **408/512 (79.6875%)** with development
+NLL **0.625161** versus **0.684276**, and **395,814** versus **449,110** parameters.
+On the reused 657-utterance audit it gets **518/657 (78.84%)** versus 510/657:
+60 selected-only correct and 52 combined-only correct, net +8. This is the
+private training-speaker protocol; no official SHD test or published parity.
+
+### The intervention follows the measured depth bottleneck
+
+E154's bounded D12 output maps learn, but their six added blocks change no
+audit answers. §§261–264 derives the centered normalization's tangential and
+radial teachers. Post-map normalization can attenuate its map's radial update;
+a tiny scalar output gain also shrinks hidden directions invisible to the
+class head. The fitted deletion establishes decision irrelevance, not unique
+causal attribution to radial saturation.
+
+`observer_conditioned_depth.py` instead normalizes modal-state features before
+the zero output map and uses R=(I+H^T H)^(-1/2), H the fitting-derived class
+contrast head. R is invertible and retains unit scale on ker(H). The output
+map's expressive family is unchanged; its visible update units are conditioned.
+There is no arbitrary small gain on all hidden coordinates. The fixed transform
+folds into ordinary output weights at deployment, with no extra packet map.
+This changes normalization, optimizer coordinates and new-group update units
+together, not a matched single-factor intervention or complete reference inclusion.
+
+E161 preserves initialization/old teachers exactly, gives nonzero teachers in
+all six new maps, checks the explicit formula to 1.11e-16, full-rank coordinate
+reconstruction to 4.44e-16 and deployment folding exactly. E162 uses the same
+actual first fitting examples as E156: fixed old rate 0.0000203125 and derived
+new rate 0.0001953125 reduce batch CE 0.622628 -> 0.325345; anchor mean KL is
+0.004574 under the 0.02 budget. No development/audit labels select this rate.
+
+### Useful extra depth is still a generalization gap
+
+The declared E163 continuation keeps old optimizer state/order, sample order,
+augmentations and one pass over 6,144 examples, matching E159's D6 control.
+It adds 300,306 trainable parameters; full D12 has 696,120. Online NLL is
+0.397281, fitting **5,577/6,144 (90.77%)**, development **401/512 (78.3203%)**
+and NLL **0.643979**. The extra maps reach parameter norms 0.632–0.660 and
+norm-gain vector norms around 11.04; their effect is no longer negligible.
+
+But its own trained prefix/head gets **408/512**, NLL **0.625161**, when only
+the six appended blocks are removed. Full versus prefix changes ten held
+predictions: one full-only correct, eight prefix-only correct, net -7.
+On the reused audit, full D12 gets **509/657**, NLL **0.688439**; its prefix
+gets **518/657**, NLL **0.668562**. Deletion changes eleven predictions:
+zero full-only correct and nine prefix-only correct. The correction now makes
+real decisions and has negative net held-speaker value at this budget.
+
+The matched separately trained D6 control gets 400/512 and 513/657. The
+directional model's pruned prefix thus improves development by eight answers
+and audit by five over that control, after training in the deeper graph.
+This suggests useful training coupling and harmful fitted appended corrections;
+it does not isolate a depth benefit from the changed coordinates/regularization,
+nor establish that longer deep training will fix transfer. Representation
+transport, output conditioning and cross-speaker utility remain distinct.
+
+E165 selects prefix versus full by the two already recorded development
+scores, never by the audit. This is explicit post-hoc architecture selection.
+It exports only the six old blocks and trained head, retaining their Adam
+state and order/augmentation RNG. E166 independently restores that ordinary
+encoder and optimizer and reproduces the entire 512-example development score
+exactly. Checkpoints and executed sources are hash-verified; no completed
+historical result or successful queue is overwritten.
+
+**Cost:** selected prefix CPU audit forward time is **11.904 s** versus
+**23.705 s** for the combined model; full directional D12 takes **14.123 s**.
+These are single warmed observations, not joules. The deployment parameter
+reduction is about 11.9%. E163's full recorded wall time is 591.47 s and training
+390.64 s; peak RSS 1,875,648 KiB, minimum sampled host available 10,378 MiB.
+It records **6,039,797,760 additional training-forward coordinate-fold MACs**,
+which must be added to its other partial forward ledger. Backward/optimizer,
+sorting, memory traffic and energy remain incompletely measured. Pruning
+does not erase the full D12 fitting cost, fitting-only calibrations, paired-head
+work or inherited E143 training. All jobs run one at a time through the safe
+queue with the RSS watchdog and explicit 8-GiB reserve.
+
+**Next analytical/empirical question:** what makes the appended updates useful
+on fitting speakers and harmful on held speakers? Measure fitting-only view
+covariance and independent-example transfer of the full new block, not merely
+the first map. Preserve signed temporal amplitude and exact weighted-state
+queries when comparing pooling/normalization. Retain the best deployment
+checkpoint while testing a predetermined deeper-training/representation change;
+do not claim SOTA parity from this private consolidation result.
+
+## E149–E159: one encoder, live depth and realized optimizer steps
+
+**The best speech-family score remains E143's 408/512 (79.6875%).** A single
+six-block temporal encoder now retains **406/512 (79.296875%)**, with 395,814
+deployed parameters instead of the two-branch model's 449,110. Its development
+NLL is 0.631004 versus 0.684276 for the combined model. These weights inherit
+the E143 encoder and use its combined predictions as a fitting-only teacher;
+this is deployment consolidation, not a from-scratch or equal-training-cost
+comparison. Neither model has reached official SHD reference parity.
+
+### Why the readout needed the augmentation distribution
+
+E149 derives finite categorical-gauge absorption certificates and fits an
+affine replacement head on fixed encoder features. Offline feature whitening
+is folded into the ordinary head, adding no inference transformation. The
+contract preserves 240/240 synthetic decisions, checks the finite KL bound,
+and reproduces folded logits to 2.14e-14. An arbitrary parent is not guaranteed
+to lie in the new encoder's affine feature span.
+
+E150's clean-feature fit reaches 6,011/6,144 fitting answers but only 374/512
+held answers. E152 uses the same frozen features and one clean plus one
+augmented view per fitting utterance, with an explicit within-view covariance
+penalty. It reaches 406/512 before any further encoder update: **32 additional
+held answers with unchanged representations**. The number of differing
+clean/augmented fitting predictions falls from 1,169 to 480. Exact finite-view
+Jensen risk falls from 0.153232 to 0.041113, about 73.2%.
+
+| Fixed encoder; fitted head | Clean fit NLL | Augmented fit NLL | Held correct / 512 | Held NLL |
+| --- | --- | --- | --- | --- |
+| E150 clean fitting, matched reconstruction | 0.153118 | 0.635833 | 374 (73.05%) | 0.817668 |
+| E152 paired views and nuisance covariance | 0.217752 | 0.308660 | 406 (79.30%) | 0.631004 |
+
+The changed views and regularization are a joint intervention. No single-factor
+attribution is claimed. All head fitting and whitening use only the 6,144
+fitting IDs. The encoder inherits three E143 passes; E152 then tried two
+additional passes, neither improving its epoch-zero score. Private development
+selects epoch zero. Raw data are streamed through the augmentation cache;
+the experiment does not duplicate the entire raw-event dataset in memory.
+
+Theory §§245–248 proves exactly, for a fixed label and finite view distribution,
+that average view CE minus CE at the mean logits is average
+KL(p(mean logits) || p(view logits)). Its upper bound depends on class-visible
+within-view covariance. E153 checks the identity to 2.11e-15. Nuisance variation
+and useful future route optionality are separate quantities; rewarding all
+variance would oppose this measured improvement.
+
+### Depth can preserve the old function and still have new teachers
+
+E151 grows six blocks to twelve with identity residual values, nonzero hidden
+state, zero output maps and a LayerNorm gain chosen to keep the first output
+map teacher live. Initial class outputs and all old parameter teachers agree
+exactly; all six new output maps have nonzero label teachers, with the explicit
+formula checked to 1.11e-16. New internal input/pole/clock teachers initially
+wait for the output maps to become nonzero. This avoids a double-zero gate.
+The extra six winning emissions add 36 ms initially, so the preservation is
+for completed untimed queries, not deadline-equivalent behavior.
+
+An observer-conditioned initialization (E157, §§253–256) then bounds new
+class-visible residuals using the actual inherited head norm. Initial norm
+gain is 4.84056e-6 and its optimizer-group rate scales by 0.00153072. Maps
+retain a live, smaller first teacher. This is a concrete layer/optimizer
+construction, not a global convergence theorem or established depth benefit.
+
+### The realized Adam step, and a scheduler restoration bug
+
+E156 restores the first four actual augmented fitting examples and replays
+the same Adam teacher/moments at six declared step scales. At LR 0.000325,
+batch CE increases from 0.622628 to 1.867725, although the physical interior
+directional prediction is negative. Independent fitting-anchor KL is 1.845976.
+At 1/16 rate (0.0000203125), batch CE instead falls to 0.333181 and anchor KL
+is 0.004412. This isolates an excessive realized first step in this particular
+continuation. Adam normalization can largely cancel the magnitude of gradient
+clipping; a teacher-norm cap is not a class-probability step cap (§§249–252).
+
+The original identity-grown D12 fails the same anchor budget even at 1/1024
+scale. E157's observer-conditioned D12 accepts the same 1/16 factor as D6,
+with batch CE 0.332073 and anchor KL 0.004448. All calibration labels are from
+fitting, not development or the reused audit.
+
+**Implementation finding:** E155 loaded an old optimizer `initial_lr` of
+0.000325. `LambdaLR` restored that value over the manually calibrated `lr`.
+The actual recorded epoch rate therefore stayed 0.000325. Its D6 pass exactly
+reproduces E152's unstable first-pass online NLL, 3.548693291276829. E155's
+result files and executed source are preserved. They do not test calibrated
+training and must not be cited as failure of that policy or its depth theorem.
+E159 explicitly resets every group's `initial_lr`, verifies scheduler rates
+against the intended rates before any update, and records them in its result.
+
+The corrected D12 continuation completes one pass at the verified old-group
+rate 0.0000203125. Online NLL is **0.396784**, fitting is **5,574/6,144 (90.72%)**,
+and development is **400/512 (78.125%)**, NLL **0.639008**. Its 696,888 deployed
+parameters include 301,074 new parameters. It retains useful training at
+twelve blocks, but loses six held answers relative to its 406-answer starting
+head. The matched corrected six-block result also reaches **400/512**,
+**5,574/6,144** fit and online NLL **0.396765**. Its held NLL is 0.639012;
+all 512 decisions match D12. D6 training takes 304.93 s versus D12's 373.26 s.
+Additional depth buys no accuracy gain in this comparison.
+
+**Completed E154 reused-audit/deletion check:**
+
+| Deployed checkpoint | Correct / 657 | Audit NLL | Warm CPU forward seconds | Parameters |
+| --- | --- | --- | --- | --- |
+| E143 combined | 510 (77.63%) | 0.686446 | 23.705 | 449,110 |
+| E150 clean head, selected continuation | 482 (73.36%) | 2.213027 | 11.800 | 395,814 |
+| E152 paired head, selected pass zero | 507 (77.17%) | 0.684873 | 11.794 | 395,814 |
+| E159 corrected D6 | 513 (78.08%) | 0.684352 | 11.797 | 395,814 |
+| E159 corrected D12 | 513 (78.08%) | 0.684344 | 13.835 | 696,888 |
+| Same trained D12, appended blocks deleted | 513 (78.08%) | 0.684316 | 11.752 | 395,814 |
+
+The 657 utterances are disjoint from current fitting/development, but already
+audited in E147. The paired head loses three net correct answers to the combined
+model while roughly halving this CPU observation. Corrected D6/D12 gain three
+audit answers over the combined model, despite losing six development answers
+relative to their own starting head. These are not official-test or new private
+development records. Timings include packing/query, exclude loading and are
+one warmed sequential observation each, not joules or a timing distribution.
+
+Deleting the appended blocks changes **zero audit predictions**. Their output
+map norms are 0.0307–0.0332, but norm-gain vector norms stay around 4.4e-5.
+Live teachers and changed weights therefore do not establish useful added
+representation. Deletion retains the fitted prefix/head; it is not a retrained
+architecture control. E160 verifies source/result/checkpoint hashes, identical
+depth data/rates and safe-runner success/resource logs.
+
+E158 implements an optional bounded, finite function-space replay policy:
+one teacher/Adam proposal, at most six actual parameter-ray replays, fitting
+CE checks and a fitting-anchor KL cap. It charges extra forwards and defines
+moment ownership even when a parameter proposal is rejected. It is not yet a
+completed experiment or a necessary fix; E159's scheduler correction takes
+priority. Do not report the prepared policy as an empirical finding.
+
+**Resource boundary:** E159 D12's full recorded wall time is 563.51 s, including
+loading and evaluation; training alone is 373.26 s. Peak RSS is 1,894,904 KiB
+and sampled host MemAvailable stays above 10 GiB. Runs remain sequential under
+the safe-runner lock, RSS watchdog and 8,192-MiB reserve. Source projection,
+modal scans and local vector maps are real work; recorded forward ledgers
+exclude parts of backward, optimizer, sorting and physical memory traffic.
+These are not measured joules or a training-energy supremacy claim.
+
+## E143–E148: a new SHD record, learned timing and disjoint transfer
+
+**New private-development record: 408/512 (79.6875%), up from 370/512
+(72.265625%) by 38 correct answers / 7.421875 percentage points.** The selected
+checkpoint also improves all 657 other eligible utterances of the same held
+speakers from 463/657 (70.4718%) to 510/657 (77.6256%). No fitting/development
+utterance belongs to that additional audit. This is one exploratory inherited
+model and two held training speakers, not an official SHD test or SOTA claim.
+
+| Passes over 6,144 fitting utterances | Fit correct | Fit NLL | Held correct / 512 | Held NLL |
+| --- | --- | --- | --- | --- |
+| 0: unchanged parent | — | — | 370 (72.27%) | 0.982730 |
+| 1 | 5,203 (84.68%) | 0.497160 | 389 (75.98%) | 0.795071 |
+| 2 | 5,346 (87.01%) | 0.422942 | 402 (78.52%) | 0.703540 |
+| 3 | 5,394 (87.79%) | 0.380833 | 408 (79.69%) | 0.684276 |
+
+The original D8 width-32 carrier stays exactly immutable. A **parallel** D6
+width-128 signed event-state encoder adds 395,814 parameters to its 53,296,
+for 449,110 total. This is not fourteen sequential layers or a from-scratch
+replacement result for the original core. The generic new branch contains
+64 real coordinate-pair modes, source lookup before causal coalescing, learned
+input/output maps, nonlinear gates, LayerNorm, residual values and winning
+clocks. Only supplied nonempty packets are evaluated; no empty ticks or dense
+event-pair attention are introduced. Local vector maps remain dense.
+Its initially zero correction head exactly preserves the original logits;
+nonzero hidden initialization allows representation teachers after the first
+head update. Completed-utterance CE leaves the last emission clock unobserved.
+
+The three passes, data, augmentation, seed 6, width/state sizes and optimizer
+were declared before outcomes. Adam's epoch rates are 0.001, 0.000775 and
+0.000325. The best private-development epoch is the final one. Additional
+capacity, a fresh learner and a larger update budget change together; the
+record is an engineering improvement, not a single-factor attribution.
+On the 512 development utterances, 49 previously wrong answers become correct
+and 11 previously correct become wrong. On the 657 disjoint audit utterances,
+the corresponding counts are 62 and 15. Its NLL falls from 0.997235 to 0.686446.
+The audit uses the selected checkpoint unchanged, with no optimizer updates
+or reselection. It is a same-speaker transfer check; historical project-wide
+non-exposure of those utterances is not asserted.
+
+**Which learned components the fitted solution uses (E145):**
+
+| Restored initialization; trained correction head retained | Correct / 512 | NLL |
+| --- | --- | --- |
+| None: learned model | 408 | 0.684276 |
+| Hidden clocks only | 395 | 0.724534 |
+| Source embedding only | 373 | 0.958682 |
+| State stack only | 358 | 0.977332 |
+| Decay/frequency parameters only | 407 | 0.683846 |
+| All hidden parameters | 374 | 0.968766 |
+
+Clock reset changes 20 predictions: 14 trained-only correct and one reset-only
+correct. Only the new hidden emission times change in this intervention, so
+the fitted model's learned delays contribute to classification. State-stack
+reset changes 79 predictions and loses 50 net correct answers; source reset
+loses 35. These are uncoordinated resets, not matched retrained controls;
+their effects cannot be added or taken as architectural necessity. Pole reset
+changes one decision and slightly improves NLL: modal-parameter learning has
+little measured incremental influence at this budget, although the temporal
+states remain part of the computation. The learned state/value maps, source
+representations and clocks are the stronger fitted dependencies.
+
+**Analytical advance and numerical checks:** §§226–230 constructs the exact
+linear EventSSM operator mapping while retaining its optimizer-coordinate
+difference, proves first-affine packet endpoint/teacher preservation and
+specifies selective affine composition. E142 checks endpoint/teacher errors
+1.11e-16/7.77e-16 and all six representation teachers. §§231–233 extends the
+packet algebra to preserve its weighted raw-state query as well as final
+state, with exact local adjoints. E144's maximum state/query error is 2.81e-15
+and teacher error 1.60e-14; expensive output maps can be applied at 9 closures
+instead of 27 raw events in that numerical example. E143 does not use this
+query-pooling extension; it retains the original declared endpoint design.
+
+§§234–236 connects delay counterfactuals to a Krylov control orbit. At a fixed
+later observation, moving one impulse by delta changes its contribution by
+(exp(-A delta)-I)h. Adjacent-interval credit cancels the duplicated older-history
+term. Multiple small delay alternatives are first-order collinear even when
+their finite orbit has high algebraic rank. E148 verifies the exact state
+counterfactuals and local teacher, with maximum error 2.06e-13. Its four singular
+scales approach epsilon powers 1,2,3,4; at epsilon=0.001 the chord condition
+number is about 1.33e9. This identifies a usable-reserve limitation that route
+counts or entropy miss. It motivates distinct payload/temporal programs and
+measured task-visible conditioning, not blind delay noise or a seed sweep.
+
+**Physical boundary and safety:** the complete E143 timer is 1,982.24 seconds,
+including preparation, training and initial/epoch evaluation. Training alone
+takes 417.40, 414.61 and 414.70 seconds per pass. Peak RSS is 1,881,256 KiB
+(1.79 GiB); sampled host MemAvailable stays at least 10,361 MiB. Every job runs
+under the host lock, watchdog and explicit 8,192-MiB reserve. Across training,
+148,378,296 raw sources become 1,334,237 new deep-input packets; the frozen
+parent separately processes 18,373,004 coarse packets. Smaller new packet
+counts do not imply a complete energy saving: wider maps, source transport,
+both branches, backward and optimizer work must be charged. The partial
+forward ledger and full provenance are in `results/e146/event_state_summary_20260930.json`;
+physical traffic and joules are unmeasured. The exact completed calibration
+source is archived, and all recorded final sources are SHA256 verified.
+
+**Next:** preserve this transferable improvement while testing a single generic
+encoder, exact pooled-state queries and useful route initialization/credit.
+Compare frozen-feature training at the same capacity/budget before attributing
+the gain quantitatively to deep adaptation. Freeze an official training and
+selection protocol, reach the named approximately 96% official-test reference
+range, and measure physical work at a fixed quality target. The present result
+solves a real development plateau; it does not establish frontier parity.
+
+## E138–E141: source information and a trainable temporal-mode intervention
+
+**Historical comparison:** the four completed continuations below do not beat
+the then-strongest 370/512 (72.265625%) common-model development score. None delivers
+a new best. This private speaker-held-out protocol is not the official SHD test.
+
+| One-pass continuation from the strongest parent | Fit correct / 6,144 | Held correct / 512 | Held NLL | Wall seconds | Peak RSS KiB |
+| --- | --- | --- | --- | --- | --- |
+| E138: existing source representation, terminal warm LR | 4,962 (80.76%) | 368 (71.875%) | 0.973563 | 625.69 | 665,076 |
+| E139: learned fine channel/time source messages | 4,968 (80.86%) | 369 (72.070%) | 0.976990 | 658.80 | 1,718,160 |
+| E140: fine sources plus learned temporal phase | 4,967 (80.84%) | 368 (71.875%) | 0.976120 | 996.79 | 1,835,124 |
+| E141: same fine/phase learner, original parent frozen | 4,935 (80.32%) | 369 (72.070%) | 0.989443 | 961.25 | 1,788,360 |
+
+E138–E140 use the same 6,144 fitting examples, disjoint 512 held-speaker examples,
+warm old Adam state, core LR 0.00007, sample order and band/time augmentation.
+E139 introduces 5,760 zero-initialized source-contrast parameters with LR 0.0003.
+Its initial logits, hard winners, clocks and sparse deep packet extraction match
+the parent. All 700 original cochlear channels have distinct source addresses;
+raw event times enter the message before packet coalescing. Fine weights change
+to norm 0.9712 and have nonzero gradient, but the single extra held decision is
+insufficient to exceed the parent, and held NLL is slightly worse than the plain
+continuation. Restoring these marks alone is not demonstrated as the solution.
+
+E139 processes 49,437,469 augmented raw source events and 6,123,083 deep input
+packets. Source projection has 1,581,999,008 multiplies and the same number of
+aggregation additions, 195,938,656 packet divisions and 148,312,407 time-feature
+exponentials, plus source contrast-table work. The old three-option/eight-layer
+training evaluates 146,953,992 value alternatives. These are forward work counts,
+not complete training FLOPs, physical memory traffic or joules. Peak RSS includes
+the cached raw fitting data; a streaming loader would change this boundary.
+All runs remain sequential under the host lock and explicit 8,192-MiB reserve.
+The recorded continuation wall times start after model/data preparation and
+include initial/final evaluation; complete guarded-job wall times also include
+startup and loading. Neither timing boundary is a joule measurement.
+
+E141 uses the same examples, augmentation, ordering, source/phase rates and
+initial function as E140, but freezes every original parameter and calibration
+buffer. No new-teacher update clips (0/1,536), versus 1,535/1,536 in E140.
+All phase blocks change and the fine embedding norm reaches 1.03577. The parent
+state remains exactly unchanged, yet accuracy still fails to beat 370/512.
+The clipping covariance identity in theory §§224–225 therefore identifies a
+possible optimizer confound, not the demonstrated cause or solution of the
+quality gap. Sampled host MemAvailable remains at least 10,510 MiB.
+
+**Next structural experiment (E142–E143):** `event_state.py` implements signed
+unnormalized modal states, nonlinear vector gates, residual depth and winning
+clocks. It learns source vectors before causal coalescing. E142 verifies exact
+first-affine endpoint/teacher preservation (1.11e-16/7.77e-16), agreement with
+complex modal recurrence, nonzero six-layer representation teachers, and one
+emitted vector per supplied packet. Completed-query supervision has no final
+clock teacher, as its output time is not observed by the loss. This does not
+establish SHD accuracy, nonlinear raw-event equivalence or global trainability.
+
+E143's measured 16-example resource calibration uses 550,060 KiB peak RSS and
+1.141 seconds for four optimizer steps. Its eight-example development sample
+is a resource check, not accuracy evidence. The exact calibration source is
+archived under `reference/e143_event_state_calibration_20260930.py`; its SHA256
+matches the completed calibration record. The larger uniquely named queue
+trains 395,814 new parameters in a parallel six-block width-128 encoder while
+retaining the immutable 53,296-parameter parent. Its initially zero correction
+head preserves 370/512 exactly. Three passes over 6,144 examples, Adam 0.001
+with cosine decay to 0.0001, and 10 ms nonempty global closures are declared
+before outcomes. Its completed improvement is documented above; this is not a fourteen-layer
+sequential classifier or a from-scratch benchmark. Theory §§226–230 distinguishes
+linear reference inclusion, optimizer geometry and exact packet credit from
+the remaining nonlinear pooling, selective-state and route-boundary questions.
+
+Theory §§215–219 now separates the input quotient's irrecoverable Bayes-risk
+gap from optimization failure, derives exact affine block coalescing and the
+local source-label teacher, and specifies a signed learned temporal-mode
+operator with paired winning state/output/clock semantics. The standalone
+operator reproduces a diagonal complex SSM to 2.09e-17 state error; its decay/
+frequency teachers and semigroup agree at float64 precision. It is not a complete
+nonlinear reference classifier or a trained policy.
+
+E140 changes the common receiver to damped coordinate-pair rotations, with
+dimensionless phase per memory timescale. It adds 384 scalars and no emitted
+events. Zero phase exactly nests the parent; all eight phase blocks receive
+credit. The primitive analytic teacher matches to 1.09e-14, and the linear-work
+scan agrees with the sequential recurrence to 4.44e-16. The whole-model restored
+1e-5-L2 phase probe lowers fitting NLL by 7.15e-7, versus surrogate prediction
+1.40e-6. This discrepancy preserves the distinction between an exact local
+memory adjoint and the core's approximate hard-route teacher. Theory §§220–223
+derives this operator, its nonzero phase teacher at initialization, conditional
+depth bounds and a subsequent optimizer-preserving width construction.
+The same-budget E140 run completes at 368/512 (71.875%), with fitting NLL
+0.59909 versus 0.60256 for E139, and held NLL 0.97612 versus 0.97699. Every
+phase block learns: final block norms range from 0.6462 to 1.3364. Thus this is
+not a missing-gradient or frozen-parameter result, but it gives no accuracy
+record advance. Recorded continuation wall time rises 51.3% relative to E139;
+peak RSS is 1,835,124 KiB. Sampled available memory stays at least 10,444 MiB,
+above the 8,192-MiB guard. The complete source/phase model has 59,440 stored
+parameters. No extra events are emitted, but rotations, trigonometric work and
+their backward graphs add cost. Conditional stability and available local
+credit have not supplied competitive content-dependent representation learning.
+
+Completed source/continuation records:
+`results/e122/d8_n6144_best_warm_s6_e1_20260930.json`,
+`results/e139/d8_fine_source_n6144_warm_s6_e1_20260930.json`,
+`results/e139/fine_source_contract_v2_20260930.json`,
+`results/e139/temporal_modes_contract_20260930.json`,
+`results/e140/phase_contract_20260930.json`.
+The completed phase record is
+`results/e140/d8_phase_source_n6144_warm_s6_e1_20260930.json`.
+
+## E137: compact twelve-layer learning isolates useful angular adaptation (30 September 2026)
+
+A rank-16 bank/channel/class memory query has **4,968 decoder parameters**.
+The learned-angle model trains **6,476 parameters**, versus 140,428 for the
+full-state E136 prototype (21.7× fewer trainable parameters). All arms also
+retain the **53,296 frozen pretrained key parameters** and their computation;
+this is not a 21.7× total-model or energy reduction.
+All 1,024 query-fitting utterances were already in the key parent's 4,096-fit
+set. All 512 held utterances were in its development split, with disjoint
+fitting/held speakers. This is a supervised-key transfer/intervention screen;
+`results/e137/pretraining_overlap_20260930.json` preserves the overlap audit.
+
+Matched three-pass outcomes on the same 1,024 fitting/512 held utterances:
+
+| Angular adaptation | Fitting correct | Held correct | Fitting NLL | Held NLL |
+| --- | --- | --- | --- | --- |
+| Learned | 690/1,024 (67.38%) | 243/512 (47.46%) | 1.3654 | 1.7220 |
+| Frozen | 591/1,024 (57.71%) | 181/512 (35.35%) | 1.7322 | 2.0507 |
+
+Both embeddings and compact heads learn; only angle adaptation is disabled in
+the control. Initial state, logits, calibration, immutable key checkpoint,
+examples, sample order, learning rate, update budget and current source hashes
+match exactly. The held gain is **62/512, or 12.11 percentage points**; 102
+utterances are correct only with learned angles, versus 40 only with frozen
+angles. The paired descriptive SE is 2.27 points, excluding seed and speaker-
+population uncertainty. Every learned angle layer receives nonzero credit.
+This is evidence of useful angular adaptation under matched decoder capacity,
+not just gradient support or memorization by a huge head.
+
+The compact model remains below E136 full-state final accuracy 57.8% and the
+separately trained common model's 72.3%. Its fitting loss continues to fall,
+so capacity, optimization budget and speaker transfer remain distinct gaps.
+All 768 optimizer steps clip in both compact arms. The rank constraint is
+explicit; there is no theorem that a rank-16 query preserves arbitrary memory
+classification. Direct all-layer state queries do not establish deepest-only
+serial composition, and inherited supervised keys prevent a from-scratch claim.
+
+A restored final-checkpoint audit on 64 fit and 64 held utterances finds angular
+mean-gradient cosine **−0.0399**, versus **+0.0347** for the query and **+0.1324**
+for the embedding. Angular squared-mean/mean-squared batch gradient ratio is
+0.0587 on fitting data; the distinct-batch inner-product estimate is −0.2007.
+These are noisy descriptive statistics from 16 minibatches per split, not a
+population diagnosis. A normalized angle step of L2 size 0.001 changes fit/held
+NLL by **−0.001682/+0.000190**; first-order predictions are
+−0.001712/+0.000156. An independently restored query step of the same size
+changes losses by **−0.001891/−0.000108**, close to predicted
+−0.001893/−0.000109. Actual finite signs agree with the observed credit geometry.
+No development-label updates are retained. This identifies fitting-speaker
+invariance and reusable gradient alignment as targets beyond mere transport.
+
+The learned run resumes after a daemon restart from its completed first-pass
+checkpoint, preserving optimizer and next-pass RNG under a new result/queue
+name. The old partial result remains intact. Accounted completed-boundary wall
+time is 447.8 seconds, excluding lost uncheckpointed work and including repeated
+resume setup, versus 399.0 seconds for the control. Peak RSS is 517,072/443,428
+KiB. The RSS watchdog stays enabled; sampled host MemAvailable never drops
+below **11,765 MiB**, above the 8,192 MiB floor. Only one queue job runs at once.
+Terminal-query forward contractions are 115,028 MACs versus 138,900 for the full
+head; complete training work, physical traffic and joules remain unmeasured.
+
+Completed records: `results/e137/compact_comparison_20260930.json`,
+`credit_statistics_20260930.json`, `compact_contract_20260930.json`,
+`geometry_contract_20260930.json`, `resource_guards_20260930.json`.
+
+## E136: completed twelve-layer memory-query learning and attribution (30 September 2026)
+
+The observable-state classifier completes three passes on 1,024 unaugmented
+fitting utterances and 512 held training-file speakers. It inherits immutable
+keys from the E122 eight-layer/4,096-fit checkpoint; those key layers are reused
+cyclically through twelve trainable exchanges. Class loss is assigned only at
+the completed utterance. No official test data are read.
+
+The full-state query reaches fitting accuracy **98.1%, 100%, 100%** across its
+three passes; held-speaker accuracy is **59.0%, 56.3%, 57.8%**. Every angle layer
+receives nonzero credit and changes. With the emitted-packet-only query, fitting
+accuracy is **31.2%, 38.5%, 46.0%** and held accuracy **18.4%, 25.0%, 29.7%**.
+Both retain the same actual winning key program and calibration, but this is
+**not capacity matched**: reading all states adds 138,240 active decoder
+weights. Full-state training has 140,428 active parameters versus 2,188 for the
+packet query (the masked nominal head still stores unused weights).
+
+Resetting all exchange angles in the full-state trained checkpoint, while
+retaining the learned embedding/decoder/calibration/keys, preserves 1,024/1,024
+fitting decisions. Fitting NLL rises from 0.001576 to 0.005248. Held decisions
+fall from **296/512 to 278/512 (57.81% to 54.30%)**, and held NLL rises from
+1.5946 to 1.7816. This demonstrates angle contribution/coadaptation while
+identifying the decoder's ability to retain fit. It is a frozen intervention,
+not a retrained fixed-angle control. Neither prototype beats the separately
+trained common model's 370/512 (72.3%) development result.
+
+Both complete screens take about 424 seconds on the recorded one-thread CPU,
+with peak RSS about 523,000 KiB and the host memory floor preserved. These are
+not energy or matched-quality work claims. The all-layer memory query creates
+direct supervision paths; a deepest-only serial-composition claim still needs
+its own intervention. Contracts and completed outputs:
+`results/e136/scattering_query_comparison_20260929.json`,
+`scattering_angle_ablation_20260929.json`, `reachability_contract_20260930.json`.
+
+The next intervention, E137, uses a bank/channel/class factorized query with
+4,968 head parameters. Learned/frozen angle arms start with exactly equal
+logits and share data, sample order, keys, calibration, readout capacity and
+optimizer budget. The compact query and its exact state teacher agree with a
+dense oracle to at most 4.2e-17; all twelve angle layers receive credit on the
+four-utterance contract. Completed empirical comparison is required before
+attributing transfer to angular adaptation. Theory §§210–213 derives the
+class-visible control kernel, costed query, categorical route covariance and
+correlation-preserving optionality propagation. It also reconciles §209's
+second-moment identity with the existing mean/variance distinction in §161.
+
 ## E134: full value learning separates gradient support from transfer (29 September 2026)
 
 Eight layers, 4,096 fitting utterances, 512 held-out training-file speakers,
@@ -53,9 +598,8 @@ a sequence classifier must expose or drain retained memory at its supervised
 query. The proof includes initial/final states and conditions on keys and
 angles. It ensures conditioned reachable value transport, not arbitrary
 value-dependent policy gradients, useful readout alignment, parameter-gradient
-noncancellation or classification convergence. No SHD classifier is trained
-with this primitive yet. This is an implemented mechanism/theory advance,
-not an accuracy result. `results/e136/scattering_contract_20260929.json`.
+noncancellation or classification convergence. The primitive contract alone is an implemented mechanism/theory advance,
+not an accuracy result; the subsequently completed classifier is recorded above. `results/e136/scattering_contract_20260929.json`.
 
 ## E135: completed content-key continuation and attribution (29 September 2026)
 

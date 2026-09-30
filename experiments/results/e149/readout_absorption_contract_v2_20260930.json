@@ -1,0 +1,48 @@
+{
+  "status": "completed",
+  "affine_component_max_error": 6.446921454461574e-07,
+  "optimizer_coordinate_fold_max_error": 2.1316282072803006e-14,
+  "projection": {
+    "relative_ridge": 1e-10,
+    "absolute_ridge": 1.1307047106356913e-09,
+    "feature_eigenvalue_min": 0.00010237098630254205,
+    "feature_eigenvalue_max": 93.63672468047847,
+    "centered_component_mse": 1.8638906596002322e-14,
+    "mean_logit_kl_upper_bound": 2.3298633245002904e-14,
+    "centered_component_rms": 14.239697959128206
+  },
+  "certificate": {
+    "n": 240,
+    "teacher_decisions_certified": 240,
+    "changed_decisions": 0,
+    "teacher_to_student_kl": 6.223479180678815e-16,
+    "mean_kl_upper_bound": 2.3298633245151078e-14,
+    "maximum_bound_violation": -4.015388567685118e-16,
+    "certified_decision_failures": 0
+  },
+  "head_fit": {
+    "teacher_weight": 0.5,
+    "iterations": 30,
+    "closure_evaluations": 33,
+    "objective_initial": 0.08396306843626658,
+    "objective_final": 0.0678368010912914,
+    "unregularized_soft_target_ce": 0.06244923317496857,
+    "coordinate_ridge": 1e-05
+  },
+  "large_perturbation_bound": {
+    "n": 400,
+    "teacher_decisions_certified": 0,
+    "changed_decisions": 356,
+    "teacher_to_student_kl": 12.64209633131341,
+    "mean_kl_upper_bound": 197.42912152661017,
+    "maximum_bound_violation": -11.856346632680138,
+    "certified_decision_failures": 0
+  },
+  "wall_s": 0.8336062990128994,
+  "max_rss_kb": 319808,
+  "scope": "Synthetic affine-head inclusion and categorical bounds; not deep optimization or held-speaker accuracy",
+  "source_sha256": {
+    "/workspace/experiments/e149_readout_absorption_contract.py": "2411264520ab82f329a40b25c2b4a9a607eca77d9845721308120ebf1cd8f68e",
+    "sleeping_machines/readout_absorption.py": "4758466d95e233bdcd83aa409c0fb8e8bcea4b261142ff120175ae00ecfc9fde"
+  }
+}

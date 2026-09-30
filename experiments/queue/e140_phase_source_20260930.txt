@@ -1,0 +1,1 @@
+e140_phase_source_20260930 experiments/e140_phase_packet_shd.py --tag d8_phase_source_n6144_warm_s6_e1_20260930 --limit 6144 --epochs 1 --core-lr 0.00007 --fine-lr 0.0003 --phase-lr 0.003 --checkpoint-every 64

@@ -48,6 +48,31 @@ def results():
     tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
     content_path = "e135/content_comparison_20260929.json"
     tasks["shd_content"] = read(content_path) if (RES/content_path).exists() else None
+    exchange_paths = {name: f"e136/scattering_{name}_d12_n1024_s6_e3_20260929.json"
+                      for name in ("state", "packets")}
+    exchange_paths["ablation"] = "e136/scattering_angle_ablation_20260929.json"
+    tasks["shd_exchange"] = ({name: read(path) for name,path in exchange_paths.items()}
+                              if all((RES/path).exists() for path in exchange_paths.values()) else None)
+    compact_path = "e137/compact_comparison_20260930.json"
+    tasks["shd_compact"] = read(compact_path) if (RES/compact_path).exists() else None
+    for key,path in (
+        ("shd_warm", "e122/d8_n6144_best_warm_s6_e1_20260930.json"),
+        ("shd_fine", "e139/d8_fine_source_n6144_warm_s6_e1_20260930.json"),
+        ("shd_phase", "e140/d8_phase_source_n6144_warm_s6_e1_20260930.json"),
+        ("shd_local", "e141/d8_new_only_n6144_warm_s6_e1_20260930.json"),
+        ("shd_state_residual", "e143/d8_parent_d6_state_residual_n6144_s6_e3_20260930.json"),
+        ("shd_state_ablation", "e145/state_residual_ablation_20260930.json"),
+        ("shd_state_summary", "e146/event_state_summary_20260930.json"),
+        ("shd_single_clean", "e150/single_state_n6144_s6_e3_20260930.json"),
+        ("shd_single_paired", "e152/nuisance_state_n6144_s6_e2_20260930.json"),
+        ("shd_calibrated_d6", "e159/calibrated_d6_n6144_s6_e1_20260930.json"),
+        ("shd_calibrated_d12", "e159/calibrated_d12_n6144_s6_e1_20260930.json"),
+        ("shd_single_audit", "e154/single_encoder_audit_20260930.json"),
+        ("shd_observer_depth", "e163/observer_depth_n6144_s6_e1_20260930.json"),
+        ("shd_observer_audit", "e164/observer_depth_audit_20260930.json"),
+        ("shd_selected_prefix", "e165/selected_prefix_20260930.json")):
+        tasks[key] = (read(path) if (RES/path).exists() and
+            json.loads((RES/path).read_text()).get("status") == "completed" else None)
     return tasks
 
 
@@ -204,6 +229,151 @@ def figures(M, tasks, ev):
     for i,v in enumerate(values):a.text(i,v+2,f"{v:.1f}%",ha="center",fontsize=11)
     f.tight_layout();save(f,"e122_speech")
 
+    f, axes = plt.subplots(1,2,figsize=(7.2,2.85))
+    def held(row):
+        parts=[row["final"][k] for k in ("dev_original","dev_additional")]
+        return 100*sum(p["correct"] for p in parts)/sum(p["n"] for p in parts)
+    parent=held(tasks["shd_scaled"])
+    entries=[("Original\nparent",tasks["shd_scaled"],gray)]
+    for key,label,color in (("shd_warm","Warm\ncontinuation",orange),
+                            ("shd_fine","Fine source\nmessages",blue),
+                            ("shd_phase","Fine source +\ntemporal phase","#1baf7a"),
+                            ("shd_local","New learner;\nparent frozen","#8766b6")):
+        if tasks[key] is not None:entries.append((label,tasks[key],color))
+    axes[0].bar(range(len(entries)),[held(r) for _,r,_ in entries],
+                color=[c for _,_,c in entries],width=.55)
+    for i,(_,r,_) in enumerate(entries):
+        axes[0].text(i,held(r)+2,f"{held(r):.2f}%",ha="center",fontsize=8.5)
+    axes[0].set(xticks=range(len(entries)),xticklabels=[n for n,_,_ in entries],
+        ylim=(0,100),ylabel="Private held-speaker accuracy (%)",title="Recognition quality — higher is better")
+    timed=entries[1:]
+    for i,(label,r,color) in enumerate(timed):
+        axes[1].scatter(r["wall_s"],held(r),s=65,color=color,label=label.replace("\n"," "))
+    axes[1].axhline(parent,color=gray,linestyle="--",linewidth=1)
+    axes[1].text(.98,.96,f"Original parent: {parent:.2f}%",transform=axes[1].transAxes,
+        fontsize=7,ha="right",va="top")
+    axes[1].set(xlabel="Recorded continuation wall time (s)",ylabel="Accuracy (%) — higher is better",
+        title="One pass; same 6,144 fitting examples",ylim=(65,80))
+    axes[1].legend(fontsize=6.1,loc="lower center",ncol=2)
+    axes[0].tick_params(axis="x",labelsize=6.1)
+    f.tight_layout();save(f,"e139_source_information")
+
+    if tasks["shd_state_residual"] is not None:
+        row=tasks["shd_state_residual"]
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+        epochs=[0]+[r["epoch"] for r in row["curve"]]
+        dev=[row["initial"]["dev"]["accuracy"]]+[r["dev"]["accuracy"] for r in row["curve"]]
+        axes[0].plot(epochs,[100*x for x in dev],"o-",color=blue,label="Temporal residual + frozen parent")
+        axes[0].axhline(100*dev[0],color=gray,linestyle="--",label="Original parent")
+        axes[0].set(xlabel="Passes over 6,144 fitting utterances",ylabel="Private accuracy (%) — higher is better",
+            title="Transfer to held speakers",xticks=epochs,ylim=(65,100))
+        axes[0].legend(fontsize=6.5,loc="upper left")
+        for split,label,color in (("fit","Fitting speakers",orange),("dev","Held speakers",blue)):
+            axes[1].plot([r["epoch"] for r in row["curve"]],[r[split]["nll"] for r in row["curve"]],
+                "o-",label=label,color=color)
+        axes[1].axhline(row["initial"]["dev"]["nll"],color=gray,linestyle="--",label="Parent held NLL")
+        axes[1].set(xlabel="Passes over fitting utterances",ylabel="NLL — lower is better",
+            title="Prediction quality",xticks=epochs[1:])
+        axes[1].legend(fontsize=6.5,frameon=True,facecolor="white",edgecolor="white",framealpha=1.)
+        f.tight_layout();save(f,"e143_temporal_residual_learning")
+
+    if tasks["shd_state_ablation"] is not None and tasks["shd_state_summary"] is not None:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+        rows=tasks["shd_state_ablation"]["rows"]
+        entries=[("trained","Learned model"),("reset_clocks","Initial hidden clocks"),
+            ("reset_source_embedding","Initial source marks"),("reset_state_stack","Initial state stack"),
+            ("reset_modal_dynamics","Initial modal poles")]
+        values=[100*rows[key]["held"]["accuracy"] for key,_ in entries]
+        axes[0].barh(range(len(entries)),values,color=[blue,orange,gray,gray,gray])
+        axes[0].set(yticks=range(len(entries)),yticklabels=[name for _,name in entries],
+            xlim=(60,87),xlabel="Accuracy (%) — higher is better",title="Reset one learned subsystem")
+        axes[0].invert_yaxis();axes[0].tick_params(axis="y",labelsize=7)
+        for i,v in enumerate(values):axes[0].text(v+.4,i,f"{v:.1f}%",va="center",fontsize=7)
+        summary=tasks["shd_state_summary"]
+        audit=read("e147/disjoint_speaker_audit_20260930.json")
+        for i,(n,gain,lost) in enumerate(((512,summary["new_only_correct"],summary["parent_only_correct"]),
+            (audit["n"],audit["new_only_correct"],audit["parent_only_correct"]))):
+            axes[1].bar(i-.16,gain,width=.3,color=blue,label="Newly correct" if i==0 else None)
+            axes[1].bar(i+.16,-lost,width=.3,color=orange,label="Previously correct, now wrong" if i==0 else None)
+            axes[1].text(i,gain+3,f"Net +{gain-lost}",ha="center",fontsize=8)
+        axes[1].axhline(0,color=gray,linewidth=.8)
+        axes[1].set(xticks=[0,1],xticklabels=["Development\n512 utterances",f"Disjoint audit\n{audit['n']} utterances"],
+            ylabel="Changed correct answers",title="Matched gains and regressions",ylim=(-25,82))
+        axes[1].tick_params(axis="x",labelsize=7)
+        axes[1].legend(fontsize=6,loc="upper left")
+        f.tight_layout();save(f,"e145_learned_timing_and_transfer")
+
+    if tasks["shd_single_clean"] is not None and tasks["shd_single_paired"] is not None:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+        for key,label,color in (("shd_single_clean","Clean head initialization",orange),
+                               ("shd_single_paired","Paired-view initialization",blue)):
+            row=tasks[key]
+            curve=[r for r in row["curve"] if r["epoch"]>0]
+            points=[row["conditioned_initial"]["dev"]]+[r["dev"] for r in curve]
+            axes[0].plot([0]+[r["epoch"] for r in curve],[100*p["accuracy"] for p in points],
+                "o-",label=label,color=color)
+        reference=max(tasks["shd_state_residual"]["curve"],key=lambda r:r["dev"]["correct"])
+        axes[0].axhline(100*reference["dev"]["accuracy"],color=gray,linestyle="--",label="Combined model")
+        axes[0].set(xlabel="Single-encoder continuation passes",ylabel="Private accuracy (%) — higher is better",
+            title="Head initialization and encoder updates",xticks=[0,1,2,3],ylim=(60,100))
+        axes[0].legend(fontsize=5.6,loc="upper left",ncol=2)
+        row=tasks["shd_single_paired"]
+        for i,(key,label) in enumerate((("matched_clean_head","Clean-fit head"),("conditioned_initial","Paired-view head"))):
+            part=row[key]
+            clean=part.get("clean_fit",part.get("fit"))["nll"]
+            aug=part["augmented_fit"]["nll"]
+            axes[1].bar(i-.16,clean,width=.3,color=blue,label="Clean fitting speech" if i==0 else None)
+            axes[1].bar(i+.16,aug,width=.3,color=orange,label="Augmented fitting speech" if i==0 else None)
+        axes[1].set(xticks=[0,1],xticklabels=["Clean-fit head","Paired-view head"],
+            ylabel="NLL — lower is better",title="Same frozen temporal features")
+        axes[1].legend(fontsize=6.1,loc="upper right")
+        f.tight_layout();save(f,"e152_single_encoder_learning")
+
+    if tasks["shd_single_audit"] is not None and tasks["shd_observer_audit"] is not None:
+        audit=tasks["shd_single_audit"];directional=tasks["shd_observer_audit"]
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.8))
+        points=[(audit['rows'][name],label,color) for name,label,color in (
+            ('combined','Combined model',gray),('single_paired','Single paired head',blue),
+            ('matched_d6','Trained six blocks','#1baf7a'),('grown_d12','Bounded twelve blocks',orange))]
+        points.append((directional['rows']['directional_d12'],'Directional twelve blocks','#9154c3'))
+        points.append((directional['rows']['directional_prefix'],'Selected trained prefix','#144da1'))
+        for row,label,color in points:
+            axes[0].scatter(row['forward_wall_s'],100*row['audit']['accuracy'],color=color,s=30,label=label)
+        axes[0].set(xlabel='CPU forward seconds / 657 utterances — lower is better',
+            ylabel='Reused audit accuracy (%) — higher is better',title='Quality and observed CPU work',ylim=(72,85))
+        axes[0].legend(fontsize=5.8,loc='upper right')
+        for i,(full,prefix) in enumerate(((audit['rows']['grown_d12']['audit'],audit['rows']['grown_d12_prefix']['audit']),
+            (directional['rows']['directional_d12']['audit'],directional['rows']['directional_prefix']['audit']))):
+            for offset,row,color,label in ((-.16,full,blue,'Full twelve blocks'),(.16,prefix,gray,'Six appended blocks removed')):
+                axes[1].bar(i+offset,100*row['accuracy'],width=.3,color=color,label=label if i==0 else None)
+                axes[1].text(i+offset,100*row['accuracy']+.4,str(row['correct']),ha='center',fontsize=7)
+        axes[1].set(xticks=[0,1],xticklabels=['Bounded outputs','Directional units'],
+            ylabel='Reused audit accuracy (%) — higher is better',title='Fitted contribution of added depth',ylim=(70,86))
+        axes[1].legend(fontsize=5.8,loc='upper right')
+        f.tight_layout();save(f,'e164_depth_use_and_work')
+
+    if tasks["shd_exchange"] is not None:
+        f, axes = plt.subplots(1,2,figsize=(7.2,2.95))
+        for name,label,color,style in (("state","Full state query",blue,"-"),
+                                       ("packets","Packet query",gray,":")):
+            row=tasks["shd_exchange"][name]
+            for axis,split in zip(axes,("fit","held")):
+                points=[row["initial"][split]["accuracy"]]+[x[split]["accuracy"] for x in row["curve"]]
+                axis.plot(range(len(points)),[100*x for x in points],marker="o",linestyle=style,color=color,label=label)
+        if tasks["shd_compact"] is not None:
+            for mode,label,color,style in (("learned","Compact, learned angles","#1baf7a","-"),
+                                          ("frozen","Compact, fixed angles",orange,"--")):
+                row=tasks["shd_compact"]["rows"][mode]
+                for axis,split in zip(axes,("fit","held")):
+                    axis.plot([x["epoch"] for x in row["curve"]],
+                              [100*x[split+"_accuracy"] for x in row["curve"]],
+                              marker="o",linestyle=style,color=color,label=label)
+        for axis,title in zip(axes,("Learning the fitting utterances","Transfer to held speakers")):
+            axis.set(xlabel="Passes over 1,024 utterances",ylabel="Accuracy (%) — higher is better",
+                     title=title,xticks=range(4),ylim=(0,105))
+        axes[0].legend(fontsize=6.8,loc="lower right")
+        f.tight_layout();save(f,"e136_scattering_learning")
+
     f, axes = plt.subplots(1,2,figsize=(7.2,3.15))
     entries=tasks["work_audit"]["rows"]
     names={"shared_phase_only":"Common phase path (69 scalars)","shared_d2_phase":"Common two-layer + phase",
@@ -242,6 +412,9 @@ def blocks(M, tasks, ev):
     recall_work=next(r for r in work if r["model"]=="shared_d2_recall" and r["split"]=="context4x")["work"]["estimated_operations"]
     pool_mean,pool_weighted=tasks["shd_pool_mean"],tasks["shd_pool_weighted"]
     def pooled(row,endpoint="final"):
+        if "dev" in row[endpoint]:
+            part=row[endpoint]["dev"]
+            return part["correct"]/part["n"]
         parts=[row[endpoint][k] for k in ("dev_original","dev_additional")]
         return sum(p["correct"] for p in parts)/sum(p["n"] for p in parts)
     pages=[]
@@ -336,7 +509,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","A mathematical foundation for trainable computation"),
         ("table",(["Principle","What it enables"],[
-         ["Stable transport through depth","Bounded residual carriers preserve conditional credit. A reversible packet/memory prototype has unit singular values through twelve layers with fixed keys/angles. The supervised query must expose retained memory; route and readout learning remain essential."],
+         ["Stable transport through depth","A reversible packet/memory program preserves conditional value and credit norms at any depth. Twelve-layer speech prototypes learn with observable memory queries. Readout alignment, route support and transfer remain separate requirements."],
          ["Active communication support","Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected."],
          ["Credit to unrealized alternatives","A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race."],
          ["Periodic state as an isometry","Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples."],
@@ -369,8 +542,12 @@ def blocks(M, tasks, ev):
         ("h2","A reusable event-to-decision module"),
         ("p","Sound, event-camera vision, touch and telemetry all arrive as evolving evidence. A capable recognizer "
          "could maintain context, identify meaningful patterns and answer as soon as confidence is sufficient. "
-         "Deep speech learning and temporal composition establish parts of this capability; reliable early "
-         "decisions and broader generalization are central development goals."),
+         "Deep speech learning and temporal composition establish parts of this capability. "
+         + (f"The new temporal encoder improves private speech accuracy by "
+            f"{tasks['shd_state_summary']['selected_gain_percentage_points']:.2f} points; its "
+            "gain also holds on disjoint utterances, and its learned clocks contribute to classification. "
+            if tasks['shd_state_summary'] is not None else "") +
+         "Reliable early decisions and broader generalization are central development goals."),
         ("h2","Training efficiency creates capability"),
         ("p","Cheaper updates can buy more data, depth and experimentation from the same budget. Better sample "
          "efficiency makes each experience more useful. The exact event-memory scan already reduces audited "
@@ -432,37 +609,242 @@ def blocks(M, tasks, ev):
          "for frontier models. The project's distinctive resources—timing, local memory, hard selection and credit "
          "to alternatives—remain the guide for architecture and learning.")])
 
+    speech_runs=[("Original eight-layer parent",tasks["shd_scaled"])]
+    for key,label in (("shd_warm","Warm larger-data continuation"),
+                      ("shd_fine","Fine source messages"),
+                      ("shd_phase","Fine sources + temporal phase"),
+                      ("shd_local","Fine/phase learner; parent frozen")):
+        if tasks[key] is not None:speech_runs.append((label,tasks[key]))
+    state_residual=tasks["shd_state_residual"]
+    audit_sentence=""
+    if tasks["shd_state_summary"] is not None:
+        audit=tasks["shd_state_summary"]["disjoint_audit"]
+        audit_sentence=(f" On {audit['n']} disjoint utterances from the same held speakers, accuracy improves "
+            f"from {100*audit['parent_correct']/audit['n']:.2f}% to {100*audit['residual_correct']/audit['n']:.2f}%.")
+    if state_residual is not None:
+        best_row=max(state_residual["curve"],key=lambda r:r["dev"]["correct"])
+        speech_runs.append((f"Parent + parallel six-block residual; pass {best_row['epoch']}",{"final":best_row}))
+    single_paired=tasks["shd_single_paired"]
+    if single_paired is not None:
+        selected=min(single_paired["curve"],key=lambda r:(-r["dev"]["correct"],r["dev"]["nll"]))
+        speech_runs.append((f"Single six-block temporal encoder; pass {selected['epoch']}",{"final":selected}))
+    for key,label in (("shd_calibrated_d6","Calibrated six-block continuation"),
+                      ("shd_calibrated_d12","Bounded twelve-block encoder"),
+                      ("shd_observer_depth","Directional twelve-block encoder")):
+        if tasks[key] is not None:speech_runs.append((label,tasks[key]))
+    if tasks['shd_selected_prefix'] is not None:
+        speech_runs.append(('Selected single six-block prefix; trained with twelve blocks',tasks['shd_selected_prefix']))
+    best_label,best_speech=max(speech_runs,key=lambda entry:(pooled(entry[1]),
+        -entry[1]['final'].get('dev',{}).get('nll',float('inf'))))
+    speech_rows=[]
+    display_runs=speech_runs
+    if state_residual is not None:
+        display_runs=[speech_runs[0]]+[(f"Parent + six-block temporal residual; pass {r['epoch']}",{"final":r})
+            for r in state_residual["curve"]]
+        if single_paired is not None:
+            display_runs=[speech_runs[0],(f"Parent + six-block residual; pass {best_row['epoch']}",{"final":best_row})]
+            for label,run in speech_runs:
+                if label.startswith(("Single six","Selected single","Calibrated","Bounded","Directional")):display_runs.append((label,run))
+    for label,row in display_runs:
+        parts=[row["final"]["dev"]] if "dev" in row["final"] else [row["final"][k] for k in ("dev_original","dev_additional")]
+        correct=sum(p["correct"] for p in parts)
+        speech_rows.append([label,f"{correct}/512",f"{100*pooled(row):.2f}%"])
     pages.append([
         ("h1","Appendix A. Deep event recognition"),
-        ("p",f"The eight-layer speech checkpoint reaches <b>{100*pooled(tasks['shd_scaled']):.1f}%</b> across 512 held-out "
-         "utterances. Both readout continuations start from that checkpoint. At the matched "
-         f"readout comparison below, count pooling reaches <b>{100*pooled(pool_mean):.1f}%</b> and learned event "
-         f"pooling reaches <b>{100*pooled(pool_weighted):.1f}%</b> across 512 held-out utterances. Each model has "
-         "4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors "
-         "and delays; the learned pool adds 32 scalar parameters."),
-        ("figure",("e122_speech",174)),
-        ("p",f"Two causal context channels allow distant packets to interact through accumulated state. "
-         f"Their zero-initialized columns preserve the starting predictions exactly. A matched full-update "
-         f"continuation reaches {100*pooled(tasks['shd_bridge']):.1f}%; training only those columns reaches "
-         f"{100*pooled(tasks['shd_bridge_frozen']):.1f}%. The added state has linear event work and 6,534 learned parameters."),
-        ("p","A separate key stream computes actual input-dependent winners and clocks while values learn. "
-         "Training only new context maps reaches 71.1% with separate keys and 71.3% with shared streams. "
-         "Training all eight value layers reaches 68.2% in both routing conditions. Every value layer receives "
-         "credit; route stability alone is insufficient for better transfer."),
-        *([("p",f"Content-selective temporal memory starts with identical parent predictions and preserves hard "
-         f"winning signals. Its full-value continuation reaches <b>{100*tasks['shd_content']['rows']['content']['held_accuracy']:.1f}%</b>, "
-         "versus 68.2% for the plain full-value control. It adds 2,048 learned query/key parameters and "
-         "uses 165 state scalars per time bank versus 33. Removing its learned retrieval preserves the score; "
-         "its fitting-logit effect is small. The continuation costs 3.09× the control's CPU time. "
-         "This verifies a teacher and retrieval mechanism, with no quality/resource gain at this budget.")] if tasks['shd_content'] is not None else []),
-        ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
-         "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
-         "at the audited checkpoint, excluding optimizer updates."),
-        ("small","Speech scores are development evidence from training speakers 3/6; the official SHD test set "
-         "is untouched. They demonstrate deep learning and limited transfer, not competitive speech representation. "
-         "They are not directly comparable to published official-test scores. One seed, width 32, "
-         "eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. "
-         "Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.")])
+        ("p",f"The strongest completed speech result in the model family is <b>{100*pooled(best_speech):.2f}%</b> "
+         f"on 512 private held-speaker utterances ({best_label.lower()}). "
+         "Accurate general recognition remains an open capability; published official-test results below "
+         "are reference targets, evaluated on a different partition."),
+        ("table",(["Private development configuration","Correct","Accuracy ↑"],speech_rows,[108,32,34])),
+        ("figure",("e143_temporal_residual_learning" if state_residual is not None else "e139_source_information",174)),
+        ("p",("A six-block width-128 temporal encoder learns corrections while the inherited eight-layer parent "
+         "stays frozen. It adds 395,814 parameters to the parent's 53,296. Signed modal states, nonlinear gates "
+         "and residual vectors learn from all source identities and original event times before causal pooling. "
+         "This is a larger parallel model, not fourteen sequential layers; completed-utterance supervision "
+         "does not yet teach calibrated early answers."+audit_sentence if state_residual is not None else
+         "Raw channel identities and original source times now enter learned vector messages before "
+         "coalescing. Signed temporal rotations extend the receiver memory, with the old mean as its zero-phase "
+         "case. Initial predictions, hard winners and clocks match the trained parent exactly. Each packet "
+         "still emits one winning vector and delay; source and temporal transformations add measured work.")),
+        ("table",(["Published reference; official-test protocol","Reported accuracy ↑"],[
+         ["EventSSM: asynchronous learned state-space layers","95.9%"],
+         ["S7: input-dependent temporal state","96.3%"],
+         ["2026 multiscale residual encoder; publisher abstract","96.44%"],
+        ],[131,43])),
+        ("small","Our private sample uses training-file speakers 3/6; official test accuracy is unmeasured. "
+         + ("The temporal residual uses three passes and a fresh optimizer; its larger capacity and budget "
+            "are not a matched single-factor comparison. Its listed score selects the best private-development "
+            "epoch; the curve shows all three. " if state_residual is not None else "") +
+         "The original parent was fitted on 4,096 examples. Continuation timers exclude loading; the residual "
+         "timer includes it. Both include evaluation and are not energy measurements. One seed. References: "
+         '<a href="https://arxiv.org/html/2404.18508v2">EventSSM</a>, '
+         '<a href="https://arxiv.org/html/2410.03464v1">S7</a>, '
+         '<a href="https://www.sciencedirect.com/science/article/abs/pii/S0893608026003345">multiscale encoding</a>. '
+         "The last reference's full training/selection protocol has not yet been inspected.")])
+
+    if tasks["shd_state_ablation"] is not None and tasks["shd_state_summary"] is not None:
+        summary=tasks["shd_state_summary"]
+        reset=tasks["shd_state_ablation"]["rows"]
+        reset_rows=[]
+        for key,label in (("trained","All learned parameters retained"),("reset_clocks","Only hidden clocks reset"),
+            ("reset_source_embedding","Only source vectors reset"),("reset_state_stack","Only state stack reset"),
+            ("reset_modal_dynamics","Only decay/frequency parameters reset")):
+            part=reset[key]["held"]
+            reset_rows.append([label,f"{part['correct']}/512",f"{100*part['accuracy']:.2f}%"])
+        pages.append([
+            ("h1","Appendix A (continued). Learned timing and transfer"),
+            ("p","<b>Learned delays contribute to the answer.</b> Restoring the hidden clocks to their initial "
+             "values, with source vectors, state/value maps and the trained classifier retained, loses 13 correct "
+             "answers. Timing changes the temporal interactions used by the representation; it performs computation."),
+            ("figure",("e145_learned_timing_and_transfer",174)),
+            ("table",(["Same trained readout; one subsystem reset","Correct","Accuracy ↑"],reset_rows,[108,32,34])),
+            ("p","The temporal stack and source vectors also learn useful coordinated representations. Resetting "
+             "the stack loses 50 correct answers; resetting sources loses 35. Decay/frequency resets change one "
+             "decision. These changes depend on the fitted solution's coordination; their effects cannot be added "
+             "or treated as a matched comparison of retrained architectures."),
+            ("p","The 657-utterance audit is disjoint from fitting and the development sample and uses the selected "
+             "checkpoint unchanged. It gains 62 correct answers and loses 15, for a net improvement of 47. "
+             "Both samples use the same two held training speakers. Official-test and additional-speaker "
+             "generalization are the next evaluation targets."),
+            ("h2","A stronger mathematical account of routing"),
+            ("p","An affine packet summary can preserve both the final state and the average of raw temporal "
+             "states, including their teachers. This permits richer pooling before expensive nonlinear maps. "
+             "A second derivation shows why many almost-equal delays may offer little usable choice: their "
+             "effects point in nearly the same direction. Diverse payloads and temporal modes, sufficient delay "
+             "spread and downstream visibility determine useful route reserve."),
+            ("small","One exploratory run: 449,110 total parameters, inherited parent plus a trained six-block "
+             "encoder. Three passes use about 33 minutes including preparation/evaluation and 1.79 GiB peak RSS; "
+             "the guarded host retains at least 10,361 MiB sampled available memory. Complete physical work and "
+             "joules remain unmeasured. Formal statements and numerical contracts are in THEORY §§226–236.")])
+    elif tasks["shd_exchange"] is not None:
+        state=tasks["shd_exchange"]["state"]["final"]
+        packets=tasks["shd_exchange"]["packets"]["final"]
+        ablation=tasks["shd_exchange"]["ablation"]
+        query_rows=[
+            ["Full retained-state query","140,428",f"{100*state['fit']['accuracy']:.1f}%",f"{100*state['held']['accuracy']:.1f}%"],
+            ["Emitted-packet query","2,188 active",f"{100*packets['fit']['accuracy']:.1f}%",f"{100*packets['held']['accuracy']:.1f}%"],
+        ]
+        compact_blocks=[]
+        if tasks["shd_compact"] is not None:
+            rows=tasks["shd_compact"]["rows"]
+            learned,frozen=rows["learned"],rows["frozen"]
+            for mode,label in (("learned","Compact; learned angles"),("frozen","Compact; fixed angles")):
+                last=rows[mode]["curve"][-1]
+                query_rows.append([label,f"{rows[mode]['train_parameters']:,}",
+                                   f"{100*last['fit_accuracy']:.1f}%",f"{100*last['held_accuracy']:.1f}%"])
+            compact_blocks=[("p",f"A rank-16 bank/channel/class query uses 4,968 decoder parameters. Learned exchanges "
+                f"reach {100*learned['curve'][-1]['held_accuracy']:.1f}% held accuracy versus "
+                f"{100*frozen['curve'][-1]['held_accuracy']:.1f}% with fixed angles. These compact arms share initial "
+                "predictions, calibration, keys, query capacity, examples and optimizer budget. Both embeddings and "
+                "queries learn; only angle adaptation is disabled. This isolates useful exchange adaptation under constrained supervision."),
+                ("small","Compact/full terminal queries estimate 115,028/138,900 forward MACs, excluding key/exchange work, "
+                 "normalization, backward, optimizer and traffic. Parameter compression is much larger than this query-work saving; energy is unmeasured.")]
+        pages.append([
+            ("h1","Appendix A (continued). Trainable event memory at twelve layers"),
+            ("p","A winning key selects one memory bank. Its orthogonal exchange stores and emits vector information "
+             "with the winning delay. Conditional packet/state norms survive depth; the completed query reads retained "
+             "memory. All twelve exchange layers receive credit."),
+            ("figure",("e136_scattering_learning",174)),
+            ("table",(["Completed three-pass query","Trainable parameters","Fit: higher is better","Held: higher is better"],query_rows,[63,35,38,38])),
+            ("p",f"Resetting learned angles preserves all 1,024 full-query fitting decisions, "
+             f"while held accuracy changes from {100*ablation['trained']['held']['accuracy']:.1f}% to "
+             f"{100*ablation['all_angles_reset_same_decoder']['held']['accuracy']:.1f}%. This frozen-checkpoint probe shows "
+             "angle contribution/coadaptation, not a retrained control. The full-state and packet queries differ in active decoder capacity."),
+            *compact_blocks,
+            ("small","Exploratory seed 6: 1,024 unaugmented fitting utterances; 512 held training-file speakers; "
+             "three passes, width 32. Each model retains 53,296 frozen key parameters from the eight-layer/4,096-fit checkpoint. "
+             "Query-fitting examples are a subset of its fitting data. These are not from-scratch or matched continuations. All-layer state queries provide "
+             "direct supervision. Official SHD test data and calibrated early decisions remain untested.")])
+
+    if tasks["shd_single_clean"] is not None and single_paired is not None:
+        clean_run=tasks["shd_single_clean"]
+        selected=min(single_paired["curve"],key=lambda r:(-r["dev"]["correct"],r["dev"]["nll"]))
+        model_rows=[]
+        for label,part in (("Combined model: parent + temporal correction",best_row["dev"]),
+            ("Single encoder: clean head, before continuation",clean_run["conditioned_initial"]["dev"]),
+            ("Single encoder: paired head, selected pass zero",single_paired["conditioned_initial"]["dev"])):
+            model_rows.append([label,f"{part['correct']}/512",f"{100*part['accuracy']:.2f}%",f"{part['nll']:.3f}"])
+        if tasks['shd_selected_prefix'] is not None:
+            part=tasks['shd_selected_prefix']['final']['dev']
+            model_rows.append(['Single encoder: selected trained prefix',f"{part['correct']}/512",
+                f"{100*part['accuracy']:.2f}%",f"{part['nll']:.3f}"])
+        transfer_text=""
+        timing_text=""
+        if tasks["shd_single_audit"] is not None:
+            audit=tasks["shd_single_audit"]
+            original= audit["rows"]["combined"]
+            single= audit["rows"]["single_paired"]
+            transfer_text=(f" On the reused 657-utterance disjoint audit, the single encoder reaches "
+                f"{100*single['audit']['accuracy']:.2f}% versus {100*original['audit']['accuracy']:.2f}% "
+                "for the combined model. This audit is excluded from updates and checkpoint selection.")
+            timing_text=(f" One CPU forward evaluation of those utterances takes {single['forward_wall_s']:.2f} s "
+                f"for the single encoder and {original['forward_wall_s']:.2f} s for the combined model. "
+                "This includes packing/query work and excludes loading; it is one timing observation, not joules.")
+        if tasks['shd_selected_prefix'] is not None:
+            selected_prefix=tasks['shd_selected_prefix']
+            transfer_text=(f" The selected trained prefix reaches {selected_prefix['reused_audit']['correct']}/657 "
+                f"({100*selected_prefix['reused_audit']['accuracy']:.2f}%) versus 510/657 (77.63%) for the combined model "
+                "on the reused disjoint audit. Audit labels do not choose the checkpoint.")
+            timing_text=(f" One CPU forward evaluation takes {selected_prefix['observed_forward_wall_s']:.2f} s for "
+                "the selected prefix versus 23.71 s for the combined model. Packing/query included, loading excluded; "
+                "one timing observation, not joules.")
+        pages.append([
+            ("h1","Appendix A (continued). One temporal encoder"),
+            ("p","A six-block temporal encoder retains nearly all the combined model's development accuracy "
+             "through one ordinary query head. Deployment removes the frozen parent: 395,814 parameters "
+             "replace 449,110. Modal states, gated vector messages and winning delays remain. Its weights "
+             "inherit earlier encoder training; combined teacher predictions are used only to initialize the head."),
+            ("table",(["Private development configuration","Correct","Accuracy ↑","NLL ↓"],model_rows,[98,27,27,22])),
+            ("figure",("e152_single_encoder_learning",174)),
+            ("p","Fitting the head on clean and transformed speech improves held accuracy by 32 answers "
+             "with the temporal features frozen. Its covariance penalty suppresses class-visible nuisance "
+             "variation. The right panel compares the heads on the same features; the left shows all subsequent "
+             "unrestricted encoder passes."+transfer_text),
+            ("p","Training the directional twelve-block extension, then selecting its six-block prefix on development, "
+             "retains the combined model's 408 correct answers with lower NLL and 395,814 deployed parameters. "
+             "The extra training blocks are removed after their learned contributions reduce held accuracy. "
+             "This improves deployment quality/work; it does not establish a positive deep-block accuracy gain."),
+            ("small","Seed 6, private train-file speakers 3/6; official-test parity remains unmeasured. "
+             "Head fitting uses 6,144 unique fitting utterances: one clean view for the first arm, clean plus "
+             "one transformed view for the paired arm. The arms also change regularization and use three/two "
+             "encoder passes respectively, so total budgets are not matched. All continuation epochs are plotted; "
+             "selection uses development accuracy, then NLL. Extra teacher/cache/head work and inherited fitting "
+             "must be charged. Modal/vector maps are locally dense; no empty ticks or event-pair attention are added. "
+             "The selected prefix additionally inherits the full twelve-block fitting pass; pruning does not erase "
+             "that training cost. Prefix/full choice is post-hoc private-development selection. "
+             "Formulae and numerical checks: THEORY §§237–264."+timing_text)])
+
+    if tasks['shd_observer_depth'] is not None and tasks['shd_observer_audit'] is not None:
+        depth_rows=[]
+        for key,label in (('shd_calibrated_d6','Six-block control'),('shd_calibrated_d12','Twelve blocks: bounded outputs'),
+                          ('shd_observer_depth','Twelve blocks: directional units')):
+            run=tasks[key];final=run['final']
+            depth_rows.append([label,f"{run['deployed_parameters']:,}",f"{100*final['fit']['accuracy']:.2f}%",
+                f"{100*final['dev']['accuracy']:.2f}%",f"{final['dev']['nll']:.3f}"])
+        audit=tasks['shd_observer_audit'];paired=audit['paired']['its_trained_prefix']
+        pages.append([
+            ('h1','Appendix A (continued). Making depth useful'),
+            ('p','Identity growth preserves the classifier and old teachers while added output maps receive '
+             'label credit. They must also change useful features. A tightly bounded twelve-block extension '
+             'learns weights but changes no audit decisions when its six appended blocks are removed.'),
+            ('table',(['One matched fitting pass','Parameters','Fit accuracy ↑','Private accuracy ↑','NLL ↓'],depth_rows,[68,29,26,29,22])),
+            ('figure',('e164_depth_use_and_work',174)),
+            ('p','Directional conditioning normalizes temporal-state features before their output map. An '
+             'invertible coordinate change rescales classifier-sensitive directions and preserves hidden null '
+             'directions for later computation. The fixed transform folds into an ordinary map at deployment. '
+             'Initial outputs and old teachers remain exact; fitting replays verify the actual proposed update.'),
+            ('p',f"The directional model reaches {audit['rows']['directional_d12']['audit']['correct']}/657 on the reused audit. "
+             f"Removing its six appended blocks changes {paired['changed_predictions']} predictions: "
+             f"{paired['full_only_correct']} are correct only with the blocks and {paired['reference_only_correct']} only without them. "
+             'This measures fitted contribution with the trained prefix/head retained; it is not a retrained architecture comparison.'),
+            ('small','All arms inherit the paired-head checkpoint and use 6,144 fitting utterances, the same order, '
+             'channel/time transformations and one encoder pass. Old-group LR is 0.0000203125; directional new groups '
+             'use 0.0001953125 from fitting-only replay. Changed normalization and update coordinates form one '
+             'intervention. New blocks initially add 36 ms latency; labels supervise completed untimed utterances. '
+             'Audit reuse is explicit; official-test parity remains unmeasured. CPU points are one warmed observation '
+             'per model, packing/query included and loading excluded; energy is unmeasured. Weight-coordinate folding, '
+             'all source work and added depth must be charged during training. Local maps remain dense, with no empty '
+             'ticks or event-pair attention. Theory §§249–264.')])
 
     coverage=[]
     def compact_work(value):
@@ -548,7 +930,11 @@ def blocks(M, tasks, ev):
          "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks "
          "a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test "
          "whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport "
-         "and its supervised memory boundary."),
+         "and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests "
+         "compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages "
+         "and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. "
+         "E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal "
+         "residual learner, and E144 audits simultaneous state/query pooling."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
@@ -559,6 +945,7 @@ def markdown(pages):
     def convert(text):
         text = re.sub(r"<b>(.*?)</b>", r"**\1**", text)
         text = re.sub(r"<i>(.*?)</i>", r"*\1*", text)
+        text = re.sub(r'<a href="([^"]+)">(.*?)</a>', r"[\2](\1)", text)
         return html.unescape(text)
     out = []
     for page in pages:

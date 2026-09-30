@@ -1,0 +1,1 @@
+e137_compact_frozen_20260930 experiments/e137_compact_shd.py --tag compact_frozen_d12_r16_n1024_s6_e3_20260930 --angles frozen

@@ -16,6 +16,13 @@ not yet a union of every historical prototype's primitives.
 | `sleeping_machines/evidence_memory.py` | Visited-context count/exposure memory and hard relative pointer routes |
 | `sleeping_machines/objectives.py` | Categorical and exact piecewise-constant marked hazard likelihoods |
 | `sleeping_machines/readout_calibration.py` | Fit-only conditioning; project unsupported static count dependence |
+| `sleeping_machines/event_state.py` | Generic signed temporal-state blocks, nonlinear vector gates, winning clocks; full-source causal coalescing and a six-block candidate encoder |
+| `sleeping_machines/affine_packets.py` | Simultaneous affine endpoint and weighted-state-query summaries, including packet/receiver resets |
+| `sleeping_machines/readout_absorption.py` | Fitting-only affine branch absorption, categorical certificates and folded feature conditioning |
+| `sleeping_machines/nuisance_readout.py` | Paired-view covariance and robust affine head fitting; no extra deployment transform |
+| `sleeping_machines/depth_growth.py` | Identity event-block growth retaining old outputs/teachers with live new output-map credit |
+| `sleeping_machines/head_conditioned_depth.py` | Existing class-head bound for new residual gains and their optimizer units |
+| `sleeping_machines/observer_conditioned_depth.py` | Pre-normalized state/output growth, invertible observer units retaining hidden null directions, and physical deployment-map folding |
 | `experiments/e120_shared_tasks.py` | Task encodings, disjoint evidence/neural fitting, target construction |
 | `experiments/e120_dvs_adapter.py` | Bounded-packet AEDAT input, causal count coalescing |
 | `experiments/e120_shared_bench.py` | The same optimizer/backbone training path for all new tasks |
@@ -28,7 +35,66 @@ an asserted SHA-256 so rebases and fresh clones do not lose the reference.
 The check gives exact logits, parameter gradients and winners on the audited
 batch, and 151/256 unchanged development answers on the existing speech model.
 
+### Richer signed temporal states (E142–E145)
+
+The new generic encoder uses real coordinate pairs for stable complex modes,
+learned source vectors, input/output maps, nonlinear gates, LayerNorm and
+residual vectors. It evaluates only supplied packets and their actual delayed
+arrival order. Local projections are dense; event-pair attention and empty
+time ticks are absent. Clock candidate credit is a declared local surrogate,
+not an exact changed-order suffix replay. Its completed-query head observes
+vectors and counts, so the last output clock receives no label teacher.
+
+Raw source lookup occurs before causal coalescing. Transporting raw modal
+drives to closure preserves first-layer affine endpoints and their smooth
+teachers exactly, but nonlinear outputs are evaluated only at closures.
+`affine_packets.py` additionally retains weighted raw-state queries; this
+pooling extension is not in E143. Its streaming state/query storage is O(m)
+per active receiver, while the current autograd scan materializes O(Nm).
+
+E143 composes an immutable trained D8 width-32 parent with a **parallel** D6
+width-128 encoder (64 state pairs). A zero correction head initially preserves
+all parent predictions; the hidden encoder is initialized nonzero, allowing
+its label teacher after the first head update. There are 53,296 inherited
+parameters plus 395,814 new ones. This is not a fourteen-layer sequential model,
+a from-scratch result, or a new primitive already rerun on every benchmark.
+It is a common module for continuous/vector event representations, currently
+evaluated on the SHD task class. Completed curves and reset diagnostics belong
+in FINDINGS.md; official-test parity and early-confidence answers remain separate
+acceptance gates.
+
+Completed E143 improves the private sample from **370/512 to 408/512**, and
+657 disjoint utterances from **463 to 510 correct**. Resetting learned hidden
+clocks loses 13 decisions, confirming their use in this fitted computation;
+resetting the trained stack loses 50. These probes retain the trained readout
+and are not matched retrained controls. The new encoder has not yet replaced
+the original carrier across the other task configurations.
+
 ### Semantics and resource boundaries
+
+E152 deploys the temporal encoder alone: six blocks, 395,814 parameters and
+406/512 private development answers, versus the combined model's 408/512.
+Its affine head is fitted on clean/augmented fitting-only queries and combined
+teacher predictions. Whitening folds into the existing head. The inherited
+E143 training and teacher work remain part of its training lineage; this is
+not a fresh standalone result or a complete synthesis with the language expert.
+
+The same encoder grows to twelve sequential blocks with exact initial class
+outputs and old teachers, nonzero new output teachers, and 36 ms additional
+initial winning-clock latency. E159 verifies actual restored scheduler rates;
+the corrected D12 pass reaches 400/512 with 696,888 parameters. It trains above
+chance with useful fitting progress but does not beat the six-block starting
+model. New depth costs more vector/state work. All local maps remain dense;
+the packet schedule still has no empty ticks or dense event-pair attention.
+
+The matched D6 yields identical development decisions; on the reused audit,
+both get 513/657. Removing the appended D12 blocks changes zero answers.
+E161–E163 implements a distinct growth variant: normalized state features
+precede the zero output map, and its optimizer units condition visible class
+directions while retaining unit scale in the observer nullspace. The full-rank
+coordinate transform folds into ordinary output weights at deployment.
+Its exact growth/local teacher/folding contracts and actual fitting-step
+replay pass; only completed recognition evidence establishes its usefulness.
 
 - Encoders supply only observations available at a query cutoff. The label,
   next character and next gap are separate targets.

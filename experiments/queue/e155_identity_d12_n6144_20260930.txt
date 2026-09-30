@@ -1,0 +1,1 @@
+e155_identity_d12_n6144_20260930 experiments/e155_identity_depth_shd.py --tag identity_d12_n6144_s6_e1_20260930 --depth 12 --limit 6144 --epochs 1 --bs 4 --lr 0.000325

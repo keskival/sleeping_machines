@@ -1,4 +1,137 @@
-# Current frontier priorities — 29 September 2026
+# Current frontier priorities — 30 September 2026
+
+## Current decision: consolidate quality before attributing a depth gain
+
+E152 retains 406/512 (79.30%) with one 395,814-parameter six-block encoder,
+versus E143's two-branch 408/512 (79.69%). Paired-view head fitting improves
+the clean-only head by 32 held decisions with the encoder frozen. This is
+inherited deployment consolidation, not a fresh generic-model scaling result.
+The corrected twelve-block continuation fits 90.72% and reaches 400/512;
+there is no demonstrated depth accuracy advantage yet. E155's apparent
+calibrated failure was an optimizer scheduler restoration bug; preserve it
+as implementation evidence and use E159's verified actual group rates.
+
+1. The matched corrected D6/D12 comparison is complete: both give 400/512 and
+   513/657 on the reused audit. Deleting the new D12 blocks changes no audit
+   decisions. Test the analytically specified pre-normalized output maps with
+   directional observer units (§§261–264), which retain hidden null directions.
+   E161/E162 verify exact growth, local teachers, folding and the actual first
+   fitting step. Read E163/E164's completed quality/deletion results next.
+   Keep selection on private development and distinguish audit reuse from test.
+2. Preserve the strongest encoder/head checkpoint. Use the exact affine
+   weighted-state query already derived in §§231–233 to address the remaining
+   reference pooling difference; compare it at declared training/data cost.
+   Analyze fitting-speaker gradient transfer and augmentation covariance
+   before changing capacity, seed or an optimizer heuristic.
+3. A finite function-space update policy is implemented as E158. First run
+   its resource calibration if needed. Its extra fitting/anchor forwards and
+   moment semantics are part of training cost; a prepared policy is not an
+   improvement. Do not confuse safe fitting descent with new-speaker parity.
+4. Freeze an official SHD training/selection protocol for the leading named
+   roughly 96% references. Compare quality, full forward/backward work,
+   measured memory traffic and eventually joules at fixed quality.
+5. Transfer the generic temporal primitive to independently trained language
+   and other task models. A single-encoder speech result alone does not absorb
+   the explicit count/pointer language expert or establish frontier scaling.
+
+## Primary target: improve the strongest SHD model, then official-test parity
+
+The new inherited parallel model reaches **408/512 (79.69%)**, improving the
+original **370/512 (72.27%)** by 7.42 points. A disjoint same-speaker audit also
+improves from 463/657 to 510/657. Its six-block width-128 temporal residual learns
+source vectors, nonlinear state maps and useful hidden clocks around the
+unchanged eight-layer parent. Resetting clocks alone loses 13 held decisions;
+resetting the learned stack loses 50. These are fitted-coordinate diagnostics,
+not matched retrained controls. See E143–E148 in FINDINGS.md for complete scope.
+
+The immediate targets are to retain this improvement with a single generic
+deep encoder; test exact pooled-state queries; measure task-visible clock-orbit
+conditioning and bounded finite counterfactual utility; then freeze an official
+training/selection protocol for comparison with the named approximately 96%
+SHD references. All current scores are private training-speaker development.
+
+E138's 6,144-example warm continuation at the parent terminal learning rate
+finishes at 368/512, so it delivers no accuracy-record advance. The compact
+12-layer controls below answer architectural questions but are not the primary
+accuracy route. Do not substitute their lower scores for this target.
+
+E139 tests the source information boundary: all 700 original channels have
+distinct addresses, and source-time features enter learned vector messages
+before packet coalescing. A zero-initialized fine contrast map exactly nests
+the strongest checkpoint. Deep packet count, closure times, hard winners,
+calibration, augmentation and old optimizer are preserved initially. Fine
+updates can subsequently change races and are not guaranteed to improve.
+The preliminary contract verifies matching extraction/augmentation, initial
+logits/clocks/winners and a nonzero source label teacher. Evaluate the completed
+run against 370/512; then use an official-test protocol for published parity.
+
+The completed E139 source-only continuation reaches 369/512: one decision
+above its matched plain control, still below the best. Fine weights learn but
+this intervention is insufficient at the one-pass budget. E140 adds 384
+dimensionless temporal phases in addressed coordinate-pair memories. At zero,
+the parent logits/winners/clocks agree exactly; all eight phase blocks receive
+credit. Its safe same-budget continuation tests useful temporal computation.
+Theory §§220–223 derives the phase teacher and conditional depth bound, and
+specifies a subsequent width expansion preserving the old function/optimizer.
+E140 completes at 368/512, with all phase blocks changed and slightly better
+fitting NLL. It does not improve the record. The next architecture must contain
+content-dependent affine state updates and richer nonlinear query features,
+with an explicit reference-block inclusion and local teacher; increasing
+capacity must preserve the old function and optimizer rather than restart it.
+Do not promote a phase/source variant or claim parity on these scores.
+
+The frozen-parent E141 control also ends at 369/512, despite removing all
+cross-block clipping of the new teachers (0/1,536 clipped updates). The next
+architecture is now implemented: signed unnormalized modal states, nonlinear
+gates and six width-128 residual event blocks. A zero correction head nests the
+strong parent exactly. E142 verifies exact first-state coalescing and adjoints;
+E143 completes the declared three-pass 6,144-example residual-learning experiment.
+This adds capacity alongside the old model, not fourteen sequential layers.
+It completes at 408/512; the improvement is measured, not inferred from teacher norms.
+Theory §§226–230 proves the linear reference mapping and separates forward
+inclusion from its optimizer geometry and nonlinear pooling semantics.
+
+Theory §§215–219 derives the irrecoverable input quotient, exact affine
+coalescing conditions and local source adjoint. It also defines a concrete
+stable learned temporal-mode operator that can contain an asynchronous linear
+SSM, with winning state/output/clock semantics. The current three-timescale
+normalized receiver is not that complete operator. Richer content-conditioned
+memory, suitable capacity and training budget remain implementation targets.
+
+## Completed architectural investigation: compact, class-visible deep learning
+
+**Completed:** compact learned exchanges reach 243/512 (47.46%) versus
+181/512 (35.35%) for frozen angles, with identical compact query capacity.
+The next gap is transferable fitting progress: the final-checkpoint angular
+fit step improves fit but slightly harms the audited held-speaker loss, while
+the query step improves both. Test fitting-speaker-only invariance objectives
+and the continuing compact learning budget; preserve the matched frozen-angle
+control. Avoid attributing held-label diagnostics to a deployable training rule.
+Neither compact arm beats the full-state 57.8% prototype or common 72.3% result.
+
+The twelve-layer full-state prototype learns 100% of its 1,024 fitting examples
+and 57.8% of held speakers after three passes, while a packet-only query learns
+46.0%/29.7%. Query capacity differs substantially. Resetting trained angles
+preserves all fitting decisions but lowers held accuracy to 54.3%. The next
+question is useful representation adaptation under a constrained query.
+
+E137 declares a matched learned/frozen-angle intervention with a rank-16
+bank/channel/class query: same initial logits, inherited immutable keys, fitting
+and held examples, sample order, compact decoder capacity, and three-pass
+optimizer budget. The primitive keeps one addressed winning exchange and one
+emitted packet per event. Measure fitting/held curves and actual gradient
+transfer before spending a larger fitting budget. A restored finite-update
+probe distinguishes useful direction from nonzero gradient norm. Preserve
+complete results and restart checkpoint provenance.
+
+Theory §§210–213 connects supervised observability to reachable control,
+separates error correction from directional future reserve, and shows why
+packet/state cross-covariance matters for propagation. A trainable optionality
+critic still needs a declared future adaptation budget and counterfactual
+continuation targets. No reserve surrogate is promoted to the production model
+without evidence. All-layer state queries also leave a deepest-only composition
+question open. Official-test speech accuracy, calibrated early decisions,
+persistent language execution and measured physical energy remain frontier gates.
 
 **Usable credit and the memory query (E135–E136):** content retrieval also ends
 at 349/512, and removing it preserves that score. It is only weakly exercised

@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "events": 19,
+  "modes": 5,
+  "max_complex_ssm_state_error": 2.0816681711721685e-17,
+  "max_complex_ssm_output_error": 5.421010862427522e-19,
+  "constant_winning_delay_s": 0.003689414213699952,
+  "delay_offset_spread_s": 3.469446951953614e-18,
+  "semigroup_error": 2.220446049250313e-16,
+  "decay_teacher_error": 1.3877787807814457e-17,
+  "frequency_teacher_error": 1.3877787807814457e-17,
+  "source_sha256": {
+    "/workspace/experiments/e139_temporal_modes_contract.py": "3fedc3d105463d3e2e13be52a0d3973adcb1b0cb57ce25fc90bc1a00d0a13873",
+    "sleeping_machines/temporal_modes.py": "9ae0c5581b487d22f44a4b6e82e2213778318741f9dbcce8fc7d8f1fbd8c8598"
+  },
+  "scope": "Exact selected affine SSM operator and local teachers only; not a six-layer nonlinear reference classifier, learned route policy or SHD accuracy result"
+}

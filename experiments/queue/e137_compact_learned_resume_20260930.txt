@@ -1,0 +1,1 @@
+e137_compact_learned_resume_20260930 experiments/e137_compact_shd.py --tag compact_learned_d12_r16_n1024_s6_e3_resume_20260930 --angles learned --resume-result experiments/results/e137/compact_learned_d12_r16_n1024_s6_e3_20260930.json

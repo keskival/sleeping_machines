@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "checkpoint": "experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt",
+  "checkpoint_sha256": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18",
+  "source_sha256": {
+    "/workspace/experiments/e139_fine_packet_contract.py": "13f0af13862aeb5d617c1d114d099684c80d508700b5746a68b0bdbc8e24374e",
+    "experiments/e139_fine_packet_model.py": "821c5bea62cd3f56c0067649cc2cadd233b4fb165cf1e19806640552ff3757ae",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314"
+  },
+  "coarse_packets_match": true,
+  "augmentation_packets_match": true,
+  "zero_adapter_predictions_and_races_match": true,
+  "distinct_original_channel_addresses": 700,
+  "causal_source_assignment": true,
+  "new_parameters": 5760,
+  "source_gradient_norm": 0.23572884500026703,
+  "fit_loss": 2.7781145572662354,
+  "fit_probe_loss_change": -2.1457672119140625e-06,
+  "predicted_loss_change": -2.3572884500026704e-06,
+  "probe_step_l2": 1e-05,
+  "warm_optimizer_core_groups": 1,
+  "work": {
+    "source_events": 35411,
+    "source_lookup_scalars": 283288,
+    "source_payload_multiplies": 1133152,
+    "source_payload_additions": 1133152,
+    "source_packet_divisions": 134112,
+    "source_time_exponentials": 106233,
+    "source_contrast_table_additions": 11520
+  },
+  "scope": "Eight fitting utterances; no official test; no retained probe update. Nonzero source credit is not a quality gain."
+}
