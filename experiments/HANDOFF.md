@@ -1,14 +1,17 @@
 # Session handoff — 2026-09-30
 
-## Current priority — complete independent-head models, 23:30 UTC
+## Current priority — complete independent-head models, 23:46 UTC
 
 The 21:15 single-head eight-block campaign completed. Matched 8K controls:
 receiver 3.310618 bpc / 40.243259 unit-special whole-fit GFLOPs; indexed KV
 3.357342 bpc / 50.006204 GFLOPs. KV regresses 0.046724 bpc; preserve this beside
 the previous 2K evidence. All are one-seed development screens, not supremacy.
 
-Prepared supervisor: `scripts/run_parallel_heads_overnight.py`; manifest/log
-stem `local_parallel_heads_overnight_20260930T231500Z`. Inspect tmux/processes
+Running supervisor: `scripts/run_parallel_heads_overnight.py`; manifest/log
+stem `local_parallel_heads_overnight_20260930T231500Z`. Started after commit
+`bfbbcf8` in tmux `local_parallel_heads_overnight_20260930T234620Z`. It reused
+the completed numerical/smoke/baseline jobs and began the first guarded
+U64/lr.002 optimizer pilot at 23:46 UTC. Inspect tmux/processes
 and its `.status.json` before launching. The baseline H2 2K pilot completed:
 3.786482 bpc on 8,191 development targets, selected epoch 2; epoch 4 was
 3.892307, indicating overfitting. It uses new independent spatial heads,
@@ -37,15 +40,18 @@ failed contracts, source changes, poor quality or memory gate. No new dense
 training locally. The superseded single-head packed ladder is prepared only;
 its supervisor refuses to launch. AWS10M six-block definition remains separate.
 
-The report's new pages 2–4 develop the general event interface, architectural hypothesis and full-bank
+The report's new pages 2–5 develop the general event interface, staged research upside, architectural hypothesis and full-bank
 work/access scenario; scores for every key remain charged. Same context/depth
 orders, constant attention arithmetic savings, winner-value logical access
 savings, and counterfactual/optimizer costs are explicit. Temporal expressivity,
 smaller models, event-camera suitability and useful dormant-capacity scaling
 are hypotheses with stated milestones, not established frontier superiority.
 Independent heads are implemented; additional within-head shared-match policies
-and local scalar-credit traffic optimization remain proposed. Read theory48,
-§§313–319 and the updated root README/integrated guide.
+and local scalar-credit traffic optimization remain proposed. Section320 additionally derives
+fixed-query winner-local Poisson renewal: many independent softmax marks without
+rescoring keys or globally resetting losing clocks. It is an unimplemented
+proposal, with explicit variance, latency, traffic and gradient limitations. Read theory48,
+§§313–320 and the updated root README/integrated guide.
 
 ## Current priority — eight-block content-indexed KV, 21:15 UTC
 

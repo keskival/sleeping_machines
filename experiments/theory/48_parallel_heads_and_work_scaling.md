@@ -224,3 +224,51 @@ matched-quality training/inference advantage; better quality at fixed work;
 useful capacity growth without proportional activity; then measured hardware
 energy/traffic and asynchronous sensor benchmarks. Failed language promotions
 are evidence about this design, not a reason to erase established primitives.
+
+## 320. A repeated race can be an event process rather than a global reset
+
+For a fixed query, let stored key j emit a Poisson process with fixed positive
+rate lambda_j=exp(s_j). Their superposition has total rate Lambda=sum_j lambda_j.
+The next arrival's mark J has probability p_j=lambda_j/Lambda. Exponential
+memorylessness means the losing emitters keep their residual waiting times;
+only the winner needs its next local waiting time. Repeating this produces
+independent marks J_1,...,J_m with distribution p, and independent inter-arrival
+times of rate Lambda. The m-th arrival time has mean m/Lambda. No explicit
+probability normalization or global reset is needed to generate these marks.
+This is a mathematical construction, not a measured circuit or implemented
+language module. Physical emitters, calibration and communication cost resources.
+
+The query/key setup costs approximately 2Nd once. A subsequent sample needs one
+winner's value and its local new event, plus delivery/accumulation, rather than
+rescoring every key. With fixed m and static values, averaging the m arrivals
+recovers the attention mean with mean-square error sigma_v^2/m. For m=64 the
+RMS sampling term is sigma_v/8; this is an error relative to value variance,
+not a claimed accuracy guarantee. Required m can be large, and the approximation
+is not uniformly cheap. At N=4096,m=64, value-only reads are 64 times fewer than
+reading all values, whereas total logical K/V reads improve only by
+2N/(N+m), approximately 1.97. Projection and teaching work remain additional.
+
+A common rescaling of all rates changes expected latency but not mark
+probabilities. A real circuit must fit rate range, timing noise and deadlines;
+refractory/reset delays can invalidate the ideal Poisson model. Stopping after
+a fixed number of arrivals differs from stopping at a fixed deadline. If zero
+arrivals occur by a deadline, a defined silence/no-event response and its
+learning objective are required. Rate setting need not itself be free.
+
+For distinct policies, project retained partial match features into independent
+rate banks as in §318. Their additional score transforms, emitter/state capacity,
+value widths and credit must be charged. Winner messages can drive evolving
+states instead of being averaged, yielding temporal computations beyond a
+static attention mean. That changes the function and requires its own learning
+comparison. Marks are independent of arrival times under the fixed-rate model;
+transporting values to different ages changes the readout unless its temporal
+kernel/normalization explicitly preserves the attention mean. Do not silently
+claim exact attention equivalence for an evolving-state readout.
+
+A minimal future contract should check mark frequencies and lag correlations,
+waiting-time statistics, equivalence of winner-local renewal versus fresh
+independent races, and average-value convergence. Training needs a separate
+contract: unbiased sampled values alone do not reproduce deterministic
+attention gradients through nonlinear downstream layers. Validate integrated
+learning and finite-rate/deadline behavior before a long run. This proposal does
+not displace the already running independent-head/optimizer campaign.

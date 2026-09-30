@@ -2036,10 +2036,10 @@ def blocks(M, tasks, ev):
                  f"{r['args']['fit']:,} / {r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}"] for r in display],
                 [62,37,30,45])),
-            ('small','Payload32 per head: H2 totalwidth64, H4 totalwidth128; eight blocks. More heads also '
+            ('small','Payload 32 per head: H2 total width 64, H4 total width 128; eight blocks. More heads also '
              'increase capacity, and source/channel dynamics differ from the old single-head model. '
-             'The baseline H2 pilot selects epoch2 and overfits later; no head-count quality benefit is established. '
-             'Adam interval U is separate from16-character credit. Training reads admitted losing values '
+             'The baseline H2 pilot selects epoch 2 and overfits later; no head-count quality benefit is established. '
+             'Adam interval U is separate from 16-character credit. Training reads admitted losing values '
              'and charges gradients, clipping and optimizer work. Contracts pass for causality, independent '
              'projections, evolving channels, all-head gradients and exact next-update recovery. '
              'All completed variants remain in the ledger; this table shows the latest four records.'),
@@ -2322,7 +2322,39 @@ def blocks(M, tasks, ev):
          'advantage or robot reliability. The current language candidate uses 27 character pools. '
          'Held-out cross-modal combinations and interventions must test whether integration adds useful capability.'),
     ]
-    architectural_pages=[generality_page,[
+    investment_page=[
+        ('h1','The research upside: four routes to useful advantage'),
+        ('p','The investment thesis is a trainable substrate with a known useful workload and broader '
+         'capability beyond it. Reproducing relevant Transformer quality and convergence with lower '
+         'whole-system energy would already be valuable. Temporal expressivity, selective capacity '
+         'and cross-modal integration offer additional, independently testable upside.'),
+        ('table',(['Strength','Potential benefit','Evidence needed'],[
+         ['Temporal races and local state','Less digital normalization and value aggregation; a path to globally clockless hardware','Matched-quality full learning/inference, precision, throughput and measured system joules'],
+         ['Evolving state and reused matches','More useful transformations per expensive match; potentially smaller models','Width/depth/data sweeps at fixed quality and complete work'],
+         ['Capacity beyond activity','More specialized stored representations without executing all modules per observation','Improve quality as capacity grows; keep discovery, teaching and execution budgets economical'],
+         ['Common content/time interface','Language-guided sensing and event-grounded reasoning/control in a shared model','Joint held-out modality combinations, task success and causal deadline tests'],
+        ],[43,64,67])),
+        ('h1','Quantitative upside scenarios, with their conditions'),
+        ('bullets',[
+         '<b>Model compression.</b> If comparable quality needs half the width, dominant projection arithmetic falls to one quarter; attention matching and width-dependent state/traffic fall roughly by half. This has not been established.',
+         '<b>Hardware components.</b> Illustrative baseline energy shares: 40% compute, 40% memory, 10% global clock, 10% fixed. Halving both compute and memory energy, removing that clock and adding 5% control energy gives 55% of the original energy: 45% saved, 1.82× efficiency. These shares and reductions are assumptions, not a chip forecast.',
+         '<b>Dormant receiver units.</b> Our H2/eight-block candidate stores 864 receivers and selects 16 receiver updates per character: 54× available/selected units. Teaching evaluates 32 receiver alternatives plus admitted historical values, and shared projections still execute. This ratio is not a 54× FLOP or energy saving.'
+        ]),
+        ('h1','Why this is a research program worth testing'),
+        ('p','Multi-run structured-task learning/generalization, temporal algebra and trainable deep '
+         'event representations provide concrete starting evidence. The immediate uncertainty is '
+         'whether the combined mechanisms improve broad predictive quality per total work: the new '
+         'small multi-head language fit overfits and has not established a gain. The next stages '
+         'test optimizer stability, width/head/data scaling and repeatability before longer runs. '
+         'A proposed fixed-query Poisson race reuses matched keys for successive arrivals without '
+         'globally resetting losing clocks; its derivation and validation requirements are in theory §320.'),
+        ('small','No universal efficiency ceiling or supremacy claim follows from the fixed-width attention scenario. '
+         'Further gains depend on learned computation and its resource costs. Hardware comparisons should include '
+         'a competent synchronous ASIC to isolate clockless execution from custom silicon alone. '
+         'Gradient communication and optimizer costs remain part of full learning. See HARDWARE_VALUE_PROPOSITION.md '
+         'and EVENT_STREAM_ADVANTAGE_PROTOCOL.md for hypotheses and validation boundaries.'),
+    ]
+    architectural_pages=[generality_page,investment_page,[
         ('h1','The hypothesis: more capability per unit of active work'),
         ('p','Sleeping Machines combine trainable delays, temporal races, evolving local state and '
          'counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention '
@@ -2380,7 +2412,7 @@ def blocks(M, tasks, ev):
         ('small','Shared content/projection structure isolates the attention substitution; this is not a quality-matched '
          'fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must '
          'be charged when present. Bounded candidate search is a separate coverage hypothesis. '
-         'See theory note 48, §§313–319; measured quality/work curves remain in the appendix.'),
+         'See theory note 48, §§313–320; measured quality/work curves remain in the appendix.'),
     ]]
     pages[1:1]=architectural_pages
     return pages

@@ -64,6 +64,13 @@ training and inference at lower whole-system energy on clockless hardware would
 already be a useful milestone; richer temporal state, dormant capacity and
 cross-modal integration provide further directions.
 
+The report's opening pages set out four routes to useful advantage: a
+Transformer-relevant clockless workload, smaller models through richer temporal
+computation, economical growth of dormant capacity, and integrated language/event
+reasoning and control. Each has an explicit next test. Illustrative compression
+and energy scenarios show the possible payoff without presenting assumptions as
+completed results.
+
 ### The differentiators at a glance
 
 - **Time performs computation:** learned delays, races and phase transformations.
