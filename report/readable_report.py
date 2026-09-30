@@ -174,28 +174,32 @@ def accomplishments_figure(M, ev, tasks):
     import matplotlib.pyplot as plt
     import numpy as np
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
-    f, ax = plt.subplots(1, 2, figsize=(7.2, 2.5), gridspec_kw={"width_ratios": [1.15, 1]})
-    costs={r['model']:r['total_training_flops'] for r in tasks['training_work']['language_rows']}
-    language = [ev['lstm10'], ev['tf10']]
-    ax[0].bar([0,1],language,width=.55,color=[gray,orange])
-    for i,value in enumerate(language):
-        ax[0].text(i,value+.07,f"{value:.3f}",ha="center",fontsize=11)
-    ax[0].set(xticks=[0,1],xticklabels=[f"LSTM\n{costs['lstm']/1e12:.2f}T fit FLOPs",
-                                      f"Transformer\n{costs['tf']/1e12:.2f}T fit FLOPs"],
-              ylim=(0,2.55),ylabel="Text8 test bits per character ↓")
-    ax[0].set_title("Saved language references\n10M fitting characters",fontsize=10)
-    ax[0].tick_params(axis='x',labelsize=7.4)
-    ax[0].text(.5,.94,"Full learned-event test: pending",transform=ax[0].transAxes,
-               ha="center",va="top",fontsize=7.4,color=blue)
+    f, ax = plt.subplots(1, 2, figsize=(7.2, 2.7))
+    event = [100*next(point["test"] for point in row["curve"] if point["step"] == 2000)
+             for row in tasks["mechanisms"]["order_curve"]["rows"]]
+    reference = [100*row["acc"] for row in tasks["mechanisms"]["order_references"][2000]["rows"]]
+    for i, (values, color) in enumerate(((event, blue), (reference, orange))):
+        mean = np.mean(values)
+        ax[0].bar(i, mean, width=.55, color=color)
+        ax[0].errorbar(i, mean, yerr=[[mean-min(values)], [max(values)-mean]],
+                       color="#172431", capsize=4, linewidth=1.2)
+        ax[0].text(i, max(values)+3, f"{min(values):.2f}–{max(values):.2f}%",
+                   ha="center", fontsize=9)
+    ax[0].set(xticks=[0,1], xticklabels=["Event chains\n5 runs; one pass",
+                                      "Transformer\n2 runs; repeated fitting"],
+              ylim=(0,116), ylabel="Held-out accuracy (%) ↑")
+    ax[0].set_title("Learning an order rule\nSame 2,000 distinct fitting examples", fontsize=10)
     ax[1].bar(range(2), [100, 100*ev["recall_tf"]], color=[blue, orange], width=.55)
-    ax[1].set_xticks([0, 1], ["Sleeping Machines\nrace retrieval", "Best of 7\nTransformers"])
-    ax[1].set_ylim(0, 118)
+    ax[1].set_xticks([0, 1], ["Race retrieval\n5 runs", "Best recorded\nTransformer result"])
+    ax[1].set_ylim(0, 116)
     ax[1].set_ylabel("Accuracy at 4× context (%) ↑")
     for i, value in enumerate([100, 100*ev["recall_tf"]]):
         ax[1].text(i, value+2, f"{value:.1f}%", ha="center", fontsize=10)
-    ax[1].set_title("Retrieval that generalizes\nSynthetic key/value task", fontsize=10)
+    ax[1].set_title("Retrieval beyond training length\nFour times the training context", fontsize=10)
     for a in ax:
         a.grid(axis="x", visible=False)
+        a.set_yticks([0,25,50,75,100])
+        a.tick_params(axis="x", labelsize=7.3)
     f.tight_layout(w_pad=2.5)
     return f
 
@@ -525,6 +529,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("title","Sleeping Machines"),
         ("sub","Deep learning that computes with time"),
+        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 30 September 2026"),
         ("p","Messages carry a learned vector and an arrival time. Nodes accumulate local memory, transform "
          "messages and compete through learned delays. Arrival order and winning races determine the computation. "
          "The goal is useful intelligence with much less active work."),
@@ -546,18 +551,14 @@ def blocks(M, tasks, ev):
          f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} development bpc</b> in a small screen. "
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
          "These models learn source embeddings, temporal state and vector maps."]),
-        ("p",f"<b>Completed learned language pilot:</b> an estimated "
-         f"{tasks['event_language_work']['total_training_arithmetic_flops']/1e9:.2f}G arithmetic FLOPs "
-         "for fitting, backward, clipping, Adam and warmup; "
-         f"{tasks['event_language_work']['inference_arithmetic_flops_per_character']/1e3:.2f}K "
-         "per character for inference/scoring. These count the event algorithm, with special functions "
-         "separate. Full-model and matched-quality costs remain pending (Appendix B)."),
         ("figure",("accomplishments",174)),
-        ("small","Left: completed text8 controls; full fitting cost includes backward, clipping and Adam. "
-         "The learned event model's 10M-character test is pending. Its 28,403-parameter development screen "
-         "uses 8,192 fitting characters and 1,024 targets, a different budget and split. Right: the preserved "
-         "synthetic retrieval comparison. Event chains use five runs versus two Transformer runs, with different "
-         "architectures, priors and fitting schedules. Speech uses a development-selected prefix.")])
+        ("small","Left: means and recorded ranges, five event runs and two Transformer runs; "
+         "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
+         "reach 100% within 4,000 examples; the control is the best saved result across seven "
+         "Transformer configurations and their learning curves. These synthetic tasks use different "
+         "architectures and structural priors. Sources: E53/E36 and E61."),
+        ("small","<b>Language scale-up:</b> the 1.21M-parameter learned model is running on 10M text8 "
+         "characters. Its test result is pending; completed neural controls and cost protocols are in Appendix B.")])
 
     reference_rows=[
         ["LSTM; width 512, one recurrent layer", "10M / six passes", f"{ev['lstm10']:.3f}",
@@ -594,7 +595,7 @@ def blocks(M, tasks, ev):
          "G/T/P mean billion/trillion/quadrillion. Validation/test evaluation, memory traffic and runtime "
          "are outside these arithmetic totals."),
         ("h2","Sleeping Machines benchmark status"),
-        ("p","The learned event-state model is queued for 10M fitting characters, four passes, "
+        ("p","The learned event-state model is running with 10M fitting characters, four passes, "
          "200,000 validation characters and the same 1M test interval. Its six layers, width 256 and "
          "128 temporal modes have 1,205,805 parameters. Its full test score and training work are pending. "
          "The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget "

@@ -28,11 +28,30 @@ architecture, theory and historical results; extend them with new evidence.
   report commit, then push from an authenticated host. Do not claim it is remote
   until the remote commit is verified.
 
-## Running benchmarks — preserve the existing job
+## Running benchmarks — language now has priority
 
-- tmux: `proper_events_20260930T131028Z`.
+The user explicitly prioritized the front-page learned-language comparison and
+authorized pausing speech. The former suite was stopped without altering model
+sources or deleting its logs/checkpoint. A replacement suite runs language first.
+
+- Active tmux: `local_language_priority_20260930T144721Z`.
+- Active manifest: `experiments/queue/local_language_priority_20260930T144721Z.json`.
+- Active suite log: `experiments/queue/local_language_priority_20260930T144721Z.out`.
+- Current guarded job: `local_full_proper_language_10m_20260930T131028Z`, using
+  its original unique queue and unchanged configuration. It started at 14:47 UTC.
+- Speech resumes after language from epoch 12, example 6,144; source hashes in
+  `local_full_proper_shd_20260930T131028Z.progress.pt` were checked before pausing.
+- Remaining order: speech, DVS, MNIST, market, temporal composition.
+- The user will push incremental commits from the authenticated host; commit
+  reviewed report work on `main`. The references-only front-page panel has been
+  replaced by completed order-learning and retrieval comparisons. Keep the
+  larger language claim pending until the actual result and full work exist.
+
+### Original suite record (superseded)
+
+- Former tmux: `proper_events_20260930T131028Z` (stopped).
 - Manifest: `experiments/queue/local_full_proper_suite_20260930T131028Z.json`.
-- Suite log: `experiments/queue/local_full_proper_suite_20260930T131028Z.out`.
+- Historical suite log: `experiments/queue/local_full_proper_suite_20260930T131028Z.out`.
 - One guarded job at a time, through `experiments/queue/run_safe.sh`; never
   launch Python training directly. Current job: full SHD, 20 epochs, seed 6,
   from scratch, 395,814 learned parameters, 6,987 fit / 1,169 development

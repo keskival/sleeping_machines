@@ -2,8 +2,6 @@
 
 Deep learning that computes with time
 
-Tero Keski-Valkama and Karoliina Salminen · Research report · 30 September 2026
-
 Messages carry a learned vector and an arrival time. Nodes accumulate local memory, transform messages and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
 
 ## The differentiators at a glance
@@ -19,11 +17,11 @@ Messages carry a learned vector and an arrival time. Nodes accumulate local memo
 - **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
 - **Learned representations.** The persistent language model reaches **3.351 development bpc** in a small screen. A learned speech encoder reaches **79.69%** on 512 private development utterances. These models learn source embeddings, temporal state and vector maps.
 
+**Completed learned language pilot:** an estimated 6.96G arithmetic FLOPs for fitting, backward, clipping, Adam and warmup; 59.74K per character for inference/scoring. These count the event algorithm, with special functions separate. Full-model and matched-quality costs remain pending (Appendix B).
+
 ![accomplishments](report/figures/accomplishments.png)
 
-Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
-
-**Language scale-up:** the 1.21M-parameter learned model is running on 10M text8 characters. Its test result is pending; completed neural controls and cost protocols are in Appendix B.
+Left: completed text8 controls; full fitting cost includes backward, clipping and Adam. The learned event model's 10M-character test is pending. Its 28,403-parameter development screen uses 8,192 fitting characters and 1,024 targets, a different budget and split. Right: the preserved synthetic retrieval comparison. Event chains use five runs versus two Transformer runs, with different architectures, priors and fitting schedules. Speech uses a development-selected prefix.
 
 ## One architecture, several learned computations
 
@@ -337,7 +335,7 @@ Training estimates include every fitting step, forward/loss, backpropagation, gr
 
 ### Sleeping Machines benchmark status
 
-The learned event-state model is running with 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Its six layers, width 256 and 128 temporal modes have 1,205,805 parameters. Its full test score and training work are pending. The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget and a different evaluation split; it is not a comparable test result.
+The learned event-state model is queued for 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Its six layers, width 256 and 128 temporal modes have 1,205,805 parameters. Its full test score and training work are pending. The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget and a different evaluation split; it is not a comparable test result.
 
 Earlier 1M-character references also remain saved: LSTM **2.179** and Transformer **2.367 test bpc**, each with twenty fitting passes. The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons remain in their labeled sections and Appendix B.
 
