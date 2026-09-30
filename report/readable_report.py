@@ -892,7 +892,7 @@ def blocks(M, tasks, ev):
     if full_rows:
         pages.append([
             ('h1','Ours: completed integrated-language stages'),
-            ('table',(['Ours: fit / pool','Development bpc ↓','Fitting GFLOPs ↓','Capacity / active units'],[
+            ('table',(['Ours: fit / pool','Development bpc ↓','Fitting GFLOPs ↓','Capacity / selected states'],[
              [f"{row['args']['fit']:,} / {row['args']['pool']}",f"{row['final']['dev']['bpc']:.3f}",
               f"{row['work']['total_training_arithmetic_flops']/1e9:.2f}",
               f"{row['capacity_units']} / {row['args']['depth']}"] for row in full_rows],[44,38,44,48])),

@@ -112,7 +112,7 @@ Fixed observed-character pools, bounded delays and six sequential event depths; 
 
 ## Ours: completed integrated-language stages
 
-| Ours: fit / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / active units |
+| Ours: fit / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / selected states |
 | --- | --- | --- | --- |
 | 8,192 / 2 | 3.398 | 7.49 | 324 / 6 |
 
