@@ -76,7 +76,7 @@ FEATURE=""
 if [[ "${1:-}" == "--" ]]; then
     shift
 elif [[ "${1:-}" == "--list" ]]; then
-    USER_PREFIX="claude-${USER:-$(id -un)}-"
+    USER_PREFIX="codex-${USER:-$(id -un)}-"
     echo "Sandbox containers for ${USER_PREFIX}*:"
     docker ps --all --filter "name=^${USER_PREFIX}" \
         --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}'
@@ -206,7 +206,8 @@ echo ""
 # Same applies to a Dockerfile `ENV`: rebuilding the image is not enough, because
 # the running container was built from the previous one.
 if docker inspect "${CONTAINER_NAME}" &>/dev/null; then
-  # Container exists – restart it if stopped, then attach
+  # Reuse the container, but launch Codex explicitly so older container
+  # entrypoints cannot restore Codex's additional sandbox or approval prompts.
   STATUS="$(docker inspect -f '{{.State.Status}}' "${CONTAINER_NAME}")"
   if [[ "${STATUS}" != "running" ]]; then
     echo "♻️  Restarting existing container ${CONTAINER_NAME} …"
@@ -214,7 +215,8 @@ if docker inspect "${CONTAINER_NAME}" &>/dev/null; then
   else
     echo "✅  Container ${CONTAINER_NAME} is already running, attaching …"
   fi
-  exec docker attach "${CONTAINER_NAME}"
+  exec docker exec --interactive --tty --workdir /workspace \
+    "${CONTAINER_NAME}" codex --dangerously-bypass-approvals-and-sandbox "$@"
 else
   # No container yet – create it fresh
   exec docker run \
@@ -238,6 +240,6 @@ else
     --workdir /workspace \
     --entrypoint codex \
     "${IMAGE_NAME}" \
-    --yolo \
-    ${@:+"$@"}
+    --dangerously-bypass-approvals-and-sandbox \
+    "$@"
 fi
