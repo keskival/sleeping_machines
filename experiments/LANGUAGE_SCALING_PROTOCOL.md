@@ -6,7 +6,10 @@ Can a reasonably generic Sleeping Machines model learn useful deep language
 representations while its total physical work grows more slowly than competitive
 Transformer, recurrent and state-space references?
 
-The native E79 text8 mixture is strong evidence for specialized prediction. It
+The causal E173 text8 mixture is evidence for specialized prediction: 1.727 test
+bpc without the word expert, versus aligned E174 LSTM 1.799 and Transformer 1.908.
+It fits count evidence on 10M characters plus mixing weights on 1M validation
+labels; capacities and fitting budgets differ. It
 is not the answer to this question. The E120 common language screen also fits
 explicit conditional count memories before its neural stage. A shared interface
 and a small development win do not establish generic learned representation.
@@ -36,7 +39,9 @@ Before increasing the data budget:
 2. Measure representation retention and transfer, not only fitting accuracy.
 3. Establish usable route alternatives and their downstream credit. E130 shows
    why a correct interior derivative alone can miss a harmful hard winner change.
-4. Implement persistent causal state across contiguous tokens. The existing
+4. Implement persistent causal state across contiguous tokens. E175 implements
+   and checks modal memory, pending messages and chunk invariance at depth eight.
+   Its contract does not establish trained prediction quality. The existing
    common language query replays 32 characters, and its cost must be reported as
    prefix replay until that behavior is replaced.
 5. Verify state reset, chunk boundaries, delayed messages, teacher alignment and
@@ -72,7 +77,7 @@ positions and precision. Declare two distinct comparisons where feasible:
 Equal parameter count does not imply equal compute, memory or optimization
 quality. Give every family a declared tuning budget and preserve unsuccessful
 configurations. Existing specialized mixtures remain an additional reference.
-Heavy runs belong on the provisioned AWS host in a separate branch and unique
+Heavy runs belong on the provisioned AWS host on main with unique
 host-specific queues; coordinate ownership before launching them.
 
 ## Required measurement ledger

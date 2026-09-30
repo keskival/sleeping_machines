@@ -1,5 +1,75 @@
 # Findings log
 
+## E171–E177: causal evidence, complete learning work and persistent language
+
+### Highlighted-result review and aligned language scoring
+
+The numerical E171 review reproduces the seven consolidated task screens from
+saved weights and the selected speech model's 408/512 development answers.
+Fitting/development identities are disjoint; target mutations leave constructed
+inputs unchanged. Causal prefix probes pass for the reviewed shared/event-state,
+LSTM, Transformer and Hawkes input paths. Source review also identifies
+historical E79 partial-word target leakage and older native market threshold
+fitting on held days. Detailed decisions and limits are kept in
+`EXPERIMENTAL_REVIEW.md`; those historical claims are not used in the report.
+
+E173 rebuilds train-only, strictly causal context evidence on 10M characters.
+The count/copy mixture reaches **1.726986 test bpc without word context**;
+adding causal word context gives **1.719360**. Both fit mixture weights on an
+additional 1M validation labels and freeze parameters during testing. E174
+rescoring of unchanged saved neural weights gives **1.799344 LSTM** and
+**1.908275 Transformer**, on the same **999,999** test positions and checksum.
+The score gains are 0.072358/0.181289 bpc for the no-word mixture; optional word
+context adds 0.007626. Model capacities and fitting/validation budgets differ.
+This is a specialized prediction result, not generic representation supremacy
+or measured energy. All compared streams start cold and score causal context.
+
+### Full optimizer-step arithmetic
+
+E172 v2 traces a representative four-query fitting batch for each common and
+Transformer screen. The total includes **forward/loss, backward, clipping and
+Adam**. Every observed floating operator has a declared arithmetic formula or
+explicit special-function/comparison/data-movement classification. Common/TF
+arithmetic ratios are **1.913 text, 1.914 market, 1.970 composition, 1.437 MNIST,
+0.453 gestures**. These are complete-step estimates, not historical whole-run
+budgets. Preprocessing, evidence fitting, calibration, inherited fitting and
+search remain additional costs. No physical memory traffic or joules are measured.
+
+### Eight-layer persistent language learning
+
+E175 implements retained modal states and an actual delayed-message queue.
+Fifteen token arrivals cause exactly 120 layer deliveries. Chunk splits and
+future-suffix mutation change earlier predictions by zero. All eight value
+teachers are nonzero; seven hidden-clock teachers are nonzero. The final clock
+is unobserved by a completed, untimed query within its deadline.
+
+E176 fits 8,192 character targets for four passes, with 1,024 validation targets,
+31 warm characters and 64-character truncated credit. It uses 28,403 parameters,
+width 32 and sixteen modal pairs per block. Validation bpc is **5.328981** before
+fitting, then **3.831130, 3.527552, 3.420379, 3.351248**. Frozen fitting bpc ends
+at **3.142180**. All eight layer teachers are nonzero in each pass. Each pass
+consumes 8,223 source characters and makes 65,784 block deliveries, without
+prefix replay. Total CPU wall time is 364.93 s; peak RSS 373,580 KiB. Target
+ranges match E133, but topology, capacity, history and update counts differ.
+This is a one-seed development result, not a matched depth/control scaling study.
+
+### A causal tokenization control with exact character likelihood
+
+Theory §§269–274 constructs a complete prefix dictionary. Leaves are uniquely
+parsed tokens released at their last observed character. Subtree probability
+ratios define normalized next-character probabilities; phrase scores telescope
+to the learned leaf likelihood. Partial final phrases are marginalized, so
+character and compressed arms can score exactly the same raw targets. The local
+teacher is the difference of compatible-leaf posteriors, not a confidence proxy.
+
+E177 verifies normalization to 2.22e-16, token/character score telescoping exactly,
+character-stream equivalence to 4.44e-16, and zero chunk/future-suffix errors.
+All eight layer teachers are nonzero. In its synthetic contract 48 characters
+release 21 tokens, with one unfinished character and 168 block deliveries.
+This establishes scoring and causal execution, not a quality or energy result.
+The vocabulary is fitted on training only; frequency counts never supply model
+output probabilities. Vocabulary capacity and tokenizer work must be charged.
+
 ## E161–E166: directional depth and a stronger single deployment encoder
 
 **Deployment improvement, not a new overall accuracy record:** the selected

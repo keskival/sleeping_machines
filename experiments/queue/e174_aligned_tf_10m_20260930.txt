@@ -1,0 +1,1 @@
+e174_aligned_tf_10m_20260930 experiments/e174_aligned_language_baselines.py --tag aligned_tf_10m_20260930 --model tf --n 1000000 --batch 4

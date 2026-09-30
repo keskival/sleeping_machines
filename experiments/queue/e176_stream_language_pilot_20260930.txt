@@ -1,0 +1,1 @@
+e176_stream_language_pilot_20260930 experiments/e176_stream_language_train.py --tag stream_language_pilot_20260930 --depth 8 --fit 128 --dev 64 --epochs 1 --chunk 32

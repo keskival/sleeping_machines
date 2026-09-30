@@ -1,0 +1,116 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "stream_language_pilot_20260930",
+    "depth": 8,
+    "fit": 128,
+    "dev": 64,
+    "epochs": 1,
+    "chunk": 32
+  },
+  "curve": [
+    {
+      "epoch": 1,
+      "online_bpc": 5.160300313085502,
+      "optimizer_steps": 4,
+      "consumed_tokens": 159,
+      "training_event_deliveries": 1272,
+      "layer_teacher_norm_sum": [
+        0.25892975496983706,
+        0.24114215456223403,
+        0.23264046820303846,
+        0.2027229356414553,
+        0.18822941440693552,
+        0.19234756960739885,
+        0.18482499056722362,
+        0.17863422440154086
+      ],
+      "dev": {
+        "n": 64,
+        "nll": 3.5288292039185762,
+        "bpc": 5.091024392637479,
+        "consumed_tokens": 95,
+        "event_deliveries": 760
+      },
+      "fit": {
+        "n": 128,
+        "nll": 3.506858211942017,
+        "bpc": 5.059326951469486,
+        "consumed_tokens": 159,
+        "event_deliveries": 1272
+      }
+    }
+  ],
+  "parameters": 28403,
+  "initial": {
+    "n": 64,
+    "nll": 3.583713013678789,
+    "bpc": 5.170204992803631,
+    "consumed_tokens": 95,
+    "event_deliveries": 760
+  },
+  "protocol": {
+    "training_targets": [
+      32,
+      160
+    ],
+    "development_targets": [
+      90000032,
+      90000096
+    ],
+    "official_test_read": false,
+    "tokenizer": "fixed 27-character text8 alphabet",
+    "experts": [],
+    "warm_tokens": 31,
+    "state_reset": "once at each fitting pass and each evaluation stream",
+    "credit_truncation": 32,
+    "stream_time_unit": "one token interval",
+    "query_budget": 0.5
+  },
+  "source_sha256": {
+    "/workspace/experiments/e176_stream_language_train.py": "9a3597dfd0447de93b599055dfa90f24821620e01c54c233f05cb00790336bd9",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  },
+  "scope": "Fresh generic signed event-state model, no count/copy/word evidence. Persistent stream, no prefix replay. Same target byte ranges as E133, different topology/parameters/update budget, broader causal history. Small one-seed development study.",
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "threads": 1,
+    "device": "cpu"
+  },
+  "energy_joules": null,
+  "wall_s": 2.770533720991807,
+  "max_rss_kb": 347544,
+  "final": {
+    "epoch": 1,
+    "online_bpc": 5.160300313085502,
+    "optimizer_steps": 4,
+    "consumed_tokens": 159,
+    "training_event_deliveries": 1272,
+    "layer_teacher_norm_sum": [
+      0.25892975496983706,
+      0.24114215456223403,
+      0.23264046820303846,
+      0.2027229356414553,
+      0.18822941440693552,
+      0.19234756960739885,
+      0.18482499056722362,
+      0.17863422440154086
+    ],
+    "dev": {
+      "n": 64,
+      "nll": 3.5288292039185762,
+      "bpc": 5.091024392637479,
+      "consumed_tokens": 95,
+      "event_deliveries": 760
+    },
+    "fit": {
+      "n": 128,
+      "nll": 3.506858211942017,
+      "bpc": 5.059326951469486,
+      "consumed_tokens": 159,
+      "event_deliveries": 1272
+    }
+  }
+}

@@ -47,6 +47,7 @@ def results():
     tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
     tasks["complete_work"] = read("e172/complete_work_v2_20260930.json")
     tasks["stream_contract"] = read("e175/stream_language_contract_20260930.json")
+    tasks["stream_training"] = read("e176/stream_language_d8_20260930.json")
     tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
     content_path = "e135/content_comparison_20260929.json"
     tasks["shd_content"] = read(content_path) if (RES/content_path).exists() else None
@@ -180,13 +181,24 @@ def figures(M, tasks, ev):
         axes[1].annotate(f"{depth} layer" + ("s" if depth > 1 else "") + f"\n{final:.3f} bpc", (work,final),
                          xytext=(0,12), textcoords="offset points", ha="center", fontsize=8)
     axes[0].set(xlabel="Passes over 8,192 training characters", ylabel="Validation bpc (lower is better)",
-                title="Learned prediction; no explicit experts", xticks=range(5))
+                title="Learned prediction through event layers", xticks=range(5))
     axes[0].legend(fontsize=8)
     axes[1].set(xlabel="Training-forward contractions (GFLOPs; estimate)",
                 ylabel="Validation bpc (lower is better)", title="Quality / computation tradeoff",
                 xlim=(0,135), ylim=(3.32,3.58))
     f.tight_layout()
     save(f, "e133_generic_language")
+    stream = tasks["stream_training"]
+    f, a = plt.subplots(figsize=(7.2, 2.65))
+    a.plot(range(5), [stream["initial"]["bpc"]]+[row["dev"]["bpc"] for row in stream["curve"]],
+           "o-", color=blue, label="Validation")
+    a.plot(range(1,5), [row["fit"]["bpc"] for row in stream["curve"]],
+           "s--", color=gray, label="Fitting, frozen evaluation")
+    a.set(xlabel="Passes over 8,192 training characters", ylabel="Bits per character ↓",
+          title="Eight-layer persistent language stream", xticks=range(5))
+    a.legend(fontsize=8)
+    f.tight_layout()
+    save(f, "e176_stream_language_learning")
     f = accomplishments_figure(M, ev)
     save(f, "accomplishments")
 
@@ -884,6 +896,7 @@ def blocks(M, tasks, ev):
     def compact_work(value):
         return f"{value/1e9:.2f}G" if value>=1e9 else f"{value/1e6:.2f}M"
     breadth={row["task"]:row for row in tasks["breadth_work"]["rows"]}
+    complete={row["task"]:row for row in tasks["complete_work"]["rows"]}
     for task,label in (("language","Text8"),("market","Market event prediction"),("temporal","Temporal composition"),
                        ("mnist","MNIST"),("dvs","Event-camera gestures")):
         row=breadth[task]
@@ -894,10 +907,11 @@ def blocks(M, tasks, ev):
         direction = "Prediction error: lower is better" if task in ("language", "market") else "Accuracy: higher is better"
         coverage.append([label+"<br/>"+direction,score(row["common_metric"]),score(row["reference_metric"]),
              compact_work(row["common_forward_map_scan_flops"])+" / "+compact_work(row["reference_forward_map_attention_flops"]),
-             compact_work(row["common_training_forward_map_scan_flops"])+" / "+compact_work(row["reference_training_forward_map_attention_flops"])])
+             compact_work(complete[task]["common"]["total_arithmetic_flops"]/complete[task]["common"]["queries"])
+             +" / "+compact_work(complete[task]["transformer"]["total_arithmetic_flops"]/complete[task]["transformer"]["queries"])])
     pages.append([
         ("h1","Appendix B. Breadth of the common implementation"),
-        ("p","The common event backbone has independently trained development screens across language, event "
+        ("p","The common event backbone has development screens across language, event "
          "prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. "
          "These bounded screens establish implementation breadth; the stronger native comparison results use their "
          "own complete protocols."),
@@ -905,32 +919,96 @@ def blocks(M, tasks, ev):
          "Bits per character (bpc) and nats/event measure prediction error, so <b>lower is better</b>. "
          "FLOPs estimate arithmetic work: <b>lower means less computation</b>. Each work pair lists the common model "
          "first and the Transformer (TF) second."),
-        ("table",(["Task and quality direction","Common quality","Transformer quality","Forward FLOPs per query: common / TF; lower is better","Training-forward FLOPs: common / TF; lower is better"],coverage,[40,24,26,43,41])),
+        ("table",(["Task and quality direction","Common quality","Transformer quality","Inference contractions/query: common / TF ↓","Complete step arithmetic/query: common / TF ↓"],coverage,[40,24,26,43,41])),
         ("p","The common screens use eight layers and the Transformer references two, both at width 32 for "
-         "eight epochs. They share neural-fitting examples, held-out examples, input encoding, objective and "
-         "learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both "
-         "context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times "
-         "fewer hidden carrier emissions. The model's depth is chosen to suit the computation."),
+         "eight epochs. They share neural-fitting examples, held-out examples, encoding, objective and schedule, "
+         "with fitting batches of 16/64 respectively. These are small reference settings. Two-layer follow-ups "
+         "retain 100% recall at both context lengths and reach 96.1% composition versus 97.3% at depth eight, "
+         "using four times fewer hidden carrier emissions."),
         ("p","<b>Why training can cost more:</b> this older race core evaluates all three candidate vector payloads "
          "during training, versus only the winner during inference. Its eight layers also exceed the reference's two. "
          "With short contexts, that work outweighs the saved attention cost; these rows do not show a training "
-         "efficiency advantage. On the longer event-camera prefixes, counted training-forward work is lower."),
+         "efficiency advantage. On the longer event-camera prefixes, the common model's complete step uses "
+         "45.3% of the reference arithmetic on the audited four-query batch."),
         ("small","Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, "
          "MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character "
          "evidence bank; market evidence is fitted on a prior day. The references have no such bank. "
          "MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. "
          "No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event."),
-        ("small","FLOPs count 2 per map, attention or memory-scan MAC; M = million, G = billion. Forward "
-         "counts are per unpadded prefix. Training-forward sums the declared fitting budget and includes the "
-         "common model's losing-value evaluations. These are contraction estimates, excluding nonlinearities, "
-         "sorting, normalization arithmetic, evidence fitting/lookup, backward and optimizer updates; they "
-         "are not total training FLOPs or measured energy.")])
+        ("small","M = million, G = billion. Inference counts estimate contractions per unpadded prefix, excluding "
+         "other arithmetic. Complete steps include forward/loss, backward, clipping and Adam, with actual padding "
+         "and all training alternatives. Each is one four-query fitting batch divided by four. These are different "
+         "accounting boundaries, not whole-run budgets. The next page defines complete-step coverage.")])
+
+    stage_rows=[]
+    for row in tasks["complete_work"]["rows"]:
+        for key,label in (("common","Common"),("transformer","TF")):
+            part=row[key]
+            if not part["formula_coverage_complete"]:
+                raise ValueError("Complete-step table requires formulas for every observed floating operator")
+            stage_rows.append([row["task"].capitalize()+": "+label]+
+                [f"{part['stages'][stage]['arithmetic_flops']/part['queries']/1e6:.3f}"
+                 for stage in ("forward_and_loss","backward","gradient_clipping","optimizer")]+
+                [f"{part['total_arithmetic_flops']/part['queries']/1e6:.3f}"])
+    pages.append([
+        ("h1","Appendix B (continued). Complete training steps"),
+        ("p","The ledger charges the complete learning step for both models: prediction and loss, reverse "
+         "credit, gradient clipping and Adam. It traces the actual tensor operators in a representative "
+         "four-query fitting batch. Every observed floating operator has a declared formula or a classification "
+         "as comparison, special function or data movement. Lower arithmetic work is better."),
+        ("figure",("e172_complete_training_work",174)),
+        ("table",(["Model/task","Forward + loss","Backward","Clip","Adam","Total"],stage_rows,[59,27,26,18,18,26])),
+        ("small","All table values are MFLOPs per query. A multiply-add counts as two arithmetic operations. "
+         "Fused attention, normalization and activation kernels use shape-based mathematical formulas. "
+         "Exponentials, logarithms, trigonometric functions, roots and comparisons are recorded separately; "
+         "memory traffic and execution overhead are outside the arithmetic total. This is formula coverage "
+         "of the observed CPU steps, not measured hardware instructions or joules."),
+        ("p","The audit does not reconstruct total historical training work. Fitting evidence banks, "
+         "preprocessing, calibration, inherited weights, evaluation and search add work beyond these steps. "
+         "Different original batch sizes also change optimizer amortization. A future whole-run ledger must "
+         "record all of these costs alongside energy and quality.")])
+
+    language_rows=[
+        ["Native count/copy mixture",f"{ev['native10']:.3f}","10M count fitting + 1M mixing-weight fitting"],
+        ["Mixture + causal word context",f"{ev['native_word10']:.3f}","Same data budgets; independent validation selection"],
+        ["LSTM, width 512; one recurrent layer",f"{ev['lstm10']:.3f}","10M characters, six passes; 200k validation selection"],
+        ["Transformer, width 256; four layers",f"{ev['tf10']:.3f}","10M characters, four passes; 200k validation selection"],
+    ]
+    pages.append([
+        ("h1","Appendix B (continued). Language benchmark protocol"),
+        ("p","The native predictor and saved neural references score the same 999,999 character targets, "
+         "starting from a cold context. Parameters are frozen during testing. Earlier observed test characters "
+         "can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per "
+         "character means better prediction."),
+        ("table",(["Predictor","Test bpc ↓","Fitting and selection budget"],language_rows,[68,24,82])),
+        ("p",f"The mixture without a word expert improves on LSTM by {ev['lstm10']-ev['native10']:.3f} bpc "
+         f"and Transformer by {ev['tf10']-ev['native10']:.3f} bpc. Adding causal word context gives a further "
+         f"{ev['native10']-ev['native_word10']:.4f} bpc. These results establish useful specialized prediction; "
+         "generic learned representations are assessed in the separate language screen."),
+        ("p","The native mixture combines order-0 through order-6 conditional counts, Witten–Bell prediction "
+         "and a bounded copy predictor. Its count arrays occupy 66.55 MB; optional word arrays add 7.39 MB. "
+         "Vocabulary, capacities, optimization and fitting budgets differ from the neural references. "
+         "The comparison does not measure total training energy or a matched-capacity advantage."),
+        ("h2","Characters, subwords and a persistent stream"),
+        ("p","All four predictors use the same 27-character alphabet. Characters are tokens, but a subword "
+         "representation can reduce the number of arrivals and expose longer patterns within a fixed credit "
+         "window. It also enlarges the output vocabulary. The useful comparison is quality and total work per "
+         "original character, with train-only tokenizer fitting and declared buffering latency."),
+        ("p","A generic streaming event-state implementation retains modal memory and pending delayed messages "
+         "across chunks. An eight-layer contract confirms identical predictions under chunk splitting, causal "
+         "prefix invariance and nonzero learning signals in every layer. Fifteen input arrivals cause 120 "
+         "layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches "
+         f"{tasks['stream_training']['final']['dev']['bpc']:.3f} validation bpc in the separately described small screen."),
+        ("small","One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation "
+         "[90M,91M), test [95M,96M); test index zero is excluded for all four predictors. Each mixture arm "
+         "selects its update rate independently on validation. Saved neural weights are unchanged. "
+         "Results: E173/E174; stream contract: E175. "+language_90m_reference_text(ev))])
 
     generic = tasks["generic_language_audit"]["rows"]
     pages.append([
-        ("h1","Appendix B (continued). Learned language without experts"),
-        ("p","A new bounded screen trains the common event backbone without explicit n-gram, pointer, copy "
-         "or periodic prediction experts. Both configurations use width 32, the same 8,192 training characters, "
+        ("h1","Appendix B (continued). Learned language and depth"),
+        ("p","A bounded screen trains the common event backbone to predict the next character. "
+         "Both configurations use width 32, the same 8,192 training characters, "
          "four passes, 32-character contexts and 1,024 validation predictions. All eight layers' value, route "
          "and memory-time parameters update. Lower bits per character means better prediction."),
         ("figure",("e133_generic_language",174)),
@@ -951,6 +1029,29 @@ def blocks(M, tasks, ev):
          "data are untouched. E133 preserves commands, source/data hashes, layer diagnostics and work coverage.")])
 
     pages.append([
+        ("h1","Appendix B (continued). Persistent learned language"),
+        ("p","The event-state language model consumes each character once and retains local modal "
+         "memories and its delayed-message queue. Chunk boundaries "
+         "truncate learning credit without discarding the observed history. Only actual event arrivals evaluate "
+         "layers; text time is measured in token intervals."),
+        ("figure",("e176_stream_language_learning",174)),
+        ("table",(["Pass","Fitting bpc ↓","Validation bpc ↓","Deliveries/pass"],
+            [[str(row['epoch']),f"{row['fit']['bpc']:.3f}",f"{row['dev']['bpc']:.3f}",
+              f"{row['training_event_deliveries']:,}"] for row in tasks['stream_training']['curve']],
+            [24,47,53,50])),
+        ("p",f"Validation loss falls from {tasks['stream_training']['initial']['bpc']:.3f} to "
+         f"{tasks['stream_training']['final']['dev']['bpc']:.3f} bpc. All eight layer teachers are nonzero in "
+         "every fitting pass. Each pass consumes 8,223 characters including warmup and makes 65,784 block "
+         "deliveries. The result establishes learning with persistent causal state and no prefix replay."),
+        ("small",f"One seed; 28,403 parameters, width 32, sixteen temporal modes per block. Four passes, "
+         "128 Adam steps/pass, credit truncated every 64 characters, 31 warm characters and 1,024 validation "
+         "targets. Target offsets match the bounded E133 screen; topology, capacity, history and update counts "
+         "differ, so this is not a matched intervention. Total CPU wall time "
+         f"{tasks['stream_training']['wall_s']:.1f} s including fitting/evaluation; peak RSS "
+         f"{tasks['stream_training']['max_rss_kb']/1024:.1f} MiB. These are event counts and observed resources, "
+         "not total arithmetic, physical memory traffic or energy. No official test or large-corpus claim. E176.")])
+
+    pages.append([
         ("h1","Appendix C. Evidence and metric definitions"),
         ("table",(["Metric","Interpretation"],[
          ["Bits per character","Held-out negative log probability in base two; lower is better next-character prediction."],
@@ -961,7 +1062,7 @@ def blocks(M, tasks, ev):
          ["Energy","Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements."],
         ],[45,129])),
         ("p","The evidence is preserved in versioned result summaries with configurations, split identities, "
-         "learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; "
+         "learning curves and source hashes. E173/E174 support the language comparison; E61 supports retrieval; "
          "E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 "
          "establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 "
          "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
@@ -972,7 +1073,9 @@ def blocks(M, tasks, ev):
          "compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages "
          "and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. "
          "E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal "
-         "residual learner, and E144 audits simultaneous state/query pooling."),
+         "residual learner, and E144 audits simultaneous state/query pooling. E171 reproduces the consolidated "
+         "screens and selected speech answers, and checks causal input boundaries. E172 records complete "
+         "training-step arithmetic; E175 checks the generic persistent language stream."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
@@ -1001,7 +1104,10 @@ def markdown(pages):
                 out.append(f"![{name.replace('_', ' ')}](report/figures/{name}.png)")
             else:
                 out.append(convert(value))
-    return "\n\n".join(out)+"\n"
+    # Editorial blocks can end with a space; generated Markdown must stay clean
+    # for the host commit helper's git diff --check.
+    rendered = "\n\n".join(out)
+    return "\n".join(line.rstrip(" \t") for line in rendered.splitlines())+"\n"
 
 
 def build(M):

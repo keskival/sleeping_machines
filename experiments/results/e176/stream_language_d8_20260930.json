@@ -1,0 +1,214 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "stream_language_d8_20260930",
+    "depth": 8,
+    "fit": 8192,
+    "dev": 1024,
+    "epochs": 4,
+    "chunk": 64
+  },
+  "curve": [
+    {
+      "epoch": 1,
+      "online_bpc": 4.354418162949653,
+      "optimizer_steps": 128,
+      "consumed_tokens": 8223,
+      "training_event_deliveries": 65784,
+      "layer_teacher_norm_sum": [
+        5.6093388938986894,
+        5.46681561448934,
+        5.381056980738278,
+        4.907598649752913,
+        4.271383764247893,
+        4.585827629495618,
+        4.109898524752462,
+        3.9199376807165685
+      ],
+      "dev": {
+        "n": 1024,
+        "nll": 2.6555371661670506,
+        "bpc": 3.831130300525535,
+        "consumed_tokens": 1055,
+        "event_deliveries": 8440
+      },
+      "fit": {
+        "n": 8192,
+        "nll": 2.596335357586213,
+        "bpc": 3.745720144874303,
+        "consumed_tokens": 8223,
+        "event_deliveries": 65784
+      }
+    },
+    {
+      "epoch": 2,
+      "online_bpc": 3.5678872722744286,
+      "optimizer_steps": 128,
+      "consumed_tokens": 8223,
+      "training_event_deliveries": 65784,
+      "layer_teacher_norm_sum": [
+        8.332961879836397,
+        7.610568651725508,
+        7.404227381017879,
+        6.563964625082518,
+        5.727332066120743,
+        5.54163122203482,
+        5.170418513653944,
+        4.698342106740358
+      ],
+      "dev": {
+        "n": 1024,
+        "nll": 2.4451126053463668,
+        "bpc": 3.5275518301482967,
+        "consumed_tokens": 1055,
+        "event_deliveries": 8440
+      },
+      "fit": {
+        "n": 8192,
+        "nll": 2.3566453477433242,
+        "bpc": 3.3999205563233406,
+        "consumed_tokens": 8223,
+        "event_deliveries": 65784
+      }
+    },
+    {
+      "epoch": 3,
+      "online_bpc": 3.3494509801210435,
+      "optimizer_steps": 128,
+      "consumed_tokens": 8223,
+      "training_event_deliveries": 65784,
+      "layer_teacher_norm_sum": [
+        12.121764748278974,
+        11.11883465897652,
+        10.095078781520979,
+        8.447426610894421,
+        7.71528425302178,
+        6.9522787817297464,
+        6.995674046108404,
+        5.982967325304359
+      ],
+      "dev": {
+        "n": 1024,
+        "nll": 2.370826045953436,
+        "bpc": 3.4203789793074115,
+        "consumed_tokens": 1055,
+        "event_deliveries": 8440
+      },
+      "fit": {
+        "n": 8192,
+        "nll": 2.253304215524622,
+        "bpc": 3.2508308173515683,
+        "consumed_tokens": 8223,
+        "event_deliveries": 65784
+      }
+    },
+    {
+      "epoch": 4,
+      "online_bpc": 3.227744494568093,
+      "optimizer_steps": 128,
+      "consumed_tokens": 8223,
+      "training_event_deliveries": 65784,
+      "layer_teacher_norm_sum": [
+        15.199662430579718,
+        13.949368804687866,
+        12.84228421766131,
+        9.982441402133965,
+        9.651401613937091,
+        8.609448011559374,
+        8.833937455358198,
+        7.617881230925792
+      ],
+      "dev": {
+        "n": 1024,
+        "nll": 2.322907905523607,
+        "bpc": 3.351247715740677,
+        "consumed_tokens": 1055,
+        "event_deliveries": 8440
+      },
+      "fit": {
+        "n": 8192,
+        "nll": 2.1779933962097857,
+        "bpc": 3.142180271800769,
+        "consumed_tokens": 8223,
+        "event_deliveries": 65784
+      }
+    }
+  ],
+  "parameters": 28403,
+  "initial": {
+    "n": 1024,
+    "nll": 3.693768158205785,
+    "bpc": 5.328981004037046,
+    "consumed_tokens": 1055,
+    "event_deliveries": 8440
+  },
+  "protocol": {
+    "training_targets": [
+      32,
+      8224
+    ],
+    "development_targets": [
+      90000032,
+      90001056
+    ],
+    "official_test_read": false,
+    "tokenizer": "fixed 27-character text8 alphabet",
+    "experts": [],
+    "warm_tokens": 31,
+    "state_reset": "once at each fitting pass and each evaluation stream",
+    "credit_truncation": 64,
+    "stream_time_unit": "one token interval",
+    "query_budget": 0.5
+  },
+  "source_sha256": {
+    "/workspace/experiments/e176_stream_language_train.py": "9a3597dfd0447de93b599055dfa90f24821620e01c54c233f05cb00790336bd9",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  },
+  "scope": "Fresh generic signed event-state model, no count/copy/word evidence. Persistent stream, no prefix replay. Same target byte ranges as E133, different topology/parameters/update budget, broader causal history. Small one-seed development study.",
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "threads": 1,
+    "device": "cpu"
+  },
+  "energy_joules": null,
+  "wall_s": 364.92978693000623,
+  "max_rss_kb": 373580,
+  "progress": {
+    "epoch": 4,
+    "targets": 8192,
+    "online_bpc": 3.227744494568093
+  },
+  "final": {
+    "epoch": 4,
+    "online_bpc": 3.227744494568093,
+    "optimizer_steps": 128,
+    "consumed_tokens": 8223,
+    "training_event_deliveries": 65784,
+    "layer_teacher_norm_sum": [
+      15.199662430579718,
+      13.949368804687866,
+      12.84228421766131,
+      9.982441402133965,
+      9.651401613937091,
+      8.609448011559374,
+      8.833937455358198,
+      7.617881230925792
+    ],
+    "dev": {
+      "n": 1024,
+      "nll": 2.322907905523607,
+      "bpc": 3.351247715740677,
+      "consumed_tokens": 1055,
+      "event_deliveries": 8440
+    },
+    "fit": {
+      "n": 8192,
+      "nll": 2.1779933962097857,
+      "bpc": 3.142180271800769,
+      "consumed_tokens": 8223,
+      "event_deliveries": 65784
+    }
+  }
+}

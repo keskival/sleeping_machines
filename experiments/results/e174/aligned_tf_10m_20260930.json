@@ -1,0 +1,44 @@
+{
+  "test_bpc": 1.9082749867563866,
+  "test_n": 999999,
+  "status": "completed",
+  "args": {
+    "tag": "aligned_tf_10m_20260930",
+    "model": "tf",
+    "n": 1000000,
+    "batch": 4
+  },
+  "inherited_args": {
+    "model": "tf",
+    "D": 10000000,
+    "passes": 4.0,
+    "size": 256,
+    "layers": 4,
+    "ctx": 256,
+    "test": 1000000,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "valid": 200000
+  },
+  "checkpoint": "experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v.pt",
+  "checkpoint_sha256": "cec7409f5d6dd29c7b7a095b12e84382c05c58e0867a953d347ffb60a75e4554",
+  "source_sha256": {
+    "/workspace/experiments/e174_aligned_language_baselines.py": "161f44200ce6cba7d13d35ded9585d4e7130f1cb4c91ad381621004a45c27df8",
+    "experiments/e64_lm_baselines.py": "af9c4bb99832a83365e26378db9afaad72ed9bdf4ea493e223d187128d350fc6"
+  },
+  "data_sha256": "32ba90f64452075dcc05054a29efb90d66ae8b72f21b57e7bc4ee22fb1c3791b",
+  "protocol": {
+    "test": [
+      95000000,
+      96000000
+    ],
+    "scored_positions": [
+      1,
+      1000000
+    ],
+    "cold_scored_stream_context": true
+  },
+  "scope": "Saved validation-selected E64 model, no retraining or test-driven selection. Exact E173 target population; Transformer final tail included; training capacities/schedules remain unmatched.",
+  "wall_s": 207.90333633200498,
+  "max_rss_kb": 317100
+}

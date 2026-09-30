@@ -24,6 +24,7 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
+| Native language prediction | **1.727 test bits/character** without a word expert, versus **1.799 LSTM / 1.908 Transformer**; lower is better | 10M-character count/copy mixture; identical test positions; capacities and fitting budgets differ |
 | Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small expert-free development screen; no frontier language claim |
 | Rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
 | Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
@@ -36,13 +37,6 @@ work estimate. Counted operations and logical memory visits are not measured
 energy.
 
 ### The central next result
-
-The earlier native-mixture headline scores are **withdrawn**: a partial-word
-context used the character being predicted to detect a space. The experimental
-review also quarantines an older market comparison whose trade-size threshold
-used held-day observations. Original records are retained; corrected causal
-language reruns compare mixtures with and without the word expert.
-See the [experimental review](experiments/EXPERIMENTAL_REVIEW.md).
 
 The common implementation currently
 covers multiple independently trained tasks; sharing an implementation does not
@@ -58,9 +52,11 @@ sensitivity, with higher computation cost for the deeper model. It is a small
 development result, not a large-corpus result or a scaling claim.
 [Results and work audit](experiments/results/e133/generic_language_audit_20260929.json).
 
-An eight-layer event/race model reaches **72.3% on 512 held-out SHD utterances**
-from reserved training-file speakers. This demonstrates deep learning and some
-speaker transfer. It does not establish competitive speech recognition; the
+The selected six-block temporal encoder reaches **79.69% on 512 held-out SHD
+utterances**, and **78.84% on a reused disjoint 657-utterance audit**, from
+reserved training-file speakers. It inherits a twelve-block fitting pass and
+development-based prefix selection. This demonstrates learning and some
+speaker transfer. The
 published official-test protocols are different, and our official SHD test set
 remains untouched.
 
@@ -90,8 +86,10 @@ The [shared model](experiments/SHARED_MODEL.md) combines configurable mechanisms
 
 Tasks have separate fitted weights and may use different depth or primitives.
 Small vector maps and output readouts use dense arithmetic. The current CPU
-reference also sorts arrivals and replays contexts; persistent incremental
-execution and cheaper candidate discovery are important systems objectives.
+reference also sorts arrivals and replays contexts. A separate generic streaming
+path retains modal state and delayed messages across chunks; its eight-layer
+contract checks prefix causality and all-layer credit without prefix replay.
+Competitive stream training and cheaper candidate discovery remain research objectives.
 All this work belongs in the resource accounting.
 
 ## Read the theory and evidence

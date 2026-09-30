@@ -1,0 +1,1 @@
+e174_aligned_lstm_10m_20260930 experiments/e174_aligned_language_baselines.py --tag aligned_lstm_10m_20260930 --model lstm --n 1000000 --batch 4
