@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "fisher_increment_error": 2.7755575615628914e-17,
+  "fisher_leaf_error": 2.7755575615628914e-17,
+  "orthogonal_increment_error": 0.0,
+  "expected_quadratic_risk_error": 3.469446951953614e-18,
+  "expected_cross_sample_signal_error": 0.0,
+  "protocol": "Exact enumeration, float64; finite prefix dictionary and independent four-point gradient noise. No language/speech quality claim.",
+  "source_sha256": "23c6475c3d27369deeabb74d839871b34e46c4328ec311d4ffa483060f4bb41a",
+  "wall_s": 0.0024958830035757273
+}

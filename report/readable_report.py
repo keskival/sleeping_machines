@@ -563,6 +563,7 @@ def blocks(M, tasks, ev):
          ["Certified composition","Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it."],
          ["Natural supervised credit","Categorical and event likelihoods both credit predicted sufficient statistics minus observations. Silence enters through integrated exposure."],
          ["Useful optionality","Reserve consists of distinct, attainable future corrections under a causal work budget. Reachability and transferable learning matter alongside immediate loss."],
+         ["Statistically useful credit","Expected improvement must overcome the curvature cost of fitting noise. Cross-example teacher agreement separates reproducible correction from raw gradient magnitude."],
         ],[57,117])),
         ("h2","From mathematics to an engineering discipline"),
         ("p","The theory connects representation, topology, clocks and optimization. Expressivity describes what "
@@ -993,7 +994,7 @@ def blocks(M, tasks, ev):
          "Vocabulary, capacities, optimization and fitting budgets differ from the neural references. "
          "The comparison does not measure total training energy or a matched-capacity advantage."),
         ("h2","Characters, subwords and a persistent stream"),
-        ("p","All four predictors use the same 27-character alphabet. Characters are tokens, but a subword "
+        ("p","All three predictors use the same 27-character alphabet. Characters are tokens, but a subword "
          "representation can reduce the number of arrivals and expose longer patterns within a fixed credit "
          "window. It also enlarges the output vocabulary. The useful comparison is quality and total work per "
          "original character, with train-only tokenizer fitting and declared buffering latency."),

@@ -93,7 +93,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Directional depth and normalization](theory/39_directional_depth_and_normalization.md) — §§261–264: fitted depth deletion, normalization radial credit, pre-normalized live output maps and full-rank observer conditioning that retains hidden null directions.
 - [Serial corrections and credit ownership](theory/40_serial_corrections_and_credit_ownership.md) — §§265–268: exact finite correction-risk decomposition, a nonzero serial suffix with its own zero correction head, paired supervision and explicit progressive-training boundaries.
 - [Causal streams and tokenization](theory/41_causal_streams_and_tokenization.md) — §§269–274: preprocessing filtrations, persistent state versus truncated credit, complete prefix dictionaries, exact per-character marginal likelihood and local vocabulary teachers, with a quality/work experiment.
-- [Information and statistical credit](theory/42_information_and_statistical_credit.md) — §§275–278: a stopped-token Fisher identity, control frequency versus statistical capacity, the noise cost of deep corrections and fitting-only cross-sample teacher diagnostics.
+- [Information and statistical credit](theory/42_information_and_statistical_credit.md) — §§275–279: a stopped-token Fisher identity, control frequency versus statistical capacity, the noise cost of deep corrections, fitting-only cross-sample teachers and a class-calibration quotient.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map
