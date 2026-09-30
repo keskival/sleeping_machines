@@ -66,8 +66,12 @@ an exact interior term, holding winner fixed:
 
     d f(T)/d score_W = -0.010 T/(1+T)^2.
 
-This term changes downstream elapsed-time computation. Final clock credit can
-be absent under the bounded completed-message query, as in §291. Numerical
+This term changes downstream elapsed-time computation. Its final-arrival term
+is absent under the bounded completed-message query, as in §291. Unlike the
+earlier shared-payload clock, however, the final race selects different receivers
+and values: its clock scores still receive counterfactual choice credit. A zero
+interior arrival-time derivative therefore does not remove its semantic route.
+Numerical
 contracts check live query/key/value/retention gradients, causality, partition
 invariance, training-forward/inference equality and selected-state counts.
 

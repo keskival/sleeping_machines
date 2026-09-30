@@ -595,11 +595,12 @@ def figures(M, tasks, ev):
     a.set_title('Ours: integrated event path',fontsize=9)
     a=axes[1]
     for depth in range(6):
-        a.scatter([depth]*54,range(54),s=6,color='#cdd4db',linewidths=0)
-        a.scatter([depth]*2,[10,11],s=15,color=orange,linewidths=0)
-        a.scatter([depth],[10+depth%2],s=20,color=blue,linewidths=0)
-    a.plot(range(6),[10+i%2 for i in range(6)],color=blue,linewidth=.8)
-    a.set(xlim=(-.5,5.5),ylim=(55,-4),xticks=range(6),
+        a.scatter([depth+(j%3-1)*.15 for j in range(54)],
+                  [j//3 for j in range(54)],s=6,color='#cdd4db',linewidths=0)
+        a.scatter([depth,depth+.15],[3,3],s=15,color=orange,linewidths=0)
+        a.scatter([depth+.15*(depth%2)],[3],s=20,color=blue,linewidths=0)
+    a.plot([i+.15*(i%2) for i in range(6)],[3]*6,color=blue,linewidth=.8)
+    a.set(xlim=(-.5,5.5),ylim=(21,-2),xticks=range(6),
           xticklabels=[str(i) for i in range(1,7)],yticks=[],xlabel='Depth')
     a.set_title('324 available units; 6 state updates / character',fontsize=8.5)
     a.grid(False)
