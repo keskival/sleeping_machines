@@ -54,10 +54,24 @@ state and checked predictions/gradients. Original model files remain unchanged.
   fixed 10M/200K/1M run may read the official test.
 - Completed small stages: width 32, 21,741 parameters, 2.858 development bpc;
   width 64, 80,301 parameters, 2.727. These are exploratory, not official tests.
-- The campaign orchestrator was stopped with SIGSTOP at 15:45 UTC while its
-  width-128 job finishes. Do not resume it blindly: diagnostics show inherited
-  event timescales are only a few token intervals. A matched language-memory
-  initialization ablation takes priority over promotion to the long run.
+- Width 128 also completed: 308,013 parameters, 2.643 development bpc. The old
+  orchestrator was terminated after that job completed. Its remaining queues
+  are superseded, since model-driver contract sources have since changed.
+- Active tmux: `local_language_memory_20260930T155000Z`; manifest and suite log
+  are in `experiments/queue/` with the same stem. Three width-256 numerical
+  contracts passed for inherited, long-decay and long-spectrum initialization.
+  The campaign fits those three profiles serially at width 128, fixed 131,072
+  characters/four passes and identical development targets. No official test.
+  All three fits completed: inherited 2.643, long decay 2.752, long spectrum
+  2.858 development bpc. Retain inherited as the leading matched result.
+  Longer modal retention alone worsened this screen. Investigate content-aware
+  write/forget selection in a small matched fit before larger promotion.
+- The inherited event initialization has mostly sub-character modal timescales.
+  `sleeping_machines/language_memory.py` adds explicit token-unit alternatives;
+  `experiments/theory/44_precise_language_scans_and_content.md` derives the
+  schedule, precision and content-mixing contracts. The input vector is
+  retained, mixed with memory, gated and passed through a residual. Rates and
+  output gates are learned; selective write/forget gates are not present.
 - All jobs use unique one-job queues and `run_safe.sh`; caps are 4,000,000 KiB
   virtual memory, 2,500,000 KiB group RSS and at least 8,192 MiB MemAvailable.
   The host is CPU-only. Do not train new Transformer/LSTM controls here.

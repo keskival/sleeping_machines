@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 from sleeping_machines.parallel_stream_language import ParallelEventLanguageModel
 from sleeping_machines.stream_language import StreamingEventLanguageModel
 from sleeping_machines.operation_audit import OperationAudit
+from sleeping_machines.language_memory import PROFILES, initialize_language_memory
 
 
 def serial(model, tokens, state):
@@ -48,6 +49,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--width', type=int, default=32)
+    parser.add_argument('--memory-profile',choices=PROFILES,default='inherited')
     args = parser.parse_args()
     output = ROOT/'experiments/results/parallel_language'/f'{args.tag}.json'
     if Path(args.tag).name != args.tag or output.exists():
@@ -55,6 +57,7 @@ def main():
     torch.set_num_threads(1); torch.manual_seed(6)
     start = time.perf_counter()
     model = ParallelEventLanguageModel(width=args.width, modes=args.width//2, depth=6)
+    initialize_language_memory(model,args.memory_profile)
     with torch.no_grad():
         for layer in model.layers:
             layer.clock.weight.normal_(0, .05); layer.clock.bias.normal_(0, .1)
@@ -113,6 +116,7 @@ def main():
         early_new, _ = model.forward_chunk(tokens[:16])
         torch.testing.assert_close(early_new, early_old, rtol=5e-4, atol=1e-4)
     benchmark_model = ParallelEventLanguageModel(width=256, modes=128, depth=6)
+    initialize_language_memory(benchmark_model,args.memory_profile)
     sample = torch.randint(0, 27, (65,))
     speed = {name:[timed_step(benchmark_model, sample, parallel) for _ in range(3)]
              for name, parallel in (('serial_precise',False), ('parallel_precise',True))}
@@ -138,7 +142,7 @@ def main():
                   source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
                       for p in (Path(__file__),ROOT/'sleeping_machines/parallel_stream_language.py',
                                 ROOT/'sleeping_machines/stream_language.py',ROOT/'sleeping_machines/event_state.py',
-                                ROOT/'sleeping_machines/event_memory.py')},
+                                ROOT/'sleeping_machines/event_memory.py',ROOT/'sleeping_machines/language_memory.py')},
                   wall_s=time.perf_counter()-start,max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     output.parent.mkdir(exist_ok=True)
     output.write_text(json.dumps(result,indent=2)+'\n')

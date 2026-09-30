@@ -1,0 +1,1 @@
+local_memory_w128_D131072_long_spectrum_20260930T155000Z experiments/parallel_event_language.py --tag local_memory_w128_D131072_long_spectrum_20260930T155000Z --contracts experiments/results/parallel_language/local_memory_contract_long_spectrum_20260930T155000Z.json --fit 131072 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume --memory-profile long_spectrum

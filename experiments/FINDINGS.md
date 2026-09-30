@@ -2518,3 +2518,45 @@ The full proper-model suite continues in its existing guarded serial tmux
 session. No dense model was retrained. See `HANDOFF.md` and the versioned queue
 manifest for continuation instructions; unfinished runs do not replace completed
 report evidence.
+
+### Precise-clock language scale-up and representation audit (2026-09-30)
+
+The original language/speech suites are superseded or paused; see HANDOFF for
+live state. The front page now leads with completed order-learning and retrieval
+comparisons, rather than neural language references without an event result.
+
+Absolute float32 token clocks erased delays on long streams. Precise float64
+clocks, float32 payloads and a bounded-delay affine scan fix that error. Width-256
+warm-state contracts compare serial/parallel outputs, states, gradients, chunk
+partitions and causality at positions 0 and 10M. The saved v3 complete-step CPU
+speedup is 12.30×; this is an implementation result for the same model, not
+prediction-quality or energy superiority.
+
+At identical 131,072 fitting characters/four passes and 8,191 development targets,
+completed six-layer seed-6 fits reach 2.858 bpc at 21,741 parameters, 2.727 at
+80,301 and 2.643 at 308,013. Full fitting arithmetic is 76.11G, 272.30G and
+1,026.18G respectively.
+These are one-seed capacity screens, with different work, not a scaling law or
+an official test. Raw results remain under experiments/results/parallel_language.
+
+The learned input embeddings, modal-state injection, direct path and gated
+residual output retain and transform incoming content. The fixed-vector phrase
+in the temporal-orbit proof holds one drive constant to isolate delay variation;
+it does not define a constant outgoing payload in the learned encoder.
+
+Diagnostics identify a task-unit concern: inherited event rates initialize
+modal timescales at 0.02..10 character intervals, and small fits retain only a
+few intervals in their longest modes. A matched development-only ablation tests
+1..1024-character decay times and resolved 4..2048-character periods, retaining
+identical capacity and training budgets. Three corresponding numerical contracts
+passed before training. Credit truncation remains 64 characters; persistent
+memory and long-range learning credit are different requirements. No larger
+quality claim is promoted until completed comparable evidence supports it.
+
+The matched memory initialization ablation completed: inherited 2.643410,
+long decay 2.752318 and long spectrum 2.858211 development bpc. All have
+308,013 parameters and 1,026.18G fitting arithmetic FLOPs. The inherited repeat
+reproduces the previous result exactly. Longer individual retention worsened
+this screen; no longer-memory result replaces the leading valid result.
+Interference and useful content selection need further diagnosis. Longer
+context remains a design requirement, not a demonstrated gain from these poles.

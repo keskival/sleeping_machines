@@ -44,6 +44,8 @@ work, and §11.1's linearity in the weights is a known property that we exploit.
 
 Section numbers remain global and unchanged, so references such as “THEORY §57” continue to work. The detailed derivations are split into shorter thematic notes:
 
+- [Precise language scans and content-bearing messages](theory/44_precise_language_scans_and_content.md) — §§287–292: bounded-delay causal scans, clock precision, gated vector mixing and token-unit memory initialization.
+
 - [Race foundations and exact gradients](theory/01_foundations_and_counterfactual_credit.md) — §§1–10
 - [Counterfactual credit, routing, and depth](theory/01b_counterfactual_credit_and_depth.md) — §§11–20
 - [History ensembles and learning dynamics](theory/02_history_ensembles_and_learning_dynamics.md) — §§21–25

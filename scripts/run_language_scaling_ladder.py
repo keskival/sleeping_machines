@@ -56,6 +56,11 @@ def main():
         if rc:stop(f'Guarded job {job["tag"]} exited {rc}; preserve checkpoint/log and investigate')
         result = json.loads((ROOT/job['result']).read_text())
         if result['status'] != 'completed':stop('Incomplete result: '+job['tag'])
+        if job['kind'] == 'contract':
+            job.update(status='completed',finished_utc=now(),wall_s=result['wall_s'])
+            plan['updated_utc']=now();persist()
+            print(json.dumps(dict(tag=job['tag'],numerical_contracts='passed')),flush=True)
+            continue
         if job['kind'] != 'official_comparison' and result['protocol']['official_test_read']:
             stop('Development stage touched the official test')
         score = result['final']['dev']['bpc']
@@ -72,7 +77,7 @@ def main():
         plan['updated_utc']=now();persist()
         print(json.dumps({k:job[k] for k in ('tag','development_bpc','parameters','training_flops','wall_s')}),flush=True)
     plan.update(status='completed',current_job=None,updated_utc=now());persist()
-    print('All scaling stages and the fixed official comparison completed',flush=True)
+    print('All declared campaign stages completed',flush=True)
 
 
 if __name__ == '__main__':

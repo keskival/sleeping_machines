@@ -81,6 +81,13 @@ singular scales are generically epsilon,epsilon^2,...,epsilon^r. Higher
 directions exist algebraically but become unusably small near a tie. Duplicate
 delays or missing modal drive components reduce rank further.
 
+Here "fixed vector" holds one observed drive constant while varying its delay
+to isolate the timing control orbit. It is not a restriction on the payload of
+the learned encoder. `EventStateBlock` projects the incoming vector into modal
+memory, mixes a learned memory read with the direct input, gates that mixture,
+and emits a residual update to the incoming vector. Both content and timing
+therefore carry information; the orbit calculation studies one axis at a time.
+
 This resolves a concrete counting ambiguity: K clock choices per layer do not
 give K independent infinitesimal control directions. Finite temporal spread,
 distinct modes/source vectors, and their downstream observation all matter.

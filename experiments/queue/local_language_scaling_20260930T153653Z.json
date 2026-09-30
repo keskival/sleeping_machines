@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "superseded_for_memory_initialization_audit",
   "created_utc": "2026-09-30T15:36:53.947645+00:00",
   "tmux_session": "local_language_scaling_20260930T153653Z",
   "suite_log": "experiments/queue/local_language_scaling_20260930T153653Z.out",
@@ -61,9 +61,13 @@
       "dev": 8192,
       "epochs": 4,
       "timeout_s": 7200,
-      "status": "running",
+      "status": "completed",
       "command": "experiments/parallel_event_language.py --tag local_scale_capacity_w128_D131072_20260930T153653Z --contracts experiments/results/parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json --fit 131072 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume",
-      "started_utc": "2026-09-30T15:43:57.572183+00:00"
+      "started_utc": "2026-09-30T15:43:57.572183+00:00",
+      "development_bpc": 2.6434104135708854,
+      "parameters": 308013,
+      "training_flops": 1026177399296,
+      "wall_s": 258.9070545400027
     },
     {
       "kind": "capacity",
@@ -161,7 +165,7 @@
     "minimum_data_gain_bpc": 0.1
   },
   "protocol": "Independent seed-6 fits: capacity at fixed 131072 characters; data at fixed width 128. Same six layers, four passes, 8192-character development window. No official test in exploratory stages. Fixed 10M/200k/1M comparison only after numerical, learning and development gates. Gates are practical promotion rules, not a guarantee of benchmark superiority.",
-  "updated_utc": "2026-09-30T15:43:57.572173+00:00",
-  "current_job": "local_scale_capacity_w128_D131072_20260930T153653Z",
+  "updated_utc": "2026-09-30T15:50:00.453253+00:00",
+  "current_job": null,
   "interruption_note": "Orchestrator paused; current width-128 job may finish. Investigate inherited sub-token memory initialization before promoting larger language fitting."
 }

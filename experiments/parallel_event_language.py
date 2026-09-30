@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT/'experiments'))
 from e120_shared_tasks import text_slice
 from sleeping_machines.operation_audit import OperationAudit
 from sleeping_machines.parallel_stream_language import ParallelEventLanguageModel
+from sleeping_machines.language_memory import PROFILES, initialize_language_memory
 
 
 @torch.no_grad()
@@ -137,6 +138,7 @@ def main():
     parser.add_argument('--official-test',action='store_true')
     parser.add_argument('--test',type=int,default=1000000)
     parser.add_argument('--monitor-every',type=int,default=0)
+    parser.add_argument('--memory-profile',choices=PROFILES,default='inherited')
     args = parser.parse_args()
     out = ROOT/'experiments/results/parallel_language'/f'{args.tag}.json'
     checkpoint, running = out.with_suffix('.progress.pt'), out.with_suffix('.running.json')
@@ -150,6 +152,8 @@ def main():
     contract = json.loads(contract_path.read_text())
     if contract['status'] != 'completed':
         raise ValueError('Completed numerical contracts required')
+    if contract['args'].get('memory_profile', 'inherited') != args.memory_profile:
+        raise ValueError('Numerical contract must cover this memory profile')
     for name,digest in contract['source_sha256'].items():
         if hashlib.sha256((ROOT/name).read_bytes()).hexdigest() != digest:
             raise ValueError('Contract source changed: '+name)
@@ -159,12 +163,13 @@ def main():
     started = time.perf_counter()
     train = torch.tensor(text_slice(0,args.fit)); dev = torch.tensor(text_slice(90_000_000,args.dev))
     model = ParallelEventLanguageModel(width=args.width,modes=args.modes,depth=args.depth)
+    initialize_language_memory(model,args.memory_profile)
     optimizer = torch.optim.Adam(model.parameters(),lr=args.lr)
     initial = copy.deepcopy(model.state_dict())
     sources = [Path(__file__),ROOT/'sleeping_machines/parallel_stream_language.py',
                ROOT/'sleeping_machines/stream_language.py',ROOT/'sleeping_machines/event_state.py',
                ROOT/'sleeping_machines/event_memory.py',ROOT/'sleeping_machines/operation_audit.py',
-               ROOT/'experiments/e120_shared_tasks.py']
+               ROOT/'experiments/e120_shared_tasks.py',ROOT/'sleeping_machines/language_memory.py']
     result = dict(status='running',args=vars(args),parameters=sum(p.numel() for p in model.parameters()),
                   curve=[],monitor_curve=[],initial_dev=evaluate(model,dev,args.chunk),
                   protocol=dict(fitting=[0,args.fit],development=[90_000_000,90_000_000+args.dev],
@@ -173,6 +178,7 @@ def main():
                       statistical_experts=[],selection='minimum full-development bpc over the fixed epoch budget',
                       cold_context=True,excluded_first_target=True,weights_frozen_on_test=True,
                       credit_truncation=args.chunk,clock_dtype='float64',payload_dtype='float32',
+                      memory_initialization=args.memory_profile,
                       execution='causal layer-wise affine scans, persistent state across chunks'),
                   contract_result=args.contracts,contract_sha256=hashlib.sha256(contract_path.read_bytes()).hexdigest(),
                   source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
