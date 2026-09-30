@@ -2329,3 +2329,6 @@ dense training. Only the single racing layer wins at inference (~2.4×).
 one job at a time with a watchdog. Hidden batch assumptions surfaced when moving to one frame
 per update (homeostasis inside `teach`; a frame with no hidden spike). A waiter loop that
 matched its own command line never started the queue; found by checking, not assuming.
+
+
+**AWS 90M LSTM reference (2026-09-30, exploratory single seed).** Completed `aws_e64_lstm_D90M_baseline_20260929`: test BPC 1.661015, best validation BPC 1.615515, 1,199,323 parameters, 65,917 steps, 38314.004 seconds wall time, peak RSS 2,300,868 KiB. CPU, size 512, six passes, dropout 0.1, 200,000 validation characters. The four-layer 90M Transformer reference remains pending; this result alone does not establish a matched large-data comparison. Metrics and provenance: `experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/`.

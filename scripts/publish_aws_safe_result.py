@@ -72,8 +72,7 @@ def main():
     progress[tag] = record
     PROGRESS.write_text(json.dumps(progress, indent=2) + '\n')
 
-    paths = [qfile, PROGRESS, QUEUE / 'aws_90m_reference_baselines.txt',
-             QUEUE / 'runner_aws_90m_reference_baselines.out',
+    paths = [qfile, PROGRESS, QUEUE / f'runner_{tag}.out',
              QUEUE / 'logs' / f'{tag}.log', *result_dir.glob('*.json')]
     if status == 'completed':
         updated = subprocess.run([str(ROOT / '.venv-docker/bin/python'),
