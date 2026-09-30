@@ -114,6 +114,7 @@ Fixed observed-character pools, bounded delays and six sequential event depths; 
 
 | Ours: fit / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / selected states |
 | --- | --- | --- | --- |
+| 32,768 / 2 | 3.121 | 29.88 | 324 / 6 |
 | 8,192 / 2 | 3.398 | 7.49 | 324 / 6 |
 
 These are the integrated model stages, with identical cold development targets. Each character selects one unit at each depth; addressed alternatives teach the races. Capacity and selected activity are different counts. The fitting ledger includes counterfactual values, backward, clipping and Adam.
@@ -452,6 +453,7 @@ This ledger updates from completed integrated-model stages. It shows the emergin
 
 | Ours: fit / pool | Development bpc ↓ | Full fitting GFLOPs ↓ | Inference KFLOPs / char ↓ | Fitting KFLOPs / target ↓ |
 | --- | --- | --- | --- | --- |
+| 32,768 / 2 | 3.121 | 29.883 | 25.063 | 227.998 |
 | 8,192 / 2 | 3.398 | 7.492 | 25.027 | 228.673 |
 
 The table contains arithmetic FLOPs; additional special-function counts are in each result. The figure and ratios add one operation per special function to align with the historical neural estimate convention. This unit assignment is not its physical energy cost.
@@ -461,7 +463,7 @@ The table contains arithmetic FLOPs; additional special-function counts are in e
 | LSTM; width 512 | 10M / six | 1.799 | 7.210 | 2.402 |
 | Transformer; width 256 | 10M / four | 1.908 | 22.223 | 7.405 |
 
-**The raw work gap is substantial.** The completed 8,192-character integrated stage's representative forward estimate is **291× smaller** than the larger saved Transformer estimate; fitting work per target is **93× smaller**. These are configuration-level arithmetic ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
+**The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **290× smaller** than the larger saved Transformer estimate; fitting work per target is **94× smaller**. These are configuration-level arithmetic ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
 
 Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
 
