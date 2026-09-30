@@ -877,6 +877,10 @@ def blocks(M, tasks, ev):
          "learning-rate schedule. These are one small reference setting per task. Two-layer follow-ups retain 100% recall at both "
          "context lengths and reach 96.1% temporal composition versus 97.3% with eight layers, using four times "
          "fewer hidden carrier emissions. The model's depth is chosen to suit the computation."),
+        ("p","<b>Why training can cost more:</b> this older race core evaluates all three candidate vector payloads "
+         "during training, versus only the winner during inference. Its eight layers also exceed the reference's two. "
+         "With short contexts, that work outweighs the saved attention cost; these rows do not show a training "
+         "efficiency advantage. On the longer event-camera prefixes, counted training-forward work is lower."),
         ("small","Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, "
          "MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character "
          "evidence bank; market evidence is fitted on a prior day. The references have no such bank. "
