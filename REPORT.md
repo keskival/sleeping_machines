@@ -219,6 +219,7 @@ Each stage fits independently from initialization. Data, capacity and memory con
 | Ours: memory / width | Fit characters | Parameters | Development bpc ↓ | Fitting TFLOPs ↓ |
 | --- | --- | --- | --- | --- |
 | Input gates / 256 | 131,072 | 1,208,889 | 2.572 | 4.009 |
+| Input gates / 128 | 1,048,576 | 309,561 | 2.210 | 8.325 |
 
 ![language compute choices](report/figures/language_compute_choices.png)
 
