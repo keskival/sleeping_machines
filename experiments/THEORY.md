@@ -91,6 +91,7 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Class-observer-conditioned depth](theory/37_class_observer_conditioned_depth.md) — §§253–256: finite normalized-residual/class bounds, nonzero gain initialization in head units, compatible normalization steps and matched real depth replays.
 - [Finite function-trusted credit](theory/38_finite_function_trusted_credit.md) — §§257–260: bounded actual parameter counterfactuals, fitting-only paired descent/probability acceptance, consistent moment ownership and explicit extra event work.
 - [Directional depth and normalization](theory/39_directional_depth_and_normalization.md) — §§261–264: fitted depth deletion, normalization radial credit, pre-normalized live output maps and full-rank observer conditioning that retains hidden null directions.
+- [Serial corrections and credit ownership](theory/40_serial_corrections_and_credit_ownership.md) — §§265–268: exact finite correction-risk decomposition, a nonzero serial suffix with its own zero correction head, paired supervision and explicit progressive-training boundaries.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

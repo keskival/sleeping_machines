@@ -24,10 +24,10 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
-| Language prediction | **1.613 test bits/character** with 10M training characters, compared with LSTM **1.799** and Transformer **1.908**; lower is better | Native predictive mixture, text8 split; different model sizes and fitting schedules |
+| Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small expert-free development screen; no frontier language claim |
 | Rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
 | Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
-| Temporal composition | Native shared-motif models reach approximately **99.65%**, with approximately **10,000× less counted work** than the named Transformer reference | Task-specific native model and declared operation ledger |
+| Temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
 
 [Accuracy versus computation](report/figures/consolidated_work_frontiers.png)
 shows the consolidated arithmetic and retrieval comparisons. The report contains
@@ -37,9 +37,14 @@ energy.
 
 ### The central next result
 
-The strongest language result comes from a specialized predictive mixture. It
-has **not yet been reproduced by a generic deep event language model** without
-explicit context-count or pointer experts. The common implementation currently
+The earlier native-mixture headline scores are **withdrawn**: a partial-word
+context used the character being predicted to detect a space. The experimental
+review also quarantines an older market comparison whose trade-size threshold
+used held-day observations. Original records are retained; corrected causal
+language reruns compare mixtures with and without the word expert.
+See the [experimental review](experiments/EXPERIMENTAL_REVIEW.md).
+
+The common implementation currently
 covers multiple independently trained tasks; sharing an implementation does not
 by itself establish general representation learning.
 
@@ -50,7 +55,7 @@ layers' value, route and memory-time parameters update. Shuffling preceding
 characters while preserving the last character, count and timestamps increases
 the deeper model's loss to 3.805. This is evidence of trainability and context
 sensitivity, with higher computation cost for the deeper model. It is a small
-development result, not the 10M-character mixture result or a scaling claim.
+development result, not a large-corpus result or a scaling claim.
 [Results and work audit](experiments/results/e133/generic_language_audit_20260929.json).
 
 An eight-layer event/race model reaches **72.3% on 512 held-out SHD utterances**
