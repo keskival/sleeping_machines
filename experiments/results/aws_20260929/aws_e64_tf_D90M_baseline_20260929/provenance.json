@@ -1,0 +1,34 @@
+{
+  "run_tag": "aws_e64_tf_D90M_baseline_20260929",
+  "script": "experiments/e64_lm_baselines.py",
+  "arguments": [
+    "--model",
+    "tf",
+    "--D",
+    "90000000",
+    "--size",
+    "256",
+    "--layers",
+    "4",
+    "--passes",
+    "4",
+    "--dropout",
+    "0.1",
+    "--valid",
+    "200000"
+  ],
+  "output_redirected": true,
+  "source_sha256": "af9c4bb99832a83365e26378db9afaad72ed9bdf4ea493e223d187128d350fc6",
+  "git_commit": "137c36bee5620f82a0e063df42251d533d68c488",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "259200"
+  },
+  "start_utc": "2026-09-30T11:15:29Z",
+  "status": "terminated",
+  "exit_code": 2,
+  "termination_reason": "RSS watchdog: 3620084 KiB above 3500000 KiB",
+  "peak_rss_kb": 3620084
+}

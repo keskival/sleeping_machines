@@ -11,5 +11,18 @@
       "JOB_TIMEOUT_S": "259200"
     },
     "peak_rss_kb": 2300868
+  },
+  "aws_e64_tf_D90M_baseline_20260929": {
+    "exit_code": 2,
+    "wall_s": null,
+    "status": "failed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e64_tf_D90M_baseline_20260929 --script experiments/e64_lm_baselines.py -- --model tf --D 90000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000",
+    "limits": {
+      "MEM_CAP_KB": "6000000",
+      "MEM_CAP_RSS_KB": "3500000",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "259200"
+    },
+    "peak_rss_kb": 3620084
   }
 }
