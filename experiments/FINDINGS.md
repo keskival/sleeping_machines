@@ -2491,3 +2491,30 @@ Earlier 1M results are also visible. The proper 10M learned-event benchmark
 remains pending; its small development score is not substituted for a comparable
 test result. The interrupted AWS 90M Transformer attempt retains its provenance
 and is not reported as a completed test. No reference retraining was performed.
+
+### Report narrative and evidence preservation (2026-09-30)
+
+The regenerated single PDF restores the four opening differentiators: time
+performs computation, hard routes can learn, deep persistent event
+representations, and capacity beyond activity. The supporting explanation
+retains temporal algebra, counterfactual credit, separate keys/values, trainable
+depth, structured memory and supervision that includes silence. New parallel
+fitting and compute-allocation discussion extends these principles.
+
+The front-page charts show saved language controls and the longer-context
+retrieval comparison. The redundant front-page reference table is removed;
+complete neural protocols and training costs remain together in Appendix B.
+The temporal-composition figure shows preserved five-run accuracies and
+distinct-example learning curves. Every reference result file remains intact.
+
+Appendix C explicitly preserves the earlier E79 language and E57 world-model
+numbers beside their documented protocol errors. Those entries explain revised
+headlines without promoting invalid comparisons. Valid retrieval, temporal
+composition and modular results remain leading evidence. FLOP tables retain
+their event-algorithm boundaries, backward and optimizer estimates; device
+energy has not been measured.
+
+The full proper-model suite continues in its existing guarded serial tmux
+session. No dense model was retrained. See `HANDOFF.md` and the versioned queue
+manifest for continuation instructions; unfinished runs do not replace completed
+report evidence.

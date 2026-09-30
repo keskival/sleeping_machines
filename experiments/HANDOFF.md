@@ -1,0 +1,56 @@
+# Session handoff — 2026-09-30
+
+Work on `main`. The user authorized committing and pushing all work, wants one
+presentable PDF, and intends to start a fresh session. Preserve the established
+architecture, theory and historical results; extend them with new evidence.
+
+## Report and publishing
+
+- Canonical PDF: `report/sleeping_machines_status.pdf`; Markdown: `REPORT.md`.
+  Regenerate both with `.venv-docker/bin/python report/make_pdf.py`.
+- The revision restores all four opening differentiators, explains computation
+  through time and counterfactual learning, restores visual comparisons, and
+  removes the redundant opening reference table. Complete neural language
+  references remain in Appendix B; older revised claims remain in Appendix C.
+- Saved text8 test scores: 10M LSTM 1.799, 10M Transformer 1.908, AWS 90M LSTM
+  1.661 bpc. Estimated full training costs: 432.59T, 888.78T, 3.89P FLOPs.
+- The completed persistent learned-language pilot is 3.351 development bpc,
+  28,403 parameters, 8,192 fitting characters and four passes. Estimated event
+  arithmetic: 6.962G total fitting FLOPs and 59.741K inference/scoring FLOPs per
+  character, with special functions separate. It is not the full benchmark.
+- E79's old 1.613/1.504 statistical language headlines had target leakage; E173
+  corrects the 10M score to 1.727, or 1.719 with causal word context. Old market
+  thresholds used evaluation days. Retain the raw records and stated errors.
+- Publishing from this container has been unavailable: origin uses SSH, the
+  SSH executable and credentials are absent, and the connected GitHub app
+  rejected blob creation with 403. The user has pushed previous commits from
+  the host. HTTPS reads work. Verify `git status` and `git log` for the new local
+  report commit, then push from an authenticated host. Do not claim it is remote
+  until the remote commit is verified.
+
+## Running benchmarks — preserve the existing job
+
+- tmux: `proper_events_20260930T131028Z`.
+- Manifest: `experiments/queue/local_full_proper_suite_20260930T131028Z.json`.
+- Suite log: `experiments/queue/local_full_proper_suite_20260930T131028Z.out`.
+- One guarded job at a time, through `experiments/queue/run_safe.sh`; never
+  launch Python training directly. Current job: full SHD, 20 epochs, seed 6,
+  from scratch, 395,814 learned parameters, 6,987 fit / 1,169 development
+  utterances. At this handoff it had reached epoch 11. Official test runs once
+  after development selection; ongoing development scores are not final tests.
+- Next jobs, serially: DVS, MNIST, market, temporal composition, learned
+  language. The language job has six layers, width 256, 128 temporal modes,
+  1,205,805 parameters; 10M fit characters, four passes, 200K development and
+  the existing 1M test interval. No count/copy/word experts.
+- CPU-only host. Suite caps: virtual memory 4,000,000 KiB, RSS 2,500,000 KiB,
+  minimum available memory 8,192 MiB, timeout 864,000 seconds. Available memory
+  at handoff was about 11.2 GiB and only one training process was active.
+- Progress/checkpoints are ignored local files under `experiments/results/`.
+  Final result JSONs are versioned. Check the live state before deciding whether
+  a job needs resumption; the queue and tmux process may still be running.
+- Do not train Transformers or LSTMs here. The user reserves new dense controls
+  for AWS; reuse existing reference results. Update the report from completed
+  comparable results without deleting older evidence.
+
+The model drivers and theory were not changed by this report revision. The
+source hashes recorded by the running suite remain its reproducibility contract.

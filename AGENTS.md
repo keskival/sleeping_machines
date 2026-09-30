@@ -1,5 +1,7 @@
 # Experiment host rules
 
+- Read `experiments/HANDOFF.md` for the current report, publishing and running
+  benchmark state before continuing work from a new session.
 - Before launching training, inspect the existing queue, result files, report,
   host memory, running jobs, and GPU occupancy. Reuse an existing benchmark
   configuration when possible; prioritize the deferred large Transformer
@@ -22,3 +24,15 @@
   and coordinate overlapping files. Update findings and the report from completed result
   files, and distinguish exploratory single-seed evidence from benchmark
   claims.
+- Preserve completed result files and older report evidence while new runs are
+  pending. Replace a leading valid result only after a completed, comparable
+  run improves it, retaining the previous result in the historical record.
+  State protocol errors and revised interpretations beside the original
+  numbers instead of silently deleting them. Keep existing dense controls;
+  the user has reserved new Transformer/LSTM training for AWS.
+- Preserve the established architectural case when editing the report: time
+  performs computation, hard routes learn through counterfactual credit, deep
+  persistent event representations, and capacity beyond activity. Retain the
+  supporting temporal algebra, key/value separation, silence-aware supervision,
+  depth theory and compute-allocation reasoning. Integrate new findings with
+  their evidence and scope instead of replacing these principles ad hoc.

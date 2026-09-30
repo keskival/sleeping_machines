@@ -51,7 +51,7 @@ benchmark; lower test bits/character is better:
 These are saved validation-selected test results. Training estimates include
 forward, backward, clipping and Adam. The proper 10M-character Sleeping Machines
 test benchmark is pending; its small development score above uses a different
-split and fitting budget. See the report's early reference-results page for the
+split and fitting budget. See the report's completed-language-references appendix for the
 protocols and cost boundaries.
 
 The separate statistical count/copy baseline reaches 1.727 text8 test
