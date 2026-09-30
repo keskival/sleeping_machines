@@ -29,8 +29,9 @@ def main():
         raise RuntimeError('Integrated sources changed; preserve the source snapshot and review')
     def save():
         plan['updated_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        MANIFEST.write_text(json.dumps(plan, indent=2) + '\n')
+        MANIFEST.with_suffix('.status.json').write_text(json.dumps(plan, indent=2) + '\n')
     def publish(paths, message):
+        MANIFEST.write_text(json.dumps(plan, indent=2) + '\n')
         subprocess.run(['git', 'add', '--', *paths], cwd=ROOT, check=True)
         subprocess.run(['git', 'commit', '-m', message], cwd=ROOT, check=True)
         subprocess.run(['git', 'pull', '--rebase', 'origin', 'main'], cwd=ROOT, check=True)
