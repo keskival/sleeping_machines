@@ -1,0 +1,184 @@
+{
+  "status": "completed",
+  "rows": {
+    "state": {
+      "initial_fit": 0.060546875,
+      "initial_held": 0.029296875,
+      "curve": [
+        {
+          "epoch": 1,
+          "fit_correct": 1005,
+          "fit_n": 1024,
+          "fit_accuracy": 0.9814453125,
+          "fit_nll": 0.11764981173291744,
+          "held_correct": 302,
+          "held_n": 512,
+          "held_accuracy": 0.58984375,
+          "held_nll": 1.335006426088512,
+          "angle_gradient_norms": [
+            2.807666914886795,
+            2.306809126283042,
+            3.1787458424223587,
+            1.467076680622995,
+            0.9795800013525877,
+            0.7825877596042119,
+            1.1904783496283926,
+            0.9560671689687297,
+            0.8458086644532159,
+            0.6218676082789898,
+            1.0572871986078098,
+            0.48962693112844136
+          ]
+        },
+        {
+          "epoch": 2,
+          "fit_correct": 1024,
+          "fit_n": 1024,
+          "fit_accuracy": 1.0,
+          "fit_nll": 0.009680803678719485,
+          "held_correct": 288,
+          "held_n": 512,
+          "held_accuracy": 0.5625,
+          "held_nll": 1.472858109860681,
+          "angle_gradient_norms": [
+            1.2183798047990422,
+            1.0495667695213342,
+            1.2994197944644839,
+            0.6730759627316729,
+            0.4207124703189038,
+            0.377526619658056,
+            0.6053445579018444,
+            0.4556879862657297,
+            0.3669620732343901,
+            0.2898787855065166,
+            0.527426581887994,
+            0.26004660262333346
+          ]
+        },
+        {
+          "epoch": 3,
+          "fit_correct": 1024,
+          "fit_n": 1024,
+          "fit_accuracy": 1.0,
+          "fit_nll": 0.0015759115884179664,
+          "held_correct": 296,
+          "held_n": 512,
+          "held_accuracy": 0.578125,
+          "held_nll": 1.5945817804749822,
+          "angle_gradient_norms": [
+            0.2128076456438066,
+            0.18513752271974226,
+            0.21985356338427664,
+            0.12345139072112943,
+            0.08061791866475687,
+            0.07092420044637038,
+            0.11198815389707306,
+            0.08806106534530045,
+            0.06719466547792763,
+            0.051288735030084354,
+            0.10134512557078779,
+            0.05305486771385404
+          ]
+        }
+      ],
+      "wall_s": 424.302947854012,
+      "peak_rss_kib": 523356,
+      "nominal_train_parameters": 140428,
+      "active_train_parameters": 140428
+    },
+    "packets": {
+      "initial_fit": 0.0419921875,
+      "initial_held": 0.056640625,
+      "curve": [
+        {
+          "epoch": 1,
+          "fit_correct": 319,
+          "fit_n": 1024,
+          "fit_accuracy": 0.3115234375,
+          "fit_nll": 2.540827457793057,
+          "held_correct": 94,
+          "held_n": 512,
+          "held_accuracy": 0.18359375,
+          "held_nll": 2.6424123141914606,
+          "angle_gradient_norms": [
+            0.364165057631908,
+            0.30274706241107197,
+            0.3662172339136305,
+            0.2980630520178238,
+            0.2271276043211401,
+            0.2548453259332746,
+            0.4791392206097953,
+            0.42873472435894655,
+            0.43279622564296005,
+            0.34843976942647714,
+            0.5103580979484832,
+            0.4467878565774299
+          ]
+        },
+        {
+          "epoch": 2,
+          "fit_correct": 394,
+          "fit_n": 1024,
+          "fit_accuracy": 0.384765625,
+          "fit_nll": 2.083961974363774,
+          "held_correct": 128,
+          "held_n": 512,
+          "held_accuracy": 0.25,
+          "held_nll": 2.385326685383916,
+          "angle_gradient_norms": [
+            1.0181139505002648,
+            0.9467472814721987,
+            0.9255192974815145,
+            0.8354407587321475,
+            0.7407295394223183,
+            0.7503886100603268,
+            1.3962369993096218,
+            1.0674956362927333,
+            1.1568627656670287,
+            0.8512807178776711,
+            1.03477127419319,
+            0.963763756561093
+          ]
+        },
+        {
+          "epoch": 3,
+          "fit_correct": 471,
+          "fit_n": 1024,
+          "fit_accuracy": 0.4599609375,
+          "fit_nll": 1.8299149083904922,
+          "held_correct": 152,
+          "held_n": 512,
+          "held_accuracy": 0.296875,
+          "held_nll": 2.223693256266415,
+          "angle_gradient_norms": [
+            1.4424906196072698,
+            1.4252940118312836,
+            1.374145193491131,
+            1.1939079219009727,
+            1.0732116409344599,
+            1.0142376659205183,
+            2.053864928195253,
+            1.4056787034496665,
+            1.5829507206799462,
+            1.1627131180139259,
+            1.218567117699422,
+            1.1634052987210453
+          ]
+        }
+      ],
+      "wall_s": 423.9979395000264,
+      "peak_rss_kib": 522848,
+      "nominal_train_parameters": 140428,
+      "active_train_parameters": 2188
+    }
+  },
+  "same_key_program_and_calibration": true,
+  "same_fit_held_order_and_optimizer_budget": true,
+  "all_twelve_angle_layers_receive_credit": true,
+  "source_sha256": {
+    "/workspace/experiments/e136_scattering_comparison.py": "022224268b9e49e388a428fbe76bd777cb3d704a4e0c18d98dee46dd61cbfcb0",
+    "experiments/results/e136/scattering_state_d12_n1024_s6_e3_20260929.json": "5c8d06af0be3eabdb01c865bb2ddc9219d06b75101f004020d8e015af1b19e94",
+    "experiments/results/e136/scattering_packets_d12_n1024_s6_e3_20260929.json": "874a8a82d1c070f1dce9805b257e925646d17974086de0e31909244988bf74a4"
+  },
+  "scope": "Query-boundary/learnability intervention, not a capacity-matched model comparison. Observable states add 138240 active terminal-head weights. Keys inherit supervised E122 training; new fitting set is 1024 unaugmented utterances. No official test or energy claim."
+}

@@ -1,0 +1,118 @@
+{
+  "status": "completed",
+  "trained": {
+    "fit": {
+      "correct": 1024,
+      "n": 1024,
+      "accuracy": 1.0,
+      "nll": 0.0015759115884179664
+    },
+    "held": {
+      "correct": 296,
+      "n": 512,
+      "accuracy": 0.578125,
+      "nll": 1.5945817804749822
+    }
+  },
+  "all_angles_reset_same_decoder": {
+    "fit": {
+      "correct": 1024,
+      "n": 1024,
+      "accuracy": 1.0,
+      "nll": 0.005248311225557245
+    },
+    "held": {
+      "correct": 278,
+      "n": 512,
+      "accuracy": 0.54296875,
+      "nll": 1.7815531548694707
+    }
+  },
+  "per_layer_reset_fitting_64": [
+    {
+      "layer": 0,
+      "fitting_probe_nll_change": 6.426179334084736e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.09003932029008865
+    },
+    {
+      "layer": 1,
+      "fitting_probe_nll_change": 0.0007185890108303283,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.13823148608207703
+    },
+    {
+      "layer": 2,
+      "fitting_probe_nll_change": 0.00026614894431986613,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.10447119921445847
+    },
+    {
+      "layer": 3,
+      "fitting_probe_nll_change": -0.00010880036370508606,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.10996735841035843
+    },
+    {
+      "layer": 4,
+      "fitting_probe_nll_change": 7.88930583439651e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.12353499978780746
+    },
+    {
+      "layer": 5,
+      "fitting_probe_nll_change": 9.508212224318413e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.11815300583839417
+    },
+    {
+      "layer": 6,
+      "fitting_probe_nll_change": -2.0125074115640018e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.10668224841356277
+    },
+    {
+      "layer": 7,
+      "fitting_probe_nll_change": 5.50898066649097e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.12647873163223267
+    },
+    {
+      "layer": 8,
+      "fitting_probe_nll_change": -7.061082305881428e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.1255764216184616
+    },
+    {
+      "layer": 9,
+      "fitting_probe_nll_change": 9.295454492530553e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.1597069948911667
+    },
+    {
+      "layer": 10,
+      "fitting_probe_nll_change": 0.00010552994808676885,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.14129526913166046
+    },
+    {
+      "layer": 11,
+      "fitting_probe_nll_change": 6.411300182662671e-05,
+      "correct": 64,
+      "angle_parameter_l2_change": 0.14361520111560822
+    }
+  ],
+  "fitting_probe_baseline": {
+    "correct": 64,
+    "n": 64,
+    "accuracy": 1.0,
+    "nll": 0.0013869093572793645
+  },
+  "source_sha256": {
+    "/workspace/experiments/e136_scattering_angle_ablation.py": "5b2fa5d25248d6c0ef7b07826b9f347992714507c27e0a1a9cc7b00a07413830",
+    "experiments/results/e136/scattering_state_d12_n1024_s6_e3_20260929.json": "5c8d06af0be3eabdb01c865bb2ddc9219d06b75101f004020d8e015af1b19e94",
+    "experiments/e136_scattering_shd_model.py": "3f3de8e54c618c26f5c7ea0f3d2e51b73093752cd48fa670fa8293cc0fd8474d",
+    "experiments/e136_event_scattering.py": "33df0f69e0103d62922e48d9b010ec05165074c808d48dc9251193a23d1c07e2"
+  },
+  "scope": "Frozen-checkpoint intervention; learned embedding, decoder/calibration and key program unchanged. Measures angle contribution/coadaptation, not a retrained fixed-angle baseline."
+}
