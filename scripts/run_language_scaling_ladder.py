@@ -16,6 +16,14 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
+def choose_width(scores, tolerance):
+    """Select the smallest declared width close to the best development loss."""
+    if not scores or tolerance < 0 or not all(math.isfinite(value) for value in scores.values()):
+        raise ValueError('Finite completed development scores and a nonnegative tolerance required')
+    best = min(scores.values())
+    return min(width for width,score in scores.items() if score <= best+tolerance)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest')
@@ -35,14 +43,28 @@ def main():
     for job in plan['jobs']:
         if job.get('status') == 'completed':continue
         if job['kind'] == 'official_comparison':
-            primary = next(j for j in plan['jobs'] if j['kind']=='primary_development')
+            if plan['promotion'].get('select_width_from_primary'):
+                primary_jobs = [j for j in plan['jobs'] if j['kind']=='primary_development']
+                if any(j.get('status') != 'completed' for j in primary_jobs):
+                    stop('All declared primary development stages must complete before width selection')
+                scores = {j['width']:json.loads((ROOT/j['result']).read_text())['final']['dev']['bpc']
+                          for j in primary_jobs}
+                width = choose_width(scores,plan['promotion']['prefer_smaller_within_bpc'])
+                plan['selected_width']=width;persist()
+                if job['width'] != width:
+                    job.update(status='not_selected',reason='Predeclared development/cost width rule');persist()
+                    continue
+                primary = next(j for j in primary_jobs if j['width']==width)
+            else:
+                primary = next(j for j in plan['jobs'] if j['kind']=='primary_development')
             row = json.loads((ROOT/primary['result']).read_text())
             score = row['final']['dev']['bpc']
             if score > plan['promotion']['maximum_1m_development_bpc']:
                 stop(f'1M development bpc {score:.4f} exceeds the declared scale-up gate; diagnose before a full run')
-            data_rows = [j for j in plan['jobs'] if j['width']==128 and j['kind'] in ('capacity','data')]
+            data_rows = [j for j in plan['jobs'] if j.get('width')==primary['width']
+                         and j['kind'] in ('capacity','data','primary_development')]
             ordered = sorted((j['fit'],json.loads((ROOT/j['result']).read_text())['final']['dev']['bpc']) for j in data_rows)
-            if ordered[-1][1] > ordered[0][1]-plan['promotion']['minimum_data_gain_bpc']:
+            if len(ordered)<2 or ordered[-1][0]==ordered[0][0] or ordered[-1][1] > ordered[0][1]-plan['promotion']['minimum_data_gain_bpc']:
                 stop('Larger data did not improve the fixed-width development comparison enough')
         queue = ROOT/job['queue']
         commands = [line for line in queue.read_text().splitlines() if line.strip() and not line.startswith('#')]
@@ -76,6 +98,9 @@ def main():
                    wall_s=result['wall_s'],max_rss_kb=result['max_rss_kb'])
         plan['updated_utc']=now();persist()
         print(json.dumps({k:job[k] for k in ('tag','development_bpc','parameters','training_flops','wall_s')}),flush=True)
+        if plan.get('report_hook'):
+            rc = subprocess.run([sys.executable,plan['report_hook'],job['result']],cwd=ROOT).returncode
+            if rc:stop('Completed result preserved; report hook failed and needs review')
     plan.update(status='completed',current_job=None,updated_utc=now());persist()
     print('All declared campaign stages completed',flush=True)
 

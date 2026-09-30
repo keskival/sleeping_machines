@@ -17,7 +17,7 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 - **Generalization.** Race retrieval reaches **100% at four times the training context** within 4,000 examples in all five runs. A learned phase rule solves **all 3,440 unseen modular triples**, using the supplied period 17.
 - **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
-- **Learned representations.** The persistent language model reaches **3.351 development bpc** in a small screen. A learned speech encoder reaches **79.69%** on 512 private development utterances. These models learn source embeddings, temporal state and vector maps.
+- **Learned representations.** The persistent language model reaches **3.351 development bpc** in the 8K-character pilot. The new 131K-character screen reaches **2.587**. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn.
 
 ![accomplishments](report/figures/accomplishments.png)
 
@@ -184,15 +184,33 @@ These learned models use character embeddings, gated residual content transforma
 
 All curves use six layers, seed 6, 131,072 fitting characters, four passes and the same 8,191 cold-context development targets. Credit is truncated every 64 characters; memory persists. FLOPs include forward/loss, backward, clipping and Adam; special functions are reported separately in each result. These runs vary capacity at equal data/passes, rather than equal compute, and establish neither a scaling law nor official-test superiority.
 
-### Matched memory initialization test
+### From longer memory to selective content
 
-| Ours: initialization | Development bpc ↓ | Longest modal timescale |
-| --- | --- | --- |
-| inherited | 2.643 | 6.4 token intervals |
-| long decay | 2.752 | 223.9 token intervals |
-| long spectrum | 2.858 | 343.9 token intervals |
+| Ours: memory variant | Parameters | Development bpc ↓ | Fitting GFLOPs ↓ |
+| --- | --- | --- | --- |
+| Constant / inherited | 308,013 | 2.643 | 1,026.18 |
+| Constant / long decay | 308,013 | 2.752 | 1,026.18 |
+| Constant / long spectrum | 308,013 | 2.858 | 1,026.18 |
+| Input gates / inherited | 309,561 | 2.587 | 1,040.61 |
+| Input gates / long decay | 309,561 | 2.627 | 1,040.61 |
 
-Identical width-128 architecture, seed, data, four passes and 64-character credit horizon. Only initial decay rates, or rates and frequencies, differ. This is a single-seed development ablation.
+Identical width, seed, data, four passes and 64-character credit horizon. Constant-memory arms vary initial timescales/frequencies. Input-gated arms add content-dependent write/forget controls (0.50% more parameters, 1.41% more fitting arithmetic). Longer decay alone worsens this fit. These are single-seed development comparisons; complete numerical contracts precede training.
+
+## Ours: content and memory in fitted language models
+
+An event carries information about its input. The learned vector is a transformation of incoming content and persistent state, with a residual path and an output gate. The new candidate also gates memory writing and forgetting from incoming content. These checks measure whether the fitted predictions use those paths.
+
+![language content memory audit](report/figures/language_content_memory_audit.png)
+
+Resetting all history before each character preserves its current embedding and learned content transformations, but raises the gated model's development loss from 2.587 to 4.519 bpc. Zeroing incoming embeddings raises it to 7.569. Both present input and earlier messages contribute to prediction.
+
+### Selective retention adds a useful control
+
+The two input gates start at one, preserving the constant-memory model exactly at initialization. During fitting they learn different write strengths and forgetting factors for different incoming vectors. A factor below one slows decay; above one accelerates it. The controls are known from the causal previous layer, so serial execution and parallel affine scans retain their checked outputs and teachers.
+
+In the matched small fit, gates improve 2.643 to 2.587 bpc for 0.50% more parameters and 1.41% more fitting arithmetic. This is a local quality/work improvement, with one seed. All six layers still execute for every character; dormant-unit scaling remains a separate target.
+
+Frozen selected checkpoints, identical 8,191 cold development targets, no training or official-test reads. These interventions disrupt a trained model; they establish fitted dependence, not the quality of retrained ablated architectures or lossless storage. Source: parallel_language/local_language_representation_20260930T162337Z.json.
 
 ## What establishes the larger advantage
 
@@ -357,7 +375,7 @@ Training estimates include every fitting step, forward/loss, backpropagation, gr
 
 ### Ours: learned-language benchmark status
 
-The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Its six layers, width 256 and 128 temporal modes have 1,205,805 parameters. The earlier sequential run was paused after a clock-precision error was found; staged, precise-clock fitting now precedes promotion. Its full test score and training work are pending. The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget and a different evaluation split; it is not a comparable test result.
+The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Completed development stages select width 128 or 256. The six-layer content-gated candidates have 309,561 or 1,208,889 parameters. The earlier sequential run was paused after a clock-precision error; precise-clock staged fitting precedes promotion. The full test score and training work remain pending. The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget and different split; it is not a comparable test result.
 
 Earlier 1M-character references also remain saved: LSTM **2.179** and Transformer **2.367 test bpc**, each with twenty fitting passes. The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons remain in their labeled sections and Appendix B.
 

@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "completed",
   "created_utc": "2026-09-30T16:10:50.223245+00:00",
   "tmux_session": "local_language_selective_20260930T161050Z",
   "suite_log": "experiments/queue/local_language_selective_20260930T161050Z.out",
@@ -79,8 +79,14 @@
       "content_memory": true,
       "timeout_s": 1800,
       "command": "experiments/parallel_event_language.py --tag local_selective_w128_D131072_selective_long_20260930T161050Z --contracts experiments/results/parallel_language/local_selective_contract_selective_long_20260930T161050Z.json --fit 131072 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume --memory-profile long_decay --content-memory",
-      "status": "running",
-      "started_utc": "2026-09-30T16:16:25.915650+00:00"
+      "status": "completed",
+      "started_utc": "2026-09-30T16:16:25.915650+00:00",
+      "finished_utc": "2026-09-30T16:20:56.995538+00:00",
+      "development_bpc": 2.626910646562143,
+      "parameters": 309561,
+      "training_flops": 1040608261136,
+      "wall_s": 268.99139985101647,
+      "max_rss_kb": 347980
     }
   ],
   "resource_caps": {
@@ -107,6 +113,6 @@
   ],
   "decision": "Promote only a completed useful development result; otherwise retain the stronger existing model. No automatic official-test promotion.",
   "constant_contract": "experiments/results/parallel_language/local_selective_contract_constant_20260930T161050Z.json",
-  "updated_utc": "2026-09-30T16:16:25.915640+00:00",
-  "current_job": "local_selective_w128_D131072_selective_long_20260930T161050Z"
+  "updated_utc": "2026-09-30T16:20:56.995923+00:00",
+  "current_job": null
 }

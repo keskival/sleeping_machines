@@ -1,0 +1,200 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_language_representation_20260930T162337Z",
+    "results": [
+      "experiments/results/parallel_language/local_memory_w128_D131072_inherited_20260930T155000Z.json",
+      "experiments/results/parallel_language/local_selective_w128_D131072_selective_20260930T161050Z.json"
+    ]
+  },
+  "rows": [
+    {
+      "result": "experiments/results/parallel_language/local_memory_w128_D131072_inherited_20260930T155000Z.json",
+      "result_sha256": "b2a3e7d57789c386de69249b772f0e91a12e30d9c1c17c70996f9828d4a8d031",
+      "checkpoint_sha256": "ebed307faee940e92a6f0e794317430aca2a9a6de862d48b281550c8724af740",
+      "parameters": 308013,
+      "args": {
+        "tag": "local_memory_w128_D131072_inherited_20260930T155000Z",
+        "contracts": "experiments/results/parallel_language/local_memory_contract_inherited_20260930T155000Z.json",
+        "fit": 131072,
+        "dev": 8192,
+        "epochs": 4,
+        "chunk": 64,
+        "width": 128,
+        "modes": 64,
+        "depth": 6,
+        "lr": 0.001,
+        "seed": 6,
+        "resume": true,
+        "official_test": false,
+        "test": 1000000,
+        "monitor_every": 0,
+        "memory_profile": "inherited"
+      },
+      "interventions": {
+        "full": {
+          "n": 8191,
+          "bpc": 2.6434104135708854,
+          "delta_bpc": 0.0
+        },
+        "reset_history_every_token": {
+          "n": 8191,
+          "bpc": 4.352291095873111,
+          "delta_bpc": 1.708880682302226
+        },
+        "zero_incoming_embeddings": {
+          "n": 8191,
+          "bpc": 7.3349107094052055,
+          "delta_bpc": 4.69150029583432
+        },
+        "remove_all_memory_corrections": {
+          "n": 8191,
+          "bpc": 3.7832314129023015,
+          "delta_bpc": 1.1398209993314161
+        }
+      },
+      "content_memory_controls": null
+    },
+    {
+      "result": "experiments/results/parallel_language/local_selective_w128_D131072_selective_20260930T161050Z.json",
+      "result_sha256": "798635ea94e105ab9b78e53828c3fad1d086f4c0623ca77d76c0bc63587c198e",
+      "checkpoint_sha256": "eec2e72bf8d97d9f1a1d2fea9fcc5fa4d3080f375a11a100e5b396a324767a88",
+      "parameters": 309561,
+      "args": {
+        "tag": "local_selective_w128_D131072_selective_20260930T161050Z",
+        "contracts": "experiments/results/parallel_language/local_selective_contract_selective_20260930T161050Z.json",
+        "fit": 131072,
+        "dev": 8192,
+        "epochs": 4,
+        "chunk": 64,
+        "width": 128,
+        "modes": 64,
+        "depth": 6,
+        "lr": 0.001,
+        "seed": 6,
+        "resume": true,
+        "official_test": false,
+        "test": 1000000,
+        "monitor_every": 0,
+        "memory_profile": "inherited",
+        "content_memory": true
+      },
+      "interventions": {
+        "full": {
+          "n": 8191,
+          "bpc": 2.586650391781479,
+          "delta_bpc": 0.0
+        },
+        "reset_history_every_token": {
+          "n": 8191,
+          "bpc": 4.519204628039734,
+          "delta_bpc": 1.9325542362582553
+        },
+        "zero_incoming_embeddings": {
+          "n": 8191,
+          "bpc": 7.568758386482829,
+          "delta_bpc": 4.98210799470135
+        },
+        "remove_all_memory_corrections": {
+          "n": 8191,
+          "bpc": 3.8346305318398795,
+          "delta_bpc": 1.2479801400584005
+        }
+      },
+      "content_memory_controls": [
+        {
+          "layer": 1,
+          "forget_quantiles": [
+            0.000989160151220858,
+            0.025401359423995018,
+            1.6548808813095093
+          ],
+          "write_quantiles": [
+            1.7786017656326294,
+            1.9149709939956665,
+            1.963304042816162
+          ]
+        },
+        {
+          "layer": 2,
+          "forget_quantiles": [
+            0.0004457093309611082,
+            0.020556388422846794,
+            11.532684326171875
+          ],
+          "write_quantiles": [
+            0.6622962951660156,
+            1.5456796884536743,
+            1.9870227575302124
+          ]
+        },
+        {
+          "layer": 3,
+          "forget_quantiles": [
+            0.0004883546498604119,
+            0.3360709249973297,
+            13.142024993896484
+          ],
+          "write_quantiles": [
+            0.5781670808792114,
+            1.5561292171478271,
+            1.992658019065857
+          ]
+        },
+        {
+          "layer": 4,
+          "forget_quantiles": [
+            0.0002650506212376058,
+            0.4832953214645386,
+            8.608399391174316
+          ],
+          "write_quantiles": [
+            0.2269781231880188,
+            1.0783169269561768,
+            1.9597587585449219
+          ]
+        },
+        {
+          "layer": 5,
+          "forget_quantiles": [
+            0.0003834083618130535,
+            0.5798435807228088,
+            13.712569236755371
+          ],
+          "write_quantiles": [
+            0.06253358721733093,
+            0.4279862344264984,
+            1.8129085302352905
+          ]
+        },
+        {
+          "layer": 6,
+          "forget_quantiles": [
+            0.0005606358754448593,
+            0.7283564805984497,
+            10.104496955871582
+          ],
+          "write_quantiles": [
+            0.04031061753630638,
+            0.7826395630836487,
+            1.9971590042114258
+          ]
+        }
+      ]
+    }
+  ],
+  "wall_s": 46.26921109398245,
+  "max_rss_kb": 270224,
+  "protocol": "Same completed selected checkpoints and identical cold development targets. No fitting, parameter selection or official test. Reset-history retains the current character and removes every earlier modal state.",
+  "scope": "Frozen fitted-dependence interventions, not retrained model comparisons, energy or quality superiority.",
+  "source_sha256": {
+    "experiments/language_representation_audit.py": "802b6b0f3abaa1b9c3c361dbd43a6ff28b724d2275800d50a9afc0277564b733",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57"
+  }
+}

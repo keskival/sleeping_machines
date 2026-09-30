@@ -2578,3 +2578,19 @@ bpc, versus 2.643410 for the saved constant-memory arm. It has 309,561 versus
 not an isocompute comparison, official test or frontier claim. The constant
 baseline and all unsuccessful longer-memory runs remain preserved. The second
 longer-decay gated arm and frozen representation interventions are pending.
+
+The longer-decay gated fit also completed at 2.626911 bpc. The inherited-spectrum
+gated model remains best in this matched screen. Frozen selected-weight audits
+reproduce both models' full scores. For the gated model, resetting history while
+retaining current input raises development loss to 4.519205; zeroing incoming
+embeddings gives 7.568758; removing all learned memory corrections gives
+3.834631. Gate quantiles vary by content and layer. These demonstrate fitted
+use of inputs and history, not retrained ablation performance or lossless memory.
+
+The next campaign declares capacity/data stages before execution and uses only
+completed development results to select the smallest width within 0.03 bpc of
+its best 1M result. It requires <=2.25 bpc and >=0.1 fixed-width data gain before
+one selected fresh 10M comparison. Live fitting/monitor losses cannot become
+benchmark results. Completed stages rebuild/validate report artifacts and commit
+on main; no remote push. Failed quality, numerical, memory or report checks stop
+promotion while preserving completed evidence.

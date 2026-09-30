@@ -66,13 +66,30 @@ state and checked predictions/gradients. Original model files remain unchanged.
   2.858 development bpc. Retain inherited as the leading matched result.
   Longer modal retention alone worsened this screen. Investigate content-aware
   write/forget selection in a small matched fit before larger promotion.
-- Active tmux: `local_language_selective_20260930T161050Z`; manifest/log use
+- Completed tmux: `local_language_selective_20260930T161050Z`; manifest/log use
   the same stem. Three new numerical contracts passed, including nonzero
   input-dependent controls and their identity initialization. The first gated
   width-128 fit completed at 2.586650 bpc, 309,561 parameters and 1,040.61G
   fitting arithmetic, versus 2.643410, 308,013 and 1,026.18G for constant memory.
-  The longer-decay gated arm is next. Compare all completed arms, audit fitted
-  dependence on content/history, then prepare the larger staged campaign.
+  The longer-decay gated arm also completed at 2.626911; inherited spectrum
+  remains the leading matched model. Frozen representation audit completed:
+  `parallel_language/local_language_representation_20260930T162337Z.json`.
+  Reset history/current content unchanged: 4.519 bpc; zero embeddings: 7.569;
+  full gated model: 2.587. These are fitted-dependence interventions, not
+  retrained architecture comparisons.
+- Next staged campaign: `local_language_nextscale_20260930T163234Z`; manifest
+  and tmux/log use that stem. It reuses completed gated width-128/131K evidence,
+  fits width 256 at 131K, then both widths at 1M. Only after both primary stages
+  finish does it select the smallest width within 0.03 bpc of the best. A <=2.25
+  1M score and >=0.1 fixed-width data gain are required to run exactly one
+  selected fresh 10M/200K/1M comparison. Unselected official queues are retained
+  but never executed. Practical gates cannot guarantee superiority.
+- `scripts/update_language_report.py` rebuilds/validates the report after each
+  completed training stage and commits completed results/artifacts on main.
+  It never pushes remotely, never publishes live scores, and refuses to mix
+  existing staged changes or overwrite report edits. The authenticated host
+  can push each resulting commit. Failed guards or report hooks preserve
+  results/checkpoints and stop the pipeline for review.
 - The inherited event initialization has mostly sub-character modal timescales.
   `sleeping_machines/language_memory.py` adds explicit token-unit alternatives;
   `experiments/theory/44_precise_language_scans_and_content.md` derives the

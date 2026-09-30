@@ -56,6 +56,12 @@ def results():
         for path in sorted((RES/"parallel_language").glob("local_scale_capacity_*_20260930T153653Z.json"))]
     tasks["language_memory"] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/"parallel_language").glob("local_memory_w128_D131072_*_20260930T155000Z.json"))]
+    tasks["language_selective"] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/"parallel_language").glob("local_selective_w128_D131072_*_20260930T161050Z.json"))]
+    tasks["language_scaleup"] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/"parallel_language").glob("local_staged_language_*Z.json"))]
+    audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
+    tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")
     tasks["mechanisms"] = {
         "timing": read("e35/free.json"),
@@ -552,6 +558,21 @@ def figures(M, tasks, ev):
     f.tight_layout(w_pad=2)
     save(f,"breadth_work_ratios")
 
+    if tasks['language_representation']:
+        audit=tasks['language_representation']
+        names=('full','reset_history_every_token','zero_incoming_embeddings','remove_all_memory_corrections')
+        f,a=plt.subplots(figsize=(7.2,2.8))
+        for j,(row,color,label) in enumerate(zip(audit['rows'],(gray,blue),
+            ('Ours: constant memory','Ours: input-gated memory'))):
+            values=[row['interventions'][name]['bpc'] for name in names]
+            positions=np.arange(4)+(j-.5)*.35
+            a.bar(positions,values,width=.35,color=color,label=label)
+            for x,value in zip(positions,values):a.text(x,value+.08,f"{value:.3f}",ha='center',fontsize=7)
+        a.set_xticks(range(4),['Full content\nand history','Reset history\nevery character','Zero incoming\nembeddings','Remove all\nmemory corrections'])
+        a.set(ylabel='Development bpc ↓',ylim=(0,8.5),title='Fitted predictions depend on content and history')
+        a.legend(fontsize=7,loc='upper left');a.grid(axis='x',visible=False)
+        f.tight_layout();save(f,'language_content_memory_audit')
+
 
 def blocks(M, tasks, ev):
     """Project entry point: capabilities, evidence, principles and applications."""
@@ -573,6 +594,9 @@ def blocks(M, tasks, ev):
         parts=[row[endpoint][k] for k in ("dev_original","dev_additional")]
         return sum(p["correct"] for p in parts)/sum(p["n"] for p in parts)
     pages=[]
+    completed_stage = tasks['language_selective']+[row for row in tasks['language_scaleup']
+                                                 if row['args']['fit']==131072]
+    stage_bpc=min((row['final']['dev']['bpc'] for row in completed_stage),default=None)
     lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
     pages.append([
         ("title","Sleeping Machines"),
@@ -596,9 +620,10 @@ def blocks(M, tasks, ev):
          "after 2,000 examples seen once; saved Transformer controls reach <b>33.25–40.80%</b> "
          "with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.",
          f"<b>Learned representations.</b> The persistent language model reaches "
-         f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} development bpc</b> in a small screen. "
+         f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} development bpc</b> in the 8K-character pilot. "
+         +(f"The new 131K-character screen reaches <b>{stage_bpc:.3f}</b>. " if stage_bpc is not None else "")+
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
-         "These models learn source embeddings, temporal state and vector maps."]),
+         "Embeddings, temporal state and vector maps learn."]),
         ("figure",("accomplishments",174)),
         ("small","Left: means and recorded ranges, five event runs and two Transformer runs; "
          "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
@@ -619,6 +644,19 @@ def blocks(M, tasks, ev):
         '<a href="experiments/results/e174/aligned_lstm_10m_20260930.json">10M LSTM aligned result</a>',
         '<a href="experiments/results/e174/aligned_tf_10m_20260930.json">10M Transformer aligned result</a>',
     ]
+    official=[row for row in tasks['language_scaleup'] if row['args'].get('official_test')]
+    if official:
+        reference_rows.pop(0)
+        for row in official:
+            protocol=row['protocol']
+            if (protocol['fitting']!=[0,10_000_000] or protocol['development']!=[90_000_000,90_200_000]
+                    or protocol['test']!=[95_000_000,96_000_000] or not protocol['official_test_read']
+                    or not protocol['weights_frozen_on_test'] or protocol['statistical_experts']
+                    or row['final']['official_test']['n']!=999_999):
+                raise ValueError('Completed learned language result does not match the comparison protocol')
+            reference_rows.insert(0,[f"Ours: input-gated event state; width {row['args']['width']}",
+                '10M / four passes',f"{row['final']['official_test']['bpc']:.3f}",
+                compact_work(row['work']['total_training_unit_special_flops'])])
     for model, label in (("lstm", "LSTM; width 512, one recurrent layer"),
                          ("tf", "Transformer; width 256, four layers")):
         reference = ev["aws_references"][model]
@@ -644,13 +682,17 @@ def blocks(M, tasks, ev):
          "G/T/P mean billion/trillion/quadrillion. Validation/test evaluation, memory traffic and runtime "
          "are outside these arithmetic totals."),
         ("h2","Ours: learned-language benchmark status"),
-        ("p","The planned comparison uses 10M fitting characters, four passes, "
-         "200,000 validation characters and the same 1M test interval. Its six layers, width 256 and "
-         "128 temporal modes have 1,205,805 parameters. The earlier sequential run was paused after a "
-         "clock-precision error was found; staged, precise-clock fitting now precedes promotion. "
-         "Its full test score and training work are pending. "
-         "The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget "
-         "and a different evaluation split; it is not a comparable test result."),
+        ("p",("The completed learned-model row above scores the same cold-context character targets as "
+         "the saved controls, with weights frozen. Its fitting arithmetic and additional special functions "
+         "are recorded separately; the table includes unit-weight specials for comparison with the older "
+         "neural estimates. Architecture/capacity and optimization differ. " if official else
+         "The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters "
+         "and the same 1M test interval. Completed development stages select width 128 or 256. The "
+         "six-layer content-gated candidates have 309,561 or 1,208,889 parameters. The earlier sequential "
+         "run was paused after a clock-precision error; precise-clock staged fitting precedes promotion. "
+         "The full test score and training work remain pending. ")+
+         "The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget "
+         "and different split; it is not a comparable test result."),
         ("p",f"Earlier 1M-character references also remain saved: LSTM <b>{ev['lstm1']:.3f}</b> "
          f"and Transformer <b>{ev['tf1']:.3f} test bpc</b>, each with twenty fitting passes. "
          "The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons "
@@ -875,14 +917,18 @@ def blocks(M, tasks, ev):
 
     scaling=sorted(tasks["language_scaling"],key=lambda row:row["parameters"])
     memory=sorted(tasks["language_memory"],key=lambda row:row["args"]["memory_profile"])
+    memory+=sorted(tasks["language_selective"],key=lambda row:row["args"]["memory_profile"])
     memory_blocks = ([
-        ("h2","Matched memory initialization test"),
-        ("table",(["Ours: initialization","Development bpc ↓","Longest modal timescale"],[
-         [row['args']['memory_profile'].replace('_',' '),f"{row['final']['dev']['bpc']:.3f}",
-          f"{max(item['memory_time_max'] for item in row['diagnostics']):.1f} token intervals"]
-         for row in memory],[70,48,56])),
-        ("small","Identical width-128 architecture, seed, data, four passes and 64-character credit horizon. "
-         "Only initial decay rates, or rates and frequencies, differ. This is a single-seed development ablation.")
+        ("h2","From longer memory to selective content"),
+        ("table",(["Ours: memory variant","Parameters","Development bpc ↓","Fitting GFLOPs ↓"],[
+         [("Input gates / " if row['args'].get('content_memory') else "Constant / ")+
+          row['args']['memory_profile'].replace('_',' '),f"{row['parameters']:,}",
+          f"{row['final']['dev']['bpc']:.3f}",f"{row['work']['total_training_arithmetic_flops']/1e9:,.2f}"]
+         for row in memory],[64,32,37,41])),
+        ("small","Identical width, seed, data, four passes and 64-character credit horizon. Constant-memory "
+         "arms vary initial timescales/frequencies. Input-gated arms add content-dependent write/forget controls "
+         "(0.50% more parameters, 1.41% more fitting arithmetic). Longer decay alone worsens this fit. "
+         "These are single-seed development comparisons; complete numerical contracts precede training.")
     ] if memory else [("p","The inherited event initialization leaves individual modal timescales at only "
          "a few character intervals after fitting. A matched small ablation now tests longer decay times and "
          "resolved temporal periods before committing to the large run. Modal decay is a diagnostic, not a "
@@ -903,6 +949,53 @@ def blocks(M, tasks, ev):
          "in each result. These runs vary capacity at equal data/passes, rather than equal compute, and "
          "establish neither a scaling law nor official-test superiority."),
     ]+memory_blocks)
+
+    if tasks['language_representation']:
+        audit=tasks['language_representation'];gated=audit['rows'][-1]['interventions']
+        pages.append([
+            ('h1','Ours: content and memory in fitted language models'),
+            ('p','An event carries information about its input. The learned vector is a transformation of '
+             'incoming content and persistent state, with a residual path and an output gate. The new '
+             'candidate also gates memory writing and forgetting from incoming content. These checks '
+             'measure whether the fitted predictions use those paths.'),
+            ('figure',('language_content_memory_audit',170)),
+            ('p',f"Resetting all history before each character preserves its current embedding and learned "
+             f"content transformations, but raises the gated model's development loss from "
+             f"{gated['full']['bpc']:.3f} to {gated['reset_history_every_token']['bpc']:.3f} bpc. "
+             f"Zeroing incoming embeddings raises it to {gated['zero_incoming_embeddings']['bpc']:.3f}. "
+             'Both present input and earlier messages contribute to prediction.'),
+            ('h2','Selective retention adds a useful control'),
+            ('p','The two input gates start at one, preserving the constant-memory model exactly at '
+             'initialization. During fitting they learn different write strengths and forgetting factors '
+             'for different incoming vectors. A factor below one slows decay; above one accelerates it. '
+             'The controls are known from the causal previous layer, so serial execution and parallel '
+             'affine scans retain their checked outputs and teachers.'),
+            ('p','In the matched small fit, gates improve 2.643 to 2.587 bpc for 0.50% more parameters '
+             'and 1.41% more fitting arithmetic. This is a local quality/work improvement, with one seed. '
+             'All six layers still execute for every character; dormant-unit scaling remains a separate target.'),
+            ('small','Frozen selected checkpoints, identical 8,191 cold development targets, no training '
+             'or official-test reads. These interventions disrupt a trained model; they establish fitted '
+             'dependence, not the quality of retrained ablated architectures or lossless storage. Source: '
+             'parallel_language/local_language_representation_20260930T162337Z.json.')])
+
+    if tasks['language_scaleup']:
+        rows=sorted(tasks['language_scaleup'],key=lambda row:(row['args']['fit'],row['args']['width']))
+        pages.append([
+            ('h1','Ours: larger language development stages'),
+            ('p','Each stage fits independently from initialization. Data, capacity and memory controls are '
+             'declared below. Development selects weights within the fixed four-pass budget; ongoing '
+             'training logs are never substituted for a completed result.'),
+            ('table',(['Ours: memory / width','Fit characters','Parameters','Development bpc ↓','Fitting TFLOPs ↓'],[
+             [('Input gates' if row['args'].get('content_memory') else 'Constant')+f" / {row['args']['width']}",
+              f"{row['args']['fit']:,}",f"{row['parameters']:,}",f"{row['final']['dev']['bpc']:.3f}",
+              f"{row['work']['total_training_arithmetic_flops']/1e12:.3f}"] for row in rows],[46,34,29,34,31])),
+            ('p','The fixed-capacity data comparison and fixed-data capacity comparison answer different '
+             'questions. Equal passes and data do not imply equal compute. The pipeline checks finite '
+             'learning, trained value blocks, complete work and source provenance before promotion. '
+             'A development gain is not an official-test or frontier claim.'),
+            ('small','Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. '
+             'Special functions, evaluation passes and physical traffic are separate from the arithmetic '
+             'ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.')])
 
     pages.append([
         ("h1","What establishes the larger advantage"),
