@@ -1,0 +1,290 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "serial_teacher_pilot_20260930",
+    "limit": 32
+  },
+  "groups": {
+    "projection": {
+      "teachers": 8,
+      "coordinates": 16512,
+      "all_nonzero": true,
+      "squared_fitted_mean": 4.889578065077102e-06,
+      "cross_sample_signal": 2.2498226314504323e-06,
+      "teacher_variance_trace": 2.1118043469013362e-05,
+      "variance_of_mean_under_independence": 2.6397554336266703e-06,
+      "signal_fraction_of_squared_mean": 0.4601261298023586,
+      "split_cross_inner_product": 2.48766035536598e-06,
+      "split_cosine": 0.5357240268011653,
+      "mean_teacher_norm": 0.00337895850126841,
+      "max_teacher_norm": 0.012019408039273361
+    },
+    "block_1": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 5.235465035648303e-07,
+      "cross_sample_signal": 2.548844423671033e-07,
+      "teacher_variance_trace": 2.149296489581816e-06,
+      "variance_of_mean_under_independence": 2.68662061197727e-07,
+      "signal_fraction_of_squared_mean": 0.48684202956488887,
+      "split_cross_inner_product": 2.6545249952173036e-07,
+      "split_cosine": 0.5683114625804759,
+      "mean_teacher_norm": 0.0011266150567893908,
+      "max_teacher_norm": 0.0037876988262641772
+    },
+    "block_2": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 6.04727263900141e-07,
+      "cross_sample_signal": 2.885127945499165e-07,
+      "teacher_variance_trace": 2.529715754801795e-06,
+      "variance_of_mean_under_independence": 3.1621446935022436e-07,
+      "signal_fraction_of_squared_mean": 0.4770957285589803,
+      "split_cross_inner_product": 3.016657341143529e-07,
+      "split_cosine": 0.5915997221781855,
+      "mean_teacher_norm": 0.0011861095303928003,
+      "max_teacher_norm": 0.004161106480772274
+    },
+    "block_3": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 4.987536897486723e-07,
+      "cross_sample_signal": 2.4672755253127987e-07,
+      "teacher_variance_trace": 2.0162090977391397e-06,
+      "variance_of_mean_under_independence": 2.5202613721739247e-07,
+      "signal_fraction_of_squared_mean": 0.4946881749498609,
+      "split_cross_inner_product": 2.919909410144186e-07,
+      "split_cosine": 0.6490118921566511,
+      "mean_teacher_norm": 0.0011203529487499675,
+      "max_teacher_norm": 0.003601950799223992
+    },
+    "block_4": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 5.136534510855207e-07,
+      "cross_sample_signal": 2.3129419739548453e-07,
+      "teacher_variance_trace": 2.2588740295202894e-06,
+      "variance_of_mean_under_independence": 2.8235925369003617e-07,
+      "signal_fraction_of_squared_mean": 0.45029230682025584,
+      "split_cross_inner_product": 2.631773457253758e-07,
+      "split_cosine": 0.567990517567654,
+      "mean_teacher_norm": 0.0011305735401581087,
+      "max_teacher_norm": 0.0038827157266848435
+    },
+    "block_5": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 4.4718882857894756e-07,
+      "cross_sample_signal": 2.0681866778118863e-07,
+      "teacher_variance_trace": 1.9229612863820716e-06,
+      "variance_of_mean_under_independence": 2.4037016079775895e-07,
+      "signal_fraction_of_squared_mean": 0.46248621290117153,
+      "split_cross_inner_product": 2.3740157510533193e-07,
+      "split_cosine": 0.579208276676252,
+      "mean_teacher_norm": 0.001074934913363043,
+      "max_teacher_norm": 0.0035174247477030673
+    },
+    "block_6": {
+      "teachers": 8,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 4.6286539872302324e-07,
+      "cross_sample_signal": 2.066094260536463e-07,
+      "teacher_variance_trace": 2.0500477813550155e-06,
+      "variance_of_mean_under_independence": 2.5625597266937694e-07,
+      "signal_fraction_of_squared_mean": 0.44637042782556435,
+      "split_cross_inner_product": 2.2537789336198763e-07,
+      "split_cosine": 0.5598247445428197,
+      "mean_teacher_norm": 0.0010881132564658919,
+      "max_teacher_norm": 0.003672845944022522
+    },
+    "head": {
+      "teachers": 8,
+      "coordinates": 2580,
+      "all_nonzero": true,
+      "squared_fitted_mean": 0.02888412945501125,
+      "cross_sample_signal": -0.00020963063712249795,
+      "teacher_variance_trace": 0.23275008073707,
+      "variance_of_mean_under_independence": 0.02909376009213375,
+      "signal_fraction_of_squared_mean": -0.007257640824834625,
+      "split_cross_inner_product": -0.009629057739275148,
+      "split_cosine": -0.1611164331800348,
+      "mean_teacher_norm": 0.39347704223526403,
+      "max_teacher_norm": 0.9418227500871806
+    }
+  },
+  "batches": [
+    {
+      "ids": [
+        3239,
+        3240,
+        5667,
+        3169
+      ],
+      "labels": [
+        2,
+        19,
+        5,
+        4
+      ],
+      "paired_ce": 0.36423616111278534,
+      "unclipped_teacher_norm": 0.7195557417449266,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6848,
+        1160,
+        6773,
+        2027
+      ],
+      "labels": [
+        12,
+        15,
+        0,
+        3
+      ],
+      "paired_ce": 0.7900779545307159,
+      "unclipped_teacher_norm": 0.9419448085486533,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1711,
+        702,
+        3663,
+        8068
+      ],
+      "labels": [
+        1,
+        4,
+        10,
+        14
+      ],
+      "paired_ce": 0.1149170994758606,
+      "unclipped_teacher_norm": 0.2649838098329855,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        4506,
+        388,
+        857,
+        4115
+      ],
+      "labels": [
+        1,
+        14,
+        3,
+        14
+      ],
+      "paired_ce": 0.03634190931916237,
+      "unclipped_teacher_norm": 0.11468337988944631,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5960,
+        4443,
+        1345,
+        6536
+      ],
+      "labels": [
+        7,
+        1,
+        1,
+        16
+      ],
+      "paired_ce": 0.024175324011594057,
+      "unclipped_teacher_norm": 0.07923645976252368,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        8064,
+        4607,
+        4413,
+        2745
+      ],
+      "labels": [
+        10,
+        17,
+        18,
+        17
+      ],
+      "paired_ce": 0.11897296085953712,
+      "unclipped_teacher_norm": 0.3817354965500996,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        2802,
+        3424,
+        3848,
+        2169
+      ],
+      "labels": [
+        16,
+        1,
+        3,
+        17
+      ],
+      "paired_ce": 0.10186933726072311,
+      "unclipped_teacher_norm": 0.24664293205423166,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6152,
+        5247,
+        7601,
+        5153
+      ],
+      "labels": [
+        5,
+        16,
+        0,
+        13
+      ],
+      "paired_ce": 0.12685151770710945,
+      "unclipped_teacher_norm": 0.3992530986474564,
+      "clipping_factor": 1.0
+    }
+  ],
+  "warm_step": {
+    "rate": 0.001,
+    "teacher_norm": 0.17762243747711182,
+    "fitting_ids": [
+      1829,
+      5866,
+      7253,
+      2512
+    ]
+  },
+  "protocol": {
+    "depth": 12,
+    "frozen_prefix_depth": 6,
+    "trainable_suffix_depth": 6,
+    "probe_utterances": 32,
+    "paired_views_per_utterance": 2,
+    "batch_utterances": 4,
+    "calibration_update_and_anchor_ids_excluded": true,
+    "parameter_updates_during_probe": 0,
+    "held_data_read": false,
+    "metric": "raw CE parameter-gradient geometry; fixed identity preconditioner"
+  },
+  "scope": "Fitting-only cross-example teacher statistics after a live serial head step.\n\nNo new model tuning or held data. Raw paired CE teachers are measured at one\nfrozen checkpoint. Cross-inner-products remove the diagonal noise term under\nexplicit independence assumptions; real speaker/finite-set correlation limits\nthat statistical interpretation. They do not estimate actual Adam descent.",
+  "checkpoint_sha256": "3989097b1c63b7b3fac9491dc0df9f3af86c556459bef70bc3f31ad6d5b87f6b",
+  "source_sha256": {
+    "/workspace/experiments/e179_serial_teacher_statistics.py": "dc569342ecd63db6a23832e913eccb212ab8bab9ed4c77d9464fd57e86be608f",
+    "experiments/e169_serial_step_replay.py": "48578a04c8871f04b8a9e2f803f0931ea1094a85ce7b6c774f5ca57ee58c60fa",
+    "sleeping_machines/serial_residual.py": "bd2f4f8ad29203154c1c0429a980418b59a267ec5b5270cfb5b672ed583d9f6b"
+  },
+  "wall_s": 48.60426542698406,
+  "max_rss_kb": 1601776
+}
