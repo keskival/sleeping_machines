@@ -1,8 +1,15 @@
 # Sleeping Machines
 
-Computing with time: learned delays, vector messages and local memory
+Deep learning that computes with time
 
-**Time is part of the computation.** Messages carry both a vector and an arrival time. Learned delays change arrival order, shape temporal memory and decide which competing message wins. Nodes can wait, accumulate evidence and transform a message's content and timing. A clock race can select a class; learned phase transformations can compose an arithmetic rule. Unrealized alternatives teach better choices. Dormant capacity and sparse activation reduce cost, while the organizing idea is to make timing itself a trainable computational medium.
+Messages carry a learned vector and an arrival time. Nodes accumulate local memory, transform messages and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
+
+## The differentiators at a glance
+
+- **Time performs computation.** Delays, races and phase transformations implement useful functions.
+- **Hard routes can learn.** Winning messages execute; unrealized alternatives receive counterfactual credit.
+- **Deep, persistent event representations.** Vector messages and local memory carry information and credit through layers; retrieval and temporal primitives share the model family.
+- **Capacity beyond activity.** The scaling goal is more useful dormant capacity, selectively recruited and judged by prediction quality at a given total work budget.
 
 ## The strongest demonstrated results
 
@@ -74,7 +81,7 @@ The theory connects representation, topology, clocks and optimization. Expressiv
 
 A common implementation makes these principles reusable across tasks. Efficient primitives can own a computation when its structure is known; a deep carrier can learn representations when it is not. The research objective is to combine this flexibility with affordable route discovery and increasingly capable models.
 
-Formal derivations and their assumptions are indexed in the project's theory notes. Conditional stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law.
+Formal derivations and their assumptions are indexed in the project's theory notes. Conditional stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law. The program builds on established deep spiking and sparse conditional computation; its focus is the combination of useful temporal operators, hard causal routing and counterfactual learning. Related survey: [Direct training of deep spiking networks](https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1383844/full).
 
 ## Potential: what the demonstrated capabilities put within reach
 
@@ -314,14 +321,14 @@ The event-state language model consumes each character once and retains local mo
 
 ![e176 stream language learning](report/figures/e176_stream_language_learning.png)
 
-| Pass | Fitting bpc ↓ | Validation bpc ↓ | Deliveries/pass |
-| --- | --- | --- | --- |
-| 1 | 3.746 | 3.831 | 65,784 |
-| 2 | 3.400 | 3.528 | 65,784 |
-| 3 | 3.251 | 3.420 | 65,784 |
-| 4 | 3.142 | 3.351 | 65,784 |
+| Representation | Parameters | Fitting bpc ↓ | Validation bpc ↓ | Deliveries/pass |
+| --- | --- | --- | --- | --- |
+| Characters | 28,403 | 3.142 | 3.351 | 65,784 |
+| Causal prefix tokens | 35,163 | 3.085 | 3.517 | 45,816 |
 
 Validation loss falls from 5.329 to 3.351 bpc. All eight layer teachers are nonzero in every fitting pass. Each pass consumes 8,223 characters including warmup and makes 65,784 block deliveries. The result establishes learning with persistent causal state and no prefix replay.
+
+A train-only 131-token prefix dictionary reduces layer deliveries by 30.4% and observed CPU time by 26.2%, while validation bpc is 3.517. Exact partial-token marginalization scores identical raw targets. Its larger vocabulary fits better but generalizes less well in this small screen: compression alone does not explain or resolve the quality gap.
 
 One seed; 28,403 parameters, width 32, sixteen temporal modes per block. Four passes, 128 Adam steps/pass, credit truncated every 64 characters, 31 warm characters and 1,024 validation targets. Target offsets match the bounded E133 screen; topology, capacity, history and update counts differ, so this is not a matched intervention. Total CPU wall time 364.9 s including fitting/evaluation; peak RSS 364.8 MiB. These are event counts and observed resources, not total arithmetic, physical memory traffic or energy. No official test or large-corpus claim. E176.
 
