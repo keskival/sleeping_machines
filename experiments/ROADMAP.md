@@ -1,5 +1,17 @@
 # Current frontier priorities — 29 September 2026
 
+**Usable credit and the memory query (E135–E136):** content retrieval also ends
+at 349/512, and removing it preserves that score. It is only weakly exercised
+under the present initialization/update budget and has a 5/3 selection-ratio
+cap. Query/key gradient support is established; useful finite correction and
+transfer are the next criteria. Reversible addressed packet/state exchange
+now has an implementation and a twelve-layer augmented isometry contract.
+Its classifier must query retained state: a complete exchange can emit zero
+while preserving the entire input in memory. Integrate this observable query
+and its exact local angle teacher, then measure fitting/held-speaker learning
+before expanding depth or data. Keep the winning exchange distinct from its
+counterfactual alternative, and charge both policy and state work.
+
 **Full-value result and next structural intervention (E134–E135):** both matched
 whole-value phases end at 349/512, below the 370/512 parent. Every value layer
 learns, and functional key freezing does not improve this continuation. The

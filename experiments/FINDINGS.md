@@ -31,6 +31,65 @@ for recorded hardware). Extra immutable key computation is charged. No total
 training FLOPs, memory-traffic or joule measurement is available. Completed
 audit: `results/e134/full_value_comparison_20260929.json`.
 
+## E136: reversible value transport and the memory boundary (29 September 2026)
+
+Theory §§206–208 replaces accumulated residual gain bounds with an orthogonal
+packet/state exchange conditioned on independent keys/angles. One addressed
+state is updated and one packet emitted per event; losing alternatives remain
+counterfactuals. The affine event scan uses fewer than 2E combines and handles
+complete swaps without division by a small cosine. The local angle teacher is
+`g_state·packet_out - g_packet·state_out`, including the state suffix's utility.
+
+The numerical contract computes the full **180×180 augmented Jacobian through
+12 layers**. Singular values are [0.9999999999999989, 1.0000000000000007], and
+the maximum orthogonality error is 3.3e-16. Scan/sequential outputs are exactly
+equal in the fixture; payload-plus-state and adjoint squared-norm discrepancies
+are 7.1e-15 and 1.8e-15. Angle finite-difference error is 3.3e-10; the local
+angle teacher matches exactly.
+
+The contract also verifies the essential counterexample: a complete exchange
+can store all input information in memory while emitting zero. Consequently,
+a sequence classifier must expose or drain retained memory at its supervised
+query. The proof includes initial/final states and conditions on keys and
+angles. It ensures conditioned reachable value transport, not arbitrary
+value-dependent policy gradients, useful readout alignment, parameter-gradient
+noncancellation or classification convergence. No SHD classifier is trained
+with this primitive yet. This is an implemented mechanism/theory advance,
+not an accuracy result. `results/e136/scattering_contract_20260929.json`.
+
+## E135: completed content-key continuation and attribution (29 September 2026)
+
+The full-value content continuation finishes at **349/512 (68.16%)**, equal to
+the plain E134 control. Held NLL is 1.107008 versus 1.107095, and clean fitting
+NLL 0.607567 versus 0.607569. All eight query and key matrices change and receive
+nonzero gradients. Removing content retrieval from the trained checkpoint while
+preserving its values, head and actual key program leaves accuracy at 349/512
+and changes held NLL to 1.107046. On 64 clean fitting utterances, content
+changes memory payloads by at most 0.01156 and logits by at most 0.002122
+(mean absolute logit change 0.0002973). This identifies **weakly exercised
+retrieval**, rather than an absent query/key gradient, in this continuation.
+
+The first-order kernel's content weight ratio is analytically capped at 5/3.
+Its exact balanced query teacher is a key/value covariance aligned with the
+returning task teacher; the direct formula matches autograd to 4.2e-17. Its
+actual normalized matrix partitions tighten the trained conditional transport
+interval from [0.00336, 21.25] to [0.02420, 12.11]. Neither interval is an
+optimizer/generalization proof. A small fixed-schedule fixture verifies its
+partitioned Jacobian and inverse bounds numerically.
+
+At this budget the extra retrieval costs 1580.9 versus 511.3 seconds on the same
+one-thread CPU boundary, and peak RSS 1,270,016 versus 582,340 KiB. Its value
+memory scan has exactly 5× the plain state width; recorded content scan,
+projection and retrieval contractions total 133.83G partial forward FLOPs,
+of which 80.61G are expanded scan contractions. These are not total training
+FLOPs, memory traffic or joules. The new primitive has earned a verified
+teacher and implementation, but no quality/resource advantage here. Next
+changes must increase useful function movement/selectivity or change the
+supervised memory interface; another seed does not address this diagnosis.
+
+Completed records: `results/e135/content_comparison_20260929.json`,
+`content_ablation_20260929.json`, `covariance_contract_20260929.json`.
+
 ## E135: content-key temporal memory contracts (29 September 2026)
 
 A bounded positive retrieval kernel is accumulated in affine temporal state

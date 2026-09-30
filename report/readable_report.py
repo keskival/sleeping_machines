@@ -336,7 +336,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","A mathematical foundation for trainable computation"),
         ("table",(["Principle","What it enables"],[
-         ["Stable transport through depth","Bounded residual carriers preserve payload and credit under stated schedule conditions. A separate key stream can keep actual races and clocks fixed while values learn; routing credit is a separate problem."],
+         ["Stable transport through depth","Bounded residual carriers preserve conditional credit. A reversible packet/memory prototype has unit singular values through twelve layers with fixed keys/angles. The supervised query must expose retained memory; route and readout learning remain essential."],
          ["Active communication support","Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected."],
          ["Credit to unrealized alternatives","A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race."],
          ["Periodic state as an isometry","Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples."],
@@ -452,8 +452,9 @@ def blocks(M, tasks, ev):
         *([("p",f"Content-selective temporal memory starts with identical parent predictions and preserves hard "
          f"winning signals. Its full-value continuation reaches <b>{100*tasks['shd_content']['rows']['content']['held_accuracy']:.1f}%</b>, "
          "versus 68.2% for the plain full-value control. It adds 2,048 learned query/key parameters and "
-         "uses 165 state scalars per time bank versus 33. Its retrieval and gradient identities are audited; "
-         "this additional state and computation must earn their cost in task quality.")] if tasks['shd_content'] is not None else []),
+         "uses 165 state scalars per time bank versus 33. Removing its learned retrieval preserves the score; "
+         "its fitting-logit effect is small. The continuation costs 3.09× the control's CPU time. "
+         "This verifies a teacher and retrieval mechanism, with no quality/resource gain at this budget.")] if tasks['shd_content'] is not None else []),
         ("p","The exact linear-work memory scan preserves audited predictions and gradients while reducing scan "
          "combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× "
          "at the audited checkpoint, excluding optimizer updates."),
@@ -546,7 +547,8 @@ def blocks(M, tasks, ev):
          "the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; "
          "E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks "
          "a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test "
-         "whole-value credit and content-selective temporal memory."),
+         "whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport "
+         "and its supervised memory boundary."),
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
