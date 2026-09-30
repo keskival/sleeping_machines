@@ -2,7 +2,8 @@
 
 ## Current priority — eight-block content-indexed KV, 21:15 UTC
 
-Active tmux/manifest/log: `local_indexed_episodic_depth8_20260930T211500Z`.
+Current tmux: `local_indexed_episodic_depth8_resume_20260930T214000Z`.
+Manifest/log stem: `local_indexed_episodic_depth8_20260930T211500Z`.
 Supervisor: `scripts/run_indexed_episodic_language.py`. The first guarded 2K fit
 started at 21:10:49 UTC; inspect its live status before any launch. Model/driver:
 `indexed_episodic_race_language.py` (sleeping_machines / experiments respectively,
@@ -48,8 +49,12 @@ comparisons. The content-index pilot completed at 3.553976 bpc versus receiver
 is 2,026 characters old. The 0.091453 depth gain and this small regression pass
 the declared bounded 8K promotion gate. The supervisor stopped safely because
 report documentation was being edited; after committing those edits, restart
-the same supervisor in a uniquely named tmux session. Its completed pilot is
-skipped by the guard; the eight-block 8K receiver/KV pair follows serially.
+the same supervisor in a uniquely named tmux session. This was done at 21:37
+UTC after commit `5b6f147`: the guard skipped the successful pilot, the clean
+report hook published `459b855`, and the 8K eight-block receiver started at
+21:37:17. The matched content-indexed KV fit follows serially. At restart the
+host was CPU-only, with 11.7 GiB available and ~404 MiB trainer RSS; the guard
+retains its 8 GiB available-memory floor and 2,500,000 KiB group RSS watchdog.
 
 The report now has separate accuracy-versus-total-fitting and accuracy-versus-
 inference-work plots, sharing checkpoint IDs and a per-variant ledger. Inference
