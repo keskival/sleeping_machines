@@ -1,0 +1,1 @@
+local_language_scale_smoke_20260930T152431Z experiments/parallel_event_language.py --tag local_language_scale_smoke_20260930T152431Z --contracts experiments/results/parallel_language/local_parallel_language_contract_v2_20260930T151554Z.json --fit 8192 --dev 1024 --epochs 2 --width 32 --modes 16 --depth 6 --resume
