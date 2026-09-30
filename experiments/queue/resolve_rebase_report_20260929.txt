@@ -1,0 +1,2 @@
+# Rebuild the merged report PDF with resource guards.
+resolve_rebase_report_20260929 report/make_pdf.py

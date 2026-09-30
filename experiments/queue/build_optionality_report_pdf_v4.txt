@@ -1,0 +1,2 @@
+# Rebuild the report after pinning the optionality plot to exact run tags.
+build_optionality_report_pdf_v4 report/make_pdf.py

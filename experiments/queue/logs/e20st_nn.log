@@ -1,4 +1,0 @@
-# 2026-09-26T18:50:29+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e20_exact.py --task mnist --depth 2 --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --nonneg 1
-mnist depth 2 epoch 1: loss 0.7000 val 0.9061 (408s)
-mnist depth 2 epoch 2: loss 0.2767 val 0.8665 (816s)
-EXIT 0

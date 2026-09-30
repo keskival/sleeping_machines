@@ -117,6 +117,29 @@ executed queue commands and result records live in [experiments/](experiments/).
 The implementation is a research reference, with explicit contracts and source
 hashes rather than a claim of a production event processor.
 
+## Repository layout
+
+| Path | Contents |
+| --- | --- |
+| [sleeping_machines/](sleeping_machines/) | Event engine, shared models and work accounting |
+| [experiments/](experiments/README.md) | Experiment drivers, research documents, queue commands and results |
+| [report/](report/) | Report generators, figures and published PDF |
+| [tests/](tests/) | Unit checks for the event engine and foundational experiment claims |
+| [scripts/](scripts/) | Host provisioning and development helpers |
+| [legacy/](legacy/) | Earlier implementations and historical results |
+
+Local datasets, virtual environments, caches, runner logs and model checkpoints
+stay outside version control. Queue commands and result records remain tracked.
+The [experiment guide](experiments/README.md) explains how to find the commands
+and evidence for a result.
+
+For the foundational unit checks in a Python environment with
+[requirements.txt](requirements.txt) installed:
+
+```bash
+python -m pytest tests/ -q
+```
+
 ## Run experiments safely
 
 Read [AGENTS.md](AGENTS.md) before launching work. Every experiment runs through

@@ -1,0 +1,5 @@
+# Matched objective comparison on speaker-held-out SHD. Same topology, split,
+# seed, batch order and updates; this is a depth-4 learning-signal pilot.
+e83_d4_race_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 5 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective race --race_threshold 0.6 --race_temperature 0.03 --race_logit_temperature 2 --race_rate 5 --race_latency_discount 1 --seed 2
+e83_d4_integral_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 5 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective integral --seed 2
+e83_d4_max_seed2 experiments/e83_deep_shd.py --limit 512 --eval_limit 128 --epochs 5 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 4 --aux_weight 0.2 --objective max --seed 2

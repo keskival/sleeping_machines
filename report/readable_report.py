@@ -117,9 +117,12 @@ def evidence(M):
 def language_90m_reference_text(ev):
     """Publish each completed control without treating validation logs as test evidence."""
     scores = []
+    pending = []
     for key, label in (("lstm90", "LSTM"), ("tf90", "four-layer Transformer")):
         if ev[key] is not None:
             scores.append(f"{ev[key]:.3f} for the {label}")
+        else:
+            pending.append(label)
     text = ("At 90M training characters, reference test scores are " + ", ".join(scores) + ". "
             if scores else "")
     costs = []
@@ -138,6 +141,9 @@ def language_90m_reference_text(ev):
         text += ('Estimated training work (forward, backward, Adam and gradient clipping): '
                  + ', '.join(costs) + '. Shape-based estimates count multiply-add as two operations; '
                  'backward is approximated as twice forward. Validation/test inference is excluded. ')
+    if pending:
+        text += " and ".join(pending) + " reference results are pending. "
+    text += "These are single-seed comparisons; capacities and fitting budgets are not matched. "
     return text
 
 
@@ -1135,7 +1141,7 @@ def markdown(pages):
             else:
                 out.append(convert(value))
     # Editorial blocks can end with a space; generated Markdown must stay clean
-    # for the host commit helper's git diff --check.
+    # for git diff --check.
     rendered = "\n\n".join(out)
     return "\n".join(line.rstrip(" \t") for line in rendered.splitlines())+"\n"
 

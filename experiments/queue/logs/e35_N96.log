@@ -1,4 +1,0 @@
-{"seed": 0, "step": 100000, "test": 1.0, "updates": 1056, "synaptic_events": 4.033}
-{"seed": 1, "step": 100000, "test": 0.999, "updates": 592, "synaptic_events": 3.4475}
-{"seed": 2, "step": 100000, "test": 1.0, "updates": 267, "synaptic_events": 3.213}
-EXIT-OK 43.8

@@ -1,0 +1,2 @@
+# Rebuild report with the six-epoch SHD extension and corrected chance label.
+build_optionality_report_pdf_v5 report/make_pdf.py

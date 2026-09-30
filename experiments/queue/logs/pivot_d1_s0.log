@@ -1,5 +1,0 @@
-# 2026-09-26T13:43:35+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e14_depth.py --width 400 --val 10000 --epochs 3 --variant crl_pivot --pivot-top 1 --zero-sum 1 --tag pivot --depth 1 --seed 0
-depth 1 crl_pivot epoch 1: 0.9395 (108s)
-depth 1 crl_pivot epoch 2: 0.9526 (211s)
-depth 1 crl_pivot epoch 3: 0.9566 (314s)
-EXIT 0

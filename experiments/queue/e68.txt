@@ -1,11 +1,6 @@
-# priority after e71a (2026-09-28 01:05): SHD pilots with fixed readouts, converged LM baselines (skipped by a misaligned
-# e71a reader), the market as vector events, race mixers, then the full SHD runs
-e75_pilot_bs16 experiments/e75_equivariant_tvn.py --limit 2000 --epochs 6 --bs 16 --eval spk
-e74_pilot_fixed experiments/e74_time_vector_net.py --limit 2000 --epochs 6 --w_sd 0.05,0.05 --eval spk
-e64b_lstm_D1M experiments/e64_lm_baselines.py --model lstm --D 1000000 --size 256 --passes 20 --dropout 0.2 --valid 200000
-e64b_tf_D1M experiments/e64_lm_baselines.py --model tf --D 1000000 --size 256 --layers 2 --passes 20 --dropout 0.2 --valid 200000
-e64b_lstm_D10M experiments/e64_lm_baselines.py --model lstm --D 10000000 --size 512 --passes 6 --dropout 0.1 --valid 200000
-e64b_tf_D10M experiments/e64_lm_baselines.py --model tf --D 10000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000
+# Priority after the small E74/E75 pilots: direct race-attention comparison, then distinct language and market runs.
+e75_pilot_bs4 experiments/e75_equivariant_tvn.py --limit 2000 --epochs 6 --bs 4 --eval spk
+e74_pilot_fixed_bs4 experiments/e74_time_vector_net.py --limit 2000 --epochs 6 --bs 4 --w_sd 0.05,0.05 --eval spk
 e79wk_D1M experiments/e79_race_mixer.py --D 1000000 --K 5 --wordkeys 1 --windows 256
 e79wk_D10M experiments/e79_race_mixer.py --D 10000000 --K 6 --wordkeys 1 --windows 256
 e81_D1M experiments/e81_race_gln.py --D 1000000 --K 5
@@ -16,9 +11,6 @@ e80_val_own experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 0
 e80_val_mag experiments/e80_tv_market.py --mode val --fine 1 --cross 0 --mag 1
 e80_val_mag_cross experiments/e80_tv_market.py --mode val --fine 1 --cross 1 --mag 1
 e80_test experiments/e80_select_test.py
-# full SHD runs (time-vector network; equivariant, batch 16 to fit memory)
-e74_full experiments/e74_time_vector_net.py --epochs 20 --w_sd 0.05,0.05 --eval spk
-e75_full experiments/e75_equivariant_tvn.py --epochs 20 --bs 16 --eval spk
 # E68: race Transformer vs softmax Transformer (THEORY §103)
 e68_recall_R0_s0 experiments/e68_race_transformer.py --task recall --R 0 --steps 8000 --seed 0
 e68_recall_R1_s0 experiments/e68_race_transformer.py --task recall --R 1 --steps 8000 --seed 0

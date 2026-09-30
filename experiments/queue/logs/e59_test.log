@@ -1,4 +1,0 @@
-{"rel": 0, "selected": {"B": 70, "O": 40, "a": 0.5, "timing": 1}, "spk_acc": 0.378956372968349}
-{"args": {"B": 70, "O": 40, "a": 0.5, "timing": 1, "eval": "test", "rel": 0}, "test_acc": 0.657243816254417, "n_test": 2264, "wall_s": 41.3}
-{"rel": 1, "selected": {"B": 140, "O": 40, "a": 0.5, "timing": 1}, "spk_acc": 0.4644995722840034}
-{"args": {"B": 140, "O": 40, "a": 0.5, "timing": 1, "eval": "test", "rel": 1}, "test_acc": 0.6753533568904594, "n_test": 2264, "wall_s": 47.6}

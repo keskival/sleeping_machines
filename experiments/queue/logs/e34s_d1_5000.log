@@ -1,6 +1,0 @@
-{"seed": 0, "step": 5000, "test": 0.44866666666666666, "updates": 2987, "events_per_episode": 15.693333333333333}
-{"seed": 1, "step": 5000, "test": 0.38466666666666666, "updates": 3143, "events_per_episode": 15.564}
-{"seed": 2, "step": 5000, "test": 0.38, "updates": 3287, "events_per_episode": 14.479333333333333}
-{"seed": 3, "step": 5000, "test": 0.35133333333333333, "updates": 3316, "events_per_episode": 15.424}
-{"seed": 4, "step": 5000, "test": 0.47, "updates": 3062, "events_per_episode": 15.473333333333333}
-EXIT-OK 14.8

@@ -1,0 +1,2 @@
+# Rebuild the report PDF under the same host-memory and wall-time guards.
+build_optionality_report_pdf report/make_pdf.py

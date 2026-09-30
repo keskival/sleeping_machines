@@ -1,9 +1,0 @@
-11:43:23 start e68_recall_R0_s0
-11:44:11 done e68_recall_R0_s0 (exit 0)
-11:44:11 start e68_recall_R1_s0
-11:45:12 alive e68_recall_R1_s0: process group RSS=462304KB, MemAvailable=30190MB
-11:45:32 done e68_recall_R1_s0 (exit 0)
-11:45:32 start e68_recall_R4_s0
-11:46:32 alive e68_recall_R4_s0: process group RSS=463652KB, MemAvailable=30214MB
-11:47:33 alive e68_recall_R4_s0: process group RSS=465564KB, MemAvailable=30214MB
-11:48:25 done e68_recall_R4_s0 (exit 0)

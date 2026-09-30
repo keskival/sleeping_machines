@@ -1,4 +1,0 @@
-{"seed": 0, "epoch": 400, "train": 1.0, "test": 0.9613670133729569, "test_lookup_answers": 0.0, "updates": 21016}
-{"seed": 1, "epoch": 400, "train": 1.0, "test": 0.8915304606240714, "test_lookup_answers": 0.0, "updates": 36830}
-{"seed": 2, "epoch": 400, "train": 0.9965277777777778, "test": 0.9390787518573551, "test_lookup_answers": 0.0, "updates": 30364}
-EXIT-OK 4.9

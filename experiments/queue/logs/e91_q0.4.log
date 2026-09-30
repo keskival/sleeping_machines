@@ -1,8 +1,0 @@
-/workspace/experiments/e53_depth3.py:96: RuntimeWarning: invalid value encountered in subtract
-  dt = t[self.pp[:, 1]] - t[self.pp[:, 0]]
-{"seed": 0, "step": 20000, "test": 0.9966666666666667, "updates": 835, "near_miss_updates": 0, "q_trail": 0.4485148514851485, "events_per_episode": 61.95933333333333, "synapses_per_episode": 28.498666666666665}
-{"seed": 1, "step": 20000, "test": 0.9946666666666667, "updates": 801, "near_miss_updates": 0, "q_trail": 0.4525691699604743, "events_per_episode": 62.669333333333334, "synapses_per_episode": 27.713333333333335}
-{"seed": 2, "step": 20000, "test": 0.9953333333333333, "updates": 848, "near_miss_updates": 0, "q_trail": 0.46732673267326735, "events_per_episode": 61.919333333333334, "synapses_per_episode": 28.467333333333332}
-{"seed": 3, "step": 20000, "test": 0.9946666666666667, "updates": 919, "near_miss_updates": 0, "q_trail": 0.4673913043478261, "events_per_episode": 63.29666666666667, "synapses_per_episode": 28.602}
-{"seed": 4, "step": 20000, "test": 0.9993333333333333, "updates": 733, "near_miss_updates": 0, "q_trail": 0.4579624134520277, "events_per_episode": 61.44533333333333, "synapses_per_episode": 26.858}
-EXIT-OK 57.1

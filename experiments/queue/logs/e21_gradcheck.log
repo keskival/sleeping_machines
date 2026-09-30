@@ -1,5 +1,0 @@
-# 2026-09-26T20:17:59+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e21_soft.py --gradcheck
-W0: 58 coords, median rel err 4.51e-03, within 5%: 0.88
-W1: 45 coords, median rel err 2.62e-03, within 5%: 0.91
-Wo: 51 coords, median rel err 1.19e-04, within 5%: 0.92
-EXIT 0

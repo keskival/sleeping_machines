@@ -1,3 +1,0 @@
-# 2026-09-26T20:36:31+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e22_shd.py
-train (8156, 700) test (2264, 700); active inputs per utterance 356 of 700; classes 20
-EXIT 0

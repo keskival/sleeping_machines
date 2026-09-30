@@ -1,4 +1,0 @@
-/workspace/experiments/diag/../e53_depth3.py:95: RuntimeWarning: invalid value encountered in subtract
-  dt = t[self.pp[:, 1]] - t[self.pp[:, 0]]
-{"seed": 1, "updates:wrong_class": 52, "updates:miss": 139, "updates:falsefire_on_none": 24}
-{"seed": 4, "updates:wrong_class": 26, "updates:miss": 109, "updates:falsefire_on_none": 28}

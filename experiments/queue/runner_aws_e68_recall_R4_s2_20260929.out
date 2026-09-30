@@ -1,4 +1,0 @@
-14:36:26 start aws_e68_recall_R4_s2_20260929
-14:37:26 alive aws_e68_recall_R4_s2_20260929: process group RSS=465172KB, MemAvailable=30173MB
-14:38:27 alive aws_e68_recall_R4_s2_20260929: process group RSS=465176KB, MemAvailable=30212MB
-14:39:17 done aws_e68_recall_R4_s2_20260929 (exit 0)

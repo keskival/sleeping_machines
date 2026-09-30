@@ -1,8 +1,30 @@
+# Local datasets and Python environments.
 data/
-experiments/results/e2/rows.json
-experiments/__pycache__/
-__pycache__/
-*.lock
+.venv/
+.venv-*/
 
-# Host-local commit convenience helper.
-/commit_done.sh
+# Generated Python bytecode and test/tool caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Host-local locks and editor files.
+*.lock
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Large per-example output from the early E2 experiment.
+experiments/results/e2/rows.json
+
+# Generated run artifacts stay local; retain queue commands and result JSON.
+experiments/queue/**/*.log
+experiments/queue/**/*.out
+experiments/results/**/*.pt
+experiments/results/**/*.npy
+experiments/results/**/*.npz

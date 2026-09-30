@@ -1,0 +1,167 @@
+{
+  "status": "running",
+  "word_context": {
+    "disposition": "withdraw E79 highlighted mixture scores; rebuild word counts and rerun",
+    "expert_order": [
+      "KT0",
+      "KT1",
+      "KT2",
+      "KT3",
+      "Witten-Bell",
+      "partial-word",
+      "copy"
+    ],
+    "cases": [
+      {
+        "position": 6,
+        "target_original": 0,
+        "target_changed": 1,
+        "old_word_context_changes": true,
+        "fixed_word_context_changes": false,
+        "expert_max_abs_logp_changes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.6345338821411133,
+          0.0
+        ],
+        "selector_changes": false
+      },
+      {
+        "position": 10,
+        "target_original": 0,
+        "target_changed": 1,
+        "old_word_context_changes": true,
+        "fixed_word_context_changes": false,
+        "expert_max_abs_logp_changes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.772684097290039,
+          0.0
+        ],
+        "selector_changes": false
+      },
+      {
+        "position": 15,
+        "target_original": 5,
+        "target_changed": 0,
+        "old_word_context_changes": true,
+        "fixed_word_context_changes": false,
+        "expert_max_abs_logp_changes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.6345338821411133,
+          0.0
+        ],
+        "selector_changes": false
+      },
+      {
+        "position": 28,
+        "target_original": 0,
+        "target_changed": 1,
+        "old_word_context_changes": true,
+        "fixed_word_context_changes": false,
+        "expert_max_abs_logp_changes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.6345338821411133,
+          0.0
+        ],
+        "selector_changes": false
+      },
+      {
+        "position": 65,
+        "target_original": 0,
+        "target_changed": 1,
+        "old_word_context_changes": true,
+        "fixed_word_context_changes": false,
+        "expert_max_abs_logp_changes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.772684097290039,
+          0.0
+        ],
+        "selector_changes": false
+      }
+    ],
+    "fixed_context_future_mutation_failures": 0,
+    "legacy_current_target_space_reset": true
+  },
+  "baseline_causality": {
+    "lstm": {
+      "max_prefix_logit_change": 0.0,
+      "future_start": 7,
+      "next_character_alignment": "logit at input i predicts target i+1"
+    },
+    "transformer": {
+      "max_prefix_logit_change": 0.0,
+      "future_start": 7,
+      "next_character_alignment": "logit at input i predicts target i+1"
+    },
+    "market_thp": {
+      "max_prefix_intensity_change": 0.0,
+      "max_prefix_feature_change": 0.0,
+      "objective_gap_after_position_separate_from_features": true
+    },
+    "e64_scoring_population": {
+      "native_positions": 1000000,
+      "lstm_positions": 999999,
+      "transformer_positions": 999936,
+      "transformer_first": 1,
+      "transformer_last": 999936,
+      "transformer_unique": 999936,
+      "missing_positions": 64,
+      "note": "No duplicates, but first character and final tail are omitted; scores are not exactly the same target population."
+    }
+  },
+  "market": {
+    "legacy_threshold_before": 9.91,
+    "legacy_threshold_after_held_only_change": 9727.272727272726,
+    "fit_only_threshold_before": 9.91,
+    "fit_only_threshold_after_held_only_change": 9.91,
+    "price_decision_prefix_equal": true,
+    "affected_sources": [
+      "e44_tpp.py",
+      "e47_worldrep.py",
+      "e48_event_world.py",
+      "e49_gru_offline.py",
+      "e52_thp.py",
+      "e57_regime.py"
+    ],
+    "affected_claim": "Native market within .08-.19 nats of Transformer at ~1/3000 work",
+    "disposition": "Quarantine historical held-day comparison; common E120 day25-only threshold is separate"
+  },
+  "event_causality": {
+    "shared_layer_prefix_payload_changes": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "state_encoder_prefix_payload_change": 0.0,
+    "packet_min_closure_minus_raw_time": 0.0010000001639127731,
+    "packet_release_at_end_of_fixed_bin": true,
+    "end_readout_is_completed_prefix_only": true,
+    "warning": "End-of-query pooled classification is not a tested real-time early-confidence policy. Classification Transformers use bidirectional attention within the already observed prefix."
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "threads": 1,
+    "device": "cpu"
+  }
+}

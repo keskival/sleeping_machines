@@ -1,1 +1,0 @@
-{"args": {"G": 16, "R": 10.0, "lo": 2.0, "hi": 80.0, "S": 50.0, "rel": 0, "O": 6, "a": 0.5, "eval": "val"}, "val_bag_acc": 0.3958333333333333, "val_seq_acc": 0.16666666666666666, "n": 192, "raw_events_per_gesture": 312953.5104166667, "onset_events_per_gesture": 6971.703125, "motion_events_per_gesture": 11637.713541666666, "wall_s": 80.3}

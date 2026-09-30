@@ -1,8 +1,0 @@
-/workspace/experiments/e53_depth3.py:95: RuntimeWarning: invalid value encountered in subtract
-  dt = t[self.pp[:, 1]] - t[self.pp[:, 0]]
-{"seed": 0, "step": 40000, "test": 0.326, "updates": 26665, "events_per_episode": 41.13466666666667, "synapses_per_episode": 38.306}
-{"seed": 1, "step": 40000, "test": 0.3253333333333333, "updates": 26620, "events_per_episode": 41.112, "synapses_per_episode": 38.054}
-{"seed": 2, "step": 40000, "test": 0.326, "updates": 26812, "events_per_episode": 40.70466666666667, "synapses_per_episode": 36.474}
-{"seed": 3, "step": 40000, "test": 0.3253333333333333, "updates": 26778, "events_per_episode": 41.18666666666667, "synapses_per_episode": 38.17066666666667}
-{"seed": 4, "step": 40000, "test": 0.36, "updates": 25399, "events_per_episode": 40.14266666666666, "synapses_per_episode": 36.63933333333333}
-EXIT-OK 123.2

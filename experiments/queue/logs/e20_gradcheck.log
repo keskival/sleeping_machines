@@ -1,5 +1,0 @@
-# 2026-09-26T15:10:52+00:00 /tmp/claude-1000/-workspace/0aeee332-e50f-463c-aa58-9c74dd9d3532/scratchpad/venv/bin/python experiments/e20_gradcheck.py
-Wo: 29 coordinates, median relative error 1.27e-02
-W1: 15 coordinates, median relative error 2.85e-01
-GRADCHECK FAIL
-EXIT 0

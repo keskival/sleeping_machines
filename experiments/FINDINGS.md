@@ -1074,8 +1074,8 @@ The report is reorganized into a concise accomplishments-first narrative;
 the previous long account is retained under report/archive/. Ongoing speech
 work remains in an appendix. The default report now builds Markdown and PDF
 from the same editorial source, with a named copy to survive cross-host status
-PDF refreshes. The host commit helper includes all new package/report sources,
-queues and result JSON, while excluding checkpoints and logs.
+PDF refreshes. Package/report sources, executed queues and result JSON preserve
+the implementation and evidence behind the report.
 
 ---
 

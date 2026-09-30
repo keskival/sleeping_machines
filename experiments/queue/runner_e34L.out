@@ -1,6 +1,0 @@
-12:28:47 start e34L_ph15_200k
-12:33:09 done e34L_ph15_200k (exit 0)
-12:33:09 start e34L_bank_200k
-12:38:13 done e34L_bank_200k (exit 0)
-12:38:13 start e34L_bank_1M
-12:43:14 stopped by lead: 1M-episode run dropped (plateau already shown at 40k and 200k)

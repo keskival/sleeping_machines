@@ -1,0 +1,2 @@
+# Targeted correctness run for the sequence-level confidence-race objective.
+e83_race_smoke experiments/e83_deep_shd.py --limit 80 --eval_limit 40 --epochs 1 --bs 4 --d 8 --n 4 --M1 16 --M 16 --depth 2 --aux_weight 0.2 --objective race --race_threshold 0.6 --race_temperature 0.03 --race_rate 5 --seed 1

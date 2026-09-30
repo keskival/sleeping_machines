@@ -1,6 +1,0 @@
-{"seed": 0, "step": 200000, "test": 0.7995, "updates": 36574}
-{"seed": 1, "step": 200000, "test": 0.799, "updates": 38766}
-{"seed": 2, "step": 200000, "test": 0.839, "updates": 37850}
-{"seed": 3, "step": 200000, "test": 0.853, "updates": 30515}
-{"seed": 4, "step": 200000, "test": 0.7915, "updates": 39405}
-EXIT-OK 70.7

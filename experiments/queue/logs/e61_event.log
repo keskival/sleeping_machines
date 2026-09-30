@@ -1,5 +1,0 @@
-{"model": "event", "seed": 0, "seen": 10000, "mistakes": 68, "n8": 1.0, "n32": 1.0}
-{"model": "event", "seed": 1, "seen": 10000, "mistakes": 67, "n8": 1.0, "n32": 1.0}
-{"model": "event", "seed": 2, "seen": 10000, "mistakes": 67, "n8": 1.0, "n32": 1.0}
-{"model": "event", "seed": 3, "seen": 10000, "mistakes": 65, "n8": 1.0, "n32": 1.0}
-{"model": "event", "seed": 4, "seen": 10000, "mistakes": 64, "n8": 1.0, "n32": 1.0}

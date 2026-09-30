@@ -1,0 +1,2 @@
+# Rebuild after adjusting the optionality comparison figure layout.
+build_optionality_report_pdf_v2 report/make_pdf.py
