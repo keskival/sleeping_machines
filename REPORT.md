@@ -116,6 +116,7 @@ Fixed observed-character pools, bounded delays and six sequential event depths; 
 | --- | --- | --- | --- |
 | 32,768 / 2 | 3.121 | 29.88 | 324 / 6 |
 | 8,192 / 2 | 3.398 | 7.49 | 324 / 6 |
+| 8,192 / 4 | 3.426 | 14.15 | 648 / 6 |
 
 These are the integrated model stages, with identical cold development targets. Each character selects one unit at each depth; addressed alternatives teach the races. Capacity and selected activity are different counts. The fitting ledger includes counterfactual values, backward, clipping and Adam.
 
@@ -455,12 +456,13 @@ This ledger updates from completed integrated-model stages. It shows the emergin
 | --- | --- | --- | --- | --- | --- |
 | Ours / pool 2 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.026 |
 | Ours / pool 2 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.025 |
+| Ours / pool 4 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.449 | 0.032 |
 | LSTM / width 512 | 10M / six | 1.799 / test | 432,592.997 | 7.210 | 2.402 |
 | Transformer / width 256 | 10M / four | 1.908 / test | 888,775.443 | 22.223 | 7.405 |
 
 Compare within a column: whole-fit totals use GFLOPs for every model; per-target and forward work use MFLOPs for every model. One GFLOP is 1,000 MFLOPs. Whole-fit totals also depend on the number of training presentations; the per-target column divides that out.
 
-All table values, figures and ratios use arithmetic plus one operation per special function, matching the historical neural estimate convention. This is not a physical energy cost. Ours arithmetic-only whole-fit totals (GFLOPs): 32,768 / pool 2: 29.883; 8,192 / pool 2: 7.492. Separate special-function counts are preserved in each result.
+All table values, figures and ratios use arithmetic plus one operation per special function, matching the historical neural estimate convention. This is not a physical energy cost. Ours arithmetic-only whole-fit totals (GFLOPs): 32,768 / pool 2: 29.883; 8,192 / pool 2: 7.492; 8,192 / pool 4: 14.152. Separate special-function counts are preserved in each result.
 
 **The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **290× smaller** than the larger saved Transformer estimate; fitting work per target is **94× smaller**. These are configuration-level work ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
 
