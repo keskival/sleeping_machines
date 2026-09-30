@@ -61,6 +61,28 @@ selected activity. Push commits from the authenticated host.
 The sections below preserve the previous campaign/history; this priority update
 supersedes their descriptions of what is active.
 
+### Completed first integrated stage — 18:11 UTC
+
+`local_full_sparse_language_D8192_p2_20260930T175400Z.json` completed:
+361,367 parameters; 324 units; six selected states per character; development
+5.340124 initially, then 3.728912, 3.535521, 3.448233, 3.398284 across four
+epochs. Selected epoch 4. 8,191 cold development targets. Representative
+fitting arithmetic: 7.492246G (forward/loss 1.233630G, backward 2.521473G,
+clipping 0.748783G, Adam 2.988360G). Representative inference/scoring:
+25,027.375 arithmetic FLOPs per character. Wall time 829.48 seconds.
+These are completed development-stage results, not matched official supremacy.
+The old 3.351 language pilot uses a different development interval/window,
+warm context and credit horizon; do not call those quality/runtime comparisons
+matched merely because both fit about 8K characters.
+
+The report hook safely stopped because a diagram edit overlapped this completion.
+The edits were committed and the completed stage was published manually from
+the clean tree (`a99a403`), validating the 30-page PDF. The same ladder resumed
+at its next job, full sparse pool-2/32K, at 18:10:55 UTC; one guarded trainer
+is active. Source contracts are unchanged. Core setup/report commits:
+`fe0a451`, `aaa2a8f`, `a99a403`. The user pushes from the authenticated host.
+Future completion hooks should see clean report files; avoid overlapping edits.
+
 Work on `main`. The user authorized committing and pushing all work, wants one
 presentable PDF, and intends to start a fresh session. Preserve the established
 architecture, theory and historical results; extend them with new evidence.
