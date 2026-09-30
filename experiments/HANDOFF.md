@@ -103,6 +103,31 @@ Work on `main`. The user authorized committing and pushing all work, wants one
 presentable PDF, and intends to start a fresh session. Preserve the established
 architecture, theory and historical results; extend them with new evidence.
 
+### Completed 32K stage and consistent cost columns — 18:58 UTC
+
+Full pool-2/32K completed at 3.120653 development bpc after four passes;
+29.883299G fitting arithmetic, 31.053267G including unit-weight specials,
+2,815.51 seconds. Its automatic report commit is `09701d1`. Pool-4/8K capacity
+comparison is now active; the 131K data stage follows, with its gate satisfied
+by the 32K quality and gain. Inspect live manifest before changing the queue.
+
+The user correctly flagged a misleading appendix layout: ours whole-fit GFLOPs
+sat above reference per-target MFLOPs in separate tables. The evolving appendix
+now places all completed integrated stages and both 10M controls in one table,
+with identical units and denominators in each column: whole-fit GFLOPs, fitting
+MFLOPs/target, forward MFLOPs/position. All use unit-weight specials consistently
+with the chart; arithmetic-only totals remain explicit. The 32K stage is
+0.236925 MFLOPs/target versus LSTM 7.210099 and Transformer 22.223084. Different
+quality/data/model sizes still preclude a matched-quality supremacy claim.
+`AGENTS.md` now requires this column consistency for future comparison tables.
+The accompanying visual has three aligned panels: whole-fit GFLOPs, fitting
+MFLOPs/target and forward MFLOPs/position, with fitting budgets in model labels.
+Older language capacity evidence also exists: carrier widths 32/64/128/256;
+E64 LSTM widths 256/512; Transformers width 112/depth 8 and width 256/depth 2/4.
+These have different fitting budgets, passes and protocols. Do not call the
+8K-to-32K integrated data ladder a capacity-scaling curve or treat the older
+carrier sizes as integrated sparse/timed architecture results.
+
 ## Report and publishing
 
 - Canonical PDF: `report/sleeping_machines_status.pdf`; Markdown: `REPORT.md`.

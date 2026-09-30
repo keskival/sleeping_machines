@@ -451,19 +451,18 @@ This ledger updates from completed integrated-model stages. It shows the emergin
 
 ![integrated language work progress](report/figures/integrated_language_work_progress.png)
 
-| Ours: fit / pool | Development bpc ↓ | Full fitting GFLOPs ↓ | Inference KFLOPs / char ↓ | Fitting KFLOPs / target ↓ |
-| --- | --- | --- | --- | --- |
-| 32,768 / 2 | 3.121 | 29.883 | 25.063 | 227.998 |
-| 8,192 / 2 | 3.398 | 7.492 | 25.027 | 228.673 |
+| Model | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ | Forward MFLOPs / position ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Ours / pool 2 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.026 |
+| Ours / pool 2 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.025 |
+| LSTM / width 512 | 10M / six | 1.799 / test | 432,592.997 | 7.210 | 2.402 |
+| Transformer / width 256 | 10M / four | 1.908 / test | 888,775.443 | 22.223 | 7.405 |
 
-The table contains arithmetic FLOPs; additional special-function counts are in each result. The figure and ratios add one operation per special function to align with the historical neural estimate convention. This unit assignment is not its physical energy cost.
+Compare within a column: whole-fit totals use GFLOPs for every model; per-target and forward work use MFLOPs for every model. One GFLOP is 1,000 MFLOPs. Whole-fit totals also depend on the number of training presentations; the per-target column divides that out.
 
-| Saved reference | Fit / passes | Official test bpc ↓ | Fitting MFLOPs / target ↓ | Forward MFLOPs / position ↓ |
-| --- | --- | --- | --- | --- |
-| LSTM; width 512 | 10M / six | 1.799 | 7.210 | 2.402 |
-| Transformer; width 256 | 10M / four | 1.908 | 22.223 | 7.405 |
+All table values, figures and ratios use arithmetic plus one operation per special function, matching the historical neural estimate convention. This is not a physical energy cost. Ours arithmetic-only whole-fit totals (GFLOPs): 32,768 / pool 2: 29.883; 8,192 / pool 2: 7.492. Separate special-function counts are preserved in each result.
 
-**The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **290× smaller** than the larger saved Transformer estimate; fitting work per target is **94× smaller**. These are configuration-level arithmetic ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
+**The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **290× smaller** than the larger saved Transformer estimate; fitting work per target is **94× smaller**. These are configuration-level work ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
 
 Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
 

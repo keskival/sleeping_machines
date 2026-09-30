@@ -86,6 +86,10 @@
   FLOPs, wall time, traffic and measured energy. Report isolated or projected
   advantages as such. Fix accounting errors without treating familiar dense
   computation as the preferred architecture by default.
+  Comparison tables must use the same units and denominator for every model
+  within a column. Show whole-fit and per-target work for ours and controls
+  together; do not juxtapose ours whole-fit GFLOPs with controls per-target
+  MFLOPs in separate tables that invite a false comparison.
 - After each completed integrated stage, update the report appendix with
   quality, data/passes, capacity/selected activity, full fitting FLOPs,
   per-target fitting work and inference work. Show supported raw work gaps

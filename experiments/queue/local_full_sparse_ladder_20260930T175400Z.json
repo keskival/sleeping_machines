@@ -46,8 +46,14 @@
       "dev": 8192,
       "kind": "data",
       "timeout_s": 57600,
-      "status": "running",
-      "started_utc": "2026-09-30T18:10:55.374169+00:00"
+      "status": "completed",
+      "started_utc": "2026-09-30T18:10:55.374169+00:00",
+      "finished_utc": "2026-09-30T18:57:54.943268+00:00",
+      "development_bpc": 3.120653258840507,
+      "parameters": 361367,
+      "training_flops": 29883298624,
+      "wall_s": 2815.507019175013,
+      "max_rss_kb": 407212
     },
     {
       "tag": "local_full_sparse_language_D8192_p4_20260930T175400Z",
@@ -61,7 +67,8 @@
       "dev": 8192,
       "kind": "capacity",
       "timeout_s": 28800,
-      "status": "pending"
+      "status": "running",
+      "started_utc": "2026-09-30T18:58:02.638117+00:00"
     },
     {
       "tag": "local_full_sparse_language_D131072_p2_20260930T175400Z",
@@ -123,8 +130,8 @@
     "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
     "scripts/run_full_sparse_ladder.py": "25696a6310271a1d665d77d7f61edbb86f6b7555843d9642837e26fe64255614"
   },
-  "updated_utc": "2026-09-30T18:10:55.374176+00:00",
-  "current_job": "local_full_sparse_language_D32768_p2_20260930T175400Z",
+  "updated_utc": "2026-09-30T18:58:02.638136+00:00",
+  "current_job": "local_full_sparse_language_D8192_p4_20260930T175400Z",
   "review_resolution": "Report hook preserved evidence while diagram edits overlapped completion; clean-tree publication completed and layout checked before resumption",
   "resolved_utc": "2026-09-30T18:10:55.321263+00:00"
 }
