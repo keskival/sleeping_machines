@@ -297,7 +297,7 @@ All three predictors use the same 27-character alphabet. Characters are tokens, 
 
 A generic streaming event-state implementation retains modal memory and pending delayed messages across chunks. An eight-layer contract confirms identical predictions under chunk splitting, causal prefix invariance and nonzero learning signals in every layer. Fifteen input arrivals cause 120 layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches 3.351 validation bpc in the separately described small screen.
 
-One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175.
+One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM.
 
 ## Appendix B (continued). Learned language and depth
 
