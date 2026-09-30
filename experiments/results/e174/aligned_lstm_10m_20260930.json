@@ -1,0 +1,43 @@
+{
+  "test_bpc": 1.7993440508357954,
+  "test_n": 999999,
+  "status": "completed",
+  "args": {
+    "tag": "aligned_lstm_10m_20260930",
+    "model": "lstm",
+    "n": 1000000,
+    "batch": 4
+  },
+  "inherited_args": {
+    "model": "lstm",
+    "D": 10000000,
+    "passes": 6.0,
+    "size": 512,
+    "layers": 2,
+    "ctx": 256,
+    "test": 1000000,
+    "dropout": 0.1,
+    "valid": 200000
+  },
+  "checkpoint": "experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.pt",
+  "checkpoint_sha256": "c5c17d840ac2a48e63ea11a0debe5ab539c646d6ae90d871fd614aa572bd0712",
+  "source_sha256": {
+    "/workspace/experiments/e174_aligned_language_baselines.py": "161f44200ce6cba7d13d35ded9585d4e7130f1cb4c91ad381621004a45c27df8",
+    "experiments/e64_lm_baselines.py": "af9c4bb99832a83365e26378db9afaad72ed9bdf4ea493e223d187128d350fc6"
+  },
+  "data_sha256": "32ba90f64452075dcc05054a29efb90d66ae8b72f21b57e7bc4ee22fb1c3791b",
+  "protocol": {
+    "test": [
+      95000000,
+      96000000
+    ],
+    "scored_positions": [
+      1,
+      1000000
+    ],
+    "cold_scored_stream_context": true
+  },
+  "scope": "Saved validation-selected E64 model, no retraining or test-driven selection. Exact E173 target population; Transformer final tail included; training capacities/schedules remain unmatched.",
+  "wall_s": 134.1316540639964,
+  "max_rss_kb": 321452
+}

@@ -1,0 +1,40 @@
+{
+  "status": "completed",
+  "chunk_split_max_logit_error": 0.0,
+  "future_mutation_prefix_error": 0.0,
+  "depth": 8,
+  "layer_gradient_norm": [
+    0.05594500407405738,
+    0.057750632911622565,
+    0.06371166841177722,
+    0.05102800946265797,
+    0.046209059616084826,
+    0.03902302717554705,
+    0.04600653125066033,
+    0.04531073782478414
+  ],
+  "clock_gradient_norm": [
+    0.0027981887937225153,
+    0.0034013410737682606,
+    0.0022444545701843237,
+    0.0027317604614700308,
+    0.0015241477581903731,
+    0.0014485268647043234,
+    0.0005060103018605663,
+    0.0
+  ],
+  "loss": 1.7669491204579881,
+  "source_tokens": 15,
+  "event_deliveries": 120,
+  "expected_deliveries": 120,
+  "pending_messages": 0,
+  "detach_preserves_position": true,
+  "scope": "Synthetic local contract only. Persistent signed states and event queue; no prefix replay. Future token mutations do not change earlier predictions. Fixed token-interval serialization, dense local maps, no trained accuracy/scaling claim. Final clock is unobserved when it arrives before the query deadline.",
+  "source_sha256": {
+    "/workspace/experiments/e175_stream_language_contract.py": "038ffede6825ade4b3cb317c864493fea31be7b00b1a95eda3412502bf2f28dd",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  },
+  "wall_s": 0.24619697601883672,
+  "max_rss_kb": 272032
+}

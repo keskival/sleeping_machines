@@ -1,0 +1,33 @@
+{
+  "status": "completed",
+  "initial_logit_error": 0.0,
+  "total_depth": 12,
+  "initial_head_gradient_norm": 0.3484151899854687,
+  "initial_hidden_gradient_norms": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "post_head_update_hidden_gradient_norms": [
+    6.206336780536084e-05,
+    2.9068099561826198e-05,
+    3.389687842229634e-05,
+    2.7874702679855902e-05,
+    4.0123158072984886e-05,
+    3.832527642944502e-05
+  ],
+  "prefix_state_unchanged": true,
+  "initial_loss": 0.9214658150964642,
+  "post_head_update_loss": 0.9212854898969276,
+  "scope": "Exact baseline and staged head/six-block hidden teacher support with immutable prefix; not an accuracy/global convergence result",
+  "source_sha256": {
+    "/workspace/experiments/e168_serial_credit_contract.py": "d684475af715d7546c65ecf0e782db525a92dc346a31564fecf0466867d62357",
+    "sleeping_machines/serial_residual.py": "bd2f4f8ad29203154c1c0429a980418b59a267ec5b5270cfb5b672ed583d9f6b",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  },
+  "wall_s": 0.04880364501150325,
+  "max_rss_kb": 249676
+}

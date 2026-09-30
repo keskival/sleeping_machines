@@ -1,0 +1,73 @@
+{
+  "status": "completed",
+  "normalization_error": 2.220446049250313e-16,
+  "token_score_telescoping_error": 0.0,
+  "chunk_error": 0.0,
+  "future_suffix_error": 0.0,
+  "character_stream_equivalence_error": 4.440892098500626e-16,
+  "layer_teacher_norms": [
+    0.034491468684492925,
+    0.02913308705899426,
+    0.027460335138403628,
+    0.026942775339622586,
+    0.02478544743909766,
+    0.02273193863288247,
+    0.022170191714366877,
+    0.021645996268796555
+  ],
+  "raw_characters": 48,
+  "released_tokens": 21,
+  "unfinished_prefix": [
+    1
+  ],
+  "layer_deliveries": 168,
+  "phrases": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      2
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2
+    ]
+  ],
+  "alphabet": 3,
+  "source_sha256": {
+    "/workspace/experiments/e177_prefix_token_contract.py": "37232e9f161c38a68104cd4bcbec22d6f75eeac01e2db597ce6b0523434b9203",
+    "sleeping_machines/prefix_tokenizer.py": "8f58e4643e1112781b2f0ea696bd1d134aa017e818dbd7c9225dfc043d08a712",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708"
+  },
+  "scope": "Synthetic float64 contract, not language accuracy or optimal tokenization.",
+  "wall_s": 0.4952439889893867,
+  "max_rss_kb": 256532
+}

@@ -1,0 +1,109 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "causal_language_10m_20260930",
+    "D": 10000000,
+    "K": 6,
+    "validation": 1000000,
+    "test": 1000000,
+    "chunk": 20000
+  },
+  "protocol": {
+    "training": [
+      0,
+      10000000
+    ],
+    "validation": [
+      90000000,
+      91000000
+    ],
+    "test": [
+      95000000,
+      96000000
+    ],
+    "scored_test_positions": [
+      1,
+      1000000
+    ],
+    "copy_window": 256,
+    "cold_scored_stream_context": true,
+    "validation_fits_mixing_weights": true,
+    "weight_updates_on_test": false,
+    "label": "Native context-count/copy mixture; optional causal partial-word expert; no generic learned backbone"
+  },
+  "source_sha256": {
+    "/workspace/experiments/e173_causal_language.py": "7aafdf28eae453de123944d46cbb3adf380ce46715ab4e72313151f1f3156b35",
+    "experiments/e62_charlm.py": "eec34404ab2d4b40b06212b0ccae20f09b81aaa60b1aa1c9a851bdf3367bc0f6",
+    "experiments/e79_race_mixer.py": "1ea3ff6b616d6465b0953ca86cd3dd10c3d0db3ff52d34070bdd957977edfa97",
+    "experiments/e120_shared_tasks.py": "b9c0fd797e675618548d797496093d72fb6cdca6a059d7dbad0f495edadab555",
+    "sleeping_machines/causal_contexts.py": "f8a0058b71f66a237f76a8474baaec3727bb06e4b070653bffdf9bf1c68c96af"
+  },
+  "data_sha256": {
+    "train": "eb65df8c02a63dd84539c6fe9d292d74dd30330b39a925a9344c06f19b019d63",
+    "validation": "5147fdaf6ccf1f6257a4c618ad67c087825f399b97435394e796132dd8cb70e0",
+    "test": "32ba90f64452075dcc05054a29efb90d66ae8b72f21b57e7bc4ee22fb1c3791b"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "device": "cpu",
+    "threads": 1
+  },
+  "energy_joules": null,
+  "wall_s": 124.57390824702452,
+  "max_rss_kb": 754404,
+  "causality_max_logp_change": 0.0,
+  "stored_count_contexts": 1093776,
+  "stored_word_contexts": 195368,
+  "count_numeric_bytes": 66551872,
+  "word_numeric_bytes": 7387472,
+  "validation_progress": 1000000,
+  "arms": {
+    "without_word": {
+      "selected_learning_rate": 0.002,
+      "validation_bpc": 1.6447554189962919,
+      "validation_grid": {
+        "0.002": 1.6447554189962919,
+        "0.01": 1.6535028137982575,
+        "0.05": 1.8367379017180343
+      },
+      "experts": [
+        "KT0",
+        "KT1",
+        "KT2",
+        "KT3",
+        "KT4",
+        "KT5",
+        "KT6",
+        "Witten-Bell",
+        "copy256"
+      ],
+      "test_bpc": 1.7269862883371017,
+      "test_n": 999999
+    },
+    "with_causal_word": {
+      "selected_learning_rate": 0.002,
+      "validation_bpc": 1.6354302033828063,
+      "validation_grid": {
+        "0.002": 1.6354302033828063,
+        "0.01": 1.6452830333140471,
+        "0.05": 1.854908876532828
+      },
+      "experts": [
+        "KT0",
+        "KT1",
+        "KT2",
+        "KT3",
+        "KT4",
+        "KT5",
+        "KT6",
+        "Witten-Bell",
+        "causal partial-word",
+        "copy256"
+      ],
+      "test_bpc": 1.719360023687601,
+      "test_n": 999999
+    }
+  },
+  "test_progress": 1000000,
+  "scope": "Corrected one-run native mixture; explicit two expert arms, selected independently on validation. Additional 1M validation labels fit mixture weights. Not matched capacity/optimization or a generic architecture superiority claim."
+}

@@ -362,3 +362,22 @@ candidate implementation. Only winning payloads propagate. New query/key
 parameters and expanded scan/projection costs are explicitly recorded; the
 adapter is not yet a default or an energy advantage. See theory §205 and
 `experiments/e135_content_memory.py`.
+
+
+## Persistent language stream and causal token adapters
+
+`stream_language.py` reuses the signed `EventStateBlock` primitive with retained
+modal state, actual delayed-message scheduling and chunk-preserving credit
+truncation. Each source token is consumed once. E175 verifies causality and
+all-layer teachers; E176 reaches 3.351 validation bpc in an eight-layer,
+8,192-target/four-pass development screen. It has 28,403 parameters and uses
+character intervals as text time. It is a new generic path rather than the
+bounded-prefix classifier or native count/copy mixture.
+
+`prefix_tokenizer.py` supplies a train-only complete prefix dictionary and a
+raw-character-timed token adapter. Learned leaf probabilities induce exact
+next-character probabilities by subtree marginalization; no ambiguous decoding
+or dropped final partial phrase is needed. E177 checks normalization, chunking,
+causality, raw/token probability identity and exact character-control equivalence.
+Vocabulary capacity, tokenization work and buffering remain part of its cost.
+Theory §§269–274 defines the filtration, scoring and local teachers.

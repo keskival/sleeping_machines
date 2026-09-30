@@ -1,0 +1,100 @@
+{
+  "status": "completed",
+  "selected_learning_rate": 0.001,
+  "rows": [
+    {
+      "learning_rate": 0.001,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.06217902898788452,
+      "anchor_mean_kl": 2.5892733901855536e-05,
+      "accepted": true
+    },
+    {
+      "learning_rate": 0.00025,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.06471019238233566,
+      "anchor_mean_kl": 1.604283852429944e-06,
+      "accepted": true
+    },
+    {
+      "learning_rate": 6.25e-05,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.06535831838846207,
+      "anchor_mean_kl": 8.304046872353865e-08,
+      "accepted": true
+    },
+    {
+      "learning_rate": 1.5625e-05,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.06552138924598694,
+      "anchor_mean_kl": 4.78617057098063e-09,
+      "accepted": true
+    },
+    {
+      "learning_rate": 3.90625e-06,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.0655621737241745,
+      "anchor_mean_kl": -4.762718663897658e-09,
+      "accepted": true
+    },
+    {
+      "learning_rate": 9.765625e-07,
+      "batch_ce_before": 0.06557577103376389,
+      "batch_ce_after": 0.06557237356901169,
+      "anchor_mean_kl": 8.043283372671794e-09,
+      "accepted": true
+    }
+  ],
+  "initial_paired_loss": 0.06557577475905418,
+  "unclipped_teacher_norm": 0.17762243747711182,
+  "update_fitting_ids": [
+    1829,
+    5866,
+    7253,
+    2512
+  ],
+  "anchor_fitting_ids": [
+    1381,
+    2356,
+    1899,
+    7626,
+    6788,
+    4258,
+    724,
+    7226,
+    4008,
+    5399,
+    7736,
+    4642,
+    1124,
+    141,
+    3381,
+    5780,
+    7822,
+    840,
+    6281,
+    7228,
+    279,
+    1025,
+    208,
+    2812,
+    7019,
+    3820,
+    4101,
+    2338,
+    7573,
+    7659,
+    4787,
+    7807
+  ],
+  "checkpoint_sha256": "3989097b1c63b7b3fac9491dc0df9f3af86c556459bef70bc3f31ad6d5b87f6b",
+  "protocol": "Largest declared first-step rate decreasing paired fitting CE with fitting-anchor KL <= 0.02; prefix immutable; no held labels or updates",
+  "source_sha256": {
+    "/workspace/experiments/e169_serial_step_replay.py": "48578a04c8871f04b8a9e2f803f0931ea1094a85ce7b6c774f5ca57ee58c60fa",
+    "sleeping_machines/serial_residual.py": "bd2f4f8ad29203154c1c0429a980418b59a267ec5b5270cfb5b672ed583d9f6b",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "experiments/e139_fine_packet_model.py": "821c5bea62cd3f56c0067649cc2cadd233b4fb165cf1e19806640552ff3757ae"
+  },
+  "wall_s": 56.6545392809785,
+  "max_rss_kb": 1559668
+}
