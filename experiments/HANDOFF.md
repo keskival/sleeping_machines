@@ -84,6 +84,9 @@ state and checked predictions/gradients. Original model files remain unchanged.
   1M score and >=0.1 fixed-width data gain are required to run exactly one
   selected fresh 10M/200K/1M comparison. Unselected official queues are retained
   but never executed. Practical gates cannot guarantee superiority.
+  Width-256/131K completed at 2.572493 bpc, 1,208,889 parameters and 4.009T
+  fitting arithmetic; its report hook committed `d6c7c55`. Width-128/1M began
+  at 16:44 UTC and is the current guarded job. Live monitors are not results.
 - `scripts/update_language_report.py` rebuilds/validates the report after each
   completed training stage and commits completed results/artifacts on main.
   It never pushes remotely, never publishes live scores, and refuses to mix
@@ -136,9 +139,17 @@ memory sources are separately versioned with their numerical contracts. Never
 resume an old queue after source changes without recovering its exact source
 revision; never overwrite completed results or silently reinterpret old metrics.
 
-Latest report/setup commit: `c5fb85d`, following `8675098` (context/visuals) and
+Report/setup commit: `c5fb85d`, following `8675098` (context/visuals) and
 `55b31e8` (selective memory). The report has 26 pages and a front-page 131K
 development result alongside the preserved 8K pilot. Numerical contracts,
 representation interventions, PDF bounds/no-orphan checks and nine focused
 report/promotion tests passed. Frontier language quality and physical energy
 remain unestablished; the active campaign is building the next evidence.
+
+After the first larger stage the PDF has 27 pages. It now visualizes the
+allocation comparison at identical 131K data/four passes: content gates improve
+0.057 bpc for 1.41% more fitting arithmetic; widening the gated model improves
+another 0.014 bpc for 3.85× total fitting arithmetic. This is a local finite
+comparison, not a scaling law or dense-model superiority. Keep the report
+working tree clean before its automatic post-stage hook. Bounds/no-orphan and
+nine focused checks passed after the latest rebuild.

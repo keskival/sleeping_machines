@@ -538,6 +538,24 @@ def figures(M, tasks, ev):
     f.tight_layout(w_pad=2)
     save(f,"language_capacity_scaling")
 
+    capacity=[row for row in tasks['language_scaleup']
+              if row['args']['fit']==131072 and row['args']['width']==256]
+    if capacity and tasks['language_selective']:
+        constant=next(row for row in tasks['language_memory'] if row['args']['memory_profile']=='inherited')
+        selective=next(row for row in tasks['language_selective'] if row['args']['memory_profile']=='inherited')
+        f,a=plt.subplots(figsize=(7.2,2.65))
+        points=[constant,selective,capacity[-1]]
+        labels=['Ours: constant memory, width 128','Ours: input gates, width 128','Ours: input gates, width 256']
+        for row,label,color,offset in zip(points,labels,(gray,blue,orange),((16,13),(16,-16),(-16,12))):
+            x=row['work']['total_training_arithmetic_flops']/1e12;y=row['final']['dev']['bpc']
+            a.scatter(x,y,color=color,s=55)
+            a.annotate(label+f"\n{y:.3f} bpc; {x:.3f} TFLOPs",(x,y),xytext=offset,
+                textcoords='offset points',ha='right' if offset[0]<0 else 'left',fontsize=8,
+                arrowprops=dict(arrowstyle='-',color=color))
+        a.set(xlim=(.75,4.5),ylim=(2.53,2.68),xlabel='Total fitting arithmetic (TFLOPs) ↓',
+              ylabel='Development bpc ↓',title='Where additional work helped this fit')
+        f.tight_layout();save(f,'language_compute_choices')
+
     rows=tasks["breadth_work"]["rows"]
     costs={row["task"]:row for row in tasks["training_work"]["rows"]}
     f, axes=plt.subplots(1,2,figsize=(7.2,2.2))
@@ -980,7 +998,7 @@ def blocks(M, tasks, ev):
 
     if tasks['language_scaleup']:
         rows=sorted(tasks['language_scaleup'],key=lambda row:(row['args']['fit'],row['args']['width']))
-        pages.append([
+        larger_blocks=[
             ('h1','Ours: larger language development stages'),
             ('p','Each stage fits independently from initialization. Data, capacity and memory controls are '
              'declared below. Development selects weights within the fixed four-pass budget; ongoing '
@@ -988,14 +1006,29 @@ def blocks(M, tasks, ev):
             ('table',(['Ours: memory / width','Fit characters','Parameters','Development bpc ↓','Fitting TFLOPs ↓'],[
              [('Input gates' if row['args'].get('content_memory') else 'Constant')+f" / {row['args']['width']}",
               f"{row['args']['fit']:,}",f"{row['parameters']:,}",f"{row['final']['dev']['bpc']:.3f}",
-              f"{row['work']['total_training_arithmetic_flops']/1e12:.3f}"] for row in rows],[46,34,29,34,31])),
+              f"{row['work']['total_training_arithmetic_flops']/1e12:.3f}"] for row in rows],[46,34,29,34,31]))]
+        capacity=[row for row in rows if row['args']['fit']==131072 and row['args']['width']==256]
+        if capacity:
+            smaller=next(row for row in tasks['language_selective'] if row['args']['memory_profile']=='inherited')
+            larger=capacity[-1]
+            extra=smaller['final']['dev']['bpc']-larger['final']['dev']['bpc']
+            ratio=larger['work']['total_training_arithmetic_flops']/smaller['work']['total_training_arithmetic_flops']
+            larger_blocks += [
+                ('figure',('language_compute_choices',170)),
+                ('p',f"On the identical 131K-character/four-pass screen, widening the gated model buys "
+                 f"{extra:.3f} bpc for {ratio:.2f}× the total fitting arithmetic. Adding input gates at "
+                 'width 128 instead improves 0.057 bpc for 1.41% more arithmetic. This makes the '
+                 'allocation question quantitative: measure useful correction before spending broadly '
+                 'on width. These are finite, single-seed interventions, rather than a scaling law.')]
+        larger_blocks += [
             ('p','The fixed-capacity data comparison and fixed-data capacity comparison answer different '
              'questions. Equal passes and data do not imply equal compute. The pipeline checks finite '
              'learning, trained value blocks, complete work and source provenance before promotion. '
              'A development gain is not an official-test or frontier claim.'),
             ('small','Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. '
              'Special functions, evaluation passes and physical traffic are separate from the arithmetic '
-             'ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.')])
+             'ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.')]
+        pages.append(larger_blocks)
 
     pages.append([
         ("h1","What establishes the larger advantage"),
