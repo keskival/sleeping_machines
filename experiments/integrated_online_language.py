@@ -60,6 +60,7 @@ def main():
         raise ValueError('Checkpoint and completed result disagree')
     base = SparseRaceLanguageModel(**architecture)
     base.load_state_dict(inherited['best_state'])
+    initial = base.state_dict()
     models = {name: copy.deepcopy(base) for name in ('frozen', 'online')}
     states = {name: base.new_state() for name in models}
     optimizer = torch.optim.Adam(models['online'].parameters(), lr=a.lr)
@@ -138,15 +139,15 @@ def main():
         arithmetic=sum(counts[k]*sum(t['arithmetic_flops'] for t in row['stages'].values()) for k,row in rows.items())
         specials=sum(counts[k]*sum(t['special_function_evaluations'] for t in row['stages'].values()) for k,row in rows.items())
         state=states[name]
-        work[name]=dict(arithmetic_flops=arithmetic,special_functions=special,
-            unit_special_flops=arithmetic+special,trace_repetitions=counts,traces=rows,
+        work[name]=dict(arithmetic_flops=arithmetic,special_functions=specials,
+            unit_special_flops=arithmetic+specials,trace_repetitions=counts,traces=rows,
             event_deliveries=state.deliveries,candidate_scores=state.candidate_scores,
             counterfactual_values=state.counterfactual_values,selected_state_updates=state.selected_updates,
             scope='Representative extrapolation of actual first, middle and last-block work; excludes inherited fitting, RNG, index/traffic and contract checks; not measured energy')
     result.update(status='completed',blocks=blocks,work=work,arm_wall_s=timings,
         rows=[dict(arm=name,bpc=totals[name]/(a.n-1)/math.log(2),
             updates=len(starts) if name=='online' else 0,
-            parameter_change_l2=math.sqrt(sum(float((p.detach()-base.state_dict()[key]).square().sum())
+            parameter_change_l2=math.sqrt(sum(float((p.detach()-initial[key]).square().sum())
                 for key,p in models[name].named_parameters()))) for name in models])
     assert result['rows'][0]['parameter_change_l2']==0.
     persist(completed=True);running.unlink(missing_ok=True)

@@ -101,6 +101,10 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Causal streams and tokenization](theory/41_causal_streams_and_tokenization.md) — §§269–274: preprocessing filtrations, persistent state versus truncated credit, complete prefix dictionaries, exact per-character marginal likelihood and local vocabulary teachers, with a quality/work experiment.
 - [Information and statistical credit](theory/42_information_and_statistical_credit.md) — §§275–279: a stopped-token Fisher identity, control frequency versus statistical capacity, the noise cost of deep corrections, fitting-only cross-sample teachers and a class-calibration quotient.
 - [Compute allocation and frontier scaling](theory/43_compute_allocation_and_frontier_scaling.md) — §§280–286: feasible resource sets, marginal learning value, dormant-capacity exposure, retrieval-error bounds, modern token/position controls, online adaptation and conditional scaling predictions.
+- [Precise language scans and content](theory/44_precise_language_scans_and_content.md) — §§287–293: precise clocks, bounded causal scans and input-dependent content/memory learning.
+- [Race attention and resource identity](theory/45_race_attention_and_resource_identity.md) — §§294–298: corrected shared-clock covariance, centered conserved counterfactual credit and complete resource boundaries.
+- [Integrated sparse temporal language](theory/46_integrated_sparse_temporal_language.md) — §§299–302: content-bearing sparse timed events, key/value/state separation and capacity versus teaching work.
+- [Language capacity and online learning](theory/47_language_capacity_and_online_learning.md) — §§303–307: centered-logit rank, integrated width/data tests, iso-FLOP risk, causal block-delayed adaptation and reproducible larger-model benchmarks.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

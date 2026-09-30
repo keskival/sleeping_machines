@@ -10,6 +10,7 @@ import json
 import math
 from pathlib import Path
 import re
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT/"experiments/results"
@@ -65,6 +66,8 @@ def results():
     tasks['language_full_sparse'] = [read(str(path.relative_to(RES)))
         for path in sorted([*(RES/'parallel_language').glob('local_full_sparse_language_*Z.json'),
                             *(RES/'parallel_language').glob('aws_full_sparse_language_*Z.json')])]
+    tasks['integrated_online_language'] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
     audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
     tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")
@@ -108,6 +111,50 @@ def results():
         tasks[key] = (read(path) if (RES/path).exists() and
             json.loads((RES/path).read_text()).get("status") == "completed" else None)
     return tasks
+
+
+def language_work_points(tasks, ev):
+    """Completed quality/work pairs; preserve architecture and scoring split."""
+    rows=[]
+    for r in tasks['language_full_sparse']:
+        a=r['args'];w=r['work']
+        official=r['protocol']['official_test_read']
+        location='AWS ' if a['tag'].startswith('aws_') else ''
+        rows.append(dict(model=f"Ours: integrated d{a['payload']}/p{a['pool']}",family='integrated',
+            label=location+f"I{a['payload']}/p{a['pool']}/{a['fit']//1024}K/s{a['seed']}",parameters=r['parameters'],
+            fit=a['fit'],passes=a['epochs'],split='test' if official else 'dev',
+            bpc=r['final']['official_test' if official else 'dev']['bpc'],
+            total=w['total_training_unit_special_flops'],targets=w['fitting_targets']))
+    carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
+    for r in carrier:
+        a=r['args'];w=r['work']
+        if a.get('official_test'):continue
+        gate='g' if a.get('content_memory') else ''
+        rows.append(dict(model=f"Ours: carrier w{a['width']}{gate}",family='carrier',
+            label=f"C{a['width']}{gate}/{a['fit']//1024}K",parameters=r['parameters'],
+            fit=a['fit'],passes=a['epochs'],split='dev',bpc=r['final']['dev']['bpc'],
+            total=w['total_training_unit_special_flops'],targets=w['fitting_targets']))
+    estimate=runpy.run_path(str(ROOT/'experiments/lm_training_flops.py'))['estimate_training_flops']
+    variants=[
+        ('L256/1M', 'e64/lstm_D1000000_s256_p20_dr0.2_v.json'),
+        ('L256/10M', 'e64/lstm_D10000000_s256_p1.json'),
+        ('L512/10M', 'e64/lstm_D10000000_s512_p6_dr0.1_v.json'),
+        ('T112x8/1M', 'e64/tf_D1000000_s112_L8_p5_b4_dr0_v.json'),
+        ('T256x2/1M', 'e64/tf_D1000000_s256_p20_dr0.2_v.json'),
+        ('T256x2/10M', 'e64/tf_D10000000_s256_p1.json'),
+        ('T256x4/10M', 'e64/tf_D10000000_s256_L4_p4_dr0.1_v.json')]
+    aws=ev['aws_references']['lstm']
+    if aws:variants.append(('L512/90M',aws['path']))
+    for label,path in variants:
+        relative=str(Path(path).relative_to('experiments/results')) if path.startswith('experiments/results/') else path
+        r=read(relative);a=r['args'];w=estimate(a,r['params'],r['steps'])
+        family='lstm' if a['model']=='lstm' else 'tf'
+        quality=ev['lstm10'] if label=='L512/10M' else ev['tf10'] if label=='T256x4/10M' else r['test_bpc']
+        rows.append(dict(model=('LSTM' if family=='lstm' else 'Transformer')+f": {a['size']}"+
+            (f"x{a.get('layers',2)}" if family=='tf' else ''),family=family,label=label,
+            parameters=r['params'],fit=a['D'],passes=a['passes'],split='test',bpc=quality,
+            total=w['total_training_flops'],targets=w['training_token_positions']))
+    return rows
 
 
 def aws_e64_reference(model, data_size):
@@ -613,7 +660,7 @@ def figures(M, tasks, ev):
 
     full=tasks['language_full_sparse']
     if full:
-        latest=max(full,key=lambda row:(row['args']['fit'],-row['args']['pool']))
+        latest=max(full,key=lambda row:(row['args']['fit'],-row['final']['dev']['bpc']))
         neural={r['model']:r for r in tasks['training_work']['language_rows']}
         ours=latest['work']
         whole=[ours['total_training_unit_special_flops']/1e9]
@@ -625,7 +672,7 @@ def figures(M, tasks, ev):
             whole.append(r['total_training_flops']/1e9)
             fitting.append(r['total_training_flops']/r['training_token_positions']/1e6)
             forward.append(r['forward_flops']/r['training_token_positions']/1e6)
-        labels=[f"Ours: integrated\n{latest['args']['fit']:,} fit / {latest['args']['epochs']} passes",
+        labels=[f"Ours: integrated d{latest['args']['payload']}\n{latest['args']['fit']:,} fit / {latest['args']['epochs']} passes",
                 'LSTM\n10M fit / 6 passes','Transformer\n10M fit / 4 passes']
         f,axes=plt.subplots(1,3,figsize=(7.2,2.65),sharey=True)
         for i,(a,values,title,unit,limits) in enumerate(zip(axes,(whole,fitting,forward),
@@ -643,6 +690,47 @@ def figures(M, tasks, ev):
         axes[0].invert_yaxis()
         f.suptitle('Work estimates; data, model size and quality differ',fontsize=9,y=1.01)
         f.tight_layout(w_pad=.9);save(f,'integrated_language_work_progress')
+
+    points=language_work_points(tasks,ev)
+    f,axes=plt.subplots(1,2,figsize=(7.2,3.2),sharey=True)
+    styles={'integrated':(blue,'s','Ours: integrated'),
+            'carrier':('#1baf7a','o','Ours: earlier carrier'),
+            'lstm':(gray,'o','LSTM'),'tf':(orange,'^','Transformer')}
+    for a,split,title in zip(axes,('dev','test'),('Cold development scores','Saved test scores')):
+        subset=[r for r in points if r['split']==split]
+        for family,(color,marker,label) in styles.items():
+            group=[r for r in subset if r['family']==family]
+            if group:a.scatter([r['total']/1e9 for r in group],[r['bpc'] for r in group],
+                color=color,marker=marker,s=25,label=label,zorder=3)
+        for i,r in enumerate(subset):
+            offset=(5,7 if i%2==0 else -12)
+            a.annotate(str(points.index(r)+1),(r['total']/1e9,r['bpc']),xytext=offset,
+                textcoords='offset points',fontsize=7,
+                arrowprops=dict(arrowstyle='-',color='#8a8984',lw=.4))
+        a.set_xscale('log');a.set_xlim(.8,2e7);a.set_ylim(1.45,3.75)
+        a.set_title(title,fontsize=9);a.set_xlabel('Whole fitting GFLOPs; log scale ↓',fontsize=8)
+        a.legend(loc='upper right',fontsize=6.3,frameon=False)
+    axes[0].set_ylabel('Bits per character ↓',fontsize=8)
+    f.suptitle('Quality versus fitting work; scoring protocols and data budgets differ',fontsize=9,y=1.01)
+    f.tight_layout(w_pad=.8);save(f,'language_quality_vs_work')
+
+    if tasks['integrated_online_language']:
+        row=tasks['integrated_online_language'][-1]
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
+        for name,color,label in [('frozen',gray,'Ours: frozen'),('online',blue,'Ours: online')]:
+            n,total,x,y=0,0.,[],[]
+            for block in row['blocks']:
+                n+=block['n'];total+=block['bpc'][name]*block['n'];x.append(n);y.append(total/n)
+            axes[0].plot(x,y,color=color,label=label,lw=1.2)
+        axes[0].set(xlabel='New stream targets',ylabel='Cumulative bpc ↓',title='Prediction before feedback')
+        axes[0].legend(fontsize=7,frameon=False)
+        costs=[row['work'][name]['unit_special_flops']/1e6 for name in ('frozen','online')]
+        axes[1].barh(range(2),costs,color=[gray,blue],height=.6)
+        axes[1].set_yticks(range(2),['Ours: frozen','Ours: online']);axes[1].invert_yaxis()
+        axes[1].set(xlabel='Whole stream MFLOPs ↓',title='Scoring plus adaptation work')
+        axes[1].set_xlim(0,max(costs)*1.3)
+        for i,cost in enumerate(costs):axes[1].text(cost+max(costs)*.02,i,f'{cost:,.1f}',va='center',fontsize=8)
+        f.tight_layout(w_pad=1.2);save(f,'integrated_online_language')
 
     if tasks['language_representation']:
         audit=tasks['language_representation']
@@ -732,7 +820,7 @@ def blocks(M, tasks, ev):
         '<a href="experiments/results/e174/aligned_lstm_10m_20260930.json">10M LSTM aligned result</a>',
         '<a href="experiments/results/e174/aligned_tf_10m_20260930.json">10M Transformer aligned result</a>',
     ]
-    official=[row for row in tasks['language_scaleup'] if row['args'].get('official_test')]
+    official=[row for row in tasks['language_scaleup']+tasks['language_full_sparse'] if row['args'].get('official_test')]
     if official:
         reference_rows.pop(0)
         for row in official:
@@ -742,7 +830,9 @@ def blocks(M, tasks, ev):
                     or not protocol['weights_frozen_on_test'] or protocol['statistical_experts']
                     or row['final']['official_test']['n']!=999_999):
                 raise ValueError('Completed learned language result does not match the comparison protocol')
-            reference_rows.insert(0,[f"Ours: input-gated event state; width {row['args']['width']}",
+            label=(f"Ours: integrated races; payload {row['args']['payload']}" if 'payload' in row['args'] else
+                   f"Ours: input-gated event state; width {row['args']['width']}")
+            reference_rows.insert(0,[label,
                 '10M / four passes',f"{row['final']['official_test']['bpc']:.3f}",
                 compact_work(row['work']['total_training_unit_special_flops'])])
     for model, label in (("lstm", "LSTM; width 512, one recurrent layer"),
@@ -927,8 +1017,8 @@ def blocks(M, tasks, ev):
     if full_rows:
         pages.append([
             ('h1','Ours: completed integrated-language stages'),
-            ('table',(['Ours: fit / pool','Development bpc ↓','Fitting GFLOPs ↓','Capacity / selected states'],[
-             [f"{row['args']['fit']:,} / {row['args']['pool']}",f"{row['final']['dev']['bpc']:.3f}",
+            ('table',(['Ours: fit / payload / pool','Development bpc ↓','Fitting GFLOPs ↓','Capacity / selected states'],[
+             [f"{row['args']['fit']:,} / {row['args']['payload']} / {row['args']['pool']}",f"{row['final']['dev']['bpc']:.3f}",
               f"{row['work']['total_training_arithmetic_flops']/1e9:.2f}",
               f"{row['capacity_units']} / {row['args']['depth']}"] for row in full_rows],[44,38,44,48])),
             ('p','These are the integrated model stages, with identical cold development targets. '
@@ -1527,7 +1617,7 @@ def blocks(M, tasks, ev):
     pages.append(language_reference_page)
 
     if full_rows:
-        latest=max(full_rows,key=lambda row:(row['args']['fit'],-row['args']['pool']))
+        latest=max(full_rows,key=lambda row:(row['args']['fit'],-row['final']['dev']['bpc']))
         w=latest['work'];ours_fit=w['total_training_unit_special_flops']/w['fitting_targets']
         ours_forward=w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character']
         tf=lm_costs['tf'];tf_fit=tf['total_training_flops']/tf['training_token_positions']
@@ -1536,7 +1626,7 @@ def blocks(M, tasks, ev):
         for r in full_rows:
             rw=r['work']
             work_rows.append([
-                f"Ours / pool {r['args']['pool']}",
+                f"Ours / d{r['args']['payload']} / p{r['args']['pool']}",
                 f"{r['args']['fit']:,} / {r['args']['epochs']}",
                 f"{r['final']['dev']['bpc']:.3f} / dev",
                 f"{rw['total_training_unit_special_flops']/1e9:,.3f}",
@@ -1572,12 +1662,76 @@ def blocks(M, tasks, ev):
              f"than the larger saved Transformer estimate; fitting work per target is <b>{tf_fit/ours_fit:.0f}× smaller</b>. "
              'These are configuration-level work ratios. Our development score and the reference official '
              'test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.'),
-            ('small','Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development '
-             'targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, '
+            ('small','Ours: d denotes payload width and p pool size; fixed character pools and event depths. '
+             'Each result records its validation interval and credit horizon. References: width-512 LSTM or four width-256 Transformer layers, '
              '256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative '
              'operator traces including counterfactual credit, backward, clipping and Adam; neural references '
              'use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation '
              'passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.')])
+    points=language_work_points(tasks,ev)
+    pages.append([
+        ('h1','Appendix B (continued). Ours and neural controls: accuracy versus FLOPs'),
+        ('p','Each point is a completed model, not a projected scaling law. Left: ours on cold '
+         'development characters, with integrated models and earlier carrier controls labelled separately. '
+         'Right: saved neural test results. Lower bpc means better prediction; lower fitting work means '
+         'fewer estimated operations. No curve is drawn between different model families or scoring splits.'),
+        ('figure',('language_quality_vs_work',174)),
+        ('table',(['Model type','Fitting budget','bpc / split ↓','Whole fit GFLOPs ↓','Fitting MFLOPs / target ↓'],[
+            [r['model'],f"{r['fit']:,} / {r['passes']:g} passes",f"{r['bpc']:.3f} / {r['split']}",
+             f"{r['total']/1e9:,.3f}",f"{r['total']/r['targets']/1e6:.3f}"]
+            for family in ('integrated','carrier','lstm','tf')
+            for r in [max([p for p in points if p['family']==family],key=lambda p:(p['fit'],-p['bpc']))]],
+            [43,33,25,33,40])),
+        ('small','The table selects the largest fitting budget currently completed for each family; '
+         'the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted '
+         'variants. Variant labels: I = ours integrated payload/pool/data; '
+         'C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer '
+         'width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.'),
+        ('small','Estimates include learning, clipping and Adam, with unit-weight special functions. '
+         'Ours uses representative operator traces; neural controls use shape formulas and backward '
+         'approximately twice forward. Scoring splits, data, passes, capacity and credit differ; '
+         'these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.')])
+    ledger_chunk=math.ceil(len(points)/math.ceil(len(points)/18))
+    for start in range(0,len(points),ledger_chunk):
+        pages.append([
+            ('h1','Appendix B (continued). Completed language variants and work'),
+            ('table',(['Variant','Parameters K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓'],[
+                [f"{i+1}. "+('Ours: ' if r['family'] in ('integrated','carrier') else '')+r['label'],
+                 f"{r['parameters']/1e3:,.1f}",f"{r['fit']:,} / {r['passes']:g}",
+                 f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}"]
+                 for i,r in enumerate(points[start:start+ledger_chunk],start=start)],
+                 [48,25,36,29,36])),
+            ('small','Each row retains its original architecture, fitting budget and score. The selected '
+             '10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain '
+             'their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. '
+             'Carrier and integrated development scores use frozen evaluation; integrated official scores '
+             'appear only after their full test completes. Validation/test work, RNG and physical traffic '
+             'are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed '
+             'parallel_language JSON records. No new dense model was trained.')])
+    if tasks['integrated_online_language']:
+        row=tasks['integrated_online_language'][-1];a=row['args']
+        pages.append([
+            ('h1','Appendix B (continued). Ours: separate online neural learning'),
+            ('p','Both arms start from the same selected integrated-model checkpoint and maintain '
+             'persistent event memory on the same new development stream. The frozen arm retains '
+             'its parameters. The online arm updates the complete neural backbone after making '
+             f"the causal predictions in each {a['chunk']}-character block, with no replay."),
+            ('figure',('integrated_online_language',174)),
+            ('table',(['Ours: mode','Stream bpc ↓','Whole stream MFLOPs ↓','Parameter change L2','Updates'],[
+                [f"Ours: {r['arm']}",f"{r['bpc']:.3f}",f"{row['work'][r['arm']]['unit_special_flops']/1e6:,.3f}",
+                 f"{r['parameter_change_l2']:.3f}",str(r['updates'])] for r in row['rows']],
+                [37,26,44,40,27])),
+            ('p',f"The {a['n']-1:,} targets come from [{a['offset']:,}, {a['offset']+a['n']:,}). "
+             f"Learning rate {a['lr']:g} was fixed before this stream; Adam starts with fresh moments. "
+             'Both arms use paired block race noise. Parameter updates precede only future blocks; '
+             'the current target cannot change its own prediction. Their contexts can diverge after learning.'),
+            ('small','This measures block-delayed online adaptation, not instant per-character updates '
+             'or a frozen official-test score. One inherited model/window/rate. All neural parameters '
+             'may learn, including content, keys, clocks and retention; this differs from the earlier '
+             'statistical expert-mixing-only ablation. Inherited fitting is additional and identical '
+             'in both arms. Work estimates observe the actual first/middle/last blocks and include '
+             'counterfactual learning, backward, clipping and Adam; RNG, indexing and physical '
+             'traffic remain additional. Lower online loss, if observed, is evidence only for this protocol.')])
     language_rows=[
         ["Ours: separate statistical count/copy baseline",f"{ev['native10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_without_word']['total_training_flops'])+" + integer count construction"],
         ["Ours: count/copy plus causal word context",f"{ev['native_word10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_with_causal_word']['total_training_flops'])+" + integer count construction"],

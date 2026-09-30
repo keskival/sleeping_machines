@@ -1,5 +1,5 @@
 {
-  "status": "needs_review",
+  "status": "superseded_for_larger_messages",
   "created_utc": "2026-09-30T17:54:56.448016+00:00",
   "tmux_session": "local_full_sparse_ladder_20260930T175400Z",
   "suite_log": "experiments/queue/local_full_sparse_ladder_20260930T175400Z.out",
@@ -141,5 +141,5 @@
   "current_job": "local_full_sparse_language_D131072_p2_20260930T175400Z",
   "review_resolution": "Report hook preserved evidence while diagram edits overlapped completion; clean-tree publication completed and layout checked before resumption",
   "resolved_utc": "2026-09-30T18:10:55.321263+00:00",
-  "reason": "Guarded job exited 143; retain its checkpoint and logs"
+  "reason": "User requests payload-32 matched pilot and larger-model data stages; preserve interrupted payload-16 checkpoint and completed pool-4 evidence"
 }

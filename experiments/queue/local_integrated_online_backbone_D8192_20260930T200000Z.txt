@@ -1,0 +1,1 @@
+local_integrated_online_backbone_D8192_20260930T200000Z experiments/integrated_online_language.py --tag local_integrated_online_backbone_D8192_20260930T200000Z --checkpoint-result experiments/results/parallel_language/local_full_sparse_language_D32768_p2_20260930T175400Z.json --offset 90065536 --n 8192 --chunk 16 --lr 0.0001

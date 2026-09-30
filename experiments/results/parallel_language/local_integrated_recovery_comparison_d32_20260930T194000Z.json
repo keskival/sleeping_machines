@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "scope": "Interrupted in epoch two; resumed predictions, losses, selected weights and work equal uninterrupted control",
+  "checks": [
+    "curve",
+    "final",
+    "work",
+    "parameter_change_norms_by_category",
+    "training_random_draws"
+  ],
+  "resume_result": "experiments/results/parallel_language/local_integrated_recovery_probe_d32_20260930T194000Z.json",
+  "control_result": "experiments/results/parallel_language/local_integrated_recovery_control_d32_20260930T194000Z.json"
+}

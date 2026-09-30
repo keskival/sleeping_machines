@@ -112,11 +112,11 @@ Fixed observed-character pools, bounded delays and six sequential event depths; 
 
 ## Ours: completed integrated-language stages
 
-| Ours: fit / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / selected states |
+| Ours: fit / payload / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / selected states |
 | --- | --- | --- | --- |
-| 32,768 / 2 | 3.121 | 29.88 | 324 / 6 |
-| 8,192 / 2 | 3.398 | 7.49 | 324 / 6 |
-| 8,192 / 4 | 3.426 | 14.15 | 648 / 6 |
+| 32,768 / 16 / 2 | 3.121 | 29.88 | 324 / 6 |
+| 8,192 / 16 / 2 | 3.398 | 7.49 | 324 / 6 |
+| 8,192 / 16 / 4 | 3.426 | 14.15 | 648 / 6 |
 
 These are the integrated model stages, with identical cold development targets. Each character selects one unit at each depth; addressed alternatives teach the races. Capacity and selected activity are different counts. The fitting ledger includes counterfactual values, backward, clipping and Adam.
 
@@ -454,9 +454,9 @@ This ledger updates from completed integrated-model stages. It shows the emergin
 
 | Model | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ | Forward MFLOPs / position ↓ |
 | --- | --- | --- | --- | --- | --- |
-| Ours / pool 2 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.026 |
-| Ours / pool 2 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.025 |
-| Ours / pool 4 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.449 | 0.032 |
+| Ours / d16 / p2 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.026 |
+| Ours / d16 / p2 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.025 |
+| Ours / d16 / p4 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.449 | 0.032 |
 | LSTM / width 512 | 10M / six | 1.799 / test | 432,592.997 | 7.210 | 2.402 |
 | Transformer / width 256 | 10M / four | 1.908 / test | 888,775.443 | 22.223 | 7.405 |
 
@@ -466,7 +466,48 @@ All table values, figures and ratios use arithmetic plus one operation per speci
 
 **The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **290× smaller** than the larger saved Transformer estimate; fitting work per target is **94× smaller**. These are configuration-level work ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
 
-Ours: six depths with 16-dimensional payloads; fixed character pools; four passes; 8,191 cold development targets; 16-character credit. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
+Ours: d denotes payload width and p pool size; fixed character pools and event depths. Each result records its validation interval and credit horizon. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
+
+## Appendix B (continued). Ours and neural controls: accuracy versus FLOPs
+
+Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. Right: saved neural test results. Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
+
+![language quality vs work](report/figures/language_quality_vs_work.png)
+
+| Model type | Fitting budget | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ |
+| --- | --- | --- | --- | --- |
+| Ours: integrated d16/p2 | 32,768 / 4 passes | 3.121 / dev | 31.053 | 0.237 |
+| Ours: carrier w128g | 1,048,576 / 4 passes | 2.210 / dev | 8,373.302 | 1.996 |
+| LSTM: 512 | 90,000,000 / 6 passes | 1.661 / test | 3,893,396.042 | 7.210 |
+| Transformer: 256x4 | 10,000,000 / 4 passes | 1.908 / test | 888,775.443 | 22.223 |
+
+The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
+
+Estimates include learning, clipping and Adam, with unit-weight special functions. Ours uses representative operator traces; neural controls use shape formulas and backward approximately twice forward. Scoring splits, data, passes, capacity and credit differ; these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Parameters K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ |
+| --- | --- | --- | --- | --- |
+| 1. Ours: I16/p2/32K/s6 | 361.4 | 32,768 / 4 | 3.121 / dev | 31.053 |
+| 2. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 |
+| 3. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 |
+| 4. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 |
+| 5. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 |
+| 6. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 |
+| 7. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 |
+| 8. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 |
+| 9. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 |
+| 10. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 |
+| 11. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 |
+| 12. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 |
+| 13. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 |
+| 14. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 |
+| 15. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 |
+| 16. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 |
+| 17. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language JSON records. No new dense model was trained.
 
 ## Appendix B (continued). Separate statistical language baseline
 

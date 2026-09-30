@@ -1,0 +1,1 @@
+local_integrated_online_smoke_20260930T195000Z experiments/integrated_online_language.py --tag local_integrated_online_smoke_20260930T195000Z --checkpoint-result experiments/results/parallel_language/local_integrated_benchmark_smoke_d32_20260930T193500Z.json --n 129 --offset 90065536 --chunk 16 --lr 0.0001

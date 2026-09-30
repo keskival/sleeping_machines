@@ -47,6 +47,11 @@ the chosen model configuration before fitting. The long run should follow a
 completed useful larger-model pilot, rather than assume capacity improvement.
 All source hashes must match the completed core contracts and remain unchanged
 for an active run/resume. Preserve the exact checkout used for a long run.
+The guarded width-32 smoke and the end-to-end recovery comparison are saved as
+`local_integrated_benchmark_smoke_d32_20260930T193500Z.json` and
+`local_integrated_recovery_comparison_d32_20260930T194000Z.json` in
+`experiments/results/parallel_language/`. The latter interrupts in epoch two
+and verifies exact agreement with the uninterrupted control.
 
 At the measured smaller-model CPU rate (~47 fitting targets/second), 10M/four
 passes would take about ten days plus larger validation/test overhead. Width 32

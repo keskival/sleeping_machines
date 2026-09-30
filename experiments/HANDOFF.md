@@ -33,6 +33,52 @@ with persistent event memory and predictions before block-delayed updates.
 The following older priority sections are historical. Inspect live queues and
 the newer larger-message campaign before resuming them.
 
+### New follow-up campaign and report ledger — 20:00 UTC
+
+Tmux/manifest/suite log: `local_integrated_followups_20260930T200000Z`.
+Its supervisor `scripts/run_integrated_followups.py` runs the separate guarded
+online-backbone 8K development experiment, publishes its completed result if
+layout/source checks pass, then invokes the existing guarded ladder controller
+on the new manifest. AWS's separately committed seed-6 campaign is preserved.
+Local capacity comparisons use seed 7: matched width-16 and width-32 at 32K,
+then 131K requires an exploratory 0.02-bpc improvement over that same-seed
+width-16 control. The larger 1M stage requires >=0.1 bpc gain over width-32/32K
+and <=3.0 development bpc. All larger-data stages use width 32.
+The superseded payload-16 long jobs do not resume automatically.
+
+New width-32 model: 1,388,871 parameters; still 324 units / six selected state
+updates. Theory §§303–307 explains the width intervention, the 16-versus-26
+centered-logit rank restriction, causal online evaluation and conditional
+scaling. These are reasons to test, not a prediction of frontier supremacy.
+The index now links current theory notes 44–47.
+
+The online protocol adapts all neural parameters on [90,065,536,90,073,728),
+making each block's predictions before parameter updates; feedback delay/credit
+is 16, fixed learning rate 0.0001, fresh Adam, paired race noise. Frozen and
+online arms share the selected width-16/32K checkpoint and both retain event
+memory. Online smoke v1 finished computation but failed at result assembly
+because of a variable-name error; its progress/logs are preserved. The corrected
+v2 smoke passes and is not used as quality evidence in the report.
+
+Actual end-to-end recovery passed: the guarded width-32 probe stopped in epoch
+two at 64 targets and resumed. Its complete curve, final score, parameter
+changes, random counts and work ledger exactly equal its uninterrupted control.
+Completed comparison JSON: `local_integrated_recovery_comparison_d32_20260930T194000Z.json`.
+Do not edit the new protocol/benchmark/online drivers while their jobs run.
+
+The PDF adds accuracy-versus-whole-fitting-FLOPs panels for integrated ours,
+earlier carrier controls, LSTM and Transformer, plus every plotted variant's
+capacity, data/passes, quality split and whole-fit work. Development/test panels
+are separate; point numbers map to the detailed table to avoid overlapping
+labels. Costs consistently use unit-weight specials, with arithmetic-only
+integrated totals preserved in the earlier appendix. New online curves and
+complete adaptation cost are included only from completed result files.
+Incoming AWS setup commits `545b771`/`95e6b41` arrived through a host-side
+autostash pull during report editing. The result-discovery conflict was resolved
+by retaining explicit local/AWS globs plus the independent online-result loader;
+AWS runner/queues/fingerprints remain preserved. Its model/driver source hashes
+match this checkout. Avoid overlapping report edits/publishing across hosts.
+
 ## Priority update — integrated architecture, 17:54 UTC
 
 The user explicitly prioritizes full architectural experiments over carrier-only
