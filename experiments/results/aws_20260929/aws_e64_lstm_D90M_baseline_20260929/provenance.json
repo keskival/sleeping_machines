@@ -1,0 +1,31 @@
+{
+  "run_tag": "aws_e64_lstm_D90M_baseline_20260929",
+  "script": "experiments/e64_lm_baselines.py",
+  "arguments": [
+    "--model",
+    "lstm",
+    "--D",
+    "90000000",
+    "--size",
+    "512",
+    "--passes",
+    "6",
+    "--dropout",
+    "0.1",
+    "--valid",
+    "200000"
+  ],
+  "output_redirected": true,
+  "source_sha256": "af9c4bb99832a83365e26378db9afaad72ed9bdf4ea493e223d187128d350fc6",
+  "git_commit": "4c7efd4fd92b526f8d5b824ce32ee61d745528ee",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "259200"
+  },
+  "start_utc": "2026-09-29T21:33:05Z",
+  "status": "completed",
+  "wall_s": 38314.004,
+  "peak_rss_kb": 2300868
+}

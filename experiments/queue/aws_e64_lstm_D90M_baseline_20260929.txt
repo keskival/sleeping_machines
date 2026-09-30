@@ -1,0 +1,1 @@
+aws_e64_lstm_D90M_baseline_20260929 experiments/aws_benchmark.py --run-tag aws_e64_lstm_D90M_baseline_20260929 --script experiments/e64_lm_baselines.py -- --model lstm --D 90000000 --size 512 --passes 6 --dropout 0.1 --valid 200000
