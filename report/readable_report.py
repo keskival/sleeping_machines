@@ -83,36 +83,45 @@ def results():
     return tasks
 
 
+def aws_e64_reference(model, data_size):
+    """Read completed AWS reference evidence, including its cost and source path."""
+    for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
+        try:
+            meta = json.loads(provenance_path.read_text())
+            args = meta.get("arguments", [])
+            if (meta.get("status") != "completed" or
+                    meta.get("script") != "experiments/e64_lm_baselines.py" or
+                    "--model" not in args or args[args.index("--model") + 1] != model or
+                    "--D" not in args or int(args[args.index("--D") + 1]) != data_size):
+                continue
+            for result_path in sorted(provenance_path.parent.glob("*.json")):
+                if result_path.name == "provenance.json":
+                    continue
+                row = json.loads(result_path.read_text())
+                value = row.get("test_bpc")
+                if (isinstance(value, (int, float)) and not isinstance(value, bool)
+                        and math.isfinite(value) and value > 0):
+                    return {"result": row, "path": str(result_path.relative_to(ROOT))}
+        except (OSError, ValueError, TypeError, IndexError):
+            continue
+    return None
+
+
 def evidence(M):
     causal = read("e173/causal_language_10m_20260930.json")
-    def aws_e64_bpc(model, data_size):
-        for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
-            try:
-                meta = json.loads(provenance_path.read_text())
-                args = meta.get("arguments", [])
-                if (meta.get("status") != "completed" or
-                        meta.get("script") != "experiments/e64_lm_baselines.py" or
-                        "--model" not in args or args[args.index("--model") + 1] != model or
-                        "--D" not in args or int(args[args.index("--D") + 1]) != data_size):
-                    continue
-                for result_path in sorted(provenance_path.parent.glob("*.json")):
-                    if result_path.name == "provenance.json":
-                        continue
-                    value = json.loads(result_path.read_text()).get("test_bpc")
-                    if (isinstance(value, (int, float)) and not isinstance(value, bool)
-                            and math.isfinite(value) and value > 0):
-                        return float(value)
-            except (OSError, ValueError, TypeError, IndexError):
-                continue
-        return None
+    aws_references = {model: aws_e64_reference(model, 90_000_000) for model in ("lstm", "tf")}
+    def aws_e64_bpc(model):
+        reference = aws_references[model]
+        return reference["result"]["test_bpc"] if reference else None
     return {"native10": causal["arms"]["without_word"]["test_bpc"],
             "native_word10": causal["arms"]["with_causal_word"]["test_bpc"],
             "lstm1": read("e64/lstm_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
             "lstm10": read("e174/aligned_lstm_10m_20260930.json")["test_bpc"],
-            "lstm90": aws_e64_bpc("lstm", 90_000_000),
+            "lstm90": aws_e64_bpc("lstm"),
             "tf1": read("e64/tf_D1000000_s256_p20_dr0.2_v.json")["test_bpc"],
             "tf10": read("e174/aligned_tf_10m_20260930.json")["test_bpc"],
-            "tf90": aws_e64_bpc("tf", 90_000_000),
+            "tf90": aws_e64_bpc("tf"),
+            "aws_references": aws_references,
             "recall_tf": max(p["n32"] for f in (RES/"e61").glob("tf_K32_n8*.json")
                              for row in json.loads(f.read_text())["rows"] for p in row["curve"])}
 
@@ -481,6 +490,12 @@ def figures(M, tasks, ev):
 
 def blocks(M, tasks, ev):
     """Project entry point: capabilities, evidence, principles and applications."""
+    def compact_work(value):
+        if value >= 1e15:
+            return f"{value/1e15:.2f}P"
+        if value >= 1e12:
+            return f"{value/1e12:.2f}T"
+        return f"{value/1e9:.2f}G" if value>=1e9 else f"{value/1e6:.2f}M"
     phase=tasks["phase_only"]["final"]["dev"]
     work=tasks["work_audit"]["rows"]
     phase_work=next(r for r in work if r["model"]=="shared_phase_only")["work"]["estimated_operations"]
@@ -493,6 +508,7 @@ def blocks(M, tasks, ev):
         parts=[row[endpoint][k] for k in ("dev_original","dev_additional")]
         return sum(p["correct"] for p in parts)/sum(p["n"] for p in parts)
     pages=[]
+    lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
     pages.append([
         ("title","Sleeping Machines"),
         ("sub","Deep learning that computes with time"),
@@ -511,7 +527,7 @@ def blocks(M, tasks, ev):
          f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} validation bits per character</b>, "
          f"from {tasks['stream_training']['initial']['bpc']:.3f} before fitting. "
          "It learns embeddings, temporal state, vector maps and a readout without count/copy/word experts. "
-         "This is a small development result; a matched larger neural comparison remains to be run.",
+         "This is a small development result; the full learned-event benchmark is pending.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
          "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
          "100% on its standard and longer contexts.",
@@ -524,11 +540,67 @@ def blocks(M, tasks, ev):
          f"Inference/scoring uses {tasks['event_language_work']['inference_arithmetic_flops_per_character']/1e3:.2f}K "
          "arithmetic FLOPs per character. These count the logical event algorithm; special functions are "
          "reported separately in Appendix B. A matched-quality cost advantage is not yet established."),
-        ("figure",("accomplishments",154)),
-        ("small","Language: 8,192 fitting characters, four passes, 1,024 validation targets, one seed; "
-         "28,403 parameters. No official-test or frontier-quality claim. The separate statistical "
-         "count/copy predictor in Appendix B does not use this learned event backbone. "
-         "Retrieval, composition and arithmetic are controlled synthetic tasks.")])
+        ("h2","Language benchmark: saved references and our full run"),
+        ("table",(["Model","Fitting characters / passes","Test bpc ↓","Full training FLOPs ↓"],[
+         ["LSTM; width 512, one recurrent layer","10M / six passes",f"{ev['lstm10']:.3f}",
+          compact_work(lm_costs['lstm']['total_training_flops'])],
+         ["Transformer; width 256, four layers","10M / four passes",f"{ev['tf10']:.3f}",
+          compact_work(lm_costs['tf']['total_training_flops'])],
+         ["Sleeping Machines; full learned model","10M / four passes","Pending","Pending"],
+        ],[60,42,29,43])),
+        ("small","The references are completed text8 test results; training totals include backward, "
+         "clipping and Adam. Protocols and the completed 90M LSTM appear on the next page. "
+         "Our completed small model above uses 8,192 fitting characters, four passes, 1,024 development "
+         "targets and 28,403 parameters; its development bpc is not a comparable test score. "
+         "Retrieval/composition are synthetic. The separate count/copy baseline is labeled in Appendix B.")])
+
+    reference_rows=[
+        ["LSTM; width 512, one recurrent layer", "10M / six passes", f"{ev['lstm10']:.3f}",
+         compact_work(lm_costs['lstm']['total_training_flops'])],
+        ["Transformer; width 256, four layers", "10M / four passes", f"{ev['tf10']:.3f}",
+         compact_work(lm_costs['tf']['total_training_flops'])],
+    ]
+    reference_sources=[
+        '<a href="experiments/results/e174/aligned_lstm_10m_20260930.json">10M LSTM aligned result</a>',
+        '<a href="experiments/results/e174/aligned_tf_10m_20260930.json">10M Transformer aligned result</a>',
+    ]
+    for model, label in (("lstm", "LSTM; width 512, one recurrent layer"),
+                         ("tf", "Transformer; width 256, four layers")):
+        reference = ev["aws_references"][model]
+        if reference:
+            row = reference["result"]
+            cost = row.get("training_flops_estimate", {}).get("total_training_flops")
+            reference_rows.append([label, f"90M / {row['args']['passes']:g} passes",
+                                   f"{row['test_bpc']:.3f}", compact_work(cost) if cost else "Not audited"])
+            reference_sources.append(f'<a href="{reference["path"]}">90M {model.upper()} saved result</a>')
+    pages.append([
+        ("h1","Completed language reference benchmarks"),
+        ("p","The Transformer and LSTM benchmarks have already been run. Their completed result files "
+         "remain in the repository and are reused as reference targets for the full learned-event benchmark. "
+         "Lower bits per character (bpc) means better prediction."),
+        ("table",(["Reference model","Fitting characters / passes","Test bpc ↓","Full training FLOPs ↓"],
+                  reference_rows,[60,46,24,44])),
+        ("p","The 10M references score exactly the same 999,999 text8 targets in [95M,96M), "
+         "with frozen validation-selected weights and cold initial context. The 90M LSTM uses the same "
+         "test interval and its saved recurrent scoring protocol. All use the historical 27-character alphabet "
+         "and 200,000-character validation selection; data budgets, capacities and fitting passes differ."),
+        ("p","Training estimates include every fitting step, forward/loss, backpropagation, gradient clipping "
+         "and Adam. Backward is approximated as twice forward; multiply-add counts as two FLOPs. "
+         "G/T/P mean billion/trillion/quadrillion. Validation/test evaluation, memory traffic and runtime "
+         "are outside these arithmetic totals."),
+        ("h2","Sleeping Machines benchmark status"),
+        ("p","The proper learned event model is queued for 10M fitting characters, four passes, "
+         "200,000 validation characters and the same 1M test interval. Its six layers, width 256 and "
+         "128 temporal modes have 1,205,805 parameters. Its full test score and training work are pending. "
+         "The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget "
+         "and a different evaluation split; it is not a comparable test result."),
+        ("p",f"Earlier 1M-character references also remain saved: LSTM <b>{ev['lstm1']:.3f}</b> "
+         f"and Transformer <b>{ev['tf1']:.3f} test bpc</b>, each with twenty fitting passes. "
+         "The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons "
+         "remain in their labeled sections and Appendix B."),
+        ("small","Saved evidence: "+"; ".join(reference_sources)+". An earlier 90M Transformer attempt was "
+         "interrupted by its RSS watchdog before producing a completed test result; its provenance is "
+         "preserved. No Transformer/LSTM training is launched locally.")])
 
     pages.append([
         ("h1","Which model produced each result?"),
@@ -546,14 +618,14 @@ def blocks(M, tasks, ev):
          "reused during research, official tests, inherited checkpoints and separately fitted evidence are "
          "identified where their results appear. FLOPs describe a declared logical algorithm; activity counts "
          "and simulator timings do not substitute for measured total device energy."),
-        ("p","Full learned-event benchmarks are being prepared for language, speech, image classification, "
+        ("p","Full learned-event benchmarks are queued locally for language, speech, image classification, "
          "complete event-camera gestures and forecasting. Their results remain pending. Modern tokenization "
          "and stronger contemporary controls are additional gates before a frontier claim.")])
 
     pages.append([
         ("h1","Task-specific periodic and retrieval mechanisms"),
         ("p","Two task-specific mechanisms retain perfect modular generalization and longer-context retrieval. "
-         "New Transformer and LSTM controls use the same synthetic examples. <b>Higher and further left is better:</b> "
+         "Saved Transformer and LSTM controls use the same synthetic examples. <b>Higher and further left is better:</b> "
          "more accurate answers from less counted work. The logarithmic axis makes large cost differences visible."),
         ("figure",("consolidated_work_frontiers",174)),
         ("table",(["Common configuration","Held-out capability","Estimated work per query"],[
@@ -956,10 +1028,6 @@ def blocks(M, tasks, ev):
              'ticks or event-pair attention. Theory §§249–264.')])
 
     coverage=[]
-    def compact_work(value):
-        if value >= 1e12:
-            return f"{value/1e12:.2f}T"
-        return f"{value/1e9:.2f}G" if value>=1e9 else f"{value/1e6:.2f}M"
     breadth={row["task"]:row for row in tasks["breadth_work"]["rows"]}
     total_work={row["task"]:row for row in tasks["training_work"]["rows"]}
     for task,label in (("language","Text8"),("market","Market event prediction"),("temporal","Temporal composition"),
@@ -1032,7 +1100,6 @@ def blocks(M, tasks, ev):
          "event hardware, matched-quality cost or energy. Ledger: "
          '<a href="experiments/estimate_training_work.py">estimate_training_work.py</a>.')])
 
-    lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
     language_rows=[
         ["Separate statistical count/copy baseline",f"{ev['native10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_without_word']['total_training_flops'])+" + integer count construction"],
         ["LSTM, width 512; one recurrent layer",f"{ev['lstm10']:.3f}","10M characters, six passes; 200k validation selection",compact_work(lm_costs['lstm']['total_training_flops'])],

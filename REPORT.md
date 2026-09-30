@@ -13,15 +13,43 @@ Messages carry a learned vector and an arrival time. Nodes accumulate local memo
 
 ## The strongest demonstrated results
 
-- **Learned event language prediction.** The eight-layer persistent event model reaches **3.351 validation bits per character**, from 5.329 before fitting. It learns embeddings, temporal state, vector maps and a readout without count/copy/word experts. This is a small development result; a matched larger neural comparison remains to be run.
+- **Learned event language prediction.** The eight-layer persistent event model reaches **3.351 validation bits per character**, from 5.329 before fitting. It learns embeddings, temporal state, vector maps and a readout without count/copy/word experts. This is a small development result; the full learned-event benchmark is pending.
 - **Accurate retrieval with far fewer examples.** Local race retrieval learns perfect recall at four times the training context within 4,000 examples in all five runs. The consolidated model preserves 100% on its standard and longer contexts.
 - **Rule learning and deep composition.** The consolidated periodic path reaches **100% across all 3,440 unseen modular triples**. Native depth-four order models reach 99.9–100%; shared-motif composition reaches about 99.65% from one pass.
 
 **Learned language work:** the completed small run uses an estimated 6.96G arithmetic FLOPs for all fitting passes, backward, clipping, Adam and warmup. Inference/scoring uses 59.74K arithmetic FLOPs per character. These count the logical event algorithm; special functions are reported separately in Appendix B. A matched-quality cost advantage is not yet established.
 
-![accomplishments](report/figures/accomplishments.png)
+### Language benchmark: saved references and our full run
 
-Language: 8,192 fitting characters, four passes, 1,024 validation targets, one seed; 28,403 parameters. No official-test or frontier-quality claim. The separate statistical count/copy predictor in Appendix B does not use this learned event backbone. Retrieval, composition and arithmetic are controlled synthetic tasks.
+| Model | Fitting characters / passes | Test bpc ↓ | Full training FLOPs ↓ |
+| --- | --- | --- | --- |
+| LSTM; width 512, one recurrent layer | 10M / six passes | 1.799 | 432.59T |
+| Transformer; width 256, four layers | 10M / four passes | 1.908 | 888.78T |
+| Sleeping Machines; full learned model | 10M / four passes | Pending | Pending |
+
+The references are completed text8 test results; training totals include backward, clipping and Adam. Protocols and the completed 90M LSTM appear on the next page. Our completed small model above uses 8,192 fitting characters, four passes, 1,024 development targets and 28,403 parameters; its development bpc is not a comparable test score. Retrieval/composition are synthetic. The separate count/copy baseline is labeled in Appendix B.
+
+## Completed language reference benchmarks
+
+The Transformer and LSTM benchmarks have already been run. Their completed result files remain in the repository and are reused as reference targets for the full learned-event benchmark. Lower bits per character (bpc) means better prediction.
+
+| Reference model | Fitting characters / passes | Test bpc ↓ | Full training FLOPs ↓ |
+| --- | --- | --- | --- |
+| LSTM; width 512, one recurrent layer | 10M / six passes | 1.799 | 432.59T |
+| Transformer; width 256, four layers | 10M / four passes | 1.908 | 888.78T |
+| LSTM; width 512, one recurrent layer | 90M / 6 passes | 1.661 | 3.89P |
+
+The 10M references score exactly the same 999,999 text8 targets in [95M,96M), with frozen validation-selected weights and cold initial context. The 90M LSTM uses the same test interval and its saved recurrent scoring protocol. All use the historical 27-character alphabet and 200,000-character validation selection; data budgets, capacities and fitting passes differ.
+
+Training estimates include every fitting step, forward/loss, backpropagation, gradient clipping and Adam. Backward is approximated as twice forward; multiply-add counts as two FLOPs. G/T/P mean billion/trillion/quadrillion. Validation/test evaluation, memory traffic and runtime are outside these arithmetic totals.
+
+### Sleeping Machines benchmark status
+
+The proper learned event model is queued for 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Its six layers, width 256 and 128 temporal modes have 1,205,805 parameters. Its full test score and training work are pending. The completed 28,403-parameter model's 3.351 development bpc comes from a smaller fitting budget and a different evaluation split; it is not a comparable test result.
+
+Earlier 1M-character references also remain saved: LSTM **2.179** and Transformer **2.367 test bpc**, each with twenty fitting passes. The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons remain in their labeled sections and Appendix B.
+
+Saved evidence: [10M LSTM aligned result](experiments/results/e174/aligned_lstm_10m_20260930.json); [10M Transformer aligned result](experiments/results/e174/aligned_tf_10m_20260930.json); [90M LSTM saved result](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json). An earlier 90M Transformer attempt was interrupted by its RSS watchdog before producing a completed test result; its provenance is preserved. No Transformer/LSTM training is launched locally.
 
 ## Which model produced each result?
 
@@ -37,11 +65,11 @@ Sleeping Machines is a family of event computations. The results below come from
 
 Only completed result files support reported measurements. Development splits, synthetic tests reused during research, official tests, inherited checkpoints and separately fitted evidence are identified where their results appear. FLOPs describe a declared logical algorithm; activity counts and simulator timings do not substitute for measured total device energy.
 
-Full learned-event benchmarks are being prepared for language, speech, image classification, complete event-camera gestures and forecasting. Their results remain pending. Modern tokenization and stronger contemporary controls are additional gates before a frontier claim.
+Full learned-event benchmarks are queued locally for language, speech, image classification, complete event-camera gestures and forecasting. Their results remain pending. Modern tokenization and stronger contemporary controls are additional gates before a frontier claim.
 
 ## Task-specific periodic and retrieval mechanisms
 
-Two task-specific mechanisms retain perfect modular generalization and longer-context retrieval. New Transformer and LSTM controls use the same synthetic examples. **Higher and further left is better:** more accurate answers from less counted work. The logarithmic axis makes large cost differences visible.
+Two task-specific mechanisms retain perfect modular generalization and longer-context retrieval. Saved Transformer and LSTM controls use the same synthetic examples. **Higher and further left is better:** more accurate answers from less counted work. The logarithmic axis makes large cost differences visible.
 
 ![consolidated work frontiers](report/figures/consolidated_work_frontiers.png)
 

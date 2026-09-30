@@ -2473,3 +2473,21 @@ Caps are 4,000,000 KiB virtual memory, 2,500,000 KiB group RSS and at least
 8,192 MiB available memory, with a ten-day per-job timeout and resumable state.
 The immutable commands and model capacity are in the manifest; live summaries,
 checkpoints and logs remain local. No Transformer/LSTM training is in this suite.
+
+### Reference visibility correction (2026-09-30)
+
+The attribution correction removed the language reference scores from the
+report's opening comparison while retaining them in Appendix B. This made
+completed references too hard to find. All 46 dense-reference JSON files
+previously tracked at `fa6d881` retain their exact Git blob IDs; none was deleted
+or changed by the cleanup. Saved checkpoint files remain local and ignored.
+
+The PDF front page now shows the completed 10M LSTM (1.799 test bpc) and
+Transformer (1.908), their full training work, and the full learned-event model's
+pending test/work columns. The following reference table also includes the
+completed AWS 90M LSTM (1.661). Their full training estimates are 432.59T,
+888.78T and 3.89P FLOPs, respectively, including backward and optimizer work.
+Earlier 1M results are also visible. The proper 10M learned-event benchmark
+remains pending; its small development score is not substituted for a comparable
+test result. The interrupted AWS 90M Transformer attempt retains its provenance
+and is not reported as a completed test. No reference retraining was performed.

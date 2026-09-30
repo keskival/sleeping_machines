@@ -39,6 +39,21 @@ The original ideas are preserved in the
 | Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
 | Temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
 
+The completed language references remain available for the full learned-event
+benchmark; lower test bits/character is better:
+
+| Reference | Fitting characters | Test bits/character | Estimated full training FLOPs |
+| --- | --- | --- | --- |
+| [LSTM, width 512](experiments/results/e174/aligned_lstm_10m_20260930.json) | 10M, six passes | **1.799** | 432.59T |
+| [Transformer, width 256, four layers](experiments/results/e174/aligned_tf_10m_20260930.json) | 10M, four passes | **1.908** | 888.78T |
+| [AWS LSTM, width 512](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json) | 90M, six passes | **1.661** | 3.89P |
+
+These are saved validation-selected test results. Training estimates include
+forward, backward, clipping and Adam. The proper 10M-character Sleeping Machines
+test benchmark is pending; its small development score above uses a different
+split and fitting budget. See the report's early reference-results page for the
+protocols and cost boundaries.
+
 The separate statistical count/copy baseline reaches 1.727 text8 test
 bits/character after 10M-character count fitting. It does not use the learned
 Sleeping Machines event backbone and is not evidence of that backbone's
