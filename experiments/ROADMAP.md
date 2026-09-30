@@ -6,8 +6,11 @@ E152 retains 406/512 (79.30%) with one 395,814-parameter six-block encoder,
 versus E143's two-branch 408/512 (79.69%). Paired-view head fitting improves
 the clean-only head by 32 held decisions with the encoder frozen. This is
 inherited deployment consolidation, not a fresh generic-model scaling result.
-The corrected twelve-block continuation fits 90.72% and reaches 400/512;
-there is no demonstrated depth accuracy advantage yet. E155's apparent
+The selected E163 trained prefix now matches 408/512 with one 395,814-parameter
+encoder, lower NLL 0.62516, and 518/657 on the reused audit. A warmed CPU audit
+observation is 11.90 s versus the combined model's 23.71 s; energy is unmeasured.
+Full directional D12 gets 401/512 and 509/657; its appended corrections now
+change decisions but reduce held accuracy. E155's apparent
 calibrated failure was an optimizer scheduler restoration bug; preserve it
 as implementation evidence and use E159's verified actual group rates.
 
@@ -15,9 +18,12 @@ as implementation evidence and use E159's verified actual group rates.
    513/657 on the reused audit. Deleting the new D12 blocks changes no audit
    decisions. Test the analytically specified pre-normalized output maps with
    directional observer units (§§261–264), which retain hidden null directions.
-   E161/E162 verify exact growth, local teachers, folding and the actual first
-   fitting step. Read E163/E164's completed quality/deletion results next.
-   Keep selection on private development and distinguish audit reuse from test.
+   E161/E162 verify exact growth, local teachers, folding and the first step.
+   E163/E164 show decision-active but harmful appended corrections; the trained
+   prefix improves over the separate D6 control. E165/E166 export and restore
+   the development-selected prefix. Next measure new-block cross-example
+   transfer and fitting-only nuisance covariance, preserving temporal amplitude
+   and raw-state query information. Keep official-test evaluation separate.
 2. Preserve the strongest encoder/head checkpoint. Use the exact affine
    weighted-state query already derived in §§231–233 to address the remaining
    reference pooling difference; compare it at declared training/data cost.

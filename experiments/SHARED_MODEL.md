@@ -93,8 +93,14 @@ E161–E163 implements a distinct growth variant: normalized state features
 precede the zero output map, and its optimizer units condition visible class
 directions while retaining unit scale in the observer nullspace. The full-rank
 coordinate transform folds into ordinary output weights at deployment.
-Its exact growth/local teacher/folding contracts and actual fitting-step
-replay pass; only completed recognition evidence establishes its usefulness.
+Its exact growth/local teacher/folding contracts and fitting-step replay pass.
+The completed full D12 reaches 401/512 and 509/657; its trained prefix reaches
+408/512 and 518/657. Added maps now change decisions, with negative net held
+utility. E165 exports the development-selected six-block prefix with ordinary
+weights and retained old optimizer/RNG state; E166 reproduces its development
+score exactly. It matches the combined accuracy with lower NLL, fewer deployed
+parameters and roughly half the observed CPU forward time, while inheriting
+the full deeper training cost. It is not official-test or energy supremacy.
 
 - Encoders supply only observations available at a query cutoff. The label,
   next character and next gap are separate targets.

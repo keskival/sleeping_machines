@@ -24,6 +24,9 @@ this budget; radial saturation alone is not established as the sole cause.
 
 ## 262. Normalize sufficient features before the zero output map
 
+Here m denotes the number of real state features (128 for 64 coordinate
+pairs), and d the emitted width; it does not denote the number of pairs.
+
 An alternative appended block is
 
 \[
@@ -104,3 +107,11 @@ anchor mean KL is 0.004574. The initial head sensitivity is 912.9976; largest
 conditioned sensitivity is 0.9999994, with minimum output unit 0.00109529.
 The same declared data/teacher/moments are used for all six new-rate proposals.
 Full-training utility must be read from completed E163/E164 evidence.
+
+**Completed continuation and deletion:** E163's full D12 gets 401/512 and
+509/657 on development/reused audit. Its trained six-block prefix gets
+408/512 and 518/657. Appended maps now have nonzero decision effects but
+negative net held-speaker utility. E165 selects the prefix using development
+only and E166 restores its ordinary weights/old optimizer and reproduces its
+development score exactly. This resolves the previous negligible-output
+condition in one concrete variant without solving useful deep generalization.

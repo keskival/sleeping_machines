@@ -45,6 +45,14 @@ alone is 370/512 (72.265625%); architectural controls do not replace the new gat
 Published parity requires a comparable result on the 2,264 official test
 utterances, not a numerical comparison between different held-out partitions.
 
+E163's directional full D12 reaches 401/512, but its trained six-block prefix
+reaches 408/512 with lower NLL 0.625161. E165 selects this prefix/full choice on
+private development; E166 reproduces the exported score exactly. It has 395,814
+deployed parameters, and gets 518/657 on the reused same-speaker audit. This
+matches the private accuracy gate more efficiently at deployment without an
+official-test, equal-training-cost or measured-energy claim. All post-hoc
+architecture choices belong in the eventual protocol/access ledger.
+
 All head projection, paired-view whitening and finite optimizer calibration
 use fitting IDs only. The 657 additional same-speaker utterances audited in
 E147/E154 are disjoint from current fitting and development, but reused across
