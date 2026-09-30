@@ -1,0 +1,1 @@
+e138_best_scale_20260930 experiments/e122_shd_continuation.py --tag d8_n6144_best_warm_s6_e1_20260930 --augment 1 --limit 6144 --epochs 1 --lr 0.00007 --checkpoint-every 64 --checkpoint experiments/results/e122/d8_n4096_invariance_continue_s6_e2.pt

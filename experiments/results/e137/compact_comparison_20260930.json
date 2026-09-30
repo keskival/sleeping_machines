@@ -1,0 +1,196 @@
+{
+  "status": "completed",
+  "rows": {
+    "learned": {
+      "train_parameters": 6476,
+      "head_parameters": 4968,
+      "head_forward_macs_per_query": 115028,
+      "completed_wall_s": 447.7957166150154,
+      "wall_boundary": "Recorded completed-checkpoint and continuation wall; excludes uncheckpointed lost restart work. Resume repeats setup/calibration.",
+      "peak_rss_kib": 517072,
+      "curve": [
+        {
+          "epoch": 1,
+          "fit_correct": 370,
+          "fit_n": 1024,
+          "fit_accuracy": 0.361328125,
+          "fit_nll": 2.498238531406969,
+          "held_correct": 89,
+          "held_n": 512,
+          "held_accuracy": 0.173828125,
+          "held_nll": 2.606009690091014,
+          "angle_gradient_norms": [
+            0.45207565039163455,
+            0.36875889825751074,
+            0.4561748856212944,
+            0.3456417695560958,
+            0.24619167958735488,
+            0.2571407326904591,
+            0.4694645488343667,
+            0.43668869162502233,
+            0.4602862383326283,
+            0.35955286301032174,
+            0.535436748934444,
+            0.4540654243901372
+          ],
+          "clipped_steps": 256
+        },
+        {
+          "epoch": 2,
+          "fit_correct": 564,
+          "fit_n": 1024,
+          "fit_accuracy": 0.55078125,
+          "fit_nll": 1.8578810300678015,
+          "held_correct": 172,
+          "held_n": 512,
+          "held_accuracy": 0.3359375,
+          "held_nll": 2.1273830803111196,
+          "angle_gradient_norms": [
+            1.094129615696147,
+            1.0380439682630822,
+            1.359147357637994,
+            0.890858115744777,
+            0.6875866084592417,
+            0.7426279046921991,
+            1.3909877970581874,
+            1.1058122483082116,
+            1.1575136976316571,
+            0.8489382471889257,
+            1.0462117863353342,
+            0.9668196523562074
+          ],
+          "clipped_steps": 256
+        },
+        {
+          "epoch": 3,
+          "fit_correct": 690,
+          "fit_n": 1024,
+          "fit_accuracy": 0.673828125,
+          "fit_nll": 1.3654216788709164,
+          "held_correct": 243,
+          "held_n": 512,
+          "held_accuracy": 0.474609375,
+          "held_nll": 1.7219907017424703,
+          "angle_gradient_norms": [
+            1.7595846755430102,
+            1.8324077947763726,
+            2.9106832274701446,
+            1.3836271616164595,
+            1.010933360317722,
+            0.9756997214863077,
+            1.930716838920489,
+            1.3829082297161222,
+            1.3964547493960708,
+            1.0788645830471069,
+            1.1308769236784428,
+            1.1091209934093058
+          ],
+          "clipped_steps": 256
+        }
+      ]
+    },
+    "frozen": {
+      "train_parameters": 5288,
+      "head_parameters": 4968,
+      "head_forward_macs_per_query": 115028,
+      "completed_wall_s": 399.02248740999494,
+      "wall_boundary": "Recorded completed-checkpoint and continuation wall; excludes uncheckpointed lost restart work. Resume repeats setup/calibration.",
+      "peak_rss_kib": 443428,
+      "curve": [
+        {
+          "epoch": 1,
+          "fit_correct": 418,
+          "fit_n": 1024,
+          "fit_accuracy": 0.408203125,
+          "fit_nll": 2.758284312672913,
+          "held_correct": 108,
+          "held_n": 512,
+          "held_accuracy": 0.2109375,
+          "held_nll": 2.8412770312279463,
+          "angle_gradient_norms": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "clipped_steps": 256
+        },
+        {
+          "epoch": 2,
+          "fit_correct": 505,
+          "fit_n": 1024,
+          "fit_accuracy": 0.4931640625,
+          "fit_nll": 2.2299118395894766,
+          "held_correct": 159,
+          "held_n": 512,
+          "held_accuracy": 0.310546875,
+          "held_nll": 2.4220705907791853,
+          "angle_gradient_norms": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "clipped_steps": 256
+        },
+        {
+          "epoch": 3,
+          "fit_correct": 591,
+          "fit_n": 1024,
+          "fit_accuracy": 0.5771484375,
+          "fit_nll": 1.7322493698447943,
+          "held_correct": 181,
+          "held_n": 512,
+          "held_accuracy": 0.353515625,
+          "held_nll": 2.0506547912955284,
+          "angle_gradient_norms": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "clipped_steps": 256
+        }
+      ]
+    }
+  },
+  "same_initial_logits_calibration_keys_and_samples": true,
+  "same_decoder_capacity_and_update_budget": true,
+  "paired_held_final": {
+    "learned_only_correct": 102,
+    "frozen_only_correct": 40,
+    "difference_accuracy": 0.12109375,
+    "descriptive_standard_error": 0.02267269251182333,
+    "scope": "One seed; uncertainty over this development sample does not include training-seed or speaker-population uncertainty."
+  },
+  "source_sha256": {
+    "/workspace/experiments/e137_compact_comparison.py": "b5d1bf76802323b25ea0ea334171980a967dce7d712781c155d60220bb4cbbfd",
+    "experiments/results/e137/compact_learned_d12_r16_n1024_s6_e3_resume_20260930.json": "5701283ce9c57e17f5a75b0a0155a8c7eb6fb9d513f0ad9efd5bf5386b29a11e",
+    "experiments/results/e137/compact_frozen_d12_r16_n1024_s6_e3_20260930.json": "eb4316778b99a1ed179e2bd9d72f390068f3af70e01d28175841a90738ab9c0c"
+  },
+  "scope": "Pretrained immutable keys, 1024 new unaugmented fitting utterances, 512 held training-file speakers. Only angular adaptation is disabled in the control; both embeddings and identical compact queries learn. No official-test, complete-cost or supremacy claim."
+}

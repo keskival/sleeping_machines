@@ -1,0 +1,1 @@
+e150_single_state_n6144_20260930 experiments/e150_single_state_shd.py --tag single_state_n6144_s6_e3_20260930 --limit 6144 --epochs 3 --bs 4 --lr 0.000325

@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "events": 27,
+  "modes": 9,
+  "packets": 9,
+  "errors": {
+    "state": 1.7763568394002505e-15,
+    "state_sum": 2.808666774861361e-15,
+    "mass": 0.0
+  },
+  "teacher_errors": {
+    "decay": 5.551115123125783e-17,
+    "frequency": 2.7755575615628914e-17,
+    "drive": 1.3322676295501878e-15,
+    "pool_weight": 1.5987211554602254e-14
+  },
+  "associative_error": 6.280369834735101e-16,
+  "descriptor_compositions": 45,
+  "dense_output_map_evaluations": 9,
+  "scope": "Exact weighted linear-state pooling, including input-dependent precomputable modal transitions. No trained classifier or nonlinear raw-event equivalence",
+  "wall_s": 0.0090349160018377,
+  "max_rss_kb": 241280,
+  "source_sha256": {
+    "/workspace/experiments/e144_affine_pooling_contract.py": "865e60e45bb70537e60ac7a6361eefc1f9016c414548debd98dc8642f478a2a0",
+    "sleeping_machines/affine_packets.py": "a85022c5b2035dfbf3cb00108039273ad3e32135aa89eb938054bef20d5fbe68"
+  }
+}

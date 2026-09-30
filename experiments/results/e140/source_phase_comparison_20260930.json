@@ -1,0 +1,104 @@
+{
+  "status": "completed",
+  "parent_correct": 370,
+  "parent_accuracy": 0.72265625,
+  "rows": {
+    "warm": {
+      "held_correct": 368,
+      "held_n": 512,
+      "held_accuracy": 0.71875,
+      "held_nll": 0.973562699771719,
+      "fit_accuracy": 0.8076171875,
+      "fit_nll": 0.6033343653531725,
+      "wall_s": 625.692576529982,
+      "max_rss_kb": 665076,
+      "beats_parent_record": false
+    },
+    "fine": {
+      "held_correct": 369,
+      "held_n": 512,
+      "held_accuracy": 0.720703125,
+      "held_nll": 0.9769900613027858,
+      "fit_accuracy": 0.80859375,
+      "fit_nll": 0.602560036747794,
+      "wall_s": 658.7987882120069,
+      "max_rss_kb": 1718160,
+      "beats_parent_record": false
+    },
+    "phase": {
+      "held_correct": 368,
+      "held_n": 512,
+      "held_accuracy": 0.71875,
+      "held_nll": 0.9761196224862942,
+      "fit_accuracy": 0.8084309895833334,
+      "fit_nll": 0.5990898964100779,
+      "wall_s": 996.788589275995,
+      "max_rss_kb": 1835124,
+      "beats_parent_record": false
+    }
+  },
+  "paired": {
+    "fine_vs_warm": {
+      "only_left_correct": 2,
+      "only_right_correct": 1,
+      "accuracy_difference": 0.001953125,
+      "descriptive_paired_se": 0.003385117740766776,
+      "scope": "Fixed examples and seed; does not capture speaker or training-seed population uncertainty"
+    },
+    "phase_vs_fine": {
+      "only_left_correct": 1,
+      "only_right_correct": 2,
+      "accuracy_difference": -0.001953125,
+      "descriptive_paired_se": 0.003385117740766776,
+      "scope": "Fixed examples and seed; does not capture speaker or training-seed population uncertainty"
+    },
+    "phase_vs_warm": {
+      "only_left_correct": 1,
+      "only_right_correct": 1,
+      "accuracy_difference": 0.0,
+      "descriptive_paired_se": 0.0027648372200238048,
+      "scope": "Fixed examples and seed; does not capture speaker or training-seed population uncertainty"
+    }
+  },
+  "resource_guards": {
+    "warm": {
+      "runner_log": "experiments/queue/runner_e138_best_scale_20260930.out",
+      "sampled_min_mem_available_mib": 11635,
+      "sampled_max_group_rss_kib": 634072,
+      "mem_cap_kb": 3600000,
+      "group_rss_cap_kb": 2600000,
+      "mem_available_floor_mib": 8192,
+      "timeout_s": 1800,
+      "lock": "/tmp/experiments-runner.lock",
+      "exit_code": 0
+    },
+    "fine": {
+      "runner_log": "experiments/queue/runner_e139_fine_source_20260930.out",
+      "sampled_min_mem_available_mib": 10615,
+      "sampled_max_group_rss_kib": 1680820,
+      "mem_cap_kb": 3600000,
+      "group_rss_cap_kb": 2600000,
+      "mem_available_floor_mib": 8192,
+      "timeout_s": 1800,
+      "lock": "/tmp/experiments-runner.lock",
+      "exit_code": 0
+    },
+    "phase": {
+      "runner_log": "experiments/queue/runner_e140_phase_source_20260930.out",
+      "sampled_min_mem_available_mib": 10444,
+      "sampled_max_group_rss_kib": 1810696,
+      "mem_cap_kb": 3600000,
+      "group_rss_cap_kb": 2600000,
+      "mem_available_floor_mib": 8192,
+      "timeout_s": 1800,
+      "lock": "/tmp/experiments-runner.lock",
+      "exit_code": 0
+    }
+  },
+  "input_sha256": {
+    "experiments/results/e122/d8_n6144_best_warm_s6_e1_20260930.json": "d587a133a4a13aa45f7f28aaac0b10bb63994e0d6dc6765cea2cffc39ae87b92",
+    "experiments/results/e139/d8_fine_source_n6144_warm_s6_e1_20260930.json": "652fd859a5cbfbc744c1f737e30ed8ab9daaa12cf547a71a656182215180ac85",
+    "experiments/results/e140/d8_phase_source_n6144_warm_s6_e1_20260930.json": "1a82836e0aa9f2f5c6ed6b5969031258e0278f7eb112019b13eb8a827da56645"
+  },
+  "scope": "One-pass same-parent source/phase interventions on private held training speakers; no official-test parity or accuracy record improvement"
+}

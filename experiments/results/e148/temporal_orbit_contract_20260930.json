@@ -1,0 +1,65 @@
+{
+  "status": "completed",
+  "future_counterfactual_error": 1.5812004483528597e-15,
+  "own_event_counterfactual_error": 1.5543122344752192e-15,
+  "adjacent_interval_teacher_error": 2.0605739337042905e-13,
+  "krylov_rank": 4,
+  "orbit_rows": [
+    {
+      "epsilon": 0.03,
+      "singular_values": [
+        0.4405416965897484,
+        0.060243104821529475,
+        0.0006946079956762995,
+        9.050862670116948e-06
+      ],
+      "condition": 48674.00077169175,
+      "absolute_determinant": 1.6684919669336458e-10
+    },
+    {
+      "epsilon": 0.01,
+      "singular_values": [
+        0.148387371073242,
+        0.006741957161509236,
+        2.5595811893374262e-05,
+        1.1140597391228236e-07
+      ],
+      "condition": 1331951.6527011169,
+      "absolute_determinant": 2.852727697650821e-15
+    },
+    {
+      "epsilon": 0.003,
+      "singular_values": [
+        0.04456914758314563,
+        0.0006072714292774685,
+        6.906917206841134e-07,
+        9.020929718439853e-10
+      ],
+      "condition": 49406379.35804,
+      "absolute_determinant": 1.6863694506223777e-20
+    },
+    {
+      "epsilon": 0.001,
+      "singular_values": [
+        0.014857935014105626,
+        6.747944237234551e-05,
+        2.5579740185850174e-08,
+        1.1136448655277422e-11
+      ],
+      "condition": 1334171734.0980725,
+      "absolute_determinant": 2.8560959410401477e-25
+    }
+  ],
+  "small_delay_singular_exponents": [
+    0.9999048853125663,
+    1.999934722131749,
+    3.00005104985406,
+    4.000040998601643
+  ],
+  "scope": "Fixed drives and unchanged event order in a linear state. Not an exact nonlinear suffix replay, trained optionality score or SHD accuracy result",
+  "wall_s": 0.009143335017142817,
+  "max_rss_kb": 245332,
+  "source_sha256": {
+    "/workspace/experiments/e148_temporal_orbit_contract.py": "29cb75a3043382d0e9a8a8f8bf25c9b50ecec34cd7c289165ecea64659856196"
+  }
+}

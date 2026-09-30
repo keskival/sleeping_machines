@@ -1,0 +1,1 @@
+e158_function_trusted_calibration_20260930 experiments/e158_function_trusted_shd.py --tag function_trusted_calibration_20260930 --depth 12 --limit 32 --epochs 1 --bs 4 --lr 0.000325 --calibrate --kl-budget 0.02

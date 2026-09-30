@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "current_fit_n": 1024,
+  "current_fit_already_used_by_key_pretraining": 1024,
+  "current_held_n": 512,
+  "current_held_overlap_with_parent_development": 512,
+  "source_sha256": {
+    "experiments/results/e122/d8_n4096_invariance_continue_s6_e2.json": "f2debb05b48874f354684b8a31c553d7172914cd049ef6077cb45111d410eeb6",
+    "experiments/results/e137/compact_learned_d12_r16_n1024_s6_e3_resume_20260930.json": "5701283ce9c57e17f5a75b0a0155a8c7eb6fb9d513f0ad9efd5bf5386b29a11e"
+  },
+  "scope": "IDs are relative to different filtered fit/held speaker subsets; numeric IDs across these subsets are not global utterance IDs. Fitting overlap is within the fit subset, development overlap within the held subset. Raw cross-subset numeric intersections are not data leakage.",
+  "fit_and_held_speakers_disjoint": true
+}

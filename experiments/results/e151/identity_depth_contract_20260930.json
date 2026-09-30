@@ -1,0 +1,26 @@
+{
+  "status": "completed",
+  "function_max_error": 0.0,
+  "payload_max_error": 0.0,
+  "extra_constant_delay_max_error": 3.469446951953614e-17,
+  "old_teacher_max_error": 0.0,
+  "appended_output_gradient_norms": [
+    0.07590956854165515,
+    0.07586897042107665,
+    0.06766879868497253,
+    0.05664483854871229,
+    0.0643661436737768,
+    0.06352766193072118
+  ],
+  "explicit_output_teacher_max_error": 1.1102230246251565e-16,
+  "depth": 12,
+  "initial_constant_delay_increment": 0.036,
+  "scope": "Exact initialization and old/local teachers for a completed untimed query. Not a trained D12 SHD result or a global optimization theorem",
+  "wall_s": 0.048528357001487166,
+  "max_rss_kb": 249732,
+  "source_sha256": {
+    "/workspace/experiments/e151_identity_depth_contract.py": "fd1d5669e5207033e8334173e5bc1e65e24509cefff419ce96d117dd2c9962d5",
+    "sleeping_machines/depth_growth.py": "6f16d1fcd12d59d0922c08dc1e8bf76371b65025ab39282418b75e5d01d7207c",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db"
+  }
+}

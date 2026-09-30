@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "zero_phase_initial_logits_error": 0.0,
+  "zero_phase_races_and_clocks_match": true,
+  "primitive_phase_teacher_error": 1.0873246747422627e-14,
+  "primitive_parallel_serial_error": 4.440892098500626e-16,
+  "primitive_phase_gradient_norm": 1.1343651412353348,
+  "phase_gradient_norm_per_layer": [
+    0.051997650414705276,
+    0.054619934409856796,
+    0.06337939202785492,
+    0.04258382320404053,
+    0.02027568593621254,
+    0.024099400267004967,
+    0.07122611254453659,
+    0.04516975209116936
+  ],
+  "fit_probe_loss_change": -7.152557373046875e-07,
+  "predicted_loss_change": -1.400813062534698e-06,
+  "probe_step_l2": 1e-05,
+  "phase_parameters": 384,
+  "checkpoint_sha256": "00b9526d6243f6f66a6b511f905cc2888cc4f2a5fc6302bbf461aeef6d514f18",
+  "source_sha256": {
+    "/workspace/experiments/e140_phase_contract.py": "26aed9581250f57fca238b50ff69ac869eb3edff83b8b10506df812cc5efef2d",
+    "experiments/e140_phase_packet_model.py": "3270dc56532bf3766d47d0edbd96dfcd94f987d3392da1331a97f8d052ece510",
+    "sleeping_machines/rotating_memory.py": "d5b0308a9a28593310673683638fa9f4162aceba94ce79ca58db87e4ba5323b4",
+    "experiments/e139_fine_packet_model.py": "821c5bea62cd3f56c0067649cc2cadd233b4fb165cf1e19806640552ff3757ae"
+  },
+  "scope": "Eight fitting utterances; exact source/memory chain rule with the existing route surrogate; no retained probe, test access or benchmark quality claim"
+}

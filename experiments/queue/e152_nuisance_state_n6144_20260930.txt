@@ -1,0 +1,1 @@
+e152_nuisance_state_n6144_20260930 experiments/e152_nuisance_state_shd.py --tag nuisance_state_n6144_s6_e2_20260930 --limit 6144 --epochs 2 --bs 4 --lr 0.000325

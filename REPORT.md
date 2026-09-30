@@ -60,7 +60,7 @@ Small local vector maps and query readouts can remain dense. The intended effici
 
 | Principle | What it enables |
 | --- | --- |
-| Stable transport through depth | Bounded residual carriers preserve conditional credit. A reversible packet/memory prototype has unit singular values through twelve layers with fixed keys/angles. The supervised query must expose retained memory; route and readout learning remain essential. |
+| Stable transport through depth | A reversible packet/memory program preserves conditional value and credit norms at any depth. Twelve-layer speech prototypes learn with observable memory queries. Readout alignment, route support and transfer remain separate requirements. |
 | Active communication support | Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected. |
 | Credit to unrealized alternatives | A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race. |
 | Periodic state as an isometry | Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples. |
@@ -86,7 +86,7 @@ Local predictive memories can support compression, stream forecasting and adapta
 
 ### A reusable event-to-decision module
 
-Sound, event-camera vision, touch and telemetry all arrive as evolving evidence. A capable recognizer could maintain context, identify meaningful patterns and answer as soon as confidence is sufficient. Deep speech learning and temporal composition establish parts of this capability; reliable early decisions and broader generalization are central development goals.
+Sound, event-camera vision, touch and telemetry all arrive as evolving evidence. A capable recognizer could maintain context, identify meaningful patterns and answer as soon as confidence is sufficient. Deep speech learning and temporal composition establish parts of this capability. The new temporal encoder improves private speech accuracy by 7.42 points; its gain also holds on disjoint utterances, and its learned clocks contribute to classification. Reliable early decisions and broader generalization are central development goals.
 
 ### Training efficiency creates capability
 
@@ -139,19 +139,90 @@ Success on these dimensions would turn the current task-level advantages into a 
 
 ## Appendix A. Deep event recognition
 
-The eight-layer speech checkpoint reaches **72.3%** across 512 held-out utterances. Both readout continuations start from that checkpoint. At the matched readout comparison below, count pooling reaches **68.9%** and learned event pooling reaches **69.5%** across 512 held-out utterances. Each model has 4,096 fitting utterances and begins from the same checkpoint. Hidden messages remain winning vectors and delays; the learned pool adds 32 scalar parameters.
+The strongest completed speech result in the model family is **79.69%** on 512 private held-speaker utterances (selected single six-block prefix; trained with twelve blocks). Accurate general recognition remains an open capability; published official-test results below are reference targets, evaluated on a different partition.
 
-![e122 speech](report/figures/e122_speech.png)
+| Private development configuration | Correct | Accuracy ↑ |
+| --- | --- | --- |
+| Original eight-layer parent | 370/512 | 72.27% |
+| Parent + six-block residual; pass 3 | 408/512 | 79.69% |
+| Single six-block temporal encoder; pass 0 | 406/512 | 79.30% |
+| Calibrated six-block continuation | 400/512 | 78.12% |
+| Bounded twelve-block encoder | 400/512 | 78.12% |
+| Directional twelve-block encoder | 401/512 | 78.32% |
+| Selected single six-block prefix; trained with twelve blocks | 408/512 | 79.69% |
 
-Two causal context channels allow distant packets to interact through accumulated state. Their zero-initialized columns preserve the starting predictions exactly. A matched full-update continuation reaches 68.6%; training only those columns reaches 71.1%. The added state has linear event work and 6,534 learned parameters.
+![e143 temporal residual learning](report/figures/e143_temporal_residual_learning.png)
 
-A separate key stream computes actual input-dependent winners and clocks while values learn. Training only new context maps reaches 71.1% with separate keys and 71.3% with shared streams. Training all eight value layers reaches 68.2% in both routing conditions. Every value layer receives credit; route stability alone is insufficient for better transfer.
+A six-block width-128 temporal encoder learns corrections while the inherited eight-layer parent stays frozen. It adds 395,814 parameters to the parent's 53,296. Signed modal states, nonlinear gates and residual vectors learn from all source identities and original event times before causal pooling. This is a larger parallel model, not fourteen sequential layers; completed-utterance supervision does not yet teach calibrated early answers. On 657 disjoint utterances from the same held speakers, accuracy improves from 70.47% to 77.63%.
 
-Content-selective temporal memory starts with identical parent predictions and preserves hard winning signals. Its full-value continuation reaches **68.2%**, versus 68.2% for the plain full-value control. It adds 2,048 learned query/key parameters and uses 165 state scalars per time bank versus 33. Removing its learned retrieval preserves the score; its fitting-logit effect is small. The continuation costs 3.09× the control's CPU time. This verifies a teacher and retrieval mechanism, with no quality/resource gain at this budget.
+| Published reference; official-test protocol | Reported accuracy ↑ |
+| --- | --- |
+| EventSSM: asynchronous learned state-space layers | 95.9% |
+| S7: input-dependent temporal state | 96.3% |
+| 2026 multiscale residual encoder; publisher abstract | 96.44% |
 
-The exact linear-work memory scan preserves audited predictions and gradients while reducing scan combines 5.49×. Median one-thread CPU inference improves 1.52× and forward/backward computation 1.68× at the audited checkpoint, excluding optimizer updates.
+Our private sample uses training-file speakers 3/6; official test accuracy is unmeasured. The temporal residual uses three passes and a fresh optimizer; its larger capacity and budget are not a matched single-factor comparison. Its listed score selects the best private-development epoch; the curve shows all three. The original parent was fitted on 4,096 examples. Continuation timers exclude loading; the residual timer includes it. Both include evaluation and are not energy measurements. One seed. References: [EventSSM](https://arxiv.org/html/2404.18508v2), [S7](https://arxiv.org/html/2410.03464v1), [multiscale encoding](https://www.sciencedirect.com/science/article/abs/pii/S0893608026003345). The last reference's full training/selection protocol has not yet been inspected.
 
-Speech scores are development evidence from training speakers 3/6; the official SHD test set is untouched. They demonstrate deep learning and limited transfer, not competitive speech representation. They are not directly comparable to published official-test scores. One seed, width 32, eight layers. The matched readout arms share checkpoint, examples, augmentation and update budget. Sparse event packets avoid a hidden time grid; calibrated early output remains a further capability.
+## Appendix A (continued). Learned timing and transfer
+
+**Learned delays contribute to the answer.** Restoring the hidden clocks to their initial values, with source vectors, state/value maps and the trained classifier retained, loses 13 correct answers. Timing changes the temporal interactions used by the representation; it performs computation.
+
+![e145 learned timing and transfer](report/figures/e145_learned_timing_and_transfer.png)
+
+| Same trained readout; one subsystem reset | Correct | Accuracy ↑ |
+| --- | --- | --- |
+| All learned parameters retained | 408/512 | 79.69% |
+| Only hidden clocks reset | 395/512 | 77.15% |
+| Only source vectors reset | 373/512 | 72.85% |
+| Only state stack reset | 358/512 | 69.92% |
+| Only decay/frequency parameters reset | 407/512 | 79.49% |
+
+The temporal stack and source vectors also learn useful coordinated representations. Resetting the stack loses 50 correct answers; resetting sources loses 35. Decay/frequency resets change one decision. These changes depend on the fitted solution's coordination; their effects cannot be added or treated as a matched comparison of retrained architectures.
+
+The 657-utterance audit is disjoint from fitting and the development sample and uses the selected checkpoint unchanged. It gains 62 correct answers and loses 15, for a net improvement of 47. Both samples use the same two held training speakers. Official-test and additional-speaker generalization are the next evaluation targets.
+
+### A stronger mathematical account of routing
+
+An affine packet summary can preserve both the final state and the average of raw temporal states, including their teachers. This permits richer pooling before expensive nonlinear maps. A second derivation shows why many almost-equal delays may offer little usable choice: their effects point in nearly the same direction. Diverse payloads and temporal modes, sufficient delay spread and downstream visibility determine useful route reserve.
+
+One exploratory run: 449,110 total parameters, inherited parent plus a trained six-block encoder. Three passes use about 33 minutes including preparation/evaluation and 1.79 GiB peak RSS; the guarded host retains at least 10,361 MiB sampled available memory. Complete physical work and joules remain unmeasured. Formal statements and numerical contracts are in THEORY §§226–236.
+
+## Appendix A (continued). One temporal encoder
+
+A six-block temporal encoder retains nearly all the combined model's development accuracy through one ordinary query head. Deployment removes the frozen parent: 395,814 parameters replace 449,110. Modal states, gated vector messages and winning delays remain. Its weights inherit earlier encoder training; combined teacher predictions are used only to initialize the head.
+
+| Private development configuration | Correct | Accuracy ↑ | NLL ↓ |
+| --- | --- | --- | --- |
+| Combined model: parent + temporal correction | 408/512 | 79.69% | 0.684 |
+| Single encoder: clean head, before continuation | 374/512 | 73.05% | 0.818 |
+| Single encoder: paired head, selected pass zero | 406/512 | 79.30% | 0.631 |
+| Single encoder: selected trained prefix | 408/512 | 79.69% | 0.625 |
+
+![e152 single encoder learning](report/figures/e152_single_encoder_learning.png)
+
+Fitting the head on clean and transformed speech improves held accuracy by 32 answers with the temporal features frozen. Its covariance penalty suppresses class-visible nuisance variation. The right panel compares the heads on the same features; the left shows all subsequent unrestricted encoder passes. The selected trained prefix reaches 518/657 (78.84%) versus 510/657 (77.63%) for the combined model on the reused disjoint audit. Audit labels do not choose the checkpoint.
+
+Training the directional twelve-block extension, then selecting its six-block prefix on development, retains the combined model's 408 correct answers with lower NLL and 395,814 deployed parameters. The extra training blocks are removed after their learned contributions reduce held accuracy. This improves deployment quality/work; it does not establish a positive deep-block accuracy gain.
+
+Seed 6, private train-file speakers 3/6; official-test parity remains unmeasured. Head fitting uses 6,144 unique fitting utterances: one clean view for the first arm, clean plus one transformed view for the paired arm. The arms also change regularization and use three/two encoder passes respectively, so total budgets are not matched. All continuation epochs are plotted; selection uses development accuracy, then NLL. Extra teacher/cache/head work and inherited fitting must be charged. Modal/vector maps are locally dense; no empty ticks or event-pair attention are added. The selected prefix additionally inherits the full twelve-block fitting pass; pruning does not erase that training cost. Prefix/full choice is post-hoc private-development selection. Formulae and numerical checks: THEORY §§237–264. One CPU forward evaluation takes 11.90 s for the selected prefix versus 23.71 s for the combined model. Packing/query included, loading excluded; one timing observation, not joules.
+
+## Appendix A (continued). Making depth useful
+
+Identity growth preserves the classifier and old teachers while added output maps receive label credit. They must also change useful features. A tightly bounded twelve-block extension learns weights but changes no audit decisions when its six appended blocks are removed.
+
+| One matched fitting pass | Parameters | Fit accuracy ↑ | Private accuracy ↑ | NLL ↓ |
+| --- | --- | --- | --- | --- |
+| Six-block control | 395,814 | 90.72% | 78.12% | 0.639 |
+| Twelve blocks: bounded outputs | 696,888 | 90.72% | 78.12% | 0.639 |
+| Twelve blocks: directional units | 696,120 | 90.77% | 78.32% | 0.644 |
+
+![e164 depth use and work](report/figures/e164_depth_use_and_work.png)
+
+Directional conditioning normalizes temporal-state features before their output map. An invertible coordinate change rescales classifier-sensitive directions and preserves hidden null directions for later computation. The fixed transform folds into an ordinary map at deployment. Initial outputs and old teachers remain exact; fitting replays verify the actual proposed update.
+
+The directional model reaches 509/657 on the reused audit. Removing its six appended blocks changes 11 predictions: 0 are correct only with the blocks and 9 only without them. This measures fitted contribution with the trained prefix/head retained; it is not a retrained architecture comparison.
+
+All arms inherit the paired-head checkpoint and use 6,144 fitting utterances, the same order, channel/time transformations and one encoder pass. Old-group LR is 0.0000203125; directional new groups use 0.0001953125 from fitting-only replay. Changed normalization and update coordinates form one intervention. New blocks initially add 36 ms latency; labels supervise completed untimed utterances. Audit reuse is explicit; official-test parity remains unmeasured. CPU points are one warmed observation per model, packing/query included and loading excluded; energy is unmeasured. Weight-coordinate folding, all source work and added depth must be charged during training. Local maps remain dense, with no empty ticks or event-pair attention. Theory §§249–264.
 
 ## Appendix B. Breadth of the common implementation
 
@@ -201,6 +272,6 @@ One seed; different parameter counts. This establishes a generic learned-languag
 | Resource boundary | Logical memory reads are reported separately. Transfers, allocations, kernel launch and instrumentation are outside the arithmetic ledger. Division, exponential and remainder costs have unit weights. |
 | Energy | Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements. |
 
-The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary.
+The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E79/E64 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the expert-free language screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal residual learner, and E144 audits simultaneous state/query pooling.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.

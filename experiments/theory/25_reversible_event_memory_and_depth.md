@@ -102,7 +102,8 @@ checks norm and adjoint conservation, verifies local angle credit, and computes
 the complete augmented Jacobian for twelve layers. It includes the hidden-state
 counterexample so that a future sequence classifier cannot claim deep
 trainability while omitting its memory from the supervised boundary. This is
-a candidate composable memory primitive, not a trained SHD architecture.
+a candidate composable memory primitive; the contract is not a classification
+training result.
 
 The subsequent SHD adapter makes twelve value exchanges conditioned on the
 inherited eight-layer key program, with the final query reading all retained
@@ -111,8 +112,11 @@ layer, preserves actual winners/clocks under learned-value perturbations,
 and keeps the key program immutable. The adapter has a larger 6,945-feature
 terminal readout and 140,428 trainable parameters, mostly in that readout.
 Fitting progress alone can therefore come from the decoder. Completed training
-and angle/readout interventions must determine what the deep representation
-actually contributes; the isometry theorem does not answer that question.
+fits all 1,024 fitting examples, while resetting its learned angles retains every
+fitting decision and lowers held-speaker accuracy from 57.8% to 54.3%. The
+compact matched-angle intervention in §§210–213 determines what exchange
+adaptation contributes under a smaller query; the isometry theorem alone
+does not answer that question.
 
 ## 209. Angular reachability and a precise role for optionality
 
@@ -132,17 +136,20 @@ Tied angles aggregate tangents across events and can also cancel. Count the
 rank and geometry of the supported tangents, rather than treating the number
 of candidate routes times depth as independent useful choices.
 
-For a declared covariance of future teachers $C_f$ and control costs encoded
-by $\sigma_k$, define $G=\sum_k\sigma_k^2 J_kJ_k^T$. Then
+For a declared second moment of future teachers $M_f=\mathbb E[g_f g_f^T]$
+and control costs encoded by $\sigma_k$, define
+$G=\sum_k\sigma_k^2 J_kJ_k^T$. Then
 
 \[
- \mathbb E_{g_f}[g_f^T G g_f]=\operatorname{tr}(G C_f),
+ \mathbb E_{g_f}[g_f^T G g_f]=\operatorname{tr}(G M_f),
  \quad \operatorname{tr}(U G U^T)=\operatorname{tr}G. \tag{209.2}
 \]
 
 This gives an explicit limited case for scalar option reserve: under an
 isotropic future teacher, its expected quadratic correction capacity is
-proportional to trace G and survives an orthogonal suffix. Under anisotropic
+proportional to trace G and survives an orthogonal suffix for a zero-mean
+isotropic teacher. With a nonzero mean, its squared mean term must also be
+included (§161, §212). Under anisotropic
 future teachers, direction matters; trace alone is insufficient. This is a
 limitation of that particular scalar statistic, not of a state-conditioned
 scalar future-value critic that learns the relevant alignment from its state.

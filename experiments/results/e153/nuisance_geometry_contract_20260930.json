@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "risk": {
+    "n": 100,
+    "mean_jensen_ce_penalty": 0.3082589016368498,
+    "mean_exact_kl_penalty": 0.3082589016368497,
+    "mean_kl_upper_bound": 2.6989678559565324,
+    "identity_max_error": 2.1094237467877974e-15,
+    "maximum_bound_violation": -0.037126346913063546,
+    "paired_prediction_changes": 35
+  },
+  "geometry": {
+    "noise_weight": 1.0,
+    "relative_ridge": 0.0001,
+    "absolute_ridge": 0.00015890202947877504,
+    "between_trace": 9.952875591232965,
+    "within_trace": 2.759286767069035,
+    "view_covariance_trace": 12.712162358302002,
+    "covariance_decomposition_max_error": 4.753142324176451e-16
+  },
+  "coordinate_fold_max_error": 2.6645352591003757e-15,
+  "regularizer_identity_error": 1.4210854715202004e-14,
+  "scope": "Exact paired-view CE/KL, covariance decomposition and folded-head regularizer; no SHD score implied",
+  "wall_s": 0.002058561978628859,
+  "max_rss_kb": 241664,
+  "source_sha256": {
+    "/workspace/experiments/e153_nuisance_geometry_contract.py": "c6c7824cf6cf97a3afe89d40cc27707eb32e47c4441ab7db395d84f608d40b66",
+    "sleeping_machines/nuisance_readout.py": "430380c4fd8417c516b0c1bf15fe061d1ebbb685e8a915c841329567dfd86bcb"
+  }
+}

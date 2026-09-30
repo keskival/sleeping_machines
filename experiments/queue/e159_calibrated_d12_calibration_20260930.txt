@@ -1,0 +1,1 @@
+e159_calibrated_d12_calibration_20260930 experiments/e159_calibrated_depth_shd.py --tag calibrated_d12_calibration_20260930 --run experiments/results/e152/nuisance_state_calibration_20260930.json --depth 12 --limit 32 --epochs 1 --bs 4 --lr 0.000325 --calibrate

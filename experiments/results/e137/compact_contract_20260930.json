@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "factorized_dense_max_error": 3.469446951953614e-18,
+  "all_parameter_gradient_max_error": 4.163336342344337e-17,
+  "local_state_teacher_max_error": 0.0,
+  "matched_initial_logits_max_error": 0.0,
+  "matched_actual_winners_and_clocks": true,
+  "twelve_angle_layer_gradient_norms": [
+    0.25923022627830505,
+    0.2353014498949051,
+    0.3106100857257843,
+    0.2355605512857437,
+    0.14420942962169647,
+    0.19046825170516968,
+    0.2132555991411209,
+    0.14973244071006775,
+    0.17721408605575562,
+    0.12557892501354218,
+    0.20217262208461761,
+    0.22468069195747375
+  ],
+  "learned_angle_train_parameters": 6476,
+  "frozen_angle_train_parameters": 5288,
+  "head_parameters": 4968,
+  "head_forward_macs_per_query": 115028,
+  "source_sha256": {
+    "/workspace/experiments/e137_compact_contract.py": "e58d553284a43b7fee8867a06b5b49d265d9f07eccae61f2d1c89ca2d456990f",
+    "experiments/e137_compact_scattering_model.py": "62cb8e8cc470426b2a3853f37b912953de36dfba0e1013236cbf94f1a6499d33"
+  },
+  "scope": "Numerical query/teacher contract and four fitting utterances; no classification benchmark claim."
+}

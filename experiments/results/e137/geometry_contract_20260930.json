@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "mean_plus_covariance_expectation_error": 7.105427357601002e-15,
+  "categorical_teacher_covariance_error": 5.551115123125783e-17,
+  "deterministic_label_covariance_zero": true,
+  "deterministic_label_mean_correction_capacity": 90.88394842236421,
+  "duplicate_route_covariance_error": 2.220446049250313e-16,
+  "logdet_rank_one_identity_error": 4.440892098500626e-16,
+  "same_input_scalar_variances_opposite_output_variances": [
+    [
+      1.9999999999999996,
+      0.0
+    ],
+    [
+      0.0,
+      1.9999999999999996
+    ]
+  ],
+  "norm_preserved_but_readout_visible_capacity": [
+    1.0,
+    0.0
+  ],
+  "source_sha256": {
+    "/workspace/experiments/e137_geometry_contract.py": "f7d6dd196f40e30e2ebbf6abd9b9f895c3c9574d403cd98d4fdfa6d7403219c3"
+  },
+  "scope": "Deterministic algebraic checks, not an optionality learning experiment or SHD accuracy claim."
+}

@@ -1,6 +1,6 @@
 # Supervised observability, compact queries and directional optionality
 
-[Theory index](../THEORY.md) · Global sections 210–213.
+[Theory index](../THEORY.md) · Global sections 210–214.
 
 The E136 transport theorem removes one source of depth-dependent numerical
 damage. Its completed classifier also exposes a different bottleneck: a large
@@ -15,7 +15,8 @@ Let the completed event program have augmented boundary state $h$, class
 logits $z=f(h)$, readout Jacobian $P=\partial z/\partial h$, and supported
 parameter/control Jacobian $J=\partial h/\partial\theta$. All derivatives
 condition on the actual hard race program unless its boundary contribution
-is explicitly included. Let $D\succ0$ declare the control metric or cost.
+is explicitly included. Here $\theta$ denotes hidden controls with the readout
+parameters held fixed. Let $D\succ0$ declare the control metric or cost.
 For class loss teacher $g=\partial L/\partial z$, a small preconditioned step
 has
 
@@ -38,8 +39,25 @@ Softmax teachers satisfy $\mathbf1^Tg=0$. Put
 $H=I-\mathbf1\mathbf1^T/C$ and analyze $HKH$ on the class-contrast space,
 rather than counting the irrelevant uniform-logit direction. A lower bound
 requires a positive minimum eigenvalue on the actual teacher support, plus
-a finite-step region in which the linearization remains valid. Clipping,+optimizer state and hard race changes modify that region; gradient presence
+a finite-step region in which the linearization remains valid. Clipping,
+optimizer state and hard race changes modify that region; gradient presence
 alone is insufficient.
+
+For fitting example $i$ and evaluation example $j$, the same hidden update
+has the cross-example kernel $K_{ji}=P_jJ_jD^{-1}J_i^TP_i^T$ and first-order
+evaluation change $-\eta g_j^TK_{ji}g_i$. Its sign is unrestricted even when
+both within-example kernels are well conditioned. Thus good transport and
+fitting descent can coexist with interference across speakers/classes.
+This connects the class-visible geometry to the existing independent-sample
+credit criterion in §161. The E137 checkpoint audit measures that alignment
+and compares its prediction with restored finite steps.
+
+If readout parameters also update, their direct logit Jacobian must be added
+to the control matrix. With a block-diagonal update metric, the observed
+kernel is the sum of the hidden and direct-query kernels. Attributing that
+sum to hidden learning alone would mistake decoder fitting for representation
+adaptation. Nonzero query learning can rotate the teacher support over time;
+this local identity does not assume that support remains fixed during training.
 
 For a fitted linear head with feature rows $\Phi_i$, the feature kernel
 $\Phi\Phi^T$ can have full fitting-sample rank even when all hidden parameters
@@ -101,7 +119,8 @@ with identical query capacity, initialization, sample order and fitting budget.
 
 ## 212. Separate current error, uncertainty and optionality
 
-The expectation in §209 requires a **second moment**, not just a centered
+Following the mean/variance distinction already derived in §161, the
+expectation in §209 requires a **second moment**, not just a centered
 covariance. For future class teacher $g_f$ with mean $\mu$ and covariance $C_f$,
 
 \[
@@ -185,6 +204,65 @@ on counterfactual adaptation outcomes. Directional sketches are one explicit
 alternative. A sketch $Q$ with $C\approx QQ^T$ propagates as $Q'=UQ$ through
 the conditional exchange, preserving its shared columns and correlations.
 Independent sketch columns at each node would lose that information too.
-The next policy-learning mechanism must declare what reserve it predicts,+which correlations/context it retains, and how realized future gains teach
+The next policy-learning mechanism must declare what reserve it predicts,
+which correlations/context it retains, and how realized future gains teach
 that prediction. E137 tests the compact supervised query; it does not yet
 train an optionality critic.
+
+## 214. Rich nonlinear computation with an explicit transport boundary
+
+There is a useful rigidity lemma for the design of the next payload transform.
+If a twice continuously differentiable map $f:\mathcal U\subset\mathbb R^n
+\to\mathbb R^n$ has orthogonal Jacobian everywhere on a connected open set,
+then $f(x)=Qx+b$ with constant orthogonal $Q$. To prove this, put
+$E_i=\partial_i f$ and $\Gamma_{kij}=\langle\partial_k E_i,E_j\rangle$.
+Mixed partials give symmetry in the first two indices; orthonormality gives
+antisymmetry in the last two. Cycling these identities gives
+$\Gamma_{kij}=-\Gamma_{kij}=0$. The $E_j$ form a full basis, so every
+$\partial_kE_i=0$. This is a square-map result; a higher-dimensional isometric
+immersion can have nonzero normal curvature and is outside its assumptions.
+
+Consequently, exact full augmented Jacobian isometry is a conditional
+transport property. A separately computed key can select a different
+orthogonal payload program for each input while retaining that property
+during value updates. Joint input/key variation has additional Jacobian
+terms. Those terms are where nonlinear key conditioning can change the
+computation, and their credit and stability must be accounted for explicitly.
+Pointwise payload norm conservation alone does not give the same guarantee.
+
+For example, in two dimensions let $A$ generate a 90-degree rotation and
+$f(x)=R(\beta\|x\|^2)x$. It preserves $\|x\|$ exactly, but
+
+\[
+ Df=R\bigl[I+(Ax)(2\beta x)^T\bigr]. \tag{214.1}
+\]
+
+In radial/tangential coordinates the bracket is a shear with magnitude
+$a=2\beta\|x\|^2$ and singular values
+$(\sqrt{4+a^2}\pm|a|)/2$. At $a=1$ they are approximately 1.618 and 0.618,
+despite exact norm conservation. Its inverse exists and its determinant is 1,
+but repeated shears can still damage gradient conditioning.
+
+A concrete richer event primitive uses key-conditioned **channel-specific**
+packet/state exchanges, then a few sparse two-channel rotations. Each winning
+exchange remains addressed, with one emitted vector. Conditional orthogonality
+survives arbitrary compositions, while independent channel angles and
+noncommuting channel generators expand the controllable family beyond the
+current scalar exchange tensored with a payload identity (§209). Its exact
+per-channel teacher is
+
+\[
+ \partial_{\theta_d}L=g_{s',d}v'_d-g_{v',d}s'_d,\qquad
+ \nabla_kL\supset\sum_d\partial_{\theta_d}L\,\nabla_k\theta_d(k).
+ \tag{214.2}
+\]
+
+This teaches a smooth key/angle conditioner locally in addition to the value
+path. Hard receiver or winning-delay changes still require their actual
+counterfactual state/timing suffix or a declared stochastic credit law.
+Channel controls do not supply that missing boundary credit automatically.
+Their event work, proposal support and readout-visible rank are explicit
+design budgets. E137 verifies useful scalar-exchange adaptation under compact
+supervision; channel-specific exchanges and trainable policy conditioning are
+the next expressivity mechanisms to implement, with the conditional transport
+theorem retained and the full key Jacobian measured separately.

@@ -1,0 +1,1 @@
+e143_event_state_residual_20260930 experiments/e143_event_state_shd.py --tag d8_parent_d6_state_residual_n6144_s6_e3_20260930 --limit 6144 --epochs 3 --bs 4 --width 128 --modes 64 --depth 6 --window 0.01 --lr 0.001
