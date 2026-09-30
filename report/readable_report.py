@@ -48,6 +48,7 @@ def results():
     tasks["complete_work"] = read("e172/complete_work_v2_20260930.json")
     tasks["stream_contract"] = read("e175/stream_language_contract_20260930.json")
     tasks["stream_training"] = read("e176/stream_language_d8_20260930.json")
+    tasks["token_training"] = read("e178/prefix_language_d8_20260930.json")
     tasks["shd_full_values"] = read("e134/full_value_comparison_20260929.json")
     content_path = "e135/content_comparison_20260929.json"
     tasks["shd_content"] = read(content_path) if (RES/content_path).exists() else None
@@ -188,6 +189,9 @@ def figures(M, tasks, ev):
            "o-", color=blue, label="Validation")
     a.plot(range(1,5), [row["fit"]["bpc"] for row in stream["curve"]],
            "s--", color=gray, label="Fitting, frozen evaluation")
+    token = tasks["token_training"]
+    a.plot(range(5), [token["initial"]["bpc"]]+[row["dev"]["bpc"] for row in token["curve"]],
+           "^-", color=orange, label="Prefix tokens: validation")
     a.set(xlabel="Passes over 8,192 training characters", ylabel="Bits per character ↓",
           title="Eight-layer persistent language stream", xticks=range(5))
     a.legend(fontsize=8)
@@ -460,13 +464,16 @@ def blocks(M, tasks, ev):
     pages=[]
     pages.append([
         ("title","Sleeping Machines"),
-        ("sub","Computing with time: learned delays, vector messages and local memory"),
-        ("p","<b>Time is part of the computation.</b> Messages carry both a vector and an arrival time. Learned "
-         "delays change arrival order, shape temporal memory and decide which competing message wins. Nodes "
-         "can wait, accumulate evidence and transform a message's content and timing. A clock race can select "
-         "a class; learned phase transformations can compose an arithmetic rule. Unrealized alternatives "
-         "teach better choices. Dormant capacity and sparse activation reduce cost, while the organizing idea "
-         "is to make timing itself a trainable computational medium."),
+        ("sub","Deep learning that computes with time"),
+        ("p","Messages carry a learned vector and an arrival time. Nodes accumulate local memory, transform "
+         "messages and compete through learned delays. Arrival order and winning races determine the computation. "
+         "The goal is useful intelligence with much less active work."),
+        ("h1","The differentiators at a glance"),
+        ("bullets",[
+         "<b>Time performs computation.</b> Delays, races and phase transformations implement useful functions.",
+         "<b>Hard routes can learn.</b> Winning messages execute; unrealized alternatives receive counterfactual credit.",
+         "<b>Deep, persistent event representations.</b> Vector messages and local memory carry information and credit through layers; retrieval and temporal primitives share the model family.",
+         "<b>Capacity beyond activity.</b> The scaling goal is more useful dormant capacity, selectively recruited and judged by prediction quality at a given total work budget."]),
         ("h1","The strongest demonstrated results"),
         ("bullets",[
          f"<b>Better real-language prediction.</b> With 10M training characters, the native count/copy mixture reaches "
@@ -479,7 +486,7 @@ def blocks(M, tasks, ev):
          "<b>Rule learning and deep composition.</b> The consolidated periodic path reaches <b>100% across all "
          "3,440 unseen modular triples</b>. Native depth-four order models reach 99.9–100%; shared-motif composition "
          "reaches about 99.65% from one pass."]),
-        ("figure",("accomplishments",174)),
+        ("figure",("accomplishments",164)),
         ("small",f"Language: 999,999 identical targets, frozen test parameters and cold test context. "
          "Counts fit 10M characters; mixture "
          "weights additionally fit 1M validation labels. Neural baselines use different capacities, fitting passes "
@@ -567,7 +574,11 @@ def blocks(M, tasks, ev):
          "The research objective is to combine this flexibility with affordable route discovery and increasingly "
          "capable models."),
         ("small","Formal derivations and their assumptions are indexed in the project's theory notes. Conditional "
-         "stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law.")])
+         "stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law. "
+         "The program builds on established deep spiking and sparse conditional computation; its focus is the "
+         "combination of useful temporal operators, hard causal routing and counterfactual learning. Related survey: "
+         '<a href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1383844/full">'
+         'Direct training of deep spiking networks</a>.')])
 
     pages.append([
         ("h1","Potential: what the demonstrated capabilities put within reach"),
@@ -1027,14 +1038,24 @@ def blocks(M, tasks, ev):
          "truncate learning credit without discarding the observed history. Only actual event arrivals evaluate "
          "layers; text time is measured in token intervals."),
         ("figure",("e176_stream_language_learning",174)),
-        ("table",(["Pass","Fitting bpc ↓","Validation bpc ↓","Deliveries/pass"],
-            [[str(row['epoch']),f"{row['fit']['bpc']:.3f}",f"{row['dev']['bpc']:.3f}",
-              f"{row['training_event_deliveries']:,}"] for row in tasks['stream_training']['curve']],
-            [24,47,53,50])),
+        ("table",(["Representation","Parameters","Fitting bpc ↓","Validation bpc ↓","Deliveries/pass"],[
+            ["Characters",f"{tasks['stream_training']['parameters']:,}",
+             f"{tasks['stream_training']['final']['fit']['bpc']:.3f}",
+             f"{tasks['stream_training']['final']['dev']['bpc']:.3f}",
+             f"{tasks['stream_training']['final']['training_event_deliveries']:,}"],
+            ["Causal prefix tokens",f"{tasks['token_training']['parameters']:,}",
+             f"{tasks['token_training']['final']['fit']['bpc']:.3f}",
+             f"{tasks['token_training']['final']['dev']['bpc']:.3f}",
+             f"{tasks['token_training']['final']['training_layer_deliveries']:,}"],
+        ],[46,31,30,31,36])),
         ("p",f"Validation loss falls from {tasks['stream_training']['initial']['bpc']:.3f} to "
          f"{tasks['stream_training']['final']['dev']['bpc']:.3f} bpc. All eight layer teachers are nonzero in "
          "every fitting pass. Each pass consumes 8,223 characters including warmup and makes 65,784 block "
          "deliveries. The result establishes learning with persistent causal state and no prefix replay."),
+        ("p","A train-only 131-token prefix dictionary reduces layer deliveries by 30.4% and observed CPU time "
+         "by 26.2%, while validation bpc is 3.517. Exact partial-token marginalization scores identical raw "
+         "targets. Its larger vocabulary fits better but generalizes less well in this small screen: compression "
+         "alone does not explain or resolve the quality gap."),
         ("small",f"One seed; 28,403 parameters, width 32, sixteen temporal modes per block. Four passes, "
          "128 Adam steps/pass, credit truncated every 64 characters, 31 warm characters and 1,024 validation "
          "targets. Target offsets match the bounded E133 screen; topology, capacity, history and update counts "

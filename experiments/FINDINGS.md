@@ -70,6 +70,31 @@ This establishes scoring and causal execution, not a quality or energy result.
 The vocabulary is fitted on training only; frequency counts never supply model
 output probabilities. Vocabulary capacity and tokenizer work must be charged.
 
+### E178: compression saves event work; quality requires another adaptation
+
+The 131-leaf complete prefix dictionary is fitted on the raw training stream
+only. Its eight-layer body starts with the same weights as E176; both use four
+passes, the same 8,192/1,024 raw targets and 64-character credit window. Token
+arrivals use the final raw character's index. Parameters increase from 28,403 to
+35,163 through the embedding/head vocabulary; no probability expert is supplied.
+
+Development bpc is 5.113706 initially, then **4.164782, 3.741975, 3.597820,
+3.517331**; fitting bpc ends at **3.084539** versus character model 3.142180.
+Each pass consumes 8,223 raw characters and releases 5,727 tokens, with **45,816
+block deliveries versus 65,784**: **30.35% fewer**. Total observed CPU wall time
+is **269.31 versus 364.93 s**, **26.20% less**, including fitting/evaluation in
+both cases. Peak RSS is 361,572 KiB; no joules are measured. This control improves
+work but worsens validation quality by 0.166083 bpc. It rejects this particular
+small-budget compression as a quality fix, not subword modeling in general.
+
+Theory §§275–278 explains why fewer token releases need not destroy score
+information: stopped character teachers conserve the leaf model's Fisher
+information. The backbone's control schedule and statistical capacity do change.
+Better fitting/worse validation is consistent with weakly estimated compound
+readout directions, not proof of their causal role. A shared small character
+state/decoder plus selective deep updates is the concrete next representation
+adaptation; fitting-only cross-example teacher statistics diagnose added depth.
+
 ## E161–E166: directional depth and a stronger single deployment encoder
 
 **Deployment improvement, not a new overall accuracy record:** the selected

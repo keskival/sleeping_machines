@@ -1,6 +1,6 @@
 # Sleeping Machines
 
-**Learning to compute with time, vector messages and local memory.**
+**Deep learning that computes with time.**
 
 Sleeping Machines explores models in which an event carries a learned vector and
 an arrival time. Nodes accumulate local evidence, transform messages and compete
@@ -15,6 +15,13 @@ The goal is a broadly useful model family with competitive predictive quality an
 substantially less physical work in both training and inference. This repository
 contains the implementations, mathematical analysis, reproducible experiments and
 completed results used to pursue that goal.
+
+### The differentiators at a glance
+
+- **Time performs computation:** learned delays, races and phase transformations.
+- **Hard routes can learn:** winners execute; unrealized alternatives receive credit.
+- **Deep, persistent representations:** vector messages, local memory and reusable temporal primitives.
+- **Capacity beyond activity:** the scaling goal is useful dormant capacity with selective work and competitive quality.
 
 **Start with the [project report](REPORT.md) or [PDF](report/sleeping_machines_status.pdf).**
 The original ideas are preserved in the

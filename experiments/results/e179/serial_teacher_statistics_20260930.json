@@ -1,0 +1,698 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "serial_teacher_statistics_20260930",
+    "limit": 128
+  },
+  "groups": {
+    "projection": {
+      "teachers": 32,
+      "coordinates": 16512,
+      "all_nonzero": true,
+      "squared_fitted_mean": 2.6113209249702415e-06,
+      "cross_sample_signal": 1.6066100031171156e-06,
+      "teacher_variance_trace": 3.215074949930003e-05,
+      "variance_of_mean_under_independence": 1.0047109218531259e-06,
+      "signal_fraction_of_squared_mean": 0.6152480102136142,
+      "split_cross_inner_product": 1.8902758352876279e-06,
+      "split_cosine": 0.5988519687384973,
+      "mean_teacher_norm": 0.00463583096746716,
+      "max_teacher_norm": 0.01404607173844114
+    },
+    "block_1": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.641691153255886e-07,
+      "cross_sample_signal": 3.8289386114771155e-08,
+      "teacher_variance_trace": 4.028151334746159e-06,
+      "variance_of_mean_under_independence": 1.2587972921081746e-07,
+      "signal_fraction_of_squared_mean": 0.2332313604713876,
+      "split_cross_inner_product": 8.234958499355496e-08,
+      "split_cosine": 0.3351894832679856,
+      "mean_teacher_norm": 0.001625371465755635,
+      "max_teacher_norm": 0.00452701822354586
+    },
+    "block_2": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.9719368651278942e-07,
+      "cross_sample_signal": 6.53744832577061e-08,
+      "teacher_variance_trace": 4.2182145041626665e-06,
+      "variance_of_mean_under_independence": 1.3181920325508333e-07,
+      "signal_fraction_of_squared_mean": 0.33152422074865007,
+      "split_cross_inner_product": 1.2085318082229622e-07,
+      "split_cosine": 0.44261569658500083,
+      "mean_teacher_norm": 0.0016599647832631777,
+      "max_teacher_norm": 0.004828272853452219
+    },
+    "block_3": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.6723754613666442e-07,
+      "cross_sample_signal": 4.0936340420100065e-08,
+      "teacher_variance_trace": 4.04163858293006e-06,
+      "variance_of_mean_under_independence": 1.2630120571656437e-07,
+      "signal_fraction_of_squared_mean": 0.24477960461490747,
+      "split_cross_inner_product": 9.590148684041365e-08,
+      "split_cosine": 0.4050989197255207,
+      "mean_teacher_norm": 0.0016256466758984636,
+      "max_teacher_norm": 0.004683367160747217
+    },
+    "block_4": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.6980508540799822e-07,
+      "cross_sample_signal": 5.30201589694008e-08,
+      "teacher_variance_trace": 3.7371176460351184e-06,
+      "variance_of_mean_under_independence": 1.1678492643859745e-07,
+      "signal_fraction_of_squared_mean": 0.3122412903124009,
+      "split_cross_inner_product": 9.518913841843432e-08,
+      "split_cosine": 0.38982571225499557,
+      "mean_teacher_norm": 0.0015690037461786551,
+      "max_teacher_norm": 0.004423697903263054
+    },
+    "block_5": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.3661674142869163e-07,
+      "cross_sample_signal": 2.900966287623112e-08,
+      "teacher_variance_trace": 3.4434265136787363e-06,
+      "variance_of_mean_under_independence": 1.0760707855246051e-07,
+      "signal_fraction_of_squared_mean": 0.2123433963719079,
+      "split_cross_inner_product": 6.355353034836413e-08,
+      "split_cosine": 0.30326060019920237,
+      "mean_teacher_norm": 0.0015090506203037798,
+      "max_teacher_norm": 0.004259255076677998
+    },
+    "block_6": {
+      "teachers": 32,
+      "coordinates": 50179,
+      "all_nonzero": true,
+      "squared_fitted_mean": 1.5297266030298195e-07,
+      "cross_sample_signal": 4.077832131812543e-08,
+      "teacher_variance_trace": 3.590218847515409e-06,
+      "variance_of_mean_under_independence": 1.1219433898485654e-07,
+      "signal_fraction_of_squared_mean": 0.2665726100164483,
+      "split_cross_inner_product": 8.040349877056979e-08,
+      "split_cosine": 0.35738708421744186,
+      "mean_teacher_norm": 0.0015310455902211237,
+      "max_teacher_norm": 0.004362339041659251
+    },
+    "head": {
+      "teachers": 32,
+      "coordinates": 2580,
+      "all_nonzero": true,
+      "squared_fitted_mean": 0.024004025938745975,
+      "cross_sample_signal": 0.01383287867218683,
+      "teacher_variance_trace": 0.3254767125298927,
+      "variance_of_mean_under_independence": 0.010171147266559146,
+      "signal_fraction_of_squared_mean": 0.5762732763031455,
+      "split_cross_inner_product": 0.014644172105559619,
+      "split_cosine": 0.5009170128580427,
+      "mean_teacher_norm": 0.47428579553301903,
+      "max_teacher_norm": 1.2371898862582305
+    }
+  },
+  "batches": [
+    {
+      "ids": [
+        3239,
+        3240,
+        5667,
+        3169
+      ],
+      "labels": [
+        2,
+        19,
+        5,
+        4
+      ],
+      "paired_ce": 0.36423616111278534,
+      "unclipped_teacher_norm": 0.7195557417449266,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6848,
+        1160,
+        6773,
+        2027
+      ],
+      "labels": [
+        12,
+        15,
+        0,
+        3
+      ],
+      "paired_ce": 0.7900779545307159,
+      "unclipped_teacher_norm": 0.9419448085486533,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1711,
+        702,
+        3663,
+        8068
+      ],
+      "labels": [
+        1,
+        4,
+        10,
+        14
+      ],
+      "paired_ce": 0.1149170994758606,
+      "unclipped_teacher_norm": 0.2649838098329855,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        4506,
+        388,
+        857,
+        4115
+      ],
+      "labels": [
+        1,
+        14,
+        3,
+        14
+      ],
+      "paired_ce": 0.03634190931916237,
+      "unclipped_teacher_norm": 0.11468337988944631,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5960,
+        4443,
+        1345,
+        6536
+      ],
+      "labels": [
+        7,
+        1,
+        1,
+        16
+      ],
+      "paired_ce": 0.024175324011594057,
+      "unclipped_teacher_norm": 0.07923645976252368,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        8064,
+        4607,
+        4413,
+        2745
+      ],
+      "labels": [
+        10,
+        17,
+        18,
+        17
+      ],
+      "paired_ce": 0.11897296085953712,
+      "unclipped_teacher_norm": 0.3817354965500996,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        2802,
+        3424,
+        3848,
+        2169
+      ],
+      "labels": [
+        16,
+        1,
+        3,
+        17
+      ],
+      "paired_ce": 0.10186933726072311,
+      "unclipped_teacher_norm": 0.24664293205423166,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6152,
+        5247,
+        7601,
+        5153
+      ],
+      "labels": [
+        5,
+        16,
+        0,
+        13
+      ],
+      "paired_ce": 0.12685151770710945,
+      "unclipped_teacher_norm": 0.3992530986474564,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        7522,
+        362,
+        4054,
+        348
+      ],
+      "labels": [
+        12,
+        9,
+        13,
+        9
+      ],
+      "paired_ce": 0.12576189171522856,
+      "unclipped_teacher_norm": 0.19167195970755552,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        2309,
+        1940,
+        5892,
+        313
+      ],
+      "labels": [
+        7,
+        8,
+        8,
+        0
+      ],
+      "paired_ce": 0.48476478457450867,
+      "unclipped_teacher_norm": 1.2193740868608216,
+      "clipping_factor": 0.820092201960937
+    },
+    {
+      "ids": [
+        1927,
+        6939,
+        7572,
+        5905
+      ],
+      "labels": [
+        9,
+        10,
+        14,
+        4
+      ],
+      "paired_ce": 0.24688559770584106,
+      "unclipped_teacher_norm": 0.42745460252697765,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1781,
+        2340,
+        2962,
+        4749
+      ],
+      "labels": [
+        19,
+        2,
+        14,
+        19
+      ],
+      "paired_ce": 0.6649302840232849,
+      "unclipped_teacher_norm": 1.0320257502524488,
+      "clipping_factor": 0.9689671316711369
+    },
+    {
+      "ids": [
+        5975,
+        2073,
+        5715,
+        7888
+      ],
+      "labels": [
+        4,
+        19,
+        9,
+        6
+      ],
+      "paired_ce": 0.2355685755610466,
+      "unclipped_teacher_norm": 0.5601936432551424,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5152,
+        5366,
+        61,
+        4968
+      ],
+      "labels": [
+        6,
+        13,
+        1,
+        14
+      ],
+      "paired_ce": 0.0996322394348681,
+      "unclipped_teacher_norm": 0.27637786049128765,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5681,
+        6694,
+        6204,
+        1008
+      ],
+      "labels": [
+        18,
+        7,
+        10,
+        19
+      ],
+      "paired_ce": 0.42754213511943817,
+      "unclipped_teacher_norm": 0.7422708430901447,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        2413,
+        6035,
+        5172,
+        4778
+      ],
+      "labels": [
+        4,
+        1,
+        1,
+        11
+      ],
+      "paired_ce": 0.15958241373300552,
+      "unclipped_teacher_norm": 0.47163723245403083,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5559,
+        5404,
+        1498,
+        7185
+      ],
+      "labels": [
+        13,
+        3,
+        2,
+        4
+      ],
+      "paired_ce": 0.7284815814346075,
+      "unclipped_teacher_norm": 0.5839617971365377,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6937,
+        2048,
+        7733,
+        1967
+      ],
+      "labels": [
+        17,
+        1,
+        7,
+        9
+      ],
+      "paired_ce": 0.05684459675103426,
+      "unclipped_teacher_norm": 0.12446468712186384,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5060,
+        3354,
+        7061,
+        1156
+      ],
+      "labels": [
+        15,
+        1,
+        18,
+        7
+      ],
+      "paired_ce": 0.04875857103615999,
+      "unclipped_teacher_norm": 0.15867960455728647,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6760,
+        6761,
+        5305,
+        1613
+      ],
+      "labels": [
+        9,
+        16,
+        3,
+        6
+      ],
+      "paired_ce": 0.47647932171821594,
+      "unclipped_teacher_norm": 0.664509448699795,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1295,
+        780,
+        6583,
+        6336
+      ],
+      "labels": [
+        16,
+        9,
+        12,
+        3
+      ],
+      "paired_ce": 0.2262728586792946,
+      "unclipped_teacher_norm": 0.8402185048797806,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6199,
+        5166,
+        1379,
+        4391
+      ],
+      "labels": [
+        4,
+        1,
+        5,
+        8
+      ],
+      "paired_ce": 0.028940651565790176,
+      "unclipped_teacher_norm": 0.057835369834938574,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1064,
+        6173,
+        7012,
+        2696
+      ],
+      "labels": [
+        0,
+        1,
+        3,
+        7
+      ],
+      "paired_ce": 0.18646284192800522,
+      "unclipped_teacher_norm": 0.46564543590785684,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        4020,
+        4245,
+        3964,
+        8006
+      ],
+      "labels": [
+        8,
+        7,
+        17,
+        19
+      ],
+      "paired_ce": 0.8466484844684601,
+      "unclipped_teacher_norm": 1.237319064466621,
+      "clipping_factor": 0.8081983220979093
+    },
+    {
+      "ids": [
+        2140,
+        5740,
+        187,
+        2993
+      ],
+      "labels": [
+        7,
+        10,
+        17,
+        15
+      ],
+      "paired_ce": 0.11721696518361568,
+      "unclipped_teacher_norm": 0.3720573719999306,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        3433,
+        3692,
+        1864,
+        6393
+      ],
+      "labels": [
+        5,
+        17,
+        8,
+        12
+      ],
+      "paired_ce": 0.05043518915772438,
+      "unclipped_teacher_norm": 0.15465772740980763,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        5206,
+        7319,
+        3951,
+        4628
+      ],
+      "labels": [
+        10,
+        10,
+        14,
+        14
+      ],
+      "paired_ce": 0.043060602620244026,
+      "unclipped_teacher_norm": 0.1426028175731216,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        194,
+        2859,
+        2953,
+        3563
+      ],
+      "labels": [
+        12,
+        14,
+        3,
+        17
+      ],
+      "paired_ce": 0.6732179895043373,
+      "unclipped_teacher_norm": 1.0390595558468534,
+      "clipping_factor": 0.9624078157648682
+    },
+    {
+      "ids": [
+        6245,
+        4517,
+        2151,
+        4151
+      ],
+      "labels": [
+        5,
+        16,
+        18,
+        9
+      ],
+      "paired_ce": 0.1388494037091732,
+      "unclipped_teacher_norm": 0.36822613400359205,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6308,
+        7505,
+        5778,
+        1111
+      ],
+      "labels": [
+        19,
+        14,
+        7,
+        7
+      ],
+      "paired_ce": 0.22700008004903793,
+      "unclipped_teacher_norm": 0.5486384555567273,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        6510,
+        2039,
+        6651,
+        6732
+      ],
+      "labels": [
+        13,
+        2,
+        12,
+        1
+      ],
+      "paired_ce": 0.028591194190084934,
+      "unclipped_teacher_norm": 0.06863026118939328,
+      "clipping_factor": 1.0
+    },
+    {
+      "ids": [
+        1563,
+        7047,
+        4729,
+        8089
+      ],
+      "labels": [
+        4,
+        3,
+        15,
+        1
+      ],
+      "paired_ce": 0.13089924305677414,
+      "unclipped_teacher_norm": 0.28303846742408034,
+      "clipping_factor": 1.0
+    }
+  ],
+  "warm_step": {
+    "rate": 0.001,
+    "teacher_norm": 0.17762243747711182,
+    "fitting_ids": [
+      1829,
+      5866,
+      7253,
+      2512
+    ]
+  },
+  "protocol": {
+    "depth": 12,
+    "frozen_prefix_depth": 6,
+    "trainable_suffix_depth": 6,
+    "probe_utterances": 128,
+    "paired_views_per_utterance": 2,
+    "batch_utterances": 4,
+    "calibration_update_and_anchor_ids_excluded": true,
+    "parameter_updates_during_probe": 0,
+    "held_data_read": false,
+    "metric": "raw CE parameter-gradient geometry; fixed identity preconditioner"
+  },
+  "scope": "Fitting-only cross-example teacher statistics after a live serial head step.\n\nNo new model tuning or held data. Raw paired CE teachers are measured at one\nfrozen checkpoint. Cross-inner-products remove the diagonal noise term under\nexplicit independence assumptions; real speaker/finite-set correlation limits\nthat statistical interpretation. They do not estimate actual Adam descent.",
+  "checkpoint_sha256": "3989097b1c63b7b3fac9491dc0df9f3af86c556459bef70bc3f31ad6d5b87f6b",
+  "source_sha256": {
+    "/workspace/experiments/e179_serial_teacher_statistics.py": "dc569342ecd63db6a23832e913eccb212ab8bab9ed4c77d9464fd57e86be608f",
+    "experiments/e169_serial_step_replay.py": "48578a04c8871f04b8a9e2f803f0931ea1094a85ce7b6c774f5ca57ee58c60fa",
+    "sleeping_machines/serial_residual.py": "bd2f4f8ad29203154c1c0429a980418b59a267ec5b5270cfb5b672ed583d9f6b"
+  },
+  "wall_s": 55.15849116499885,
+  "max_rss_kb": 1666280
+}
