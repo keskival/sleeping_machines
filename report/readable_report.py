@@ -1073,6 +1073,7 @@ def blocks(M, tasks, ev):
          "case. Initial predictions, hard winners and clocks match the trained parent exactly. Each packet "
          "still emits one winning vector and delay; source and temporal transformations add measured work.")),
         ("table",(["Published reference; official-test protocol","Reported accuracy ↑"],[
+         ["Ours: full official SHD comparison","Pending"],
          ["EventSSM: asynchronous learned state-space layers","95.9%"],
          ["S7: input-dependent temporal state","96.3%"],
         ],[131,43])),

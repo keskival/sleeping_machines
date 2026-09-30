@@ -247,6 +247,7 @@ A six-block width-128 temporal encoder learns corrections while the inherited ei
 
 | Published reference; official-test protocol | Reported accuracy ↑ |
 | --- | --- |
+| Ours: full official SHD comparison | Pending |
 | EventSSM: asynchronous learned state-space layers | 95.9% |
 | S7: input-dependent temporal state | 96.3% |
 

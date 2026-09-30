@@ -40,6 +40,14 @@ The original ideas are preserved in the
 | Ours: longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
 | Ours: temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
 
+A matched width-128 pilot adds content-dependent memory write/forget gates and
+improves **2.643 to 2.587 development bpc**, with 0.50% more parameters and
+1.41% more fitting arithmetic. The input vector already enters persistent state
+and a gated residual output; it is not replaced by a constant node vector.
+Frozen interventions confirm that both input content and earlier messages affect
+predictions. These are one-seed development results. The [next staged campaign](experiments/queue/local_language_nextscale_20260930T163234Z.json)
+tests larger capacity/data before selecting one full 10M comparison.
+
 The completed language references remain available for the full learned-event
 benchmark; lower test bits/character is better:
 

@@ -77,8 +77,8 @@ state and checked predictions/gradients. Original model files remain unchanged.
   Reset history/current content unchanged: 4.519 bpc; zero embeddings: 7.569;
   full gated model: 2.587. These are fitted-dependence interventions, not
   retrained architecture comparisons.
-- Next staged campaign: `local_language_nextscale_20260930T163234Z`; manifest
-  and tmux/log use that stem. It reuses completed gated width-128/131K evidence,
+- Active staged campaign: `local_language_nextscale_20260930T163234Z`, launched
+  at 16:38 UTC; manifest and tmux/log use that stem. It reuses completed gated width-128/131K evidence,
   fits width 256 at 131K, then both widths at 1M. Only after both primary stages
   finish does it select the smallest width within 0.03 bpc of the best. A <=2.25
   1M score and >=0.1 fixed-width data gain are required to run exactly one
@@ -131,5 +131,14 @@ language superiority pending until completed, comparable test and work evidence.
   for AWS; reuse existing reference results. Update the report from completed
   comparable results without deleting older evidence.
 
-The model drivers and theory were not changed by this report revision. The
-source hashes recorded by the running suite remain its reproducibility contract.
+The original suite remains a historical record. New precise-clock and selective
+memory sources are separately versioned with their numerical contracts. Never
+resume an old queue after source changes without recovering its exact source
+revision; never overwrite completed results or silently reinterpret old metrics.
+
+Latest report/setup commit: `c5fb85d`, following `8675098` (context/visuals) and
+`55b31e8` (selective memory). The report has 26 pages and a front-page 131K
+development result alongside the preserved 8K pilot. Numerical contracts,
+representation interventions, PDF bounds/no-orphan checks and nine focused
+report/promotion tests passed. Frontier language quality and physical energy
+remain unestablished; the active campaign is building the next evidence.
