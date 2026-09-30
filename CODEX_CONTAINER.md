@@ -5,6 +5,8 @@ sandbox. The workspace volume, including `.git`, is mounted read-write.
 New containers retain the existing limits: **10 GiB RAM**, no additional swap,
 and **3 CPUs**, adjustable with `DEV_MEMORY` and `DEV_CPUS`. Experiment jobs
 still use `experiments/queue/run_safe.sh`, its lock and RSS watchdog.
+The image contains the research development tools; mobile SDKs and Java are
+excluded. The launchers use Docker's default capabilities.
 
 ## Apply to an existing container
 
@@ -46,6 +48,8 @@ The launcher checks for the bypass flag or its own startup label before
 attaching. For an older container with a different command, use
 `--configure-only` and restart its Codex client, or use a new session name to
 create a fresh container while preserving the original container.
+Image contents and Docker capability changes apply only to newly created
+containers; updating Codex's config alone does not replace an existing image.
 
 ## Why `.git` was read-only
 

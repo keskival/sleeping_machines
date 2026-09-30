@@ -171,34 +171,10 @@ echo ""
 #   --user $(id -u):$(id -g) files written inside the container are owned by YOU
 #   -v workspace            your code is live-mounted; no copies needed
 #   --network host          lets Claude Code reach the Anthropic API
-#   --privileged            REQUIRED for the Android emulator (KVM access).
-#                           Tero confirmed 2026-07-28.
-#   --cap-drop ALL          present, but see the warning below
-#
-# ── WHAT THIS SANDBOX DOES AND DOES NOT GIVE YOU (read this) ─────────────────
-# This comment block used to claim four protections that are NOT in the command
-# below: `-v .claude` (absent — auth persists because the container is REUSED by
-# name, not because anything is mounted), `--security-opt` (absent),
-# `--read-only /` (absent), and `--tmpfs /tmp` (absent). It also described
-# `--cap-drop ALL` as giving "minimal attack surface", which is false here:
-# `--privileged` on the next line grants every capability straight back and
-# relaxes the other isolation, so the cap-drop is decorative. Anyone reading the
-# old comments would believe they were far better isolated than they are.
-#
-# The privilege is legitimate — the Android emulator needs /dev/kvm — so the
-# flag stays. What is fixed is the description, because a wrong security comment
-# is worse than none: it is what makes someone comfortable running this against
-# a repo full of production credentials.
-#
-# So, honestly: this container isolates your FILESYSTEM (only this repo is
-# mounted) but it is NOT a security boundary against a privileged escape, and
-# with --network host it shares your machine's network stack — it can reach
-# anything you can, including localhost services and any VPN you are on.
-#
-# The documentation repo has a hardened equivalent (documentation/dev.sh) that
-# drops caps for real, adds no-new-privileges, --read-only and tmpfs scratch, and
-# uses bridge networking — because prose needs no emulator. Prefer that one for
-# any work that does not require building or running the apps.
+#   --memory / --memory-swap  RAM cap with no additional swap
+#   --cpus                  leaves CPU capacity for the host
+# Docker uses its default capabilities. Auth and installed tools persist in
+# the reused container; the launchers do not mount the Docker host socket.
 
 # ⚠️ ENV VARS ONLY TAKE EFFECT ON A FRESHLY CREATED CONTAINER.
 # The branch below reuses an existing container by name, and neither
@@ -232,8 +208,6 @@ else
     --name "${CONTAINER_NAME}" \
     --user "$(id -u):$(id -g)" \
     --network host \
-    --cap-drop ALL \
-    --privileged \
     --memory "${DEV_MEMORY:-10g}" \
     --memory-swap "${DEV_MEMORY:-10g}" \
     --cpus "${DEV_CPUS:-3}" \

@@ -120,8 +120,6 @@ exec docker run \
     --label sleeping-machines.codex-sandbox=disabled \
     --user "$(id -u):$(id -g)" \
     --network host \
-    --cap-drop ALL \
-    --privileged \
     --memory "${DEV_MEMORY:-10g}" \
     --memory-swap "${DEV_MEMORY:-10g}" \
     --cpus "${DEV_CPUS:-3}" \

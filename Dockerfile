@@ -1,4 +1,4 @@
-# Codex / Claude development container with Android/React Native toolchain
+# Codex / Claude development container for Sleeping Machines research
 # Usage: ./codex.sh [codex args...] or ./dev.sh [claude args...]
 # Codex uses Docker isolation; its inner sandbox is disabled in this image.
 #
@@ -26,7 +26,7 @@ FROM node:${NODE_VERSION}-trixie-slim@sha256:ae91dcc111a68c9d2d81ff2a17bda61be12
 
 ARG CLAUDE_VERSION=latest
 LABEL org.opencontainers.image.title="codex-claude-development"
-LABEL org.opencontainers.image.description="Development tools for Codex and Claude Code with Android SDK"
+LABEL org.opencontainers.image.description="Development tools for Sleeping Machines research with Codex and Claude Code"
 
 # ── System packages ───────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -148,63 +148,7 @@ RUN pip3 install --no-cache-dir --break-system-packages \
       pytest pytest-asyncio pytest-httpx httpx psutil \
     && python3 -m pytest --version
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    openjdk-21-jdk-headless \
-    && rm -rf /var/lib/apt/lists/* \
-    # OpenJDK installs to an arch-specific dir; symlink to a stable path.
-    && ln -s "/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)" /usr/lib/jvm/java-21-openjdk
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
-
-ENV ANDROID_HOME=/opt/android-sdk
-ENV ANDROID_SDK_ROOT=/opt/android-sdk
-ENV PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/build-tools/36.0.0:${PATH}"
-
-# Grab the current revision from developer.android.com/studio#command-line-tools
-ARG ANDROID_CMDLINE_TOOLS_VERSION=13114758
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        curl unzip ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p "${ANDROID_HOME}/cmdline-tools" \
-    && curl -fsSL -o /tmp/clt.zip \
-        "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_CMDLINE_TOOLS_VERSION}_latest.zip" \
-    && unzip -q /tmp/clt.zip -d "${ANDROID_HOME}/cmdline-tools" \
-    && mv "${ANDROID_HOME}/cmdline-tools/cmdline-tools" "${ANDROID_HOME}/cmdline-tools/latest" \
-    && rm /tmp/clt.zip \
-    && yes | sdkmanager --licenses \
-    && sdkmanager --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
-
-# Install Google's cmdline-tools (sdkmanager) — needed for installing
-# platforms, build-tools, NDK, and system images
-RUN mkdir -p ${ANDROID_HOME}/cmdline-tools \
-    && cd /tmp \
-    && curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o cmdline-tools.zip \
-    && unzip -q cmdline-tools.zip \
-    && mv cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest \
-    && rm cmdline-tools.zip
-
-# Accept all SDK licenses non-interactively
-RUN yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
-
-# Install specific SDK components needed for Expo/React Native Android builds.
-# CMake 3.22.1 is the version AGP pins for native builds (react-native-worklets,
-# reanimated, etc.) — building without it falls back to system cmake which mismatches
-# the prefab/header expectations and breaks linking. ninja-build feeds CMake's
-# Ninja generator; without it, native builds fall back to slower Make.
-RUN ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install \
-    "platforms;android-36" \
-    "platforms;android-31" \
-    "build-tools;36.0.0" \
-    "build-tools;35.0.1" \
-    "build-tools;35.0.0" \
-    "ndk;27.1.12297006" \
-    "cmake;3.22.1" \
-    # No system-image: this container builds/signs APKs (gradle assemble); the
-    # emulator runs on the host. An x86_64 image is also wrong-arch on arm64.
-    && chmod -R a+r ${ANDROID_HOME}
-
-# Standalone cmake + ninja-build for any tooling that invokes them outside the
-# Android SDK CMake (e.g. shell scripts, dev REPL). The Android-SDK cmake at
-# ${ANDROID_HOME}/cmake/3.22.1 stays the one Gradle uses.
+# Native build tools for scientific Python extensions.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     ninja-build \
@@ -268,13 +212,6 @@ RUN npm install -g bun@1.3.14
 
 RUN npm install -g @google/gemini-cli
 
-# ── Maestro (mobile E2E testing framework) ───────────────────────────────────
-# Installed into the node user's home so it persists across sessions
-USER node
-RUN curl -fsSL "https://get.maestro.mobile.dev" | bash
-ENV PATH="/home/node/.maestro/bin:${PATH}"
-USER root
-
 # ── Make $HOME writable by ANY host uid ───────────────────────────────────────
 # dev.sh runs the container with `--user <host-uid>:<host-gid>` so files written
 # into the mounted /workspace are owned by the host user. That user is arbitrary:
@@ -287,9 +224,8 @@ USER root
 # EACCES"). Both symptoms are the same unwritable-$HOME cause.
 #
 # Opening the home dir to any uid fixes it for every host uid without hardcoding
-# one. This is a throwaway single-user dev sandbox (already --privileged, see
-# dev.sh), not a multi-tenant host, so a world-writable home is an acceptable
-# trade for "works on every developer's machine".
+# one. The launchers use a single-user development container and map the host
+# UID so workspace files retain the user's ownership.
 RUN chmod -R a+rwX /home/node
 
 # ── Workspace ─────────────────────────────────────────────────────────────────
