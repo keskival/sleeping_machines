@@ -35,7 +35,12 @@ Sections 261–264 derives the radial normalization teacher, a pre-normalized
 feature output map and invertible observer conditioning that retains hidden
 null directions. E161 checks exact old/live teachers and deployment folding;
 E162's actual first fitting step passes at the derived new-coordinate rate.
-Completed E163/E164 must establish whether this remedies the practical gap.
+Completed E163/E164 makes the appended maps decision-active, but their effect
+on held accuracy is negative. Their trained prefix improves to 408/512 and
+518/657 and becomes the selected single deployment model. The remaining
+question is transferable correction learning, rather than mere gradient
+support. Derive and measure fitting-only cross-example control/teacher
+alignment and nuisance covariance at the new block's complete observed output.
 Next distinguish task-relevant covariance and cross-example update transfer
 from raw teacher transport. Exact nonlinear/pooling inclusion, robust finite
 route-boundary utility and generic language scaling remain substantive gaps.
