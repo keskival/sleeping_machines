@@ -95,6 +95,36 @@ readout directions, not proof of their causal role. A shared small character
 state/decoder plus selective deep updates is the concrete next representation
 adaptation; fitting-only cross-example teacher statistics diagnose added depth.
 
+### E179/E180: statistically supported deep credit, with explicit limits
+
+After the fitting-calibrated first correction-head step, E179 freezes the
+actual serial twelve-block checkpoint and measures 32 paired four-utterance
+teachers from 128 fitting utterances. The warm-update and calibration-anchor
+IDs are excluded; no held data or parameter update enters the probe. Every
+teacher has support in all six suffix blocks. Cross-sample signal estimates
+are positive in all eight parameter groups. Suffix split-group cosines are
+0.303–0.443; source projection 0.599; head 0.501. Estimated reproducible fractions
+of squared fitted means are 0.212–0.332 for suffix blocks. Wall time 55.16 s;
+peak RSS 1,666,280 KiB. The 32-utterance resource pilot is separately preserved.
+
+This establishes reproducible fitting credit under an independently owned,
+live correction head, not an SHD accuracy improvement. It does not guarantee
+Adam descent or transfer, and speaker/finite-set dependence qualifies the
+independence interpretation. Parameter-coordinate comparisons are not functional
+Fisher-whitened estimates. A head warmed on four examples can supply common
+calibration directions; positive reproducibility alone is insufficient evidence
+of better representation.
+
+Theory §§275–279 derives stopped-token Fisher conservation, expected quadratic
+risk including teacher covariance, a cross-sample statistic removing diagonal
+noise, and a Fisher-weighted quotient separating shared class offsets from
+sample-dependent function change. E180 checks the first three identities by
+exact float64 enumeration, with all errors below 1e-12. The proposed full-depth
+continuation should establish broad head class support, use memory-bounded
+paired accumulation and compare trained versus fixed-body/head controls under
+the same fitting protocol. Each intervention addresses a measured credit or
+statistical role rather than altering seeds.
+
 ## E161–E166: directional depth and a stronger single deployment encoder
 
 **Deployment improvement, not a new overall accuracy record:** the selected

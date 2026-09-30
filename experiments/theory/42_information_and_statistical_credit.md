@@ -139,3 +139,42 @@ head, source projection and all six added blocks. It checks cross-sample and
 split-group agreement, layer support and clipping magnitudes. No private
 development or official test labels choose it. This distinguishes absent credit
 from active but statistically inconsistent credit before a longer full-depth run.
+
+**Completed E179 diagnostic.** At the frozen post-warm checkpoint, 128 fitting
+utterances yield 32 paired four-utterance teachers. All six suffix blocks have
+nonzero teachers and positive cross-sample signal estimates. Their split cosines
+are 0.303–0.443; the projected source map is 0.599 and head 0.501. The estimated
+signal fractions of squared fitted means are 0.212–0.332 in suffix blocks.
+These parameter-coordinate measurements establish live, reproducible fitting
+credit in this sample. They do not prove generalization, correct schedule-boundary
+credit or useful additional representation. Speaker dependence and a head warmed
+on only four examples remain part of their interpretation.
+
+## 279. Reproducible credit can still be mostly calibration
+
+A common parameter direction can change class priors or calibrate confidence
+without extracting a better sample-dependent representation. Positive teacher
+reproducibility alone does not distinguish these roles. Let \(d_i=J_i\delta\)
+be logit changes on fitting queries with categorical curvature \(F_i\).
+Separate constant class offsets by the exact quadratic quotient
+
+\[
+ Q_{\rm repr}(\delta)=\min_b\sum_i(d_i-b)^TF_i(d_i-b).
+\]
+
+On the class-contrast subspace, the minimizer is
+\(b_*=(\sum_iF_i)^\dagger\sum_iF_i d_i\).
+This follows by differentiating the convex quadratic. The removed component
+is a Fisher-weighted shared offset; the remainder measures input-dependent
+function change. A nonzero remainder is still not evidence of useful change:
+its label alignment and transfer must also be measured.
+
+The next full-depth comparison should therefore include a fixed-body learned
+head control and a bias/calibration control, while preserving the same prefix,
+sample order and fitting budget. Head initialization should use broad fitting
+class support before interpreting its reverse teachers as representation
+evidence. Clean/augmented accumulation increases the effective sample support
+without concurrent jobs or peak-memory growth, but the two views remain one
+utterance cluster. Actual step replay verifies update magnitude; matched controls
+verify what the extra depth contributes. This is a testable learning mechanism,
+not a reward for merely adding layers or having nonzero gradient norms.

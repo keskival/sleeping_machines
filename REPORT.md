@@ -74,6 +74,7 @@ Small local vector maps and query readouts can remain dense. The intended effici
 | Certified composition | Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it. |
 | Natural supervised credit | Categorical and event likelihoods both credit predicted sufficient statistics minus observations. Silence enters through integrated exposure. |
 | Useful optionality | Reserve consists of distinct, attainable future corrections under a causal work budget. Reachability and transferable learning matter alongside immediate loss. |
+| Statistically useful credit | Expected improvement must overcome the curvature cost of fitting noise. Cross-example teacher agreement separates reproducible correction from raw gradient magnitude. |
 
 ### From mathematics to an engineering discipline
 
@@ -292,7 +293,7 @@ The native mixture combines order-0 through order-6 conditional counts, Wittenâ€
 
 ### Characters, subwords and a persistent stream
 
-All four predictors use the same 27-character alphabet. Characters are tokens, but a subword representation can reduce the number of arrivals and expose longer patterns within a fixed credit window. It also enlarges the output vocabulary. The useful comparison is quality and total work per original character, with train-only tokenizer fitting and declared buffering latency.
+All three predictors use the same 27-character alphabet. Characters are tokens, but a subword representation can reduce the number of arrivals and expose longer patterns within a fixed credit window. It also enlarges the output vocabulary. The useful comparison is quality and total work per original character, with train-only tokenizer fitting and declared buffering latency.
 
 A generic streaming event-state implementation retains modal memory and pending delayed messages across chunks. An eight-layer contract confirms identical predictions under chunk splitting, causal prefix invariance and nonzero learning signals in every layer. Fifteen input arrivals cause 120 layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches 3.351 validation bpc in the separately described small screen.
 
