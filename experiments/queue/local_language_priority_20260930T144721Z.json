@@ -1,5 +1,5 @@
 {
-  "status": "launched",
+  "status": "superseded_for_precision_checked_scale_up",
   "created_utc": "20260930T144721Z",
   "host": "local CPU-only workspace",
   "execution": "serial tmux suite; one unique one-job guarded queue at a time",
@@ -70,5 +70,6 @@
     },
     "source_hashes_verified": true
   },
-  "host_mem_available_mib": 12000
+  "host_mem_available_mib": 12000,
+  "superseded_by": "experiments/queue/local_language_scaling_20260930T153653Z.json"
 }

@@ -47,13 +47,14 @@ def timed_step(base, tokens, parallel):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tag', required=True)
+    parser.add_argument('--width', type=int, default=32)
     args = parser.parse_args()
     output = ROOT/'experiments/results/parallel_language'/f'{args.tag}.json'
     if Path(args.tag).name != args.tag or output.exists():
         raise ValueError('A unique plain tag is required')
     torch.set_num_threads(1); torch.manual_seed(6)
     start = time.perf_counter()
-    model = ParallelEventLanguageModel(width=32, modes=16, depth=6)
+    model = ParallelEventLanguageModel(width=args.width, modes=args.width//2, depth=6)
     with torch.no_grad():
         for layer in model.layers:
             layer.clock.weight.normal_(0, .05); layer.clock.bias.normal_(0, .1)
@@ -63,14 +64,18 @@ def main():
         reference, candidate = copy.deepcopy(model), copy.deepcopy(model)
         a, b = reference.new_state(), candidate.new_state()
         a.position = b.position = position
-        reference_logits, a = serial(reference, tokens[:-1], a)
-        candidate_logits, b = candidate.forward_chunk(tokens[:-1], b)
+        with torch.no_grad():
+            _, a = serial(reference, tokens[:7], a)
+            _, b = serial(candidate, tokens[:7], b)
+        a, b = a.detach(), b.detach()
+        reference_logits, a = serial(reference, tokens[7:-1], a)
+        candidate_logits, b = candidate.forward_chunk(tokens[7:-1], b)
         torch.testing.assert_close(candidate_logits, reference_logits, rtol=3e-4, atol=3e-5)
         mode_error = max(error(x, y) for x, y in zip(a.modes, b.modes))
         for x, y in zip(a.modes, b.modes):
             torch.testing.assert_close(x, y, rtol=4e-4, atol=1e-4)
-        F.cross_entropy(reference_logits, tokens[1:]).backward()
-        F.cross_entropy(candidate_logits, tokens[1:]).backward()
+        F.cross_entropy(reference_logits, tokens[8:]).backward()
+        F.cross_entropy(candidate_logits, tokens[8:]).backward()
         gradient_errors = {}
         for (name, x), (other, y) in zip(reference.named_parameters(), candidate.named_parameters()):
             assert name == other
@@ -90,12 +95,13 @@ def main():
             changed = tokens[:-1].clone(); changed[39:] = (changed[39:]+1)%27
             perturbed, _ = candidate.forward_chunk(changed)
             torch.testing.assert_close(perturbed[:39], whole[:39], rtol=3e-4, atol=3e-5)
-        cases.append(dict(position=position, logit_max_abs_error=error(candidate_logits, reference_logits),
+        cases.append(dict(position=position, width=args.width, warm_tokens=7,
+                          logit_max_abs_error=error(candidate_logits, reference_logits),
                           state_max_abs_error=mode_error, gradient_max_abs_errors=gradient_errors,
                           chunk_max_abs_error=error(chunked, whole),
                           future_perturbation_prefix_error=error(perturbed[:39], whole[:39])))
     with torch.no_grad():
-        old = StreamingEventLanguageModel(width=32, modes=16, depth=6)
+        old = StreamingEventLanguageModel(width=args.width, modes=args.width//2, depth=6)
         old.load_state_dict(model.state_dict())
         old_state, precise_state = old.new_state(), model.new_state()
         old_state.position = precise_state.position = 10_000_000

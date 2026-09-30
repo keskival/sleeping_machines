@@ -29,13 +29,15 @@ from sleeping_machines.parallel_stream_language import ParallelEventLanguageMode
 @torch.no_grad()
 def evaluate(model, tokens, chunk):
     model.eval()
-    state, total = model.new_state(), 0.
+    state, total, block_bpc, block_targets = model.new_state(), 0., [], []
     for start in range(0, len(tokens)-1, chunk):
         end = min(start+chunk, len(tokens)-1)
         logits, state = model.forward_chunk(tokens[start:end], state)
-        total += float(F.cross_entropy(logits, tokens[start+1:end+1], reduction='sum'))
+        loss_sum = float(F.cross_entropy(logits, tokens[start+1:end+1], reduction='sum'))
+        total += loss_sum
+        block_bpc.append(loss_sum/(end-start)/math.log(2)); block_targets.append(end-start)
     return dict(n=len(tokens)-1, bpc=total/(len(tokens)-1)/math.log(2),
-                event_deliveries=state.deliveries)
+                event_deliveries=state.deliveries, block_bpc=block_bpc, block_targets=block_targets)
 
 
 def capture(action):
@@ -102,7 +104,7 @@ def fitting_work(model, optimizer, tokens, args):
                 scope='Representative saved-parameter complete-step estimates, including the actual first, persistent and partial chunks, backward, clipping and warm Adam. No artificial fitting warmup. Excludes development/test passes, trace setup, loading, index/queue work and physical memory traffic; not measured energy.')
 
 
-def diagnostics(model, initial):
+def diagnostics(model, initial, credit_horizon):
     rows = []
     for i, layer in enumerate(model.layers):
         rates = F.softplus(layer.raw_rate.detach())+1e-6
@@ -113,7 +115,7 @@ def diagnostics(model, initial):
                          memory_time_min=float(timescales.min()),
                          memory_time_median=float(timescales.median()),
                          memory_time_max=float(timescales.max()),
-                         fraction_memory_times_above_credit_horizon=float((timescales>64).float().mean()),
+                         fraction_memory_times_above_credit_horizon=float((timescales>credit_horizon).float().mean()),
                          frequency_abs_max=float(layer.frequency.detach().abs().max())))
     return rows
 
@@ -236,7 +238,7 @@ def main():
     if args.official_test:
         result['final']['official_test'] = evaluate(model,torch.tensor(text_slice(95_000_000,args.test)),args.chunk)
         result['protocol']['official_test_read'] = True
-    result['diagnostics'] = diagnostics(model,initial)
+    result['diagnostics'] = diagnostics(model,initial,args.chunk)
     result['work'] = fitting_work(model,optimizer,train,args)
     result['status'] = 'completed';persist()
     print(json.dumps(dict(final=result['final'],selected_epoch=result['selected_epoch'],
