@@ -2,14 +2,15 @@
 
 Authorized scope: all unfinished non-SHD queued benchmarks, serialized through
 `experiments/queue/run_safe.sh`; commit and push completed work. SHD work belongs
-to the workstation agent and is excluded. Branch: `aws/non-shd-benchmarks-20260929`.
+to the workstation agent and is excluded. All development and commits happen
+directly on `main` on both hosts.
 
 Host: EC2 c7i.4xlarge, 16 vCPUs, Intel Xeon Platinum 8488C, approximately 30 GiB
 visible RAM, CPU-only PyTorch 2.14.0. Package versions are recorded in
 `queue/aws_packages_20260929.txt`. The initial checkout was c9a3e37; the latest
 AWS instructions were fetched and fast-forwarded to bb89163 before preparing
-this batch. The updated instructions require AWS-specific paths and a dedicated
-branch; the first three E68 runs below predate that synchronization.
+this batch. Use AWS-specific paths and run tags while keeping the checkout on
+`main`; the first three E68 runs below predate output isolation.
 
 ## Completed initial runs
 
@@ -65,7 +66,7 @@ retaining the 8 GiB floor. Large counting tables use 16 GiB virtual / 12 GiB RSS
 other jobs retain the original memory caps. These are ceilings, not reservations.
 
 `queue/aws_progress_20260929.json` records outcomes as jobs finish. Each job's
-JSON results, provenance, and logs are committed and pushed to the AWS branch.
+JSON results, provenance, and logs are committed and pushed directly to `main`.
 Binary checkpoints and probability arrays remain on the host for dependent
 analyses; they are not automatically added to Git. Preserve them before host
 termination.
@@ -100,4 +101,20 @@ underlying script returned normally. Binary artifacts stay local.
 Monitor with `tmux attach -t aws-non-shd`,
 `tail -f /tmp/aws-non-shd-controller.log`, or the individual safe-runner logs.
 The follow-up session is `aws-non-shd-followup`; its log is
-`/tmp/aws-non-shd-followup.log`. Results are running/queued, not yet all complete. The workstation advanced `main` while the AWS batch was active. The mirror publishes a benchmark commit directly when it can fast-forward; otherwise it creates a merge commit that preserves both branches. Between jobs it rebases the AWS branch onto current `main`, then refreshes `REPORT.md`, `FINDINGS.md`, and the PDF from committed result files and pushes that report update to `main`.
+`/tmp/aws-non-shd-followup.log`. Consult the progress JSON for completed outcomes.
+
+## Synchronization between hosts
+
+Both AWS publishers now require the local branch to be `main`. They commit
+completed work there, fetch `origin`, rebase onto `origin/main` and push directly
+to `main`. A concurrent push triggers another fetch/rebase attempt; a rebase
+conflict stops publication so both hosts' changes can be resolved explicitly.
+There is no branch-mirroring controller or automatic merge of generated reports.
+Coordinate ownership of report edits and regenerate the PDF from completed
+results using the current report source.
+
+Processes already running on AWS retain their loaded Python code. After the
+current safe-runner job completes and its results are preserved, stop any
+retired mirror process, synchronize the AWS checkout onto `main` without
+discarding its work, and restart the controller from the updated scripts.
+Do not interrupt an active training job just to replace the controller.

@@ -295,16 +295,15 @@ Validation queues:
 ## AWS handoff and outstanding coverage
 
 The AWS sibling retains its existing non-SHD queues. This local work did not
-start those workloads or change their plan. Use a separate `aws/shared-*`
-branch, host-specific tags and new one-job queues for shared-model work. The
+start those workloads or change their plan. Work directly on `main`, using
+host-specific tags and new one-job queues for shared-model work. The
 handoff is a repository file, not a message sent to the sibling.
 
-The report publisher now resolves conflicts automatically only for generated
-report artifacts, preserving main until regeneration; editorial/builder conflicts
-require resolution. A publisher process started before this code change must be
-restarted on its host to adopt the revised policy. The named PDF edition
-`report/sleeping_machines_shared_20260929.pdf` preserves this report independently
-of the background status-PDF refresh.
+Both hosts commit and push directly to `main` after fetching and rebasing onto
+`origin/main`. Conflicts require explicit resolution that preserves both hosts'
+work. Coordinate changes to shared report source, then regenerate both PDF
+editions from completed results. Running AWS publishers must be restarted
+between jobs to adopt updated scripts; do not interrupt training.
 
 1. Import the shared-core source and contracts; run the contracts on a host
    with the referenced SHD checkpoint, or obtain that untracked checkpoint

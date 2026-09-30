@@ -2,6 +2,10 @@
 # Resume the unfinished reference in a one-job queue, then reload the AWS plan.
 set -euo pipefail
 cd /workspace
+if [[ "$(git branch --show-current)" != "main" ]]; then
+  echo 'AWS development and benchmark commits must happen on main.' >&2
+  exit 2
+fi
 export WAIT=1 MIN_AVAIL_MB=8192 MEM_CAP_KB=6000000 MEM_CAP_RSS_KB=3500000
 export JOB_TIMEOUT_S=259200 PYTHONUNBUFFERED=1
 export AFTER_JOB_HOOK=/workspace/scripts/publish_aws_safe_result.py

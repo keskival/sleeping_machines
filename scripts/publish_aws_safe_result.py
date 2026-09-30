@@ -13,7 +13,7 @@ ROOT = Path('/workspace')
 QUEUE = ROOT / 'experiments/queue'
 PLAN = QUEUE / 'aws_plan_20260929.json'
 PROGRESS = QUEUE / 'aws_progress_90m_baselines.json'
-BRANCH = 'aws/non-shd-benchmarks-20260929'
+BRANCH = 'main'
 
 
 def git(*args, check=True):
@@ -28,6 +28,8 @@ def stamp():
 def publish():
     delay = 5
     while True:
+        if git('branch', '--show-current').stdout.strip() != BRANCH:
+            raise RuntimeError('AWS development must stay on main; refusing to publish')
         fetched = git('fetch', 'origin', check=False)
         if fetched.returncode:
             print(stamp(), 'fetch failed; retrying:', fetched.stdout.strip(), flush=True)
@@ -35,20 +37,22 @@ def publish():
             rebased = git('rebase', 'origin/main', check=False)
             if rebased.returncode:
                 git('rebase', '--abort', check=False)
-                print(stamp(), 'rebase failed; retrying:', rebased.stdout.strip(), flush=True)
+                raise RuntimeError('Rebase onto origin/main failed; resolve it on main '
+                                   'before restarting publication:\n' + rebased.stdout.strip())
             else:
-                for ref in ('refs/heads/main', f'refs/heads/{BRANCH}'):
-                    pushed = git('push', 'origin', f'HEAD:{ref}', check=False)
-                    if pushed.returncode:
-                        print(stamp(), 'push failed; retrying:', pushed.stdout.strip(), flush=True)
-                        break
-                else:
+                if git('branch', '--show-current').stdout.strip() != BRANCH:
+                    raise RuntimeError('Branch changed; refusing to publish benchmark results')
+                pushed = git('push', 'origin', 'HEAD:refs/heads/main', check=False)
+                if pushed.returncode == 0:
                     return
+                print(stamp(), 'push failed; retrying:', pushed.stdout.strip(), flush=True)
         time.sleep(delay)
         delay = min(delay * 2, 300)
 
 
 def main():
+    if git('branch', '--show-current').stdout.strip() != BRANCH:
+        raise RuntimeError('AWS development and benchmark commits must happen on main')
     tag = os.environ['AFTER_JOB_NAME']
     exit_code = int(os.environ.get('AFTER_JOB_EXIT_CODE', '1'))
     jobs = {job['run_tag']: job for job in json.loads(PLAN.read_text())}
@@ -94,10 +98,12 @@ def main():
                       built.stdout.strip().splitlines()[-1], flush=True)
 
     paths = [str(path.relative_to(ROOT)) for path in paths if path.exists()]
+    if git('branch', '--show-current').stdout.strip() != BRANCH:
+        raise RuntimeError('Branch changed; refusing to commit benchmark results')
     git('add', '--', *paths)
     git('commit', '--only', '-m', f'Record {tag}: {status}', '--', *paths)
     publish()
-    print(stamp(), 'published', tag, 'to main and benchmark branch', flush=True)
+    print(stamp(), 'published', tag, 'to main', flush=True)
 
 
 if __name__ == '__main__':

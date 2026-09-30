@@ -12,7 +12,7 @@ ROOT = Path('/workspace')
 QUEUE = ROOT / 'experiments/queue'
 PLAN = QUEUE / 'aws_plan_20260929.json'
 PROGRESS = QUEUE / 'aws_progress_20260929.json'
-BRANCH = 'aws/non-shd-benchmarks-20260929'
+BRANCH = 'main'
 
 
 def git(*args):
@@ -23,6 +23,8 @@ def publish_result():
     """Keep retrying transient remote failures and rebase after concurrent main updates."""
     delay = 15
     while True:
+        if git('branch', '--show-current') != BRANCH:
+            raise RuntimeError('AWS development must stay on main; refusing to publish')
         fetched = subprocess.run(['git', 'fetch', 'origin'], cwd=ROOT, text=True,
                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         if fetched.returncode:
@@ -34,11 +36,13 @@ def publish_result():
             if rebased.returncode:
                 subprocess.run(['git', 'rebase', '--abort'], cwd=ROOT, check=False,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                      'rebase onto main failed; retrying:', rebased.stdout.strip(), flush=True)
+                raise RuntimeError('Rebase onto origin/main failed; resolve it on main '
+                                   'before restarting publication:\n' + rebased.stdout.strip())
             else:
+                if git('branch', '--show-current') != BRANCH:
+                    raise RuntimeError('Branch changed; refusing to publish benchmark results')
                 pushed = subprocess.run(['git', 'push', 'origin',
-                                         'HEAD:refs/heads/' + BRANCH], cwd=ROOT, text=True,
+                                         'HEAD:refs/heads/main'], cwd=ROOT, text=True,
                                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 if pushed.returncode == 0:
                     print(pushed.stdout.strip(), flush=True)
@@ -52,13 +56,15 @@ def publish_result():
 def main():
     os.chdir(ROOT)
     if git('branch', '--show-current') != BRANCH:
-        raise RuntimeError('Use the dedicated AWS benchmark branch')
+        raise RuntimeError('AWS development and benchmark commits must happen on main')
     jobs = json.loads(PLAN.read_text())
     progress = json.loads(PROGRESS.read_text()) if PROGRESS.exists() else {}
     supplemental_progress = QUEUE / 'aws_progress_90m_baselines.json'
     if supplemental_progress.exists():
         progress.update(json.loads(supplemental_progress.read_text()))
     for job in jobs:
+        if git('branch', '--show-current') != BRANCH:
+            raise RuntimeError('Branch changed; refusing to start a benchmark outside main')
         tag = job['run_tag']
         if tag in progress:
             continue

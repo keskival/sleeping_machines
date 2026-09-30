@@ -109,8 +109,11 @@ Run Codex from the AWS checkout and use it for one benchmark at a time. The
 queue lock at `/tmp/experiments-runner.lock` serializes jobs on that EC2 host;
 it does not coordinate with the workstation or another EC2 instance. Keep AWS
 run tags distinct (for example, include `aws`) so results from two machines do
-not overwrite one another when copied or merged. Use a separate Git branch on
-AWS while the workstation checkout is also changing.
+not overwrite one another when synchronized. Work directly on `main` on both
+hosts. Commit only completed work owned by that host, then fetch, rebase onto
+`origin/main`, and push to `main` without force. Coordinate edits to shared
+source, theory and report files. Stop and resolve conflicts while preserving
+both hosts' work; do not create development branches or use branch mirroring.
 
 Codex CLI automatically reads repository `AGENTS.md` instructions, so the
 checkout's [host rules](AGENTS.md) apply at session start. The prompt below
@@ -143,9 +146,11 @@ Give every run a unique AWS-specific run_tag and output name. Never overwrite
 an earlier result or reuse a successful queue job name for changed settings.
 Record the exact command, instance type, CPU/GPU, memory peak, wall time, and
 benchmark metrics. Update findings and the report only from completed result
-files. Work on a dedicated AWS Git branch; commit the benchmark and report
-changes there using Git, staging only that host's completed source, results and report changes.
-Do not push to main while another host may be changing it.
+files. Work and commit directly on main, staging only this host's completed
+source, results and coordinated report changes. Fetch and rebase onto
+origin/main before pushing directly to main, without force. If another host
+pushes first, fetch and rebase again. Stop for genuine conflicts and preserve
+both hosts' work. Do not create development branches or use branch mirroring.
 ```
 
 The checkout's `run_safe.sh` defaults protect a small host and may be too
