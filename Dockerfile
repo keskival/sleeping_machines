@@ -1,5 +1,6 @@
-# Claude Code – safe local sandbox with Android/React Native toolchain
-# Usage: ./dev.sh [claude args...]
+# Codex / Claude development container with Android/React Native toolchain
+# Usage: ./codex.sh [codex args...] or ./dev.sh [claude args...]
+# Codex uses Docker isolation; its inner sandbox is disabled in this image.
 #
 # Build args:
 #   NODE_VERSION   – Node.js major version  (default: 24)
@@ -24,8 +25,8 @@ ARG NODE_VERSION=24
 FROM node:${NODE_VERSION}-trixie-slim@sha256:ae91dcc111a68c9d2d81ff2a17bda61be126426176fde6fe7d08ab13b7f50573
 
 ARG CLAUDE_VERSION=latest
-LABEL org.opencontainers.image.title="claude-code-sandbox"
-LABEL org.opencontainers.image.description="Safe local environment for Claude Code with Android SDK"
+LABEL org.opencontainers.image.title="codex-claude-development"
+LABEL org.opencontainers.image.description="Development tools for Codex and Claude Code with Android SDK"
 
 # ── System packages ───────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -254,6 +255,14 @@ ENV PATH="/home/node/.npm-global/bin:${PATH}"
 ENV CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION=400
 
 RUN npm install -g @openai/codex
+
+# Also configure clients that start the app-server daemon directly, rather
+# than invoking the CLI with --yolo. Existing threads keep their runtime policy
+# until the client selects Full Access or starts a new thread with these defaults.
+ENV CODEX_HOME=/home/node/.codex
+COPY scripts/configure_codex_container.py /usr/local/lib/configure_codex_container.py
+RUN python3 /usr/local/lib/configure_codex_container.py /home/node/.codex/config.toml
+
 # ── Bun runtime (used by the API and as package manager) ─────────────────────
 RUN npm install -g bun@1.3.14
 
