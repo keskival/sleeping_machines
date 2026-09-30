@@ -41,7 +41,7 @@ def main():
     g=torch.diag(torch.tensor([1.,0.],dtype=torch.float64));c=g.clone()
     u=torch.tensor([[0.,-1.],[1.,0.]],dtype=torch.float64);rotated=u@g@u.T
     assert g.trace()==rotated.trace() and torch.trace(g@c)==1 and torch.trace(rotated@c)==0
-    assert torch.trace(g@torch.eye(2))==torch.trace(rotated@torch.eye(2))
+    assert torch.trace(g@torch.eye(2,dtype=g.dtype))==torch.trace(rotated@torch.eye(2,dtype=g.dtype))
     result={'status':'completed','commutator_identity_max_error':commutator_error,
       'connected_five_coordinate_lie_dimension':connected,'disconnected_three_plus_two_dimension':disconnected,
       'same_scalar_trace_different_anisotropic_capacity':[float(torch.trace(g@c)),float(torch.trace(rotated@c))],
