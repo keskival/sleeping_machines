@@ -63,7 +63,8 @@ def results():
     tasks['language_race'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'parallel_language').glob('local_indexed_language_*Z.json'))]
     tasks['language_full_sparse'] = [read(str(path.relative_to(RES)))
-        for path in sorted((RES/'parallel_language').glob('local_full_sparse_language_*Z.json'))]
+        for path in sorted([*(RES/'parallel_language').glob('local_full_sparse_language_*Z.json'),
+                            *(RES/'parallel_language').glob('aws_full_sparse_language_*Z.json')])]
     audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
     tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")

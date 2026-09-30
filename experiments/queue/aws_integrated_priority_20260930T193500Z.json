@@ -1,0 +1,67 @@
+{
+  "status": "prepared",
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/integrated_language_benchmark.py": "7927ac18f2b024b9d58db34b450028cb3892508f7a939ede4d86923a2ed5aa13"
+  },
+  "jobs": [
+    {
+      "tag": "aws_full_sparse_language_D32768_d32_p2_seed6_20260930T193500Z",
+      "fit": 32768,
+      "queue": "experiments/queue/aws_full_sparse_language_D32768_d32_p2_seed6_20260930T193500Z.txt",
+      "result": "experiments/results/parallel_language/aws_full_sparse_language_D32768_d32_p2_seed6_20260930T193500Z.json",
+      "status": "pending",
+      "timeout_s": 28800
+    },
+    {
+      "tag": "aws_full_sparse_language_D131072_d32_p2_seed6_20260930T193500Z",
+      "fit": 131072,
+      "queue": "experiments/queue/aws_full_sparse_language_D131072_d32_p2_seed6_20260930T193500Z.txt",
+      "result": "experiments/results/parallel_language/aws_full_sparse_language_D131072_d32_p2_seed6_20260930T193500Z.json",
+      "status": "pending",
+      "timeout_s": null
+    },
+    {
+      "tag": "aws_full_sparse_language_D1048576_d32_p2_seed6_20260930T193500Z",
+      "fit": 1048576,
+      "queue": "experiments/queue/aws_full_sparse_language_D1048576_d32_p2_seed6_20260930T193500Z.txt",
+      "result": "experiments/results/parallel_language/aws_full_sparse_language_D1048576_d32_p2_seed6_20260930T193500Z.json",
+      "status": "pending",
+      "timeout_s": null
+    },
+    {
+      "tag": "aws_full_sparse_language_D10000000_d32_p2_seed6_20260930T193500Z",
+      "fit": 10000000,
+      "queue": "experiments/queue/aws_full_sparse_language_D10000000_d32_p2_seed6_20260930T193500Z.txt",
+      "result": "experiments/results/parallel_language/aws_full_sparse_language_D10000000_d32_p2_seed6_20260930T193500Z.json",
+      "status": "pending",
+      "timeout_s": null
+    }
+  ],
+  "resource_caps": {
+    "MEM_CAP_KB": 6000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "hardware": {
+    "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  16\nOn-line CPU(s) list:                     0-15\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Platinum 8488C\nCPU family:                              6\nModel:                                   143\nThread(s) per core:                      2\nCore(s) per socket:                      8\nSocket(s):                               1\nStepping:                                8\nBogoMIPS:                                4800.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq monitor ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 wbnoinvd ida arat avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq rdpid cldemote movdiri movdir64b md_clear serialize amx_bf16 avx512_fp16 amx_tile amx_int8 flush_l1d arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               384 KiB (8 instances)\nL1i cache:                               256 KiB (8 instances)\nL2 cache:                                16 MiB (8 instances)\nL3 cache:                                105 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-15\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+    "memory": "               total        used        free      shared  buff/cache   available\nMem:            30Gi       4.7Gi        11Gi       245Mi        14Gi        26Gi\nSwap:             0B          0B          0B\n",
+    "gpu": "No nvidia-smi or NVIDIA device available"
+  },
+  "source_commit": "bd444a1c1de1cf763ac7c7baaf5516b4b04122e6"
+}
