@@ -1,0 +1,1 @@
+local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b128lr004_20260930T231500Z experiments/parallel_head_accumulated_language.py --tag local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b128lr004_20260930T231500Z --heads 2 --fit 8192 --dev 8192 --epochs 4 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --chunk 16 --update-targets 128 --warmup-targets 512 --seed 6 --lr 0.004

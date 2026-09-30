@@ -1,5 +1,31 @@
 # Findings log
 
+## Independent parallel temporal heads and full-bank work hypothesis
+
+Completed matched eight-block, payload 32, seed6, four-pass 8K fitting controls
+reach receiver **3.310618** and content-index KV **3.357342 bpc** on 8,191 cold
+development targets. Whole-fit unit-special CPU work is **40.243259** and
+**50.006204 GFLOPs**, respectively. Adding this KV did not improve quality.
+The receiver took approximately 18.6 min; KV 27.8 min, with peak RSS 749,944 KiB.
+The earlier 2K records and their small gains remain preserved.
+
+The complete two-head candidate has independent Q/K/V matrices, receiver pools,
+historical banks, evolving timestamped channels and learned cross-head mixing.
+Numerical contracts and a 129-character full-gradient/accounting smoke pass,
+including 10M clock precision, channel alignment, all-head gradients, detached
+packed storage and exact next-update recovery. Its 2K/four-pass fit reaches
+**3.786482 development bpc** on 8,191 targets, selecting epoch 2; epoch 4 regresses
+to 3.892307. Whole-fit CPU work **27.730791 GFLOPs**; wall 1735.8 s. Total width 64
+and new source/channel dynamics differ from previous single-head models, so
+this is neither a pure head ablation nor evidence that heads improve quality.
+
+The next campaign separates 16-character credit from 64/128-target Adam updates.
+Summed-gradient, partial-window and checkpoint-resume contracts pass. Quality
+and actual full fitting work determine schedule/head/data promotions. Theory 48
+states all-key inference/training FLOPs, logical access reductions and limits
+of sampled attention containment. More temporal policies and dormant capacity
+are explicit testable mechanisms, not assumed language superiority.
+
 ## E171–E177: causal evidence, complete learning work and persistent language
 
 ### Highlighted-result review and aligned language scoring

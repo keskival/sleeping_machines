@@ -104,7 +104,8 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 - [Precise language scans and content](theory/44_precise_language_scans_and_content.md) — §§287–293: precise clocks, bounded causal scans and input-dependent content/memory learning.
 - [Race attention and resource identity](theory/45_race_attention_and_resource_identity.md) — §§294–298: corrected shared-clock covariance, centered conserved counterfactual credit and complete resource boundaries.
 - [Integrated sparse temporal language](theory/46_integrated_sparse_temporal_language.md) — §§299–302: content-bearing sparse timed events, key/value/state separation and capacity versus teaching work.
-- [Language capacity and online learning](theory/47_language_capacity_and_online_learning.md) — §§303–311: centered-logit rank, integrated width/data tests, iso-FLOP risk, online adaptation, reproducible benchmarks, queries, compressed versus token KV memory, addressable history and the eight-depth content-index experiment.
+- [Language capacity and online learning](theory/47_language_capacity_and_online_learning.md) — §§303–312: centered-logit rank, integrated width/data tests, iso-FLOP risk, online adaptation, reproducible benchmarks, queries, compressed versus token KV memory, addressable history and the eight-depth content-index experiment.
+- [Parallel heads and work scaling](theory/48_parallel_heads_and_work_scaling.md) — §§313–319: independent projections, timestamped mixing, full-bank attention work, counterfactual/Adam costs, approximate attention containment, shared-match temporal policies and the dormant-capacity hypothesis.
 - [Cross-cutting test matrix](theory/TEST_MATRIX.md)
 
 ### Canonical derivation map

@@ -1,5 +1,52 @@
 # Session handoff — 2026-09-30
 
+## Current priority — complete independent-head models, 23:30 UTC
+
+The 21:15 single-head eight-block campaign completed. Matched 8K controls:
+receiver 3.310618 bpc / 40.243259 unit-special whole-fit GFLOPs; indexed KV
+3.357342 bpc / 50.006204 GFLOPs. KV regresses 0.046724 bpc; preserve this beside
+the previous 2K evidence. All are one-seed development screens, not supremacy.
+
+Prepared supervisor: `scripts/run_parallel_heads_overnight.py`; manifest/log
+stem `local_parallel_heads_overnight_20260930T231500Z`. Inspect tmux/processes
+and its `.status.json` before launching. The baseline H2 2K pilot completed:
+3.786482 bpc on 8,191 development targets, selected epoch 2; epoch 4 was
+3.892307, indicating overfitting. It uses new independent spatial heads,
+source-state evolution and learned channel mixing; it is not a head-only
+comparison with the earlier single-head model. Baseline tag ends `225500Z`.
+
+Frozen candidate sources: `sleeping_machines/parallel_head_race_language.py`,
+`packed_episodic_race_language.py`, `experiments/parallel_head_race_language_screen.py`,
+`parallel_head_accumulated_language.py`, `parallel_head_gradient_accumulation.py`
+and their source-hashed dependencies. Never edit while jobs run. H2 has payload
+32/head (total64), H4 total128, depth8, independent per-head Q/K/V/gates,
+receiver pools and historical banks. Channels evolve until their read time;
+next-layer mixing preserves separate channels. Numerical contracts and the
+baseline full-gradient smoke passed. Accumulation contracts passed, including
+partial-window normalization, summed-gradient comparison and exact resumed next
+update. Its guarded full-gradient smoke passed before optimizer pilots (351.103155 million
+unit-special fitting operations versus baseline smoke 447.656271 million; distinct
+update schedules/learning rates, not a matched-quality advantage).
+
+Campaign: compare U64/lr.002, U64/lr.004, U128/lr.004 with fixed16-character
+credit; select work within declared quality tolerance, then H2/H4 8K, selected
+32K, second seed8K and conditionally131K. Every stage runs via a unique one-job
+queue, serial guard, VMS4,000,000KiB/groupRSS2,500,000KiB caps and minavailable
+8192MiB. CPU host ~31.3GiB total/~11.8GiB available; no NVIDIA GPU. Stop on
+failed contracts, source changes, poor quality or memory gate. No new dense
+training locally. The superseded single-head packed ladder is prepared only;
+its supervisor refuses to launch. AWS10M six-block definition remains separate.
+
+The report's new pages 2–4 develop the general event interface, architectural hypothesis and full-bank
+work/access scenario; scores for every key remain charged. Same context/depth
+orders, constant attention arithmetic savings, winner-value logical access
+savings, and counterfactual/optimizer costs are explicit. Temporal expressivity,
+smaller models, event-camera suitability and useful dormant-capacity scaling
+are hypotheses with stated milestones, not established frontier superiority.
+Independent heads are implemented; additional within-head shared-match policies
+and local scalar-credit traffic optimization remain proposed. Read theory48,
+§§313–319 and the updated root README/integrated guide.
+
 ## Current priority — eight-block content-indexed KV, 21:15 UTC
 
 Current tmux: `local_indexed_episodic_depth8_resume_20260930T214000Z`.

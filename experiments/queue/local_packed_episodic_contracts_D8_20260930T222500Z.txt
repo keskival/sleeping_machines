@@ -1,0 +1,1 @@
+local_packed_episodic_contracts_D8_20260930T222500Z experiments/packed_episodic_race_language_screen.py --tag local_packed_episodic_contracts_D8_20260930T222500Z --memory kv --fit 2048 --dev 2048 --epochs 4 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6 --lr 0.001 --contracts-only

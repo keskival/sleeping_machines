@@ -25,6 +25,70 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 **Language scale-up:** the integrated sparse/timed architecture is now prioritized. The comparable 10M-character test remains pending; completed neural controls and costs are in Appendix B.
 
+## A general architecture for content, time and selective activity
+
+Language tokens, irregular observations and action requests can be expressed as content-bearing events with timestamps and source identities. Sleeping Machines aim to learn through this common interface: local state evolves between arrivals, delays perform computation, and only recruited modules act. This broader design is the central research target.
+
+![general temporal interface](report/figures/general_temporal_interface.png)
+
+## Why this could matter across domains
+
+- **Language and memory.** Content-dependent races retrieve representations; temporal state carries context beyond an immediate token.
+- **Asynchronous sensing.** Updates can follow observations and required deadlines rather than a periodic sweep of all modules. Silence remains informative when the objective depends on waiting time.
+- **Instruction-conditioned control.** Language can guide event routing and memory; observations can ground language and update a world state that informs timed actions.
+- **Useful dormant capacity.** Stored modules need not all execute for each input. The gain depends on economical discovery and credit, and is judged at a fixed total work budget.
+- **Distributed hardware.** Local event-triggered state and communication can reduce global coordination. Globally clockless ASICs are a target; conventional FPGA prototypes retain clocks. Hardware joule savings remain to be measured.
+
+## What is established, and what is next
+
+| Ours: family evidence | Completed result / scope | Next generality test |
+| --- | --- | --- |
+| Temporal reasoning | 99.73–99.93% event-order accuracy; five runs, declared structured task | Unseen delays, gaps and concurrent streams |
+| Deep learned context | 3.121 development bpc; sparse six-block / 32K fit; eight-block models also train | Matched-quality work and capacity scaling |
+| Auditory events | 79.69% on 512 private development utterances; selected temporal encoder | Aligned official-test real-stream comparison |
+
+The diagram is a joint-model research target. Existing cross-task results use task-specific adapters and separately trained variants; they do not establish shared-weight multimodal learning, an event-camera advantage or robot reliability. The current language candidate uses 27 character pools. Held-out cross-modal combinations and interventions must test whether integration adds useful capability.
+
+## The hypothesis: more capability per unit of active work
+
+Sleeping Machines combine trainable delays, temporal races, evolving local state and counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention with less selected arithmetic and value movement, then use richer temporal computation and dormant capacity to reach comparable quality with smaller models or less fitting. A common content-and-time event interface can support tokens and irregular sensor streams, with task-specific adapters and losses. Existing cross-task models train separately; The integration target is language-guided event routing and shared state: events ground language and both inform actions. Shared-weight multimodal learning remains a further milestone.
+
+A softmax race samples exactly from its distribution. One winner does not equal its weighted average. Averaging m independent winners has mean-square error variance/m; approximate Transformer containment also requires historical coverage and stable propagation through depth. Temporal state permits additional computations beyond this attention analogue.
+
+## Matched attention work: retain all query/key matches
+
+Let d be total width, L depth, N historical keys, r the feed-forward expansion and B = (8 + 4r)d² the shared projection/content work per layer. S is extra evolving-state work per layer. Two FLOPs per multiply-add:
+
+| Per token / target | Transformer | Ours: race substitution |
+| --- | --- | --- |
+| Inference | L(B + 4Nd) | L(B + 2Nd + S) |
+| Training, approximate | 3LB + 12LNd + 19P/U | 3L(B + S) + 10LNd + 20P/U |
+| Logical value reads (FP32) | 4LNd bytes | 4Ld bytes |
+| Logical key + value reads | 8LNd bytes | 4L(N + 1)d bytes |
+
+P is updated parameter count and U targets per Adam update. The race training term includes admitted losing-value credit; it is not winner-only training. Our normalization of accumulated gradients adds one operation per updated parameter. Shared embeddings/output and lower-order operations are added in the plotted scenario.
+
+## What would make the case decisive?
+
+- **Matched-quality efficiency.** Repeated completed comparisons of full fitting work and inference work.
+- **Capacity beyond activity.** More useful stored modules with nearly fixed routing and execution budgets.
+- **Temporal expressivity.** Reuse expensive matches for distinct cheap races and evolving-state responses; test whether this reduces required width or depth.
+- **Common event interface.** Tokens, irregular sensors and instruction-conditioned control can use content-and-time events. Real-stream, joint-reasoning/control and hardware-energy advantages require their own benchmarks.
+
+This is a research hypothesis and an architectural comparison, not a frontier-language or measured-energy claim. Current deep sparse learning and structured-task results establish meaningful mechanisms; compression and broad language advantage need further evidence.
+
+## Expected architectural work and access scaling
+
+![full bank temporal scaling](report/figures/full_bank_temporal_scaling.png)
+
+Scenario: d = 256, four heads, r = 4, U = 128 and S = 128d per layer. Context plots use L = 8; the depth plot scores N = 4,096 keys. All keys are scored in both models. Both retain linear context and depth terms, and quadratic width terms. At fixed width, the attention-only arithmetic limit is about 2× at inference and 1.2× during counterfactual training; common projection work lowers these total-work ratios. If richer temporal computation reaches the same quality at width αd and depth βL, projection work scales by βα² and context work by βα. Those additional savings require matched-quality evidence.
+
+![full bank temporal traffic](report/figures/full_bank_temporal_traffic.png)
+
+Winner-only retrieval reduces logical value reads by N in this one-sample scenario. Including the key reads, total K/V access improves by at most about 2×. These counts are logical accesses, not measured off-chip transfers, cache behavior or joules. Multiple winners increase value reads. Explicit digital probability normalization is avoided in a physical race, but clock circuitry and rate setting still have costs.
+
+Shared content/projection structure isolates the attention substitution; this is not a quality-matched fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must be charged when present. Bounded candidate search is a separate coverage hypothesis. See theory note 48, §§313–319; measured quality/work curves remain in the appendix.
+
 ## Why this research matters
 
 Sparse neural computation promises to spend work only where information changes. The hard part is teaching useful deep representations when routes can be silent, discrete or absent. A cheap forward pass is insufficient if discovering those routes consumes the savings.
@@ -516,7 +580,7 @@ Inference predicts with frozen weights: no backward pass, clipping or optimizer 
 
 | Model type | bpc / split ↓ | Inference MFLOPs / character ↓ | Cost boundary |
 | --- | --- | --- | --- |
-| Ours: integrated d16/p2 | 3.121 / dev | 0.0255 | Winner-only operator trace |
+| Ours: integrated d16/p2 | 3.121 / dev | 0.0255 | Winner-only inference trace |
 | Ours: carrier w128g | 2.210 / dev | 0.6389 | Saved forward operator trace |
 | LSTM: 512 | 1.661 / test | 2.4024 | Recurrent shape estimate |
 | Transformer: 256x4 | 1.908 / test | 14.8104 | Overlapping-window shape estimate |
@@ -532,15 +596,16 @@ Two FLOPs per multiply-add; special functions count as one operation. Ours trace
 | 1. Ours: I16/p2/32K/s6 | 361.4 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.0255 |
 | 2. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.0255 |
 | 3. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.0321 |
-| 4. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 0.1466 |
-| 5. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 0.1941 |
-| 6. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 0.1968 |
-| 7. Ours: IKVS32D8/8K/s6 | 1,883.9 | 8,192 / 4 | 3.357 / dev | 50.006 | 0.1969 |
-| 8. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.0890 |
-| 9. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 0.1173 |
-| 10. Ours: I32D8/8K/s6 | 1,850.9 | 8,192 / 4 | 3.311 / dev | 40.243 | 0.1173 |
-| 11. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 0.6296 |
-| 12. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.0470 |
+| 4. Ours: IHR2x32D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.786 / dev | 27.731 | 0.5059 |
+| 5. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 0.1466 |
+| 6. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 0.1941 |
+| 7. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 0.1968 |
+| 8. Ours: IKVS32D8/8K/s6 | 1,883.9 | 8,192 / 4 | 3.357 / dev | 50.006 | 0.1969 |
+| 9. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.0890 |
+| 10. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 0.1173 |
+| 11. Ours: I32D8/8K/s6 | 1,850.9 | 8,192 / 4 | 3.311 / dev | 40.243 | 0.1173 |
+| 12. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 0.6296 |
+| 13. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.0470 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
 
@@ -548,18 +613,18 @@ Each row retains its original architecture, fitting budget and score. The select
 
 | Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Inference MFLOPs / char ↓ |
 | --- | --- | --- | --- | --- | --- |
-| 13. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.1675 |
-| 14. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 0.6389 |
-| 15. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 2.4571 |
-| 16. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 0.6389 |
-| 17. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 0.6770 |
-| 18. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 0.6770 |
-| 19. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 2.4024 |
-| 20. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 6.7999 |
-| 21. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 7.4192 |
-| 22. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 7.4192 |
-| 23. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 14.8104 |
-| 24. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 2.4024 |
+| 14. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.1675 |
+| 15. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 0.6389 |
+| 16. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 2.4571 |
+| 17. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 0.6389 |
+| 18. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 0.6770 |
+| 19. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 0.6770 |
+| 20. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 2.4024 |
+| 21. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 6.7999 |
+| 22. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 7.4192 |
+| 23. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 7.4192 |
+| 24. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 14.8104 |
+| 25. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 2.4024 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
 
@@ -630,6 +695,20 @@ Completed KV improvement over receiver memory: -0.047 bpc (positive is better). 
 Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
 
 Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: independent temporal heads
+
+Each head has its own receiver pool, historical bank and query/key/value/gate matrices. A winning content vector evolves through learned rotation and decay until its channel is read. The next block reads at the latest parallel arrival, preserves each channel and learns their mix. Heads need not arrive simultaneously. This is implemented in the CPU emulator; execution there is serial.
+
+![parallel temporal heads](report/figures/parallel_temporal_heads.png)
+
+![parallel temporal head pilots](report/figures/parallel_temporal_head_pilots.png)
+
+| Ours: heads / update | Fit / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ |
+| --- | --- | --- | --- |
+| H2 / U16 / lr0.001 | 2,048 / 4 | 3.786 | 27.731 |
+
+Payload32 per head: H2 totalwidth64, H4 totalwidth128; eight blocks. More heads also increase capacity, and source/channel dynamics differ from the old single-head model. The baseline H2 pilot selects epoch2 and overfits later; no head-count quality benefit is established. Adam interval U is separate from16-character credit. Training reads admitted losing values and charges gradients, clipping and optimizer work. Contracts pass for causality, independent projections, evolving channels, all-head gradients and exact next-update recovery. All completed variants remain in the ledger; this table shows the latest four records.
 
 ## Appendix B (continued). Ours: separate online neural learning
 

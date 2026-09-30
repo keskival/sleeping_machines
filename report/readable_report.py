@@ -12,9 +12,11 @@ from pathlib import Path
 import re
 import runpy
 
+
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT/"experiments/results"
 FIG = ROOT/"report/figures"
+full_bank_comparison=runpy.run_path(str(ROOT/'report/language_scaling.py'))['full_bank_comparison']
 
 
 def read(path):
@@ -70,6 +72,9 @@ def results():
         for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
     tasks['episodic_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'episodic_language').glob('local_episodic_pair_*Z.json'))]
+    tasks['parallel_head_contracts'] = [read(str(path.relative_to(RES)))
+        for path in sorted([*(RES/'episodic_language').glob('local_parallel_head_contracts_*Z.json'),
+                            *(RES/'episodic_language').glob('local_parallel_head_accum_contracts_*Z.json')])]
     audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
     tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")
@@ -128,17 +133,21 @@ def language_work_points(tasks, ev):
             bpc=r['final']['official_test' if official else 'dev']['bpc'],
             total=w['total_training_unit_special_flops'],targets=w['fitting_targets'],
             inference=w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'],
-            inference_method='Winner-only operator trace'))
+            inference_method='Winner-only inference trace'))
     for r in tasks['episodic_language']:
         a=r['args'];w=r['work'];kv=a['memory']=='kv';semantic=a.get('candidate_index')=='semantic'
-        rows.append(dict(model='Ours: '+('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}",
-            family='integrated',label=f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
+        parallel=a.get('heads',1)>1
+        name=f"parallel race KV H{a['heads']}×d{a['payload']}" if parallel else ('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}"
+        label=(f"IHR{a['heads']}x{a['payload']}" if parallel else f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}")
+        if 'update_targets' in a:label+=f"/u{a['update_targets']}@{a['lr']:g}"
+        rows.append(dict(model='Ours: '+name,
+            family='integrated',label=label+f"D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
             parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],split='dev',
             bpc=r['final']['dev']['bpc'],total=w['cpu_emulator']['total_training_unit_special_flops'],
             targets=w['fitting_targets'],
             inference=w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'],
             projected_inference=w['projected_event_architecture']['inference_arithmetic_flops_per_character']+w['projected_event_architecture']['inference_special_functions_per_character'],
-            inference_method='Winner-only operator trace'))
+            inference_method='Winner-only inference trace'))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -180,6 +189,7 @@ def episodic_pairs(tasks):
     grouped={}
     for r in tasks['episodic_language']:
         a=r['args']
+        if a.get('heads',1)>1:continue  # Preserve the matched single-head intervention boundary.
         key=tuple(a[k] for k in ('fit','dev','epochs','chunk','payload','depth','pool','seed','lr'))
         group=grouped.setdefault(key,{'kv':{}})
         if a['memory']=='receiver':group['receiver']=r
@@ -317,6 +327,65 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    f,ax=plt.subplots(figsize=(7.2,2.3));ax.set(xlim=(0,10),ylim=(0,3));ax.axis('off')
+    def box(x,y,w,h,t):
+        ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.06',facecolor='#edf3fb',edgecolor=blue))
+        ax.text(x+w/2,y+h/2,t,ha='center',va='center',fontsize=8)
+    box(.1,.8,1.55,1.3,'Incoming content\n+ persistent state')
+    box(2.1,1.85,2.35,.9,'Head 1: own Q / K / V\nReceiver + historical race')
+    box(2.1,.25,2.35,.9,'Head 2: own Q / K / V\nReceiver + historical race')
+    box(4.95,1.85,2,.9,'Channel 1 / arrival t₁\nEvolves while waiting')
+    box(4.95,.25,2,.9,'Channel 2 / arrival t₂\nEvolves while waiting')
+    box(7.5,.8,2.2,1.3,'Read at max(t₁,t₂)\nKeep separate channels\nLearned next-block mix')
+    for start,end in [((1.7,1.8),(2,2.3)),((1.7,1.1),(2,.7)),((4.5,2.3),(4.9,2.3)),((4.5,.7),(4.9,.7)),((7,2.3),(7.45,1.8)),((7,.7),(7.45,1.1))]:
+        ax.add_patch(FancyArrowPatch(start,end,arrowstyle='->',mutation_scale=11,color=blue))
+    f.tight_layout();save(f,'parallel_temporal_heads')
+    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    if pilots:
+        f,ax=plt.subplots(figsize=(7.2,2.5))
+        for row in pilots:
+            a=row['args'];ax.plot([c['epoch'] for c in row['curve']],[c['dev']['bpc'] for c in row['curve']],marker='o',label=f"Ours H{a['heads']} / U{a.get('update_targets',16)} / lr {a['lr']:g}")
+        ax.set(xlabel='Passes over 2,048 fitting characters',ylabel='Frozen 8K development bpc ↓');ax.grid(alpha=.2);ax.legend(fontsize=7)
+        f.tight_layout();save(f,'parallel_temporal_head_pilots')
+    f,ax=plt.subplots(figsize=(7.2,2.45));ax.set(xlim=(0,10),ylim=(0,3.7));ax.axis('off')
+    def modality_box(x,y,w,h,t):
+        ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.05',facecolor='#edf3fb',edgecolor=blue))
+        ax.text(x+w/2,y+h/2,t,ha='center',va='center',fontsize=8)
+    for y,t in [(2.8,'Language / instructions'),(1.65,'Irregular sensor events'),(.5,'Action queries / deadlines')]:
+        modality_box(.1,y,2.3,.65,t)
+        ax.add_patch(FancyArrowPatch((2.5,y+.325),(3.2,1.95),arrowstyle='->',mutation_scale=11,color=blue))
+    modality_box(3.3,.6,3.5,2.7,'Learned input adapters\nContent + time + source\n\nPersistent evolving state\nTrainable delays / parallel races\nCounterfactual route credit\nSelectively recruited modules')
+    for y,t in [(2.8,'Grounded predictions'),(1.65,'Temporal world estimates'),(.5,'Timed actions')]:
+        modality_box(7.5,y,2.3,.65,t)
+        ax.add_patch(FancyArrowPatch((6.9,1.95),(7.4,y+.325),arrowstyle='->',mutation_scale=11,color=blue))
+    f.tight_layout();save(f,'general_temporal_interface')
+    # Full-bank architectural comparison: keep every query/key match.
+    f, axes = plt.subplots(2, 2, figsize=(7.2, 4.3))
+    contexts = np.array([64,128,256,512,1024,2048,4096,8192,16384,32768])
+    rows = [full_bank_comparison(context=int(n)) for n in contexts]
+    for name,color,label in [('transformer',gray,'Transformer'),('ours',blue,'Ours: temporal race')]:
+        axes[0,0].loglog(contexts,[r[name+'_inference']/1e6 for r in rows],color=color,label=label)
+        axes[1,0].loglog(contexts,[r[name+'_training']/1e6 for r in rows],color=color,label=label)
+    axes[0,0].set(xlabel='All historical keys scored / query',ylabel='Inference MFLOPs / token')
+    axes[1,0].set(xlabel='All historical keys scored / query',ylabel='Training MFLOPs / target')
+    axes[0,1].semilogx(contexts,[r['transformer_inference']/r['ours_inference'] for r in rows],color=blue,label='Inference')
+    axes[0,1].semilogx(contexts,[r['transformer_training']/r['ours_training'] for r in rows],color=orange,label='Training incl. credit / Adam')
+    axes[0,1].set(xlabel='All historical keys scored / query',ylabel='Transformer / ours work ratio')
+    depths=np.array([2,4,8,16,32,64])
+    for name,color,label in [('transformer',gray,'Transformer'),('ours',blue,'Ours: temporal race')]:
+        axes[1,1].plot(depths,[full_bank_comparison(depth=int(l))[name+'_inference']/1e6 for l in depths],color=color,label=label)
+    axes[1,1].set(xlabel='Depth (N = 4,096)',ylabel='Inference MFLOPs / token')
+    for ax in axes.flat:ax.grid(alpha=.2);ax.legend(fontsize=7)
+    f.tight_layout();save(f,'full_bank_temporal_scaling')
+    f,axes=plt.subplots(1,2,figsize=(7.2,2.2))
+    axes[0].loglog(contexts,[r['transformer_value_bytes']/1024 for r in rows],color=gray,label='Transformer: all values')
+    axes[0].loglog(contexts,[r['ours_value_bytes']/1024 for r in rows],color=blue,label='Ours: one value / head')
+    axes[0].set(xlabel='Historical keys / query',ylabel='Logical value reads (KiB / token)')
+    axes[1].semilogx(contexts,[r['transformer_key_value_bytes']/r['ours_key_value_bytes'] for r in rows],color=blue)
+    axes[1].set(xlabel='Historical keys / query',ylabel='Total K/V read ratio: Transformer / ours',ylim=(0,2.2))
+    axes[0].legend(fontsize=7)
+    for ax in axes:ax.grid(alpha=.2)
+    f.tight_layout();save(f,'full_bank_temporal_traffic')
     f, axes = plt.subplots(1, 2, figsize=(7.2, 2.65))
     for depth, color in ((1, gray), (8, blue)):
         row = tasks["generic_language"][depth]
@@ -487,7 +556,7 @@ def figures(M, tasks, ev):
 
     if tasks["shd_single_audit"] is not None and tasks["shd_observer_audit"] is not None:
         audit=tasks["shd_single_audit"];directional=tasks["shd_observer_audit"]
-        f,axes=plt.subplots(1,2,figsize=(7.2,2.8))
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.45))
         points=[(audit['rows'][name],label,color) for name,label,color in (
             ('combined','Combined model',gray),('single_paired','Single paired head',blue),
             ('matched_d6','Trained six blocks','#1baf7a'),('grown_d12','Bounded twelve blocks',orange))]
@@ -857,7 +926,7 @@ def figures(M, tasks, ev):
     if tasks['language_representation']:
         audit=tasks['language_representation']
         names=('full','reset_history_every_token','zero_incoming_embeddings','remove_all_memory_corrections')
-        f,a=plt.subplots(figsize=(7.2,2.8))
+        f,a=plt.subplots(figsize=(7.2,2.45))
         for j,(row,color,label) in enumerate(zip(audit['rows'],(gray,blue),
             ('Ours: constant memory','Ours: input-gated memory'))):
             values=[row['interventions'][name]['bpc'] for name in names]
@@ -1951,6 +2020,30 @@ def blocks(M, tasks, ev):
              'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
+    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1]
+    if head_rows:
+        display=head_rows[-4:]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: independent temporal heads'),
+            ('p','Each head has its own receiver pool, historical bank and query/key/value/gate matrices. '
+             'A winning content vector evolves through learned rotation and decay until its channel is read. '
+             'The next block reads at the latest parallel arrival, preserves each channel and learns their mix. '
+             'Heads need not arrive simultaneously. This is implemented in the CPU emulator; execution there is serial.'),
+            ('figure',('parallel_temporal_heads',174)),
+            ('figure',('parallel_temporal_head_pilots',160)),
+            ('table',(['Ours: heads / update','Fit / passes','Dev bpc ↓','Whole fit GFLOPs ↓'],[
+                [f"H{r['args']['heads']} / U{r['args'].get('update_targets',16)} / lr{r['args']['lr']:g}",
+                 f"{r['args']['fit']:,} / {r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}"] for r in display],
+                [62,37,30,45])),
+            ('small','Payload32 per head: H2 totalwidth64, H4 totalwidth128; eight blocks. More heads also '
+             'increase capacity, and source/channel dynamics differ from the old single-head model. '
+             'The baseline H2 pilot selects epoch2 and overfits later; no head-count quality benefit is established. '
+             'Adam interval U is separate from16-character credit. Training reads admitted losing values '
+             'and charges gradients, clipping and optimizer work. Contracts pass for causality, independent '
+             'projections, evolving channels, all-head gradients and exact next-update recovery. '
+             'All completed variants remain in the ledger; this table shows the latest four records.'),
+        ])
     if tasks['integrated_online_language']:
         row=tasks['integrated_online_language'][-1];a=row['args']
         pages.append([
@@ -2203,6 +2296,93 @@ def blocks(M, tasks, ev):
         ("p","The project theory index contains formal assumptions and proofs. Research findings retain detailed "
          "analyses and the full experimental record. The model documentation describes reproducible configurations "
          "and operational procedures. This report presents the project, its evidence and its potential.")])
+    generality_page=[
+        ('h1','A general architecture for content, time and selective activity'),
+        ('p','Language tokens, irregular observations and action requests can be expressed as '
+         'content-bearing events with timestamps and source identities. Sleeping Machines aim to '
+         'learn through this common interface: local state evolves between arrivals, delays perform '
+         'computation, and only recruited modules act. This broader design is the central research target.'),
+        ('figure',('general_temporal_interface',174)),
+        ('h1','Why this could matter across domains'),
+        ('bullets',[
+         '<b>Language and memory.</b> Content-dependent races retrieve representations; temporal state carries context beyond an immediate token.',
+         '<b>Asynchronous sensing.</b> Updates can follow observations and required deadlines rather than a periodic sweep of all modules. Silence remains informative when the objective depends on waiting time.',
+         '<b>Instruction-conditioned control.</b> Language can guide event routing and memory; observations can ground language and update a world state that informs timed actions.',
+         '<b>Useful dormant capacity.</b> Stored modules need not all execute for each input. The gain depends on economical discovery and credit, and is judged at a fixed total work budget.',
+         '<b>Distributed hardware.</b> Local event-triggered state and communication can reduce global coordination. Globally clockless ASICs are a target; conventional FPGA prototypes retain clocks. Hardware joule savings remain to be measured.'
+        ]),
+        ('h1','What is established, and what is next'),
+        ('table',(['Ours: family evidence','Completed result / scope','Next generality test'],[
+         ['Temporal reasoning','99.73–99.93% event-order accuracy; five runs, declared structured task','Unseen delays, gaps and concurrent streams'],
+         ['Deep learned context','3.121 development bpc; sparse six-block / 32K fit; eight-block models also train','Matched-quality work and capacity scaling'],
+         ['Auditory events','79.69% on 512 private development utterances; selected temporal encoder','Aligned official-test real-stream comparison'],
+        ],[45,77,52])),
+        ('small','The diagram is a joint-model research target. Existing cross-task results use task-specific adapters '
+         'and separately trained variants; they do not establish shared-weight multimodal learning, an event-camera '
+         'advantage or robot reliability. The current language candidate uses 27 character pools. '
+         'Held-out cross-modal combinations and interventions must test whether integration adds useful capability.'),
+    ]
+    architectural_pages=[generality_page,[
+        ('h1','The hypothesis: more capability per unit of active work'),
+        ('p','Sleeping Machines combine trainable delays, temporal races, evolving local state and '
+         'counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention '
+         'with less selected arithmetic and value movement, then use richer temporal computation and '
+         'dormant capacity to reach comparable quality with smaller models or less fitting. '
+         'A common content-and-time event interface can support tokens and irregular sensor streams, '
+         'with task-specific adapters and losses. Existing cross-task models train separately; '
+         'The integration target is language-guided event routing and shared state: '
+         'events ground language and both inform actions. Shared-weight multimodal learning '
+         'remains a further milestone.'),
+        ('p','A softmax race samples exactly from its distribution. One winner does not equal its weighted '
+         'average. Averaging m independent winners has mean-square error variance/m; approximate '
+         'Transformer containment also requires historical coverage and stable propagation through depth. '
+         'Temporal state permits additional computations beyond this attention analogue.'),
+        ('h1','Matched attention work: retain all query/key matches'),
+        ('p','Let d be total width, L depth, N historical keys, r the feed-forward expansion and '
+         'B = (8 + 4r)d² the shared projection/content work per layer. '
+         'S is extra evolving-state work per layer. Two FLOPs per multiply-add:'),
+        ('table',(['Per token / target','Transformer','Ours: race substitution'],[
+         ['Inference','L(B + 4Nd)','L(B + 2Nd + S)'],
+         ['Training, approximate','3LB + 12LNd + 19P/U','3L(B + S) + 10LNd + 20P/U'],
+         ['Logical value reads (FP32)','4LNd bytes','4Ld bytes'],
+         ['Logical key + value reads','8LNd bytes','4L(N + 1)d bytes'],
+        ],[48,60,66])),
+        ('p','P is updated parameter count and U targets per Adam update. The race training term '
+         'includes admitted losing-value credit; it is not winner-only training. Our normalization of '
+         'accumulated gradients adds one operation per updated parameter. Shared embeddings/output '
+         'and lower-order operations are added in the plotted scenario.'),
+        ('h1','What would make the case decisive?'),
+        ('bullets',[
+         '<b>Matched-quality efficiency.</b> Repeated completed comparisons of full fitting work and inference work.',
+         '<b>Capacity beyond activity.</b> More useful stored modules with nearly fixed routing and execution budgets.',
+         '<b>Temporal expressivity.</b> Reuse expensive matches for distinct cheap races and evolving-state responses; test whether this reduces required width or depth.',
+         '<b>Common event interface.</b> Tokens, irregular sensors and instruction-conditioned control can use content-and-time events. Real-stream, joint-reasoning/control and hardware-energy advantages require their own benchmarks.'
+        ]),
+        ('small','This is a research hypothesis and an architectural comparison, not a frontier-language or measured-energy claim. '
+         'Current deep sparse learning and structured-task results establish meaningful mechanisms; compression and broad language advantage need further evidence.'),
+    ],[
+        ('h1','Expected architectural work and access scaling'),
+        ('figure',('full_bank_temporal_scaling',174)),
+        ('p','Scenario: d = 256, four heads, r = 4, U = 128 and S = 128d per layer. '
+         'Context plots use L = 8; the depth plot scores N = 4,096 keys. '
+         'All keys are scored in both models. Both retain linear context and depth terms, '
+         'and quadratic width terms. At fixed width, the attention-only arithmetic limit is about 2× at inference '
+         'and 1.2× during counterfactual training; common projection work lowers these total-work ratios. '
+         'If richer temporal computation reaches the same quality at width αd and depth βL, '
+         'projection work scales by βα² and context work by βα. Those additional savings require '
+         'matched-quality evidence.'),
+        ('figure',('full_bank_temporal_traffic',174)),
+        ('p','Winner-only retrieval reduces logical value reads by N in this one-sample scenario. '
+         'Including the key reads, total K/V access improves by at most about 2×. '
+         'These counts are logical accesses, not measured off-chip transfers, cache behavior or joules. '
+         'Multiple winners increase value reads. Explicit digital probability normalization is avoided '
+         'in a physical race, but clock circuitry and rate setting still have costs.'),
+        ('small','Shared content/projection structure isolates the attention substitution; this is not a quality-matched '
+         'fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must '
+         'be charged when present. Bounded candidate search is a separate coverage hypothesis. '
+         'See theory note 48, §§313–319; measured quality/work curves remain in the appendix.'),
+    ]]
+    pages[1:1]=architectural_pages
     return pages
 
 

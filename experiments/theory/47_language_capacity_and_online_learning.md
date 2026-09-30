@@ -252,3 +252,56 @@ Hash-plane projections remain charged in architectural FLOPs, while bucket
 operations and integer random-probe counts are separate. CPU noise/rate clock
 simulation is excluded only under the stated physical-competition projection.
 Long KV runs require packed storage and measured memory before promotion.
+
+## 312. Lossless cache packing preserves the event computation and its credit
+
+The immediate scaling problem is representation overhead: the prototype retains
+two separate tensor objects and a Python tuple for every position at every
+depth. Its neural work is bounded by a shortlist, but its emulator pays for a
+growing number of small allocations. This is a storage problem, not evidence
+that races should be replaced by dense attention or that history must be lost.
+
+The separate packed implementation inherits exactly the existing consume,
+candidate discovery and model initialization. Detached keys/values occupy
+append-only contiguous slabs; positions and bucket IDs use signed 64-bit arrays.
+Current-credit-segment keys/values retain their original differentiable tensors
+until the existing detach boundary. Copying their detached values into fresh
+historical rows does not alter the stored floating values. There is no eviction,
+quantization, compression, change of candidate ordering or added random draw.
+
+Conditioned on equal parameters, RNG state and input prefix, lossless reads
+give the same candidate scores, winning messages and state transitions. By
+induction the subsequent causal outputs agree. Because the current segment's
+autograd connections are retained and precisely the same past activations are
+detached, its local route teacher and realized-value gradients also agree.
+This claim concerns the implemented truncated-credit objective, not an exact
+gradient through all historical races. Verify bitwise predictions, gradients,
+actual Adam updates and the next update after a serialized checkpoint, including
+crossings of slab boundaries, before training a longer packed model.
+
+For history N, depth L, width d, scalar bytes s and slab length B, the principal
+allocated cache payload is
+
+    M(N) = 2 L ceil(N/B) B d s + 16 L N bytes.
+
+The last term stores one absolute position and one bucket ID per entry. Python
+containers, allocator overhead, receiver state, parameter/optimizer storage and
+live credit graphs are additional. At L=8, d=32, s=4, B=256, 32K positions use
+68 MiB and 131K use 272 MiB of this payload. One million positions need about
+2.03 GiB and ten million about 20.27 GiB; cheap selection does not erase cache
+capacity requirements. These are storage formulas, not measured process RSS.
+
+The candidate cap still bounds scoring and admitted counterfactual value reads
+per query independently of N. Only one value is delivered at inference; training
+continues to charge all admitted alternatives. Packing reduces storage objects
+and changes traffic/allocation costs, without removing any neural learning work.
+All generated slabs have zeroed unused rows so checkpointing does not serialize
+uninitialized memory. Append-only sealed rows are never overwritten.
+
+The planned ladder is guarded contracts and a tiny full-gradient/accounting
+smoke, then a matched 2K/four-pass replay against the saved unpacked pilot.
+Require identical saved development curves before promoting a full eight-block
+KV fit to 32K data. The completed 8K KV intervention must also be within 0.10
+bpc of its matched receiver control. This gate tests a functioning architecture
+at more data; it is not a declaration of superiority. Larger promotion awaits
+the 32K quality, full fitting work, wall time and measured peak RSS.

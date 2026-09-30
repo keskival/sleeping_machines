@@ -19,11 +19,50 @@ completed results used to pursue that goal.
 
 The current integrated language models combine these ideas: learned queries and
 state-dependent keys set temporal races, selected receivers mix content with
-memory, and counterfactual credit teaches hard choices. An eight-block variant
-also races over separate historical token keys and values, delivering only a
-winning value. These are working research implementations with small-data
-evidence; larger-scale quality and resource advantages remain under test.
+memory, and counterfactual credit teaches hard choices. The new eight-block
+candidate has independent parallel Q/K/V heads and timestamped channels whose
+state evolves while other messages arrive. Each head retrieves a historical
+winning value; the next layer can learn to mix the separate channels.
 See the [integrated language guide](experiments/INTEGRATED_LANGUAGE.md).
+
+Our hypothesis is **more capability per unit of active work**. Temporal races
+can approximate attention while avoiding selected arithmetic and value
+aggregation; evolving state and useful dormant modules may reduce the width,
+depth or fitting needed for comparable quality. Full-bank key/query scoring
+still costs work. One winner is not a deterministic attention average, and
+compression and frontier language superiority remain experimental questions.
+The report puts the [full-bank work scaling](report/figures/full_bank_temporal_scaling.png)
+and [logical access comparison](report/figures/full_bank_temporal_traffic.png)
+near the front. Both models retain the same context/depth order in this matched
+attention substitution; further gains depend on learned temporal computation
+and economical recruitment of dormant capacity. Irregular event streams are a
+natural input interface, with event-camera benchmarks still to come.
+
+The same event interface can carry language tokens or asynchronous sensor
+observations. Reusable temporal primitives and training machinery are a practical
+advantage; input adapters and objectives remain task-specific. Existing cross-task
+results use separately trained models, so shared-weight multimodal learning is a
+further milestone. The [event-stream advantage protocol](experiments/EVENT_STREAM_ADVANTAGE_PROTOCOL.md)
+tests real-stream quality, silence, temporal information and dormant-capacity
+scaling against controls that also accept timestamps. Instruction-conditioned
+robotic control is a further application: language goals, persistent world state,
+irregular observations and timed actions. Joint expressive reasoning and reliable
+control need their own benchmarks; they do not follow from the current task wins.
+The stronger integration target is instruction-conditioned event routing and
+shared persistent state: language guides perception, events ground language, and
+both inform actions. This joint model is a next milestone, not an existing result.
+
+Distributed event-triggered hardware is another target: local state and
+communication can reduce global coordination and avoid periodic work during
+silence. FPGA prototypes can validate sparse execution; asynchronous ASICs can
+test physical delay/race computation. Clock removal alone saves its measured
+energy fraction, with control overhead deducted. The larger opportunity combines
+that with sparse activity and reduced traffic. See the [hardware hypothesis and
+measurement plan](experiments/HARDWARE_VALUE_PROPOSITION.md); hardware joules
+are not yet measured for Sleeping Machines. Replicating Transformer-quality
+training and inference at lower whole-system energy on clockless hardware would
+already be a useful milestone; richer temporal state, dormant capacity and
+cross-modal integration provide further directions.
 
 ### The differentiators at a glance
 
@@ -59,8 +98,9 @@ and a gated residual output; it is not replaced by a constant node vector.
 Frozen interventions confirm that both input content and earlier messages affect
 predictions. These are one-seed development results from the earlier carrier.
 Its [historical staged campaign](experiments/queue/local_language_nextscale_20260930T163234Z.json)
-is preserved. The current priority is the [eight-block integrated KV campaign](experiments/queue/local_indexed_episodic_depth8_20260930T211500Z.json),
-with small matched fits before larger-data promotion.
+is preserved. The current priority is the [parallel-head campaign](experiments/queue/local_parallel_heads_overnight_20260930T231500Z.json),
+with independent heads, packed historical storage and measured optimizer
+comparisons before larger-data promotion.
 
 The completed language references remain available for the full learned-event
 benchmark; lower test bits/character is better:
@@ -97,14 +137,17 @@ energy.
 
 ### The next integrated result
 
-The current experiment combines sparse receiver updates, trainable races and
-historical KV retrieval in **eight event blocks**. The first character-indexed
-KV pilot delivers one value versus 11.36 admitted values per query, but improves
-small-fit loss only modestly. A content index now probes full historical buckets
-using learned queries/keys. Its candidate coverage and all teaching work are
-explicit. Temporal competition supplies softmax choice probabilities without an
-explicit normalizing reduction; winner sampling differs from a deterministic
-weighted sum. See the [guide and campaign](experiments/INTEGRATED_LANGUAGE.md).
+The current candidate combines sparse receivers, independent parallel temporal
+heads and historical KV retrieval in **eight event blocks**. Completed
+single-head 8K controls reach 3.311 bpc for receivers and 3.357 for content-indexed
+KV; adding this KV did not improve quality. The new two-head 2K fit reaches
+3.786 bpc on a larger 8K development stream, showing that more mechanisms alone
+do not ensure better fitting. Numerical contracts pass for independent
+projections, causal timing, evolving channel buffers, all-head gradients and
+exact recovery. The next guarded stages test accumulated Adam updates, then
+promote two-/four-head models only through declared quality and memory gates.
+See [current state](experiments/HANDOFF.md), [the guide](experiments/INTEGRATED_LANGUAGE.md)
+and [the theory](experiments/theory/48_parallel_heads_and_work_scaling.md).
 
 We have explored only a small part of the architecture's design space. The next
 evidence must show which combinations improve held-out quality for their complete

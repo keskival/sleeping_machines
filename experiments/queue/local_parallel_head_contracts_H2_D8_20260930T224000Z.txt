@@ -1,0 +1,1 @@
+local_parallel_head_contracts_H2_D8_20260930T224000Z experiments/parallel_head_race_language_screen.py --tag local_parallel_head_contracts_H2_D8_20260930T224000Z --memory kv --heads 2 --payload 32 --depth 8 --fit 2048 --dev 8192 --epochs 4 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6 --lr 0.001 --contracts-only

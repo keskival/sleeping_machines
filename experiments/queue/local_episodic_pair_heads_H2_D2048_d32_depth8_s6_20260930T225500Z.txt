@@ -1,0 +1,1 @@
+local_episodic_pair_heads_H2_D2048_d32_depth8_s6_20260930T225500Z experiments/parallel_head_race_language_screen.py --tag local_episodic_pair_heads_H2_D2048_d32_depth8_s6_20260930T225500Z --memory kv --heads 2 --payload 32 --depth 8 --fit 2048 --dev 8192 --epochs 4 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6 --lr 0.001

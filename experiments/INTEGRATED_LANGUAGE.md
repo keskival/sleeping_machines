@@ -18,15 +18,28 @@ arrival time. Incoming information is retained, not replaced by a constant unit
 vector. No explicit normalizing reduction/division evaluates the choice
 probabilities. One sampled value differs from a deterministic weighted sum.
 
-The primary **eight-block** receiver configuration has 432 available units,
-16 addressed key scores and eight receiver-state updates per character. The
-episodic KV variant adds one historical race per block: up to 16 sequential
-selections, with one historical value delivered at each nonempty cache. Training
-reads admitted losing values for a conserved local surrogate and charges them.
-Keys, values, gates, retention and clocks receive learning signals. Credit is
-truncated at 16 characters; forward state survives across chunks.
+The prior single-head **eight-block** receiver configuration has 432 available
+units, 16 addressed key scores and eight receiver-state updates per character.
+Its episodic variant adds one historical race per block. These controls remain
+preserved. The current full-architecture candidate uses H independent parallel
+heads in each of eight blocks: separate receiver pools and Q/K/V/gate matrices,
+H historical races, and H timestamped output channels. With payload 32/head,
+H=2 gives total width 64; H=4 gives 128. Increasing heads here also increases
+width and capacity, so this is not an isolated head-count ablation.
 
-## Two distinct memory organizations
+Each channel evolves through learned rotation/decay until the next read time.
+The next block reads aligned channels at the latest arrival and applies a
+learned cross-channel matrix. Exact simultaneous arrival and averaging heads
+are unnecessary. CPU loops emulate these parallel events serially. Dormant
+receivers retain their capacity without being updated on every character;
+addressed losing proposals still execute during teaching and must be charged.
+Keys, values, gates, retention and clocks receive learning signals. Credit is
+truncated at 16 characters; forward state survives across chunks. The new
+optimizer experiment accumulates detached-segment gradients over 64/128 targets,
+then normalizes, clips and updates Adam once. Learning-rate and quality effects
+are measured, not assumed equivalent to the old per-16-target optimizer.
+
+## Receiver state and historical memory
 
 | Ours | Representation | Candidate discovery |
 | --- | --- | --- |
@@ -51,6 +64,8 @@ the weights that created them.
 | Six → eight blocks / payload 32 / 2K fit | 3.633 → 3.542 bpc | Matched data/passes/seed; capacity and work also increase |
 | Character-indexed KV, six / eight blocks | 3.620 / 3.539 bpc | Same 2K protocol; gains over receiver controls are 0.013 / 0.003 bpc |
 | Eight-block content-index KV | 3.554 bpc versus receiver 3.542 | Same 2K protocol; no quality gain in this pilot. Full historical buckets are eligible; average 10.07 candidates / one value delivered |
+| Eight-block / 8K fit matched pair | Receiver 3.311; content-index KV 3.357 bpc | Same 8K development stream; KV is worse by 0.047 bpc; 40.243 / 50.006 whole-fit GFLOPs |
+| Two independent heads / eight blocks / 2K fit | 3.786 bpc; 27.731 whole-fit GFLOPs | 8K development stream, four passes, selected epoch 2; later passes overfit. New state/channel design also differs from older single-head models |
 | Separate online full-backbone adaptation | 3.191 frozen → 3.096 online bpc | Inherited checkpoint, new 8K development stream, predict before block-delayed updates |
 
 Records live in [parallel_language](results/parallel_language/),
@@ -78,15 +93,26 @@ quality, index coverage and total resource use still determine its usefulness.
 ## Run state and next evidence
 
 Read [HANDOFF.md](HANDOFF.md) and inspect live processes before launching work.
-The [eight-block content-index campaign](queue/local_indexed_episodic_depth8_20260930T211500Z.json)
-runs a matched 8K receiver/KV pair after the completed 2K pilot passes its
-predeclared bounded-data gate (useful receiver depth gain and limited KV regression). All jobs
-use unique one-job queues and [run_safe.sh](queue/run_safe.sh). Sources remain
-fixed during runs; completed evidence publishes and commits automatically.
+The [parallel-head campaign](queue/local_parallel_heads_overnight_20260930T231500Z.json)
+prioritizes the complete architecture. Contracts and full-gradient/accounting
+smokes precede optimizer pilots, two-/four-head 8K comparisons, a selected 32K
+fit, repeat-seed evidence and gated 131K work. Every job uses a unique one-job
+queue and [run_safe.sh](queue/run_safe.sh), with one trainer per host, an 8 GiB
+available-memory floor and RSS watchdog. The coordinator publishes and commits
+completed evidence stage by stage. Read live status; a prepared plan alone does
+not establish that its supervisor is running. Single-head larger packed runs
+were superseded to preserve this full-architecture priority.
+
+Append-only tensor slabs and integer-array indices reduce historical cache
+metadata and preserve all entries. Independent heads multiply storage. No
+memory compression, eviction or changed candidate prior is hidden in packing.
+The [scaling theory](theory/48_parallel_heads_and_work_scaling.md) retains
+all-key matching in its main comparison and distinguishes logical accesses from
+energy. Shared-match multi-policy races and local scalar counterfactual credit
+are proposed extensions, not implemented or benchmarked results.
 
 The [AWS 10M definition](AWS_INTEGRATED_10M.md) remains a separate committed
-six-block receiver comparison, not an episodic-KV result. Longer KV runs need
-packed cache storage and measured memory/runtime before promotion. The older
+six-block receiver comparison, not an episodic-KV result. Longer KV runs require measured memory/runtime and quality before promotion. The older
 six-block local checkpoint and recovery queue are preserved, without an implicit
 restart that displaces the requested eight-block architecture.
 
@@ -95,3 +121,14 @@ are current constraints. This is sparse event execution with computation through
 time; unrestricted overlapping schedules and learned topology remain open.
 See [theory §§303–311](theory/47_language_capacity_and_online_learning.md) and
 the [integrated construction](theory/46_integrated_sparse_temporal_language.md).
+
+## Beyond character streams
+
+The parallel-head candidate currently uses 27 character-specific receiver pools;
+it is not an implemented joint sensor/language model. The broader event interface
+and temporal/state/credit primitives motivate shared persistent representations
+with modality-specific projections. The [event-stream and integration protocol](EVENT_STREAM_ADVANTAGE_PROTOCOL.md)
+sets tests where instructions change event routing, events ground language and
+both inform actions. Language index and physical elapsed time require distinct
+encodings. Held-out cross-modal combinations and single-modality interventions
+must establish any integration or compression advantage.

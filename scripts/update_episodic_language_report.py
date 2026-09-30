@@ -17,8 +17,13 @@ def main():
         if not path.is_relative_to(ROOT/'experiments/results/episodic_language'):
             raise ValueError('Unexpected result directory')
         r=json.loads(path.read_text())
-        if r['status']!='completed' or r['protocol']['official_test_read']:
+        if r['status']!='completed':
             raise ValueError('Completed development result required')
+        if 'final' in r:
+            if r['protocol']['official_test_read']:
+                raise ValueError('Development result required')
+        elif not r.get('numerical_contracts'):
+            raise ValueError('Expected a completed fit or numerical contracts')
         for source,digest in r['source_sha256'].items():
             if hashlib.sha256((ROOT/source).read_bytes()).hexdigest()!=digest:
                 raise ValueError('Source changed: '+source)

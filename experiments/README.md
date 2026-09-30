@@ -7,8 +7,9 @@ behind the report, including exploratory runs and failed approaches.
 The current combined-mechanism experiments are the
 [integrated sparse temporal language models](INTEGRATED_LANGUAGE.md): learned
 content, sparse receiver updates, temporal query/key races and counterfactual
-route credit. The eight-block episodic variant retains historical token KV
-entries and transfers winning values. Read [HANDOFF.md](HANDOFF.md) for live
+route credit. The eight-block parallel-head candidate retains historical token KV
+entries, transfers per-head winning values and mixes evolving timestamped
+channels through independent projections. Read [HANDOFF.md](HANDOFF.md) for live
 queue state; a committed plan alone does not establish that a remote job is running.
 
 ## Research documents
@@ -16,6 +17,8 @@ queue state; a committed plan alone does not establish that a remote job is runn
 | Document | Purpose |
 | --- | --- |
 | [INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md) | Current integrated receivers, episodic KV, evidence, work ledgers and queue |
+| [EVENT_STREAM_ADVANTAGE_PROTOCOL.md](EVENT_STREAM_ADVANTAGE_PROTOCOL.md) | Prospective native-stream quality/work and dormant-capacity tests |
+| [HARDWARE_VALUE_PROPOSITION.md](HARDWARE_VALUE_PROPOSITION.md) | Globally clockless target, FPGA/ASIC path and energy accounting |
 | [SHARED_MODEL.md](SHARED_MODEL.md) | Earlier cross-task model, adapters and preserved implementation contracts |
 | [THEORY.md](THEORY.md) | Index to mathematical derivations in [theory/](theory/) |
 | [FINDINGS.md](FINDINGS.md) | Completed experiments, measured results and limitations |
@@ -28,10 +31,12 @@ queue state; a committed plan alone does not establish that a remote job is runn
 
 ## Locate a run
 
-The [current eight-block content-index campaign](queue/local_indexed_episodic_depth8_20260930T211500Z.json)
-starts with a small KV fit and a matched receiver control before bounded data
-promotion. Its driver is `indexed_episodic_race_language_screen.py`, and completed
-records live in [results/episodic_language/](results/episodic_language/).
+The [current parallel-head campaign](queue/local_parallel_heads_overnight_20260930T231500Z.json)
+checks complete two-/four-head models, optimizer accumulation and gated data
+scaling. The drivers are `parallel_head_race_language_screen.py` and
+`parallel_head_accumulated_language.py`; completed records live in
+[results/episodic_language/](results/episodic_language/). Theory note 48 derives
+full-bank FLOPs/access comparisons and distinguishes hypotheses from results.
 Receiver scaling uses `integrated_language_benchmark.py` and
 [results/parallel_language/](results/parallel_language/). The separate
 `integrated_online_language.py` experiment adapts the full backbone after causal
