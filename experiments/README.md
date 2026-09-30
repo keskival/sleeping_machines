@@ -13,9 +13,19 @@ behind the report, including exploratory runs and failed approaches.
 | [FINDINGS.md](FINDINGS.md) | Completed experiments, measured results and limitations |
 | [ROADMAP.md](ROADMAP.md) | Research priorities and next experiments |
 | [LANGUAGE_SCALING_PROTOCOL.md](LANGUAGE_SCALING_PROTOCOL.md) | Language model comparisons and measurement protocol |
+| [PARALLEL_TRAINING_PROTOCOL.md](PARALLEL_TRAINING_PROTOCOL.md) | Sequence scans, persistent inference and architecture comparisons |
+| [ONLINE_LANGUAGE_PROTOCOL.md](ONLINE_LANGUAGE_PROTOCOL.md) | Causal online adaptation and modern architecture controls |
+| [FRONTIER_COMPUTE_PROTOCOL.md](FRONTIER_COMPUTE_PROTOCOL.md) | Modern tokenization/position, event-target work and adaptive budget experiments |
 | [MATHEMATICAL_PROGRAM.md](MATHEMATICAL_PROGRAM.md) | Open analytic questions and proposed measurements |
 
 ## Locate a run
+
+The [full learned-event suite](queue/local_full_proper_suite_20260930T131028Z.json)
+declares CPU-only speech, complete-gesture vision, MNIST, market, temporal and
+10M-character language runs. Each is a separate one-job guarded queue. Live
+`.running.json` files and resumable checkpoints stay local; completed result
+JSON appears in `results/full_event/`. These pending runs are not frontier
+evidence. The local suite contains no Transformer or LSTM job.
 
 Experiment drivers use the `e<number>_*.py` naming scheme. The number connects
 the driver to its section in the findings and its directory under

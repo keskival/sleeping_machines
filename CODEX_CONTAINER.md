@@ -5,8 +5,10 @@ sandbox. The workspace volume, including `.git`, is mounted read-write.
 New containers retain the existing limits: **10 GiB RAM**, no additional swap,
 and **3 CPUs**, adjustable with `DEV_MEMORY` and `DEV_CPUS`. Experiment jobs
 still use `experiments/queue/run_safe.sh`, its lock and RSS watchdog.
-The image contains the research development tools; mobile SDKs and Java are
-excluded. The launchers use Docker's default capabilities.
+The image contains the project's scientific Python dependencies, Codex, Claude
+Code, Git/SSH, GitHub CLI and the tools used by the guarded experiment runner.
+The launchers use Docker's default capabilities. GPU experiment hosts use the
+AWS bootstrap script to install the appropriate PyTorch wheel.
 
 ## Apply to an existing container
 

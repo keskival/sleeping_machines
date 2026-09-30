@@ -1,0 +1,332 @@
+{
+  "rows": [
+    {
+      "task": "language",
+      "common_result": "experiments/results/e120/language_d8_20260929.json",
+      "reference_result": "experiments/results/e123/language_tf_d32_l2_s6.json",
+      "fitting_queries": 2048,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 1024,
+      "reference_optimizer_steps": 1024,
+      "common_stages": {
+        "forward_and_loss": 62633397100,
+        "backward": 130872585188,
+        "gradient_clipping": 164602880,
+        "optimizer": 658265088
+      },
+      "reference_stages": {
+        "forward_and_loss": 31246204928,
+        "backward": 63990239232,
+        "gradient_clipping": 83474432,
+        "optimizer": 333806592
+      },
+      "common_setup": {
+        "calibration_forward_flops": 2923813370,
+        "calibration_whitening_flops": 5297292,
+        "evidence_fitting_flops": 130944,
+        "fitting_evidence_precomputation_flops": 671744,
+        "evidence_log_evaluations": 221184,
+        "total_arithmetic_flops": 2929913350
+      },
+      "common_total_training_flops": 197258763606,
+      "reference_total_training_flops": 95653725184,
+      "common_to_reference_ratio": 2.0622172657317006,
+      "fitting_prefix_events": 65536,
+      "reference_padding": {
+        "flops": 30093082624,
+        "optimizer_steps": 1024,
+        "padded_tokens": 524288,
+        "padded_token_pairs": 16777216
+      }
+    },
+    {
+      "task": "market",
+      "common_result": "experiments/results/e120/market_d8_20260929.json",
+      "reference_result": "experiments/results/e123/market_tf_d32_l2_s6.json",
+      "fitting_queries": 512,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 256,
+      "reference_optimizer_steps": 256,
+      "common_stages": {
+        "forward_and_loss": 15656824335,
+        "backward": 32715724410,
+        "gradient_clipping": 40904960,
+        "optimizer": 163583232
+      },
+      "reference_stages": {
+        "forward_and_loss": 7810617344,
+        "backward": 15995949056,
+        "gradient_clipping": 20227328,
+        "optimizer": 80886528
+      },
+      "common_setup": {
+        "calibration_forward_flops": 730760945,
+        "calibration_whitening_flops": 1647756,
+        "evidence_fitting_flops": 103929,
+        "fitting_evidence_precomputation_flops": 82944,
+        "evidence_log_evaluations": 36864,
+        "total_arithmetic_flops": 732595574
+      },
+      "common_total_training_flops": 49309632511,
+      "reference_total_training_flops": 23907680256,
+      "common_to_reference_ratio": 2.062501756046574,
+      "fitting_prefix_events": 16384,
+      "reference_padding": {
+        "flops": 7522484224,
+        "optimizer_steps": 256,
+        "padded_tokens": 131072,
+        "padded_token_pairs": 4194304
+      }
+    },
+    {
+      "task": "temporal",
+      "common_result": "experiments/results/e120/temporal_d8_20260929.json",
+      "reference_result": "experiments/results/e123/temporal_tf_d32_l2_s6.json",
+      "fitting_queries": 1024,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 512,
+      "reference_optimizer_steps": 512,
+      "common_stages": {
+        "forward_and_loss": 7725493024,
+        "backward": 16545951654,
+        "gradient_clipping": 81022464,
+        "optimizer": 324019712
+      },
+      "reference_stages": {
+        "forward_and_loss": 4772641196,
+        "backward": 9540185775,
+        "gradient_clipping": 40625152,
+        "optimizer": 162455040
+      },
+      "common_setup": {
+        "calibration_forward_flops": 361137352,
+        "calibration_whitening_flops": 2864268,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 364001620
+      },
+      "common_total_training_flops": 25040488474,
+      "reference_total_training_flops": 14515907163,
+      "common_to_reference_ratio": 1.7250377942500486,
+      "fitting_prefix_events": 7869,
+      "reference_padding": {
+        "flops": 4609949696,
+        "optimizer_steps": 512,
+        "padded_tokens": 88672,
+        "padded_token_pairs": 968256
+      }
+    },
+    {
+      "task": "mnist",
+      "common_result": "experiments/results/e120/mnist_d8_20260929.json",
+      "reference_result": "experiments/results/e123/mnist_tf_d32_l2_s6.json",
+      "fitting_queries": 1024,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 512,
+      "reference_optimizer_steps": 512,
+      "common_stages": {
+        "forward_and_loss": 40393639724,
+        "backward": 84375904048,
+        "gradient_clipping": 83280384,
+        "optimizer": 333051392
+      },
+      "reference_stages": {
+        "forward_and_loss": 33025681402,
+        "backward": 68488908101,
+        "gradient_clipping": 49182208,
+        "optimizer": 196683264
+      },
+      "common_setup": {
+        "calibration_forward_flops": 1883481014,
+        "calibration_whitening_flops": 2864268,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 1886345282
+      },
+      "common_total_training_flops": 127072220830,
+      "reference_total_training_flops": 101760454975,
+      "common_to_reference_ratio": 1.2487387252859519,
+      "fitting_prefix_events": 42349,
+      "reference_padding": {
+        "flops": 31758086144,
+        "optimizer_steps": 512,
+        "padded_tokens": 491312,
+        "padded_token_pairs": 29702640
+      }
+    },
+    {
+      "task": "dvs",
+      "common_result": "experiments/results/e120/dvs_d8_20260929.json",
+      "reference_result": "experiments/results/e123/dvs_tf_counts_d32_l2_s6.json",
+      "fitting_queries": 88,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 4,
+      "reference_batch_size": 4,
+      "common_optimizer_steps": 176,
+      "reference_optimizer_steps": 176,
+      "common_stages": {
+        "forward_and_loss": 51579959584,
+        "backward": 107385984793,
+        "gradient_clipping": 27957072,
+        "optimizer": 111804176
+      },
+      "reference_stages": {
+        "forward_and_loss": 99022522879,
+        "backward": 230261308271,
+        "gradient_clipping": 14186832,
+        "optimizer": 56731136
+      },
+      "common_setup": {
+        "calibration_forward_flops": 2403553156,
+        "calibration_whitening_flops": 640332,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 2404193488
+      },
+      "common_total_training_flops": 161509899113,
+      "reference_total_training_flops": 329354749118,
+      "common_to_reference_ratio": 0.49038278496216503,
+      "fitting_prefix_events": 54329,
+      "reference_padding": {
+        "flops": 93761910528,
+        "optimizer_steps": 176,
+        "padded_tokens": 444588,
+        "padded_token_pairs": 280783484
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/results/e172/complete_work_v2_20260930.json": "9916a700befa297da88940780ce385f84120bfdacc16504bd2872740c3651ec9",
+    "experiments/results/e124/breadth_work_counted_20260929.json": "86ad0402f22dd9cf8407f7da8ca264d5232f1ab39c4a0a9dd0fcb8d7b1c2cf2d",
+    "experiments/results/e120/language_d8_20260929.json": "84f383e50cbc04869206dd79619a887abefc4d975fd6996945fa519c0be9fecb",
+    "experiments/results/e123/language_tf_d32_l2_s6.json": "76c55c6a6fc61c9d9d8ea968ba0569dda1cb75eddcc385e42134d61dd708f946",
+    "experiments/results/e120/market_d8_20260929.json": "27ae93bce032f3dd3df9adbf06ce05c1f54f2e38246b05a3f30c425d19525f9a",
+    "experiments/results/e123/market_tf_d32_l2_s6.json": "e9376c51adc47e2aa91d851eb0dba57bb3f29350e64e92735137bef73a5372a5",
+    "experiments/results/e120/temporal_d8_20260929.json": "f8e5edda9baeff617b322e9ebd631fdadb2cf0683d705f6571efcafa3db4de07",
+    "experiments/results/e123/temporal_tf_d32_l2_s6.json": "7fe7eb3f6b44f7bd7818a8228d277896ac681e5108ab4d55345986ac256a3543",
+    "experiments/results/e120/mnist_d8_20260929.json": "76d611a93251fd448ea89f313150b3dc6e4965ef445ceb648aa888aa3172d8b6",
+    "experiments/results/e123/mnist_tf_d32_l2_s6.json": "04ad5b7ab0f7c9a35eabb038cd915a2332bd8b7a31bab7aa6268c4108911bf2f",
+    "experiments/results/e120/dvs_d8_20260929.json": "fe943bec272355e95a769ad765666ded5b9d9c9f0f727ae52c25d75c74e2ad6e",
+    "experiments/results/e123/dvs_tf_counts_d32_l2_s6.json": "c944dc95b80101e633036343f310a052835223f5e7e4dc0e1d6a3855e1dbf0c4",
+    "experiments/results/e173/causal_language_10m_20260930.json": "d36ee6d1fc5321ea1971c83355f0e90982195f27fb692ef4c51dd41f46a790a0",
+    "experiments/lm_training_flops.py": "d0a5220ba03d8f3dd9c7071d299521babe1ec3be9234a0266ad990356ddc0427",
+    "experiments/e173_causal_language.py": "7aafdf28eae453de123944d46cbb3adf380ce46715ab4e72313151f1f3156b35",
+    "experiments/e79_race_mixer.py": "1ea3ff6b616d6465b0953ca86cd3dd10c3d0db3ff52d34070bdd957977edfa97",
+    "experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json": "4b9ad878521654817ba47e60754283380a9ce690d0726a7384b13793dc6b0688",
+    "experiments/results/e174/aligned_lstm_10m_20260930.json": "a9f3fe8d4f4fd75bfae142f506a2bd567f14784d98b7b032f4b506ddfe6b89d8",
+    "experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v.json": "16c4397a74ef4768b20a4666c001c2491ba3310d27f2fc4e5c237cc3d3864899",
+    "experiments/results/e174/aligned_tf_10m_20260930.json": "63b0c7df29181ef17401eb44eb71f20b934e7421077ae830a7ce972b6bb6ddf2",
+    "experiments/estimate_training_work.py": "00b5de8667b65f4869986fe4da76119becbf3eebe119f6b3e50f914e2f736e8e"
+  },
+  "language_rows": [
+    {
+      "model": "native_without_word",
+      "total_training_flops": 4470000000,
+      "forward_flops": 2631000000,
+      "backward_and_update_flops": 1512000000,
+      "special_function_evaluations": 327000000,
+      "rate_trials": 3,
+      "fitting_labels": 1000000,
+      "integer_count_presentations": 80000000,
+      "convention": "Arithmetic plus one unit per exp/log; no Adam in this local gradient learner",
+      "scope": "Includes all rate trials and fully charges shared expert preparation to each standalone arm; count construction uses integer/sort/hash work, which is additional and unquantified"
+    },
+    {
+      "model": "native_with_causal_word",
+      "total_training_flops": 4800000000,
+      "forward_flops": 2793000000,
+      "backward_and_update_flops": 1680000000,
+      "special_function_evaluations": 327000000,
+      "rate_trials": 3,
+      "fitting_labels": 1000000,
+      "integer_count_presentations": 80000000,
+      "convention": "Arithmetic plus one unit per exp/log; no Adam in this local gradient learner",
+      "scope": "Includes all rate trials and fully charges shared expert preparation to each standalone arm; count construction uses integer/sort/hash work, which is additional and unquantified"
+    },
+    {
+      "model": "lstm",
+      "inherited_fitting_result": "experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json",
+      "method": "shape_based_v1",
+      "multiply_add_flops": 2,
+      "forward_flops": 144142034829312,
+      "backward_flops": 288284069658624,
+      "adam_flops": 122973783128,
+      "gradient_clipping_flops": 43919208260,
+      "total_training_flops": 432592997479324,
+      "training_token_positions": 59998208,
+      "assumptions": [
+        "Backward approximated as 2x forward",
+        "Dense attention includes masked positions",
+        "Elementwise overhead is approximate; nonlinear/divide/sqrt count as 1",
+        "Adam 14 and gradient clipping 5 operations per parameter per step"
+      ],
+      "excludes": [
+        "Validation and test inference",
+        "Data loading and indexing",
+        "Memory movement",
+        "RNG generation",
+        "Learning-rate scheduler"
+      ]
+    },
+    {
+      "model": "tf",
+      "inherited_fitting_result": "experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v.json",
+      "method": "shape_based_v1",
+      "multiply_add_flops": 2,
+      "forward_flops": 296158351048704,
+      "backward_flops": 592316702097408,
+      "adam_flops": 221340008596,
+      "gradient_clipping_flops": 79050003070,
+      "total_training_flops": 888775443157778,
+      "training_token_positions": 39993344,
+      "assumptions": [
+        "Backward approximated as 2x forward",
+        "Dense attention includes masked positions",
+        "Elementwise overhead is approximate; nonlinear/divide/sqrt count as 1",
+        "Adam 14 and gradient clipping 5 operations per parameter per step"
+      ],
+      "excludes": [
+        "Validation and test inference",
+        "Data loading and indexing",
+        "Memory movement",
+        "RNG generation",
+        "Learning-rate scheduler"
+      ]
+    }
+  ],
+  "status": "completed",
+  "method": "trace_calibrated_whole_fitting_budget_v1",
+  "multiply_add_flops": 2,
+  "scope": "All completed fitting epochs, backward, clipping, Adam, evidence fitting and readout calibration. No new training.",
+  "assumptions": [
+    "Scale traced forward/loss and backward arithmetic by whole-run forward contractions",
+    "Non-contraction arithmetic extrapolates the four-query saved-parameter trace",
+    "Reference padding is reconstructed from original seed, prefix lengths and batch size",
+    "Reference contraction scaling includes fused attention matrix products in both numerator and denominator",
+    "Clipping and warm Adam costs are charged once per original optimizer step",
+    "Calibration forward uses inference contraction scaling; whitening includes a 10*d^3 eigensolver estimate"
+  ],
+  "excludes": [
+    "Development/test inference and hyperparameter search",
+    "Data loading, encoding, sorting and indexing",
+    "Memory traffic and allocations",
+    "Special functions, integer arithmetic and comparisons (not arithmetic FLOPs)"
+  ],
+  "evidence": "Exploratory single-seed screens; total arithmetic estimates, not hardware instructions, elapsed time or joules"
+}

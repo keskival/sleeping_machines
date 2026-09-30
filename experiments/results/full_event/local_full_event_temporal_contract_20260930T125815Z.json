@@ -1,0 +1,120 @@
+{
+  "status": "completed",
+  "args": {
+    "task": "temporal",
+    "tag": "local_full_event_temporal_contract_20260930T125815Z",
+    "epochs": 1,
+    "seed": 6,
+    "resume": false,
+    "contract": true
+  },
+  "protocol": {
+    "dataset": "E28 shared-motif composition",
+    "channels": 24,
+    "motifs": [
+      [
+        10,
+        12,
+        1.0583470678567648
+      ],
+      [
+        15,
+        7,
+        1.4912114931305265
+      ],
+      [
+        15,
+        4,
+        1.0309744187698209
+      ],
+      [
+        15,
+        16,
+        0.8860806624210331
+      ],
+      [
+        14,
+        1,
+        0.8062270638748044
+      ],
+      [
+        19,
+        23,
+        1.3789021180733374
+      ]
+    ],
+    "classes": [
+      [
+        4,
+        3
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        5,
+        4
+      ]
+    ],
+    "time_unit": "E28 time divided by 10",
+    "q": 0.15,
+    "note": "same generator, smaller configuration; no handcrafted motif detector",
+    "contract_only": true,
+    "official_test_read": false
+  },
+  "statistical_experts": [],
+  "parameters": 52734,
+  "fitting_examples": 8,
+  "development_examples": 4,
+  "curve": [
+    {
+      "epoch": 1,
+      "fitting_online_nll": 1.943999171257019,
+      "dev": {
+        "n": 4,
+        "nll": 1.4978649616241455,
+        "correct": 3,
+        "accuracy": 0.75
+      }
+    }
+  ],
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "source_sha256": {
+    "experiments/full_event_benchmarks.py": "439acac5f2c55f31a8f516162c02d834f21ef9ab16a8a394b7ba0c6d8b8308b2",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "experiments/e120_shared_tasks.py": "7c158894f1f057578d3c064cd6868aa51b98866726d77ee96e6a5246a542b9ad",
+    "experiments/e120_dvs_adapter.py": "c5e9a7d89b9d56ba682c3384a3b57e8bbe03f1f15f12b1cd5ac3aac76ba67345"
+  },
+  "scope": "Small execution contract, not benchmark evidence",
+  "test_policy": "Fixed epoch budget; minimum development NLL checkpoint; official test once after selection where available",
+  "wall_s": 5.341635927994503,
+  "max_rss_kb": 342420,
+  "selected_epoch": 1,
+  "final": {
+    "dev": {
+      "n": 4,
+      "nll": 1.4978649616241455,
+      "correct": 3,
+      "accuracy": 0.75
+    }
+  }
+}

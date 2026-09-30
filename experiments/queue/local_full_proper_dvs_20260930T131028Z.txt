@@ -1,0 +1,1 @@
+local_full_proper_dvs_20260930T131028Z experiments/full_event_benchmarks.py --task dvs --epochs 8 --seed 6 --resume --tag local_full_proper_dvs_20260930T131028Z

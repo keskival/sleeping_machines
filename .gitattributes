@@ -1,3 +1,6 @@
+# Published artifacts are binary, even when a PDF happens to contain plain text.
+*.pdf binary
+*.png binary
 /legacy/sleeping_machines_v3_results/results.json filter=lfs diff=lfs merge=lfs -text
 /experiments/results/e38/feats_p1_s0.01.npz filter=lfs diff=lfs merge=lfs -text
 /experiments/results/e38/feats_p2_s0.01,0.03.npz filter=lfs diff=lfs merge=lfs -text

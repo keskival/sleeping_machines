@@ -1,0 +1,1 @@
+local_full_event_language_contract_20260930T125815Z experiments/full_event_language.py --fit 128 --dev 64 --test 64 --epochs 1 --chunk 32 --contract --tag local_full_event_language_contract_20260930T125815Z

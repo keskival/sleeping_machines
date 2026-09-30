@@ -1,0 +1,60 @@
+{
+  "status": "launched",
+  "created_utc": "20260930T131028Z",
+  "host": "local CPU-only workspace",
+  "execution": "serial tmux suite; one unique one-job guarded queue at a time",
+  "resource_caps": {
+    "MEM_CAP_KB": 4000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192,
+    "JOB_TIMEOUT_S": 864000
+  },
+  "statistics": "one seed; development selection, final official test where available; no current frontier claim",
+  "jobs": [
+    {
+      "task": "shd",
+      "queue": "experiments/queue/local_full_proper_shd_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_shd_20260930T131028Z.json",
+      "command": "experiments/full_event_benchmarks.py --task shd --epochs 20 --seed 6 --resume --tag local_full_proper_shd_20260930T131028Z"
+    },
+    {
+      "task": "dvs",
+      "queue": "experiments/queue/local_full_proper_dvs_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_dvs_20260930T131028Z.json",
+      "command": "experiments/full_event_benchmarks.py --task dvs --epochs 8 --seed 6 --resume --tag local_full_proper_dvs_20260930T131028Z"
+    },
+    {
+      "task": "mnist",
+      "queue": "experiments/queue/local_full_proper_mnist_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_mnist_20260930T131028Z.json",
+      "command": "experiments/full_event_benchmarks.py --task mnist --epochs 8 --seed 6 --resume --tag local_full_proper_mnist_20260930T131028Z"
+    },
+    {
+      "task": "market",
+      "queue": "experiments/queue/local_full_proper_market_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_market_20260930T131028Z.json",
+      "command": "experiments/full_event_benchmarks.py --task market --epochs 8 --seed 6 --resume --tag local_full_proper_market_20260930T131028Z"
+    },
+    {
+      "task": "temporal",
+      "queue": "experiments/queue/local_full_proper_temporal_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_temporal_20260930T131028Z.json",
+      "command": "experiments/full_event_benchmarks.py --task temporal --epochs 8 --seed 6 --resume --tag local_full_proper_temporal_20260930T131028Z"
+    },
+    {
+      "task": "language",
+      "queue": "experiments/queue/local_full_proper_language_10m_20260930T131028Z.txt",
+      "result": "experiments/results/full_event/local_full_proper_language_10m_20260930T131028Z.json",
+      "command": "experiments/full_event_language.py --fit 10000000 --dev 200000 --test 1000000 --epochs 4 --chunk 64 --seed 6 --resume --tag local_full_proper_language_10m_20260930T131028Z --width 256 --modes 128 --depth 6",
+      "model_capacity": {
+        "width": 256,
+        "modes": 128,
+        "depth": 6,
+        "parameters": 1205805
+      }
+    }
+  ],
+  "tmux_session": "proper_events_20260930T131028Z",
+  "suite_log": "experiments/queue/local_full_proper_suite_20260930T131028Z.out",
+  "launched_utc": "2026-09-30T13:27:04.628955+00:00"
+}

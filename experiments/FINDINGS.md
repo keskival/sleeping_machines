@@ -1073,8 +1073,7 @@ coverage remain to integrate. See [SHARED_MODEL.md](SHARED_MODEL.md).
 The report is reorganized into a concise accomplishments-first narrative;
 the previous long account is retained under report/archive/. Ongoing speech
 work remains in an appendix. The default report now builds Markdown and PDF
-from the same editorial source, with a named copy to survive cross-host status
-PDF refreshes. Package/report sources, executed queues and result JSON preserve
+from the same editorial source. Package/report sources, executed queues and result JSON preserve
 the implementation and evidence behind the report.
 
 ---
@@ -2332,3 +2331,145 @@ matched its own command line never started the queue; found by checking, not ass
 
 
 **AWS 90M LSTM reference (2026-09-30, exploratory single seed).** Completed `aws_e64_lstm_D90M_baseline_20260929`: test BPC 1.661015, best validation BPC 1.615515, 1,199,323 parameters, 65,917 steps, 38314.004 seconds wall time, peak RSS 2,300,868 KiB. CPU, size 512, six passes, dropout 0.1, 200,000 validation characters. The four-layer 90M Transformer reference remains pending; this result alone does not establish a matched large-data comparison. Metrics and provenance: `experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/`.
+
+
+## 2026-09-30 — Whole training budgets and repository cleanup
+
+Appendix B now estimates all fitting epochs, forward/loss, backward, clipping
+and Adam at the recorded batch sizes. Both models used batch 16, except gestures
+where both used batch 4; the previous 16/64 description was incorrect. The
+common model also pays for evidence fitting/preparation and initial readout
+calibration. These are trace-calibrated arithmetic estimates, not observed whole-run
+hardware instructions or energy measurements.
+
+| Task | Common training GFLOPs | Transformer training GFLOPs |
+| --- | --- | --- |
+| language | 197.26 | 95.65 |
+| market | 49.31 | 23.91 |
+| temporal | 25.04 | 14.52 |
+| mnist | 127.07 | 101.76 |
+| dvs | 161.51 | 329.35 |
+
+The estimator replays original reference padding/shuffles, scales the saved E172
+forward/backward trace, and charges clipping/Adam per actual optimizer step.
+Fused attention products are included in both reference scaling terms; initial
+v1/v2 local ledgers missed them in the denominator and are superseded by
+[v3](results/training_work/local_total_training_work_v3_20260930T120216Z.json). Their exploratory records are retained.
+Other arithmetic and calibration are estimates. Evaluation, search, data
+encoding, integer operations, special functions and memory traffic are excluded
+from the breadth arithmetic totals. These are single-seed development screens
+with different depths and quality, not a matched-quality energy comparison.
+
+The 10M native count/copy learner's estimated floating fitting work is 4.47G
+operations, including expert preparation and all three mixing-rate trials with
+local gradients/updates. Its roughly 80M integer count presentations and
+sort/hash/lookup work are additional and unquantified. Corresponding inherited
+neural fitting is approximately 432.59T for the LSTM and 888.78T for the
+Transformer, including backward, clipping and Adam; nonlinear evaluations use
+unit weights in these language estimates. These floating totals alone do not
+establish runtime or energy savings.
+
+The report now has one canonical PDF, `report/sleeping_machines_status.pdf`.
+The obsolete commit helper, tracked bytecode and unrelated container tooling
+were removed. Model checkpoints, array artifacts and runner logs remain local;
+queue commands, result JSON and published report artifacts remain tracked.
+[The parallel training protocol](PARALLEL_TRAINING_PROTOCOL.md) separates existing
+affine-scan parallelism from proposed input-gated and sparse-retrieval arms.
+
+## 2026-09-30 — Causal online language pilot and compute allocation
+
+[Completed development pilot](results/online_language/local_online_language_20260930T121741Z.json):
+from the existing 100K-character E173 count checkpoint, with its rate selected on
+the earlier 2,048-character validation region, score then update mixing weights
+on a fresh 8,192-character development window. Counts remain frozen; copy-cache
+behavior is identical in frozen/adaptive arms. There are 8,191 scored targets,
+8,192 updates including first-position warmup, and no official-test access.
+
+| Expert set | Frozen bpc | Online bpc | Additional gradient/update arithmetic |
+| --- | --- | --- | --- |
+| Without word | 2.604848 | 2.563614 | 2.753M FLOPs |
+| With causal word | 2.537099 | 2.487342 | 3.211M FLOPs |
+
+One checkpoint/window; this is specialized readout adaptation, not learned deep
+TTT or a frontier comparison. Whole pilot wall time is 0.587 s, peak RSS
+236,244 KiB. The update column excludes shared scoring/preparation and inherited
+fitting. Target independence and frozen-weight contracts are covered by tests.
+
+[Theory §§280–286](theory/43_compute_allocation_and_frontier_scaling.md) formalizes
+the hypothesis that a larger useful allocation space improves quality per
+resource. It derives a conditional marginal-value allocator, a bounded attention
+omission estimate and explicit scaling conditions; these are not empirical
+frontier evidence. The accompanying calculator solves the stated separable
+continuous surrogate, with charged overhead and bounds. Paired development
+measurements and independent confirmation are required to use it for decisions.
+
+The [frontier compute protocol](FRONTIER_COMPUTE_PROTOCOL.md) specifies modern
+shared subword tokenization, positional controls, packed optimized Transformer,
+MoE/SSM/hybrid controls, causal adaptation and cross-task promotion gates.
+Existing relative-time event rotations are retained and audited. Primary
+architecture FLOPs count declared logical event execution, including all
+required losing-value teaching, backward, clipping and optimizer work. Simulator
+dispatch/allocation is outside that arithmetic ledger. Event-target arithmetic
+estimates remain distinct from measured device runtime or energy.
+
+## 2026-09-30 — Corrected model attribution and proper language work
+
+The report/README headline now uses the learned persistent E176 model:
+**3.351248 development bpc**, 28,403 parameters, 8,192 fitting characters and
+four passes, with no count/copy/word experts. Its prior 1.727-bpc headline belonged
+to a separate statistical predictor and must not be attributed to this backbone.
+The statistical comparison remains an explicitly separate appendix baseline.
+The breadth text/market rows use fitted evidence banks and are labeled hybrids;
+periodic and pointer results are labeled task-specific mechanisms.
+
+[Proper event-language work audit](results/event_language_work/local_event_language_work_20260930T124646Z.json):
+the small run estimates **6.962035G arithmetic FLOPs** for all 32,768 fitting
+targets, backward, 512 clipping/Adam steps and four warmups, plus **85.431072M
+special-function evaluations**. Persistent inference plus NLL scoring estimates
+**59,741 arithmetic FLOPs and 1,212 special-function evaluations per character**.
+This is logical event execution calibrated on a saved-parameter 64-character
+chunk, with complete formula coverage there. Index/queue work and physical
+traffic are additional; evaluation passes are excluded from fitting cost.
+The much larger neural 10M-character runs are not a matched quality/budget
+comparison for this small model, so no whole-run saving ratio is claimed.
+
+Pytest discovery is restricted to `tests/`: historical `*_test.py` experiment
+drivers execute training at import and must never be collected as unit tests.
+An incidental discovery rerun was stopped, its overwritten historical summary
+restored, and the actual unit suite passed (38 tests before full-run drivers).
+
+The reader-facing report was audited beyond the language headline: common
+text/market hybrids, supplied-period arithmetic, pointer/race retrieval and
+activity-versus-arithmetic panels now have explicit attribution. An early model
+inventory separates these implementations. The archived report is marked as
+superseded, with its prior language attribution and activity-ratio limits.
+
+Full proper-model runs are declared in
+[the serial local suite manifest](queue/local_full_proper_suite_20260930T131028Z.json).
+Speech uses a fresh six-block learned full-source event encoder with all
+6,987 fitting and 1,169 development utterances. Vision uses complete labelled
+gestures (984 fitting, 192 development), and MNIST uses 50K/10K development plus
+its final official test. The declared pooling/latency encodings remain explicit.
+Market removes all fitted count evidence and reads all available trades on its
+declared days, with frozen final evaluation on August 30 after August 29
+development selection; temporal uses 32,768/8,192 generated examples. Language fits 10M
+characters for four passes with the learned persistent model, 200K validation
+and 1M final official test characters. The full language configuration uses six
+layers, width 256 and 128 temporal modes, bringing capacity close to the existing
+1.2M-parameter LSTM rather than extrapolating the 28K-parameter pilot's cost.
+These are fixed-budget single-seed runs,
+not frontier results; no local dense baseline training is queued.
+
+Initial SHD loading exceeded a 1.5M-KiB RSS guard because it retained expanded
+raw utterances. The corrected loader reads requested utterances on demand.
+All jobs keep the RSS watchdog and 8-GiB available-memory floor. The full CPU
+language run is expected to take days at current throughput; frequent resumable
+checkpoints preserve work. Result claims will be updated only after completion.
+
+The serial local suite launched at **2026-09-30 13:27:04 UTC** in tmux session
+`proper_events_20260930T131028Z`, starting with the full learned SHD model.
+Every task has a separate one-job queue; the host runs exactly one at a time.
+Caps are 4,000,000 KiB virtual memory, 2,500,000 KiB group RSS and at least
+8,192 MiB available memory, with a ten-day per-job timeout and resumable state.
+The immutable commands and model capacity are in the manifest; live summaries,
+checkpoints and logs remain local. No Transformer/LSTM training is in this suite.

@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_full_event_language_contract_20260930T125815Z",
+    "fit": 128,
+    "dev": 64,
+    "test": 64,
+    "epochs": 1,
+    "chunk": 32,
+    "seed": 6,
+    "resume": false,
+    "contract": true
+  },
+  "curve": [
+    {
+      "epoch": 1,
+      "fitting_online_bpc": 5.193086160054319,
+      "optimizer_steps": 4,
+      "training_event_deliveries": 1016,
+      "dev": {
+        "n": 63,
+        "bpc": 5.356602376799759,
+        "event_deliveries": 504
+      }
+    }
+  ],
+  "parameters": 28403,
+  "protocol": {
+    "fitting": [
+      0,
+      128
+    ],
+    "validation": [
+      90000000,
+      90000064
+    ],
+    "test": [
+      90001024,
+      90001088
+    ],
+    "official_test_read": false,
+    "excluded_first_target": true,
+    "cold_context": true,
+    "weights_frozen_on_test": true,
+    "statistical_experts": [],
+    "tokenizer": "fixed 27-character text8 alphabet",
+    "credit_truncation": 32,
+    "resets": "each epoch, development stream and test stream",
+    "selection": "minimum development bpc over the fixed epoch budget"
+  },
+  "source_sha256": {
+    "experiments/full_event_language.py": "916ce70418a381f924f664bbf88adb3ab0f80791e97122b6e5bf9ad4d1c542db",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/rotating_memory.py": "d5b0308a9a28593310673683638fa9f4162aceba94ce79ca58db87e4ba5323b4",
+    "experiments/e120_shared_tasks.py": "7c158894f1f057578d3c064cd6868aa51b98866726d77ee96e6a5246a542b9ad"
+  },
+  "fitting_data_sha256": "69e0122db520695d3eedf788f9678496bc291ac1e84786f2bfa8056bf536a036",
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "scope": "Small execution contract, not benchmark evidence",
+  "wall_s": 2.346914118999848,
+  "max_rss_kb": 347176,
+  "selected_epoch": 1,
+  "final": {
+    "dev": {
+      "n": 63,
+      "bpc": 5.356602376799759,
+      "event_deliveries": 504
+    },
+    "contract_score": {
+      "n": 63,
+      "bpc": 5.216480047066422,
+      "event_deliveries": 504
+    }
+  }
+}

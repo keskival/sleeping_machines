@@ -1842,3 +1842,10 @@ this is the only bottleneck.
   test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
   optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
   4.319, so it does not establish useful language-model quality or a scaling advantage.
+# Historical snapshot — superseded
+
+This preserves an earlier report for provenance. Its language headline used a
+separate statistical count/copy system; it must not be attributed to the learned
+Sleeping Machines event backbone. Activity ratios in this snapshot are not
+complete training/inference FLOPs or energy ratios. Read the corrected current
+[report](../../REPORT.md) for model attribution, completed evidence and cost boundaries.

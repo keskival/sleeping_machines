@@ -56,6 +56,12 @@ current hard-race training implementation.
 
 ## Data and baseline matching
 
+For modern tokenization, positional controls, packed dense kernels and sparse
+MoE/hybrid comparisons, apply the [frontier compute protocol](FRONTIER_COMPUTE_PROTOCOL.md).
+The [compute-allocation theory](theory/43_compute_allocation_and_frontier_scaling.md)
+derives the marginal-value hypothesis and the conditions needed for an improving
+scaling advantage. Historical character comparisons retain their original scope.
+
 Use a fixed train/validation/test manifest with byte offsets or document IDs,
 checksums, preprocessing, tokenizer and reset semantics. Choose hyperparameters
 on validation only; test once for each declared completed comparison. Log unique

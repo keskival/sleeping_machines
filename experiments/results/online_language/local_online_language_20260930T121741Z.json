@@ -1,0 +1,149 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_online_language_20260930T121741Z",
+    "checkpoint": "experiments/results/e173/causal_language_pilot_20260930.json",
+    "offset": 90032768,
+    "n": 8192
+  },
+  "protocol": {
+    "split": "new development window",
+    "predict_before_target_update": true,
+    "counts_frozen": true,
+    "copy_cache_identical": true,
+    "adaptation": "expert mixing weights only",
+    "official_test_read": false,
+    "excluded_first_position": true,
+    "learning_rate_source": "selected on the checkpoint's earlier validation split",
+    "inherited_count_training_characters": 100000,
+    "inherited_mixing_training_characters": 2048
+  },
+  "rows": [
+    {
+      "arm": "without_word",
+      "frozen_bpc": 2.604847802564656,
+      "online_bpc": 2.5636138782135642,
+      "online_updates": 8192,
+      "rate": 0.01,
+      "weight_change_l2": 1.9389901161193848,
+      "extra_update_arithmetic_flops": 2752512
+    },
+    {
+      "arm": "with_causal_word",
+      "frozen_bpc": 2.537099152372547,
+      "online_bpc": 2.4873424979053476,
+      "online_updates": 8192,
+      "rate": 0.01,
+      "weight_change_l2": 2.2119619846343994,
+      "extra_update_arithmetic_flops": 3211264
+    }
+  ],
+  "blocks": [
+    {
+      "start": 0,
+      "end": 1024,
+      "n": 1023,
+      "bpc": {
+        "without_word:frozen": 2.5241900628843577,
+        "without_word:online": 2.518949594997897,
+        "with_causal_word:frozen": 2.4769382132470947,
+        "with_causal_word:online": 2.4721023440000356
+      }
+    },
+    {
+      "start": 1024,
+      "end": 2048,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.860381291859541,
+        "without_word:online": 2.826008754368954,
+        "with_causal_word:frozen": 2.7985506425556337,
+        "with_causal_word:online": 2.7627197792208524
+      }
+    },
+    {
+      "start": 2048,
+      "end": 3072,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.4518450522774073,
+        "without_word:online": 2.412323742572135,
+        "with_causal_word:frozen": 2.3835786495424736,
+        "with_causal_word:online": 2.3395638236971448
+      }
+    },
+    {
+      "start": 3072,
+      "end": 4096,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.5344762082938317,
+        "without_word:online": 2.4379358283956605,
+        "with_causal_word:frozen": 2.4908324073778534,
+        "with_causal_word:online": 2.3850105713838534
+      }
+    },
+    {
+      "start": 4096,
+      "end": 5120,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.6776934171328866,
+        "without_word:online": 2.6199438289886157,
+        "with_causal_word:frozen": 2.6093204477820744,
+        "with_causal_word:online": 2.5405845846236135
+      }
+    },
+    {
+      "start": 5120,
+      "end": 6144,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.5451162176359903,
+        "without_word:online": 2.5325017582759064,
+        "with_causal_word:frozen": 2.4718699533323574,
+        "with_causal_word:online": 2.4535291943377633
+      }
+    },
+    {
+      "start": 6144,
+      "end": 7168,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.7263045812535323,
+        "without_word:online": 2.7055023039156465,
+        "with_causal_word:frozen": 2.6628495050619083,
+        "with_causal_word:online": 2.626375340834793
+      }
+    },
+    {
+      "start": 7168,
+      "end": 8192,
+      "n": 1024,
+      "bpc": {
+        "without_word:frozen": 2.518696821855794,
+        "without_word:online": 2.455701596729622,
+        "with_causal_word:frozen": 2.402794649163864,
+        "with_causal_word:online": 2.3188394621819284
+      }
+    }
+  ],
+  "checkpoint_sha256": "621516f934efd21e286ac77e9d2f3f901ab9fbe7045752dd4f330b10193a1cea",
+  "stream_sha256": "cd574602d6948d20922c65b3038bca41188323d5ccef92b7d2275c8de71cdf14",
+  "source_sha256": {
+    "experiments/online_language_ablation.py": "5a090b0a2f4ea9e8e978c4318b64abe89cd03dbecd3acc04aff378f805090a82",
+    "experiments/e173_causal_language.py": "7aafdf28eae453de123944d46cbb3adf380ce46715ab4e72313151f1f3156b35",
+    "experiments/e79_race_mixer.py": "1ea3ff6b616d6465b0953ca86cd3dd10c3d0db3ff52d34070bdd957977edfa97"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "device": "cpu",
+    "threads": 1
+  },
+  "count_reconstruction_wall_s": 0.014608401019359007,
+  "frozen_scoring_wall_s": 0.1800328109820839,
+  "online_scoring_wall_s": 0.25663275897386484,
+  "wall_s": 0.5866734159935731,
+  "max_rss_kb": 236244,
+  "scope": "Exploratory one-checkpoint, one-window ablation; no neural-backbone TTT or frontier comparison"
+}

@@ -76,8 +76,8 @@ def main():
     progress[tag] = record
     PROGRESS.write_text(json.dumps(progress, indent=2) + '\n')
 
-    paths = [qfile, PROGRESS, QUEUE / f'runner_{tag}.out',
-             QUEUE / 'logs' / f'{tag}.log', *result_dir.glob('*.json')]
+    # Runner logs remain local; provenance and progress retain their metrics.
+    paths = [qfile, PROGRESS, *result_dir.glob('*.json')]
     if status == 'completed':
         updated = subprocess.run([str(ROOT / '.venv-docker/bin/python'),
                                   'scripts/update_aws_benchmark_report.py'], cwd=ROOT,
@@ -90,8 +90,7 @@ def main():
                                    cwd=ROOT, env=env, text=True,
                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             if built.returncode == 0:
-                paths.extend([ROOT / 'REPORT.md', ROOT / 'report/sleeping_machines_status.pdf',
-                              ROOT / 'report/sleeping_machines_shared_20260929.pdf'])
+                paths.extend([ROOT / 'REPORT.md', ROOT / 'report/sleeping_machines_status.pdf'])
                 print(stamp(), 'rebuilt report PDF', flush=True)
             else:
                 print(stamp(), 'PDF rebuild deferred; upstream report inputs are missing:',

@@ -1,0 +1,247 @@
+{
+  "rows": [
+    {
+      "task": "language",
+      "common_result": "experiments/results/e120/language_d8_20260929.json",
+      "reference_result": "experiments/results/e123/language_tf_d32_l2_s6.json",
+      "fitting_queries": 2048,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 1024,
+      "reference_optimizer_steps": 1024,
+      "common_stages": {
+        "forward_and_loss": 62633397100,
+        "backward": 130872585188,
+        "gradient_clipping": 164602880,
+        "optimizer": 658265088
+      },
+      "reference_stages": {
+        "forward_and_loss": 36165338898,
+        "backward": 74064312556,
+        "gradient_clipping": 83474432,
+        "optimizer": 333806592
+      },
+      "common_setup": {
+        "calibration_forward_flops": 2923813370,
+        "calibration_whitening_flops": 5297292,
+        "evidence_fitting_flops": 130944,
+        "fitting_evidence_precomputation_flops": 671744,
+        "evidence_log_evaluations": 221184,
+        "total_arithmetic_flops": 2929913350
+      },
+      "common_total_training_flops": 197258763606,
+      "reference_total_training_flops": 110646932478,
+      "common_to_reference_ratio": 1.7827766137594558,
+      "fitting_prefix_events": 65536,
+      "reference_padding": {
+        "flops": 30093082624,
+        "optimizer_steps": 1024,
+        "padded_tokens": 524288,
+        "padded_token_pairs": 16777216
+      }
+    },
+    {
+      "task": "market",
+      "common_result": "experiments/results/e120/market_d8_20260929.json",
+      "reference_result": "experiments/results/e123/market_tf_d32_l2_s6.json",
+      "fitting_queries": 512,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 256,
+      "reference_optimizer_steps": 256,
+      "common_stages": {
+        "forward_and_loss": 15656824335,
+        "backward": 32715724410,
+        "gradient_clipping": 40904960,
+        "optimizer": 163583232
+      },
+      "reference_stages": {
+        "forward_and_loss": 9040419698,
+        "backward": 18514553532,
+        "gradient_clipping": 20227328,
+        "optimizer": 80886528
+      },
+      "common_setup": {
+        "calibration_forward_flops": 730760945,
+        "calibration_whitening_flops": 1647756,
+        "evidence_fitting_flops": 103929,
+        "fitting_evidence_precomputation_flops": 82944,
+        "evidence_log_evaluations": 36864,
+        "total_arithmetic_flops": 732595574
+      },
+      "common_total_training_flops": 49309632511,
+      "reference_total_training_flops": 27656087086,
+      "common_to_reference_ratio": 1.7829576670649625,
+      "fitting_prefix_events": 16384,
+      "reference_padding": {
+        "flops": 7522484224,
+        "optimizer_steps": 256,
+        "padded_tokens": 131072,
+        "padded_token_pairs": 4194304
+      }
+    },
+    {
+      "task": "temporal",
+      "common_result": "experiments/results/e120/temporal_d8_20260929.json",
+      "reference_result": "experiments/results/e123/temporal_tf_d32_l2_s6.json",
+      "fitting_queries": 1024,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 512,
+      "reference_optimizer_steps": 512,
+      "common_stages": {
+        "forward_and_loss": 7725493024,
+        "backward": 16545951654,
+        "gradient_clipping": 81022464,
+        "optimizer": 324019712
+      },
+      "reference_stages": {
+        "forward_and_loss": 4908023671,
+        "backward": 9810806153,
+        "gradient_clipping": 40625152,
+        "optimizer": 162455040
+      },
+      "common_setup": {
+        "calibration_forward_flops": 361137352,
+        "calibration_whitening_flops": 2864268,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 364001620
+      },
+      "common_total_training_flops": 25040488474,
+      "reference_total_training_flops": 14921910016,
+      "common_to_reference_ratio": 1.6781020959884068,
+      "fitting_prefix_events": 7869,
+      "reference_padding": {
+        "flops": 4609949696,
+        "optimizer_steps": 512,
+        "padded_tokens": 88672,
+        "padded_token_pairs": 968256
+      }
+    },
+    {
+      "task": "mnist",
+      "common_result": "experiments/results/e120/mnist_d8_20260929.json",
+      "reference_result": "experiments/results/e123/mnist_tf_d32_l2_s6.json",
+      "fitting_queries": 1024,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 16,
+      "reference_batch_size": 16,
+      "common_optimizer_steps": 512,
+      "reference_optimizer_steps": 512,
+      "common_stages": {
+        "forward_and_loss": 40393639724,
+        "backward": 84375904048,
+        "gradient_clipping": 83280384,
+        "optimizer": 333051392
+      },
+      "reference_stages": {
+        "forward_and_loss": 40959777618,
+        "backward": 84942696897,
+        "gradient_clipping": 49182208,
+        "optimizer": 196683264
+      },
+      "common_setup": {
+        "calibration_forward_flops": 1883481014,
+        "calibration_whitening_flops": 2864268,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 1886345282
+      },
+      "common_total_training_flops": 127072220830,
+      "reference_total_training_flops": 126148339987,
+      "common_to_reference_ratio": 1.0073237653630258,
+      "fitting_prefix_events": 42349,
+      "reference_padding": {
+        "flops": 31758086144,
+        "optimizer_steps": 512,
+        "padded_tokens": 491312,
+        "padded_token_pairs": 29702640
+      }
+    },
+    {
+      "task": "dvs",
+      "common_result": "experiments/results/e120/dvs_d8_20260929.json",
+      "reference_result": "experiments/results/e123/dvs_tf_counts_d32_l2_s6.json",
+      "fitting_queries": 88,
+      "common_epochs": 8,
+      "reference_epochs": 8,
+      "common_batch_size": 4,
+      "reference_batch_size": 4,
+      "common_optimizer_steps": 176,
+      "reference_optimizer_steps": 176,
+      "common_stages": {
+        "forward_and_loss": 51579959584,
+        "backward": 107385984793,
+        "gradient_clipping": 27957072,
+        "optimizer": 111804176
+      },
+      "reference_stages": {
+        "forward_and_loss": 424320097538,
+        "backward": 986689673665,
+        "gradient_clipping": 14186832,
+        "optimizer": 56731136
+      },
+      "common_setup": {
+        "calibration_forward_flops": 2403553156,
+        "calibration_whitening_flops": 640332,
+        "evidence_fitting_flops": 0,
+        "fitting_evidence_precomputation_flops": 0,
+        "evidence_log_evaluations": 0,
+        "total_arithmetic_flops": 2404193488
+      },
+      "common_total_training_flops": 161509899113,
+      "reference_total_training_flops": 1411080689171,
+      "common_to_reference_ratio": 0.11445830160703704,
+      "fitting_prefix_events": 54329,
+      "reference_padding": {
+        "flops": 93761910528,
+        "optimizer_steps": 176,
+        "padded_tokens": 444588,
+        "padded_token_pairs": 280783484
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/results/e172/complete_work_v2_20260930.json": "9916a700befa297da88940780ce385f84120bfdacc16504bd2872740c3651ec9",
+    "experiments/results/e124/breadth_work_counted_20260929.json": "86ad0402f22dd9cf8407f7da8ca264d5232f1ab39c4a0a9dd0fcb8d7b1c2cf2d",
+    "experiments/results/e120/language_d8_20260929.json": "84f383e50cbc04869206dd79619a887abefc4d975fd6996945fa519c0be9fecb",
+    "experiments/results/e123/language_tf_d32_l2_s6.json": "76c55c6a6fc61c9d9d8ea968ba0569dda1cb75eddcc385e42134d61dd708f946",
+    "experiments/results/e120/market_d8_20260929.json": "27ae93bce032f3dd3df9adbf06ce05c1f54f2e38246b05a3f30c425d19525f9a",
+    "experiments/results/e123/market_tf_d32_l2_s6.json": "e9376c51adc47e2aa91d851eb0dba57bb3f29350e64e92735137bef73a5372a5",
+    "experiments/results/e120/temporal_d8_20260929.json": "f8e5edda9baeff617b322e9ebd631fdadb2cf0683d705f6571efcafa3db4de07",
+    "experiments/results/e123/temporal_tf_d32_l2_s6.json": "7fe7eb3f6b44f7bd7818a8228d277896ac681e5108ab4d55345986ac256a3543",
+    "experiments/results/e120/mnist_d8_20260929.json": "76d611a93251fd448ea89f313150b3dc6e4965ef445ceb648aa888aa3172d8b6",
+    "experiments/results/e123/mnist_tf_d32_l2_s6.json": "04ad5b7ab0f7c9a35eabb038cd915a2332bd8b7a31bab7aa6268c4108911bf2f",
+    "experiments/results/e120/dvs_d8_20260929.json": "fe943bec272355e95a769ad765666ded5b9d9c9f0f727ae52c25d75c74e2ad6e",
+    "experiments/results/e123/dvs_tf_counts_d32_l2_s6.json": "c944dc95b80101e633036343f310a052835223f5e7e4dc0e1d6a3855e1dbf0c4",
+    "experiments/estimate_training_work.py": "975fa51d8d73f9d490e9bc109b04c1ab1324897989e93ad697e2a0981a49c378"
+  },
+  "status": "completed",
+  "method": "trace_calibrated_whole_fitting_budget_v1",
+  "multiply_add_flops": 2,
+  "scope": "All completed fitting epochs, backward, clipping, Adam, evidence fitting and readout calibration. No new training.",
+  "assumptions": [
+    "Scale traced forward/loss and backward arithmetic by whole-run forward contractions",
+    "Non-contraction arithmetic extrapolates the four-query saved-parameter trace",
+    "Reference padding is reconstructed from original seed, prefix lengths and batch size",
+    "Clipping and warm Adam costs are charged once per original optimizer step",
+    "Calibration forward uses inference contraction scaling; whitening includes a 10*d^3 eigensolver estimate"
+  ],
+  "excludes": [
+    "Development/test inference and hyperparameter search",
+    "Data loading, encoding, sorting and indexing",
+    "Memory traffic and allocations",
+    "Special functions, integer arithmetic and comparisons (not arithmetic FLOPs)"
+  ],
+  "evidence": "Exploratory single-seed screens; total arithmetic estimates, not hardware instructions, elapsed time or joules"
+}

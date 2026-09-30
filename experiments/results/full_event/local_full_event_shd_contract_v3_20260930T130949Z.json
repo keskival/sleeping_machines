@@ -1,0 +1,74 @@
+{
+  "status": "completed",
+  "args": {
+    "task": "shd",
+    "tag": "local_full_event_shd_contract_v3_20260930T130949Z",
+    "epochs": 1,
+    "seed": 6,
+    "resume": false,
+    "contract": true
+  },
+  "protocol": {
+    "dataset": "SHD",
+    "fit": "all 6987 train-file utterances outside speakers 3/6",
+    "dev": "all 1169 train-file utterances from speakers 3/6",
+    "encoding": "injective 700-channel source addresses, original time, nonempty 10ms global closures",
+    "inheritance": "none; from-scratch six-block learned event-state encoder",
+    "contract_only": true,
+    "official_test_read": false
+  },
+  "statistical_experts": [],
+  "parameters": 395814,
+  "fitting_examples": 8,
+  "development_examples": 4,
+  "encoded_data_sha256": {
+    "fit": "5fc693fb6b2c27f7509b60b25616943c72bfb9457d48c6322b97f10338fee01a",
+    "dev": "d18cd8294ae49b22a4ad6e165f665dbcd58dbdfa501d3008175f582e501b235e"
+  },
+  "curve": [
+    {
+      "epoch": 1,
+      "fitting_online_nll": 3.037009596824646,
+      "dev": {
+        "n": 4,
+        "nll": 3.005647897720337,
+        "correct": 1,
+        "accuracy": 0.25
+      }
+    }
+  ],
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "source_sha256": {
+    "experiments/full_event_benchmarks.py": "630802add91801f7ff5d59fde6efd928fcc1cff12bb151d1e24ccdce94a9a683",
+    "sleeping_machines/shared_event.py": "4bf0c696b6f9c8c55bb9930a091c6a33e0b1207150ab8030c2050387b782a314",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/rotating_memory.py": "d5b0308a9a28593310673683638fa9f4162aceba94ce79ca58db87e4ba5323b4",
+    "sleeping_machines/event_query.py": "43dccd3a40a82f980e74eb8a5e58d05a2bd8a6dc1f2dc37b626b9c219a951ee5",
+    "sleeping_machines/objectives.py": "5ab73ee498e29220230cbd768816d8aaef27606bb41309587f472b5a2897d9f7",
+    "sleeping_machines/readout_calibration.py": "037621374c3600e8613241814ec5e857545fcd41794019cac82a3ff1986653dc",
+    "experiments/e120_shared_tasks.py": "7c158894f1f057578d3c064cd6868aa51b98866726d77ee96e6a5246a542b9ad",
+    "experiments/e120_shared_bench.py": "2a2413e8fcacb5e8108c361bfbb6fce70f1f123102cb6eacbf12a40b936c32dd",
+    "experiments/e120_dvs_adapter.py": "c5e9a7d89b9d56ba682c3384a3b57e8bbe03f1f15f12b1cd5ac3aac76ba67345",
+    "experiments/e139_fine_packet_model.py": "821c5bea62cd3f56c0067649cc2cadd233b4fb165cf1e19806640552ff3757ae",
+    "experiments/e143_event_state_shd.py": "03849189dfb47ea01c1b3a734b949e0924806baa5a5a731feda465b35b6ee444"
+  },
+  "scope": "Small execution contract, not benchmark evidence",
+  "test_policy": "Fixed epoch budget; minimum development NLL checkpoint; official test once after selection where available",
+  "wall_s": 2.3456719440000597,
+  "max_rss_kb": 546932,
+  "selected_epoch": 1,
+  "final": {
+    "dev": {
+      "n": 4,
+      "nll": 3.005647897720337,
+      "correct": 1,
+      "accuracy": 0.25
+    }
+  }
+}

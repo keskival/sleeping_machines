@@ -13,17 +13,35 @@ Messages carry a learned vector and an arrival time. Nodes accumulate local memo
 
 ## The strongest demonstrated results
 
-- **Better real-language prediction.** With 10M training characters, the native count/copy mixture reaches **1.727 test bits per character**, ahead of LSTM (1.799) and four-layer Transformer (1.908) on identical text8 test targets. Lower bits per character means better prediction.
+- **Learned event language prediction.** The eight-layer persistent event model reaches **3.351 validation bits per character**, from 5.329 before fitting. It learns embeddings, temporal state, vector maps and a readout without count/copy/word experts. This is a small development result; a matched larger neural comparison remains to be run.
 - **Accurate retrieval with far fewer examples.** Local race retrieval learns perfect recall at four times the training context within 4,000 examples in all five runs. The consolidated model preserves 100% on its standard and longer contexts.
 - **Rule learning and deep composition.** The consolidated periodic path reaches **100% across all 3,440 unseen modular triples**. Native depth-four order models reach 99.9–100%; shared-motif composition reaches about 99.65% from one pass.
 
+**Learned language work:** the completed small run uses an estimated 6.96G arithmetic FLOPs for all fitting passes, backward, clipping, Adam and warmup. Inference/scoring uses 59.74K arithmetic FLOPs per character. These count the logical event algorithm; special functions are reported separately in Appendix B. A matched-quality cost advantage is not yet established.
+
 ![accomplishments](report/figures/accomplishments.png)
 
-Language: 999,999 identical targets, frozen test parameters and cold test context. Counts fit 10M characters; mixture weights additionally fit 1M validation labels. Neural baselines use different capacities, fitting passes and validation budgets. This is a specialized count/copy mixture result. Generic deep-language learning is measured separately. Retrieval, composition and arithmetic are controlled synthetic tasks.
+Language: 8,192 fitting characters, four passes, 1,024 validation targets, one seed; 28,403 parameters. No official-test or frontier-quality claim. The separate statistical count/copy predictor in Appendix B does not use this learned event backbone. Retrieval, composition and arithmetic are controlled synthetic tasks.
 
-## Consolidated models: accuracy versus computation
+## Which model produced each result?
 
-The common implementation now retains perfect modular generalization and longer-context retrieval. New Transformer and LSTM controls use the same synthetic examples. **Higher and further left is better:** more accurate answers from less counted work. The logarithmic axis makes large cost differences visible.
+Sleeping Machines is a family of event computations. The results below come from distinct implementations and training protocols; a shared interface does not make them one trained model. The report distinguishes learned event backbones, hybrids and task-specific mechanisms.
+
+| Model | Mechanism | Evidence | What it establishes |
+| --- | --- | --- | --- |
+| Proper learned language model | Eight-layer signed event state, learned vector maps/clocks/head; no statistical experts | E176: 3.351 development bpc | Small persistent learned-language result; full benchmark pending |
+| Proper learned speech model | Learned source embedding and temporal event encoder; selected inherited prefix | E163/E165: 408/512 private development | Generic speech learning; official-test parity unmeasured |
+| Common breadth hybrids | Event carrier plus separately fitted conditional evidence | E120/E124 text and market | Hybrid prediction at declared extra evidence-fitting cost |
+| Task-specific event mechanisms | Hard race pointer, supplied-period phase path, timing/composition learners | E61, E34/E53/E54, E124 | Controlled mechanism/generalization results; no broad representation claim |
+| Separate statistical language baseline | N-gram/backoff counts and copy cache with mixing weights; no learned event backbone | E173/E174 aligned text8 comparison | Statistical prediction benchmark; no Sleeping Machines backbone advantage |
+
+Only completed result files support reported measurements. Development splits, synthetic tests reused during research, official tests, inherited checkpoints and separately fitted evidence are identified where their results appear. FLOPs describe a declared logical algorithm; activity counts and simulator timings do not substitute for measured total device energy.
+
+Full learned-event benchmarks are being prepared for language, speech, image classification, complete event-camera gestures and forecasting. Their results remain pending. Modern tokenization and stronger contemporary controls are additional gates before a frontier claim.
+
+## Task-specific periodic and retrieval mechanisms
+
+Two task-specific mechanisms retain perfect modular generalization and longer-context retrieval. New Transformer and LSTM controls use the same synthetic examples. **Higher and further left is better:** more accurate answers from less counted work. The logarithmic axis makes large cost differences visible.
 
 ![consolidated work frontiers](report/figures/consolidated_work_frontiers.png)
 
@@ -38,13 +56,13 @@ The periodic path executes directly through the shared model interface. A two-la
 
 Arithmetic: 1,473 fitting triples, a 200-epoch budget, all 3,440 unseen triples; supplied period 17. The phase-only path stops after 47 passes, when an entire fitting pass makes no updates. Recall: 4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 examples for eight epochs. Width 32 and two generic layers where present, seed 6, one small dense setting. Work is an analytic logical-operation estimate, including configured vector maps, routers, scans, normalization, clock candidates and pointer search. These inference counts are not measured joules or backward/optimizer counts. Full work definitions appear in the evidence appendix.
 
-## Native components: quality, work and sample efficiency
+## Task-specific event mechanisms: quality and activity
 
-The native components establish why selective temporal computation is promising. Timing patterns, composition and deep order reach high accuracy with sparse event activity. Retrieval and rule learning also show that a reusable computation can generalize beyond the observed examples.
+These mechanisms provide separate evidence for selective temporal computation. Timing patterns, composition and deep order reach high accuracy with sparse event activity. Retrieval and rule learning also show that a reusable computation can generalize beyond the observed examples.
 
 ![supremacy map](report/figures/supremacy_map.png)
 
-Native work panels show event deliveries and dense multiply-adds: different activity measures. Native delivery counts omit candidate scans and local array arithmetic, so their ratios do not measure total work or energy savings. Synthetic evaluation sets were reused during development. Market points are causal development screens with prior-day evidence. The preceding page uses a common logical operation ledger; Appendix B includes complete optimizer-step arithmetic estimates.
+Native work panels show event deliveries and dense multiply-adds: different activity measures. Native delivery counts omit candidate scans and local array arithmetic, so their ratios do not measure total work or energy savings. Synthetic evaluation sets were reused during development. Market points are causal development screens with prior-day evidence. The preceding page uses a common logical operation ledger; Appendix B estimates total training arithmetic, including backward and optimizer work.
 
 ## How the model computes and learns
 
@@ -55,7 +73,7 @@ The architecture computes through local memory, vector payloads and timing. A le
 - **Local temporal memory** accumulates observed content and elapsed time without evaluating empty time ticks.
 - **Computation through delays** uses waiting times, arrival order and clock races to transform information and select outcomes.
 - **Hard races** choose the emitted vector and delay. Losing alternatives provide training credit without becoming identical forward messages.
-- **Reusable memories** include conditional outcome statistics, relative pointers and learned phase transformations.
+- **Separate hybrid mechanisms** include fitted conditional outcome statistics, relative pointers and learned phase transformations; their results do not establish generic backbone quality.
 - **Trainable depth** uses bounded carrier updates to preserve representations and credit through a hierarchy.
 - **Appropriate supervision** teaches a completed class decision or the next event's type and waiting time, including silence.
 
@@ -86,7 +104,7 @@ Formal derivations and their assumptions are indexed in the project's theory not
 
 ## Potential: what the demonstrated capabilities put within reach
 
-The opportunity is intelligence that learns reusable structure and spends computation in proportion to useful activity. Strong predictive mixtures, reliable retrieval, efficient temporal composition and certified periodic computation already provide working foundations. The shared implementation gives those mechanisms a common place to develop.
+The opportunity is intelligence that learns reusable structure and spends computation in proportion to useful activity. Learned temporal state, specialized retrieval, temporal composition and certified periodic computation already provide working foundations. The shared implementation gives those mechanisms a common place to develop.
 
 ### Compact prediction and memory
 
@@ -234,70 +252,68 @@ All arms inherit the paired-head checkpoint and use 6,144 fitting utterances, th
 
 ## Appendix B. Breadth of the common implementation
 
-The common event backbone has development screens across language, event prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. These bounded screens establish implementation breadth; the stronger native comparison results use their own complete protocols.
+The common event backbone has development screens across language, event prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. These bounded screens establish implementation breadth. Text8 and market rows are hybrids with separately fitted statistical evidence; they are not evidence-free backbone results. The proper learned language model is reported separately. Task-specific comparison results have their own protocols.
 
 **How to read the comparison:** accuracy is the percentage of correct answers, so **higher is better**. Bits per character (bpc) and nats/event measure prediction error, so **lower is better**. FLOPs estimate arithmetic work: **lower means less computation**. Each work pair lists the common model first and the Transformer (TF) second.
 
-| Task and quality direction | Common quality | Transformer quality | Inference contractions/query: common / TF ↓ | Complete step arithmetic/query: common / TF ↓ |
+| Task / quality direction | Common quality | TF quality | Inference contractions/query: common / TF ↓ | Training total FLOPs: common / TF ↓ |
 | --- | --- | --- | --- | --- |
-| Text8<br/>Prediction error: lower is better | 2.915 bpc | 3.729 bpc | 1.26M / 1.84M | 11.32M / 5.91M |
-| Market event prediction<br/>Prediction error: lower is better | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 11.31M / 5.91M |
-| Temporal composition<br/>Accuracy: higher is better | 97.3% | 90.2% | 0.29M / 0.38M | 2.38M / 1.21M |
-| MNIST<br/>Accuracy: higher is better | 75.8% | 69.9% | 1.66M / 2.57M | 13.72M / 9.55M |
-| Event-camera gestures<br/>Accuracy: higher is better | 59.1% | 15.9% | 23.99M / 124.23M | 215.70M / 476.33M |
+| Text8<br/>bpc ↓ | 2.915 bpc | 3.729 bpc | 1.26M / 1.84M | 197.26G / 95.65G |
+| Market event prediction<br/>nats/event ↓ | 3.823 nats/event | 4.208 nats/event | 1.26M / 1.84M | 49.31G / 23.91G |
+| Temporal composition<br/>accuracy ↑ | 97.3% | 90.2% | 0.29M / 0.38M | 25.04G / 14.52G |
+| MNIST<br/>accuracy ↑ | 75.8% | 69.9% | 1.66M / 2.57M | 127.07G / 101.76G |
+| Event-camera gestures<br/>accuracy ↑ | 59.1% | 15.9% | 23.99M / 124.23M | 161.51G / 329.35G |
 
-The common screens use eight layers and the Transformer references two, both at width 32 for eight epochs. They share neural-fitting examples, held-out examples, encoding, objective and schedule, with fitting batches of 16/64 respectively. These are small reference settings. Two-layer follow-ups retain 100% recall at both context lengths and reach 96.1% composition versus 97.3% at depth eight, using four times fewer hidden carrier emissions.
+Eight-layer event variants and two-layer Transformer references use width 32, eight epochs and the same neural-fitting/development examples, encoding and objective. Both use batch 16, or batch four for gestures. Depth and capacity differ. M/G/T denote million/billion/trillion. Inference lists unpadded contractions; training covers every fitting epoch, backward, clipping, Adam and event-model evidence/calibration.
 
-**Why training can cost more:** the race core evaluates all three candidate vector payloads during training, versus only the winner during inference. Its eight layers also exceed the reference's two. With short contexts, that work outweighs the saved attention cost; these rows do not show a training efficiency advantage. On the longer event-camera prefixes, the common model's complete step uses 45.3% of the reference arithmetic on the audited four-query batch.
+**Why training can cost more:** the race core evaluates all three candidate vector payloads during training, versus only the winner during inference. Its eight layers also exceed the reference's two. With short contexts, that work outweighs the saved attention cost; these rows do not show a training efficiency advantage. On the longer event-camera prefixes, the common model's estimated total uses 49.0% of the reference training arithmetic, including calibration.
 
 Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character evidence bank; market evidence is fitted on a prior day. The references have no such bank. MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event.
 
-M = million, G = billion. Inference counts estimate contractions per unpadded prefix, excluding other arithmetic. Complete steps include forward/loss, backward, clipping and Adam, with actual padding and all training alternatives. Each is one four-query fitting batch divided by four. These are different accounting boundaries, not whole-run budgets. The next page defines complete-step coverage.
+## Appendix B (continued). Total training cost
 
-## Appendix B (continued). Complete training steps
-
-The ledger charges the complete learning step for both models: prediction and loss, reverse credit, gradient clipping and Adam. It traces the actual tensor operators in a representative four-query fitting batch. Every observed floating operator has a declared formula or a classification as comparison, special function or data movement. Lower arithmetic work is better.
+The ledger estimates the entire completed fitting budget for each reported model. It includes prediction and loss, backpropagation, gradient clipping and Adam across all eight epochs. The common model also pays for its evidence bank and initial readout calibration. These models were trained from initialization; there is no inherited neural fitting to omit.
 
 ![e172 complete training work](report/figures/e172_complete_training_work.png)
 
-| Model/task | Forward + loss | Backward | Clip | Adam | Total |
-| --- | --- | --- | --- | --- | --- |
-| Language: Common | 3.598 | 7.518 | 0.040 | 0.161 | 11.316 |
-| Language: TF | 1.907 | 3.906 | 0.020 | 0.081 | 5.915 |
-| Market: Common | 3.597 | 7.517 | 0.040 | 0.160 | 11.314 |
-| Market: TF | 1.907 | 3.905 | 0.020 | 0.079 | 5.911 |
-| Temporal: Common | 0.694 | 1.487 | 0.040 | 0.158 | 2.380 |
-| Temporal: TF | 0.370 | 0.739 | 0.020 | 0.079 | 1.208 |
-| Mnist: Common | 4.376 | 9.141 | 0.041 | 0.163 | 13.721 |
-| Mnist: TF | 3.067 | 6.361 | 0.024 | 0.096 | 9.549 |
-| Dvs: Common | 69.925 | 145.578 | 0.040 | 0.159 | 215.701 |
-| Dvs: TF | 143.212 | 333.017 | 0.020 | 0.081 | 476.330 |
+| Model/task | Forward + loss | Backward | Clip | Adam | Evidence + calibration | Total |
+| --- | --- | --- | --- | --- | --- | --- |
+| Language: Common | 62.633 | 130.873 | 0.165 | 0.658 | 2.930 | 197.26 |
+| Language: TF | 31.246 | 63.990 | 0.083 | 0.334 | 0 | 95.65 |
+| Market: Common | 15.657 | 32.716 | 0.041 | 0.164 | 0.733 | 49.31 |
+| Market: TF | 7.811 | 15.996 | 0.020 | 0.081 | 0 | 23.91 |
+| Temporal: Common | 7.725 | 16.546 | 0.081 | 0.324 | 0.364 | 25.04 |
+| Temporal: TF | 4.773 | 9.540 | 0.041 | 0.162 | 0 | 14.52 |
+| Mnist: Common | 40.394 | 84.376 | 0.083 | 0.333 | 1.886 | 127.07 |
+| Mnist: TF | 33.026 | 68.489 | 0.049 | 0.197 | 0 | 101.76 |
+| Dvs: Common | 51.580 | 107.386 | 0.028 | 0.112 | 2.404 | 161.51 |
+| Dvs: TF | 99.023 | 230.261 | 0.014 | 0.057 | 0 | 329.35 |
 
-All table values are MFLOPs per query. A multiply-add counts as two arithmetic operations. Fused attention, normalization and activation kernels use shape-based mathematical formulas. Exponentials, logarithms, trigonometric functions, roots and comparisons are recorded separately; memory traffic and execution overhead are outside the arithmetic total. This is formula coverage of the observed CPU steps, not measured hardware instructions or joules.
+All table values are estimated GFLOPs for the whole fitting run, not per query. A multiply-add counts as two operations. Forward/loss and backward use the saved E172 four-query operator trace scaled by full-run contractions. The common model uses its logged candidate-map/scan counts. Reference padding is reconstructed from all fitting prefix lengths, the original shuffle seed and batch sizes, including fused attention products. Clipping and Adam are charged once per original step. Other arithmetic and the small calibration eigensolver are estimates.
 
-The audit does not reconstruct total historical training work. Fitting evidence banks, preprocessing, calibration, inherited weights, evaluation and search add work beyond these steps. Different original batch sizes also change optimizer amortization. A future whole-run ledger must record all of these costs alongside energy and quality.
+Event-target arithmetic excludes padding and simulator dispatch/allocation; required candidate maps, losing-value teaching, scans and learning remain charged. References use the same FLOP convention. Evaluation, search, encoding, special functions, integer/index work, comparisons and memory traffic are outside these totals. These single-seed screens have different depths/quality and do not measure event hardware, matched-quality cost or energy. Ledger: [estimate_training_work.py](experiments/estimate_training_work.py).
 
-## Appendix B (continued). Language benchmark protocol
+## Appendix B (continued). Separate statistical language baseline
 
-The native predictor and saved neural references score the same 999,999 character targets, starting from a cold context. Parameters are frozen during testing. Earlier observed test characters can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per character means better prediction.
+This count/copy predictor does not use the learned Sleeping Machines event backbone. It is a separate statistical system: order-0 through order-6 counts, backoff probabilities and a bounded causal copy cache, combined by learned mixing weights. Its quality/work results must not be attributed to the event architecture.
 
-| Predictor | Test bpc ↓ | Fitting and selection budget |
-| --- | --- | --- |
-| Native count/copy mixture | 1.727 | 10M count fitting + 1M mixing-weight fitting |
-| LSTM, width 512; one recurrent layer | 1.799 | 10M characters, six passes; 200k validation selection |
-| Transformer, width 256; four layers | 1.908 | 10M characters, four passes; 200k validation selection |
+The statistical predictor and saved neural references score the same 999,999 character targets, starting from a cold context. Parameters are frozen during testing. Earlier observed test characters can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per character means better prediction.
+
+| Predictor | Test bpc ↓ | Fitting and selection budget | Estimated training FLOPs ↓ |
+| --- | --- | --- | --- |
+| Separate statistical count/copy baseline | 1.727 | 10M count fitting + three 1M mixing-rate trials | 4.47G + integer count construction |
+| LSTM, width 512; one recurrent layer | 1.799 | 10M characters, six passes; 200k validation selection | 432.59T |
+| Transformer, width 256; four layers | 1.908 | 10M characters, four passes; 200k validation selection | 888.78T |
+
+The neural totals charge all original optimizer steps that produced the inherited E174 checkpoints: forward, estimated 2×-forward backward, clipping and Adam. Alignment evaluation is excluded. The native floating estimate charges expert probability preparation and all three mixing-rate trials, including local gradients and weight updates. Exp/log/root evaluations count as one operation in these language estimates. Native count construction additionally uses about 80M integer count presentations, plus sorting, lookup and hashing; that work is not quantified as FLOPs. The floating totals alone cannot establish total compute, runtime or energy savings.
 
 The count/copy mixture improves on LSTM by 0.072 bpc and Transformer by 0.181 bpc. These results establish useful specialized prediction; generic learned representations are assessed in the separate language screen.
 
-The native mixture combines order-0 through order-6 conditional counts, Witten–Bell prediction and a bounded copy predictor. Its count arrays occupy 66.55 MB. Vocabulary, capacities, optimization and fitting budgets differ from the neural references. The comparison does not measure total training energy or a matched-capacity advantage.
+The statistical baseline's count arrays occupy 66.55 MB. Vocabulary, capacities, optimization and fitting budgets differ from the neural references. The comparison does not measure total training energy or a matched-capacity advantage.
 
-### Characters, subwords and a persistent stream
+All three use the same historical 27-character alphabet. Modern shared subword tokenization is a separate comparison gate for the learned event architecture, described later in this appendix.
 
-All three predictors use the same 27-character alphabet. Characters are tokens, but a subword representation can reduce the number of arrivals and expose longer patterns within a fixed credit window. It also enlarges the output vocabulary. The useful comparison is quality and total work per original character, with train-only tokenizer fitting and declared buffering latency.
-
-A generic streaming event-state implementation retains modal memory and pending delayed messages across chunks. An eight-layer contract confirms identical predictions under chunk splitting, causal prefix invariance and nonzero learning signals in every layer. Fifteen input arrivals cause 120 layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches 3.351 validation bpc in the separately described small screen.
-
-One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM. Estimated training work (forward, backward, Adam and gradient clipping): LSTM: 3.89 PFLOP. Shape-based estimates count multiply-add as two operations; backward is approximated as twice forward. Validation/test inference is excluded.
+One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM. Estimated training work (forward, backward, Adam and gradient clipping): LSTM: 3.89 PFLOP. Shape-based estimates count multiply-add as two operations; backward is approximated as twice forward. Validation/test inference is excluded. four-layer Transformer reference results are pending. These are single-seed comparisons; capacities and fitting budgets are not matched.
 
 ## Appendix B (continued). Learned language and depth
 
@@ -332,6 +348,55 @@ Validation loss falls from 5.329 to 3.351 bpc. All eight layer teachers are nonz
 A train-only 131-token prefix dictionary reduces layer deliveries by 30.4% and observed CPU time by 26.2%, while validation bpc is 3.517. Exact partial-token marginalization scores identical raw targets. Its larger vocabulary fits better but generalizes less well in this small screen: compression alone does not explain or resolve the quality gap.
 
 One seed; 28,403 parameters, width 32, sixteen temporal modes per block. Four passes, 128 Adam steps/pass, credit truncated every 64 characters, 31 warm characters and 1,024 validation targets. Target offsets match the bounded E133 screen; topology, capacity, history and update counts differ, so this is not a matched intervention. Total CPU wall time 364.9 s including fitting/evaluation; peak RSS 364.8 MiB. These are event counts and observed resources, not total arithmetic, physical memory traffic or energy. No official test or large-corpus claim. E176.
+
+## Appendix B (continued). Proper language-model work
+
+These counts belong to the learned eight-layer persistent Sleeping Machines event model that reaches 3.351 validation bpc. It has no count/copy/word experts. Primary counts describe the logical event algorithm; simulator dispatch/allocation is excluded.
+
+| Fitting stage | Estimated arithmetic FLOPs |
+| --- | --- |
+| Forward and loss | 1.96G |
+| Backward | 4.77G |
+| Gradient clipping | 43.52M |
+| Optimizer | 173.95M |
+| Warmup | 7.42M |
+| Total | 6.96G |
+
+The entire completed budget includes 32,768 fitting targets, 512 Adam/clipping steps and four stream warmups. Special functions add 85.431M evaluations, reported separately from arithmetic FLOPs.
+
+| Inference boundary | Per character |
+| --- | --- |
+| Prediction plus NLL-scoring arithmetic | 59,741 FLOPs |
+| Additional special functions | 1,212 evaluations |
+
+A 64-character saved-checkpoint trace measures forward/loss, backward, clipping and warm Adam; the fitting ledger scales those stages by the original 512 steps and separately charges warmup. This is a representative arithmetic estimate, not a whole-run trace. The traced chunk has complete floating-operator formula coverage. Index/queue work, comparisons, memory traffic and evaluation passes are outside the fitting arithmetic boundary.
+
+The 10M-character LSTM/Transformer checkpoints have different data, capacity and achieved quality. Dividing their full fitting budgets by this small run would not establish a fair training advantage. Full learned-event runs must complete before a larger aligned quality/work comparison.
+
+Evidence: event_language_work/local_event_language_work_20260930T124646Z.json; quality: E176. Two arithmetic FLOPs per multiply-add. Additional unit-weight special functions would give a different logical-operation total; no event-device runtime or energy has been measured.
+
+## Appendix B (continued). Online language and next comparisons
+
+The official language comparison freezes parameters during evaluation. A new development-only pilot asks whether causal local learning improves prediction: score each character first, reveal it, then update only the expert mixing weights. Count experts stay frozen and both arms use identical causal copy-cache behavior.
+
+| Expert set | Frozen bpc ↓ | Online bpc ↓ | Extra update FLOPs |
+| --- | --- | --- | --- |
+| Without word | 2.605 | 2.564 | 2.75M |
+| With causal word | 2.537 | 2.487 | 3.21M |
+
+This pilot reuses a 100,000-character count checkpoint and its learning rate selected on an earlier 2,048-character validation window. It scores 8,191 targets in a fresh 8,192-character development window [90,032,768,90,040,960), excluding the first target. Each adaptive arm performs 8,192 updates, including first-position warmup. Official test data are untouched.
+
+One checkpoint and one window; a specialized adaptive readout, not deep learned TTT or a frontier result. The extra arithmetic column counts only local gradient/weight updates, on top of shared prediction and inherited fitting costs. Total pilot CPU wall time is 0.587 s. Evidence: online_language/local_online_language_20260930T121741Z.json.
+
+### Compute allocation is the next architectural hypothesis
+
+Independent budgets for active width/depth, dormant capacity, temporal memory, retrieval, credit and adaptation may let extra work buy more prediction quality. The new theory derives conditional marginal-value allocation and retrieval-error bounds, and identifies exposure, routing overhead and hardware utilization as possible limits. A small-scale win does not prove a better scaling exponent or a widening frontier advantage.
+
+Next learned-language comparisons need shared modern subword tokenization, Unicode/byte coverage, suitable rotary/relative position, packed optimized Transformer kernels, sparse MoE and modern recurrent/attention-hybrid controls. Existing event memory already uses relative-time rotations. Token coordinates must remain distinct from learned scheduling delays.
+
+Known sequences can be fitted with input-known affine scans and then generated sequentially with persistent state. Sequence-parallel fitting also permits Transformer adaptation between tokens/chunks. Compare frozen and online arms at identical observations and adaptation budgets; charge cache consistency and update work.
+
+[Theory §§280–286](experiments/theory/43_compute_allocation_and_frontier_scaling.md) and the [frontier compute protocol](experiments/FRONTIER_COMPUTE_PROTOCOL.md) specify these tests. Modern architecture and larger-scale comparison arms remain proposed, not completed.
 
 ## Appendix C. Evidence and metric definitions
 

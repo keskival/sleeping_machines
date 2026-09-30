@@ -1,0 +1,1 @@
+local_full_proper_language_10m_20260930T131028Z experiments/full_event_language.py --fit 10000000 --dev 200000 --test 1000000 --epochs 4 --chunk 64 --seed 6 --resume --tag local_full_proper_language_10m_20260930T131028Z --width 256 --modes 128 --depth 6

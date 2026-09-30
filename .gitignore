@@ -28,3 +28,11 @@ experiments/queue/**/*.out
 experiments/results/**/*.pt
 experiments/results/**/*.npy
 experiments/results/**/*.npz
+experiments/results/**/*.log
+experiments/results/**/*.out
+# Live benchmark progress stays local; completed result summaries are tracked.
+experiments/results/**/*.running.json
+experiments/results/**/*.pt.tmp
+experiments/results/**/*.json.tmp
+experiments/queue/*.status.json
+report/*.building.pdf

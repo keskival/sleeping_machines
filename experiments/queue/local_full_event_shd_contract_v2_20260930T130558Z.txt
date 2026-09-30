@@ -1,0 +1,1 @@
+local_full_event_shd_contract_v2_20260930T130558Z experiments/full_event_benchmarks.py --task shd --epochs 1 --contract --tag local_full_event_shd_contract_v2_20260930T130558Z

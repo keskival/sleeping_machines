@@ -24,6 +24,8 @@ completed results used to pursue that goal.
 - **Capacity beyond activity:** the scaling goal is useful dormant capacity with selective work and competitive quality.
 
 **Start with the [project report](REPORT.md) or [PDF](report/sleeping_machines_status.pdf).**
+The next language comparisons follow the [frontier compute protocol](experiments/FRONTIER_COMPUTE_PROTOCOL.md)
+and [compute-allocation theory](experiments/theory/43_compute_allocation_and_frontier_scaling.md).
 The original ideas are preserved in the
 [historical motivation manifesto](HISTORICAL_MOTIVATION_MANIFESTO.md).
 
@@ -31,11 +33,17 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
-| Native language prediction | **1.727 test bits/character**, versus **1.799 LSTM / 1.908 Transformer**; lower is better | 10M-character count/copy mixture; identical test positions; capacities and fitting budgets differ |
+| Learned event language model | **3.351 validation bits/character** with persistent eight-layer state; lower is better | 8,192 fitting characters, four passes, 1,024 development targets; no count/copy/word experts or matched neural comparison |
 | Learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small language/depth development screen |
 | Rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
 | Longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
 | Temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
+
+The separate statistical count/copy baseline reaches 1.727 text8 test
+bits/character after 10M-character count fitting. It does not use the learned
+Sleeping Machines event backbone and is not evidence of that backbone's
+language quality or compute advantage. Its comparison is retained separately
+in the report's language appendix.
 
 [Accuracy versus computation](report/figures/consolidated_work_frontiers.png)
 shows the consolidated arithmetic and retrieval comparisons. The report contains
@@ -109,6 +117,8 @@ All this work belongs in the resource accounting.
 | [Mathematical program](experiments/MATHEMATICAL_PROGRAM.md) | Open analytic problems and their decisive measurements |
 | [Research roadmap](experiments/ROADMAP.md) | Next experiments and architectural priorities |
 | [Language scaling protocol](experiments/LANGUAGE_SCALING_PROTOCOL.md) | Generic prediction, baseline matching and physical work measurements |
+| [Parallel training protocol](experiments/PARALLEL_TRAINING_PROTOCOL.md) | Sequence parallelism, persistent inference and proposed architecture controls |
+| [Online language protocol](experiments/ONLINE_LANGUAGE_PROTOCOL.md) | Test-time adaptation, memory and frontier comparison experiments |
 | [Findings](experiments/FINDINGS.md) | Completed experiment history and detailed observations |
 | [Historical manifesto](HISTORICAL_MOTIVATION_MANIFESTO.md) | Original motivation, exploratory ideas and early references |
 

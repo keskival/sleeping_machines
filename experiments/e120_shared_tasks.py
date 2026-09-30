@@ -167,11 +167,11 @@ def mnist(nfit, ndev, seed):
          "official_test_read": False})
 
 
-def market(nfit, ndev, seed):
+def market(nfit, ndev, seed, evidence_free=False, raw_limit=200_000, dev_day="2026-08-29"):
     from e42_when import decision_points
     bounds = np.array([.01, .05, .2, 1., 5.])
     edges = np.r_[0., bounds, np.inf]
-    context, raw_limit = 32, 200_000
+    context = 32
     def trades(day):
         path = Path(f"data/binance/BTCUSDT-aggTrades-{day}.zip")
         with zipfile.ZipFile(path) as zf:
@@ -193,7 +193,7 @@ def market(nfit, ndev, seed):
         types = np.r_[move, np.where(sell[big], 3, 2)]
         order = np.argsort(times, kind="stable")
         return times[order], types[order]
-    memories = [ConditionalEvidence(4, bins=6) for _ in range(3)]
+    memories = [] if evidence_free else [ConditionalEvidence(4, bins=6) for _ in range(3)]
     def target(times, types, i):
         gap = max(float(times[i]-times[i-1]), 1e-6)
         return int(types[i]), int(np.searchsorted(bounds, gap)), np.clip(gap-edges[:-1], 0, np.diff(edges))
@@ -204,24 +204,28 @@ def market(nfit, ndev, seed):
             mem.observe(tuple(types[i-order:i]), y, k, span)
     def examples(day, n):
         times, types = events(trades(day))
+        if n is None:
+            n = len(types) - context
         if len(types) < context+n:
             raise ValueError("Bounded market prefix has too few events; lower --fit/--dev")
         rows = []
         for i in range(context, context+n):
             obs = types[i-context:i]
             t = times[i-context:i]-times[i-context]
-            scores = np.stack([mem.scores(tuple(obs[len(obs)-o:])).ravel() for o, mem in enumerate(memories)])
+            scores = (np.stack([mem.scores(tuple(obs[len(obs)-o:])).ravel() for o, mem in enumerate(memories)])
+                      if memories else None)
             y, k, span = target(times, types, i)
             rows.append(Example(prefix(obs, t), y, f"{day}:{i}", scores, k, span))
         return rows
-    return Task({"bands": 4, "classes": 24, "groups": 1, "readout": "last", "evidence_count": 3},
-        examples("2026-08-26", nfit), examples("2026-08-29", ndev),
+    return Task({"bands": 4, "classes": 24, "groups": 1, "readout": "last", "evidence_count": len(memories)},
+        examples("2026-08-26", nfit), examples(dev_day, ndev),
         {"dataset": "BTCUSDT event TPP", "memory_day": "2026-08-25", "fit_day": "2026-08-26",
-         "dev_day": "2026-08-29", "raw_trade_limit_per_day": raw_limit, "size_threshold": threshold,
+         "dev_day": dev_day, "raw_trade_limit_per_day": raw_limit, "size_threshold": threshold,
          "threshold_fit": "first training day prefix only", "gap_edges_seconds": bounds.tolist(),
          "time_unit": "physical seconds", "objective": "exact marked hazard NLL",
          "official_test_read": False, "context": context,
-         "note": "bounded prefixes, not full E48/E52 day protocol; next gap/type are targets only"}, memories)
+         "evidence": "none" if evidence_free else "three frozen conditional evidence banks",
+         "note": "declared train/development days; next gap/type are targets only"}, memories)
 
 
 BUILDERS = {"language": language, "recall": recall, "market": market, "temporal": temporal,

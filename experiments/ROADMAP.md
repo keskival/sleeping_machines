@@ -1,5 +1,15 @@
 # Current frontier priorities — 30 September 2026
 
+The cross-task resource-allocation program is now specified in the
+[frontier compute protocol](FRONTIER_COMPUTE_PROTOCOL.md), with its derivation in
+[theory §§280–286](theory/43_compute_allocation_and_frontier_scaling.md).
+Modern language tokenization, position and optimized dense/MoE/hybrid controls
+are required gates. Primary FLOPs describe the declared logical event algorithm;
+simulator overhead and measured hardware resources remain separate. The
+completed local adaptive-readout pilot is encouraging, but does not change the
+speech quality gate or establish a scaling advantage. Close deferred AWS
+Transformer comparisons before promoting new heavy language arms.
+
 ## Current decision: consolidate quality before attributing a depth gain
 
 E152 retains 406/512 (79.30%) with one 395,814-parameter six-block encoder,

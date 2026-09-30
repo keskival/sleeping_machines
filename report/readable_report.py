@@ -46,6 +46,9 @@ def results():
     tasks["generic_language"] = {depth: read(f"e133/generic_language_d{depth}_s6_20260929.json") for depth in (1,8)}
     tasks["generic_language_audit"] = read("e133/generic_language_audit_20260929.json")
     tasks["complete_work"] = read("e172/complete_work_v2_20260930.json")
+    tasks["training_work"] = read("training_work/local_total_training_work_v4_20260930T123846Z.json")
+    tasks["event_language_work"] = read("event_language_work/local_event_language_work_20260930T124646Z.json")
+    tasks["online_language"] = read("online_language/local_online_language_20260930T121741Z.json")
     tasks["stream_contract"] = read("e175/stream_language_contract_20260930.json")
     tasks["stream_training"] = read("e176/stream_language_d8_20260930.json")
     tasks["token_training"] = read("e178/prefix_language_d8_20260930.json")
@@ -147,24 +150,25 @@ def language_90m_reference_text(ev):
     return text
 
 
-def accomplishments_figure(M, ev):
+def accomplishments_figure(M, ev, tasks):
     import matplotlib.pyplot as plt
     import numpy as np
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
     f, ax = plt.subplots(1, 2, figsize=(7.2, 2.65), gridspec_kw={"width_ratios": [1.2, 1]})
-    labels = ["Native\ncount/copy", "LSTM", "Transformer"]
-    ten_m = [ev["native10"], ev["lstm10"], ev["tf10"]]
-    x = np.arange(3)
+    labels = ["Before\nfitting", "Learned event\nmodel"]
+    language = [tasks['stream_training']['initial']['bpc'],
+                tasks['stream_training']['final']['dev']['bpc']]
+    x = np.arange(2)
     width = .58
-    colors = [blue, gray, orange]
+    colors = [gray, blue]
     for i, (label, color) in enumerate(zip(labels, colors)):
-        ax[0].bar(x[i], ten_m[i], width, color=color)
-        ax[0].text(x[i], ten_m[i] + .035, f"{ten_m[i]:.3f}",
+        ax[0].bar(x[i], language[i], width, color=color)
+        ax[0].text(x[i], language[i] + .07, f"{language[i]:.3f}",
                    ha="center", fontsize=8)
     ax[0].set_xticks(x, labels)
-    ax[0].set_ylim(0, 2.5)
-    ax[0].set_ylabel("Test bits per character ↓")
-    ax[0].set_title("Better real-text prediction\n10M fit; identical test targets", fontsize=10)
+    ax[0].set_ylim(0, 6)
+    ax[0].set_ylabel("Validation bits per character ↓")
+    ax[0].set_title("Learned event language model\n8,192 fit characters; four passes", fontsize=10)
     ax[1].bar(range(2), [100, 100*ev["recall_tf"]], color=[blue, orange], width=.55)
     ax[1].set_xticks([0, 1], ["Local race\nretrieval", "Best of 7\nTransformers"])
     ax[1].set_ylim(0, 118)
@@ -219,7 +223,7 @@ def figures(M, tasks, ev):
     a.legend(fontsize=8)
     f.tight_layout()
     save(f, "e176_stream_language_learning")
-    f = accomplishments_figure(M, ev)
+    f = accomplishments_figure(M, ev, tasks)
     save(f, "accomplishments")
 
     f, a = plt.subplots(figsize=(7.2, 2.65))
@@ -443,7 +447,7 @@ def figures(M, tasks, ev):
                 "Fixed evidence only           3.670 nats/event", transform=market.transAxes,
                 fontsize=8.3, va="top", linespacing=1.8)
     market.text(.05, .25, "Prior-day evidence; disjoint fitting/development days.\n"
-                "Complete step work appears in Appendix B.\n"
+                "Total training work appears in Appendix B.\n"
                 "Predictive likelihood; no trading-return claim.", transform=market.transAxes,
                 fontsize=7, va="top", linespacing=1.6)
     save(native, "supremacy_map")
@@ -452,21 +456,26 @@ def figures(M, tasks, ev):
     stages = ("forward_and_loss", "backward", "gradient_clipping", "optimizer")
     names = ("Forward + loss", "Backward", "Clip", "Adam")
     colors = (blue, orange, gray, "#8c73aa")
-    rows = tasks["complete_work"]["rows"]
+    rows = tasks["training_work"]["rows"]
     for a, model, title in zip(axes, ("common", "transformer"), ("Common: 8 layers", "Transformer: 2 layers")):
         bottom = np.zeros(len(rows))
         for stage, label, color in zip(stages, names, colors):
-            values = np.array([row[model]["stages"][stage]["arithmetic_flops"]/row[model]["queries"]/1e6 for row in rows])
+            key = "common_stages" if model == "common" else "reference_stages"
+            values = np.array([row[key][stage]/1e9 for row in rows])
             a.barh(range(len(rows)), values, left=bottom, label=label, color=color)
             bottom += values
+        if model == "common":
+            values = np.array([row["common_setup"]["total_arithmetic_flops"]/1e9 for row in rows])
+            a.barh(range(len(rows)), values, left=bottom, label="Evidence + calibration", color="#64a68c")
         a.set_yticks(range(len(rows)), ["Text", "Market", "Composition", "MNIST", "Gestures"])
-        a.set_xscale("log")
-        a.set_xlim(.01, 800)
+        a.set_xlim(0, max(max(row["common_total_training_flops"], row["reference_total_training_flops"])
+                        for row in rows)/1e9*1.1)
         a.invert_yaxis()
-        a.set_xlabel("MFLOPs per query in one step ↓", fontsize=8)
+        a.set_xlabel("Whole fitting budget (estimated GFLOPs) ↓", fontsize=8)
         a.set_title(title, fontsize=10)
-    axes[1].legend(fontsize=6.5, loc="lower right")
-    f.tight_layout(w_pad=2)
+    handles, labels = axes[0].get_legend_handles_labels()
+    f.legend(handles, labels, fontsize=6.5, loc="lower center", ncol=3)
+    f.tight_layout(w_pad=2, rect=(0, .15, 1, 1))
     save(f, "e172_complete_training_work")
 
 
@@ -498,26 +507,52 @@ def blocks(M, tasks, ev):
          "<b>Capacity beyond activity.</b> The scaling goal is more useful dormant capacity, selectively recruited and judged by prediction quality at a given total work budget."]),
         ("h1","The strongest demonstrated results"),
         ("bullets",[
-         f"<b>Better real-language prediction.</b> With 10M training characters, the native count/copy mixture reaches "
-         f"<b>{ev['native10']:.3f} test bits per character</b>, ahead of LSTM ({ev['lstm10']:.3f}) "
-         f"and four-layer Transformer ({ev['tf10']:.3f}) on identical text8 test targets. "
-         "Lower bits per character means better prediction.",
+         f"<b>Learned event language prediction.</b> The eight-layer persistent event model reaches "
+         f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} validation bits per character</b>, "
+         f"from {tasks['stream_training']['initial']['bpc']:.3f} before fitting. "
+         "It learns embeddings, temporal state, vector maps and a readout without count/copy/word experts. "
+         "This is a small development result; a matched larger neural comparison remains to be run.",
          "<b>Accurate retrieval with far fewer examples.</b> Local race retrieval learns perfect recall at four "
          "times the training context within 4,000 examples in all five runs. The consolidated model preserves "
          "100% on its standard and longer contexts.",
          "<b>Rule learning and deep composition.</b> The consolidated periodic path reaches <b>100% across all "
          "3,440 unseen modular triples</b>. Native depth-four order models reach 99.9–100%; shared-motif composition "
          "reaches about 99.65% from one pass."]),
-        ("figure",("accomplishments",164)),
-        ("small",f"Language: 999,999 identical targets, frozen test parameters and cold test context. "
-         "Counts fit 10M characters; mixture "
-         "weights additionally fit 1M validation labels. Neural baselines use different capacities, fitting passes "
-         "and validation budgets. This is a specialized count/copy mixture result. Generic deep-language learning "
-         "is measured separately. Retrieval, composition and arithmetic are controlled synthetic tasks.")])
+        ("p",f"<b>Learned language work:</b> the completed small run uses an estimated "
+         f"{tasks['event_language_work']['total_training_arithmetic_flops']/1e9:.2f}G arithmetic FLOPs "
+         "for all fitting passes, backward, clipping, Adam and warmup. "
+         f"Inference/scoring uses {tasks['event_language_work']['inference_arithmetic_flops_per_character']/1e3:.2f}K "
+         "arithmetic FLOPs per character. These count the logical event algorithm; special functions are "
+         "reported separately in Appendix B. A matched-quality cost advantage is not yet established."),
+        ("figure",("accomplishments",154)),
+        ("small","Language: 8,192 fitting characters, four passes, 1,024 validation targets, one seed; "
+         "28,403 parameters. No official-test or frontier-quality claim. The separate statistical "
+         "count/copy predictor in Appendix B does not use this learned event backbone. "
+         "Retrieval, composition and arithmetic are controlled synthetic tasks.")])
 
     pages.append([
-        ("h1","Consolidated models: accuracy versus computation"),
-        ("p","The common implementation now retains perfect modular generalization and longer-context retrieval. "
+        ("h1","Which model produced each result?"),
+        ("p","Sleeping Machines is a family of event computations. The results below come from distinct "
+         "implementations and training protocols; a shared interface does not make them one trained model. "
+         "The report distinguishes learned event backbones, hybrids and task-specific mechanisms."),
+        ("table",(["Model","Mechanism","Evidence","What it establishes"],[
+         ["Proper learned language model","Eight-layer signed event state, learned vector maps/clocks/head; no statistical experts","E176: 3.351 development bpc","Small persistent learned-language result; full benchmark pending"],
+         ["Proper learned speech model","Learned source embedding and temporal event encoder; selected inherited prefix","E163/E165: 408/512 private development","Generic speech learning; official-test parity unmeasured"],
+         ["Common breadth hybrids","Event carrier plus separately fitted conditional evidence","E120/E124 text and market","Hybrid prediction at declared extra evidence-fitting cost"],
+         ["Task-specific event mechanisms","Hard race pointer, supplied-period phase path, timing/composition learners","E61, E34/E53/E54, E124","Controlled mechanism/generalization results; no broad representation claim"],
+         ["Separate statistical language baseline","N-gram/backoff counts and copy cache with mixing weights; no learned event backbone","E173/E174 aligned text8 comparison","Statistical prediction benchmark; no Sleeping Machines backbone advantage"],
+        ],[42,57,35,40])),
+        ("p","Only completed result files support reported measurements. Development splits, synthetic tests "
+         "reused during research, official tests, inherited checkpoints and separately fitted evidence are "
+         "identified where their results appear. FLOPs describe a declared logical algorithm; activity counts "
+         "and simulator timings do not substitute for measured total device energy."),
+        ("p","Full learned-event benchmarks are being prepared for language, speech, image classification, "
+         "complete event-camera gestures and forecasting. Their results remain pending. Modern tokenization "
+         "and stronger contemporary controls are additional gates before a frontier claim.")])
+
+    pages.append([
+        ("h1","Task-specific periodic and retrieval mechanisms"),
+        ("p","Two task-specific mechanisms retain perfect modular generalization and longer-context retrieval. "
          "New Transformer and LSTM controls use the same synthetic examples. <b>Higher and further left is better:</b> "
          "more accurate answers from less counted work. The logarithmic axis makes large cost differences visible."),
         ("figure",("consolidated_work_frontiers",174)),
@@ -542,8 +577,8 @@ def blocks(M, tasks, ev):
          "backward/optimizer counts. Full work definitions appear in the evidence appendix.")])
 
     pages.append([
-        ("h1","Native components: quality, work and sample efficiency"),
-        ("p","The native components establish why selective temporal computation is promising. Timing patterns, "
+        ("h1","Task-specific event mechanisms: quality and activity"),
+        ("p","These mechanisms provide separate evidence for selective temporal computation. Timing patterns, "
          "composition and deep order reach high accuracy with sparse event activity. Retrieval and rule learning "
          "also show that a reusable computation can generalize beyond the observed examples."),
         ("figure",("supremacy_map",174)),
@@ -551,7 +586,7 @@ def blocks(M, tasks, ev):
          "Native delivery counts omit candidate scans and local array arithmetic, so their ratios do not measure "
          "total work or energy savings. Synthetic evaluation sets were reused during development. Market points "
          "are causal development screens with prior-day evidence. The preceding page uses a common logical "
-         "operation ledger; Appendix B includes complete optimizer-step arithmetic estimates.")])
+         "operation ledger; Appendix B estimates total training arithmetic, including backward and optimizer work.")])
 
     pages.append([
         ("h1","How the model computes and learns"),
@@ -565,7 +600,7 @@ def blocks(M, tasks, ev):
          "<b>Local temporal memory</b> accumulates observed content and elapsed time without evaluating empty time ticks.",
          "<b>Computation through delays</b> uses waiting times, arrival order and clock races to transform information and select outcomes.",
          "<b>Hard races</b> choose the emitted vector and delay. Losing alternatives provide training credit without becoming identical forward messages.",
-         "<b>Reusable memories</b> include conditional outcome statistics, relative pointers and learned phase transformations.",
+         "<b>Separate hybrid mechanisms</b> include fitted conditional outcome statistics, relative pointers and learned phase transformations; their results do not establish generic backbone quality.",
          "<b>Trainable depth</b> uses bounded carrier updates to preserve representations and credit through a hierarchy.",
          "<b>Appropriate supervision</b> teaches a completed class decision or the next event's type and waiting time, including silence."]),
         ("p","The consolidated model is trained independently on each task. Input queries contain only observations "
@@ -606,7 +641,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("h1","Potential: what the demonstrated capabilities put within reach"),
         ("p","The opportunity is intelligence that learns reusable structure and spends computation in proportion "
-         "to useful activity. Strong predictive mixtures, reliable retrieval, efficient temporal composition and "
+         "to useful activity. Learned temporal state, specialized retrieval, temporal composition and "
          "certified periodic computation already provide working foundations. The shared implementation gives "
          "those mechanisms a common place to develop."),
         ("h2","Compact prediction and memory"),
@@ -922,9 +957,11 @@ def blocks(M, tasks, ev):
 
     coverage=[]
     def compact_work(value):
+        if value >= 1e12:
+            return f"{value/1e12:.2f}T"
         return f"{value/1e9:.2f}G" if value>=1e9 else f"{value/1e6:.2f}M"
     breadth={row["task"]:row for row in tasks["breadth_work"]["rows"]}
-    complete={row["task"]:row for row in tasks["complete_work"]["rows"]}
+    total_work={row["task"]:row for row in tasks["training_work"]["rows"]}
     for task,label in (("language","Text8"),("market","Market event prediction"),("temporal","Temporal composition"),
                        ("mnist","MNIST"),("dvs","Event-camera gestures")):
         row=breadth[task]
@@ -932,99 +969,101 @@ def blocks(M, tasks, ev):
             if task=="language":return f"{metric['nll']/math.log(2):.3f} bpc"
             if "accuracy" in metric:return f"{100*metric['accuracy']:.1f}%"
             return f"{metric['nll']:.3f} nats/event"
-        direction = "Prediction error: lower is better" if task in ("language", "market") else "Accuracy: higher is better"
+        direction = "bpc ↓" if task=="language" else "nats/event ↓" if task=="market" else "accuracy ↑"
         coverage.append([label+"<br/>"+direction,score(row["common_metric"]),score(row["reference_metric"]),
              compact_work(row["common_forward_map_scan_flops"])+" / "+compact_work(row["reference_forward_map_attention_flops"]),
-             compact_work(complete[task]["common"]["total_arithmetic_flops"]/complete[task]["common"]["queries"])
-             +" / "+compact_work(complete[task]["transformer"]["total_arithmetic_flops"]/complete[task]["transformer"]["queries"])])
+             compact_work(total_work[task]["common_total_training_flops"])
+             +" / "+compact_work(total_work[task]["reference_total_training_flops"])])
     pages.append([
         ("h1","Appendix B. Breadth of the common implementation"),
         ("p","The common event backbone has development screens across language, event "
          "prediction, temporal composition, images and event cameras, in addition to speech, retrieval and arithmetic. "
-         "These bounded screens establish implementation breadth; the stronger native comparison results use their "
-         "own complete protocols."),
+         "These bounded screens establish implementation breadth. Text8 and market rows are hybrids with "
+         "separately fitted statistical evidence; they are not evidence-free backbone results. The proper "
+         "learned language model is reported separately. Task-specific comparison results have their own protocols."),
         ("p","<b>How to read the comparison:</b> accuracy is the percentage of correct answers, so <b>higher is better</b>. "
          "Bits per character (bpc) and nats/event measure prediction error, so <b>lower is better</b>. "
          "FLOPs estimate arithmetic work: <b>lower means less computation</b>. Each work pair lists the common model "
          "first and the Transformer (TF) second."),
-        ("table",(["Task and quality direction","Common quality","Transformer quality","Inference contractions/query: common / TF ↓","Complete step arithmetic/query: common / TF ↓"],coverage,[40,24,26,43,41])),
-        ("p","The common screens use eight layers and the Transformer references two, both at width 32 for "
-         "eight epochs. They share neural-fitting examples, held-out examples, encoding, objective and schedule, "
-         "with fitting batches of 16/64 respectively. These are small reference settings. Two-layer follow-ups "
-         "retain 100% recall at both context lengths and reach 96.1% composition versus 97.3% at depth eight, "
-         "using four times fewer hidden carrier emissions."),
+        ("table",(["Task / quality direction","Common quality","TF quality","Inference contractions/query: common / TF ↓","Training total FLOPs: common / TF ↓"],coverage,[40,24,26,43,41])),
+        ("p","Eight-layer event variants and two-layer Transformer references use width 32, eight epochs "
+         "and the same neural-fitting/development examples, encoding and objective. Both use batch 16, "
+         "or batch four for gestures. Depth and capacity differ. M/G/T denote million/billion/trillion. "
+         "Inference lists unpadded contractions; training covers every fitting epoch, backward, "
+         "clipping, Adam and event-model evidence/calibration."),
         ("p","<b>Why training can cost more:</b> the race core evaluates all three candidate vector payloads "
          "during training, versus only the winner during inference. Its eight layers also exceed the reference's two. "
          "With short contexts, that work outweighs the saved attention cost; these rows do not show a training "
-         "efficiency advantage. On the longer event-camera prefixes, the common model's complete step uses "
-         "45.3% of the reference arithmetic on the audited four-query batch."),
+         "efficiency advantage. On the longer event-camera prefixes, the common model's estimated total uses "
+         f"{100*total_work['dvs']['common_to_reference_ratio']:.1f}% of the reference training arithmetic, including calibration."),
         ("small","Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, "
          "MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character "
          "evidence bank; market evidence is fitted on a prior day. The references have no such bank. "
          "MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. "
-         "No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event."),
-        ("small","M = million, G = billion. Inference counts estimate contractions per unpadded prefix, excluding "
-         "other arithmetic. Complete steps include forward/loss, backward, clipping and Adam, with actual padding "
-         "and all training alternatives. Each is one four-query fitting batch divided by four. These are different "
-         "accounting boundaries, not whole-run budgets. The next page defines complete-step coverage.")])
+         "No official real-data test sets are used here. The market fixed-evidence reference is 3.670 nats/event.")])
 
     stage_rows=[]
-    for row in tasks["complete_work"]["rows"]:
-        for key,label in (("common","Common"),("transformer","TF")):
-            part=row[key]
-            if not part["formula_coverage_complete"]:
-                raise ValueError("Complete-step table requires formulas for every observed floating operator")
+    for row in tasks["training_work"]["rows"]:
+        for key,label in (("common","Common"),("reference","TF")):
+            part=row[key+"_stages"]
             stage_rows.append([row["task"].capitalize()+": "+label]+
-                [f"{part['stages'][stage]['arithmetic_flops']/part['queries']/1e6:.3f}"
+                [f"{part[stage]/1e9:.3f}"
                  for stage in ("forward_and_loss","backward","gradient_clipping","optimizer")]+
-                [f"{part['total_arithmetic_flops']/part['queries']/1e6:.3f}"])
+                [f"{row['common_setup']['total_arithmetic_flops']/1e9:.3f}" if key=="common" else "0",
+                 f"{row[key+'_total_training_flops']/1e9:.2f}"])
     pages.append([
-        ("h1","Appendix B (continued). Complete training steps"),
-        ("p","The ledger charges the complete learning step for both models: prediction and loss, reverse "
-         "credit, gradient clipping and Adam. It traces the actual tensor operators in a representative "
-         "four-query fitting batch. Every observed floating operator has a declared formula or a classification "
-         "as comparison, special function or data movement. Lower arithmetic work is better."),
-        ("figure",("e172_complete_training_work",174)),
-        ("table",(["Model/task","Forward + loss","Backward","Clip","Adam","Total"],stage_rows,[59,27,26,18,18,26])),
-        ("small","All table values are MFLOPs per query. A multiply-add counts as two arithmetic operations. "
-         "Fused attention, normalization and activation kernels use shape-based mathematical formulas. "
-         "Exponentials, logarithms, trigonometric functions, roots and comparisons are recorded separately; "
-         "memory traffic and execution overhead are outside the arithmetic total. This is formula coverage "
-         "of the observed CPU steps, not measured hardware instructions or joules."),
-        ("p","The audit does not reconstruct total historical training work. Fitting evidence banks, "
-         "preprocessing, calibration, inherited weights, evaluation and search add work beyond these steps. "
-         "Different original batch sizes also change optimizer amortization. A future whole-run ledger must "
-         "record all of these costs alongside energy and quality.")])
+        ("h1","Appendix B (continued). Total training cost"),
+        ("p","The ledger estimates the entire completed fitting budget for each reported model. It includes "
+         "prediction and loss, backpropagation, gradient clipping and Adam across all eight epochs. "
+         "The common model also pays for its evidence bank and initial readout calibration. "
+         "These models were trained from initialization; there is no inherited neural fitting to omit."),
+        ("figure",("e172_complete_training_work",160)),
+        ("table",(["Model/task","Forward + loss","Backward","Clip","Adam","Evidence + calibration","Total"],stage_rows,[43,25,24,16,19,23,24])),
+        ("small","All table values are estimated GFLOPs for the whole fitting run, not per query. "
+         "A multiply-add counts as two operations. Forward/loss and backward use the saved E172 four-query "
+         "operator trace scaled by full-run contractions. The common model uses its logged candidate-map/scan "
+         "counts. Reference padding is reconstructed from all fitting prefix lengths, the original shuffle seed "
+         "and batch sizes, including fused attention products. Clipping and Adam are charged once per original step. "
+         "Other arithmetic and the small calibration eigensolver are estimates."),
+        ("p","Event-target arithmetic excludes padding and simulator dispatch/allocation; required candidate "
+         "maps, losing-value teaching, scans and learning remain charged. References use the same FLOP convention. "
+         "Evaluation, search, encoding, special functions, integer/index work, comparisons and memory traffic "
+         "are outside these totals. These single-seed screens have different depths/quality and do not measure "
+         "event hardware, matched-quality cost or energy. Ledger: "
+         '<a href="experiments/estimate_training_work.py">estimate_training_work.py</a>.')])
 
+    lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
     language_rows=[
-        ["Native count/copy mixture",f"{ev['native10']:.3f}","10M count fitting + 1M mixing-weight fitting"],
-        ["LSTM, width 512; one recurrent layer",f"{ev['lstm10']:.3f}","10M characters, six passes; 200k validation selection"],
-        ["Transformer, width 256; four layers",f"{ev['tf10']:.3f}","10M characters, four passes; 200k validation selection"],
+        ["Separate statistical count/copy baseline",f"{ev['native10']:.3f}","10M count fitting + three 1M mixing-rate trials",compact_work(lm_costs['native_without_word']['total_training_flops'])+" + integer count construction"],
+        ["LSTM, width 512; one recurrent layer",f"{ev['lstm10']:.3f}","10M characters, six passes; 200k validation selection",compact_work(lm_costs['lstm']['total_training_flops'])],
+        ["Transformer, width 256; four layers",f"{ev['tf10']:.3f}","10M characters, four passes; 200k validation selection",compact_work(lm_costs['tf']['total_training_flops'])],
     ]
     pages.append([
-        ("h1","Appendix B (continued). Language benchmark protocol"),
-        ("p","The native predictor and saved neural references score the same 999,999 character targets, "
+        ("h1","Appendix B (continued). Separate statistical language baseline"),
+        ("p","This count/copy predictor does not use the learned Sleeping Machines event backbone. "
+         "It is a separate statistical system: order-0 through order-6 counts, backoff probabilities and "
+         "a bounded causal copy cache, combined by learned mixing weights. Its quality/work results "
+         "must not be attributed to the event architecture."),
+        ("p","The statistical predictor and saved neural references score the same 999,999 character targets, "
          "starting from a cold context. Parameters are frozen during testing. Earlier observed test characters "
          "can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per "
          "character means better prediction."),
-        ("table",(["Predictor","Test bpc ↓","Fitting and selection budget"],language_rows,[68,24,82])),
+        ("table",(["Predictor","Test bpc ↓","Fitting and selection budget","Estimated training FLOPs ↓"],language_rows,[51,21,59,43])),
+        ("small","The neural totals charge all original optimizer steps that produced the inherited E174 "
+         "checkpoints: forward, estimated 2×-forward backward, clipping and Adam. Alignment evaluation is excluded. "
+         "The native floating estimate charges expert probability preparation and all three mixing-rate trials, "
+         "including local gradients and weight updates. Exp/log/root evaluations count as one operation in these "
+         "language estimates. Native count construction additionally uses about 80M integer count presentations, "
+         "plus sorting, lookup and hashing; that work is not quantified as FLOPs. "
+         "The floating totals alone cannot establish total compute, runtime or energy savings."),
         ("p",f"The count/copy mixture improves on LSTM by {ev['lstm10']-ev['native10']:.3f} bpc "
          f"and Transformer by {ev['tf10']-ev['native10']:.3f} bpc. These results establish useful specialized prediction; "
          "generic learned representations are assessed in the separate language screen."),
-        ("p","The native mixture combines order-0 through order-6 conditional counts, Witten–Bell prediction "
-         "and a bounded copy predictor. Its count arrays occupy 66.55 MB. "
+        ("p","The statistical baseline's count arrays occupy 66.55 MB. "
          "Vocabulary, capacities, optimization and fitting budgets differ from the neural references. "
          "The comparison does not measure total training energy or a matched-capacity advantage."),
-        ("h2","Characters, subwords and a persistent stream"),
-        ("p","All three predictors use the same 27-character alphabet. Characters are tokens, but a subword "
-         "representation can reduce the number of arrivals and expose longer patterns within a fixed credit "
-         "window. It also enlarges the output vocabulary. The useful comparison is quality and total work per "
-         "original character, with train-only tokenizer fitting and declared buffering latency."),
-        ("p","A generic streaming event-state implementation retains modal memory and pending delayed messages "
-         "across chunks. An eight-layer contract confirms identical predictions under chunk splitting, causal "
-         "prefix invariance and nonzero learning signals in every layer. Fifteen input arrivals cause 120 "
-         "layer deliveries, with no repeated prefix processing. The trained eight-layer stream reaches "
-         f"{tasks['stream_training']['final']['dev']['bpc']:.3f} validation bpc in the separately described small screen."),
+        ("p","All three use the same historical 27-character alphabet. Modern shared subword tokenization "
+         "is a separate comparison gate for the learned event architecture, described later in this appendix."),
         ("small","One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation "
          "[90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture "
          "selects its update rate on validation. Saved neural weights are unchanged. "
@@ -1086,6 +1125,72 @@ def blocks(M, tasks, ev):
          f"{tasks['stream_training']['wall_s']:.1f} s including fitting/evaluation; peak RSS "
          f"{tasks['stream_training']['max_rss_kb']/1024:.1f} MiB. These are event counts and observed resources, "
          "not total arithmetic, physical memory traffic or energy. No official test or large-corpus claim. E176.")])
+
+    event_work=tasks["event_language_work"]
+    pages.append([
+        ("h1","Appendix B (continued). Proper language-model work"),
+        ("p","These counts belong to the learned eight-layer persistent Sleeping Machines event model "
+         "that reaches 3.351 validation bpc. It has no count/copy/word experts. Primary counts describe "
+         "the logical event algorithm; simulator dispatch/allocation is excluded."),
+        ("table",(["Fitting stage","Estimated arithmetic FLOPs"],[
+          [stage.replace('_',' ').capitalize(),compact_work(value)]
+          for stage,value in event_work['training_stages'].items()
+        ]+[["Total",compact_work(event_work['total_training_arithmetic_flops'])]],[95,79])),
+        ("p",f"The entire completed budget includes 32,768 fitting targets, 512 Adam/clipping steps and "
+         f"four stream warmups. Special functions add {event_work['training_special_function_evaluations']/1e6:.3f}M "
+         "evaluations, reported separately from arithmetic FLOPs."),
+        ("table",(["Inference boundary","Per character"],[
+          ["Prediction plus NLL-scoring arithmetic",f"{event_work['inference_arithmetic_flops_per_character']:,.0f} FLOPs"],
+          ["Additional special functions",f"{event_work['inference_special_functions_per_character']:,.0f} evaluations"],
+        ],[112,62])),
+        ("p","A 64-character saved-checkpoint trace measures forward/loss, backward, clipping and warm Adam; "
+         "the fitting ledger scales those stages by the original 512 steps and separately charges warmup. "
+         "This is a representative arithmetic estimate, not a whole-run trace. The traced chunk has complete "
+         "floating-operator formula coverage. Index/queue work, comparisons, memory traffic and evaluation "
+         "passes are outside the fitting arithmetic boundary."),
+        ("p","The 10M-character LSTM/Transformer checkpoints have different data, capacity and achieved "
+         "quality. Dividing their full fitting budgets by this small run would not establish a fair training "
+         "advantage. Full learned-event runs must complete before a larger aligned quality/work comparison."),
+        ("small","Evidence: event_language_work/local_event_language_work_20260930T124646Z.json; "
+         "quality: E176. Two arithmetic FLOPs per multiply-add. Additional unit-weight special functions "
+         "would give a different logical-operation total; no event-device runtime or energy has been measured.")])
+
+    online=tasks["online_language"]
+    pages.append([
+        ("h1","Appendix B (continued). Online language and next comparisons"),
+        ("p","The official language comparison freezes parameters during evaluation. A new development-only "
+         "pilot asks whether causal local learning improves prediction: score each character first, reveal it, "
+         "then update only the expert mixing weights. Count experts stay frozen and both arms use identical "
+         "causal copy-cache behavior."),
+        ("table",(["Expert set","Frozen bpc ↓","Online bpc ↓","Extra update FLOPs"],[
+          ["Without word" if r['arm']=='without_word' else "With causal word",
+           f"{r['frozen_bpc']:.3f}",f"{r['online_bpc']:.3f}",compact_work(r['extra_update_arithmetic_flops'])]
+          for r in online['rows']],[56,37,37,44])),
+        ("p","This pilot reuses a 100,000-character count checkpoint and its learning rate selected on an "
+         "earlier 2,048-character validation window. It scores 8,191 targets in a fresh 8,192-character "
+         "development window [90,032,768,90,040,960), excluding the first target. Each adaptive arm performs "
+         "8,192 updates, including first-position warmup. Official test data are untouched."),
+        ("small","One checkpoint and one window; a specialized adaptive readout, not deep learned TTT or a "
+         "frontier result. The extra arithmetic column counts only local gradient/weight updates, on top of "
+         "shared prediction and inherited fitting costs. Total pilot CPU wall time is 0.587 s. "
+         "Evidence: online_language/local_online_language_20260930T121741Z.json."),
+        ("h2","Compute allocation is the next architectural hypothesis"),
+        ("p","Independent budgets for active width/depth, dormant capacity, temporal memory, retrieval, "
+         "credit and adaptation may let extra work buy more prediction quality. The new theory derives "
+         "conditional marginal-value allocation and retrieval-error bounds, and identifies exposure, "
+         "routing overhead and hardware utilization as possible limits. A small-scale win does not prove "
+         "a better scaling exponent or a widening frontier advantage."),
+        ("p","Next learned-language comparisons need shared modern subword tokenization, Unicode/byte "
+         "coverage, suitable rotary/relative position, packed optimized Transformer kernels, sparse MoE "
+         "and modern recurrent/attention-hybrid controls. Existing event memory already uses relative-time "
+         "rotations. Token coordinates must remain distinct from learned scheduling delays."),
+        ("p","Known sequences can be fitted with input-known affine scans and then generated sequentially "
+         "with persistent state. Sequence-parallel fitting also permits Transformer adaptation between "
+         "tokens/chunks. Compare frozen and online arms at identical observations and adaptation budgets; "
+         "charge cache consistency and update work."),
+        ("small",'<a href="experiments/theory/43_compute_allocation_and_frontier_scaling.md">Theory §§280–286</a> '
+         'and the <a href="experiments/FRONTIER_COMPUTE_PROTOCOL.md">frontier compute protocol</a> '
+         "specify these tests. Modern architecture and larger-scale comparison arms remain proposed, not completed.")])
 
     pages.append([
         ("h1","Appendix C. Evidence and metric definitions"),
@@ -1196,9 +1301,6 @@ def build(M):
                             bottomMargin=16*mm,title="Sleeping Machines — accomplishments and the shared model",
                             author="Sleeping Machines project")
     doc.build(flow,onFirstPage=M["footer"],onLaterPages=M["footer"])
-    # Publish only a complete PDF. Keep an explicitly named edition as well:
-    # another host may publish its generated status PDF during a rebase.
-    snapshot = ROOT/"report/sleeping_machines_shared_20260929.pdf"
-    snapshot.write_bytes(temporary.read_bytes())
+    # Publish only a complete PDF at the project's single canonical path.
     temporary.replace(pdf)
     print("wrote",pdf,"and REPORT.md")

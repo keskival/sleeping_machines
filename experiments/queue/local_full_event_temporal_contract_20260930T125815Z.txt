@@ -1,0 +1,1 @@
+local_full_event_temporal_contract_20260930T125815Z experiments/full_event_benchmarks.py --task temporal --epochs 1 --contract --tag local_full_event_temporal_contract_20260930T125815Z

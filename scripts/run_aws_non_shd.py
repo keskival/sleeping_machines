@@ -128,7 +128,8 @@ def main():
                 provenance.write_text(json.dumps(meta, indent=2)+'\n')
         progress[tag] = record
         PROGRESS.write_text(json.dumps(progress, indent=2)+'\n')
-        files = [q, PROGRESS, lifecycle, log, *out.glob('*.json')]
+        # Keep logs local and publish their lifecycle/metrics through JSON.
+        files = [q, PROGRESS, *out.glob('*.json')]
         files = [str(p.relative_to(ROOT)) for p in files if p.exists()]
         if git('branch', '--show-current') != BRANCH:
             raise RuntimeError('Branch changed; refusing to commit benchmark results')

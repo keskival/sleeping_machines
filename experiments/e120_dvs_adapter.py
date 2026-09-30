@@ -11,7 +11,7 @@ import numpy as np
 from e120_shared_tasks import Example, Task, prefix
 
 
-def recording(path):
+def recording(path, observation_seconds=1.0):
     with path.with_name(path.stem+"_labels.csv").open() as f:
         labels = [(int(r["class"])-1, int(r["startTime_usec"]), int(r["endTime_usec"]))
                   for r in csv.DictReader(f)]
@@ -40,7 +40,8 @@ def recording(path):
             ok = (data & 1) == 1
             x, y, polarity = (data >> 17) & 0x1FFF, (data >> 2) & 0x1FFF, (data >> 1) & 1
             for j, (_, start, end) in enumerate(labels):
-                selected = ok & (t >= start) & (t < min(end, start+1_000_000)) & (x < 128) & (y < 128)
+                cutoff = end if observation_seconds is None else min(end, start+int(observation_seconds*1_000_000))
+                selected = ok & (t >= start) & (t < cutoff) & (x < 128) & (y < 128)
                 if not selected.any():
                     continue
                 raw_counts[j] += int(selected.sum())
@@ -58,7 +59,8 @@ def recording(path):
         # A declared query/end marker ensures even an empty prefix is valid.
         # Full packet closure may be up to 50 ms beyond a short segment end;
         # that is compute/input buffering delay, not an additional observation.
-        close = max(1., float(t[-1]) if len(t) else 0.)
+        duration = (end-start)/1e6 if observation_seconds is None else observation_seconds
+        close = max(duration, float(t[-1]) if len(t) else 0.)
         obs = prefix(np.r_[b, 32], np.r_[t, close], np.r_[c, 1.])
         rows.append(Example(obs, label, f"{path.name}:{j}"))
     return rows, int(raw_counts.sum())
