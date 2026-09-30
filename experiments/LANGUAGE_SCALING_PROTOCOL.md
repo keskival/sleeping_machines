@@ -1,5 +1,17 @@
 # Generic language learning and physical scaling
 
+## Current implementation and evidence
+
+The primary combined-mechanism language experiments now use the
+[integrated sparse temporal models](INTEGRATED_LANGUAGE.md), with learned
+embeddings/content, hard query/key races, sparse receiver updates and
+counterfactual route teaching. The current KV comparison has eight event blocks
+and per-position memory; the earlier evidence-free `SharedEventModel` and dense
+temporal carriers remain diagnostics. Fixed pools, bounded delays and candidate
+coverage are declared priors. All admitted teaching and optimizer work is charged.
+The [AWS 10M definition](AWS_INTEGRATED_10M.md) is a separate receiver run;
+completed small KV results do not replace its frozen official-test protocol.
+
 ## The claim this experiment must answer
 
 Can a reasonably generic Sleeping Machines model learn useful deep language
@@ -26,8 +38,9 @@ phase solution or hand-written task solver supplies the output probabilities.
 Keep these mechanisms available as separately labeled hybrid controls.
 
 One generic model family is configured by capacity, depth and memory budget;
-weights are trained separately on each task. For the initial language experiment,
-use an evidence-free instance of `SharedEventModel`. Preserve observation/target
+weights are trained separately on each task. The initial historical language
+experiment used an evidence-free instance of `SharedEventModel`. Current primary
+implementations are linked above. Preserve observation/target
 separation and compare a one-layer representation with genuinely trained deeper
 representations. Frozen keys with learned values are a declared learning phase;
 full model claims must also show how useful keys are learned.

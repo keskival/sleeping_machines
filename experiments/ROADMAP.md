@@ -1,5 +1,23 @@
 # Current frontier priorities — 30 September 2026
 
+## Latest priority: integrated sparse temporal language, eight event blocks
+
+The user prioritizes the combined architecture and requests eight-block depth
+and genuine per-position KV memory before longer scaling. The
+[current campaign](queue/local_indexed_episodic_depth8_20260930T211500Z.json)
+tests content-indexed historical race retrieval on small data, then a matched
+8K receiver/KV pair under explicit development gates. It retains learned
+content, delay computation, sparse receiver updates and counterfactual credit.
+The six-to-eight-block 2K receiver comparison improves 3.633 to 3.542 bpc;
+the first tail-index KV gains are small and remain recorded. Complete costs
+and candidate coverage accompany quality; physical energy is not inferred
+from FLOPs. See [INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md).
+
+Speech and earlier carrier campaigns remain paused/preserved. The separately
+defined AWS six-block receiver campaign and saved dense controls remain valid
+comparisons; new dense fits belong on AWS. The older speech priorities below
+are historical research context, not the current local queue order.
+
 The cross-task resource-allocation program is now specified in the
 [frontier compute protocol](FRONTIER_COMPUTE_PROTOCOL.md), with its derivation in
 [theory §§280–286](theory/43_compute_allocation_and_frontier_scaling.md).

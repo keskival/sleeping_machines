@@ -1,5 +1,12 @@
 # Shared Sleeping Machines model
 
+This document preserves the earlier cross-task implementation and its evidence.
+The current combined-mechanism language architecture is documented in
+[INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md): sparse persistent receivers,
+query/key temporal races and an eight-block episodic KV variant. Its code and
+work boundaries are distinct from the dense carriers and structured task
+adapters described below; those remain important controls and mechanism evidence.
+
 **One architecture and implementation; independently trained weights per task.**
 No joint training is used. This is the first working synthesis of the deep event
 carrier, conditional evidence, learned relative retrieval and periodic phase mechanisms. It is

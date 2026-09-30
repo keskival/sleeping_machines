@@ -1,0 +1,1 @@
+local_indexed_episodic_smoke_D8_20260930T211000Z experiments/indexed_episodic_race_language_screen.py --tag local_indexed_episodic_smoke_D8_20260930T211000Z --memory kv --fit 129 --dev 65 --epochs 1 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --chunk 16 --seed 6

@@ -40,6 +40,8 @@ Sparse neural computation promises to spend work only where information changes.
 
 We combine computation through trainable time, content-bearing messages, persistent local state and credit to unrealized alternatives. Optionality asks whether distinct, reachable future corrections remain available under a work budget. The theory connects temporal algebra, key/value separation, credit transport and supervision that includes silence. The contribution is this construction and its tested consequences; learned delays and sparse capacity are established ideas.
 
+The integrated language candidates now exercise learned content, temporal races, sparse persistent receivers and counterfactual credit together. An eight-block variant also races historical key/value messages. These small-data experiments explore only a small part of the design space; larger-scale quality and complete resource advantages remain under test.
+
 Our earlier deep sparse-routing pilots often lost activity and useful credit before the final layers. Counterfactual proposals alone did not reliably fix that. The subsequent vector-state and persistent-memory work addresses those observed obstacles. Completed structured-task gains motivate the larger learned-model tests; broad quality, training efficiency and energy must still be measured together.
 
 Primary precedents: [EventProp](https://www.nature.com/articles/s41598-021-91786-z); [Space-Time Algebra](https://arxiv.org/abs/2001.04242); [Learning Delays in SNNs](https://arxiv.org/abs/2306.17670); [Switch Transformers](https://www.jmlr.org/papers/v23/21-0998.html); [EventSSM](https://arxiv.org/abs/2404.18508). Our routing failures and revised interpretations remain in the theory index and findings.
@@ -52,6 +54,7 @@ The common idea is local computation triggered by an arrival: retain memory, com
 
 | Model | Mechanism | Evidence | What it establishes |
 | --- | --- | --- | --- |
+| Ours: integrated sparse temporal language | Learned content, state-dependent key races, selected receiver updates and episodic KV | Completed 32K receiver / 2K depth and KV screens | Combined mechanisms train; bounded candidate coverage and causal schedule |
 | Ours: learned event-state encoders | Source embeddings, temporal modes, nonlinear vector maps and competing clocks | Language E176; speech E165 | Learned representations and persistent state |
 | Ours: routed event query encoders | Candidate payloads, receiver memory and hard value/time races | Breadth E120; language E133 | Trainable event depth across tasks; text/market breadth variants add statistical evidence |
 | Ours: structured event mechanisms | Temporal chains, relative pointers and phase composition | E34/E53/E54, E61, E124 | Sample efficiency and generalization with declared structural priors |
@@ -106,7 +109,9 @@ This candidate has no dense language carrier. Each event mixes its embedding wit
 
 The first six-depth, 16-dimensional candidate provides 324 units but updates only six states per character. Each depth scores two addressed keys; training additionally evaluates both candidate values to teach hard choices. Unaddressed pools remain dormant. The capacity experiment doubles available units to 648 while retaining six selected state updates. Key scoring and counterfactual work still grow and are charged.
 
-Checks establish causal predictions, identical chunked execution, precise clocks at 10M positions, equality of training forward values and winner-only inference, learned key/value/memory gradients and conserved route credit. The smoke fit learns, but is not a quality benchmark. The active ladder increases data and tests capacity before larger promotion.
+Checks establish causal predictions, identical chunked execution, precise clocks at 10M positions, equality of training forward values and winner-only inference, learned key/value/memory gradients and conserved route credit. The smoke fit learns, but is not a quality benchmark. Completed data, depth and memory interventions test progress before larger promotion.
+
+A matched payload-32 / 2K depth screen improves 3.633 to 3.542 development bpc from six to eight receiver blocks, for 32.6% more fitting work. The current eight-block KV variant adds historical races, giving sixteen selection steps after warmup. Fixed data/passes/seed do not isolate depth from increased capacity; this is exploratory evidence, not a scaling law.
 
 Fixed observed-character pools, bounded delays and six sequential event depths; no learned topology or complete frontier-language claim. Interior arrival-time derivatives and counterfactual score surrogates have distinct scope. FLOPs include teaching alternatives and optimizer work; representative sparse traces do not certify whole-run instruction or energy counts. Theory §§299–302; source: sleeping_machines/sparse_race_language.py.
 
@@ -488,7 +493,7 @@ Ours: d denotes payload width and p pool size; fixed character pools and event d
 
 ## Appendix B (continued). Ours and neural controls: accuracy versus FLOPs
 
-Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. Right: saved neural test results. Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
+Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. Right: saved neural test results. Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
 
 ![language quality vs work](report/figures/language_quality_vs_work.png)
 
@@ -499,34 +504,113 @@ Each point is a completed model, not a projected scaling law. Left: ours on cold
 | LSTM: 512 | 90,000,000 / 6 passes | 1.661 / test | 3,893,396.042 | 7.210 |
 | Transformer: 256x4 | 10,000,000 / 4 passes | 1.908 / test | 888,775.443 | 22.223 |
 
-The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory; C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
+The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory (S uses the content index); C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
 
 Estimates include learning, clipping and Adam, with unit-weight special functions. Ours uses representative operator traces; neural controls use shape formulas and backward approximately twice forward. Scoring splits, data, passes, capacity and credit differ; these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.
 
+## Appendix B (continued). Accuracy versus inference FLOPs
+
+Inference predicts with frozen weights: no backward pass, clipping or optimizer update. These are the same completed checkpoints, quality scores and point IDs as the fitting graph. Ours uses saved forward operator traces; the integrated models read only winning values. LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.
+
+![language quality vs inference](report/figures/language_quality_vs_inference.png)
+
+| Model type | bpc / split ↓ | Inference MFLOPs / character ↓ | Cost boundary |
+| --- | --- | --- | --- |
+| Ours: integrated d16/p2 | 3.121 / dev | 0.0255 | Winner-only operator trace |
+| Ours: carrier w128g | 2.210 / dev | 0.6389 | Saved forward operator trace |
+| LSTM: 512 | 1.661 / test | 2.4024 | Recurrent shape estimate |
+| Transformer: 256x4 | 1.908 / test | 14.8104 | Overlapping-window shape estimate |
+
+Solid Transformer points estimate its saved 256-position scorer: full windows advanced by 128 positions, approximately two forward positions per scored character (boundary/tail overhead omitted). Hollow points show a hypothetical one-step decode with cached keys/values and 256 available positions, using L(24d² + 4Td + 30d + 20T) + 54d + 135 unit-weight operations, T = 256. No cached decoder was run. Its plotted bpc belongs to the saved window scorer; learned positions reset between windows, so cache reuse has not been shown to preserve those scores.
+
+Two FLOPs per multiply-add; special functions count as one operation. Ours traces include numerical clocks and loss scoring; neural elementwise overhead is approximate. Traces are representative warm-state costs, not full-stream measurements; growing KV candidate occupancy can change work. The separate KV pages also show projected event-architecture costs that remove numerical clock simulation. RNG, indexing, memory traffic and physical race energy are additional. These are work estimates, not latency or joules, and differing data, quality and evaluation protocols prevent a supremacy conclusion.
+
 ## Appendix B (continued). Completed language variants and work
 
-| Variant | Parameters K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ |
-| --- | --- | --- | --- | --- |
-| 1. Ours: I16/p2/32K/s6 | 361.4 | 32,768 / 4 | 3.121 / dev | 31.053 |
-| 2. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 |
-| 3. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 |
-| 4. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 |
-| 5. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 |
-| 6. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 |
-| 7. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 |
-| 8. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 |
-| 9. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 |
-| 10. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 |
-| 11. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 |
-| 12. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 |
-| 13. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 |
-| 14. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 |
-| 15. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 |
-| 16. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 |
-| 17. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 |
-| 18. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 |
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| 1. Ours: I16/p2/32K/s6 | 361.4 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.0255 |
+| 2. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.0255 |
+| 3. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.0321 |
+| 4. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 0.1466 |
+| 5. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 0.1941 |
+| 6. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 0.1968 |
+| 7. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.0890 |
+| 8. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 0.1173 |
+| 9. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 0.6296 |
+| 10. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.0470 |
+| 11. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.1675 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| 12. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 0.6389 |
+| 13. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 2.4571 |
+| 14. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 0.6389 |
+| 15. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 0.6770 |
+| 16. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 0.6770 |
+| 17. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 2.4024 |
+| 18. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 6.7999 |
+| 19. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 7.4192 |
+| 20. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 7.4192 |
+| 21. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 14.8104 |
+| 22. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 2.4024 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 6 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth6 character](report/figures/episodic_language_comparison_D2048_depth6_character.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.633 | 7.206 | 7.207 | 0.0890 |
+| kv | 3.620 | 9.034 | 9.035 | 0.1464 |
+
+Completed KV improvement over receiver memory: +0.013 bpc (positive is better). The index admits up to 8 recent matching-character entries plus 4 recent positions. Older entries outside these tails cannot be addressed by this index. Duplicates are removed. Development averages 11.36 keys scored and one value delivered per retrieval query. All 12,282 entries remain stored (3.00 MiB raw keys/values); the oldest selected entry is 1,829 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 8 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth8 character](report/figures/episodic_language_comparison_D2048_depth8_character.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.542 | 9.556 | 9.557 | 0.1172 |
+| kv | 3.539 | 11.990 | 11.992 | 0.1939 |
+
+Completed KV improvement over receiver memory: +0.003 bpc (positive is better). The index admits up to 8 recent matching-character entries plus 4 recent positions. Older entries outside these tails cannot be addressed by this index. Duplicates are removed. Development averages 11.36 keys scored and one value delivered per retrieval query. All 16,376 entries remain stored (4.00 MiB raw keys/values); the oldest selected entry is 1,829 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 8 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth8 semantic](report/figures/episodic_language_comparison_D2048_depth8_semantic.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.542 | 9.556 | 9.557 | 0.1172 |
+| kv | 3.554 | 11.997 | 11.999 | 0.1965 |
+
+Completed KV improvement over receiver memory: -0.012 bpc (positive is better). The content index uses three random-hyperplane bits of learned keys/queries, with up to 8 recent/full-history samples in the query bucket and its one-bit neighbors, plus 4 recent positions. Duplicates are removed. Development averages 10.07 keys scored and one value delivered per retrieval query. All 16,376 entries remain stored (4.00 MiB raw keys/values); the oldest selected entry is 2,026 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
 
 ## Appendix B (continued). Ours: separate online neural learning
 

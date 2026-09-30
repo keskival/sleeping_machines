@@ -4,11 +4,19 @@ Start with the [project report](../REPORT.md) for the current results and their
 scope. This directory preserves the experiment implementations and the evidence
 behind the report, including exploratory runs and failed approaches.
 
+The current combined-mechanism experiments are the
+[integrated sparse temporal language models](INTEGRATED_LANGUAGE.md): learned
+content, sparse receiver updates, temporal query/key races and counterfactual
+route credit. The eight-block episodic variant retains historical token KV
+entries and transfers winning values. Read [HANDOFF.md](HANDOFF.md) for live
+queue state; a committed plan alone does not establish that a remote job is running.
+
 ## Research documents
 
 | Document | Purpose |
 | --- | --- |
-| [SHARED_MODEL.md](SHARED_MODEL.md) | Current model, task adapters and implementation contracts |
+| [INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md) | Current integrated receivers, episodic KV, evidence, work ledgers and queue |
+| [SHARED_MODEL.md](SHARED_MODEL.md) | Earlier cross-task model, adapters and preserved implementation contracts |
 | [THEORY.md](THEORY.md) | Index to mathematical derivations in [theory/](theory/) |
 | [FINDINGS.md](FINDINGS.md) | Completed experiments, measured results and limitations |
 | [ROADMAP.md](ROADMAP.md) | Research priorities and next experiments |
@@ -20,14 +28,24 @@ behind the report, including exploratory runs and failed approaches.
 
 ## Locate a run
 
-The [full learned-event suite](queue/local_full_proper_suite_20260930T131028Z.json)
-declares CPU-only speech, complete-gesture vision, MNIST, market, temporal and
-10M-character language runs. Each is a separate one-job guarded queue. Live
-`.running.json` files and resumable checkpoints stay local; completed result
-JSON appears in `results/full_event/`. These pending runs are not frontier
-evidence. The local suite contains no Transformer or LSTM job.
+The [current eight-block content-index campaign](queue/local_indexed_episodic_depth8_20260930T211500Z.json)
+starts with a small KV fit and a matched receiver control before bounded data
+promotion. Its driver is `indexed_episodic_race_language_screen.py`, and completed
+records live in [results/episodic_language/](results/episodic_language/).
+Receiver scaling uses `integrated_language_benchmark.py` and
+[results/parallel_language/](results/parallel_language/). The separate
+`integrated_online_language.py` experiment adapts the full backbone after causal
+predictions; its results live in [results/online_language/](results/online_language/).
+The [AWS 10M receiver definition](AWS_INTEGRATED_10M.md) has a distinct protocol.
 
-Experiment drivers use the `e<number>_*.py` naming scheme. The number connects
+The [older full learned-event suite](queue/local_full_proper_suite_20260930T131028Z.json)
+preserves speech/vision/market/temporal and carrier-language configurations; it
+is superseded as the local priority. Speech is paused, with checkpoints intact.
+Every fit uses a separate one-job guarded queue. Live `.running.json` files,
+logs and checkpoints stay local; only completed JSON is report evidence.
+New dense Transformer/LSTM training is reserved for AWS.
+
+Earlier experiment drivers use the `e<number>_*.py` naming scheme. The number connects
 the driver to its section in the findings and its directory under
 [results/](results/). Later runs also use dated tags to distinguish settings,
 seeds, audits and repeated runs.

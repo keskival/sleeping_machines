@@ -2,6 +2,16 @@
 
 ## Current evidence
 
+The separate all-neural-parameter integrated experiment has completed:
+**3.190859 frozen versus 3.095738 adapting prequential bpc**, on 8,191 new
+development targets. Both arms inherit the same sparse receiver checkpoint and
+retain event memory; each block is predicted before its 16-character delayed
+Adam update, with a fixed 0.0001 rate and fresh optimizer moments. This goes
+beyond the older mixing-only experiment below. It is one checkpoint/window/rate,
+not official-test adaptation or a frozen-test score. See the
+[record](results/online_language/local_integrated_online_backbone_D8192_20260930T200000Z.json)
+and [integrated architecture guide](INTEGRATED_LANGUAGE.md).
+
 The corrected [E173 language benchmark](e173_causal_language.py) learns expert
 mixing weights on validation and freezes them on test. Its context/copy cache
 changes with observed text, while learned counts and weights remain frozen.

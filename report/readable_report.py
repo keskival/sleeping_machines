@@ -126,14 +126,19 @@ def language_work_points(tasks, ev):
             label=location+f"I{a['payload']}/p{a['pool']}/{a['fit']//1024}K/s{a['seed']}",parameters=r['parameters'],
             fit=a['fit'],passes=a['epochs'],split='test' if official else 'dev',
             bpc=r['final']['official_test' if official else 'dev']['bpc'],
-            total=w['total_training_unit_special_flops'],targets=w['fitting_targets']))
+            total=w['total_training_unit_special_flops'],targets=w['fitting_targets'],
+            inference=w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'],
+            inference_method='Winner-only operator trace'))
     for r in tasks['episodic_language']:
-        a=r['args'];w=r['work'];kv=a['memory']=='kv'
+        a=r['args'];w=r['work'];kv=a['memory']=='kv';semantic=a.get('candidate_index')=='semantic'
         rows.append(dict(model='Ours: '+('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}",
-            family='integrated',label=f"{'IKV' if kv else 'I'}{a['payload']}D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
+            family='integrated',label=f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
             parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],split='dev',
             bpc=r['final']['dev']['bpc'],total=w['cpu_emulator']['total_training_unit_special_flops'],
-            targets=w['fitting_targets']))
+            targets=w['fitting_targets'],
+            inference=w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'],
+            projected_inference=w['projected_event_architecture']['inference_arithmetic_flops_per_character']+w['projected_event_architecture']['inference_special_functions_per_character'],
+            inference_method='Winner-only operator trace'))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -142,7 +147,9 @@ def language_work_points(tasks, ev):
         rows.append(dict(model=f"Ours: carrier w{a['width']}{gate}",family='carrier',
             label=f"C{a['width']}{gate}/{a['fit']//1024}K",parameters=r['parameters'],
             fit=a['fit'],passes=a['epochs'],split='dev',bpc=r['final']['dev']['bpc'],
-            total=w['total_training_unit_special_flops'],targets=w['fitting_targets']))
+            total=w['total_training_unit_special_flops'],targets=w['fitting_targets'],
+            inference=w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'],
+            inference_method='Saved forward operator trace'))
     estimate=runpy.run_path(str(ROOT/'experiments/lm_training_flops.py'))['estimate_training_flops']
     variants=[
         ('L256/1M', 'e64/lstm_D1000000_s256_p20_dr0.2_v.json'),
@@ -162,7 +169,10 @@ def language_work_points(tasks, ev):
         rows.append(dict(model=('LSTM' if family=='lstm' else 'Transformer')+f": {a['size']}"+
             (f"x{a.get('layers',2)}" if family=='tf' else ''),family=family,label=label,
             parameters=r['params'],fit=a['D'],passes=a['passes'],split='test',bpc=quality,
-            total=w['total_training_flops'],targets=w['training_token_positions']))
+            total=w['total_training_flops'],targets=w['training_token_positions'],
+            inference=w['forward_flops']/w['training_token_positions']*(2 if family=='tf' else 1),
+            cached_inference=w['forward_flops']/w['training_token_positions'] if family=='tf' else None,
+            inference_method='Overlapping-window shape estimate' if family=='tf' else 'Recurrent shape estimate'))
     return rows
 
 
@@ -171,14 +181,17 @@ def episodic_pairs(tasks):
     for r in tasks['episodic_language']:
         a=r['args']
         key=tuple(a[k] for k in ('fit','dev','epochs','chunk','payload','depth','pool','seed','lr'))
-        grouped.setdefault(key,{})[a['memory']]=r
+        group=grouped.setdefault(key,{'kv':{}})
+        if a['memory']=='receiver':group['receiver']=r
+        else:group['kv'][a.get('candidate_index','character')]=r
     pairs=[]
     for group in grouped.values():
-        if set(group)=={'receiver','kv'}:
-            left,right=group['receiver'],group['kv']
-            for name in ('fitting_data_sha256','development_data_sha256'):
-                if left[name]!=right[name]:raise ValueError('Unmatched episodic data: '+name)
-            pairs.append(group)
+        if 'receiver' in group:
+            for right in group['kv'].values():
+                left=group['receiver']
+                for name in ('fitting_data_sha256','development_data_sha256'):
+                    if left[name]!=right[name]:raise ValueError('Unmatched episodic data: '+name)
+                pairs.append({'receiver':left,'kv':right})
     return sorted(pairs,key=lambda group:group['kv']['args']['fit'])
 
 
@@ -751,6 +764,14 @@ def figures(M, tasks, ev):
                 color=color,marker=marker,s=25,label=label,zorder=3)
         for i,r in enumerate(subset):
             offset=(5,7 if i%2==0 else -12)
+            # Separate the matched 2K depth/KV points; their work/quality are
+            # close enough that alternating offsets alone overlap the IDs.
+            if r['family']=='integrated' and r['fit']==2048:
+                if r['label'].startswith('IKVS'):offset=(35,8)
+                elif r['label'].startswith('IKV') and 'D8/' in r['label']:offset=(35,-8)
+                elif r['label'].startswith('IKV'):offset=(15,12)
+                elif 'D8/' in r['label']:offset=(-6,-18)
+                else:offset=(-10,12)
             a.annotate(str(points.index(r)+1),(r['total']/1e9,r['bpc']),xytext=offset,
                 textcoords='offset points',fontsize=7,
                 arrowprops=dict(arrowstyle='-',color='#8a8984',lw=.4))
@@ -760,6 +781,40 @@ def figures(M, tasks, ev):
     axes[0].set_ylabel('Bits per character ↓',fontsize=8)
     f.suptitle('Quality versus fitting work; scoring protocols and data budgets differ',fontsize=9,y=1.01)
     f.tight_layout(w_pad=.8);save(f,'language_quality_vs_work')
+
+    f,axes=plt.subplots(1,2,figsize=(7.2,3.2),sharey=True)
+    for a,split,title in zip(axes,('dev','test'),('Cold development scores','Saved test scores')):
+        subset=[r for r in points if r['split']==split]
+        for family,(color,marker,label) in styles.items():
+            group=[r for r in subset if r['family']==family]
+            if group:a.scatter([r['inference']/1e6 for r in group],[r['bpc'] for r in group],
+                color=color,marker=marker,s=25,label=label,zorder=3)
+        for i,r in enumerate(subset):
+            offset=(5,7 if i%2==0 else -12)
+            if r['family']=='integrated' and r['fit']!=2048:
+                offset=(-13,8) if r['fit']>8192 else (6,9)
+            if r['family']=='integrated' and r['fit']==2048:
+                if r['label'].startswith('IKVS'):offset=(35,8)
+                elif r['label'].startswith('IKV') and 'D8/' in r['label']:offset=(35,-8)
+                elif r['label'].startswith('IKV'):offset=(12,12)
+                elif 'D8/' in r['label']:offset=(-12,-18)
+                else:offset=(-10,12)
+            a.annotate(str(points.index(r)+1),(r['inference']/1e6,r['bpc']),xytext=offset,
+                textcoords='offset points',fontsize=7,
+                arrowprops=dict(arrowstyle='-',color='#8a8984',lw=.4))
+            if r['family']=='tf':
+                left=r['cached_inference']/1e6;right=r['inference']/1e6
+                a.plot([left,right],[r['bpc'],r['bpc']],color=orange,lw=.7,alpha=.5,zorder=1)
+                a.scatter([left],[r['bpc']],facecolors='none',edgecolors=orange,marker='^',s=25,zorder=2)
+        if split=='test':a.scatter([],[],facecolors='none',edgecolors=orange,marker='^',
+            s=25,label='Transformer: cache scenario')
+        a.set_xscale('log');a.set_xlim(.015,30)
+        a.set_ylim(1.45,max(3.75,max(p['bpc'] for p in points)+.2))
+        a.set_title(title,fontsize=9);a.set_xlabel('Inference MFLOPs / predicted character; log scale ↓',fontsize=7.5)
+        a.legend(loc='upper right',fontsize=6.1,frameon=False)
+    axes[0].set_ylabel('Bits per character ↓',fontsize=8)
+    f.suptitle('Quality versus inference work; estimates, scoring protocols and data differ',fontsize=8.8,y=1.01)
+    f.tight_layout(w_pad=.8);save(f,'language_quality_vs_inference')
 
     if tasks['integrated_online_language']:
         row=tasks['integrated_online_language'][-1]
@@ -796,7 +851,8 @@ def figures(M, tasks, ev):
         for i,value in enumerate([mean,1]):axes[1].text(i,value+.15,f'{value:.2f}',ha='center',fontsize=8)
         axes[1].set_ylim(0,mean*1.2);axes[1].tick_params(axis='x',labelsize=7)
         a=pair['kv']['args']
-        f.tight_layout(w_pad=1.1);save(f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}")
+        index=a.get('candidate_index','character')
+        f.tight_layout(w_pad=1.1);save(f,f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}_{index}")
 
     if tasks['language_representation']:
         audit=tasks['language_representation']
@@ -963,6 +1019,10 @@ def blocks(M, tasks, ev):
          "remain available under a work budget. The theory connects temporal algebra, key/value separation, "
          "credit transport and supervision that includes silence. The contribution is this construction and "
          "its tested consequences; learned delays and sparse capacity are established ideas."),
+        ('p','The integrated language candidates now exercise learned content, temporal races, sparse '
+         'persistent receivers and counterfactual credit together. An eight-block variant also races '
+         'historical key/value messages. These small-data experiments explore only a small part of '
+         'the design space; larger-scale quality and complete resource advantages remain under test.'),
         ("p","Our earlier deep sparse-routing pilots often lost activity and useful credit before the final "
          "layers. Counterfactual proposals alone did not reliably fix that. The subsequent vector-state and "
          "persistent-memory work addresses those observed obstacles. Completed structured-task gains motivate "
@@ -982,6 +1042,7 @@ def blocks(M, tasks, ev):
          "The model family implements this idea at several levels of generality."),
         ("figure",("shared_architecture",154)),
         ("table",(["Model","Mechanism","Evidence","What it establishes"],[
+         ['Ours: integrated sparse temporal language','Learned content, state-dependent key races, selected receiver updates and episodic KV','Completed 32K receiver / 2K depth and KV screens','Combined mechanisms train; bounded candidate coverage and causal schedule'],
          ["Ours: learned event-state encoders","Source embeddings, temporal modes, nonlinear vector maps and competing clocks","Language E176; speech E165","Learned representations and persistent state"],
          ["Ours: routed event query encoders","Candidate payloads, receiver memory and hard value/time races","Breadth E120; language E133","Trainable event depth across tasks; text/market breadth variants add statistical evidence"],
          ["Ours: structured event mechanisms","Temporal chains, relative pointers and phase composition","E34/E53/E54, E61, E124","Sample efficiency and generalization with declared structural priors"],
@@ -1073,12 +1134,24 @@ def blocks(M, tasks, ev):
         ('p','Checks establish causal predictions, identical chunked execution, precise clocks at '
          '10M positions, equality of training forward values and winner-only inference, learned '
          'key/value/memory gradients and conserved route credit. The smoke fit learns, but is not a '
-         'quality benchmark. The active ladder increases data and tests capacity before larger promotion.'),
+         'quality benchmark. Completed data, depth and memory interventions test progress before larger promotion.'),
         ('small','Fixed observed-character pools, bounded delays and six sequential event depths; '
          'no learned topology or complete frontier-language claim. Interior arrival-time derivatives '
          'and counterfactual score surrogates have distinct scope. FLOPs include teaching alternatives '
          'and optimizer work; representative sparse traces do not certify whole-run instruction or '
          'energy counts. Theory §§299–302; source: sleeping_machines/sparse_race_language.py.')]
+    depth_rows={r['args']['depth']:r for r in tasks['episodic_language']
+        if r['args']['memory']=='receiver' and r['args']['fit']==2048
+        and r['args']['payload']==32 and r['args']['seed']==6}
+    if 6 in depth_rows and 8 in depth_rows:
+        six,eight=depth_rows[6],depth_rows[8]
+        extra=eight['work']['cpu_emulator']['total_training_unit_special_flops']/six['work']['cpu_emulator']['total_training_unit_special_flops']-1
+        full_blocks.insert(-1,('p',f"A matched payload-32 / 2K depth screen improves "
+            f"{six['final']['dev']['bpc']:.3f} to {eight['final']['dev']['bpc']:.3f} development bpc "
+            f"from six to eight receiver blocks, for {100*extra:.1f}% more fitting work. "
+            'The current eight-block KV variant adds historical races, giving sixteen selection '
+            'steps after warmup. Fixed data/passes/seed do not isolate depth from increased capacity; '
+            'this is exploratory evidence, not a scaling law.'))
     pages.append(full_blocks)
     pages.append([
         ('h1','Ours: queries, memory and context'),
@@ -1770,6 +1843,7 @@ def blocks(M, tasks, ev):
         ('h1','Appendix B (continued). Ours and neural controls: accuracy versus FLOPs'),
         ('p','Each point is a completed model, not a projected scaling law. Left: ours on cold '
          'development characters, with integrated models and earlier carrier controls labelled separately. '
+         'The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. '
          'Right: saved neural test results. Lower bpc means better prediction; lower fitting work means '
          'fewer estimated operations. No curve is drawn between different model families or scoring splits.'),
         ('figure',('language_quality_vs_work',174)),
@@ -1781,23 +1855,48 @@ def blocks(M, tasks, ev):
             [43,33,25,33,40])),
         ('small','The table selects the largest fitting budget currently completed for each family; '
          'the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted '
-         'variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory; '
+         'variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory '
+         '(S uses the content index); '
          'C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer '
          'width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.'),
         ('small','Estimates include learning, clipping and Adam, with unit-weight special functions. '
          'Ours uses representative operator traces; neural controls use shape formulas and backward '
          'approximately twice forward. Scoring splits, data, passes, capacity and credit differ; '
          'these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.')])
+    pages.append([
+        ('h1','Appendix B (continued). Accuracy versus inference FLOPs'),
+        ('p','Inference predicts with frozen weights: no backward pass, clipping or optimizer update. '
+         'These are the same completed checkpoints, quality scores and point IDs as the fitting graph. '
+         'Ours uses saved forward operator traces; the integrated models read only winning values. '
+         'LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.'),
+        ('figure',('language_quality_vs_inference',174)),
+        ('table',(['Model type','bpc / split ↓','Inference MFLOPs / character ↓','Cost boundary'],[
+            [r['model'],f"{r['bpc']:.3f} / {r['split']}",f"{r['inference']/1e6:.4f}",r['inference_method']]
+            for family in ('integrated','carrier','lstm','tf')
+            for r in [max([p for p in points if p['family']==family],key=lambda p:(p['fit'],-p['bpc']))]],
+            [43,27,42,62])),
+        ('small','Solid Transformer points estimate its saved 256-position scorer: full windows advanced '
+         'by 128 positions, approximately two forward positions per scored character (boundary/tail overhead omitted). '
+         'Hollow points show a hypothetical one-step decode with cached keys/values and 256 available positions, '
+         'using L(24d² + 4Td + 30d + 20T) + 54d + 135 unit-weight operations, T = 256. '
+         'No cached decoder was run. Its plotted bpc belongs to the saved window scorer; learned positions reset '
+         'between windows, so cache reuse has not been shown to preserve those scores.'),
+        ('small','Two FLOPs per multiply-add; special functions count as one operation. Ours traces include '
+         'numerical clocks and loss scoring; neural elementwise overhead is approximate. Traces are representative '
+         'warm-state costs, not full-stream measurements; growing KV candidate occupancy can change work. '
+         'The separate KV pages also show projected event-architecture costs that remove numerical clock simulation. '
+         'RNG, indexing, memory traffic and physical race energy are additional. These are work estimates, '
+         'not latency or joules, and differing data, quality and evaluation protocols prevent a supremacy conclusion.')])
     ledger_chunk=math.ceil(len(points)/math.ceil(len(points)/18))
     for start in range(0,len(points),ledger_chunk):
         pages.append([
             ('h1','Appendix B (continued). Completed language variants and work'),
-            ('table',(['Variant','Parameters K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓'],[
+            ('table',(['Variant','Params K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓','Inference MFLOPs / char ↓'],[
                 [f"{i+1}. "+('Ours: ' if r['family'] in ('integrated','carrier') else '')+r['label'],
                  f"{r['parameters']/1e3:,.1f}",f"{r['fit']:,} / {r['passes']:g}",
-                 f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}"]
+                 f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}",f"{r['inference']/1e6:.4f}"]
                  for i,r in enumerate(points[start:start+ledger_chunk],start=start)],
-                 [48,25,36,29,36])),
+                 [40,21,31,24,31,27])),
             ('small','Each row retains its original architecture, fitting budget and score. The selected '
              '10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain '
              'their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. '
@@ -1812,6 +1911,12 @@ def blocks(M, tasks, ev):
         rows=[pair[mode] for mode in ('receiver','kv')]
         gain=rows[0]['final']['dev']['bpc']-kv['final']['dev']['bpc']
         mean_candidates=act['kv_scores']/max(1,act['kv_queries'])
+        index=a.get('candidate_index','character')
+        index_explanation=(f"The content index uses three random-hyperplane bits of learned keys/queries, "
+            f"with up to {a['matching']} recent/full-history samples in the query bucket and its one-bit "
+            f"neighbors, plus {a['recent']} recent positions. " if index=='semantic' else
+            f"The index admits up to {a['matching']} recent matching-character entries plus {a['recent']} "
+            'recent positions. Older entries outside these tails cannot be addressed by this index. ')
         pages.append([
             ('h1','Appendix B (continued). Ours: per-position race KV memory'),
             ('p',f"Both integrated models fit {a['fit']:,} characters for {a['epochs']} passes, with "
@@ -1819,7 +1924,7 @@ def blocks(M, tasks, ev):
              f"{a['dev']-1:,} identical cold development targets. The KV arm retains separate historical "
              'keys and values at every depth; learned queries select one value through time. '
              'Incoming content is retained and gated with the retrieved message. No dense carrier is added.'),
-            ('figure',(f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}",148)),
+            ('figure',(f"episodic_language_comparison_D{a['fit']}_depth{a['depth']}_{index}",148)),
             ('table',(['Ours: memory','Dev bpc ↓','Projected fit GFLOPs ↓','CPU fit GFLOPs ↓','Projected forward MFLOPs/char ↓'],[
                 [r['args']['memory'],f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['projected_event_architecture']['total_training_unit_special_flops']/1e9:,.3f}",
@@ -1827,8 +1932,7 @@ def blocks(M, tasks, ev):
                  f"{(r['work']['projected_event_architecture']['inference_arithmetic_flops_per_character']+r['work']['projected_event_architecture']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],
                 [30,24,40,36,44])),
             ('p',f"Completed KV improvement over receiver memory: {gain:+.3f} bpc (positive is better). "
-             f"The index admits up to {a['matching']} matching-character entries plus {a['recent']} recent "
-             f"positions; duplicates are removed. Development averages {mean_candidates:.2f} keys scored "
+             +index_explanation+f"Duplicates are removed. Development averages {mean_candidates:.2f} keys scored "
              f"and one value delivered per retrieval query. All {act['kv_stored_entries']:,} entries remain "
              f"stored ({act['kv_raw_key_value_bytes']/2**20:.2f} MiB raw keys/values); the oldest selected "
              f"entry is {act['kv_winner_age_max']:,} characters old. This bounds reads, not stored history."),
@@ -1842,7 +1946,9 @@ def blocks(M, tasks, ev):
             ('small','Temporal races avoid the explicit normalizing reduction/division and deliver one '
              'value at inference; training reads all admitted values for route credit. The orange bar '
              'is an analytical same-shortlist aggregation comparison, not another trained model. '
-             'Candidate coverage is fixed-index, not arbitrary semantic search. Historical activations '
+             'Candidate coverage is approximate and does not guarantee full-bank attention equivalence. '
+             'Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is '
+             'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
     if tasks['integrated_online_language']:

@@ -2587,10 +2587,57 @@ embeddings gives 7.568758; removing all learned memory corrections gives
 3.834631. Gate quantiles vary by content and layer. These demonstrate fitted
 use of inputs and history, not retrained ablation performance or lossless memory.
 
-The next campaign declares capacity/data stages before execution and uses only
+The historical next campaign declares capacity/data stages before execution and uses only
 completed development results to select the smallest width within 0.03 bpc of
 its best 1M result. It requires <=2.25 bpc and >=0.1 fixed-width data gain before
 one selected fresh 10M comparison. Live fitting/monitor losses cannot become
 benchmark results. Completed stages rebuild/validate report artifacts and commit
 on main; no remote push. Failed quality, numerical, memory or report checks stop
 promotion while preserving completed evidence.
+
+### Integrated sparse receiver, depth and episodic KV evidence (2026-09-30)
+
+Current architecture and queue: [INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md).
+The prioritized models combine learned content, state-dependent temporal races,
+sparse persistent receiver updates and counterfactual credit, without a dense
+carrier. Completed payload-16/six-block fits improve 3.398284 at 8K to 3.120653
+at 32K, four passes, 8,191 identical cold development targets. The 32K run uses
+361,367 parameters, 324 available receivers / six selected updates, 29.883299G
+fitting arithmetic and 31.053267G with unit-weight specials. The pool-four/8K
+arm gives 3.426425, worse than pool two; retain this negative capacity screen.
+
+New payload-32 depth/KV controls use 2,048 fitting/development characters, four
+passes, seed 6, credit 16 and frozen evaluation. Whole-fit GFLOPs below use
+unit-weight specials with consistent denominators.
+
+| Ours: model | Dev bpc | Parameters | Projected architecture GFLOPs | CPU-emulator GFLOPs |
+| --- | --- | --- | --- | --- |
+| Six-block receiver | 3.632968 | 1,388,871 | 7.206 | 7.207 |
+| Eight-block receiver | 3.541515 | 1,850,891 | 9.556 | 9.557 |
+| Six-block character-index KV | 3.619986 | 1,413,645 | 9.034 | 9.035 |
+| Eight-block character-index KV | 3.538588 | 1,883,923 | 11.990 | 11.992 |
+| Eight-block content-index KV | 3.553976 | 1,883,923 | 11.997 | 11.999 |
+
+Depth improves this small-fit score for 32.6% more work; capacity/initialization
+and residual gain change too. KV quality gains in the first index are small;
+the content index does not yet beat its receiver control. These are exploratory
+single-seed observations, not equal-compute or frontier claims. Sources:
+[episodic_language](results/episodic_language/), theory §§308–311. Numerical
+contracts and guarded full-gradient/accounting smokes pass at eight blocks.
+
+The first KV index admits recent character/global tails and cannot later access
+older excluded entries, despite retaining them. The content index uses learned
+query/key random-hyperplane buckets and full-history samples. It scores at most
+twelve candidates; inference reads one value per query. Average development
+candidates are 11.36 (character) / 10.07 (content); training reads all admitted
+values for score credit. The content arm stores all 16,376 entries, 4.00 MiB raw
+keys/values, and selects entries up to 2,026 characters old. Selection age does
+not establish useful long-range recall. Index/RNG/traffic and physical clock
+costs remain separate; projection removes only numerical clock simulation from
+floating arithmetic. Hash projections, content, keys, teaching and Adam count.
+
+The separate all-backbone online run scores 3.190859 frozen versus 3.095738
+adapting bpc on 8,191 new development targets, after an inherited 32K receiver
+fit. Predictions precede each of 512 sixteen-character delayed updates; fresh
+Adam and rate 0.0001 were fixed before the stream. This is a causal online
+protocol, not an official frozen score or the earlier statistical mixing ablation.

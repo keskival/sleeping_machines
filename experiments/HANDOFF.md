@@ -1,5 +1,68 @@
 # Session handoff — 2026-09-30
 
+## Current priority — eight-block content-indexed KV, 21:15 UTC
+
+Active tmux/manifest/log: `local_indexed_episodic_depth8_20260930T211500Z`.
+Supervisor: `scripts/run_indexed_episodic_language.py`. The first guarded 2K fit
+started at 21:10:49 UTC; inspect its live status before any launch. Model/driver:
+`indexed_episodic_race_language.py` (sleeping_machines / experiments respectively,
+experiment filename ends `_screen.py`). Do not change their hashed sources.
+They retain separate per-position keys/values, with learned-query content
+indexing, eight sparse receiver blocks and temporal competition. A fixed
+three-bit random-hyperplane index probes own/one-bit-neighbor buckets, including
+uniform full-history samples; four recent positions also qualify, <=12 keys
+scored per KV query. Inference reads one winner; teaching reads all admitted
+values. All entries remain stored. Hash projections are charged; bucket/RNG
+operations and traffic are separate, with no full-bank attention guarantee.
+
+Guarded eight-depth content-index contracts and 129-character full-gradient /
+accounting smoke completed. Causality, exact teacher/inference/chunk values,
+10M clock origin, full-history eligibility, all-entry retention, bounded
+candidates, query/key/value/gate gradients and exact next-update recovery pass.
+Completed check/smoke tags: `local_indexed_episodic_{contracts,smoke}_D8_20260930T211000Z`.
+
+Completed small controls, four passes / 2K fit / 2K dev / payload 32 / seed 6:
+six receiver blocks 3.632968 bpc; eight receiver blocks 3.541515. Character-tail
+KV gives 3.619986 (six) / 3.538588 (eight). This index stores entries it cannot
+later address, so the new variant replaces that candidate prior without
+discarding these small gains. The new bounded 8K promotion requires >=0.05
+depth gain and <=0.10 regression of the new KV pilot versus eight-block
+receiver; it does not require or assert KV supremacy. It runs a new matched
+8K eight-block receiver/KV pair only if that predeclared gate passes.
+
+The two earlier KV coordinators have exited; no coordinator remains suspended.
+Their manifests record completed 2K pairs and supersession for the content
+index. The old seed-7 six-block/32K checkpoint and exact recovery queue remain
+preserved; it does not automatically restart after the new campaign. Longer KV
+fits need packed storage and measured workload before promotion. Existing AWS
+six-block receiver queues/sources are preserved as a separate comparison.
+
+Root/experiment READMEs, roadmap, shared-model introduction and language,
+parallel and online protocols now point to `experiments/INTEGRATED_LANGUAGE.md`
+and distinguish the current combined model from earlier carrier diagnostics.
+The report retains the strongest structured-task evidence and adds completed
+depth/KV results with architectural versus emulator cost ledgers and value-read
+comparisons. The content-index pilot completed at 3.553976 bpc versus receiver
+3.541515: a 0.012461 regression, not a quality advantage. It scores a mean
+10.07 keys per KV query and reads one winning value; the oldest selected entry
+is 2,026 characters old. The 0.091453 depth gain and this small regression pass
+the declared bounded 8K promotion gate. The supervisor stopped safely because
+report documentation was being edited; after committing those edits, restart
+the same supervisor in a uniquely named tmux session. Its completed pilot is
+skipped by the guard; the eight-block 8K receiver/KV pair follows serially.
+
+The report now has separate accuracy-versus-total-fitting and accuracy-versus-
+inference-work plots, sharing checkpoint IDs and a per-variant ledger. Inference
+uses saved winner-only traces for ours and shape estimates for neural controls.
+Solid Transformer points approximate its overlapping-window scorer (two forward
+positions per scored character); hollow points are hypothetical cached decode
+costs, not measured cached quality. Learned window-relative positions prevent
+assuming score equivalence under cache reuse. Numerical-clock emulator costs
+remain in the global graph; the KV appendix separately gives event projections.
+The rebuilt PDF has 40 pages; inference accuracy/work is on page 27. All 22
+completed quality/work pairs, campaign source hashes, PDF bounds/no-orphan checks
+and nine report/promotion tests passed. The root README links both work graphs.
+
 ## Latest priority — per-position race KV experiment, 20:50 UTC
 
 Depth steering: the user now requests eight event blocks. The six-depth KV

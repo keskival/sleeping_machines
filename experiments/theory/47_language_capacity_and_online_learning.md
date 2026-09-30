@@ -206,3 +206,49 @@ counterfactual learning, clipping and optimizer; index/RNG/traffic are separate.
 Architectural normalization via physical competition can remove the explicit
 normalizing sum and clock-simulation arithmetic, but not all query/key work.
 No measured joules or quality advantage is implied by this allocation model.
+
+## 311. Addressable history and the eight-depth content index
+
+The first per-position KV index admits only the latest matching-character
+entries and recent global entries. Storing all historical entries under that
+index does not make them all addressable: entries outside those tails can never
+reenter its candidate set. Preserve this limit beside its small completed gains
+(six depths: 3.633 to 3.620; eight depths: 3.542 to 3.539 development bpc).
+
+The new content-indexed variant keeps the sparse receiver/temporal KV model but
+uses a three-bit fixed random-hyperplane signature of learned keys and queries.
+It probes the query bucket and its three one-bit neighbors, allocating up to
+eight candidate slots. Each populated bucket contributes its latest entry and,
+when it has a second slot, a uniform sample over the whole bucket history.
+Four recent global positions are also admitted, with duplicate removal. Every
+entry in an eligible bucket thus has a nonzero admission probability; old
+entries are not silently evicted or compressed. A guarded contract admits an
+entry more than fifty positions outside a synthetic bucket's recent tail.
+
+This is approximate query-conditioned discovery, not a guarantee of retrieving
+the full-bank softmax mass or the best inner-product key. Hash signatures depend
+on direction and need not preserve magnitude rankings. Fixed hash addressing
+has no differentiable credit; admitted keys/queries still receive temporal
+score credit. Random-hyperplane hashing is established (Charikar, STOC 2002,
+doi:10.1145/509907.509965); hash-indexed attention is also prior work, e.g.
+Reformer, https://arxiv.org/abs/2001.04451. Our proposed contribution is not
+the index primitive. It tests bounded discovery with race-normalized selection,
+winner-only value delivery, sparse receiver state and counterfactual route credit.
+
+The primary KV comparison now uses eight event blocks, sixteen sequential races
+after warmup, 432 receiver units and eight receiver updates per character.
+Eight times the two-race delay bound is 0.176, below the 0.5 causal margin.
+The receiver depth intervention at identical 2K data/four passes/payload 32/seed
+improves 3.633 to 3.542 bpc for 32.6% more fitting unit-special work. Extra
+capacity, initialization and residual gains change too; this is not a pure
+depth-only theorem or a reason to assume eight is sufficient for frontier tasks.
+
+The content-indexed 2K KV pilot uses that completed eight-depth control. Its
+predeclared bounded 8K promotion requires >=0.05 bpc gain from the receiver
+depth intervention and <=0.10 bpc regression of the KV pilot against the
+eight-depth receiver. This tests whether more data makes the new memory useful;
+it does not assert KV superiority from the gate. Record every completed result.
+Hash-plane projections remain charged in architectural FLOPs, while bucket
+operations and integer random-probe counts are separate. CPU noise/rate clock
+simulation is excluded only under the stated physical-competition projection.
+Long KV runs require packed storage and measured memory before promotion.

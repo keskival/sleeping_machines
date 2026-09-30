@@ -1,5 +1,12 @@
 # Parallel sequence training with sparse event inference
 
+The scans described below belong to the earlier temporal carriers and memory
+primitives. The current [integrated language experiments](INTEGRATED_LANGUAGE.md)
+use state-dependent receiver races and, in the eight-block variant, historical
+KV races. Their CPU reference is serial and does not claim the same affine scan
+speedup. Per-query sparse execution, sequence parallelism and hardware timing
+competition are separate properties; report each for the model actually run.
+
 The current affine event memory supports parallel sequence training. That does
 not establish that this implementation contains arbitrary LSTMs or softmax
 Transformers as exact special cases, or that its sparse execution is faster.

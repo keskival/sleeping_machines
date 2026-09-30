@@ -7,8 +7,10 @@ retain priority; later runs require a provisioned GPU host and the guarded queue
 
 ## Representation and baseline gate
 
-The present 27-character text8 and 131-token causal-prefix experiments remain
-historical controls. Before a modern architecture claim:
+The 27-character text8 [integrated receiver/KV experiments](INTEGRATED_LANGUAGE.md)
+are current small-scale architecture evidence; the earlier carrier and
+131-token causal-prefix experiments remain historical controls. None is a
+modern frontier language benchmark. Before a modern architecture claim:
 
 - Freeze a document-level train/development/test manifest with corpus revision,
   hashes, deduplication and preprocessing. Reserve evaluation documents; never

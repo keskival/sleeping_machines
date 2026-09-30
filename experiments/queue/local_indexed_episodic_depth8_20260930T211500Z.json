@@ -1,0 +1,61 @@
+{
+  "status": "prepared",
+  "pilot": {
+    "tag": "local_episodic_pair_kv_semantic_D2048_d32_depth8_s6_20260930T211500Z",
+    "queue": "experiments/queue/local_episodic_pair_kv_semantic_D2048_d32_depth8_s6_20260930T211500Z.txt",
+    "result": "experiments/results/episodic_language/local_episodic_pair_kv_semantic_D2048_d32_depth8_s6_20260930T211500Z.json",
+    "timeout_s": 10800
+  },
+  "larger_pair": [
+    {
+      "tag": "local_episodic_pair_receiver_semantic_D8192_d32_depth8_s6_20260930T211500Z",
+      "queue": "experiments/queue/local_episodic_pair_receiver_semantic_D8192_d32_depth8_s6_20260930T211500Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_receiver_semantic_D8192_d32_depth8_s6_20260930T211500Z.json",
+      "timeout_s": 32400
+    },
+    {
+      "tag": "local_episodic_pair_kv_semantic_D8192_d32_depth8_s6_20260930T211500Z",
+      "queue": "experiments/queue/local_episodic_pair_kv_semantic_D8192_d32_depth8_s6_20260930T211500Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_kv_semantic_D8192_d32_depth8_s6_20260930T211500Z.json",
+      "timeout_s": 32400
+    }
+  ],
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/indexed_episodic_race_language_screen.py": "d343b4861162e94fe1e21b0000ebb70a6ca0180ba3658dee01ca052d49411300",
+    "sleeping_machines/indexed_episodic_race_language.py": "484d9aa2fd970691f458540809009ff6a3e8fc2053bdcbd23e46819df9ca1514",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c"
+  },
+  "required_contracts": "experiments/results/episodic_language/local_indexed_episodic_contracts_D8_20260930T211000Z.json",
+  "required_smoke": "experiments/results/episodic_language/local_indexed_episodic_smoke_D8_20260930T211000Z.json",
+  "six_depth_receiver": "experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_20260930T205000Z.json",
+  "eight_depth_receiver": "experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_depth8_20260930T210000Z.json",
+  "preserved_comparisons": [
+    "experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_20260930T205000Z.json",
+    "experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_depth8_20260930T210000Z.json",
+    "experiments/results/episodic_language/local_episodic_pair_kv_D2048_d32_s6_20260930T205000Z.json",
+    "experiments/results/episodic_language/local_episodic_pair_kv_D2048_d32_s6_depth8_20260930T210000Z.json"
+  ],
+  "minimum_depth_gain_bpc": 0.05,
+  "maximum_kv_regression_bpc": 0.1,
+  "gate_scope": "Exploratory bounded-data promotion based on useful depth and a noncatastrophic KV pilot; no significance or supremacy claim",
+  "resource_caps": {
+    "MEM_CAP_KB": 4000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192
+  }
+}

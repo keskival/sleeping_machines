@@ -1,17 +1,23 @@
 {
-  "status": "prepared",
+  "status": "completed_small_pair_superseded_for_content_index",
   "small_pair": [
     {
       "tag": "local_episodic_pair_receiver_D2048_d32_s6_20260930T205000Z",
       "queue": "experiments/queue/local_episodic_pair_receiver_D2048_d32_s6_20260930T205000Z.txt",
       "result": "experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_20260930T205000Z.json",
-      "timeout_s": 7200
+      "timeout_s": 7200,
+      "status": "completed",
+      "development_bpc": 3.632968064769242,
+      "wall_s": 218.53646702697733
     },
     {
       "tag": "local_episodic_pair_kv_D2048_d32_s6_20260930T205000Z",
       "queue": "experiments/queue/local_episodic_pair_kv_D2048_d32_s6_20260930T205000Z.txt",
       "result": "experiments/results/episodic_language/local_episodic_pair_kv_D2048_d32_s6_20260930T205000Z.json",
-      "timeout_s": 7200
+      "timeout_s": 7200,
+      "status": "completed",
+      "development_bpc": 3.6199861670157065,
+      "wall_s": 285.2468406900007
     }
   ],
   "larger_pair": [
@@ -56,5 +62,6 @@
     "MEM_CAP_RSS_KB": 2500000,
     "MIN_AVAIL_MB": 8192
   },
-  "resume_scaling_manifest": "experiments/queue/local_integrated_followups_20260930T200000Z.json"
+  "resume_scaling_manifest": "experiments/queue/local_integrated_followups_20260930T200000Z.json",
+  "reason": "Preserve completed tail-index evidence; content-index KV at depth eight now has priority"
 }

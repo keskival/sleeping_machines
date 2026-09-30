@@ -17,6 +17,14 @@ substantially less physical work in both training and inference. This repository
 contains the implementations, mathematical analysis, reproducible experiments and
 completed results used to pursue that goal.
 
+The current integrated language models combine these ideas: learned queries and
+state-dependent keys set temporal races, selected receivers mix content with
+memory, and counterfactual credit teaches hard choices. An eight-block variant
+also races over separate historical token keys and values, delivering only a
+winning value. These are working research implementations with small-data
+evidence; larger-scale quality and resource advantages remain under test.
+See the [integrated language guide](experiments/INTEGRATED_LANGUAGE.md).
+
 ### The differentiators at a glance
 
 - **Time performs computation:** learned delays, races and phase transformations.
@@ -34,8 +42,12 @@ The original ideas are preserved in the
 
 | Capability | Completed evidence | Scope |
 | --- | --- | --- |
-| Ours: learned event language | **3.351 validation bpc** in the eight-layer pilot; staged six-layer fits reach **2.858 / 2.727 / 2.643 development bpc** at widths 32 / 64 / 128 | Pilot: 8K fit / 1,024 development targets. Staged fits: identical 131K fit / 8,191 development targets, four passes, one seed. No statistical experts; comparable 10M test pending |
+| Ours: integrated sparse temporal language | **3.121 development bpc**, 324 available units / six selected receiver updates per character | 32K fit, four passes, 8,191 cold development targets, payload 16; no dense carrier or statistical experts; [completed record](experiments/results/parallel_language/local_full_sparse_language_D32768_p2_20260930T175400Z.json) |
+| Ours: integrated depth comparison | **3.633 → 3.542 development bpc**, six → eight receiver blocks | Same 2K fit/development, payload 32, four passes, seed 6; extra depth also increases capacity/work; [eight-block record](experiments/results/episodic_language/local_episodic_pair_receiver_D2048_d32_s6_depth8_20260930T210000Z.json) |
+| Ours: online neural learning | **3.191 frozen → 3.096 adapting bpc** on a new stream | Inherited integrated checkpoint; score before each 16-character block update, 8K development stream, all-neural-parameter adaptation; [completed record](experiments/results/online_language/local_integrated_online_backbone_D8192_20260930T200000Z.json) |
+| Ours: earlier temporal carrier | **2.210 development bpc** | Width 128 / 1M fit / four passes; every carrier layer executes. Retained diagnostic, distinct from sparse receiver and KV models |
 | Ours: learned language context | **3.395 validation bits/character** with eight layers versus **3.464** with one; lower is better | Small language/depth development screen |
+| Ours: temporal order learning | **99.73–99.93%** across five runs after one pass over 2,000 examples | Depth-three event chains; Transformer controls reach 33.25–40.80% after repeated fitting on those examples; declared structured task |
 | Ours: rule generalization | **100% on all 3,440 unseen mod-17 triples**, with 69 learned phase scalars | Periodic primitive in the common model; supplied period 17; certified across all 4,913 possible triples |
 | Ours: longer-context retrieval | **100% at four times the training context** | Common two-layer carrier plus learned relative pointer; controlled synthetic task |
 | Ours: temporal composition | Native shared-motif models reach approximately **99.65%** | Task-specific native model; event activity and dense MACs are different work measures |
@@ -45,23 +57,31 @@ improves **2.643 to 2.587 development bpc**, with 0.50% more parameters and
 1.41% more fitting arithmetic. The input vector already enters persistent state
 and a gated residual output; it is not replaced by a constant node vector.
 Frozen interventions confirm that both input content and earlier messages affect
-predictions. These are one-seed development results. The [next staged campaign](experiments/queue/local_language_nextscale_20260930T163234Z.json)
-tests larger capacity/data before selecting one full 10M comparison.
+predictions. These are one-seed development results from the earlier carrier.
+Its [historical staged campaign](experiments/queue/local_language_nextscale_20260930T163234Z.json)
+is preserved. The current priority is the [eight-block integrated KV campaign](experiments/queue/local_indexed_episodic_depth8_20260930T211500Z.json),
+with small matched fits before larger-data promotion.
 
 The completed language references remain available for the full learned-event
 benchmark; lower test bits/character is better:
 
-| Reference | Fitting characters | Test bits/character | Estimated full training FLOPs |
+| Model | Fitting characters | Bits/character / split | Whole fitting GFLOPs |
 | --- | --- | --- | --- |
-| [LSTM, width 512](experiments/results/e174/aligned_lstm_10m_20260930.json) | 10M, six passes | **1.799** | 432.59T |
-| [Transformer, width 256, four layers](experiments/results/e174/aligned_tf_10m_20260930.json) | 10M, four passes | **1.908** | 888.78T |
-| [AWS LSTM, width 512](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json) | 90M, six passes | **1.661** | 3.89P |
+| Ours: integrated sparse temporal, payload 16 / six blocks | 32K, four passes | **3.121 / development** | 31.053 |
+| [LSTM, width 512](experiments/results/e174/aligned_lstm_10m_20260930.json) | 10M, six passes | **1.799 / test** | 432,593 |
+| [Transformer, width 256, four layers](experiments/results/e174/aligned_tf_10m_20260930.json) | 10M, four passes | **1.908 / test** | 888,775 |
+| [AWS LSTM, width 512](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json) | 90M, six passes | **1.661 / test** | 3,893,396 |
 
-These are saved validation-selected test results. Training estimates include
-forward, backward, clipping and Adam. The proper 10M-character Sleeping Machines
-test benchmark is pending; its small development score above uses a different
-split and fitting budget. See the report's completed-language-references appendix for the
-protocols and cost boundaries.
+These are different data budgets, capacities and scoring splits; this inventory
+does not establish matched-quality or iso-FLOP superiority. Every cost uses the
+same whole-fitting denominator, including backward, clipping and Adam, with
+unit-weight special functions. The report plots [quality versus total fitting work](report/figures/language_quality_vs_work.png)
+and [quality versus inference work per character](report/figures/language_quality_vs_inference.png),
+with all completed variants in the appendix ledger. The inference plot distinguishes
+the Transformer window scorer from a hypothetical KV-cache scenario; neither
+measures joules. Arithmetic-only counts are preserved.
+The [AWS integrated 10M definition](experiments/AWS_INTEGRATED_10M.md)
+is committed; a completed integrated official test is still pending.
 
 The separate statistical count/copy baseline reaches 1.727 text8 test
 bits/character after 10M-character count fitting. It does not use the learned
@@ -75,7 +95,21 @@ protocols, reference models, training budgets and the definitions behind each
 work estimate. Counted operations and logical memory visits are not measured
 energy.
 
-### The central next result
+### The next integrated result
+
+The current experiment combines sparse receiver updates, trainable races and
+historical KV retrieval in **eight event blocks**. The first character-indexed
+KV pilot delivers one value versus 11.36 admitted values per query, but improves
+small-fit loss only modestly. A content index now probes full historical buckets
+using learned queries/keys. Its candidate coverage and all teaching work are
+explicit. Temporal competition supplies softmax choice probabilities without an
+explicit normalizing reduction; winner sampling differs from a deterministic
+weighted sum. See the [guide and campaign](experiments/INTEGRATED_LANGUAGE.md).
+
+We have explored only a small part of the architecture's design space. The next
+evidence must show which combinations improve held-out quality for their complete
+training and inference costs. The following earlier results remain useful
+mechanism evidence and controls.
 
 The common implementation currently
 covers multiple independently trained tasks; sharing an implementation does not
@@ -108,6 +142,16 @@ See the [language scaling protocol](experiments/LANGUAGE_SCALING_PROTOCOL.md).
 
 ## Architecture and learning
 
+The [integrated language models](experiments/INTEGRATED_LANGUAGE.md) are the
+current combined-mechanism experiments. At each depth a learned query races
+state-dependent keys; one receiver updates and sends a gated content-bearing
+message with an arrival time. Unselected receivers retain their state without
+empty-tick evaluation. The KV variant adds indexed historical key/value races.
+Content, keys, clocks, gates and retention all learn. Training evaluates admitted
+losing alternatives for a conserved local route teacher and charges those reads.
+Fixed receiver pools and a bounded causal schedule remain declared constraints;
+arbitrary topology and unrestricted asynchronous overlap are not demonstrated.
+
 The [shared model](experiments/SHARED_MODEL.md) combines configurable mechanisms:
 
 - **Sparse event carriers:** vector messages pass through a configurable depth
@@ -124,19 +168,22 @@ The [shared model](experiments/SHARED_MODEL.md) combines configurable mechanisms
   waiting-time likelihoods, including the information in silence.
 
 Tasks have separate fitted weights and may use different depth or primitives.
-Small vector maps and output readouts use dense arithmetic. The current CPU
-reference also sorts arrivals and replays contexts. A separate generic streaming
+Small vector maps and output readouts use dense arithmetic. The earlier cross-task CPU
+reference sorts arrivals and replays contexts. A separate generic streaming
 path retains modal state and delayed messages across chunks; its eight-layer
 contract checks prefix causality and all-layer credit without prefix replay.
-Competitive stream training and cheaper candidate discovery remain research objectives.
-All this work belongs in the resource accounting.
+The integrated language models retain state across chunks without prefix replay
+and score bounded indexed candidates. Competitive larger-data prediction and
+useful candidate coverage remain research objectives. All discovery, teaching
+and optimizer work belongs in the resource accounting.
 
 ## Read the theory and evidence
 
 | Document | Purpose |
 | --- | --- |
 | [Report and applications](REPORT.md) | Accessible overview, strongest results, potential and benchmark appendices |
-| [Shared model](experiments/SHARED_MODEL.md) | Current implementation, task adapters, contracts and cost boundaries |
+| [Integrated language](experiments/INTEGRATED_LANGUAGE.md) | Current sparse receiver and episodic KV architecture, evidence and queues |
+| [Shared model](experiments/SHARED_MODEL.md) | Earlier cross-task implementation, adapters, contracts and retained evidence |
 | [Theory index](experiments/THEORY.md) | Formal derivations organized by theme, with assumptions and proof scope |
 | [Mathematical program](experiments/MATHEMATICAL_PROGRAM.md) | Open analytic problems and their decisive measurements |
 | [Research roadmap](experiments/ROADMAP.md) | Next experiments and architectural priorities |
