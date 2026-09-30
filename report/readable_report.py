@@ -1059,8 +1059,7 @@ def blocks(M, tasks, ev):
         ("h1","Appendix A. Deep event recognition"),
         ("p",f"The strongest completed speech result in the model family is <b>{100*pooled(best_speech):.2f}%</b> "
          f"on 512 private held-speaker utterances ({best_label.lower()}). "
-         "Accurate general recognition remains an open capability; published official-test results below "
-         "are reference targets, evaluated on a different partition."),
+         "Published official-test results below use a different partition; they are reference targets."),
         ("table",(["Ours: private development configuration","Correct","Accuracy ↑"],speech_rows,[108,32,34])),
         ("figure",("e143_temporal_residual_learning" if state_residual is not None else "e139_source_information",152)),
         ("p",("A six-block width-128 temporal encoder learns corrections while the inherited eight-layer parent "

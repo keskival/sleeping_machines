@@ -229,7 +229,7 @@ Success on these dimensions would turn the current task-level advantages into a 
 
 ## Appendix A. Deep event recognition
 
-The strongest completed speech result in the model family is **79.69%** on 512 private held-speaker utterances (selected single six-block prefix; trained with twelve blocks). Accurate general recognition remains an open capability; published official-test results below are reference targets, evaluated on a different partition.
+The strongest completed speech result in the model family is **79.69%** on 512 private held-speaker utterances (selected single six-block prefix; trained with twelve blocks). Published official-test results below use a different partition; they are reference targets.
 
 | Ours: private development configuration | Correct | Accuracy ↑ |
 | --- | --- | --- |
