@@ -1,0 +1,1 @@
+local_softmax_smoke_20260930T173650Z experiments/race_language_screen.py --tag local_softmax_smoke_20260930T173650Z --contracts experiments/results/parallel_language/local_race_contract_20260930T173600Z.json --attention softmax --fit 4096 --dev 1024 --epochs 1 --width 32

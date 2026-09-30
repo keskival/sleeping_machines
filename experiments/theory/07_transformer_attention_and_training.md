@@ -117,6 +117,12 @@ computation that genuinely needs every input to meet every weight at every step 
 in the data (silence is free), the representation (sparse codes) and the computation (only firing units work), which is where
 10³–10⁵× was measured. For language, per-token sparsity is plausible, so large savings are plausible; that is a prediction.
 
+**Resource clarification, 30 September 2026 (§298).** Historical large factors
+compare particular event counts and clocked-reference work or projected
+hardware costs, not measured whole-language energy ratios. Preserve the task,
+silence fraction, quality and resource boundary; §63 already records how an
+event-driven digital control narrows the separation.
+
 **Consequence for §95.** The higher floor predicted there is a property of a counting design. With race attention over
 learned sparse codes the floor could be Transformer-like at a fraction of the work; whether local credit can learn it is
 the test.
@@ -360,9 +366,19 @@ payload scaled by λ_j·T; the query node sums what arrives: o = Σ_j λ_j T v_j
 ≤ max_j |v_j|² Σ_j p_j². Hard attention is the identity channel alone (the winner's value, §96); time-normalized attention
 uses both channels: which keys, and when.
 
+**Correction, 30 September 2026 (§295).** The expectation is valid, but the
+variance bound above is not: all terms share T. Exactly o=(Lambda T) mu and
+Cov(o)=mu mu^T, or mu mu^T/R after independent averaging. Equal unit values
+have variance one even with many keys. Centering reduces noise (§296).
+Winner-only delivery is a separate estimator.
+
 **Sparse retrieval with a bounded bias.** Keys whose clocks have not fired by a cutoff c·T can be skipped (their λ_j T is
 small): the bias of the truncated output is bounded by (skipped softmax mass) × max |v|, the error of top-k attention;
 with sparse codes, a query reaches only keys sharing an active channel (§96), so the armed set is small to begin with.
+
+**Scope correction (§295).** Missing a clock cutoff does not certify a small
+rate or omitted mass. The mass-based bound needs an independently verified
+candidate/omission bound, as in §112.
 
 **Learning (local).** Keys and queries from the race's timing (§101 Corollary 3); values from the output error
 (Δv_j ∝ λ_j T · ∂L/∂o, local to key j); multi-head = several races; a layer = attention races + threshold feed-forward
@@ -418,6 +434,15 @@ descent, a limit (R → ∞) of race networks trained by local event-driven mess
 **What the theorem leaves open.** The O(1/R) terms, and whether the sparse regime where the efficiency lives (few races, hard
 or truncated retrieval, discrete routes as in §83–§89) keeps training close enough; the asynchronous overlap of forward and
 backward passes across tokens adds staleness, bounded as in §98(e).
+
+**Training scope clarification, 30 September 2026 (§295–296).** Unbiased head
+outputs and Jacobians do not make the sampled nonlinear-loss gradient unbiased
+for the deterministic Transformer objective. Claim (ii) concerns the continuous
+race network's own expected loss, with regularity permitting differentiation
+under expectation. Claims (iii)–(iv) additionally require smoothness throughout
+composition and a verified omitted-mass bound; firing late alone is not such
+a bound. Sparse hard-winner delivery requires a separate teacher, whose loss
+gradient scope is stated explicitly in §296.
 
 **Test (E68).** The same small Transformer (payload dimension 32, 2 layers, 4 heads) trained with softmax attention and with
 race attention at R = 1, 4, 16 (pathwise gradients as in the Lemma), on associative recall with learned embeddings and on

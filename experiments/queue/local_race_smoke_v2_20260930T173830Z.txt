@@ -1,0 +1,1 @@
+local_race_smoke_v2_20260930T173830Z experiments/race_language_screen.py --tag local_race_smoke_v2_20260930T173830Z --contracts experiments/results/parallel_language/local_race_contract_v2_20260930T173830Z.json --attention race --fit 4096 --dev 1024 --epochs 1 --width 32

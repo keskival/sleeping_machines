@@ -44,6 +44,10 @@ work, and §11.1's linearity in the weights is a known property that we exploit.
 
 Section numbers remain global and unchanged, so references such as “THEORY §57” continue to work. The detailed derivations are split into shorter thematic notes:
 
+- [Integrated sparse temporal language](theory/46_integrated_sparse_temporal_language.md) — §§299–302: contextual key races, persistent selected receivers, bounded arrival times, counterfactual credit and capacity/activity accounting. This is the prioritized combined-mechanism candidate.
+
+- [Race attention and resource identity](theory/45_race_attention_and_resource_identity.md) — §§294–298: timing normalization, corrected shared-clock variance, conserved centered teachers, indexed winner retrieval and resource boundaries.
+
 - [Precise language scans and content-bearing messages](theory/44_precise_language_scans_and_content.md) — §§287–293: bounded-delay causal scans, clock precision, gated vector mixing, token-unit memory initialization and input-known write/forget controls.
 
 - [Race foundations and exact gradients](theory/01_foundations_and_counterfactual_credit.md) — §§1–10

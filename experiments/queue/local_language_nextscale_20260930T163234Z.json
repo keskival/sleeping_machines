@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "paused_for_integrated_architecture",
   "created_utc": "2026-09-30T16:32:34.222241+00:00",
   "tmux_session": "local_language_nextscale_20260930T163234Z",
   "suite_log": "experiments/queue/local_language_nextscale_20260930T163234Z.out",
@@ -56,8 +56,14 @@
       "epochs": 4,
       "timeout_s": 14400,
       "command": "experiments/parallel_event_language.py --tag local_staged_language_primary_development_w128_D1048576_20260930T163234Z --contracts experiments/results/parallel_language/local_selective_contract_selective_20260930T161050Z.json --fit 1048576 --dev 8192 --epochs 4 --width 128 --modes 64 --depth 6 --resume --memory-profile inherited --content-memory --monitor-every 131072",
-      "status": "running",
-      "started_utc": "2026-09-30T16:44:34.801262+00:00"
+      "status": "completed",
+      "started_utc": "2026-09-30T16:44:34.801262+00:00",
+      "finished_utc": "2026-09-30T17:20:29.564511+00:00",
+      "development_bpc": 2.2102788517131837,
+      "parameters": 309561,
+      "training_flops": 8324919956496,
+      "wall_s": 2151.3713753149786,
+      "max_rss_kb": 355904
     },
     {
       "kind": "primary_development",
@@ -72,7 +78,8 @@
       "epochs": 4,
       "timeout_s": 14400,
       "command": "experiments/parallel_event_language.py --tag local_staged_language_primary_development_w256_D1048576_20260930T163234Z --contracts experiments/results/parallel_language/local_selective_contract_selective_20260930T161050Z.json --fit 1048576 --dev 8192 --epochs 4 --width 256 --modes 128 --depth 6 --resume --memory-profile inherited --content-memory --monitor-every 131072",
-      "status": "queued"
+      "status": "paused_checkpoint_preserved",
+      "started_utc": "2026-09-30T17:20:36.476077+00:00"
     },
     {
       "kind": "official_comparison",
@@ -134,6 +141,7 @@
   "protocol": "Selected inherited-spectrum, content-gated six-layer model. Reuse the completed width-128/131K result. Fixed-data capacity: width 128 versus 256 at 131K. Fixed-width data: 131K versus 1M, each width. All seed 6, four passes, same 8192-character cold development window and 64-character credit horizon. Before official testing choose the smallest width within 0.03 development bpc of the best completed 1M stage. Require <=2.25 1M development bpc and >=0.1 improvement with larger data at that width. Then run exactly one selected fixed 10M/200K/1M comparison from initialization. The unselected official queue is preserved but never run. No official-test selection.",
   "scope": "Exploratory single-seed scale-up. Promotion thresholds do not guarantee a benchmark or frontier advantage. All completed/failed earlier evidence retained.",
   "publishing": "After each completed stage, verify result/source hashes, rebuild and validate report, then commit only owned artifacts and the completed result on main. No remote push. Refuse if another writer has staged changes or report edits.",
-  "updated_utc": "2026-09-30T16:44:34.801244+00:00",
-  "current_job": "local_staged_language_primary_development_w128_D1048576_20260930T163234Z"
+  "updated_utc": "2026-09-30T17:54:56.448929+00:00",
+  "current_job": null,
+  "reason": "User prioritized full architectural experiments; checkpoint preserved"
 }

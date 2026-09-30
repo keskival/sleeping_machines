@@ -60,6 +60,10 @@ def results():
         for path in sorted((RES/"parallel_language").glob("local_selective_w128_D131072_*_20260930T161050Z.json"))]
     tasks["language_scaleup"] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/"parallel_language").glob("local_staged_language_*Z.json"))]
+    tasks['language_race'] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/'parallel_language').glob('local_indexed_language_*Z.json'))]
+    tasks['language_full_sparse'] = [read(str(path.relative_to(RES)))
+        for path in sorted((RES/'parallel_language').glob('local_full_sparse_language_*Z.json'))]
     audit_path="parallel_language/local_language_representation_20260930T162337Z.json"
     tasks['language_representation'] = read(audit_path) if (RES/audit_path).exists() else None
     tasks["parallel_contract"] = read("parallel_language/local_parallel_language_contract_v3_20260930T153300Z.json")
@@ -576,6 +580,35 @@ def figures(M, tasks, ev):
     f.tight_layout(w_pad=2)
     save(f,"breadth_work_ratios")
 
+    f,axes=plt.subplots(1,2,figsize=(7.2,2.65))
+    a=axes[0];a.set(xlim=(0,1),ylim=(0,1));a.axis('off')
+    boxes=[(.08,.84,'Observed character + previous message'),
+           (.08,.58,'Contextual keys race through delays'),
+           (.08,.32,'One unit mixes content + retained state'),
+           (.08,.06,'Winner sends a vector and arrival time')]
+    for x,y,label in boxes:
+        a.add_patch(FancyBboxPatch((x,y),.83,.12,boxstyle='round,pad=.01',
+                                 facecolor='#eef3f7',edgecolor=blue,linewidth=.8))
+        a.text(x+.415,y+.06,label,ha='center',va='center',fontsize=7.2)
+    for y in (.82,.56,.30):
+        a.annotate('',xy=(.50,y-.08),xytext=(.50,y),arrowprops=dict(arrowstyle='->',color=blue))
+    a.set_title('Ours: integrated event path',fontsize=9)
+    a=axes[1]
+    for depth in range(6):
+        a.scatter([depth]*54,range(54),s=6,color='#cdd4db',linewidths=0)
+        a.scatter([depth]*2,[10,11],s=15,color=orange,linewidths=0)
+        a.scatter([depth],[10+depth%2],s=20,color=blue,linewidths=0)
+    a.plot(range(6),[10+i%2 for i in range(6)],color=blue,linewidth=.8)
+    a.set(xlim=(-.5,5.5),ylim=(55,-4),xticks=range(6),
+          xticklabels=[str(i) for i in range(1,7)],yticks=[],xlabel='Depth')
+    a.set_title('324 available units; 6 state updates / character',fontsize=8.5)
+    a.grid(False)
+    a.scatter([],[],s=15,color=blue,label='Winner value + state update')
+    a.scatter([],[],s=15,color=orange,label='Other addressed key')
+    a.scatter([],[],s=10,color='#cdd4db',label='Unaddressed units remain dormant')
+    a.legend(loc='lower center',fontsize=6.5,frameon=False)
+    f.tight_layout(w_pad=1.6);save(f,'full_sparse_language_path')
+
     if tasks['language_representation']:
         audit=tasks['language_representation']
         names=('full','reset_history_every_token','zero_incoming_embeddings','remove_all_memory_corrections')
@@ -615,6 +648,8 @@ def blocks(M, tasks, ev):
     completed_stage = tasks['language_selective']+[row for row in tasks['language_scaleup']
                                                  if row['args']['fit']==131072]
     stage_bpc=min((row['final']['dev']['bpc'] for row in completed_stage),default=None)
+    data_stage=[row for row in tasks['language_scaleup'] if row['args']['fit']==1048576]
+    data_bpc=min((row['final']['dev']['bpc'] for row in data_stage),default=None)
     lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
     pages.append([
         ("title","Sleeping Machines"),
@@ -637,9 +672,9 @@ def blocks(M, tasks, ev):
          "<b>Learning from fewer examples.</b> Depth-three event chains reach <b>99.73–99.93%</b> "
          "after 2,000 examples seen once; saved Transformer controls reach <b>33.25–40.80%</b> "
          "with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.",
-         f"<b>Learned representations.</b> The persistent language model reaches "
-         f"<b>{tasks['stream_training']['final']['dev']['bpc']:.3f} development bpc</b> in the 8K-character pilot. "
-         +(f"The new 131K-character screen reaches <b>{stage_bpc:.3f}</b>. " if stage_bpc is not None else "")+
+         "<b>Learned representations.</b> Completed temporal-carrier development screens reach "
+         +(f"<b>{stage_bpc:.3f} bpc at 131K</b> " if stage_bpc is not None else "")+
+         (f"and <b>{data_bpc:.3f} at 1M fitting characters</b>, four passes. " if data_bpc is not None else "fitting characters. ")+
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
          "Embeddings, temporal state and vector maps learn."]),
         ("figure",("accomplishments",174)),
@@ -648,7 +683,7 @@ def blocks(M, tasks, ev):
          "reach 100% within 4,000 examples; the control is the best saved result across seven "
          "Transformer configurations and their learning curves. These synthetic tasks use different "
          "architectures and structural priors. Sources: E53/E36 and E61."),
-        ("small","<b>Language scale-up:</b> precision-checked, staged fitting is underway. The comparable "
+        ("small","<b>Language scale-up:</b> the integrated sparse/timed architecture is now prioritized. The comparable "
          "10M-character test remains pending; completed neural controls and costs are in Appendix B.")])
 
     reference_rows=[
@@ -796,6 +831,106 @@ def blocks(M, tasks, ev):
          "give the learning contracts. Clockless delay/race networks compute relative timing relations; "
          "phase arithmetic requires its reference. Each implemented model uses a declared subset. "
          "Candidate discovery and training alternatives are charged to the work ledger.")])
+
+    race_rows=tasks['language_race']
+    pages.append([
+        ('h1','The ambition: useful capacity without proportional activity'),
+        ('p','The proposed shift is to compute through event timing and selectively active paths. '
+         'A larger network should be able to retain more useful dormant structure while spending work '
+         'on the paths a query needs. Counterfactual credit must teach those hard choices, including '
+         'useful alternatives that did not win. The earlier temporal-chain, pointer and phase results '
+         'test parts of this case and remain central evidence.'),
+        ('h2','What temporal softmax actually provides'),
+        ('p','If candidate clocks have rates exp(score), their first-arrival winner has exactly the '
+         'softmax choice probabilities. Competition supplies normalization in time. It can avoid an '
+         'explicit normalizing sum/division in the winner path when those rates are physically available. '
+         'Score formation, candidate discovery, value delivery and learning still cost work. This identity '
+         'is not a measured near-zero-energy attention system.'),
+        ('table',(['Ours: mechanism','Completed evidence or status','What remains'],[
+         ['Temporal chains / hard pointers / phase rules','Strong structured-task accuracy, transfer and work comparisons','Transfer the useful priors to broad learned representations'],
+         ['Temporal content carrier','Learned embeddings, state, gates and delay-dependent transport','Every layer executes; does not demonstrate dormant-unit scaling'],
+         ['Integrated sparse temporal model','Hard races, content memory, sparse state updates and counterfactual teachers pass contracts','Scaling quality and complete learning work are under test'],
+         ['Capacity beyond activity','Gains depend on useful sparsity and learning','Measure marginal useful capacity with bounded active work'],
+        ],[45,67,62])),
+        ('h2','A direct mechanism experiment'),
+        ('p','The prioritized model combines the mechanisms: a character event enters six timed races, '
+         'selecting one persistent content-bearing unit at each depth. Separate state-dependent keys '
+         'set rates; the winner mixes incoming content and retained memory, then emits a vector and '
+         'learned arrival time. Addressed losing values receive counterfactual score credit during '
+         'training. The dense carrier and carrier-plus-retrieval variants remain diagnostic controls.'),
+        ('small','Character-indexed pools and fixed depth are declared priors; learned topology growth '
+         'and unrestricted asynchronous schedules remain open. RNG and physical traffic are additional. The old '
+         'time-normalized value sum has a shared random amplitude; its covariance and cutoff claims '
+         'are corrected beside the original theory, not silently deleted. A centered, conserved teacher '
+         'is now tested. Its fixed-error expected Jacobian is not an unbiased sampled-loss gradient. '
+         'Theory §§294–298: experiments/theory/45_race_attention_and_resource_identity.md.')])
+
+    full_rows=tasks['language_full_sparse']
+    full_blocks=[
+        ('h1','Ours: the integrated sparse temporal language experiment'),
+        ('p','This candidate has no dense language carrier. Each event mixes its embedding with the '
+         'previous deep message and traverses contextual key races. Only selected receivers update '
+         'their persistent rotating/decaying state and emit values. Time is part of the computation; '
+         'inactive receivers are not evaluated on empty ticks.'),
+        ('figure',('full_sparse_language_path',164)),
+        ('p','The first six-depth, 16-dimensional candidate provides 324 units but updates only six '
+         'states per character. Each depth scores two addressed keys; training additionally evaluates '
+         'both candidate values to teach hard choices. Unaddressed pools remain dormant. The capacity '
+         'experiment doubles available units to 648 while retaining six selected state updates. '
+         'Key scoring and counterfactual work still grow and are charged.'),
+        ('p','Checks establish causal predictions, identical chunked execution, precise clocks at '
+         '10M positions, equality of training forward values and winner-only inference, learned '
+         'key/value/memory gradients and conserved route credit. The smoke fit learns, but is not a '
+         'quality benchmark. The active ladder increases data and tests capacity before larger promotion.'),
+        ('small','Fixed observed-character pools, bounded delays and six sequential event depths; '
+         'no learned topology or complete frontier-language claim. Interior arrival-time derivatives '
+         'and counterfactual score surrogates have distinct scope. FLOPs include teaching alternatives '
+         'and optimizer work; representative sparse traces do not certify whole-run instruction or '
+         'energy counts. Theory §§299–302; source: sleeping_machines/sparse_race_language.py.')]
+    pages.append(full_blocks)
+    if full_rows:
+        pages.append([
+            ('h1','Ours: completed integrated-language stages'),
+            ('table',(['Ours: fit / pool','Development bpc ↓','Fitting GFLOPs ↓','Capacity / active units'],[
+             [f"{row['args']['fit']:,} / {row['args']['pool']}",f"{row['final']['dev']['bpc']:.3f}",
+              f"{row['work']['total_training_arithmetic_flops']/1e9:.2f}",
+              f"{row['capacity_units']} / {row['args']['depth']}"] for row in full_rows],[44,38,44,48])),
+            ('p','These are the integrated model stages, with identical cold development targets. '
+             'Each character selects one unit at each depth; addressed alternatives teach the races. '
+             'Capacity and selected activity are different counts. The fitting ledger includes '
+             'counterfactual values, backward, clipping and Adam.'),
+            ('p','Quality, data efficiency and work must be judged together. Completed earlier carrier '
+             'results remain preserved. Comparing these models also changes payload size, capacity '
+             'and truncated credit, so a score difference does not isolate one mechanism. '
+             'No official test or energy measurement is implied.'),
+            ('small','One seed; observed-character index; no statistical expert. Whole-stream candidate '
+             'scores, selected updates and teaching visits are recorded. Arithmetic is a representative '
+             'saved-parameter extrapolation; sparse optimizer activity depends on the actual input '
+             'and credit history. RNG, indexing and memory traffic are separate. Source: '
+             'experiments/results/parallel_language/local_full_sparse_language_*.json.')])
+
+    if race_rows:
+        pages.append([
+            ('h1','Ours: matched indexed language retrieval'),
+            ('p','Completed development-only results. The unchanged carrier is fitted jointly with '
+             'retrieval maps. Race and softmax arms share the index, payload and initialization. '
+             'These scores do not establish official-test or frontier superiority.'),
+            ('table',(['Ours: attention / fit','Development bpc ↓','Fitting TFLOPs ↓','Value deliveries / query ↓'],[
+             [row['args']['attention']+f" / {row['args']['fit']:,}",
+              f"{row['final']['dev']['bpc']:.3f}",
+              f"{row['work']['total_training_arithmetic_flops']/1e12:.3f}",
+              f"{row['final']['dev']['delivered_values']/max(1,row['final']['dev']['retrieval_queries']):.2f}"]
+             for row in race_rows],[60,36,37,41])),
+            ('p','Winner delivery limits forward value messages, while counterfactual score teaching '
+             'visits shortlisted alternatives during training. The retrieval index is supplied by '
+             'observed character identity; candidate quality is an empirical question. All six carrier '
+             'layers still execute. Four winners need not be cheaper than short candidate lists.'),
+            ('small','Identical cold development intervals, first target excluded; frozen development '
+             'weights with a fixed race noise stream; 64-character truncated credit. FLOPs are '
+             'representative saved-parameter complete-step estimates. Candidate occupancy is not '
+             'traced exactly throughout the fit; result files also include a separately labelled '
+             'synthetic saturated-index scenario. RNG and emulator memory traffic are additional. '
+             'Source: experiments/results/parallel_language/local_indexed_language_*.json.')])
 
     pages.append([
         ("h1","A demonstrated advantage: generalization with less work"),

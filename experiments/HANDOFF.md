@@ -1,5 +1,66 @@
 # Session handoff — 2026-09-30
 
+## Priority update — integrated architecture, 17:54 UTC
+
+The user explicitly prioritizes full architectural experiments over carrier-only
+or hybrid half-measures. Active tmux/manifest/log:
+`local_full_sparse_ladder_20260930T175400Z`. Inspect its live state first.
+It runs one guarded job at a time: full sparse payload-16/depth-6/pool-2 fits at
+8K then 32K characters; pool-4 capacity comparison at 8K; gated 131K then 1M
+data stages. All use four passes, seed 6, 8,192 cold development characters,
+16-character truncated credit and no official test. Gates stop weak learning
+for diagnosis, rather than promoting automatically to a long benchmark.
+
+`sleeping_machines/sparse_race_language.py` has no dense language carrier.
+Content/state keys set exponential clocks; a winner mixes incoming content and
+persistent state and emits a timed value at each depth. Exactly six receiver
+states update per character from 324 available units (648 in the capacity arm).
+Two/four keys per depth are scored. Training evaluates addressed losing values
+for a conserved centered score teacher, and charges those reads. The fixed
+character index, bounded-delay graph and local surrogate are declared limits.
+No learned topology growth, complete sparse attention equivalence or measured
+hardware energy is claimed. Theory §§299–302 defines the integrated contract.
+
+Completed contracts: `parallel_language/local_sparse_contract_20260930T175000Z.json`.
+Causal predictions, identical chunking and large-origin execution, equality of
+training forward and winner-only inference, key/value/time/retention gradients,
+sparse state updates and conserved teacher passed. Smoke:
+`local_sparse_smoke_20260930T175000Z.json`, 1,024 fitting characters, one pass,
+payload 8/depth 3, 5.482 to 5.140 development bpc; 35.872M estimated fitting
+arithmetic. This is implementation verification, not benchmark quality.
+
+The earlier carrier ladder is `paused_for_integrated_architecture`.
+Width-128/1M completed at 2.210279 development bpc, 8.324920T fitting arithmetic,
+2,151.37 seconds; report commit `1d9f72e`. Width-256/1M was paused in epoch 2
+at the 245,760-target checkpoint, preserving exact sources/settings/checkpoint.
+Its old coordinator was stopped and removed after its guarded child exited.
+Do not mistake the old manifest's official queues for active priority.
+The user requested that the dense control evidence remain preserved.
+
+The hybrid indexed retrieval candidate and softmax counterpart remain deferred
+diagnostics: `race_language.py`, `race_language_screen.py`; both pass contracts
+and 4K-character smoke fits. The first smoke stopped safely on an unsupported
+matrix-vector audit formula; corrected v2 adds explicit 2-FLOP/MAC matrix-vector,
+dot and outer-product formulas. Original failed logs/checkpoint are retained.
+No failed smoke score is a completed benchmark result.
+
+Historical temporal softmax is an exact choice-probability identity, not proof
+of free whole attention. §102's shared-clock covariance bound and clock-cutoff
+scope were incorrect; explicit corrections sit beside the originals, and
+§§294–298 derives the centered conserved teacher. Preserve all earlier valid
+structured-task comparisons. The breadth table's eight-layer versus two-layer
+training ratios do not describe the larger language comparison. FLOPs, seconds
+and physical joules have distinct boundaries.
+
+Do not edit any contract-locked model/driver sources during this ladder.
+Report hooks commit completed stages on main only, after layout/source checks.
+Keep report edits committed before a stage ends. The report now makes the full
+ambition and mechanism coverage explicit, with a diagram of capacity versus
+selected activity. Push commits from the authenticated host.
+
+The sections below preserve the previous campaign/history; this priority update
+supersedes their descriptions of what is active.
+
 Work on `main`. The user authorized committing and pushing all work, wants one
 presentable PDF, and intends to start a fresh session. Preserve the established
 architecture, theory and historical results; extend them with new evidence.

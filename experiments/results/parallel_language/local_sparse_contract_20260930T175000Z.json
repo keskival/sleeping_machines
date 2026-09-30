@@ -1,0 +1,44 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_sparse_contract_20260930T175000Z"
+  },
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26"
+  },
+  "partition_error": 0.0,
+  "origin_error": 0.0,
+  "training_forward_equals_winner_inference": true,
+  "causality": true,
+  "capacity_units": 162,
+  "active_units_per_token": 3,
+  "candidate_scores": 96,
+  "counterfactual_values": 96,
+  "gradient_norm_totals": {
+    "other": 3.4087829530326417,
+    "query": 0.011534895049408078,
+    "key": 0.04642869123199489,
+    "clock": 0.041765848829527386,
+    "memory": 0.00495673471596092,
+    "value": 0.7863024715334177
+  },
+  "timing_gradient": "passed",
+  "conserved_value_credit": "passed",
+  "wall_s": 0.7368997560115531,
+  "max_rss_kb": 315508,
+  "scope": "Integrated hard routing, sparse state updates, timed payloads and counterfactual learning; numerical contracts, not quality or energy evidence."
+}

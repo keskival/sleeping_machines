@@ -1,0 +1,1 @@
+local_full_sparse_language_D32768_p2_20260930T175400Z experiments/sparse_language_screen.py --tag local_full_sparse_language_D32768_p2_20260930T175400Z --contracts experiments/results/parallel_language/local_sparse_contract_20260930T175000Z.json --fit 32768 --dev 8192 --epochs 4 --payload 16 --depth 6 --pool 2

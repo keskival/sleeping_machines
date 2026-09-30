@@ -1,0 +1,62 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_race_contract_v2_20260930T173830Z"
+  },
+  "checks": [
+    {
+      "arm": "race",
+      "partition_error": 3.5762786865234375e-07,
+      "origin_error": 0.0,
+      "gradient_norms": {
+        "query.weight": 0.00011836138583021238,
+        "key.weight": 0.00011375586473150179,
+        "value.weight": 0.045682527124881744,
+        "readout.weight": 0.37119948863983154
+      },
+      "causality": "passed",
+      "bounded_index": "passed",
+      "winner_delivery": "passed"
+    },
+    {
+      "arm": "softmax",
+      "partition_error": 2.384185791015625e-07,
+      "origin_error": 0.0,
+      "gradient_norms": {
+        "query.weight": 0.00015203807561192662,
+        "key.weight": 0.0001254266535397619,
+        "value.weight": 0.02970023639500141,
+        "readout.weight": 0.3301517069339752
+      },
+      "causality": "passed",
+      "bounded_index": "passed",
+      "winner_delivery": "passed"
+    }
+  ],
+  "winner_probability_error": 0.0012068196386099406,
+  "teacher_expected_jacobian_error": 0.0059980352215138755,
+  "teacher_credit_conservation_error": 3.1086244689504383e-15,
+  "historical_shared_clock_variance": 1.0162756766140881,
+  "source_sha256": {
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec"
+  },
+  "wall_s": 0.6198621599760372,
+  "max_rss_kb": 321428,
+  "hardware": {
+    "device": "cpu",
+    "threads": 1,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41"
+  },
+  "scope": "Numerical contracts only. Fixed-cotangent expected output Jacobian, not unbiased sampled-loss gradient or quality evidence."
+}

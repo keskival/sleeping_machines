@@ -1,0 +1,1 @@
+local_sparse_smoke_20260930T175000Z experiments/sparse_language_screen.py --tag local_sparse_smoke_20260930T175000Z --contracts experiments/results/parallel_language/local_sparse_contract_20260930T175000Z.json --fit 1024 --dev 256 --epochs 1 --payload 8 --depth 3 --pool 2
