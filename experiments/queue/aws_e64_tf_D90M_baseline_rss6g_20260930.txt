@@ -1,0 +1,1 @@
+aws_e64_tf_D90M_baseline_rss6g_20260930 experiments/aws_benchmark.py --run-tag aws_e64_tf_D90M_baseline_rss6g_20260930 --script experiments/e64_lm_baselines.py -- --model tf --D 90000000 --size 256 --layers 4 --passes 4 --dropout 0.1 --valid 200000

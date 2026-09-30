@@ -46,6 +46,32 @@
     "timeout_s": 259200
   },
   {
+    "run_tag": "aws_e64_tf_D90M_baseline_rss6g_20260930",
+    "script": "experiments/e64_lm_baselines.py",
+    "arguments": [
+      "--model",
+      "tf",
+      "--D",
+      "90000000",
+      "--size",
+      "256",
+      "--layers",
+      "4",
+      "--passes",
+      "4",
+      "--dropout",
+      "0.1",
+      "--valid",
+      "200000"
+    ],
+    "sources": [
+      "e64b.txt"
+    ],
+    "timeout_s": 259200,
+    "mem_cap_kb": 10000000,
+    "rss_cap_kb": 6000000
+  },
+  {
     "run_tag": "aws_e36_tf_e28_long_20260929",
     "script": "experiments/e36_transformer.py",
     "arguments": [

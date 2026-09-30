@@ -16,6 +16,7 @@ import torch.nn as nn
 
 sys.path.insert(0, os.path.dirname(__file__))
 import e62_charlm as S1  # noqa: E402
+from lm_training_flops import estimate_training_flops
 
 torch.set_num_threads(1)
 OUT = os.path.join(os.path.dirname(__file__), "results", "e64")
@@ -147,7 +148,8 @@ def main():
            "train_stage_tokens_per_s": round(steps * B * T / max(train_stage_s, 1e-9), 1),
            "valid_curve": vcurve, "best_step": best[2],
            "best_valid_bpc": best[0] if best[1] is not None else None,
-           "wall_s": round(time.time() - t0, 1)}
+           "wall_s": round(time.time() - t0, 1),
+           "training_flops_estimate": estimate_training_flops(vars(a), nparam, steps, A)}
     if device.type == "cuda":
         res["gpu_peak_allocated_gib"] = round(torch.cuda.max_memory_allocated(device) / (1024 ** 3), 3)
     print(json.dumps(res), flush=True)
