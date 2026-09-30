@@ -1,0 +1,15 @@
+{
+  "status": "completed",
+  "commutator_identity_max_error": 0.0,
+  "connected_five_coordinate_lie_dimension": 10,
+  "disconnected_three_plus_two_dimension": 4,
+  "same_scalar_trace_different_anisotropic_capacity": [
+    1.0,
+    0.0
+  ],
+  "isotropic_scalar_reserve_preserved": true,
+  "source_sha256": {
+    "/workspace/experiments/e136_reachability_contract.py": "66fc79995dbca32ac4bbde7185f773aa09028a1c619322dc53667aa159f9acb7"
+  },
+  "scope": "Static Lie closure with freely revisitable edges, and a scalar-trace counterexample. Does not prove causal event-schedule controllability or trained SHD performance. A state-conditioned scalar critic can encode alignment beyond trace."
+}
