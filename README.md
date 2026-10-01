@@ -80,6 +80,17 @@ whole-fit work** than the saved KV construction at **0.032 bpc worse** developme
 quality; it is a near-quality resource tradeoff, not established language supremacy.
 The report retains those distinctions and the negative depth/residual findings.
 
+The [first cross-domain screen](experiments/FIRST_SCREEN_FINDINGS_20261001.md)
+finds a promising **95.3% versus93.0% banknote accuracy /33% lower log loss**
+for ours versus the boosted-tree screen (128 development rows, one seed).
+Wine currently favors trees, and extra reception has not earned its cost.
+The [admitted next AWS battery](experiments/AWS_SPLIT_EVENT_BATTERY.md) tests
+protected memory, shared rules/private state and identifiable elapsed time.
+The [advantage battery](experiments/ADVANTAGE_BATTERY.md) defines promotion,
+recognized-domain comparisons and [chronological learning](experiments/NONSTATIONARY_PROTOCOL.md).
+The [generator-to-receiver analysis](experiments/theory/56_generator_to_receiver_requirements.md)
+derives necessary information paths rather than relying only on ablation.
+
 Our hypothesis is **more capability per unit of active work**. Temporal races
 can approximate attention while avoiding selected arithmetic and value
 aggregation; evolving state and useful dormant modules may reduce the width,

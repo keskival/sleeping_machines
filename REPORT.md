@@ -23,7 +23,21 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
 
-**Language scale-up:** the integrated sparse/timed architecture is now prioritized. The comparable 10M-character test remains pending; completed neural controls and costs are in Appendix B.
+**New integrated evidence:** banknote pilot **ours 95.3% versus trees 93.0%**; native language uses **6.02× less counted fitting work** than the saved KV model at0.032bpc worse. Protocols and limits follow on the next page; comparable10M language remains pending.
+
+## New evidence: quality and complete work
+
+**Tabular quality signal.** Ours reaches **95.31%** banknote accuracy versus **92.97%** for the boosted-tree screen, with **33.0% lower log loss** (0.155 versus 0.232). The native eight-block model mixes content and memory through parallel temporal receiver heads. Added R2 reception performs worse, shown alongside it.
+
+![banknote first screen](report/figures/banknote_first_screen.png)
+
+128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. This is an exploratory quality advantage; independent test and repeated seeds are pending. Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.
+
+**A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
+
+**What the next tests must repair.** State clearing damages learned order predictions, yet stretching silent gaps also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels cannot be inferred from rank alone.
+
+Wine regression currently favors trees: RMSE0.649 versus ours0.824. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.
 
 ## A general architecture for content, time and selective activity
 
@@ -725,10 +739,12 @@ Independent feature-ID rows, state reset between rows, train-only scaling and du
 
 | Model | Fit/dev rows | Dev NLL / RMSE ↓ | Dev accuracy / MAE | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
 | --- | --- | --- | --- | --- | --- | --- |
+| Ours R0 | 128/128 | 0.8238 | 0.6422 | 0.816 | 1.594 | 0.341 |
 | Boosted trees | 128/128 | 0.6489 | 0.4890 | Not counted | Not counted | Not counted |
 
 | Model | All fit wall s | Peak RSS MiB | Tree nodes / bytes |
 | --- | --- | --- | --- |
+| Ours R0 | 2553.48 | 468.1 | Not applicable |
 | Boosted trees | 0.11 | 404.3 | 464/25,984 |
 
 Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.

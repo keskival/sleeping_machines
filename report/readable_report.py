@@ -137,6 +137,12 @@ def results():
             if path.exists():
                 r=json.loads(path.read_text())
                 if r.get('status')=='completed' and 'final' in r:tasks['gym_screen'].append(dict(job=job,result=r))
+    tasks['split_screen']=[]
+    for path in sorted((RES/'event_variants').glob('*_pilot.json')):
+        r=json.loads(path.read_text())
+        if (r.get('status')=='completed' and 'final' in r
+                and r['args']['fit_targets']>=128 and r['args']['epochs']>=4):
+            tasks['split_screen'].append(r)
     tasks['native_tabular']=[]
     for path in sorted((RES/'native_tabular').glob('*.json')):
         if path.name.endswith('.running.json'):continue
@@ -405,6 +411,20 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
+              and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')]
+    if banknote:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.35))
+        names=['Ours R'+str(r['args']['clock_features']) if r['args']['model']=='ours' else 'Boosted trees' for r in banknote]
+        colors=[blue if r['args']['model']=='ours' else orange for r in banknote]
+        for axis,metric,scale,label in zip(axes,('accuracy','nll'),(100,1),('Development accuracy (%) ↑','Development log loss ↓')):
+            values=[r['final']['dev'][metric]*scale for r in banknote]
+            axis.bar(range(len(values)),values,color=colors,width=.6)
+            axis.set_xticks(range(len(values)),names,fontsize=8)
+            axis.set_ylabel(label);axis.grid(axis='x',visible=False)
+            axis.set_ylim(0,max(values)*1.2)
+            for j,value in enumerate(values):axis.text(j,value+max(values)*.025,f'{value:.2f}',ha='center',fontsize=9)
+        f.tight_layout();save(f,'banknote_first_screen')
     for domain in ('temporal','language'):
         records=[r for r in tasks.get('gym_screen',[]) if r['job']['domain']==domain]
         if records:
@@ -1254,8 +1274,39 @@ def blocks(M, tasks, ev):
          "reach 100% within 4,000 examples; the control is the best saved result across seven "
          "Transformer configurations and their learning curves. These synthetic tasks use different "
          "architectures and structural priors. Sources: E53/E36 and E61."),
-        ("small","<b>Language scale-up:</b> the integrated sparse/timed architecture is now prioritized. The comparable "
-         "10M-character test remains pending; completed neural controls and costs are in Appendix B.")])
+        ("small","<b>New integrated evidence:</b> banknote pilot <b>ours 95.3% versus trees 93.0%</b>; "
+         "native language uses <b>6.02× less counted fitting work</b> than the saved KV model at0.032bpc worse. "
+         "Protocols and limits follow on the next page; comparable10M language remains pending.")])
+
+    banknote={r['args']['model']+str(r['args']['clock_features']):r for r in tasks.get('native_tabular',[])
+              if r['args']['dataset']=='banknote' and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')}
+    if 'ours0' in banknote and 'trees0' in banknote:
+        if any(banknote['ours0']['protocol'][k]!=banknote['trees0']['protocol'][k]
+               for k in ('raw_sha256','fit_sha256','dev_sha256','fit_indices','dev_indices')):
+            raise ValueError('Opening banknote comparison requires identical fitting/development data')
+        ours,trees=banknote['ours0']['final']['dev'],banknote['trees0']['final']['dev']
+        gain=100*(1-ours['nll']/trees['nll'])
+        pages.append([
+            ('h1','New evidence: quality and complete work'),
+            ('p',f'<b>Tabular quality signal.</b> Ours reaches <b>{100*ours["accuracy"]:.2f}%</b> banknote accuracy versus '
+             f'<b>{100*trees["accuracy"]:.2f}%</b> for the boosted-tree screen, with <b>{gain:.1f}% lower log loss</b> '
+             f'({ours["nll"]:.3f} versus {trees["nll"]:.3f}). The native eight-block model mixes content and memory '
+             'through parallel temporal receiver heads. Added R2 reception performs worse, shown alongside it.'),
+            ('figure',('banknote_first_screen',174)),
+            ('small','128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. '
+             'Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. '
+             'This is an exploratory quality advantage; independent test and repeated seeds are pending. '
+             'Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.'),
+            ('p','<b>A near-quality language work advantage.</b> Ours native2K uses <b>3.78 whole-fit GFLOPs</b> versus '
+             '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
+             'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
+             'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
+            ('p','<b>What the next tests must repair.</b> State clearing damages learned order predictions, yet stretching silent gaps '
+             'also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. '
+             'The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels '
+             'cannot be inferred from rank alone.'),
+            ('small','Wine regression currently favors trees: RMSE0.649 versus ours0.824. Strong synthetic order/retrieval evidence '
+             'on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.')])
 
     reference_rows=[
         ["Ours: learned event-state model (planned)", "10M / four passes", "Pending", "Pending"],
@@ -2254,6 +2305,28 @@ def blocks(M, tasks, ev):
                     'available state grows, but fixed queries reduce per-source training exposure. The 64-source '
                     'development set has one population; its collapsed bootstrap interval is not useful uncertainty.'))
 
+    for task in ('order','paired_timing'):
+        selected=[r for r in tasks.get('split_screen',[]) if r['args']['task']==task]
+        for begin in range(0,len(selected),5):
+            records=selected[begin:begin+5];rows=[];activity=[]
+            for r in records:
+                a,w,d=r['args'],r['work'],r['final']['dev']
+                name=f'Ours S{a["sources"]} '+('shared' if a['shared_maps'] else 'private')+f'/P{a["protected_pairs"]}/{a["time_input"]}'
+                rows.append([name,f'{100*d["accuracy"]:.2f}',f'{d["nll"]:.4f}',f'{w["total_training_unit_special_flops"]/1e9:.3f}',
+                             f'{w["total_training_unit_special_flops"]/w["fitting_query_targets"]/1e6:.3f}',
+                             f'{(w["inference_arithmetic_flops_per_query"]+w["inference_special_functions_per_query"])/1e6:.3f}'])
+                activity.append([name,f'{a["fit_targets"]}/{a["dev_targets"]}/{a["epochs"]}',f'{r["parameters"]:,}',
+                                 str(w['available_receivers']),f'{w["selected_updates_per_event"]}/{w["key_scores_per_event"]}'])
+            pages.append([('h1','Appendix B. Protected state/shared rules: '+task),
+                ('p','Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. '
+                 'Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order '
+                 'identical while labels differ; rank-only prediction has an exact50% paired ceiling under coupled noise.'),
+                ('table',(['Construction','Dev accuracy%','Dev NLL','Whole fit GFLOPs','Fit MFLOPs/query','Infer MFLOPs/query'],rows,[48,25,21,27,27,26])),
+                ('table',(['Construction','Fit/dev/passes','Parameters','State slots','Updates/scores per event'],activity,[48,32,28,25,41])),
+                ('small','Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. '
+                 'Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster '
+                 'initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.')])
+
     for dataset in ('banknote','wine_red'):
         rows=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']==dataset]
         for begin in range(0,len(rows),6):
@@ -3180,7 +3253,9 @@ def blocks(M, tasks, ev):
          'be charged when present. Bounded candidate search is a separate coverage hypothesis. '
          'See theory note 48, §§313–323; measured quality/work curves remain in the appendix.'),
     ]]
-    pages[1:1]=architectural_pages
+    # Put new completed evidence immediately after the cover, before hypotheses.
+    opening_index=2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1
+    pages[opening_index:opening_index]=architectural_pages
     return pages
 
 

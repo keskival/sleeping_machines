@@ -1,5 +1,41 @@
 # Local host: current research continuation
 
+## First-screen interpretation and next battery, 1 October, 23:14 UTC
+
+Sixteen of17 first AWS pilots are published locally; wine R2 is pending.
+All16 source fingerprints match. Banknote data/split fingerprints match ours
+and trees:95.3125%/.155305 NLL versus92.96875%/.231868, a three-example
+accuracy lead and33.0% lower loss. This is a single-seed dev quality signal;
+tree work is uncounted and its CPU fitting is much faster. Wine R0 RMSE.823788
+loses to tree.648887 and worsens after selected epoch2; do not blindly lengthen
+that fit. FIRST_SCREEN_FINDINGS_20261001.md preserves every contrast and scope.
+
+REPORT/PDF promotes banknote quality and the native/KV6.02x counted-work
+tradeoff to the cover/page2, retaining all older strong synthetic evidence.
+New completed event_variants pilots will populate separate quality/work/activity
+ledgers; contracts/smokes cannot populate them. Protected-prefix initialization
+removes faster initial temporal modes as well as introducing retention;
+note53 now states this confound without changing frozen model sources.
+
+The AWS host has already prepared/reserved11 pilots/33 guarded stages:
+AWS_SPLIT_EVENT_BATTERY.md and aws_split_event_20261001T230029Z. Prefer that
+coordinated plan. Earlier local draft aws_split_screen_v1_20261001T225000Z is
+retained as superseded/unlaunched; do not start it. The broad ADVANTAGE_BATTERY
+links the admitted queue and conditional real-event/tabular/language/online
+promotions. NONSTATIONARY_PROTOCOL defines causal pre-update scoring, drift
+and forgetting; its new adapters are pending, not invented completed TTT.
+
+Theory notes54–56 turn the generator/receptor intuition into task-weighted
+tangent alignment, sufficient messages, predictive spectra, hierarchical
+conditional moments and necessary operator/state witnesses. Eleven read-only
+model/analytical tests pass; optimizer contracts stay guarded AWS prerequisites.
+
+Local delay recovery remains healthy and serial. R2/R4/late2K are completed:
+3.795698/3.794673/3.794863bpc, all worse than native3.764712. R4 waiting2K is
+running; await its result and frozen quality gates. Sources are unchanged.
+No extra trainer was launched. Core gaps remain fixed addresses/forced
+activity, full producer graphs, surrogate loser credit and physical hardware.
+
 Use this file for future local progress updates. HANDOFF.md preserves the shared
 history and AWS-host notes; append here to avoid competing end-of-file commits.
 Do not modify running model/driver/helper sources or reuse changed run tags.
