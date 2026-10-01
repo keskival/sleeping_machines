@@ -1,0 +1,8 @@
+{
+  "predecessor_pid": 371111,
+  "command": "/workspace/.venv-docker/bin/python -u scripts/run_aws_non_shd.py ",
+  "start_ticks": "8772040",
+  "current_job": "aws_e19_race_res_d4_P64000_20260929",
+  "reason": "User requests new benchmark protocol after depth4; suspend coordinator only pending protocol identification",
+  "created_utc": "20261001T211941Z"
+}

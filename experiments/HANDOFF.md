@@ -1006,3 +1006,22 @@ The bounded coordinator adopts the PID178293 reservation and resumes that
 coordinator in finally. Read its same-stem status/log; do not modify its frozen
 sources or start another trainer. Tabular and real robotics adapters/matrices
 are independent next work and not included as invented jobs in this manifest.
+
+
+## AWS next-slot reservation — 1 October, 21:21 UTC
+
+User requests the new benchmark protocol immediately after the current residual
+depth4/64K run. Pulled/rebased main through e343c69. New AWS follow-up protocol
+was not found in that revision; request its filename/commit before selecting
+training. The new local delay-feature manifest requires another host's exact
+PID178293 reservation and must not be launched here.
+
+Only AWS coordinator PID371111 (`scripts/run_aws_non_shd.py`) is SIGSTOP-reserved;
+its active depth4 runner/trainer/watchdog are untouched and continue normally.
+Reservation identity is saved in
+`experiments/queue/aws_after_depth4_20261001T211941Z.reservation.json`.
+Do not resume the coordinator before choosing the requested replacement, since
+it would immediately start the old manifest's next job. When depth4 finishes,
+preserve/publish its result and progress explicitly, or arrange coordinator
+publication without allowing an additional old-manifest fit. No second trainer
+or replacement supervisor has been started. Host MemAvailable ~29 GiB; no GPU.
