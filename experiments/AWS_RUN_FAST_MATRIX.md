@@ -69,3 +69,37 @@ report edits through one publisher; the gym worker intentionally does not push,
 edit the PDF or pretend incomplete runs succeeded. Summarize paired comparisons
 and negative results as well as wins. New Transformer/LSTM fits remain AWS work,
 but must use their own declared protocols rather than unimplemented matrix cells.
+
+
+## Measured AWS memory recovery — 1 October
+
+The original attempt1 is preserved as needs_review: its64-source contract
+was stopped at2,593,472KiB groupRSS against2,499,584KiB. The identical
+contract passed under a uniquely named guarded memory probe, with peak
+processRSS2,585,864KiB and39.067s wall. This identifies an inadequate cap,
+not a failed numerical assertion or a reason to change the architecture.
+
+Recovery plan:
+`gym/plans/aws_fast_matrix_recovery_20261001T213409Z/manifest.json`.
+It reuses eleven completed unchanged checks, including the memory probe;
+all other stages have fresh tags/queues. Sources/models, data, passes,
+activity and optimizer windows are unchanged.64-source stages use4GiB RSS
+and6GiB VMS; other stages retain2441MiB RSS/3907MiB VMS. Keep the8GiB
+available-memory floor and all guards. These caps apply to this measured
+32GiB CPU host, not arbitrary workers.
+
+`run_aws_matrix_recovery.py` runs every remaining contract/smoke before
+pilots, validates finite numbers and complete operator coverage, checks
+smoke RSS headroom, and commits/rebases/pushes each completed result before
+starting the next job. No separate Git watcher is necessary. Failures are
+preserved in a separate versioned failure record and stop the worker.
+Previous lifecycle/status/logs remain intact. REPORT/PDF ownership stays
+with the coordinated report publisher. No speculative larger promotion.
+
+```bash
+tmux new-session -d -s aws-fast-matrix-recovery-20261001T213409Z '.venv-docker/bin/python -u scripts/run_aws_matrix_recovery.py --manifest experiments/gym/plans/aws_fast_matrix_recovery_20261001T213409Z/manifest.json >> experiments/queue/aws_fast_matrix_recovery_20261001T213409Z.out 2>&1'
+```
+
+Worker status lives beside that manifest as `worker_recovery.status.json`.
+Same-host parallelism remains disabled unless the user explicitly replaces
+the one-job-per-host rule and a bounded scheduler/lock protocol is installed.

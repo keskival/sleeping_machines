@@ -1114,3 +1114,26 @@ pilots launched. Diagnose graph retention/workload and choose measured host
 capacity caps or a separately named recovery before resuming; do not bypass
 failed prerequisites or overwrite the original lifecycle. Host had~29GiB
 available, so a measured cap revision may be feasible while retaining8GiB.
+
+
+## AWS measured matrix recovery — 1 October, 21:35 UTC
+
+Unchanged64-source contract passed in unique memory probe
+`aws_fast_matrix_memory64_20261001T213208Z`: peakRSS2,585,864KiB,39.067s.
+No source/model/credit/data/optimizer change. New prioritized recovery:
+`experiments/gym/plans/aws_fast_matrix_recovery_20261001T213409Z/manifest.json`,
+worker `scripts/run_aws_matrix_recovery.py`, tmux
+`aws-fast-matrix-recovery-20261001T213409Z`, log
+`experiments/queue/aws_fast_matrix_recovery_20261001T213409Z.out`.
+Reuses eleven completed checks; remaining stages have new tags/queues.
+64-source caps are4GiB RSS/6GiB VMS, derived from measurement with headroom;
+other stages retain2441MiB RSS/3907MiB VMS. Host~29GiB available,16 logical
+CPUs,no GPU.8GiB memory floor, watchdogs and one-job lock remain enabled.
+
+Per-result publication now occurs inside the serial worker, before its next
+job, eliminating the separate publication watcher. Complete operator-coverage,
+finite-result, prerequisite/hash and smoke RSS checks precede pilots. Failed
+stages stop and preserve a versioned failure record; original attempt1 and
+its watchdog failure are unchanged. Shared report updates remain with the
+other host publisher. User asks about parallelism; explicit override of the
+one-job-per-host rule is pending. Do not change that rule based on RAM alone.

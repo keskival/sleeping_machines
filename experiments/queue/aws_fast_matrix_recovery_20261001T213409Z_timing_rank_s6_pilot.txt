@@ -1,0 +1,1 @@
+aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot experiments/native_event_benchmark.py --tag aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot --task timing --credit counterfactual --time-input rank --sources 4 --depth 8 --payload 8 --heads 2 --pool 2 --seed 6 --fit-targets 128 --dev-targets 64 --epochs 4 --update-targets 64

@@ -1,0 +1,1 @@
+aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke experiments/native_tabular_benchmark.py --tag aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke --dataset banknote --model trees --clock-features 0 --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit 16 --dev 16 --epochs 1

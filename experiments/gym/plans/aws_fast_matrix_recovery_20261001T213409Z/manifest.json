@@ -1,0 +1,1128 @@
+{
+  "schema": 1,
+  "status": "prepared_not_started",
+  "run_prefix": "aws_fast_matrix_recovery_20261001T213409Z",
+  "jobs": [
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts",
+      "domain": "temporal",
+      "variant": "timing_full",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts.txt",
+      "queue_sha256": "f8d54fc0786455c92ff954f9246e7a05b1ca8bd0c10e6e782c3e3df7c7cfb996",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke",
+      "domain": "temporal",
+      "variant": "timing_full",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke.txt",
+      "queue_sha256": "0df645e8bb7fd11599ba97c246a4d58fd1b3d1b6d0f4039963090d133673ab5f",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_timing_full_s6_pilot",
+      "domain": "temporal",
+      "variant": "timing_full",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_timing_full_s6_pilot.txt",
+      "queue_sha256": "7c57cd00e32d3478fc9d37babd89ed6604ad1fc7089439fc287eb8535e49c2db",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_timing_full_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts",
+        "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts",
+      "domain": "temporal",
+      "variant": "timing_rank",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts.txt",
+      "queue_sha256": "55b2cfc449970ce25fca87cf9dd642c73db23570e9d4d37f751cf70013b1abb8",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke",
+      "domain": "temporal",
+      "variant": "timing_rank",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke.txt",
+      "queue_sha256": "e6d5cf5a3f5d36a3ec243e3831467ca7eb41717b96a799a4ad4a1c89a6bdc99e",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot",
+      "domain": "temporal",
+      "variant": "timing_rank",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot.txt",
+      "queue_sha256": "8c12914be53ad3f658d2230b6c28ab2fea69d9a2c07ff84b0e0f47ab14139abe",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts",
+        "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_full",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts.txt",
+      "queue_sha256": "99b04cbf794b9a8c969a95425e56422f5f68b6f58896158779cbca7842970f97",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_full",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke.txt",
+      "queue_sha256": "f05ee7148b20d1d34dd01cd6e724173f9a89350bdbbb7c315ab73d7f43741aec",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_full_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_full",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_full_s6_pilot.txt",
+      "queue_sha256": "0ab48492cfb1c2b3f6043dcd44023e2a8d1ab68d09e9c1e04d6e134a468d3f9f",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_full_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts",
+        "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_pathwise",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts.txt",
+      "queue_sha256": "bba925abf6bffa2f14e91e226da75c669508a96a7bc77d09ae7fa77acbb3f532",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_pathwise",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke.txt",
+      "queue_sha256": "54d432c6fbef16ed7fbd292392f39f4a2bcd8fa53845574f5f2b1ffe5bf85654",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_pathwise_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_pathwise",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_pathwise_s6_pilot.txt",
+      "queue_sha256": "35e4d12c3a1413101750f74035d01355eb58aed650eb60882586c217426f9e21",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_pathwise_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts",
+        "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_sources16",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts.txt",
+      "queue_sha256": "80bf60ee76e1138aab97cf5d8078d0eb12f0b1e8fa286404b533e2c9be11191a",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_sources16",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke.txt",
+      "queue_sha256": "7b6056ac20e1d725ea2a4ca180fe60d02a6a38027597866c433aedf9e15dfd1b",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources16_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_sources16",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_sources16_s6_pilot.txt",
+      "queue_sha256": "76c1fc6c1356982f7956292ef0183cf66691aec9c36ed8d3198f622535802075",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources16_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts",
+        "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_memory64_20261001T213208Z",
+      "domain": "temporal",
+      "variant": "order_sources64",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_memory64_20261001T213208Z.txt",
+      "queue_sha256": "9cf4b9c6c8419abc574c14937ddd97016cb43ac67eb04b39a18706c9e3b5952f",
+      "result": "experiments/results/native_event/aws_fast_matrix_memory64_20261001T213208Z.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_sources64",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke.txt",
+      "queue_sha256": "fc2fea4b776289d7fa56052ff9841c8bebef5d90bd6923b01dd7b61ae42398eb",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_memory64_20261001T213208Z"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_sources64",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_pilot.txt",
+      "queue_sha256": "04b58d611984ab02bffd5f0229ce9cdcb6c1d059186ff693c7669dcc532528bf",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_memory64_20261001T213208Z",
+        "aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_shallow_control",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts.txt",
+      "queue_sha256": "6e81164bbb66ef6e47fbbea0bcbe2eb17918138950754d9a9fad7ce576bba8b0",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_shallow_control",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke.txt",
+      "queue_sha256": "63ba0417841db5501192527ac2e0937a0ba7c3adf177e66721febfc687451372",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_shallow_control",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_event_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_pilot.txt",
+      "queue_sha256": "a3aba17bbf9d36ecb5d53b543e998fcbcede24ea88420d3a0fb86d70f8f9a285",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Elapsed-time credit, hard-route learning or occupied capacity at fixed events/activity",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts",
+      "domain": "language",
+      "variant": "language_native",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts.txt",
+      "queue_sha256": "07ac09e47afeafaf80292bf2642c732eecf9347642497a314f6180b8698f0daf",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke",
+      "domain": "language",
+      "variant": "language_native",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke.txt",
+      "queue_sha256": "885bcacf2819cb020bd1f8f738ab7439bf25a942a1a10a6334a13d2c42a790bf",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_pilot",
+      "domain": "language",
+      "variant": "language_native",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_pilot.txt",
+      "queue_sha256": "28195889be1c84cd389c85e93d9f02dd299defc07dc5573e71212bbb8f8deeb9",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts",
+      "domain": "language",
+      "variant": "language_reception",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts.txt",
+      "queue_sha256": "931f8cc04112b62684ea81940689535a3faaa8e72f2f89113565e9a383f6b780",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke",
+      "domain": "language",
+      "variant": "language_reception",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke.txt",
+      "queue_sha256": "5ad99d12460b0622f2725f0d521f8b2ae4233bf462d0ad43c25b5d30cfe7e6e2",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_pilot",
+      "domain": "language",
+      "variant": "language_reception",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_pilot.txt",
+      "queue_sha256": "f78183c80a005529eb4f82deabedfd83d3894a229fe8d08de6a15a5a0ed5d551",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts",
+      "domain": "language",
+      "variant": "language_late",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts.txt",
+      "queue_sha256": "ac63a6dd76b7130acfdc3988a0ae8543dd2becc7400aa7332c93e6aed24aaa24",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke",
+      "domain": "language",
+      "variant": "language_late",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke.txt",
+      "queue_sha256": "4dbc29613305eac22141323ada1eda810dd5ff17a7e01970345bf3dd6a26de87",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_pilot",
+      "domain": "language",
+      "variant": "language_late",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_pilot.txt",
+      "queue_sha256": "0fc367ae37ed400c61145186418f945955874d4befe0ce8298c9ecc6180ca057",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts",
+      "domain": "language",
+      "variant": "language_waiting",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts.txt",
+      "queue_sha256": "444ccb367b23b88fd6936965944df7c984e56cbb1a8903de535a3330380d9665",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke",
+      "domain": "language",
+      "variant": "language_waiting",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke.txt",
+      "queue_sha256": "553c790fac097403be15d8bb09f21ec47f58bc99e4e213e1f2a609283319f817",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_pilot",
+      "domain": "language",
+      "variant": "language_waiting",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/clock_feature_language_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_pilot.txt",
+      "queue_sha256": "b1ce11c8e867f800fd135ae8248f0e6111d867c4f6df3725eab2683cfe66e20a",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "hypothesis": "Useful delay readout and depth allocation at matched added budget",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts",
+      "domain": "tabular",
+      "variant": "banknote_ours_R0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts.txt",
+      "queue_sha256": "c6e5019d402289e4caba15e032d318f51d0174087baada97ed8d94d5d3065a28",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke",
+      "domain": "tabular",
+      "variant": "banknote_ours_R0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke.txt",
+      "queue_sha256": "19e3f3dbf1d2762077ac7e827fbfc2301675aa32c46f70577d25015840894777",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot",
+      "domain": "tabular",
+      "variant": "banknote_ours_R0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot.txt",
+      "queue_sha256": "51709d82c319b5d2e3dc766b5ca6038875626b6e1adf9fc49ed440bb80063cc5",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts",
+      "domain": "tabular",
+      "variant": "banknote_ours_R2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts.txt",
+      "queue_sha256": "f100e6284c7f415060b826ac6f2586069cb0005a0f301f4a4f56caeee7e54021",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke",
+      "domain": "tabular",
+      "variant": "banknote_ours_R2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke.txt",
+      "queue_sha256": "5abdf0885f7ebf5e08afbb7fc3d4af672a8df2c9631a7fe25659466c8f5cc1ff",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_pilot",
+      "domain": "tabular",
+      "variant": "banknote_ours_R2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_pilot.txt",
+      "queue_sha256": "c57d6da40ec6aa03a7d6601389e59886f6a2ac3ff579a1c973752fd030a21248",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts",
+      "domain": "tabular",
+      "variant": "banknote_trees_R0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts.txt",
+      "queue_sha256": "58cd8d1c8afc9bf3f908a1b34f7f974065e049a24bdde3c1ee5dc6365ec52eb7",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke",
+      "domain": "tabular",
+      "variant": "banknote_trees_R0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke.txt",
+      "queue_sha256": "6b9959df16e6d4769cb60c49fff525e565536b828a7f2cb1fce8cfbbd2a7fccd",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_pilot",
+      "domain": "tabular",
+      "variant": "banknote_trees_R0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_pilot.txt",
+      "queue_sha256": "ea479fd8a3fcb7f1fbbc464802d4983fa65faedbbf229d5b90dfd1871d84c318",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts.txt",
+      "queue_sha256": "e5cfb15241867d7975881a23fe4660a08a794c2c7c9ddcbdb47bdc8195627b73",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke.txt",
+      "queue_sha256": "4a39fc89f7085d67da877667672def5304906e4226b8126ba9e381495fdbdc44",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_pilot",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_pilot.txt",
+      "queue_sha256": "9af113b6e4d11e19e733480a31a40f7574b638c0ad480e1414fb2fbe9e172c28",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts.txt",
+      "queue_sha256": "8a5b1095cda22efe925c25411b9cad00b16f173017c0319c78713dac37e133ec",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke.txt",
+      "queue_sha256": "16dbd2d430ff67ebce5035603adf10154b72de13bf1cea0e116176a221b35a5e",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_pilot",
+      "domain": "tabular",
+      "variant": "wine_red_ours_R2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_pilot.txt",
+      "queue_sha256": "3d0361e64f1b07c4c824982f3bd2cef107084c1227b7347f4875d1ae072a3faa",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts",
+      "domain": "tabular",
+      "variant": "wine_red_trees_R0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts.txt",
+      "queue_sha256": "5f37a258a1000827ee3226100770da461ce482a18438644f29d8d6842290fbfa",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke",
+      "domain": "tabular",
+      "variant": "wine_red_trees_R0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke.txt",
+      "queue_sha256": "273bff7668522e4f0bb723ab09aceb1407ca6ecd8d62bfb92f746c1e22b034ee",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_pilot",
+      "domain": "tabular",
+      "variant": "wine_red_trees_R0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/native_tabular_benchmark.py",
+      "queue": "experiments/queue/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_pilot.txt",
+      "queue_sha256": "5849cd6d9bbe39180d6c2ec4075c5247fd14e64fcd74ed11b65947808a59e66a",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_pilot.json",
+      "requires": [
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts",
+        "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "hypothesis": "Static conditional feature interactions; temporal reception versus native parent and strong trees",
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/clock_feature_event_contracts.py": "0f57a20dec5ba76919a5a0f1a1da4ba639bc9297fdc27dbc47a989f34a92db86",
+    "experiments/clock_feature_gradient_contracts.py": "e2d45ec140eff43ec0680c3d1a7ba078f291705c9584a284d81c38adf4d83afc",
+    "experiments/clock_feature_language_benchmark.py": "c2014c5cf70d0dac31e616fe0961c34f467a6333b72e2d175fbefd0e703675b2",
+    "experiments/clock_feature_language_helpers.py": "0a0b4ed006ccaed9c2d408cb162f263959b12a7c8483be1f96b09de85e796003",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/native_event_benchmark.py": "59060bebede63c40f32120d396629f656d79b9d792a740a15c0d7f43763d7f47",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/native_language_benchmark.py": "5d07c18c65c5a370d1a9a4d82d6e56f46cdb8d1550750c0a6cf5441343fe7ef4",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/native_tabular_benchmark.py": "a37d2529b7a440534512ab9e0a446c2d7dc581865a2e6ee90fe185b17a802bad",
+    "experiments/native_tabular_data.py": "c8f85c4c9865b6b7273124091209cad07d9b50c51e5f42c892bb245381d11a3c",
+    "experiments/native_tabular_model.py": "a566bc9071962f6a3bbe46fac2341edc93c5bff90abc0ba2bd2bbc9adff19710",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "experiments/tabular_data_manifest.json": "17eb4076c6bb2139063ee6d970d061e1581c25c18b3e2d863fafee699a60900a",
+    "scripts/plan_research_gym.py": "41c8a93b1cada364d9acdd873e700d023a07c02f03ac4489d035eef8998e763c",
+    "scripts/run_delay_feature_campaign.py": "3d795003bb12d21740194d4f3b860a5bdc51f1f2cb059a0c981acabb22ae58d9",
+    "scripts/run_native_research_campaign.py": "aca2c8317aa6e1c68275aa37518b2fdbc7a68bcf2f2d653886ee18c692c5699f",
+    "scripts/run_research_gym.py": "9e62027c36a37a46d41d28114fce9a4d0e62cd3c5144bfacf13055fd75ce9d43",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/clock_feature_event_heads.py": "1ab46c6d1c4dfd550a48b06eb8a4e83d065e634a2e8bf2492ec112380a41fae7",
+    "sleeping_machines/clock_feature_races.py": "514c1bf396539d7e1bfc71fa6827adcb4ac1ca36e80e80a607d77b9e29233c4f",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "scripts/run_aws_matrix_recovery.py": "113c175219c72302dda3e84d4db6d6e3498c104c678aff6031b5a1fe71c6935a"
+  },
+  "concurrency": "One guarded training job per host; user parallelism decision pending",
+  "protocol": "experiments/AWS_EARLY_INDICATION_MATRIX.md",
+  "promotion": "Separate paired-seed confirmation, no automatic large-model promotion",
+  "blocked": [
+    {
+      "domain": "robotics",
+      "dataset": "MIT planar pushing",
+      "reason": "Raw unequal-timestamp causal regression adapter and immutable trial split not yet implemented"
+    },
+    {
+      "domain": "robotics",
+      "dataset": "UCI Robot Execution Failures",
+      "reason": "Trial-sequence adapter and per-problem vocabulary/splits not yet implemented"
+    }
+  ],
+  "recovery_of": "experiments/gym/plans/aws_fast_matrix_v1_20261001T213000Z/manifest.json",
+  "resource_revision": {
+    "reason": "Unchanged 64-source contracts passed at 2585864 KiB RSS/39.067s; measured cap revision to4GiB RSS/6GiB VMS for this population only",
+    "failed_attempt_preserved": true,
+    "architecture_and_data_unchanged": true,
+    "memory_probe_tag": "aws_fast_matrix_memory64_20261001T213208Z"
+  }
+}
