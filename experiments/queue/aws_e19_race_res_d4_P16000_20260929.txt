@@ -1,0 +1,1 @@
+aws_e19_race_res_d4_P16000_20260929 experiments/aws_benchmark.py --run-tag aws_e19_race_res_d4_P16000_20260929 --script experiments/e19_rhm.py -- --model race --depth 4 --residual 2 --train 16000
