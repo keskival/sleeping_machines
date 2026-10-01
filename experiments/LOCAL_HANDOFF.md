@@ -53,6 +53,16 @@ depth versus weak tested residual paths, the native 6.02x work/.032126bpc
 tradeoff, proved but not yet fitted temporal functions, and training-memory
 exposure. These are the current empirical constraints, not assumed supremacy.
 
+22:18 UTC update: local R2 language2K completed at 3.795698bpc/4.032017GF,
+versus native3.764712/3.778244; no promotion justified yet. Published c81f0e7;
+full R4 started at22:18 under the same guard, followed by late allocation and
+waiting control. Seven completed AWS small pilots are now in the PDF: timing
+78.125% versus refitted rank79.6875%; order CF/pathwise both51.5625%; occupied
+sources4/16/64 accuracy51.56/48.44/32.81% with commits16/matches32 per event.
+State-clearing hurts, but invariant order labels degrade under stretched gaps.
+See the theory update for hypotheses and the one-population sources64
+uncertainty limitation. No full tabular pilot result is present locally yet.
+
 REPORT/PDF now contains new AWS language and complete residual4 hierarchy results;
 63-page PDF bounds checked. Plain depth3 85.06% remains best saved64K RHM point,
 residual4 72.56%/ten passes still improving. Early AWS matrix pilots are to be

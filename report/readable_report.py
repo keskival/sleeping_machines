@@ -2242,6 +2242,17 @@ def blocks(M, tasks, ev):
                  'Temporal tasks and altered source counts are explicitly named; different '
                  'tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. '
                  'Paired independent seeds and frozen held-out confirmation precede benchmark promotion.')])
+            screen={entry['job']['variant']:entry['result'] for entry in group}
+            if 'timing_full' in screen and 'timing_rank' in screen:
+                observed=screen['timing_full']['final']['dev']['accuracy']
+                rank=screen['timing_rank']['final']['dev']['accuracy']
+                pages[-1].append(('small',f'Interpretation: observed-time accuracy {100*observed:.2f}% versus '
+                    f'refitted rank-time {100*rank:.2f}% does not yet demonstrate an elapsed-time advantage. '
+                    'State-clearing and stretched-gap probes are diagnostic interventions, not refitted controls.'))
+            if 'order_sources64' in screen and screen['order_sources64']['final']['dev']['episodes']==1:
+                pages[-1].append(('small','Capacity interpretation: commits and matches remain fixed while '
+                    'available state grows, but fixed queries reduce per-source training exposure. The 64-source '
+                    'development set has one population; its collapsed bootstrap interval is not useful uncertainty.'))
 
     for dataset in ('banknote','wine_red'):
         rows=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']==dataset]
@@ -2611,7 +2622,7 @@ def blocks(M, tasks, ev):
              'temporal reception/readout. The native parent has no extra clock branch.'),
             ('figure',('delay_language_quality_work',145)),
             ('table',(['Ours','Fit chars / passes','Dev bpc ↓','CPU fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],[
-                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{r['args'].get('clock_allocation','uniform')}/{'reception' if r['args']['clock_readout'] else 'waiting'}",
+                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']} {r['args'].get('clock_allocation','uniform')}{'' if r['args']['clock_readout'] else ' wait'}",
                  f"{r['args']['fit']:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
@@ -2627,6 +2638,19 @@ def blocks(M, tasks, ev):
              'remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate '
              'setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory '
              'development results; these do not alone establish comparable-quality Transformer superiority.')])
+        if reference:
+            base=reference[0]
+            matched=[r for r in rows if r is not base and all(r['args'].get(k)==base['args'].get(k)
+                     for k in ('fit','dev','payload','epochs','depth','heads','pool','seed','chunk',
+                               'update_targets','warmup_targets','lr'))]
+            if matched:
+                best=min(matched,key=lambda r:r['final']['dev']['bpc'])
+                delta=best['final']['dev']['bpc']-base['final']['dev']['bpc']
+                ratio=best['work']['cpu_emulator']['total_training_unit_special_flops']/base['work']['cpu_emulator']['total_training_unit_special_flops']
+                pages[-1].append(('small',f'Current matched-fit interpretation: best completed added-clock row is '
+                    f'{abs(delta):.4f} bpc {"worse" if delta>=0 else "better"} than native, with '
+                    f'{100*abs(ratio-1):.2f}% {"more" if ratio>=1 else "less"} fitting work. '
+                    'Pending allocations and waiting controls cannot establish a benefit yet.'))
     for begin in range(0,len(tasks.get('native_language',[])),4):
         rows=tasks['native_language'][begin:begin+4]
         pages.append([

@@ -655,6 +655,8 @@ Small completed integrated pilots from the committed fast matrix. These answer m
 
 FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
 
+Interpretation: observed-time accuracy 78.12% versus refitted rank-time 79.69% does not yet demonstrate an elapsed-time advantage. State-clearing and stretched-gap probes are diagnostic interventions, not refitted controls.
+
 ## Appendix B. AWS early temporal mechanism screen
 
 Small completed integrated pilots from the committed fast matrix. These answer mechanism questions before larger scaling; their development budgets differ from the saved main language and native512-target results. Contracts and accounting smokes are excluded.
@@ -672,6 +674,8 @@ Small completed integrated pilots from the committed fast matrix. These answer m
 | Ours order sources64 | 617,972 | 2048/16/32 | 980.5 | 6 |
 
 FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
+
+Capacity interpretation: commits and matches remain fixed while available state grows, but fixed queries reduce per-source training exposure. The 64-source development set has one population; its collapsed bootstrap interval is not useful uncertainty.
 
 ## Appendix B. AWS early language mechanism screen
 
@@ -993,7 +997,7 @@ Native eight-block independent-head models reuse key/query matches for two/four 
 | Ours | Fit chars / passes | Dev bpc ↓ | CPU fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Infer MFLOPs / char ↓ |
 | --- | --- | --- | --- | --- | --- |
 | Native | 2,048/4 | 3.765 | 3.778 | 0.461 | 0.0974 |
-| R2/uniform/reception | 2,048/4 | 3.796 | 4.032 | 0.492 | 0.1056 |
+| R2 uniform | 2,048/4 | 3.796 | 4.032 | 0.492 | 0.1056 |
 
 | Ours | Projected whole fit GFLOPs | Receivers / commits per token | Matches / clocks per token | Parameters |
 | --- | --- | --- | --- | --- |
@@ -1001,6 +1005,8 @@ Native eight-block independent-head models reuse key/query matches for two/four 
 | R2/uniform/on | 4.029 | 32/16 | 32/48 | 57,083 |
 
 Completed fits only; identical frozen 8,191-target development protocol, four passes, U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory development results; these do not alone establish comparable-quality Transformer superiority.
+
+Current matched-fit interpretation: best completed added-clock row is 0.0310 bpc worse than native, with 6.72% more fitting work. Pending allocations and waiting controls cannot establish a benefit yet.
 
 ## Appendix B (continued). Ours: native temporal-core language
 
