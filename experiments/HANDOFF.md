@@ -1096,3 +1096,21 @@ units and distinguish selection development from test quality. The AWS hierarchy
 page preserves plain-depth gains, saturation and weak residual variants;
 unfinished residual-depth4 is not filled. No new result supports matched-quality
 frontier supremacy. Source/protocol distinctions remain beside the numbers.
+
+## AWS fast matrix first memory stop — 1 October, 21:30 UTC
+
+Depth4 completed successfully: test accuracy .7256, training accuracy .7954,
+wrapper wall1094.702s; committed/pushed as1b0b5c4. Incremental publisher
+`publish_aws_fast_matrix_incrementally.py` was added in ebb9690 and pushed ten
+completed matrix contract/smoke records individually, through2efd3bb. It
+suspended only the publication supervisor during git operations, leaving the
+worker/guard/watchdog untouched. Supervisor and publisher have now exited.
+
+First-wave worker attempt1 stopped at sources64 numerical contracts: watchdog
+observed groupRSS2,593,472KiB above the2,499,584KiB cap at21:29:57UTC. This is
+a memory-budget failure, not completed quality or a demonstrated contract
+failure. Preserve worker/supervisor needs_review states and runner logs. No
+pilots launched. Diagnose graph retention/workload and choose measured host
+capacity caps or a separately named recovery before resuming; do not bypass
+failed prerequisites or overwrite the original lifecycle. Host had~29GiB
+available, so a measured cap revision may be feasible while retaining8GiB.
