@@ -34,6 +34,24 @@ quality and resource evidence will determine scaling, with refitted controls
 and independent seeds. The [native derivation](experiments/theory/50_native_addressed_event_learning.md)
 separates state capacity, parameter exposure and complete optimizer work.
 
+The next full-core comparison adds **content-dependent temporal reception**:
+each head reuses its key/query matches for several fast clock policies. Learned
+projections match incoming content/state against latched rotating clock vectors,
+then compose the gated components into the next message. Two/four-clock fits and
+a same-clock waiting control test whether this capacity earns its complete
+learning/inference cost. The [derivation and contracts](experiments/theory/51_temporal_windows_and_spike_trains.md)
+also construct learnable integration windows and information-bearing spike
+trains; those primitives are not yet a fitted full language model.
+[Useful capacity and mixing](experiments/theory/52_useful_capacity_and_local_mixing.md)
+explains task-aligned interaction rank, learning exposure and marginal work.
+
+**Arrival times are simulator coordinates, not a global execution tick.**
+The native function uses elapsed intervals, local precedence and causal joins;
+shifting the time origin preserves predictions within numerical precision.
+The CPU input API serializes observed events on a common axis. A globally
+clockless ASIC remains a hardware implementation target, with local time-scale,
+coordination and energy costs to measure.
+
 Earlier receiver and episodic race-attention models remain documented in the
 [integrated language guide](experiments/INTEGRATED_LANGUAGE.md), with their
 stronger results preserved. The H2 KV model improves from **3.733 to 3.490 bpc**

@@ -73,6 +73,9 @@ def results():
     tasks['native_language'] = [r for path in sorted((RES/'native_language').glob('local_native_language_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
+    tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
+        and r['args']['fit']>=2048 and r['args']['dev']==8192]
     tasks['native_event'] = [r for path in sorted((RES/'native_event').glob('local_native_event_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit_targets']>=512 and r['args']['epochs']>=8]
@@ -170,6 +173,15 @@ def language_work_points(tasks, ev):
             inference=cpu['inference_arithmetic_flops_per_character']+cpu['inference_special_functions_per_character'],
             projected_inference=projected['inference_arithmetic_flops_per_character']+projected['inference_special_functions_per_character'],
             inference_method='Native receiver-state inference trace'))
+    for r in tasks.get('delay_language',[]):
+        a=r['args'];w=r['work'];cpu=w['cpu_emulator'];projected=w['projected_event_architecture']
+        variant=f"R{a['clock_features']}/{'reception' if a['clock_readout'] else 'waiting'}"
+        rows.append(dict(model='Ours: native temporal reception '+variant,family='integrated',
+            label=variant+f"/{a['fit']//1024}K/s{a['seed']}",parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],
+            split='dev',bpc=r['final']['dev']['bpc'],total=cpu['total_training_unit_special_flops'],targets=w['fitting_targets'],
+            inference=cpu['inference_arithmetic_flops_per_character']+cpu['inference_special_functions_per_character'],
+            projected_inference=projected['inference_arithmetic_flops_per_character']+projected['inference_special_functions_per_character'],
+            inference_method='Native content-gated clock-feature trace'))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -378,6 +390,38 @@ def figures(M, tasks, ev):
         axes[1].set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development bpc ↓')
         for ax in axes:ax.grid(alpha=.2)
         f.tight_layout();save(f,'native_language_quality_work')
+    # Analytical construction, not a fitted task score.
+    f,axes=plt.subplots(1,3,figsize=(7.2,2.1))
+    t=np.linspace(0,1,200)
+    axes[0].plot(t,np.cos(np.pi*t),label='First content direction')
+    axes[0].plot(t,np.sin(np.pi*t),label='Second content direction')
+    axes[0].set(xlabel='Local normalized elapsed time',ylabel='Receptive coefficient',title='Time rotates relevance')
+    axes[0].legend(fontsize=5.5)
+    age=np.linspace(-.1,1.1,200);u=np.clip(age,0,1)
+    axes[1].plot(age,u**2*(1-u)**2*np.exp(-.4*u))
+    axes[1].set(xlabel='Age / learned window width',ylabel='Contribution weight',title='Smooth event integration')
+    theta,beta,prefix,split=.4,.7,2.3,.25
+    first=-np.log1p(-beta*theta/prefix)/beta
+    voltage=prefix/beta*(-np.expm1(-beta*(split-first)))
+    for y,current in ((1,2.),(0,.8)):
+        second=split+np.log((current-beta*voltage)/(current-beta*theta))/beta
+        times=[first]+([second] if second<.45 else [])
+        axes[2].vlines(times,y-.2,y+.2,color=blue if y else orange,lw=2)
+    axes[2].axvline(split,color=gray,ls=':',lw=1)
+    axes[2].axvline(.45,color=gray,ls='--',lw=1)
+    axes[2].set(xlim=(0,.48),ylim=(-.5,1.5),yticks=[0,1],yticklabels=['Later weak input','Later strong input'],xlabel='Local event time',title='Same first spike; new evidence')
+    axes[2].tick_params(axis='y',labelsize=5.5)
+    f.tight_layout();save(f,'temporal_reception_windows_trains')
+    if tasks.get('delay_language'):
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.5))
+        records=tasks.get('native_language',[])+tasks['delay_language']
+        for r in records:
+            a=r['args'];label=('Ours native' if 'clock_features' not in a else f"Ours R{a['clock_features']} {'reception' if a['clock_readout'] else 'waiting'}")+f"/{a['fit']//1024}K/s{a['seed']}"
+            axes[0].scatter(r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9,r['final']['dev']['bpc'],label=label)
+            axes[1].plot([v['epoch'] for v in r['curve']],[v['dev']['bpc'] for v in r['curve']],label=label)
+        axes[0].set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development bpc ↓')
+        axes[1].set(xlabel='Passes over fitting data',ylabel='Frozen development bpc ↓');axes[1].legend(fontsize=5)
+        f.tight_layout();save(f,'delay_language_quality_work')
     if tasks.get('native_event'):
         f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
         for ax,task in zip(axes,('order','timing')):
@@ -1310,7 +1354,7 @@ def blocks(M, tasks, ev):
          "coincidence with B. A competing path can veto the match when C intervenes. The timing-pattern "
          "and compositional experiments test these mechanisms; the language and speech encoders learn "
          "richer vector messages and temporal state."),
-        ("small",'The primitives and their symmetry limits are developed in '
+        ("small",'The simulator stores arrival coordinates on a common axis; the native function uses local elapsed intervals, precedence and causal joins, not a globally ticking execution clock. A time-origin shift preserves predictions. CPU serialization and a fabricated clockless ASIC are separate implementation claims. The primitives and their symmetry limits are developed in '
          '<a href="experiments/theory/05_temporal_computation_and_scaling.md">temporal computation theory, §56</a>; '
          '<a href="experiments/theory/01_foundations_and_counterfactual_credit.md">counterfactual learning</a>, '
          '<a href="experiments/theory/22_key_value_separation_and_race_boundaries.md">key/value separation</a> '
@@ -1319,6 +1363,25 @@ def blocks(M, tasks, ev):
          "phase arithmetic requires its reference. Each implemented model uses a declared subset. "
          "Candidate discovery and training alternatives are charged to the work ledger.")])
 
+    pages.append([
+        ('h1','Useful functions from time, reception and repeated events'),
+        ('p','A dot product is a compatibility score along one direction. Projecting a message into a learned '
+         'two-dimensional plane and rotating a local clock vector changes which content direction is receptive. '
+         'Separate clock modes and independent heads can gate different components, then compose a new vector '
+         'while retaining the incoming content. This creates content–time interactions, rather than just delaying a fixed computation.'),
+        ('figure',('temporal_reception_windows_trains',145)),
+        ('table',(['Ours: construction','Analytical function and learning','Implementation status'],[
+            ['Temporal reception','Content dot a rotating learned direction; exact ordinary phase/projection gradients within a route history','Full native candidate; two/four-mode fits and same-clock waiting control'],
+            ['Learnable integration window','Compact smooth kernel; exact membership gradients; five moment vectors, no silent-time ticks','Primitive contracts passed; full-model integration remains'],
+            ['Information-bearing train','Same first spike, different later evidence, distinguishable train readout; exact fixed-count gradients','Closed-form event solver and train/window contracts passed']], [35,83,56])),
+        ('p','Parameters are useful when their interactions preserve relevant information, reach the readout and '
+         'receive adequate credit and exposure. Consecutive affine maps can fuse into one; gated products and '
+         'temporal state create new interactions. The appropriate mode count or local rank is determined by '
+         'marginal held-out quality per complete work, not by maximizing parameter count.'),
+        ('small','The figure is an analytical construction, not measured model performance. Hard destination '
+         'changes and spike creation/deletion still require boundary or counterfactual credit. More emissions '
+         'are charged; no biological rate-code or free-energy claim. Theory §§337–352 gives the proof, '
+         'costs, timing-noise limits and frozen/refitted ablation protocol.')])
     race_rows=tasks['language_race']
     pages.append([
         ('h1','The ambition: useful capacity without proportional activity'),
@@ -2376,6 +2439,34 @@ def blocks(M, tasks, ev):
          'confidence intervals are published from completed files. Synthetic learning, real-data '
          'Pareto advantage and physical joules are separate milestones. The executable protocol, '
          'gates and current host limitations are documented in experiments/RESEARCH_VALUE_PLAN.md.')])
+    for begin in range(0,len(tasks.get('delay_language',[])),4):
+        rows=tasks['delay_language'][begin:begin+4]
+        reference=[r for r in tasks.get('native_language',[]) if r['args']['fit'] in {v['args']['fit'] for v in rows}]
+        rows=reference[:1]+rows
+        pages.append([
+            ('h1','Appendix B (continued). Ours: content-gated temporal reception'),
+            ('p','Native eight-block independent-head models reuse key/query matches for two/four additional '
+             'scalar clock policies. Local rotating/decaying clock vectors gate content-dependent projections '
+             'and compose the next message. The waiting control retains the same clocks and joins but removes '
+             'temporal reception/readout. The native parent has no extra clock branch.'),
+            ('figure',('delay_language_quality_work',145)),
+            ('table',(['Ours','Fit chars / passes','Dev bpc ↓','CPU fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],[
+                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{'reception' if r['args']['clock_readout'] else 'waiting'}",
+                 f"{r['args']['fit']:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
+                 f"{(r['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+r['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],[33,32,23,28,30,28])),
+            ('table',(['Ours','Projected whole fit GFLOPs','Receivers / commits per token','Matches / clocks per token','Parameters'],[
+                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{'on' if r['args']['clock_readout'] else 'waiting'}",
+                 f"{r['work']['projected_event_architecture']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['args']['depth']*r['args']['heads']*r['args']['pool']}/{r['args']['depth']*r['args']['heads']}",
+                 f"{r['args']['depth']*r['args']['heads']*r['args']['pool']}/{r['args']['depth']*r['args']['heads']*(1+r['args'].get('clock_features',0))}",f"{r['parameters']:,}"] for r in rows],[36,37,35,35,31])),
+            ('small','Completed fits only; identical frozen 8,191-target development protocol, four passes, '
+             'U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar '
+             'policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam '
+             'remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate '
+             'setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory '
+             'development results; these do not alone establish comparable-quality Transformer superiority.')])
     for begin in range(0,len(tasks.get('native_language',[])),4):
         rows=tasks['native_language'][begin:begin+4]
         pages.append([

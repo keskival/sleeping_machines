@@ -963,3 +963,29 @@ reports development 3.106041269 bpc / 8,191 targets, selected epoch 4.
 It is preserved pending source/protocol/accounting and report-ingestion review;
 it is not evidence for the newer native model or a matched dense comparison.
 No architectural substitution or new training was launched in this continuation.
+## Priority insertion in preparation — 1 October, 20:46 UTC
+
+Native order S4 completed at 100% selected development accuracy and was published
+in 30ffc7a. Native language2K completed at 3.764712 bpc / 3.778244 whole CPU fit
+GFLOPs, 54,907 parameters. Compared with the saved matched-data KV parent
+3.732586 / 22.753030, this is 6.02x less counted fit work at .032126 bpc worse;
+capacity, width and history architecture differ. No frontier/energy claim.
+
+PID178293, the original native campaign coordinator, is SIGSTOP-reserved for a
+bounded higher-priority delay-feature insertion. Its runner/trainer/watchdog
+were untouched; language2K has now finished. Do not SIGCONT it or start an
+independent trainer without inspecting the reservation/new campaign status.
+Reservation: local_delay_feature_campaign_20261001T202000Z.reservation.json.
+The prepared new coordinator will validate PID/start identity, inherit the
+reservation, run one guarded job at a time and resume the old coordinator in
+finally. Do not edit frozen parent sources. Contracts run before added fits.
+
+Read THEORY §§337–353: fast event-local clocks, content-dependent time reception,
+C1 windows, exact repeated-spike cell gradients, explicit birth/routing limits,
+information-bearing later-spike witness, time-origin invariance, useful capacity,
+projection/mixing economics, timing-noise critique and deeper allocation.
+ClockFeatureEventHeads retains all native content/state/head/counterfactual paths,
+adds two/four reused-score clock policies with low-frequency initial basis and
+gated vector composition. Uniform R2 and late-half R4 have equal added parameter,
+projection and race/rate budgets. Primitive window/train code is numerically
+verified, not integrated into fitted language or claimed on-chip learning.
