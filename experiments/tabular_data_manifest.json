@@ -1,0 +1,20 @@
+[
+  {
+    "dataset": "banknote",
+    "url": "https://archive.ics.uci.edu/static/public/267/banknote+authentication.zip",
+    "file": "data/tabular/data_banknote_authentication.txt",
+    "sha256": "d0539aaed2139ba7a587b3e34fb345ce503ff7d5d33dbf9912d8e195ce425cb9",
+    "archive_sha256": "1e2acd9a2085fadf3d8145c12d3d22af853320d52294a6590c2eaf75fdc05227",
+    "license": "CC BY 4.0",
+    "source": "UCI Machine Learning Repository"
+  },
+  {
+    "dataset": "wine_red",
+    "url": "https://archive.ics.uci.edu/static/public/186/wine+quality.zip",
+    "file": "data/tabular/winequality-red.csv",
+    "sha256": "4a402cf041b025d4566d954c3b9ba8635a3a8a01e039005d97d6a710278cf05e",
+    "archive_sha256": "3ed56667f4b828242bd732d7d1dd7f2861e54432239d7fa63877014cbb0304d4",
+    "license": "CC BY 4.0",
+    "source": "UCI Machine Learning Repository"
+  }
+]

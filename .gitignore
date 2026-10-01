@@ -36,3 +36,6 @@ experiments/results/**/*.pt.tmp
 experiments/results/**/*.json.tmp
 experiments/queue/*.status.json
 report/*.building.pdf
+# Gym workers keep lifecycle state local; immutable plans/queues are tracked.
+experiments/gym/plans/**/worker_*.status.json
+experiments/gym/plans/**/worker_*.status.tmp

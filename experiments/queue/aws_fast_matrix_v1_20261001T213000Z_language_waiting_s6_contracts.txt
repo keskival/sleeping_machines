@@ -1,0 +1,1 @@
+aws_fast_matrix_v1_20261001T213000Z_language_waiting_s6_contracts experiments/clock_feature_language_benchmark.py --tag aws_fast_matrix_v1_20261001T213000Z_language_waiting_s6_contracts --clock-features 2 --clock-allocation uniform --clock-readout off --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit 512 --dev 1024 --epochs 4 --contracts-only

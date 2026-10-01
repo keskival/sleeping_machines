@@ -1,0 +1,1 @@
+aws_fast_matrix_v1_20261001T213000Z_banknote_ours_R0_s6_pilot experiments/native_tabular_benchmark.py --tag aws_fast_matrix_v1_20261001T213000Z_banknote_ours_R0_s6_pilot --dataset banknote --model ours --clock-features 0 --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit 128 --dev 128 --epochs 4

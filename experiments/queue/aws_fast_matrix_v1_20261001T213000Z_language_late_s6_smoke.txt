@@ -1,0 +1,1 @@
+aws_fast_matrix_v1_20261001T213000Z_language_late_s6_smoke experiments/clock_feature_language_benchmark.py --tag aws_fast_matrix_v1_20261001T213000Z_language_late_s6_smoke --clock-features 4 --clock-allocation late --clock-readout on --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit 65 --dev 128 --epochs 1
