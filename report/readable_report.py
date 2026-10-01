@@ -175,7 +175,7 @@ def language_work_points(tasks, ev):
             inference_method='Native receiver-state inference trace'))
     for r in tasks.get('delay_language',[]):
         a=r['args'];w=r['work'];cpu=w['cpu_emulator'];projected=w['projected_event_architecture']
-        variant=f"R{a['clock_features']}/{'reception' if a['clock_readout'] else 'waiting'}"
+        variant=f"R{a['clock_features']}/{a.get('clock_allocation','uniform')}/{'reception' if a['clock_readout'] else 'waiting'}"
         rows.append(dict(model='Ours: native temporal reception '+variant,family='integrated',
             label=variant+f"/{a['fit']//1024}K/s{a['seed']}",parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],
             split='dev',bpc=r['final']['dev']['bpc'],total=cpu['total_training_unit_special_flops'],targets=w['fitting_targets'],
@@ -416,7 +416,7 @@ def figures(M, tasks, ev):
         f,axes=plt.subplots(1,2,figsize=(7.2,2.5))
         records=tasks.get('native_language',[])+tasks['delay_language']
         for r in records:
-            a=r['args'];label=('Ours native' if 'clock_features' not in a else f"Ours R{a['clock_features']} {'reception' if a['clock_readout'] else 'waiting'}")+f"/{a['fit']//1024}K/s{a['seed']}"
+            a=r['args'];label=('Ours native' if 'clock_features' not in a else f"Ours R{a['clock_features']} {a.get('clock_allocation','uniform')} {'reception' if a['clock_readout'] else 'waiting'}")+f"/{a['fit']//1024}K/s{a['seed']}"
             axes[0].scatter(r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9,r['final']['dev']['bpc'],label=label)
             axes[1].plot([v['epoch'] for v in r['curve']],[v['dev']['bpc'] for v in r['curve']],label=label)
         axes[0].set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development bpc ↓')
@@ -2451,16 +2451,16 @@ def blocks(M, tasks, ev):
              'temporal reception/readout. The native parent has no extra clock branch.'),
             ('figure',('delay_language_quality_work',145)),
             ('table',(['Ours','Fit chars / passes','Dev bpc ↓','CPU fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],[
-                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{'reception' if r['args']['clock_readout'] else 'waiting'}",
+                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{r['args'].get('clock_allocation','uniform')}/{'reception' if r['args']['clock_readout'] else 'waiting'}",
                  f"{r['args']['fit']:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
                  f"{(r['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+r['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],[33,32,23,28,30,28])),
             ('table',(['Ours','Projected whole fit GFLOPs','Receivers / commits per token','Matches / clocks per token','Parameters'],[
-                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{'on' if r['args']['clock_readout'] else 'waiting'}",
+                ['Native' if 'clock_features' not in r['args'] else f"R{r['args']['clock_features']}/{r['args'].get('clock_allocation','uniform')}/{'on' if r['args']['clock_readout'] else 'waiting'}",
                  f"{r['work']['projected_event_architecture']['total_training_unit_special_flops']/1e9:.3f}",
                  f"{r['args']['depth']*r['args']['heads']*r['args']['pool']}/{r['args']['depth']*r['args']['heads']}",
-                 f"{r['args']['depth']*r['args']['heads']*r['args']['pool']}/{r['args']['depth']*r['args']['heads']*(1+r['args'].get('clock_features',0))}",f"{r['parameters']:,}"] for r in rows],[36,37,35,35,31])),
+                 f"{r['args']['depth']*r['args']['heads']*r['args']['pool']}/{r['args']['heads']*(r['args']['depth']+sum(r.get('protocol',{}).get('clock_counts',[r['args'].get('clock_features',0)]*r['args']['depth'])))}",f"{r['parameters']:,}"] for r in rows],[36,37,35,35,31])),
             ('small','Completed fits only; identical frozen 8,191-target development protocol, four passes, '
              'U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar '
              'policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam '

@@ -1,0 +1,1 @@
+local_delay_feature_smoke_R2_20261001T202000Z experiments/clock_feature_language_benchmark.py --tag local_delay_feature_smoke_R2_20261001T202000Z --clock-features 2 --clock-readout on --fit 129 --dev 256 --epochs 1 --seed 6

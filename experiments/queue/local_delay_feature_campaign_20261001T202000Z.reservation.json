@@ -1,0 +1,8 @@
+{
+  "predecessor_pid": 178293,
+  "command": ".venv-docker/bin/python scripts/run_native_research_campaign.py --manifest-stem local_native_research_campaign_20261001T174000Z ",
+  "start_ticks": "29024259",
+  "current_job": "local_native_language_D2048_H2_d16_depth8_s6_20261001T174000Z",
+  "reserved_at_utc": "2026-10-01T20:35:28Z",
+  "reason": "Preserve active trainer and reserve report/source preparation plus bounded priority insertion; resume predecessor coordinator automatically after new branch."
+}

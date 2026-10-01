@@ -1,0 +1,1 @@
+local_delay_feature_D2048_R2_waiting_20261001T202000Z experiments/clock_feature_language_benchmark.py --tag local_delay_feature_D2048_R2_waiting_20261001T202000Z --clock-features 2 --clock-readout off --fit 2048 --dev 8192 --epochs 4 --seed 6

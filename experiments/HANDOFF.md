@@ -989,3 +989,20 @@ adds two/four reused-score clock policies with low-frequency initial basis and
 gated vector composition. Uniform R2 and late-half R4 have equal added parameter,
 projection and race/rate budgets. Primitive window/train code is numerically
 verified, not integrated into fitted language or claimed on-chip learning.
+
+## Priority delay campaign launch preparation — 1 October, current session
+
+R0, R2 and R4 full-depth language numerical/gradient/recovery contract queues
+completed successfully. The priority manifest now includes R2 uniform, R4
+uniform, R4 late-half, their waiting controls and matched 2K pilots. Uniform R2
+and late R4 have matched added budget. A winning pilot must improve .02 bpc over
+the native parent, .01 over its waiting control and stay within 1.25x projected
+whole fit work before conditional 8K. Separately, native 8K is admitted by a
+predeclared .05-bpc near-quality / <=25%-work envelope against the saved 2K KV
+construction. This is a new data-scaling experiment, not a rewrite of the older
+strict quality gate. It cannot establish iso-quality or frontier supremacy.
+
+The bounded coordinator adopts the PID178293 reservation and resumes that
+coordinator in finally. Read its same-stem status/log; do not modify its frozen
+sources or start another trainer. Tabular and real robotics adapters/matrices
+are independent next work and not included as invented jobs in this manifest.
