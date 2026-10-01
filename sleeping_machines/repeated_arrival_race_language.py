@@ -140,4 +140,3 @@ class RepeatedArrivalRaceLanguageModel(ParallelHeadRaceLanguageModel):
         state.context_arrivals = torch.stack(arrivals)
         state.position += 1
         return self.head(x)
-

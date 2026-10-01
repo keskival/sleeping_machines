@@ -24,7 +24,7 @@
     "experiments/repeated_arrival_language_helpers.py": "d040289a7a974ee49885532c5db01f340a4f94876491d364ab091a5f47283933",
     "experiments/repeated_arrival_gradient_contracts.py": "c171006beee2ee1ee6231bc36e25df97467e98cfe0d191e3e945e6c2031e2db3",
     "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
-    "sleeping_machines/repeated_arrival_race_language.py": "01eee1f2c0b41cd0c92ff81ced0a13e41b18084c7efc7d583478008f32db0db7",
+    "sleeping_machines/repeated_arrival_race_language.py": "4e1748430d8a141ce0d90fb7a21f9e95fd34f8822f9544b8d25b6a8643fee8d8",
     "sleeping_machines/repeated_temporal_race.py": "103800bba528704cf54c7cf13fb08228f48d7da8b963136664405f0da3725422",
     "experiments/repeated_arrival_language.py": "084004fd4b80d7c1e87cca8784949f9b8b7d10b98c9014f53c1234bf81b3b553",
     "scripts/run_repeated_arrivals_after_heads.py": "1ffe2f411e7397e88938e93761a0220d16d8cf8221da677db8d991b52877088f"
