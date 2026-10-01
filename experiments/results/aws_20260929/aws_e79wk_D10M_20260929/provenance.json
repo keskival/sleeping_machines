@@ -1,0 +1,27 @@
+{
+  "run_tag": "aws_e79wk_D10M_20260929",
+  "script": "experiments/e79_race_mixer.py",
+  "arguments": [
+    "--D",
+    "10000000",
+    "--K",
+    "6",
+    "--wordkeys",
+    "1",
+    "--windows",
+    "256"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1ea3ff6b616d6465b0953ca86cd3dd10c3d0db3ff52d34070bdd957977edfa97",
+  "git_commit": "46bb33a6cec85af2d88dd7227d97483b4e7d82ec",
+  "limits": {
+    "MEM_CAP_KB": "16777216",
+    "MEM_CAP_RSS_KB": "12582912",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:22:07Z",
+  "status": "completed",
+  "wall_s": 92.111,
+  "peak_rss_kb": 4918408
+}
