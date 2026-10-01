@@ -1171,3 +1171,38 @@ not the newer native substrate. New completed fast-matrix pilot files will be
 ingested into separate early-screen appendix figures/tables with their actual
 small development sizes; they are not mixed into the 8,191-target language
 quality claims. Contracts/smokes never populate those pilot tables.
+
+
+## AWS next defined event battery — 1 October, 23:03 UTC
+
+Pulled/rebased main through55c684a. Read THEORY §§354–357 and notes53 plus
+RESULTS_DESIGN_UPDATE. User requests next defined battery. Prior matrix has
+15/17 completed pilots; two wine-regression pilots continue with healthy
+RSS~0.5GiB and~29GiB available. Preserve their active sources/checkpoints.
+
+Prepared new immutable plan
+`experiments/gym/plans/aws_split_event_20261001T230029Z/manifest.json`: eight
+order fits across S4/S16 x private/shared x0/2 protected pairs, plus three
+private S4 paired-timing fits (observed/rank unprotected,observed protected).
+33 unique contract/smoke/pilot stages; seed6,H2,d8,depth8,pool2,128 fit queries
+per pass,four passes,256 dev queries. More independent dev populations replace
+the earlier undersized64-query screen. Six read-only new-model tests pass;
+all source/queue hashes and output non-collision checks pass.
+
+Entry point `experiments/AWS_SPLIT_EVENT_BATTERY.md`. Waiting supervisor:
+`scripts/run_aws_split_event_after_matrix.py`, tmux
+`aws-split-event-after-matrix-20261001T230029Z`; log
+`experiments/queue/aws_split_event_20261001T230029Z.out`. It verifies live
+predecessor PID696038 and waits for its exit/terminal record, then starts
+the existing3-slot guarded worker on this plan. An unrelated tabular failure
+is preserved, not used to waive the new event prerequisites. Caps2441MiB
+RSS/3907MiB VMS,8GiB reserve; timeouts1800s checks/3600s fits from measured
+789/829s old pilots and increased development-work allowance.
+
+Prioritized candidate retains native sparse/temporal/counterfactual mechanisms
+with protected receiver/context modes and optional shared transition rules.
+No source substitutions in active predecessor, no S64/new language expansion.
+Sharing also removes private source embeddings; map-only attribution remains
+untested. Fixed addresses/forced activity, full producer graphs and local
+surrogate losing credit remain gaps. Publication per result stays serial on
+main; shared REPORT/PDF edits remain with the other host publisher.

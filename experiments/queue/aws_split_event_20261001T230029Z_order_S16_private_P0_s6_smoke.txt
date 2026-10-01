@@ -1,0 +1,1 @@
+aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke experiments/split_event_benchmark.py --tag aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke --task order --sources 16 --protected-pairs 0 --time-input observed --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit-targets 16 --dev-targets 16 --epochs 1 --update-targets 16

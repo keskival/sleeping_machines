@@ -1,0 +1,1 @@
+aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot experiments/split_event_benchmark.py --tag aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot --task order --sources 16 --protected-pairs 2 --time-input observed --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit-targets 128 --dev-targets 256 --epochs 4 --update-targets 64 --shared-maps

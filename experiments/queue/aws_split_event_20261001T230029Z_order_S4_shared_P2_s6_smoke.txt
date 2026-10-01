@@ -1,0 +1,1 @@
+aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke experiments/split_event_benchmark.py --tag aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke --task order --sources 4 --protected-pairs 2 --time-input observed --payload 8 --depth 8 --heads 2 --pool 2 --seed 6 --fit-targets 4 --dev-targets 4 --epochs 1 --update-targets 4 --shared-maps

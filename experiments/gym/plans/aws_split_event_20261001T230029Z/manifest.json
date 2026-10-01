@@ -1,0 +1,717 @@
+{
+  "schema": 1,
+  "status": "prepared_not_started",
+  "run_prefix": "aws_split_event_20261001T230029Z",
+  "jobs": [
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts.txt",
+      "queue_sha256": "fb6fee724d6c2b3d6f877d0c57cd8a3b23ae473079991320fc4613c2617d062a",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke.txt",
+      "queue_sha256": "cb62443ed02470571b1ba095cdef75a9bc5e7b59a995197cf755d098333cb408",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_pilot.txt",
+      "queue_sha256": "e888034eabf7112ea3cae982f34294c7b72a7c6008977969b99cf52ddad2dfdb",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts.txt",
+      "queue_sha256": "09059dde5b86454742e3bea6ae9f9a46d5bbbf54e58ed2961cb1515611d8c01a",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke.txt",
+      "queue_sha256": "16f3c19542add26bfd1bcc649bb53d6df459ba7d9a06cf5bb0374958152f6ddd",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_pilot.txt",
+      "queue_sha256": "6d8df7de3bd6f4621b3e6292b6dc0b46ef1fae34e025c120776526e3335d1999",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts.txt",
+      "queue_sha256": "f708ac0a273d6f55144fcddec93d8a4a42422844cdcbed4c3a2c66cec55da459",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke.txt",
+      "queue_sha256": "940e5ac20b5f211dabfb32fce5c06471de52dfd2861d1c5d9ccf85b4a8301473",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_pilot.txt",
+      "queue_sha256": "6b1ffa05f360ba25b9ff26bb644925ac6b0a93bb986120949f01b769d88e143d",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts.txt",
+      "queue_sha256": "b7aec3a5a3076bf0008cf343f3388490b19d496607bb2dc5560c35b4245598f7",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke.txt",
+      "queue_sha256": "2548045ba41aee589784b97918e2dc7a004948a0eb386aba866ce391840880b0",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_pilot.txt",
+      "queue_sha256": "20088da328ea3d7b4c44616f2607f3bb05f7d76f1af465f767b47a528b2999da",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.txt",
+      "queue_sha256": "8293ff503b4a43c98e017fff7159a7c30621bd3547fb6b5488a347a0c35c5aa4",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.txt",
+      "queue_sha256": "2c86ad22a0b6088087cdbb2a11cea1d516807a43158cf90317d928bd5b7beb42",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot.txt",
+      "queue_sha256": "d105a87cb6dbe9ba464cb8536ef410cbbe1ce973f2fadfef238e935f35e844c6",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts.txt",
+      "queue_sha256": "cd3b6a344e8d703ff7c992ecb00dd6f262ccd29508040a56431a2f51c7082171",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke.txt",
+      "queue_sha256": "710fc28aef25498e274183a34875486d04d1efec66f6a862fca91fe7f42868f3",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_pilot.txt",
+      "queue_sha256": "5d90bf6631b3569a85fb949866bfa2f7ac0e47774d090033e5fe4edf7566302e",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.txt",
+      "queue_sha256": "3400d14763ae7cdf721baff276894b384dac910071c8ff5735362e2d9a3cc32d",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.txt",
+      "queue_sha256": "071c9754e85b74a4f4bd203fe49689b35d905649e3db7c19b5ff964b1bcd28da",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.txt",
+      "queue_sha256": "5b5696b421d602626a1f13056e9734b444ec6ab6870e695c8cd0a91c1d191cec",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts.txt",
+      "queue_sha256": "99d37b68d3320c5d3a519af814e41034a5dd84c8bedb8f18ecb2115cdf33af85",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke.txt",
+      "queue_sha256": "eafa9f6eccce1e0fb41aac02d09662cacc5fc11b854b13951c99b3ffdf4ea40e",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot.txt",
+      "queue_sha256": "54054b5029c1c90da100ceec70e7a0918c6e4b7690026f9a174c70db2bf22273",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_observed",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.txt",
+      "queue_sha256": "830568c389609f7c11dca6c239250a090a812229acaaa56e1c5b4e604658abb0",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_observed",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.txt",
+      "queue_sha256": "3094dd18bcef4750a0e53316b7d32c1094029bf92c82fe3f6b08b2c356e0aa1f",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_observed",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.txt",
+      "queue_sha256": "477feef754ae853ac4763f5c537a8512d508ecb323b3d03f2fba8c191ddb3752",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_rank",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.txt",
+      "queue_sha256": "427feccc37cc2df4f38bcc10a89f8ca7b06d120c400c321d0b1c6c0a05893e78",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_rank",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.txt",
+      "queue_sha256": "7aee3d1b9ad741a0e67aa26b0540b81320651efac93d6fdab9d3b495fb113023",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_rank",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.txt",
+      "queue_sha256": "afc009d69b2f6365d8033bbf82e8a579352006510e4b5d5f50609923f051ebbd",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P2_observed",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts.txt",
+      "queue_sha256": "33dd8e87abfbe34e764814989e5b75fff32e8f727a8728985daeb271694cb8bc",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P2_observed",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke.txt",
+      "queue_sha256": "3cfeab7f4526d8a066faa04b04bfbf33e0cc12565ccb8255fc7d10d70f885ec6",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P2_observed",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot.txt",
+      "queue_sha256": "07d8ae833de4a02eae58c6aa759682983ef3b6d84921307afd61c8291c6afdf3",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    }
+  ],
+  "source_sha256": {
+    "experiments/split_event_benchmark.py": "a078c890d5e21bac469a4f9e85f6e1cbce61633c54699b7bdf88ed0adcbe3080",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/split_event_contracts.py": "7cc951b0f12196f9c02107012cbf032253a14afa9d69af243793242014e68a40",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "scripts/plan_aws_split_event_battery.py": "f0d6afd93382dac41d3bf223ff07ace97b09f7dacce3c79043837a258a347261",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "scripts/run_aws_split_event_after_matrix.py": "4d479cd577741963df96317151b15a7ac00c35332e9c4d0cb68174f3f89e804f"
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "max_parallel_jobs": 3,
+  "protocol": "experiments/theory/53_protected_state_and_shared_processing.md",
+  "concurrency": "User-authorized3 CPU slots; reserved global lock, slot guards,8GiB floor, serial result publication",
+  "promotion": "No automatic confirmation or language scaling; assess completed quality/work first",
+  "comparison_scope": "Sharing also replaces private source embeddings; no map-only attribution without embedding-only control",
+  "predecessor": "experiments/gym/plans/aws_fast_matrix_recovery_20261001T213409Z/worker_recovery.status.json",
+  "measured_timeout_basis": "Saved3-slot S4/S16 order pilots789/829s at64 dev queries; new256-dev work proxy2.59x,1.5x margin fits3600s",
+  "independent_seeds": "One architecture seed6; paired seeds/confirmation deferred",
+  "mechanisms": "Eight temporal/sparse addressed blocks,H2,d8, separate key/value roles, counterfactual learning retained; no KV bank"
+}
