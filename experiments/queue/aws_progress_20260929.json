@@ -674,5 +674,18 @@
       "JOB_TIMEOUT_S": "21600"
     },
     "peak_rss_kb": 47048
+  },
+  "aws_e49_tn_d4_20260929": {
+    "exit_code": 1,
+    "wall_s": 2.033,
+    "status": "failed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e49_tn_d4_20260929 --script experiments/e20_exact.py -- --task mnist --width 400 --epochs 2 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --winners 10 --depth 4 --tnorm 1",
+    "limits": {
+      "MEM_CAP_KB": "6000000",
+      "MEM_CAP_RSS_KB": "3500000",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "21600"
+    },
+    "peak_rss_kb": 46904
   }
 }
