@@ -531,5 +531,18 @@
       "JOB_TIMEOUT_S": "21600"
     },
     "peak_rss_kb": 414368
+  },
+  "aws_e67_win_s2_20260929": {
+    "exit_code": 0,
+    "wall_s": 6.055,
+    "status": "completed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e67_win_s2_20260929 --script experiments/e67_race_time.py -- --rule winner --epochs 3 --seed 2",
+    "limits": {
+      "MEM_CAP_KB": "6000000",
+      "MEM_CAP_RSS_KB": "3500000",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "21600"
+    },
+    "peak_rss_kb": 414436
   }
 }

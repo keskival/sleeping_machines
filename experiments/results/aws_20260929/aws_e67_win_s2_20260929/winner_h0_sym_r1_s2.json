@@ -1,0 +1,1 @@
+{"args": {"rule": "winner", "hidden": 0, "feedback": "sym", "races": 1, "lr": 0.05, "epochs": 3, "seed": 2}, "curve": [{"epoch": 1, "test_acc": 0.8653}, {"epoch": 2, "test_acc": 0.9057}, {"epoch": 3, "test_acc": 0.9263}]}
