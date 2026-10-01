@@ -928,3 +928,38 @@ language retains state but truncates ordinary producer graphs every 16 targets.
 The tested algebraic eligibility is not installed as full-model local learning.
 Real-stream adapters and shared-weight multimodal integration still need their
 own contracts/fits. These gaps guide the next redesign after completed pilots.
+
+
+## AWS host continuation — 2026-10-01 21:08 UTC
+
+`git pull --rebase` on main returned already up to date at `b99f942`.
+This checkout is the AWS CPU host, not the local native-campaign host.
+Its native campaign status file is absent; do not launch a duplicate here.
+The prioritized integrated candidate remains AddressedEventHeads /
+NativeStreamLanguageModel under the frozen
+`local_native_research_campaign_20261001T174000Z` manifest; its live remote
+status was not verified in this session. Mechanism gaps remain as recorded above.
+
+The existing AWS serial controller `scripts/run_aws_non_shd.py` is alive in
+tmux `aws-90m-transformer-rss6g-20260930`. One guarded job is running:
+`experiments/queue/aws_e19_race_res_d3_P64000_20260929.txt`, followed by the
+remaining saved manifest definitions. Preserve its active output directory
+and queue; the controller records, commits and publishes each outcome.
+Do not start another trainer while its host-local guard is occupied.
+Observed MemAvailable ~29.2 GiB of 30.8 GiB; no nvidia-smi/GPU. Current
+limits: VMS 6,000,000 KiB, group RSS 3,500,000 KiB, available-memory floor
+8,192 MiB, timeout 21,600 seconds. No active model/driver source was edited.
+
+Deferred 90M dense references have completed, per saved progress and results:
+LSTM validation 1.615514891 bpc, 38,314.004 s guarded wall, peak RSS
+2,300,868 KiB; Transformer retry validation 1.579527777 bpc, 112,265.865 s
+guarded wall, peak RSS 3,914,240 KiB. These are validation scores; retain the
+original failed Transformer attempt and distinct retry limits/provenance.
+No comparable-quality or sparse-architecture supremacy follows from them.
+
+An existing untracked completed six-block sparse-language result
+`aws_full_sparse_language_D32768_d32_p2_seed6_20260930T193500Z.json`
+reports development 3.106041269 bpc / 8,191 targets, selected epoch 4.
+It is preserved pending source/protocol/accounting and report-ingestion review;
+it is not evidence for the newer native model or a matched dense comparison.
+No architectural substitution or new training was launched in this continuation.
