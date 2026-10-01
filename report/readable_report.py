@@ -412,10 +412,11 @@ def figures(M, tasks, ev):
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
-              and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')]
+              and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
+              and r['args']['clock_features']==0]
     if banknote:
         f,axes=plt.subplots(1,2,figsize=(7.2,2.35))
-        names=['Ours R'+str(r['args']['clock_features']) if r['args']['model']=='ours' else 'Boosted trees' for r in banknote]
+        names=['Ours: native' if r['args']['model']=='ours' else 'Boosted trees' for r in banknote]
         colors=[blue if r['args']['model']=='ours' else orange for r in banknote]
         for axis,metric,scale,label in zip(axes,('accuracy','nll'),(100,1),('Development accuracy (%) ↑','Development log loss ↓')):
             values=[r['final']['dev'][metric]*scale for r in banknote]
@@ -1291,7 +1292,7 @@ def blocks(M, tasks, ev):
             ('p',f'<b>Tabular quality signal.</b> Ours reaches <b>{100*ours["accuracy"]:.2f}%</b> banknote accuracy versus '
              f'<b>{100*trees["accuracy"]:.2f}%</b> for the boosted-tree screen, with <b>{gain:.1f}% lower log loss</b> '
              f'({ours["nll"]:.3f} versus {trees["nll"]:.3f}). The native eight-block model mixes content and memory '
-             'through parallel temporal receiver heads. Added R2 reception performs worse, shown alongside it.'),
+             'through parallel temporal receiver heads.'),
             ('figure',('banknote_first_screen',174)),
             ('small','128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. '
              'Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. '
@@ -1302,7 +1303,7 @@ def blocks(M, tasks, ev):
              'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
              'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
             ('p','<b>What the next tests must repair.</b> State clearing damages learned order predictions, yet stretching silent gaps '
-             'also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. '
+             'also damages them. Private source rules lose exposure as capacity grows. '
              'The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels '
              'cannot be inferred from rank alone.'),
             ('small','Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence '
@@ -2353,6 +2354,10 @@ def blocks(M, tasks, ev):
                  'and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. '
                  'These are small exploratory development results; reserved test labels are '
                  'not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.')])
+            if dataset=='banknote':
+                pages[-1].append(('small','Reception ablation: ours R2 reaches89.06% accuracy /0.270 NLL versus '
+                    'native R0 95.31% /0.155. Whole fitting work increases from0.335 to0.379 GFLOPs. '
+                    'The added reception capacity has not earned its cost in this single-seed static-data screen.'))
 
 
     if full_rows:

@@ -27,7 +27,7 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 ## New evidence: quality and complete work
 
-**Tabular quality signal.** Ours reaches **95.31%** banknote accuracy versus **92.97%** for the boosted-tree screen, with **33.0% lower log loss** (0.155 versus 0.232). The native eight-block model mixes content and memory through parallel temporal receiver heads. Added R2 reception performs worse, shown alongside it.
+**Tabular quality signal.** Ours reaches **95.31%** banknote accuracy versus **92.97%** for the boosted-tree screen, with **33.0% lower log loss** (0.155 versus 0.232). The native eight-block model mixes content and memory through parallel temporal receiver heads.
 
 ![banknote first screen](report/figures/banknote_first_screen.png)
 
@@ -35,7 +35,7 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 **A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
 
-**What the next tests must repair.** State clearing damages learned order predictions, yet stretching silent gaps also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels cannot be inferred from rank alone.
+**What the next tests must repair.** State clearing damages learned order predictions, yet stretching silent gaps also damages them. Private source rules lose exposure as capacity grows. The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels cannot be inferred from rank alone.
 
 Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.
 
@@ -732,6 +732,8 @@ Independent feature-ID rows, state reset between rows, train-only scaling and du
 | Boosted trees | 0.09 | 404.0 | 890/49,840 |
 
 Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.
+
+Reception ablation: ours R2 reaches89.06% accuracy /0.270 NLL versus native R0 95.31% /0.155. Whole fitting work increases from0.335 to0.379 GFLOPs. The added reception capacity has not earned its cost in this single-seed static-data screen.
 
 ## Appendix B. Ours and boosted trees: wine_red
 

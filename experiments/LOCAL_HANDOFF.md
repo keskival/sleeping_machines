@@ -12,6 +12,9 @@ that fit. FIRST_SCREEN_FINDINGS_20261001.md preserves every contrast and scope.
 
 REPORT/PDF promotes banknote quality and the native/KV6.02x counted-work
 tradeoff to the cover/page2, retaining all older strong synthetic evidence.
+Editorial direction from the user: the opening banknote figure compares the
+native model with trees. Keep the losing R2 reception variant and its cost/
+quality interpretation in the appendix, rather than in the opening figure.
 New completed event_variants pilots will populate separate quality/work/activity
 ledgers; contracts/smokes cannot populate them. Protected-prefix initialization
 removes faster initial temporal modes as well as introducing retention;
