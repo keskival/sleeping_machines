@@ -835,3 +835,66 @@ matched 2K pilot, followed by alpha.25. Section 329 adds a verified common-clock
 mode identity: categorical probability invariance still permits arrival-time
 learning. Seven numerical read-only checks now pass; the new check introduces
 no optimizer and does not modify any active hashed driver/model sources.
+
+## Native strengths and uncertainty-reducing campaign — 1 October, 17:40 UTC
+
+The historical write-credit campaign finished. Alpha1 / alpha.25 matched 2K
+pilots score 3.724035 / 3.722073 bpc versus 3.732586 for the parent; gains
+.008551 / .010513 miss the .02 gate. Whole CPU fit work is 23.464 / 23.469
+versus 22.753 GFLOPs. No larger write-credit job ran. Current main includes the
+published results (`c8209ba`, `980aec3`); unused definitions remain history.
+
+The user redirects the primary research toward native temporal/sparse strengths.
+Read THEORY §§330–335 and RESEARCH_VALUE_PLAN.md before redesigning. New core:
+`AddressedEventHeads`, eight blocks, H2, d16/head, pool2, observed stream
+addresses, independent source admission, parallel temporal receiver races,
+incoming-content/memory mixing, rotating/decaying persistent state and
+counterfactual learning. The per-position KV bank is deliberately removed;
+old attention proofs/results remain preserved. Internal head/block joins and
+source-local causal waits remain; arbitrary cross-source learned routing is
+not implemented. No periodic state scan is triggered by silence.
+
+`NativeStreamLanguageModel` feeds token content into the same core with one
+conversation address and shared maps across symbols. It has 32 available
+receivers / 16 selected commits per token, versus the old char-specific H2
+model's 864 receivers. This changes capacity/weight sharing, not just attention.
+Persistent representations are not equivalent to retaining a full KV bank.
+Map exposure, silent-state information loss and complete optimizer costs are
+derived in §§333–335. Protected content/time subspaces and sparse specialist
+corrections remain hypotheses; do not add them to frozen sources mid-campaign.
+
+Event and language full-depth gradient/optimizer/recovery contracts passed via
+unique guarded queues. Both accounting smokes completed; their one-window
+quality is not a benchmark claim. Twelve focused read-only checks pass. Peak
+smoke process RSS is below 0.5 GiB; idle host has about 12 GiB available of
+31 GiB. CPU-only; nvidia-smi absent. Guards VMS4MKiB/groupRSS2.5MKiB/
+minavailable8192MiB. No remote AWS job state or connection was verified.
+New Transformer/LSTM training remains reserved for a provisioned AWS host.
+
+Prepared finite manifest:
+`experiments/queue/local_native_research_campaign_20261001T174000Z.json`.
+Supervisor: `scripts/run_native_research_campaign.py --manifest-stem local_native_research_campaign_20261001T174000Z`.
+It validates finished predecessor, completed contracts and frozen sources,
+reuses successful unchanged smokes, runs timing accounting smoke, native order
+pilot, native language2K pilot and native timing pilot. Refit order pathwise-
+credit / timing rank-time controls run even if pilots are weak. Capability gates
+admit source16/64 capacity fits and independent seed7/8 confirmation runs;
+language quality/work/data gates admit8K/32K and seed7/8 replications. A measured
+131K extension runs last, after event/capacity evidence, with a<=48h timeout.
+Each fit is a unique one-job queue. No other trainer or supervisor should start
+on this host. Read same-stem status JSON, process list and runner logs first.
+
+All source/queue hashes are frozen in the manifest. Do not modify them while
+running, including baseline sources reused by validation. Completed stages are
+validated, published to REPORT/PDF/figures and committed on main by
+`scripts/publish_native_research_stage.py`. Coordinate overlapping report edits
+with that publisher; it refuses to overwrite tracked/staged changes. Smokes
+are excluded from quality plots. Real chronological adapters, matched AWS
+controls, native local-trace learning and measured hardware energy remain
+unimplemented/unrun milestones, not queued successes.
+
+After committing prepared work, start once in tmux:
+
+```bash
+tmux new-session -d -s local_native_research_campaign_20261001T174000Z '.venv-docker/bin/python scripts/run_native_research_campaign.py --manifest-stem local_native_research_campaign_20261001T174000Z >> experiments/queue/local_native_research_campaign_20261001T174000Z.out 2>&1'
+```

@@ -17,23 +17,32 @@ substantially less physical work in both training and inference. This repository
 contains the implementations, mathematical analysis, reproducible experiments and
 completed results used to pursue that goal.
 
-The current integrated language models combine these ideas: learned queries and
-state-dependent keys set temporal races, selected receivers mix content with
-memory, and counterfactual credit teaches hard choices. The new eight-block
-candidate has independent parallel Q/K/V heads and timestamped channels whose
-state evolves while other messages arrive. Each head retrieves a historical
-winning value; the next layer can learn to mix the separate channels.
-See the [integrated language guide](experiments/INTEGRATED_LANGUAGE.md).
+The prioritized integrated candidate now tests our native strengths directly:
+**eight event blocks, independent parallel receiver heads, learned temporal
+races, incoming content mixed with evolving memory, and losing-route credit**.
+Observed stream addresses select persistent receiver pools. Other streams can
+progress independently; silence does not trigger periodic state scans. A token
+content adapter tests the same core on language, with learned maps shared across
+symbols. This branch has no per-position KV attention bank; it tests useful
+persistent representations rather than full-cache equivalence.
 
-The next language experiment tests **compact historical write credit**. Old
-cached content influences predictions after its producing graph is detached;
-one saved feature per write lets later queries teach those old key/value maps
-without retaining a long graph. The key teacher factors into one matrix update
-per query, while temporal races and sparse addressed state remain intact.
-This costs 50% extra K/V tensor storage and additional learning arithmetic;
-quality benefit is pending. The [derivation and matched pilot protocol](experiments/theory/49_historical_write_eligibility.md)
-state the local surrogate's scope and scaling gates. Simply extending ordinary
-credit from 16 to 64 targets did not improve the completed 2K pilot.
+The [research value plan](experiments/RESEARCH_VALUE_PLAN.md) prioritizes order
+and elapsed-time learning, native language quality, occupied-capacity scaling,
+then real irregular streams and matched AWS controls. Full-depth numerical,
+optimizer-recovery and small accounting checks have passed. Completed pilot
+quality and resource evidence will determine scaling, with refitted controls
+and independent seeds. The [native derivation](experiments/theory/50_native_addressed_event_learning.md)
+separates state capacity, parameter exposure and complete optimizer work.
+
+Earlier receiver and episodic race-attention models remain documented in the
+[integrated language guide](experiments/INTEGRATED_LANGUAGE.md), with their
+stronger results preserved. The H2 KV model improves from **3.733 to 3.490 bpc**
+when fitting data grows from 2K to 8K characters, but has a substantial train/dev
+gap. Compact historical write credit improves its matched 2K score to **3.722**
+for additional work and 50% more K/V tensor storage; both tested strengths miss
+the .02 bpc promotion gate. This is learning, but does not establish a scaling
+curve to frontier supremacy. [The write-credit derivation](experiments/theory/49_historical_write_eligibility.md)
+and original comparisons remain part of the evidence.
 
 Our hypothesis is **more capability per unit of active work**. Temporal races
 can approximate attention while avoiding selected arithmetic and value
@@ -273,9 +282,10 @@ Small vector maps and output readouts use dense arithmetic. The earlier cross-ta
 reference sorts arrivals and replays contexts. A separate generic streaming
 path retains modal state and delayed messages across chunks; its eight-layer
 contract checks prefix causality and all-layer credit without prefix replay.
-The integrated language models retain state across chunks without prefix replay
-and score bounded indexed candidates. Competitive larger-data prediction and
-useful candidate coverage remain research objectives. All discovery, teaching
+The integrated language models retain state across chunks without prefix replay.
+Episodic variants score bounded indexed candidates; the native branch uses
+addressed receiver pools and no per-position KV bank. Competitive larger-data
+prediction and useful candidate coverage remain research objectives. All discovery, teaching
 and optimizer work belongs in the resource accounting.
 
 ## Read the theory and evidence
@@ -283,7 +293,8 @@ and optimizer work belongs in the resource accounting.
 | Document | Purpose |
 | --- | --- |
 | [Report and applications](REPORT.md) | Accessible overview, strongest results, potential and benchmark appendices |
-| [Integrated language](experiments/INTEGRATED_LANGUAGE.md) | Current sparse receiver and episodic KV architecture, evidence and queues |
+| [Research value plan](experiments/RESEARCH_VALUE_PLAN.md) | Prioritized uncertainty-reducing experiments, protocols and scaling gates |
+| [Integrated language](experiments/INTEGRATED_LANGUAGE.md) | Native receiver, episodic KV architecture, evidence and queues |
 | [Shared model](experiments/SHARED_MODEL.md) | Earlier cross-task implementation, adapters, contracts and retained evidence |
 | [Theory index](experiments/THEORY.md) | Formal derivations organized by theme, with assumptions and proof scope |
 | [Mathematical program](experiments/MATHEMATICAL_PROGRAM.md) | Open analytic problems and their decisive measurements |

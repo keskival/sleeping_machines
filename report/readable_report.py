@@ -70,6 +70,12 @@ def results():
                             *(RES/'parallel_language').glob('aws_full_sparse_language_*Z.json')])]
     tasks['integrated_online_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
+    tasks['native_language'] = [r for path in sorted((RES/'native_language').glob('local_native_language_*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
+        and r['args']['fit']>=2048 and r['args']['dev']==8192]
+    tasks['native_event'] = [r for path in sorted((RES/'native_event').glob('local_native_event_*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
+        and r['args']['fit_targets']>=512 and r['args']['epochs']>=8]
     tasks['episodic_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'episodic_language').glob('local_episodic_pair_*Z.json'))]
     tasks['historical_write_contracts'] = [read(str(path.relative_to(RES))) for path in sorted((RES/'episodic_language').glob('local_write_credit_contracts_*Z.json'))]
@@ -155,6 +161,15 @@ def language_work_points(tasks, ev):
             inference=w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'],
             projected_inference=w['projected_event_architecture']['inference_arithmetic_flops_per_character']+w['projected_event_architecture']['inference_special_functions_per_character'],
             inference_method='Selected-arrival inference trace'))
+    for r in tasks.get('native_language',[]):
+        a=r['args'];w=r['work'];cpu=w['cpu_emulator'];projected=w['projected_event_architecture']
+        rows.append(dict(model=f"Ours: native event receivers H{a['heads']}×d{a['payload']}",family='integrated',
+            label=f"Native H{a['heads']}d{a['payload']}/p{a['pool']}/{a['fit']//1024}K/s{a['seed']}",
+            parameters=r['parameters'],fit=a['fit'],passes=a['epochs'],split='dev',bpc=r['final']['dev']['bpc'],
+            total=cpu['total_training_unit_special_flops'],targets=w['fitting_targets'],
+            inference=cpu['inference_arithmetic_flops_per_character']+cpu['inference_special_functions_per_character'],
+            projected_inference=projected['inference_arithmetic_flops_per_character']+projected['inference_special_functions_per_character'],
+            inference_method='Native receiver-state inference trace'))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -353,6 +368,32 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    if tasks.get('native_language'):
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
+        for r in tasks['native_language']:
+            a=r['args'];label=f"Ours d{a['payload']}/p{a['pool']}/{a['fit']//1024}K/s{a['seed']}"
+            axes[0].plot([v['epoch'] for v in r['curve']],[v['dev']['bpc'] for v in r['curve']],marker='o',label=label)
+            axes[1].scatter(r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9,r['final']['dev']['bpc'],label=label)
+        axes[0].set(xlabel='Fitting passes',ylabel='Frozen development bpc ↓');axes[0].legend(fontsize=6)
+        axes[1].set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development bpc ↓')
+        for ax in axes:ax.grid(alpha=.2)
+        f.tight_layout();save(f,'native_language_quality_work')
+    if tasks.get('native_event'):
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
+        for ax,task in zip(axes,('order','timing')):
+            for r in tasks['native_event']:
+                a=r['args']
+                if a['task']!=task:continue
+                label=f"Ours S{a['sources']}/{'CF' if a['credit']=='counterfactual' else 'PW'}/{'time' if a['time_input']=='observed' else 'rank'}/s{a['seed']}"
+                quality=r['final']['dev']['accuracy']
+                lo,hi=r['final']['dev']['episode_bootstrap_95_percent_interval']
+                ax.errorbar(r['work']['total_training_unit_special_flops']/1e9,quality,
+                            yerr=[[max(0,quality-lo)],[max(0,hi-quality)]],fmt='o',capsize=2,label=label)
+            ax.set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development accuracy ↑',title=task)
+            ax.grid(alpha=.2)
+            if ax.containers:ax.legend(fontsize=5.5)
+            else:ax.text(.5,.5,'No completed '+task+' pilot',transform=ax.transAxes,ha='center',fontsize=8)
+        f.tight_layout();save(f,'native_event_quality_work')
     for name,rows in historical_write_groups(tasks):
         f,axes=plt.subplots(1,2,figsize=(7.2,2.4))
         labels=['Ours parent' if 'write_credit' not in r['args'] else f"Ours α={r['args']['write_credit']:g}" for r in rows]
@@ -544,6 +585,24 @@ def figures(M, tasks, ev):
     a.text(.1,3.3,"Ours: a learned event-state block",fontsize=11,fontweight="bold")
     a.text(.1,2.85,"Source identity, content and elapsed time determine the next vector and arrival.",fontsize=9)
     save(f,"shared_architecture")
+
+    f,a=plt.subplots(figsize=(7.2,2.65))
+    a.set(xlim=(0,10),ylim=(0,4));a.axis('off')
+    boxes=[(.1,1.3,1.7,1.,'Observed event\naddress, time, content'),
+           (2.25,1.3,1.9,1.,'Addressed memory\nevolves on read'),
+           (4.6,2.05,2.1,.75,'Head 1: local race\nselected content'),
+           (4.6,.75,2.1,.75,'Head 2: local race\nselected content'),
+           (7.25,1.3,2.5,1.,'Align and mix channels\nnext block / query')]
+    for x,y,w,h,label in boxes:
+        a.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.04',facecolor='#edf3fb',edgecolor=blue))
+        a.text(x+w/2,y+h/2,label,ha='center',va='center',fontsize=8)
+    for start,end in (((1.85,1.8),(2.2,1.8)),((4.2,1.8),(4.55,2.4)),
+                      ((4.2,1.8),(4.55,1.1)),((6.75,2.4),(7.2,1.8)),((6.75,1.1),(7.2,1.8))):
+        a.add_patch(FancyArrowPatch(start,end,arrowstyle='-|>',mutation_scale=12,color=blue))
+    a.text(.1,3.5,'Ours: native temporal receiver heads',fontsize=11,fontweight='bold')
+    a.text(.1,3.,'Eight blocks; two independent heads; local state persists between events.',fontsize=9)
+    a.text(.1,.15,'Learning charges losing-route teachers and producer credit; no per-position KV bank.',fontsize=8,color=orange)
+    save(f,'native_addressed_event_path')
 
     f, a = plt.subplots(figsize=(7.2,2.85))
     values=[100*tasks['shd_full_values']['rows']['parent']['held_accuracy'],
@@ -1074,7 +1133,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("title","Sleeping Machines"),
         ("sub","Deep learning that computes with time"),
-        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 30 September 2026"),
+        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 1 October 2026"),
         ("p","Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, "
          "gate their updates and compete through learned delays. Arrival order and winning races determine the computation. "
          "The goal is useful intelligence with much less active work."),
@@ -1281,17 +1340,43 @@ def blocks(M, tasks, ev):
          ['Capacity beyond activity','Gains depend on useful sparsity and learning','Measure marginal useful capacity with bounded active work'],
         ],[45,67,62])),
         ('h2','A direct mechanism experiment'),
-        ('p','The prioritized model combines the mechanisms: a character event enters six timed races, '
-         'selecting one persistent content-bearing unit at each depth. Separate state-dependent keys '
+        ('p','The native candidate combines the mechanisms: an addressed content/time event enters '
+         'eight blocks with two independent receiver heads, selecting one persistent content-bearing '
+         'unit per head at each depth. Separate state-dependent keys '
          'set rates; the winner mixes incoming content and retained memory, then emits a vector and '
          'learned arrival time. Addressed losing values receive counterfactual score credit during '
          'training. The dense carrier and carrier-plus-retrieval variants remain diagnostic controls.'),
-        ('small','Character-indexed pools and fixed depth are declared priors; learned topology growth '
+        ('small','Observed-source pools and fixed depth are declared priors; learned topology growth '
          'and unrestricted asynchronous schedules remain open. RNG and physical traffic are additional. The old '
          'time-normalized value sum has a shared random amplitude; its covariance and cutoff claims '
          'are corrected beside the original theory, not silently deleted. A centered, conserved teacher '
          'is now tested. Its fixed-error expected Jacobian is not an unbiased sampled-loss gradient. '
          'Theory §§294–298: experiments/theory/45_race_attention_and_resource_identity.md.')])
+
+    pages.append([
+        ('h1','A native path to more capability per unit of work'),
+        ('p','The next integrated experiments test what this substrate does naturally: '
+         'learned time computation, sparse addressed memory and hard choices trained through '
+         'counterfactual credit. Episodic race attention remains a useful preserved comparison; '
+         'the native branch does not require a per-position attention bank.'),
+        ('figure',('native_addressed_event_path',174)),
+        ('table',(['Ours: native construction','Exact activity boundary'],[
+            ['S observed sources; L blocks; H heads; P candidates','Available receivers: S × L × H × P'],
+            ['One selected receiver per head/block','Selected state commits per event: L × H'],
+            ['All addressed candidates are scored','Key scores and training proposals per event: L × H × P']], [88,86])),
+        ('p','Useful capacity can grow while selected activity stays fixed, but its value must be '
+         'learned. At a fixed data budget more local maps receive fewer examples. Sharing learned '
+         'maps while retaining separate state is one way to improve learning exposure; the native '
+         'language adapter tests this directly. It changes capacity and is a whole-construction comparison.'),
+        ('p','Analytic state evolution avoids periodic simulation during silence. Decay can still '
+         'erase information, so long-gap accuracy is measured separately from operation count. '
+         'A protected-content subspace alongside evolving time modes is a derived next hypothesis, '
+         'to test if the current construction loses useful memory.'),
+        ('small','The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys '
+         'per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local '
+         'causal waits remain paid. Full-depth contracts and accounting smokes pass; quality pilots, '
+         'refitted controls and independent seeds determine further scaling. Theory §§330–335; '
+         'completed results and the executable priority appear in Appendix B.')])
 
     full_rows=tasks['language_full_sparse']
     full_blocks=[
@@ -2265,6 +2350,109 @@ def blocks(M, tasks, ev):
              'Inference traces average different representative spans; the operation definitions and '
              'inference architecture are the same. One seed, development selection, no frontier claim. '
              'Forward-partition equality and full 64-credit gradient/update contracts precede fitting.')])
+    pages.append([
+        ('h1','Appendix B (continued). What most reduces research uncertainty'),
+        ('p','The main direction now tests native content-and-time computation directly. '
+         'Episodic race attention remains a preserved comparison. Its small language improvements '
+         'do not yet establish that an attention scaffold is the best use of this substrate.'),
+        ('table',(['Priority','Experiment','Doubt resolved'],[
+            ['1','Integrated order/time learning; refitted credit/time controls; three seeds','Can deep sparse temporal state learn useful representations?'],
+            ['2','Native-core text8 adapter and small-to-larger data ladder','Does the native construction learn economically without a KV attention bank?'],
+            ['3','Occupy 4, 16, 64 stream states at fixed event/query budgets','Does useful state grow without proportional per-event activity?'],
+            ['4','Chronological real streams and predict-before-update adaptation','Does the advantage survive real data and online change?'],
+            ['5','Timestamp-aware AWS controls, equal-budget/quality curves','Is the quality/resource advantage reproducible?'],
+            ['6','Whole-system FPGA/ASIC timing, traffic and energy measurement','Does the physical substrate deliver the projected savings?']], [19,87,68])),
+        ('p','The first native branch uses eight event blocks, two independent receiver heads, '
+         'observed source addresses, persistent content/state, analytic temporal evolution and '
+         'counterfactual learning. It has no per-position KV attention. Other sources keep independent '
+         'progress; source-local causal dependencies and internal joins remain charged.'),
+        ('p','The same native core receives token content for the language test. Sharing receiver maps '
+         'across tokens changes capacity and parameter exposure; it is a whole-construction comparison, '
+         'not an isolated attention-removal ablation. Persistent state is not a full-cache equivalence claim.'),
+        ('small','Contracts/smokes precede fixed-budget pilots, conditional capacity/data scaling and '
+         'independent replication. Whole fitting, per-target work, inference, occupancy, memory and '
+         'confidence intervals are published from completed files. Synthetic learning, real-data '
+         'Pareto advantage and physical joules are separate milestones. The executable protocol, '
+         'gates and current host limitations are documented in experiments/RESEARCH_VALUE_PLAN.md.')])
+    for begin in range(0,len(tasks.get('native_language',[])),4):
+        rows=tasks['native_language'][begin:begin+4]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: native temporal-core language'),
+            ('p','27-character text8 content enters one conversation address in the native event core. '
+             'Independent receiver heads, persistent state, learned delays, evolving channels and '
+             'losing-route credit remain; no historical KV attention or dense carrier is added. '
+             'The receiver maps now learn across all token marks.'),
+            ('figure',('native_language_quality_work',145)),
+            ('table',(['Ours','Fit chars / passes','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],[
+                [f"d{r['args']['payload']}/p{r['args']['pool']}/s{r['args']['seed']}",
+                 f"{r['args']['fit']:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
+                 f"{(r['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+r['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows], [31,32,23,29,30,29])),
+            ('small','Fixed passes and frozen 8,191-target development selection; official test untouched. '
+             'Existing stronger receiver and dense-reference evidence is preserved in the common ledger. '
+             'Architecture, capacity and weight sharing differ from the KV variants. Work uses audited '
+             'representative optimizer windows including backward, teachers and Adam; special functions '
+             'have unit weight here, with separate JSON counts. These are exploratory scaling points, '
+             'not a frontier score or a measured energy advantage. With H2/depth8/pool2, '
+             'available receivers are 32, selected commits 16/token, scored keys and training proposals 32/token. '
+             'Parameter counts and occupied state are retained in completed records.')])
+    for begin in range(0,len(tasks.get('native_event',[])),4):
+        rows=tasks['native_event'][begin:begin+4]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: native event/state capability'),
+            ('p','Each source writes three signed marks then receives an explicit causal query. '
+             'Fits use 512 queries / 2,048 input events per pass, eight passes; development has 256 queries. '
+             'All source populations are occupied. The order task predicts the last two signs; '
+             'the timing task predicts a two-mode temporal trace. All events, timestamps and query '
+             'flags are observed; target labels never address a module.'),
+            ('figure',('native_event_quality_work',145)),
+            ('table',(['Ours: task / sources / seed','Credit / time','Dev accuracy ↑','Whole fit GFLOPs ↓','Fit MFLOPs / query ↓','Infer MFLOPs / event ↓'],[
+                [f"{r['args']['task']}/S{r['args']['sources']}/s{r['args']['seed']}",
+                 ('CF' if r['args']['credit']=='counterfactual' else 'pathwise')+'/'+r['args']['time_input'],
+                 f"{r['final']['dev']['accuracy']:.1%}",f"{r['work']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['total_training_unit_special_flops']/r['work']['fitting_query_targets']/1e6:.3f}",
+                 f"{(r['work']['inference_arithmetic_flops_per_event']+r['work']['inference_special_functions_per_event'])/1e6:.4f}"] for r in rows], [40,34,25,28,24,23])),
+            ('small','Equal declared query/event budgets; available receivers scale with source population '
+             'while per-event key scores and selected commits are logged explicitly. All fitting arithmetic '
+             'is summed from executed operators, including complete producer graphs, losing proposals, '
+             'clipping and Adam; CPU numerical clocks and unit-weight specials are included. '
+             'Bootstrap intervals by population and raw state-clearing/time/long-gap probes remain in '
+             'the completed JSON. More addresses change training exposure. Synthetic capability and '
+             'bounded activity do not establish superiority over timestamp-aware recurrent/attention '
+             'controls, real-stream generalization or clockless energy savings.')])
+    for begin in range(0,len(tasks.get('native_event',[])),6):
+        rows=tasks['native_event'][begin:begin+6]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: occupied state and activity'),
+            ('p','Every source stores three content events and receives a query. These are useful-state '
+             'tests rather than padded unused capacity. Event budgets, active depth, head count and '
+             'candidate pool are fixed. More addresses reduce observations per local parameter; '
+             'addressing is input information that strong controls must also receive.'),
+            ('table',(['Ours: task / sources / seed','Available / occupied receivers','Commits / scores per event','Persistent state KiB','Parameters'],[
+                [f"{r['args']['task']}/S{r['args']['sources']}/s{r['args']['seed']} "
+                 +('CF' if r['args']['credit']=='counterfactual' else 'PW')+'/'+r['args']['time_input'],
+                 f"{r['work']['available_receivers']}/{r['work']['inference_storage']['occupied_receivers']}",
+                 f"{r['work']['selected_updates_per_event']}/{r['work']['key_scores_per_event']}",
+                 f"{r['work']['inference_storage']['persistent_tensor_bytes']/1024:.2f}",f"{r['parameters']:,}"] for r in rows], [49,35,35,27,28])),
+            ('table',(['Ours: task / sources / seed','Whole fit GFLOPs','Fit MFLOPs / input event','Infer MFLOPs / query'],[
+                [f"{r['args']['task']}/S{r['args']['sources']}/s{r['args']['seed']} "
+                 +('CF' if r['args']['credit']=='counterfactual' else 'PW')+'/'+r['args']['time_input'],
+                 f"{r['work']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['total_training_unit_special_flops']/r['work']['fitting_events']/1e6:.3f}",
+                 f"{(r['work']['inference_arithmetic_flops_per_query']+r['work']['inference_special_functions_per_query'])/1e6:.3f}"] for r in rows], [57,36,43,38])),
+            ('table',(['Ours: task / sources / seed','Selected dev accuracy','Clear-history accuracy','Independent confirmation'],[
+                [f"{r['args']['task']}/S{r['args']['sources']}/s{r['args']['seed']} "
+                 +('CF' if r['args']['credit']=='counterfactual' else 'PW')+'/'+r['args']['time_input'],
+                 f"{r['final']['dev']['accuracy']:.1%}",f"{r['final']['cleared_state']['accuracy']:.1%}",
+                 f"{r['final']['confirmation']['accuracy']:.1%}" if 'confirmation' in r['final'] else 'Not read'] for r in rows], [57,36,38,43])),
+            ('small','Occupied receivers and stored float bytes come from the audited inference population, '
+             'not parameter storage, Python metadata, graphs or host RSS. Inference/query includes all four '
+             'producer/query events. Full fitting includes every event and optimizer operation. '
+             'Arithmetic plus unit-weight specials; traffic/RNG/energy separate. Development selects '
+             'checkpoints; independent confirmation is read once only on fixed promoted seed protocols. '
+             'Population bootstrap intervals in the quality plot condition on the selected model and '
+             'do not correct development selection or substitute for independent seed uncertainty.')])
     if tasks['historical_write_contracts']:
         pages.append([
             ('h1','Appendix B (continued). Ours: compact delayed learning'),
@@ -2273,7 +2461,7 @@ def blocks(M, tasks, ev):
              'its write map receives no later loss credit. Increasing the ordinary credit span '
              'from 16 to 64 did not improve the completed matched 2K pilot.'),
             ('figure',('historical_write_credit_flow',160)),
-            ('p','The next integrated experiment saves the normalized feature φ of each historical '
+            ('p','The tested integrated construction saves the normalized feature φ of each historical '
              'write. Later queries send a compact producer teacher to sealed key/value maps while '
              'preserving independent heads, temporal races, incoming content and persistent addressed state.'),
             ('table',(['Ours: added teacher','Factorization','Extra work / query'],[

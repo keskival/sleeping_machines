@@ -1,0 +1,1 @@
+local_native_event_order_S4_s7_confirm_20261001T174000Z experiments/native_event_benchmark.py --tag local_native_event_order_S4_s7_confirm_20261001T174000Z --task order --sources 4 --seed 7 --fit-targets 512 --dev-targets 256 --epochs 8 --confirm

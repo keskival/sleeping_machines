@@ -136,3 +136,5 @@ Section numbers remain global and unchanged, so references such as “THEORY §5
 Read §0 for the prior-work boundary and the synthesis above for the project's working principles. The test matrix is an inventory; it is not evidence that each listed prediction has been confirmed.
 
 - [Historical write eligibility](theory/49_historical_write_eligibility.md) — §§326–329: compact sealed-write producer credit, factorized key-map adjoints, exact fixed-feature perturbation scope, 50% K/V tensor-storage overhead and gated integrated comparisons, and the independent common clock mode. Forward history is preserved; full-history deep gradients and hardware efficiency remain unproved.
+
+- [Native addressed event learning](theory/50_native_addressed_event_learning.md) — §§330–335: user-directed receiver/state construction without per-position KV attention, local causal schedules, occupied-capacity versus activity, full producer-credit boundaries, matched order/time/credit controls, map sharing versus state sharing, long-silence information loss, and complete optimizer/exposure scaling.

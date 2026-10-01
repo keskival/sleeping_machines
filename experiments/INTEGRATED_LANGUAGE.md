@@ -21,7 +21,7 @@ probabilities. One sampled value differs from a deterministic weighted sum.
 The prior single-head **eight-block** receiver configuration has 432 available
 units, 16 addressed key scores and eight receiver-state updates per character.
 Its episodic variant adds one historical race per block. These controls remain
-preserved. The current full-architecture candidate uses H independent parallel
+preserved. The earlier KV full-architecture candidate uses H independent parallel
 heads in each of eight blocks: separate receiver pools and Q/K/V/gate matrices,
 H historical races, and H timestamped output channels. With payload 32/head,
 H=2 gives total width 64; H=4 gives 128. Increasing heads here also increases
@@ -113,7 +113,7 @@ not unlimited long-context training or a derivative error.
 
 The [credit campaign](queue/local_language_credit_campaign_20261001T074000Z.json)
 follows the repeated-arrival trial. It first diagnoses saved H2/H4 checkpoints,
-then guards full 64-credit gradient/update contracts and a129-character smoke.
+then guards full 64-credit gradient/update contracts and a 129-character smoke.
 The matched 2K comparison holds U64/lr.002 and the full architecture fixed;
 only credit span changes16→64. The strongest16-credit schedule also gets its
 prepared8K comparison. Longer8K,32K,secondseed8K and 131K fitting have explicit
@@ -141,19 +141,31 @@ Read [HANDOFF.md](HANDOFF.md) and inspect live processes before launching work.
 The parallel-head, repeated-arrival and longer-credit campaigns finished at
 small-data quality gates. Their completed records and unused larger definitions
 remain preserved; do not restart them as though they were active.
-The current [historical write-credit campaign](queue/local_historical_write_campaign_20261001T152100Z.json)
-runs H2/d32/head/depth8, with full and quarter-strength compact producer credit.
-It preserves the forward sparse temporal architecture and adds one detached
-normalized feature per stored K/V write. See [theory §§326–328](theory/49_historical_write_eligibility.md)
-for the factorized key teacher, stale-write scope and 50% K/V tensor-storage cost.
-It teaches sealed write maps without reopening their old representation graphs.
+The completed [historical write-credit campaign](queue/local_historical_write_campaign_20261001T152100Z.json)
+retains H2/d32/head/depth8 and tests full/quarter-strength sealed-write teachers.
+Matched 2K scores are 3.724035 / 3.722073, versus 3.732586 for the parent;
+whole-fitting CPU work is 23.464 / 23.469 versus 22.753 GFLOPs. Both miss the
+predeclared .02 bpc gate, so no larger write-credit fit ran. The factorized
+teacher and 50% K/V float-storage cost remain in [theory §§326–329](theory/49_historical_write_eligibility.md).
 
-Six read-only numerical tests, full eight-block optimizer/recovery contracts and
-an alpha1 smoke passed. Exact alpha0 forward/RNG/gradient/Adam nesting allows
-reuse of the strongest completed matched 2K parent. The campaign completes an
-alpha.25 smoke and both 2K pilots before any 8K promotion: >=.02 bpc pilot gain.
-The saved indexed-control+.10 gate then decides 32K; measured data benefit,
-memory and time decide 131K. See the same-stem status JSON for actual progress.
+The new prioritized [native campaign](queue/local_native_research_campaign_20261001T174000Z.json)
+uses `NativeStreamLanguageModel`: the same addressed content/time event core as
+the native order/timing experiments, one conversation address, eight blocks,
+two independent heads, d16/head, pool2. Tokens enter a learned content projection;
+receiver maps are shared across all symbols. It retains persistent temporal
+memory, actual depth, separate key/value functions and counterfactual credit,
+without an episodic KV bank. Its 32 available receivers and 16 selected commits
+per token differ from the old H2 character-specific model's 864 receivers.
+This is a whole-construction comparison, not a pure KV-removal ablation.
+
+Full-depth gradient/update and exact hot-stream optimizer recovery, accumulated
+U64 gradient/recovery contracts, and a 129-character accounting fit passed.
+The fixed four-pass ladder uses 2K→8K→32K→131K fitting characters, frozen disjoint
+8K development, U64/lr.002/warm512 and no official test. Same-data quality/work,
+data benefit, replication, measured memory and runtime gate successive sizes.
+Read [the value plan](RESEARCH_VALUE_PLAN.md) and [theory §§330–335](theory/50_native_addressed_event_learning.md)
+for map sharing, source-local schedules, complete optimizer costs and explicit
+remaining gaps. Read the same-stem status JSON for actual progress.
 Every job uses a unique one-job queue and [run_safe.sh](queue/run_safe.sh), with
 one trainer per host, an 8 GiB available-memory floor and RSS watchdog. The
 coordinator publishes and commits completed evidence stage by stage. A prepared
@@ -180,7 +192,7 @@ the [integrated construction](theory/46_integrated_sparse_temporal_language.md).
 
 ## Beyond character streams
 
-The parallel-head candidate currently uses 27 character-specific receiver pools;
+The earlier KV parallel-head candidate uses 27 character-specific receiver pools;
 it is not an implemented joint sensor/language model. The broader event interface
 and temporal/state/credit primitives motivate shared persistent representations
 with modality-specific projections. The [event-stream and integration protocol](EVENT_STREAM_ADVANTAGE_PROTOCOL.md)
@@ -188,3 +200,9 @@ sets tests where instructions change event routing, events ground language and
 both inform actions. Language index and physical elapsed time require distinct
 encodings. Held-out cross-modal combinations and single-modality interventions
 must establish any integration or compression advantage.
+
+The new native core accepts observed source/time/content events directly; its
+language adapter treats tokens as content in one addressed conversation.
+Order/timing tasks and language have separate fitted weights. Shared code and
+state primitives are implemented; joint sensor/language weights, real-stream
+online training and clockless native learning are not established by these fits.

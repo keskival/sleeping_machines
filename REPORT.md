@@ -2,7 +2,7 @@
 
 Deep learning that computes with time
 
-Tero Keski-Valkama and Karoliina Salminen · Research report · 30 September 2026
+Tero Keski-Valkama and Karoliina Salminen · Research report · 1 October 2026
 
 Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, gate their updates and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
 
@@ -185,9 +185,27 @@ If candidate clocks have rates exp(score), their first-arrival winner has exactl
 
 ### A direct mechanism experiment
 
-The prioritized model combines the mechanisms: a character event enters six timed races, selecting one persistent content-bearing unit at each depth. Separate state-dependent keys set rates; the winner mixes incoming content and retained memory, then emits a vector and learned arrival time. Addressed losing values receive counterfactual score credit during training. The dense carrier and carrier-plus-retrieval variants remain diagnostic controls.
+The native candidate combines the mechanisms: an addressed content/time event enters eight blocks with two independent receiver heads, selecting one persistent content-bearing unit per head at each depth. Separate state-dependent keys set rates; the winner mixes incoming content and retained memory, then emits a vector and learned arrival time. Addressed losing values receive counterfactual score credit during training. The dense carrier and carrier-plus-retrieval variants remain diagnostic controls.
 
-Character-indexed pools and fixed depth are declared priors; learned topology growth and unrestricted asynchronous schedules remain open. RNG and physical traffic are additional. The old time-normalized value sum has a shared random amplitude; its covariance and cutoff claims are corrected beside the original theory, not silently deleted. A centered, conserved teacher is now tested. Its fixed-error expected Jacobian is not an unbiased sampled-loss gradient. Theory §§294–298: experiments/theory/45_race_attention_and_resource_identity.md.
+Observed-source pools and fixed depth are declared priors; learned topology growth and unrestricted asynchronous schedules remain open. RNG and physical traffic are additional. The old time-normalized value sum has a shared random amplitude; its covariance and cutoff claims are corrected beside the original theory, not silently deleted. A centered, conserved teacher is now tested. Its fixed-error expected Jacobian is not an unbiased sampled-loss gradient. Theory §§294–298: experiments/theory/45_race_attention_and_resource_identity.md.
+
+## A native path to more capability per unit of work
+
+The next integrated experiments test what this substrate does naturally: learned time computation, sparse addressed memory and hard choices trained through counterfactual credit. Episodic race attention remains a useful preserved comparison; the native branch does not require a per-position attention bank.
+
+![native addressed event path](report/figures/native_addressed_event_path.png)
+
+| Ours: native construction | Exact activity boundary |
+| --- | --- |
+| S observed sources; L blocks; H heads; P candidates | Available receivers: S × L × H × P |
+| One selected receiver per head/block | Selected state commits per event: L × H |
+| All addressed candidates are scored | Key scores and training proposals per event: L × H × P |
+
+Useful capacity can grow while selected activity stays fixed, but its value must be learned. At a fixed data budget more local maps receive fewer examples. Sharing learned maps while retaining separate state is one way to improve learning exposure; the native language adapter tests this directly. It changes capacity and is a whole-construction comparison.
+
+Analytic state evolution avoids periodic simulation during silence. Decay can still erase information, so long-gap accuracy is measured separately from operation count. A protected-content subspace alongside evolving time modes is a derived next hypothesis, to test if the current construction loses useful memory.
+
+The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local causal waits remain paid. Full-depth contracts and accounting smokes pass; quality pilots, refitted controls and independent seeds determine further scaling. Theory §§330–335; completed results and the executable priority appear in Appendix B.
 
 ## Ours: the integrated sparse temporal language experiment
 
@@ -828,13 +846,32 @@ Sealed historical keys and values still affect predictions, but detachment remov
 
 Matched 16-credit records are shown when completed under identical settings. Additional backward/normalization/clip/Adam work is counted and peak memory is guarded. Inference traces average different representative spans; the operation definitions and inference architecture are the same. One seed, development selection, no frontier claim. Forward-partition equality and full 64-credit gradient/update contracts precede fitting.
 
+## Appendix B (continued). What most reduces research uncertainty
+
+The main direction now tests native content-and-time computation directly. Episodic race attention remains a preserved comparison. Its small language improvements do not yet establish that an attention scaffold is the best use of this substrate.
+
+| Priority | Experiment | Doubt resolved |
+| --- | --- | --- |
+| 1 | Integrated order/time learning; refitted credit/time controls; three seeds | Can deep sparse temporal state learn useful representations? |
+| 2 | Native-core text8 adapter and small-to-larger data ladder | Does the native construction learn economically without a KV attention bank? |
+| 3 | Occupy 4, 16, 64 stream states at fixed event/query budgets | Does useful state grow without proportional per-event activity? |
+| 4 | Chronological real streams and predict-before-update adaptation | Does the advantage survive real data and online change? |
+| 5 | Timestamp-aware AWS controls, equal-budget/quality curves | Is the quality/resource advantage reproducible? |
+| 6 | Whole-system FPGA/ASIC timing, traffic and energy measurement | Does the physical substrate deliver the projected savings? |
+
+The first native branch uses eight event blocks, two independent receiver heads, observed source addresses, persistent content/state, analytic temporal evolution and counterfactual learning. It has no per-position KV attention. Other sources keep independent progress; source-local causal dependencies and internal joins remain charged.
+
+The same native core receives token content for the language test. Sharing receiver maps across tokens changes capacity and parameter exposure; it is a whole-construction comparison, not an isolated attention-removal ablation. Persistent state is not a full-cache equivalence claim.
+
+Contracts/smokes precede fixed-budget pilots, conditional capacity/data scaling and independent replication. Whole fitting, per-target work, inference, occupancy, memory and confidence intervals are published from completed files. Synthetic learning, real-data Pareto advantage and physical joules are separate milestones. The executable protocol, gates and current host limitations are documented in experiments/RESEARCH_VALUE_PLAN.md.
+
 ## Appendix B (continued). Ours: compact delayed learning
 
 Available historical content is not automatically learned historical content. After graph detachment, a retrieved old key/value can affect the prediction while its write map receives no later loss credit. Increasing the ordinary credit span from 16 to 64 did not improve the completed matched 2K pilot.
 
 ![historical write credit flow](report/figures/historical_write_credit_flow.png)
 
-The next integrated experiment saves the normalized feature φ of each historical write. Later queries send a compact producer teacher to sealed key/value maps while preserving independent heads, temporal races, incoming content and persistent addressed state.
+The tested integrated construction saves the normalized feature φ of each historical write. Later queries send a compact producer teacher to sealed key/value maps while preserving independent heads, temporal races, incoming content and persistent addressed state.
 
 | Ours: added teacher | Factorization | Extra work / query |
 | --- | --- | --- |

@@ -1,0 +1,1 @@
+local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z experiments/native_language_benchmark.py --tag local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z --fit 8192 --dev 8192 --epochs 4 --seed 8

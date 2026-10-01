@@ -2775,7 +2775,9 @@ alpha0 parent-nesting contracts pass. Alpha1 smoke completes in 177.8s with
 718,508 KiB peak RSS and full floating-operation formula coverage. It records
 8976 old key eligibility reads and 960 old winning-value teachers over 128 fit
 targets. These prove implemented credit reach/cost, not quality or hardware gain.
-Matched alpha1/alpha.25 2K pilots are prepared; no pending score is evidence.
+Matched alpha1/alpha.25 2K pilots completed at 3.724035 / 3.722073 bpc.
+Their .008551 / .010513 gains miss the predeclared .02 gate; no larger fit ran.
+Whole CPU fitting work is 23.464 / 23.469 GFLOPs, versus 22.753 for the parent.
 
 Section 329 separates the race's content contrasts from its common clock mode:
 a shared score shift leaves winner probabilities unchanged, but rescales raw
@@ -2784,3 +2786,34 @@ state can learn when a message arrives separately from which message wins.
 A seventh read-only test verifies fixed-noise winner invariance, delay rescaling,
 finite differences and the content/timing adjoint sums. The write teacher keeps
 this timing term; no quality or energy gain follows from the identity alone.
+
+
+## Native addressed event/state research — 1 October 2026
+
+User-directed architectural change: test temporal/sparse strengths without
+requiring a per-position attention scaffold. THEORY §§330–335 records the
+failure being addressed, retained mechanisms, removed KV bank, shared language
+maps, source-local causal schedule and complete optimizer/exposure boundary.
+The old race-attention algebra, positive structured evidence and completed
+negative/positive language records are preserved.
+
+`AddressedEventHeads` has eight event blocks, two independent receiver heads,
+d16/head, pool2, observed-source state addressing, learned clocks, evolving
+persistent content and counterfactual teaching. Order/timing tasks interleave
+occupied source populations with explicit causal queries. Native text8 uses the
+same core plus a token content projection into one conversation, without KV.
+Source identity is observed input, not a label or an oracle routing decision.
+
+Guarded full-depth event and language contracts pass, including nonzero deep
+query/content/temporal gradients, teacher/inference equality, causality, exact
+optimizer/RNG/state recovery and summed/partial accumulation. Native event and
+language accounting smokes completed with complete floating-operation coverage.
+These one-window fits establish execution, not benchmark quality. Twelve focused
+read-only tests pass, including independent-source admission, dormant-state
+integrity, large timestamp origins and language chunk continuity.
+
+The fixed-budget campaign and promotion rules are in RESEARCH_VALUE_PLAN.md and
+queue/local_native_research_campaign_20261001T174000Z.json. Completed pilots,
+refitted credit/time controls, conditional occupied-capacity/data scaling and
+independent seeds run serially. Synthetic capability, text8 generalization,
+matched-quality advantage and physical energy remain separate questions.
