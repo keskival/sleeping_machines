@@ -621,16 +621,16 @@ Two FLOPs per multiply-add; special functions count as one operation. Ours trace
 | 2. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.0255 |
 | 3. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.0321 |
 | 4. Ours: IHR2x32D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.786 / dev | 27.731 | 0.5059 |
-| 5. Ours: IHR2x32/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.733 / dev | 22.753 | 0.5059 |
-| 6. Ours: IHR2x32/u64@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.800 / dev | 22.750 | 0.5060 |
-| 7. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 0.1466 |
-| 8. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 0.1941 |
-| 9. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 0.1968 |
-| 10. Ours: IKVS32D8/8K/s6 | 1,883.9 | 8,192 / 4 | 3.357 / dev | 50.006 | 0.1969 |
-| 11. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.0890 |
-| 12. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 0.1173 |
-| 13. Ours: I32D8/8K/s6 | 1,850.9 | 8,192 / 4 | 3.311 / dev | 40.243 | 0.1173 |
-| 14. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 0.6296 |
+| 5. Ours: IHR2x32/u128@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.779 / dev | 19.999 | 0.5058 |
+| 6. Ours: IHR2x32/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.733 / dev | 22.753 | 0.5059 |
+| 7. Ours: IHR2x32/u64@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.800 / dev | 22.750 | 0.5060 |
+| 8. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 0.1466 |
+| 9. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 0.1941 |
+| 10. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 0.1968 |
+| 11. Ours: IKVS32D8/8K/s6 | 1,883.9 | 8,192 / 4 | 3.357 / dev | 50.006 | 0.1969 |
+| 12. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.0890 |
+| 13. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 0.1173 |
+| 14. Ours: I32D8/8K/s6 | 1,850.9 | 8,192 / 4 | 3.311 / dev | 40.243 | 0.1173 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
 
@@ -638,19 +638,20 @@ Each row retains its original architecture, fitting budget and score. The select
 
 | Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Inference MFLOPs / char ↓ |
 | --- | --- | --- | --- | --- | --- |
-| 15. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.0470 |
-| 16. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.1675 |
-| 17. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 0.6389 |
-| 18. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 2.4571 |
-| 19. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 0.6389 |
-| 20. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 0.6770 |
-| 21. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 0.6770 |
-| 22. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 2.4024 |
-| 23. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 6.7999 |
-| 24. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 7.4192 |
-| 25. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 7.4192 |
-| 26. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 14.8104 |
-| 27. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 2.4024 |
+| 15. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 0.6296 |
+| 16. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.0470 |
+| 17. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.1675 |
+| 18. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 0.6389 |
+| 19. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 2.4571 |
+| 20. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 0.6389 |
+| 21. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 0.6770 |
+| 22. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 0.6770 |
+| 23. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 2.4024 |
+| 24. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 6.7999 |
+| 25. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 7.4192 |
+| 26. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 7.4192 |
+| 27. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 14.8104 |
+| 28. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 2.4024 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; the separate KV page reports architectural projections. No new dense model was trained.
 
@@ -733,6 +734,7 @@ Each head has its own receiver pool, historical bank and query/key/value/gate ma
 | Ours: heads / update | Fit / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ |
 | --- | --- | --- | --- |
 | H2 / U16 / lr0.001 | 2,048 / 4 | 3.786 | 27.731 |
+| H2 / U128 / lr0.004 | 2,048 / 4 | 3.779 | 19.999 |
 | H2 / U64 / lr0.002 | 2,048 / 4 | 3.733 | 22.753 |
 | H2 / U64 / lr0.004 | 2,048 / 4 | 3.800 | 22.750 |
 
