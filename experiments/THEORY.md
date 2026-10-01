@@ -9,6 +9,10 @@ Latest empirical design update: [what the completed October 1 results change](th
 It connects depth, native language quality/work, temporal function contracts
 and training-memory exposure to the next matched comparisons.
 
+Next candidate: [protected state, shared processing and identifiable timing](theory/53_protected_state_and_shared_processing.md),
+§§354–357. It retains the integrated sparse temporal mechanisms and tests
+gap robustness, statistical exposure and timing information separately.
+
 The foundational calculus in §§1–20 reduces to five principles. Later sections extend and
 test them; the evidence column below summarizes that initial layer of the theory.
 
