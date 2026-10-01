@@ -947,5 +947,18 @@
       "JOB_TIMEOUT_S": "21600"
     },
     "peak_rss_kb": 132416
+  },
+  "aws_e19_race_d2_P64000_20260929": {
+    "exit_code": 0,
+    "wall_s": 229.337,
+    "status": "completed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e19_race_d2_P64000_20260929 --script experiments/e19_rhm.py -- --model race --depth 2 --train 64000",
+    "limits": {
+      "MEM_CAP_KB": "6000000",
+      "MEM_CAP_RSS_KB": "3500000",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "21600"
+    },
+    "peak_rss_kb": 207296
   }
 }
