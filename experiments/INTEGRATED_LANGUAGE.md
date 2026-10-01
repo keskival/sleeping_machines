@@ -39,6 +39,29 @@ optimizer experiment accumulates detached-segment gradients over 64/128 targets,
 then normalizes, clips and updates Adam once. Learning-rate and quality effects
 are measured, not assumed equivalent to the old per-16-target optimizer.
 
+## Prepared shared-match repeated arrivals
+
+The [repeated-arrival model](../sleeping_machines/repeated_arrival_race_language.py)
+keeps independent spatial heads and all sparse receiver mechanisms. Historical
+retrieval sets each admitted key's rate once and reads m marks from the merged
+Poisson process; only the winning emitter renews, while losing absolute clocks
+remain unchanged. These marks share a policy, rather than replacing independent
+Q/K/V heads. Earlier message buffers evolve to the last local arrival, then the
+messages are averaged/gated into the evolved receiver. Keys are scored once;
+inference delivers m values. Training reads all C admitted values once and sums
+a conserved local per-arrival teacher in O(Cd+md). This remains a surrogate for
+nonlinear route changes. See theory §324 for its derivation and cost boundaries.
+
+m=1 nests the previous model exactly. Seven read-only numerical/operator checks
+passed; full-configuration optimizer contracts and smoke fits are pending in
+unique guarded queues. Matched m2/m4 2K pilots use H2/d32/head/depth8, U128,
+lr.004, four passes and seed6; only a completed .02 bpc gain promotes one 8K fit.
+The [deferred manifest](queue/local_repeated_arrivals_after_heads_20261001T015000Z.json)
+preserves the current head/scaling campaign's priority. Bounded numerical time
+encoding is not a demonstrated homogeneous physical Poisson clock or measured
+clockless energy advantage. Messages, renewals, teacher reads and emulator
+minimum comparisons remain visible in the record.
+
 ## Receiver state and historical memory
 
 | Ours | Representation | Candidate discovery |
@@ -66,6 +89,7 @@ the weights that created them.
 | Eight-block content-index KV | 3.554 bpc versus receiver 3.542 | Same 2K protocol; no quality gain in this pilot. Full historical buckets are eligible; average 10.07 candidates / one value delivered |
 | Eight-block / 8K fit matched pair | Receiver 3.311; content-index KV 3.357 bpc | Same 8K development stream; KV is worse by 0.047 bpc; 40.243 / 50.006 whole-fit GFLOPs |
 | Two independent heads / eight blocks / 2K fit | 3.786 bpc; 27.731 whole-fit GFLOPs | 8K development stream, four passes, selected epoch 2; later passes overfit. New state/channel design also differs from older single-head models |
+| Two-head accumulated updates / same 2K fit | U64/lr.002: 3.733 bpc / 22.753 whole-fit GFLOPs; U128/lr.004: 3.779 / 19.999 | U128 costs 27.9% less than U16, within .05 bpc of best; LR/warmup vary, one seed |
 | Separate online full-backbone adaptation | 3.191 frozen → 3.096 online bpc | Inherited checkpoint, new 8K development stream, predict before block-delayed updates |
 
 Records live in [parallel_language](results/parallel_language/),

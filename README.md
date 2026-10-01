@@ -165,11 +165,22 @@ The current candidate combines sparse receivers, independent parallel temporal
 heads and historical KV retrieval in **eight event blocks**. Completed
 single-head 8K controls reach 3.311 bpc for receivers and 3.357 for content-indexed
 KV; adding this KV did not improve quality. The new two-head 2K fit reaches
-3.786 bpc on a larger 8K development stream, showing that more mechanisms alone
-do not ensure better fitting. Numerical contracts pass for independent
-projections, causal timing, evolving channel buffers, all-head gradients and
-exact recovery. The next guarded stages test accumulated Adam updates, then
-promote two-/four-head models only through declared quality and memory gates.
+3.786 bpc on a larger 8K development stream. Completed accumulated-update pilots
+reach 3.733 bpc with U64/lr.002 and 3.779 with U128/lr.004. The selected U128
+schedule uses **27.9% less whole fitting work** than the original U16 fit,
+within the declared 0.05 bpc tolerance of the best pilot. Learning rates/warmup
+also differ; this is a one-seed schedule result, not dense-model superiority.
+Numerical contracts pass for independent projections, causal timing, evolving
+channels, all-head gradients, partial gradient windows and exact recovery.
+The guarded campaign now tests larger two-/four-head fits and repeatability.
+
+A prepared follow-up retrieves two or four temporal arrivals per head from
+**one shared set of key/query matches**. Only the winning emitter renews its
+clock; arriving messages evolve until their local read. It retains independent
+spatial heads and aggregates the declared counterfactual teacher in O(Cd + md).
+Seven read-only numerical/accounting checks pass; full guarded optimizer
+contracts and fits are pending. Its supervisor waits for the prioritized head
+campaign and promotes a longer fit only after a completed pilot quality gain.
 See [current state](experiments/HANDOFF.md), [the guide](experiments/INTEGRATED_LANGUAGE.md)
 and [the theory](experiments/theory/48_parallel_heads_and_work_scaling.md).
 

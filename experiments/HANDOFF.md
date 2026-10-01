@@ -629,8 +629,8 @@ no predicted results. Winner deliveries, local renewals, candidate teacher
 reads and numerical minimum comparisons have explicit counters. Clock costs,
 RNG, discovery/traffic and physical energy are not erased by FLOP projection.
 
-After the reviewed commit, start the waiting supervisor in tmux
-`local_repeated_arrivals_after_heads_20261001T015000Z` using:
+After commits `2101d70`/`735dc55`, the waiting supervisor was started in tmux
+`local_repeated_arrivals_after_heads_20261001T015000Z` with the preserved command:
 
 ```bash
 tmux new-session -d -s local_repeated_arrivals_after_heads_20261001T015000Z '.venv-docker/bin/python scripts/run_repeated_arrivals_after_heads.py >> experiments/queue/local_repeated_arrivals_after_heads_20261001T015000Z.out 2>&1'
