@@ -9,6 +9,7 @@ from sleeping_machines.historical_write_credit import (
 )
 from sleeping_machines.historical_write_race_language import HistoricalWriteRaceLanguageModel
 from sleeping_machines.parallel_head_race_language import ParallelHeadRaceLanguageModel
+from sleeping_machines.sparse_race_language import TemporalRoute
 
 
 def test_key_factorization_is_exact_conditional_common_write_perturbation():
@@ -114,3 +115,30 @@ def test_feature_bank_lossless_graph_free_checkpoint_and_storage():
     clone = copy.deepcopy(state.detach())
     assert clone.detached_until == 8
     assert all(not row.requires_grad for b in clone.write_features for row in b.slabs)
+
+
+def test_common_score_mode_preserves_choice_but_teaches_arrival_time():
+    scores = torch.tensor([-.4, .1, .7], dtype=torch.float64, requires_grad=True)
+    values = torch.tensor([[1., -2.], [3., 4.], [-1., 2.]], dtype=torch.float64)
+    error = torch.tensor([.3, -.7], dtype=torch.float64)
+    with torch.random.fork_rng():
+        torch.manual_seed(1117)
+        noise = torch.empty_like(scores).exponential_()
+        raw, expected_winner = (noise/scores.detach().exp()).min(0)
+        torch.manual_seed(1117)
+        value, delay, winner = TemporalRoute.apply(scores, values)
+        torch.manual_seed(1117)
+        shifted_value, shifted_delay, shifted_winner = TemporalRoute.apply(scores+.3, values)
+        assert int(winner) == int(expected_winner) == int(shifted_winner)
+        torch.testing.assert_close(value, shifted_value, rtol=0, atol=0)
+        shifted_raw = raw*torch.exp(torch.tensor(-.3, dtype=torch.float64))
+        torch.testing.assert_close(shifted_delay, .001+.010*shifted_raw/(1+shifted_raw), rtol=1e-14, atol=1e-15)
+        gradient, = torch.autograd.grad(value @ error+7*delay, scores)
+        expected = -7*.010*raw/(1+raw).square()
+        torch.testing.assert_close(gradient.sum(), expected, rtol=1e-12, atol=1e-14)
+        eps = 1e-5
+        def conditional_time(offset):
+            torch.manual_seed(1117)
+            return TemporalRoute.apply(scores+offset, values)[1]
+        finite = (conditional_time(eps)-conditional_time(-eps))/(2*eps)
+        torch.testing.assert_close(7*finite, expected, rtol=1e-9, atol=1e-12)

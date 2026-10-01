@@ -90,3 +90,37 @@ Promote only a completed ≥.02 bpc pilot gain to one 8K fit. Larger fits requir
 the existing indexed-control +.10 bpc gate, measured memory and time. Preserve
 negative evidence. This tests delayed local credit, not unlimited learned
 history, ASIC energy or frontier supremacy.
+
+## 329. Content contrasts and the common clock mode
+
+A temporal race has a degree of freedom beyond its categorical probabilities.
+For unsaturated scores s_i and fixed exponential noise E_i, adding the same b
+to every score leaves the winner unchanged but rescales its raw arrival:
+
+    p_i(s+b1) = p_i(s),    T(s+b1) = exp(-b) T(s).
+
+For the implemented bounded delay D(T)=.001+.010 T/(1+T):
+
+    dD/db = -.010 T/(1+T)².
+
+The conserved content counterfactual teacher has Σ_i e_i^content=0. The
+interior timing teacher contributes Σ_i e_i^time = a_D dD/db. Thus probability
+invariance does not make the common score mode useless: time can change
+receiver evolution and when messages are integrated. No extra value is read
+to express this common clock change. The CPU still pays the numerical clock
+and state-evolution costs; it is not an energy measurement.
+
+When all admitted entries are sealed, their direct key-map teacher can be
+decomposed around any feature center μ:
+
+    g_K = (α/√d) q [Σ_i e_i(φ_i-μ) + μ Σ_i e_i]ᵀ.
+
+The contrast term teaches which historical feature should win; the mean term
+can teach the common clock mode. This is an identity, not a new estimator or
+implemented centering optimization. With mixed live/sealed entries, conservation
+is over the whole race, not the old subset; unequal α weights and score clipping
+also change the cancellation. Do not silently zero the mean term in the new
+teacher. Receiver/transport nonlinearities and deep route boundaries retain
+the limitations above. A read-only common-score-shift test verifies winner
+invariance, delay rescaling and the timing/content adjoint sums before claiming
+this degree of freedom; its quality contribution remains unmeasured.

@@ -2280,6 +2280,10 @@ def blocks(M, tasks, ev):
                 ['Old keys','α q (Σ eᵢ φᵢ)ᵀ','O(C_old d + d²)'],
                 ['Old winning value','α a φ_wᵀ','O(d²)'],
                 ['Saved eligibility','One detached d-vector / write','50% extra K/V float storage']], [37,82,55])),
+            ('p','A shared offset of all race scores leaves winner probabilities unchanged but '
+             'rescales arrival time. Content contrasts can teach which value wins; a separate '
+             'clock signal can teach when it arrives and how persistent state evolves. '
+             'The new write teacher retains both signals.'),
             ('p','The shared query factors all admitted old key teachers into one matrix update. '
              'Live writes keep ordinary gradients without duplicate credit. Six read-only numerical '
              'checks and guarded full eight-block update/recovery contracts passed; disabling '

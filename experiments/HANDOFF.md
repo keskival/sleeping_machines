@@ -730,7 +730,7 @@ supervisor `scripts/run_language_credit_campaign.py`. Started after `a9a90cb`
 in tmux with the same stem; currently waiting. Do not start another instance. It waits for completed repeated-arrival campaign,
 then runs every stage through unique `run_safe.sh` one-job queues. Order:
 frozen saved-checkpoint diagnosis; full 64-credit gradient/update contracts;
-129-character full-configuration smoke; matched2K64-credit/U64/lr.002 fit;
+129-character full-configuration smoke; matched 2K64-credit/U64/lr.002 fit;
 existing unused16-credit/U64/lr.002 H2 8K queue. A .02 bpc pilot gain admits
 one 64-credit 8K run. Best completed 8K must satisfy the existing indexed-control
 +.10 gate before 32K; secondseed8K follows.131K additionally requires32K gain
@@ -828,3 +828,10 @@ checks pass; the updated 53-page PDF has valid text bounds/no orphan pages and
 its new delayed-learning diagram was visually inspected on page 44. Sources
 and all twelve unique queue definitions are committed on main. Read the live
 status before continuing; completed pilot quality has not yet been measured.
+
+Both alpha1/alpha.25 full-size smokes completed and were committed, the latter
+by automatic publisher in `792939f`. The supervisor is now running the alpha1
+matched 2K pilot, followed by alpha.25. Section 329 adds a verified common-clock
+mode identity: categorical probability invariance still permits arrival-time
+learning. Seven numerical read-only checks now pass; the new check introduces
+no optimizer and does not modify any active hashed driver/model sources.

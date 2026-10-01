@@ -2776,3 +2776,11 @@ alpha0 parent-nesting contracts pass. Alpha1 smoke completes in 177.8s with
 8976 old key eligibility reads and 960 old winning-value teachers over 128 fit
 targets. These prove implemented credit reach/cost, not quality or hardware gain.
 Matched alpha1/alpha.25 2K pilots are prepared; no pending score is evidence.
+
+Section 329 separates the race's content contrasts from its common clock mode:
+a shared score shift leaves winner probabilities unchanged, but rescales raw
+arrival by exp(-shift). The bounded-delay derivative is nonzero, so persistent
+state can learn when a message arrives separately from which message wins.
+A seventh read-only test verifies fixed-noise winner invariance, delay rescaling,
+finite differences and the content/timing adjoint sums. The write teacher keeps
+this timing term; no quality or energy gain follows from the identity alone.
