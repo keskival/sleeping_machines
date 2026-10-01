@@ -1,0 +1,1 @@
+local_tabular_wine_R2_smoke_20261001T213000Z experiments/native_tabular_benchmark.py --tag local_tabular_wine_R2_smoke_20261001T213000Z --dataset wine_red --model ours --clock-features 2 --fit 16 --dev 16 --epochs 1

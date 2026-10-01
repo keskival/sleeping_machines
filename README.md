@@ -62,6 +62,24 @@ the .02 bpc promotion gate. This is learning, but does not establish a scaling
 curve to frontier supremacy. [The write-credit derivation](experiments/theory/49_historical_write_eligibility.md)
 and original comparisons remain part of the evidence.
 
+The new [AWS fast matrix](experiments/AWS_RUN_FAST_MATRIX.md) contains **17 small
+pilot comparisons** across temporal signals, character language and tabular
+classification/regression, with contracts and accounting smokes first. It tests
+our integrated strengths before spending days on larger fits. The
+[robotics protocol](experiments/AWS_EARLY_INDICATION_MATRIX.md) prioritizes
+supervised processing of recorded, unsynchronized force/pose streams; robotics
+adapters are still pending. The [research gym](experiments/GYM_FARM.md) and
+[staged equipment shopping list](experiments/RESEARCH_FARM_SHOPPING_LIST.md)
+define the path to reproducible parallel work across independent hosts.
+
+New completed AWS evidence includes **3.106 development bpc** for the older
+six-block sparse model on 32K fitting characters, and **1.661 / 1.604 test bpc**
+for the 90M-character LSTM / Transformer controls. These data/model/scoring
+budgets differ. The current local native 2K model uses **6.02× less counted
+whole-fit work** than the saved KV construction at **0.032 bpc worse** development
+quality; it is a near-quality resource tradeoff, not established language supremacy.
+The report retains those distinctions and the negative depth/residual findings.
+
 Our hypothesis is **more capability per unit of active work**. Temporal races
 can approximate attention while avoiding selected arithmetic and value
 aggregation; evolving state and useful dormant modules may reduce the width,
@@ -396,21 +414,3 @@ Sleeping Machines — Tero Keski-Valkama and Karoliina Salminen.
 ```
 
 [![DOI](https://zenodo.org/badge/342583401.svg)](https://zenodo.org/doi/10.5281/zenodo.13207423)
-
-The new [AWS fast matrix](experiments/AWS_RUN_FAST_MATRIX.md) contains **17 small
-pilot comparisons** across temporal signals, character language and tabular
-classification/regression, with contracts and accounting smokes first. It tests
-our integrated strengths before spending days on larger fits. The
-[robotics protocol](experiments/AWS_EARLY_INDICATION_MATRIX.md) prioritizes
-supervised processing of recorded, unsynchronized force/pose streams; robotics
-adapters are still pending. The [research gym](experiments/GYM_FARM.md) and
-[staged equipment shopping list](experiments/RESEARCH_FARM_SHOPPING_LIST.md)
-define the path to reproducible parallel work across independent hosts.
-
-New completed AWS evidence includes **3.106 development bpc** for the older
-six-block sparse model on 32K fitting characters, and **1.661 / 1.604 test bpc**
-for the 90M-character LSTM / Transformer controls. These data/model/scoring
-budgets differ. The current local native 2K model uses **6.02× less counted
-whole-fit work** than the saved KV construction at **0.032 bpc worse** development
-quality; it is a near-quality resource tradeoff, not established language supremacy.
-The report retains those distinctions and the negative depth/residual findings.

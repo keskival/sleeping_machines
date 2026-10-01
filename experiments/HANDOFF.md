@@ -1152,3 +1152,19 @@ accounting/source check and the all-smokes-before-pilots barrier remains.
 Old failed attempt and original run queues/results are preserved.
 Failure stops new admissions and drains/publishes existing work.
 CPU wall times under contention are labelled accordingly; no GPU overlap.
+Local tabular classifier/regressor whole-optimizer smokes and both tree-control
+smokes have now completed under the guard with validated source fingerprints.
+Neural traces have complete operator coverage; these one-pass 16-row checks are
+excluded from benchmark plots. Tree candidates fit serially within each one-job
+queue. Preprocessing is separately timed, and tree FLOPs remain unavailable.
+Neural wall time includes full audit instrumentation; avoid interpreting an
+instrumented emulator/tree wall gap as a physical architecture comparison.
+
+Residual AWS depth4 has completed at 72.56% final held-out accuracy / 1,094.702s
+and is included beside plain depth4 84.12% in the PDF's hierarchy appendix.
+Plain depth3 85.06% remains the best saved 64K point. Residual4 improves across
+all ten passes; longer convergence is untested. Scope is this older RHM variant,
+not the newer native substrate. New completed fast-matrix pilot files will be
+ingested into separate early-screen appendix figures/tables with their actual
+small development sizes; they are not mixed into the 8,191-target language
+quality claims. Contracts/smokes never populate those pilot tables.

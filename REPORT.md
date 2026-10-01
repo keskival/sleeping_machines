@@ -627,10 +627,11 @@ These are older race-network diagnostics on the fixed depth-three Random Hierarc
 | Ours plain race | 4 | 84.12% | 536.5 | 252.1 |
 | Ours residual-2 | 2 | 72.72% | 266.1 | 217.4 |
 | Ours residual-2 | 3 | 74.54% | 610.4 | 369.3 |
+| Ours residual-2 | 4 | 72.56% | 1094.7 | 574.0 |
 
-Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses slightly. The tested residual-2 depth 2/3 variants give 72.72/74.54%, below their plain counterparts. Preserve this negative design evidence; adding an interaction path does not by itself improve learning.
+Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses slightly. The completed residual-2 depth 2/3/4 variants give 72.72/74.54/72.56%, below their plain counterparts. Depth-four residual accuracy rises throughout its ten passes; its longer-budget convergence is untested. This constrains the tested implementation and budget, not all residual paths.
 
-Only completed provenance files produce rows. Plain and residual depth-four runs are distinct; an unfinished residual run is not filled with a prediction. Final epoch is reported; evaluation curves are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.
+Only completed provenance files produce rows. Plain and residual depth-four runs are distinct. Final epoch is reported; evaluation curves are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.
 
 ## Appendix B (continued). Ours: language work as scaling develops
 

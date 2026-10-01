@@ -1,7 +1,8 @@
 # Tabular prediction: sparse conditional routing as a hypothesis
 
-A prospective domain test, not a completed result or an active experiment. The
-current integrated language campaign remains the local training priority.
+The first real-data adapter and guarded smokes are now implemented; full pilots
+remain pending in the committed AWS matrix. The integrated language campaign
+remains the local full-training priority.
 
 ## Why the architecture might help
 

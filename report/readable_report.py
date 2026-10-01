@@ -128,6 +128,15 @@ def results():
         ("shd_selected_prefix", "e165/selected_prefix_20260930.json")):
         tasks[key] = (read(path) if (RES/path).exists() and
             json.loads((RES/path).read_text()).get("status") == "completed" else None)
+    tasks['gym_screen']=[]
+    gym_plan=ROOT/'experiments/gym/plans/aws_fast_matrix_v1_20261001T213000Z/manifest.json'
+    if gym_plan.exists():
+        for job in json.loads(gym_plan.read_text())['jobs']:
+            if job['stage']!='pilot' or job['domain']=='tabular':continue
+            path=ROOT/job['result']
+            if path.exists():
+                r=json.loads(path.read_text())
+                if r.get('status')=='completed' and 'final' in r:tasks['gym_screen'].append(dict(job=job,result=r))
     tasks['native_tabular']=[]
     for path in sorted((RES/'native_tabular').glob('*.json')):
         if path.name.endswith('.running.json'):continue
@@ -396,6 +405,20 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    for domain in ('temporal','language'):
+        records=[r for r in tasks.get('gym_screen',[]) if r['job']['domain']==domain]
+        if records:
+            f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
+            for entry in records:
+                r=entry['result'];w=r['work'];name='Ours '+entry['job']['variant'].replace(domain+'_','').replace('_',' ')
+                quality=100*r['final']['dev']['accuracy'] if domain=='temporal' else r['final']['dev']['bpc']
+                cost=w['total_training_unit_special_flops'] if domain=='temporal' else w['cpu_emulator']['total_training_unit_special_flops']
+                infer=(w['inference_arithmetic_flops_per_query']+w['inference_special_functions_per_query']) if domain=='temporal' else (w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'])
+                for axis,x in zip(axes,(cost/1e9,infer/1e6)):
+                    axis.scatter(x,quality,color=blue,s=30);axis.annotate(name,(x,quality),xytext=(3,3),textcoords='offset points',fontsize=6)
+            axes[0].set_xlabel('Whole neural fitting GFLOPs');axes[1].set_xlabel('Inference MFLOPs / target')
+            for axis in axes:axis.set_ylabel('Development accuracy (%)' if domain=='temporal' else 'Development bpc');axis.grid(alpha=.2)
+            f.tight_layout();save(f,'aws_fast_screen_'+domain)
     hierarchy=[r for r in tasks.get('aws_hierarchy',[]) if r['result']['config']['train']==64000]
     if hierarchy:
         f,a=plt.subplots(figsize=(7.2,2.6))
@@ -1314,10 +1337,11 @@ def blocks(M, tasks, ev):
                  str(r['result']['config']['depth']),f"{100*r['result']['test_acc']:.2f}%",f"{r['provenance']['wall_s']:.1f}",f"{r['provenance']['peak_rss_kb']/1024:.1f}"]
                 for r in sorted(large,key=lambda r:(r['result']['config']['residual'],r['result']['config']['depth']))],[46,18,46,34,30])),
             ('p','Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses '
-             'slightly. The tested residual-2 depth 2/3 variants give 72.72/74.54%, below their plain counterparts. '
-             'Preserve this negative design evidence; adding an interaction path does not by itself improve learning.'),
-            ('small','Only completed provenance files produce rows. Plain and residual depth-four runs are distinct; '
-             'an unfinished residual run is not filled with a prediction. Final epoch is reported; evaluation curves '
+             'slightly. The completed residual-2 depth 2/3/4 variants give 72.72/74.54/72.56%, below their plain '
+             'counterparts. Depth-four residual accuracy rises throughout its ten passes; its longer-budget '
+             'convergence is untested. This constrains the tested implementation and budget, not all residual paths.'),
+            ('small','Only completed provenance files produce rows. Plain and residual depth-four runs are distinct. '
+             'Final epoch is reported; evaluation curves '
              'are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. '
              'Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.')])
     language_reference_page=[
@@ -2187,6 +2211,37 @@ def blocks(M, tasks, ev):
 
     pages.append(language_reference_page)
     pages.extend(new_aws_pages)
+    for domain in ('temporal','language'):
+        records=[r for r in tasks.get('gym_screen',[]) if r['job']['domain']==domain]
+        for begin in range(0,len(records),4):
+            group=records[begin:begin+4];table=[];capacity=[]
+            for entry in group:
+                r=entry['result'];a=r['args'];w=r['work'];label='Ours '+entry['job']['variant'].replace(domain+'_','').replace('_',' ')
+                if domain=='temporal':
+                    fit=a['fit_targets'];dev=a['dev_targets'];cost=w['total_training_unit_special_flops'];targets=w['fitting_query_targets']
+                    infer=w['inference_arithmetic_flops_per_query']+w['inference_special_functions_per_query'];quality=f"{100*r['final']['dev']['accuracy']:.2f}%"
+                    available=w['available_receivers'];selected=w['selected_updates_per_event'];scores=w['key_scores_per_event']
+                else:
+                    fit=a['fit'];dev=r['final']['dev']['n'];cost=w['cpu_emulator']['total_training_unit_special_flops'];targets=w['fitting_targets']
+                    infer=w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'];quality=f"{r['final']['dev']['bpc']:.4f}"
+                    available=a['depth']*a['heads']*a['pool'];selected=a['depth']*a['heads'];scores=selected*a['pool']
+                table.append([label,f"{fit}/{a['epochs']}/{dev}",quality,f"{cost/1e9:.3f}",f"{cost/targets/1e6:.3f}",f"{infer/1e6:.4f}"])
+                capacity.append([label,f"{r['parameters']:,}",f"{available}/{selected}/{scores}",f"{r['wall_s']:.1f}",str(a['seed'])])
+            pages.append([
+                ('h1','Appendix B. AWS early '+domain+' mechanism screen'),
+                ('p','Small completed integrated pilots from the committed fast matrix. These answer mechanism '
+                 'questions before larger scaling; their development budgets differ from the saved main language '
+                 'and native512-target results. Contracts and accounting smokes are excluded.'),
+                ('figure',('aws_fast_screen_'+domain,125)),
+                ('table',(['Model','Fit / passes / dev','Dev quality','Whole fit GFLOPs','Fit MFLOPs / target','Infer MFLOPs / target'],table,[42,27,24,27,27,27])),
+                ('table',(['Model','Parameters','Receivers/commits/matches per event','Wall s','Seed'],capacity,[43,29,59,28,15])),
+                ('small','FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. '
+                 'Temporal inference per query includes intervening input events; language per target is per character. '
+                 'Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and '
+                 'physical energy are separate. Temporal tasks and altered source counts are explicitly named; different '
+                 'tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. '
+                 'Paired independent seeds and frozen held-out confirmation precede benchmark promotion.')])
+
     for dataset in ('banknote','wine_red'):
         rows=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']==dataset]
         for begin in range(0,len(rows),6):
@@ -2210,7 +2265,8 @@ def blocks(M, tasks, ev):
                 ('small','Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting '
                  'wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, '
                  'with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable '
-                 'and are not manufactured. These are small exploratory development results; reserved test labels are '
+                 'and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. '
+                 'These are small exploratory development results; reserved test labels are '
                  'not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.')])
 
 
