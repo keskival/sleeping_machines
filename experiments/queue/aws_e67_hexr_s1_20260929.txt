@@ -1,0 +1,1 @@
+aws_e67_hexr_s1_20260929 experiments/aws_benchmark.py --run-tag aws_e67_hexr_s1_20260929 --script experiments/e67_race_time.py -- --rule exact --hidden 256 --feedback random --epochs 3 --lr 0.02 --seed 1
