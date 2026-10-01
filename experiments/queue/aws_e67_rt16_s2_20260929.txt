@@ -1,0 +1,1 @@
+aws_e67_rt16_s2_20260929 experiments/aws_benchmark.py --run-tag aws_e67_rt16_s2_20260929 --script experiments/e67_race_time.py -- --rule race_time --races 16 --epochs 3 --seed 2

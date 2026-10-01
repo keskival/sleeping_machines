@@ -1,0 +1,27 @@
+{
+  "run_tag": "aws_e67_rt16_s2_20260929",
+  "script": "experiments/e67_race_time.py",
+  "arguments": [
+    "--rule",
+    "race_time",
+    "--races",
+    "16",
+    "--epochs",
+    "3",
+    "--seed",
+    "2"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1ff442ac482790b1d62090cf484ddc0ce570d0e03f762531333e53f4454e62c7",
+  "git_commit": "98f818484a3c5df8e231c0c82bc1ad82b429d4be",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:42:24Z",
+  "status": "completed",
+  "wall_s": 10.497,
+  "peak_rss_kb": 414368
+}
