@@ -1,5 +1,31 @@
 # Session handoff — 2026-09-30
 
+## Current state — 1 October, 07:22 UTC
+
+The prioritized head campaign completed both 8K fits, then stopped at its
+predeclared quality gate before 32K/131K: H2 3.485055 bpc / 79.952694 whole-fit
+GFLOPs; H4 3.542576 / 193.750653. Both are worse than the saved 8K single-head
+indexed control 3.357342 and receiver 3.310618. H4 also increases total width.
+The source/channel construction changes with the head model, so do not call
+this an isolated head ablation. Preserve all historical evidence. Completed
+stage results were published automatically and committed on main overnight.
+
+The repeated-arrival supervisor is running in tmux
+`local_repeated_arrivals_after_heads_20261001T015000Z`. Full m1/m2/m4 numerical,
+optimizer/recovery and accounting smokes passed under the guard. Exact m1
+nesting confirms reuse of its completed reference. m2 2K completes at 3.819845
+bpc / 20.495032 GFLOPs versus m1 3.778729 / 19.999171; no gain. m4 2K is running;
+its intermediate scores remain excluded from benchmark tables. The supervisor
+will run one 8K follow-up only if a completed pilot gains at least .02 bpc;
+otherwise it stops. Inspect live status/results before another launch.
+
+Host is CPU-only, ~11GiB available; only one trainer, ~746MiB RSS. Active
+repeated-arrival model/driver/helper and original head dependencies stay frozen.
+Next priority: diagnose the multihead quality failure with saved checkpoints,
+including candidate-score/credit fidelity, source/channel recurrence and state
+conditioning. Any frozen intervention is a diagnosis, not a refitted benchmark
+or a new superiority claim. Use a guarded serial queue after the current campaign.
+
 ## Active campaign update — 1 October, 01:21 UTC
 
 All three accumulated-optimizer pilots completed and auto-published through

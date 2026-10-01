@@ -172,15 +172,19 @@ within the declared 0.05 bpc tolerance of the best pilot. Learning rates/warmup
 also differ; this is a one-seed schedule result, not dense-model superiority.
 Numerical contracts pass for independent projections, causal timing, evolving
 channels, all-head gradients, partial gradient windows and exact recovery.
-The guarded campaign now tests larger two-/four-head fits and repeatability.
+Completed 8K fits reach H2 3.485 and H4 3.543 bpc, with 79.953 and 193.751
+whole-fit GFLOPs. They miss the declared promotion gate relative to the earlier
+3.357 indexed control, so longer fitting paused for diagnosis. More heads also
+increase width and change source/channel dynamics.
 
 A prepared follow-up retrieves two or four temporal arrivals per head from
 **one shared set of key/query matches**. Only the winning emitter renews its
 clock; arriving messages evolve until their local read. It retains independent
 spatial heads and aggregates the declared counterfactual teacher in O(Cd + md).
-Seven read-only numerical/accounting checks pass; full guarded optimizer
-contracts and fits are pending. Its supervisor waits for the prioritized head
-campaign and promotes a longer fit only after a completed pilot quality gain.
+Numerical, full guarded optimizer/recovery contracts and smoke fits pass. The
+completed two-arrival pilot reaches 3.820 bpc versus nested one-arrival 3.779;
+four arrivals are being tested. A longer fit requires a completed pilot quality
+gain. The report preserves these negative results beside the earlier wins.
 See [current state](experiments/HANDOFF.md), [the guide](experiments/INTEGRATED_LANGUAGE.md)
 and [the theory](experiments/theory/48_parallel_heads_and_work_scaling.md).
 

@@ -1,5 +1,30 @@
 # Findings log
 
+## Completed integrated head/data ladder — 1 October
+
+| Ours | Fit characters / passes | Dev bpc | Whole-fit GFLOPs | Fit MFLOPs / target |
+|---|---:|---:|---:|---:|
+| H2, d32/head, U128/lr.004 | 2,048 / 4 | 3.778729 | 19.999171 | 2.442 |
+| H2, d32/head, U128/lr.004 | 8,192 / 4 | 3.485055 | 79.952694 | 2.440 |
+| H4, d32/head, U128/lr.004 | 2,048 / 4 | 3.981278 | 48.430647 | 5.915 |
+| H4, d32/head, U128/lr.004 | 8,192 / 4 | 3.542576 | 193.750653 | 5.913 |
+
+Eight event blocks, pool2, 16-character credit, four passes, seed6, same 8,191
+cold development targets. Larger data helps, but additional heads/width do not
+improve this screen. Both 8K fits miss the predeclared .10 bpc tolerance of the
+saved indexed single-head 3.357342 bpc control, stopping 32K/131K promotion.
+The earlier receiver control remains 3.310618. Source/channel evolution also
+changes: this does not isolate head count or establish a substrate-wide limit.
+Whole fitting charges counterfactual learning, backward, clip and Adam; specials
+have unit weight, with separate raw ledgers. One-seed exploratory evidence.
+
+The guarded repeated-arrival m1/2/4 contracts and smokes pass. Completed m2 2K
+retrieval reaches 3.819845 bpc / 20.495032 GFLOPs, versus exact nested m1
+3.778729 / 19.999171. m4 is still running at this entry; no pending accuracy is
+filled in. Candidate scores/rate settings are reused, while message delivery,
+renewal and local teacher work remain counted. Current quality/work does not
+yet justify a longer repeated-arrival fit.
+
 ## Completed independent-head optimizer pilots — 1 October
 
 Same H2 / payload32 per head / depth8 / 2K fit / 4 passes / 8K dev / seed 6:

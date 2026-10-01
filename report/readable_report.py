@@ -349,6 +349,26 @@ def figures(M, tasks, ev):
             a=row['args'];ax.plot([c['epoch'] for c in row['curve']],[c['dev']['bpc'] for c in row['curve']],marker='o',label=f"Ours H{a['heads']} / U{a.get('update_targets',16)} / lr {a['lr']:g}")
         ax.set(xlabel='Passes over 2,048 fitting characters',ylabel='Frozen 8K development bpc ↓');ax.grid(alpha=.2);ax.legend(fontsize=7)
         f.tight_layout();save(f,'parallel_temporal_head_pilots')
+    scaled_heads=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and
+        r['args'].get('arrivals',1)==1 and r['args'].get('update_targets')==128 and
+        r['args']['lr']==.004 and r['args']['seed']==6 and r['args']['dev']==8192 and
+        r['args']['fit'] in (2048,8192)]
+    if any(r['args']['fit']==8192 for r in scaled_heads):
+        f,ax=plt.subplots(figsize=(7.2,2.8))
+        for heads,color in ((2,blue),(4,orange)):
+            rows=sorted([r for r in scaled_heads if r['args']['heads']==heads],key=lambda r:r['args']['fit'])
+            if rows:
+                ax.plot([r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9 for r in rows],
+                    [r['final']['dev']['bpc'] for r in rows],marker='o',color=color,label=f'Ours H{heads} / d32 per head')
+                for r in rows:
+                    ax.annotate(f"{r['args']['fit']//1024}K fit",(r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9,r['final']['dev']['bpc']),xytext=(5,5),textcoords='offset points',fontsize=8)
+        controls=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)==1 and r['args']['fit']==8192 and r['args']['dev']==8192]
+        for r in controls:
+            name='indexed KV' if r['args']['memory']=='kv' else 'receiver'
+            ax.scatter([r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9],[r['final']['dev']['bpc']],marker='s',color='#278477')
+            ax.annotate('Ours earlier '+name,(r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9,r['final']['dev']['bpc']),xytext=(7,-10 if name=='receiver' else 4),textcoords='offset points',fontsize=8)
+        ax.set(xlabel='Whole fitting GFLOPs (unit-weight specials)',ylabel='Frozen 8K development bpc ↓')
+        ax.grid(alpha=.2);ax.legend(fontsize=8);f.tight_layout();save(f,'parallel_head_data_work')
     f,ax=plt.subplots(figsize=(7.2,2.15));ax.set(xlim=(0,10),ylim=(0,3.7));ax.axis('off')
     def modality_box(x,y,w,h,t):
         ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.05',facecolor='#edf3fb',edgecolor=blue))
@@ -2117,6 +2137,31 @@ def blocks(M, tasks, ev):
              'projections, evolving channels, all-head gradients and exact next-update recovery. '
              'All completed variants remain in the ledger; this table shows the latest four records.'),
         ])
+    scaled_heads=[r for r in head_rows if r['args'].get('update_targets')==128 and
+        r['args']['lr']==.004 and r['args']['seed']==6 and r['args']['dev']==8192 and r['args']['fit'] in (2048,8192)]
+    if any(r['args']['fit']==8192 for r in scaled_heads):
+        pages.append([
+            ('h1','Appendix B (continued). Ours: completed head/data scaling'),
+            ('p','Fixed d32 per head, eight blocks, pool2, credit16, U128/lr.004, four fitting passes, seed6. '
+             'Every point scores the same 8,191 frozen development targets. More data improves these '
+             'configurations, while four heads increase both width/capacity and fitting cost.'),
+            ('figure',('parallel_head_data_work',174)),
+            ('table',(['Ours: heads / fit','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓'],[
+                [f"H{r['args']['heads']} / {r['args']['fit']:,}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}"]
+                 for r in sorted(scaled_heads,key=lambda r:(r['args']['heads'],r['args']['fit']))],
+                [50,30,46,48])),
+            ('p','The earlier 8K single-head controls reach receiver 3.311 and indexed KV 3.357 bpc. '
+             'The multihead construction also changes source/channel dynamics and total width, so this '
+             'is not a pure head-count ablation. The completed parallel-head 8K results missed the declared '
+             '0.10 bpc tolerance of the indexed control; the campaign stopped before 32K/131K promotion. '
+             'Route-credit fidelity, recurrent/channel conditioning, candidate coverage and optimization '
+             'are diagnosis targets. These results constrain this implementation rather than the whole substrate.'),
+            ('small','One seed and small fitting budgets. Whole fitting includes all four passes, backward, '
+             'admitted losing-value credit and optimizer work. Development selection uses the lowest full '
+             'development loss over those passes. Logical FLOPs and unit-weight special functions do not '
+             'measure wall time, physical traffic or energy; no language supremacy follows from these points.')])
     if tasks['integrated_online_language']:
         row=tasks['integrated_online_language'][-1];a=row['args']
         pages.append([
