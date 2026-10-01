@@ -1025,3 +1025,34 @@ it would immediately start the old manifest's next job. When depth4 finishes,
 preserve/publish its result and progress explicitly, or arrange coordinator
 publication without allowing an additional old-manifest fit. No second trainer
 or replacement supervisor has been started. Host MemAvailable ~29 GiB; no GPU.
+
+
+## AWS fast matrix authorized continuation — 1 October, 21:25 UTC
+
+Pulled main through eee24a8 and read AWS_RUN_FAST_MATRIX.md,
+AWS_EARLY_INDICATION_MATRIX.md and GYM_FARM.md. User confirms that
+AWS_RUN_FAST_MATRIX is the instruction file and authorizes it after depth4.
+All 42 source fingerprints and 51 queue fingerprints match the first-wave
+`aws_fast_matrix_v1_20261001T213000Z` manifest; no existing matrix result tags.
+Installed requirements including pinned scikit-learn1.9.1. Host has ~29 GiB
+MemAvailable, ~80 GiB free storage and no NVIDIA GPU.
+
+Continuation supervisor: `scripts/run_aws_fast_matrix_after_depth4.py`.
+Run once in tmux `aws-fast-matrix-after-depth4`; log
+`experiments/queue/aws_fast_matrix_after_depth4.out`, status same stem
+`.status.json`. It waits for the original depth4 successful guarded lifecycle
+and runner exit, retires only the suspended old coordinator, preserves depth4
+progress/result/queue and pushes them, then runs the prescribed smoke-only
+worker attempt1. Only after all contracts/smokes pass and RSS remains below
+2,000,000 KiB does it admit pilot attempt2 with the same caps: RSS2441MiB,
+VMS3907MiB, minimum available8192MiB. Every cell uses run_safe and its unique
+one-job queue. Failure stops for review; no large-model promotion.
+
+Completed smoke and pilot JSON evidence is committed/pushed on main after each
+worker phase. Shared REPORT/PDF edits remain with the other host publisher;
+gym results require subsequent paired evidence/report integration, not invented
+pending scores. Prioritized integrated model is native H2/depth8/d8 with
+temporal reception/waiting and counterfactual/pathwise controls. Fixed observed
+addresses, forced activity, bounded producer credit and local surrogate
+losing-route credit remain gaps. Robotics adapters are explicitly blocked; no
+RL, new dense Transformer/LSTM or multi-day language run is authorized here.
