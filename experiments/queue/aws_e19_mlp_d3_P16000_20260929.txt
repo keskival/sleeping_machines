@@ -1,0 +1,1 @@
+aws_e19_mlp_d3_P16000_20260929 experiments/aws_benchmark.py --run-tag aws_e19_mlp_d3_P16000_20260929 --script experiments/e19_rhm.py -- --model mlp --depth 3 --train 16000
