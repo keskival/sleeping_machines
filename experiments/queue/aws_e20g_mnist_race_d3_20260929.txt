@@ -1,0 +1,1 @@
+aws_e20g_mnist_race_d3_20260929 experiments/aws_benchmark.py --run-tag aws_e20g_mnist_race_d3_20260929 --script experiments/e20_exact.py -- --task mnist --depth 3 --width 400 --epochs 5 --lr 1e-2 --homeo 0.1 --center 1

@@ -1,0 +1,34 @@
+{
+  "run_tag": "aws_e20g_mnist_race_d3_20260929",
+  "script": "experiments/e20_exact.py",
+  "arguments": [
+    "--task",
+    "mnist",
+    "--depth",
+    "3",
+    "--width",
+    "400",
+    "--epochs",
+    "5",
+    "--lr",
+    "1e-2",
+    "--homeo",
+    "0.1",
+    "--center",
+    "1"
+  ],
+  "output_redirected": true,
+  "source_sha256": "fe934e9e9d2eb9a4722c7eb16dd80ed24877337542d8628c8d5c478a1755f61d",
+  "git_commit": "ebdf7397c557257f47a6bf4fd7b795fece8c39c7",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:56:29Z",
+  "status": "failed",
+  "error": "Traceback (most recent call last):\n  File \"/usr/lib/python3.14/argparse.py\", line 1759, in _check_help\n    formatter._expand_help(action)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.14/argparse.py\", line 687, in _expand_help\n    return help_string % params\n           ~~~~~~~~~~~~^~~~~~~~\nValueError: incomplete format\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/experiments/aws_benchmark.py\", line 58, in main\n    exec(compile(tree, str(script), 'exec'), {'__name__': '__main__', '__file__': str(script)})\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e20_exact.py\", line 259, in <module>\n    ap.add_argument(\"--decay\", type=int, default=0, help=\"linear learning-rate decay to 10%\")\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.14/argparse.py\", line 1573, in add_argument\n    self._check_help(action)\n    ~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.14/argparse.py\", line 1761, in _check_help\n    raise ValueError('badly formed help string') from exc\nValueError: badly formed help string\n",
+  "wall_s": 0.052,
+  "peak_rss_kb": 47048
+}

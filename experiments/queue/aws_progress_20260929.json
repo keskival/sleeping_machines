@@ -661,5 +661,18 @@
       "JOB_TIMEOUT_S": "21600"
     },
     "peak_rss_kb": 464320
+  },
+  "aws_e20g_mnist_race_d3_20260929": {
+    "exit_code": 1,
+    "wall_s": 2.033,
+    "status": "failed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e20g_mnist_race_d3_20260929 --script experiments/e20_exact.py -- --task mnist --depth 3 --width 400 --epochs 5 --lr 1e-2 --homeo 0.1 --center 1",
+    "limits": {
+      "MEM_CAP_KB": "6000000",
+      "MEM_CAP_RSS_KB": "3500000",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "21600"
+    },
+    "peak_rss_kb": 47048
   }
 }
