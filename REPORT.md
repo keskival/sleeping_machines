@@ -800,6 +800,29 @@ The earlier 8K single-head controls reach receiver 3.311 and indexed KV 3.357 bp
 
 One seed and small fitting budgets. Whole fitting includes all four passes, backward, admitted losing-value credit and optimizer work. Development selection uses the lowest full development loss over those passes. Logical FLOPs and unit-weight special functions do not measure wall time, physical traffic or energy; no language supremacy follows from these points.
 
+## Appendix B (continued). Ours: frozen information-flow diagnosis
+
+Saved selected H2/H4 eight-block 8K checkpoints; 256 targets from the development prefix. Weights remain fixed. Each intervention removes one path only during this short evaluation; these are diagnostic probes rather than refitted architecture comparisons.
+
+| Ours | Frozen intervention | Window bpc ↓ | Context RMS mean |
+| --- | --- | --- | --- |
+| H2 | unaltered | 3.316 | 1.770 |
+| H2 | source off | 4.013 | 1.676 |
+| H2 | kv off | 3.312 | 1.750 |
+| H2 | channel identity | 3.773 | 1.488 |
+| H4 | unaltered | 3.331 | 2.144 |
+| H4 | source off | 4.001 | 2.066 |
+| H4 | kv off | 3.375 | 2.073 |
+| H4 | channel identity | 3.786 | 1.477 |
+
+A route-credit audit replays each admitted historical value at three depths/head0 for the two-head model. It holds one realized race time and continuation seed fixed, then compares the centered local content teacher with the conditional categorical loss gradient.
+
+| Ours: local audit | Probes | Mean cosine | Opposed directions | Mean oracle gap (nats) |
+| --- | --- | --- | --- | --- |
+| H2 / head0 | 24 | 0.717 | 1 / 24 | 0.071 |
+
+Higher cosine means better alignment in this narrow replay. The oracle gap is realized loss minus the best candidate replay, not achieved improvement. Different routing can change subsequent candidate/RNG paths. The audit conditions away time derivatives and does not estimate the full expected gradient, long-history utility or discovery coverage. Interventions have no refitting and no confidence intervals; do not use these window scores as promotion metrics or dense-model superiority evidence.
+
 ## Appendix B (continued). Ours: separate online neural learning
 
 Both arms start from the same selected integrated-model checkpoint and maintain persistent event memory on the same new development stream. The frozen arm retains its parameters. The online arm updates the complete neural backbone after making the causal predictions in each 16-character block, with no replay.
