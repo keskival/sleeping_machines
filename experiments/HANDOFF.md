@@ -723,3 +723,21 @@ conditions on one race time/continuation seed for24 local replay probes and
 uses a256-target window; it is not a full expected gradient or refitted model
 benchmark. Publication adds only completed results and separates credit spans
 from optimizer/head comparisons; source hashes/queues are frozen before launch.
+
+## Smoke audit configuration correction — 1 October, 07:50 UTC
+
+The129-character/64-credit fit completed, but its inference audit failed:
+dev65 minus one target minus64 trace targets left zero warmup inputs. This
+is a smoke configuration error, not evidence of a model numerical failure.
+Preserve original queue, running/checkpoint files and log; no final benchmark
+result was published. New unused smoke tag:
+`local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z` with dev129.
+
+Continuation manifest:
+`experiments/queue/local_language_credit_campaign_recovery_20261001T075000Z.json`.
+The original manifest/status remain unchanged as history. The supervisor now
+accepts `--manifest-stem`; the continuation pins this new supervisor revision,
+retains all model/driver sources and reuses unchanged successful diagnostic/
+64-credit contracts. Commit before starting it once in tmux with the recovery
+stem. Subsequent pilot/data gates and original fitting definitions are unchanged.
+Do not restart the original frozen supervisor manifest with the new revision.

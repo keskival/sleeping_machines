@@ -1,0 +1,140 @@
+{
+  "status": "prepared_recovery_after_smoke_window_error",
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/packed_episodic_race_language.py": "461fb7964c765b0ac9ce9343a1d7194965be0bcfc4867b32cfc95adbf37843e7",
+    "sleeping_machines/indexed_episodic_race_language.py": "484d9aa2fd970691f458540809009ff6a3e8fc2053bdcbd23e46819df9ca1514",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/diagnose_parallel_head_language.py": "0c07579bbc3d3a4ef9b785c485ffe10a421c1b397bf69059a143967e38c01a86",
+    "experiments/parallel_head_credit_contracts.py": "edde873a424ae672c7dbbf3616316cba2c8aaeec5654c9a098cd9af90b1b7bfb",
+    "scripts/run_language_credit_campaign.py": "d4eff110a34b0f023791e8bfb91b28aef95816a1d8108ecd54da6134fa25643c",
+    "scripts/publish_language_credit_stage.py": "86ddcf1c6360a498a876424ae4d6d080078b08f2ae764f4a8ff62c5df9f01a45",
+    "experiments/queue/local_parallel_head_diagnosis_20261001T074000Z.txt": "e2ca93e26a7a428e2d35b01563a1b6c19569a7fad08c4712dcc8f73291c598af",
+    "experiments/queue/local_parallel_head_credit_contracts_b64_20261001T074000Z.txt": "dceaa5e26cc1336d4eb160a17074106c620a30bf146471830ee033a6ac500b31",
+    "experiments/queue/local_parallel_head_credit_smoke_b64_20261001T074000Z.txt": "1b4e6a09bbf2d9335237c89e5d0505e313eaeff257521a8a37b916684e409439",
+    "experiments/queue/local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z.txt": "e2515be1f3fc573f65319dd71a426653c0a6b217d699e9f6509908d4eabeb41a",
+    "experiments/queue/local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b64lr002_20260930T231500Z.txt": "606d95d7606676c8ad95e23f797e9e876739f5a7137385bc47fe8dcfd41aff1e",
+    "experiments/queue/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s6_eight_k_20261001T074000Z.txt": "cdfb3f11e2099b9b6f0396ebf92c4f6ef6bd09539e25ff91b3c936c88b030cda",
+    "experiments/queue/local_episodic_pair_credit_H2_b16_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.txt": "de72d3852fadc4c5376ed1e6505b04df751030ceb6a1a37fdbe51b22d41b5e29",
+    "experiments/queue/local_episodic_pair_credit_H2_b64_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.txt": "b03fdd9c85de4ce6dfe720de672c9ade90a52e5c4436f1b60f11c7731baf5213",
+    "experiments/queue/local_episodic_pair_credit_H2_b16_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.txt": "d4684a9ae381c13b9c789a50e41271db3a22355061f4773b88ce99a497d5a5d2",
+    "experiments/queue/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.txt": "3f14b5e980a0b0c9b3889433a4b602b02a2c60a7f99b0908659a721266b9fe21",
+    "experiments/queue/local_episodic_pair_credit_H2_b16_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.txt": "2008af479ffd1a796cc2dfc60ea14ff61edf1338e2d2adf385afbc9815fee470",
+    "experiments/queue/local_episodic_pair_credit_H2_b64_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.txt": "48ac9347b362476df5d5d92cca0fa4d4ea90590d26971c4a3f030064e055f90c",
+    "experiments/queue/local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z.txt": "6556d13bc42a69a68deb6d911fcfc265be8b961babde4247e6933066f957f7fd"
+  },
+  "prioritized_status": "experiments/queue/local_repeated_arrivals_after_heads_20261001T015000Z.status.json",
+  "diagnosis": {
+    "tag": "local_parallel_head_diagnosis_20261001T074000Z",
+    "queue": "experiments/queue/local_parallel_head_diagnosis_20261001T074000Z.txt",
+    "result": "experiments/results/diagnostics/local_parallel_head_diagnosis_20261001T074000Z.json",
+    "timeout_s": 1800
+  },
+  "credit_contracts": {
+    "tag": "local_parallel_head_credit_contracts_b64_20261001T074000Z",
+    "queue": "experiments/queue/local_parallel_head_credit_contracts_b64_20261001T074000Z.txt",
+    "result": "experiments/results/episodic_language/local_parallel_head_credit_contracts_b64_20261001T074000Z.json",
+    "timeout_s": 1800
+  },
+  "credit_smoke": {
+    "tag": "local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z",
+    "queue": "experiments/queue/local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z.txt",
+    "result": "experiments/results/episodic_language/local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z.json",
+    "timeout_s": 1800
+  },
+  "credit_pilot": {
+    "tag": "local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z",
+    "queue": "experiments/queue/local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z.txt",
+    "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z.json",
+    "timeout_s": 14400
+  },
+  "short_credit_eight_k": {
+    "tag": "local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b64lr002_20260930T231500Z",
+    "queue": "experiments/queue/local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b64lr002_20260930T231500Z.txt",
+    "result": "experiments/results/episodic_language/local_episodic_pair_heads_H2_D8192_d32_depth8_s6_b64lr002_20260930T231500Z.json",
+    "timeout_s": 14400
+  },
+  "long_credit_eight_k": {
+    "tag": "local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s6_eight_k_20261001T074000Z",
+    "queue": "experiments/queue/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s6_eight_k_20261001T074000Z.txt",
+    "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s6_eight_k_20261001T074000Z.json",
+    "timeout_s": 21600
+  },
+  "thirtytwo_k": {
+    "16": {
+      "tag": "local_episodic_pair_credit_H2_b16_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b16_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b16_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.json",
+      "timeout_s": 43200
+    },
+    "64": {
+      "tag": "local_episodic_pair_credit_H2_b64_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b64_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b64_D32768_d32_depth8_s6_thirtytwo_k_20261001T074000Z.json",
+      "timeout_s": 43200
+    }
+  },
+  "repeat_eight_k": {
+    "16": {
+      "tag": "local_episodic_pair_credit_H2_b16_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b16_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b16_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.json",
+      "timeout_s": 21600
+    },
+    "64": {
+      "tag": "local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b64_D8192_d32_depth8_s7_repeat_eight_k_20261001T074000Z.json",
+      "timeout_s": 21600
+    }
+  },
+  "onehundredthirtyone_k": {
+    "16": {
+      "tag": "local_episodic_pair_credit_H2_b16_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b16_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b16_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.json",
+      "timeout_s": 172800
+    },
+    "64": {
+      "tag": "local_episodic_pair_credit_H2_b64_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z",
+      "queue": "experiments/queue/local_episodic_pair_credit_H2_b64_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.txt",
+      "result": "experiments/results/episodic_language/local_episodic_pair_credit_H2_b64_D131072_d32_depth8_s6_onehundredthirtyone_k_20261001T074000Z.json",
+      "timeout_s": 172800
+    }
+  },
+  "short_credit_reference": "experiments/results/episodic_language/local_episodic_pair_heads_H2_D2048_d32_depth8_s6_b64lr002_20260930T231500Z.json",
+  "single_head_eight_k": "experiments/results/episodic_language/local_episodic_pair_kv_semantic_D8192_d32_depth8_s6_20260930T211500Z.json",
+  "resource_caps": {
+    "MEM_CAP_KB": 4000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "minimum_credit_pilot_gain_bpc": 0.02,
+  "maximum_full_model_regression_bpc": 0.1,
+  "minimum_larger_data_gain_bpc": 0.05,
+  "maximum_projected_rss_kb": 2200000,
+  "maximum_timeout_s": 172800,
+  "direction": "Retain full temporal/sparse independent-head architecture. Extend temporal producer credit only; inference/forward state unchanged at fixed weights.",
+  "selection": "Saved strongest U64/lr.002 pilot rather than cheapest U128; best completed 8K quality, work breaks exact ties; existing control tolerance before 32K. No dense local fits.",
+  "time_policy": "Conditional131K timeout derived from completed32K wall*4*1.5+1800; no launch if >48h or measured-RSS-plus-cache projection >2.2M KiB.",
+  "recovery_from": "experiments/queue/local_language_credit_campaign_20261001T074000Z.json",
+  "protocol_correction": "Previous smoke fit completed but inference audit warmup was empty at dev65/credit64. Preserve failed record/log; new unique smoke uses dev129. Numerical optimizer contracts and frozen diagnostics remain valid. Model/fit settings unchanged."
+}

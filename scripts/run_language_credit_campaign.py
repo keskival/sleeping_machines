@@ -1,4 +1,5 @@
 """Finite diagnosis/credit/data ladder after the active repeated-arrival run."""
+import argparse
 import hashlib
 import json
 import math
@@ -13,8 +14,12 @@ STEM='local_language_credit_campaign_20261001T074000Z'
 
 
 def main():
-    plan=json.loads((ROOT/f'experiments/queue/{STEM}.json').read_text())
-    status=ROOT/f'experiments/queue/{STEM}.status.json'
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--manifest-stem',default=STEM)
+    stem=parser.parse_args().manifest_stem
+    if Path(stem).name!=stem:raise ValueError('Use a local manifest stem')
+    plan=json.loads((ROOT/f'experiments/queue/{stem}.json').read_text())
+    status=ROOT/f'experiments/queue/{stem}.status.json'
     live=dict(status='waiting_for_repeated_arrivals',completed=[],decisions=[])
     def save():status.write_text(json.dumps(live,indent=2)+'\n')
     def validate(path):
@@ -32,7 +37,8 @@ def main():
             JOB_TIMEOUT_S=str(timeout or job['timeout_s']),WAIT='1',WAIT_TIMEOUT_S='86400')
         subprocess.run(['bash','experiments/queue/run_safe.sh',job['queue']],cwd=ROOT,env=env,check=True)
         r=validate(job['result']);live['completed'].append(job['result']);save()
-        subprocess.run([sys.executable,'scripts/publish_language_credit_stage.py',job['result']],cwd=ROOT,check=True)
+        changes=subprocess.check_output(['git','status','--porcelain','--',job['result']],cwd=ROOT,text=True)
+        if changes.strip():subprocess.run([sys.executable,'scripts/publish_language_credit_stage.py',job['result']],cwd=ROOT,check=True)
         return r
     quality=lambda r:r['final']['dev']['bpc']
     work=lambda r:r['work']['cpu_emulator']['total_training_unit_special_flops']
