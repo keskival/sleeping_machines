@@ -1,0 +1,6 @@
+{
+  "pid": 735849,
+  "start_ticks": "21483010",
+  "command": ".venv-docker/bin/python -u scripts/run_aws_split_event_after_matrix.py --manifest experiments/gym/plans/aws_split_event_20261001T230029Z/manifest.json --predecessor-pid 696038 ",
+  "reason": "Bounded frozen route-credit audit before split battery; resume waiter in finally"
+}

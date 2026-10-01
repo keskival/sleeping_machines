@@ -1236,3 +1236,28 @@ Only a completed actionable audit plus integrated contracts/small matched fit
 can promote a separately named teacher intervention. Shared map versus source
 embedding effects, temporal information and necessary memory require their
 controls; neither state occupancy nor loss conservation alone proves advantage.
+
+
+## Autonomous frozen route/state diagnostic insertion — 1 October, 23:30 UTC
+
+User renews autonomous research toward supremacy. Frozen replay audit now
+implemented separately in `experiments/frozen_native_route_audit.py`; its
+checkpoint/RNG/delay/realized-forward integrity test passes. It uses completed
+order-full selected checkpoint, one dev population and address0's four events
+at blocks0/4/7, head0: twelve predeclared probes. Each compares the local
+losing-value teacher with actual alternative persistent-write/suffix losses
+at the same sampled delay and continuation noise. Scope is conditional boundary
+fidelity, excluding clock interiors and full downstream expectation. No optimizer
+or model-source change, and replay counts/wall/RSS are charged separately.
+
+Split waiter PID735849 alone is SIGSTOP-reserved for this<=300s diagnostic;
+active wine trainer/guard/watchdogs are unchanged. Reservation:
+`experiments/queue/aws_frozen_route_audit_reservation_20261001T233000Z.json`.
+One-job queue `aws_frozen_native_route_audit_20261001T233000Z.txt`. Supervisor
+`scripts/run_frozen_audit_before_split.py` waits for original matrix worker
+PID696038 to exit/publish, runs audit via run_safe with2441MiB RSS/3907MiB VMS
+and8GiB floor, commits/pushes completed result, and resumes split waiter in
+finally. Launch once in tmux `aws-frozen-audit-before-split`; same-tag queue
+`.status.json`/`.out` retain state. Failure preserves its logs and still resumes
+the independent prioritized split battery. No extra trainer is admitted while
+the old matrix occupies the host reservation. Preserve model/theory continuity.
