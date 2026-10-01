@@ -1289,3 +1289,24 @@ Next hypothesis: surrogate value credit may omit route-dependent persistent
 write effects as well as nonlinear value curvature. Isolate them with a
 separately tagged checkpoint audit before proposing a trained replacement.
 Keep all sparse/temporal/counterfactual mechanisms and current split priority.
+
+
+## Addressed write credit witness — 1 October, 23:41 UTC
+
+Additional independent mathematical diagnostic:
+`experiments/addressed_write_credit_reference.py`, saved
+`diagnostics/aws_addressed_write_credit_reference_20261001T234000Z.json`.
+Two tests pass; finite differences6.7e-12. Identical message AND proposed memory
+content still give unequal future losses because routes write different
+persistent addresses; current value-only local teacher is zero against
+nonzero true credit. This isolates a structural information path distinct
+from nonlinear value curvature. It does not prove whole-model learning fails.
+
+Theory derives a candidate addressed-state adjoint times write-delta utility,
+exact only for linear future losses, and bounds smooth-region Taylor error.
+Conditional O(Kd) local scalar work assumes future losing-address adjoints
+exist; discovery, traces, versions, sparse reverse routing and critic fitting
+remain charged/open. Next checkpoint control should separate payload-only
+versus actual-write interventions, then a separately named integrated teacher
+comparison with zero-added-credit nesting and recovery/accounting contracts.
+Current split/shared/protected battery remains frozen and prioritized.

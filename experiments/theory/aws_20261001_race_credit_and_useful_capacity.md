@@ -242,3 +242,62 @@ model. Next isolate persistent-write versus delivered-value effects, then test
 a separately named bounded credit correction. All replay/state/optimizer work
 and any cache/RNG handling must be charged. The prioritized protected/shared
 battery continues; neither these probes nor its pending scores imply supremacy.
+
+
+## Addressed writes create an independent credit channel
+
+There is a failure even without nonlinear delivered-value curvature. Take
+two equal-rate routes with identical delivered values v0=v1=0 and identical
+proposed memory content m0'=m1'=1. Old addressed state is(S0,S1)=(0,0).
+Route0 writes only address0; route1 writes only address1. Let later loss be
+F=S1, independent of arrival time. Branch losses are0 and1, so exact local
+score credit is(-.25,+.25). The value-only teacher is zero.
+
+The new deterministic addressed-write audit checks finite differences to
+6.7e-12; two tests pass. Concatenating the proposed memory CONTENT with the
+message does not repair this witness: both concatenated vectors still coincide.
+The location of the persistent update changes future information paths. This
+is a local structural blind spot, not proof of zero learning in a whole model:
+other events and shared parameters can receive useful gradients.
+
+For a linear future conditional loss
+
+    F(v,S)=a·v+Σ_b c_b·S_b,
+
+routei's utility, up to a common constant, is
+
+    U_i=a·v_i+c_address(i)·(m_i'-m_old,address(i)).
+
+The SECOND term uses the adjoint at the actual candidate write address and
+its delta relative to old memory. It is exact in this linear setting. The
+existing teacher sees the first term; ordinary producer backprop can train
+the selected memory map, but integer selection of WHICH persistent slot
+to commit does not expose the losing-address delta to its local value teacher.
+In consume_event the selected memory proposal is assigned outside TemporalRoute,
+so that local autograd operator cannot directly receive its later memory adjoint.
+
+For a smooth conditional suffix with state/value perturbationδ_i and Hessian
+norm bounded by M, the joint Taylor error is at most M||δ_i||²/2. This holds
+only within a differentiable continuation, not across ignored downstream
+hard-route changes. Actual scalar suffix replay is needed to audit that scope.
+A state-aware local surrogate can therefore reduce a missing information path
+without claiming exact arbitrary expected gradients.
+
+If future addressed adjoints are available, evaluating the K state-dot-deltas
+costs O(Kd) scalar/vector work plus candidate proposals already charged. That
+is a conditional complexity claim: generating, storing, transporting and
+versioning those adjoints is NOT free, and losing addresses may not be touched
+by the realized suffix at all. Dense reverse-state scans or full suffix replay
+would undermine the resource argument. Learned local route-value critics are
+an alternative hypothesis whose approximation, exposure and fitting work must
+be measured. The frozen checkpoint audit currently conflates this missing
+state channel with value curvature; its next control must separate them.
+
+A justified intervention would expose candidate addressed-write effects to
+the teacher while retaining temporal races, independent heads, persistent
+state, sparse commits and losing alternatives. It must keep winner-only
+forward execution and pay the extra learning information paths. First compare
+value-only, value-plus-addressed-state and bounded scalar-replay credit on a
+small fully audited integrated task. Preserve the existing teacher as a matched
+parent and prove zero-added-credit nesting before fitting. Do not modify the
+currently running protected/shared battery.

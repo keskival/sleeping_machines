@@ -1,0 +1,42 @@
+{
+  "status": "completed",
+  "scope": "Deterministic one-race addressed-state information-path witness; no fitting or full-model quality claim",
+  "before_state": [
+    0.0,
+    0.0
+  ],
+  "candidate_writes": [
+    1.0,
+    1.0
+  ],
+  "future_readout": [
+    0.0,
+    1.0
+  ],
+  "branch_losses": [
+    0.0,
+    1.0
+  ],
+  "true_route_score_gradient": [
+    -0.25,
+    0.25
+  ],
+  "finite_difference": [
+    -0.2499999999933111,
+    0.24999999999608666
+  ],
+  "value_only_credit": [
+    0.0,
+    0.0
+  ],
+  "state_adjoint_branch_utilities": [
+    0.0,
+    1.0
+  ],
+  "max_abs_error": 6.688899434337259e-12,
+  "conclusion": "Write identity matters even when immediate values and proposed memory contents coincide; concatenating payload and memory content alone cannot expose the address effect",
+  "limitation": "Future adjoints at losing addresses must be available/estimated and charged; nonlinear and stochastic suffixes need further credit",
+  "source_sha256": {
+    "experiments/addressed_write_credit_reference.py": "90d1451831e17166d67e97e792ea1c731707ad0ca7fcb4eaec8e81afd760136a"
+  }
+}
