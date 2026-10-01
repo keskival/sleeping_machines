@@ -15,6 +15,8 @@ tradeoff to the cover/page2, retaining all older strong synthetic evidence.
 Editorial direction from the user: the opening banknote figure compares the
 native model with trees. Keep the losing R2 reception variant and its cost/
 quality interpretation in the appendix, rather than in the opening figure.
+The user also requests that repair plans stay out of the opening chapter;
+the next-experiment interpretation belongs beside the appendix mechanism screen.
 New completed event_variants pilots will populate separate quality/work/activity
 ledgers; contracts/smokes cannot populate them. Protected-prefix initialization
 removes faster initial temporal modes as well as introducing retention;

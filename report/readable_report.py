@@ -1302,10 +1302,6 @@ def blocks(M, tasks, ev):
              '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
              'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
              'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
-            ('p','<b>What the next tests must repair.</b> State clearing damages learned order predictions, yet stretching silent gaps '
-             'also damages them. Private source rules lose exposure as capacity grows. '
-             'The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels '
-             'cannot be inferred from rank alone.'),
             ('small','Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence '
              'on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.')])
 
@@ -2305,6 +2301,11 @@ def blocks(M, tasks, ev):
                 pages[-1].append(('small','Capacity interpretation: commits and matches remain fixed while '
                     'available state grows, but fixed queries reduce per-source training exposure. The 64-source '
                     'development set has one population; its collapsed bootstrap interval is not useful uncertainty.'))
+            if domain=='temporal' and begin==0:
+                pages[-1].append(('small','Next experimental questions: state clearing and stretched silent gaps damage '
+                    'order predictions; private source rules lose training exposure as capacity grows. The next integrated '
+                    'battery tests protected memory, shared rules with private state, and paired timing whose labels '
+                    'cannot be inferred from rank alone.'))
 
     for task in ('order','paired_timing'):
         selected=[r for r in tasks.get('split_screen',[]) if r['args']['task']==task]
