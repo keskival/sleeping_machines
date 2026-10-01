@@ -1,0 +1,1 @@
+aws_e20f_mlp_d4_20260929 experiments/aws_benchmark.py --run-tag aws_e20f_mlp_d4_20260929 --script experiments/e20_exact.py -- --task mnist --model mlp --depth 4 --width 400 --epochs 5
