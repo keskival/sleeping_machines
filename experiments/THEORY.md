@@ -5,6 +5,10 @@ numerically (table at the end) before later experiments rely on it.
 
 ## Synthesis: the principles so far (read this first)
 
+Latest empirical design update: [what the completed October 1 results change](theory/RESULTS_DESIGN_UPDATE_20261001.md).
+It connects depth, native language quality/work, temporal function contracts
+and training-memory exposure to the next matched comparisons.
+
 The foundational calculus in §§1–20 reduces to five principles. Later sections extend and
 test them; the evidence column below summarizes that initial layer of the theory.
 

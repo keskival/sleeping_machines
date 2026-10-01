@@ -41,6 +41,18 @@ CPU-only ~31GiB host, idleavailable ~12GiB. One trainer. Read status/processes
 before assuming later stages completed. Model/driver/helper/queue fingerprints
 are unchanged; new manifests explicitly accept only the reviewed guard revision.
 
+At 21:57 UTC the new continuation is healthy: R4-late accounting smoke was
+published in 4663d51, and the full 2K/R2 reception pilot has been training since
+21:51 UTC. Group RSS is about 447MiB, MemAvailable about 11.4GiB. No completed
+quality score from that pilot yet. AWS recovery pilot results are now included
+by the report loader across both original/recovery plans, deduplicated by tag;
+contracts and smokes remain excluded from benchmark plots.
+
+The design update in `theory/RESULTS_DESIGN_UPDATE_20261001.md` records useful
+depth versus weak tested residual paths, the native 6.02x work/.032126bpc
+tradeoff, proved but not yet fitted temporal functions, and training-memory
+exposure. These are the current empirical constraints, not assumed supremacy.
+
 REPORT/PDF now contains new AWS language and complete residual4 hierarchy results;
 63-page PDF bounds checked. Plain depth3 85.06% remains best saved64K RHM point,
 residual4 72.56%/ten passes still improving. Early AWS matrix pilots are to be

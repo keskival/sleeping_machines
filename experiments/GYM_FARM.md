@@ -1,5 +1,11 @@
 # A research gym for sparse temporal architectures
 
+Current AWS exception: AGENTS.md authorizes up to three one-thread CPU jobs on
+`ip-172-31-47-132` through the measured locked-slot scheduler. Other hosts
+retain serial training, and GPU jobs never overlap. The original serial design
+below is retained as the default; AWS_RUN_FAST_MATRIX.md documents recovery.
+
+
 Goal: submit a declared architecture/variant, run a small cross-domain screen,
 then spend resources only on hypotheses supported by completed comparisons.
 This is an experiment farm, not a reinforcement-learning environment farm.

@@ -129,11 +129,11 @@ def results():
         tasks[key] = (read(path) if (RES/path).exists() and
             json.loads((RES/path).read_text()).get("status") == "completed" else None)
     tasks['gym_screen']=[]
-    gym_plan=ROOT/'experiments/gym/plans/aws_fast_matrix_v1_20261001T213000Z/manifest.json'
-    if gym_plan.exists():
+    seen_gym=set()
+    for gym_plan in sorted((ROOT/'experiments/gym/plans').glob('aws_fast_matrix*/manifest.json')):
         for job in json.loads(gym_plan.read_text())['jobs']:
-            if job['stage']!='pilot' or job['domain']=='tabular':continue
-            path=ROOT/job['result']
+            if job['stage']!='pilot' or job['domain']=='tabular' or job['tag'] in seen_gym:continue
+            seen_gym.add(job['tag']);path=ROOT/job['result']
             if path.exists():
                 r=json.loads(path.read_text())
                 if r.get('status')=='completed' and 'final' in r:tasks['gym_screen'].append(dict(job=job,result=r))
@@ -2238,7 +2238,8 @@ def blocks(M, tasks, ev):
                 ('small','FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. '
                  'Temporal inference per query includes intervening input events; language per target is per character. '
                  'Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and '
-                 'physical energy are separate. Temporal tasks and altered source counts are explicitly named; different '
+                 'physical energy are separate; AWS wall observations may include authorized CPU concurrency. '
+                 'Temporal tasks and altered source counts are explicitly named; different '
                  'tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. '
                  'Paired independent seeds and frozen held-out confirmation precede benchmark promotion.')])
 

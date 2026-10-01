@@ -1,5 +1,11 @@
 # Research farm: staged shopping list
 
+Current AWS exception: AGENTS.md authorizes up to three one-thread CPU jobs on
+`ip-172-31-47-132` through the measured locked-slot scheduler. Other hosts
+retain serial training, and GPU jobs never overlap. The original serial design
+below is retained as the default; AWS_RUN_FAST_MATRIX.md documents recovery.
+
+
 Prepared 1 October 2026. These are procurement envelopes, not purchase orders.
 No AWS capacity has been provisioned by this plan. Product/spec sources were
 checked against primary vendor pages; request current regional quotes before

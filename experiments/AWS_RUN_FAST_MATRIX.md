@@ -1,5 +1,10 @@
 # AWS agent: run this next
 
+Current continuation: the measured recovery plan below, with the explicitly
+authorized three-slot CPU scheduler on ip-172-31-47-132. The original plan and
+failed lifecycle are retained. Inspect current worker state; do not launch a
+second scheduler from an older command.
+
 The committed next protocol is
 [AWS_EARLY_INDICATION_MATRIX.md](AWS_EARLY_INDICATION_MATRIX.md).
 The ready first-wave plan is
