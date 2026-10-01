@@ -898,3 +898,15 @@ After committing prepared work, start once in tmux:
 ```bash
 tmux new-session -d -s local_native_research_campaign_20261001T174000Z '.venv-docker/bin/python scripts/run_native_research_campaign.py --manifest-stem local_native_research_campaign_20261001T174000Z >> experiments/queue/local_native_research_campaign_20261001T174000Z.out 2>&1'
 ```
+
+Prepared sources/report/queues were committed in `0cc5028`; `2e28ee8` normalized
+whitespace in seven unused queue definitions and refreshed their fingerprints,
+without changing arguments. The campaign started once at 17:53:55 UTC using the
+tmux command above. It validated predecessor/contracts, skipped the unchanged
+successful order/language smokes and entered the timing accounting smoke.
+One guarded trainer is active, RSS about 0.45 GiB, host MemAvailable about 11.5 GiB.
+The 57-page canonical PDF passed text-bound/orphan checks; pages 10 and 46 were
+visually reviewed. A temporary layout-only stress rendering of ten event and
+seven language records passed on seven bounded result pages. Those duplicated
+smoke fixtures are not published evidence. Inspect current status before assuming
+that a full pilot or any conditional larger stage has completed.
