@@ -139,6 +139,8 @@ def language_work_points(tasks, ev):
         parallel=a.get('heads',1)>1
         name=f"parallel race KV H{a['heads']}×d{a['payload']}" if parallel else ('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}"
         label=(f"IHR{a['heads']}x{a['payload']}" if parallel else f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}")
+        if a.get('arrivals',1)>1:
+            name+=f" / m{a['arrivals']} arrivals";label+=f"/m{a['arrivals']}"
         if 'update_targets' in a:label+=f"/u{a['update_targets']}@{a['lr']:g}"
         rows.append(dict(model='Ours: '+name,
             family='integrated',label=label+f"D{a['depth']}/{a['fit']//1024}K/s{a['seed']}",
@@ -147,7 +149,7 @@ def language_work_points(tasks, ev):
             targets=w['fitting_targets'],
             inference=w['cpu_emulator']['inference_arithmetic_flops_per_character']+w['cpu_emulator']['inference_special_functions_per_character'],
             projected_inference=w['projected_event_architecture']['inference_arithmetic_flops_per_character']+w['projected_event_architecture']['inference_special_functions_per_character'],
-            inference_method='Winner-only inference trace'))
+            inference_method='Selected-arrival inference trace'))
     carrier=tasks['language_scaling']+tasks['language_selective'][:1]+tasks['language_scaleup']
     for r in carrier:
         a=r['args'];w=r['work']
@@ -340,7 +342,7 @@ def figures(M, tasks, ev):
     for start,end in [((1.7,1.8),(2,2.3)),((1.7,1.1),(2,.7)),((4.5,2.3),(4.9,2.3)),((4.5,.7),(4.9,.7)),((7,2.3),(7.45,1.8)),((7,.7),(7.45,1.1))]:
         ax.add_patch(FancyArrowPatch(start,end,arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'parallel_temporal_heads')
-    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
     if pilots:
         f,ax=plt.subplots(figsize=(7.2,2.5))
         for row in pilots:
@@ -359,7 +361,7 @@ def figures(M, tasks, ev):
         modality_box(7.5,y,2.3,.65,t)
         ax.add_patch(FancyArrowPatch((6.9,1.95),(7.4,y+.325),arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'general_temporal_interface')
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
     if optimizer_pilots:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         f,ax=plt.subplots(figsize=(7.2,2.8));bottom=np.zeros(len(optimizer_pilots))
@@ -2034,7 +2036,7 @@ def blocks(M, tasks, ev):
              'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
     if len(optimizer_pilots)>1:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         reference=next(r for r in optimizer_pilots if r['args'].get('update_targets',16)==16)
@@ -2061,7 +2063,37 @@ def blocks(M, tasks, ev):
              'gradient accumulation/normalization remain in the operator ledger. Larger-data and repeat-seed '
              'comparisons must establish transfer of the selected schedule.'),
         ])
-    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1]
+    repeated=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)>1]
+    arrival_fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs','chunk','update_targets','warmup_targets','seed','lr')
+    for group in sorted({tuple(r['args'][k] for k in arrival_fields) for r in repeated}):
+        trials=[r for r in repeated if tuple(r['args'][k] for k in arrival_fields)==group]
+        a=trials[0]['args'];fit=a['fit']
+        same=lambda r: all(r['args'].get(k,1 if k=='arrivals' else None)==a.get(k) for k in
+            ('heads','payload','depth','pool','matching','recent','fit','dev','epochs','chunk','update_targets','warmup_targets','seed','lr'))
+        reference=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)==1 and same(r)]
+        rows=sorted(reference+trials,key=lambda r:r['args'].get('arrivals',1))
+        pages.append([
+            ('h1','Appendix B (continued). Ours: shared-match temporal arrivals'),
+            ('p',f"{a['heads']} independent spatial heads, payload {a['payload']}/head, {a['depth']} blocks. "
+             f"All rows fit {fit:,} characters for {a['epochs']} passes and score {a['dev']-1:,} cold development targets. "
+             'Each query forms its candidate matches once. Multiple temporal marks reuse those rates; only the winning emitter renews its clock. '
+             'The receiver and each selected message evolve until the last local read, then the messages are averaged and gated.'),
+            ('table',(['Ours: arrivals / head','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
+                [f"m={r['args'].get('arrivals',1)}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
+                 f"{(r['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+r['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],
+                [32,25,35,38,44])),
+            ('p','Candidate discovery, keys, rates and independent Q/K/V projections are unchanged. '
+             'More marks can retrieve the same value; they do not create extra learned spatial heads or discover absent candidates. '
+             'Training reads all admitted values once and aggregates the conserved per-arrival teacher in O(Cd + md). '
+             'All delivered messages, temporal transports, backward, clipping and Adam remain charged.'),
+            ('small','Completed single-seed development screens; m=1 reuses the saved reference under exact nesting contracts. '
+             'Unit-weight special functions are included; CPU minimum comparisons/RNG and memory traffic are separate counters. '
+             'The bounded numerical time encoding is not a demonstrated homogeneous physical Poisson clock. '
+             'This local counterfactual teacher is a declared surrogate, not an exact gradient through nonlinear route changes. '
+             'No matched-quality dense-model, physical-energy or frontier superiority is inferred.')])
+    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args'].get('arrivals',1)==1]
     if head_rows:
         display=head_rows[-4:]
         pages.append([

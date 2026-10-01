@@ -592,3 +592,49 @@ another 0.014 bpc for 3.85× total fitting arithmetic. This is a local finite
 comparison, not a scaling law or dense-model superiority. Keep the report
 working tree clean before its automatic post-stage hook. Bounds/no-orphan and
 nine focused checks passed after the latest rebuild.
+
+## Deferred integrated repeated-arrival trial — 1 October, 01:50 UTC
+
+Completed optimizer evidence and consistent per-target fitting units were
+committed in `57d8b65`. Current H2 8K stage remains guarded; first-pass frozen
+8K development is 3.498321 bpc. This is an intermediate score, not the completed
+fit or a new report benchmark. Inspect its status and log before any launch.
+
+New sources `repeated_arrival_race_language.py` / `repeated_temporal_race.py`
+add m historical arrivals per head with one set of key/query matches. Only the
+winning emitter renews. Receiver races, independent spatial Q/K/V heads, depth8,
+persistent state, sparse index and counterfactual credit are retained. Read
+THEORY §324 for the failure addressed, temporal aggregation, conserved
+O(Cd+md) teacher and cost/physical-clock limitations. m=1 exactly nests the
+existing model. Seven read-only numerical/operation checks passed; with report
+and scaling checks, fourteen tests passed. Full optimizer contracts and smoke
+fits must run under the host guard before pilots; they have not completed yet.
+
+Prepared manifest: `experiments/queue/local_repeated_arrivals_after_heads_20261001T015000Z.json`.
+Supervisor: `scripts/run_repeated_arrivals_after_heads.py`. It waits for the
+prioritized head campaign's terminal state, not merely an unlocked moment.
+It proceeds after completion or the exact declared 8K head-quality stop; other
+errors require review. It must not displace or edit the active head campaign.
+Ten unique one-job queues cover m1/2/4 contracts/smokes, m2/4 2K pilots and two
+alternative 8K promotion definitions (only the selected one may run). H2,
+d32/head/depth8, U128/lr.004, four passes/seed6, disjoint 8K dev. Reuse the
+completed m1 reference only after nesting checks. Minimum .02 bpc pilot gain
+required for one 8K fit; no 32K/131K promotion without reviewing that evidence.
+Caps remain VMS4,000,000KiB/groupRSS2,500,000KiB/minavailable8192MiB; CPU-only.
+
+Report ingestion distinguishes `/m2` and `/m4`, keeps them out of optimizer-
+schedule and independent-head-only comparisons, and adds a matched appendix
+cost/quality table only after completed fit records exist. Pending cells contain
+no predicted results. Winner deliveries, local renewals, candidate teacher
+reads and numerical minimum comparisons have explicit counters. Clock costs,
+RNG, discovery/traffic and physical energy are not erased by FLOP projection.
+
+After the reviewed commit, start the waiting supervisor in tmux
+`local_repeated_arrivals_after_heads_20261001T015000Z` using:
+
+```bash
+tmux new-session -d -s local_repeated_arrivals_after_heads_20261001T015000Z '.venv-docker/bin/python scripts/run_repeated_arrivals_after_heads.py >> experiments/queue/local_repeated_arrivals_after_heads_20261001T015000Z.out 2>&1'
+```
+
+Check its same-stem `.status.json`; `waiting_for_prioritized_campaign` means no
+new training has started. Do not start another instance or change frozen sources.

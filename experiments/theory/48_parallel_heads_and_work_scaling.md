@@ -394,3 +394,78 @@ this join is an explicit dependency and its latency is charged. Value-encoded
 delay is a computation, not observed physical elapsed time. Order bias is useful
 for temporal streams but need not be imposed on unordered tabular records.
 See TABULAR_RESEARCH_PROTOCOL.md for the proposed tests and primary references.
+
+## 324. Integrated repeated arrivals with one shared key match
+
+Concrete limitation addressed: one historical value per spatial head supplies
+only one sampled relationship, even when several candidate contents are useful.
+Sections 316/319/320 motivate several cheap temporal marks from one query.
+This trial preserves the complete independent-head architecture, addressed
+persistent receiver updates, deep time evolution, separate Q/K/V, index and
+counterfactual teaching. It changes historical retrieval alone. Receiver races
+still select one receiver; no dense carrier or tied spatial heads are added.
+The m=1 implementation nests the prior model exactly, including delays,
+outputs, gradients and RNG. Stored history/candidate discovery are unchanged.
+
+For a fixed admitted query, set lambda_i=exp(s_i) once. Start each next clock
+at E_i/lambda_i. Select the earliest absolute clock tau_r, retain every losing
+clock unchanged, and renew only the winner by adding a fresh Exp(1)/lambda_i
+gap. Ideal independent Poisson processes have IID categorical marks with
+p_i=lambda_i/sum(lambda), and independent gaps Exp(sum(lambda)). This supplies
+m samples without m key/query contractions or m rate settings. Repeated marks
+can select the same value. More marks are not additional independent learned
+policies, extra spatial heads or better candidate discovery.
+
+The CPU protocol encodes each absolute arrival as
+u_r=.001+.010*tau_r/(1+tau_r). Its receiver message evolves to u_m; each selected
+historical message evolves by T_h(u_m-u_r). Average these m evolved messages,
+apply the existing gate and add to the receiver. Different spatial heads retain
+their own projections/channels and join as before. Since u_m<.011, the original
+depth/order bound is preserved. This bounded warp is a monotone numerical
+encoding: the warped clocks are not homogeneous physical Poisson processes.
+Rate programming, finite deadlines, resolution, renewal, buffering and a
+hardware realization of this encoding remain implementation questions. There
+is no measured clock-free hardware or zero-energy claim.
+
+For learning, admit all C candidate values once. Let c_i=v_i-mean(v),
+g_r be the upstream message gradient, Delta_r=tau_r-tau_(r-1), tau_0=0.
+The declared local per-arrival teacher is
+
+    a_(i,r) = lambda_i Delta_r (c_i dot g_r),
+    credit_(i,r) = a_(i,r) - 1{i=w_r} sum_j a_(j,r).
+
+Its conserved sum can be evaluated without m separate C-by-d contractions:
+
+    G = sum_r Delta_r g_r,      D = sum_i lambda_i c_i,
+    credit_i = lambda_i (c_i dot G)
+               - sum_(r:w_r=i) Delta_r (D dot g_r).
+
+Thus this local teacher takes O(Cd+md), not O(mCd). It equals the explicit
+sum of the declared per-arrival rules, not the exact nonlinear loss change
+when a mark changes subsequent state or arrival order. Realized timing credit
+additionally uses d u_r/d s_(w_r)=-.010*tau_r/(1+tau_r)^2 inside fixed-mark
+regions; value gradients accumulate at delivered marks. Transport's gradients
+reach message and delay arguments. Route-boundary fidelity remains an open
+hypothesis requiring task evidence, not a consequence of credit conservation.
+
+Inference leading historical work remains 2Cd plus O(md) transport/aggregation
+per head; it delivers m values and renews m-1 emitters. CPU minimum scans cost
+m(C-1) comparisons and are reported separately from FLOPs. Training retains
+C value reads, aggregated losing-route credit, all backward/optimizer work and
+m message transports. Projected arithmetic removes only explicit numerical
+clock division/renewal/bounded-time encoding and rate exponentials, recording
+rate settings/arrivals/renewals separately. It does not erase matches, state
+operations, memory, physical clock cost or counterfactual learning.
+
+Prepared matched trials: H2, d32/head, eight blocks, pool2, C<=8+4,
+credit16, optimizerU128/warmup512/lr.004/seed6; 2,048 fit characters/four passes,
+8,191 cold development targets, m=2 and m=4. Reuse the completed exact m=1
+reference (3.778729 bpc; 19.999171 unit-special whole-fit GFLOPs) only after
+full-configuration nesting/optimizer contracts and guarded smoke fits pass.
+Existing H2/H4/data-scaling work retains priority. Seven read-only numerical
+checks pass for nesting, mark/gap statistics, teacher aggregation/conservation,
+fixed-mark timing derivatives, integrated key-budget/teacher equivalence and
+complete forward/backward operator/clock-projection accounting.
+They are not training or benchmark evidence. The deferred serial campaign
+must pass complete operator accounting and memory gates before fitting, and
+promotes one 8K comparison only if completed pilot quality supports it.
