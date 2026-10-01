@@ -35,7 +35,7 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 **A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
 
-Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.
+This banknote comparison concerns one task. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.
 
 ## A general architecture for content, time and selective activity
 
@@ -735,6 +735,8 @@ Four development checkpoints or four separately fitted tree candidates; all cand
 
 Reception ablation: ours R2 reaches89.06% accuracy /0.270 NLL versus native R0 95.31% /0.155. Whole fitting work increases from0.335 to0.379 GFLOPs. The added reception capacity has not earned its cost in this single-seed static-data screen.
 
+Confirmation protocol: native checkpoint reuse plus seeds7/8, original trees, CatBoost and logistic regression; four development selection opportunities per family, then frozen reserved-test scoring. See experiments/AWS_BANKNOTE_CONFIRMATION.md. No pending test score is reported.
+
 ## Appendix B. Ours and boosted trees: wine_red
 
 Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.
@@ -742,11 +744,13 @@ Independent feature-ID rows, state reset between rows, train-only scaling and du
 | Model | Fit/dev rows | Dev NLL / RMSE ↓ | Dev accuracy / MAE | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
 | --- | --- | --- | --- | --- | --- | --- |
 | Ours R0 | 128/128 | 0.8238 | 0.6422 | 0.816 | 1.594 | 0.341 |
+| Ours R2 | 128/128 | 0.7579 | 0.6205 | 0.919 | 1.795 | 0.398 |
 | Boosted trees | 128/128 | 0.6489 | 0.4890 | Not counted | Not counted | Not counted |
 
 | Model | All fit wall s | Peak RSS MiB | Tree nodes / bytes |
 | --- | --- | --- | --- |
 | Ours R0 | 2553.48 | 468.1 | Not applicable |
+| Ours R2 | 3547.22 | 485.4 | Not applicable |
 | Boosted trees | 0.11 | 404.3 | 464/25,984 |
 
 Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.

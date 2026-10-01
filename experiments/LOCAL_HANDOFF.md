@@ -1,5 +1,39 @@
 # Local host: current research continuation
 
+## Autonomous continuation and banknote confirmation, 1 October, 23:48 UTC
+
+Native8K is running under the existing delay recovery; the completed waiting
+control gives3.763722bpc. Full reception misses its declared quality gate, so
+no larger delay-feature fit is admitted. Native8K is the separate authorized
+data-scaling test. Preserve the live source/queues; exactly one local trainer.
+
+New bounded AWS follow-up committed in45b0ea1:
+AWS_BANKNOTE_CONFIRMATION.md and
+gym/plans/aws_banknote_confirmation_20261001T234000Z/manifest.json.
+Twenty uniquely guarded stages: four contracts,four accounting smokes,twelve
+comparisons across ours/original trees/CatBoost/logistic and seeds6/7/8.
+Only two new native fits: seed6 reuses the first-screen selected checkpoint,
+validates matching source/settings/data/dev score and retains the original full
+fitting charge. A missing checkpoint stops, rather than silently retraining.
+All281 reserved rows/270 feature groups are scored after dev selection; weights
+stay frozen and no best seed/ensemble is selected. Paired seed/group analysis
+keeps repeated rows dependent and adjusts primary NLL intervals across controls.
+
+Do not displace the already reserved split-event battery or start a second AWS
+worker. New confirmation source/queues match their manifest and are unlaunched.
+Pinned CatBoost1.2.10 imports successfully locally; its additional dependencies
+were installed without changing existing NumPy/PyTorch/sklearn versions.
+Five read-only data/probability/pairing/evaluation tests pass. New guarded
+optimizer-recovery and full fitting smokes remain AWS prerequisites; no local
+training/optimizer diagnostic was added beside the native8K fit.
+
+REPORT/PDF retains opening quality/work evidence and moves next-test repair
+plans/losing variants into the appendix per user direction. Completed future
+confirmation JSONs have a separate test-quality/consistent-work ledger, with
+charged historical reuse explicit. No pending score fills it. Seventy-page PDF
+bounds and opening-content checks pass. Stronger real-event adapters, physical
+energy and a matched-quality language win remain open; no supremacy assumed.
+
 ## First-screen interpretation and next battery, 1 October, 23:14 UTC
 
 Sixteen of17 first AWS pilots are published locally; wine R2 is pending.

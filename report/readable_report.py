@@ -149,6 +149,12 @@ def results():
         r=json.loads(path.read_text())
         if r.get('status')=='completed' and 'final' in r and r['args']['fit']>=128 and r['args']['dev']>=128:
             tasks['native_tabular'].append(r)
+    tasks['tabular_confirmation']=[]
+    for path in sorted((RES/'tabular_confirmation').glob('*_pilot.json')):
+        r=json.loads(path.read_text())
+        if (r.get('status')=='completed' and r.get('protocol',{}).get('test_labels_scored')
+                and r['protocol'].get('weights_frozen_before_test') and 'test' in r.get('final',{})):
+            tasks['tabular_confirmation'].append(r)
     tasks['aws_hierarchy'] = []
     for meta_path in sorted((RES/'aws_20260929').glob('aws_e19_*/provenance.json')):
         meta=json.loads(meta_path.read_text())
@@ -1302,8 +1308,8 @@ def blocks(M, tasks, ev):
              '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
              'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
              'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
-            ('small','Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence '
-             'on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.')])
+            ('small','This banknote comparison concerns one task. Strong synthetic order/retrieval evidence '
+             'on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.')])
 
     reference_rows=[
         ["Ours: learned event-state model (planned)", "10M / four passes", "Pending", "Pending"],
@@ -2359,6 +2365,37 @@ def blocks(M, tasks, ev):
                 pages[-1].append(('small','Reception ablation: ours R2 reaches89.06% accuracy /0.270 NLL versus '
                     'native R0 95.31% /0.155. Whole fitting work increases from0.335 to0.379 GFLOPs. '
                     'The added reception capacity has not earned its cost in this single-seed static-data screen.'))
+                pages[-1].append(('small','Confirmation protocol: native checkpoint reuse plus seeds7/8, original trees, '
+                    'CatBoost and logistic regression; four development selection opportunities per family, then frozen '
+                    'reserved-test scoring. See experiments/AWS_BANKNOTE_CONFIRMATION.md. No pending test score is reported.'))
+
+    confirmed=tasks.get('tabular_confirmation',[])
+    labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
+    order=list(labels)
+    confirmed=sorted(confirmed,key=lambda r:(order.index(r['args']['model']),r['args']['seed']))
+    for begin in range(0,len(confirmed),6):
+        records=confirmed[begin:begin+6];quality=[];costs=[]
+        for r in records:
+            a,w,p=r['args'],r['work'],r['protocol'];model=labels[a['model']]+f'/s{a["seed"]}'
+            dev,test=r['final']['dev'],r['final']['test']
+            quality.append([model,f'{dev["nll"]:.4f}',f'{test["nll"]:.4f}',f'{100*test["accuracy"]:.2f}',
+                f'{w["whole_neural_fit_unit_special_flops"]/1e9:.3f}' if a['model']=='ours' else 'Not counted',
+                f'{w["neural_fit_unit_special_flops_per_row"]/1e6:.3f}' if a['model']=='ours' else 'Not counted',
+                f'{w["inference_unit_special_flops_per_row"]/1e6:.3f}' if a['model']=='ours' else 'Not counted'])
+            costs.append([model,f'{w["fit_wall_s" if a["model"]=="ours" else "control_fit_wall_s_all_candidates"]:.2f}',
+                f'{r["confirmation_wall_s"]:.2f}',f'{r["max_rss_kb"]/1024:.1f}',
+                'Historical fit reused' if r.get('reused_fit') else 'New fit'])
+        pages.append([('h1','Appendix B. Frozen banknote confirmation'),
+            ('p','Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting '
+             '128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. '
+             'Partial publication is a snapshot, not a completed three-seed comparison.'),
+            ('table',(['Model/seed','Dev NLL','Test NLL','Test accuracy%','Whole fit GFLOPs','Fit MFLOPs/row','Infer MFLOPs/row'],quality,[36,22,23,24,23,23,23])),
+            ('table',(['Model/seed','Charged fit wall s','Test wall s','Peak RSS MiB','Fit provenance'],costs,[36,36,29,29,44])),
+            ('small','Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting '
+             'charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs '
+             'are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds '
+             'share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis '
+             'and all three prespecified seeds are required for the confirmation claim.')])
 
 
     if full_rows:
