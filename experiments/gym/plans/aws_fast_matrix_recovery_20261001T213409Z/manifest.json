@@ -1101,9 +1101,10 @@
     "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
     "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
     "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
-    "scripts/run_aws_matrix_recovery.py": "113c175219c72302dda3e84d4db6d6e3498c104c678aff6031b5a1fe71c6935a"
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
   },
-  "concurrency": "One guarded training job per host; user parallelism decision pending",
+  "concurrency": "User-authorized AWS exception: up to3 one-thread CPU jobs; exclusive host reservation, per-slot guards and8GiB reserve; serial per-result publication",
   "protocol": "experiments/AWS_EARLY_INDICATION_MATRIX.md",
   "promotion": "Separate paired-seed confirmation, no automatic large-model promotion",
   "blocked": [
@@ -1124,5 +1125,7 @@
     "failed_attempt_preserved": true,
     "architecture_and_data_unchanged": true,
     "memory_probe_tag": "aws_fast_matrix_memory64_20261001T213208Z"
-  }
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "max_parallel_jobs": 3
 }

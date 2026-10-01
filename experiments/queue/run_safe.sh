@@ -10,6 +10,20 @@
 set -u
 Q=${1:?queue file}
 LOCK=/tmp/experiments-runner.lock
+# Explicit AWS-only bounded scheduler mode. The coordinator reserves the normal
+# host lock and passes that open, locked descriptor to every slot runner.
+# Default workers on other hosts keep the original one-job admission rule.
+if [ -n "${AWS_GYM_SLOT:-}" ]; then
+  if [[ ! "$AWS_GYM_SLOT" =~ ^[1-3]$ ]] || [[ ! "${AWS_GYM_HOST_LOCK_FD:-}" =~ ^[0-9]+$ ]]; then
+    echo 'AWS gym slot requires 1..3 and an inherited host-lock descriptor' >&2
+    exit 2
+  fi
+  if [ "$(readlink "/proc/$$/fd/$AWS_GYM_HOST_LOCK_FD")" != "$LOCK" ] || ! flock -n "$AWS_GYM_HOST_LOCK_FD"; then
+    echo 'AWS gym slot requires the inherited exclusive host reservation' >&2
+    exit 2
+  fi
+  LOCK="/tmp/experiments-runner.aws-gym-slot${AWS_GYM_SLOT}.lock"
+fi
 QUEUE_DIR=$(dirname "$Q")
 QUEUE_NAME=$(basename "${Q%.txt}")
 RUNNER_LOG="$QUEUE_DIR/runner_${QUEUE_NAME}.out"
@@ -25,7 +39,11 @@ if [[ ! "$JOB_TIMEOUT_S" =~ ^[1-9][0-9]*$ ]]; then
 fi
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 TORCH_NUM_THREADS=1
 exec 9>"$LOCK"
-flock $([ -n "${WAIT:-}" ] && echo "-w ${WAIT_TIMEOUT_S:-86400}" || echo -n) 9 || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
+if [ -n "${WAIT:-}" ]; then
+  flock -w "${WAIT_TIMEOUT_S:-86400}" 9
+else
+  flock -n 9
+fi || { echo "another runner holds $LOCK; refusing to run in parallel" >&2; exit 1; }
 job_pid=""
 stop_job() {
   local pid=${job_pid:-}

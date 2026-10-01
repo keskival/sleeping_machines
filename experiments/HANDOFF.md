@@ -1137,3 +1137,18 @@ stages stop and preserve a versioned failure record; original attempt1 and
 its watchdog failure are unchanged. Shared report updates remain with the
 other host publisher. User asks about parallelism; explicit override of the
 one-job-per-host rule is pending. Do not change that rule based on RAM alone.
+
+
+## AWS parallel policy authorized — 1 October, 21:40 UTC
+
+User explicitly authorizes replacing one-job-per-host on this AWS host;
+the limited local host retains its serial policy. Updated AGENTS.md with
+this scoped exception. Recovery plan now binds to ip-172-31-47-132 and
+permits `run_aws_matrix_recovery.py --jobs 3`. Scheduler holds the ordinary
+host lock, passes its locked descriptor to slot runners, preserves up to
+three slot locks/watchdogs, one thread per job and8GiB host reserve.
+Result publication is serial inside the worker. Every prerequisite/finite
+accounting/source check and the all-smokes-before-pilots barrier remains.
+Old failed attempt and original run queues/results are preserved.
+Failure stops new admissions and drains/publishes existing work.
+CPU wall times under contention are labelled accordingly; no GPU overlap.

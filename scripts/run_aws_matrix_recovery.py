@@ -1,6 +1,8 @@
 """Serial immutable matrix recovery with guarded phases and per-result publication."""
 import argparse
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 import datetime
+import fcntl
 import hashlib
 import json
 import math
@@ -40,6 +42,7 @@ def validate_result(root, job):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', required=True)
+    parser.add_argument('--jobs', type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
     os.chdir(ROOT)
     path = (ROOT / args.manifest).resolve()
@@ -49,6 +52,8 @@ def main():
         raise ValueError('Preserve existing lifecycle; prepare a new recovery plan')
     live = dict(status='checking', completed=[], current_job=None,
                 host=os.uname().nodename, started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+    if args.jobs > 1 and plan.get('parallel_host') != os.uname().nodename:
+        raise ValueError('Parallel protocol must be explicitly assigned to this AWS host')
 
     def save():
         temporary = state.with_suffix('.tmp')
@@ -101,40 +106,86 @@ def main():
         for line in process_lines:
             if any(name in line for name in forbidden):
                 raise ValueError('Existing coordinator must finish: ' + line)
-        # Complete all contracts and accounting smokes before any pilot.
-        ordered = [job for job in plan['jobs'] if job['stage'] != 'pilot']
-        ordered += [job for job in plan['jobs'] if job['stage'] == 'pilot']
-        for job in ordered:
-            frozen()
-            for tag in job['requires']:
-                validate_result(ROOT, by_tag[tag])
-            live.update(status='running', current_job=job['tag']); save()
-            if (ROOT / job['result']).exists():
-                result = validate_result(ROOT, job)
-                reused = True
-            else:
-                reused = False
-                caps = job['resource_caps']
-                env = dict(os.environ, **{key: str(value) for key, value in caps.items()},
-                           JOB_TIMEOUT_S=str(job['timeout_s']))
-                started = time.monotonic()
-                rc = subprocess.run(['bash', 'experiments/queue/run_safe.sh', job['queue']], cwd=ROOT, env=env).returncode
-                if rc:
-                    failure = path.parent / (job['tag'] + '.failure.json')
-                    failure.write_text(json.dumps(dict(status='failed', tag=job['tag'], exit_code=rc,
-                        wall_s=time.monotonic()-started, resource_caps=caps, queue=job['queue'],
-                        source_sha256=plan['source_sha256'],
-                        runner_log='experiments/queue/runner_' + Path(job['queue']).stem + '.out'), indent=2) + '\n')
-                    publish([str(failure.relative_to(ROOT))], 'Preserve failed AWS matrix stage ' + job['tag'])
-                    raise RuntimeError('Guarded prerequisite/stage failed: ' + job['tag'])
-                result = validate_result(ROOT, job)
+        host_lock = open('/tmp/experiments-runner.lock', 'a') if args.jobs > 1 else None
+        if host_lock:
+            fcntl.flock(host_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+        def execute(job, slot):
+            caps = job['resource_caps']
+            env = dict(os.environ, **{key: str(value) for key, value in caps.items()},
+                       JOB_TIMEOUT_S=str(job['timeout_s']))
+            descriptors = ()
+            if host_lock:
+                env.update(AWS_GYM_SLOT=str(slot), AWS_GYM_HOST_LOCK_FD=str(host_lock.fileno()))
+                descriptors = (host_lock.fileno(),)
+            started = time.monotonic()
+            rc = subprocess.run(['bash', 'experiments/queue/run_safe.sh', job['queue']],
+                                cwd=ROOT, env=env, pass_fds=descriptors).returncode
+            if rc:
+                raise RuntimeError(f'Guarded stage {job["tag"]} failed with exit {rc}; wall {time.monotonic()-started:.3f}s')
+            return validate_result(ROOT, job)
+
+        def finish(job, result, reused):
             publish([job['result']], 'Record completed ' + job['tag'])
             peak = result.get('max_rss_kb', 0)
+            live['completed'].append(dict(tag=job['tag'], result=job['result'], reused=reused,
+                max_rss_kb=peak, wall_s=result.get('wall_s')))
+            save(); print(json.dumps(live['completed'][-1]), flush=True)
             if job['stage'] == 'smoke' and peak > job['resource_caps']['MEM_CAP_RSS_KB'] * .85:
                 raise RuntimeError('Smoke near RSS cap; review pilot allocation: ' + job['tag'])
-            live['completed'].append(dict(tag=job['tag'], result=job['result'], reused=reused,
-                max_rss_kb=peak, wall_s=result.get('wall_s'))); save()
-            print(json.dumps(live['completed'][-1]), flush=True)
+
+        done = set()
+        try:
+            with ThreadPoolExecutor(max_workers=args.jobs) as workers:
+                # The phase barrier remains even when cells run in parallel.
+                for phase in ('checks', 'pilots'):
+                    pending = [job for job in plan['jobs'] if (job['stage'] == 'pilot') == (phase == 'pilots')]
+                    active = {}; failure_errors = []; free_slots = set(range(1, args.jobs + 1))
+                    while pending or active:
+                        if not failure_errors:
+                            frozen()
+                            for job in list(pending):
+                                if not set(job['requires']).issubset(done):
+                                    continue
+                                if (ROOT / job['result']).exists():
+                                    finish(job, validate_result(ROOT, job), True)
+                                    done.add(job['tag']); pending.remove(job); continue
+                                if not free_slots:
+                                    break
+                                available = int(next(line.split()[1] for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemAvailable:')))
+                                reserved = sum(info[0]['resource_caps']['MEM_CAP_RSS_KB'] for info in active.values())
+                                if available - reserved - job['resource_caps']['MEM_CAP_RSS_KB'] < 8192 * 1024:
+                                    continue
+                                slot = min(free_slots); free_slots.remove(slot)
+                                active[workers.submit(execute, job, slot)] = (job, slot)
+                                pending.remove(job)
+                        live.update(status='running_' + phase, active_jobs=[info[0]['tag'] for info in active.values()],
+                                    max_parallel_jobs=args.jobs, current_job=None); save()
+                        if not active:
+                            if failure_errors:
+                                raise RuntimeError('; '.join(failure_errors))
+                            if pending:
+                                raise RuntimeError('Admission blocked by memory or unavailable prerequisite')
+                            break
+                        ready, _ = wait(active, timeout=2, return_when=FIRST_COMPLETED)
+                        for future in ready:
+                            job, slot = active.pop(future); free_slots.add(slot)
+                            try:
+                                finish(job, future.result(), False); done.add(job['tag'])
+                            except Exception as error:
+                                failure_errors.append(str(error))
+                                failure = path.parent / (job['tag'] + '.failure.json')
+                                failure.write_text(json.dumps(dict(status='failed', tag=job['tag'], error=str(error),
+                                    resource_caps=job['resource_caps'], queue=job['queue'], source_sha256=plan['source_sha256'],
+                                    runner_log='experiments/queue/runner_' + Path(job['queue']).stem + '.out'), indent=2) + '\n')
+                                publish([str(failure.relative_to(ROOT))], 'Preserve failed AWS matrix stage ' + job['tag'])
+                        # On failure, admit no new jobs; finish/publish in-flight
+                        # work before stopping. Never abandon guards or trainers.
+                        if failure_errors and not active:
+                            raise RuntimeError('; '.join(failure_errors))
+        finally:
+            if host_lock:
+                host_lock.close()
         live.update(status='completed', current_job=None); save()
         summary = path.parent / 'completed_summary.json'
         summary.write_text(json.dumps(live, indent=2) + '\n')

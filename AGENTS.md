@@ -6,6 +6,12 @@
   host memory, running jobs, and GPU occupancy. Reuse an existing benchmark
   configuration when possible; prioritize the deferred large Transformer
   comparisons on a provisioned AWS host.
+- AWS exception explicitly authorized by the user on 2026-10-01: on
+  `ip-172-31-47-132`, the AWS gym may run up to three one-thread CPU jobs
+  through the bounded slot scheduler. It reserves the ordinary host lock,
+  keeps per-slot locks/RSS watchdogs and at least 8 GiB MemAvailable, and
+  serializes result publication. Other hosts and GPU jobs retain the
+  one-training-job rule.
 - Run exactly one training job at a time on each host. Put every run in a
   uniquely named one-job queue and invoke `experiments/queue/run_safe.sh`;
   never launch a benchmark directly with Python or bypass its lock. If the

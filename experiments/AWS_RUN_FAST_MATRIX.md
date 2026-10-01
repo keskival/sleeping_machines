@@ -103,3 +103,28 @@ tmux new-session -d -s aws-fast-matrix-recovery-20261001T213409Z '.venv-docker/b
 Worker status lives beside that manifest as `worker_recovery.status.json`.
 Same-host parallelism remains disabled unless the user explicitly replaces
 the one-job-per-host rule and a bounded scheduler/lock protocol is installed.
+
+
+## Explicit AWS parallel exception — 1 October, 21:40 UTC
+
+The user clarified that the serial host restriction applies to the limited
+local host and authorized changing it on this AWS host. On
+`ip-172-31-47-132`, the measured recovery worker may use `--jobs 3`.
+This does not alter other hosts or permit concurrent GPU training.
+
+The scheduler holds the ordinary exclusive host lock for its entire run;
+legacy/default runners cannot enter. Each slot still invokes run_safe with
+a uniquely named one-job queue and an inherited locked descriptor. run_safe
+validates that descriptor and slot1..3, takes its separate slot lock, and
+retains per-job RSS/VMS/timeout guards and the8GiB available-memory floor.
+The scheduler reserves the sum of active RSS caps before admission (a
+conservative check against current MemAvailable), pins math threads to one,
+and limits active jobs to three. Complete all contracts/smokes before pilots.
+Failures stop new admissions and allow active guarded jobs to finish and
+publish. Git publication occurs on the coordinator thread between dispatches.
+
+Launch the committed recovery command above with `--jobs 3` appended to
+the Python arguments. Numerical/data/model settings are unchanged; wall
+time now includes contention and should not be presented as isolated timing.
+Three admission tests verify the inherited reservation requirement, maximum
+slot count and exclusion of ordinary runners, without launching training.
