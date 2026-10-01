@@ -1,0 +1,1 @@
+aws_e19_race_res_d3_P64000_20260929 experiments/aws_benchmark.py --run-tag aws_e19_race_res_d3_P64000_20260929 --script experiments/e19_rhm.py -- --model race --depth 3 --residual 2 --train 64000
