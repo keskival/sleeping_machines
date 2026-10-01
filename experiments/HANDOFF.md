@@ -1,5 +1,17 @@
 # Session handoff — 2026-09-30
 
+## Diagnosis completed — 1 October, 07:45 UTC
+
+Frozen audit completed and published in4b63566: source-context and learned
+cross-head maps help the256-target H2/H4 window. Removing them worsens loss;
+do not substitute away these paths on an untested conditioning hypothesis.
+H2 local route-credit mean cosine.717 across24 fixed-time/head0 choice replays,
+one opposed direction; scope excludes full expected sequence/time gradients.
+Full64-credit gradient/update and partition-equality contracts passed and
+published in0fd8b77. Its guarded129-character smoke is running with~755MiB RSS,
+~11.2GiB available. Next the2K64-credit pilot, then original unused U64 8K.
+Preserve current source hashes; report pages ingest completed diagnostics only.
+
 ## Live transition — 1 October, 07:43 UTC
 
 Repeated-arrival campaign completed: m4 3.770751 bpc / 20.913599 GFLOPs,
