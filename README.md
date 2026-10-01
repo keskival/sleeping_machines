@@ -81,7 +81,7 @@ quality; it is a near-quality resource tradeoff, not established language suprem
 The report retains those distinctions and the negative depth/residual findings.
 
 The [first cross-domain screen](experiments/FIRST_SCREEN_FINDINGS_20261001.md)
-finds a promising **95.3% versus93.0% banknote accuracy /33% lower log loss**
+finds a promising **95.3% versus 93.0% banknote accuracy / 33% lower log loss**
 for ours versus the boosted-tree screen (128 development rows, one seed).
 Wine currently favors trees, and extra reception has not earned its cost.
 The [admitted next AWS battery](experiments/AWS_SPLIT_EVENT_BATTERY.md) tests

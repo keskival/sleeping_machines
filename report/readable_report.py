@@ -1275,8 +1275,8 @@ def blocks(M, tasks, ev):
          "Transformer configurations and their learning curves. These synthetic tasks use different "
          "architectures and structural priors. Sources: E53/E36 and E61."),
         ("small","<b>New integrated evidence:</b> banknote pilot <b>ours 95.3% versus trees 93.0%</b>; "
-         "native language uses <b>6.02× less counted fitting work</b> than the saved KV model at0.032bpc worse. "
-         "Protocols and limits follow on the next page; comparable10M language remains pending.")])
+         "native language uses <b>6.02× less counted fitting work</b> than the saved KV model at 0.032 bpc worse. "
+         "Protocols and limits follow on the next page; comparable 10M language remains pending.")])
 
     banknote={r['args']['model']+str(r['args']['clock_features']):r for r in tasks.get('native_tabular',[])
               if r['args']['dataset']=='banknote' and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')}
@@ -1305,7 +1305,7 @@ def blocks(M, tasks, ev):
              'also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. '
              'The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels '
              'cannot be inferred from rank alone.'),
-            ('small','Wine regression currently favors trees: RMSE0.649 versus ours0.824. Strong synthetic order/retrieval evidence '
+            ('small','Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence '
              'on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.')])
 
     reference_rows=[
@@ -2320,7 +2320,7 @@ def blocks(M, tasks, ev):
             pages.append([('h1','Appendix B. Protected state/shared rules: '+task),
                 ('p','Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. '
                  'Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order '
-                 'identical while labels differ; rank-only prediction has an exact50% paired ceiling under coupled noise.'),
+                 'identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.'),
                 ('table',(['Construction','Dev accuracy%','Dev NLL','Whole fit GFLOPs','Fit MFLOPs/query','Infer MFLOPs/query'],rows,[48,25,21,27,27,26])),
                 ('table',(['Construction','Fit/dev/passes','Parameters','State slots','Updates/scores per event'],activity,[48,32,28,25,41])),
                 ('small','Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. '

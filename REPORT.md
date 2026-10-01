@@ -23,7 +23,7 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
 
-**New integrated evidence:** banknote pilot **ours 95.3% versus trees 93.0%**; native language uses **6.02× less counted fitting work** than the saved KV model at0.032bpc worse. Protocols and limits follow on the next page; comparable10M language remains pending.
+**New integrated evidence:** banknote pilot **ours 95.3% versus trees 93.0%**; native language uses **6.02× less counted fitting work** than the saved KV model at 0.032 bpc worse. Protocols and limits follow on the next page; comparable 10M language remains pending.
 
 ## New evidence: quality and complete work
 
@@ -37,7 +37,7 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 **What the next tests must repair.** State clearing damages learned order predictions, yet stretching silent gaps also damages them. Extra clock reception has not earned its cost; private source rules lose exposure as capacity grows. The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels cannot be inferred from rank alone.
 
-Wine regression currently favors trees: RMSE0.649 versus ours0.824. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.
+Wine regression currently favors trees: RMSE 0.649 versus ours 0.824. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains all completed comparisons and resource ledgers.
 
 ## A general architecture for content, time and selective activity
 
