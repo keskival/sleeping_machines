@@ -667,11 +667,13 @@ Small completed integrated pilots from the committed fast matrix. These answer m
 | --- | --- | --- | --- | --- | --- |
 | Ours order sources16 | 128/4/64 | 48.44% | 0.280 | 0.548 | 0.1103 |
 | Ours order sources64 | 128/4/64 | 32.81% | 0.341 | 0.666 | 0.1104 |
+| Ours order shallow control | 128/4/64 | 51.56% | 0.134 | 0.262 | 0.0569 |
 
 | Model | Parameters | Receivers/commits/matches per event | Wall s | Seed |
 | --- | --- | --- | --- | --- |
 | Ours order sources16 | 157,940 | 512/16/32 | 829.1 | 6 |
 | Ours order sources64 | 617,972 | 2048/16/32 | 980.5 | 6 |
+| Ours order shallow control | 21,684 | 64/8/16 | 403.3 | 6 |
 
 FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
 
@@ -686,12 +688,32 @@ Small completed integrated pilots from the committed fast matrix. These answer m
 | Model | Fit / passes / dev | Dev quality | Whole fit GFLOPs | Fit MFLOPs / target | Infer MFLOPs / target |
 | --- | --- | --- | --- | --- | --- |
 | Ours native | 512/4/1023 | 4.2003 | 0.290 | 0.142 | 0.0301 |
+| Ours reception | 512/4/1023 | 4.1949 | 0.325 | 0.159 | 0.0348 |
+| Ours late | 512/4/1023 | 4.1962 | 0.319 | 0.156 | 0.0341 |
+| Ours waiting | 512/4/1023 | 4.1955 | 0.304 | 0.149 | 0.0318 |
 
 | Model | Parameters | Receivers/commits/matches per event | Wall s | Seed |
 | --- | --- | --- | --- | --- |
 | Ours native | 14,971 | 32/16/32 | 166.1 | 6 |
+| Ours reception | 16,123 | 32/16/32 | 239.2 | 6 |
+| Ours late | 16,123 | 32/16/32 | 205.1 | 6 |
+| Ours waiting | 16,123 | 32/16/32 | 207.6 | 6 |
 
 FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
+
+## Appendix B. Ours and boosted trees: banknote
+
+Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.
+
+| Model | Fit/dev rows | Dev NLL / RMSE ↓ | Dev accuracy / MAE | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| Boosted trees | 128/128 | 0.2319 | 0.9297 | Not counted | Not counted | Not counted |
+
+| Model | All fit wall s | Peak RSS MiB | Tree nodes / bytes |
+| --- | --- | --- | --- |
+| Boosted trees | 0.09 | 404.0 | 890/49,840 |
+
+Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.
 
 ## Appendix B (continued). Ours: language work as scaling develops
 
@@ -794,13 +816,13 @@ Each row retains its original architecture, fitting budget and score. The select
 | 24. Ours: IHR2x32/wc1/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.724 / dev | 23.464 | 2.866 | 0.5058 |
 | 25. Ours: Native H2d16/p2/2K/s6 | 54.9 | 2,048 / 4 | 3.765 / dev | 3.778 | 0.461 | 0.0974 |
 | 26. Ours: R2/uniform/reception/2K/s6 | 57.1 | 2,048 / 4 | 3.796 / dev | 4.032 | 0.492 | 0.1056 |
-| 27. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 1.969 | 0.6296 |
-| 28. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.147 | 0.0470 |
-| 29. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.524 | 0.1675 |
-| 30. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 1.996 | 0.6389 |
-| 31. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 7.678 | 2.4571 |
-| 32. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 1.996 | 0.6389 |
-| 33. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 2.032 | 0.6770 |
+| 27. Ours: R4/uniform/reception/2K/s6 | 59.3 | 2,048 / 4 | 3.795 / dev | 4.183 | 0.511 | 0.1109 |
+| 28. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 1.969 | 0.6296 |
+| 29. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.147 | 0.0470 |
+| 30. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.524 | 0.1675 |
+| 31. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 1.996 | 0.6389 |
+| 32. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 7.678 | 2.4571 |
+| 33. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 1.996 | 0.6389 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
@@ -808,14 +830,15 @@ Each row retains its original architecture, fitting budget and score. The select
 
 | Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
 | --- | --- | --- | --- | --- | --- | --- |
-| 34. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 2.032 | 0.6770 |
-| 35. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 7.210 | 2.4024 |
-| 36. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 10.223 | 6.7999 |
-| 37. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 11.133 | 7.4192 |
-| 38. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 11.133 | 7.4192 |
-| 39. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 22.223 | 14.8104 |
-| 40. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 7.210 | 2.4024 |
-| 41. T256x4/90M | 3,238.4 | 90,000,000 / 4 | 1.604 / test | 8,000,253.349 | 22.223 | 14.8104 |
+| 34. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 2.032 | 0.6770 |
+| 35. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 2.032 | 0.6770 |
+| 36. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 7.210 | 2.4024 |
+| 37. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 10.223 | 6.7999 |
+| 38. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 11.133 | 7.4192 |
+| 39. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 11.133 | 7.4192 |
+| 40. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 22.223 | 14.8104 |
+| 41. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 7.210 | 2.4024 |
+| 42. T256x4/90M | 3,238.4 | 90,000,000 / 4 | 1.604 / test | 8,000,253.349 | 22.223 | 14.8104 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
@@ -998,15 +1021,17 @@ Native eight-block independent-head models reuse key/query matches for two/four 
 | --- | --- | --- | --- | --- | --- |
 | Native | 2,048/4 | 3.765 | 3.778 | 0.461 | 0.0974 |
 | R2 uniform | 2,048/4 | 3.796 | 4.032 | 0.492 | 0.1056 |
+| R4 uniform | 2,048/4 | 3.795 | 4.183 | 0.511 | 0.1109 |
 
 | Ours | Projected whole fit GFLOPs | Receivers / commits per token | Matches / clocks per token | Parameters |
 | --- | --- | --- | --- | --- |
 | Native | 3.777 | 32/16 | 32/16 | 54,907 |
 | R2/uniform/on | 4.029 | 32/16 | 32/48 | 57,083 |
+| R4/uniform/on | 4.178 | 32/16 | 32/80 | 59,259 |
 
 Completed fits only; identical frozen 8,191-target development protocol, four passes, U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory development results; these do not alone establish comparable-quality Transformer superiority.
 
-Current matched-fit interpretation: best completed added-clock row is 0.0310 bpc worse than native, with 6.72% more fitting work. Pending allocations and waiting controls cannot establish a benefit yet.
+Current matched-fit interpretation: best completed added-clock row is 0.0300 bpc worse than native, with 10.72% more fitting work. Pending allocations and waiting controls cannot establish a benefit yet.
 
 ## Appendix B (continued). Ours: native temporal-core language
 
