@@ -1,0 +1,23 @@
+{
+  "run_tag": "aws_e81_D1M_20260929",
+  "script": "experiments/e81_race_gln.py",
+  "arguments": [
+    "--D",
+    "1000000",
+    "--K",
+    "5"
+  ],
+  "output_redirected": true,
+  "source_sha256": "05d1faf441983ff1804cbb030e8413c3edca46d255cad41d878477c05fdfb204",
+  "git_commit": "2bdd81f9c4d7fb67e0f8d85268121c6a46c3d032",
+  "limits": {
+    "MEM_CAP_KB": "16777216",
+    "MEM_CAP_RSS_KB": "12582912",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:23:42Z",
+  "status": "completed",
+  "wall_s": 479.223,
+  "peak_rss_kb": 4100388
+}

@@ -323,5 +323,18 @@
       "JOB_TIMEOUT_S": "21600"
     },
     "peak_rss_kb": 4918408
+  },
+  "aws_e81_D1M_20260929": {
+    "exit_code": 0,
+    "wall_s": 480.79,
+    "status": "completed",
+    "command": "experiments/aws_benchmark.py --run-tag aws_e81_D1M_20260929 --script experiments/e81_race_gln.py -- --D 1000000 --K 5",
+    "limits": {
+      "MEM_CAP_KB": "16777216",
+      "MEM_CAP_RSS_KB": "12582912",
+      "MIN_AVAIL_MB": "8192",
+      "JOB_TIMEOUT_S": "21600"
+    },
+    "peak_rss_kb": 4100388
   }
 }

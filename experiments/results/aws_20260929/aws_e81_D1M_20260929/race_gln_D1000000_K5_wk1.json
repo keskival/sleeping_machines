@@ -1,0 +1,31 @@
+{
+ "args": {
+  "D": 1000000,
+  "K": 5,
+  "n": 1000000,
+  "windows": "256,0",
+  "wordkeys": 1
+ },
+ "copy_window_256": {
+  "valid_bpc": 1.5234594844715432,
+  "lr": [
+   0.005,
+   0.005,
+   0.002
+  ],
+  "gln_frozen_test_bpc": 1.7045567053533375,
+  "gln_online_test_bpc": 1.6436770441215272,
+  "one_neuron_frozen_test_bpc": 1.7456600960454616
+ },
+ "copy_window_unbounded": {
+  "valid_bpc": 1.5172253450221975,
+  "lr": [
+   0.005,
+   0.005,
+   0.002
+  ],
+  "gln_frozen_test_bpc": 1.7192661137180216,
+  "gln_online_test_bpc": 1.6512182621912872,
+  "one_neuron_frozen_test_bpc": 1.7510053592114565
+ }
+}
