@@ -1,0 +1,60 @@
+{
+  "status": "completed",
+  "scope": "Deterministic mathematical operator audit; no training, checkpoint quality or supremacy claim",
+  "polynomial_score_gradient": {
+    "reference": [
+      0.27930349374857066,
+      0.5955008035291137,
+      -1.0263513979517216
+    ],
+    "finite_difference": [
+      0.27930349375034774,
+      0.5955008035308725,
+      -1.0263513979511667
+    ],
+    "max_abs_error": 1.7770784843662568e-12
+  },
+  "nonlinear_poisson_counterexample": {
+    "values": [
+      0.0,
+      2.0
+    ],
+    "count_target": 4,
+    "true_score_gradient": [
+      0.4027359752673374,
+      -0.4027359752673376
+    ],
+    "expected_current_local_teacher": [
+      -0.0972640247326626,
+      0.0972640247326626
+    ],
+    "inner_product": -0.07834344371827062,
+    "strictly_convex_loss": true,
+    "conclusion": "Opposed expected route-score directions on this toy loss; no full-model diagnosis inferred"
+  },
+  "linear_joint_clock_credit": {
+    "exact": [
+      -0.002822414244772069,
+      0.0025983712882708047
+    ],
+    "existing": [
+      -0.0028224142447723327,
+      0.00259837128827107
+    ],
+    "max_abs_error": 2.654126918244515e-16,
+    "conclusion": "Current joint teacher passes linear-value/bounded-delay identity"
+  },
+  "conditional_variance": {
+    "covariance_removed_trace": 2.186596866384102,
+    "scope": "Rao-Blackwellization of the stated hybrid reference, conditional on time and downstream noise"
+  },
+  "source_sha256": {
+    "experiments/race_gradient_reference.py": "aa46aecbfdf7f1cd75955fc6295413ac8a721964458f3dd2dac5c1bd1b727db9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-1006-aws-x86_64-with-glibc2.43",
+    "scope": "Read-only CPU mathematical audit; no training"
+  },
+  "command": ".venv-docker/bin/python experiments/race_gradient_reference.py --output experiments/results/diagnostics/aws_race_gradient_reference_20261001T231100Z.json"
+}

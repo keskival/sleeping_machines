@@ -1206,3 +1206,33 @@ Sharing also removes private source embeddings; map-only attribution remains
 untested. Fixed addresses/forced activity, full producer graphs and local
 surrogate losing credit remain gaps. Publication per result stays serial on
 main; shared REPORT/PDF edits remain with the other host publisher.
+
+
+## AWS autonomous research audit — 1 October, 23:20 UTC
+
+User authorizes proactive mathematical/experimental research toward defensible
+quality/resource supremacy and autonomous main commits/pushes. Active first-wave
+source hashes and next split-event queues remain unchanged. Wine R0 completed
+and pushed as c489bcc; wine R2 remains guarded; split battery is still waiting
+for the predecessor to exit. The split/shared protected candidate remains
+prioritized, with fixed-address/forced-activity and producer-credit gaps intact.
+
+New independent read-only audit: `experiments/race_gradient_reference.py`,
+saved `experiments/results/diagnostics/aws_race_gradient_reference_20261001T231100Z.json`;
+three tests pass. Exact single-race conditional expected score gradient matches
+polynomial finite differences to1.8e-12. A strictly convex count4 Poisson loss
+on values0/2 gives opposed current-teacher versus true expected route gradients.
+Existing combined value/time teacher is exact for linear payload times bounded
+delay; preserve that positive identity and do not misdiagnose clock interiors.
+
+Theory note `theory/aws_20261001_race_credit_and_useful_capacity.md` proves the
+joint winner/minimum law, local nonlinear limitation, conditional enumeration,
+full-support residual replay and a Fano necessary-state bound. Likelihood-ratio
+and conditional Monte Carlo primitives are attributed. No model quality or
+full-sequence unbiasedness is claimed. Next credit diagnostic should include
+actual route-specific persistent writes and conditional suffix outcomes with
+fixed replay randomness, charge every replay, and retain the frozen parent.
+Only a completed actionable audit plus integrated contracts/small matched fit
+can promote a separately named teacher intervention. Shared map versus source
+embedding effects, temporal information and necessary memory require their
+controls; neither state occupancy nor loss conservation alone proves advantage.

@@ -24,6 +24,7 @@ activation/weight roles and observability, with generator–recognizer precedent
 [Generator-to-receiver requirements](theory/56_generator_to_receiver_requirements.md),
 §§369–372, gives necessary order/uncertainty/retention operations, a local
 predictive-rank bound, and tests distinguishing exact redundancy from flatness.
+Additional AWS audit: [joint race credit and useful occupied capacity](theory/aws_20261001_race_credit_and_useful_capacity.md). It verifies a strictly convex opposed-gradient witness for the local teacher, preserves its exact linear joint-clock case, and derives a conditional reference and charged residual-replay direction. No frozen model is changed.
 
 The foundational calculus in §§1–20 reduces to five principles. Later sections extend and
 test them; the evidence column below summarizes that initial layer of the theory.
