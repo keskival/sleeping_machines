@@ -664,3 +664,36 @@ tmux new-session -d -s local_repeated_arrivals_after_heads_20261001T015000Z '.ve
 
 Check its same-stem `.status.json`; `waiting_for_prioritized_campaign` means no
 new training has started. Do not start another instance or change frozen sources.
+
+## Prepared diagnosis and longer-credit ladder — 1 October, 07:40 UTC
+
+Read theory §325 before continuing. The failed 8K head gate constrains this
+implementation. A verified numerical limitation is that the 16-character
+boundary detaches older KV producers even though their contents are retrieved;
+forward history and learning history are different. Extending credit to64
+retains temporal races, addressed receiver state, independent Q/K/V heads,
+full indexed history and counterfactual learning. It changes graph lifetime and
+training cost, not fixed-weight inference. It is truncated backpropagation,
+not a new architecture/novelty claim or unlimited long-history credit.
+
+Prepared manifest `experiments/queue/local_language_credit_campaign_20261001T074000Z.json`;
+supervisor `scripts/run_language_credit_campaign.py`. Start once in tmux with the
+same stem after committing. It waits for completed repeated-arrival campaign,
+then runs every stage through unique `run_safe.sh` one-job queues. Order:
+frozen saved-checkpoint diagnosis; full64-credit gradient/update contracts;
+129-character full-configuration smoke; matched2K64-credit/U64/lr.002 fit;
+existing unused16-credit/U64/lr.002 H2 8K queue. A .02 bpc pilot gain admits
+one64-credit8K run. Best completed8K must satisfy the existing indexed-control
++.10 gate before32K; secondseed8K follows.131K additionally requires32K gain
+>=.05, projectedRSS<=2.2MKiB and timeout derived from measured32K wall time,
+with48h maximum. VMS4MKiB/groupRSS2.5MKiB/minavailable8192MiB; CPU-only.
+Reuse strongest completed U64 pilot, not assumed success of cheapest U128.
+
+Two new read-only contracts pass: detached producer credit versus identical
+forward content, and frozen replay/intervention parameter/hook integrity. With
+previous checks, sixteen focused tests pass. Full optimizer64-credit contracts
+and fitting remain pending until the serial guard admits them. The diagnostic
+conditions on one race time/continuation seed for24 local replay probes and
+uses a256-target window; it is not a full expected gradient or refitted model
+benchmark. Publication adds only completed results and separates credit spans
+from optimizer/head comparisons; source hashes/queues are frozen before launch.

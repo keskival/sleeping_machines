@@ -469,3 +469,70 @@ complete forward/backward operator/clock-projection accounting.
 They are not training or benchmark evidence. The deferred serial campaign
 must pass complete operator accounting and memory gates before fitting, and
 promotes one 8K comparison only if completed pilot quality supports it.
+
+## 325. Forward history, temporal credit and the failed head/data gate
+
+The completed U128/lr.004 eight-block runs improve with 2K→8K data, but H2
+reaches 3.485055 development bpc and H4 3.542576. Both miss the predeclared
+3.357342+.10 indexed single-head quality gate. More heads also change total
+width, source/channel dynamics and parameters. This is a limitation of the
+present implementation/protocol, not evidence that independent heads are
+unhelpful or a ceiling on the sparse temporal substrate. Keep the negative
+results, earlier controls and strong structured-task evidence together.
+
+A specific implemented bottleneck is temporal credit truncation. Suppose an
+entry written at u stores k_u=W_K phi_u and v_u=W_V phi_u. For a later target t,
+local score credit a_(t,u) and delivered value cotangent g_(t,u) would contribute
+
+    dL_t/dW_K += a_(t,u) q_t phi_u^T / sqrt(d),
+    dL_t/dW_V += g_(t,u) phi_u^T,
+
+plus upstream representation credit, inside the declared route surrogate.
+Sealing the cache with detach removes these producer paths for entries before
+the credit boundary. Their values still affect prediction and query/choice
+credit still learns; the old key/value-producing maps receive no contribution
+from those later reads. Long forward history is not long learning history.
+Likewise carried receiver/context state retains information but its earlier
+producing path is cut. The first event after a boundary can retrieve old content
+without any gradient to its old KV projection writes. A numerical contract
+verifies this and exact forward equality before/after detachment.
+
+The current b=16 segments therefore restrict learned long-lag representations,
+even when all historical positions stay in memory. This is an intentional
+truncated-gradient protocol, not a newly discovered incorrect derivative.
+Cached states created under older weights also remain a declared approximation;
+increasing b does not make all historical weight versions current or restore
+unlimited credit. Simply adding capacity/arrivals does not repair these paths.
+
+Next matched intervention: increase b from16 to64 with U=64/lr.002, H2,
+d32/head, depth8 and the same source/index/races. U remains fixed, separating
+credit support from optimizer interval. No architectural mechanism or inference
+operation is removed/replaced. Standard truncated backpropagation is the
+learning primitive being varied, not the novelty claim. Longer credit retains
+more state/KV graphs; it may train producers used up to64 positions within a
+window and change gradient norms/work. It cannot train arbitrarily old writes.
+Average producer-lag coverage is boundary-dependent, not exactly64 everywhere.
+All additional backward and clipping/Adam work must be captured; peak memory
+must pass a guarded full-size64-target contract and 129-character smoke first.
+Causality and the fixed-weight forward/RNG path are unchanged by graph lifetime.
+
+Reuse the strongest completed 2K optimizer pilot, U64/lr.002/credit16 at
+3.732586 bpc, instead of assuming the cheapest U128 schedule scales best.
+The next finite serial campaign runs a frozen-checkpoint information-flow audit,
+the64-credit contracts/smoke, one matched64-credit2K fit and the existing
+16-credit/U64 8K configuration. A >=.02 bpc2K gain admits one64-credit8K fit.
+Choose completed8K quality/work before32K promotion under the existing .10 bpc
+control tolerance. Second-seed8K and conditional131K follow only after a
+completed32K gain/memory/time gate. None of these pending cells is evidence.
+
+The diagnostic separately measures short-window frozen interventions, channel
+spectra/source gate behavior, and a local content-credit comparison. For one
+realized race time, continuation seed and finite candidate set, replay each
+value choice, giving losses ell_i. The conditional categorical content gradient
+is p_i(ell_i-sum_j p_j ell_j). Compare its direction with the actual centered
+local teacher at the realized value; report alignment and candidate loss gaps.
+This conditions away the race-time derivative and samples a tiny local subset.
+It is not the full expected gradient through changing persistent histories,
+noise or candidate discovery, and removal interventions without refitting are
+not benchmark controls. Use it to choose a concrete repair, not as a supremacy
+claim or an automatic justification for replacing temporal computation.

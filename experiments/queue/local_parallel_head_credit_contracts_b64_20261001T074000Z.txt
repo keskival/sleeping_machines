@@ -1,0 +1,1 @@
+local_parallel_head_credit_contracts_b64_20261001T074000Z experiments/parallel_head_credit_contracts.py --tag local_parallel_head_credit_contracts_b64_20261001T074000Z --credit 64 --heads 2 --payload 32 --depth 8 --pool 2

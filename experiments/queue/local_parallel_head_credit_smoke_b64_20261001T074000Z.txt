@@ -1,0 +1,1 @@
+local_parallel_head_credit_smoke_b64_20261001T074000Z experiments/parallel_head_accumulated_language.py --tag local_parallel_head_credit_smoke_b64_20261001T074000Z --fit 129 --dev 65 --epochs 1 --chunk 64 --seed 6 --heads 2 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --update-targets 64 --warmup-targets 512 --lr 0.002

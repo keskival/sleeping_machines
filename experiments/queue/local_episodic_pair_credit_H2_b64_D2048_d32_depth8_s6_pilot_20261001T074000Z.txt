@@ -1,0 +1,1 @@
+local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z experiments/parallel_head_accumulated_language.py --tag local_episodic_pair_credit_H2_b64_D2048_d32_depth8_s6_pilot_20261001T074000Z --fit 2048 --dev 8192 --epochs 4 --chunk 64 --seed 6 --heads 2 --payload 32 --depth 8 --pool 2 --matching 8 --recent 4 --update-targets 64 --warmup-targets 512 --lr 0.002

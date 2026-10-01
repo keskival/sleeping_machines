@@ -2167,7 +2167,7 @@ def blocks(M, tasks, ev):
     long_credit=[r for r in tasks['episodic_language'] if r['args'].get('chunk',16)>16]
     for r in long_credit:
         a=r['args'];fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs','update_targets','warmup_targets','seed','lr')
-        matched=[v for v in tasks['episodic_language'] if v['args'].get('chunk',16)==16 and all(v['args'].get(k)==a.get(k) for k in fields)]
+        matched=[v for v in tasks['episodic_language'] if v['args'].get('chunk',16)==16 and v['args'].get('arrivals',1)==a.get('arrivals',1) and all(v['args'].get(k)==a.get(k) for k in fields)]
         rows=matched+[r]
         pages.append([
             ('h1','Appendix B (continued). Ours: longer temporal credit'),

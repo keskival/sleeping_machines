@@ -7,7 +7,7 @@
 | H2, d32/head, U128/lr.004 | 2,048 / 4 | 3.778729 | 19.999171 | 2.442 |
 | H2, d32/head, U128/lr.004 | 8,192 / 4 | 3.485055 | 79.952694 | 2.440 |
 | H4, d32/head, U128/lr.004 | 2,048 / 4 | 3.981278 | 48.430647 | 5.915 |
-| H4, d32/head, U128/lr.004 | 8,192 / 4 | 3.542576 | 193.750653 | 5.913 |
+| H4, d32/head, U128/lr.004 | 8,192 / 4 | 3.542576 | 193.750653 | 5.914 |
 
 Eight event blocks, pool2, 16-character credit, four passes, seed6, same 8,191
 cold development targets. Larger data helps, but additional heads/width do not
