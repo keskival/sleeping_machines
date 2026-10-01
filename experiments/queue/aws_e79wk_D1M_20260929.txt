@@ -1,0 +1,1 @@
+aws_e79wk_D1M_20260929 experiments/aws_benchmark.py --run-tag aws_e79wk_D1M_20260929 --script experiments/e79_race_mixer.py -- --D 1000000 --K 5 --wordkeys 1 --windows 256
