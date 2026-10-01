@@ -1,0 +1,25 @@
+{
+  "run_tag": "aws_e67_win_s1_20260929",
+  "script": "experiments/e67_race_time.py",
+  "arguments": [
+    "--rule",
+    "winner",
+    "--epochs",
+    "3",
+    "--seed",
+    "1"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1ff442ac482790b1d62090cf484ddc0ce570d0e03f762531333e53f4454e62c7",
+  "git_commit": "b54704fe6902ac13be9bec0493755d0d83a52e78",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:41:50Z",
+  "status": "completed",
+  "wall_s": 4.602,
+  "peak_rss_kb": 414236
+}
