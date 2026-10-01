@@ -208,3 +208,37 @@ counterfactual alternatives; pass gradient/recovery/accounting contracts and a
 small matched fit before promotion. Compare quality per total fitting work,
 not route movement or an uncharged teacher. Strong addressed-recurrent/time-aware
 controls and independent paired seeds remain necessary for supremacy claims.
+
+
+## Completed frozen checkpoint replay — 1 October, 23:35 UTC
+
+`aws_frozen_native_route_audit_20261001T233000Z.json` replays the selected
+completed native order checkpoint. Twelve predeclared head0 choices cover
+address0's four events and blocks0/4/7 in one development population, using
+continuation seed619. Alternatives replace the candidate's persistent write
+as well as its value. Same sampled delay, downstream RNG consumption, total
+race/commit counts and checkpoint parameter hash are verified.
+
+Two of12 local score teachers oppose the scalar full-state boundary reference.
+At event0/block4, alternative losses are3.572759628 and3.588039398; teacher
+score0 is+5.2289e-6 while reference score0 is-7.1532e-5. At event7/block7,
+losses are3.588039398 and3.620435715; teacher score0 is+1.7415e-4 versus
+reference-4.6471e-3. Twelve nonzero cosines average2/3; with two routes these
+are sign comparisons, not rich high-dimensional angle evidence.
+
+Boundary reference uses λ_i T(F_i-mean_j F_j), followed by the same sampled-
+winner conservation correction. Current teacher uses endpoint value derivatives
+instead of actual branch-state losses. Winner clock interiors are excluded
+from BOTH comparisons. This is a fixed-noise/time, one-population diagnosis,
+not the full expected gradient or an estimated population error rate. It does
+not distinguish value curvature from missing alternative-memory effects yet.
+
+Audit cost:36 full forward replays,12 backwards,9,216 races;6.319s wall and
+442,400KiB peakRSS. Arithmetic is uninstrumented, not free or an energy claim.
+The checkpoint and outerTorch RNG were preserved; no weights were fitted.
+
+This supplies an actionable conditional fidelity error in a trained integrated
+model. Next isolate persistent-write versus delivered-value effects, then test
+a separately named bounded credit correction. All replay/state/optimizer work
+and any cache/RNG handling must be charged. The prioritized protected/shared
+battery continues; neither these probes nor its pending scores imply supremacy.

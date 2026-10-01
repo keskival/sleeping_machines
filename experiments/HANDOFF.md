@@ -1261,3 +1261,31 @@ finally. Launch once in tmux `aws-frozen-audit-before-split`; same-tag queue
 `.status.json`/`.out` retain state. Failure preserves its logs and still resumes
 the independent prioritized split battery. No extra trainer is admitted while
 the old matrix occupies the host reservation. Preserve model/theory continuity.
+
+
+## Autonomous audit complete and first-wave evidence reconciled — 23:38 UTC
+
+Frozen native state-aware route audit completed underguard in6.319s/442400KiB,
+pushed as7629e68. Twelve predeclared fixed-time/noise probes, two opposed
+local-teacher directions; scope one dev population, not expected sequence
+gradient. All alternatives include actual candidate memory commits. Checkpoint
+weights/RNG preserved;36 forwards/12 backwards/9216 races charged bycounts.
+Theory note now states two failures and retains all limitations. Split waiter
+was resumed automatically; new battery contracts/smokes are running and pushing.
+
+The first-wave wineR2 fit completed successfully exit0 at23:35:14:
+RMSE.757913993/MAE.620534889 on128dev rows,3594.834s wall. Original supervisor
+had already stopped admission when external publication temporarily detached
+HEAD during rebase (`Main required`). This is a publication protocol error,
+not a failed model fit. Its original needs_review state remains preserved.
+All51 expected results validate; all17 pilots are complete. New versioned
+`gym/plans/aws_fast_matrix_recovery_20261001T213409Z/reconciled_summary.json`
+records completion and the original error sideby side. Missing wine result
+is committed/pushed explicitly. Future external publication must reserve
+only the coordinator around Git work, leaving trainer/guard/watchdogs active;
+do not change a running frozen worker revision to mask its historical error.
+
+Next hypothesis: surrogate value credit may omit route-dependent persistent
+write effects as well as nonlinear value curvature. Isolate them with a
+separately tagged checkpoint audit before proposing a trained replacement.
+Keep all sparse/temporal/counterfactual mechanisms and current split priority.

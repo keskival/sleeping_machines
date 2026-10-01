@@ -1,0 +1,265 @@
+{
+  "status": "completed_evidence_reconciled",
+  "completed": [
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_full_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_timing_full_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_timing_full_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_timing_rank_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_timing_rank_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_full_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_full_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_full_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_pathwise_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_pathwise_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_pathwise_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_v1_20261001T213000Z_order_sources16_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources16_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources16_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_memory64_20261001T213208Z",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_memory64_20261001T213208Z.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_sources64_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_event/aws_fast_matrix_recovery_20261001T213409Z_order_shallow_control_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_native_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_reception_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_late_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/clock_feature_language/aws_fast_matrix_recovery_20261001T213409Z_language_waiting_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R2_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_trees_R0_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R0_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_ours_R2_s6_pilot.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts",
+      "stage": "contracts",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_contracts.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke",
+      "stage": "smoke",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_smoke.json"
+    },
+    {
+      "tag": "aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_pilot",
+      "stage": "pilot",
+      "result": "experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_wine_red_trees_R0_s6_pilot.json"
+    }
+  ],
+  "pilots": 17,
+  "contracts_and_smokes": 34,
+  "original_supervisor_status": "needs_review",
+  "original_error": "Main required",
+  "explanation": "Concurrent publication temporarily detachedHEAD during rebase; last wineR2 fitting guard completed exit0 at23:35:14. Original worker state retained."
+}
