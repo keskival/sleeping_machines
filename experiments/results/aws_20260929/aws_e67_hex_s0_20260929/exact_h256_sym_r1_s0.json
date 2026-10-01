@@ -1,0 +1,1 @@
+{"args": {"rule": "exact", "hidden": 256, "feedback": "sym", "races": 1, "lr": 0.02, "epochs": 3, "seed": 0}, "curve": [{"epoch": 1, "test_acc": 0.9515}, {"epoch": 2, "test_acc": 0.969}, {"epoch": 3, "test_acc": 0.9822}]}
