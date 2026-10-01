@@ -1,5 +1,23 @@
 # Session handoff — 2026-09-30
 
+## Active campaign update — 1 October, 01:21 UTC
+
+All three accumulated-optimizer pilots completed and auto-published through
+commits 7921ce6/a41a5b3. U64/lr.002 gives 3.732586 bpc / 22.753030 GFLOPs;
+U64/lr.004 gives 3.800302 / 22.750429; U128/lr.004 gives 3.778729 / 19.999171.
+The declared 0.05 bpc quality tolerance selected U128/lr.004: 27.9% lower whole
+fitting work than the original U16 reference, 0.046143 bpc worse than the best
+pilot. The selected H2 eight-block 8K fit started 01:20:55 UTC in the existing
+supervisor/guard. ~11.3 GiB available, trainer RSS ~650 MiB, no GPU. Sources remain
+frozen. H4 contracts/smoke and its pilot follow; inspect live status before any
+launch. New repeated-arrival work is prepared separately and must not bypass the
+single-trainer lock or displace the existing integrated head/data comparison.
+
+The appendix now plots completed optimizer-stage costs and reports whole fitting,
+per-training-target fitting and per-character inference work together for every
+completed language variant/control. All update stages and losing-route credit
+remain charged; LR/warmup differences and one-seed scope are stated.
+
 ## Report clarification — native learning, 1 October
 
 The report/README now explicitly identify native on-substrate learning as a

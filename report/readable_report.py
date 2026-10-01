@@ -359,6 +359,19 @@ def figures(M, tasks, ev):
         modality_box(7.5,y,2.3,.65,t)
         ax.add_patch(FancyArrowPatch((6.9,1.95),(7.4,y+.325),arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'general_temporal_interface')
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    if optimizer_pilots:
+        optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
+        f,ax=plt.subplots(figsize=(7.2,2.8));bottom=np.zeros(len(optimizer_pilots))
+        colors=['#89b9e7',blue,'#86c6bd','#aa9fdb',orange,gray]
+        names=[('forward_and_loss','Forward/loss'),('backward','Backward'),('gradient_normalization','Gradient averaging'),('gradient_clipping','Clipping'),('optimizer','Adam'),('special','Unit-weight special functions')]
+        for (stage,label),color in zip(names,colors):
+            costs=[(r['work']['cpu_emulator']['training_special_function_evaluations'] if stage=='special' else r['work']['cpu_emulator']['training_stages'].get(stage,0))/1e9 for r in optimizer_pilots]
+            ax.bar(range(len(costs)),costs,bottom=bottom,label=label,color=color);bottom+=costs
+        ax.set(xticks=range(len(optimizer_pilots)),xticklabels=[f"Ours U{r['args'].get('update_targets',16)}\nlr {r['args']['lr']:g}" for r in optimizer_pilots],ylabel='Whole fitting GFLOPs (unit-weight specials)',ylim=(0,max(bottom)*1.17))
+        for i,(r,total) in enumerate(zip(optimizer_pilots,bottom)):
+            ax.text(i,total+.25,f"{r['final']['dev']['bpc']:.3f} bpc",ha='center',fontsize=8)
+        ax.legend(fontsize=7,ncol=3,loc='upper center',bbox_to_anchor=(.5,1.25));f.tight_layout();save(f,'parallel_optimizer_work')
     # Full-bank architectural comparison: keep every query/key match.
     f, axes = plt.subplots(2, 2, figsize=(7.2, 4.3))
     contexts = np.array([64,128,256,512,1024,2048,4096,8192,16384,32768])
@@ -1956,16 +1969,16 @@ def blocks(M, tasks, ev):
          'The separate KV pages also show projected event-architecture costs that remove numerical clock simulation. '
          'RNG, indexing, memory traffic and physical race energy are additional. These are work estimates, '
          'not latency or joules, and differing data, quality and evaluation protocols prevent a supremacy conclusion.')])
-    ledger_chunk=math.ceil(len(points)/math.ceil(len(points)/18))
+    ledger_chunk=math.ceil(len(points)/math.ceil(len(points)/12))
     for start in range(0,len(points),ledger_chunk):
         pages.append([
             ('h1','Appendix B (continued). Completed language variants and work'),
-            ('table',(['Variant','Params K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓','Inference MFLOPs / char ↓'],[
+            ('table',(['Variant','Params K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
                 [f"{i+1}. "+('Ours: ' if r['family'] in ('integrated','carrier') else '')+r['label'],
                  f"{r['parameters']/1e3:,.1f}",f"{r['fit']:,} / {r['passes']:g}",
-                 f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}",f"{r['inference']/1e6:.4f}"]
+                 f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}",f"{r['total']/r['targets']/1e6:.3f}",f"{r['inference']/1e6:.4f}"]
                  for i,r in enumerate(points[start:start+ledger_chunk],start=start)],
-                 [40,21,31,24,31,27])),
+                 [36,18,25,20,27,24,24])),
             ('small','Each row retains its original architecture, fitting budget and score. The selected '
              '10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain '
              'their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. '
@@ -1973,7 +1986,8 @@ def blocks(M, tasks, ev):
              'appear only after their full test completes. Validation/test work, RNG and physical traffic '
              'are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed '
              'parallel_language and episodic_language JSON records. The global ledger uses emulator '
-             'floating arithmetic consistently; the separate KV page reports architectural projections. '
+             'floating arithmetic consistently; fitting work per target divides by actual training target presentations. '
+             'The separate KV page reports architectural projections. '
              'No new dense model was trained.')])
     for pair in episodic_pairs(tasks):
         kv=pair['kv'];a=kv['args'];act=kv['final']['dev']['activity']
@@ -2020,6 +2034,33 @@ def blocks(M, tasks, ev):
              'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192]
+    if len(optimizer_pilots)>1:
+        optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
+        reference=next(r for r in optimizer_pilots if r['args'].get('update_targets',16)==16)
+        best=min(optimizer_pilots,key=lambda r:r['final']['dev']['bpc'])
+        selected=min((r for r in optimizer_pilots if r['final']['dev']['bpc']<=best['final']['dev']['bpc']+.05),key=lambda r:r['work']['cpu_emulator']['total_training_unit_special_flops'])
+        saving=1-selected['work']['cpu_emulator']['total_training_unit_special_flops']/reference['work']['cpu_emulator']['total_training_unit_special_flops']
+        pages.append([
+            ('h1','Appendix B (continued). Ours: cheaper learning updates'),
+            ('p','Credit still propagates over 16-character segments. Gradients are summed over U targets, '
+             'normalized by their actual count, clipped once and used for one Adam update. '
+             'All models here use two independent heads, payload 32/head, eight blocks, seed 6, four passes '
+             'over 2,048 fitting characters and 8,191 frozen development targets.'),
+            ('figure',('parallel_optimizer_work',174)),
+            ('table',(['Ours: U / learning rate','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Adam + clip GFLOPs ↓'],[
+                [f"U{r['args'].get('update_targets',16)} / {r['args']['lr']:g}",f"{r['final']['dev']['bpc']:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
+                 f"{sum(r['work']['cpu_emulator']['training_stages'].get(k,0) for k in ('optimizer','gradient_clipping'))/1e9:.3f}"] for r in optimizer_pilots],
+                [40,25,35,37,37])),
+            ('p',f"The cheapest schedule within the declared 0.05 bpc tolerance of the best pilot uses U{selected['args'].get('update_targets',16)}, lr {selected['args']['lr']:g}: {selected['final']['dev']['bpc']:.3f} bpc and {100*saving:.1f}% less whole fitting work than reference. The best quality is {best['final']['dev']['bpc']:.3f} bpc. These completed results support optimizer amortization in this configuration, not language-model supremacy."),
+            ('small','Learning rates and warmup differ across configurations, so this is not an isolated optimizer-interval ablation. '
+             'Selected checkpoints minimize frozen development loss over the fixed four passes; all fitting work '
+             'remains charged. Each result is one seed. Candidate scoring, losing-value credit, backward and '
+             'gradient accumulation/normalization remain in the operator ledger. Larger-data and repeat-seed '
+             'comparisons must establish transfer of the selected schedule.'),
+        ])
     head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1]
     if head_rows:
         display=head_rows[-4:]
@@ -2032,7 +2073,7 @@ def blocks(M, tasks, ev):
             ('figure',('parallel_temporal_heads',174)),
             ('figure',('parallel_temporal_head_pilots',160)),
             ('table',(['Ours: heads / update','Fit / passes','Dev bpc ↓','Whole fit GFLOPs ↓'],[
-                [f"H{r['args']['heads']} / U{r['args'].get('update_targets',16)} / lr{r['args']['lr']:g}",
+                [f"H{r['args']['heads']} / U{r['args'].get('update_targets',16)} / lr {r['args']['lr']:g}",
                  f"{r['args']['fit']:,} / {r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}"] for r in display],
                 [62,37,30,45])),

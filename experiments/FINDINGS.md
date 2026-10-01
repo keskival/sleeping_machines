@@ -1,5 +1,23 @@
 # Findings log
 
+## Completed independent-head optimizer pilots — 1 October
+
+Same H2 / payload32 per head / depth8 / 2K fit / 4 passes / 8K dev / seed 6:
+
+| Ours: optimizer configuration | Dev bpc | Whole fit GFLOPs | Scope |
+| --- | --- | --- | --- |
+| U16 / lr.001 reference | 3.786482 | 27.730791 | No learning-rate warmup |
+| U64 / lr.002 | 3.732586 | 22.753030 | Best quality; 18.0% less fitting work |
+| U64 / lr.004 | 3.800302 | 22.750429 | Worse than best schedule |
+| U128 / lr.004 | 3.778729 | 19.999171 | Selected within predeclared 0.05 bpc of best; 27.9% less work than reference |
+
+All retain 16-character credit, independent heads, temporal state and historical
+KV. LR/warmup differ, so isolate no single causal hyperparameter. Actual gradient
+accumulation, normalization, clipping, Adam and all losing-value credit are
+charged. This is single-seed optimizer evidence, not an architectural supremacy
+or frontier language claim. The selected schedule's 8K fit began 01:20:55 UTC;
+H4 contracts/smoke and selected-schedule pilot follow under the same guard.
+
 ## Independent parallel temporal heads and full-bank work hypothesis
 
 Completed matched eight-block, payload 32, seed6, four-pass 8K fitting controls
@@ -2629,7 +2647,7 @@ sparse persistent receiver updates and counterfactual credit, without a dense
 carrier. Completed payload-16/six-block fits improve 3.398284 at 8K to 3.120653
 at 32K, four passes, 8,191 identical cold development targets. The 32K run uses
 361,367 parameters, 324 available receivers / six selected updates, 29.883299G
-fitting arithmetic and 31.053267G with unit-weight specials. The pool-four/8K
+fitting arithmetic and 31.053267G with unit-weight specials. The pool-four/ 8K
 arm gives 3.426425, worse than pool two; retain this negative capacity screen.
 
 New payload-32 depth/KV controls use 2,048 fitting/development characters, four
