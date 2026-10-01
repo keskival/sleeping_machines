@@ -1,0 +1,1 @@
+{"args": {"rule": "race_time", "hidden": 0, "feedback": "sym", "races": 16, "lr": 0.05, "epochs": 3, "seed": 1}, "curve": [{"epoch": 1, "test_acc": 0.8986}, {"epoch": 2, "test_acc": 0.8848}, {"epoch": 3, "test_acc": 0.9273}]}
