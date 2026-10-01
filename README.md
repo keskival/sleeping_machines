@@ -183,8 +183,9 @@ clock; arriving messages evolve until their local read. It retains independent
 spatial heads and aggregates the declared counterfactual teacher in O(Cd + md).
 Numerical, full guarded optimizer/recovery contracts and smoke fits pass. The
 completed two-arrival pilot reaches 3.820 bpc versus nested one-arrival 3.779;
-four arrivals are being tested. A longer fit requires a completed pilot quality
-gain. The report preserves these negative results beside the earlier wins.
+four arrivals complete at3.771 bpc. Four winner deliveries cost **4.57% extra
+whole fitting work** with shared matches, but the .008 bpc gain misses the
+.02 promotion gate; longer repeated-arrival fitting is deferred. The report preserves these negative results beside the earlier wins.
 
 The next [guarded credit/data ladder](experiments/queue/local_language_credit_campaign_20261001T074000Z.json)
 starts with a frozen-checkpoint audit. Forward memory survives the current

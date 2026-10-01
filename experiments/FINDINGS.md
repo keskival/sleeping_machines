@@ -1,5 +1,23 @@
 # Findings log
 
+## Shared-match four-arrival result — 1 October
+
+The m4 pilot completed at **3.770751 bpc / 20.913599 whole-fit GFLOPs**.
+Relative to exact nested m1, quality improves 0.007978 bpc,
+below the predeclared .02 promotion threshold. No longer m4 fit was launched.
+Both use H2/d32/head/depth8, U128/lr.004, 2,048 fit/four passes, 8,191 frozen
+development targets, seed6. m2 regressed. Full numerical/optimizer and operator
+coverage contracts passed. All historical results remain.
+
+The resource mechanism has a concrete exploratory result: four historical
+arrivals deliver four times as many winner values for **4.57% additional whole fitting
+work**. Query matches/rates are shared inside each retrieval; key candidate
+counts can differ across trained trajectories. Additional renewals, messages,
+transport and O(Cd+md) local surrogate are charged. This demonstrates cheap
+arrival multiplicity in this CPU arithmetic ledger, not measured energy or
+comparable-quality Transformer superiority. Better routing/persistent-state
+learning remains necessary to turn it into a larger quality advantage.
+
 ## Completed integrated head/data ladder — 1 October
 
 | Ours | Fit characters / passes | Dev bpc | Whole-fit GFLOPs | Fit MFLOPs / target |

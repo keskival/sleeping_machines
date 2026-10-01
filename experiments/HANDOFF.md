@@ -1,5 +1,19 @@
 # Session handoff — 2026-09-30
 
+## Live transition — 1 October, 07:43 UTC
+
+Repeated-arrival campaign completed: m4 3.770751 bpc / 20.913599 GFLOPs,
+.007978 bpc better than nested m1, below the .02 promotion gate. Four historical
+value arrivals cost4.57% extra whole fitting work; keep this positive mechanism
+result beside its modest quality gain. m2 was worse. No larger repeated-arrival
+fit was launched. Results auto-published in153ea8a.
+
+The credit campaign started its guarded frozen H2/H4 diagnosis at07:42:30 UTC;
+next full64-credit contracts, smoke and2K fit follow serially. Supervisor/tmux
+`local_language_credit_campaign_20261001T074000Z` is active. Preserve all its
+source/queue hashes; do not launch another trainer. Inspect status before edits
+or work. Its short-credit/U64 8K uses the earlier unused benchmark definition.
+
 ## Current state — 1 October, 07:22 UTC
 
 The prioritized head campaign completed both 8K fits, then stopped at its
