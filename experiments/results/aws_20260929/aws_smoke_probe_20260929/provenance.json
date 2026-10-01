@@ -1,0 +1,38 @@
+{
+  "run_tag": "aws_smoke_probe_20260929",
+  "script": "experiments/e14_depth.py",
+  "arguments": [
+    "--width",
+    "60",
+    "--val",
+    "500",
+    "--train-limit",
+    "300",
+    "--epochs",
+    "1",
+    "--zero-sum",
+    "1",
+    "--variant",
+    "crl_fa",
+    "--probe",
+    "1",
+    "--depth",
+    "2",
+    "--tag",
+    "smokeprobe"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1bdbd1eb771f78224c32bf36f3f7a02be965cc315efb99eb2718cabcfbdf4e72",
+  "git_commit": "170eeb0a99f1c21b92640bf85c51b2cd96f1f654",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:56:25Z",
+  "status": "failed",
+  "error": "Traceback (most recent call last):\n  File \"/workspace/experiments/aws_benchmark.py\", line 58, in main\n    exec(compile(tree, str(script), 'exec'), {'__name__': '__main__', '__file__': str(script)})\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e14_depth.py\", line 664, in <module>\n    main(ap.parse_args())\n    ~~~~^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e14_depth.py\", line 599, in main\n    res[\"probe_per_layer\"] = probes(net, ttr, ytr, tte, yte)\n                             ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e14_depth.py\", line 493, in probes\n    Ftr, Fte = feats(ttr, n_train), feats(tte, n_test)\n               ~~~~~^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e14_depth.py\", line 487, in feats\n    st = net.forward(*to_events(times[i:i + 250]))\n                      ~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/workspace/experiments/e6_hidden.py\", line 42, in to_events\n    s = max(int(np.isfinite(times).sum(1).max()), 1)     # keep one padding slot when nothing spiked\n                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/workspace/.venv-docker/lib/python3.14/site-packages/numpy/_core/_methods.py\", line 41, in _amax\n    return umr_maximum(a, axis, None, out, keepdims, initial, where)\nValueError: zero-size array to reduction operation maximum which has no identity\n",
+  "wall_s": 0.711,
+  "peak_rss_kb": 464320
+}

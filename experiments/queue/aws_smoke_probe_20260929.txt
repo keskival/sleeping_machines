@@ -1,0 +1,1 @@
+aws_smoke_probe_20260929 experiments/aws_benchmark.py --run-tag aws_smoke_probe_20260929 --script experiments/e14_depth.py -- --width 60 --val 500 --train-limit 300 --epochs 1 --zero-sum 1 --variant crl_fa --probe 1 --depth 2 --tag smokeprobe
