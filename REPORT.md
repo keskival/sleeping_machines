@@ -819,6 +819,24 @@ Sealed historical keys and values still affect predictions, but detachment remov
 
 Matched 16-credit records are shown when completed under identical settings. Additional backward/normalization/clip/Adam work is counted and peak memory is guarded. Inference traces average different representative spans; the operation definitions and inference architecture are the same. One seed, development selection, no frontier claim. Forward-partition equality and full 64-credit gradient/update contracts precede fitting.
 
+## Appendix B (continued). Ours: compact delayed learning
+
+Available historical content is not automatically learned historical content. After graph detachment, a retrieved old key/value can affect the prediction while its write map receives no later loss credit. Increasing the ordinary credit span from 16 to 64 did not improve the completed matched 2K pilot.
+
+![historical write credit flow](report/figures/historical_write_credit_flow.png)
+
+The next integrated experiment saves the normalized feature φ of each historical write. Later queries send a compact producer teacher to sealed key/value maps while preserving independent heads, temporal races, incoming content and persistent addressed state.
+
+| Ours: added teacher | Factorization | Extra work / query |
+| --- | --- | --- |
+| Old keys | α q (Σ eᵢ φᵢ)ᵀ | O(C_old d + d²) |
+| Old winning value | α a φ_wᵀ | O(d²) |
+| Saved eligibility | One detached d-vector / write | 50% extra K/V float storage |
+
+The shared query factors all admitted old key teachers into one matrix update. Live writes keep ordinary gradients without duplicate credit. Six read-only numerical checks and guarded full eight-block update/recovery contracts passed; disabling the new teacher exactly reproduces parent outputs, RNG, gradients and two Adam windows.
+
+This is exact for a hypothetical common perturbation of historical write maps with saved features fixed. Transport to current maps is a delayed local surrogate: old weight versions and omitted representation paths remain limitations. Additional learning arithmetic and eligibility traffic are real costs. Existing counterfactual score credit is retained. Fitting work uses representative audited windows, with exact credit-coverage counters logged separately. Matched quality/work results require completed fits; improved language accuracy and native clockless learning are not established by these contracts.
+
 ## Appendix B (continued). Ours: frozen information-flow diagnosis
 
 Saved selected H2/H4 eight-block 8K checkpoints; 256 targets from the development prefix. Weights remain fixed. Each intervention removes one path only during this short evaluation; these are diagnostic probes rather than refitted architecture comparisons.

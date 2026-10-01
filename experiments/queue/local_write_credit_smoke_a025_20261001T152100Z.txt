@@ -1,0 +1,1 @@
+local_write_credit_smoke_a025_20261001T152100Z experiments/historical_write_language.py --tag local_write_credit_smoke_a025_20261001T152100Z --write-credit 0.25 --fit 129 --dev 129 --epochs 1 --seed 6

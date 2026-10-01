@@ -25,6 +25,16 @@ state evolves while other messages arrive. Each head retrieves a historical
 winning value; the next layer can learn to mix the separate channels.
 See the [integrated language guide](experiments/INTEGRATED_LANGUAGE.md).
 
+The next language experiment tests **compact historical write credit**. Old
+cached content influences predictions after its producing graph is detached;
+one saved feature per write lets later queries teach those old key/value maps
+without retaining a long graph. The key teacher factors into one matrix update
+per query, while temporal races and sparse addressed state remain intact.
+This costs 50% extra K/V tensor storage and additional learning arithmetic;
+quality benefit is pending. The [derivation and matched pilot protocol](experiments/theory/49_historical_write_eligibility.md)
+state the local surrogate's scope and scaling gates. Simply extending ordinary
+credit from 16 to 64 targets did not improve the completed 2K pilot.
+
 Our hypothesis is **more capability per unit of active work**. Temporal races
 can approximate attention while avoiding selected arithmetic and value
 aggregation; evolving state and useful dormant modules may reduce the width,

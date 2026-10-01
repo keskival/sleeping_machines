@@ -557,3 +557,16 @@ contracts pass; the first smoke's dev 65 left an empty inference warmup. Preserv
 that protocol failure. A fresh dev 129 smoke passes, allowing the 64-credit 2K
 pilot. Model/fit sources remain identical; only the corrected smoke window and
 continuation supervisor definition changed.
+
+### Completed §325 credit intervention — 1 October
+
+The credit64/U64/lr.002 H2 2K fit completed at 3.740341 development bpc,
+versus matched credit16 at 3.732586: a .007755 regression. Whole fitting work
+is 23.019 versus 22.753 GFLOPs (CPU arithmetic plus unit-weight specials).
+No longer-credit 8K extension passed the declared .02 pilot-gain gate.
+The strongest credit16/U64 schedule was separately fitted on 8K: 3.490090 bpc
+and 89.999 GFLOPs; it also missed the indexed-control+.10 gate. Both completed
+records and all prior evidence remain published. These outcomes reject the
+simple larger-graph remedy at this pilot, not every delayed-credit mechanism.
+Sections326–328 test a compact sealed-write producer teacher, with unchanged
+forward races and explicit extra storage/work, before any larger fit.

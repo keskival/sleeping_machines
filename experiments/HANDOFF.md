@@ -764,3 +764,53 @@ retains all model/driver sources and reuses unchanged successful diagnostic/
 64-credit contracts. Commit before starting it once in tmux with the recovery
 stem. Subsequent pilot/data gates and original fitting definitions are unchanged.
 Do not restart the original frozen supervisor manifest with the new revision.
+
+## Historical write eligibility — 1 October, 15:21 UTC
+
+The recovery credit campaign finished at 09:32. Its b64 2K pilot did not improve
+matched b16 (3.740341 versus 3.732586 development bpc); no b64 8K extension.
+The completed b16/U64/lr.002 H2 8K result is 3.490090 bpc/89.999 CPU fit GFLOPs
+and missed the indexed-control+.10 gate. The existing larger queues remain
+unrun definitions, not active jobs. No remote AWS state was verified.
+
+Read THEORY §§326–328 and `theory/49_historical_write_eligibility.md` before
+changing the new prioritized integrated candidate. It adds one saved normalized
+write feature per K/V entry and factorized delayed credit to sealed write maps.
+Independent Q/K/V heads, depth8, temporal races, persistent receiver/content
+state, cross-head channels, full indexed history and counterfactual score credit
+are retained. Fixed-weight outputs and RNG do not change. Extra credit is a
+conditional historical-map perturbation transported to current weights, not
+full-history gradients; no old feature/representation graph is reopened.
+
+Six read-only contracts passed. Full H2/d32/depth8 guarded architecture,
+accumulation, checkpoint-recovery and two-window alpha0 parent-nesting contracts
+completed in `local_write_credit_contracts_a1_20261001T151500Z`. The alpha1
+129-character smoke is running in its own one-job queue. Inspect the host lock,
+logs and campaign status before launching anything. CPU-only; about 12 GiB
+available before launch; guards VMS4MKiB/groupRSS2.5MKiB/minavailable8192MiB.
+K/V/eligibility float payload is3d versus2d (+50%); feature copy/read traffic is
+not zero. Numerical backward/optimizer costs are audited by the actual driver.
+
+New driver `experiments/historical_write_language.py`; new model/operators
+`historical_write_race_language.py` / `historical_write_credit.py`. Parent
+sources remain frozen and unchanged. Reports label `/wc...` and keep these
+interventions out of old optimizer/head/credit-only comparison groups.
+Only completed matched pilot results enter the new quality/work appendix.
+Remaining gaps: no upstream old-state credit, stale weight versions, approximate
+deep counterfactual teacher, content-index discovery coverage, hardware energy
+and task quality. This is retained-mechanism local learning, not a departure
+into a dense carrier model. New dense Transformer/LSTM training remains AWS-only.
+
+Smoke completed with finite losses and complete trace coverage: 718,508 KiB peak
+RSS, 177.8s wall. No quality claim follows from a 129-character smoke.
+Prepared finite manifest `experiments/queue/local_historical_write_campaign_20261001T152100Z.json`
+with supervisor `scripts/run_historical_write_campaign.py --manifest-stem local_historical_write_campaign_20261001T152100Z`.
+It validates the completed predecessor/contracts, reuses the unchanged alpha1
+smoke, then runs alpha.25 smoke and matched alpha1/alpha.25 2K pilots. A completed
+>=.02 bpc gain admits the best one to 8K; indexed-control+.10 then admits 32K and
+seed7 replication. 131K additionally needs >=.05 data gain, projected RSS <=2.2MKiB
+and measured-wall timeout <=48h. Every stage uses a unique one-job guarded queue;
+completed stages automatically publish/commit report quality/work figures.
+Start exactly once in tmux after the prepared sources/report are committed.
+Do not edit hashed sources/queues during the campaign. Inspect the same-stem
+status JSON and logs; other hosts must coordinate any overlapping source edits.

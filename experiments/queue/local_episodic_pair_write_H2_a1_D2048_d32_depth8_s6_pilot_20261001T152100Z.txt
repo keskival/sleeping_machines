@@ -1,0 +1,1 @@
+local_episodic_pair_write_H2_a1_D2048_d32_depth8_s6_pilot_20261001T152100Z experiments/historical_write_language.py --tag local_episodic_pair_write_H2_a1_D2048_d32_depth8_s6_pilot_20261001T152100Z --write-credit 1 --fit 2048 --dev 8192 --epochs 4 --seed 6

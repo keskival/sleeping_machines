@@ -72,6 +72,7 @@ def results():
         for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
     tasks['episodic_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'episodic_language').glob('local_episodic_pair_*Z.json'))]
+    tasks['historical_write_contracts'] = [read(str(path.relative_to(RES))) for path in sorted((RES/'episodic_language').glob('local_write_credit_contracts_*Z.json'))]
     tasks['head_diagnosis'] = [read(str(path.relative_to(RES))) for path in sorted((RES/'diagnostics').glob('local_parallel_head_diagnosis_*Z.json'))]
     tasks['parallel_head_contracts'] = [read(str(path.relative_to(RES)))
         for path in sorted([*(RES/'episodic_language').glob('local_parallel_head_contracts_*Z.json'),
@@ -141,6 +142,8 @@ def language_work_points(tasks, ev):
         name=f"parallel race KV H{a['heads']}×d{a['payload']}" if parallel else ('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}"
         label=(f"IHR{a['heads']}x{a['payload']}" if parallel else f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}")
         if a.get('chunk',16)!=16:label+=f"/b{a['chunk']}"
+        if 'write_credit' in a:
+            name+=f" / delayed write credit {a['write_credit']:g}";label+=f"/wc{a['write_credit']:g}"
         if a.get('arrivals',1)>1:
             name+=f" / m{a['arrivals']} arrivals";label+=f"/m{a['arrivals']}"
         if 'update_targets' in a:label+=f"/u{a['update_targets']}@{a['lr']:g}"
@@ -319,6 +322,25 @@ def accomplishments_figure(M, ev, tasks):
     return f
 
 
+
+def historical_write_groups(tasks):
+    fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs',
+            'chunk','update_targets','warmup_targets','seed','lr')
+    groups={}
+    for r in tasks['episodic_language']:
+        if 'write_credit' in r['args'] and r['args']['dev']==8192 and r['args']['fit']>=2048:
+            groups.setdefault(tuple(r['args'].get(k) for k in fields),[]).append(r)
+    for key,trials in groups.items():
+        matched=[r for r in tasks['episodic_language'] if 'write_credit' not in r['args']
+                 and r['args'].get('arrivals',1)==1 and tuple(r['args'].get(k) for k in fields)==key
+                 and r.get('fitting_data_sha256')==trials[0].get('fitting_data_sha256')
+                 and r.get('development_data_sha256')==trials[0].get('development_data_sha256')]
+        # Source-level coupled forward/gradient/Adam nesting is required by this driver.
+        trials=sorted(trials,key=lambda r:r['args']['write_credit'])
+        rows=matched[:1]+trials
+        yield 'historical_write_quality_work_'+hashlib.sha256(repr(key).encode()).hexdigest()[:10], rows
+
+
 def figures(M, tasks, ev):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -331,6 +353,21 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    for name,rows in historical_write_groups(tasks):
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.4))
+        labels=['Ours parent' if 'write_credit' not in r['args'] else f"Ours α={r['args']['write_credit']:g}" for r in rows]
+        colors=[gray]+[blue,orange,blue][:max(0,len(rows)-1)]
+        for i,r in enumerate(rows):
+            w=r['work']['cpu_emulator'];bpc=r['final']['dev']['bpc']
+            axes[0].scatter(w['total_training_unit_special_flops']/1e9,bpc,color=colors[i])
+            axes[0].annotate(labels[i],(w['total_training_unit_special_flops']/1e9,bpc),xytext=(3,5),textcoords='offset points',fontsize=7)
+        for i,r in enumerate(rows):
+            axes[1].plot([v['epoch'] for v in r['curve']],[v['dev']['bpc'] for v in r['curve']],marker='o',label=labels[i],color=colors[i])
+        axes[0].set(xlabel='Whole fitting GFLOPs ↓',ylabel='Frozen development bpc ↓')
+        axes[1].set(xlabel='Passes over fitting data',ylabel='Frozen development bpc ↓')
+        axes[1].legend(fontsize=7)
+        for ax in axes:ax.grid(alpha=.2)
+        f.tight_layout();save(f,name)
     f,ax=plt.subplots(figsize=(7.2,2.3));ax.set(xlim=(0,10),ylim=(0,3));ax.axis('off')
     def box(x,y,w,h,t):
         ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.06',facecolor='#edf3fb',edgecolor=blue))
@@ -344,7 +381,17 @@ def figures(M, tasks, ev):
     for start,end in [((1.7,1.8),(2,2.3)),((1.7,1.1),(2,.7)),((4.5,2.3),(4.9,2.3)),((4.5,.7),(4.9,.7)),((7,2.3),(7.45,1.8)),((7,.7),(7.45,1.1))]:
         ax.add_patch(FancyArrowPatch(start,end,arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'parallel_temporal_heads')
-    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
+    f,ax=plt.subplots(figsize=(7.2,2.4));ax.set(xlim=(0,10),ylim=(0,3));ax.axis('off')
+    box(.1,1.5,2.2,1.,'Historical write\nSave key, value and φ')
+    box(3.2,1.5,2.4,1.,'Later temporal query\nSame cached race / winner')
+    box(6.6,1.5,3.1,1.,'Prediction + local teacher\nCurrent Q and live state learn')
+    box(3.2,.12,2.4,.95,'Old admitted keys\nSum weighted saved features')
+    box(6.6,.12,3.1,.95,'Old write maps learn\nOne key outer product\nOne winning-value outer product')
+    for start,end in [((2.4,2),(3.1,2)),((5.7,2),(6.5,2)),((7.4,1.45),(5.7,.6)),((5.7,.55),(6.5,.55))]:
+        ax.add_patch(FancyArrowPatch(start,end,arrowstyle='->',mutation_scale=11,color=blue))
+    ax.text(.1,.45,'Ours: +50% K/V tensor storage\nNo old representation graph',fontsize=8,color=gray)
+    f.tight_layout();save(f,'historical_write_credit_flow')
+    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192 and 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if pilots:
         f,ax=plt.subplots(figsize=(7.2,2.5))
         for row in pilots:
@@ -352,7 +399,7 @@ def figures(M, tasks, ev):
         ax.set(xlabel='Passes over 2,048 fitting characters',ylabel='Frozen 8K development bpc ↓');ax.grid(alpha=.2);ax.legend(fontsize=7)
         f.tight_layout();save(f,'parallel_temporal_head_pilots')
     scaled_heads=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and
-        r['args'].get('arrivals',1)==1 and r['args'].get('update_targets')==128 and
+        'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and r['args'].get('update_targets')==128 and
         r['args']['lr']==.004 and r['args']['seed']==6 and r['args']['dev']==8192 and
         r['args']['fit'] in (2048,8192)]
     if any(r['args']['fit']==8192 for r in scaled_heads):
@@ -388,7 +435,7 @@ def figures(M, tasks, ev):
     for group in sorted({tuple(r['args'][k] for k in repeat_fields) for r in repeat_rows}):
         trials=[r for r in repeat_rows if tuple(r['args'][k] for k in repeat_fields)==group]
         a=trials[0]['args']
-        reference=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)==1 and all(r['args'].get(k)==a.get(k) for k in repeat_fields)]
+        reference=[r for r in tasks['episodic_language'] if 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and all(r['args'].get(k)==a.get(k) for k in repeat_fields)]
         if not reference:continue
         rows=sorted(reference+trials,key=lambda r:r['args'].get('arrivals',1));base=reference[0]
         def total(r):return r['work']['cpu_emulator']['total_training_unit_special_flops']
@@ -405,7 +452,7 @@ def figures(M, tasks, ev):
         for m,r in zip(marks,rows):axes[1].annotate(f"{r['final']['dev']['bpc']:.3f}",(m,r['final']['dev']['bpc']),xytext=(2,5),textcoords='offset points',fontsize=8)
         axes[1].margins(y=.25);f.tight_layout()
         save(f,'repeated_arrival_quality_work_'+hashlib.sha256(repr(group).encode()).hexdigest()[:10])
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if optimizer_pilots:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         f,ax=plt.subplots(figsize=(7.2,2.8));bottom=np.zeros(len(optimizer_pilots))
@@ -2080,7 +2127,7 @@ def blocks(M, tasks, ev):
              'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if len(optimizer_pilots)>1:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         reference=next(r for r in optimizer_pilots if r['args'].get('update_targets',16)==16)
@@ -2114,7 +2161,7 @@ def blocks(M, tasks, ev):
         a=trials[0]['args'];fit=a['fit']
         same=lambda r: all(r['args'].get(k,1 if k=='arrivals' else None)==a.get(k) for k in
             ('heads','payload','depth','pool','matching','recent','fit','dev','epochs','chunk','update_targets','warmup_targets','seed','lr'))
-        reference=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)==1 and same(r)]
+        reference=[r for r in tasks['episodic_language'] if 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and same(r)]
         rows=sorted(reference+trials,key=lambda r:r['args'].get('arrivals',1))
         extra=[]
         if reference:
@@ -2144,7 +2191,7 @@ def blocks(M, tasks, ev):
              'The bounded numerical time encoding is not a demonstrated homogeneous physical Poisson clock. '
              'This local counterfactual teacher is a declared surrogate, not an exact gradient through nonlinear route changes. '
              'No matched-quality dense-model, physical-energy or frontier superiority is inferred.')])
-    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
+    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and 'write_credit' not in r['args'] and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if head_rows:
         display=head_rows[-4:]
         pages.append([
@@ -2196,7 +2243,7 @@ def blocks(M, tasks, ev):
     long_credit=[r for r in tasks['episodic_language'] if r['args'].get('chunk',16)>16]
     for r in long_credit:
         a=r['args'];fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs','update_targets','warmup_targets','seed','lr')
-        matched=[v for v in tasks['episodic_language'] if v['args'].get('chunk',16)==16 and v['args'].get('arrivals',1)==a.get('arrivals',1) and all(v['args'].get(k)==a.get(k) for k in fields)]
+        matched=[v for v in tasks['episodic_language'] if 'write_credit' not in v['args'] and v['args'].get('chunk',16)==16 and v['args'].get('arrivals',1)==a.get('arrivals',1) and all(v['args'].get(k)==a.get(k) for k in fields)]
         rows=matched+[r]
         pages.append([
             ('h1','Appendix B (continued). Ours: longer temporal credit'),
@@ -2218,6 +2265,57 @@ def blocks(M, tasks, ev):
              'Inference traces average different representative spans; the operation definitions and '
              'inference architecture are the same. One seed, development selection, no frontier claim. '
              'Forward-partition equality and full 64-credit gradient/update contracts precede fitting.')])
+    if tasks['historical_write_contracts']:
+        pages.append([
+            ('h1','Appendix B (continued). Ours: compact delayed learning'),
+            ('p','Available historical content is not automatically learned historical content. '
+             'After graph detachment, a retrieved old key/value can affect the prediction while '
+             'its write map receives no later loss credit. Increasing the ordinary credit span '
+             'from 16 to 64 did not improve the completed matched 2K pilot.'),
+            ('figure',('historical_write_credit_flow',160)),
+            ('p','The next integrated experiment saves the normalized feature φ of each historical '
+             'write. Later queries send a compact producer teacher to sealed key/value maps while '
+             'preserving independent heads, temporal races, incoming content and persistent addressed state.'),
+            ('table',(['Ours: added teacher','Factorization','Extra work / query'],[
+                ['Old keys','α q (Σ eᵢ φᵢ)ᵀ','O(C_old d + d²)'],
+                ['Old winning value','α a φ_wᵀ','O(d²)'],
+                ['Saved eligibility','One detached d-vector / write','50% extra K/V float storage']], [37,82,55])),
+            ('p','The shared query factors all admitted old key teachers into one matrix update. '
+             'Live writes keep ordinary gradients without duplicate credit. Six read-only numerical '
+             'checks and guarded full eight-block update/recovery contracts passed; disabling '
+             'the new teacher exactly reproduces parent outputs, RNG, gradients and two Adam windows.'),
+            ('small','This is exact for a hypothetical common perturbation of historical write maps '
+             'with saved features fixed. Transport to current maps is a delayed local surrogate: '
+             'old weight versions and omitted representation paths remain limitations. Additional '
+             'learning arithmetic and eligibility traffic are real costs. Existing counterfactual '
+             'score credit is retained. Fitting work uses representative audited windows, with exact '
+             'credit-coverage counters logged separately. Matched quality/work results require completed fits; '
+             'improved language accuracy and native clockless learning are not established by these contracts.')])
+    for figure_name,rows in historical_write_groups(tasks):
+        a=rows[-1]['args']
+        pages.append([
+            ('h1','Appendix B (continued). Ours: historical write credit'),
+            ('p',f"H{a['heads']}, d{a['payload']}/head, {a['depth']} event blocks, pool{a['pool']}; "
+             f"{a['fit']:,} fitting characters / {a['epochs']} passes; {a['dev']-1:,} frozen development targets, seed{a['seed']}. "
+             f"Credit{a['chunk']}, Adam U{a['update_targets']}, lr{a['lr']:g}, warmup{a['warmup_targets']}. "
+             'Forward races/history are preserved; sealed writes gain a compact local producer teacher.'),
+            ('figure',(figure_name,140)),
+            ('table',(['Ours: credit','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
+                ['parent' if 'write_credit' not in v['args'] else f"α={v['args']['write_credit']:g}",
+                 f"{v['final']['dev']['bpc']:.3f}",f"{v['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{v['work']['cpu_emulator']['total_training_unit_special_flops']/v['work']['fitting_targets']/1e6:.3f}",
+                 f"{(v['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+v['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for v in rows],
+                [28,26,35,40,45])),
+            ('p','A historical normalized write feature φ is retained alongside each cached key/value. '
+             'The old key-map teacher factors as α q (Σ eᵢ φᵢ)ᵀ: one weighted feature sum and one '
+             'matrix outer product per query. The old winning value map receives α a φᵀ. '
+             'Live writes keep ordinary credit without duplication; no full-history graph is reopened.'),
+            ('small','One extra feature vector raises K/V float storage by 50%. The update is exact for '
+             'a common hypothetical perturbation of historical maps at fixed saved features; transporting '
+             'it to current maps is a delayed local surrogate with stale weight versions and omitted '
+             'representation paths. Additional teacher/optimizer arithmetic is counted; feature traffic '
+             'and physical energy are separate. Parent reuse requires exact forward/RNG/gradient/Adam '
+             'nesting at α=0. One-seed exploratory development selection, not comparable-quality supremacy.')])
     if tasks['head_diagnosis']:
         diagnosis=tasks['head_diagnosis'][-1]
         pages.append([

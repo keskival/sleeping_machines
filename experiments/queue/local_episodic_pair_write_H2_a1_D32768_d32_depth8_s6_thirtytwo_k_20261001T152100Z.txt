@@ -1,0 +1,1 @@
+local_episodic_pair_write_H2_a1_D32768_d32_depth8_s6_thirtytwo_k_20261001T152100Z experiments/historical_write_language.py --tag local_episodic_pair_write_H2_a1_D32768_d32_depth8_s6_thirtytwo_k_20261001T152100Z --write-credit 1 --fit 32768 --dev 8192 --epochs 4 --seed 6

@@ -2749,3 +2749,30 @@ adapting bpc on 8,191 new development targets, after an inherited 32K receiver
 fit. Predictions precede each of 512 sixteen-character delayed updates; fresh
 Adam and rate 0.0001 were fixed before the stream. This is a causal online
 protocol, not an official frozen score or the earlier statistical mixing ablation.
+
+## Historical write eligibility — 1 October 2026
+
+The completed matched credit64 H2 2K pilot did not improve credit16:
+3.740341 versus 3.732586 development bpc, 23.019 versus 22.753 whole-fitting
+GFLOPs (CPU arithmetic plus unit-weight specials). The separate credit16/U64
+H2 8K fit completed at 3.490090 bpc/89.999 GFLOPs and missed the indexed-control
++.10 promotion gate. Results remain in the report and original records.
+
+New THEORY §§326–328 addresses missing sealed-write producer credit without
+changing forward races/content/state. Saving one detached normalized feature
+per historical write gives a factorized key-map teacher
+`alpha outer(query, sum(error_i * feature_i))` and one winning-value outer
+product. Only sealed writes get extra credit. It is exact for a conditional
+historical-map perturbation, then transported as a local delayed surrogate to
+current weights; no full-history deep derivative is claimed. K/V float payload
+rises 50%; additional arithmetic, feature reads/writes and optimizer work remain
+charged. All independent temporal heads and receiver mechanisms are preserved.
+
+Six read-only numerical checks pass, including fixed-feature finite differences,
+unchanged primals/RNG, added old-map credit and no duplication on live writes.
+Guarded H2/d32/depth8 architecture/optimizer/serialized-recovery and two-window
+alpha0 parent-nesting contracts pass. Alpha1 smoke completes in 177.8s with
+718,508 KiB peak RSS and full floating-operation formula coverage. It records
+8976 old key eligibility reads and 960 old winning-value teachers over 128 fit
+targets. These prove implemented credit reach/cost, not quality or hardware gain.
+Matched alpha1/alpha.25 2K pilots are prepared; no pending score is evidence.

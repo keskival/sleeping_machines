@@ -1,0 +1,1 @@
+local_write_credit_contracts_a1_20261001T151500Z experiments/historical_write_language.py --tag local_write_credit_contracts_a1_20261001T151500Z --write-credit 1 --contracts-only --fit 129 --dev 129 --epochs 1
