@@ -593,6 +593,45 @@ Earlier 1M-character references also remain saved: LSTM **2.179** and Transforme
 
 Saved evidence: [10M LSTM aligned result](experiments/results/e174/aligned_lstm_10m_20260930.json); [10M Transformer aligned result](experiments/results/e174/aligned_tf_10m_20260930.json); [90M LSTM saved result](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json); [90M TF saved result](experiments/results/aws_20260929/aws_e64_tf_D90M_baseline_rss6g_20260930/tf_D90000000_s256_L4_p4_dr0.1_v.json). An earlier 90M Transformer attempt was interrupted by its RSS watchdog before producing a completed test result; its provenance is preserved.
 
+## Appendix B. New completed AWS language evidence
+
+The six-block sparse receiver model reaches 3.106 development bpc on 32K fitting characters. It learns meaningful prediction, but this is the older single-head, observed-character-pool variant, not the newer eight-block native/content-gated reception model. The large dense controls are completed reference targets with much better held-out quality and much larger fitting budgets.
+
+| Model | Fit chars / passes | Dev bpc ↓ | Test bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Ours sparse d32/L6 | 32,768/4 | 3.106 | Not scored | 114.25 | 0.872 |
+| LSTM512 | 90M/6 | 1.616 | 1.661 | 3,893,396.04 | 7.210 |
+| Transformer256/L4 | 90M/4 | 1.580 | 1.604 | 8,000,253.35 | 22.223 |
+
+| Model | Parameters | Guarded wall h | Peak RSS MiB | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- |
+| Ours sparse | 1,388,871 | 0.39 | 558.4 | 0.0885 |
+| LSTM512 | 1,199,323 | 10.64 | 2246.9 | 2.4024 |
+| Transformer256/L4 | 3,238,427 | 31.18 | 3822.5 | 14.8104 |
+
+All rows use the same units and whole-fit/per-target denominators within each column. Sparse work is a representative full-step arithmetic estimate with unit-weight special functions; dense work uses shapes and backward = twice forward, including clipping/Adam. Both exclude evaluation and traffic. Dense inference uses the saved shape convention, including Transformer window overlap; sparse inference is a winner-only trace. Guarded wall and RSS include different simulator/runtime overheads and are not energy measurements.
+
+The sparse development set has 8,191 targets; dense selection uses 200,000 validation characters and the saved 1M test interval. Neither their development scores nor their fitting budgets are matched. Raw resource gaps cannot establish comparable-quality or iso-FLOP supremacy. The interrupted Transformer attempt remains preserved; only its completed retry appears as a quality point. All completed points, including the 90M Transformer, are retained in the common quality/work and inference figures.
+
+## Appendix B. AWS hierarchy depth: a useful constraint
+
+These are older race-network diagnostics on the fixed depth-three Random Hierarchy Model. They test composition and depth, not the newer integrated language/event construction. Every shown model uses width 200, 64K fitting examples, ten passes, architecture seed 0 and rule seed 0.
+
+![aws hierarchy depth](report/figures/aws_hierarchy_depth.png)
+
+| Model | Depth | Final held-out accuracy | Guarded wall s | Peak RSS MiB |
+| --- | --- | --- | --- | --- |
+| Ours plain race | 1 | 70.12% | 70.4 | 129.3 |
+| Ours plain race | 2 | 83.72% | 227.4 | 202.4 |
+| Ours plain race | 3 | 85.06% | 382.2 | 249.7 |
+| Ours plain race | 4 | 84.12% | 536.5 | 252.1 |
+| Ours residual-2 | 2 | 72.72% | 266.1 | 217.4 |
+| Ours residual-2 | 3 | 74.54% | 610.4 | 369.3 |
+
+Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses slightly. The tested residual-2 depth 2/3 variants give 72.72/74.54%, below their plain counterparts. Preserve this negative design evidence; adding an interaction path does not by itself improve learning.
+
+Only completed provenance files produce rows. Plain and residual depth-four runs are distinct; an unfinished residual run is not filled with a prediction. Final epoch is reported; evaluation curves are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.
+
 ## Appendix B (continued). Ours: language work as scaling develops
 
 This ledger updates from completed integrated-model stages. It shows the emerging work advantage alongside its quality and data budget. Per-target fitting work removes the difference in the number of presentations; it does not establish equal-quality superiority.
@@ -627,7 +666,7 @@ Each point is a completed model, not a projected scaling law. Left: ours on cold
 | Ours: integrated d32/p2 | 32,768 / 4 passes | 3.106 / dev | 114.247 | 0.872 |
 | Ours: carrier w128g | 1,048,576 / 4 passes | 2.210 / dev | 8,373.302 | 1.996 |
 | LSTM: 512 | 90,000,000 / 6 passes | 1.661 / test | 3,893,396.042 | 7.210 |
-| Transformer: 256x4 | 10,000,000 / 4 passes | 1.908 / test | 888,775.443 | 22.223 |
+| Transformer: 256x4 | 90,000,000 / 4 passes | 1.604 / test | 8,000,253.349 | 22.223 |
 
 The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory (S uses the content index); C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
 
@@ -644,7 +683,7 @@ Inference predicts with frozen weights: no backward pass, clipping or optimizer 
 | Ours: integrated d32/p2 | 3.106 / dev | 0.0885 | Winner-only inference trace |
 | Ours: carrier w128g | 2.210 / dev | 0.6389 | Saved forward operator trace |
 | LSTM: 512 | 1.661 / test | 2.4024 | Recurrent shape estimate |
-| Transformer: 256x4 | 1.908 / test | 14.8104 | Overlapping-window shape estimate |
+| Transformer: 256x4 | 1.604 / test | 14.8104 | Overlapping-window shape estimate |
 
 Solid Transformer points estimate its saved 256-position scorer: full windows advanced by 128 positions, approximately two forward positions per scored character (boundary/tail overhead omitted). Hollow points show a hypothetical one-step decode with cached keys/values and 256 available positions, using L(24d² + 4Td + 30d + 20T) + 54d + 135 unit-weight operations, T = 256. No cached decoder was run. Its plotted bpc belongs to the saved window scorer; learned positions reset between windows, so cache reuse has not been shown to preserve those scores.
 
@@ -714,6 +753,7 @@ Each row retains its original architecture, fitting budget and score. The select
 | 37. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 11.133 | 7.4192 |
 | 38. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 22.223 | 14.8104 |
 | 39. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 7.210 | 2.4024 |
+| 40. T256x4/90M | 3,238.4 | 90,000,000 / 4 | 1.604 / test | 8,000,253.349 | 22.223 | 14.8104 |
 
 Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 

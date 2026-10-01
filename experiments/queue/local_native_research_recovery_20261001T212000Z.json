@@ -1,0 +1,224 @@
+{
+  "status": "prepared",
+  "prioritized_status": "experiments/queue/local_historical_write_campaign_20261001T152100Z.status.json",
+  "completed_contracts": [
+    "experiments/results/native_event/local_native_event_contract_S4_20261001T171000Z.json",
+    "experiments/results/native_language/local_native_language_contract_20261001T172000Z.json"
+  ],
+  "language_reference": "experiments/results/episodic_language/local_episodic_pair_heads_H2_D2048_d32_depth8_s6_b64lr002_20260930T231500Z.json",
+  "indexed_control_eight_k": "experiments/results/episodic_language/local_episodic_pair_kv_semantic_D8192_d32_depth8_s6_20260930T211500Z.json",
+  "minimum_order_accuracy": 0.8,
+  "minimum_memory_gap": 0.2,
+  "minimum_timing_accuracy": 0.75,
+  "minimum_time_control_gain": 0.03,
+  "maximum_capacity_regression": 0.05,
+  "minimum_language_data_gain_bpc": 0.1,
+  "maximum_language_control_regression_bpc": 0.1,
+  "minimum_larger_data_gain_bpc": 0.05,
+  "maximum_rss_for_large_language_kb": 2200000,
+  "maximum_timeout_s": 172800,
+  "resource_caps": {
+    "MEM_CAP_KB": 4000000,
+    "MEM_CAP_RSS_KB": 2500000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "protocol": "Fixed native eight-block H2 d16 pool2 core; order/time 512 query targets, 2048 input events/pass, 8 passes, U64 lr.003; native text8 content adapter 4 passes U64 lr.002 warm512, disjoint8192 dev; no official test; all new dense training AWS-only",
+  "smokes": [
+    {
+      "tag": "local_native_event_order_smoke_S4_20261001T171500Z",
+      "queue": "experiments/queue/local_native_event_order_smoke_S4_20261001T171500Z.txt",
+      "result": "experiments/results/native_event/local_native_event_order_smoke_S4_20261001T171500Z.json",
+      "timeout_s": 1800
+    },
+    {
+      "tag": "local_native_language_smoke_20261001T172000Z",
+      "queue": "experiments/queue/local_native_language_smoke_20261001T172000Z.txt",
+      "result": "experiments/results/native_language/local_native_language_smoke_20261001T172000Z.json",
+      "timeout_s": 1800
+    },
+    {
+      "tag": "local_native_event_timing_smoke_S4_20261001T174000Z",
+      "queue": "experiments/queue/local_native_event_timing_smoke_S4_20261001T174000Z.txt",
+      "result": "experiments/results/native_event/local_native_event_timing_smoke_S4_20261001T174000Z.json",
+      "timeout_s": 1800
+    }
+  ],
+  "order_pilot": {
+    "tag": "local_native_event_order_S4_s6_pilot_20261001T174000Z",
+    "queue": "experiments/queue/local_native_event_order_S4_s6_pilot_20261001T174000Z.txt",
+    "result": "experiments/results/native_event/local_native_event_order_S4_s6_pilot_20261001T174000Z.json",
+    "timeout_s": 14400
+  },
+  "language_pilot": {
+    "tag": "local_native_language_D2048_H2_d16_depth8_s6_20261001T174000Z",
+    "queue": "experiments/queue/local_native_language_D2048_H2_d16_depth8_s6_20261001T174000Z.txt",
+    "result": "experiments/results/native_language/local_native_language_D2048_H2_d16_depth8_s6_20261001T174000Z.json",
+    "timeout_s": 14400
+  },
+  "timing_pilot": {
+    "tag": "local_native_event_timing_S4_s6_pilot_20261001T174000Z",
+    "queue": "experiments/queue/local_native_event_timing_S4_s6_pilot_20261001T174000Z.txt",
+    "result": "experiments/results/native_event/local_native_event_timing_S4_s6_pilot_20261001T174000Z.json",
+    "timeout_s": 14400
+  },
+  "controls": {
+    "order": {
+      "tag": "local_native_event_order_S4_s6_pathwise_20261001T174000Z",
+      "queue": "experiments/queue/local_native_event_order_S4_s6_pathwise_20261001T174000Z.txt",
+      "result": "experiments/results/native_event/local_native_event_order_S4_s6_pathwise_20261001T174000Z.json",
+      "timeout_s": 14400
+    },
+    "timing": {
+      "tag": "local_native_event_timing_S4_s6_rank_20261001T174000Z",
+      "queue": "experiments/queue/local_native_event_timing_S4_s6_rank_20261001T174000Z.txt",
+      "result": "experiments/results/native_event/local_native_event_timing_S4_s6_rank_20261001T174000Z.json",
+      "timeout_s": 14400
+    }
+  },
+  "language_eight_k": {
+    "tag": "local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z",
+    "queue": "experiments/queue/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.txt",
+    "result": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.json",
+    "timeout_s": 21600
+  },
+  "language_thirtytwo_k": {
+    "tag": "local_native_language_D32768_H2_d16_depth8_s6_20261001T174000Z",
+    "queue": "experiments/queue/local_native_language_D32768_H2_d16_depth8_s6_20261001T174000Z.txt",
+    "result": "experiments/results/native_language/local_native_language_D32768_H2_d16_depth8_s6_20261001T174000Z.json",
+    "timeout_s": 43200
+  },
+  "language_onehundredthirtyone_k": {
+    "tag": "local_native_language_D131072_H2_d16_depth8_s6_20261001T174000Z",
+    "queue": "experiments/queue/local_native_language_D131072_H2_d16_depth8_s6_20261001T174000Z.txt",
+    "result": "experiments/results/native_language/local_native_language_D131072_H2_d16_depth8_s6_20261001T174000Z.json",
+    "timeout_s": 172800
+  },
+  "language_repeats": [
+    {
+      "tag": "local_native_language_D8192_H2_d16_depth8_s7_20261001T174000Z",
+      "queue": "experiments/queue/local_native_language_D8192_H2_d16_depth8_s7_20261001T174000Z.txt",
+      "result": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s7_20261001T174000Z.json",
+      "timeout_s": 21600
+    },
+    {
+      "tag": "local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z",
+      "queue": "experiments/queue/local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z.txt",
+      "result": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z.json",
+      "timeout_s": 21600
+    }
+  ],
+  "capacity_stages": [
+    {
+      "smoke": {
+        "tag": "local_native_event_order_smoke_S16_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_smoke_S16_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_smoke_S16_20261001T174000Z.json",
+        "timeout_s": 1800
+      },
+      "fit": {
+        "tag": "local_native_event_order_S16_s6_capacity_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_S16_s6_capacity_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_S16_s6_capacity_20261001T174000Z.json",
+        "timeout_s": 14400
+      }
+    },
+    {
+      "smoke": {
+        "tag": "local_native_event_order_smoke_S64_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_smoke_S64_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_smoke_S64_20261001T174000Z.json",
+        "timeout_s": 1800
+      },
+      "fit": {
+        "tag": "local_native_event_order_S64_s6_capacity_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_S64_s6_capacity_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_S64_s6_capacity_20261001T174000Z.json",
+        "timeout_s": 14400
+      }
+    }
+  ],
+  "event_repeats": {
+    "order": [
+      {
+        "tag": "local_native_event_order_S4_s7_confirm_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_S4_s7_confirm_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_S4_s7_confirm_20261001T174000Z.json",
+        "timeout_s": 14400
+      },
+      {
+        "tag": "local_native_event_order_S4_s8_confirm_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_order_S4_s8_confirm_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_order_S4_s8_confirm_20261001T174000Z.json",
+        "timeout_s": 14400
+      }
+    ],
+    "timing": [
+      {
+        "tag": "local_native_event_timing_S4_s7_confirm_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_timing_S4_s7_confirm_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_timing_S4_s7_confirm_20261001T174000Z.json",
+        "timeout_s": 14400
+      },
+      {
+        "tag": "local_native_event_timing_S4_s8_confirm_20261001T174000Z",
+        "queue": "experiments/queue/local_native_event_timing_S4_s8_confirm_20261001T174000Z.txt",
+        "result": "experiments/results/native_event/local_native_event_timing_S4_s8_confirm_20261001T174000Z.json",
+        "timeout_s": 14400
+      }
+    ]
+  },
+  "source_sha256": {
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/native_event_benchmark.py": "59060bebede63c40f32120d396629f656d79b9d792a740a15c0d7f43763d7f47",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/native_language_benchmark.py": "5d07c18c65c5a370d1a9a4d82d6e56f46cdb8d1550750c0a6cf5441343fe7ef4",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/queue/local_native_event_order_S16_s6_capacity_20261001T174000Z.txt": "f9930ba496781c9d9521c87f3f4fef2480347d5e15c126027036234e275f2ec1",
+    "experiments/queue/local_native_event_order_S4_s6_pathwise_20261001T174000Z.txt": "ec74317fc35552970c366ceadf67a171fb66af41a2a5a869e6b187605e2d6041",
+    "experiments/queue/local_native_event_order_S4_s6_pilot_20261001T174000Z.txt": "320eb3131edab0bc72901c7db0875f307c31daacdc36eab2aff9b396081f05ee",
+    "experiments/queue/local_native_event_order_S4_s7_confirm_20261001T174000Z.txt": "4bf849d6fd01fc10adb9eae6e6b82f7f2c96ab023b1ae7d3b47c587a346f8956",
+    "experiments/queue/local_native_event_order_S4_s8_confirm_20261001T174000Z.txt": "e3dc2105241461ea7070dad1c2355bd03a12462b19f85cfae0163a989e2c02a8",
+    "experiments/queue/local_native_event_order_S64_s6_capacity_20261001T174000Z.txt": "02d288ffba39e76e29be7e443fb8b643c6366ed48fc84eb55df92b8be02e4956",
+    "experiments/queue/local_native_event_order_smoke_S16_20261001T174000Z.txt": "7f6fb97beadfb2c2682a0c3762b82828e74eb369f82aed32fceee32c56ca4db9",
+    "experiments/queue/local_native_event_order_smoke_S4_20261001T171500Z.txt": "ba8e96baec6f39087587a10fc7098b1fdab8b0677140d5f675c00f48fc0bb9aa",
+    "experiments/queue/local_native_event_order_smoke_S64_20261001T174000Z.txt": "c1bdc27c4fd05731402d8dd5978247da1ba576052e0f2e914439f2fbae00f404",
+    "experiments/queue/local_native_event_timing_S4_s6_pilot_20261001T174000Z.txt": "fefb06b7873a69463036eea5135b917613fe4f54d513135d6c8688e83ae796df",
+    "experiments/queue/local_native_event_timing_S4_s6_rank_20261001T174000Z.txt": "9517bf4f495845495b8720232c946363730a8e587e651205ffa21475b013bad2",
+    "experiments/queue/local_native_event_timing_S4_s7_confirm_20261001T174000Z.txt": "d06c8aa3aeab41757dc3f98282f83d4353185c192294ccfce19b89c329db3c33",
+    "experiments/queue/local_native_event_timing_S4_s8_confirm_20261001T174000Z.txt": "bf86f5fa278531473a2828a7602fca605992b1ac0e25e57e892c6d8bf4c395cb",
+    "experiments/queue/local_native_event_timing_smoke_S4_20261001T174000Z.txt": "46a937694df873a4bc3aaa14e07947588a74ccba59ca433f476463fb275733e1",
+    "experiments/queue/local_native_language_D131072_H2_d16_depth8_s6_20261001T174000Z.txt": "864a9ae656354cedaf181e9bac4e4110ec652cd1bfd1127b1cd30109d44026f3",
+    "experiments/queue/local_native_language_D2048_H2_d16_depth8_s6_20261001T174000Z.txt": "be1abd5c55848c9bd7e00401e3e5304ecf86a6ef675e9ff750e567de42c227a0",
+    "experiments/queue/local_native_language_D32768_H2_d16_depth8_s6_20261001T174000Z.txt": "e902ca8e1023b8682abfd2e6668654536d20b1579f0407ea9258c753ac272e41",
+    "experiments/queue/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.txt": "842967f1d440b8d0ef67d39806a5c99bc12b3ba0a614866a247304cf469b74fe",
+    "experiments/queue/local_native_language_D8192_H2_d16_depth8_s7_20261001T174000Z.txt": "7701e1bdcf79d38faee1e47aabf5f2b8787401d1343c14fb64031365ecffb1d0",
+    "experiments/queue/local_native_language_D8192_H2_d16_depth8_s8_20261001T174000Z.txt": "a8aee4df8038eb6834265ea5ab0e383b9f1223def6cf3d3abdcd75884b32b939",
+    "experiments/queue/local_native_language_smoke_20261001T172000Z.txt": "618756b0cfccb17bf54b6f8ab4125de7f6bd8dd4b3203110a69face029eaa1c3",
+    "experiments/queue/run_safe.sh": "57565bc4c39973bbccd4b7cf2b12ba6a5a71f37bac64edc8d8fd6785eaf944e3",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "scripts/publish_native_research_stage.py": "900d3f3996d22f5c025f0524dfea86b0092ca6deb96df68eea47d53c8fec1e29",
+    "scripts/run_native_research_campaign.py": "aca2c8317aa6e1c68275aa37518b2fdbc7a68bcf2f2d653886ee18c692c5699f",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708"
+  }
+}

@@ -128,6 +128,20 @@ def results():
         ("shd_selected_prefix", "e165/selected_prefix_20260930.json")):
         tasks[key] = (read(path) if (RES/path).exists() and
             json.loads((RES/path).read_text()).get("status") == "completed" else None)
+    tasks['native_tabular']=[]
+    for path in sorted((RES/'native_tabular').glob('*.json')):
+        if path.name.endswith('.running.json'):continue
+        r=json.loads(path.read_text())
+        if r.get('status')=='completed' and 'final' in r and r['args']['fit']>=128 and r['args']['dev']>=128:
+            tasks['native_tabular'].append(r)
+    tasks['aws_hierarchy'] = []
+    for meta_path in sorted((RES/'aws_20260929').glob('aws_e19_*/provenance.json')):
+        meta=json.loads(meta_path.read_text())
+        if meta.get('status')!='completed' or meta.get('script')!='experiments/e19_rhm.py':continue
+        for path in sorted(meta_path.parent.glob('*.json')):
+            if path.name=='provenance.json':continue
+            row=json.loads(path.read_text())
+            if 'test_acc' in row:tasks['aws_hierarchy'].append(dict(result=row,provenance=meta,path=str(path.relative_to(ROOT))))
     return tasks
 
 
@@ -204,6 +218,8 @@ def language_work_points(tasks, ev):
         ('T256x4/10M', 'e64/tf_D10000000_s256_L4_p4_dr0.1_v.json')]
     aws=ev['aws_references']['lstm']
     if aws:variants.append(('L512/90M',aws['path']))
+    aws_tf=ev['aws_references']['tf']
+    if aws_tf:variants.append(('T256x4/90M',aws_tf['path']))
     for label,path in variants:
         relative=str(Path(path).relative_to('experiments/results')) if path.startswith('experiments/results/') else path
         r=read(relative);a=r['args'];w=estimate(a,r['params'],r['steps'])
@@ -380,6 +396,15 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    hierarchy=[r for r in tasks.get('aws_hierarchy',[]) if r['result']['config']['train']==64000]
+    if hierarchy:
+        f,a=plt.subplots(figsize=(7.2,2.6))
+        for residual in sorted({r['result']['config']['residual'] for r in hierarchy}):
+            rows=sorted([r['result'] for r in hierarchy if r['result']['config']['residual']==residual],key=lambda r:r['config']['depth'])
+            a.plot([r['config']['depth'] for r in rows],[100*r['test_acc'] for r in rows],marker='o',
+                label='Ours plain race' if residual==0 else f'Ours residual-{residual}',color=blue if residual==0 else orange)
+        a.set(xlabel='Race model depth (RHM hierarchy depth fixed at 3)',ylabel='Final held-out accuracy (%)',xticks=[1,2,3,4])
+        a.grid(alpha=.2);a.legend(fontsize=8);f.tight_layout();save(f,'aws_hierarchy_depth')
     if tasks.get('native_language'):
         f,axes=plt.subplots(1,2,figsize=(7.2,2.6))
         for r in tasks['native_language']:
@@ -1244,6 +1269,57 @@ def blocks(M, tasks, ev):
             reference_rows.append([label, f"90M / {row['args']['passes']:g} passes",
                                    f"{row['test_bpc']:.3f}", compact_work(cost) if cost else "Not audited"])
             reference_sources.append(f'<a href="{reference["path"]}">90M {model.upper()} saved result</a>')
+    new_aws_pages=[]
+    aws_sparse=[r for r in tasks['language_full_sparse'] if r['args']['tag'].startswith('aws_')]
+    if aws_sparse or any(ev['aws_references'].values()):
+        latest=[];resources=[]
+        for r in aws_sparse:
+            a=r['args'];w=r['work'];latest.append([f"Ours sparse d{a['payload']}/L{a['depth']}",f"{a['fit']:,}/{a['epochs']}",f"{r['final']['dev']['bpc']:.3f}",'Not scored',f"{w['total_training_unit_special_flops']/1e9:,.2f}",f"{w['total_training_unit_special_flops']/w['fitting_targets']/1e6:.3f}"])
+            resources.append(['Ours sparse',f"{r['parameters']:,}",f"{r['wall_s']/3600:.2f}",f"{r['max_rss_kb']/1024:.1f}",f"{(w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'])/1e6:.4f}"])
+        for family,label in (('lstm','LSTM512'),('tf','Transformer256/L4')):
+            ref=ev['aws_references'][family]
+            if not ref:continue
+            r=ref['result'];w=r['training_flops_estimate'];meta=json.loads((ROOT/ref['path']).with_name('provenance.json').read_text())
+            latest.append([label,f"90M/{r['args']['passes']:g}",f"{r['best_valid_bpc']:.3f}",f"{r['test_bpc']:.3f}",f"{w['total_training_flops']/1e9:,.2f}",f"{w['total_training_flops']/w['training_token_positions']/1e6:.3f}"])
+            resources.append([label,f"{r['params']:,}",f"{meta['wall_s']/3600:.2f}",f"{meta['peak_rss_kb']/1024:.1f}",f"{w['forward_flops']/w['training_token_positions']*(2 if family=='tf' else 1)/1e6:.4f}"])
+        new_aws_pages.append([
+            ('h1','Appendix B. New completed AWS language evidence'),
+            ('p','The six-block sparse receiver model reaches 3.106 development bpc on 32K fitting characters. '
+             'It learns meaningful prediction, but this is the older single-head, observed-character-pool variant, '
+             'not the newer eight-block native/content-gated reception model. The large dense controls are completed '
+             'reference targets with much better held-out quality and much larger fitting budgets.'),
+            ('table',(['Model','Fit chars / passes','Dev bpc ↓','Test bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓'],latest,[39,29,23,24,31,28])),
+            ('table',(['Model','Parameters','Guarded wall h','Peak RSS MiB','Infer MFLOPs / char ↓'],resources,[45,31,29,29,40])),
+            ('p','All rows use the same units and whole-fit/per-target denominators within each column. Sparse work '
+             'is a representative full-step arithmetic estimate with unit-weight special functions; dense work '
+             'uses shapes and backward = twice forward, including clipping/Adam. Both exclude evaluation and traffic. '
+             'Dense inference uses the saved shape convention, including Transformer window overlap; sparse inference is a winner-only trace. '
+             'Guarded wall and RSS include different simulator/runtime overheads and are not energy measurements.'),
+            ('small','The sparse development set has 8,191 targets; dense selection uses 200,000 validation characters '
+             'and the saved 1M test interval. Neither their development scores nor their fitting budgets are matched. '
+             'Raw resource gaps cannot establish comparable-quality or iso-FLOP supremacy. The interrupted Transformer '
+             'attempt remains preserved; only its completed retry appears as a quality point. All completed points, '
+             'including the 90M Transformer, are retained in the common quality/work and inference figures.')])
+    hierarchy=tasks.get('aws_hierarchy',[])
+    large=[r for r in hierarchy if r['result']['config']['train']==64000]
+    if large:
+        new_aws_pages.append([
+            ('h1','Appendix B. AWS hierarchy depth: a useful constraint'),
+            ('p','These are older race-network diagnostics on the fixed depth-three Random Hierarchy Model. '
+             'They test composition and depth, not the newer integrated language/event construction. Every shown '
+             'model uses width 200, 64K fitting examples, ten passes, architecture seed 0 and rule seed 0.'),
+            ('figure',('aws_hierarchy_depth',160)),
+            ('table',(['Model','Depth','Final held-out accuracy','Guarded wall s','Peak RSS MiB'],[
+                ['Ours plain race' if r['result']['config']['residual']==0 else f"Ours residual-{r['result']['config']['residual']}",
+                 str(r['result']['config']['depth']),f"{100*r['result']['test_acc']:.2f}%",f"{r['provenance']['wall_s']:.1f}",f"{r['provenance']['peak_rss_kb']/1024:.1f}"]
+                for r in sorted(large,key=lambda r:(r['result']['config']['residual'],r['result']['config']['depth']))],[46,18,46,34,30])),
+            ('p','Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses '
+             'slightly. The tested residual-2 depth 2/3 variants give 72.72/74.54%, below their plain counterparts. '
+             'Preserve this negative design evidence; adding an interaction path does not by itself improve learning.'),
+            ('small','Only completed provenance files produce rows. Plain and residual depth-four runs are distinct; '
+             'an unfinished residual run is not filled with a prediction. Final epoch is reported; evaluation curves '
+             'are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. '
+             'Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.')])
     language_reference_page=[
         ("h1","Appendix B (continued). Completed language references"),
         ("p","The Transformer and LSTM benchmarks have already been run. Their completed result files "
@@ -2110,6 +2186,33 @@ def blocks(M, tasks, ev):
          '<a href="experiments/estimate_training_work.py">estimate_training_work.py</a>.')])
 
     pages.append(language_reference_page)
+    pages.extend(new_aws_pages)
+    for dataset in ('banknote','wine_red'):
+        rows=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']==dataset]
+        for begin in range(0,len(rows),6):
+            records=rows[begin:begin+6]
+            pages.append([
+                ('h1','Appendix B. Ours and boosted trees: '+dataset),
+                ('p','Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature '
+                 'group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; '
+                 'R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.'),
+                ('table',(['Model','Fit/dev rows','Dev NLL / RMSE ↓','Dev accuracy / MAE','Whole fit GFLOPs','Fit MFLOPs/row','Infer MFLOPs/row'],[
+                    [('Ours R'+str(r['args']['clock_features'])) if r['args']['model']=='ours' else 'Boosted trees',
+                     f"{r['args']['fit']}/{r['args']['dev']}",f"{r['final']['dev']['nll' if dataset=='banknote' else 'rmse']:.4f}",
+                     f"{r['final']['dev']['accuracy' if dataset=='banknote' else 'mae']:.4f}",
+                     f"{r['work']['whole_neural_fit_unit_special_flops']/1e9:.3f}" if r['args']['model']=='ours' else 'Not counted',
+                     f"{r['work']['neural_fit_unit_special_flops_per_row']/1e6:.3f}" if r['args']['model']=='ours' else 'Not counted',
+                     f"{r['work']['inference_unit_special_flops_per_row']/1e6:.3f}" if r['args']['model']=='ours' else 'Not counted'] for r in records],[28,23,25,28,25,23,22])),
+                ('table',(['Model','All fit wall s','Peak RSS MiB','Tree nodes / bytes'],[
+                    ['Ours R'+str(r['args']['clock_features']) if r['args']['model']=='ours' else 'Boosted trees',
+                     f"{r['work']['fit_wall_s' if r['args']['model']=='ours' else 'tree_fit_wall_s_all_candidates']:.2f}",f"{r['max_rss_kb']/1024:.1f}",
+                     'Not applicable' if r['args']['model']=='ours' else f"{r['work']['selected_tree_nodes']:,}/{r['work']['selected_tree_node_bytes']:,}"] for r in records],[44,40,40,50])),
+                ('small','Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting '
+                 'wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, '
+                 'with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable '
+                 'and are not manufactured. These are small exploratory development results; reserved test labels are '
+                 'not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.')])
+
 
     if full_rows:
         latest=max(full_rows,key=lambda row:(row['args']['fit'],-row['final']['dev']['bpc']))

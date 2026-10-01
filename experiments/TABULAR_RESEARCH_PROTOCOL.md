@@ -77,3 +77,21 @@ stateful versus per-row reset; larger dormant pools at fixed admitted activity.
 A gain would support general sparse conditional computation, even if physical
 asynchrony is not essential for static rows. It would not establish online,
 clockless hardware or event-camera superiority without their own tests.
+
+## First real-data screen prepared — 1 October 2026
+
+`native_tabular_benchmark.py` implements feature-ID preserving independent rows,
+train-only scaling and exact feature-duplicate group isolation for UCI banknote
+classification and red-wine regression. Missing and observed zero have distinct
+marks; canonicalizing feature identity makes presentation permutations identical.
+The adapter uses the unchanged native/clock-feature core, all feature reads and
+full eight-block counterfactual learning work. It does not selectively acquire
+input fields or implement a tree-path topology, optional heads or physical time.
+
+The AWS fast matrix includes native R0/R2 and HistGradientBoosting pairs, 128 fit /
+128 dev rows, four neural checkpoints or four tree fitting candidates. Actual
+neural forward/loss/backward/clipping/Adam work is traced; all tree-candidate
+fitting wall time is counted, without inventing neural FLOPs for trees. Raw rows
+are parsed but reserved test labels are never scored. Numerical read-only checks
+and a guarded full-depth contract have passed; full pilot results remain pending.
+Data manifests include hashes, original UCI URLs and CC BY 4.0 attribution.

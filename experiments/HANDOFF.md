@@ -1056,3 +1056,43 @@ temporal reception/waiting and counterfactual/pathwise controls. Fixed observed
 addresses, forced activity, bounded producer credit and local surrogate
 losing-route credit remain gaps. Robotics adapters are explicitly blocked; no
 RL, new dense Transformer/LSTM or multi-day language run is authorized here.
+
+## Local rebase repair and fast AWS matrix — 1 October, current session
+
+A host-side pull/rebase collided with publication. Resolved HANDOFF.md by
+preserving both the AWS continuation and local priority notes; rebase finished
+on main. The guarded R2 delay accounting smoke completed successfully before its
+publisher temporarily disappeared during checkout. Both old local coordinators
+then exited; no trainer was killed. Their original status/logs and reservation
+remain historical records. Do not assume PID178293 is still suspended/alive.
+
+Recovery is prepared under
+`local_delay_feature_recovery_20261001T212000Z.json` with
+`scripts/run_delay_feature_recovery.py`. It validates sources, reuses unchanged
+successful queues, waits for clean main/report publication state, runs remaining
+smokes and full reception pilots, then starts the unchanged native campaign
+under separate `local_native_research_recovery_20261001T212000Z` lifecycle. The
+original strict native gate is preserved; the priority branch's separate
+near-quality native8K test remains explicit. If recovery fails, inspect its
+status: it does not silently start a lower-priority fit on a failed contract.
+
+The new AWS protocol is committed and verified on remote main (eee24a8):
+`experiments/AWS_RUN_FAST_MATRIX.md` is the entry point. Its manifest is
+`experiments/gym/plans/aws_fast_matrix_v1_20261001T213000Z/manifest.json`:
+17 pilots (7 temporal, 4 language, 6 tabular), 51 guarded stages including
+contracts/smokes. MIT pushing and UCI robot failures have explicit blocked
+adapters, not fake runnable cells. Supervised asynchronous force/pose prediction
+is prioritized over RL. Exactly one trainer per host; independent hosts provide
+parallelism. The gym runner requires the old AWS coordinator to exit cleanly
+once its active fit/result are preserved; SIGSTOP alone keeps it detectable.
+Local numerical tabular tests and its guarded R2 full-depth contract passed.
+Banknote R2 whole-optimizer accounting smoke passed; regression/tree smokes are
+being checked. Their scores are excluded from quality plots.
+
+New AWS sparse32K and completed 90M controls are now in REPORT/PDF and common
+quality/work/inference plots; the 90M Transformer was missing from the common
+ledger and is restored. New appendix pages show consistent whole-fit/per-target
+units and distinguish selection development from test quality. The AWS hierarchy
+page preserves plain-depth gains, saturation and weak residual variants;
+unfinished residual-depth4 is not filled. No new result supports matched-quality
+frontier supremacy. Source/protocol distinctions remain beside the numbers.
