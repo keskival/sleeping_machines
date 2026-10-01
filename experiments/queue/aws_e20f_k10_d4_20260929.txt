@@ -1,0 +1,1 @@
+aws_e20f_k10_d4_20260929 experiments/aws_benchmark.py --run-tag aws_e20f_k10_d4_20260929 --script experiments/e20_exact.py -- --task mnist --width 400 --epochs 5 --homeo 0.1 --center 1 --decay 1 --clip 3 --lr 1e-2 --depth 4 --winners 10
