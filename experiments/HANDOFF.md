@@ -677,8 +677,8 @@ training cost, not fixed-weight inference. It is truncated backpropagation,
 not a new architecture/novelty claim or unlimited long-history credit.
 
 Prepared manifest `experiments/queue/local_language_credit_campaign_20261001T074000Z.json`;
-supervisor `scripts/run_language_credit_campaign.py`. Start once in tmux with the
-same stem after committing. It waits for completed repeated-arrival campaign,
+supervisor `scripts/run_language_credit_campaign.py`. Started after `a9a90cb`
+in tmux with the same stem; currently waiting. Do not start another instance. It waits for completed repeated-arrival campaign,
 then runs every stage through unique `run_safe.sh` one-job queues. Order:
 frozen saved-checkpoint diagnosis; full64-credit gradient/update contracts;
 129-character full-configuration smoke; matched2K64-credit/U64/lr.002 fit;

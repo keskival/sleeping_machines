@@ -185,6 +185,14 @@ Numerical, full guarded optimizer/recovery contracts and smoke fits pass. The
 completed two-arrival pilot reaches 3.820 bpc versus nested one-arrival 3.779;
 four arrivals are being tested. A longer fit requires a completed pilot quality
 gain. The report preserves these negative results beside the earlier wins.
+
+The next [guarded credit/data ladder](experiments/queue/local_language_credit_campaign_20261001T074000Z.json)
+starts with a frozen-checkpoint audit. Forward memory survives the current
+16-character boundary, but earlier key/value producers lose later training
+credit. A matched 64-character credit trial preserves the inference architecture
+and sparse temporal mechanisms. It also retests the strongest completed
+U64/lr.002 schedule at 8K before choosing any 32K/131K promotion. Longer credit,
+more data and better quality are measured separately rather than assumed.
 See [current state](experiments/HANDOFF.md), [the guide](experiments/INTEGRATED_LANGUAGE.md)
 and [the theory](experiments/theory/48_parallel_heads_and_work_scaling.md).
 

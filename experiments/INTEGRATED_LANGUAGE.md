@@ -53,7 +53,7 @@ a conserved local per-arrival teacher in O(Cd+md). This remains a surrogate for
 nonlinear route changes. See theory §324 for its derivation and cost boundaries.
 
 m=1 nests the previous model exactly. Seven read-only numerical/operator checks
-passed; full-configuration optimizer contracts and smoke fits are pending in
+passed; full-configuration optimizer contracts and smoke fits have also passed in
 unique guarded queues. Matched m2/m4 2K pilots use H2/d32/head/depth8, U128,
 lr.004, four passes and seed6; only a completed .02 bpc gain promotes one 8K fit.
 The [deferred manifest](queue/local_repeated_arrivals_after_heads_20261001T015000Z.json)
@@ -88,6 +88,7 @@ the weights that created them.
 | Character-indexed KV, six / eight blocks | 3.620 / 3.539 bpc | Same 2K protocol; gains over receiver controls are 0.013 / 0.003 bpc |
 | Eight-block content-index KV | 3.554 bpc versus receiver 3.542 | Same 2K protocol; no quality gain in this pilot. Full historical buckets are eligible; average 10.07 candidates / one value delivered |
 | Eight-block / 8K fit matched pair | Receiver 3.311; content-index KV 3.357 bpc | Same 8K development stream; KV is worse by 0.047 bpc; 40.243 / 50.006 whole-fit GFLOPs |
+| Two / four heads, eight blocks, 8K fit | 3.485 / 3.543 bpc; 79.953 / 193.751 whole-fit GFLOPs | U128/lr.004, four passes, same8K dev; both miss the prior indexed control+.10 quality gate |
 | Two independent heads / eight blocks / 2K fit | 3.786 bpc; 27.731 whole-fit GFLOPs | 8K development stream, four passes, selected epoch 2; later passes overfit. New state/channel design also differs from older single-head models |
 | Two-head accumulated updates / same 2K fit | U64/lr.002: 3.733 bpc / 22.753 whole-fit GFLOPs; U128/lr.004: 3.779 / 19.999 | U128 costs 27.9% less than U16, within .05 bpc of best; LR/warmup vary, one seed |
 | Separate online full-backbone adaptation | 3.191 frozen → 3.096 online bpc | Inherited checkpoint, new 8K development stream, predict before block-delayed updates |
@@ -97,6 +98,24 @@ Records live in [parallel_language](results/parallel_language/),
 [online_language](results/online_language/). The report visualizes completed
 quality/work pairs, including saved LSTM/Transformer controls. These small-data
 scores do not establish comparable-quality language superiority.
+
+## Forward history and learning credit
+
+Forward state, available retrieval history and gradient support are different.
+All historical entries remain stored, but the16-character credit boundary
+seals their producer graphs. Later query/route parameters can learn from their
+contents while older key/value-producing maps receive no corresponding later
+credit. Two read-only contracts verify this distinction and exact fixed-weight
+forward equality across detach partitions. This is truncated backpropagation,
+not unlimited long-context training or a derivative error.
+
+The [credit campaign](queue/local_language_credit_campaign_20261001T074000Z.json)
+follows the repeated-arrival trial. It first diagnoses saved H2/H4 checkpoints,
+then guards full64-credit gradient/update contracts and a129-character smoke.
+The matched2K comparison holds U64/lr.002 and the full architecture fixed;
+only credit span changes16→64. The strongest16-credit schedule also gets its
+prepared8K comparison. Longer8K,32K,secondseed8K and131K fitting have explicit
+quality/resource gates. See theory §325 for producer gradients and scope.
 
 ## Architecture work versus emulation
 
