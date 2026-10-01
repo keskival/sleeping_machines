@@ -1,5 +1,8 @@
 # Session handoff — 2026-09-30
 
+Current local state: [LOCAL_HANDOFF.md](LOCAL_HANDOFF.md). Future local progress
+updates belong there; keep this shared history and AWS notes intact.
+
 ## Active priority — 1 October, 07:55 UTC
 
 The corrected 64-credit smoke completed under the guard and published in 2b0d04d;
