@@ -39,7 +39,7 @@ optimizer experiment accumulates detached-segment gradients over 64/128 targets,
 then normalizes, clips and updates Adam once. Learning-rate and quality effects
 are measured, not assumed equivalent to the old per-16-target optimizer.
 
-## Prepared shared-match repeated arrivals
+## Completed shared-match repeated-arrival pilots
 
 The [repeated-arrival model](../sleeping_machines/repeated_arrival_race_language.py)
 keeps independent spatial heads and all sparse receiver mechanisms. Historical
@@ -55,9 +55,11 @@ nonlinear route changes. See theory §324 for its derivation and cost boundaries
 m=1 nests the previous model exactly. Seven read-only numerical/operator checks
 passed; full-configuration optimizer contracts and smoke fits have also passed in
 unique guarded queues. Matched m2/m4 2K pilots use H2/d32/head/depth8, U128,
-lr.004, four passes and seed6; only a completed .02 bpc gain promotes one 8K fit.
-The [deferred manifest](queue/local_repeated_arrivals_after_heads_20261001T015000Z.json)
-preserves the current head/scaling campaign's priority. Bounded numerical time
+lr.004, four passes and seed6. The completed m1/m2/m4 results are 3.779/3.820/3.771
+development bpc; m4 gives four times the value deliveries for 4.57% extra counted
+whole-fitting work. Its .008 bpc gain misses the .02 promotion gate, so no larger
+fit ran. The [completed manifest](queue/local_repeated_arrivals_after_heads_20261001T015000Z.json)
+preserves the original finite schedule and definitions. Bounded numerical time
 encoding is not a demonstrated homogeneous physical Poisson clock or measured
 clockless energy advantage. Messages, renewals, teacher reads and emulator
 minimum comparisons remain visible in the record.
@@ -112,7 +114,7 @@ not unlimited long-context training or a derivative error.
 The [credit campaign](queue/local_language_credit_campaign_20261001T074000Z.json)
 follows the repeated-arrival trial. It first diagnoses saved H2/H4 checkpoints,
 then guards full 64-credit gradient/update contracts and a129-character smoke.
-The matched2K comparison holds U64/lr.002 and the full architecture fixed;
+The matched 2K comparison holds U64/lr.002 and the full architecture fixed;
 only credit span changes16→64. The strongest16-credit schedule also gets its
 prepared8K comparison. Longer8K,32K,secondseed8K and 131K fitting have explicit
 quality/resource gates. See theory §325 for producer gradients and scope.
@@ -136,15 +138,26 @@ quality, index coverage and total resource use still determine its usefulness.
 ## Run state and next evidence
 
 Read [HANDOFF.md](HANDOFF.md) and inspect live processes before launching work.
-The [parallel-head campaign](queue/local_parallel_heads_overnight_20260930T231500Z.json)
-prioritizes the complete architecture. Contracts and full-gradient/accounting
-smokes precede optimizer pilots, two-/four-head 8K comparisons, a selected 32K
-fit, repeat-seed evidence and gated 131K work. Every job uses a unique one-job
-queue and [run_safe.sh](queue/run_safe.sh), with one trainer per host, an 8 GiB
-available-memory floor and RSS watchdog. The coordinator publishes and commits
-completed evidence stage by stage. Read live status; a prepared plan alone does
-not establish that its supervisor is running. Single-head larger packed runs
-were superseded to preserve this full-architecture priority.
+The parallel-head, repeated-arrival and longer-credit campaigns finished at
+small-data quality gates. Their completed records and unused larger definitions
+remain preserved; do not restart them as though they were active.
+The current [historical write-credit campaign](queue/local_historical_write_campaign_20261001T152100Z.json)
+runs H2/d32/head/depth8, with full and quarter-strength compact producer credit.
+It preserves the forward sparse temporal architecture and adds one detached
+normalized feature per stored K/V write. See [theory §§326–328](theory/49_historical_write_eligibility.md)
+for the factorized key teacher, stale-write scope and 50% K/V tensor-storage cost.
+It teaches sealed write maps without reopening their old representation graphs.
+
+Six read-only numerical tests, full eight-block optimizer/recovery contracts and
+an alpha1 smoke passed. Exact alpha0 forward/RNG/gradient/Adam nesting allows
+reuse of the strongest completed matched 2K parent. The campaign completes an
+alpha.25 smoke and both 2K pilots before any 8K promotion: >=.02 bpc pilot gain.
+The saved indexed-control+.10 gate then decides 32K; measured data benefit,
+memory and time decide 131K. See the same-stem status JSON for actual progress.
+Every job uses a unique one-job queue and [run_safe.sh](queue/run_safe.sh), with
+one trainer per host, an 8 GiB available-memory floor and RSS watchdog. The
+coordinator publishes and commits completed evidence stage by stage. A prepared
+larger definition is not evidence that it has run or succeeded.
 
 Append-only tensor slabs and integer-array indices reduce historical cache
 metadata and preserve all entries. Independent heads multiply storage. No

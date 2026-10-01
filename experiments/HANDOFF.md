@@ -814,3 +814,17 @@ completed stages automatically publish/commit report quality/work figures.
 Start exactly once in tmux after the prepared sources/report are committed.
 Do not edit hashed sources/queues during the campaign. Inspect the same-stem
 status JSON and logs; other hosts must coordinate any overlapping source edits.
+
+After commit `0f07332`, the campaign was started at 15:31 UTC in tmux:
+
+```bash
+tmux new-session -d -s local_historical_write_campaign_20261001T152100Z '.venv-docker/bin/python scripts/run_historical_write_campaign.py --manifest-stem local_historical_write_campaign_20261001T152100Z >> experiments/queue/local_historical_write_campaign_20261001T152100Z.out 2>&1'
+```
+
+The supervisor validated its frozen sources and completed predecessor, reused
+alpha1 smoke without rerunning it, and entered alpha.25 smoke. One trainer is
+active; about 11.5 GiB host memory remains available. Fifteen focused read-only
+checks pass; the updated 53-page PDF has valid text bounds/no orphan pages and
+its new delayed-learning diagram was visually inspected on page 44. Sources
+and all twelve unique queue definitions are committed on main. Read the live
+status before continuing; completed pilot quality has not yet been measured.
