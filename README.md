@@ -84,6 +84,8 @@ The [first cross-domain screen](experiments/FIRST_SCREEN_FINDINGS_20261001.md)
 finds a promising **95.3% versus 93.0% banknote accuracy / 33% lower log loss**
 for ours versus the boosted-tree screen (128 development rows, one seed).
 Wine currently favors trees, and extra reception has not earned its cost.
+The [banknote confirmation protocol](experiments/AWS_BANKNOTE_CONFIRMATION.md)
+adds repeated seeds, stronger controls and frozen reserved-test scoring.
 The [admitted next AWS battery](experiments/AWS_SPLIT_EVENT_BATTERY.md) tests
 protected memory, shared rules/private state and identifiable elapsed time.
 The [advantage battery](experiments/ADVANTAGE_BATTERY.md) defines promotion,

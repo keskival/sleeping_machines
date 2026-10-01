@@ -1,0 +1,1 @@
+aws_banknote_confirmation_20261001T234000Z_catboost_s8_pilot experiments/tabular_confirmation_benchmark.py --tag aws_banknote_confirmation_20261001T234000Z_catboost_s8_pilot --model catboost --seed 8 --fit 128 --dev 128 --epochs 4 --confirm

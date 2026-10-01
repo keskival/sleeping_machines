@@ -1,0 +1,1 @@
+aws_banknote_confirmation_20261001T234000Z_trees_s6_smoke experiments/tabular_confirmation_benchmark.py --tag aws_banknote_confirmation_20261001T234000Z_trees_s6_smoke --model trees --seed 6 --fit 16 --dev 16 --epochs 1

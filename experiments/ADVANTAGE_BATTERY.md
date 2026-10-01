@@ -119,3 +119,9 @@ architectural case; language accuracy alone is not its only potential value.
 The [first-screen findings](FIRST_SCREEN_FINDINGS_20261001.md) record positive
 and negative evidence motivating this order. The [nonstationary protocol](NONSTATIONARY_PROTOCOL.md)
 defines prediction-before-learning, drift and forgetting, with adapters pending.
+
+The bounded [banknote confirmation](AWS_BANKNOTE_CONFIRMATION.md) is now
+executable after the prioritized event battery: original native checkpoint
+reuse, two new native seeds, three conventional controls and frozen281-row
+reserved evaluation. Guarded optimizer/recovery and smoke prerequisites remain
+pending; preparing queues is not evidence that their fits have completed.

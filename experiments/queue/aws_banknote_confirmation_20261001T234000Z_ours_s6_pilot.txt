@@ -1,0 +1,1 @@
+aws_banknote_confirmation_20261001T234000Z_ours_s6_pilot experiments/tabular_confirmation_benchmark.py --tag aws_banknote_confirmation_20261001T234000Z_ours_s6_pilot --model ours --seed 6 --fit 128 --dev 128 --epochs 4 --confirm --reuse-result experiments/results/native_tabular/aws_fast_matrix_recovery_20261001T213409Z_banknote_ours_R0_s6_pilot.json

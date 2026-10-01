@@ -1,8 +1,11 @@
 # Tabular prediction: sparse conditional routing as a hypothesis
 
-The first real-data adapter and guarded smokes are now implemented; full pilots
-remain pending in the committed AWS matrix. The integrated language campaign
-remains the local full-training priority.
+The first real-data adapter, guarded smokes and most full AWS pilots have
+completed. Banknote native quality leads the small tree screen; wine native
+currently loses. See [first-screen findings](FIRST_SCREEN_FINDINGS_20261001.md).
+The [banknote confirmation protocol](AWS_BANKNOTE_CONFIRMATION.md) adds repeated
+seeds, stronger controls and frozen reserved-test scoring after the prioritized
+event battery. The integrated language campaign remains the local priority.
 
 ## Why the architecture might help
 
@@ -94,5 +97,6 @@ The AWS fast matrix includes native R0/R2 and HistGradientBoosting pairs, 128 fi
 neural forward/loss/backward/clipping/Adam work is traced; all tree-candidate
 fitting wall time is counted, without inventing neural FLOPs for trees. Raw rows
 are parsed but reserved test labels are never scored. Numerical read-only checks
-and a guarded full-depth contract have passed; full pilot results remain pending.
+and a guarded full-depth contract have passed; completed pilot evidence is
+preserved beside its limitations in the findings/report.
 Data manifests include hashes, original UCI URLs and CC BY 4.0 attribution.

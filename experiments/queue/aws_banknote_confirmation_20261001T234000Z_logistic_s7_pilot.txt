@@ -1,0 +1,1 @@
+aws_banknote_confirmation_20261001T234000Z_logistic_s7_pilot experiments/tabular_confirmation_benchmark.py --tag aws_banknote_confirmation_20261001T234000Z_logistic_s7_pilot --model logistic --seed 7 --fit 128 --dev 128 --epochs 4 --confirm
