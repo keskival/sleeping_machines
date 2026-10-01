@@ -272,3 +272,125 @@ contract: unbiased sampled values alone do not reproduce deterministic
 attention gradients through nonlinear downstream layers. Validate integrated
 learning and finite-rate/deadline behavior before a long run. This proposal does
 not displace the already running independent-head/optimizer campaign.
+
+## 321. Event-triggered credit and on-substrate learning
+
+At fixed parameter versions and realized stochastic/temporal choices, the
+finite unrolled credit graph consists of local operations y=f_theta(x). A node
+can execute forward after its inputs arrive and retain the required activation
+trace. Backward begins when the declared loss adjoint is available; each node
+accumulates all its downstream adjoints, then emits J_x^T*g and J_theta^T*g.
+Messages carry graph/target/version identity and dependency completion. This
+readiness schedule does not require a chip-wide oscillator. It preserves the
+chosen differentiable/surrogate graph if dependencies and versions are retained;
+it does not make a hard race's true discrete derivative equal its teacher.
+
+This construction is applicable to finite computation graphs generally. The
+proposed advantage here is economical event-local traces and sparse addressed
+credit, integrated with delays, evolving state, independent channels and
+counterfactual alternatives. Losing proposals and admitted historical values
+remain part of the teaching graph. Required completion accounting, communication
+and local storage are not free. Keeping enough activation/error precision and
+physical delay/rate fidelity is a separate hardware requirement.
+
+Updates can be triggered by completed local credit windows. For exact recovery
+of the reference learner, parameter versions, target-weighted accumulation,
+global clipping and optimizer ordering must match its declared semantics.
+A global norm reduction can use messages rather than a global clock, but still
+has a logical completion dependency. Advancing a forward path before its
+required weight update or using per-node clipping changes the learning rule.
+Bounded-staleness/local optimizers require numerical contracts and measured
+integrated convergence; no general convergence theorem is asserted here.
+
+Persistent optimizer moments cost storage for updated parameter blocks, and
+bounded credit traces scale with addressed alternatives and credit length.
+Dormant capacity alone does not remove these costs. Full learning can be native
+to a suitably equipped event ASIC in principle; a chip with only inference
+state-update circuitry is insufficient. Current implementations use CPU autograd
+and block-delayed Adam, not asynchronous learning hardware.
+
+A useful milestone is online prediction and adaptation on the same substrate,
+with delayed feedback and no external parameter trainer. Replay identical
+causal streams, compare frozen/exact-version/asynchronous-update arms, and
+measure accuracy/likelihood, adaptation latency, retention/forgetting, trace
+bytes, control/gradient traffic, deadlines and total inference-plus-learning
+joules. The existing full-backbone online result is supporting software evidence,
+not hardware validation. Include learning-capable neuromorphic controls and
+competent synchronous training hardware; on-chip learning is not unique to this
+project. State what the complete combined construction adds.
+
+## 322. Order and elapsed time as structural inductive biases
+
+Let Phi_Delta be the stored-state flow and Psi_a the update induced by content
+a. Two events a,b separated by Delta yield Psi_b(Phi_Delta(Psi_a(s))). Swapping
+their content generally gives a different state, because event updates and the
+waiting flow need not commute. In an affine local approximation
+Psi_a(s)=A_a*s+b_a, their difference is
+
+    (A_b*Phi_Delta*A_a - A_a*Phi_Delta*A_b)*s
+      + A_b*Phi_Delta*b_a + b_b - A_a*Phi_Delta*b_b - b_a.
+
+Thus order sensitivity follows from the computational state/update structure,
+without treating order only as an extra input feature. Trainable delays also
+alter relative arrival order and route selection. Counterfactual credit can
+teach these hard decisions; this is not a claim that their realized discrete
+boundary has an ordinary smooth derivative.
+
+The learned rotation/decay flow has the semigroup identity
+Phi_(u+v)=Phi_u composed with Phi_v. Reading state after a gap therefore need
+not require repeatedly scanning every intermediate clock tick. If a construction
+uses only time differences, common timestamp translation leaves its computation
+unchanged. That invariance is conditional: absolute phases/time features and
+explicit deadlines can deliberately change it. Delay bounds and event scheduling
+must preserve observation causality; the present language candidate uses a
+bounded sequential source schedule, not unrestricted overlapping event streams.
+
+These biases favor order-, lag- and history-dependent signals. They do not prove
+that temporal precedence identifies causal mechanisms or that every causal task
+is easy. The completed multi-seed order-chain learning result supplies concrete
+structured-task evidence, with its declared priors and controls. Promote the
+broader claim through count/content-matched temporal tasks, held-out delay ranges,
+timestamp jitter, relative-time shifts, event-order interventions and real-stream
+quality/work curves. Compare controls with competent positional/time encodings.
+Keep joint-model and hardware advantages prospective until measured.
+
+## 323. A concrete tabular connection: feature thresholds through delays
+
+Preserving feature identity gives a simple representational construction. For
+feature x_i, threshold theta and positive d0>a, beta, define two branch delays
+
+    d_plus  = d0 - a*tanh(beta*(x_i-theta)),
+    d_minus = d0 + a*tanh(beta*(x_i-theta)).
+
+Both delays remain positive. The plus branch arrives first exactly when
+x_i>theta; the minus branch arrives first when x_i<theta. Declare the tie policy
+at equality. In ideal arithmetic this realizes a decision stump through arrival
+order. Composing such addressed branch modules realizes a tree's conditional
+path without executing every stored node. Multiple independent paths/heads can
+supply an ensemble. An oblique threshold uses z=u*x-theta instead, charging its
+feature contractions. This is a representational construction, not an implemented
+or trained tabular benchmark, a new decision-tree algorithm or hardware result.
+
+This identifies a concrete hypothesis: tree-like feature-selective boundaries
+can coexist with learned vector content, temporal state and counterfactual route
+credit in the substrate. Generic smooth dense feature mixing is not required
+before every conditional decision. Feature/store addressing and all input reads
+still cost work. A row identifier can address locally stored features, so branch
+messages need not retransmit the full row at each step; its storage/communication
+costs must nevertheless be included. Finite delay resolution and circuit noise
+can blur a threshold and require precision/robustness tests.
+
+Learning good trees is not established by representing them. Local losing-branch
+content credit is not automatically the exact loss of a complete unexecuted
+subtree. Any approximation needs defined semantics, its own contracts and
+resource charges. Branch discovery, feature selection, ensemble size and credit
+can consume the saved execution. Compare with boosted trees and modern tabular
+Transformers at fixed tuning/data/quality budgets.
+
+Static independent rows should reset row-specific state and respect feature-ID
+presentation invariance. A feature-addressed store can gather a row before
+conditional queries, avoiding dependence on arbitrary input transport order;
+this join is an explicit dependency and its latency is charged. Value-encoded
+delay is a computation, not observed physical elapsed time. Order bias is useful
+for temporal streams but need not be imposed on unordered tabular records.
+See TABULAR_RESEARCH_PROTOCOL.md for the proposed tests and primary references.

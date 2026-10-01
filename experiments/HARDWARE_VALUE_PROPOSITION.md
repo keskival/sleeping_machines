@@ -94,3 +94,42 @@ alternative. Delays as computational variables are a stronger architectural
 hypothesis than merely implementing unchanged dense operations in self-timed
 logic. Replicated quality with lower total energy would nevertheless be a solid
 milestone, independent of whether the additional expressivity later succeeds.
+
+## Native learning during use
+
+A learning-capable event ASIC could update delays, gates, routes and local
+content/state parameters where they reside, in response to observations and
+later error or reward messages. This would support continual adaptation without
+sending every learning example and weight update to an external trainer. The
+potential benefits are local feedback latency, reduced external data movement,
+offline autonomy and adaptation to a changing environment. These are hardware
+hypotheses; their value depends on useful retained quality and total energy,
+including learning state and communication.
+
+Our completed CPU full-backbone online experiment improves 3.191 to 3.096 bpc on
+a new 8K development stream, predicting before each 16-character block update.
+It demonstrates adaptive learning under that protocol, not a clockless chip or
+fully asynchronous optimizer. Current fits use autograd, truncated credit,
+shared update windows and global gradient-norm clipping. Mapping these exactly
+requires their dependencies; changing them to local/event-triggered updates
+requires an explicit learning rule and integrated convergence comparison.
+
+An asynchronous reverse-credit graph can be scheduled by data/error readiness,
+with local traces, dependency completion and parameter-version tags, instead of
+a chip-wide clock. That is a possible execution construction, not proof that
+our current trainer has no synchronization or fits efficiently on silicon.
+Losing-route proposals still require credit work. Error delivery, trace storage,
+optimizer moments, atomic updates and in-flight state/weight versions must be
+included in an on-chip prototype and resource ledger. Exact gradient semantics
+and a more asynchronous/stale-update learning rule are distinct experiments.
+See theory §321 for the conditional construction and validation milestone.
+
+Many inference accelerators intentionally omit full learning circuitry. An
+ordinary neural network is not intrinsically GPU-only: a learning-capable ASIC
+can be designed for it. On-chip neuromorphic learning also has precedents:
+[Intel's Loihi 2 brief](https://www.intel.com/content/dam/www/central-libraries/us/en/documents/neuromorphic-computing-loihi-2-brief.pdf)
+describes programmable learning with local third-factor traces and asynchronous
+neuron cores. The stronger research claim is a scalable combination of deep
+content-bearing temporal computation, counterfactual hard-route credit, sparse
+activity and useful on-device learning, with measured quality/resource benefits.
+No uniqueness claim for on-chip learning itself is made.

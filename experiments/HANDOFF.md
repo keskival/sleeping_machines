@@ -1,5 +1,28 @@
 # Session handoff — 2026-09-30
 
+## Report clarification — native learning, 1 October
+
+The report/README now explicitly identify native on-substrate learning as a
+research upside, beyond clockless inference. Theory §321 derives a conditional
+readiness-scheduled credit graph, including dependency completion, local traces
+and weight-version identity. Current autograd/global clipping/block-window Adam
+are not a fully asynchronous hardware learner. The completed 3.191→3.096 bpc
+online CPU experiment supports adaptation, not chip energy. Loihi 2 has prior
+on-chip learning; novelty concerns the combined expressive temporal/sparse-credit
+construction, not on-chip learning alone. All active hashed sources remain fixed. Theory §322 adds the noncommuting event-update/
+waiting-flow construction and its order/time bias. Structured multi-seed order
+results support it; temporal precedence alone is not causal identification.
+
+Tabular prediction is an additional prospective sparse-routing test, with
+feature-ID-preserving adapters, row-state reset, order-invariance and missingness
+contracts. Boosted trees and modern tabular Transformers remain controls; no
+tabular benchmark is launched or claimed. Theory §323 constructs ideal feature
+thresholds using paired positive delays, then tree paths/ensembles; learning
+good paths and accurate losing-subtree credit are separate open questions. Read TABULAR_RESEARCH_PROTOCOL.md.
+The first optimizer pilot completed at 3.732586 bpc / 22.753030 whole-fit GFLOPs,
+versus reference 3.786482 / 27.730791: a one-seed schedule result, not architecture
+supremacy. It auto-published commit e9b39bf; the U64/lr.004 pilot began 00:17:47.
+
 ## Current priority — complete independent-head models, 23:46 UTC
 
 The 21:15 single-head eight-block campaign completed. Matched 8K controls:
@@ -51,7 +74,7 @@ and local scalar-credit traffic optimization remain proposed. Section320 additio
 fixed-query winner-local Poisson renewal: many independent softmax marks without
 rescoring keys or globally resetting losing clocks. It is an unimplemented
 proposal, with explicit variance, latency, traffic and gradient limitations. Read theory48,
-§§313–320 and the updated root README/integrated guide.
+§§313–323 and the updated root README/integrated guide.
 
 ## Current priority — eight-block content-indexed KV, 21:15 UTC
 

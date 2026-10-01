@@ -64,16 +64,33 @@ training and inference at lower whole-system energy on clockless hardware would
 already be a useful milestone; richer temporal state, dormant capacity and
 cross-modal integration provide further directions.
 
-The report's opening pages set out four routes to useful advantage: a
+The report's opening pages set out five routes to useful advantage: a
 Transformer-relevant clockless workload, smaller models through richer temporal
-computation, economical growth of dormant capacity, and integrated language/event
-reasoning and control. Each has an explicit next test. Illustrative compression
+computation, economical growth of dormant capacity, integrated language/event
+reasoning and control, and native on-substrate learning. Each has an explicit
+next test. Illustrative compression
 and energy scenarios show the possible payoff without presenting assumptions as
 completed results.
 
+**Learning can be native to the substrate too.** A suitably equipped event ASIC
+could learn delays, routes and local content/state parameters during use, through
+local traces and error/reward messages. This could reduce external training data
+movement and enable continual adaptation. Our CPU full-backbone online result
+improves 3.191 to 3.096 development bpc with predict-before-update semantics;
+clockless on-chip learning remains a hardware milestone. Current training uses
+autograd and block-delayed Adam, whose dependencies must be mapped or explicitly
+replaced and tested. On-chip learning has neuromorphic precedents; our target is
+its combination with deep expressive temporal computation and sparse credit.
+
+Sparse conditional routing also motivates a [tabular-data hypothesis](experiments/TABULAR_RESEARCH_PROTOCOL.md):
+learn feature-dependent paths and useful optional modules while preserving feature
+identity. Static rows need no invented event ordering. Boosted trees and modern
+tabular Transformers are essential controls; no tabular advantage has been
+measured here.
+
 ### The differentiators at a glance
 
-- **Time performs computation:** learned delays, races and phase transformations.
+- **Time performs computation:** learned delays, races and phase transformations. Earlier events change the state and routes encountered by later ones; elapsed time changes the stored state. This supplies a native ordering bias for sequence-sensitive signals.
 - **Hard routes can learn:** winners execute; unrealized alternatives receive credit.
 - **Deep, persistent representations:** vector messages, local memory and reusable temporal primitives.
 - **Capacity beyond activity:** the scaling goal is useful dormant capacity with selective work and competitive quality.

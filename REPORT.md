@@ -33,7 +33,7 @@ Language tokens, irregular observations and action requests can be expressed as 
 
 ## Why this could matter across domains
 
-- **Language and memory.** Content-dependent races retrieve representations; temporal state carries context beyond an immediate token.
+- **Ordering as computation.** Earlier events change the state/routes encountered by later ones; elapsed time changes that state. The structured order-learning results support this prior for sequence-sensitive signals.
 - **Asynchronous sensing.** Updates can follow observations and required deadlines rather than a periodic sweep of all modules. Silence remains informative when the objective depends on waiting time.
 - **Instruction-conditioned control.** Language can guide event routing and memory; observations can ground language and update a world state that informs timed actions.
 - **Useful dormant capacity.** Stored modules need not all execute for each input. The gain depends on economical discovery and credit, and is judged at a fixed total work budget.
@@ -47,9 +47,9 @@ Language tokens, irregular observations and action requests can be expressed as 
 | Deep learned context | 3.121 development bpc; sparse six-block / 32K fit; eight-block models also train | Matched-quality work and capacity scaling |
 | Auditory events | 79.69% on 512 private development utterances; selected temporal encoder | Aligned official-test real-stream comparison |
 
-The diagram is a joint-model research target. Existing cross-task results use task-specific adapters and separately trained variants; they do not establish shared-weight multimodal learning, an event-camera advantage or robot reliability. The current language candidate uses 27 character pools. Held-out cross-modal combinations and interventions must test whether integration adds useful capability.
+Joint integration is a research target. Existing results use separately trained task-specific variants; the language candidate has 27 character pools. Shared-weight multimodal learning, camera advantages and robot reliability need dedicated benchmarks. Sparse conditional routing also motivates tabular prediction: paired delays can represent feature thresholds (theory §323). Preserve feature IDs and avoid invented row order; trees and modern tabular Transformers remain controls. No tabular advantage is established (TABULAR_RESEARCH_PROTOCOL.md).
 
-## The research upside: four routes to useful advantage
+## The research upside: five routes to useful advantage
 
 The investment thesis is a trainable substrate with a known useful workload and broader capability beyond it. Reproducing relevant Transformer quality and convergence with lower whole-system energy would already be valuable. Temporal expressivity, selective capacity and cross-modal integration offer additional, independently testable upside.
 
@@ -59,22 +59,23 @@ The investment thesis is a trainable substrate with a known useful workload and 
 | Evolving state and reused matches | More useful transformations per expensive match; potentially smaller models | Width/depth/data sweeps at fixed quality and complete work |
 | Capacity beyond activity | More specialized stored representations without executing all modules per observation | Improve quality as capacity grows; keep discovery, teaching and execution budgets economical |
 | Common content/time interface | Language-guided sensing and event-grounded reasoning/control in a shared model | Joint held-out modality combinations, task success and causal deadline tests |
+| Native learning during use | Adapt delays/routes/content locally on an event ASIC; reduce external trainer traffic | CPU online: 3.191→3.096 bpc; asynchronous on-chip credit/updates remain untested |
 
-## Quantitative upside scenarios, with their conditions
+## Quantitative scenarios, with conditions
 
-- **Model compression.** If comparable quality needs half the width, dominant projection arithmetic falls to one quarter; attention matching and width-dependent state/traffic fall roughly by half. This has not been established.
-- **Hardware components.** Illustrative baseline energy shares: 40% compute, 40% memory, 10% global clock, 10% fixed. Halving both compute and memory energy, removing that clock and adding 5% control energy gives 55% of the original energy: 45% saved, 1.82× efficiency. These shares and reductions are assumptions, not a chip forecast.
-- **Dormant receiver units.** Our H2/eight-block candidate stores 864 receivers and selects 16 receiver updates per character: 54× available/selected units. Teaching evaluates 32 receiver alternatives plus admitted historical values, and shared projections still execute. This ratio is not a 54× FLOP or energy saving.
+- **Compression.** At equal quality, half the width would give one-quarter projection arithmetic and roughly half the matching/state work. This compression is unproven.
+- **Energy scenario.** Assume baseline shares of 40% compute, 40% memory, 10% clock, 10% fixed. Halving compute/memory energy, removing the clock and adding 5% control gives 45% savings (1.82×). These are assumptions, not a chip forecast.
+- **Dormant units.** H2 stores 864 receivers and selects 16 updates/character (54× capacity/activity). Teaching evaluates 32 receiver alternatives and admitted historical values; shared maps execute. This is not a 54× resource saving.
 
 ## Why this is a research program worth testing
 
-Multi-run structured-task learning/generalization, temporal algebra and trainable deep event representations provide concrete starting evidence. The immediate uncertainty is whether the combined mechanisms improve broad predictive quality per total work: the new small multi-head language fit overfits and has not established a gain. The next stages test optimizer stability, width/head/data scaling and repeatability before longer runs. A proposed fixed-query Poisson race reuses matched keys for successive arrivals without globally resetting losing clocks; its derivation and validation requirements are in theory §320.
+Multi-run structured learning/generalization, temporal algebra and deep trainable event representations provide starting evidence. The current language fits have not established a matched-quality resource advantage. Optimizer, width/head/data scaling and repeatability tests address that gap. Theory §320 proposes repeated Poisson arrivals that reuse matched keys without resetting all losing clocks.
 
-No universal efficiency ceiling or supremacy claim follows from the fixed-width attention scenario. Further gains depend on learned computation and its resource costs. Hardware comparisons should include a competent synchronous ASIC to isolate clockless execution from custom silicon alone. Gradient communication and optimizer costs remain part of full learning. See HARDWARE_VALUE_PROPOSITION.md and EVENT_STREAM_ADVANTAGE_PROTOCOL.md for hypotheses and validation boundaries.
+Current autograd, global clipping and block-window Adam do not demonstrate fully asynchronous learning. That needs dependency/version-aware credit and tested updates. On-chip learning has precedents ([Intel Loihi 2](https://www.intel.com/content/dam/www/central-libraries/us/en/documents/neuromorphic-computing-loihi-2-brief.pdf)); the proposed contribution is the complete temporal/sparse-credit construction. Compare competent synchronous learning ASICs and charge gradient/optimizer traffic. See HARDWARE_VALUE_PROPOSITION.md and EVENT_STREAM_ADVANTAGE_PROTOCOL.md.
 
 ## The hypothesis: more capability per unit of active work
 
-Sleeping Machines combine trainable delays, temporal races, evolving local state and counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention with less selected arithmetic and value movement, then use richer temporal computation and dormant capacity to reach comparable quality with smaller models or less fitting. A common content-and-time event interface can support tokens and irregular sensor streams, with task-specific adapters and losses. Existing cross-task models train separately; The integration target is language-guided event routing and shared state: events ground language and both inform actions. Shared-weight multimodal learning remains a further milestone.
+Sleeping Machines combine trainable delays, temporal races, evolving local state and counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention with less selected arithmetic and value movement, then use richer temporal computation and dormant capacity to reach comparable quality with smaller models or less fitting. A common content-and-time event interface can support tokens and irregular sensor streams, with task-specific adapters and losses. Existing cross-task models train separately; the integration target is language-guided event routing and shared state: events ground language and both inform actions. Shared-weight multimodal learning remains a further milestone.
 
 A softmax race samples exactly from its distribution. One winner does not equal its weighted average. Averaging m independent winners has mean-square error variance/m; approximate Transformer containment also requires historical coverage and stable propagation through depth. Temporal state permits additional computations beyond this attention analogue.
 
@@ -110,7 +111,7 @@ Scenario: d = 256, four heads, r = 4, U = 128 and S = 128d per layer. Context pl
 
 Winner-only retrieval reduces logical value reads by N in this one-sample scenario. Including the key reads, total K/V access improves by at most about 2×. These counts are logical accesses, not measured off-chip transfers, cache behavior or joules. Multiple winners increase value reads. Explicit digital probability normalization is avoided in a physical race, but clock circuitry and rate setting still have costs.
 
-Shared content/projection structure isolates the attention substitution; this is not a quality-matched fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must be charged when present. Bounded candidate search is a separate coverage hypothesis. See theory note 48, §§313–320; measured quality/work curves remain in the appendix.
+Shared content/projection structure isolates the attention substitution; this is not a quality-matched fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must be charged when present. Bounded candidate search is a separate coverage hypothesis. See theory note 48, §§313–323; measured quality/work curves remain in the appendix.
 
 ## Why this research matters
 

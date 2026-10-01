@@ -19,6 +19,7 @@ queue state; a committed plan alone does not establish that a remote job is runn
 | [INTEGRATED_LANGUAGE.md](INTEGRATED_LANGUAGE.md) | Current integrated receivers, episodic KV, evidence, work ledgers and queue |
 | [EVENT_STREAM_ADVANTAGE_PROTOCOL.md](EVENT_STREAM_ADVANTAGE_PROTOCOL.md) | Prospective native-stream quality/work and dormant-capacity tests |
 | [HARDWARE_VALUE_PROPOSITION.md](HARDWARE_VALUE_PROPOSITION.md) | Globally clockless target, FPGA/ASIC path and energy accounting |
+| [TABULAR_RESEARCH_PROTOCOL.md](TABULAR_RESEARCH_PROTOCOL.md) | Prospective feature-preserving sparse-routing tests against trees and tabular Transformers |
 | [SHARED_MODEL.md](SHARED_MODEL.md) | Earlier cross-task model, adapters and preserved implementation contracts |
 | [THEORY.md](THEORY.md) | Index to mathematical derivations in [theory/](theory/) |
 | [FINDINGS.md](FINDINGS.md) | Completed experiments, measured results and limitations |
