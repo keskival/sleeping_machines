@@ -72,6 +72,7 @@ def results():
         for path in sorted((RES/'online_language').glob('local_integrated_online_backbone_*Z.json'))]
     tasks['episodic_language'] = [read(str(path.relative_to(RES)))
         for path in sorted((RES/'episodic_language').glob('local_episodic_pair_*Z.json'))]
+    tasks['head_diagnosis'] = [read(str(path.relative_to(RES))) for path in sorted((RES/'diagnostics').glob('local_parallel_head_diagnosis_*Z.json'))]
     tasks['parallel_head_contracts'] = [read(str(path.relative_to(RES)))
         for path in sorted([*(RES/'episodic_language').glob('local_parallel_head_contracts_*Z.json'),
                             *(RES/'episodic_language').glob('local_parallel_head_accum_contracts_*Z.json')])]
@@ -139,6 +140,7 @@ def language_work_points(tasks, ev):
         parallel=a.get('heads',1)>1
         name=f"parallel race KV H{a['heads']}×d{a['payload']}" if parallel else ('episodic race KV' if kv else 'receiver memory')+f" d{a['payload']}"
         label=(f"IHR{a['heads']}x{a['payload']}" if parallel else f"{'IKVS' if semantic and kv else 'IKV' if kv else 'I'}{a['payload']}")
+        if a.get('chunk',16)!=16:label+=f"/b{a['chunk']}"
         if a.get('arrivals',1)>1:
             name+=f" / m{a['arrivals']} arrivals";label+=f"/m{a['arrivals']}"
         if 'update_targets' in a:label+=f"/u{a['update_targets']}@{a['lr']:g}"
@@ -342,7 +344,7 @@ def figures(M, tasks, ev):
     for start,end in [((1.7,1.8),(2,2.3)),((1.7,1.1),(2,.7)),((4.5,2.3),(4.9,2.3)),((4.5,.7),(4.9,.7)),((7,2.3),(7.45,1.8)),((7,.7),(7.45,1.1))]:
         ax.add_patch(FancyArrowPatch(start,end,arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'parallel_temporal_heads')
-    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
+    pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if pilots:
         f,ax=plt.subplots(figsize=(7.2,2.5))
         for row in pilots:
@@ -381,7 +383,7 @@ def figures(M, tasks, ev):
         modality_box(7.5,y,2.3,.65,t)
         ax.add_patch(FancyArrowPatch((6.9,1.95),(7.4,y+.325),arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'general_temporal_interface')
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if optimizer_pilots:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         f,ax=plt.subplots(figsize=(7.2,2.8));bottom=np.zeros(len(optimizer_pilots))
@@ -2056,7 +2058,7 @@ def blocks(M, tasks, ev):
              'not claimed for this index. Historical activations '
              'are detached at the credit boundary and are not recomputed after parameter updates. '
              'One seed and a small data budget; no equal-quality Transformer or frontier claim.')])
-    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1]
+    optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if len(optimizer_pilots)>1:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
         reference=next(r for r in optimizer_pilots if r['args'].get('update_targets',16)==16)
@@ -2113,7 +2115,7 @@ def blocks(M, tasks, ev):
              'The bounded numerical time encoding is not a demonstrated homogeneous physical Poisson clock. '
              'This local counterfactual teacher is a declared surrogate, not an exact gradient through nonlinear route changes. '
              'No matched-quality dense-model, physical-energy or frontier superiority is inferred.')])
-    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args'].get('arrivals',1)==1]
+    head_rows=[r for r in tasks['episodic_language'] if r['args'].get('heads',1)>1 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if head_rows:
         display=head_rows[-4:]
         pages.append([
@@ -2162,6 +2164,55 @@ def blocks(M, tasks, ev):
              'admitted losing-value credit and optimizer work. Development selection uses the lowest full '
              'development loss over those passes. Logical FLOPs and unit-weight special functions do not '
              'measure wall time, physical traffic or energy; no language supremacy follows from these points.')])
+    long_credit=[r for r in tasks['episodic_language'] if r['args'].get('chunk',16)>16]
+    for r in long_credit:
+        a=r['args'];fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs','update_targets','warmup_targets','seed','lr')
+        matched=[v for v in tasks['episodic_language'] if v['args'].get('chunk',16)==16 and all(v['args'].get(k)==a.get(k) for k in fields)]
+        rows=matched+[r]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: longer temporal credit'),
+            ('p',f"Independent H{a['heads']} heads, d{a['payload']}/head, {a['depth']} event blocks, pool{a['pool']}. "
+             f"{a['fit']:,} fitting characters / {a['epochs']} passes; {a['dev']-1:,} frozen development targets, seed{a['seed']}. "
+             f"Adam uses U{a['update_targets']} / lr{a['lr']:g}. Graphs remain live for {a['chunk']} targets before detachment. "
+             'Forward stored history and the inference architecture are retained.'),
+            ('table',(['Ours: credit','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
+                [str(v['args']['chunk']),f"{v['final']['dev']['bpc']:.3f}",f"{v['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
+                 f"{v['work']['cpu_emulator']['total_training_unit_special_flops']/v['work']['fitting_targets']/1e6:.3f}",
+                 f"{(v['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+v['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for v in rows],
+                [28,26,35,40,45])),
+            ('p','Sealed historical keys and values still affect predictions, but detachment removes '
+             'later loss paths to their old producers. Longer credit restores those paths for more writes '
+             'inside each optimizer window; it does not backpropagate through unlimited history. '
+             'Temporal races, sparse receiver commits, separate Q/K/V and losing-route credit remain active.'),
+            ('small','Matched 16-credit records are shown when completed under identical settings. '
+             'Additional backward/normalization/clip/Adam work is counted and peak memory is guarded. '
+             'Inference traces average different representative spans; the operation definitions and '
+             'inference architecture are the same. One seed, development selection, no frontier claim. '
+             'Forward-partition equality and full 64-credit gradient/update contracts precede fitting.')])
+    if tasks['head_diagnosis']:
+        diagnosis=tasks['head_diagnosis'][-1]
+        pages.append([
+            ('h1','Appendix B (continued). Ours: frozen information-flow diagnosis'),
+            ('p',f"Saved selected H2/H4 eight-block 8K checkpoints; {diagnosis['args']['n']-1} targets from the development prefix. "
+             'Weights remain fixed. Each intervention removes one path only during this short evaluation; '
+             'these are diagnostic probes rather than refitted architecture comparisons.'),
+            ('table',(['Ours','Frozen intervention','Window bpc ↓','Context RMS mean'],[
+                [f"H{row['heads']}",v['mode'].replace('_',' '),f"{v['bpc']:.3f}",f"{v['context_rms_mean']:.3f}"]
+                for row in diagnosis['rows'] for v in row['variants']], [24,70,36,44])),
+            ('p','A route-credit audit replays each admitted historical value at three depths/head0 '
+             'for the two-head model. It holds one realized race time and continuation seed fixed, '
+             'then compares the centered local content teacher with the conditional categorical loss gradient.'),
+            ('table',(['Ours: local audit','Probes','Mean cosine','Opposed directions','Mean oracle gap (nats)'],[
+                [f"H{row['heads']} / head0",str(row['route_credit']['summary']['probes']),
+                 f"{row['route_credit']['summary']['mean_cosine']:.3f}" if row['route_credit']['summary']['mean_cosine'] is not None else 'undefined',
+                 f"{row['route_credit']['summary']['negative_cosines']} / {row['route_credit']['summary']['defined_cosines']}",
+                 f"{row['route_credit']['summary']['mean_oracle_gap_nats']:.3f}"] for row in diagnosis['rows'] if row['route_credit']], [42,22,30,40,40])),
+            ('small','Higher cosine means better alignment in this narrow replay. The oracle gap is realized '
+             'loss minus the best candidate replay, not achieved improvement. Different routing can change '
+             'subsequent candidate/RNG paths. The audit conditions away time derivatives and does not '
+             'estimate the full expected gradient, long-history utility or discovery coverage. '
+             'Interventions have no refitting and no confidence intervals; do not use these window scores '
+             'as promotion metrics or dense-model superiority evidence.')])
     if tasks['integrated_online_language']:
         row=tasks['integrated_online_language'][-1];a=row['args']
         pages.append([
