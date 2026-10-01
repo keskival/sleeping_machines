@@ -1,0 +1,733 @@
+{
+  "schema": 1,
+  "status": "superseded_unlaunched",
+  "run_prefix": "aws_split_screen_v1_20261001T225000Z",
+  "jobs": [
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_contracts.txt",
+      "queue_sha256": "fabd13ab58a19218d02b92ccd13c1fec139cb51f4b729cfcca0baab638b0eb4c",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_contracts.txt",
+      "queue_sha256": "ccc4dece811c97af4e9227d41628f124be15c2c97ad2af44e03cbff9c952f81b",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_contracts.txt",
+      "queue_sha256": "5919b54ab2371f468e11a6d7fc11f88bb95c95c815fe746e9332f2c87e0c95d0",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_contracts.txt",
+      "queue_sha256": "2995bd037a865b8d485e3e1809c5a5a77192b5e4972a0d6786e3b8a47bbf7040",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_contracts.txt",
+      "queue_sha256": "8274906e055aa1cccd29e2249b36ff1a34111c7c9e09372b041c42b46fb45f66",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_contracts.txt",
+      "queue_sha256": "9df0d7db4ff5f5b47e18b100371725aec5cb87db0966c7fffcbab5de3c2084ab",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_contracts.txt",
+      "queue_sha256": "7226a6b4e5041c3fea5a07cf7619e1cea5f506c63ff0deb3455d65287392ef48",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_contracts.txt",
+      "queue_sha256": "e4f8b79a42a25af7b3d6d2bacf9298b2794058dcfa35d6f696cfa56dcfb2baf3",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_shared_temporal",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_contracts.txt",
+      "queue_sha256": "cb52b26ec06912ee5ac91ec477b6602497ebfdb9de20e60d847acc9eb19c1001",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_shared_rank",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_contracts.txt",
+      "queue_sha256": "7760040311aca822d59aa496f6642122c2e894a335481bb268d6fc060b11c5ed",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_shared_protected",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_contracts.txt",
+      "queue_sha256": "83c0bc535c3c95e4ab5ef9e4bf2e859743ce1c0ab6ea9cf184b9c1907fcd71d0",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_smoke.txt",
+      "queue_sha256": "776471144dab08e57b36f5201cf0038708fa41558a7d7c598857757c6f492407",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_smoke.txt",
+      "queue_sha256": "297d1431fdd83d41f971b24621aa82523de65923c650d4fef8ff2d877cc645f9",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_smoke.txt",
+      "queue_sha256": "8c2c6c7f77e0df4077d803f80aa75c82c10a77431925830b3a569d9d8dc48dfb",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_smoke.txt",
+      "queue_sha256": "83847cd843c6d2822427628a0156faaed2c6f0eff50f4190766d618e3b34c197",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_smoke.txt",
+      "queue_sha256": "fa846805b828bc513d53b2bb346a130d1fa23997aa2b2765a5528f263de491c1",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_smoke.txt",
+      "queue_sha256": "51d79d253fa77aadfce84191b3eabb9df08c358125675c3e249111270ac4358b",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_smoke.txt",
+      "queue_sha256": "c0b0d766cf7b662bcbc78a5912f2198a6069a7bece17aea32b217f42b5757a4f",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_smoke.txt",
+      "queue_sha256": "a9ea6b3fbdc492da630c6ec9967a4c343e684471760a0fc1d163422b3861b2ae",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_shared_temporal",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_smoke.txt",
+      "queue_sha256": "1077acd727950c5fdacc04666f9b605b98eb9aefd9b411dbbfef23ed088f4313",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_shared_rank",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_smoke.txt",
+      "queue_sha256": "476c8c80db3221579b8d008f393b7cfd5c30219251a150f444f74d5d9d66607c",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_shared_protected",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_smoke.txt",
+      "queue_sha256": "6199c354ccf00c582fc9a7ec13a410a905d336418dcf67feb9864e6e25f5b608",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_smoke.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_private_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_pilot.txt",
+      "queue_sha256": "dcb0e4190a3be146531ea1716dbec2541293e1c2d9814a80bd0986215a3b0f6c",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P0_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_private_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_pilot.txt",
+      "queue_sha256": "ffd023c6920c7456a0949aaef75e7b27e81df70a87d7410d597b8b121aa1b3b7",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S4_private_P2_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_pilot.txt",
+      "queue_sha256": "2069daa746969426a41ea5fb85bc437dfa712ce344bb82cfa64a620b219272a8",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S4_shared_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_pilot.txt",
+      "queue_sha256": "f170aaa767db2a3576d65bce67e849bc11183f437ae3259496e53175904fcc3d",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S4_shared_P2_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_pilot.txt",
+      "queue_sha256": "28c66b23f3fc614e5b7aee225a32eb7b118525bc3a4da5a9923450625c774b66",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P0_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_pilot.txt",
+      "queue_sha256": "1cf1e46c79fcc9e6dc274d7d33d77dc07c3979e62fd00fd1ba9adfe12cbb44d2",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S16_private_P2_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_pilot.txt",
+      "queue_sha256": "7976bcbfd081c39a80fb103b0f61ea3f07ab084273de0a69098df84a13debcae",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P2",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_pilot.txt",
+      "queue_sha256": "ba2a4effd8beaf5ae9ab9af0da41f1ced16e155440c0171b202c1499825c00b3",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_order_S16_shared_P2_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_shared_temporal",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_pilot.txt",
+      "queue_sha256": "bdb0563cd7caf216ba9b83c8907fcc0069d177f09bde5fad63453e3914c7a8b4",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_temporal_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_shared_rank",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_pilot.txt",
+      "queue_sha256": "417d5a990c457498923f69531b2ec7500a640e16486b26d90546453a2ebf2f30",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_rank_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    },
+    {
+      "tag": "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_shared_protected",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_pilot.txt",
+      "queue_sha256": "1ce14240f681f8e2286616f5cea784e761fe6e982054f0a7cd1c623886f19589",
+      "result": "experiments/results/event_variants/aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_pilot.json",
+      "requires": [
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_contracts",
+        "aws_split_screen_v1_20261001T225000Z_paired_shared_protected_s6_smoke"
+      ],
+      "timeout_s": 5400,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention x shared processing/private state; paired timing identification"
+    }
+  ],
+  "source_sha256": {
+    "experiments/split_event_benchmark.py": "a078c890d5e21bac469a4f9e85f6e1cbce61633c54699b7bdf88ed0adcbe3080",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/split_event_contracts.py": "7cc951b0f12196f9c02107012cbf032253a14afa9d69af243793242014e68a40",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "scripts/plan_split_event_screen.py": "fa020e7bfdbee1c4a957fb5e2ee4d75e52d5864f5dad40c3700f8b9a6670ce3d",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "scripts/run_research_gym.py": "9e62027c36a37a46d41d28114fce9a4d0e62cd3c5144bfacf13055fd75ce9d43",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "protocol": "experiments/ADVANTAGE_BATTERY.md",
+  "concurrency": "Serial locally; up to three bounded CPU slots only on the explicitly authorized AWS host",
+  "publication": "Existing AWS worker commits raw results; report publisher ingests completed event_variants only",
+  "promotion": "No automatic long run; paired seeds and independent held-out confirmation before benchmark claims",
+  "prerequisites": "Finish and retire current matrix/coordinator before launch; all contracts/smokes precede pilots",
+  "blocked": [
+    {
+      "domain": "robotics",
+      "reason": "Unequal-timestamp whole-trial adapter pending"
+    },
+    {
+      "domain": "recognized_event",
+      "reason": "Integrated SHD/DVS adapter and matched modern controls pending"
+    },
+    {
+      "domain": "language",
+      "reason": "Protected variant language adapter pending event evidence"
+    },
+    {
+      "domain": "hardware",
+      "reason": "No synthesized/trained clockless ASIC or measured energy implementation"
+    }
+  ],
+  "superseded_by": "experiments/gym/plans/aws_split_event_20261001T230029Z/manifest.json",
+  "reason": "AWS host independently prepared and reserved the coordinated battery; do not launch duplicate screens."
+}

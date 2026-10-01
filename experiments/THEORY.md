@@ -13,6 +13,18 @@ Next candidate: [protected state, shared processing and identifiable timing](the
 §§354–357. It retains the integrated sparse temporal mechanisms and tests
 gap robustness, statistical exposure and timing information separately.
 
+[Information matching and temporal statistics](theory/54_information_matching_and_temporal_statistics.md),
+§§358–362, gives the antenna analogy a predictive-metric interpretation and
+derives sufficient evidence pooling and aggregate information in race times.
+
+[Predictive spectra and reception sampling](theory/55_predictive_spectra_and_reception_sampling.md),
+§§363–368, separates generator realizability, explanatory multiresolution,
+activation/weight roles and observability, with generator–recognizer precedents.
+
+[Generator-to-receiver requirements](theory/56_generator_to_receiver_requirements.md),
+§§369–372, gives necessary order/uncertainty/retention operations, a local
+predictive-rank bound, and tests distinguishing exact redundancy from flatness.
+
 The foundational calculus in §§1–20 reduces to five principles. Later sections extend and
 test them; the evidence column below summarizes that initial layer of the theory.
 

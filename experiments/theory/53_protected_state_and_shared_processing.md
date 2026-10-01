@@ -39,6 +39,12 @@ separate keys/values, content mixing, independent heads, losing-route teaching
 and selected commits. Inference evolves only the temporal suffix; learning
 still pays all gates, maps, candidate proposals, backward and Adam.
 
+Initialization caveat: protecting the prefix retains the parent's initialized
+temporal suffix. At d8/P2 this keeps its slower modes and removes its faster
+ones. A protected timing result therefore changes both silent retention and
+initial spectral coverage. Diagnose this explicitly; a later matched-frequency
+control needs a new variant/manifest, never an edit to the frozen active model.
+
 ## 355. Separate private state from private learned rules
 
 Current populations share a task, but each address has its own receiver maps.
