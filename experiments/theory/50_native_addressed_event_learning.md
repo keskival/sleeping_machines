@@ -165,3 +165,53 @@ only if they improve quality enough to pay discovery, teaching and optimization.
 The architectural target is thus a three-way frontier: information retained,
 quality learned and complete active work. Cheap races offer additional choices;
 they do not make untrained or information-erasing choices useful automatically.
+
+## 336. Depth can accumulate ordered interactions without rescanning the past
+
+An elementary gated temporal construction makes the native expressivity target
+concrete. Let content maps a(v) and b(v) be scalars, and maintain two states
+r and s. Between events they decay at rates γ₁ and γ₂. At event j, first read
+the evolved left-limit states, then write
+
+    s_j = s_j⁻ + b(v_j) r_j⁻,
+    r_j = r_j⁻ + a(v_j).
+
+Reading r before its current write excludes self-pairs. At a later query t,
+expanding the recurrence gives exactly
+
+    s(t) = Σ_{i<j} exp[-γ₂(t-t_j)] b(v_j)
+                      exp[-γ₁(t_j-t_i)] a(v_i).
+
+This is a weighted ordered-pair interaction. Choosing a to detect one content
+pattern and b another distinguishes A-then-B from B-then-A. It needs two stored
+scalars and constant arithmetic per event, although its expansion contains
+quadratically many event pairs. Independent mode channels generalize this to
+vectors; event-conditioned gates and further levels provide richer ordered
+interactions. Such state is useful when the task admits a compact temporal
+summary. Arbitrary independent historical values cannot all be recovered from
+two scalars; this identity does not subsume unrestricted cached attention.
+
+The time derivative also has a compact exact eligibility at fixed parameters.
+Let e=∂r/∂γ₁ and f=∂s/∂γ₁, holding the content maps and γ₂ independent of γ₁.
+For an event gap Δ, evolve using the pre-evolution r:
+
+    r⁻ = exp(-γ₁Δ) r,
+    e⁻ = exp(-γ₁Δ) (e - Δ r),
+    s⁻ = exp(-γ₂Δ) s,
+    f⁻ = exp(-γ₂Δ) f.
+
+Then f_j=f_j⁻+b(v_j)e_j⁻, with e unchanged by the a(v_j) write. A final loss
+on s uses f without retaining or replaying all old pairs. The extra traces and
+their updates cost work. This is exact for this stated linear/gated recurrence
+at fixed parameters; it is not a proof of cheap exact gradients for arbitrary
+deep nonlinear hard races, changing weight versions or the current full model.
+
+The two-state identity and eligibility are checked against an independent
+explicit pair sum and finite differences in test_ordered_temporal_algebra.py.
+This is a derived expressivity/learning target, not a newly fitted architecture
+or a claim that pair recurrences themselves are novel. The native model has
+evolving memory, content-conditioned gates and deep channels, but its exact
+left-limit timing/read semantics differ. Demonstrating a learned ordered basis
+in that model requires its held-out order task and controlled interventions.
+The useful direction is economical causal summaries plus selectively recruited
+temporal features, rather than copying a dense attention layer by default.

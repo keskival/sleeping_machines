@@ -2817,3 +2817,10 @@ queue/local_native_research_campaign_20261001T174000Z.json. Completed pilots,
 refitted credit/time controls, conditional occupied-capacity/data scaling and
 independent seeds run serially. Synthetic capability, text8 generalization,
 matched-quality advantage and physical energy remain separate questions.
+
+
+Theory §336 adds a checked native expressivity target: two gated temporal
+states exactly accumulate a weighted ordered-pair sum without enumerating pairs.
+A timing eligibility recurrence matches finite differences at fixed parameters.
+Thirteen focused read-only tests pass. This is an algebraic contract, not new
+trained quality or proof of exact local learning for the full hard-race network.

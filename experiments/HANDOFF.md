@@ -910,3 +910,21 @@ visually reviewed. A temporary layout-only stress rendering of ten event and
 seven language records passed on seven bounded result pages. Those duplicated
 smoke fixtures are not published evidence. Inspect current status before assuming
 that a full pilot or any conditional larger stage has completed.
+
+
+Timing accounting smoke completed and was automatically published in `e4005d3`.
+The native order S4 full pilot began at 17:56:47 UTC; language2K follows it.
+Read the live status rather than assuming later stages have run. Theory §336
+adds an ordered-state kernel and fixed-parameter timing eligibility, checked
+against explicit pairs/finite differences. This does not change frozen training
+sources or implement a new native module. Thirteen focused read-only tests pass.
+
+Remaining native mechanism gaps: fixed observed addresses/pools and forced
+head/block activity rather than learned cross-source discovery or optional
+silence; explicit-query classification rather than a marked survival objective;
+local surrogate losing-route credit rather than an exact arbitrary sampled-loss
+expectation gradient. Event fits retain whole-population producer graphs;
+language retains state but truncates ordinary producer graphs every 16 targets.
+The tested algebraic eligibility is not installed as full-model local learning.
+Real-stream adapters and shared-weight multimodal integration still need their
+own contracts/fits. These gaps guide the next redesign after completed pilots.

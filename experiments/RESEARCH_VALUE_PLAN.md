@@ -115,3 +115,14 @@ capacity/activity and persistent bytes. Never fill pending cells with estimates
 of achieved quality. Resource projections and measured physical energy are
 separate ledgers. Report real-data and hardware stages as prepared/awaiting a
 validated adapter or provisioned host until they actually execute.
+
+
+## Native expressivity target
+
+Theory §336 derives an ordered-pair temporal kernel maintained by two gated
+states, with constant per-event arithmetic and an exact fixed-parameter timing
+eligibility. An explicit pair expansion and finite differences agree numerically.
+This explains one way depth and time can summarize many causal interactions
+without rescanning history. It is a restricted algebraic construction, not a
+claim that the current model already learns every such kernel or reproduces
+arbitrary cached attention. The integrated order/timing fits test that next gap.

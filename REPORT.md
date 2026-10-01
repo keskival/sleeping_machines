@@ -191,7 +191,7 @@ Observed-source pools and fixed depth are declared priors; learned topology grow
 
 ## A native path to more capability per unit of work
 
-The next integrated experiments test what this substrate does naturally: learned time computation, sparse addressed memory and hard choices trained through counterfactual credit. Episodic race attention remains a useful preserved comparison; the native branch does not require a per-position attention bank.
+The next integrated experiments test what this substrate does naturally: learned time computation, sparse addressed memory and hard choices trained through counterfactual credit. A derived gated-state kernel accumulates ordered interactions without enumerating past pairs; learning useful such representations is the target. Episodic race attention remains a useful preserved comparison; the native branch does not require a per-position attention bank.
 
 ![native addressed event path](report/figures/native_addressed_event_path.png)
 
@@ -205,7 +205,7 @@ Useful capacity can grow while selected activity stays fixed, but its value must
 
 Analytic state evolution avoids periodic simulation during silence. Decay can still erase information, so long-gap accuracy is measured separately from operation count. A protected-content subspace alongside evolving time modes is a derived next hypothesis, to test if the current construction loses useful memory.
 
-The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local causal waits remain paid. Full-depth contracts and accounting smokes pass; quality pilots, refitted controls and independent seeds determine further scaling. Theory §§330–335; completed results and the executable priority appear in Appendix B.
+The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local causal waits remain paid. The ordered kernel is a restricted algebraic identity, not an achieved capability of the fitted model. Full-depth contracts and accounting smokes pass; quality pilots, refitted controls and independent seeds determine further scaling. Theory §§330–336; completed results and the executable priority appear in Appendix B.
 
 ## Ours: the integrated sparse temporal language experiment
 
