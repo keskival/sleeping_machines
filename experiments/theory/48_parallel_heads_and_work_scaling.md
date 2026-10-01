@@ -504,12 +504,12 @@ Cached states created under older weights also remain a declared approximation;
 increasing b does not make all historical weight versions current or restore
 unlimited credit. Simply adding capacity/arrivals does not repair these paths.
 
-Next matched intervention: increase b from16 to64 with U=64/lr.002, H2,
+Next matched intervention: increase b from 16 to 64 with U=64/lr.002, H2,
 d32/head, depth8 and the same source/index/races. U remains fixed, separating
 credit support from optimizer interval. No architectural mechanism or inference
 operation is removed/replaced. Standard truncated backpropagation is the
 learning primitive being varied, not the novelty claim. Longer credit retains
-more state/KV graphs; it may train producers used up to64 positions within a
+more state/KV graphs; it may train producers used up to 64 positions within a
 window and change gradient norms/work. It cannot train arbitrarily old writes.
 Average producer-lag coverage is boundary-dependent, not exactly64 everywhere.
 All additional backward and clipping/Adam work must be captured; peak memory
@@ -519,11 +519,11 @@ Causality and the fixed-weight forward/RNG path are unchanged by graph lifetime.
 Reuse the strongest completed 2K optimizer pilot, U64/lr.002/credit16 at
 3.732586 bpc, instead of assuming the cheapest U128 schedule scales best.
 The next finite serial campaign runs a frozen-checkpoint information-flow audit,
-the64-credit contracts/smoke, one matched64-credit2K fit and the existing
-16-credit/U64 8K configuration. A >=.02 bpc2K gain admits one64-credit8K fit.
-Choose completed8K quality/work before32K promotion under the existing .10 bpc
+the 64-credit contracts/smoke, one matched64-credit 2K fit and the existing
+16-credit/U64 8K configuration. A >=.02 bpc2K gain admits one 64-credit 8K fit.
+Choose completed 8K quality/work before 32K promotion under the existing .10 bpc
 control tolerance. Second-seed8K and conditional131K follow only after a
-completed32K gain/memory/time gate. None of these pending cells is evidence.
+completed 32K gain/memory/time gate. None of these pending cells is evidence.
 
 The diagnostic separately measures short-window frozen interventions, channel
 spectra/source gate behavior, and a local content-credit comparison. For one
@@ -536,3 +536,24 @@ It is not the full expected gradient through changing persistent histories,
 noise or candidate discovery, and removal interventions without refitting are
 not benchmark controls. Use it to choose a concrete repair, not as a supremacy
 claim or an automatic justification for replacing temporal computation.
+
+### Completed trial clarification — 1 October, 07:55 UTC
+
+Section324's m1 nesting and full m2/m4 guarded contracts/smokes passed. m4
+completes at 3.770751 bpc /20.913599 unit-special GFLOPs versus nested m1
+3.778729 /19.999171. Four historical value arrivals cost 4.57% additional whole
+fitting work, demonstrating cheap multiplicity in this arithmetic convention.
+The .007978 bpc gain misses the declared .02 gate, so no larger m4 fit follows.
+Candidate discovery trajectories/rate values differ after fitting; sharing is
+within each query, not identical fitted scores across models. No joule or
+matched-quality dense-model advantage follows. m2 regressed to 3.819845.
+
+Section325's frozen checkpoint audit finds source carry and learned channel maps
+useful on its 256-target diagnostic window; removing them worsens loss. H2 local
+content-credit alignment averages .717 in 24 fixed-time choice replays, with
+one opposed direction. This is neither full expected credit nor an argument
+for replacing temporal state with conventional computation. Full64-credit
+contracts pass; the first smoke's dev 65 left an empty inference warmup. Preserve
+that protocol failure. A fresh dev 129 smoke passes, allowing the 64-credit 2K
+pilot. Model/fit sources remain identical; only the corrected smoke window and
+continuation supervisor definition changed.

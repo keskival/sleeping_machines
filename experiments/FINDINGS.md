@@ -3,21 +3,21 @@
 ## Frozen head checkpoint diagnosis and retained information paths
 
 A guarded no-update audit of selected H2/H4 8K checkpoints scored256 development
-prefix targets, preserving every parameter. H2 unchanged3.316 bpc; disabling
-source-context carry4.013; replacing learned channel maps with identity3.773;
-disabling KV3.312. H4 unchanged3.331; source off4.001; channel identity3.786;
-KV off3.375. These short-window removal probes show useful learned persistent
+prefix targets, preserving every parameter. H2 unchanged 3.316 bpc; disabling
+source-context carry4.013; replacing learned channel maps with identity 3.773;
+disabling KV3.312. H4 unchanged 3.331; source off 4.001; channel identity 3.786;
+KV off 3.375. These short-window removal probes show useful learned persistent
 content and channel mixing in these checkpoints. They are not refitted controls
 or generalizable benchmark gains; weights/context/noise paths can differ after
 an intervention. They do not justify removing these core information paths.
 
 Twenty-four H2/head0 local historical-choice replays across three depths have
-mean content-credit cosine0.717, with one opposed direction. Mean per-replay
-oracle loss gap0.0709 nats remains unachieved. The replay conditions on one
+mean content-credit cosine 0.717, with one opposed direction. Mean per-replay
+oracle loss gap 0.0709 nats remains unachieved. The replay conditions on one
 realized race time and continuation seed, so it is not the full expected
 sequence gradient or a discovery test. It supports useful but imperfect local
 credit and leaves long-history producer credit as a concrete diagnosis target.
-Guarded full64-credit gradient normalization/clipping/update and forward-
+Guarded full 64-credit gradient normalization/clipping/update and forward-
 partition contracts passed before its smoke/pilot fitting. Frozen audit record:
 `results/diagnostics/local_parallel_head_diagnosis_20261001T074000Z.json`.
 

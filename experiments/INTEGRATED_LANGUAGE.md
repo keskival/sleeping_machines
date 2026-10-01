@@ -111,10 +111,10 @@ not unlimited long-context training or a derivative error.
 
 The [credit campaign](queue/local_language_credit_campaign_20261001T074000Z.json)
 follows the repeated-arrival trial. It first diagnoses saved H2/H4 checkpoints,
-then guards full64-credit gradient/update contracts and a129-character smoke.
+then guards full 64-credit gradient/update contracts and a129-character smoke.
 The matched2K comparison holds U64/lr.002 and the full architecture fixed;
 only credit span changes16→64. The strongest16-credit schedule also gets its
-prepared8K comparison. Longer8K,32K,secondseed8K and131K fitting have explicit
+prepared8K comparison. Longer8K,32K,secondseed8K and 131K fitting have explicit
 quality/resource gates. See theory §325 for producer gradients and scope.
 
 ## Architecture work versus emulation

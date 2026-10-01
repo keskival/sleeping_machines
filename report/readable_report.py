@@ -383,6 +383,28 @@ def figures(M, tasks, ev):
         modality_box(7.5,y,2.3,.65,t)
         ax.add_patch(FancyArrowPatch((6.9,1.95),(7.4,y+.325),arrowstyle='->',mutation_scale=11,color=blue))
     f.tight_layout();save(f,'general_temporal_interface')
+    repeat_rows=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)>1]
+    repeat_fields=('heads','payload','depth','pool','matching','recent','fit','dev','epochs','chunk','update_targets','warmup_targets','seed','lr')
+    for group in sorted({tuple(r['args'][k] for k in repeat_fields) for r in repeat_rows}):
+        trials=[r for r in repeat_rows if tuple(r['args'][k] for k in repeat_fields)==group]
+        a=trials[0]['args']
+        reference=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)==1 and all(r['args'].get(k)==a.get(k) for k in repeat_fields)]
+        if not reference:continue
+        rows=sorted(reference+trials,key=lambda r:r['args'].get('arrivals',1));base=reference[0]
+        def total(r):return r['work']['cpu_emulator']['total_training_unit_special_flops']
+        def inference(r):
+            w=r['work']['cpu_emulator'];return w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character']
+        marks=[r['args'].get('arrivals',1) for r in rows]
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.5))
+        axes[0].plot(marks,[total(r)/total(base) for r in rows],marker='o',color=blue,label='Ours: whole fitting')
+        axes[0].plot(marks,[inference(r)/inference(base) for r in rows],marker='s',color=orange,label='Ours: inference trace')
+        axes[0].set(ylabel='Counted work / one-arrival reference',xlabel='Winner values / historical query',xticks=marks)
+        axes[0].legend(fontsize=7);axes[0].grid(alpha=.2)
+        axes[1].plot(marks,[r['final']['dev']['bpc'] for r in rows],marker='o',color=blue)
+        axes[1].set(ylabel='Frozen development bpc ↓',xlabel='Winner values / historical query',xticks=marks);axes[1].grid(alpha=.2)
+        for m,r in zip(marks,rows):axes[1].annotate(f"{r['final']['dev']['bpc']:.3f}",(m,r['final']['dev']['bpc']),xytext=(2,5),textcoords='offset points',fontsize=8)
+        axes[1].margins(y=.25);f.tight_layout()
+        save(f,'repeated_arrival_quality_work_'+hashlib.sha256(repr(group).encode()).hexdigest()[:10])
     optimizer_pilots=[r for r in tasks['episodic_language'] if r['args'].get('heads')==2 and r['args']['fit']==2048 and r['args']['dev']==8192 and r['args'].get('arrivals',1)==1 and r['args'].get('chunk',16)==16]
     if optimizer_pilots:
         optimizer_pilots.sort(key=lambda r:(r['args'].get('update_targets',16),r['args']['lr']))
@@ -2094,19 +2116,26 @@ def blocks(M, tasks, ev):
             ('heads','payload','depth','pool','matching','recent','fit','dev','epochs','chunk','update_targets','warmup_targets','seed','lr'))
         reference=[r for r in tasks['episodic_language'] if r['args'].get('arrivals',1)==1 and same(r)]
         rows=sorted(reference+trials,key=lambda r:r['args'].get('arrivals',1))
+        extra=[]
+        if reference:
+            extra.append(('figure',('repeated_arrival_quality_work_'+hashlib.sha256(repr(group).encode()).hexdigest()[:10],174)))
+            many=max(trials,key=lambda r:r['args']['arrivals']);base=reference[0]
+            cost=100*(many['work']['cpu_emulator']['total_training_unit_special_flops']/base['work']['cpu_emulator']['total_training_unit_special_flops']-1)
+            extra.append(('p',f"Ours delivers {many['args']['arrivals']} times as many historical winner messages for {cost:.2f}% additional whole fitting arithmetic in this completed screen. Quality changes from {base['final']['dev']['bpc']:.3f} to {many['final']['dev']['bpc']:.3f} bpc. This supports cheap arrival multiplicity under shared matches; it does not establish language-model superiority."))
         pages.append([
             ('h1','Appendix B (continued). Ours: shared-match temporal arrivals'),
             ('p',f"{a['heads']} independent spatial heads, payload {a['payload']}/head, {a['depth']} blocks. "
              f"All rows fit {fit:,} characters for {a['epochs']} passes and score {a['dev']-1:,} cold development targets. "
              'Each query forms its candidate matches once. Multiple temporal marks reuse those rates; only the winning emitter renews its clock. '
              'The receiver and each selected message evolve until the last local read, then the messages are averaged and gated.'),
+            *extra,
             ('table',(['Ours: arrivals / head','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
                 [f"m={r['args'].get('arrivals',1)}",f"{r['final']['dev']['bpc']:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/1e9:.3f}",
                  f"{r['work']['cpu_emulator']['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
                  f"{(r['work']['cpu_emulator']['inference_arithmetic_flops_per_character']+r['work']['cpu_emulator']['inference_special_functions_per_character'])/1e6:.4f}"] for r in rows],
                 [32,25,35,38,44])),
-            ('p','Candidate discovery, keys, rates and independent Q/K/V projections are unchanged. '
+            ('p','Candidate discovery and independent Q/K/V projections are retained. Multiple marks reuse one rate setting within each query; trained scores and candidate trajectories can differ across runs. '
              'More marks can retrieve the same value; they do not create extra learned spatial heads or discover absent candidates. '
              'Training reads all admitted values once and aggregates the conserved per-arrival teacher in O(Cd + md). '
              'All delivered messages, temporal transports, backward, clipping and Adam remain charged.'),
@@ -2199,6 +2228,7 @@ def blocks(M, tasks, ev):
             ('table',(['Ours','Frozen intervention','Window bpc ↓','Context RMS mean'],[
                 [f"H{row['heads']}",v['mode'].replace('_',' '),f"{v['bpc']:.3f}",f"{v['context_rms_mean']:.3f}"]
                 for row in diagnosis['rows'] for v in row['variants']], [24,70,36,44])),
+            ('p','Removing source-message carry and learned channel mixing worsens both saved checkpoints in this window. These content/state paths are useful here; short-window removal probes do not warrant discarding them or demonstrate a refitted architecture advantage.'),
             ('p','A route-credit audit replays each admitted historical value at three depths/head0 '
              'for the two-head model. It holds one realized race time and continuation seed fixed, '
              'then compares the centered local content teacher with the conditional categorical loss gradient.'),

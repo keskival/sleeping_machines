@@ -1,14 +1,37 @@
 # Session handoff — 2026-09-30
 
+## Active priority — 1 October, 07:55 UTC
+
+The corrected 64-credit smoke completed under the guard and published in 2b0d04d;
+all full-gradient/update/forward and operator coverage checks passed. The
+H2/d32/head/depth8, credit64/U64/lr.002, 2K/four-pass pilot started 07:54:38 UTC.
+Active supervisor/tmux: `local_language_credit_campaign_recovery_20261001T075000Z`.
+Original failed smoke/manifest/status are preserved; use this continuation
+status, not the superseded 074000 status, to inspect progress. Only one trainer.
+All model/driver/helper and continuation source/queue hashes remain frozen.
+
+Next: completed 64-credit 2K quality/work versus saved16-credit U64 pilot, then
+existing16-credit U64 8K; conditional64-credit 8K, selected 32K, seed 7 and 131K.
+No changes to temporal/sparse mechanisms are authorized implicitly by a poor
+score: derive/record any future repair and retain comparison evidence. The
+frozen audit argues against removing useful source carry or channel mixing.
+Long-credit coverage, old weight-version caches, candidate discovery, local
+nonlinear credit and eventual native execution remain limitations to address.
+
+The report now visualizes completed m1/m2/m4 quality/work in its shared-match
+appendix: four deliveries for 4.57% extra counted whole fitting work, quality
+3.779→3.771 bpc. It retains the failed head ladder and scope of short-window
+information-flow probes. No pending64-credit quality is reported.
+
 ## Diagnosis completed — 1 October, 07:45 UTC
 
-Frozen audit completed and published in4b63566: source-context and learned
+Frozen audit completed and published in 4b63566: source-context and learned
 cross-head maps help the256-target H2/H4 window. Removing them worsens loss;
 do not substitute away these paths on an untested conditioning hypothesis.
-H2 local route-credit mean cosine.717 across24 fixed-time/head0 choice replays,
+H2 local route-credit mean cosine .717 across 24 fixed-time/head0 choice replays,
 one opposed direction; scope excludes full expected sequence/time gradients.
 Full64-credit gradient/update and partition-equality contracts passed and
-published in0fd8b77. Its guarded129-character smoke is running with~755MiB RSS,
+published in 0fd8b77. Its guarded129-character smoke is running with~755MiB RSS,
 ~11.2GiB available. Next the2K64-credit pilot, then original unused U64 8K.
 Preserve current source hashes; report pages ingest completed diagnostics only.
 
@@ -16,12 +39,12 @@ Preserve current source hashes; report pages ingest completed diagnostics only.
 
 Repeated-arrival campaign completed: m4 3.770751 bpc / 20.913599 GFLOPs,
 .007978 bpc better than nested m1, below the .02 promotion gate. Four historical
-value arrivals cost4.57% extra whole fitting work; keep this positive mechanism
+value arrivals cost 4.57% extra whole fitting work; keep this positive mechanism
 result beside its modest quality gain. m2 was worse. No larger repeated-arrival
-fit was launched. Results auto-published in153ea8a.
+fit was launched. Results auto-published in 153ea8a.
 
-The credit campaign started its guarded frozen H2/H4 diagnosis at07:42:30 UTC;
-next full64-credit contracts, smoke and2K fit follow serially. Supervisor/tmux
+The credit campaign started its guarded frozen H2/H4 diagnosis at 07:42:30 UTC;
+next full 64-credit contracts, smoke and2K fit follow serially. Supervisor/tmux
 `local_language_credit_campaign_20261001T074000Z` is active. Preserve all its
 source/queue hashes; do not launch another trainer. Inspect status before edits
 or work. Its short-credit/U64 8K uses the earlier unused benchmark definition.
@@ -696,7 +719,7 @@ new training has started. Do not start another instance or change frozen sources
 Read theory §325 before continuing. The failed 8K head gate constrains this
 implementation. A verified numerical limitation is that the 16-character
 boundary detaches older KV producers even though their contents are retrieved;
-forward history and learning history are different. Extending credit to64
+forward history and learning history are different. Extending credit to 64
 retains temporal races, addressed receiver state, independent Q/K/V heads,
 full indexed history and counterfactual learning. It changes graph lifetime and
 training cost, not fixed-weight inference. It is truncated backpropagation,
@@ -706,11 +729,11 @@ Prepared manifest `experiments/queue/local_language_credit_campaign_20261001T074
 supervisor `scripts/run_language_credit_campaign.py`. Started after `a9a90cb`
 in tmux with the same stem; currently waiting. Do not start another instance. It waits for completed repeated-arrival campaign,
 then runs every stage through unique `run_safe.sh` one-job queues. Order:
-frozen saved-checkpoint diagnosis; full64-credit gradient/update contracts;
+frozen saved-checkpoint diagnosis; full 64-credit gradient/update contracts;
 129-character full-configuration smoke; matched2K64-credit/U64/lr.002 fit;
 existing unused16-credit/U64/lr.002 H2 8K queue. A .02 bpc pilot gain admits
-one64-credit8K run. Best completed8K must satisfy the existing indexed-control
-+.10 gate before32K; secondseed8K follows.131K additionally requires32K gain
+one 64-credit 8K run. Best completed 8K must satisfy the existing indexed-control
++.10 gate before 32K; secondseed8K follows.131K additionally requires32K gain
 >=.05, projectedRSS<=2.2MKiB and timeout derived from measured32K wall time,
 with48h maximum. VMS4MKiB/groupRSS2.5MKiB/minavailable8192MiB; CPU-only.
 Reuse strongest completed U64 pilot, not assumed success of cheapest U128.
@@ -719,7 +742,7 @@ Two new read-only contracts pass: detached producer credit versus identical
 forward content, and frozen replay/intervention parameter/hook integrity. With
 previous checks, sixteen focused tests pass. Full optimizer64-credit contracts
 and fitting remain pending until the serial guard admits them. The diagnostic
-conditions on one race time/continuation seed for24 local replay probes and
+conditions on one race time/continuation seed for 24 local replay probes and
 uses a256-target window; it is not a full expected gradient or refitted model
 benchmark. Publication adds only completed results and separates credit spans
 from optimizer/head comparisons; source hashes/queues are frozen before launch.
@@ -727,11 +750,11 @@ from optimizer/head comparisons; source hashes/queues are frozen before launch.
 ## Smoke audit configuration correction — 1 October, 07:50 UTC
 
 The129-character/64-credit fit completed, but its inference audit failed:
-dev65 minus one target minus64 trace targets left zero warmup inputs. This
+dev 65 minus one target minus64 trace targets left zero warmup inputs. This
 is a smoke configuration error, not evidence of a model numerical failure.
 Preserve original queue, running/checkpoint files and log; no final benchmark
 result was published. New unused smoke tag:
-`local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z` with dev129.
+`local_parallel_head_credit_smoke_b64_dev129_20261001T075000Z` with dev 129.
 
 Continuation manifest:
 `experiments/queue/local_language_credit_campaign_recovery_20261001T075000Z.json`.
