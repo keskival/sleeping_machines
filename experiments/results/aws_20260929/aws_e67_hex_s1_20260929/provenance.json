@@ -1,0 +1,31 @@
+{
+  "run_tag": "aws_e67_hex_s1_20260929",
+  "script": "experiments/e67_race_time.py",
+  "arguments": [
+    "--rule",
+    "exact",
+    "--hidden",
+    "256",
+    "--feedback",
+    "sym",
+    "--epochs",
+    "3",
+    "--lr",
+    "0.02",
+    "--seed",
+    "1"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1ff442ac482790b1d62090cf484ddc0ce570d0e03f762531333e53f4454e62c7",
+  "git_commit": "cd8b48a74247b3e9ca26fa9684865bcc99e99855",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T19:49:31Z",
+  "status": "completed",
+  "wall_s": 95.828,
+  "peak_rss_kb": 414228
+}
