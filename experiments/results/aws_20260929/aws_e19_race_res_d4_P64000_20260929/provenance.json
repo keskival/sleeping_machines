@@ -1,0 +1,27 @@
+{
+  "run_tag": "aws_e19_race_res_d4_P64000_20260929",
+  "script": "experiments/e19_rhm.py",
+  "arguments": [
+    "--model",
+    "race",
+    "--depth",
+    "4",
+    "--residual",
+    "2",
+    "--train",
+    "64000"
+  ],
+  "output_redirected": true,
+  "source_sha256": "1514be31da14cd425cff7c684780e66987dfcd6409352b17b55b433a8502083e",
+  "git_commit": "501e85607890d98214776c13806423d77fb6cffc",
+  "limits": {
+    "MEM_CAP_KB": "6000000",
+    "MEM_CAP_RSS_KB": "3500000",
+    "MIN_AVAIL_MB": "8192",
+    "JOB_TIMEOUT_S": "21600"
+  },
+  "start_utc": "2026-10-01T21:08:46Z",
+  "status": "completed",
+  "wall_s": 1094.702,
+  "peak_rss_kb": 587780
+}
