@@ -1553,3 +1553,16 @@ is described historically. No changes or retuning on seed4201. Need a fresh
 protocol for any calibration/new architecture. Stronger prior timing/capacity
 mechanism evidence stays preserved. Other hosts own ongoing harder joint/
 retrieval fits; no duplication. AWS worker and publisher exited successfully.
+
+## AWS joint text/event calibration admission — 2 October
+
+Pulled c26c55c and read AWS_JOINT_EVENT_CONTROLS/theory/current local handoff.
+AWS takes explicitly assigned timestamp-aware GRU/Transformer controls; local
+native joint/DVS fits remain separate. Ten guarded task/control contracts pass.
+Plan aws_joint_event_calibration_20261002T164400Z recomputes v2 causal table and
+runs two width64 accounting smokes. AWS copy adds selected weights and full
+16-query inference ledger without changing dense architecture/training.
+Pilots require complete audit/resource margin; three seeds and original fixed
+budgets, >=20pp calibration over comparable table. No pending quality claim.
+Prioritized research architecture remains native joint text/event race core;
+these dense controls calibrate its information/learning gap. No substitution.

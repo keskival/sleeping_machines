@@ -1,0 +1,1 @@
+aws_joint_event_contracts_20261002T170100Z -m pytest -q tests/test_joint_event_language_tasks.py tests/test_joint_event_dense_controls.py
