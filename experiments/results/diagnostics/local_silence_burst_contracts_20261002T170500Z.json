@@ -1,0 +1,34 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_silence_burst_contracts_20261002T170500Z"
+  },
+  "contracts_passed": 4,
+  "scheduled_causality_ties_and_no_eof_flush_passed": true,
+  "two_layer_all_parameter_and_input_time_finite_differences_passed": true,
+  "exact_two_layer_timeout_option_risk_and_all_derivatives_passed": true,
+  "timeout_options": [
+    0.06,
+    0.22,
+    0.7
+  ],
+  "actual_option_outcome_losses": [
+    0.38379227360576496,
+    0.3876225913015505,
+    0.44063215327395827
+  ],
+  "exact_first_policy_gradient": [
+    -0.009381719973225167,
+    -0.004423594633089206,
+    0.013805314606314404
+  ],
+  "joint_outcomes_evaluated": 9,
+  "source_sha256": {
+    "sleeping_machines/silence_burst.py": "1abd182444eb4381e979ad985568682992c6bf769e904a7e38cf1152cf98dac1",
+    "experiments/silence_burst_contracts.py": "8762a98bf64d57d601927874f767e6cc225af2325a167f6fea0b779d45b60788",
+    "experiments/theory/79_learned_windows_and_silence_bursts.md": "eb05c619063261f6e8c4fef57b617d277ad40f0fad3629b1c47e021f2cc7432e"
+  },
+  "wall_s": 0.48082571499980986,
+  "max_rss_kb": 282720,
+  "scope": "Event-only additive/decaying primitive and two-layer composition; exact history-cell gradients and finite-option unrealized boundary credit. No fitted integrated native model, natural-stream advantage, or free continuous merge/split gradient claim."
+}
