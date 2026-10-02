@@ -1313,7 +1313,7 @@ Labelled diagnostic, not the integrated native architecture. The input-gated tem
 | KN counts, frozen o5 | 131,072/1 | 2.349 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o4 | 131,072/1 | 2.346 | Not FLOPs | Not FLOPs | Not FLOPs |
 
-Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
+Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap; both hold formally, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the base cannot see the counts it complements, so flat width reflects an inert base (Theory §389), not tax relief. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
 
 ## Appendix B (continued). Ours: native temporal-core language
 

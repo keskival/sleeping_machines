@@ -3150,7 +3150,9 @@ def blocks(M, tasks, ev):
              crow,[44,27,20,27,28,27])),
             ('small','Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and '
              'passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier '
-             'gap. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory '
+             'gap; both hold formally, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the '
+             'base cannot see the counts it complements, so flat width reflects an inert base (Theory §389), not tax relief. '
+             'Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory '
              'development evidence; no comparable-quality Transformer claim.')])
     for begin in range(0,len(tasks.get('native_language',[])),4):
         rows=tasks['native_language'][begin:begin+4]
