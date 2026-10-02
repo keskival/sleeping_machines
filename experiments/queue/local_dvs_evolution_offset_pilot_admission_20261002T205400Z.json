@@ -1,0 +1,42 @@
+{
+  "status": "admitted",
+  "tag": "local_dvs_evolution_offset_pilot_admission_20261002T205400Z",
+  "completed_prerequisites": {
+    "experiments/results/diagnostics/local_dvs_evolution_offset_contracts_20261002T205000Z.json": "e0aaec1d1ba622cf01e4eb51f962efbf86571336f167cb2248d1e6d8b9774173",
+    "experiments/results/dvs_native/local_dvs_evolution_offset_joint_smoke_20261002T205200Z.json": "09bf48d377f5f79b3c44ba598c4cc4fef0fbfce8b1eb7b57a4d853d50ac657aa",
+    "experiments/results/dvs_native/local_dvs_evolution_offset_alternating_smoke_20261002T205300Z.json": "69af6b1a777869cf1effd3698d4235c7bb22136210d562864d471d44dcca5996"
+  },
+  "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+  "schedules": [
+    "joint",
+    "alternating"
+  ],
+  "queues": [
+    "experiments/queue/local_dvs_evolution_offset_joint_pilot_s6_20261002T205500Z.txt",
+    "experiments/queue/local_dvs_evolution_offset_alternating_pilot_s6_20261002T205700Z.txt"
+  ],
+  "protocol": {
+    "fit": 256,
+    "dev": 192,
+    "epochs": 4,
+    "seed": 6,
+    "update_targets": 16,
+    "lr": 0.003
+  },
+  "gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "selection": "Among variants passing against saved local, choose minimum selected development NLL then lower counted fitting work. Only that unchanged schedule receives seed7 confirmation. Neither passing stops this offset campaign.",
+  "scope": "Two schedules declared before either pilot completes; same inference initialization/data/draws. Offset-only and alternating-block hypotheses separated; no added credit repair. Exploratory candidate selection, not independent evidence or supremacy.",
+  "host_guards": {
+    "threads": 1,
+    "nice": 19,
+    "vms_kib": 3000000,
+    "rss_kib": 1250000,
+    "min_available_mib": 8192,
+    "timeout_s": 240
+  }
+}
