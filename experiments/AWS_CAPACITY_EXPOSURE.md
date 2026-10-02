@@ -31,7 +31,7 @@ iso-quality supremacy comparison.
 
 Six contract stages and six accounting smokes precede six pilot fits, each in
 a unique queue through run_safe. Three CPU slots on this AWS host only. Prior
-source64 contract measured about2.59GiB RSS; caps4GiB groupRSS/6GiB VMS per
+source64 contract measured about2.47GiB RSS; caps4GiB groupRSS/6GiB VMS per
 job and8GiB MemAvailable floor retain headroom on31GiB host.7200s timeout
 uses completed815–868s S16 fits and a fourfold query budget plus evaluation
 margin. Inspect measured contracts/smokes before relying on that projection;

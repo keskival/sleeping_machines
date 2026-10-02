@@ -361,5 +361,5 @@
   "max_parallel_jobs": 3,
   "protocol": "experiments/AWS_CAPACITY_EXPOSURE.md",
   "scope": "Exploratory integrated occupied-capacity test with8 fit queries/source/pass and16 dev populations; compare completed S16 common-seed fits. Changed total data/population size/window composition disclosed; no zero-cost discovery or iso-data supremacy claim.",
-  "timeout_basis": "Comparable S16 fits~815\u2013868s; fourfold query budget projects~3500s plus larger evaluation;7200s margin. Source64 prior contract measured~2.59GiB RSS;4GiB RSS/6GiB VMS cap,8GiB floor."
+  "timeout_basis": "Comparable S16 fits~815\u2013868s; fourfold query budget projects~3500s plus larger evaluation;7200s margin. Source64 prior contract measured~2.47GiB RSS;4GiB RSS/6GiB VMS cap,8GiB floor."
 }
