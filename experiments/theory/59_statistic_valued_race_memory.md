@@ -823,3 +823,28 @@ updates per event: capacity beyond activity), depth 4, payload 32, and all three
 reaches ≥ 70%, approaching RBF. Fitting work grows mainly through scored keys and losing-value credit,
 which are charged. Per-query inference work and selected updates are reported beside quality. A gain from
 pool alone would be the first real-data evidence that available capacity beyond activity pays.
+
+## 397. Importing Transformer language into the asynchronous substrate
+
+**Correspondence, stated exactly.** With clock rates exp(q·k/√d_h), a race's first arrival is key i with
+probability softmax_i (§96), so one race is an unbiased one-sample estimator of an attention head. Its
+*expected* delivery Σπ_i v_i is the head exactly. Pre-norm feed-forward blocks, layer norms, residuals and the
+KV cache map to local vector maps and persistent addressed state. The substrate therefore contains Transformer
+computation **in expectation**, and exactly under expected delivery. It is not identical step for step: sampling
+variance, bounded candidate sets and truncated credit are the differences.
+
+**Strategy.** Small-data language measures closeness to counts for every learner (§394), so learning language from
+scratch here is not where the substrate can show value. A trained Transformer's weights can instead be run as a
+race-attention event stream (sleeping_machines/race_transformer.py). Expected delivery reproduces the Transformer
+exactly (contract: 1e-10 in double). Sampled races cut value reads from n to at most S per head, and shortlists
+restrict both. A per-head elapsed-time clock term exp(−λ_h (t_now − t_i)), zero at conversion, lets physical time
+modulate attention on asynchronous streams while the imported language weights stay fixed.
+
+**Tests.** (1) Exactness on the trained E64 Transformer (AWS checkpoint; experiments/race_transformer_eval.py):
+expected-delivery bpc equals the original's. (2) Sparsity frontier: bpc against value reads and key scores per
+token for S ∈ {1,4,16} and m ∈ {8,32,64}. Prediction (P397a): m = 32 stays within .05 bpc of the original at a
+≥ 4× value-read reduction with ctx 256; single-sample races (S = 1) lose more than .2 bpc, so variance reduction
+is needed. Key scoring stays O(n) without a candidate index, so the honest saving is in value reads until
+discovery is learned. (3) Asynchrony: the converted model on timestamped text interleaved with irregular events,
+fitting only λ and a small event adapter, against the same Transformer given time encodings. This is the
+regime where an advantage is possible.
