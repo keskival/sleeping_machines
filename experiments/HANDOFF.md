@@ -1577,3 +1577,17 @@ phase barrier/RSS admission retained. Three slots,2GiB RSS/job,8GiB floor,
 900s fit timeout from small bounded workload. Worker auto-commits/pushes each
 completed result, stops admission on failure and preserves in-flight results.
 No history ladder queued; calibration decision requires completed results.
+
+## AWS assigned joint-event battery completed — 2 October, 16:49 UTC
+
+Both accounting smokes pass (<0.5GiB RSS); all six fixed base controls complete,
+results/selected predictors/common-unit analysis committed and pushed through
+93fc390. GRU confirmation49.707/50.781/50.879%; Transformer50.098/50/50%.
+All fail78.398% calibrated threshold. No history ladder admitted. Completed
+findings: aws_joint_event_fit_20261002T164800Z_FINDINGS.md; theory note
+aws_20261002_joint_event_calibration.md derives alternating-age phase versus
+one-threshold information limitation and nominates separately frozen binding/
+retention/phase probes rather than automatic scale-up. Native joint-event
+architecture remains prioritized; local host owns its fits/credit changes.
+No native-versus-control or supremacy claim from uncalibrated controls.
+AWS worker and summary publisher completed; no AWS training remains active.

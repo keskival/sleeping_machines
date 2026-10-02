@@ -1,0 +1,23 @@
+16:44:22 start aws_joint_event_calibration_20261002T164400Z_transformer
+16:44:22 start aws_joint_event_calibration_20261002T164400Z_table
+16:44:22 start aws_joint_event_calibration_20261002T164400Z_gru
+16:44:24 done aws_joint_event_calibration_20261002T164400Z_table (exit 0)
+16:44:24 done aws_joint_event_calibration_20261002T164400Z_transformer (exit 1)
+Current branch main is up to date.
+16:44:26 done aws_joint_event_calibration_20261002T164400Z_gru (exit 1)
+To github.com:keskival/sleeping_machines.git
+   c9a2c7d..7f7b05d  main -> main
+Current branch main is up to date.
+To github.com:keskival/sleeping_machines.git
+   7f7b05d..ef2babd  main -> main
+Current branch main is up to date.
+To github.com:keskival/sleeping_machines.git
+   ef2babd..b4591e2  main -> main
+{"tag": "aws_joint_event_calibration_20261002T164400Z_table", "result": "experiments/results/diagnostics/aws_joint_event_calibration_20261002T164400Z_table.json", "reused": false, "max_rss_kb": 77892, "wall_s": 0.4701774020213634}
+Traceback (most recent call last):
+  File "/workspace/scripts/run_aws_matrix_recovery.py", line 199, in <module>
+    main()
+    ~~~~^^
+  File "/workspace/scripts/run_aws_matrix_recovery.py", line 185, in main
+    raise RuntimeError('; '.join(failure_errors))
+RuntimeError: Guarded stage aws_joint_event_calibration_20261002T164400Z_transformer failed with exit 1; wall 2.031s; Guarded stage aws_joint_event_calibration_20261002T164400Z_gru failed with exit 1; wall 4.042s
