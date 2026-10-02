@@ -468,3 +468,35 @@ out-of-bounds PDF text. All three supervisor lifecycles are completed, tmux
 exited normally, no local numerical job remains. Model sources stayed frozen
 through execution; completed findings are committed locally on main. Remote
 sync is handled by the external publisher; this session did not push via SSH.
+
+## Integrated credit attribution, 2 October, 06:00 UTC
+
+User renews autonomous work. Read latest shared/AWS handoff and theory59:
+new count-gate minimal controls match or beat full cores at2K/8K. Thus gate
+gains cannot establish deeper temporal learning. Existing32K count gate/scalar/
+minimal queue belongs to the other thread; no local trainer/progress checkpoint
+is present in this session. Do not duplicate its settings. AWS owns event
+confirmations and provisioned large dense comparisons.
+
+Prioritized new integrated comparison: queue/local_count_credit64_20261002T060000Z.json,
+supervisor scripts/run_count_credit_pair.py. Reuses completed full/minimal
+16-credit2K gate-only results; new64-credit full H2/d16/depth8 and minimal
+H2/d2/depth1. Same data hashes, K4/prequential dev,4passes, seed6, lr.002,
+U64/warm512,8188 fitting targets/128 optimizer updates. Only graph reach changes
+within each core. Native races, persistent addressed state, separate keys/values,
+channel mixing and unrealized-route credit remain. No model/driver substitution.
+The mechanism gap is omitted producer credit across detach boundaries; the
+frozen audit showed30.9% gradient difference, not a quality benefit.
+
+Actual gated64-credit normalization/head-gradient/cursor/serialized-Adam
+contracts precede full and minimal192/129-target accounting smokes (first64,
+persistent64, partial63). Contracts and smokes must stay below900000KiB RSS
+for admission; jobs retain1250000KiB groupRSS/3000000KiB VMS/8192MiB floor,
+1thread/nice19/watchdog. Full fit3600s, minimal1200s, based on historical
+1096s/164s16-credit fits with generous long-graph margin. One job per queue.
+Model/source/queue hashes freeze before launch; every completed result committed
+locally on main. Four-arm analysis charges all fitting work and counts separately.
+Follow-up nomination requires full64 improve over full16 by.02bpc AND beat
+matched minimal64 by.02bpc with≤2× full-core fitting work. No automatic scale-up.
+Small single-seed/development evidence; semantic abstraction, available capacity
+beyond activity, discovery/traffic and unbiased hard-route credit remain open.

@@ -1,0 +1,1 @@
+local_count_credit64_minimal_smoke_D192_20261002T060000Z experiments/count_carrying_language_benchmark.py --tag local_count_credit64_minimal_smoke_D192_20261002T060000Z --chunk 64 --update-targets 64 --warmup-targets 512 --heads 2 --pool 2 --orders 4 --escape-gate --lr 0.002 --seed 6 --payload 2 --depth 1 --fit 192 --dev 129 --epochs 1

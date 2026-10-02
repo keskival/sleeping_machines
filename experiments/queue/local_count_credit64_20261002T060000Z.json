@@ -1,0 +1,158 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_count_credit64_contracts_20261002T060000Z",
+      "stage": "contracts",
+      "queue": "experiments/queue/local_count_credit64_contracts_20261002T060000Z.txt",
+      "queue_sha256": "1827630e18b6cdcd3372a339dd2f0674bba3f9a92070aeb252719658d709ee70",
+      "result": "experiments/results/diagnostics/local_count_credit64_contracts_20261002T060000Z.json",
+      "timeout_s": 300,
+      "requires": []
+    },
+    {
+      "tag": "local_count_credit64_full_smoke_D192_20261002T060000Z",
+      "stage": "smoke",
+      "queue": "experiments/queue/local_count_credit64_full_smoke_D192_20261002T060000Z.txt",
+      "queue_sha256": "c4d359110364db852ce921afde11f005192000b576e812f47041837031adbff6",
+      "result": "experiments/results/count_carrying_language/local_count_credit64_full_smoke_D192_20261002T060000Z.json",
+      "timeout_s": 600,
+      "requires": [
+        "local_count_credit64_contracts_20261002T060000Z"
+      ]
+    },
+    {
+      "tag": "local_count_credit64_minimal_smoke_D192_20261002T060000Z",
+      "stage": "smoke",
+      "queue": "experiments/queue/local_count_credit64_minimal_smoke_D192_20261002T060000Z.txt",
+      "queue_sha256": "20298f72e1b5507741341b0a2ae1b0a00f695f80632c94c8a3d0a708b7ad7595",
+      "result": "experiments/results/count_carrying_language/local_count_credit64_minimal_smoke_D192_20261002T060000Z.json",
+      "timeout_s": 300,
+      "requires": [
+        "local_count_credit64_contracts_20261002T060000Z",
+        "local_count_credit64_full_smoke_D192_20261002T060000Z"
+      ]
+    },
+    {
+      "tag": "local_count_credit64_full_D2048_20261002T060000Z",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_count_credit64_full_D2048_20261002T060000Z.txt",
+      "queue_sha256": "845b93a9b56416ee1c7ca2333b062d7b8c5e1fcd9d52a66c4ca9dbdfaf1b5b58",
+      "result": "experiments/results/count_carrying_language/local_count_credit64_full_D2048_20261002T060000Z.json",
+      "timeout_s": 3600,
+      "requires": [
+        "local_count_credit64_contracts_20261002T060000Z",
+        "local_count_credit64_full_smoke_D192_20261002T060000Z",
+        "local_count_credit64_minimal_smoke_D192_20261002T060000Z"
+      ]
+    },
+    {
+      "tag": "local_count_credit64_minimal_D2048_20261002T060000Z",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_count_credit64_minimal_D2048_20261002T060000Z.txt",
+      "queue_sha256": "3742e4202fa1d2a298aaac1b00d8cae44d6038ba2534889e2fbafb6ec03d9987",
+      "result": "experiments/results/count_carrying_language/local_count_credit64_minimal_D2048_20261002T060000Z.json",
+      "timeout_s": 1200,
+      "requires": [
+        "local_count_credit64_full_D2048_20261002T060000Z"
+      ]
+    },
+    {
+      "tag": "local_count_credit64_analysis_20261002T060000Z",
+      "stage": "analysis",
+      "queue": "experiments/queue/local_count_credit64_analysis_20261002T060000Z.txt",
+      "queue_sha256": "e2b34e77601f7b4dcf860ff7f45e6437557a6717d11f5158677a8153ab93ba95",
+      "result": "experiments/results/diagnostics/local_count_credit64_analysis_20261002T060000Z.json",
+      "timeout_s": 120,
+      "requires": [
+        "local_count_credit64_full_D2048_20261002T060000Z",
+        "local_count_credit64_minimal_D2048_20261002T060000Z"
+      ]
+    }
+  ],
+  "references": [
+    "experiments/results/count_carrying_language/curie_count_carrying_D2048_K4_gate_s6_20261002T032000Z.json",
+    "experiments/results/count_carrying_language/curie_count_carrying_D2048_K4_gate_minimal_p2_d1_s6_20261002T050000Z.json"
+  ],
+  "comparison_results": {
+    "full16": "experiments/results/count_carrying_language/curie_count_carrying_D2048_K4_gate_s6_20261002T032000Z.json",
+    "minimal16": "experiments/results/count_carrying_language/curie_count_carrying_D2048_K4_gate_minimal_p2_d1_s6_20261002T050000Z.json",
+    "full64": "experiments/results/count_carrying_language/local_count_credit64_full_D2048_20261002T060000Z.json",
+    "minimal64": "experiments/results/count_carrying_language/local_count_credit64_minimal_D2048_20261002T060000Z.json"
+  },
+  "source_sha256": {
+    "experiments/count_carrying_language_benchmark.py": "48f28c315b135cfe50eefa2ddec6dbf0a72e92179b53b7e3a3af20da2b45bc23",
+    "experiments/count_credit_pair_analysis.py": "e30ac87535f77a4a06f67c2e6df7273d1cc1ec1cff51ab803dceaef70310a3d5",
+    "experiments/count_credit_window_contracts.py": "7395a52b9dd859812622b6bbd2b2a6cb89caddbe3abd7aa45c4ffc5e230bc279",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "scripts/run_count_credit_pair.py": "1aa7c782496433bebe810ad3c4146ef18ae070cf832a60b30214a8fe7da5475b",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/count_carrying_language.py": "745809a8ce6800c7807ea23cc9846cb2f3575db682bb651dde6d9dcb02c1f95a",
+    "sleeping_machines/count_escape_gate.py": "49be8e7d3cdc5e06744db727cf63f20ab0aaec08a5bbcaf7d05f8d65448d6a50",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "tests/test_count_carrying_language.py": "373ebdedcfa342704c77187b68c28166cde9ee200745e1b4755f240d82fa242a",
+    "tests/test_count_escape_gate.py": "8062cc0ee80f94c1196251dc7cbb702f275474a6ba774024e69eb6d3a46fa456"
+  },
+  "scope": "Bounded integrated 2K learning test of graph reach64 against saved16 with matched minimal-core arms. No changes to model/driver, no duplicate32K fit, no dense training or automatic scale-up. Contracts and representative first/persistent/partial accounting smokes precede fits.",
+  "protocol": {
+    "fit": 2048,
+    "dev": 8192,
+    "epochs": 4,
+    "seed": 6,
+    "optimizer_targets": 64,
+    "warmup_targets": 512,
+    "lr": 0.002,
+    "orders": 4,
+    "escape_gate": true,
+    "count_message": false,
+    "credits": [
+      16,
+      64
+    ],
+    "full_core": {
+      "payload": 16,
+      "depth": 8
+    },
+    "minimal_core": {
+      "payload": 2,
+      "depth": 1
+    },
+    "selection": "minimum dev bpc over four fixed passes",
+    "followup_gate": {
+      "minimum_full_vs_minimal_gain_bpc": 0.02,
+      "minimum_full_credit_gain_bpc": 0.02,
+      "maximum_full_fitting_work_ratio": 2
+    }
+  }
+}

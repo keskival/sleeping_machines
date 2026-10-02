@@ -463,3 +463,15 @@ must appear as full < minimal by ≥ .02. Mechanisms aimed at the gap, all to be
 control: longer credit horizons; content retrieval (copy/induction over persistent addressed state,
 §384); and learned keys pooling contexts by evidence (§382), so the core supplies generalization the
 counts cannot.
+
+
+**Next integrated credit test, 2 October06:00 UTC.** The full/minimal2K64-credit
+pair retains the current native/count-gate construction exactly.64 rather than
+16 targets of graph reach allows later losses to teach producer states within
+the same64-target Adam window; forward persistent capacity and optimizer
+exposure are held fixed. The four-arm full/minimal ×16/64 comparison measures
+whether this helps the core beyond local count smoothing. Complete-step work
+and actual64-credit optimizer/cursor recovery precede the fits. A≥.02bpc
+full-core gain must also beat the matching minimal64 arm by≥.02bpc before
+nomination; improvement over scalar counts alone is insufficient. This remains
+an exploratory single-seed2K fit, with no core substitution or automatic scale-up.
