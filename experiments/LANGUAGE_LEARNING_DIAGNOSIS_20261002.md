@@ -31,8 +31,24 @@ here concerns identical query suffix/count inputs, not arbitrary count-memory
 inspection. These controlled synthetic results do not demonstrate natural-text
 advantage. They refute an architectural impossibility claim on this relation
 and motivate contextual protected evidence plus charged joint learning.
-Unchanged seed7/8 pairs and frozen delivered-value erasure are running under
-the one-job guard; their reserved seed75001 result remains pending.
+Unchanged seed7/8 pairs and frozen delivered-value erasure subsequently
+completed on reserved seed75001/256 queries. Joint/local seed7 scores
+99.21875%/.049604100bits versus100%/.003160244; seed8 scores100%/
+.000147362 versus100%/.003534957. Neither replicates the prespecified
+.05-bit joint superiority gate. Preserve the large seed6 result with this
+failed replication beside it. Three of four frozen zero-delivered-value
+models retain98.83–100% accuracy through native context; seed8 joint falls
+to75%. Native nonlocal learning is possible at these settings, but the bank's
+training benefit is not isolated without a matched bare-core refit. This
+does not establish useful extra depth or language semantics.
+
+The joint-recency task has a learned causal age table reaching99.51% on its
+reserved1024-query confirmation, so it is not the practical advantage region
+the user now requests. Real DVS calibration retains stronger controls and
+meaningful headroom: calibrated counts58.85%, nonlinear grid73.44–74.48%
+on984fit/192 subject-disjoint first-second gestures. The integrated native
+full fit is running after numerical/learning admission; its scores remain
+pending. Theory73/74 state the information and resource boundaries.
 
 The user's concern is whether learned language representations have lost useful
 depth and reduced to surface counting. The current integrated model, the older

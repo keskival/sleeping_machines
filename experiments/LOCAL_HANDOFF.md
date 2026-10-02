@@ -1,5 +1,61 @@
 # Local host: current research continuation
 
+## Real-packet native full fit active, 2 October14:55 UTC
+
+Combined relation/theory/confirmation report recovered successfully:113pages,
+all text bounds/orphan checks pass, completed publication record
+`results/diagnostics/local_joint_report_recovery_20261002T140500Z.json`.
+Old failed publication logs and restored historical evidence remain preserved.
+
+Strong DVS calibration completed on984 first-second fitting gestures/users1..19
+and192 dev/users20..23,4x4/polarity/50ms closures. No official test access.
+Fit-only calibrated class-count reference58.8542%/1.373369NLL; best linear
+61.4583%; selected minimum-NLL RBF C10/g1:73.4375%/.706478NLL, maximum grid
+accuracy74.4792%. Meaningful practical headroom:14.5833pp over counts and
+all grid cells below95%. Raw preprocessing123.976s/264832KiB; entire strong
+control grid15.926s/420976KiB. JSONs and checksummed data/model artifacts:
+`results/dvs_calibration/local_dvs_calibration_20261002T141400Z*`.
+Solver FLOPs unknown, not zero. All cells and warnings remain preserved.
+
+Prioritized integrated candidate: unchanged AddressedEventHeads fast training,
+one observed source,33 input coordinates,11 classes,p16/depth2/H2/pool2.
+Temporal races, separate keys/values, sparse persistent state and unrealized
+value credit retained. Counts are observed camera packets, not label-experts.
+Common per-pass/fitting-seed race draws and fixed eval seed314159; identity,
+index and labels do not enter randomness or event inputs. Same fitting-only
+log-count normalization as controls, query flag at1s, reset each gesture.
+Theory73 records admission; theory74 separates information/gradient/frontier
+contracts. No exact whole-route gradient, useful-depth or dormant-capacity claim.
+
+Numerical contracts completed: reference/fast forward and all parameter
+gradients, causality/input metadata, trained inference, actual interrupted
+driver/model/Adam/RNG/cursor recovery. Result
+`results/diagnostics/local_dvs_native_contracts_20261002T143900Z.json`.
+Full-shape smoke8fit/8dev,2epochs/U4 completes29.697s/344108KiB;
+first8fit NLL2.704424→2.035225, learning gate and operation coverage pass.
+Preserved `results/dvs_native/local_dvs_native_smoke_20261002T144500Z.json`.
+
+Active frozen one-job plan `queue/local_dvs_native_full_20261002T145300Z.json`,
+tmux `local-dvs-native-full-20261002T145300Z`, worker41833/trainer41852,
+started14:50:41. Full984/192,8 fixed passes,U16,Adam.003,s6:7872 fitting
+presentations/496 updates; min devNLL selection, no epoch extension. Timeout
+7200s conservatively derives from smoke clip-call ratio. One thread/nice19,
+RSS1250000KiB/VMS3000000KiB/min8192MiB guards. Observed~356000KiB groupRSS,
+~11.5GiB MemAvailable. Epoch1 dev54.6875%/1.252066NLL is RUNNING evidence,
+not completed benchmark or advantage. Online checkpoints align optimizer;
+best-state selection saved separately. Numerical sources/theory73/calibration
+and prerequisite JSON hashes remain frozen; do not edit or duplicate jobs.
+
+Next: finish all fixed passes, run completed-only `dvs_native_analysis.py`
+through a new one-job queue, compare against every strong cell in common
+work units. Charge all preprocessing/validation and mark sampled native
+arithmetic estimates. A development quality win needs frozen independent
+confirmation and measured matching inference boundaries before practical
+advantage. If it fails, diagnose information paths/conditioning/clock/credit
+without weakening controls. AWS owns new large dense campaigns; other curie
+thread owns language pooling/count strata/joint-recency fits. Main retained,
+three stashes intact, no unmerged index at last check.
+
 ## Strong practical calibration changes priority, 2 October13:50 UTC
 
 User explicitly requires advantage where existing solutions are not already
