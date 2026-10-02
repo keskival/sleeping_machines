@@ -1,0 +1,1 @@
+aws_event_history_20261002T123343Z_history32_s6_smoke experiments/event_history_comparison.py --tag aws_event_history_20261002T123343Z_history32_s6_smoke --model history32 --seed 6 --smoke

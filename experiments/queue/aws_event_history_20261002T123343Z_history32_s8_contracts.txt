@@ -1,0 +1,1 @@
+aws_event_history_20261002T123343Z_history32_s8_contracts experiments/event_history_comparison.py --tag aws_event_history_20261002T123343Z_history32_s8_contracts --model history32 --seed 8 --contracts-only

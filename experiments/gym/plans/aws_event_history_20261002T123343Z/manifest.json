@@ -1,0 +1,581 @@
+{
+  "schema": 1,
+  "status": "prepared_not_started",
+  "run_prefix": "aws_event_history_20261002T123343Z",
+  "jobs": [
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_contracts",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s6_contracts.txt",
+      "queue_sha256": "7a8bfa8b7242f8553d3b2fe11d9d197857285c3478867210b06b57016279f0c9",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_smoke",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s6_smoke.txt",
+      "queue_sha256": "0eb26a2ff8f8be01a4806fd8f432bc703d8d5e67ec3faa40ee020ae81edcba90",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_pilot",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s6_pilot.txt",
+      "queue_sha256": "ac43eeb1e6307daf39240db69787f2ef7aa98a133da8547388bee3511f949980",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s6_contracts",
+        "aws_event_history_20261002T123343Z_history32_s6_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_contracts",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s7_contracts.txt",
+      "queue_sha256": "f06d32ecf933e7f631177f005838eb7e2dbc5d31b728bb163dd6f4868a923485",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_smoke",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "smoke",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s7_smoke.txt",
+      "queue_sha256": "5f8a6260d68a38fc4256f9292daa50f2e296f2316e2ebcadb03cc84b6e2d513e",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_pilot",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s7_pilot.txt",
+      "queue_sha256": "230ead629ff5d92e3ba237c73dfa824ae94548a1b3749d6e842bc13661ace4e4",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s7_contracts",
+        "aws_event_history_20261002T123343Z_history32_s7_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_contracts",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s8_contracts.txt",
+      "queue_sha256": "1b77c6e4a187b0d72254930064fcf8b3b92aabf48447899b3208a9bb42c1cad4",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_smoke",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "smoke",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s8_smoke.txt",
+      "queue_sha256": "5bd4bab395c6231525dfaee9449779ecba9c1203a73fc3c400efe0dea7bc2e89",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_pilot",
+      "domain": "temporal",
+      "variant": "history32",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history32_s8_pilot.txt",
+      "queue_sha256": "edec8f3f983ced43d8d3c82dd20629c76d86835c7e5d6c16a762fbc96b8fd005",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history32_s8_contracts",
+        "aws_event_history_20261002T123343Z_history32_s8_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_contracts",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s6_contracts.txt",
+      "queue_sha256": "6d5511ac4a12b86da9db8a0d5f0a654ac9933d9d3ccee880af639f3dfcf74902",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_smoke",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s6_smoke.txt",
+      "queue_sha256": "7cf2217f65ed6a4dec39cfed63a3f237ad01c10b82f6f3ed90196fd6da795a66",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_pilot",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s6_pilot.txt",
+      "queue_sha256": "8bcfe6d1f6b43b0b82fcdf47a51f148fa2836ef5f142f5ac65d6ec68132b6944",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s6_contracts",
+        "aws_event_history_20261002T123343Z_history128_s6_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_contracts",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s7_contracts.txt",
+      "queue_sha256": "6f24f1cd97e4304d881c8587b1512922982a27691d9b4bcb948c6c81bce75e34",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_smoke",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "smoke",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s7_smoke.txt",
+      "queue_sha256": "aaba97dae94dd86353cd9984c4c7954b152af9454cc12f3eb38a4eef402a2b3d",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_pilot",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s7_pilot.txt",
+      "queue_sha256": "5fa553c7fd143c72579ca5bde8fd57694780495a2bdaba57f48903ec33c57b03",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s7_contracts",
+        "aws_event_history_20261002T123343Z_history128_s7_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_contracts",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s8_contracts.txt",
+      "queue_sha256": "441210fe2b00914ae0eb2f2f611a10533f59e5d007e97911cc000b15ec181c7a",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_smoke",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "smoke",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s8_smoke.txt",
+      "queue_sha256": "049fab06826c78503ee002ddd06af1f975d1b7a5d63d4adc2555be3c5fd2a325",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_smoke.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_pilot",
+      "domain": "temporal",
+      "variant": "history128",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_history128_s8_pilot.txt",
+      "queue_sha256": "ea380df33b831177d4490a84a9aab3181dd1b114a756ff3c3838856c4e2adb15",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_history128_s8_contracts",
+        "aws_event_history_20261002T123343Z_history128_s8_smoke"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s6_contracts",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s6_contracts.txt",
+      "queue_sha256": "6a84f5370d5853adaab44b120de0913667081a5c6d3f2e69a016c17134853e82",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s6_pilot",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s6_pilot.txt",
+      "queue_sha256": "a32a0c7f2e0573a16b3672e98ccb0a557b57d8bf50a753b54e18fd89c6df1f71",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s6_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_private_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s7_contracts",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s7_contracts.txt",
+      "queue_sha256": "12dd72467d6b14721d74a95308b24b8dbd4ec7f696e433e5c4abf451619ccba3",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s7_pilot",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s7_pilot.txt",
+      "queue_sha256": "98e93ae75e2464531e9a70f00cee73f98cc3e36d0512884b4618b951dd66f88e",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s7_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_private_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s8_contracts",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s8_contracts.txt",
+      "queue_sha256": "6feb636d561ace9d49d2c584b4f3214d3ae99501b90faa7efa4f86e160c6e795",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s8_pilot",
+      "domain": "temporal",
+      "variant": "native_private",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_private_s8_pilot.txt",
+      "queue_sha256": "85bb6be2a746c2d5bfd8594b40a84e5f253406a12e4bf613e35e8bdb934f62e2",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s8_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_private_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s6_contracts",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s6_contracts.txt",
+      "queue_sha256": "2fe7290573ecb2578edc2d9d24719b149a2b0dbdda1f5eb24f642afddb2168a5",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s6_pilot",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s6_pilot.txt",
+      "queue_sha256": "79e0c99e08a7192d34c6ff0c4edd664169573d2ee02d883fec8cdb185c91bba9",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s6_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_shared_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s7_contracts",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s7_contracts.txt",
+      "queue_sha256": "5439e10d7297ef85ad18b127b00e2716bc75e3d137a6d9a63bfa40878b633038",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s7_pilot",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s7_pilot.txt",
+      "queue_sha256": "aae7576968b03b9cd5eb1423b389482bdf84007f91e6278d2585609c381bb093",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s7_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_shared_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s8_contracts",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s8_contracts.txt",
+      "queue_sha256": "55d43a5ba2dc08c723626bce5e5c42787692654b41d13b5439976dad4fb3f09b",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s8_pilot",
+      "domain": "temporal",
+      "variant": "native_shared",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_event_history_20261002T123343Z_native_shared_s8_pilot.txt",
+      "queue_sha256": "af2811f007bd6f6cb9601f01058609ec9e37e0680e3d2a6ae29cc8ceb4cdc232",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s8_pilot.json",
+      "requires": [
+        "aws_event_history_20261002T123343Z_native_shared_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 4194304,
+        "MIN_AVAIL_MB": 8192
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/event_history_comparison.py": "09e0651cd25fc8e632cf220302be9d2527fb071074bc32ad05e6aa271f076acf",
+    "sleeping_machines/event_history_control.py": "37333ba488a906d540580dd3cb21cb6f5bd0b9fcd11ebe5310fa7febc3e731d8",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/rule_seed_event_benchmark.py": "e96daaec2c61969463e9806c3bca884beeaad9ca587d1ff227a6d1150ef4185d",
+    "experiments/rule_seed_event_contracts.py": "308f419909adace5fb4256899e6d963f5f9ba40dba6a9afc9a2dfa70a6070f93",
+    "sleeping_machines/rule_seed_event_heads.py": "a8fbe3c0e7573af6e00c3d8e02e5b2cca8dd6439efee1fe6d231b48a83352817",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "max_parallel_jobs": 3,
+  "protocol": "experiments/AWS_EVENT_HISTORY_COMPARISON.md",
+  "scope": "Fresh4096-query seed4201 diagnostic; six saved native checkpoints and six learned history controls. No native refitting, no changes after confirmation; history length3 prior declared."
+}

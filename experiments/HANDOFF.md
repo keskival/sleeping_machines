@@ -1494,3 +1494,21 @@ scope. Scripts compile. `scripts/run_aws_capacity_summary.py` waits exact
 worker835962 terminal completion, then reserves host lock during publication.
 Session `aws-capacity-summary-20261002`; log
 `queue/aws_capacity_summary_20261002.out`. No pending scores promoted.
+
+
+## Completed capacity; stronger fresh-data comparison — 2 October, 12:35 UTC
+
+All18 occupied-capacity stages and full inventory completed/pushed. Shared
+source64 mean99.251%/.~1.034GFLOPs versus private97.396%/~1.324GFLOPs;
+no iso-data claim against source16. Current pull through5bd385c includes new
+other-host joint/statistic variants; do not duplicate them.
+Next AWS plan `experiments/gym/plans/aws_event_history_20261002T123343Z/manifest.json`: six frozen native restores/scores and
+six learned causal-history controls, widths32/128, seeds6/7/8, same512×4/U64.
+Fresh4096-query seed4201; all contracts/smokes before final scores. Explicit
+three-history prior, input query scheduling and different mechanisms documented
+in AWS_EVENT_HISTORY_COMPARISON.md. Original sources unchanged. Two model
+contracts pass; numeric optimizer/recovery checks remain guarded admissions.
+Resource gate is intra-family1pp noninferiority margin and≤.85 fitting ratio;
+controls must be included before broader resource claims. Every seed/width kept.
+RSS4GiB/VMS6GiB,8GiB floor,1800s per stage,3 CPU slots. Worker publishes
+complete JSONs serially on main. No new long native fit or pending result claim.
