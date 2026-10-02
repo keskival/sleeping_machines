@@ -2053,6 +2053,26 @@ Promotion gate FAILS: NLL improvement -0.043869, accuracy decline-2.604pp, whole
 
 All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_pairs_20261002T174000Z.json; theory77/80/81.
 
+## Appendix B. Completed matched credit pilot: state clock
+
+![report/figures/local dvs credit comparison state clock 20261002T174600Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_clock_20261002T174600Z_learning.png.png)
+
+| Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
+| --- | --- | --- | --- | --- | --- |
+| local | 54.17 | 1.3059 | 2.285696 | 2.2321 | 0.5917 |
+| state clock | 47.40 | 1.4507 | 3.060638 | 2.9889 | 0.5918 |
+
+| Credit | Workflow seconds | Peak RSS MiB | Keys / fit target | Commits / fit target | Values / fit target |
+| --- | --- | --- | --- | --- | --- |
+| local | 94.464 | 338.9 | 168 | 84 | 168 |
+| state clock | 99.314 | 339.5 | 336 | 168 | 336 |
+
+Fixed256 fit/192 development gestures, four passes/1,024 target presentations/64 Adam updates; same initialization, causal packets, draws and minimum-devNLL selection. Unchanged p16/L2/H2/pool2 architecture:15,523 parameters/eight available receivers; inference168 scored keys/84 commits/168 candidate values per21-event prefix. Fitting activity includes shadow replay where present.
+
+Promotion gate FAILS: NLL improvement -0.144750, accuracy decline6.771pp, whole-fit work ratio1.3390. Required gain>=.02, decline<=1pp, work ratio<=1.50, peak RSS<900,000KiB. A failed gate stops unchanged confirmation/scale-up; all passes and negative findings retained.
+
+All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_state_clock_20261002T174600Z.json; theory77/80/81.
+
 ## Appendix B. Why actual write and joint-clock credit need a test
 
 | Frozen model | Opposed directions | Mean |value effect| | Mean |write effect| | Mean |interaction| |
