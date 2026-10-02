@@ -1702,3 +1702,21 @@ all races/clocks/keys/values/sparsewrite/counterfactual paths; no densecarrier
 or label/time oracle. Numerical/deepgradient/recovery/accounting contracts and
 smalllearning smoke needed before fixed256/192/fourpassscreen. Otherhosts own
 offset/paired/exposure/tied-map work; no duplication.
+
+## AWS integrated quadratic readout prerequisites pass — 2 October, 21:46 UTC
+
+New hypothesis after frozen context gate: standard degree2 local readout with
+zero residual, 5808 added weights, no prefix carrier or resident-memory read.
+Original native4bin p16/L2/H2/pool2/.25-clock and all temporal/key/value/state/
+credit mechanisms retained. Theory aws_20261002_quadratic_native_protocol.md
+states prior degree2 failures, exact retained scope and resource accounting.
+Contracts214400Z pass: initial RNG/logits/all old gradients EXACTLY nested;
+new head gradients nonzero; explicit polynomial derivatives; native independent
+vs batched nonzero-head state/all gradients; target-independent forward; actual
+interrupted Adam/cursor/RNG and complete operation coverage. Six-second guarded
+job, no benchmark quality claim. Old affine-only NumPy pack cannot represent
+this head and is not used; current sequential inference pays ALL5 head calls.
+Plan aws_quadratic_native_20261002T214600Z requires24/8/two-pass learning smoke
+and <=1.25fit/<=1.50inference resource admission before256/192/four-pass seed6
+pilot. Frozen pilot gate also demands >=.05NLL gain/<=1pp accuracy decline.
+No larger/seed7 run until it passes; earlier full coarse seed8 failure retained.
