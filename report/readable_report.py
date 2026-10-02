@@ -2116,8 +2116,9 @@ def blocks(M, tasks, ev):
             *([('p',"Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated "
               f"Kneser–Ney counts of the same fitting characters score {count_reference_bpc(131072):.3f} bpc at 131K and "
               f"{count_reference_bpc(1048576):.3f} at 1M, with one counting pass and no gradient work. Every completed "
-              'fit from 2K to 1M characters is above this bar. Small-N character modelling is limited by estimation; '
-              'fixed learned gates under truncated credit cannot be consistent per-address estimators, which motivates '
+              'earlier fit without count-carrying receivers from 2K to 1M characters is above this bar. '
+              'The fixed-step estimator analyzed in Theory §377 has a variance floor; this is not an impossibility '
+              'theorem for learned recurrent gates or short credit. It motivates testing '
               'count-carrying receivers with escape races and a learned base measure. Counts are reference '
               'predictors, not neural controls or a large-data comparison.')] if count_reference_bpc(1048576) is not None else []),
             ('small','Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. '
@@ -2504,7 +2505,7 @@ def blocks(M, tasks, ev):
             records=selected[begin:begin+5];rows=[];activity=[]
             for r in records:
                 a,w,d=r['args'],r['work'],r['final']['dev']
-                name=f'Ours S{a["sources"]} '+('shared' if a['shared_maps'] else 'private')+f'/P{a["protected_pairs"]}/{a["time_input"]}'
+                name=f'Ours S{a["sources"]} '+('shared' if a['shared_maps'] else 'private')+f'/P{a["protected_pairs"]}/{a["time_input"]}/s{a["seed"]}'
                 rows.append([name,f'{100*d["accuracy"]:.2f}',f'{d["nll"]:.4f}',f'{w["total_training_unit_special_flops"]/1e9:.3f}',
                              f'{w["total_training_unit_special_flops"]/w["fitting_query_targets"]/1e6:.3f}',
                              f'{(w["inference_arithmetic_flops_per_query"]+w["inference_special_functions_per_query"])/1e6:.3f}'])
@@ -2519,6 +2520,29 @@ def blocks(M, tasks, ev):
                 ('small','Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. '
                  'Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster '
                  'initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.')])
+
+    replications=[r for r in tasks.get('split_screen',[])
+                  if r['args']['tag'].startswith('aws_event_replication_20261002T005408Z_')]
+    if replications:
+        shared=[r for r in replications if r['args']['task']=='order' and r['args']['shared_maps']
+                and r['args']['protected_pairs']==0]
+        timing=[r for r in replications if r['args']['task']=='paired_timing' and r['args']['time_input']=='observed']
+        interpretation=[]
+        if shared:
+            scores=', '.join(f'seed{r["args"]["seed"]}: {100*r["final"]["dev"]["accuracy"]:.2f}%' for r in shared)
+            interpretation.append('Shared S16/P0 order replications: '+scores+'. The original seed6 screen was75.39%; '
+                'training-seed variation remains material. Private S16 replication controls and fresh-population confirmation '
+                'are required for the paired sharing claim; a completed shared-only score cannot pass that gate.')
+        if timing:
+            scores=', '.join(f'seed{r["args"]["seed"]}: {100*r["final"]["dev"]["accuracy"]:.2f}%' for r in timing)
+            interpretation.append('Observed-time paired replications: '+scores+'. Original seed6 was95.31%, '
+                'with the exact rank-only paired ceiling50%. These reuse the development distribution and were '
+                'chosen after seed6; they are training-seed evidence, not independent confirmation.')
+        pages.append([('h1','Appendix B. Native replication scope'),
+            *[('p',p) for p in interpretation],
+            ('small',f'{len(replications)} of8 reserved replication pilots are complete in this checkout. '
+                'Every completed seed is listed in the preceding common-unit tables; pending cells carry no score. '
+                'The frozen AWS replication/confirmation chain owns the remaining work; no local duplicates.')])
 
     confirmations=tasks.get('event_confirmation',[])
     for begin in range(0,len(confirmations),6):
@@ -2608,20 +2632,24 @@ def blocks(M, tasks, ev):
 
     credited=tasks.get('state_credit',[])
     if credited:
-        rows=[]
+        rows=[];activity=[]
         for r in credited:
             w=r['work'];a=r['args'];q=r['final']['dev']
             rows.append(['Ours: baseline' if not a['state_credit'] else 'Ours: write credit',
                 f'{100*q["accuracy"]:.2f}',f'{q["nll"]:.4f}',f'{w["total_training_unit_special_flops"]/1e9:.3f}',
                 f'{w["total_training_unit_special_flops"]/w["fitting_query_targets"]/1e6:.3f}',
-                f'{(w["inference_arithmetic_flops_per_event"]+w["inference_special_functions_per_event"])/1e6:.3f}'])
+                f'{(w["inference_arithmetic_flops_per_query"]+w["inference_special_functions_per_query"])/1e6:.3f}'])
+            activity.append(['Ours: baseline' if not a['state_credit'] else 'Ours: write credit',
+                f'{a["fit_targets"]}/{a["dev_targets"]}/{a["epochs"]}',f'{r["parameters"]:,}',
+                str(w['available_receivers']),f'{w["selected_updates_per_event"]}/{w["key_scores_per_event"]}'])
         pages.append([('h1','Appendix B. Addressed-state write credit'),
             ('p','Completed integrated pilots only: private S4/P0, eight blocks, two independent heads, d8/pool2, '
              '128 fitting queries per pass/four passes,256 development queries, seed6. Both retain hard temporal '
              'races and winner-only inference. The zero-credit model exactly nests the parent; added memory/time '
              'credit is a local surrogate, not an arbitrary unbiased sequence-gradient estimator.'),
             ('figure',('state_credit_quality_work',160)),
-            ('table',(['Model','Accuracy %','NLL','Whole fit GFLOPs','Fit MFLOPs/query','Infer MFLOPs/event'],rows,[40,24,23,30,29,28])),
+            ('table',(['Model','Accuracy %','NLL','Whole fit GFLOPs','Fit MFLOPs/query','Infer MFLOPs/query'],rows,[40,24,23,30,29,28])),
+            ('table',(['Model','Fit/dev/passes','Parameters','State slots','Updates/scores per event'],activity,[40,32,28,25,49])),
             ('small','All fitting forward/loss/backward/normalization/clipping/Adam and losing proposals are charged. '
              'Special functions have unit weight beside arithmetic; integer discovery/traffic/energy remain separate. '
              'Training-only auxiliary state views and whole-process RSS are recorded in each result. '
@@ -3078,7 +3106,12 @@ def blocks(M, tasks, ev):
             ('small','Same 8,191 development targets for every row; one seed. Count increments/lookups are '
              'integer table work reported in the result files, not FLOPs. The untrained-base row isolates '
              'what training the native base adds. Count rows are dev-selected-order references, not neural '
-             'controls. Exploratory development evidence; no comparable-quality Transformer claim.')])
+             'controls. Exploratory development evidence; no comparable-quality Transformer claim.'),
+            *[('small',f'At {r["args"]["fit"]:,} fitting characters, fitting the native base and escape parameters '
+                f'improves {r["initial_dev"]["bpc"]-r["final"]["dev"]["bpc"]:.4f} bpc over their untrained initialization. '
+                'The complete composed predictor improves over native-alone, while this smaller learning contribution '
+                'is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.')
+              for r in tasks['count_carrying_language']]])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r]
     if composed:

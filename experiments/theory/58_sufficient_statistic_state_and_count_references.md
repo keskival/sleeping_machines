@@ -97,10 +97,21 @@ The fixed-gate floors exceed the variance formula because of support collapse.
 
 **Corollary 377.3 (gates must see occupancy, or time).** A content-dependent
 gate `g(x, s)` cannot implement `1/n` unless `n` is recoverable from `(x, s)`.
-Learning such a dependence by gradient requires credit that spans all `n`
-previous visits to the address. That is far beyond the 16- to 64-character
-truncated credit windows of the completed language fits (§§308–310). The
-schedule therefore has to be **structural**, not learned. Nonstationary streams
+The earlier claim here that learning this dependence necessarily requires
+credit spanning all `n` visits was too strong. If occupancy is supplied or
+recoverable, a learned local gate can use it without that credit horizon.
+For example, `g_theta(n)=1/(n+theta)`, `theta>0`, with local loss
+`(g_theta(n)-1/(n+1))^2` has its unique zero at `theta=1` for every observed
+occupancy. Its derivative is local; the earlier visits need not be in the
+autograd graph. This illustrative auxiliary objective is not a result from
+the language model or proof that its task loss learns a counter.
+
+Short credit can make learning useful count state difficult, but neither
+truncation nor fixed learned parameters alone establishes inconsistency.
+The fixed-step estimator in Proposition377.2 has the stated variance floor;
+that result does not cover every learned recurrent gate. Explicit count state
+is a proposed inductive bias to test, rather than a necessary architecture.
+Nonstationary streams
 call for a time-decayed count `n_a(t) = Σ_i exp(−(t − t_i)/τ_a)`. This count is
 exactly the leaky elapsed-time state the substrate already computes, with a
 learnable time constant τ_a that trades estimation variance against drift.

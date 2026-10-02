@@ -746,19 +746,19 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
-| Ours S16 shared/P0/observed | 44.53 | 1.3721 | 0.262 | 0.511 | 0.110 |
-| Ours S16 private/P0/observed | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
-| Ours S16 private/P2/observed | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
-| Ours S16 shared/P0/observed | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
-| Ours S16 shared/P2/observed | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
+| Ours S16 shared/P0/observed/s7 | 44.53 | 1.3721 | 0.262 | 0.511 | 0.110 |
+| Ours S16 private/P0/observed/s6 | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P2/observed/s6 | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
+| Ours S16 shared/P0/observed/s6 | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
+| Ours S16 shared/P2/observed/s6 | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
-| Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
-| Ours S16 private/P0/observed | 128/256/4 | 157,940 | 512 | 16/32 |
-| Ours S16 private/P2/observed | 128/256/4 | 155,828 | 512 | 16/32 |
-| Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
-| Ours S16 shared/P2/observed | 128/256/4 | 13,988 | 512 | 16/32 |
+| Ours S16 shared/P0/observed/s7 | 128/256/4 | 14,180 | 512 | 16/32 |
+| Ours S16 private/P0/observed/s6 | 128/256/4 | 157,940 | 512 | 16/32 |
+| Ours S16 private/P2/observed/s6 | 128/256/4 | 155,828 | 512 | 16/32 |
+| Ours S16 shared/P0/observed/s6 | 128/256/4 | 14,180 | 512 | 16/32 |
+| Ours S16 shared/P2/observed/s6 | 128/256/4 | 13,988 | 512 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
 
@@ -768,17 +768,17 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
-| Ours S4 private/P0/observed | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
-| Ours S4 private/P2/observed | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
-| Ours S4 shared/P0/observed | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
-| Ours S4 shared/P2/observed | 56.64 | 1.0367 | 0.252 | 0.493 | 0.107 |
+| Ours S4 private/P0/observed/s6 | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P2/observed/s6 | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
+| Ours S4 shared/P0/observed/s6 | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
+| Ours S4 shared/P2/observed/s6 | 56.64 | 1.0367 | 0.252 | 0.493 | 0.107 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
-| Ours S4 private/P0/observed | 128/256/4 | 42,932 | 128 | 16/32 |
-| Ours S4 private/P2/observed | 128/256/4 | 42,356 | 128 | 16/32 |
-| Ours S4 shared/P0/observed | 128/256/4 | 14,180 | 128 | 16/32 |
-| Ours S4 shared/P2/observed | 128/256/4 | 13,988 | 128 | 16/32 |
+| Ours S4 private/P0/observed/s6 | 128/256/4 | 42,932 | 128 | 16/32 |
+| Ours S4 private/P2/observed/s6 | 128/256/4 | 42,356 | 128 | 16/32 |
+| Ours S4 shared/P0/observed/s6 | 128/256/4 | 14,180 | 128 | 16/32 |
+| Ours S4 shared/P2/observed/s6 | 128/256/4 | 13,988 | 128 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
 
@@ -788,21 +788,29 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
-| Ours S4 private/P0/observed | 90.23 | 0.3483 | 0.265 | 0.518 | 0.110 |
-| Ours S4 private/P0/rank | 50.00 | 0.7153 | 0.265 | 0.518 | 0.110 |
-| Ours S4 private/P0/observed | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
-| Ours S4 private/P0/rank | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
-| Ours S4 private/P2/observed | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
+| Ours S4 private/P0/observed/s7 | 90.23 | 0.3483 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank/s7 | 50.00 | 0.7153 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/observed/s6 | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank/s6 | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P2/observed/s6 | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
-| Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P2/observed | 128/256/4 | 42,322 | 128 | 16/32 |
+| Ours S4 private/P0/observed/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/observed/s6 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank/s6 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P2/observed/s6 | 128/256/4 | 42,322 | 128 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Native replication scope
+
+Shared S16/P0 order replications: seed7: 44.53%. The original seed6 screen was75.39%; training-seed variation remains material. Private S16 replication controls and fresh-population confirmation are required for the paired sharing claim; a completed shared-only score cannot pass that gate.
+
+Observed-time paired replications: seed7: 90.23%. Original seed6 was95.31%, with the exact rank-only paired ceiling50%. These reuse the development distribution and were chosen after seed6; they are training-seed evidence, not independent confirmation.
+
+3 of8 reserved replication pilots are complete in this checkout. Every completed seed is listed in the preceding common-unit tables; pending cells carry no score. The frozen AWS replication/confirmation chain owns the remaining work; no local duplicates.
 
 ## Appendix B. Persistent-write credit diagnosis
 
