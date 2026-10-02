@@ -30,11 +30,13 @@ from parallel_head_gradient_accumulation import GradientAccumulator
 from native_language_gradient_contracts import accumulation_contracts
 from sleeping_machines.count_carrying_language import CountCarryingNativeModel, fit_stream_counts, eval_stream_counts
 from sleeping_machines.count_escape_gate import GatedCountCarryingNativeModel
+from sleeping_machines.statistic_race_memory import StatisticRaceNativeModel
 
 
 def sources():
     names=['experiments/count_carrying_language_benchmark.py','sleeping_machines/count_carrying_language.py',
            'tests/test_count_carrying_language.py','sleeping_machines/count_escape_gate.py','tests/test_count_escape_gate.py',
+           'sleeping_machines/statistic_race_memory.py','tests/test_statistic_race_memory.py',
            'experiments/native_language_gradient_contracts.py',
            'experiments/parallel_head_gradient_accumulation.py']
     return {**baseline.source_hashes(),**{n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names}}
@@ -68,6 +70,7 @@ def main():
     p.add_argument('--lr',type=float,default=.002);p.add_argument('--contracts-only',action='store_true')
     p.add_argument('--resume',action='store_true');p.add_argument('--orders',type=int,default=4)
     p.add_argument('--count-message',action='store_true');p.add_argument('--escape-gate',action='store_true')
+    p.add_argument('--pool-addresses',type=int,default=0);p.add_argument('--pool-key-dim',type=int,default=16)
     a=p.parse_args();a.memory='receiver';a.candidate_index='observed_stream_address';a.cache_storage='persistent';a.native_event_core=True
     directory=ROOT/'experiments/results/count_carrying_language';directory.mkdir(parents=True,exist_ok=True)
     out=directory/(a.tag+'.json');running=out.with_suffix('.running.json');checkpoint=out.with_suffix('.progress.pt')
@@ -86,7 +89,10 @@ def main():
         result.update(status='completed',wall_s=time.perf_counter()-started)
         out.write_text(json.dumps(result,indent=2)+'\n');return
     train=torch.tensor(text_slice(0,a.fit));dev=torch.tensor(text_slice(90_000_000,a.dev))
-    if a.count_message or a.escape_gate:
+    if a.pool_addresses:  # THEORY §392: statistic-valued race memory over learned keys
+        model=StatisticRaceNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders,addresses=a.pool_addresses,
+            key_dim=a.pool_key_dim,escape_gate=a.escape_gate,count_message=a.count_message)
+    elif a.count_message or a.escape_gate:
         model=GatedCountCarryingNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders,
             escape_gate=a.escape_gate,count_message=a.count_message)
     else:
@@ -96,7 +102,14 @@ def main():
     model.register_stream('dev',eval_stream_counts(train.numpy(),dev.numpy(),a.orders))
     count_seconds=time.perf_counter()-count_started
     def evaluate_dev():
-        model.use_stream('dev');score=baseline.evaluate(model,dev,a.chunk);model.use_stream('fit');return score
+        pooled=isinstance(model,StatisticRaceNativeModel)
+        if pooled and event is not None:  # dev starts from the latest completed fitting pass's pooled counts
+            model.pool_seed.copy_(event.pool_counts.detach())
+        if pooled:model.seed_pool=True
+        model.use_stream('dev');score=baseline.evaluate(model,dev,a.chunk);model.use_stream('fit')
+        if pooled:
+            model.seed_pool=False;score['pool_occupied_receivers']=int((model.pool_seed.sum(-1)>0).sum())
+        return score
     def escape_values():
         D,th=model.escape_parameters();return dict(discount=D.tolist(),concentration=th.tolist())
     model.use_stream('fit')

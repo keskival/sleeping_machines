@@ -1,5 +1,14 @@
 # Local host: current research continuation
 
+## curie: statistic-valued race memory claimed (§392), 2 October, 09:00 UTC
+
+The curie host implements and owns THEORY §§383/392 (learned keys, statistic values, pooled cascade level,
+exact race-expectation delivery credit): sleeping_machines/statistic_race_memory.py,
+tests/test_statistic_race_memory.py, and the driver flag --pool-addresses. Queue
+curie_statistic_race_D8192_20261002T090000Z (tmux curie_statistic_race) runs after curie_count_chain
+(32K scalar, 32K minimal, 8K 64-credit pair; the driver separates U64 from credit). The pooled minimal
+core runs first as the control. The other host's ContextAddressed/tapped diagnostics are not duplicated here.
+
 ## Deferred value-projection comparison, 2 October, 08:58 UTC
 
 Read theory63_retrieval_credit_and_value_versions.md. New concrete limitation:

@@ -586,3 +586,43 @@ Read [deep feature bottlenecks](62_deep_feature_bottlenecks.md) for measured
 responsibilities, the Adam scaling caveat, retained mechanisms and required
 matched comparisons. These qualifications do not retract the core principles
 or replace completed earlier positive/negative evidence.
+
+## 392. Learning allocation: why residual bases starve, and statistic-valued race memory as the repair
+
+**Failure addressed.** Theory 62 measures direct base responsibility on trained gated models: mean .072,
+median .0045 (full core). In a mixture cascade the base's logit gradient per target is `r_y(q − e_y)`. Its
+learning signal on a fit of N targets is therefore weighted by `r`. A useful summary is the Kish effective
+sample size `N_eff = N·(E r)²/E[r²]`. Because `r ≤ 1`, `E[r²] ≤ E r`, so `N_eff ≥ N·E r`; this is a lower
+bound, and with heavy-tailed `r` (median 16× below the mean) `N_eff` sits close to it. At the measured mean,
+the base learns from at most an order of magnitude fewer effective targets than the fit contains.
+
+These are also the least structured targets: those where every count order failed, which is where novel
+continuations sit. If learnable structure beyond counts needs data N* to show (§390.1), the composition
+moves that crossover to roughly N*/E r for the base. Adam rescaling (theory 62) does not change which
+examples the signal comes from. This is a quantitative reason, consistent with all completed fits, why
+minimal and full cores tie in composition. It is not a proof that deep features cannot help.
+
+**Repair: give the core a job with full credit where counts are weak.** The core's top-level state forms a
+query `u_t`. M receivers have learned keys and **sufficient-statistic values**. The pooled level of the cascade
+is the exact race expectation `Σ_a π_a p_a(y)` (§383.1): zero-variance delivery credit over all candidates at
+M lookups. The core receives credit through `π` wherever the pooled level carries responsibility. Because the
+pooled level sits below the exact orders, that is precisely the low-evidence contexts. There the core must
+generalize, mapping an unseen or rare context to an address whose statistics fit it. This is learned context
+pooling: online MDL clustering of contexts (§382), driven by the core's features rather than exact strings.
+It is the first rung where the core can supply `I(Y; Z | C) > 0` (theory 62) at small data.
+
+Retained: temporal core, races over learned keys, sparse addressed statistic state, key/value separation,
+escape cascade, per-position escape gate, exact counterfactual delivery credit. Added: M×A count state
+(M = 256: 6,912 counts), a d×16 query map, M keys, M·A lookups per target and one integer write per event.
+Simplifications: the zero-temperature race selects the writer (argmax π; no extra RNG); writes are not
+differentiated (write credit, §383.2, deferred); counts restart each fitting pass, and development starts
+from the last completed pass's counts (fit data only, causal). With all receivers empty the model equals the
+gated count model exactly (contract-tested).
+
+**Predictions (8K, seed 6, K4 + gate; gate-only references: full 2.601, minimal 2.588).**
+(P392a) Pooled memory improves the minimal-core composition by ≥ .02. Pooled statistics help even with a
+weak query. (P392b) With pooled memory, the full core beats the minimal core by ≥ .02. This is the first
+test where core features earn their work by routing. (P392c) Mean pooled-level responsibility exceeds the
+residual base's (.072). If P392a holds and P392b fails, the query features, not the memory, are the bottleneck.
+The next steps are then a richer query (taps, longer credit) and write credit (§383.2). If both fail, pooling at
+M = 256 adds nothing at 8K: test at ≥ 131K before concluding.
