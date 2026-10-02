@@ -133,6 +133,9 @@ def results():
                 if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
                     raise ValueError('Joint learning source result changed')
             tasks[key].append(r)
+    tasks['uniform_address']=[r for path in sorted((RES/'diagnostics').glob('local_joint_publication_*_contracts.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed'
+        and r.get('actual_bank_uniform_pair_law_alias_verified')]
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3732,6 +3735,37 @@ def blocks(M, tasks, ev):
              'floor. Unique queues, checkpoints, source/data hashes and failed results preserved. '
              'This confirmation adds seed evidence for a small structured nonlocal relation, not '
              'architectural supremacy or superiority to an unrestricted count-memory algorithm.')])
+    for r in tasks.get('uniform_address',[]):
+        checks=[['Actual outcome bank','Uniform two-value law identical across second-bit alternatives'],
+            ['Fixed zero-context risk',f"{r['fixed_context_stationary_risk_bits']:.6f}bits"],
+            ['Maximum decoder gradient',f"{r['maximum_decoder_gradient']:.3e}"],
+            ['Maximum policy gradient',f"{r['maximum_policy_gradient']:.3e}"],
+            ['Analytic marker-policy witness',f"{r['analytic_marker_witness_max_expected_bits']:.3e}expected bits"]]
+        pages.append([('h1','Appendix B. A terminal symmetry, not a learning impossibility'),
+            ('table',(['Numerical contract','Completed result'],checks,[65,108])),
+            ('p','At query time the four distinguished outcome addresses contain b1,b2,1−b2,n0. '
+             'Their multiset is b1,0,1,n0. Remaining entries depend only on the shared noise suffix. '
+             'Uniform independent value reads therefore have the same full joint distribution for '
+             'both second-bit alternatives. If additional context also lacks that bit, no decoder '
+             'of those values can predict the balanced relation better than one bit.'),
+            ('p','At zero residual, every candidate pair has the parent logit. Exact terminal key '
+             'credit is initially zero. With fixed zero-logit uninformative context, uniform policies '
+             'and balanced examples, decoder gradients are zero too. The actual bank and decoder '
+             'contracts verify this conditional stationary point in float64 on four suffix groups. '
+             'This is not a stationary-point proof for the whole trainable native core.'),
+            ('p','An explicit target-independent existence witness selects marker addresses24/25 '
+             'and interprets symbols0/1 as signed values. A bilinear interaction can predict their '
+             'relation with very small expected loss. The witness is analytic and never enters the '
+             'fitted model or benchmark score. Finite score clamps leave a nonzero routing error '
+             'floor, so unlimited decoder confidence need not reduce unconditional expected loss.'),
+            ('p','The useful solution and terminal symmetry coexist. Random key contrast may break '
+             'the alias, which is compatible with late fitted transitions but does not prove their '
+             'cause. A new controlled conditioning study must retain all seeds and mechanisms; '
+             'these fixed confirmation fits are neither extended nor tuned after observation.'),
+            ('small','Theory70 states the information conditions and proof. Numerical result records '
+             'source hashes, targets, wall and RSS. The obstruction concerns addressed value pooling '
+             'and terminal initialization; it does not imply that all counting, temporal computation '
+             'or architectural adaptation faces a mathematical ceiling.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
