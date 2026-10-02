@@ -1,0 +1,180 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553444,
+      "wall_s": 2.593174338020617
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553544,
+      "wall_s": 2.588585030985996
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 861968,
+      "wall_s": 7.070694797002943
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566588,
+      "wall_s": 17.137563819997013
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566428,
+      "wall_s": 16.91731505401549
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553560,
+      "wall_s": 2.6324056410230696
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 877840,
+      "wall_s": 7.4909311500086915
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 877412,
+      "wall_s": 38.22399318299722
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553604,
+      "wall_s": 2.6644888559821993
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566436,
+      "wall_s": 17.219555873976788
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 862172,
+      "wall_s": 7.103907918994082
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566436,
+      "wall_s": 17.012095854996005
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 892528,
+      "wall_s": 39.93494313702104
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_contracts",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 877600,
+      "wall_s": 7.305580318003194
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 877064,
+      "wall_s": 37.75379235600121
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_smoke",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 892420,
+      "wall_s": 38.71184382800129
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571420,
+      "wall_s": 798.4795535660232
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571296,
+      "wall_s": 807.1789149459801
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 879568,
+      "wall_s": 813.1078921649896
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571688,
+      "wall_s": 800.6199712159869
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571416,
+      "wall_s": 805.9966480339936
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 895256,
+      "wall_s": 845.02933161502
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 879604,
+      "wall_s": 805.6960741009971
+    },
+    {
+      "tag": "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_pilot",
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 895044,
+      "wall_s": 843.2550941160007
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T01:46:11.087903+00:00",
+  "active_jobs": [
+    "aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
