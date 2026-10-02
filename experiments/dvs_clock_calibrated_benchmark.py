@@ -40,7 +40,9 @@ def scale_initial_clocks(model, step):
             # Include the existing1e-6 floor: actual new rate=scale*old rate.
             desired = (F.softplus(parameter) + 1e-6) * scale - 1e-6
             # Stable inverse softplus even at the bounded100x scale.
-            parameter.copy_(desired + torch.log(-torch.expm1(-desired)))
+            inverse = desired + torch.log(-torch.expm1(-desired))
+            # Match torch.softplus's linear branch above its default threshold20.
+            parameter.copy_(torch.where(desired > 20., desired, inverse))
         for parameter in frequencies:
             parameter.mul_(scale)
     return model
