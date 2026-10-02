@@ -1,0 +1,382 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_noise_covariance_audit_20261002T212700Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json"
+    ],
+    "draws": 32,
+    "prefixes": 4
+  },
+  "contracts": {
+    "contracts_passed": 2,
+    "covariance_direct_matrix_matches": true,
+    "identical_four_clip_common_over_independent_ratio": 4.0
+  },
+  "models": [
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "checkpoint_sha256": "4bc01a9c8050c17c2555dc5a77a4cb98ab2be160d59820ec35d39d3ad41fc8fb",
+      "seed": 6,
+      "fitting_prefixes": 4,
+      "fit_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "groups": {
+        "all_parameters": {
+          "common_batch_trace_covariance": 0.1759216000228952,
+          "independent_batch_trace_covariance_estimate": 0.17629671143706152,
+          "off_diagonal_covariance_contribution": -0.0003751114141663084,
+          "common_over_independent_ratio": 0.9978722721989046,
+          "marginal_clip_trace_covariances": [
+            1.118321134994926,
+            0.007811933335415799,
+            0.01088177657888255,
+            1.68373253808376
+          ],
+          "mean_batch_gradient_norm": 6.986211567195597,
+          "sample_count": 32
+        },
+        "time_maps": {
+          "common_batch_trace_covariance": 7.584550132863532e-05,
+          "independent_batch_trace_covariance_estimate": 7.23299939827807e-05,
+          "off_diagonal_covariance_contribution": 3.5155073458546176e-06,
+          "common_over_independent_ratio": 1.0486037278904177,
+          "marginal_clip_trace_covariances": [
+            0.0005781125244373795,
+            1.6093456676351887e-06,
+            1.0830061135551734e-05,
+            0.0005667279724839248
+          ],
+          "mean_batch_gradient_norm": 0.050667278972181345,
+          "sample_count": 32
+        },
+        "incoming_context_maps": {
+          "common_batch_trace_covariance": 0.10787316674521895,
+          "independent_batch_trace_covariance_estimate": 0.10798413875087043,
+          "off_diagonal_covariance_contribution": -0.00011097200565145551,
+          "common_over_independent_ratio": 0.9989723305020981,
+          "marginal_clip_trace_covariances": [
+            0.8011573993552672,
+            0.006768526826495106,
+            0.006641300652445885,
+            0.9131789931797188
+          ],
+          "mean_batch_gradient_norm": 5.949086783199005,
+          "sample_count": 32
+        },
+        "route_maps": {
+          "common_batch_trace_covariance": 0.012127527489967734,
+          "independent_batch_trace_covariance_estimate": 0.012107482697376442,
+          "off_diagonal_covariance_contribution": 2.0044792591294096e-05,
+          "common_over_independent_ratio": 1.0016555706163128,
+          "marginal_clip_trace_covariances": [
+            0.01981495126987005,
+            8.795594775827654e-06,
+            0.00015327137268850895,
+            0.1737427049206887
+          ],
+          "mean_batch_gradient_norm": 0.09268294262309766,
+          "sample_count": 32
+        },
+        "message_maps": {
+          "common_batch_trace_covariance": 0.02760962880546944,
+          "independent_batch_trace_covariance_estimate": 0.027860594227160546,
+          "off_diagonal_covariance_contribution": -0.0002509654216911076,
+          "common_over_independent_ratio": 0.990992100899038,
+          "marginal_clip_trace_covariances": [
+            0.2164424857213387,
+            0.0004562884400873833,
+            0.001791519084343549,
+            0.2270792143887991
+          ],
+          "mean_batch_gradient_norm": 1.394624378341218,
+          "sample_count": 32
+        },
+        "decoder": {
+          "common_batch_trace_covariance": 0.028235431480910445,
+          "independent_batch_trace_covariance_estimate": 0.028272165767671303,
+          "off_diagonal_covariance_contribution": -3.673428676086121e-05,
+          "common_over_independent_ratio": 0.9987006907407545,
+          "marginal_clip_trace_covariances": [
+            0.08032818612401262,
+            0.0005767131283898466,
+            0.0022848554082690537,
+            0.36916489762206933
+          ],
+          "mean_batch_gradient_norm": 3.3851711994977625,
+          "sample_count": 32
+        }
+      },
+      "mean_fitting_loss": 0.770092248916626,
+      "mean_common_noise_winner_agreement": 0.6351066468253969,
+      "optimizer_updates": 0,
+      "weights_preserved": true,
+      "admission_supports_independent_rows": false
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "checkpoint_sha256": "4db7a20eabe435287a232c446384d99b6d43ce0383e59c0c9402c36d5ea27889",
+      "seed": 7,
+      "fitting_prefixes": 4,
+      "fit_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "groups": {
+        "all_parameters": {
+          "common_batch_trace_covariance": 1.102971069934323,
+          "independent_batch_trace_covariance_estimate": 1.1010092155537257,
+          "off_diagonal_covariance_contribution": 0.0019618543805970676,
+          "common_over_independent_ratio": 1.0017818691731937,
+          "marginal_clip_trace_covariances": [
+            12.916161880030579,
+            0.01794903792085993,
+            3.5682352445180316,
+            1.1138012863901428
+          ],
+          "mean_batch_gradient_norm": 7.854686047478129,
+          "sample_count": 32
+        },
+        "time_maps": {
+          "common_batch_trace_covariance": 0.0003489783624423379,
+          "independent_batch_trace_covariance_estimate": 0.0003582683297214984,
+          "off_diagonal_covariance_contribution": -9.289967279160413e-06,
+          "common_over_independent_ratio": 0.9740698060406788,
+          "marginal_clip_trace_covariances": [
+            0.004277031831834257,
+            3.357616462870315e-06,
+            0.0010502646642732982,
+            0.00040163916297354885
+          ],
+          "mean_batch_gradient_norm": 0.06546734449419622,
+          "sample_count": 32
+        },
+        "incoming_context_maps": {
+          "common_batch_trace_covariance": 0.7517862747675976,
+          "independent_batch_trace_covariance_estimate": 0.7479290668241118,
+          "off_diagonal_covariance_contribution": 0.003857207943485971,
+          "common_over_independent_ratio": 1.0051571841697027,
+          "marginal_clip_trace_covariances": [
+            8.859558285769133,
+            0.012126459469584247,
+            2.4074177362430627,
+            0.6877625877040088
+          ],
+          "mean_batch_gradient_norm": 6.554819059264167,
+          "sample_count": 32
+        },
+        "route_maps": {
+          "common_batch_trace_covariance": 0.1279652501027816,
+          "independent_batch_trace_covariance_estimate": 0.1291030653908071,
+          "off_diagonal_covariance_contribution": -0.001137815288025536,
+          "common_over_independent_ratio": 0.9911867678386935,
+          "marginal_clip_trace_covariances": [
+            1.3910266927480703,
+            0.00236251319155648,
+            0.48368683495769227,
+            0.1885730053555946
+          ],
+          "mean_batch_gradient_norm": 0.41123475735588666,
+          "sample_count": 32
+        },
+        "message_maps": {
+          "common_batch_trace_covariance": 0.16038499236900505,
+          "independent_batch_trace_covariance_estimate": 0.16112243451875957,
+          "off_diagonal_covariance_contribution": -0.000737442149754503,
+          "common_over_independent_ratio": 0.9954230945432453,
+          "marginal_clip_trace_covariances": [
+            1.97588380981412,
+            0.0016385325038966439,
+            0.49776227990132726,
+            0.10267433008080921
+          ],
+          "mean_batch_gradient_norm": 1.2555237672487534,
+          "sample_count": 32
+        },
+        "decoder": {
+          "common_batch_trace_covariance": 0.06248557433249642,
+          "independent_batch_trace_covariance_estimate": 0.06249638049032609,
+          "off_diagonal_covariance_contribution": -1.0806157829660932e-05,
+          "common_over_independent_ratio": 0.9998270914612193,
+          "marginal_clip_trace_covariances": [
+            0.6854160598674242,
+            0.001818175139359693,
+            0.17831812875167707,
+            0.13438972408675648
+          ],
+          "mean_batch_gradient_norm": 4.120764501372978,
+          "sample_count": 32
+        }
+      },
+      "mean_fitting_loss": 1.1306260824203491,
+      "mean_common_noise_winner_agreement": 0.6263020833333334,
+      "optimizer_updates": 0,
+      "weights_preserved": true,
+      "admission_supports_independent_rows": false
+    }
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_noise_covariance_audit.py": "36794920f2c2cfbc1edb245f42e1cd811d7404f4b754ee1395f220692ee16a03",
+    "experiments/dvs_route_content_audit.py": "673c84c3eac7203e055fcfcf5511fc6b2c7109e821aa5c179b1b742a43dc8cc1",
+    "experiments/theory/93_race_noise_coupling_and_effective_batch_size.md": "3ee481aecb251fe10d6b538338c29b8e24e1f9ec7014980fd39f1beff793c029"
+  },
+  "stage_work": [
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 0,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 0,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 1,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 1,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 2,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 2,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 3,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "clip_index": 3,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 0,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 0,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 1,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 1,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 2,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 2,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 3,
+      "stage": "forward",
+      "arithmetic_flops": 742071,
+      "special_function_evaluations": 14298,
+      "exponential_random_draws": 168
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "clip_index": 3,
+      "stage": "backward",
+      "arithmetic_flops": 1724358,
+      "special_function_evaluations": 9683,
+      "exponential_random_draws": 0
+    }
+  ],
+  "whole_audit_unit_special_flops_estimate": 637544960,
+  "formula_coverage_complete": true,
+  "independent_row_candidate_admitted": false,
+  "wall_s": 56.44304462900618,
+  "max_rss_kb": 405676,
+  "scope": "Fixed fitting prefixes, frozen dev-selected native weights, independent whole-history audit draws. Common batch covariance measured; independent covariance estimated from the same marginal samples. Finite sample, not conditional node covariance, optimizer trajectory or causal seed-failure proof. Work uses complete first-draw per-clip forward/backward traces times draws; reporting reductions separate."
+}

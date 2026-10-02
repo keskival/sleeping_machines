@@ -1,5 +1,29 @@
 # Local host: current research continuation
 
+## Common-noise covariance does not support a fitting change, 2 October21:27 UTC
+
+Frozen audit212700Z completes56.443s/405676KiB with four fitting prefixes per
+saved native seed6/7 and32 independent whole-history draws each. Exact sample
+covariance decomposition/direct-matrix and identical-clip scaling contracts pass.
+Route-map shared/independent variance ratios1.001656/.991189; whole-gradient
+ratios.997872/1.001780. Both miss preregistered1.20 route-map gate. No proposed
+fresh_shared/fresh_independent fitting campaign is admitted. Time-map ratios
+1.04860/.97407; no large covariance penalty is observed on these prefixes.
+Native weights unchanged, zero optimizer updates, complete first-draw trace
+coverage and .637545GFLOPs estimated diagnostic work. Finite four-prefix scope
+excludes a causal explanation of seed failures or adaptive noise reuse.
+
+Theory93 retains covariance/freshness derivations and Flipout's primary-paper
+analogy with explicit limits. Next bounded diagnostic: compare the saved query
+feature probe against that SAME feature augmented with causal pre-query
+persistent memory/ages/seen flags. A stronger decoder can reveal retained
+information inaccessible to the selected readout; it is a diagnostic dense
+read of dormant state, not the main architecture or inference advantage.
+Keep the learned-vs-initial comparison, fitting-only decoder selection, source
+and probability reproduction contracts, full replay accounting and strong
+controls. No new Transformer/LSTM, offset/choice refit or duplicate external
+replay campaign. All numerical jobs remain serial under the safe host guard.
+
 ## Replay-law and critic-sampling correction, 2 October21:16 UTC
 
 New theory92 audits the newly arrived external §402/403 proposal without changing
