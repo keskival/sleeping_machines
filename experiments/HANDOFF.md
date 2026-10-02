@@ -1397,3 +1397,14 @@ Session `aws-independent-events-20261002T014600Z`; log
 host lock; active model sources stay frozen. Banknote control retry requires a
 new unique tag, unchanged comparison settings and a bounded isolated runtime
 diagnostic; it cannot block independent temporal/sparse research indefinitely.
+
+
+## Banknote partial negative evidence published — 2 October, 01:48 UTC
+
+Completed paired ours/logistic NLL difference favors logistic: control-minus-ours
+−.144653, adjusted98.33% interval[−.266014,−.033775]. Trees difference−.028715
+interval crosses zero. All three native test seeds complete; seed6 development
+lead did not replicate consistently. Partial findings/hashed paired JSON saved;
+CatBoost seed8 still incomplete and full primary gate unevaluated. No retuning
+on observed confirmation scores. Independent event chain running/contracts
+publishing; read `AWS_BANKNOTE_PARTIAL_FINDINGS_20261002.md` before claims.
