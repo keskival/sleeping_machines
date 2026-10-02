@@ -1,0 +1,251 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_practical_inference_20261002T151000Z",
+    "native": "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+    "repeats": 3
+  },
+  "common_sequential_inference_ledger": [
+    {
+      "arm": "time_binned_naive_bayes",
+      "quality": {
+        "accuracy": 0.5885416666666666,
+        "nll": 1.3733685009539272
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.0023238939975271933,
+        0.002414727001450956,
+        0.002487621000909712
+      ],
+      "median_wall_ms_per_prefix": 0.012576703132557062,
+      "warmup_wall_s": 0.00011156799882883206,
+      "uncompressed_joblib_bytes": 56768,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "linear_C0.1",
+      "quality": {
+        "accuracy": 0.6145833333333334,
+        "nll": 1.2036326646750728
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.03173909700126387,
+        0.03136660200107144,
+        0.03125071999966167
+      ],
+      "median_wall_ms_per_prefix": 0.16336771875558043,
+      "warmup_wall_s": 0.003856565999740269,
+      "uncompressed_joblib_bytes": 67714,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "linear_C1",
+      "quality": {
+        "accuracy": 0.59375,
+        "nll": 1.590337530932315
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.0314449989964487,
+        0.030923539998184424,
+        0.030997123998531606
+      ],
+      "median_wall_ms_per_prefix": 0.16144335415901878,
+      "warmup_wall_s": 0.00023570100165670738,
+      "uncompressed_joblib_bytes": 67714,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "linear_C10",
+      "quality": {
+        "accuracy": 0.578125,
+        "nll": 2.460973376342366
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.031106381997233257,
+        0.032430134000605904,
+        0.03204154800187098
+      ],
+      "median_wall_ms_per_prefix": 0.1668830625097447,
+      "warmup_wall_s": 0.00024925499747041613,
+      "uncompressed_joblib_bytes": 67714,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C1_g0.25",
+      "quality": {
+        "accuracy": 0.671875,
+        "nll": 0.8803810295114428
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.13767893300246214,
+        0.14135438399534905,
+        0.12022730200260412
+      ],
+      "median_wall_ms_per_prefix": 0.7170777760544903,
+      "warmup_wall_s": 0.0008110260023386218,
+      "uncompressed_joblib_bytes": 4743618,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C1_g1",
+      "quality": {
+        "accuracy": 0.7447916666666666,
+        "nll": 0.735761689732656
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.1286099179997109,
+        0.1285708790019271,
+        0.13437867600441677
+      ],
+      "median_wall_ms_per_prefix": 0.6698433229151609,
+      "warmup_wall_s": 0.0008546429962734692,
+      "uncompressed_joblib_bytes": 4844002,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C1_g4",
+      "quality": {
+        "accuracy": 0.734375,
+        "nll": 0.8643495883583823
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.1364437660013209,
+        0.13192822300334228,
+        0.13761397400230635
+      ],
+      "median_wall_ms_per_prefix": 0.7106446145902131,
+      "warmup_wall_s": 0.0008735800001886673,
+      "uncompressed_joblib_bytes": 5203314,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C10_g0.25",
+      "quality": {
+        "accuracy": 0.6822916666666666,
+        "nll": 0.8122154502344454
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.1151722750000772,
+        0.1167145290019107,
+        0.12080142899503699
+      ],
+      "median_wall_ms_per_prefix": 0.6078881718849516,
+      "warmup_wall_s": 0.000801677000708878,
+      "uncompressed_joblib_bytes": 4558674,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C10_g1",
+      "quality": {
+        "accuracy": 0.734375,
+        "nll": 0.7064779703669549
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.13408593900385313,
+        0.12880258799850708,
+        0.12764147000416415
+      ],
+      "median_wall_ms_per_prefix": 0.6708468124922243,
+      "warmup_wall_s": 0.0008828710051602684,
+      "uncompressed_joblib_bytes": 4880994,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "rbf_C10_g4",
+      "quality": {
+        "accuracy": 0.7239583333333334,
+        "nll": 0.8338130377971759
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        0.12918314599664882,
+        0.13742210900090868,
+        0.13054871700296644
+      ],
+      "median_wall_ms_per_prefix": 0.6799412343904502,
+      "warmup_wall_s": 0.0008441910031251609,
+      "uncompressed_joblib_bytes": 5203314,
+      "model_parameter_tensor_bytes": null,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    },
+    {
+      "arm": "native",
+      "quality": {
+        "accuracy": 0.6510416666666666,
+        "nll": 0.9631611771787165
+      },
+      "targets": 192,
+      "repeats": 3,
+      "sequential_prefix_wall_s": [
+        10.666967701996327,
+        10.574514187996101,
+        10.572464775999833
+      ],
+      "median_wall_ms_per_prefix": 55.07559472914636,
+      "warmup_wall_s": 0.05893719600135228,
+      "uncompressed_joblib_bytes": 106354,
+      "model_parameter_tensor_bytes": 62092,
+      "warnings": [],
+      "scope": "CPU one-thread sequential prefix calls, fit-only transform included; complete observed count packet available at1s. Raw coalescing, loading and warmup separate. Joblib size is storage, not process RSS or traffic."
+    }
+  ],
+  "native_result_sha256": "b506bd3650e7410cffbe174ca2e1acc28c90972e65eba9c0dbec969b82006ebf",
+  "native_checkpoint_sha256": "1cb4b44c60e89772b33be04870753067538ff771902b6999db1a27a1e702ad6a",
+  "control_result_sha256": "ad592825f529682b8eb7741cac7a01f59822aa485ed65f84cfeae8aec8acde2a",
+  "control_artifact_sha256": "6a709ccf3097637d499ff5de6faae1ddcacaaf42e99f9adcb67ed32c7c7c9af5",
+  "raw_preprocessing_wall_s": 123.97591211099643,
+  "max_rss_kb": 429232,
+  "wall_s": 48.41556823900464,
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_practical_inference_audit.py": "0be52894a16dc9e49298cf0317ab9b8283bdeac708e1dba7620e9e90fc9077db"
+  },
+  "scope": "Same frozen DEVELOPMENT probabilities, no fitting or test access. CPU emulator latency/storage only, not measured energy or raw-spike event hardware. Three deterministic repeats measure timing variation, not model uncertainty. No independent practical advantage claim."
+}
