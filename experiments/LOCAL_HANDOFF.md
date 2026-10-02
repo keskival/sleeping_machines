@@ -1,5 +1,29 @@
 # Local host: current research continuation
 
+## Memory-key confidence decomposition complete, 2 October23:02 UTC
+
+Unique guarded local_dvs_key_score_decomposition_20261002T230300Z completes:
+5,376 race score PAIRS (10,752 candidate scalars), two fixed-pass4 producers
+and initial reservoirs,16 unused FIT prefixes/one noise history. This clarifies
+result field scalar_score_decompositions=5376, which counts race pairs, not
+individual candidates. Eight explicit logit/state/end-RNG contracts include
+an independent RNG check of the99 arrival collector. Every weight fixed;
+no loss/optimizer/DEV/test. Static vs memory-read score algebra reconstructs
+within float32 tolerance; full immutable arrays retained. See result for costs.
+
+Trained mean |static gap|.110/.128 versus |memory-read gap|5.322/4.340;
+memory gaps larger in93.75%/92.86% of races. Static-only entropy.996/.996;
+factual .333/.402, dynamic-only .340/.404. First-event memory reads zero and
+full routing nearly uniform. Memory-dependent confidence is demonstrated,
+not harmful routing, causal generalization failure or a normalization fix.
+
+Theory100 includes primary ST-MoE z-loss precedent and the reason blind router
+normalization/penalties change this substrate's actual common clock. Next
+independent frozen diagnostic: calibrated choice temperature with first-time
+law/rate total retained, actual memory writes, disjoint producer-unseen FIT
+inputs, no new decoder/encoder fit. Other-host exact all-race replay firstfit
+fails quality; read current theory406/protocol before any learning escalation.
+
 ## Race-scaled reception support completed, 2 October22:52 UTC
 
 New theory99 proves a relative deadline g((1+c)T), exact common-speed-shift

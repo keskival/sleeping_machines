@@ -1,0 +1,805 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_key_score_decomposition_20261002T230300Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json"
+    ],
+    "profile": "experiments/results/diagnostics/local_dvs_race_support_20261002T225200Z.json"
+  },
+  "profile_result_sha256": "416b3380b1e06c3224df00eb4c8c5b9d63ff2dd4a3bd32b0cb5db0b60994a385",
+  "parents": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "checkpoint_sha256": "4bc01a9c8050c17c2555dc5a77a4cb98ab2be160d59820ec35d39d3ad41fc8fb"
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "checkpoint_sha256": "4db7a20eabe435287a232c446384d99b6d43ce0383e59c0c9402c36d5ea27889"
+    }
+  ],
+  "rows": [
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "observed_work": {
+        "prefixes": 16,
+        "events": 336,
+        "key_scores": 2688,
+        "selected_updates": 1344
+      },
+      "maximum_clamped_score_reconstruction_error": 9.5367431640625e-07,
+      "all_sites": {
+        "races": 1344,
+        "mean_absolute_static_gap": 0.07042986072060774,
+        "mean_absolute_dynamic_gap": 1.3500193317713205,
+        "mean_memory_norm": 10.207671645274829,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          9.392130851745605,
+          24.270879554748536
+        ],
+        "memory_gap_larger_than_static_fraction": 0.9002976190476191,
+        "factual": {
+          "mean_normalized_entropy": 0.7441763179538102,
+          "top_probability99_fraction": 0.046875
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9988145415737916,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.7442553185263819,
+          "top_probability99_fraction": 0.047619047619047616
+        }
+      },
+      "first_event": {
+        "races": 64,
+        "mean_absolute_static_gap": 0.07700898103939835,
+        "mean_absolute_dynamic_gap": 0.0,
+        "mean_memory_norm": 0.0,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "memory_gap_larger_than_static_fraction": 0.0,
+        "factual": {
+          "mean_normalized_entropy": 0.99860039537822,
+          "top_probability99_fraction": 0.0
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.99860039537822,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 1.0,
+          "top_probability99_fraction": 0.0
+        }
+      },
+      "later_events": {
+        "races": 1280,
+        "mean_absolute_static_gap": 0.0701009047046682,
+        "mean_absolute_dynamic_gap": 1.4175202983598865,
+        "mean_memory_norm": 10.71805522753857,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          9.770740509033203,
+          24.458647441863967
+        ],
+        "memory_gap_larger_than_static_fraction": 0.9453125,
+        "factual": {
+          "mean_normalized_entropy": 0.7314551140825898,
+          "top_probability99_fraction": 0.04921875
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9988252488835702,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.7314680844527011,
+          "top_probability99_fraction": 0.05
+        }
+      },
+      "by_layer_head": {
+        "layer0_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.09364250724736069,
+          "mean_absolute_dynamic_gap": 0.5001071008709481,
+          "mean_memory_norm": 10.641747413114423,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            9.380316257476807,
+            25.313367557525613
+          ],
+          "memory_gap_larger_than_static_fraction": 0.8154761904761905,
+          "factual": {
+            "mean_normalized_entropy": 0.9398219449849871,
+            "top_probability99_fraction": 0.0
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.998231007214583,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.9311186529983049,
+            "top_probability99_fraction": 0.0
+          }
+        },
+        "layer0_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.026102994765443283,
+          "mean_absolute_dynamic_gap": 0.8737826073636479,
+          "mean_memory_norm": 7.650141686378491,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            7.284405946731567,
+            16.35762004852294
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9107142857142857,
+          "factual": {
+            "mean_normalized_entropy": 0.8322122582530656,
+            "top_probability99_fraction": 0.0
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9997972689013586,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.8345587232657046,
+            "top_probability99_fraction": 0.0
+          }
+        },
+        "layer1_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.07583248513262897,
+          "mean_absolute_dynamic_gap": 2.8593512696790553,
+          "mean_memory_norm": 11.043643228709698,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            9.328451156616211,
+            28.521682739257812
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9464285714285714,
+          "factual": {
+            "mean_normalized_entropy": 0.45417622360741705,
+            "top_probability99_fraction": 0.1875
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9988196041439357,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.4415423142341696,
+            "top_probability99_fraction": 0.19047619047619047
+          }
+        },
+        "layer1_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.08614145573699802,
+          "mean_absolute_dynamic_gap": 1.1668363491716307,
+          "mean_memory_norm": 11.495154252896706,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            11.470345497131348,
+            23.75012645721435
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9285714285714286,
+          "factual": {
+            "mean_normalized_entropy": 0.7504948449697716,
+            "top_probability99_fraction": 0.0
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9984102860352887,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.7698015836073483,
+            "top_probability99_fraction": 0.0
+          }
+        }
+      }
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "observed_work": {
+        "prefixes": 16,
+        "events": 336,
+        "key_scores": 2688,
+        "selected_updates": 1344
+      },
+      "maximum_clamped_score_reconstruction_error": 1.9073486328125e-06,
+      "all_sites": {
+        "races": 1344,
+        "mean_absolute_static_gap": 0.10989744843876299,
+        "mean_absolute_dynamic_gap": 5.322272285400513,
+        "mean_memory_norm": 14.914641175153,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          7.744476795196533,
+          51.10744838714601
+        ],
+        "memory_gap_larger_than_static_fraction": 0.9375,
+        "factual": {
+          "mean_normalized_entropy": 0.33288701407463384,
+          "top_probability99_fraction": 0.44568452380952384
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9960293134668358,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.33960660449180274,
+          "top_probability99_fraction": 0.43973214285714285
+        }
+      },
+      "first_event": {
+        "races": 64,
+        "mean_absolute_static_gap": 0.12659466546028852,
+        "mean_absolute_dynamic_gap": 0.0,
+        "mean_memory_norm": 0.0,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "memory_gap_larger_than_static_fraction": 0.0,
+        "factual": {
+          "mean_normalized_entropy": 0.9949803992769933,
+          "top_probability99_fraction": 0.0
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9949803992769933,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 1.0,
+          "top_probability99_fraction": 0.0
+        }
+      },
+      "later_events": {
+        "races": 1280,
+        "mean_absolute_static_gap": 0.10906258758768672,
+        "mean_absolute_dynamic_gap": 5.588385899670539,
+        "mean_memory_norm": 15.66037323391065,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          8.5134916305542,
+          51.62222843170162
+        ],
+        "memory_gap_larger_than_static_fraction": 0.984375,
+        "factual": {
+          "mean_normalized_entropy": 0.29978234481451577,
+          "top_probability99_fraction": 0.46796875
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9960817591763279,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.30658693471639287,
+          "top_probability99_fraction": 0.46171875
+        }
+      },
+      "by_layer_head": {
+        "layer0_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.03685939234648166,
+          "mean_absolute_dynamic_gap": 3.9253780420182185,
+          "mean_memory_norm": 9.807440115582375,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            6.091936111450195,
+            29.53092746734619
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9434523809523809,
+          "factual": {
+            "mean_normalized_entropy": 0.38924285301862643,
+            "top_probability99_fraction": 0.33630952380952384
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9996489527759985,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.39271048865342856,
+            "top_probability99_fraction": 0.33035714285714285
+          }
+        },
+        "layer0_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.19065845111894997,
+          "mean_absolute_dynamic_gap": 4.603850360216928,
+          "mean_memory_norm": 14.818682246619748,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            6.778353452682495,
+            46.97209529876702
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9196428571428571,
+          "factual": {
+            "mean_normalized_entropy": 0.3675572187433338,
+            "top_probability99_fraction": 0.40476190476190477
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9906294004918491,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.38472960287955454,
+            "top_probability99_fraction": 0.38392857142857145
+          }
+        },
+        "layer1_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.11959429793170698,
+          "mean_absolute_dynamic_gap": 6.390433360334663,
+          "mean_memory_norm": 14.627546570485546,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            8.377431869506836,
+            47.445493316650385
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9494047619047619,
+          "factual": {
+            "mean_normalized_entropy": 0.2566964829639456,
+            "top_probability99_fraction": 0.5327380952380952
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9959796178966585,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.26319629887114604,
+            "top_probability99_fraction": 0.5327380952380952
+          }
+        },
+        "layer1_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.09247765235791337,
+          "mean_absolute_dynamic_gap": 6.369427379032242,
+          "mean_memory_norm": 20.40489576792433,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            12.667932510375977,
+            70.98332786560059
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9375,
+          "factual": {
+            "mean_normalized_entropy": 0.3180515015726293,
+            "top_probability99_fraction": 0.5089285714285714
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.997859282702837,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.31779002756308167,
+            "top_probability99_fraction": 0.5119047619047619
+          }
+        }
+      }
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "observed_work": {
+        "prefixes": 16,
+        "events": 336,
+        "key_scores": 2688,
+        "selected_updates": 1344
+      },
+      "maximum_clamped_score_reconstruction_error": 9.5367431640625e-07,
+      "all_sites": {
+        "races": 1344,
+        "mean_absolute_static_gap": 0.10545186710147564,
+        "mean_absolute_dynamic_gap": 1.4495123055475276,
+        "mean_memory_norm": 11.64924962707751,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          10.559724807739258,
+          28.792415618896484
+        ],
+        "memory_gap_larger_than_static_fraction": 0.8809523809523809,
+        "factual": {
+          "mean_normalized_entropy": 0.73163196199568,
+          "top_probability99_fraction": 0.07217261904761904
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9975538872304209,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.730269914930274,
+          "top_probability99_fraction": 0.07291666666666667
+        }
+      },
+      "first_event": {
+        "races": 64,
+        "mean_absolute_static_gap": 0.11085337855911348,
+        "mean_absolute_dynamic_gap": 0.0,
+        "mean_memory_norm": 0.0,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "memory_gap_larger_than_static_fraction": 0.0,
+        "factual": {
+          "mean_normalized_entropy": 0.9972987317572872,
+          "top_probability99_fraction": 0.0
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9972987317572872,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 1.0,
+          "top_probability99_fraction": 0.0
+        }
+      },
+      "later_events": {
+        "races": 1280,
+        "mean_absolute_static_gap": 0.10518179152859375,
+        "mean_absolute_dynamic_gap": 1.521987920824904,
+        "mean_memory_norm": 12.231712108431385,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          11.349961280822754,
+          29.118827438354483
+        ],
+        "memory_gap_larger_than_static_fraction": 0.925,
+        "factual": {
+          "mean_normalized_entropy": 0.7183486235075995,
+          "top_probability99_fraction": 0.07578125
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9975666450040777,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.7167834106767877,
+          "top_probability99_fraction": 0.0765625
+        }
+      },
+      "by_layer_head": {
+        "layer0_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.050191149808510784,
+          "mean_absolute_dynamic_gap": 0.6426052585510271,
+          "mean_memory_norm": 8.192428254123245,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            7.460521459579468,
+            17.778617858886715
+          ],
+          "memory_gap_larger_than_static_fraction": 0.8898809523809523,
+          "factual": {
+            "mean_normalized_entropy": 0.8965650863173642,
+            "top_probability99_fraction": 0.0
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9993649927697914,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.897431617703665,
+            "top_probability99_fraction": 0.0
+          }
+        },
+        "layer0_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.1532037852143514,
+          "mean_absolute_dynamic_gap": 0.7613536346858988,
+          "mean_memory_norm": 13.764000593196778,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            12.733744621276855,
+            30.567502975463867
+          ],
+          "memory_gap_larger_than_static_fraction": 0.8065476190476191,
+          "factual": {
+            "mean_normalized_entropy": 0.8829159693408796,
+            "top_probability99_fraction": 0.01488095238095238
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9956512307270706,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.8753736495395817,
+            "top_probability99_fraction": 0.01488095238095238
+          }
+        },
+        "layer1_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.10605589614992607,
+          "mean_absolute_dynamic_gap": 1.1516819993322271,
+          "mean_memory_norm": 10.530840490900335,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            8.82544231414795,
+            25.011045455932617
+          ],
+          "memory_gap_larger_than_static_fraction": 0.875,
+          "factual": {
+            "mean_normalized_entropy": 0.7876635168664123,
+            "top_probability99_fraction": 0.008928571428571428
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9978977659580173,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.7720882759289308,
+            "top_probability99_fraction": 0.01488095238095238
+          }
+        },
+        "layer1_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.11235663723311431,
+          "mean_absolute_dynamic_gap": 3.2424083296209574,
+          "mean_memory_norm": 14.109729170089675,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            13.666813373565674,
+            32.82960987091064
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9523809523809523,
+          "factual": {
+            "mean_normalized_entropy": 0.3593832754580638,
+            "top_probability99_fraction": 0.2648809523809524
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.997301559466805,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.37618611654891876,
+            "top_probability99_fraction": 0.2619047619047619
+          }
+        }
+      }
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "observed_work": {
+        "prefixes": 16,
+        "events": 336,
+        "key_scores": 2688,
+        "selected_updates": 1344
+      },
+      "maximum_clamped_score_reconstruction_error": 1.9073486328125e-06,
+      "all_sites": {
+        "races": 1344,
+        "mean_absolute_static_gap": 0.1277415577237012,
+        "mean_absolute_dynamic_gap": 4.3400787642597045,
+        "mean_memory_norm": 14.370793645447563,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          9.234718322753906,
+          46.41713905334473
+        ],
+        "memory_gap_larger_than_static_fraction": 0.9285714285714286,
+        "factual": {
+          "mean_normalized_entropy": 0.402164631816338,
+          "top_probability99_fraction": 0.3400297619047619
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9957180784712181,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.40426126609334795,
+          "top_probability99_fraction": 0.3333333333333333
+        }
+      },
+      "first_event": {
+        "races": 64,
+        "mean_absolute_static_gap": 0.15738526545101195,
+        "mean_absolute_dynamic_gap": 0.0,
+        "mean_memory_norm": 0.0,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "memory_gap_larger_than_static_fraction": 0.0,
+        "factual": {
+          "mean_normalized_entropy": 0.9942961440602719,
+          "top_probability99_fraction": 0.0
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9942961440602719,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 1.0,
+          "top_probability99_fraction": 0.0
+        }
+      },
+      "later_events": {
+        "races": 1280,
+        "mean_absolute_static_gap": 0.12625937233733567,
+        "mean_absolute_dynamic_gap": 4.557082702472689,
+        "mean_memory_norm": 15.089333327719942,
+        "memory_norm_q05_q50_q95": [
+          0.0,
+          10.14253044128418,
+          46.60165081024168
+        ],
+        "memory_gap_larger_than_static_fraction": 0.975,
+        "factual": {
+          "mean_normalized_entropy": 0.3725580562041413,
+          "top_probability99_fraction": 0.35703125
+        },
+        "static_only": {
+          "mean_normalized_entropy": 0.9957891751917654,
+          "top_probability99_fraction": 0.0
+        },
+        "dynamic_only": {
+          "mean_normalized_entropy": 0.3744743293980154,
+          "top_probability99_fraction": 0.35
+        }
+      },
+      "by_layer_head": {
+        "layer0_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.10365308430101279,
+          "mean_absolute_dynamic_gap": 4.918698642935071,
+          "mean_memory_norm": 12.613917854570207,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            7.015746355056763,
+            40.654942321777284
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9345238095238095,
+          "factual": {
+            "mean_normalized_entropy": 0.409010571567403,
+            "top_probability99_fraction": 0.34226190476190477
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9973970150926803,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.40388724185200126,
+            "top_probability99_fraction": 0.34226190476190477
+          }
+        },
+        "layer0_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.06394344386284329,
+          "mean_absolute_dynamic_gap": 3.427821188444449,
+          "mean_memory_norm": 10.758635314802328,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            8.016444206237793,
+            33.58729553222656
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9434523809523809,
+          "factual": {
+            "mean_normalized_entropy": 0.4104940111241015,
+            "top_probability99_fraction": 0.25297619047619047
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9989819734376658,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.40698143518803,
+            "top_probability99_fraction": 0.25595238095238093
+          }
+        },
+        "layer1_head0": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.1756401715933212,
+          "mean_absolute_dynamic_gap": 4.217917851771095,
+          "mean_memory_norm": 18.027231208447898,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            12.401354789733887,
+            52.81749610900876
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9196428571428571,
+          "factual": {
+            "mean_normalized_entropy": 0.39615522220007,
+            "top_probability99_fraction": 0.3869047619047619
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9935174129682313,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.41135421825779706,
+            "top_probability99_fraction": 0.36607142857142855
+          }
+        },
+        "layer1_head1": {
+          "races": 336,
+          "mean_absolute_static_gap": 0.1677295311376275,
+          "mean_absolute_dynamic_gap": 4.795877373888201,
+          "mean_memory_norm": 16.08339020396982,
+          "memory_norm_q05_q50_q95": [
+            0.0,
+            12.116918563842773,
+            52.12824268341064
+          ],
+          "memory_gap_larger_than_static_fraction": 0.9166666666666666,
+          "factual": {
+            "mean_normalized_entropy": 0.3929987223737775,
+            "top_probability99_fraction": 0.37797619047619047
+          },
+          "static_only": {
+            "mean_normalized_entropy": 0.9929759123862949,
+            "top_probability99_fraction": 0.0
+          },
+          "dynamic_only": {
+            "mean_normalized_entropy": 0.39482216907556344,
+            "top_probability99_fraction": 0.36904761904761907
+          }
+        }
+      }
+    }
+  ],
+  "exact_logit_state_end_rng_contracts_passed": 8,
+  "all_weights_bitwise_preserved": true,
+  "scalar_score_decompositions": 5376,
+  "indices": [
+    256,
+    304,
+    352,
+    401,
+    449,
+    498,
+    546,
+    595,
+    643,
+    692,
+    740,
+    789,
+    837,
+    886,
+    934,
+    983
+  ],
+  "noise_seed": 314159,
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "decomposition_artifact": "experiments/results/diagnostics/local_dvs_key_score_decomposition_20261002T230300Z.decomposition.npz",
+  "decomposition_artifact_sha256": "b92c82f971df8e4bb9fbfc80ce1d4c5115063b7a3a8841dc26ae293a3d1545f7",
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_key_score_decomposition.py": "2db0b22a11ee7939e083a2ea3ea0cc2794af1accf71da2556972a61c35142f17",
+    "experiments/theory/100_memory_keys_and_clock_safe_calibration.md": "c84f6336f05bc02bd7d657aec8bb776bd6d4b71c5165c17de7198f79e75725c7",
+    "experiments/dvs_race_support_profile.py": "8656b79cca13e4561f5f8a6cea81838b6ce5feca4f556cac94eedaf883ef3adb",
+    "experiments/dvs_native_window_intervention.py": "8d87a9430e1e08e76a99ced669db69aac47af293bd383b9b1efd2d1ca60edd99"
+  },
+  "whole_audit_flops": null,
+  "wall_s": 32.99237792099302,
+  "max_rss_kb": 328876,
+  "hardware": {
+    "host": "curie",
+    "device": "CPU",
+    "torch_threads": 1
+  },
+  "scope": "Read-only exact local native score decomposition into static key+bias and persistent-memory key read. All component-only probabilities hold entering query fixed, not an actual altered prefix or quality claim. One noise history,16 producer-unseen FIT examples,two fixed-pass producers+initial reservoirs. Eight explicit final-logit/state/end-RNG contracts supplement99 without revising it. No target loss, optimizer, normalization fit, DEV/test evaluation or inferred bad routing. Audit and original fits paid; full FLOPs/traffic/energy unmeasured, not zero."
+}
