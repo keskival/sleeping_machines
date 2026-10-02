@@ -149,3 +149,53 @@ store for free. The open question is whether the learned base, freed from that
 work, closes parts 2 and 3 of the gap at a smaller `P·D`. That needs the
 integrated fit of §380, then AWS-matched dense controls. It is not assumed
 here.
+
+## 386. The memorization tax of dense models
+
+At 90M fitting characters, the context tables of orders ≤ 7 hold 17,144,249
+distinct (context, symbol) entries; at 10M they hold 4,820,474 (§381 result
+file, `table_pairs_by_order`). A dense model must store whatever part of that
+statistic it uses in its parameters. Language models have been measured to
+store about 2 bits of knowledge per parameter (Allen-Zhu & Li 2024,
+*Physics of Language Models 3.3*). That is an empirical rate for factual
+knowledge, used here only as an order-of-magnitude assumption.
+
+**Estimate 386.1.** Suppose each table entry carries between 1 and 4 useful
+bits (presence plus a coarse count). Storing the order-≤7 statistic of 90M
+characters then needs about 17–69 Mbit, or about 9–34M parameters at 2
+bits/parameter. The 90M Transformer control has 3.24M parameters, 3–10× too
+few, and the 90M LSTM 1.20M. This is consistent with the observed parity
+between both controls and untuned counts (1.604 / 1.661 versus 1.653). Small
+dense models at this data size are capacity-bound on *memorization* before
+they reach *generalization*.
+
+**Consequence.** Training work for a dense model is `≈ 6PD` per pass, and `P`
+must grow with the memorized statistic. Addressed counters hold the same
+statistic with `O(K)` integer increments per event and no gradient. The
+**memorization tax** is the parameter, and therefore compute, that a dense
+model spends storing what counters store for free. In the composition of
+§§379, 383 the learned base is relieved of the tax and needs capacity only
+for generalization and retrieval. This is the substrate's most concrete
+route to quality per unit of training work. It is an architectural argument
+about a dominant term, not a claim that counts generalize.
+
+**Predictions, falsifiable with saved or cheap fits:**
+
+1. *Frozen composition.* Composing a frozen small dense control (as base
+   `q`) with count receivers by the §378 cascade should improve its test
+   bpc by much more than the same composition improves a larger dense model
+   of equal data. The gain should shrink as `P` grows past roughly
+   `17–69 Mbit / 2 bits`. This needs saved AWS checkpoints, scored on the E64
+   test segment with fit counts and prequential test counts; no training.
+2. *Iso-quality parameter ratio.* For a target bpc between 1.5 and 1.3, the
+   count-carrying model should reach it with a learned base several times
+   smaller than a dense-only model trained on the same data. Report the full
+   charged FLOPs and the count increments separately.
+3. *Learned work shrinks with data.* In a fitted count-carrying model, the
+   measured responsibility-weighted backward work per target should fall
+   with `D` roughly as in the §381 schedule. A dense model's per-target work is
+   constant.
+
+If prediction 1 fails, meaning the gains do not depend on `P`, then the
+parity of §381 is not a capacity effect, and this route to an advantage is
+weaker than argued here.
