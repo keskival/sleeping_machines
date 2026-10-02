@@ -148,3 +148,15 @@ First-time-preserving actual writes plus separately consistent clock credit are
 required before promoting an integrated exact-credit claim. Freeze the critic
 before correction sampling or prove the alternative conditioning. This is a
 formal/numerical contract advance, not an admitted local long training run.
+
+## 2 October21:42 UTC: state survives, but regularization is a major confound
+
+Common-noise covariance212700Z fails its1.20 gate in both saved seeds. No
+fresh-noise fit admitted. Frozen state probe213300Z improves selected query
+.999857->.859084NLL with full pre-query state; partition214000Z shows stronger
+query-only regularization already reaches.889842. Full state adds only.030759
+at that setting and harms at C1; payload/layer partitions still retain smaller
+conditional gains. No all-state head is a new sparse main model. Theory94/95
+preserve all results and selection/cost scopes. Next diagnose producer-held
+decoder selection using fixed-pass pilot checkpoints and untouched FIT examples;
+no new Transformer/LSTM, unchanged offset/choice campaign or duplicate replay.

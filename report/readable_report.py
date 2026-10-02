@@ -150,6 +150,24 @@ def results():
         tasks['dvs_practical_native'].append(r)
     tasks['dvs_practical_inference']=[r for path in sorted((RES/'diagnostics').glob('local_dvs_practical_inference_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
+    tasks['dvs_noise_covariance']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_noise_covariance_audit_*Z.json'))]
+    tasks['dvs_persistent_state_probes']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_persistent_state_probe_*Z.json'))]
+    tasks['dvs_state_partition_probes']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_state_partition_probe_*Z.json'))]
+    for r in tasks['dvs_noise_covariance']:
+        for model in r['models']:
+            if hashlib.sha256((ROOT/model['native']).read_bytes()).hexdigest()!=model['result_sha256']:
+                raise ValueError('Changed noise audit parent')
+    for r in tasks['dvs_persistent_state_probes']:
+        for name,digest in [(r['native_result'],r['native_result_sha256']),
+                (r['args']['reference_probe'],r['reference_probe_sha256'])]:
+            if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=digest:
+                raise ValueError('Changed persistent-state parent')
+    for r in tasks['dvs_state_partition_probes']:
+        if hashlib.sha256((ROOT/r['args']['state_probe']).read_bytes()).hexdigest()!=r['state_probe_sha256']:
+            raise ValueError('Changed state partition parent')
     tasks['dvs_frozen_features']=[]
     for path in sorted((RES/'diagnostics').glob('local_dvs_frozen_features_*Z.json')):
         r=read(str(path.relative_to(RES)))
@@ -699,6 +717,20 @@ def figures(M, tasks, ev):
         a.set(xlabel='Fixed passes over256 fitting gestures',ylabel='Development NLL',xticks=range(1,5),
             title=f"Physical-time phase offsets: completed seed{r['args']['seed']}")
         a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
+    for r in tasks.get('dvs_state_partition_probes',[]):
+        parent=read(str((ROOT/r['args']['state_probe']).relative_to(RES)))
+        reference=next(x for x in parent['rows'] if x['encoder']=='selected')
+        by={x['partition']:x for x in r['rows'] if x['encoder']=='selected'}
+        labels=['Query C1','Query C.1','+ payloads','+ layer0','+ layer1','+ all state']
+        values=[reference['query_probe_development']['nll'],by['query_with_state_setting']['development']['nll'],
+            by['payloads']['development']['nll'],by['layer0']['development']['nll'],
+            by['layer1']['development']['nll'],reference['augmented_probe_development']['nll']]
+        f,a=plt.subplots(figsize=(7.2,2.35))
+        a.bar(range(len(values)),values,color=[orange,gray,blue,blue,blue,blue])
+        for i,v in enumerate(values):a.text(i,v+.015,f'{v:.3f}',ha='center',fontsize=7)
+        a.set(xticks=range(len(values)),xticklabels=labels,ylabel='Development NLL',ylim=(0,1.18),
+            title='Frozen-state diagnosis: regularization explains most of the apparent gain')
+        f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
               and r['args']['clock_features']==0]
@@ -4035,6 +4067,84 @@ def blocks(M, tasks, ev):
              'confirmation are separate questions. No official test was opened.'),
             ('small','Theory75 states admission and scope. Selected initial/fitted readout artifacts, '
              'all fitting-CV cells, native/checkpoint hashes, probability arrays, wall and RSS are saved.')])
+    for r in tasks.get('dvs_noise_covariance',[]):
+        rows=[]
+        for x in r['models']:
+            g=x['groups'];rows.append([str(x['seed']),*[f"{g[k]['common_over_independent_ratio']:.5f}" for k in
+                ('all_parameters','route_maps','time_maps','message_maps')],
+                'Pass' if x['admission_supports_independent_rows'] else 'FAIL'])
+        pages.append([('h1','Appendix B. Shared fitting noise: covariance hypothesis fails its gate'),
+            ('table',(['Saved seed','All variance ratio','Route ratio','Time ratio','Message ratio','Gate'],rows,[23,36,29,29,32,24])),
+            ('p','Four fixed fitting prefixes per saved native seed6/7, 32 independent whole-history '
+             'draws and zero optimizer updates. Each clip gradient is recorded under the same stream. '
+             'Shared-batch trace covariance is measured; independent-coupling covariance is estimated '
+             'from those same marginal samples. Their difference equals the cross-clip covariance sum.'),
+            ('p','Both route-map ratios miss the declared 1.20 admission gate. Proposed fresh_shared/ '
+             'fresh_independent fits are stopped. Neither model shows a large cross-clip covariance '
+             'penalty on these prefixes. This is not a corpus-wide result or a test of repeated-noise '
+             'adaptation across optimizer updates. Small-group variance ratios retain their finite-sample scope.'),
+            ('p','Theory93 derives the effective-batch covariance law and separates per-window freshness '
+             'from cross-row decorrelation. Independent noise need not help when cross-covariance is '
+             'negative. Flipout is a primary-paper analogy about shared perturbation correlation, '
+             'not an implementation or transferred quality guarantee for these event races.'),
+            ('small',f"Two algebra contracts pass. Audit {r['wall_s']:.3f}s/{r['max_rss_kb']/1024:.1f}MiB; "
+             f"{r['whole_audit_unit_special_flops_estimate']/1e9:.6f} known diagnostic GFLOPs est. "
+             'Complete first-draw per-clip forward/backward traces times draws; reporting reductions separate. '
+             'Frozen weights preserved. No training, official test or superiority claim.')])
+    for r in tasks.get('dvs_persistent_state_probes',[]):
+        quality=[];work=[]
+        for x in r['rows']:
+            for feature,key,dimension in [('Query','query_probe_development',32),('Query+state','augmented_probe_development',176)]:
+                q=x[key];quality.append([x['encoder'],feature,str(dimension),f"{100*q['accuracy']:.2f}",f"{q['nll']:.4f}"])
+            original=x['original_encoder_fit_gflops_estimate'];replay=x['replay_whole_gflops_estimate']
+            work.append([x['encoder'],f'{original:.6f}',f'{original*1e3/7872:.6f}',
+                f'{replay:.6f}',f'{replay*1e3/1176:.6f}','Unknown'])
+        pages.append([('h1','Appendix B. Causal persistent-state access: positive probe, qualified cause'),
+            ('table',(['Frozen encoder','Feature access','Dimensions','Dev accuracy %','Dev NLL'],quality,[30,46,26,36,35])),
+            ('table',(['Encoder','Original fit GF est.','Fit MF / presentation','Core replay GF est.','Replay MF / prefix','Decoder/grid GF'],work,[23,31,31,31,31,26])),
+            ('p','Same 984 fitting/192 development gestures. Augmentation adds all eight pre-query '
+             'receiver memories, their ages at source query admission and occupancy flags to the actual '
+             '32-dimensional query feature. No future or target-dependent feature. Three contracts '
+             'reproduce serial state, original probabilities and saved query-probe probabilities while '
+             'keeping every encoder parameter bitwise fixed. Nine-cell three-fold fitting-only head selection.'),
+            ('p','Initial augmentation improves NLL by .244819; trained augmentation by .140774. Both '
+             'pass the declared diagnostic access signal. The trained augmented probe reaches 71.35%/ '
+             '.859084, versus original native 65.10%/.963161, compact prototype 66.67%/.902951 and '
+             'strong full RBF 73.44%/.706478. Decoder/grid costs are unknown, so these are quality '
+             'comparisons and diagnostic signals, not practical advantage.'),
+            ('p','Important qualification from the completed partition controls: stronger query-only '
+             'regularization alone reaches .889842; adding full state at that same C contributes '
+             'only .030759 further NLL improvement. At the weaker C, full-state NLL worsens to '
+             '1.278955. Most apparent trained-state gain is therefore compatible with regularization '
+             'rather than uniquely missing information. Early/later state partitions retain smaller gains.'),
+            ('small','Theory94/95. Dense all-state probing is a diagnostic, not sparse inference or a '
+             'new main architecture. Selected encoder saw all fitting labels and was dev-selected; '
+             'decoder CV is not unbiased end-to-end validation. Known original fit uses 7,872 '
+             'presentations; current two-pass core replay uses 1,176 prefixes. Solver/materialization/ '
+             'traffic/energy and total probe fit/inference remain unmeasured rather than zero.')])
+    for r in tasks.get('dvs_state_partition_probes',[]):
+        labels={'payloads':'Payloads','clocks':'Clocks','layer0':'Layer0','layer1':'Layer1',
+            'query_with_state_setting':'Query@state setting','state_with_query_setting':'State@query setting'}
+        rows=[]
+        for x in r['rows']:
+            q=x['development'];c=x.get('fixed_configuration',x.get('fit_only_selected_decoder',{}).get('configuration',{}))
+            rows.append([x['encoder'],labels[x['partition']],str(x['feature_dimension']),f"{100*q['accuracy']:.2f}",
+                f"{q['nll']:.4f}",f"{c['kind']}/{c['C']}"])
+        pages.append([('h1','Appendix B. Retained payloads, clocks, layers and regularization'),
+            ('figure',('report/figures/'+r['args']['tag']+'_learning.png',95)),
+            ('table',(['Encoder','Added state/control','Dims','Accuracy %','NLL','Kind/C'],rows,[23,49,19,27,25,30])),
+            ('p','Four partitions retain the query: both payload layers, ages/occupancy only, '
+             'layer0 state or layer1 state. Same nine-cell fitting-only decoder selection per '
+             'partition, both initial and trained encoders. Two fixed configuration swaps per '
+             'encoder test regularization without another grid or development selection.'),
+            ('p','Trained payload .860321, layer0 .838315 and layer1 .840329; clocks-only 1.017809. '
+             'The query C.1 control .889842 explains most full-state gain. These finite probe '
+             'differences do not isolate a causal depth failure or population conditional information. '
+             'All outcomes remain visible; core producers/routes were never retrained.'),
+            ('small','Theory95. Cached features add zero CORE replay, not zero fitting work. '
+             'Prior encoder fit/core replay retained; additional solver arithmetic unknown. '
+             'Conditional folds share the label-trained encoder. Producer-held fitting examples '
+             'are the next decoder-selection check. No official test or supremacy claim.')])
     for clock in tasks.get('dvs_clock_completed',[]):
         comparison=next(r for r in tasks['dvs_practical_native']
                         if clock['args']['controls'] in r['inputs'])

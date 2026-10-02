@@ -1,5 +1,44 @@
 # Local host: current research continuation
 
+## State-access signal and regularization qualification, 2 October21:42 UTC
+
+Persistent-state probe213300Z completes38.100s/459264KiB. Frozen initial query
+57.8125%/1.131057 -> augmented63.5417%/.886238; selected query67.1875%/.999857
+-> augmented71.3542%/.859084. Q32 plus all causal pre-query raw memories/age/
+seen =176 features. Serial state, native and old-probe probability reproduction,
+bitwise encoder preservation pass. Same984/192 data,9-cell3-fold FIT-only head
+selection, no encoder updates. Complete sampled32/24 core replays1.735341GF
+per encoder; selected prior encoder fit20.075193GF retained. Solver/grid/
+feature-materialization/traffic/energy unmeasured, not zero. Dense probe control,
+not a sparse inference architecture or practical advantage over RBF73.44%/.7065.
+
+Partition probe214000Z completes12 fixed outcomes (four9-cell partitions and
+two fixed decoder-setting swaps, both initial/selected). Cached features mean
+zero EXTRA core replay, not zero total work. Selected payloads71.3542%/.860321,
+clocks67.7083%/1.017809, layer0 70.8333%/.838315, layer1 69.7917%/.840329.
+Crucial correction: selected query alone at the stronger state-selected C.1
+reaches67.1875%/.889842. Most apparent full-state gain is regularization;
+state adds only.030759 at C.1, and at weaker query-selected C1 full-state worsens
+to68.2292%/1.278955. No uniquely established memory-access cause or depth
+premium follows. Preserve original positive signals AND these qualifications.
+Initial same-setting query/state comparison still improves1.131059->.886238.
+Theory94/95 and all numerical dependencies are now frozen.
+
+Next bounded direction: producer-held decoder selection on existing fixed-
+four-pass native pilot checkpoints, using fitting examples never trained by
+those encoders. Conditional decoder folds reuse label-trained features and
+can prefer overconfident heads; strong regularization gain needs a selection
+protocol check. Keep inference architecture unchanged if an affine head is
+ported; no all-state probe is silently promoted. Existing covariance gate
+fails and fresh-noise fits remain stopped. Other-host replay/depth/tied work
+stays owned there; AWS remains the place for new dense controls. All queues
+serial, one thread/nice19,3M KiB VMS/1.25M KiB RSS and8GiB memory floor.
+
+Report source now includes completed noise/state/partition evidence and the
+confounding controls, with common known-work units and unknown totals explicit.
+Consolidated guarded publication is pending; canonical141-page report remains
+until validation. No training job currently runs. Main and stashes preserved.
+
 ## Common-noise covariance does not support a fitting change, 2 October21:27 UTC
 
 Frozen audit212700Z completes56.443s/405676KiB with four fitting prefixes per
