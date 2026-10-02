@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_credit_report_20261002T174100Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_credit_comparison_pairs_20261002T174000Z.json",
+      "experiments/results/diagnostics/local_dvs_counterfactual_route_audit_20261002T172000Z.json",
+      "experiments/results/diagnostics/local_dvs_state_clock_contracts_20261002T173000Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_credit_comparison_pairs_20261002T174000Z.json": "9afe1353b60699faebf4994ad06af718773df1a00b42536196fbe51e3d060a8d",
+    "experiments/results/diagnostics/local_dvs_counterfactual_route_audit_20261002T172000Z.json": "b87d1229d05306af7664470a5c1534b74b111815f544d28d5128718a499d167f",
+    "experiments/results/diagnostics/local_dvs_state_clock_contracts_20261002T173000Z.json": "c64449e71351cf59894f2b5a68ebf7df06e17a04df5163ff53edb64986bb73c4"
+  },
+  "pdf_pages": 123,
+  "wall_s": 21.735444270998414,
+  "max_rss_kb": 65388,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "31533d3c38ec1cda32f1a8297e87ef5b5482cc1858e55e5958c315ec74a84fce",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}
