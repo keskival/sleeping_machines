@@ -1,0 +1,96 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "aws_coarse_native_20261002T212600Z_admission",
+    "manifest": "experiments/gym/plans/aws_coarse_native_20261002T212600Z/manifest.json"
+  },
+  "rows": [
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_fine_smoke",
+      "max_rss_kb": 459084,
+      "wall_s": 11.600898112985305,
+      "work": {
+        "fitting_targets": 48,
+        "optimizer_updates": 4,
+        "whole_fit_unit_special_flops_estimate": 107699332.0,
+        "fit_unit_special_flops_per_target_estimate": 2243736.0833333335,
+        "stage_estimates": {
+          "forward_and_loss": 36284592.0,
+          "backward": 70357940.0,
+          "gradient_normalization": 62092.0,
+          "gradient_clipping": 187104.0,
+          "optimizer": 807604.0
+        },
+        "inference_unit_special_flops_per_target_estimate": 591695.0,
+        "native_available_receivers": 8,
+        "scope": "All prefix/query forward/backward, candidate values, clipping/normalization/Adam; first/last window samples stratified by actual target count. Inference mean first11 dev prefixes;2FLOPs/MAC+unit specials; common raw preprocessing/traffic/RNG/energy separate."
+      }
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_fastclock_smoke",
+      "max_rss_kb": 455500,
+      "wall_s": 3.5973885119892657,
+      "work": {
+        "fitting_targets": 48,
+        "optimizer_updates": 4,
+        "whole_fit_unit_special_flops_estimate": 26034052.0,
+        "fit_unit_special_flops_per_target_estimate": 542376.0833333334,
+        "stage_estimates": {
+          "forward_and_loss": 8570544.0,
+          "backward": 16406708.0,
+          "gradient_normalization": 62092.0,
+          "gradient_clipping": 187104.0,
+          "optimizer": 807604.0
+        },
+        "inference_unit_special_flops_per_target_estimate": 137993.0,
+        "native_available_receivers": 8,
+        "scope": "All prefix/query forward/backward, candidate values, clipping/normalization/Adam; first/last window samples stratified by actual target count. Inference mean first11 dev prefixes;2FLOPs/MAC+unit specials; common raw preprocessing/traffic/RNG/energy separate."
+      }
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_matchedclock_smoke",
+      "max_rss_kb": 455100,
+      "wall_s": 3.588603730953764,
+      "work": {
+        "fitting_targets": 48,
+        "optimizer_updates": 4,
+        "whole_fit_unit_special_flops_estimate": 26034052.0,
+        "fit_unit_special_flops_per_target_estimate": 542376.0833333334,
+        "stage_estimates": {
+          "forward_and_loss": 8570544.0,
+          "backward": 16406708.0,
+          "gradient_normalization": 62092.0,
+          "gradient_clipping": 187104.0,
+          "optimizer": 807604.0
+        },
+        "inference_unit_special_flops_per_target_estimate": 137993.0,
+        "native_available_receivers": 8,
+        "scope": "All prefix/query forward/backward, candidate values, clipping/normalization/Adam; first/last window samples stratified by actual target count. Inference mean first11 dev prefixes;2FLOPs/MAC+unit specials; common raw preprocessing/traffic/RNG/energy separate."
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "experiments/aws_coarse_native.py": "7ccd7fafe81eaf4138492184eafdd565bfd433a77adaa4d5756d5bcf33f7f23b",
+    "experiments/aws_coarse_native_contracts.py": "96de9e5049aa44315a5a8fe0106c0298905bdc57993b1d52a1ee5003072587ef",
+    "experiments/theory/aws_20261002_coarse_native_admission.md": "982b34522064d3e1f2e23448b048ed5095a4aef9d789aa2031e4bd21a314a053",
+    "experiments/aws_coarse_smoke_admission.py": "4ee8f2d9ee7e47a68ab355e7888fc54fbeb778c7cb12fe0f8a4c64a359bc3f7d"
+  },
+  "scope": "All three shape-specific learning and accounting smokes pass; admission only, not benchmark quality."
+}
