@@ -1992,3 +1992,23 @@ First234000Z diagnostic found missingterminal_risk adapterarg; fixedbefore
 admitted learning runs. Numerical correctness/phase law remainsfirst-time
 preserving, actualwrites, separatefactorizedclock. Do not infer deepfailure
 from shallow no-gain. Original controls and allfailed shallow work preserved.
+
+## User-prioritized depth4 corrected full replay pilot complete — 2 October
+
+Depth4 everyparameter sequential/forked replay gradient and all3actual recovery/
+work contracts pass; all3 p16smokes learn.256FIT/192DEV/fourpass seed7 pilots
+complete/publish. Teacher56.771%/1.342018,FITsubset.856196,1.039740GF;
+factorized55.729%/1.368549,FITsubset.890972,1.082407GF; fullreplay56.771%/
+1.374384,FITsubset.807254,28.968062GF. Corrected replay DOES move deep fitting
+(.048942/.083718 better), but BOTHheldoutgatesFAIL.81920actualshadowlanes/
+409600events fullycharged. No unchanged seed8/fullpromotion. Full table/scope:
+AWS_DEEP_REPLAY_FINDINGS_20261002.md. Shallow failure is not deep impossibility.
+
+Current prioritized integrated model: DEPTH4 private memories/keys/clocks with
+receiver maps SHARED acrossdepth/pool perhead, full corrected replay versus
+matched sharedteacher/factorizedcontrols. Distinct failure addressed: observed
+fit/dev gap and sparse parametric exposure, not abandoning time/route/state.
+aws_shared_depth_replay_contracts234600Z checks sharedgradients==sumuntied
+identicalweightreference, privategradients/state, fullreplay sequentialequivalence,
+actualoptimizer/alias/RNG recovery and completework before p16smokes/pilots.
+Otherhost fineD4sampled8 and factorizedregularization queues stay separatelyowned.

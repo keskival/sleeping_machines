@@ -3111,3 +3111,15 @@ Original quality and4.218015GFwholefit/.535825MFperfit-target unchanged. Complet
 ATenaudit, query/target/parameter/training-rejection checks pass. Observed Python
 wall is~2%SLOWER, so no practicalspeed or supremacyclaim. Full common-unit table
 and counterbalanced timings: experiments/AWS_QUERY_ONLY_FINDINGS_20261002.md.
+
+## Depth4 corrected full replay: stronger fitting, heldout gate fails
+
+Same256FIT/192DEV/fourpasses/seed7/p16/L4/H2/pool2; threecredit controls, full
+operator/deepgradient/recovery contracts pass. Originalteacher56.771%/1.342018
+NLL,FITsubset.856196,1.039740GF/1.015371MF per fittingtarget;
+factorized55.729%/1.368549,FITsubset.890972,1.082407GF; correctedall40race
+replay56.771%/1.374384,FITsubset.807254,28.968062GF. Supported deep-fitting
+NLLgains.048942/.083718, BOTHheldoutgatesFAIL.81920actualshadowlanes paid.
+No unchanged fullfit or supremacyclaim; shallow failure does not establish deep
+impossibility. Full common-unit work/data/activity/quality table and next shared
+DEEP-family hypothesis: experiments/AWS_DEEP_REPLAY_FINDINGS_20261002.md.
