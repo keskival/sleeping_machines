@@ -49,8 +49,8 @@ def test_forcing_the_realized_winner_reproduces_the_realized_loss():
     winners = []
     orig = LE.PATHWISE
 
-    def spy(model, scores, values):
-        out = orig(model, scores, values); winners.append(int(out[2])); return out
+    def spy(scores, values):
+        out = orig(scores, values); winners.append(int(out[2])); return out
     LE.PATHWISE = spy
     try:
         with torch.no_grad():
@@ -60,3 +60,32 @@ def test_forcing_the_realized_winner_reproduces_the_realized_loss():
     with torch.no_grad():
         for r in (0, races // 2, races - 1):
             assert float(LE.run(m, row, 11, force=(r, winners[r]))[0]) == float(loss)
+
+
+def test_forced_losers_keep_the_factual_first_time():
+    a, m, row = _setup(fast=False)
+    m.train()
+    delays = []
+    orig = LE.PATHWISE
+
+    def spy(scores, values):
+        out = orig(scores, values); delays.append(float(out[1])); return out
+    LE.PATHWISE = spy
+    try:
+        with torch.no_grad():
+            LE.run(m, row, 11)
+    finally:
+        LE.PATHWISE = orig
+    import sleeping_machines.factorized_race as FR
+    forced = []
+    real = FR.force_at_first_time
+
+    def rec(scores, values, index):
+        out = real(scores, values, index); forced.append(float(out[1])); return out
+    LE.force_at_first_time = rec
+    try:
+        with torch.no_grad():
+            LE.run(m, row, 11, force=(0, 1)); LE.run(m, row, 11, force=(0, 0))
+    finally:
+        LE.force_at_first_time = real
+    assert forced[0] == forced[1] == delays[0]

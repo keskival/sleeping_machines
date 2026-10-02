@@ -1,10 +1,11 @@
 """DVS native fit with local-expectation counterfactual race credit (THEORY §402).
 
 Wraps the clock-calibrated driver and replaces its window step:
-  * the realized episode runs with credit='pathwise' (the winner's exact value and interior delay derivatives;
-    no linearized route teacher);
-  * k races per episode are sampled uniformly; for each, every alternative i is replayed without gradients with all
-    other race noise fixed (common random numbers), giving the episode loss L_r(i);
+  * the realized episode runs the factorized race (sleeping_machines/factorized_race.py): winner payload credit and
+    common first-time clock credit dT/ds_i = -T pi_i (no linearized route teacher);
+  * k races per episode are sampled uniformly; for each, every alternative i is replayed without gradients at the
+    factual first-arrival time with all other race noise fixed (conditional race law, theory note 92), giving the
+    episode loss L_r(i);
   * route credit comes from the surrogate (R/k) * sum_r sum_i softmax(s_r)_i * stopgrad(L_r(i)), whose gradient is the
     exact marginal over that race's winner.
 The forward, data, noise seeds, optimizer windows, normalization, clipping and Adam are those of the base driver.
@@ -25,7 +26,7 @@ import dvs_clock_calibrated_benchmark as C  # noqa: E402
 import dvs_native_benchmark as N  # noqa: E402
 from parallel_head_accumulated_language import merge  # noqa: E402
 from race_language_screen import capture  # noqa: E402
-from sleeping_machines.parallel_head_race_language import ParallelHeadRaceLanguageModel  # noqa: E402
+from sleeping_machines.factorized_race import factorized_race, force_at_first_time  # noqa: E402
 
 PATHWISE = None  # bound to AddressedEventHeads.race after model construction
 
@@ -42,13 +43,10 @@ def run(model, row, seed, force=None, record=None):
     def race(scores, values=None):
         r = counter[0]; counter[0] += 1
         if force is not None and r == force[0]:
-            rates = scores.to(torch.float64).exp()
-            times = torch.empty_like(rates).exponential_() / rates          # identical RNG consumption
-            i = force[1]; t = times[i]
-            return values[i], .001 + .010 * t / (1 + t), torch.tensor(i)
+            return force_at_first_time(scores, values, force[1])           # identity changes, first time does not
         if record is not None:
             record.append(scores)
-        return PATHWISE(model, scores, values)
+        return PATHWISE(scores, values)
     model.race = race
     try:
         state = model.new_state()
@@ -107,8 +105,8 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
 
 def make_model(a, fast=True):
     global PATHWISE
-    model = C.make_model(a, fast); model.credit = 'pathwise'
-    PATHWISE = type(model).race
+    model = C.make_model(a, fast)
+    PATHWISE = factorized_race      # realized branch: winner payload credit + common first-time clock credit
     return model
 
 

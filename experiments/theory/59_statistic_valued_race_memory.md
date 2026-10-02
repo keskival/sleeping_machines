@@ -1063,3 +1063,18 @@ within longer windows. Unlike the control variate, it is biased unless accurate.
 
 **Order.** Only after P402 shows that exact replay credit improves training: (1) the critic as a control variate,
 measuring quality against k at fixed passes; (2) synthetic gradients for truncation as a separate, contract-gated test.
+
+**§§400–402 correction (2 October, 21:40 UTC, after theory note 92).** The forced replays in the §400/§401 audits
+and in the §402 driver forced each alternative at its own exponential arrival. That changes identity *and*
+clock, and it is not the conditional counterfactual: W and T are independent, and T | W=i ~ Exp(Λ). The audits'
+"exact" targets were therefore biased, and their near-chance fidelity numbers (v1, v2) are measurements against a
+biased target. They are retained, labelled, and must be re-measured before drawing conclusions. Fixed in the code:
+forced replays keep the factual first time and change only identity, payload and memory write
+(force_at_first_time). The §402 realized branch now uses the factorized race (sleeping_machines/factorized_race.py):
+winner payload credit plus common first-time clock credit dT/ds_i = −T·π_i for every candidate, and choice
+credit only from the first-time-preserving replays. Contracts (tests/test_factorized_race.py): note 92's
+time-only witness (rates 1 and 3) recovers the true expected derivative [−1/16, −3/16] by Monte Carlo, with zero
+choice credit; forced alternatives preserve the first time and RNG consumption; choice credit is exact for
+winner-dependent losses. The queued commit audit (which also reports surrogate and exact-π columns) and the
+§402 fits run with the corrected law. Per note 92, a §403 critic must be fixed before (or cross-fitted against) the
+races it corrects.

@@ -1,4 +1,8 @@
-"""Frozen race-credit fidelity by depth (surrogate and exact-pi linearized estimator, §400) on trained DVS checkpoints (THEORY §399).  Read-only, no optimizer step.
+"""Frozen race-credit fidelity by depth (surrogate and exact-pi linearized estimator, §400).
+
+Forced replays keep the factual first-arrival time and change only the winner identity (conditional race law,
+theory note 92); audits before 21:40 UTC on 2 October forced at the alternative's own arrival (biased target).
+ on trained DVS checkpoints (THEORY §399).  Read-only, no optimizer step.
 
 For sampled races in development gestures, compare the counterfactual surrogate's gradient on that race's clock
 scores (TemporalRoute.backward, captured by a hook) with the exact expected-loss gradient for that single race:
@@ -35,9 +39,10 @@ def run_episode(model, row, seed, force=None, capture=None):
     def race(scores, values=None):
         r = counter[0]; counter[0] += 1
         if force is not None and r == force[0]:
+            # conditional law (note 92): T | W=i ~ Exp(Lambda); keep the factual first time, change identity only
             rates = scores.to(torch.float64).exp()
             times = torch.empty_like(rates).exponential_() / rates           # same RNG consumption as the real race
-            i = force[1]; t = times[i]
+            i = force[1]; t = times.min()
             return values[i], .001 + .010 * t / (1 + t), torch.tensor(i)
         out = original(scores, values)
         if capture is not None:
