@@ -746,19 +746,19 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
+| Ours S16 shared/P0/observed | 44.53 | 1.3721 | 0.262 | 0.511 | 0.110 |
 | Ours S16 private/P0/observed | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
 | Ours S16 private/P2/observed | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
 | Ours S16 shared/P0/observed | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
 | Ours S16 shared/P2/observed | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
-| Ours S4 private/P0/observed | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
+| Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
 | Ours S16 private/P0/observed | 128/256/4 | 157,940 | 512 | 16/32 |
 | Ours S16 private/P2/observed | 128/256/4 | 155,828 | 512 | 16/32 |
 | Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
 | Ours S16 shared/P2/observed | 128/256/4 | 13,988 | 512 | 16/32 |
-| Ours S4 private/P0/observed | 128/256/4 | 42,932 | 128 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
 
@@ -768,12 +768,14 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P2/observed | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
 | Ours S4 shared/P0/observed | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
 | Ours S4 shared/P2/observed | 56.64 | 1.0367 | 0.252 | 0.493 | 0.107 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 128/256/4 | 42,932 | 128 | 16/32 |
 | Ours S4 private/P2/observed | 128/256/4 | 42,356 | 128 | 16/32 |
 | Ours S4 shared/P0/observed | 128/256/4 | 14,180 | 128 | 16/32 |
 | Ours S4 shared/P2/observed | 128/256/4 | 13,988 | 128 | 16/32 |
@@ -786,12 +788,16 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 90.23 | 0.3483 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank | 50.00 | 0.7153 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P0/observed | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P0/rank | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P2/observed | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
 | Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
 | Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
 | Ours S4 private/P2/observed | 128/256/4 | 42,322 | 128 | 16/32 |
@@ -1246,6 +1252,34 @@ Native eight-block independent-head models reuse key/query matches for two/four 
 Completed fits only; identical frozen 8,191-target development protocol, four passes, U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory development results; these do not alone establish comparable-quality Transformer superiority.
 
 Current matched-fit interpretation: best completed added-clock row is 0.0010 bpc better than native, with 3.13% more fitting work. Pending allocations and waiting controls cannot establish a benefit yet.
+
+## Appendix B (continued). Ours: count-carrying native receivers
+
+The unchanged native eight-block core supplies the base predictive; addressed context-suffix receivers of orders 1..K carry sufficient statistics and deliver by an escape-race cascade with learned discount and concentration (Theory §§376–380, 387). Fitting counts are leave-one-out; development counts are prequential persistent state with frozen weights. Count tables are capacity; each target touches K addresses.
+
+| Model | Fit chars / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Native alone 2,048 | 2,048/4 | 3.765 | 3.778 | 0.461 | 0.0974 |
+| Count-carrying native K4 2,048 | 2,048/4 | 2.734 | 3.806 | 0.465 | 0.0982 |
+| Same, untrained base 2,048 | 2,048/0 | 2.741 | Not trained | Not trained | 0.0982 |
+| KN counts, frozen o4 | 2,048/1 | 3.615 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o3 | 2,048/1 | 2.776 | Not FLOPs | Not FLOPs | Not FLOPs |
+
+Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The untrained-base row isolates what training the native base adds. Count rows are dev-selected-order references, not neural controls. Exploratory development evidence; no comparable-quality Transformer claim.
+
+## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
+
+Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact local statistics, a small learned base should lose far less than the carrier alone does.
+
+| Model | Fit chars / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Carrier alone w32 | 131,072/4 | 2.848 | 80.9 | 0.154 | 0.0494 |
+| Carrier + counts K5 w32 | 131,072/4 | 2.313 | 82.3 | 0.157 | 0.0504 |
+| Same, untrained base w32 | 131,072/0 | 2.371 | Not trained | Not trained | 0.0504 |
+| KN counts, frozen o5 | 131,072/1 | 2.349 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o4 | 131,072/1 | 2.346 | Not FLOPs | Not FLOPs | Not FLOPs |
+
+Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
 
 ## Appendix B (continued). Ours: native temporal-core language
 

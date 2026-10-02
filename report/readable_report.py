@@ -303,7 +303,7 @@ def count_reference_bpc(fit):
     """Best frozen Kneser-Ney reference on the shared 8,191-target development window (THEORY §376)."""
     rows=[row for path in sorted((RES/'count_reference').glob('*.json'))
           for row in json.loads(path.read_text()).get('rows',[])
-          if row['fit']==fit and row['method']=='kn' and not row['adaptive']]
+          if row['fit']==fit and row.get('method')=='kn' and not row.get('adaptive')]
     return min((row['bpc'] for row in rows),default=None)
 
 
@@ -3079,6 +3079,46 @@ def blocks(M, tasks, ev):
              'integer table work reported in the result files, not FLOPs. The untrained-base row isolates '
              'what training the native base adds. Count rows are dev-selected-order references, not neural '
              'controls. Exploratory development evidence; no comparable-quality Transformer claim.')])
+    composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
+              if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r]
+    if composed:
+        carriers={}
+        for path in [*(RES/'parallel_language').glob('curie_carrier_selective_w*_D131072_*Z.json'),
+                     RES/'parallel_language/local_selective_w128_D131072_selective_20260930T161050Z.json',
+                     RES/'parallel_language/local_staged_language_capacity_w256_D131072_20260930T163234Z.json']:
+            if path.exists() and (r:=read(str(path.relative_to(RES)))).get('status','completed')=='completed':
+                carriers.setdefault(r['args']['width'],r)
+        def cwork(r):
+            w=r['work']
+            return [f"{w['total_training_unit_special_flops']/1e9:.1f}",
+                    f"{w['total_training_unit_special_flops']/w['fitting_targets']/1e6:.3f}",
+                    f"{(w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'])/1e6:.4f}"]
+        crow=[]
+        for r in sorted(composed,key=lambda r:r['args']['width']):
+            W,N=r['args']['width'],r['args']['fit']
+            if W in carriers:
+                c=carriers[W]
+                crow.append([f"Carrier alone w{W}",f"{N:,}/{c['args']['epochs']}",f"{c['final']['dev']['bpc']:.3f}",*cwork(c)])
+            crow.append([f"Carrier + counts K{r['args']['orders']} w{W}",f"{N:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",*cwork(r)])
+            crow.append([f"Same, untrained base w{W}",f"{N:,}/0",f"{r['initial_dev']['bpc']:.3f}",'Not trained','Not trained',cwork(r)[2]])
+        refs=[row for path in sorted((RES/'count_reference').glob('*language_*.json'))
+              for row in json.loads(path.read_text())['rows'] if row['fit']==131072]
+        for label,row in (('KN counts, frozen',min((x for x in refs if x['method']=='kn' and not x['adaptive']),key=lambda x:x['bpc'],default=None)),
+                          ('Counts, stream-adaptive',min((x for x in refs if x['adaptive']),key=lambda x:x['bpc'],default=None))):
+            if row:
+                crow.append([f"{label} o{row['order']}","131,072/1",f"{row['bpc']:.3f}",'Not FLOPs','Not FLOPs','Not FLOPs'])
+        pages.append([
+            ('h1','Appendix B (continued). Diagnostic: count receivers over the temporal carrier'),
+            ('p','Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier '
+             'supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests '
+             'whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact '
+             'local statistics, a small learned base should lose far less than the carrier alone does.'),
+            ('table',(['Model','Fit chars / passes','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],
+             crow,[44,27,20,27,28,27])),
+            ('small','Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and '
+             'passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier '
+             'gap. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory '
+             'development evidence; no comparable-quality Transformer claim.')])
     for begin in range(0,len(tasks.get('native_language',[])),4):
         rows=tasks['native_language'][begin:begin+4]
         pages.append([
