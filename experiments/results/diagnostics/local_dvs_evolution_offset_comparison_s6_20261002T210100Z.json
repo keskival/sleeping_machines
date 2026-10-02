@@ -1,0 +1,168 @@
+{
+  "common_unit_ledger": [
+    {
+      "arm": "local",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5416666666666666,
+      "development_nll": 1.3059374957034986,
+      "whole_fit_gflops_estimate": 2.28569632,
+      "fit_mflops_per_presentation_estimate": 2.2321253125,
+      "inference_mflops_per_target_estimate": 0.591737,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.7942547844722867,
+          "accuracy": 0.3854166666666667
+        },
+        {
+          "epoch": 2,
+          "nll": 1.5219685196255643,
+          "accuracy": 0.4479166666666667
+        },
+        {
+          "epoch": 3,
+          "nll": 1.317523285203303,
+          "accuracy": 0.5729166666666666
+        },
+        {
+          "epoch": 4,
+          "nll": 1.3059374957034986,
+          "accuracy": 0.5416666666666666
+        }
+      ],
+      "wall_s": 94.46436668199749,
+      "max_rss_kb": 347060
+    },
+    {
+      "arm": "joint",
+      "result": "experiments/results/dvs_native/local_dvs_evolution_offset_joint_pilot_s6_20261002T205500Z.json",
+      "result_sha256": "863c0f8f906a9ae9c046afeb28e7c482de59074f587d3d7c6b16d5970b1c8100",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5729166666666666,
+      "development_nll": 1.2581704598851502,
+      "whole_fit_gflops_estimate": 2.287775232,
+      "fit_mflops_per_presentation_estimate": 2.2341555,
+      "inference_mflops_per_target_estimate": 0.596711,
+      "parameters": 15555,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.7952465303242207,
+          "accuracy": 0.390625
+        },
+        {
+          "epoch": 2,
+          "nll": 1.5162784658993285,
+          "accuracy": 0.4427083333333333
+        },
+        {
+          "epoch": 3,
+          "nll": 1.2581704598851502,
+          "accuracy": 0.5729166666666666
+        },
+        {
+          "epoch": 4,
+          "nll": 1.292328709891687,
+          "accuracy": 0.5729166666666666
+        }
+      ],
+      "wall_s": 102.77514205800253,
+      "max_rss_kb": 347680
+    },
+    {
+      "arm": "alternating",
+      "result": "experiments/results/dvs_native/local_dvs_evolution_offset_alternating_pilot_s6_20261002T205700Z.json",
+      "result_sha256": "70631af01289bd1a63c9fe936803bbae6a36916311f3c79e0ae3c1fa5466ab95",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5364583333333334,
+      "development_nll": 1.2630087467065703,
+      "whole_fit_gflops_estimate": 2.281584448,
+      "fit_mflops_per_presentation_estimate": 2.2281098125,
+      "inference_mflops_per_target_estimate": 0.596655,
+      "parameters": 15555,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.900383408802251,
+          "accuracy": 0.359375
+        },
+        {
+          "epoch": 2,
+          "nll": 1.4500352890851598,
+          "accuracy": 0.453125
+        },
+        {
+          "epoch": 3,
+          "nll": 1.286562729626894,
+          "accuracy": 0.578125
+        },
+        {
+          "epoch": 4,
+          "nll": 1.2630087467065703,
+          "accuracy": 0.5364583333333334
+        }
+      ],
+      "wall_s": 101.85835474300256,
+      "max_rss_kb": 347808
+    }
+  ],
+  "schedule_gates": [
+    {
+      "schedule": "joint",
+      "nll_improvement": 0.0477670358183484,
+      "accuracy_decline_percentage_points": -3.125,
+      "whole_fit_work_ratio": 1.000909531148915,
+      "promotion_gate_passed": true
+    },
+    {
+      "schedule": "alternating",
+      "nll_improvement": 0.042928748996928334,
+      "accuracy_decline_percentage_points": 0.5208333333333259,
+      "whole_fit_work_ratio": 0.998201041860189,
+      "promotion_gate_passed": true
+    }
+  ],
+  "selected_schedule": "joint",
+  "promotion_gate_passed": true,
+  "gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_evolution_offset_comparison_s6_20261002T210100Z",
+    "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+    "treatment": [
+      "experiments/results/dvs_native/local_dvs_evolution_offset_joint_pilot_s6_20261002T205500Z.json",
+      "experiments/results/dvs_native/local_dvs_evolution_offset_alternating_pilot_s6_20261002T205700Z.json"
+    ],
+    "seed": 6
+  },
+  "source_sha256": {
+    "experiments/dvs_evolution_offset_comparison.py": "b8bd40326ba061ae5f8a5a0f97d430cd582ac2b39f92815de9d63b4e8fb028b4",
+    "experiments/dvs_credit_comparison.py": "96f7b4045900a85a5a678deb5a29fd2755cef916f40e10bed1f87f43ca7e0187"
+  },
+  "wall_s": 0.05148866100353189,
+  "max_rss_kb": 21176,
+  "scope": "Fixed256-fit/192-dev/four-pass paired initialization/noise/data; native vs up to two prespecified offset schedules. Minimum devNLL selects a candidate among passing gates for seed7 confirmation, not a proven schedule mechanism, full-data strong-control advantage or official-test claim. Alternation gives fewer updates to private blocks and different active clipping; shared maps remain active. Complete forward/backward/optimizer and offset inference work charged."
+}

@@ -175,6 +175,22 @@ def results():
         for path in sorted((RES/'dvs_native').glob('local_dvs_state_choice_smoke_*Z.json'))]
     tasks['dvs_paired_choice_smokes']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'dvs_native').glob('local_dvs_paired_choice_smoke_pool8_*Z.json'))]
+    tasks['dvs_branch_exposure_audits']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_branch_exposure_audit_*Z.json'))]
+    tasks['race_teacher_expectation_contracts']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_race_teacher_expectation_contracts_*Z.json'))]
+    tasks['dvs_evolution_offset_smokes']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'dvs_native').glob('local_dvs_evolution_offset_*_smoke_*Z.json'))]
+    tasks['dvs_evolution_offset_comparisons']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_evolution_offset_comparison_*Z.json'))]
+    for audit in tasks['dvs_branch_exposure_audits']:
+        for model in audit['models']:
+            if hashlib.sha256((ROOT/model['native']).read_bytes()).hexdigest()!=model['result_sha256']:
+                raise ValueError('Changed branch-exposure parent')
+    for audit in tasks['dvs_evolution_offset_comparisons']:
+        for row in audit['common_unit_ledger']:
+            if hashlib.sha256((ROOT/row['result']).read_bytes()).hexdigest()!=row['result_sha256']:
+                raise ValueError('Changed offset comparison parent')
     tasks['dvs_paired_choice_contracts']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_paired_choice_contracts_*Z.json'))]
     tasks['dvs_calibration_contracts']=[read(str(path.relative_to(RES)))
@@ -670,6 +686,14 @@ def figures(M, tasks, ev):
                 marker='o',color=color,label=row['arm'].replace('_',' '),linewidth=1.5,markersize=3)
         a.set(xlabel='Fixed passes over256 fitting gestures',ylabel='Development NLL',xticks=range(1,5),
             title='Matched sparse native credit screen: '+r['args']['kind'].replace('_',' ')+f" / seed{r['args'].get('seed',6)}")
+        a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
+    for r in tasks.get('dvs_evolution_offset_comparisons',[]):
+        f,a=plt.subplots(figsize=(7.2,2.3))
+        for row,color in zip(r['common_unit_ledger'],[blue,orange,'#34856d']):
+            a.plot([x['epoch'] for x in row['curve']],[x['nll'] for x in row['curve']],marker='o',
+                color=color,label=row['arm'].replace('_',' '),linewidth=1.5,markersize=3)
+        a.set(xlabel='Fixed passes over256 fitting gestures',ylabel='Development NLL',xticks=range(1,5),
+            title=f"Physical-time phase offsets: completed seed{r['args']['seed']}")
         a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
@@ -4298,6 +4322,108 @@ def blocks(M, tasks, ev):
              'unchanged at each shape. No-grad alternatives do not directly teach losing payload maps. '
              'Other local teachers and future timing jumps remain approximate. The failed initial195200Z '
              'operator-accounting attempt is preserved; covered equivalent subtraction passes a fresh run.')])
+    for audit in tasks.get('dvs_branch_exposure_audits',[]):
+        rows=[]
+        for model in audit['models']:
+            seed='6' if '_s6_' in model['native'] else '7';cells=model['cells']
+            msg=[c['groups']['message_maps']['cosine'] for c in cells]
+            rows.append([seed,str(model['choice_score_opposed'])+'/'+str(model['choice_score_comparable']),
+                str(model['global_route_clock_opposed'])+'/'+str(len(cells)),
+                f"{sum(msg)/len(msg):.4f}",f"{min(c['sampled_vs_enumerated_branch_cosine'] for c in cells):.6f}"])
+        pages.append([('h1','Appendix B. Fitting-only branch exposure and parameter interference'),
+            ('table',(['Saved seed','Opposed selected choice','Opposed global difference','Mean message cosine','Min sampled/averaged cosine'],rows,[25,37,39,35,37])),
+            ('p','First two fitting prefixes of each saved native local seed6/7 model; four independent '
+             'whole-history draws, events9/19, both layers, head0. Actual branch writes and full suffixes '
+             'preserve current first time. Native gradients are compared with an explicit diagnostic '
+             'blocking ALL race-score paths, including raw-clock score sensitivities. No optimizer or '
+             'development-label selection; these prefixes do not represent all gestures.'),
+            ('p','Route/clock-path differences mildly oppose message gradients in both saved models. '
+             'Averaging both legal message branches leaves the full parameter-gradient direction almost '
+             'unchanged on these prefixes. Negative inner product alone does not prove harmful interference '
+             'or justify deleting a chain-rule term. Finite whole-history covariance estimates include '
+             'changing entering states and clocks; they are not current-node conditional variance.'),
+            ('p','Independent ordinary-autograd gather contracts reproduce all parameters and full state '
+             'for six score-blocked factual/legal branches. Detached-probability weighting separates branch '
+             'derivatives from categorical derivatives. All captured native/branch forwards, backwards and '
+             'residual VJPs have complete operation coverage; reporting reductions are outside that ledger.'),
+            ('small',f"Completed audit203600Z: {audit['wall_s']:.3f}s/{audit['max_rss_kb']/1024:.1f}MiB. "
+             'Contracts203400Z. No causal explanation of seed7 failure, global exact-gradient claim or '
+             'benchmark advantage. User-proposed phase offsets have a separate coupled-time hypothesis.')])
+    for contract in tasks.get('race_teacher_expectation_contracts',[]):
+        witness=contract['convex_quadratic_winner_dependent_error']
+        rows=[['True hard-outcome risk','+.018750','-.018750'],
+              ['Original teacher expectation','+.018750','-.018750'],
+              ['Exact-pi teacher expectation','-.028125','+.028125']]
+        pages.append([('h1','Appendix B. Exact probabilities do not remove winner-dependent credit bias'),
+            ('table',(['Conditional gradient','Candidate0 score','Candidate1 score'],rows,[87,43,43])),
+            ('p','Four completed contracts use actual backward implementations and independent autograd. '
+             'A convex quadratic loss.5*(value-.6)^2 with values0/1 and race rates1/3 gives probabilities '
+             '.25/.75 and legal losses.18/.08. The original local teacher happens to equal the true '
+             'categorical derivative here; the exact-probability replacement reverses its direction.'),
+            ('p','Replacing a random rate coefficient by known pi preserves the old expectation when '
+             'downstream error is fixed. In a nonlinear model that error depends on the winner, its write '
+             'and subsequent routes. The full gradient is therefore not generally unchanged-expectation '
+             'or zero variance. In the quadratic witness, replacement optimizes loss at the MEAN value; '
+             'hard-delivery expected loss also contains a value-variance derivative.'),
+            ('p','Protocol correction beside theory59 section400: the earlier curie192000Z fidelity audit '
+             'forces each candidate with its individual arrival time, changing identity AND timing. '
+             'Conditional first time has mean.25 for both winners; unconditioned individual times have '
+             'means1/.333333. Its original sign/magnitude numbers remain combined-intervention evidence, '
+             'not an exact fixed-time route-credit diagnosis. Existing models/results are preserved.'),
+            ('small','Theory89; contracts204000Z. Exact-pi remains an empirical candidate separately owned '
+             'by the other host. Neither this counterexample nor the earlier diagnostic establishes '
+             'general superiority of either local teacher. Correct counterfactuals match actual sparse '
+             'delivery, legal writes, time law and downstream utility.')])
+    if tasks.get('dvs_evolution_offset_smokes'):
+        rows=[]
+        for x in tasks['dvs_evolution_offset_smokes']:
+            w=x['work'];rows.append([x['args']['update_schedule'],f"{100*x['final']['accuracy']:.2f}",
+                f"{x['final']['nll']:.4f}",f"{w['whole_fit_unit_special_flops_estimate']/1e9:.6f}",
+                f"{w['fit_unit_special_flops_per_target_estimate']/1e6:.6f}",
+                f"{w['inference_unit_special_flops_per_target_estimate']/1e6:.6f}"])
+        pages.append([('h1','Appendix B. Evolution offset preserves signal-time coupling'),
+            ('table',(['Schedule','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[28,27,24,33,33,28])),
+            ('p','Phase=frequency*physical_age+beta, beta=pi*tanh(raw_offset). Physical-age damping, '
+             'emission delays, receiver readiness and stored timestamps remain. The32 offsets calibrate '
+             'reception phase; they do not create a separate signal clock. Time still drives representation '
+             'evolution and receives timing derivatives. Initial zero reproduces the original model.'),
+            ('p','Both24fit/eightdev/two passes/48 presentations/four updates,U16+partialU8; p16/L2/H2/'
+             'pool2 has15,555 parameters/eight receivers,168 inference keys/84 commits/168 candidate '
+             'values over21 events,720 persistent-state bytes. Joint fitting NLL2.64095 to2.09915;'
+             'alternating to2.14262. Both smokes take21.0 seconds. Tiny development scores establish '
+             'readiness, not quality ranking or advantage against strong controls.'),
+            ('p','Alternating message/route windows train the offset only with message parameters. '
+             'Inactive parameters and Adam momentum/steps remain fixed. Shared content/context maps '
+             'receive the full derivative every window; their updates can still change routes. No '
+             'content detach or changed credit estimator. Private blocks receive fewer updates and '
+             'active-gradient clipping differs at the same total presentation count.'),
+            ('small','Four contracts205000Z: zero-offset state/logit/original-gradient identity; nonzero '
+             'serial/batched identity; physical-age/offset finite differences and independent directions '
+             'with damping; phase ownership and actual interrupted recovery/accounting. Theory90. '
+             'Pure rotation can make offset/time locally redundant; constant phase is a known calibration '
+             'operator, not a universal capacity or convergence theorem.')])
+    for r in tasks.get('dvs_evolution_offset_comparisons',[]):
+        rows=[[x['arm'],f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
+            f"{x['whole_fit_gflops_estimate']:.6f}",f"{x['fit_mflops_per_presentation_estimate']:.6f}",
+            f"{x['inference_mflops_per_target_estimate']:.6f}"] for x in r['common_unit_ledger']]
+        gates=[[g['schedule'],f"{g['nll_improvement']:+.6f}",f"{-g['accuracy_decline_percentage_points']:+.4f}",
+            f"{g['whole_fit_work_ratio']:.6f}",'Pass' if g['promotion_gate_passed'] else 'FAIL'] for g in r['schedule_gates']]
+        pages.append([('h1',f"Appendix B. Completed coupled-time offset pilot: seed{r['args']['seed']}"),
+            ('figure',('report/figures/'+r['args']['tag']+'_learning.png',173)),
+            ('table',(['Schedule','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[28,27,24,33,33,28])),
+            ('table',(['Offset schedule','NLL improvement','Accuracy gain pp','Fit work ratio','Gate'],gates,[36,40,35,35,27])),
+            ('p','Fixed256 fit/192 dev/four passes/1,024 presentations/64 Adam updates. Same native '
+             'initial predictions, data, draws and minimum-devNLL selection. Native15,523 parameters '
+             'versus15,555 with offsets; eight available receivers and identical selected activity. '
+             'All offset operators, backward, clipping and active Adam work are charged.'),
+            ('p',f"Candidate gate requires>=.02NLL improvement,<=1pp accuracy decline,<=1.50 fitting "
+             f"work ratio and<900,000KiB RSS. Selected schedule: {r['selected_schedule'] or 'none'}. "
+             'Independent confirmation is required before full-data scaling; every failed schedule '
+             'remains visible. Two seed6 schedules were declared before either result.'),
+            ('small','Preserved strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 controls have '
+             'unequal fitting data; solver FLOPs unmeasured. Alternation also changes private-block '
+             'update counts/clipping, so this is an algorithm comparison, not isolated interference '
+             'attribution. Physical time still drives content; no official test or supremacy claim.')])
     for audit in tasks.get('dvs_prefix_replay_savings',[]):
         rows=[[x['variant'],f"{100*x['accuracy']:.2f}",f"{x['nll']:.4f}",
             f"{x['whole_fit_gflops']:.6f}",f"{x['fit_mflops_per_target']:.6f}",
