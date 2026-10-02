@@ -252,3 +252,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - [Race-noise coupling and effective batches](theory/93_race_noise_coupling_and_effective_batch_size.md) — covariance decomposition for shared clip noise and a separate adaptive-update freshness issue; fitting-prefix audit gates any independent-row comparison before unchanged architecture/protocol pilots.
 
 - [Retained state versus sparse access](theory/94_retained_state_and_sparse_access.md) — conditional-information identity motivates a causal pre-query memory/age/occupancy augmentation of the saved query probe; dense diagnostic access is explicitly separate from the sparse architecture and practical advantage.
+
+- [Payload, clock and layer partitions](theory/95_state_payload_clock_and_layer_partitions.md) — completed state-access signal admits four cached diagnostic partitions and fixed decoder-setting cross-checks; distinguishes retained payloads from metadata and finite regularization without claiming causal depth or sparse advantage.
