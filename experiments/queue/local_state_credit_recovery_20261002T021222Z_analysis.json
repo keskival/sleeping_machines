@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "kind": "exploratory_state_credit_comparison",
+  "source_results": [
+    "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_zero_pilot.json",
+    "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_teacher_pilot.json"
+  ],
+  "accuracy_gain": 0.0078125,
+  "nll_gain": 0.000913386233150959,
+  "whole_fitting_work_ratio": 1.0453513522881037,
+  "followup_gate_passed": false,
+  "scope": "Single seed, reused development populations; no benchmark or unbiased-gradient claim. No automatic larger fit."
+}
