@@ -2985,3 +2985,22 @@ on seed8. Every nomination fails. Exhaustive finite-population and cached
 factual-probability contracts pass. No new model/critic optimization or quality
 claim;160new VJPs paid, FLOPs unknown. Prior failures remain. Full record:
 experiments/AWS_REPLAY_CALIBRATION_FINDINGS_20261002.md.
+
+## AWS compact native-context prototype readout: practical gate fails
+
+Same984 FIT/192 DEV,threefrozen native fitted/initialpairs,33anchors and
+fit-user3foldCselection; all state/query/core/portable prediction contracts pass.
+Fitted native67.708%/.901193,64.583%/.938003,68.750%/.915083; raw4 compact
+65.625%/.888167 andraw20 66.146%/.902387. Native~115KB standalone export
+vs40.966KBcoarse/184.334KBfine. BOTHfixed stage/storage nominations FAIL.
+Learned-over-initial mean.277040NLL gain and fine-export savings retained;
+strong coarsecontrol prevents broad advantage. Allanchors scored/delivered:
+dense local RBF readout, not sparse attention. Combinedfit/per-targetfit and
+wholeinference work unknown forallarms; parentnative4.218015GF/cache costs
+retained. Full common-unit table/three-repeat latency/exports:
+experiments/AWS_COMPACT_CONTEXT_FINDINGS_20261002.md.
+
+Training-only ordinal replay priorities also fail: k2/plaink4 conditional
+score-MSE2.074656/3.053016(seeds7/8). Positivefloor,correct1/(kp) importance
+weights and exhaustive contracts pass. With-replacementproposal vswithout-
+replacementbaseline explicit. No quality or reduced-workfit claim.

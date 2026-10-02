@@ -1897,3 +1897,24 @@ Stop unchanged critic reduction; other host owns prioritized integrated replay
 quality. Next AWS independent direction is already frozen compact33prototype
 LOCAL native context head with mandatory raw4/raw20 controls, actual array
 exports, query-only inference contracts. No sparse RBF or whole-fit claim.
+
+## AWS compact context and ordinal replay priority completed — 2 October
+
+All8 compact prototype arms finish23.296s/690896KiB; state/query48checks plus
+6Torch contracts precede decoder fits.72CV/8refits,352KMeans,class33anchors.
+Fitted native67.708%/.901193,64.583%/.938003,68.750%/.915083; raw4 65.625%/
+.888167,raw20 66.146%/.902387. BOTHfixed stage/storage gatesFAIL. Native
+exports~115KB vsraw4 40.966KB/raw20 184.334KB: fine-control savings preserved,
+but stronger coarsecontrol and seed7 defeat practicalgate. Learned-over-initial
+meanNLL gain.277040 retained. Full portable exports/normalizers/metadata and
+3repeat complete-prefix walls saved. Combined fitting/inference FLOPsUNKNOWN,
+original native4.218015GF/cache work retained. No sparseRBF or long-fitpromotion.
+See AWS_COMPACT_CONTEXT_FINDINGS_20261002.md. Query-only numeric extraction
+exactly preserves old state/routes and has no interim classifier feedback.
+
+Ordinal replay sampling first32train/next32holdout alsoFAILS:k2/plaink4 score
+variance2.074656/3.053016,seeds7/8. Correctwithreplacement law/positivefloor
+and exhaustive mean/variance verified; no moreproducerfits. Separately fixed
+feature-conditioned magnitude proposal runs next; diagnostic oracle needsall
+expensive utilities and cannot establish deployable advantage. Main integrated
+priority remains independently owned episode-batched corrected replay queue.

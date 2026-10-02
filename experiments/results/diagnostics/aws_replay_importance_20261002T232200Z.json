@@ -1,0 +1,480 @@
+{
+  "status": "completed",
+  "tag": "aws_replay_importance_20261002T232200Z",
+  "contract": "all draws enumerate unbiased importance mean and shared-vector variance",
+  "rows": [
+    {
+      "seed": 7,
+      "race_probabilities": [
+        0.08157824348419149,
+        0.07985344976779463,
+        0.05375421251341288,
+        0.05382640152036549,
+        0.06243418336817578,
+        0.04401404946682278,
+        0.027843720770435797,
+        0.027199601900079393,
+        0.10680719083672664,
+        0.05640599941457837,
+        0.04543876097758101,
+        0.02188696778082819,
+        0.09668104907718794,
+        0.04596580595700119,
+        0.017757903657751224,
+        0.028888955262785853,
+        0.07848572384076309,
+        0.02167999975207294,
+        0.020007205041871354,
+        0.029490575609574056
+      ],
+      "training_site_energy": [
+        0.00016850360433087172,
+        0.0001609985760377855,
+        6.83003117626139e-05,
+        6.850272224888428e-05,
+        9.478493024359329e-05,
+        4.373614035295212e-05,
+        1.4994503153395775e-05,
+        1.416083188195264e-05,
+        0.0002978209895311381,
+        7.593220435725169e-05,
+        4.698876981161406e-05,
+        8.194109128458746e-06,
+        0.00024152247045298585,
+        4.822157611100038e-05,
+        4.676888653618844e-06,
+        1.6398068953305388e-05,
+        0.0001551687804276939,
+        7.994484663195006e-06,
+        6.471396751877867e-06,
+        1.7234408363948686e-05
+      ],
+      "heldout_importance_k_vs_uniform_without_replacement_k4": {
+        "1": 4.1493119713657,
+        "2": 2.07465598568285
+      },
+      "heldout_uniform_with_replacement_ratios": {
+        "1": 4.75,
+        "2": 2.375
+      },
+      "nomination_passed": {
+        "1": false,
+        "2": false
+      },
+      "expected_unique_races_k2": 1.936188122825391,
+      "heldout_prefixes": [
+        {
+          "index": 32,
+          "energy": 9.835575520766235e-05,
+          "importance_k2_mse": 0.0014379398908913562
+        },
+        {
+          "index": 33,
+          "energy": 0.001094102061539246,
+          "importance_k2_mse": 0.016319877623741163
+        },
+        {
+          "index": 34,
+          "energy": 1.1509350913380062e-06,
+          "importance_k2_mse": 1.0206228916403574e-05
+        },
+        {
+          "index": 35,
+          "energy": 0.0012639365216499173,
+          "importance_k2_mse": 0.014445965016890832
+        },
+        {
+          "index": 36,
+          "energy": 0.002206022827730386,
+          "importance_k2_mse": 0.031827510536794994
+        },
+        {
+          "index": 37,
+          "energy": 3.8851664811345045e-05,
+          "importance_k2_mse": 0.0004439604370952486
+        },
+        {
+          "index": 38,
+          "energy": 5.078711196034579e-05,
+          "importance_k2_mse": 0.000339010411431074
+        },
+        {
+          "index": 39,
+          "energy": 0.0021833912083273495,
+          "importance_k2_mse": 0.020980043733656997
+        },
+        {
+          "index": 40,
+          "energy": 0.000958579802944442,
+          "importance_k2_mse": 0.010809088136997384
+        },
+        {
+          "index": 41,
+          "energy": 0.010603522646029945,
+          "importance_k2_mse": 0.06408707893423442
+        },
+        {
+          "index": 42,
+          "energy": 0.01100673152859541,
+          "importance_k2_mse": 0.11277470031195792
+        },
+        {
+          "index": 43,
+          "energy": 0.0001418212836981214,
+          "importance_k2_mse": 0.0020203284291867266
+        },
+        {
+          "index": 44,
+          "energy": 4.254196623480531e-05,
+          "importance_k2_mse": 0.00047347768574870335
+        },
+        {
+          "index": 45,
+          "energy": 0.00041184208358519274,
+          "importance_k2_mse": 0.0040146582295223585
+        },
+        {
+          "index": 46,
+          "energy": 8.917336288636023e-06,
+          "importance_k2_mse": 9.636350623524976e-05
+        },
+        {
+          "index": 47,
+          "energy": 0.010739786650621608,
+          "importance_k2_mse": 0.11433284663626449
+        },
+        {
+          "index": 48,
+          "energy": 4.1366975760884496e-05,
+          "importance_k2_mse": 0.000522829875886099
+        },
+        {
+          "index": 49,
+          "energy": 2.0043266868616484e-05,
+          "importance_k2_mse": 0.0001750206129522059
+        },
+        {
+          "index": 50,
+          "energy": 2.2970724967544533e-06,
+          "importance_k2_mse": 1.4499754883207445e-05
+        },
+        {
+          "index": 51,
+          "energy": 0.00027891295423019267,
+          "importance_k2_mse": 0.0031627985646657674
+        },
+        {
+          "index": 52,
+          "energy": 0.0029134510379046396,
+          "importance_k2_mse": 0.02317158085085398
+        },
+        {
+          "index": 53,
+          "energy": 0.012476360336462725,
+          "importance_k2_mse": 0.06944963680101543
+        },
+        {
+          "index": 54,
+          "energy": 0.025508760519958658,
+          "importance_k2_mse": 0.17841039978739734
+        },
+        {
+          "index": 55,
+          "energy": 0.00018810636510049758,
+          "importance_k2_mse": 0.0031481754597304746
+        },
+        {
+          "index": 56,
+          "energy": 0.0002820597339652597,
+          "importance_k2_mse": 0.004152190226828636
+        },
+        {
+          "index": 57,
+          "energy": 0.00020197379750643116,
+          "importance_k2_mse": 0.00173612490117569
+        },
+        {
+          "index": 58,
+          "energy": 1.0774926426185236e-05,
+          "importance_k2_mse": 0.00013471030102758582
+        },
+        {
+          "index": 59,
+          "energy": 0.0070214791394397616,
+          "importance_k2_mse": 0.0774549331578205
+        },
+        {
+          "index": 60,
+          "energy": 0.00801504458365263,
+          "importance_k2_mse": 0.05404899192870162
+        },
+        {
+          "index": 61,
+          "energy": 0.0006417398978563194,
+          "importance_k2_mse": 0.007366335825997674
+        },
+        {
+          "index": 62,
+          "energy": 0.0009501621681617981,
+          "importance_k2_mse": 0.005638078661454271
+        },
+        {
+          "index": 63,
+          "energy": 0.004954285406385598,
+          "importance_k2_mse": 0.04302146051398169
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "race_probabilities": [
+        0.10015269220594418,
+        0.060228422031287,
+        0.11284029768384041,
+        0.08432998389384438,
+        0.11865075762967411,
+        0.06755432085879569,
+        0.06742352780890855,
+        0.022948129242114163,
+        0.03456868482259732,
+        0.014013708464152012,
+        0.03815282967374738,
+        0.025012726927277112,
+        0.039005413791028565,
+        0.018083975116670828,
+        0.03244353862407048,
+        0.02243198926065137,
+        0.029060952930339015,
+        0.010739559291866208,
+        0.056866023048746335,
+        0.04549246669444496
+      ],
+      "training_site_energy": [
+        0.0004544370967753977,
+        0.0001530935470282533,
+        0.0005837054813804081,
+        0.0003158685216649959,
+        0.0006483003946890304,
+        0.00019640215213189498,
+        0.00019558170740682762,
+        1.6168509715009456e-05,
+        4.388293148384546e-05,
+        4.077919329670614e-06,
+        5.516616834633349e-05,
+        2.010222615319593e-05,
+        5.8040045382237586e-05,
+        8.59233170663616e-06,
+        3.780174380786577e-05,
+        1.5251954989873548e-05,
+        2.9057434172346302e-05,
+        1.6534410244087604e-06,
+        0.0001350198163681762,
+        8.229625696603482e-05
+      ],
+      "heldout_importance_k_vs_uniform_without_replacement_k4": {
+        "1": 6.106031348274051,
+        "2": 3.0530156741370256
+      },
+      "heldout_uniform_with_replacement_ratios": {
+        "1": 4.749999999999999,
+        "2": 2.3749999999999996
+      },
+      "nomination_passed": {
+        "1": false,
+        "2": false
+      },
+      "expected_unique_races_k2": 1.9296432902281737,
+      "heldout_prefixes": [
+        {
+          "index": 32,
+          "energy": 1.2968594471494632e-05,
+          "importance_k2_mse": 0.00022778830847846994
+        },
+        {
+          "index": 33,
+          "energy": 0.03241317855618979,
+          "importance_k2_mse": 0.2595237267522372
+        },
+        {
+          "index": 34,
+          "energy": 3.1628898197151616e-08,
+          "importance_k2_mse": 4.0387357320163277e-07
+        },
+        {
+          "index": 35,
+          "energy": 0.0004598896359806372,
+          "importance_k2_mse": 0.00210375486555461
+        },
+        {
+          "index": 36,
+          "energy": 0.0004964090568509944,
+          "importance_k2_mse": 0.0036611060491984386
+        },
+        {
+          "index": 37,
+          "energy": 9.121460908388339e-07,
+          "importance_k2_mse": 7.123510616963219e-06
+        },
+        {
+          "index": 38,
+          "energy": 0.0002540478472593819,
+          "importance_k2_mse": 0.0018812144211696603
+        },
+        {
+          "index": 39,
+          "energy": 0.0017904927060866868,
+          "importance_k2_mse": 0.014785070167432805
+        },
+        {
+          "index": 40,
+          "energy": 0.002654975003780132,
+          "importance_k2_mse": 0.031641679772018504
+        },
+        {
+          "index": 41,
+          "energy": 0.0009144950795661214,
+          "importance_k2_mse": 0.006295882142579503
+        },
+        {
+          "index": 42,
+          "energy": 0.00037399075771194987,
+          "importance_k2_mse": 0.0031321225236610423
+        },
+        {
+          "index": 43,
+          "energy": 1.6199296307881533e-05,
+          "importance_k2_mse": 0.00013200114409454324
+        },
+        {
+          "index": 44,
+          "energy": 2.33296507661427e-06,
+          "importance_k2_mse": 3.458560462293304e-05
+        },
+        {
+          "index": 45,
+          "energy": 0.012651187124335371,
+          "importance_k2_mse": 0.11024461969530638
+        },
+        {
+          "index": 46,
+          "energy": 3.1101079175355094e-07,
+          "importance_k2_mse": 4.565275403576827e-06
+        },
+        {
+          "index": 47,
+          "energy": 0.0006995139498855647,
+          "importance_k2_mse": 0.006925274427615219
+        },
+        {
+          "index": 48,
+          "energy": 0.00020826979829343783,
+          "importance_k2_mse": 0.001497840992972068
+        },
+        {
+          "index": 49,
+          "energy": 8.52347986792404e-06,
+          "importance_k2_mse": 3.922621445513872e-05
+        },
+        {
+          "index": 50,
+          "energy": 6.560127507864802e-05,
+          "importance_k2_mse": 0.0006335929413354111
+        },
+        {
+          "index": 51,
+          "energy": 0.0013262827568918379,
+          "importance_k2_mse": 0.009646943614499165
+        },
+        {
+          "index": 52,
+          "energy": 0.0038692835558353563,
+          "importance_k2_mse": 0.028428811935797403
+        },
+        {
+          "index": 53,
+          "energy": 0.00011951676144558309,
+          "importance_k2_mse": 0.001343407470139953
+        },
+        {
+          "index": 54,
+          "energy": 0.1487600224575795,
+          "importance_k2_mse": 2.2300492411826935
+        },
+        {
+          "index": 55,
+          "energy": 8.098460575420634e-06,
+          "importance_k2_mse": 0.00013435264621532741
+        },
+        {
+          "index": 56,
+          "energy": 3.742872243880085e-05,
+          "importance_k2_mse": 0.00031464416236497345
+        },
+        {
+          "index": 57,
+          "energy": 0.023897714660858112,
+          "importance_k2_mse": 0.17029111216184278
+        },
+        {
+          "index": 58,
+          "energy": 1.2720554443447256e-05,
+          "importance_k2_mse": 0.00010332680178155077
+        },
+        {
+          "index": 59,
+          "energy": 0.03483292367124324,
+          "importance_k2_mse": 0.2798810667730814
+        },
+        {
+          "index": 60,
+          "energy": 0.17900194832101912,
+          "importance_k2_mse": 2.279650262741744
+        },
+        {
+          "index": 61,
+          "energy": 0.000548692708277637,
+          "importance_k2_mse": 0.004334777309842671
+        },
+        {
+          "index": 62,
+          "energy": 0.0004884693762703206,
+          "importance_k2_mse": 0.0019924511317201844
+        },
+        {
+          "index": 63,
+          "energy": 0.000759212003429245,
+          "importance_k2_mse": 0.006011112619524988
+        }
+      ]
+    }
+  ],
+  "parent_sha256": "46356bff93d5e4548db8128376a33c4f38dec13c727995417d042514529f7d5b",
+  "artifact_sha256": "7303b3d7645581ac1e2f2c89c72389563d309057da7705158468ce02cebd03ae",
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "experiments/dvs_local_expectation_benchmark.py": "69dac4a86eb6afc8629f30a0b3594abbf6fce58ea50338f4aa5fa6108086d65a",
+    "experiments/dvs_critic_le_benchmark.py": "14a8a7aa4532db97ef507ac4b9f6553e2fe1bdaaf47975ebd633233f555af04e",
+    "experiments/dvs_fork_replay.py": "9773d2a15b6a1f8e867d999ffc5d019c8831bd9ae8291f25ad5f7513b1c7a822",
+    "sleeping_machines/shadow_lanes.py": "a26482f6c6f1038a35f9b6f914b0a16b9fa941195093fc9455a29e95e0d0407c",
+    "experiments/aws_signed_replay_variance_probe.py": "49361303b0703080fd70e3922994e7c8075d5ba3621a24df3038413d959593cb",
+    "experiments/aws_coarse_native.py": "7ccd7fafe81eaf4138492184eafdd565bfd433a77adaa4d5756d5bcf33f7f23b",
+    "sleeping_machines/factorized_race.py": "5bbfdf41ea63770a2394dde6e39fbe4b94b79dbab95c863f6413480ae3aa5568",
+    "experiments/aws_replay_importance_probe.py": "c71ce95a168bfb7412605ec247c351841f3b4252b2ea0de7ab1248fcf25794b7"
+  },
+  "scope": "Fixed ordinal race proposal fitted on32 FIT prefixes, next32 heldout; corrected importance law. Conditional score-space variance, no model update, parameter covariance or quality claim.",
+  "parent_costs": "Original producer, full cached replay and critic work retained; no new replay or optimizer; arithmetic diagnostic FLOPs unmeasured",
+  "wall_s": 0.2564260439830832,
+  "peak_rss_kib": 371972
+}
