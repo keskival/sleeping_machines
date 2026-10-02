@@ -373,3 +373,49 @@ checkpoint recovery follows the bounded comparison; AWS reserved replication/
 confirmation and count-carrying work are not duplicated. Fixed observed addresses,
 forced activity, full producer graphs, surrogate credit and hardware energy remain
 limitations. This is lifecycle recovery, not an architectural departure.
+
+## Completed learning audit and bounded follow-through, 2 October, 02:56 UTC
+
+Rebase and subsequent report autostash conflicts are resolved on main. All three
+stashes and archived conflict stages are retained. Frozen recovery sources and
+queues are unchanged; the integrated teacher pilot remains the only trainer.
+Baseline completes at54.296875% /0.978725879 NLL and reproduces the saved AWS
+parent trajectory to floating tolerance. No teacher score is completed yet.
+
+Completed guarded audit: results/diagnostics/
+`local_language_learning_audit_20261002T023510Z.json` (33.212s,333336KiB).
+All six saved carrier and eight native layers receive gradients. On32 fixed dev
+positions, removing native history older than16 changes predictions by0.02252
+nats KL; useful accuracy beyond16 is not established. Count-composed carrier
+logit credit matches the escape-responsibility identity within1.86e-9. First
+five clock gradients are present at initialization, but fitted composed clock
+displacements remain zero in saved JSON; their checkpoints are unavailable
+locally, so the specific fitting trajectory remains unresolved. No optimizer
+was changed by this audit. See LANGUAGE_LEARNING_DIAGNOSIS_20261002.md.
+
+The report now distinguishes context dependence, gradient reach and predictive
+benefit. The native2K count composition gains only0.0071bpc over its initialized
+base+escape comparator; this measures whole-model fitting, not isolated deep
+representation learning. The older learned carrier uses history and memory.
+No global gradient-disconnection or strict bigram-only conclusion is supported.
+Report rebuild:87 pages, bounds/orphan checks pass;10 publication regressions
+pass. Existing eleven recovery/state-credit tests also pass.
+
+Prepared follow-through: queue/local_credit_followthrough_20261002T025250Z.json.
+It waits for exact predecessor identity and completed pair, then serially runs
+two separate one-job guarded queues: common-unit report publication (180s) and
+full-depth count-message/escape-gate optimizer/recovery contracts (300s). Frozen
+source hashes, one CPU thread,1250000KiB RSS/3000000KiB VMS and8192MiB available
+floor remain. Contracts test both repairs and each alone, exact zero nesting,
+parent gradients, head gradients and serialized next optimizer update. These
+contracts are prepared, not passed yet. No new fit or scale job is admitted.
+
+Prioritized integrated model remains native addressed-write counterfactual
+teacher, H2/d8/depth8, private four-source order task,128 fit queries/pass ×4.
+Learning uses surrogate unrealized alternatives and actual producer graphs;
+fixed observed addresses, forced activity and limited task population remain
+gaps. Count-conditioned readout/escape repair is a language diagnostic, not a
+replacement for deep persistent event representations. The other thread owns
+its proposed fits; its combined queue must be split into one-job queues before
+local admission. Deferred native timing checkpoint recovery and AWS large dense
+comparisons remain separate. No new dense local training or duplicate AWS run.

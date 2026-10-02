@@ -150,6 +150,14 @@ def results():
             for name,sha in r['source_sha256'].items():
                 if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:raise ValueError('State-credit source changed: '+name)
             tasks['state_credit'].append(r)
+    tasks['language_learning_audit']=None
+    for path in sorted((RES/'diagnostics').glob('local_language_learning_audit_*.json')):
+        r=json.loads(path.read_text())
+        if r.get('status')=='completed':
+            for name,sha in r['source_sha256'].items():
+                if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
+                    raise ValueError('Language-learning audit source changed: '+name)
+            tasks['language_learning_audit']=r
     tasks['split_screen']=[]
     for path in sorted((RES/'event_variants').glob('*_pilot.json')):
         r=json.loads(path.read_text())
@@ -514,6 +522,20 @@ def figures(M, tasks, ev):
             ax.annotate(f'{label}\n{y:.2f}%, {x:.3f}GF', (x,y),xytext=(4,8),textcoords='offset points',fontsize=8)
         ax.set_xlabel('Whole fitting work (GFLOPs) ↓');ax.set_ylabel('Development accuracy (%) ↑')
         ax.set_ylim(0,110);ax.margins(x=.4);f.tight_layout();save(f,'state_credit_quality_work')
+    learning=tasks.get('language_learning_audit')
+    if learning:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.7))
+        for row,color in zip(learning['frozen_models'],(orange,blue)):
+            label='Ours: carrier (131K fit)' if '/parallel_language/' in row['result'] else 'Ours: native (8K fit)'
+            histories=sorted(int(k) for k in row['history_interventions'])
+            evidence=row['history_interventions']
+            axes[0].plot(histories,[evidence[str(k)]['bpc'] for k in histories],'o-',color=color,label=label)
+            axes[1].plot(histories,[evidence[str(k)]['mean_kl_from_64_character_history'] for k in histories],'o-',color=color)
+        for axis in axes:
+            axis.set_xscale('log',base=2);axis.set_xticks([1,2,4,8,16,64],[1,2,4,8,16,64])
+            axis.set_xlabel('Retained history (characters)')
+        axes[0].set_ylabel('Diagnostic slice bpc ↓');axes[1].set_ylabel('KL from64-character history (nats)')
+        axes[0].legend(fontsize=7);f.tight_layout();save(f,'language_learning_context')
     split=completed_split_evidence(tasks)
     if split:
         f,axes=plt.subplots(1,2,figsize=(7.2,2.75))
@@ -2655,6 +2677,31 @@ def blocks(M, tasks, ev):
              'Training-only auxiliary state views and whole-process RSS are recorded in each result. '
              'Numerical/optimizer prerequisites and accounting smokes are excluded from benchmark plots. '
              'This reuses exploratory development populations; independent seeds and fresh confirmation remain required.')])
+    learning=tasks.get('language_learning_audit')
+    if learning:
+        c=learning['composition_gradient'];rows=[]
+        for r in learning['frozen_models']:
+            norms=[d['gradient_norm'] for d in r['layer_gradients']]
+            rows.append(['Ours: carrier,131K' if '/parallel_language/' in r['result'] else 'Ours: native,8K',
+                str(len(norms)),f'{min(norms):.3f}–{max(norms):.3f}',str(r['forward_input_tokens']),str(r['backwards'])])
+        pages.append([('h1','Appendix B. Learned history and credit reach'),
+            ('p','Frozen checkpoint audit on32 fixed development positions. Both learned models depend on history; '
+             'the native predictions change even when identical16-character suffixes receive the same race noise. '
+             'The native model is therefore not strictly a bigram predictor. Equal average loss to a count model '
+             'calibrates predictive quality; it does not identify learned features or context dependence.'),
+            ('figure',('language_learning_context',168)),
+            ('table',(['Saved model','Layers with gradients','Layer norm range','Replay tokens','Backwards'],rows,[48,30,37,30,29])),
+            ('p',f'The actual current count-composition logit gradient matches responsibility-weighted cross entropy '
+             f'to{c["maximum_absolute_gradient_error"]:.2g}; all six carrier layers receive gradients. '
+             f'Mean responsibility is{100*c["mean_responsibility"]:.2f}% on this64-target initialization probe. '
+             'This supports investigating attenuated task signal and conditioning, rather than assuming a general gradient disconnect.'),
+            ('small','No optimizer steps, weight changes or official-test access. History controls reset state and replay '
+             'the retained suffix at its absolute positions; per-position native noise is coupled. This32-position slice '
+             'is not the full saved development quality or a matched-data model comparison. Gradient norms aggregate different '
+             'parameter groups; they show reach, not superior conditioning or unbiased hard-route credit. '
+             'The64-character history is not uniformly better than16 on this slice; useful long-range/semantic features remain open. '
+             f'All replays/backwards are counted; arithmetic is uninstrumented. Wall{learning["wall_s"]:.2f}s, '
+             f'peakRSS{learning["max_rss_kb"]/1024:.1f}MiB. See experiments/LANGUAGE_LEARNING_DIAGNOSIS_20261002.md.')])
     confirmed=tasks.get('tabular_confirmation',[])
     labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
     order=list(labels)

@@ -93,3 +93,41 @@ Next comparisons: fixed-escape base replacement; count-conditioned versus
 unconditioned base; warmed layer/history dependence; and matched tasks with
 identical local n-grams but different long-range targets. Credit reach and
 superiority remain separate experimental questions.
+
+## Completed guarded audit, 02:38 UTC
+
+`results/diagnostics/local_language_learning_audit_20261002T023510Z.json`
+completed in33.212s /333,336KiB. All model weights are preserved; zero optimizer
+steps. The actual composition's logit gradient agrees with the responsibility
+identity within1.86e-9; all six content layers have nonzero gradients. Mean
+responsibility on the64-target initialization probe is.034259, not a fitted
+whole-corpus statistic. There is no general gradient disconnection in this test.
+
+Both saved models receive gradients at every depth on a warmed16-character
+window. Carrier depth norms range.419–.692, native1.027–3.487; these aggregate
+different parameter groups and are not cross-model conditioning comparisons.
+The first five carrier clock maps receive gradients; the final arrival is
+unread by the fixed deep-message readout and its clock has no gradient.
+
+Keeping the last16 input characters and their noise fixed while resetting
+earlier native state changes the predictions: meanKL.022519nats from64-character
+history over32 positions. Resetting to8 changes meanKL to.080978 and worsens
+this slice's loss from3.218881 to3.358732bpc. This directly contradicts a strict
+bigram-only dependency reading. At16, loss is3.203912, slightly better than64;
+the audit does not establish a useful benefit beyond16, semantic features or
+full-development quality. Carrier slice1/4/8/16/64 losses are4.463787/2.076002/
+1.715860/1.732411/1.761144. Longer memory is not uniformly beneficial here either.
+
+An unresolved narrower question remains: the saved composed-carrier JSONs
+report zero clock-map displacement at every layer, while the old carrier has
+nonzero displacement in its first five clocks and this initialization audit
+shows their gradients reach. The composed fitted checkpoint is needed to
+inspect its training trajectory and verify that diagnostic. These files are
+absent locally; do not infer a fit regression or invent a replay result.
+
+Contemporary strength0 integrated order finishes at54.296875%/.978725879,
+matching the earlier AWS parent54.296875%/.978725864. Its four development
+epochs match the saved trajectory within floating-point tolerance. That is
+positive regression evidence for this unchanged event-model/optimizer path,
+not evidence of learned language abstractions. The guarded strength1 fit
+started02:38:06 after the language audit; it remains pending.
