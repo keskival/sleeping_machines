@@ -1,0 +1,75 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_credit_followthrough_20261002T025250Z_contracts"
+  },
+  "kind": "numerical_optimizer_prerequisites",
+  "variants": [
+    {
+      "count_message": true,
+      "escape_gate": true,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "exact_zero_repair_parent_forward": true,
+      "zero_repair_parent_gradients_match": true,
+      "all_head_query_gradients": true,
+      "all_enabled_repair_gradients": true,
+      "exact_next_optimizer_update_recovery": true,
+      "persistent_count_position_recovery": true,
+      "numerical_optimizer_steps_per_training_copy": 2,
+      "scope": "Full integrated model numerical prerequisite; not fitted quality or deep-feature evidence"
+    },
+    {
+      "count_message": true,
+      "escape_gate": false,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "exact_zero_repair_parent_forward": true,
+      "zero_repair_parent_gradients_match": true,
+      "all_head_query_gradients": true,
+      "all_enabled_repair_gradients": true,
+      "exact_next_optimizer_update_recovery": true,
+      "persistent_count_position_recovery": true,
+      "numerical_optimizer_steps_per_training_copy": 2,
+      "scope": "Full integrated model numerical prerequisite; not fitted quality or deep-feature evidence"
+    },
+    {
+      "count_message": false,
+      "escape_gate": true,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "exact_zero_repair_parent_forward": true,
+      "zero_repair_parent_gradients_match": true,
+      "all_head_query_gradients": true,
+      "all_enabled_repair_gradients": true,
+      "exact_next_optimizer_update_recovery": true,
+      "persistent_count_position_recovery": true,
+      "numerical_optimizer_steps_per_training_copy": 2,
+      "scope": "Full integrated model numerical prerequisite; not fitted quality or deep-feature evidence"
+    }
+  ],
+  "hardware": {
+    "host": "curie",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "wall_s": 13.67829682699994,
+  "max_rss_kb": 421616,
+  "source_sha256": {
+    "experiments/count_escape_optimizer_contracts.py": "16a914f21af368a7d829ac1d52a28d51deac16fa61b1ebe81406839ffb199893",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "sleeping_machines/count_carrying_language.py": "745809a8ce6800c7807ea23cc9846cb2f3575db682bb651dde6d9dcb02c1f95a",
+    "sleeping_machines/count_escape_gate.py": "49be8e7d3cdc5e06744db727cf63f20ab0aaec08a5bbcaf7d05f8d65448d6a50",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/rotating_memory.py": "d5b0308a9a28593310673683638fa9f4162aceba94ce79ca58db87e4ba5323b4"
+  },
+  "scope": "No official-test access or benchmark score. Contract optimizer work is distinct from future fitted-model work."
+}
