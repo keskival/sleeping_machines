@@ -854,3 +854,42 @@ needed more compute than is available to do well. The conversion module and cont
 option, and no runs are queued. The program pursues comparable expressive power within the native lean
 structure: addressed persistent state, races, time and counterfactual credit, scaled by capacity beyond
 activity (§396).
+
+## 398. Capacity–exposure law: private state, shared parameters
+
+**Setting.** A head routes each event to one of P receiver units by a race. A unit carries *state* (its persistent
+memory and arrival time, rewritten only when it wins) and *parameters* θ_u (input, output, gate, control and
+key-read maps). The counterfactual teacher gives every unit score credit, but value credit reaches only the
+winner (TemporalRoute.backward). So θ_u learns only from events unit u wins.
+
+**Proposition 398.1 (parameter dilution).** Let unit u win a fraction w_u of N fitting events, and suppose the
+estimation error of a parametric map behaves as c·|θ_u|/n for n effective examples (the usual parametric rate).
+The expected excess risk from estimating every unit's map is
+
+    Σ_u w_u · c|θ_u| / (N w_u) = c Σ_u |θ_u| / N = c P |θ| / N   (untied, |θ_u| = |θ|),
+
+independent of how routing is balanced and linear in P. With maps shared across the pool (θ_u = θ for all u),
+every routed event updates the same θ and the estimation term is c|θ|/N, independent of P.
+*Proof.* Substitute n_u = N w_u; the w_u cancel. ∎ Approximation error falls with P in both cases,
+because more distinct states can specialize. Only the untied construction pays for it with estimation error
+that grows linearly in P at fixed N.
+
+**Consequences.**
+1. *Capacity beyond activity pays in learning only for state, or for shared parameters.* Adding private
+   parametric units at fixed data trades approximation for estimation one-for-one. Adding private *state*
+   (memory slots, arrival clocks, keys) with shared maps does not.
+2. *Exact sufficient statistics are the limiting case.* Count receivers have no parameters: every exposure is
+   used exactly, with no dilution beyond the data per context (§§377, 383). That is why they scale with capacity so cheaply.
+3. *Transformers are already on the right side.* A KV cache is private state with shared projection
+   weights, which is why context length (state capacity) does not dilute learning.
+
+**Evidence consistent with 398.1** (not a proof of the mechanism):
+- DVS, pool 2 → 8 untied at fixed selected updates: 66.15% → 62.50%, with the curve still rising at the
+  last pass and 2.85× the fitting work.
+- AWS source-64 capacity: shared maps reach 99.25% at 1.03 GFLOPs, private maps 97.40% at 1.32 GFLOPs.
+- Language: minimal cores match full ones while counts carry the capacity (§389).
+
+**Design rule.** Grow addressed state; share maps; keep routing identity (keys, clock biases) and timescales
+private, since they are cheap and few. **Test (P398):** DVS pool 8 with maps tied across each pool, keys, clock
+biases and timescales private. Prediction: it is no worse than untied pool 8 at equal passes, it beats the pool 2
+baseline mean across seeds 6/7/8, and its parameter count stays near pool 2 while available receivers are 4×.
