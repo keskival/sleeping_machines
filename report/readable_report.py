@@ -3296,7 +3296,8 @@ def blocks(M, tasks, ev):
             core='' if (r['args']['payload'],r['args']['depth'])==(16,8) else f" [minimal core p{r['args']['payload']}/d{r['args']['depth']}]"
             credit='' if r['args']['chunk']==16 else f" [credit{r['args']['chunk']}]"
             return (' + gate + message' if g and m else ' + escape gate' if g else ' + count message' if m else '')+core+credit
-        for r in sorted(tasks['count_carrying_language'],key=lambda r:(r['args']['fit'],variant(r))):
+        ordered=sorted(tasks['count_carrying_language'],key=lambda r:(r['args']['fit'],variant(r)))
+        for position,r in enumerate(ordered):
             N=r['args']['fit'];first=N not in seen_sizes;seen_sizes.add(N)
             if first:
                 for ref in tasks.get('native_language',[]):
@@ -3305,14 +3306,16 @@ def blocks(M, tasks, ev):
             count_rows.append([f"Count-carrying native K{r['args']['orders']}{variant(r)} {N:,}",f"{N:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",*work_cells(r)])
             if not variant(r):
                 count_rows.append([f"Same, untrained base {N:,}",f"{N:,}/0",f"{r['initial_dev']['bpc']:.3f}",'Not trained','Not trained',work_cells(r)[2]])
-            if not all(x['args']['fit']!=N or variant(x)<=variant(r) for x in tasks['count_carrying_language']):
-                continue
+            if position+1<len(ordered) and ordered[position+1]['args']['fit']==N:
+                continue  # count references follow the last row of each fitting size
             refs=[row for path in sorted((RES/'count_reference').glob('*language_*.json'))
                   for row in json.loads(path.read_text())['rows'] if row['fit']==N]
             kn=min((row for row in refs if row['method']=='kn' and not row['adaptive']),key=lambda row:row['bpc'],default=None)
             ad=min((row for row in refs if row['adaptive']),key=lambda row:row['bpc'],default=None)
             for label,row in (('KN counts, frozen',kn),('Counts, stream-adaptive',ad)):
                 if row:
+                    if row.get('method')=='kn_interpolated':
+                        label='Calibration ceiling: adaptive interpolated KN'
                     count_rows.append([f"{label} o{row['order']}",f"{N:,}/1",f"{row['bpc']:.3f}",'Not FLOPs','Not FLOPs','Not FLOPs'])
         pages.append([
             ('h1','Appendix B (continued). Ours: count-carrying native receivers'),
