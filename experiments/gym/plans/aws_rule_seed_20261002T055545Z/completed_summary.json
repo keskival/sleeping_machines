@@ -1,0 +1,138 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 862792,
+      "wall_s": 7.2572529970202595
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 862816,
+      "wall_s": 7.059151250025025
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 959844,
+      "wall_s": 9.31089611101197
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 877768,
+      "wall_s": 37.77700936599285
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 877692,
+      "wall_s": 38.10861485899659
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 960092,
+      "wall_s": 44.90583023702493
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 862676,
+      "wall_s": 7.062352398992516
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 960220,
+      "wall_s": 9.377818287990522
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 960264,
+      "wall_s": 9.39601971200318
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 877436,
+      "wall_s": 37.61866806598846
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 960140,
+      "wall_s": 44.66474689100869
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 960028,
+      "wall_s": 44.36655460699694
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 879732,
+      "wall_s": 820.1620994159894
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 880268,
+      "wall_s": 820.5256115299999
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 959752,
+      "wall_s": 867.2952590619971
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 880312,
+      "wall_s": 815.8874695709965
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 960056,
+      "wall_s": 867.5711844210164
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 960124,
+      "wall_s": 857.8635597529938
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T05:57:24.072181+00:00",
+  "active_jobs": [
+    "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
