@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_replay_law_report_20261002T212300Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_race_replay_law_contracts_20261002T212000Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_race_replay_law_contracts_20261002T212000Z.json": "78125178751f96476866310e06bbcb1ecd352ff39e44319abd7eff48cf59f075"
+  },
+  "pdf_pages": 141,
+  "wall_s": 21.66731734199857,
+  "max_rss_kb": 65312,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "920fda5478d94fb63e411c85f118a3fbe6d49cb7e2b9ee5316e366a0c2b7a0b2",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}
