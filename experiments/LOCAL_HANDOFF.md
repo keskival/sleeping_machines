@@ -1,5 +1,44 @@
 # Local host: current research continuation
 
+## Five value-credit fits complete; frozen followthrough, 2 October, 09:53 UTC
+
+queue/local_value_credit_20261002T090800Z.status.json completed, all three
+smokes/five pilots/analysis committed. Native/full-original/full-late/same-width
+shallow-late/minimal-late cold dev bpc3.968133/3.902970/3.942092/4.086241/
+4.539614 on2,047targets. Late full beats native by.026041, shallow by.144148,
+minimal by.597522; original full beats late full by.039123. Gate FAILS: exact
+fixed-feature credit restoration did not improve this fitting result over the
+original model. Preserve positive full-versus-shallow quality too: uncomposed
+standalone learning here benefits from the full core, unlike count-composition
+minimal equivalence. Depth changes initialization of later parameters, so this
+is one-seed architectural evidence, not isolated semantic abstraction proof.
+
+CPU whole-fit estimates1.893/1.924/1.933/.348/.01785GFLOPs; common per-target
+and inference/replay ledger saved in diagnostics/local_value_credit_analysis_
+20261002T090800Z.json. Full pilots~522–526s/~423MB RSS, shallows~80s/~343MB,
+caps all respected, host≥11GiB available. Fixed3-order hashes still omit n
+confidence exceptseenbit and learned pooling; old nonlinear feature-producer
+credit remains truncated. Do not scale late projection on this failed gate.
+
+Theory63 now derives linear-reader expressivity equivalence, factorized SGD
+Gram conditioning and frozen fusion (2d³ one-time versus2d² per occupied read,
+break-even d reads). Fused reader refuses training. Theory64 derives joint
+feature credit attenuation for balanced parity, a scoped information/credit
+counterexample rather than a language explanation or universal ceiling.
+Paired parity inputs validate identical actual query count vectors for orders
+1–8 with opposite prefix-determined labels. No checkpoint was trained on parity.
+
+Prepared frozen followthrough: scripts/run_value_credit_followthrough.py waits
+completed parent, then single-job local_value_credit_frozen_20261002T090800Z
+checks compiled equivalence/arithmetic, paired retention, frozen-fit/head-feature
+geometry and exact same-window closed-form count controls, no optimizer/weight
+change. Local publication queue renders completed report/learning plot and
+validates PDF bounds/orphans. Both jobs guarded;600s audit/180s publication,
+same1thread/RSS/VMS/8GiB floor. Preserve source files frozen in the parent;
+new diagnostic/compiler/report files do not change fitted models. Next decisions
+depend on these completed diagnostics, no automatic extra fit or superseded
+host queue. AWS capacity/exposure remains separate.
+
 ## curie: statistic-valued race memory claimed (§392), 2 October, 09:00 UTC
 
 The curie host implements and owns THEORY §§383/392 (learned keys, statistic values, pooled cascade level,

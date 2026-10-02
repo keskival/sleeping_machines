@@ -86,3 +86,63 @@ preserve negative evidence and diagnose which information/credit contract
 failed; no automatic larger fit. Whole-fit/per-target costs, capacity/activity,
 replay and inference work belong in the completed appendix. The AWS unchanged
 integrated capacity/exposure campaign remains independent and prioritized.
+
+## Factorization is optimization, not extra reader expressivity
+
+Both maps are square, unrestricted linear maps. With fixed weights the only
+value-read map is A=R_v W; a single unrestricted A represents the same class.
+Changing the placement restores fixed-feature credit and consistent coordinates,
+but does not by itself enlarge the reader's inference function class. If useful
+quality improves, attribute it to learning/coordinate consistency and the
+resulting core/reader weights, not extra inference expressivity of two maps.
+
+For ordinary SGD, writing G=∂L/∂A gives ∂L/∂R_v=G W^T and
+∂L/∂W=R_v^T G. Ignoring the second-order product of the two updates,
+
+\[
+\Delta A=-\eta\left(GW^TW+R_vR_v^TG\right)+O(\eta^2).
+\]
+
+The factorized optimization thus supplies left/right Gram conditioning. This
+is an algebraic SGD observation, not a derivation of the actual Adam trajectory
+or a guarantee of faster learning. Historical raw features are fixed under the
+truncated objective; their omitted producer derivatives remain omitted.
+
+Frozen inference can compile A once and omit W thereafter, preserving raw
+feature slot semantics and all native temporal dynamics. Under2FLOPs/MAC,
+fusion costs2d³ and avoids2d² per occupied read, breaking even after d occupied
+reads (32 for full/shallow,4 for minimal). Charge compiler initialization/copy
+and hash/RNG/traffic separately; no latency/energy claim follows from this count.
+Verify coupled frozen outputs, slots, removal of d² unused weights, actual
+sampled operation counts and model fingerprint preservation. Compiled models
+must refuse training: training A directly is a different optimizer experiment.
+
+## A stronger feature diagnostic than equal n-gram loss
+
+Construct inputs [24,b1,25,b2,noise...,26] and target b1 XOR b2, with all four
+bit pairs equally represented for each identical noise suffix. Noise uses only
+symbols2–23, so cue26 never occurs earlier in that example. For any local
+order K≤noise_length+1, every paired query suffix is identical. In a causal
+count cascade initialized from common fit counts, query-time counts are also
+identical: prefix transitions never end in cue26. Validate those actual count
+vectors independently for orders1–8 (avoiding integer-code overflow).
+
+For this balanced distribution any predictor restricted to those query suffixes
+and query count vectors has at least1bit target logloss and at most50% expected
+accuracy; the full observed prefix determines the target exactly. The extra
+useful conditional information is1bit. This bound applies to those predictor
+inputs, not arbitrary models which recurrently process the whole prefix or
+inspect unrelated count addresses. It is an explicit information-path test,
+not a universal n-gram theorem. Sample matching must be built into the generator,
+not approximated by a per-target minimum over count losses.
+
+Frozen text-model sensitivity on these pairs can test whether prefix differences
+survive to the query. It cannot establish parity learning: these checkpoints
+were never fitted to this task. Fixed-context lookup cannot recall a unique
+earlier cue automatically if the queried suffix has never been written. Useful
+old information must arrive via core recurrence, learned context addressing,
+an explicit delay, or another demonstrated path. That is why a fixed-hash gain
+alone would not settle the deeper-feature question. A later integrated parity
+fit would need matched full/shallow controls, prefix-data generalization,
+target-only versus whole-stream supervision labelled as different objectives,
+complete prefix computation/credit work and bounded admission prerequisites.

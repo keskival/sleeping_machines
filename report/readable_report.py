@@ -104,6 +104,21 @@ def results():
                 if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
                     raise ValueError('Integrated memory accounting result changed')
             tasks['deep_memory_preflight'].append(r)
+    tasks['value_credit_pair']=[]
+    for path in sorted((RES/'diagnostics').glob('local_value_credit_analysis_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')=='completed':
+            for entry in r['common_unit_ledger']:
+                if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
+                    raise ValueError('Value-credit result changed')
+            tasks['value_credit_pair'].append(r)
+    tasks['value_credit_frozen']=[]
+    for path in sorted((RES/'diagnostics').glob('local_value_credit_frozen_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')=='completed':
+            if hashlib.sha256((ROOT/r['analysis_result']).read_bytes()).hexdigest()!=r['analysis_sha256']:
+                raise ValueError('Frozen value-credit analysis changed')
+            tasks['value_credit_frozen'].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -513,6 +528,17 @@ def figures(M, tasks, ev):
                      fontweight="bold", ha="left")
         fig.savefig(FIG/(name+".png"), dpi=190, bbox_inches="tight", facecolor="white")
         plt.close(fig)
+    for r in tasks.get('value_credit_pair',[]):
+        f,a=plt.subplots(figsize=(7.2,2.45))
+        labels={'native_full':'Native full','addressed_full':'Stored projection full',
+            'late_full':'Late projection full','late_shallow':'Late same-width shallow','late_minimal':'Late minimal'}
+        for row,color in zip(r['common_unit_ledger'],[blue,orange,'#1baf7a','#7057a3',gray]):
+            a.plot([x['epoch'] for x in row['curve']],[x['cold_bpc'] for x in row['curve']],
+                marker='o',color=color,label=labels[row['arm']],linewidth=1.5,markersize=3)
+        a.set(xlabel='Fitting passes over1,024 characters',ylabel='Cold development bpc ↓',xticks=range(1,5),
+              title='Matched integrated value-credit learning; seed6,2,047 dev targets')
+        a.legend(fontsize=7,ncol=2);f.tight_layout()
+        save(f,r['args']['tag'].replace('local_value_credit_analysis_','value_credit_learning_'))
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
               and r['args']['clock_features']==0]
@@ -3329,6 +3355,91 @@ def blocks(M, tasks, ev):
              'derived from fixed code/dimensions. Empty text filler-group NaN in original JSONs is undefined, '
              'not a score; preserved beside correction to null in the driver. Cold neural memory differs '
              'from fit-prefilled count references. Source: local_deep_feature_preflight_20261002T081500Z.json.')])
+    for comparison in tasks.get('value_credit_pair',[]):
+        labels={'native_full':'Native full p16/L8','addressed_full':'Stored projection p16/L8',
+            'late_full':'Late projection p16/L8','late_shallow':'Late p16/L1','late_minimal':'Late p2/L1'}
+        quality=[];work=[];capacity=[]
+        for r in comparison['common_unit_ledger']:
+            label=labels[r['arm']]
+            quality.append([label,f"{r['cold_bpc']:.4f}",f"{r['frozen_fit_replay_bpc']:.4f}",str(r['selected_epoch'])])
+            work.append([label,f"{r['cpu_whole_fit_gflops_estimate']:.3f}",f"{r['cpu_fit_mflops_per_target_estimate']:.3f}",
+                f"{r['cpu_inference_mflops_per_target']:.4f}",f"{r['replay_cpu_gflops_estimate']:.3f}",
+                f"{r['warm_inference_cpu_mflops_per_target']:.4f}"])
+            capacity.append([label,str(r['core_capacity']),f"{r['cold_final_state'].get('context_slots',0)}/{r['context_capacity']}",
+                f"{r['selected_updates_per_target']:.0f}/{r['key_scores_per_target']:.0f}/{r['teacher_values_per_fit_target']:.0f}",
+                f"{r['context_reads_per_target']:.3f}/{r['context_writes_per_target']:.3f}"])
+        fig=comparison['args']['tag'].replace('local_value_credit_analysis_','value_credit_learning_')
+        pages.append([('h1','Appendix B. Restoring addressed value credit: completed fits'),
+            ('p','Five matched integrated arms:1,024 fitting characters/four passes,4,092 targets/64 Adam '
+             'updates,2,047 dev targets, H2/pool2/c16/U64/warm512/lr.002/seed6. Full native temporal core '
+             'versus original projected-value slots, late-projected raw-feature slots and two shallow controls. '
+             'Core initialization and race RNG are matched. Minimum cold dev bpc over fixed passes selects '
+             'each checkpoint; frozen fit replay is secondary and never selects weights.'),
+            ('table',(['Model','Cold dev bpc','Fit-replay dev bpc','Selected pass'],quality,[65,34,43,31])),
+            ('figure',(fig,173)),
+            ('p',f"Late-full gain over native:{comparison['late_vs_native_full_bpc']:+.4f}bpc; "
+             f"over stored projection:{comparison['late_vs_addressed_full_bpc']:+.4f}; "
+             f"over minimal:{comparison['late_full_vs_minimal_bpc']:+.4f}; "
+             f"over same-width shallow:{comparison['late_full_vs_same_width_shallow_bpc']:+.4f}. "
+             f"The predeclared nomination gate {'passes' if comparison['followup_gate_passed'] else 'fails'}."),
+            ('small','Late projection preserves fixed-weight computation by linearity and restores fixed-feature '
+             'projection credit from old detached slots. It does not restore historical core-producer credit '
+             'or add linear-reader expressivity. Fixed hash addresses are not learned pooling/KV race attention. '
+             'The same-width shallow arm isolates depth better than the width-changing minimal control. '
+             'Reused dev and one seed: exploratory quality/learning evidence, not semantic proof or supremacy.')])
+        pages.append([('h1','Appendix B. Value-credit resources and protocol boundaries'),
+            ('table',(['Model','Whole fit GFLOPs est.','Fit MFLOPs/target est.','Cold infer MFLOPs/target','Replay GFLOPs est.','Warm infer MFLOPs/target'],work,[47,24,27,25,25,25])),
+            ('table',(['Model','Core slots','Extra occupied/capacity','Updates/keys/teacher values per fit target','Context reads/writes per fit target'],capacity,[47,20,31,39,36])),
+            ('p','Every column uses the same unit/denominator for all five models. Whole fitting costs are '
+             'representative first/mature/partial-window estimates from actual forward/loss/backward/'
+             'normalization/clipping/Adam audits, with admitted losing-value work charged.2FLOPs/MAC plus '
+             'unit-weight specials; CPU emulator here. Projected clockless costs are separate in the '
+             'completed JSON ledger. Variable retrieval occupancy and graph reach are not fully enumerated.'),
+            ('p','Warm evaluation replays all1,024 fit tokens with frozen selected weights, then carries '
+             'predictive state/time into dev. Hash history and previous-address are cleared at the boundary '
+             'to forbid an invented cross-split outcome. Dev race noise is coupled to cold scoring. Replay '
+             'cost is extra work, estimated from first/last replay chunks; it is neither fitting FLOPs nor '
+             'free access to historical data. Neural slots update causally during dev with frozen parameters.'),
+            ('p',f"Late/original full fitting work ratio:{comparison['late_vs_original_fitting_work_ratio_estimate']:.3f}×. "
+             'All direct/core and additional memory work must earn predictive value. No automatic scale-up. '
+             'The nomination gate requires at least.02bpc cold gains against all four controls and no more '
+             'than2× original-full fitting work under this common estimate convention.'),
+            ('small','Hash/integer bookkeeping, RNG, traffic, Python metadata and physical energy remain '
+             'separate. Cold/replay scores here use2,047 dev targets and cannot be directly juxtaposed with '
+             'saved8,191-target count/dense references. Original-minimal projection contrast remains open; '
+             'AWS integrated capacity/exposure work remains independent. Complete work/activity/storage '
+             'and exact-source checkpoint provenance are retained in local_value_credit_analysis_20261002T090800Z.json.')])
+    for audit in tasks.get('value_credit_frozen',[]):
+        fusion=[];sensitivity=[]
+        for r in audit['models']:
+            if 'fusion' in r:
+                f=r['fusion'];unit=lambda t:t['arithmetic_flops']+t['special_function_evaluations']
+                fusion.append([r['arm'],f"{f['unfused_cpu_unit_special_flops_per_target']/1e3:.3f}",
+                    f"{f['fused_cpu_unit_special_flops_per_target']/1e3:.3f}",str(f['removed_parameters']),
+                    f"{unit(f['fold_arithmetic_trace'])/1e3:.3f}",f"{f['break_even_occupied_reads']:.0f}"])
+            sensitivity.append([r['arm'],*[f"{x['mean_paired_query_kl_nats']:.2e}" for x in r['prefix_information']['rows']]])
+        pages.append([('h1','Appendix B. Fixed-feature credit and compiled inference'),
+            ('p','Frozen-reader compilation folds A=R_vW once and removes the unused W matrix. Coupled '
+             'predictions and raw-slot state preserve the unfused construction within numerical tolerance. '
+             'Under2FLOPs/MAC, fold2d³ replaces2d² per occupied read, breaking even after d occupied reads. '
+             'This changes deployment work, not the fitting optimizer; compiled models refuse training.'),
+            ('table',(['Late model','Unfused infer KFLOPs/target','Fused infer KFLOPs/target','Removed weights','Fold KFLOPs','Break-even occupied reads'],fusion,[32,29,29,25,28,30])),
+            ('p','Inference samples include16 actual targets after128 warm tokens; the saved projection '
+             'work equals2d² times observed occupied reads. Matrix-fold work is charged above; constructor '
+             'initialization/copy/RNG are separate. This is arithmetic/weight reduction with frozen quality, '
+             'not measured latency, energy or competitive superiority.'),
+            ('table',(['Text-trained model','Prefix-pair KL, gap8','Prefix-pair KL, gap32','Prefix-pair KL, gap64'],sensitivity,[56,39,39,39])),
+            ('p','Each parity diagnostic balances all four input bit pairs with identical noise/query suffix. '
+             'Actual causal query count vectors are identical for orders1–8, but targets are opposite across '
+             'paired prefixes. A predictor restricted to those suffix/count inputs has at least1bit target '
+             'logloss; the full prefix determines parity exactly. Cue-free prefixes make the count contract '
+             'explicit, replacing the retired synthetic all-orders independence assertion.'),
+            ('small','These frozen text checkpoints were never trained on parity. KL and top-context '
+             'differences diagnose prefix dependence/retention, not parity learning or semantic abstraction. '
+             'Zero optimizer steps, parameter fingerprints unchanged. A later task fit needs matched '
+             'full/shallow controls, new-prefix generalization and complete prefix computation/credit '
+             'accounting. Historical feature-producer credit, learned address pooling and KV races remain '
+             'open. Source: local_value_credit_frozen_20261002T090800Z.json; theory63 records exact scope.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
