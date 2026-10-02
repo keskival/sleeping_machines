@@ -1,5 +1,56 @@
 # Local host: current research continuation
 
+## Native DVS credit diagnosis and bounded correction, 2 October17:40 UTC
+
+Read other-host capacity ladder and AWS completed dense calibration before
+continuation; preserve their files and assignments. No concurrent local job.
+New systematic decision: COUNTERFACTUAL_CREDIT_PLAN.md and theory80/81.
+Original p16/L2/H2/pool2 native remains the integrated model. Correct actual
+write/suffix and joint-clock utility at unchanged inference before widening
+the counterfactual bank or adding integration operators. No general no-go or
+promised cross-benchmark benefit follows from the current evidence.
+
+Matched256-fit/192-dev/four-pass local/pair seed6 pilots completed. Local
+54.1667%/1.305937NLL versus terminal pairs56.7708%/1.349807. Pair NLL is worse
+by.043869; original .02 gain gate fails, so no unchanged second seed/extension.
+All completed curves/results retained; comparison174000Z includes common units.
+
+Frozen original route audit:35.8% of16,128 choices differ from initialization;
+message/context/route/time/decoder groups all update. Full-suffix audit172000Z
+replays32 sites/model on first four previously used development clips. Original
+teacher opposes exact conditional choice utility at4/15 nonzero-comparable
+sites. One legal alternative has value-only benefit-.01016 but write-only
+harm+.10514 and full-route harm+.09193. All four original-model clips were
+correctly classified. No attribution of the global quality gap or independent
+confirmation. Failed original audit171500Z and its log remain preserved.
+
+Theory78 actual-reference contracts prove a convex cross-entropy teacher
+direction reversal. Theory79 silence-burst/popcorn primitives pass causal
+deadline/EOF, fixed-partition gradients and exact finite timeout-bank risk;
+not an integrated learned-window/popcorn fit. Need irregular timing adapter,
+scheduler and merge/split credit before admitting that architectural change.
+
+New bounded correction driver dvs_state_clock_credit_benchmark.py replaces
+one earlier node's entire value/time score derivative with conditional-winner
+joint winner/time likelihood credit, using actual alternative commits/full
+suffix and a pre-draw detached baseline. Ordinary factual content derivatives
+and all other local teachers remain. At event9, rotate head then layer across
+fixed passes; full shadow forward paid, no extra inference work/parameters.
+Contracts173000Z pass analytic smooth/jumping-time gradients, factual forward/
+state equality and actual model/Adam/cursor/RNG recovery with complete work.
+Smoke173700Z passes24fit/8dev/two passes/U16+U8: fitNLL2.64095->2.15847,
+23.406s/343276KiB, .144025 whole-fitGFLOPs/3.000525MFLOPs per target/
+.591695 inferenceMFLOPs per prefix. This is admission, not quality evidence.
+
+Next: fixed256/192/four-pass seed6 correction versus saved local pilot.
+Admit seed7 only for NLL gain>=.02, accuracy decline<=1pp, whole-fit work
+ratio<=1.50, RSS<900000KiB. No dev-selected schedule/pass extension. Full-data
+and practical repeated inference/control comparison require confirmation.
+One unique one-job guarded queue, one thread/nice19, VMS3000000KiB,
+groupRSS1250000KiB/8192MiB available floor; tmux for the pilot. Sources
+frozen after contracts, no GPU or new local dense fits. Three stashes preserved.
+Completed-stage report publication174100Z is prepared, not yet claimed passed.
+
 ## curie: DVS capacity ladder blocked on the data artifact, 2 October, 16:50 UTC
 
 The ladder's smoke failed before training: curie lacks

@@ -167,6 +167,15 @@ def results():
         tasks['dvs_compact_controls'].append(r)
     tasks['dvs_clock_completed']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'dvs_native').glob('local_dvs_clock_full_*Z.json'))]
+    tasks['dvs_credit_comparisons']=[]
+    for path in sorted((RES/'diagnostics').glob('local_dvs_credit_comparison_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        for entry in r['common_unit_ledger']:
+            if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
+                raise ValueError('Changed DVS credit evidence')
+        tasks['dvs_credit_comparisons'].append(r)
+    tasks['dvs_suffix_credit_audits']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_counterfactual_route_audit_*Z.json'))]
     tasks['dvs_batched_smoke_admission']=[]
     for path in sorted((RES/'diagnostics').glob('local_dvs_batched_smoke_admission_*Z.json')):
         r=read(str(path.relative_to(RES)))
@@ -621,6 +630,14 @@ def figures(M, tasks, ev):
             a.axhline(by[name]['development_nll'],color=color,linestyle='--',linewidth=1,label=label)
         a.set(xlabel='Fixed fitting passes over984 gestures',ylabel='Subject-disjoint development NLL',
             xticks=range(1,9),title='Real causal packets: completed learning versus strong controls')
+        a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
+    for r in tasks.get('dvs_credit_comparisons',[]):
+        f,a=plt.subplots(figsize=(7.2,2.3))
+        for row,color in zip(r['common_unit_ledger'],[blue,orange]):
+            a.plot([x['epoch'] for x in row['curve']],[x['nll'] for x in row['curve']],
+                marker='o',color=color,label=row['arm'].replace('_',' '),linewidth=1.5,markersize=3)
+        a.set(xlabel='Fixed passes over256 fitting gestures',ylabel='Development NLL',xticks=range(1,5),
+            title='Matched sparse native credit screen: '+r['args']['kind'].replace('_',' '))
         a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
@@ -4016,6 +4033,64 @@ def blocks(M, tasks, ev):
             ('small','One guarded one-thread job at a time; RSS watchdog and8GiB available-memory floor. '
              'Theory77; completed admission record local_dvs_batched_smoke_admission_20261002T163600Z.json. '
              'All negative full-fit results remain visible; no pending score fills an evidence table.')])
+    for r in tasks.get('dvs_credit_comparisons',[]):
+        rows=[[x['arm'].replace('_',' '),f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
+            f"{x['whole_fit_gflops_estimate']:.6f}",f"{x['fit_mflops_per_presentation_estimate']:.4f}",
+            f"{x['inference_mflops_per_target_estimate']:.4f}"] for x in r['common_unit_ledger']]
+        resources=[[x['arm'].replace('_',' '),f"{x['wall_s']:.3f}",f"{x['max_rss_kb']/1024:.1f}",
+            str(int(x['key_scores_per_fit_presentation'])),str(int(x['selected_updates_per_fit_presentation'])),
+            str(int(x['counterfactual_values_per_fit_presentation']))] for x in r['common_unit_ledger']]
+        pages.append([('h1','Appendix B. Completed matched credit pilot: '+r['args']['kind'].replace('_',' ')),
+            ('figure',('report/figures/'+r['args']['tag']+'_learning.png',173)),
+            ('table',(['Credit','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[29,25,24,31,32,32])),
+            ('table',(['Credit','Workflow seconds','Peak RSS MiB','Keys / fit target','Commits / fit target','Values / fit target'],resources,[29,29,26,29,30,30])),
+            ('p',f"Fixed256 fit/192 development gestures, four passes/1,024 target presentations/64 Adam updates; "
+             'same initialization, causal packets, draws and minimum-devNLL selection. Unchanged p16/L2/H2/pool2 '
+             'architecture:15,523 parameters/eight available receivers; inference168 scored keys/84 commits/168 '
+             'candidate values per21-event prefix. Fitting activity includes shadow replay where present.'),
+            ('p',f"Promotion gate {'PASSES' if r['promotion_gate_passed'] else 'FAILS'}: NLL improvement "
+             f"{r['nll_improvement']:.6f}, accuracy decline{r['accuracy_decline_percentage_points']:.3f}pp, "
+             f"whole-fit work ratio{r['whole_fit_work_ratio']:.4f}. Required gain>=.02, decline<=1pp, "
+             f"work ratio<={r['gate']['maximum_work_ratio']:.2f}, peak RSS<900,000KiB. "
+             'A failed gate stops unchanged confirmation/scale-up; all passes and negative findings retained.'),
+            ('small','All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit '
+             'specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting '
+             'data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, '
+             'no official test or superiority claim. '+r['args']['tag']+'.json; theory77/80/81.')])
+    for audit in tasks.get('dvs_suffix_credit_audits',[]):
+        rows=[[Path(x['native']).stem.replace('local_dvs_',''),str(x['opposed_teacher_directions'])+'/'+str(x['nonzero_comparable_policy_gradients']),
+            f"{x['mean_absolute_value_only_effect']:.5f}",f"{x['mean_absolute_write_only_effect']:.5f}",
+            f"{x['mean_absolute_value_write_interaction']:.5f}"] for x in audit['models']]
+        pages.append([('h1','Appendix B. Why actual write and joint-clock credit need a test'),
+            ('table',(['Frozen model','Opposed directions','Mean |value effect|','Mean |write effect|','Mean |interaction|'],rows,[61,26,29,29,28])),
+            ('p','Replay32 fixed event/head sites on the first four previously used development clips/model. '
+             'Both legal winner choices change delivered content and actual persistent writes, with full '
+             'suffix replay at unchanged current first time and future random draws. Two additional '
+             'value/write hybrids are diagnostic, not legal routes. Nonzero-comparable direction counts '
+             'exclude tiny/zero gradients. Absolute effects are not additive attribution percentages.'),
+            ('p','In the original full model, one alternative improves value-only loss by.01016 but worsens '
+             'write-only loss by.10514; its legal complete-route effect is+.09193 NLL. The averaged local '
+             'value teacher favors that harmful alternative. These four original-model clips are correctly '
+             'classified: this is a conditional credit defect, not attribution of the overall error rate.'),
+            ('p','Theory78 independently proves a convex affine cross-entropy example where the two-route '
+             'local teacher reverses exact expected-loss descent. Actual reference/backward contracts pass. '
+             'The full-state correction replaces one earlier score derivative by pi_i(F_i-b) minus '
+             'lambda_i*T times the probability-weighted centered loss. It retains sampled content derivatives '
+             'and includes common-clock credit through later timing jumps. The isolated-node joint likelihood '
+             'component is exact in expectation; other route teachers remain local, and variance is unresolved.'),
+            ('p','Routes, messages and time parameters do learn: frozen original/256-fit local/pair models '
+             'change35.8%/26.2%/25.2% of16,128 audited choices versus initialization, with nonzero updates '
+             'in every parameter group. Removing routing score-gradient paths leaves the factual forward '
+             'unchanged but removes incoming-content/message gradients. This does not prove their fitted '
+             'utility or diagnose the full quality gap.'),
+            ('p','Learned-window gradients were tested as smooth primitives; fixed-count repeated-arrival '
+             'fits are a separate mechanism. New silence-burst/popcorn contracts cover scheduled deadlines, '
+             'causal EOF, fixed-partition gradients and exact finite timeout-bank risk. No integrated learned '
+             'window or popcorn fit is established. Hard merge/split credit and an irregular adapter remain '
+             'prerequisites; fixed50ms packet schedules do not test natural silence.'),
+            ('small','Sources: completed frozen route-content audit171500Z, suffix audit172000Z, curvature '
+             'contracts165900Z, silence-burst contracts170500Z and joint-clock contracts173000Z; '
+             'theory78–81. Numerical diagnostics are not held-out superiority evidence.')])
     for r in tasks.get('dvs_compact_controls',[]):
         groups={}
         for x in r['rows']:
