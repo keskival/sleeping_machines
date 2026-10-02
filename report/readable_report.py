@@ -4210,11 +4210,17 @@ def blocks(M, tasks, ev):
              'Adam trajectory or fitted benefit from gradient normalization follows.')])
     if tasks.get('dvs_external_capacity_completed'):
         reference=tasks['dvs_practical_native'][0];clock=tasks['dvs_clock_completed'][0]
+        selected_references={'time_binned_naive_bayes',reference['selected_control'],
+                             'native_temporal_p16_L2_H2_pool2_seed6'}
         rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts').replace('native_temporal_p16_L2_H2_pool2_seed6','Ours original'),
             f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
             *['Unmeasured' if x[k] is None else f'{x[k]:.3f}' for k in
             ('whole_fit_gflops_estimate','fit_mflops_per_presentation_estimate','inference_mflops_per_target_estimate')]]
-            for x in reference['common_unit_ledger']]
+            for x in reference['common_unit_ledger'] if x['arm'] in selected_references]
+        for compact in tasks['dvs_compact_controls']:
+            q=compact['selected_compact_development_quality']
+            rows.append(['Compact prototype33',f"{100*q['accuracy']:.2f}",f"{q['nll']:.4f}",
+                'Unmeasured','Unmeasured','Unmeasured'])
         cells=[clock]+tasks['dvs_external_capacity_completed']
         capacity=[]
         for x in cells:
@@ -4240,7 +4246,8 @@ def blocks(M, tasks, ev):
              'evidence. Other-host tied-map/replication work remains pending and separate.'),
             ('small','Completed curie_dvs_clock_p16d2pool8 and p16d4pool2 results172500Z; '
              'theory59§§396/398. Conventional solver work is unmeasured, not zero. Raw controls '
-             'retained; comparisons use the same column units. No official-test or supremacy claim.')])
+             'retained in the full comparison above; selected references here use the same column '
+             'units. No official-test or supremacy claim.')])
     for r in tasks.get('dvs_compact_controls',[]):
         groups={}
         for x in r['rows']:
