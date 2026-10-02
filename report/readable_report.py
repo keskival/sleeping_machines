@@ -1922,7 +1922,7 @@ def blocks(M, tasks, ev):
         if tasks.get('joint_replication'):
             confirmation=tasks['joint_replication'][-1]
             blocks.insert(-1,('p',f"Unchanged seed7/8 confirmation: "
-                f"{'both declared gates pass' if confirmation['confirmation_gate_passed'] else 'both declared gates do not pass'}. "
+                f"{sum(x['joint_credit_gate_passed'] for x in confirmation['comparisons'])} of2 declared joint-versus-local gates pass. "
                 'All four arms and delivered-value interventions are reported separately in the appendix; '
                 'the new suffix set does not select settings.'))
         pages.append(blocks)
@@ -3681,7 +3681,8 @@ def blocks(M, tasks, ev):
         for row in r['common_unit_ledger']:
             label=f"s{row['seed']} / {row['read_credit']}"
             quality.append([label,f"{row['development']['query_bits']:.3f}",f"{row['fresh']['query_bits']:.3f}",
-                f"{100*row['fresh']['accuracy']:.2f}%",str(row['selected_epoch'])])
+                f"{100*row['fresh']['accuracy']:.2f}%",str(row['selected_epoch']),
+                f"{100*row['zero_delivered_value']['accuracy']:.2f}%"])
             work.append([label,f"{row['whole_fit_gflops_estimate']:.4f}",f"{row['fit_mflops_per_target_estimate']:.4f}",
                 f"{row['inference_mflops_per_target']:.4f}",f"{row['wall_s']:.1f}"])
         for pair in r['comparisons']:
@@ -3689,19 +3690,23 @@ def blocks(M, tasks, ev):
             comparisons.append([str(pair['seed']),f"{pair['joint_vs_local_fresh_bits']:+.3f}",
                 f"[{interval[0]:+.3f}, {interval[1]:+.3f}]",f"{pair['joint_local_fitting_work_ratio_estimate']:.3f}"])
         pages.append([('h1','Appendix B. Fixed joint-credit confirmation'),
-            ('table',(['Fit seed / credit','Selected dev bits','New suffix bits','New suffix accuracy','Selected pass'],quality,[48,31,31,34,29])),
+            ('table',(['Fit seed / credit','Selected dev bits','New suffix bits','New suffix accuracy','Pass','Zero-value accuracy'],quality,[38,27,27,30,18,33])),
             ('table',(['Fit seed','Joint improvement bits/query','Paired suffix interval','Joint/local fitting work'],comparisons,[25,48,50,50])),
             ('p','Two additional fitted seeds7/8 use the unchanged full p4/L2 configuration and16 passes. '
              'All four declared fits are shown. Development seed72001 selects the minimum across fixed '
              'passes; seed75001/64 suffix groups/256 targets is reserved for fixed selected models. '
              'No parameter, learning rate, stopping rule or evaluation setting is retuned on this set.'),
-            ('p',f"Both declared confirmation gates {'pass' if r['confirmation_gate_passed'] else 'do not pass'}. "
+            ('p',f"{sum(x['joint_credit_gate_passed'] for x in r['comparisons'])} of2 declared joint-versus-local gates pass. "
              'A seed must reach at least75%/.8bits and improve local credit by.05bits. Paired suffix '
              'bootstrap intervals are conditional on the fitted seed and synthetic generator; they '
              'are not a broad confidence interval over learning algorithms or tasks.'),
             ('p','Initial predictions, race choices and probabilities match within each joint/local pair. '
              'Inference mechanisms are identical. The differing training risk/credit objectives therefore '
              'test this terminal learning intervention, while protecting all earlier negative evidence.'),
+            ('p','Zero-value evaluation removes delivered content while keeping native context, query/key '
+             'races and contextual decoder. No fitting or model selection; every parameter is restored '
+             'and verified afterwards. A quality drop attributes dependence to value delivery, not '
+             'to useful extra native depth or a generic semantic representation.'),
             ('small','Query-suffix/count bound only. The protected bank has fixed observed predecessor '
              'addresses and no learned writes; the standard bilinear decoder and exact terminal content '
              'credit do not establish deep core learning, clock-gradient accuracy or natural-text gains.')])
