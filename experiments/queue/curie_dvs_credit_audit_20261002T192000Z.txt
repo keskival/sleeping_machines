@@ -1,0 +1,3 @@
+# THEORY §399 step 1: frozen race-credit fidelity by depth (read-only). Smoke first, then depth-4 and depth-2 references.
+curie_dvs_credit_audit_smoke_20261002T192000Z experiments/dvs_credit_fidelity_audit.py --tag curie_dvs_credit_audit_smoke_20261002T192000Z --results experiments/results/dvs_native/curie_dvs_clock_p16d4pool2_s6_20261002T172500Z.json --episodes 1 --races-per-episode 3
+curie_dvs_credit_audit_20261002T192000Z experiments/dvs_credit_fidelity_audit.py --tag curie_dvs_credit_audit_20261002T192000Z --results experiments/results/dvs_native/curie_dvs_clock_p16d4pool2_s6_20261002T172500Z.json experiments/results/dvs_native/curie_dvs_clock_p32d2pool2_s6_20261002T172500Z.json experiments/results/dvs_native/curie_dvs_clock_p16d2pool8_s6_20261002T172500Z.json
