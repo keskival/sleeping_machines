@@ -1,5 +1,62 @@
 # Local host: current research continuation
 
+## Coupled evolution offsets and formal geometry, 2 October21:10 UTC
+
+Native integrated p16/L2/H2/pool2 remains the prioritized architecture. The
+user-requested bounded reception-phase offset retains physical-age damping,
+physical-time rotation derivatives, actual races/timestamps, sparse writes and
+native counterfactual score credit. Beta=pi*tanh(raw_offset),32 extra parameters;
+message-phase ownership is explicit, inactive Adam state frozen, shared maps
+remain active. Four contracts205000Z pass native zero nesting, nonzero serial/
+batched all-state/all-parameter gradients, physical-age/offset directions and
+actual interrupted phase/Adam/RNG/work recovery. Both24-fit/eight-dev/two-pass
+smokes205200Z/205300Z learn with complete accounting. Sources and theory90 frozen.
+
+Manifest205400Z declared joint AND alternating seed6 pilots before results.
+Matched256-fit/192-dev/four-pass comparisons: native54.1667%/1.305937,
+joint57.2917%/1.258170, alternating53.6458%/1.263009. Full fitting work
+2.285696/2.287775/2.281584GFLOPs; per-presentation2.232125/2.234156/2.228110MF;
+inference.591737/.596711/.596655MF. Both gates pass; minimum NLL chooses JOINT.
+Alternation does not demonstrate an independent benefit and changes private
+block update counts/clipping. Unique result/queue names205500Z/205700Z and
+completed common-unit comparison210100Z preserve all four passes.
+
+UNCHANGED seed7 confirmation210400Z FAILS: native55.2083%/1.306508 versus
+joint offset53.1250%/1.327347, improvement-.020839, decline2.0833pp;
+work ratio1.000910. Comparison210800Z validates matching initialization/data/
+noise/exposure/accounting. No full-data offset fit, extra epochs, third seed or
+unselected alternating-seed fishing is admitted. Preserve first-seed gain and
+failed replication together. Both pilot fits use~348MiB RSS/~101seconds.
+
+Completed fitting-only branch audit203600Z (two prefixes per saved seed,
+four draws, events9/19/both layers/head0) finds nearly unchanged sampled versus
+enumerated full-gradient directions, mild route/content opposition. This small
+scope does not establish a dominant exposure/interference bottleneck. Independent
+203400Z gather/all-gradient contracts pass. Theory89 and204000Z contracts correct
+the other-host exact-pi unchanged-expectation claim for winner-dependent errors:
+convex quadratic direction reversal; earlier curie192000Z audit also changed
+identity AND time law. Original numbers remain beside revised interpretation in
+note59 section400. Other-host candidates/results/queues stay preserved/owned.
+
+Theory91 gives an exact Schur-complement local improvement criterion and
+phase/age determinant including saturation conditioning. Four independent
+211000Z matrix contracts pass16 direct/eliminated solves, zero projection,
+redundant-coordinate penalized benefit and determinant. This is formal progress,
+not empirical validation of the offset cure. Notes90/91 and numerical dependencies
+are source-frozen. No universal gradient break or deeper-feature impossibility
+follows from these bounded failures.
+
+Next: publish this completed stage with retained strong controls and both seeds;
+then prioritize a fitting-only predictive-access/credit diagnostic that can
+separate representation information from finite readout and route utility.
+Do not start another unchanged offset/choice campaign. Other-host tied-map/depth/
+exact-pi work and AWS large Transformer comparisons stay separately owned.
+Host curie CPU-only,11.5GiB available; one-job lock, one thread/nice19,
+3,000,000KiB VMS/1,250,000KiB RSS watchdog and8GiB available-memory floor.
+No active training after confirmation. Main branch; no unresolved index conflict,
+three stashes preserved. Report rendering is pending; canonical older report
+remains until completed validated publication replaces it.
+
 ## Bird's-eye decision and failed confirmation, 2 October20:20 UTC
 
 Read theory87/88 for the current synthesis and primary-paper-inspired plan.

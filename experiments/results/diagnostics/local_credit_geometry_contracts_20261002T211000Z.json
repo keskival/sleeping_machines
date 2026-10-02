@@ -1,0 +1,26 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_credit_geometry_contracts_20261002T211000Z"
+  },
+  "contracts_passed": 4,
+  "schur_direct_joint_cases": 16,
+  "schur_benefit_range": [
+    0.07782585686114658,
+    2.5793741833847768
+  ],
+  "zero_projection_no_benefit": true,
+  "redundant_regularized_costs": [
+    0.25,
+    0.16666666666666666
+  ],
+  "raw_offset_determinant": -0.3603021225926068,
+  "expected_determinant": -0.3603021225926068,
+  "source_sha256": {
+    "experiments/local_credit_geometry_contracts.py": "085dfdcd66c476c626bc15d6caa6870d9dd11e08deb54c0c48887c1180125cc9",
+    "experiments/theory/91_useful_freedom_and_local_credit_geometry.md": "3835de8672f96a48c0a72ac5532c7210aa74c5b4aff330fca26333ec3f2f2e6d"
+  },
+  "wall_s": 0.031944574002409354,
+  "max_rss_kb": 41140,
+  "scope": "Finite matrix and rotor identities only; no optimizer/model fit, causal bottleneck proof or advantage claim."
+}

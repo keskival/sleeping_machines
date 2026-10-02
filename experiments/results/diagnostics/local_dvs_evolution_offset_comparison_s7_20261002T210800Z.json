@@ -1,0 +1,119 @@
+{
+  "common_unit_ledger": [
+    {
+      "arm": "local",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5520833333333334,
+      "development_nll": 1.3065083370311186,
+      "whole_fit_gflops_estimate": 2.28569632,
+      "fit_mflops_per_presentation_estimate": 2.2321253125,
+      "inference_mflops_per_target_estimate": 0.591863,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.9183474558716018,
+          "accuracy": 0.3958333333333333
+        },
+        {
+          "epoch": 2,
+          "nll": 1.4027123482276995,
+          "accuracy": 0.515625
+        },
+        {
+          "epoch": 3,
+          "nll": 1.335288704528163,
+          "accuracy": 0.5052083333333334
+        },
+        {
+          "epoch": 4,
+          "nll": 1.3065083370311186,
+          "accuracy": 0.5520833333333334
+        }
+      ],
+      "wall_s": 96.7540006489944,
+      "max_rss_kb": 346996
+    },
+    {
+      "arm": "joint",
+      "result": "experiments/results/dvs_native/local_dvs_evolution_offset_joint_pilot_s7_20261002T210400Z.json",
+      "result_sha256": "50bfb568dca720faa6ab64d0cf6ae448e2fad21092dcbdc6d20b530968f9e83e",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.53125,
+      "development_nll": 1.3273471640810992,
+      "whole_fit_gflops_estimate": 2.287775232,
+      "fit_mflops_per_presentation_estimate": 2.2341555,
+      "inference_mflops_per_target_estimate": 0.596823,
+      "parameters": 15555,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.9544573159267504,
+          "accuracy": 0.3854166666666667
+        },
+        {
+          "epoch": 2,
+          "nll": 1.3742599743418396,
+          "accuracy": 0.4895833333333333
+        },
+        {
+          "epoch": 3,
+          "nll": 1.405133754441825,
+          "accuracy": 0.5208333333333334
+        },
+        {
+          "epoch": 4,
+          "nll": 1.3273471640810992,
+          "accuracy": 0.53125
+        }
+      ],
+      "wall_s": 100.60536234900064,
+      "max_rss_kb": 347968
+    }
+  ],
+  "schedule_gates": [
+    {
+      "schedule": "joint",
+      "nll_improvement": -0.020838827049980635,
+      "accuracy_decline_percentage_points": 2.083333333333337,
+      "whole_fit_work_ratio": 1.000909531148915,
+      "promotion_gate_passed": false
+    }
+  ],
+  "selected_schedule": null,
+  "promotion_gate_passed": false,
+  "gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_evolution_offset_comparison_s7_20261002T210800Z",
+    "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+    "treatment": [
+      "experiments/results/dvs_native/local_dvs_evolution_offset_joint_pilot_s7_20261002T210400Z.json"
+    ],
+    "seed": 7
+  },
+  "source_sha256": {
+    "experiments/dvs_evolution_offset_comparison.py": "b8bd40326ba061ae5f8a5a0f97d430cd582ac2b39f92815de9d63b4e8fb028b4",
+    "experiments/dvs_credit_comparison.py": "96f7b4045900a85a5a678deb5a29fd2755cef916f40e10bed1f87f43ca7e0187"
+  },
+  "wall_s": 0.038388975997804664,
+  "max_rss_kb": 20472,
+  "scope": "Fixed256-fit/192-dev/four-pass paired initialization/noise/data; native vs up to two prespecified offset schedules. Minimum devNLL selects a candidate among passing gates for seed7 confirmation, not a proven schedule mechanism, full-data strong-control advantage or official-test claim. Alternation gives fewer updates to private blocks and different active clipping; shared maps remain active. Complete forward/backward/optimizer and offset inference work charged."
+}

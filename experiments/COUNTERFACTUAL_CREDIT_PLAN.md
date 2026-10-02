@@ -123,3 +123,18 @@ backward is not free. Independent confirmation precedes full-data comparisons.
 Other-host tied-map/depth plans and AWS strong dense comparisons stay reserved.
 Charge discovery, proposals, optimizer and traffic; retain sparse temporal
 inference, actual memory writes and the strongest valid control evidence.
+
+## 2 October21:10 UTC: offsets do not pass independent confirmation
+
+Completed branch audit203600Z does not show a dominant content-exposure failure
+on its two fitting prefixes. User-requested coupled-time offsets pass native/
+serial/batched/phase/recovery contracts and both tiny fits. Two schedules were
+preregistered: joint seed6 improves .047767NLL, alternating .042929, at fitting
+work ratios1.000910/.998201. Minimum NLL selects joint. Unchanged seed7 loses
+.020839NLL and2.0833pp accuracy, failing the original gate. Preserve all curves;
+no unchanged full-data run, additional epochs or seed fishing. Source-frozen
+theory90 remains the admission record; notes89/91 and current handoff record
+completed corrections/outcomes. Extra directions have a rigorous local fitting
+criterion, not a generalization guarantee. Next useful local work must diagnose
+predictive access versus actual credit with a bounded fitting-only protocol;
+other-host tied/depth/exact-pi work remains separately owned.
