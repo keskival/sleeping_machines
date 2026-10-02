@@ -893,3 +893,27 @@ that grows linearly in P at fixed N.
 private, since they are cheap and few. **Test (P398):** DVS pool 8 with maps tied across each pool, keys, clock
 biases and timescales private. Prediction: it is no worse than untied pool 8 at equal passes, it beats the pool 2
 baseline mean across seeds 6/7/8, and its parameter count stays near pool 2 while available receivers are 4×.
+
+## 399. DVS scale-up failures separate into generalization (width) and optimization (depth)
+
+Seed-6 results, clock-calibrated driver; fit-subset numbers are on 32 fitting gestures, so they are indicative:
+
+| Shape | Params | Fit acc / NLL | Dev acc / NLL | Whole-fit GFLOPs |
+|---|---:|---|---|---:|
+| p16 d2 pool 2 (baseline) | 15.5K | .844 / .622 | .661 / 1.042 | 20.1 |
+| p16 d2 pool 8 | 42.1K | .781 / .586 | .625 / 1.088 | 57.3 |
+| p16 d4 pool 2 | 28.5K | .781 / .650 | .573 / 1.222 | 37.9 |
+| p32 d2 pool 2 | 57.6K | .906 / .387 | .594 / 1.170 | 70.9 |
+
+*Width* (payload, untied pool) fits the training gestures better and generalizes worse: a generalization failure on
+984 gestures with a subject-disjoint development split and no regularizer beyond epoch selection. The RBF control
+(73.4%) is regularized through C. *Depth* fits worse and generalizes worse: an optimization or credit failure.
+The baseline's 66.15% is the best epoch of a curve swinging ±5 points, so seed replicates are required before ranking.
+
+**Plan.** Width: tied pools (§398) remove dilution and cut parameters (queued, seeds 6–8); a weight-decay
+sweep follows if tied pools still overfit. Depth, in order: (1) frozen single-race credit-fidelity audit by
+depth (forced-winner exact gradients; queued); (2) depth-4 controls (pathwise credit, which tests the surrogate;
+16 passes, which tests under-training); (3) **growth by nesting**: append layers to a trained depth-2 model with
+near-identity initialization (new units' gates closed, identity channel mixes), so the grown model starts at the
+parent's quality and can only use the extra depth if credit can move it. This separates "can depth add anything" from
+"can depth be trained from scratch".
