@@ -6,8 +6,8 @@ enters inputs.  Two conventional learners with full access to elapsed time:
                per-unit tau (GRU-D style), and log(1 + dt) is appended to the input;
   transformer  causal Transformer over the episode's events with sinusoidal encodings of the absolute
                timestamp and of the gap to the previous event; the query event's output is classified.
-Calibration passes if a control beats the table bar by >= 20 points (§394).  Fitting work is traced with the
-same operator audit as the native benchmarks (2 FLOPs/MAC, specials separate).
+Calibration passes if a control beats the table bar by >= 20 points (§394).  Fitting work: the same representative-window
+estimate and operator audit as the native joint driver (2 FLOPs/MAC, specials separate).
 """
 import argparse
 import copy
@@ -101,6 +101,7 @@ def main():
     p.add_argument('--seed', type=int, default=6); p.add_argument('--lr', type=float, default=.003)
     p.add_argument('--update-episodes', type=int, default=16)
     p.add_argument('--background', type=int, nargs=2, default=[2, 6], help='[low, high) phase-A events: history length')
+    p.add_argument('--trace-windows', type=int, default=2, help='optimizer windows of pass 1 traced for the work estimate')
     a = p.parse_args()
     out = ROOT / 'experiments/results/joint_event_language' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -118,25 +119,34 @@ def main():
                   hardware=dict(platform=platform.platform(), torch=torch.__version__, device='cpu', threads=1),
                   scope='Labelled dense timestamp-aware control (Theory §394 calibration); not the research architecture')
     best, best_state = float('inf'), None
+    events = traced_events = 0
     for epoch in range(1, a.epochs + 1):
         order = rng.permutation(len(fit)).tolist(); model.train()
         for begin in range(0, len(order), a.update_episodes):
             opt.zero_grad(set_to_none=True); pending = 0
+            traced = epoch == 1 and begin // a.update_episodes < a.trace_windows
+            run = capture if traced else (lambda f: f())
             for i in order[begin:begin + a.update_episodes]:
                 box = {}
                 def forward():
                     z, y = predict(model, fit[i]); box.update(loss=F.cross_entropy(z, y, reduction='sum'), n=len(y))
-                ledger['forward_and_loss'].append(capture(forward))
-                ledger['backward'].append(capture(lambda: box['loss'].backward())); pending += box['n']
+                r1 = run(forward); r2 = run(lambda: box['loss'].backward()); pending += box['n']
+                events += len(fit[i])
+                if traced:
+                    ledger['forward_and_loss'].append(r1); ledger['backward'].append(r2); traced_events += len(fit[i])
             def normalize():
                 for q in model.parameters():
                     if q.grad is not None:
                         q.grad.div_(pending)
-            ledger['gradient_normalization'].append(capture(normalize))
-            ledger['gradient_clipping'].append(capture(lambda: torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)))
-            ledger['optimizer'].append(capture(opt.step))
-            for k in ledger:
-                ledger[k] = [merge(ledger[k])]
+            for key, step in (('gradient_normalization', normalize),
+                              ('gradient_clipping', lambda: torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)),
+                              ('optimizer', opt.step)):
+                r = run(step)
+                if traced:
+                    ledger[key].append(r)
+            if traced:
+                for k in ledger:
+                    ledger[k] = [merge(ledger[k])]
         score = evaluate(model, dev); result['curve'].append(dict(epoch=epoch, dev=score))
         if score['nll'] < best:
             best, best_state = score['nll'], copy.deepcopy(model.state_dict()); result['selected_epoch'] = epoch
@@ -147,9 +157,13 @@ def main():
     with torch.no_grad():
         inference = capture(lambda: predict(model, dev[0]))
     train = {k: merge(v) for k, v in ledger.items()}
-    arith = sum(t['arithmetic_flops'] for t in train.values()); special = sum(t['special_function_evaluations'] for t in train.values())
+    scale = events / traced_events
+    arith = sum(t['arithmetic_flops'] for t in train.values()) * scale
+    special = sum(t['special_function_evaluations'] for t in train.values()) * scale
     result['work'] = dict(total_training_unit_special_flops=arith + special, total_training_arithmetic_flops=arith,
-                          fit_mflops_per_query=(arith + special) / (a.fit * a.epochs) / 1e6, training_stages=train,
+                          fit_mflops_per_query=(arith + special) / (a.fit * a.epochs) / 1e6, traced_training_stages=train,
+                          fitting_events=events, traced_events=traced_events,
+                          estimate='first pass-1 windows fully traced; traced work per fitting event x fitting events',
                           inference_unit_special_flops_per_query=inference['arithmetic_flops'] + inference['special_function_evaluations'])
     result.update(status='completed', wall_s=time.perf_counter() - started, max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     out.write_text(json.dumps(result, indent=2) + '\n')

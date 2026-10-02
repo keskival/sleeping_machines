@@ -6,7 +6,9 @@ reference) is used by default.  Reported bars, all on the same development episo
   ours (observed time) | rank-time control (timestamps replaced by event index) | cleared-text control (character
   events removed: an information ablation) | table bar (best time-blind lookup fitted on the fit episodes).
 Learned dense controls with the same events (Δt GRU, time-encoded Transformer) are an AWS job.
-Exact fitting work (forward, backward, losing proposals, normalization, clipping, Adam) is traced.
+Fitting work (forward, backward, losing proposals, normalization, clipping, Adam) is fully traced for the first
+--trace-windows optimizer windows and extrapolated per fitting event (a labelled estimate, the repository's
+representative-window convention); per-step tracing made a full fit about 50x slower.
 """
 import argparse
 import copy
@@ -91,6 +93,7 @@ def main():
     p.add_argument('--lr', type=float, default=.003); p.add_argument('--time-input', choices=('observed', 'rank'), default='observed')
     p.add_argument('--reference-core', action='store_true', help='unbatched reference training path')
     p.add_argument('--background', type=int, nargs=2, default=[2, 6], help='[low, high) phase-A events: history length')
+    p.add_argument('--trace-windows', type=int, default=2, help='optimizer windows of pass 1 traced for the work estimate')
     a = p.parse_args()
     out = ROOT / 'experiments/results/joint_event_language' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -114,19 +117,26 @@ def main():
                                 selection='lowest frozen development NLL over fixed passes', chance=.5,
                                 scope='Synthetic joint-modality capability pilot (Theory §394); one seed; dense controls on AWS'))
     best, best_state = float('inf'), None
+    traced_events = traced_windows = 0
     for epoch in range(1, a.epochs + 1):
         order = rng.permutation(len(fit)).tolist(); model.train(); total = 0.
         for begin in range(0, len(order), a.update_episodes):
             optimizer.zero_grad(set_to_none=True); pending = 0
+            traced = epoch == 1 and begin // a.update_episodes < a.trace_windows
+            run = capture if traced else (lambda f: f())
             for index in order[begin:begin + a.update_episodes]:
                 box = {}
                 def forward():
                     z, y, state = predict(model, fit[index], a.time_input)
                     box.update(loss=F.cross_entropy(z, y, reduction='sum'), state=state, n=len(y))
-                ledger['forward_and_loss'].append(capture(forward))
+                record = run(forward)
+                if traced:
+                    ledger['forward_and_loss'].append(record)
                 if not torch.isfinite(box['loss']):
                     raise FloatingPointError('Nonfinite loss')
-                ledger['backward'].append(capture(lambda: box['loss'].backward()))
+                record = run(lambda: box['loss'].backward())
+                if traced:
+                    ledger['backward'].append(record); traced_events += box['state'].events
                 pending += box['n']; total += float(box['loss'].detach()); s = box['state']
                 activity['events'] += s.events; activity['key_scores'] += s.candidate_scores
                 activity['selected_updates'] += s.selected_updates; activity['counterfactual_proposals'] += s.counterfactual_values
@@ -135,11 +145,16 @@ def main():
                 for q in model.parameters():
                     if q.grad is not None:
                         q.grad.div_(pending)
-            ledger['gradient_normalization'].append(capture(normalize))
-            ledger['gradient_clipping'].append(capture(lambda: torch.nn.utils.clip_grad_norm_(model.parameters(), 1., error_if_nonfinite=True)))
-            ledger['optimizer'].append(capture(optimizer.step))
-            for key in ledger:
-                ledger[key] = [merge(ledger[key])]
+            for key, step in (('gradient_normalization', normalize),
+                              ('gradient_clipping', lambda: torch.nn.utils.clip_grad_norm_(model.parameters(), 1., error_if_nonfinite=True)),
+                              ('optimizer', optimizer.step)):
+                record = run(step)
+                if traced:
+                    ledger[key].append(record)
+            if traced:
+                traced_windows += 1
+                for key in ledger:
+                    ledger[key] = [merge(ledger[key])]
         score = evaluate(model, dev, a.time_input)
         result['curve'].append(dict(epoch=epoch, dev=score, training_nll=total / a.fit, wall_s=time.perf_counter() - started))
         if score['nll'] < best:
@@ -155,16 +170,20 @@ def main():
             box['z'], box['y'], box['state'] = predict(model, dev[0], a.time_input)
         inference_trace = capture(inference)
     train = {k: merge(v) for k, v in ledger.items()}
-    arithmetic = sum(t['arithmetic_flops'] for t in train.values()); special = sum(t['special_function_evaluations'] for t in train.values())
+    traced_arith = sum(t['arithmetic_flops'] for t in train.values()); traced_special = sum(t['special_function_evaluations'] for t in train.values())
+    scale = activity['events'] / traced_events  # whole fit = traced work per fitting event x all fitting events
+    arithmetic, special = traced_arith * scale, traced_special * scale
     result['work'] = dict(fitting_episodes=a.fit * a.epochs, fitting_events=activity['events'],
+                          traced_windows=traced_windows, traced_events=traced_events, estimate='traced work per fitting event x fitting events',
                           total_training_arithmetic_flops=arithmetic, training_special_function_evaluations=special,
-                          total_training_unit_special_flops=arithmetic + special, training_stages=train,
+                          total_training_unit_special_flops=arithmetic + special, traced_training_stages=train,
                           fit_mflops_per_query=(arithmetic + special) / (a.fit * a.epochs) / 1e6,
                           inference_unit_special_flops_per_query=inference_trace['arithmetic_flops'] + inference_trace['special_function_evaluations'],
                           inference_events_per_query=len(dev[0]), exact_fitting_activity=activity,
                           available_receivers=a.depth * a.heads * a.pool, selected_updates_per_event=a.depth * a.heads,
                           key_scores_per_event=a.depth * a.heads * a.pool, inference_storage=box['state'].storage(),
-                          scope='Exact executed fitting sums incl. losing proposals, backward, normalization, clipping, Adam; '
+                          scope='Representative-window estimate (first windows of pass 1 fully traced) incl. losing proposals, '
+                                'backward, normalization, clipping, Adam; '
                                 '2 FLOPs/MAC, specials separate plus unit weight; dev/RNG/traffic/energy separate')
     result.update(status='completed', wall_s=time.perf_counter() - started, max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     out.write_text(json.dumps(result, indent=2) + '\n')
