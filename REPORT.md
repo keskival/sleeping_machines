@@ -957,7 +957,7 @@ Completed integrated pilots only: private S4/P0, eight blocks, two independent h
 | Ours: write credit | 128/256/4 | 42,932 | 128 | 16/32 |
 | Ours: baseline | 128/256/4 | 42,932 | 128 | 16/32 |
 
-All fitting forward/loss/backward/normalization/clipping/Adam and losing proposals are charged. Special functions have unit weight beside arithmetic; integer discovery/traffic/energy remain separate. Training-only auxiliary state views and whole-process RSS are recorded in each result. Numerical/optimizer prerequisites and accounting smokes are excluded from benchmark plots. This reuses exploratory development populations; independent seeds and fresh confirmation remain required.
+All fitting forward/loss/backward/normalization/clipping/Adam and losing proposals are charged. Special functions have unit weight beside arithmetic; integer discovery/traffic/energy remain separate. Training-only auxiliary state views and whole-process RSS are recorded in each result. Numerical/optimizer prerequisites and accounting smokes are excluded from benchmark plots. Matched gains: 0.78 percentage points / 0.00091 NLL, at 1.045× fitting work. The predeclared larger-fit gate (5 points/.02 NLL/at most2× work) fails. This reuses exploratory development populations; independent seeds and fresh confirmation remain required.
 
 ## Appendix B. Learned history and credit reach
 
@@ -973,6 +973,26 @@ Frozen checkpoint audit on32 fixed development positions. Both learned models de
 The actual current count-composition logit gradient matches responsibility-weighted cross entropy to1.9e-09; all six carrier layers receive gradients. Mean responsibility is3.43% on this64-target initialization probe. This supports investigating attenuated task signal and conditioning, rather than assuming a general gradient disconnect.
 
 No optimizer steps, weight changes or official-test access. History controls reset state and replay the retained suffix at its absolute positions; per-position native noise is coupled. This32-position slice is not the full saved development quality or a matched-data model comparison. Gradient norms aggregate different parameter groups; they show reach, not superior conditioning or unbiased hard-route credit. The64-character history is not uniformly better than16 on this slice; useful long-range/semantic features remain open. All replays/backwards are counted; arithmetic is uninstrumented. Wall33.21s, peakRSS325.5MiB. See experiments/LANGUAGE_LEARNING_DIAGNOSIS_20261002.md.
+
+## Appendix B. Credit horizon with fixed context
+
+Completed frozen native8K/H2/d16/depth8 diagnostic. All three arms retain the same128-token development context, score the same last16 targets and receive identical per-position race noise. Only graph reach changes:16,32 or64 tokens. Predictions match exactly; the gradient changes, separating retained information from the credit used to learn how to retain it.
+
+| Graph horizon | Slice bpc | Gradient norm | Graph tokens | Replay tokens |
+| --- | --- | --- | --- | --- |
+| 16 | 4.016190 | 7.0827 | 16 | 128 |
+| 32 | 4.016190 | 6.3785 | 32 | 128 |
+| 64 | 4.016190 | 6.6635 | 64 | 128 |
+
+| Short/long credit | Difference norm | Relative difference % | Gradient cosine |
+| --- | --- | --- | --- |
+| 16 versus 32 | 1.7577 | 27.56 | 0.9713 |
+| 16 versus 64 | 2.0581 | 30.89 | 0.9570 |
+| 32 versus 64 | 1.0092 | 15.15 | 0.9890 |
+
+The16-versus64 gradient difference has norm30.89% of the64-token gradient, with cosine0.9570. The32-versus64 difference is15.15%. Every layer receives credit, and short-credit norms can be larger because omitted contributions can cancel retained ones. This is evidence of material truncation effects on this probe; it does not establish that increasing the horizon improves fitting quality.
+
+Frozen weights; zero optimizer steps and no official-test access. One16-target slice,384 replay tokens,112 graph tokens,3 backwards. Wall11.08s, peakRSS518.0MiB. Arithmetic is uninstrumented. Native hard-route credit is a surrogate;64 tokens is a comparison, not an all-history unbiased reference. Relative difference divides the norm of the gradient difference by the longer-credit gradient norm, not a percentage of predictive quality or retained features.
 
 ## Appendix B. Banknote: no confirmed advantage
 

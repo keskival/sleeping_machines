@@ -158,6 +158,14 @@ def results():
                 if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
                     raise ValueError('Language-learning audit source changed: '+name)
             tasks['language_learning_audit']=r
+    tasks['language_credit_horizon']=None
+    for path in sorted((RES/'diagnostics').glob('local_language_credit_horizon_*.json')):
+        r=json.loads(path.read_text())
+        if r.get('status')=='completed':
+            for name,sha in r['source_sha256'].items():
+                if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
+                    raise ValueError('Credit-horizon audit source changed: '+name)
+            tasks['language_credit_horizon']=r
     tasks['split_screen']=[]
     for path in sorted((RES/'event_variants').glob('*_pilot.json')):
         r=json.loads(path.read_text())
@@ -519,7 +527,7 @@ def figures(M, tasks, ev):
             x=r['work']['total_training_unit_special_flops']/1e9;y=100*r['final']['dev']['accuracy']
             label='Ours: baseline' if not r['args']['state_credit'] else 'Ours: state-write credit'
             ax.scatter([x],[y],s=55,color=blue if r['args']['state_credit'] else orange,label=label)
-            ax.annotate(f'{label}\n{y:.2f}%, {x:.3f}GF', (x,y),xytext=(4,8),textcoords='offset points',fontsize=8)
+            ax.annotate(f'{label}\n{y:.2f}%, {x:.3f}GF', (x,y),xytext=(0,15 if r['args']['state_credit'] else -27),textcoords='offset points',ha='center',fontsize=8)
         ax.set_xlabel('Whole fitting work (GFLOPs) ↓');ax.set_ylabel('Development accuracy (%) ↑')
         ax.set_ylim(0,110);ax.margins(x=.4);f.tight_layout();save(f,'state_credit_quality_work')
     learning=tasks.get('language_learning_audit')
@@ -2664,6 +2672,18 @@ def blocks(M, tasks, ev):
             activity.append(['Ours: baseline' if not a['state_credit'] else 'Ours: write credit',
                 f'{a["fit_targets"]}/{a["dev_targets"]}/{a["epochs"]}',f'{r["parameters"]:,}',
                 str(w['available_receivers']),f'{w["selected_updates_per_event"]}/{w["key_scores_per_event"]}'])
+        credit_scope=''
+        parent=next((r for r in credited if r['args']['state_credit']==0),None)
+        teacher=next((r for r in credited if r['args']['state_credit']==1),None)
+        settings=lambda r:{k:v for k,v in r['args'].items() if k not in ('tag','state_credit')}
+        if parent and teacher and settings(parent)==settings(teacher) and parent['data_sha256']==teacher['data_sha256']:
+            gain=teacher['final']['dev']['accuracy']-parent['final']['dev']['accuracy']
+            nll_gain=parent['final']['dev']['nll']-teacher['final']['dev']['nll']
+            ratio=teacher['work']['total_training_unit_special_flops']/parent['work']['total_training_unit_special_flops']
+            passed=gain>=.05 and nll_gain>=.02 and ratio<=2
+            credit_scope=(f'Matched gains: {100*gain:.2f} percentage points / {nll_gain:.5f} NLL, '
+                f'at {ratio:.3f}× fitting work. The predeclared larger-fit gate '
+                f'(5 points/.02 NLL/at most2× work) {"passes" if passed else "fails"}. ')
         pages.append([('h1','Appendix B. Addressed-state write credit'),
             ('p','Completed integrated pilots only: private S4/P0, eight blocks, two independent heads, d8/pool2, '
              '128 fitting queries per pass/four passes,256 development queries, seed6. Both retain hard temporal '
@@ -2676,7 +2696,7 @@ def blocks(M, tasks, ev):
              'Special functions have unit weight beside arithmetic; integer discovery/traffic/energy remain separate. '
              'Training-only auxiliary state views and whole-process RSS are recorded in each result. '
              'Numerical/optimizer prerequisites and accounting smokes are excluded from benchmark plots. '
-             'This reuses exploratory development populations; independent seeds and fresh confirmation remain required.')])
+             +credit_scope+'This reuses exploratory development populations; independent seeds and fresh confirmation remain required.')])
     learning=tasks.get('language_learning_audit')
     if learning:
         c=learning['composition_gradient'];rows=[]
@@ -2702,6 +2722,29 @@ def blocks(M, tasks, ev):
              'The64-character history is not uniformly better than16 on this slice; useful long-range/semantic features remain open. '
              f'All replays/backwards are counted; arithmetic is uninstrumented. Wall{learning["wall_s"]:.2f}s, '
              f'peakRSS{learning["max_rss_kb"]/1024:.1f}MiB. See experiments/LANGUAGE_LEARNING_DIAGNOSIS_20261002.md.')])
+    horizon=tasks.get('language_credit_horizon')
+    if horizon:
+        values=[[str(r['credit_targets']),f'{r["prediction_bpc"]:.6f}',f'{r["gradient_norm"]:.4f}',
+            str(r['graph_input_tokens']),str(r['forward_input_tokens'])] for r in horizon['horizons']]
+        contrasts=[[f'{r["short"]} versus {r["long"]}',f'{r["whole_model"]["difference_norm"]:.4f}',
+            f'{100*r["whole_model"]["relative_difference_to_long"]:.2f}',f'{r["whole_model"]["cosine_similarity"]:.4f}']
+            for r in horizon['comparisons']]
+        pages.append([('h1','Appendix B. Credit horizon with fixed context'),
+            ('p','Completed frozen native8K/H2/d16/depth8 diagnostic. All three arms retain the same128-token '
+             'development context, score the same last16 targets and receive identical per-position race noise. '
+             'Only graph reach changes:16,32 or64 tokens. Predictions match exactly; the gradient changes, '
+             'separating retained information from the credit used to learn how to retain it.'),
+            ('table',(['Graph horizon','Slice bpc','Gradient norm','Graph tokens','Replay tokens'],values,[35,36,36,33,34])),
+            ('table',(['Short/long credit','Difference norm','Relative difference %','Gradient cosine'],contrasts,[42,43,48,41])),
+            ('p','The16-versus64 gradient difference has norm30.89% of the64-token gradient, with cosine0.9570. '
+             'The32-versus64 difference is15.15%. Every layer receives credit, and short-credit norms can be '
+             'larger because omitted contributions can cancel retained ones. This is evidence of material '
+             'truncation effects on this probe; it does not establish that increasing the horizon improves fitting quality.'),
+            ('small',f'Frozen weights; zero optimizer steps and no official-test access. One16-target slice,384 replay '
+             f'tokens,112 graph tokens,3 backwards. Wall{horizon["wall_s"]:.2f}s, peakRSS{horizon["max_rss_kb"]/1024:.1f}MiB. '
+             'Arithmetic is uninstrumented. Native hard-route credit is a surrogate;64 tokens is a comparison, '
+             'not an all-history unbiased reference. Relative difference divides the norm of the gradient difference '
+             'by the longer-credit gradient norm, not a percentage of predictive quality or retained features.')])
     confirmed=tasks.get('tabular_confirmation',[])
     labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
     order=list(labels)

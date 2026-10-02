@@ -429,3 +429,34 @@ native8K horizon audit. Three arms retain identical128-token context, identical
 changes.384 forward tokens,112 graph tokens,3 backwards, no optimizer. This
 measures omitted surrogate credit, not proof a longer fit helps. Prepared, not
 completed; no core substitution, new fit or scaling.
+
+## Completed local chain, 2 October, 03:06 UTC
+
+All six recovery jobs, common-unit report publication, all three full-depth
+repair optimizer variants and the frozen horizon diagnostic complete under
+serial guards. No current local trainer. Teacher pilot55.078125%/.977812493
+versus parent54.296875%/.978725879; fitting.277294/.265264GFLOPs; ratio1.04535.
+The admission gate fails (.78125point/.000913NLL versus required5points/.02);
+no automatic larger write-teacher fit. Completed results/negative findings
+are preserved and committed on main.
+
+Repair optimizer contracts:13.678s/421616KiB, exact next-update recovery for
+both/message-only/gate-only full native H2/d16/depth8. Horizon audit11.075s/
+530424KiB: identical predictions for identical context/targets/noise;16vs64
+gradient relative difference30.887% and cosine.957,32vs64 difference15.145%.
+Zero optimizer steps in this audit; not improved fit-quality evidence. The
+missing optimizer prerequisite is resolved. Counts/escape repair fits remain
+owned by the other thread and require one-job queues plus measured accounting
+smokes. Next informative credit experiment uses identical target/update
+budgets and varying graph reach in the integrated model, after bounded
+resource calibration; no dense substitution or new long fit is admitted here.
+Native timing checkpoint recovery remains deferred; AWS owns large dense
+comparisons and event confirmations. See diagnosis for mechanism gaps and
+THEORY§389.1 corrections. Preserve stashes and existing results.
+
+Final publication check:88-page report includes completed pair/gate decision
+and the frozen horizon ledger;10 publication regressions pass, no orphan or
+out-of-bounds PDF text. All three supervisor lifecycles are completed, tmux
+exited normally, no local numerical job remains. Model sources stayed frozen
+through execution; completed findings are committed locally on main. Remote
+sync is handled by the external publisher; this session did not push via SSH.

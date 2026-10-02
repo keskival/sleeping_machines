@@ -160,3 +160,31 @@ before any longer fit; do not silently convert this into dense all-history
 training. Then use equal-local-n-gram long-range tasks to measure predictive
 benefit, retaining addressed writes, races and unrealized-route credit. These
 are proposed controlled diagnostics, not completed evidence or new queued fits.
+
+## Completed credit-horizon audit and mitigation contracts, 03:05 UTC
+
+`results/diagnostics/local_language_credit_horizon_20261002T030100Z.json`
+completes in11.075s /530424KiB. The native8K checkpoint's predictions match
+exactly across16/32/64 graph horizons for the same128-token context and16-target
+loss suffix.16 versus64 gradient difference norm is30.887% of the64-token
+gradient (cosine.956998);32 versus64 is15.145% (cosine.988989). All layers
+receive gradients. Norms7.083/6.379/6.664 show why truncation should not be
+interpreted simply as reducing gradient magnitude: omitted terms may cancel
+others. This diagnoses a real credit-horizon effect on one frozen slice, not
+proof of improved fitting quality, semantics or unbiased route credit. No
+optimizer/weight change,384 forward tokens,112 graph tokens,3 backwards.
+
+Full native H2/d16/depth8 count-repair contracts pass in13.678s /421616KiB for
+CountMessage+EscapeGate, message alone and gate alone: exact zero nesting,
+matching parent gradients, all head-query and enabled repair gradients, and
+bitwise recovery of the next actual Adam update and persistent count position.
+Source: `results/diagnostics/local_credit_followthrough_20261002T025250Z_contracts.json`.
+This removes the missing recovery prerequisite; fitting still needs its own
+accounting smoke and frozen one-job queue. The other thread owns those fits.
+
+The integrated addressed-write comparison also completes:54.296875%/.978725879
+versus55.078125%/.977812493, at.265264 versus.277294 whole-fitGFLOPs. The
+.78125-point accuracy gain/.000913NLL gain with1.04535× work fails the
+predeclared5-point/.02NLL/≤2× gate. Do not scale this variant automatically.
+Historical stronger timing/shared-map results and the core thesis remain;
+this small write-teacher variant has not established worthwhile improvement.
