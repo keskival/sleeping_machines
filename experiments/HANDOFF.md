@@ -1926,3 +1926,16 @@ allocation headroom and is NOT deployable credit/work evidence.64tree fixed
 predictor and all cases saved. Next bounded allocation question is distinct
 without-replacement weighted selection with EXACT inclusion probabilities;
 never use naive1/(kp) there. No long fit admitted from the failedk2 screen.
+
+## Fresh weighted-distinct replay priority evidence — 2 October
+
+FIT64..95,seeds7/8, frozen train0..31 predictor, legal weightedWITHOUTreplacement
+k3 with exact inclusion probabilities. Conditional scorevariance .768144/
+.693763×uniformk4, positive23.2%/30.6% reductions versus uniformk3 1.416667×.
+Do preserve these supported gains. Combinedgate FAIL: actual parameter cases
+.600428/4.011873(seed7) and.639390/1.009399(seed8). Exact mean/variance/uniform
+contracts pass; inclusion .742/.747ms/prefix, other discovery/tree/VJP costs
+paid unknown. Diagnostic40lanes/prefix, NOT proposed6vs8lane execution.
+No integratedlearningfit admitted. Next parameter-targeted priority diagnostic
+runs underguard, TRAIN0..31 trueparameter route norms, NEW FIT96..127 confirmation,
+samefeature/predictor settings/proposal/gates. Main replay quality ownedelsewhere.

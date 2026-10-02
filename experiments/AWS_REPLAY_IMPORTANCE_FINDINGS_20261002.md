@@ -32,3 +32,26 @@ It needs EVERY expensive replay utility, so this is a mathematical lower bound
 showing remaining allocation headroom, not a deployable advantage. Do not report
 its numbers as reduced-work training. Saved models/proposals/cases retained.
 Conditional score-space scope only, no parameter covariance/quality claim.
+
+## Three distinct weighted sites: fresh FIT score gains, parameter gate fails
+
+Prespecified fresh critic-heldout FIT64..95, frozen predictor trained0..31.
+Sequential weighted WITHOUTreplacement, exact enumerated marginal/pair
+probabilities, correction1/inclusion. Same positive90/10proposal. Exhaustive
+mean/shared-vector variance/uniform nesting contract passes. Six proposed lanes
+versus eight baseline; diagnostic actually enumerates40lanes/prefix.
+
+| Seed | k3 weighted / uniform k4 score variance | Uniform k3 / k4 | Parameter index64 ratio | Parameter index65 ratio |
+| --- | --- | --- | --- | --- |
+| 7 | .768144 | 1.416667 | .600428 | 4.011873 |
+| 8 | .693763 | 1.416667 | .639390 | 1.009399 |
+
+Positive23.19%/30.62% score variance reductions on fresh prefixes are supported;
+retain them. Strict combined nomination FAILS due parameter cases. This is
+conditional score/route variance, not quality or supremacy. Labels have been
+seen by producers; only priority supervision is held out. Exact inclusion
+computation averages .742/.747ms/prefix; tree/discovery/VJP costs additional.
+3.578s/518380KiB,2560actual diagnostic shadow lanes and80confirmationVJPs.
+No unchanged integratedfit. Next distinct hypothesis directly predicts
+parameter route norm on TRAIN instead of score norm; freezes before another
+fresh critic-heldout block, with the SAME stringent gate.

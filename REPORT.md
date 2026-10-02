@@ -3004,3 +3004,14 @@ Training-only ordinal replay priorities also fail: k2/plaink4 conditional
 score-MSE2.074656/3.053016(seeds7/8). Positivefloor,correct1/(kp) importance
 weights and exhaustive contracts pass. With-replacementproposal vswithout-
 replacementbaseline explicit. No quality or reduced-workfit claim.
+
+## Fresh replay allocation signal, with parameter failure retained
+
+Three learned weighted distinct sites on fresh FIT64..95 reduce conditional
+score variance23.2%/30.6% versus four uniform sites (seeds7/8); uniformthree
+would increase variance41.7%. Exact WITHOUTreplacement inclusion weights and
+numerical mean/variance contracts pass. Combined nomination still FAILS:
+shared-parameter ratios.600428/4.011873 and.639390/1.009399 on fixed examples.
+Six proposedshadowlanes vs eight baseline is unexecuted projected allocation,
+NOT the actual all-target diagnostic cost. No quality/supremacy or unchanged
+learningfit claim. Full cases/costs: AWS_REPLAY_IMPORTANCE_FINDINGS_20261002.md.
