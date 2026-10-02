@@ -30,7 +30,9 @@ timing jumps and uncorrected route teachers remain explicit learning gaps.
 No numerical job is left active after the completed diagnostic. Main branch,
 three stashes preserved; one-thread guards and8GiB host floor retained. No
 new local dense training or official-test read. Other-host capacity ladder and
-AWS assignments retained. Variance report addition is prepared pending render.
+AWS assignments retained. Variance report addition completed under the guard
+at17:54:34; publication175400Z passes PDF text bounds/orphans and git diff
+checks.125-page canonical report preserves all pilots and diagnostic scopes.
 
 ## Native DVS credit diagnosis and bounded correction, 2 October17:40 UTC
 
