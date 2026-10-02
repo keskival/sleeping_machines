@@ -549,3 +549,21 @@ boundary. (P391c) Taps do not solve induction-64 (within .3 bits of the native c
 P390d (KV solves induction) holds, the integrated receiver combines taps and race retrieval. Next tests are
 then text at ≥ 1M characters against the minimal-core count composition, and sparse forward credit to remove
 the chunk limit.
+
+**§390 addendum: the native language core has almost no addressed capacity.** For language the native
+receiver has one source address (one conversation stream). Every token therefore races the same
+`pool = 2` units per head per layer, and total persistent state is depth × heads × pool × payload =
+8 × 2 × 2 × 16 = 512 floats. The thesis's capacity beyond activity, many addressed states of which
+few are touched per event, is not realized in this configuration. Count tables realize it trivially:
+thousands of context addresses, five touched per target. That explains why counts dominate and why a
+minimal core loses nothing (§389 attribution). The earlier receiver/KV models address unit pools by
+token identity (`vocabulary` pools per head and layer); the native adapter dropped that to keep source
+IDs non-semantic.
+
+Repair, consistent with §§382–383: address persistent units by a **learned key of recent context**
+(a hashed or race-selected key over the suffix), so state grows with distinct contexts while each event
+updates O(1) addresses. Values stay learned vectors, or carry sufficient statistics where exact (§383). This
+is the learned generalization of the count table, and the place where deep features could beat it: keys
+that pool contexts by predictive similarity (§382) give generalization that exact-string tables cannot.
+It is a substantive change to the native receiver. It needs a nested contract (one address reproduces the
+current model) and an integrated fit against the minimal-core count composition before any long run.
