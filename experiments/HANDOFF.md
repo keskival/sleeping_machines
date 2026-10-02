@@ -1310,3 +1310,16 @@ remain charged/open. Next checkpoint control should separate payload-only
 versus actual-write interventions, then a separately named integrated teacher
 comparison with zero-added-credit nesting and recovery/accounting contracts.
 Current split/shared/protected battery remains frozen and prioritized.
+
+
+## Split-event completion and write decomposition — 2 October, 00:52 UTC
+
+All33 split stages completed/pushed. Quantitative common-unit table and scope:
+`AWS_SPLIT_EVENT_FINDINGS_20261002.md`. Paired observed95.31% versus rank50%;
+shared S16 order75.39%, with embedding confound and retention tradeoffs retained.
+Guarded factorial audit completed7.107s,399708KiB; weights/RNG preserved.
+Persistent commit effects dominate delivered-value residual in these12 fixed probes;
+no expected-gradient claim. Saved unique diagnostic JSON is preserved.
+Next queued worker: prepared banknote confirmation protocol, three CPU slots,
+unchanged integrated R0, reserved holdout, stronger controls. Event state-aware
+credit and replication remain priorities; no architecture substitution yet.
