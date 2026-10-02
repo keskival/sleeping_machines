@@ -1323,3 +1323,21 @@ no expected-gradient claim. Saved unique diagnostic JSON is preserved.
 Next queued worker: prepared banknote confirmation protocol, three CPU slots,
 unchanged integrated R0, reserved holdout, stronger controls. Event state-aware
 credit and replication remain priorities; no architecture substitution yet.
+
+
+## Autonomous follow-through prepared — 2 October, 00:58 UTC
+
+Banknote workerPID770997 active; contracts/all accounting smokes passed.
+Next frozen integrated queue: `gym/plans/aws_event_replication_20261002T005408Z/manifest.json`,
+eight pilots/24 stages, matched seeds7/8 timing observed/rank and S16 shared
+order P0/P2. Same fit/dev populations; selected after seed6, not confirmation.
+Protocol `AWS_EVENT_REPLICATION.md`. Supervisor
+`scripts/run_aws_confirmation_then_replication.py` waits for that banknote
+process, requires complete summary, runs/publishes prespecified paired analysis,
+then invokes the existing guarded3-slot worker. Failures stop for review.
+Tmux session `aws-confirmation-then-replication-20261002T005408Z`; log
+`queue/aws_event_replication_20261002T005408Z.out`. No overlapping host worker.
+Additional theory `theory/aws_20261002_joint_credit_variance.md` derives
+conditional score variance and optimal prefix baseline; arithmetic checked.
+State-aware integrated teacher remains unimplemented; require zero-credit
+nesting, joint state/time contracts, variance and complete work accounting.
