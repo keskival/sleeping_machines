@@ -46,3 +46,33 @@ def test_time_blind_tables_are_near_chance():
     for row in fit:
         by_after[J.blind_features(row)[2]].append(row[-1].target)
     assert all(abs(np.mean(v) - .5) < .07 for v in by_after.values() if len(v) > 100)
+
+
+def test_native_joint_predict_is_causal_and_fast_path_matches_reference():
+    import torch
+    import joint_event_language_benchmark as B
+    from sleeping_machines.addressed_event_heads import AddressedEventHeads
+    from sleeping_machines.fast_native_core import fast_class
+    row = J.episodes(4, 9)[0]
+    torch.manual_seed(0)
+    ref = AddressedEventHeads(sources=1, content_dim=J.WIDTH, classes=2, payload=4, depth=2, pool=2, heads=2).double()
+    fast = fast_class(AddressedEventHeads)(sources=1, content_dim=J.WIDTH, classes=2, payload=4, depth=2, pool=2, heads=2).double()
+    fast.load_state_dict(ref.state_dict())
+    outs = []
+    for m in (ref, fast):
+        m.train(); m.zero_grad()
+        with torch.random.fork_rng():
+            torch.manual_seed(5); z, y, _ = B.predict(m, row)
+        torch.nn.functional.cross_entropy(z, y).backward(); outs.append(z.detach())
+        assert m._fast_layers is None if m is fast else True
+    torch.testing.assert_close(outs[0], outs[1], rtol=0, atol=1e-11)
+    for a, b in zip(ref.parameters(), fast.parameters()):
+        if a.grad is not None:
+            torch.testing.assert_close(b.grad, a.grad, rtol=1e-9, atol=1e-11)
+    # the query output cannot depend on the label: flipping the target leaves inputs unchanged
+    flipped = row[:-1] + [J.Event(0, row[-1].time, row[-1].mark, 1 - row[-1].target)]
+    ref.eval()
+    with torch.no_grad(), torch.random.fork_rng():
+        torch.manual_seed(5); z1, _, _ = B.predict(ref, row)
+        torch.manual_seed(5); z2, _, _ = B.predict(ref, flipped)
+    assert torch.equal(z1, z2)
