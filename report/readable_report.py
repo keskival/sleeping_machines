@@ -3339,13 +3339,11 @@ def blocks(M, tasks, ev):
          ['Deep learned context','3.121 development bpc; sparse six-block / 32K fit; eight-block models also train','Matched-quality work and capacity scaling'],
          ['Auditory events','79.69% on 512 private development utterances; selected temporal encoder','Aligned official-test real-stream comparison'],
         ],[45,77,52])),
-        ('small','Joint integration is a research target. Existing results use separately trained task-specific variants; '
-         'the language candidate has 27 character pools. Shared-weight multimodal learning, camera advantages '
-         'and robot reliability need dedicated benchmarks. Sparse conditional routing also motivates tabular '
-         'prediction: paired delays can represent feature thresholds (theory §323). Preserve feature IDs '
-         'and avoid invented row order; trees and modern tabular Transformers remain controls. '
-         'The banknote screen gives an exploratory quality lead over the original boosted-tree control; '
-         'stronger-control confirmation is underway. Broad tabular superiority remains unestablished.'),
+        ('small','Joint multimodal learning and robot reliability remain research targets. Existing results use '
+         'separately trained variants; native language uses 27 character pools. Sparse routing motivates tabular '
+         'prediction: paired delays can represent feature thresholds (theory §323). Preserve feature IDs and '
+         'avoid invented row order. Trees and tabular Transformers remain controls. The banknote screen leads '
+         'the original trees; broader superiority requires the stronger-control confirmation.'),
     ]
     investment_page=[
         ('h1','The research upside: five routes to useful advantage'),
