@@ -1,5 +1,19 @@
 # Local host: current research continuation
 
+## Deep-feature program (host curie), 2 October, 07:55 UTC
+
+Attribution (Theory §389): every count-composition gain so far is learned count smoothing. Minimal cores
+match or beat full ones (native 8K gate: minimal 2.588 vs full 2.601). Diagnosis (§390): sample
+complexity, credit reach (depth·k path; 16-event truncation), a missing race-retrieval mechanism, and a
+**single-address native language core (512 floats of persistent state)**. New nested, contract-tested
+options: learned dilated delay taps (§391, sleeping_machines/dilated_delay_taps.py) and context-addressed
+outcome memory (§390 addendum, sleeping_machines/context_addressed_memory.py). Queue
+curie_long_range_core_20261002T072000Z (tmux `curie_long_range`) waits for `curie_count_chain` (32K scalar,
+32K minimal, 8K 64-credit pair). Ladder: synthetic lag/induction, counts at chance by construction; native,
+tapped and KV arms at 16/64 credit; text 8K native vs addressed in the same loop. Predictions P390a–d and
+P391a–c are in theory 59. Next: combine taps + retrieval + addressed memory per the outcomes; sparse
+forward credit contract; text at >= 1M characters against the minimal-core count composition.
+
 ## §389 ablation result (host curie), 2 October, 03:25 UTC
 
 Native 2K: scalar 2.734, message 2.744, gate **2.695** (+0.5% work), both 2.703. Promoted candidate:
