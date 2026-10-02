@@ -1,0 +1,41 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_dvs_calibration_20261002T141400Z_data",
+      "stage": "diagnostic",
+      "queue": "experiments/queue/local_dvs_calibration_20261002T141400Z_data.txt",
+      "queue_sha256": "df6c2411369a472731f1bc717b30f19e444025f3e5acfd7024593e2cc87c7ab0",
+      "result": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+      "timeout_s": 600,
+      "requires": []
+    },
+    {
+      "tag": "local_dvs_calibration_20261002T141400Z_controls",
+      "stage": "diagnostic",
+      "queue": "experiments/queue/local_dvs_calibration_20261002T141400Z_controls.txt",
+      "queue_sha256": "2fe9ca8e29ad653240c3d93066e4010eca369dbc1b867174608b945a7f0bb7cd",
+      "result": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+      "timeout_s": 600,
+      "requires": [
+        "local_dvs_calibration_20261002T141400Z_data"
+      ]
+    }
+  ],
+  "references": [],
+  "source_sha256": {
+    "experiments/dvs_practical_calibration.py": "01e019e3f06d50f7acbb4b65b06e7a0fd5c5bfbebcd1cce587f4569b2c634eb4",
+    "experiments/e120_dvs_adapter.py": "c5e9a7d89b9d56ba682c3384a3b57e8bbe03f1f15f12b1cd5ac3aac76ba67345",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "sleeping_machines/event_query.py": "43dccd3a40a82f980e74eb8a5e58d05a2bd8a6dc1f2dc37b626b9c219a951ee5",
+    "scripts/run_addressed_memory_pair.py": "7125ea4992322ed4c410f99b86ca4b0d8ffa2ed8cd6450ac9296a7175b802e62"
+  },
+  "scope": "Train-file-only subject-disjoint DVS strong calibration; raw packet adapter, preserved data/models and every fixed grid cell; no official-test access or integrated superiority assumption."
+}
