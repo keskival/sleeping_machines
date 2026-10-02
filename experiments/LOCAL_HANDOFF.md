@@ -388,9 +388,11 @@ All six saved carrier and eight native layers receive gradients. On32 fixed dev
 positions, removing native history older than16 changes predictions by0.02252
 nats KL; useful accuracy beyond16 is not established. Count-composed carrier
 logit credit matches the escape-responsibility identity within1.86e-9. First
-five clock gradients are present at initialization, but fitted composed clock
-displacements remain zero in saved JSON; their checkpoints are unavailable
-locally, so the specific fitting trajectory remains unresolved. No optimizer
+five clock gradients are present at initialization. Correction02:59 UTC: the
+initial handoff misread fitted composed clock displacements as zero; actual
+diagnostics show nonzero layers1–5 at all three widths, and only the unused
+final clock is unchanged. There is no supported clock-learning discrepancy.
+Their unavailable checkpoints still limit new base-replacement interventions. No optimizer
 was changed by this audit. See LANGUAGE_LEARNING_DIAGNOSIS_20261002.md.
 
 The report now distinguishes context dependence, gradient reach and predictive

@@ -118,12 +118,21 @@ the audit does not establish a useful benefit beyond16, semantic features or
 full-development quality. Carrier slice1/4/8/16/64 losses are4.463787/2.076002/
 1.715860/1.732411/1.761144. Longer memory is not uniformly beneficial here either.
 
-An unresolved narrower question remains: the saved composed-carrier JSONs
-report zero clock-map displacement at every layer, while the old carrier has
-nonzero displacement in its first five clocks and this initialization audit
-shows their gradients reach. The composed fitted checkpoint is needed to
-inspect its training trajectory and verify that diagnostic. These files are
-absent locally; do not infer a fit regression or invent a replay result.
+Correction to the initial clock interpretation (02:59 UTC): the earlier text
+incorrectly said every fitted composed clock had zero displacement. The saved
+JSONs' actual `diagnostics[].parameter_change_norms["clock.weight"]` show:
+
+| Composed width | Layers1–5 clock-weight displacement norms | Layer6 |
+| --- | --- | --- |
+|32|1.1950,1.1041,.9710,.9678,1.2109|0|
+|128|1.8651,1.8830,1.7446,1.7413,1.8982|0|
+|256|2.0674,2.1272,2.2207,2.1328,2.1369|0|
+
+Only the final clock is unchanged, consistent with its unused arrival time.
+This removes the purported clock-learning discrepancy. The missing fitted
+checkpoints still prevent new base-replacement interventions here, but the
+JSONs themselves already establish clock-parameter movement. As with other
+parameter movement, this does not prove useful representation depth.
 
 Contemporary strength0 integrated order finishes at54.296875%/.978725879,
 matching the earlier AWS parent54.296875%/.978725864. Its four development
@@ -131,3 +140,23 @@ epochs match the saved trajectory within floating-point tolerance. That is
 positive regression evidence for this unchanged event-model/optimizer path,
 not evidence of learned language abstractions. The guarded strength1 fit
 started02:38:06 after the language audit; it remains pending.
+
+## Credit-horizon theory and the next discriminating test
+
+Truncation cuts parameter credit through old state even when that state is
+retained for prediction. It introduces gradient bias; adaptive horizons and
+compensated stochastic truncation are established ways to study that tradeoff
+([Aicher, Foti and Fox,2020](https://proceedings.mlr.press/v115/aicher20a.html),
+[Tallec and Ollivier,2017](https://arxiv.org/abs/1705.08209)). Neither result
+proves our current short horizon is the measured bottleneck. Learnable local
+updates can still learn occupancy schedules or reuse carried information.
+
+For this substrate, compare warmed persistent-state gradients at16/32/64
+credit targets with identical target suffixes and race noise. Separate extra
+context from extra gradient reach: replay the same prefix without gradients
+for all arms, enable the graph only for the chosen credit horizon, and measure
+the gradient norm/direction and truncated-vs-longer differences. Bound cost
+before any longer fit; do not silently convert this into dense all-history
+training. Then use equal-local-n-gram long-range tasks to measure predictive
+benefit, retaining addressed writes, races and unrealized-route credit. These
+are proposed controlled diagnostics, not completed evidence or new queued fits.
