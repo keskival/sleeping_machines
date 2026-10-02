@@ -1,5 +1,37 @@
 # Local host: current research continuation
 
+## Git conflict repaired; producer-held check agrees, 2 October21:57 UTC
+
+Autostash REPORT.md conflict after shared-main update is resolved by retaining
+both the upstream AWS appendix and newly generated local diagnostic sections.
+No active rebase state existed; index conflict cleared without reset/skip or
+stash deletion. Four autostashes preserved. New PDF144pages and publication
+214300Z complete with bounds/orphan checks; REPORT.md additionally retains the
+upstream manually appended AWS evidence. Future renderer must retain those
+appendices too. Existing frozen numerical/report publication source hashes
+and all result files remain intact.
+
+Producer-held affine head check215100Z completes both fixed-four-pass native
+pilot encoders. Conditional decoder CV and producer-unseen728-FIT selection
+BOTH choose nominal final C.1 in seeds6/7. There is no demonstrated selection
+failure difference here. Final heads refit on all984 features: seed6 54.1667%/
+1.222593, seed7 53.6458%/1.177975. These are unequal-readout-data comparisons
+against256-only pilots, not native advantage or confirmation of a new joint
+training repair. Mean L2 is kept invariant across folds/256/984; probabilities
+port into the unchanged affine native head, eight winner-only serial checks
+and all192 batched checks agree, all nonhead parameters preserved. Four
+contracts include the constructed confidence-selection counterexample; it
+is a possibility theorem, not evidence it caused this benchmark failure.
+Both candidates/selections and all solver/core/verification costs are saved.
+
+Theoretical/calibration evidence does not yet justify another guessed global
+normalization or head regularizer fit. Next core-access candidate needs a
+bounded integrated construction and controls for regularization versus extra
+message information. Preserve sparse temporal mechanisms, actual writes and
+correct first-time law; learned reception windows remain a concrete mechanism
+candidate, with only primitive79 contracts presently established. Other-host
+AWS coarse/readout/quadratic outcomes stay preserved and separately owned.
+
 ## State-access signal and regularization qualification, 2 October21:42 UTC
 
 Persistent-state probe213300Z completes38.100s/459264KiB. Frozen initial query

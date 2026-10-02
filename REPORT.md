@@ -1989,6 +1989,68 @@ This is a frozen diagnostic, not an architectural substitution or practical adva
 
 Theory75 states admission and scope. Selected initial/fitted readout artifacts, all fitting-CV cells, native/checkpoint hashes, probability arrays, wall and RSS are saved.
 
+## Appendix B. Shared fitting noise: covariance hypothesis fails its gate
+
+| Saved seed | All variance ratio | Route ratio | Time ratio | Message ratio | Gate |
+| --- | --- | --- | --- | --- | --- |
+| 6 | 0.99787 | 1.00166 | 1.04860 | 0.99099 | FAIL |
+| 7 | 1.00178 | 0.99119 | 0.97407 | 0.99542 | FAIL |
+
+Four fixed fitting prefixes per saved native seed6/7, 32 independent whole-history draws and zero optimizer updates. Each clip gradient is recorded under the same stream. Shared-batch trace covariance is measured; independent-coupling covariance is estimated from those same marginal samples. Their difference equals the cross-clip covariance sum.
+
+Both route-map ratios miss the declared 1.20 admission gate. Proposed fresh_shared/ fresh_independent fits are stopped. Neither model shows a large cross-clip covariance penalty on these prefixes. This is not a corpus-wide result or a test of repeated-noise adaptation across optimizer updates. Small-group variance ratios retain their finite-sample scope.
+
+Theory93 derives the effective-batch covariance law and separates per-window freshness from cross-row decorrelation. Independent noise need not help when cross-covariance is negative. Flipout is a primary-paper analogy about shared perturbation correlation, not an implementation or transferred quality guarantee for these event races.
+
+Two algebra contracts pass. Audit 56.443s/396.2MiB; 0.637545 known diagnostic GFLOPs est. Complete first-draw per-clip forward/backward traces times draws; reporting reductions separate. Frozen weights preserved. No training, official test or superiority claim.
+
+## Appendix B. Causal persistent-state access: positive probe, qualified cause
+
+| Frozen encoder | Feature access | Dimensions | Dev accuracy % | Dev NLL |
+| --- | --- | --- | --- | --- |
+| initial | Query | 32 | 57.81 | 1.1311 |
+| initial | Query+state | 176 | 63.54 | 0.8862 |
+| selected | Query | 32 | 67.19 | 0.9999 |
+| selected | Query+state | 176 | 71.35 | 0.8591 |
+
+| Encoder | Original fit GF est. | Fit MF / presentation | Core replay GF est. | Replay MF / prefix | Decoder/grid GF |
+| --- | --- | --- | --- | --- | --- |
+| initial | 0.000000 | 0.000000 | 1.735341 | 1.475630 | Unknown |
+| selected | 20.075193 | 2.550202 | 1.735341 | 1.475630 | Unknown |
+
+Same 984 fitting/192 development gestures. Augmentation adds all eight pre-query receiver memories, their ages at source query admission and occupancy flags to the actual 32-dimensional query feature. No future or target-dependent feature. Three contracts reproduce serial state, original probabilities and saved query-probe probabilities while keeping every encoder parameter bitwise fixed. Nine-cell three-fold fitting-only head selection.
+
+Initial augmentation improves NLL by .244819; trained augmentation by .140774. Both pass the declared diagnostic access signal. The trained augmented probe reaches 71.35%/ .859084, versus original native 65.10%/.963161, compact prototype 66.67%/.902951 and strong full RBF 73.44%/.706478. Decoder/grid costs are unknown, so these are quality comparisons and diagnostic signals, not practical advantage.
+
+Important qualification from the completed partition controls: stronger query-only regularization alone reaches .889842; adding full state at that same C contributes only .030759 further NLL improvement. At the weaker C, full-state NLL worsens to 1.278955. Most apparent trained-state gain is therefore compatible with regularization rather than uniquely missing information. Early/later state partitions retain smaller gains.
+
+Theory94/95. Dense all-state probing is a diagnostic, not sparse inference or a new main architecture. Selected encoder saw all fitting labels and was dev-selected; decoder CV is not unbiased end-to-end validation. Known original fit uses 7,872 presentations; current two-pass core replay uses 1,176 prefixes. Solver/materialization/ traffic/energy and total probe fit/inference remain unmeasured rather than zero.
+
+## Appendix B. Retained payloads, clocks, layers and regularization
+
+![report/figures/local dvs state partition probe 20261002T214000Z learning.png](report/figures/report/figures/local_dvs_state_partition_probe_20261002T214000Z_learning.png.png)
+
+| Encoder | Added state/control | Dims | Accuracy % | NLL | Kind/C |
+| --- | --- | --- | --- | --- | --- |
+| initial | Payloads | 160 | 63.54 | 0.8862 | rbf/10.0 |
+| initial | Clocks | 48 | 55.21 | 1.1245 | rbf/10.0 |
+| initial | Layer0 | 104 | 66.15 | 0.9048 | rbf/10.0 |
+| initial | Layer1 | 104 | 64.58 | 0.9545 | rbf/10.0 |
+| initial | Query@state setting | 32 | 57.81 | 1.1311 | rbf/10.0 |
+| initial | State@query setting | 176 | 63.54 | 0.8862 | rbf/10.0 |
+| selected | Payloads | 160 | 71.35 | 0.8603 | linear/0.1 |
+| selected | Clocks | 48 | 67.71 | 1.0178 | linear/1.0 |
+| selected | Layer0 | 104 | 70.83 | 0.8383 | linear/0.1 |
+| selected | Layer1 | 104 | 69.79 | 0.8403 | linear/0.1 |
+| selected | Query@state setting | 32 | 67.19 | 0.8898 | linear/0.1 |
+| selected | State@query setting | 176 | 68.23 | 1.2790 | linear/1.0 |
+
+Four partitions retain the query: both payload layers, ages/occupancy only, layer0 state or layer1 state. Same nine-cell fitting-only decoder selection per partition, both initial and trained encoders. Two fixed configuration swaps per encoder test regularization without another grid or development selection.
+
+Trained payload .860321, layer0 .838315 and layer1 .840329; clocks-only 1.017809. The query C.1 control .889842 explains most full-state gain. These finite probe differences do not isolate a causal depth failure or population conditional information. All outcomes remain visible; core producers/routes were never retrained.
+
+Theory95. Cached features add zero CORE replay, not zero fitting work. Prior encoder fit/core replay retained; additional solver arithmetic unknown. Conditional folds share the label-trained encoder. Producer-held fitting examples are the next decoder-selection check. No official test or supremacy claim.
+
 ## Appendix B. Completed packet-scale clock comparison
 
 | Model | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
