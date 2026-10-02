@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_completed_stages_report_20261002T163900Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json",
+      "experiments/results/dvs_native/local_dvs_clock_full_20261002T153000Z.json",
+      "experiments/results/diagnostics/local_dvs_batched_smoke_admission_20261002T163600Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json": "0fb1ed5c20f921c8ff7496aa625a4a72c5f40355dde899c769d6c1788c79517f",
+    "experiments/results/dvs_native/local_dvs_clock_full_20261002T153000Z.json": "ddcfe5e39a95c37256d5e583ff7d1b371021b20022c658dc7c56e2103e355e9e",
+    "experiments/results/diagnostics/local_dvs_batched_smoke_admission_20261002T163600Z.json": "f0d064e3d37939c4ccfd262605b7cf1597c2ad3904d3ac509d852903475ff06f"
+  },
+  "pdf_pages": 121,
+  "wall_s": 21.375794781000877,
+  "max_rss_kb": 66728,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "d1f8a2951473a113ec95bd46f01a8de2331328c8dec4016786de5a99c2403fd3",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}

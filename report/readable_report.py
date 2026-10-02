@@ -165,6 +165,15 @@ def results():
             if hashlib.sha256((ROOT/r['args'][key]).read_bytes()).hexdigest()!=digest:
                 raise ValueError('Changed compact-kernel comparator')
         tasks['dvs_compact_controls'].append(r)
+    tasks['dvs_clock_completed']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'dvs_native').glob('local_dvs_clock_full_*Z.json'))]
+    tasks['dvs_batched_smoke_admission']=[]
+    for path in sorted((RES/'diagnostics').glob('local_dvs_batched_smoke_admission_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        for entry in r['rows']:
+            if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
+                raise ValueError('Changed batched smoke evidence')
+        tasks['dvs_batched_smoke_admission'].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3949,6 +3958,64 @@ def blocks(M, tasks, ev):
              'confirmation are separate questions. No official test was opened.'),
             ('small','Theory75 states admission and scope. Selected initial/fitted readout artifacts, '
              'all fitting-CV cells, native/checkpoint hashes, probability arrays, wall and RSS are saved.')])
+    for clock in tasks.get('dvs_clock_completed',[]):
+        comparison=next(r for r in tasks['dvs_practical_native']
+                        if clock['args']['controls'] in r['inputs'])
+        rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts').replace('native_temporal_p16_L2_H2_pool2_seed6','Ours original'),
+               f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
+               *['Unmeasured' if x[k] is None else f'{x[k]:.3f}' for k in
+                 ('whole_fit_gflops_estimate','fit_mflops_per_presentation_estimate','inference_mflops_per_target_estimate')]]
+              for x in comparison['common_unit_ledger']]
+        w=clock['work']
+        rows.append(['Ours packet-scale clock',f"{100*clock['final']['accuracy']:.2f}",f"{clock['final']['nll']:.4f}",
+                     f"{w['whole_fit_unit_special_flops_estimate']/1e9:.3f}",
+                     f"{w['fit_unit_special_flops_per_target_estimate']/1e6:.3f}",
+                     f"{w['inference_unit_special_flops_per_target_estimate']/1e6:.3f}"])
+        for compact in tasks['dvs_compact_controls']:
+            q=compact['selected_compact_development_quality']
+            rows.append(['Compact prototype33',f"{100*q['accuracy']:.2f}",f"{q['nll']:.4f}",
+                         'Unmeasured','Unmeasured','Unmeasured'])
+        pages.append([('h1','Appendix B. Completed packet-scale clock comparison'),
+            ('table',(['Model','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[48,23,23,26,27,26])),
+            ('p','Both native fits use984 gestures/eight fixed passes,7,872 presentations and496 updates; '
+             '192 subject-disjoint dev targets select pass8 by minimum NLL. Only initial decay rates and '
+             'rotation frequencies are scaled to the observed50ms packets. Temporal races, key/value '
+             'separation, sparse updates and counterfactual learning remain. Parameters15,523; '
+             'available receivers8; per-prefix168 key scores,84 selected updates,168 candidate values.'),
+            ('p',f"Clock fit wall{clock['wall_s']:.3f}s; peak RSS{clock['max_rss_kb']/1024:.1f}MiB. "
+             'Accuracy rises1.04points versus original while NLL worsens. Both trail the selected full '
+             'kernel and compact prototype in both quality measures. This initialization change does '
+             'not establish advantage; the original lower-NLL result and all control cells are retained.'),
+            ('small','Same units and native target denominators in every work column. Solver FLOPs remain '
+             'unmeasured; unequal solver policies and development tuning preclude iso-FLOP superiority. '
+             'Raw preprocessing, validation, checkpoints, traffic and energy remain separate. One seed; '
+             'no official-test access. Source: '+clock['args']['tag']+'.json; theory76.')])
+    for r in tasks.get('dvs_batched_smoke_admission',[]):
+        rows=[[x['credit'],f"{x['initial_fit_nll']:.4f}",f"{x['final_fit_nll']:.4f}",
+               f"{x['whole_fit_gflops']:.6f}",f"{x['fit_mflops_per_target']:.4f}",
+               f"{x['inference_mflops_per_prefix']:.4f}"] for x in r['rows']]
+        resources=[[x['credit'],f"{x['wall_s']:.3f}",f"{x['max_rss_kb']/1024:.1f}",
+                    str(x['window_size_counts']['16']),str(x['window_size_counts']['8'])] for x in r['rows']]
+        pages.append([('h1','Appendix B. Full and partial-window batched learning admission'),
+            ('table',(['Credit','Initial fit NLL','Selected fit NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[25,29,29,30,30,30])),
+            ('table',(['Credit','Workflow seconds','Peak RSS MiB','U16 updates','U8 updates'],resources,[35,40,38,30,30])),
+            ('p','Each arm uses24 fitting gestures/two fixed passes and8 development targets:48 target '
+             'presentations/four Adam updates. Both select pass2 and score25% dev accuracy; dev NLL '
+             '2.3115 local and2.3070 pairs. These tiny fixed smokes verify learning and resource readiness, '
+             'not prediction advantage. All optimizer stages have complete operator coverage. '
+             'Accounting includes candidate values, backward, normalization/clipping and Adam.'),
+            ('p','Same p16/L2/H2/pool2 integrated architecture:15,523 parameters,8 available receivers, '
+             '21 events per prefix,168 scored keys/84 selected state updates/168 candidate values, '
+             '720 persistent-state tensor bytes. Independent-clip batching passes forward/state and '
+             'every-parameter gradient equality plus actual interrupted model/Adam/cursor recovery.'),
+            ('p','Optional pair credit enumerates the actual final-query two-head outcome losses. '
+             'Its conditional risk and all derivatives match explicit enumeration; earlier routes '
+             'retain local surrogate credit. Inference still delivers two hard winners per layer. '
+             'No exact whole-core gradient or useful-depth claim follows. The bounded matched pilot '
+             'is next; stronger full-data controls are reported above and are not comparable tiny-fit controls.'),
+            ('small','One guarded one-thread job at a time; RSS watchdog and8GiB available-memory floor. '
+             'Theory77; completed admission record local_dvs_batched_smoke_admission_20261002T163600Z.json. '
+             'All negative full-fit results remain visible; no pending score fills an evidence table.')])
     for r in tasks.get('dvs_compact_controls',[]):
         groups={}
         for x in r['rows']:

@@ -2,6 +2,12 @@
 
 ## Full-window batching admission passed, 2 October16:35 UTC
 
+Completed report refreshed and validated:121pages, publication
+`results/diagnostics/local_dvs_completed_stages_report_20261002T163900Z.json`.
+Both original and clock-scaled full fits and both bounded batching smokes appear
+in the appendix with common work units, quality, data and activity; all old
+negative evidence and strong controls retained.
+
 Both unique guarded `local_dvs_batched_{local,pairs}_smoke_20261002T163400Z`
 fits completed,24fit/8dev/two fixed passes. Each has two U16 and two partial
 U8 updates,48 target presentations; every stage's operation accounting passes,
