@@ -74,3 +74,33 @@ def test_neural_base_gradient_is_escape_responsibility_times_cross_entropy_gradi
     r = float(e * q[y] / p)
     expected = r * (torch.nn.functional.one_hot(torch.tensor(y), C.A).double() - q.detach())
     assert torch.allclose(z.grad, expected, atol=1e-12)
+
+
+def test_scale_scorer_scores_every_order_like_a_dedicated_build():
+    """Regression: one high-order build must score lower orders with raw counts at their top level (THEORY §381)."""
+    import experiments.count_reference_scale as S
+    rng = np.random.default_rng(5)
+    x = rng.choice(4, 3000, p=[.5, .25, .15, .1]).astype(np.uint8)
+    dev = rng.choice(4, 400, p=[.5, .25, .15, .1]).astype(np.uint8)
+    for modified in (False, True):
+        tables = S.build(x, 4, modified)
+        for K in (1, 2, 4):
+            got = S.score(S.levels_for(tables, K), K, dev)['bpc']
+            own = S.score(S.levels_for(S.build(x, K, modified), K), K, dev)['bpc']
+            assert abs(got - own) < 1e-12
+
+
+def test_scale_scorer_agrees_with_reference_scorer_after_the_cold_prefix():
+    import experiments.count_reference_scale as S
+    rng = np.random.default_rng(6)
+    x = rng.choice(5, 4000, p=[.4, .3, .15, .1, .05]).astype(np.uint8)
+    dev = rng.choice(5, 300, p=[.4, .3, .15, .1, .05]).astype(np.uint8)
+    K = 3
+    t = C.Counts(K)
+    t.add_sequence(x.tolist())
+    kn = C.continuation_tables(x.tolist(), K)
+    d = dev.tolist()
+    ref = -sum(np.log2(C.predict(t, d[i - K:i], K, 'kn', .75, kn)[d[i]]) for i in range(K, len(d)))
+    full = S.score(S.levels_for(S.build(x, K, False), K), K, dev)['bpc'] * (len(d) - 1)
+    prefix = S.score(S.levels_for(S.build(x, K, False), K), K, dev[:K])['bpc'] * (K - 1)
+    assert abs(full - prefix - ref) < 1e-6

@@ -187,6 +187,15 @@ mechanism for the thesis's "capacity beyond activity" in learning work as well
 as inference work. It is a prediction for a learned base, not yet a measured
 training saving.
 
+*Order caveat.* These fractions depend strongly on the table order `K`. A
+small `e_h` means the composition *ignores* the learned base on that event.
+It does not mean a base using information beyond `K` characters could not
+help there. The table therefore uses each size's count-optimal order. If the
+learned model modulates the escape rate (a learned per-context discount, so
+it can override confident tables when longer context disagrees), the skip
+bounds apply to the learned escape instead. Quality and work then trade
+through `K` and that gate.
+
 ## 380. What this changes, and the integrated test it calls for
 
 **Diagnosis.** The persistent state of the integrated and native models is

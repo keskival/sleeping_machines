@@ -1,0 +1,2 @@
+# Large-data KN/modified-KN references + escape statistics on E64 test and shared dev (Theory 381). Host curie CPU. Replaces the stopped 013500Z build.
+curie_count_reference_scale_20261002T014500Z experiments/count_reference_scale.py --out experiments/results/count_reference/curie_count_reference_scale_20261002T014500Z.json

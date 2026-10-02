@@ -1,0 +1,3 @@
+# Large-data KN/modified-KN references + escape statistics on E64 test and shared dev (Theory 381). Host curie CPU.
+# curie_count_reference_scale_20261002T013500Z experiments/count_reference_scale.py --out experiments/results/count_reference/curie_count_reference_scale_20261002T013500Z.json
+# superseded: build bug (lower orders scored with continuation top level); stopped 01:24 UTC, no result written; see curie_count_reference_scale_20261002T014500Z
