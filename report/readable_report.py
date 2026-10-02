@@ -150,6 +150,21 @@ def results():
         tasks['dvs_practical_native'].append(r)
     tasks['dvs_practical_inference']=[r for path in sorted((RES/'diagnostics').glob('local_dvs_practical_inference_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
+    tasks['dvs_frozen_features']=[]
+    for path in sorted((RES/'diagnostics').glob('local_dvs_frozen_features_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')!='completed':continue
+        if hashlib.sha256((ROOT/r['args']['native']).read_bytes()).hexdigest()!=r['native_result_sha256']:
+            raise ValueError('Changed frozen-feature parent')
+        tasks['dvs_frozen_features'].append(r)
+    tasks['dvs_compact_controls']=[]
+    for path in sorted((RES/'diagnostics').glob('local_dvs_compact_controls_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')!='completed':continue
+        for key,digest in [('controls',r['controls_sha256']),('audit',r['inference_audit_sha256'])]:
+            if hashlib.sha256((ROOT/r['args'][key]).read_bytes()).hexdigest()!=digest:
+                raise ValueError('Changed compact-kernel comparator')
+        tasks['dvs_compact_controls'].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3906,6 +3921,65 @@ def blocks(M, tasks, ev):
             ('small','Subject-disjoint development evidence only. A quality/resource tradeoff here '
              'requires frozen independent confirmation before promotion. No test leakage, broad '
              'supremacy, useful-depth premium or dormant-capacity advantage is inferred from this audit.')])
+    for r in tasks.get('dvs_frozen_features',[]):
+        rows=[[x['encoder'],f"{100*x['original_development']['accuracy']:.2f}",
+            f"{100*x['frozen_decoder_development']['accuracy']:.2f}",f"{x['frozen_decoder_development']['nll']:.4f}",
+            x['fit_only_selected_decoder']['configuration']['kind'],
+            f"{x['replay_wall_s']:.3f}",f"{x['decoder_grid_wall_s']:.3f}"] for x in r['rows']]
+        pages.append([('h1','Appendix B. Real learned features versus the initial reservoir'),
+            ('table',(['Frozen encoder','Original accuracy %','Fresh-head accuracy %','Fresh-head NLL','Head','Replay seconds','Head grid seconds'],rows,[27,27,27,22,18,26,26])),
+            ('p','Both encoders expose the same32-dimensional query feature and use the same984 '
+             'fitting/192 development gestures and race draws. Every original prediction is reconstructed '
+             'exactly by its saved head; replay and new head fitting preserve every encoder parameter. '
+             'The initial encoder is the exact pre-fitting reservoir, not a separate tuned control.'),
+            ('p','Three linear C values and six RBF C/gamma cells are evaluated by3-fold fitting-only '
+             'decoder NLL. The selected head is then fitted once on all fitting features. No head '
+             'hyperparameter is selected on development. Scaling is fitting-fold only. Conditional '
+             'decoder CV is not unbiased end-to-end validation because the selected encoder already '
+             'saw all fitting labels during its original fit.'),
+            ('p','The fitted representation gives a better selected readout than the initial reservoir: '
+             '67.19% versus57.81%. This supports useful feature learning under this probe protocol. '
+             'Replacing the fitted head increases accuracy only2.08points and worsens NLL relative '
+             'to the original65.10%/.963161. The final decoder alone does not close the strong '
+             'raw-input control gap; failed finite heads also do not prove information is absent.'),
+            ('p','This is a frozen diagnostic, not an architectural substitution or practical advantage. '
+             'The selected encoder still pays its original20.075GFLOPs/1557.590s workflow, plus full '
+             'replay and every readout fit shown here. Solver arithmetic remains unmeasured. Useful '
+             'extra depth, semantic language features, whole-route gradient accuracy and independent '
+             'confirmation are separate questions. No official test was opened.'),
+            ('small','Theory75 states admission and scope. Selected initial/fitted readout artifacts, '
+             'all fitting-CV cells, native/checkpoint hashes, probability arrays, wall and RSS are saved.')])
+    for r in tasks.get('dvs_compact_controls',[]):
+        groups={}
+        for x in r['rows']:
+            key=(x['arm'].split('_m')[0],x['components'])
+            if key not in groups or x['final']['nll']<groups[key]['final']['nll']:groups[key]=x
+        rows=[[x['arm'],f"{100*x['final']['accuracy']:.2f}",f"{x['final']['nll']:.4f}",
+            f"{x['uncompressed_joblib_bytes']/1024:.1f}",str(x['within_native_storage_budget']),
+            f"{x['sequential_ms_per_prefix']:.3f}"] for x in groups.values()]
+        selected=next(x for x in r['rows'] if x['arm']==r['selected_within_budget_by_dev_nll'])
+        pages.append([('h1','Appendix B. Strong compact controls rule out an easy storage claim'),
+            ('table',(['Lowest-NLL cell / family size','Dev accuracy %','Dev NLL','Model KiB','In budget','CPU ms / prefix'],rows,[59,24,23,24,21,22])),
+            ('p',f"Native uncompressed saved-model budget{r['native_storage_budget_bytes']/1024:.1f}KiB. "
+             'The fixed72-cell grid uses random8/16/24/32 Nyström landmarks or1/2/3/4 learned '
+             'prototypes per class, three gamma scales and three logistic C values. Prototypes, '
+             'landmarks and normalization use fitting data only; each model includes its transform '
+             'in the same uncompressed joblib serialization. Every cell remains in the completed JSON.'),
+            ('p',f"Selected in-budget control {r['selected_within_budget_by_dev_nll']}: "
+             f"{100*selected['final']['accuracy']:.2f}%/{selected['final']['nll']:.4f}NLL, "
+             f"{selected['uncompressed_joblib_bytes']/1024:.1f}KiB, "
+             f"{selected['sequential_ms_per_prefix']:.3f}ms/prefix. This exceeds the original native "
+             '65.10%/.963161 while using less storage and far less CPU time. Thus the original '
+             'native result does not establish advantage even in this bounded-storage region.'),
+            ('p',f"The whole compact grid costs{r['wall_s']:.3f}s/{r['max_rss_kb']/1024:.1f}MiB peak RSS; "
+             f"common raw preprocessing still costs{r['preprocessing_wall_s']:.3f}s. Shared prototype "
+             'construction, kernel features, all fitting/tuning and scoring are paid in workflow wall. '
+             'Solver FLOPs are unknown, not zero. The table summarizes each family/size by its '
+             'minimum development NLL, with all gamma/C settings and probabilities retained.'),
+            ('small','Exploratory development calibration, not independent model confirmation. '
+             'Single timing passes are not repeated latency claims. Class prototypes are supervised '
+             'fitting controls, not target-derived inference inputs. Neither the full kernel nor '
+             'these compact alternatives is omitted when evaluating the next native initialization.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
