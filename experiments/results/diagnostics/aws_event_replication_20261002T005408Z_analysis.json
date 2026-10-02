@@ -1,0 +1,339 @@
+{
+  "status": "completed",
+  "cells": [
+    {
+      "configuration": {
+        "task": "order",
+        "sources": 16,
+        "shared_maps": true,
+        "protected_pairs": 0,
+        "time_input": "observed"
+      },
+      "seeds": [
+        {
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json",
+          "accuracy": 0.75390625,
+          "nll": 0.8327236473560333,
+          "cleared_state_accuracy": 0.203125,
+          "long_gap_accuracy": {
+            "8.0": 0.25390625,
+            "64.0": 0.203125
+          },
+          "whole_fit_gflops": 0.256914292,
+          "fit_mflops_per_query": 0.5017857265625,
+          "inference_mflops_per_query": 0.10675575,
+          "fitting_special_function_evaluations": 4901518,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 833.311543496995,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        },
+        {
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot.json",
+          "accuracy": 0.4453125,
+          "nll": 1.3720600977540016,
+          "cleared_state_accuracy": 0.203125,
+          "long_gap_accuracy": {
+            "8.0": 0.2265625,
+            "64.0": 0.203125
+          },
+          "whole_fit_gflops": 0.256944632,
+          "fit_mflops_per_query": 0.501844984375,
+          "inference_mflops_per_query": 0.106734,
+          "fitting_special_function_evaluations": 4904323,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 813.1078921649896,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        },
+        {
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot.json",
+          "accuracy": 0.703125,
+          "nll": 0.8630205504596233,
+          "cleared_state_accuracy": 0.203125,
+          "long_gap_accuracy": {
+            "8.0": 0.27734375,
+            "64.0": 0.2109375
+          },
+          "whole_fit_gflops": 0.257041496,
+          "fit_mflops_per_query": 0.502034171875,
+          "inference_mflops_per_query": 0.106708625,
+          "fitting_special_function_evaluations": 4913266,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 805.6960741009971,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        }
+      ],
+      "mean_accuracy": 0.6341145833333334,
+      "sample_std_accuracy": 0.1654670778165428,
+      "min_accuracy": 0.4453125,
+      "max_accuracy": 0.75390625
+    },
+    {
+      "configuration": {
+        "task": "order",
+        "sources": 16,
+        "shared_maps": true,
+        "protected_pairs": 2,
+        "time_input": "observed"
+      },
+      "seeds": [
+        {
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot.json",
+          "accuracy": 0.5625,
+          "nll": 1.0358794964849949,
+          "cleared_state_accuracy": 0.3046875,
+          "long_gap_accuracy": {
+            "8.0": 0.46484375,
+            "64.0": 0.47265625
+          },
+          "whole_fit_gflops": 0.248942512,
+          "fit_mflops_per_query": 0.48621584375,
+          "inference_mflops_per_query": 0.10409825,
+          "fitting_special_function_evaluations": 3794627,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 841.0260509430082,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        },
+        {
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_pilot.json",
+          "accuracy": 0.26171875,
+          "nll": 1.3998555541038513,
+          "cleared_state_accuracy": 0.3203125,
+          "long_gap_accuracy": {
+            "8.0": 0.234375,
+            "64.0": 0.20703125
+          },
+          "whole_fit_gflops": 0.248898602,
+          "fit_mflops_per_query": 0.48613008203125,
+          "inference_mflops_per_query": 0.104115125,
+          "fitting_special_function_evaluations": 3791805,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 845.02933161502,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        },
+        {
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_pilot.json",
+          "accuracy": 0.515625,
+          "nll": 1.093323603272438,
+          "cleared_state_accuracy": 0.2421875,
+          "long_gap_accuracy": {
+            "8.0": 0.46484375,
+            "64.0": 0.47265625
+          },
+          "whole_fit_gflops": 0.249022802,
+          "fit_mflops_per_query": 0.48637266015625,
+          "inference_mflops_per_query": 0.104087,
+          "fitting_special_function_evaluations": 3799812,
+          "available_receivers": 512,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 843.2550941160007,
+          "data_sha256": {
+            "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+            "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+          }
+        }
+      ],
+      "mean_accuracy": 0.4466145833333333,
+      "sample_std_accuracy": 0.16183067785271998,
+      "min_accuracy": 0.26171875,
+      "max_accuracy": 0.5625
+    },
+    {
+      "configuration": {
+        "task": "paired_timing",
+        "sources": 4,
+        "shared_maps": false,
+        "protected_pairs": 0,
+        "time_input": "observed"
+      },
+      "seeds": [
+        {
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.json",
+          "accuracy": 0.953125,
+          "nll": 0.185004687984474,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259847218,
+          "fit_mflops_per_query": 0.50751409765625,
+          "inference_mflops_per_query": 0.1064555,
+          "fitting_special_function_evaluations": 5145714,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 812.2723381310061,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        },
+        {
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_pilot.json",
+          "accuracy": 0.90234375,
+          "nll": 0.3482691430253908,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259885042,
+          "fit_mflops_per_query": 0.50758797265625,
+          "inference_mflops_per_query": 0.106528,
+          "fitting_special_function_evaluations": 5149212,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 798.4795535660232,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        },
+        {
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_pilot.json",
+          "accuracy": 0.91796875,
+          "nll": 0.19890915053838398,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259843652,
+          "fit_mflops_per_query": 0.5075071328125,
+          "inference_mflops_per_query": 0.1064265,
+          "fitting_special_function_evaluations": 5145384,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 800.6199712159869,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        }
+      ],
+      "mean_accuracy": 0.9244791666666666,
+      "sample_std_accuracy": 0.026009094212810127,
+      "min_accuracy": 0.90234375,
+      "max_accuracy": 0.953125
+    },
+    {
+      "configuration": {
+        "task": "paired_timing",
+        "sources": 4,
+        "shared_maps": false,
+        "protected_pairs": 0,
+        "time_input": "rank"
+      },
+      "seeds": [
+        {
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.json",
+          "accuracy": 0.5,
+          "nll": 0.7034942135214806,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259849748,
+          "fit_mflops_per_query": 0.5075190390625,
+          "inference_mflops_per_query": 0.1064845,
+          "fitting_special_function_evaluations": 5145945,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 797.5917771540117,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        },
+        {
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_pilot.json",
+          "accuracy": 0.5,
+          "nll": 0.715299160219729,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259845996,
+          "fit_mflops_per_query": 0.5075117109375,
+          "inference_mflops_per_query": 0.106499,
+          "fitting_special_function_evaluations": 5145615,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 807.1789149459801,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        },
+        {
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_pilot.json",
+          "accuracy": 0.5,
+          "nll": 0.7151366220787168,
+          "cleared_state_accuracy": 0.5,
+          "long_gap_accuracy": {},
+          "whole_fit_gflops": 0.259853326,
+          "fit_mflops_per_query": 0.50752602734375,
+          "inference_mflops_per_query": 0.10647,
+          "fitting_special_function_evaluations": 5146275,
+          "available_receivers": 128,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 805.9966480339936,
+          "data_sha256": {
+            "fit": "671b182fe701c5aa9a3eaa3a5d43c49f38f3fd25857f6da371169452589efbe7",
+            "dev": "ccfe624e5eac5369b46937462011b994a89382c52e075715ecf70529e477d712"
+          }
+        }
+      ],
+      "mean_accuracy": 0.5,
+      "sample_std_accuracy": 0.0,
+      "min_accuracy": 0.5,
+      "max_accuracy": 0.5
+    }
+  ],
+  "result_sha256": {
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json": "b8c816502324fbc4b373546a915b8bc6a27a36c28ebefd23e83bbd1787c7de84",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot.json": "79c30a7f5cb9388012cd657aa42bfd56e2c57e2fc4fc41e5c66118faa511daea",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.json": "b0b832ab5d715dda5e66c4862f6e96e0307d2e354aca0abc501e06f5f2feb8c7",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.json": "3b25b6c6a3c7c5bf91009277184b4e0a51acb5a37d3b60a9ee20685fcea0b4fe",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s7_pilot.json": "799c9eefb7daf5f24298f95bac2f8944aa5c708bcb57b31fac944bd1fef1af8c",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s7_pilot.json": "0dcaaa3e1a20a72bd9dd5dcdbb76c14a338d50264bd370e8ce6fce2487265886",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot.json": "2e240065ed94f40f4617c3eca9f7cd6bff32af8dd3879f0b20d0bb0d144a647e",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s7_pilot.json": "4ad087d1dd13878085e9b10e4cf5c5e923cde12dcfa247887621518938d78797",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_observed_s8_pilot.json": "471a6b0f0442fea6a086f7f0a598c71bc82029b1f2053f35da8113ad1ac801d1",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_paired_timing_S4_private_P0_rank_s8_pilot.json": "96bbae38064de87913ef6980a2a4d5cc58aaa33f8a9ba76ddaea84c6e0151ca6",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot.json": "7d00df145d76ceafee9b04011a16147b4515163a97d4806d5e606cbaf3204dc1",
+    "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P2_observed_s8_pilot.json": "9c142d18469569675cb4a81c7a0d663d087a787e06339a129d683bd9f73dcb2d"
+  },
+  "arithmetic_convention": "2 FLOPs/MAC; special functions separate. Whole-fit and per-query denominators512 presentations for every seed.",
+  "scope": "Three training seeds on unchanged fit/dev populations, cells selected after seed6. Development-selected checkpoints; no independent confirmation, seed selection or supremacy claim. Shared maps also replace source embeddings."
+}
