@@ -41,6 +41,8 @@ def main():
                   for name in a.analysis if 'common_unit_ledger' in json.loads((ROOT / name).read_text())]
     if subprocess.check_output(['git', 'status', '--porcelain', '--', *artifacts], cwd=ROOT):
         raise ValueError('Preserve concurrent report artifacts')
+    sources = ['experiments/publish_joint_learning_report.py', 'report/readable_report.py', 'report/make_pdf.py']
+    source_before = {name: digest(name) for name in sources}
     started = time.perf_counter()
     with tempfile.TemporaryDirectory(prefix='joint-learning-report-') as tmp:
         backups = {}
@@ -59,6 +61,8 @@ def main():
                         if min(x0, y0) < 0 or x1 > page.rect.width or y1 > page.rect.height:
                             raise ValueError('Out-of-bounds text on page ' + str(index + 1))
             subprocess.run(['git', 'diff', '--check'], cwd=ROOT, check=True)
+            if {name: digest(name) for name in sources} != source_before:
+                raise ValueError('Report source changed during rendering')
         except BaseException:
             for name in artifacts:
                 if name in backups:
@@ -66,7 +70,6 @@ def main():
                 elif (ROOT / name).exists():
                     (ROOT / name).unlink()
             raise
-    sources = ['experiments/publish_joint_learning_report.py', 'report/readable_report.py', 'report/make_pdf.py']
     result = dict(status='completed', args=vars(a), analysis_sha256=analyses, pdf_pages=pages,
                   wall_s=time.perf_counter() - started,
                   max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
