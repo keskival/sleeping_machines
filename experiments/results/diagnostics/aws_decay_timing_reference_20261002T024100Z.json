@@ -1,0 +1,126 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "aws_decay_timing_reference_20261002T024100Z"
+  },
+  "accuracy": 1.0,
+  "correct": 1024,
+  "queries": 1024,
+  "events": 4096,
+  "data_sha256": "49e21eb23d1d7831566011ba8bdd267b1fc72ef32f214fbca019d244c1b03f2c",
+  "work": {
+    "arithmetic_flops": 28672,
+    "special_function_evaluations": 6144,
+    "formula_coverage_complete": true,
+    "unsupported_floating_operators": {},
+    "operators": {
+      "aten.lift_fresh.default": {
+        "calls": 4352,
+        "arithmetic_flops": 0,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 4608,
+        "floating_output_elements": 4608,
+        "classification": "data movement, indexing or control (excluded from FLOPs)"
+      },
+      "aten.zeros.default": {
+        "calls": 1024,
+        "arithmetic_flops": 0,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 0,
+        "floating_output_elements": 2048,
+        "classification": "data movement, indexing or control (excluded from FLOPs)"
+      },
+      "aten.add.Tensor": {
+        "calls": 4096,
+        "arithmetic_flops": 8192,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 8192,
+        "floating_output_elements": 8192,
+        "classification": "elementwise arithmetic"
+      },
+      "aten.sub.Tensor": {
+        "calls": 4096,
+        "arithmetic_flops": 4096,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 8192,
+        "floating_output_elements": 4096,
+        "classification": "elementwise arithmetic"
+      },
+      "aten.neg.default": {
+        "calls": 3072,
+        "arithmetic_flops": 3072,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 3072,
+        "floating_output_elements": 3072,
+        "classification": "scalar sign arithmetic"
+      },
+      "aten.div.Tensor": {
+        "calls": 3072,
+        "arithmetic_flops": 6144,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 9216,
+        "floating_output_elements": 6144,
+        "classification": "elementwise arithmetic"
+      },
+      "aten.exp.default": {
+        "calls": 3072,
+        "arithmetic_flops": 0,
+        "special_function_evaluations": 6144,
+        "comparisons": 0,
+        "floating_input_elements": 6144,
+        "floating_output_elements": 6144,
+        "classification": "special function"
+      },
+      "aten.mul.Tensor": {
+        "calls": 4096,
+        "arithmetic_flops": 7168,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 13312,
+        "floating_output_elements": 7168,
+        "classification": "elementwise arithmetic"
+      },
+      "aten.select.int": {
+        "calls": 2048,
+        "arithmetic_flops": 0,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 4096,
+        "floating_output_elements": 2048,
+        "classification": "data movement, indexing or control (excluded from FLOPs)"
+      },
+      "aten._local_scalar_dense.default": {
+        "calls": 1024,
+        "arithmetic_flops": 0,
+        "special_function_evaluations": 0,
+        "comparisons": 0,
+        "floating_input_elements": 1024,
+        "floating_output_elements": 0,
+        "classification": "data movement, indexing or control (excluded from FLOPs)"
+      }
+    }
+  },
+  "inference_arithmetic_flops_per_query": 28.0,
+  "inference_special_functions_per_query": 6.0,
+  "fitting_targets": 0,
+  "fitting_flops": 0,
+  "learned_parameters": 0,
+  "occupied_sources": 4,
+  "persistent_tensor_bytes": 96,
+  "wall_s": 1.4418206810078118,
+  "max_rss_kb": 428180,
+  "source_sha256": {
+    "experiments/decay_timing_reference_benchmark.py": "7c400160c660dbdcaaaa1ed0e2a98181dbdf627773d31d68b7706ad5da312e22",
+    "sleeping_machines/decay_timing_reference.py": "d490f4effd73e60918d5ef5097f8ee7fb59e13ab9b95a3c35298e718821e2ab3",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b"
+  },
+  "scope": "Diagnostic using known generator time constants and coefficient. Same1024-query seed3201 confirmation population; no fitting or calibrated NLL. Two causal traces per observed address, no race selection/counterfactual learning. Not an information-matched learned control or supremacy claim; validates timestamp sufficiency and task-specific sufficient state. Arithmetic excludes Python control/indexing and is not energy."
+}
