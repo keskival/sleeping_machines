@@ -1123,3 +1123,15 @@ training gradients equal the forked driver's (tests/test_dvs_critic_le.py). Timi
 21 events, k = 4, P = 2), eight counterfactual losses: full replays 0.381 s, forked 0.135 s, **shadow lanes 0.055 s**,
 against 0.069 s for one factual forward. All counterfactuals of an episode cost less than one factual forward, which
 cuts the replay-credit overhead from about 3.6× to roughly 1.25× of baseline training.
+
+## 405. Episode-batched native training: about 10× wall time at identical gradients
+
+The DVS drivers give every episode of a pass the same race-noise seed (common per-pass draws). Episodes therefore run
+as lanes of one batched pass that shares each race's noise draw, indexed by event position. That reproduces the
+sequential runs exactly, including episodes of different lengths (sleeping_machines/batched_episodes.py; the factorized
+race law per lane). Contracts: per-episode losses to 1e-10 and summed parameter gradients to 1e-8 against sequential
+runs (tests/test_batched_episodes.py); batched evaluation equals the sequential evaluation; batched all-race replay credit
+equals the sequential all-race replay credit (tests/test_dvs_batched_le.py). Speed at the DVS shape, one 16-episode
+window forward plus backward: depth 2, 2.25 s → 0.23 s; depth 4, 4.39 s → 0.45 s (9.8×). Replay credit for every race
+of every episode runs as one batched, gradient-free shadow pass, so exact local-expectation credit without race
+sampling is affordable at depth 2. `--route-races k` samples races, unbiased with scaling, for deeper models.
