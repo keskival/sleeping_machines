@@ -1628,3 +1628,23 @@ factual credit graph. Local actual-write quality replication/curie capacity
 ownership retained. All AWS stages complete, no trainer pending. Primary
 quality hypothesis remains actual-write choice utility with original timing;
 clock/support variance and full-data control quality gaps remain open.
+
+## AWS causal temporal resolution admission — 2 October, 21:26 UTC
+
+Pulled a2a6e31 and read notes87–90: choice seed7 failed; no unchanged larger
+credit fit. Other-host offset/tied/depth work remains untouched. AWS fitting-user
+GroupKFold resolution diagnostic freezes1/4/20bins/C(.1,1,10),27fold+3finalfits,
+984fit/192dev, no test. Four bins77.604%/.686661 vs20bins74.479%/.707992;
+1bin68.75%/.806788. Four-bin stored993432vs4880984bytes; sequential .1475vs
+.3883ms/query. Solver FLOPs unknown; development control evidence only.
+
+Native follow-up keeps p16/L2/H2/pool2 unchanged; four causal250ms aggregated
+packets plus1squery versus20x50ms+query, fit-only normalization. Fine within-bin
+timing deliberately lost; no dense carrier/decoder replacement. Three arms:
+20bin clock.05,4bin clock.05,4bin clock.25. Numerical contracts all3arms pass
+forward/state/allgradients/batch-vs-independent, actual model/Adam/RNG/cursor
+recovery and operator coverage. Plan aws_coarse_native_20261002T212600Z first
+24/8/two-pass smokes and explicit learning/RSS admission, then256/192/four-pass
+seed6 pilots. Preregistered .02NLLgain/<=1pp decline/<=.50 fitting-work gate;
+independent seed7 only after pass, no direct strong-control supremacy claim.
+Theory aws_20261002_coarse_native_admission.md and frozen diagnostic show scope.
