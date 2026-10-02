@@ -1,0 +1,73 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_numpy_contracts_20261002T160600Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+      "experiments/results/dvs_native/local_dvs_clock_full_20261002T153000Z.json"
+    ]
+  },
+  "rows": [
+    {
+      "native": "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+      "native_result_sha256": "b506bd3650e7410cffbe174ca2e1acc28c90972e65eba9c0dbec969b82006ebf",
+      "native_checkpoint_sha256": "1cb4b44c60e89772b33be04870753067538ff771902b6999db1a27a1e702ad6a",
+      "float32_full_development": {
+        "targets": 192,
+        "maximum_logit_absolute_error": 1.430511474609375e-06,
+        "maximum_memory_arrival_absolute_error": 2.2215313588702656e-08,
+        "all_hard_route_choices_equal": true,
+        "context_and_selected_memory_contracts_passed": true
+      },
+      "float64_prefixes": {
+        "targets": 8,
+        "maximum_logit_absolute_error": 1.5543122344752192e-15,
+        "maximum_memory_arrival_absolute_error": 0.0,
+        "all_hard_route_choices_equal": true,
+        "context_and_selected_memory_contracts_passed": true
+      },
+      "repeat_metadata_and_future_content_contracts_passed": true
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_clock_full_20261002T153000Z.json",
+      "native_result_sha256": "ddcfe5e39a95c37256d5e583ff7d1b371021b20022c658dc7c56e2103e355e9e",
+      "native_checkpoint_sha256": "6a0d6b8f7af66d4e9dcd91f1d8ee0a7b1f4dae749d634bdccb13dfb374a6f4ec",
+      "float32_full_development": {
+        "targets": 192,
+        "maximum_logit_absolute_error": 1.9073486328125e-06,
+        "maximum_memory_arrival_absolute_error": 1.1738864991173159e-08,
+        "all_hard_route_choices_equal": true,
+        "context_and_selected_memory_contracts_passed": true
+      },
+      "float64_prefixes": {
+        "targets": 8,
+        "maximum_logit_absolute_error": 2.6645352591003757e-15,
+        "maximum_memory_arrival_absolute_error": 5.551115123125783e-17,
+        "all_hard_route_choices_equal": true,
+        "context_and_selected_memory_contracts_passed": true
+      },
+      "repeat_metadata_and_future_content_contracts_passed": true
+    }
+  ],
+  "contracts_passed": 8,
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "sleeping_machines/numpy_addressed_inference.py": "d2018f3f9a7e7a8e62d02fc404ac4782df5880c06b9f7b365ead429cfdc96ad2",
+    "experiments/dvs_numpy_inference_contracts.py": "b3184fb47fb8b0f8dfd018d443034427d0a6d9dd831613183bd5a367483fff03"
+  },
+  "wall_s": 55.096637713002565,
+  "max_rss_kb": 305652,
+  "scope": "Inference-only one-source port: frozen full-development routes/state/logits plus double precision, repeat/reset, metadata and future-content contracts. Float32 finite tolerance is numerical reproduction on these clips, not universal bitwise equivalence near route ties. Static transformed parameters and target-independent reference draw cache are paid setup/storage; training and counterfactual credit remain unchanged. No fitting, test or advantage claim."
+}
