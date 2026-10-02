@@ -1,5 +1,47 @@
 # Local host: current research continuation
 
+## Actual-write choice correction passes first pilot, 2 October19:20 UTC
+
+Prioritized native integrated p16/L2/H2/pool2 remains unchanged in inference.
+Theory84/new driver replaces one event9 head's value teacher by exact
+conditional actual-write/full-suffix choice utility; original native timing
+and factual content derivatives retained. Four contracts191100Z pass independent
+choice/time derivatives, factual/state and legal-alternative replays, every
+parameter-gradient residual VJP and actual Adam/cursor/RNG recovery/accounting.
+Smoke191400Z passes24fit/8dev/two passes/U16+U8: fit2.64095->2.11061NLL,
+23.041s/343548KiB, .143986GFLOPs/2.999703MFLOPs per target/.591695inferMFLOPs.
+
+Matched256/192/four-pass seed6 pilot191900Z completes103.948s/347972KiB:
+selected pass3,58.8542%/1.194006NLL versus saved local54.1667%/1.305937.
+Gain.111931NLL/4.6875pp, full work3.059796GFLOPs/2.988082MFLOPs per target,
+.591709inferMFLOPs; work ratio1.33867 passes<=1.50 gate. One-seed development
+evidence, not practical advantage over full984-fit strong controls. All four
+passes retained. Gate analysis192100Z validates matching data/initialization/
+settings/work and admits seed7 local+treatment. No larger stage until the
+same seed7 gate passes; queues192400Z/192600Z are separate one-job definitions.
+
+Calibration audit191600Z uses frozen full/local selected weights and first16
+fit prefixes, same event/head/draw, no optimizer. On full weights, joint-clock
+raises gradient norm3.3901->6.4002, cosine.3940 and global clip scale.2950->.1562;
+unchanged decoder gradient is attenuated too. Choice-only stays3.3915/cosine
+.99998/clip.2949. All paid forward/replay/backward/normalization coverage passes.
+31.254s/365148KiB. Single-draw balance diagnosis, not expected covariance,
+Adam trajectory or causal proof. Positive normalization cannot fix a wrong
+direction; preserve centered legal utilities and timing scope rather than
+equalizing arbitrary gradient RMS. Theory85 calibration coordinates follow.
+
+Other-host completed pool8/depth4 fits are negative versus clock pool2:
+62.50%/1.08802 at57.2985GFLOPs and57.29%/1.22159 at37.8686GFLOPs;
+clock reference66.15%/1.04199 at20.0747GFLOPs. Sources unchanged. Their tied-map
+and exposure/replication hypotheses remain independently owned, not duplicated.
+The other-host multi-job queue definitions must be split before local admission;
+this session runs only unique one-job queues via run_safe.
+
+Report source includes completed pilot/smoke/calibration and those external
+capacity results, all controls retained; publication192300Z is prepared pending
+guarded render. One thread/nice19, VMS3000000KiB/groupRSS1250000KiB/8192MiB
+floor, no GPU or official-test read. Three stashes retained, main branch.
+
 ## Completed credit gate and variance diagnosis, 2 October17:50 UTC
 
 State-clock pilot174300Z completes17:43:02:47.3958%/1.450687NLL versus local

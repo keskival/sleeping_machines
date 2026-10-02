@@ -167,6 +167,14 @@ def results():
         tasks['dvs_compact_controls'].append(r)
     tasks['dvs_clock_completed']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'dvs_native').glob('local_dvs_clock_full_*Z.json'))]
+    tasks['dvs_external_capacity_completed']=[read(str(path.relative_to(RES)))
+        for name in ('curie_dvs_clock_p16d2pool8_s6_20261002T172500Z.json',
+                     'curie_dvs_clock_p16d4pool2_s6_20261002T172500Z.json')
+        if (path:=RES/'dvs_native'/name).exists()]
+    tasks['dvs_state_choice_smokes']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'dvs_native').glob('local_dvs_state_choice_smoke_*Z.json'))]
+    tasks['dvs_credit_balance_audits']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_credit_gradient_balance_*Z.json'))]
     tasks['dvs_credit_comparisons']=[]
     for path in sorted((RES/'diagnostics').glob('local_dvs_credit_comparison_*Z.json')):
         r=read(str(path.relative_to(RES)))
@@ -184,6 +192,10 @@ def results():
                 expected=model.get('native_result_sha256',model.get('result_sha256'))
                 if hashlib.sha256((ROOT/model['native']).read_bytes()).hexdigest()!=expected:
                     raise ValueError('Changed frozen credit audit parent')
+    for audit in tasks['dvs_credit_balance_audits']:
+        for model in audit['models']:
+            if hashlib.sha256((ROOT/model['native']).read_bytes()).hexdigest()!=model['result_sha256']:
+                raise ValueError('Changed gradient-balance parent')
     tasks['dvs_batched_smoke_admission']=[]
     for path in sorted((RES/'diagnostics').glob('local_dvs_batched_smoke_admission_*Z.json')):
         r=read(str(path.relative_to(RES)))
@@ -4064,7 +4076,7 @@ def blocks(M, tasks, ev):
             ('small','All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit '
              'specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting '
              'data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, '
-             'no official test or superiority claim. '+r['args']['tag']+'.json; theory77/80/81.')])
+             'no official test or superiority claim. '+r['args']['tag']+'.json; theory77/80–84.')])
     for audit in tasks.get('dvs_suffix_credit_audits',[]):
         rows=[[Path(x['native']).stem.replace('local_dvs_',''),str(x['opposed_teacher_directions'])+'/'+str(x['nonzero_comparable_policy_gradients']),
             f"{x['mean_absolute_value_only_effect']:.5f}",f"{x['mean_absolute_write_only_effect']:.5f}",
@@ -4136,6 +4148,99 @@ def blocks(M, tasks, ev):
             ('small',f"Completed diagnostic{audit['args']['tag']}.json;{audit['wall_s']:.3f}s/"
              f"{audit['max_rss_kb']/1024:.1f}MiB peak RSS, one guarded CPU job. Theory82/83 and "
              'COUNTERFACTUAL_CREDIT_PLAN.md preserve proof, negative fit and limited diagnostic scope.')])
+    for smoke in tasks.get('dvs_state_choice_smokes',[]):
+        w=smoke['work'];act=smoke['activity'];n=act['targets']
+        rows=[['Write-choice + native timing',f"{100*smoke['final']['accuracy']:.2f}",f"{smoke['final']['nll']:.4f}",
+            f"{w['whole_fit_unit_special_flops_estimate']/1e9:.6f}",f"{w['fit_unit_special_flops_per_target_estimate']/1e6:.6f}",
+            f"{w['inference_unit_special_flops_per_target_estimate']/1e6:.6f}"]]
+        pages.append([('h1','Appendix B. Actual-write choice credit: integrated admission'),
+            ('table',(['Credit','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[46,25,22,28,27,25])),
+            ('p',f"Fixed24 fit/eight dev/two passes,48 presentations/four Adam updates: two U16 and two "
+             f"partial U8 windows. Fitting NLL{smoke['initial_fit']['nll']:.4f} to"
+             f"{smoke['final_fit_diagnostic']['nll']:.4f}; workflow{smoke['wall_s']:.3f}s, "
+             f"peak RSS{smoke['max_rss_kb']/1024:.1f}MiB. This is readiness, not benchmark advantage."),
+            ('p',f"Unchanged native p16/L2/H2/pool2:15,523 parameters/eight available receivers. "
+             f"Fitting pays{act['key_scores']/n:.0f} key scores/{act['selected_updates']/n:.0f} state commits/"
+             f"{act['counterfactual_values']/n:.0f} candidate values per target including the complete shadow. "
+             'Inference retains168 keys/84 commits/168 values over21 events;720 persistent-state tensor bytes.'),
+            ('p','At one event9 race head/window, substitute the exact conditional expected-loss derivative '
+             'for both legal delivered values and actual persistent writes. Retain the separate native '
+             'winner-delay derivative, winning content/state credit and all other local teachers. '
+             'The obsolete intermediate decoder baseline is unnecessary for categorical enumeration.'),
+            ('p','Contracts independently enumerate the choice risk, differentiate smooth raw clocks, '
+             'preserve winning payload and other-head credit, reproduce factual state/logits and actual '
+             'alternative commits, and verify every parameter-gradient change equals the upstream VJP '
+             'of the replaced score residual. Interrupted Adam/cursor/RNG recovery and complete '
+             'operator accounting pass. Downstream timing jumps and other local teachers remain approximate.'),
+            ('small','Theory84; contracts191100Z and smoke191400Z. All losses summed before gradient '
+             'normalization, global clipping and Adam; all shadow work charged. No official test or '
+             'exact whole-model gradient claim. Fixed matched pilot and second-seed gate follow.')])
+    for audit in tasks.get('dvs_credit_balance_audits',[]):
+        rows=[]
+        groups=[]
+        for model in audit['models']:
+            label='Full984' if 'native_full' in model['native'] else 'Pilot256'
+            for x in model['credit_results']:
+                rows.append([label+' / '+x['credit'].replace('state_',''),f"{x['raw_parameter_gradient_norm']:.4f}",
+                    f"{x['native_global_clip_scale']:.4f}",f"{x['cosine_to_local_parameter_gradient']:.4f}",
+                    f"{x['replacement_upstream_gradient_norm']:.4f}"])
+                g=x['parameter_group_gradient_norms']
+                groups.append([label+' / '+x['credit'].replace('state_',''),
+                    *[f'{g[name]:.4f}' for name in ('incoming_context_maps','message_maps','route_maps','time_maps','decoder')]])
+        pages.append([('h1','Appendix B. Calibration: noisy routing changes global gradient balance'),
+            ('table',(['Frozen weights / credit','Total norm','Clip scale','Cosine to local','Replacement norm'],rows,[57,28,28,30,30])),
+            ('table',(['Frozen weights / credit','Context norm','Message norm','Route norm','Time norm','Decoder norm'],groups,[52,26,25,24,23,23])),
+            ('p','Same selected weights/first16 fitting prefixes/draw314159/event9 layer0 head0 '
+             'for each local, actual-write choice+native timing and joint-clock intervention. Factual '
+             'logits and losses are identical. All gradients summed then divided by16 before computing '
+             'the native norm1 clip multiplier. No optimizer, fitting selection or new quality score.'),
+            ('p','For Full984, the noisy joint-clock correction raises total gradient norm3.3901 to '
+             '6.4002, rotates its direction to cosine.3940 and reduces the global clip multiplier '
+             '.2950 to.1562. The decoder gradient is unchanged before clipping, so the global multiplier '
+             'also attenuates its useful supervised update. This directly measures cross-path balance '
+             'on one draw; it is not attribution of the held-out regression.'),
+            ('p','Write-choice credit keeps total norm3.3915, cosine.99998 and clip multiplier.2949 '
+             'while correcting actual legal memory utility. Positive scaling alone cannot repair a '
+             'wrong direction or manufacture useful information. Per-sample norm equalization can '
+             'bias a zero-mean signal; a prefix-only clock baseline or independent calibration requires '
+             'a separate matched protocol. Shared weights retain both message and timing credit.'),
+            ('small',f"Completed audit{audit['args']['tag']}.json;{audit['wall_s']:.3f}s/"
+             f"{audit['max_rss_kb']/1024:.1f}MiB. Every intervention's forward/replay, backward and "
+             'normalization operator coverage passes. No measured expected variance, batch covariance, '
+             'Adam trajectory or fitted benefit from gradient normalization follows.')])
+    if tasks.get('dvs_external_capacity_completed'):
+        reference=tasks['dvs_practical_native'][0];clock=tasks['dvs_clock_completed'][0]
+        rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts').replace('native_temporal_p16_L2_H2_pool2_seed6','Ours original'),
+            f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
+            *['Unmeasured' if x[k] is None else f'{x[k]:.3f}' for k in
+            ('whole_fit_gflops_estimate','fit_mflops_per_presentation_estimate','inference_mflops_per_target_estimate')]]
+            for x in reference['common_unit_ledger']]
+        cells=[clock]+tasks['dvs_external_capacity_completed']
+        capacity=[]
+        for x in cells:
+            w=x['work'];a=x['args'];label=f"Native p{a['payload']}/L{a['depth']}/pool{a['pool']}"
+            rows.append([label,f"{100*x['final']['accuracy']:.2f}",f"{x['final']['nll']:.4f}",
+                f"{w['whole_fit_unit_special_flops_estimate']/1e9:.3f}",f"{w['fit_unit_special_flops_per_target_estimate']/1e6:.3f}",
+                f"{w['inference_unit_special_flops_per_target_estimate']/1e6:.3f}"])
+            capacity.append([label,str(x['parameters']),str(w['native_available_receivers']),
+                str(int(x['activity']['key_scores']/x['activity']['targets'])),
+                str(int(x['activity']['selected_updates']/x['activity']['targets'])),
+                str(x['final']['max_state_tensor_bytes'])])
+        pages.append([('h1','Appendix B. Other-host completed native capacity comparisons'),
+            ('table',(['Model','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[49,23,22,27,26,26])),
+            ('table',(['Native capacity','Parameters','Available receivers','Keys / prefix','Commits / prefix','State bytes'],capacity,[47,27,28,24,25,22])),
+            ('p','These completed stages use the same984-fit/192-dev, eight fixed passes/7,872 '
+             'presentations/496 updates and seed6 as the packet-clock reference. Wider eligible '
+             'pool and extra depth retain native timing/races/persistent addressed state/key-value '
+             'separation/counterfactual credit. All scored keys and losing values remain charged.'),
+            ('p','Pool8 scores62.50%/1.0880NLL versus pool2 reference66.15%/1.0420, at57.2985 '
+             'versus20.0747 whole fitting GFLOPs. Depth4 scores57.29%/1.2216 at37.8686GFLOPs. '
+             'Neither completed variant improves the baseline. Extra private capacity also adds '
+             'untied trainable maps; this is not isolated counterfactual-support or useful-capacity '
+             'evidence. Other-host tied-map/replication work remains pending and separate.'),
+            ('small','Completed curie_dvs_clock_p16d2pool8 and p16d4pool2 results172500Z; '
+             'theory59§§396/398. Conventional solver work is unmeasured, not zero. Raw controls '
+             'retained; comparisons use the same column units. No official-test or supremacy claim.')])
     for r in tasks.get('dvs_compact_controls',[]):
         groups={}
         for x in r['rows']:

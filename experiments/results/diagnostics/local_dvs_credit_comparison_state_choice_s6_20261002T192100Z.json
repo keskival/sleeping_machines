@@ -1,0 +1,111 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_credit_comparison_state_choice_s6_20261002T192100Z",
+    "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+    "treatment": "experiments/results/dvs_native/local_dvs_state_choice_pilot_s6_20261002T191900Z.json",
+    "kind": "state_choice",
+    "seed": 6
+  },
+  "common_unit_ledger": [
+    {
+      "arm": "local",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5416666666666666,
+      "development_nll": 1.3059374957034986,
+      "whole_fit_gflops_estimate": 2.28569632,
+      "fit_mflops_per_presentation_estimate": 2.2321253125,
+      "inference_mflops_per_target_estimate": 0.591737,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.7942547844722867,
+          "accuracy": 0.3854166666666667
+        },
+        {
+          "epoch": 2,
+          "nll": 1.5219685196255643,
+          "accuracy": 0.4479166666666667
+        },
+        {
+          "epoch": 3,
+          "nll": 1.317523285203303,
+          "accuracy": 0.5729166666666666
+        },
+        {
+          "epoch": 4,
+          "nll": 1.3059374957034986,
+          "accuracy": 0.5416666666666666
+        }
+      ],
+      "wall_s": 94.46436668199749,
+      "max_rss_kb": 347060
+    },
+    {
+      "arm": "state_choice",
+      "result": "experiments/results/dvs_native/local_dvs_state_choice_pilot_s6_20261002T191900Z.json",
+      "result_sha256": "f45185b9181e5a741b9829e7f40cb1f684467cf5f73ebc94afcf67e3c3e369a8",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5885416666666666,
+      "development_nll": 1.1940060217554371,
+      "whole_fit_gflops_estimate": 3.059796224,
+      "fit_mflops_per_presentation_estimate": 2.98808225,
+      "inference_mflops_per_target_estimate": 0.591709,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 336.0,
+      "selected_updates_per_fit_presentation": 168.0,
+      "counterfactual_values_per_fit_presentation": 336.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.8006008720646303,
+          "accuracy": 0.4010416666666667
+        },
+        {
+          "epoch": 2,
+          "nll": 1.495604413639133,
+          "accuracy": 0.4427083333333333
+        },
+        {
+          "epoch": 3,
+          "nll": 1.1940060217554371,
+          "accuracy": 0.5885416666666666
+        },
+        {
+          "epoch": 4,
+          "nll": 1.2305438704788685,
+          "accuracy": 0.5625
+        }
+      ],
+      "wall_s": 103.9477586399953,
+      "max_rss_kb": 347972
+    }
+  ],
+  "nll_improvement": 0.11193147394806147,
+  "accuracy_decline_percentage_points": -4.6875,
+  "whole_fit_work_ratio": 1.338671369956968,
+  "promotion_gate_passed": true,
+  "gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "source_sha256": {
+    "experiments/dvs_state_choice_comparison.py": "73ee85d6cac91c72c4dc82aebb5c5728401b9ac5eb62041dd1062dd91e962d69",
+    "experiments/dvs_credit_comparison.py": "96f7b4045900a85a5a678deb5a29fd2755cef916f40e10bed1f87f43ca7e0187"
+  },
+  "wall_s": 0.02194726200104924,
+  "max_rss_kb": 19668,
+  "scope": "Matched fixed256-fit/192-dev/four-pass screen; actual alternative writes/suffix paid, native timing kept. Full984-fit controls unequal data. Conditional choice exactness is not whole-history or downstream timing-jump exactness. No official test or practical supremacy."
+}
