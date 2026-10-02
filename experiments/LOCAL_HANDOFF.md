@@ -1,5 +1,18 @@
 # Local host: current research continuation
 
+## Rebase conflict repaired, 2 October, 11:49 UTC
+
+Completed the main rebase onto 765ff48. The sole conflict was the generated
+report PDF; both versions are preserved in Git history and copied under
+`.git/conflict-backups/rebase-20261002T114824Z/`. Regenerated PDF and REPORT.md
+from the merged source using the unique one-job guarded queue
+`queue/local_rebase_report_20261002T114824Z.txt`. The combined report now has
+101 validated pages and retains all headings from both prior reports.
+Completed publication record:
+`results/diagnostics/local_rebase_report_20261002T114824Z.json`, 20.423s,
+65,108 KiB RSS. No model fitting or completed result was overwritten. The
+three existing stashes remain intact; no rebase or unmerged index remains.
+
 ## Value-credit cycle fully closed, 2 October, 10:16 UTC
 
 Parent and followthrough statuses are completed; no local training job or
