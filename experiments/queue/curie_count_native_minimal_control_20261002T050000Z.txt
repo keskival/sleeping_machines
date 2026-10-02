@@ -1,0 +1,6 @@
+# Attribution control for the integrated native gate gains (2K 2.695, 8K 2.601): the 131K carrier gain proved to be learned
+# count smoothing (minimal 7.5K-parameter base 2.124 = w128 2.129). Same gate model with a minimal native core (payload 2, depth 1).
+# If it matches the full core, the native gain is also smoothing; the temporal core's own contribution is the difference.
+curie_count_native_min_smoke_20261002T050000Z experiments/count_carrying_language_benchmark.py --tag curie_count_native_min_smoke_D129_20261002T050000Z --fit 129 --dev 129 --epochs 1 --payload 2 --depth 1 --escape-gate
+curie_count_native_min_gate_D2048_20261002T050000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D2048_K4_gate_minimal_p2_d1_s6_20261002T050000Z --fit 2048 --dev 8192 --epochs 4 --orders 4 --payload 2 --depth 1 --escape-gate
+curie_count_native_min_gate_D8192_20261002T050000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D8192_K4_gate_minimal_p2_d1_s6_20261002T050000Z --fit 8192 --dev 8192 --epochs 4 --orders 4 --payload 2 --depth 1 --escape-gate
