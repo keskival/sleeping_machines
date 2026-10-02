@@ -1766,3 +1766,22 @@ contracts are not an integrated reception-window experiment. Preserve physical
 clock/readiness, actual sparse writes, query deadline and complete losing-route
 costs in any proposed extension. Current host curie remains CPU-only; one guarded
 job, 8GiB MemAvailable floor, measured ~350–460MiB diagnostics. No unguarded job.
+
+## AWS fixed-encoder polynomial diagnostic complete — 2 October, 22:00 UTC
+
+All12 arm rows and108CV/12refits,6replays finish126.81s/608044KiB. Same984/192,
+fit-user selection only, no new encoder fit/test. Fitted affine68.056%/.903627;
+quadratic69.965%/.885142mean, but both fixed nomination gates FAIL: polynomial
+vsaffine only.018485NLL/+1.910pp and seed6 regresses; parent-native gains
+.020633/.157749/.034854 below eachseed.05 requirement. Initial affine58.507%/
+1.138019 and quadratic62.847%/1.012070 remain. No unchanged scaling.
+
+Exact algebraic normalization folding and actual native predictions/state
+checks pass; all5 sequential heads paid. Parentfit4.218015GF charged but
+combined fit FLOPs UNKNOWN due solver; tensorbytes exclude input normalization
+and metadata. Portable encoder/heads and fit/dev feature caches committed with
+hashes for reuse. Nonlinear RBF context evidence still stronger than polynomial.
+Next bounded candidate: compact local RBF/prototype head on native current
+context, with initial reservoirs and strongest same-host compact/raw controls;
+no dense prefix carrier or resident reader, full lookup and costs explicit.
+No prototype/convex primitive is promoted before integrated prediction checks.

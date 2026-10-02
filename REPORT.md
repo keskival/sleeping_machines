@@ -2859,3 +2859,36 @@ Three mean-L2 coefficients are invariant across fold sizes: lambda=1/(984C), sol
 Four contracts include a constructed feature-selection confidence counterexample, sample-size invariant regularization, reproduction of fixed-pass native probabilities and folding scaled affine coefficients into the original native head. Every non-head parameter is bitwise preserved; batched and serial native probabilities match. Parameter count and the inference architecture remain unchanged.
 
 Theory96. The mathematical counterexample establishes a possible failure, not its occurrence in these pilots. Original encoder fits, feature replay and head-port verification replay are separate costs; solver/transformation/traffic/ energy work remains unknown. Same reused192 development examples; no official test or new main model. No guessed global regularization fit is admitted from this result.
+
+Frozen gate FAILS: NLL worsens.166618; fitratio1.083617 and inference1.458782
+remain within fixed limits. New5808 head weights and all5 sequential head
+calls paid.8 available receivers/4writes per event and factual/key/losing-value
+activity identical. Deep state/parameter-gradient and interrupted recovery
+contracts remain valid; they do not predict quality. No unchanged seed7,
+full-fit, epoch extension or automatic promotion. Earlier full-coarse seed8
+failure and all positive frozen readout/reservoir controls remain preserved.
+A frozen affine-versus-polynomial convex-fit diagnostic can separate decoder
+fitting from encoder drift before a new learning intervention.
+
+## AWS frozen polynomial optimization study complete: gates fail
+
+All three984-fit coarse encoders and matching initial reservoirs compare
+fit-user-selected affine/degree2 logistic heads;108CV/12refits,6replays,
+192 development, official test unopened. Folded coefficients exactly reproduce
+explicit normalized-feature logits; full native query predictions agree within
+frozen tolerance. All5 sequential head calls charged, native state unchanged.
+Fitted affine68.056%/.903627mean; quadratic69.965%/.885142. Polynomial adds
+only.018485NLL/+1.910pp and worsens seed6 relative to affine, failing .05/+3pp/
+everyseed nomination. Parent-native polynomial NLL gains .020633/.157749/
+.034854 fail everyseed>=.05. Initial affine58.507%/1.138019 and quadratic
+62.847%/1.012070 retained. Numeric contracts do not guarantee predictive gates.
+
+Native parent4.218015GFLOPs is charged for fitted encoders,0 for initial
+reservoirs; COMBINED fit FLOPs remain UNKNOWN because decoder solver FLOPs are
+unknown. Tensor-state/storage, inference MFLOPs,3repeat walls and every fold
+are in AWS_FROZEN_POLYNOMIAL_FINDINGS_20261002.md/raw ledger. Packet-normalization
+arrays and serialization metadata are outside its tensor-only storage figures.
+All selected portable encoder/head states and reusable feature arrays preserved.
+This restricts a polynomial hypothesis; it does not overturn the positive RBF
+information result or imply a general architectural impossibility. No unchanged
+polynomial escalation, test access or broad advantage claim.
