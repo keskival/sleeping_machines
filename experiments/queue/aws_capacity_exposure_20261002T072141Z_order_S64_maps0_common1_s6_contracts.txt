@@ -1,0 +1,1 @@
+aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_contracts experiments/rule_seed_event_benchmark.py --tag aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_contracts --task order --sources 64 --payload 8 --heads 2 --depth 8 --pool 2 --seed 6 --common-source-seed 1 --fit-targets 512 --dev-targets 1024 --epochs 4 --update-targets 64 --contracts-only

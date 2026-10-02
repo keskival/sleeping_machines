@@ -1,0 +1,252 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "maps": false,
+      "common_seed": false,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot.json",
+      "sha256": "643e8702b780da5a8ed53de1d00726716b1226ceb3f956949e2f2b4356863ffe",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.44140625,
+      "nll": 1.1194342039525509,
+      "parameters": 157940,
+      "whole_fit_gflops": 0.274358946,
+      "fit_mflops_per_query": 0.53585731640625,
+      "inference_mflops_per_query": 0.10671225,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": false,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010500Z_order_S16_private_s7_pilot.json",
+      "sha256": "b923aa663f6b6f3bb64a4c92686bee6f9d501706aed7305ba8071abe74b8b5cb",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.2578125,
+      "nll": 1.4431793242692947,
+      "parameters": 157940,
+      "whole_fit_gflops": 0.274353926,
+      "fit_mflops_per_query": 0.53584751171875,
+      "inference_mflops_per_query": 0.106701375,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": false,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010500Z_order_S16_private_s8_pilot.json",
+      "sha256": "acf4f89293af17c82ce93be3b84675aaed13c95eafdd8c523e4f6d71b07f34ff",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.4296875,
+      "nll": 1.3149793073534966,
+      "parameters": 157940,
+      "whole_fit_gflops": 0.27440458,
+      "fit_mflops_per_query": 0.5359464453125,
+      "inference_mflops_per_query": 0.10674125,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot.json",
+      "sha256": "751ca2a6da3456eb57b98164b37ad6a588555c61b047e7f8d79a6d5fdf254cb7",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.75390625,
+      "nll": 0.7592398263514042,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274287896,
+      "fit_mflops_per_query": 0.535718546875,
+      "inference_mflops_per_query": 0.106734,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot.json",
+      "sha256": "893f251246e58e57ff0dde78c68774e4ed6f7d83f4b67043f01db1afc615ed28",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.51171875,
+      "nll": 1.031316626816988,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274295586,
+      "fit_mflops_per_query": 0.53573356640625,
+      "inference_mflops_per_query": 0.10671225,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot.json",
+      "sha256": "050cdcbc2b67e63346a019358242116c573d38014404556f15142136fd2b77a2",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.69140625,
+      "nll": 0.868910439312458,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274354774,
+      "fit_mflops_per_query": 0.53584916796875,
+      "inference_mflops_per_query": 0.106737625,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": false,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot.json",
+      "sha256": "4ba866c1767e24bc6ba71658668e2fbc7b550fef84eb0a787618ee3d9a85752d",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.40234375,
+      "nll": 1.2576394230127335,
+      "parameters": 14420,
+      "whole_fit_gflops": 0.25702747,
+      "fit_mflops_per_query": 0.50200677734375,
+      "inference_mflops_per_query": 0.106773875,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": false,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot.json",
+      "sha256": "764cce93ac295bbcb693f74c76c987c4d0e02b1a60df2a4e0d4cca4a458d68b3",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.3203125,
+      "nll": 1.4567302837967873,
+      "parameters": 14420,
+      "whole_fit_gflops": 0.256998202,
+      "fit_mflops_per_query": 0.50194961328125,
+      "inference_mflops_per_query": 0.10677025,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": false,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot.json",
+      "sha256": "8f6b49f437f6e51c242988d8b6891ad46b979f902731a38e87c535c6b857e8c8",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.25,
+      "nll": 1.5001140460371971,
+      "parameters": 14420,
+      "whole_fit_gflops": 0.257005298,
+      "fit_mflops_per_query": 0.50196347265625,
+      "inference_mflops_per_query": 0.10675575,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json",
+      "sha256": "b8c816502324fbc4b373546a915b8bc6a27a36c28ebefd23e83bbd1787c7de84",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.75390625,
+      "nll": 0.8327236473560333,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.256914292,
+      "fit_mflops_per_query": 0.5017857265625,
+      "inference_mflops_per_query": 0.10675575,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot.json",
+      "sha256": "2e240065ed94f40f4617c3eca9f7cd6bff32af8dd3879f0b20d0bb0d144a647e",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.4453125,
+      "nll": 1.3720600977540016,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.256944632,
+      "fit_mflops_per_query": 0.501844984375,
+      "inference_mflops_per_query": 0.106734,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot.json",
+      "sha256": "7d00df145d76ceafee9b04011a16147b4515163a97d4806d5e606cbaf3204dc1",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.703125,
+      "nll": 0.8630205504596233,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.257041496,
+      "fit_mflops_per_query": 0.502034171875,
+      "inference_mflops_per_query": 0.106708625,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    }
+  ],
+  "effects": {
+    "common_seed_gain_private_maps_pp": 27.604166666666668,
+    "common_seed_gain_shared_maps_pp": 30.989583333333336,
+    "shared_maps_gain_private_seed_pp": -5.208333333333331,
+    "shared_maps_gain_common_seed_pp": -1.822916666666663
+  },
+  "scope": "Development-selected factorial architecture comparison,3 training seeds on fixed populations. Different initialization streams across map conditions; not pure parameter-controlled causality or fresh confirmation. Historical diagonals charged."
+}

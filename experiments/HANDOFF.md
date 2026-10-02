@@ -1462,3 +1462,19 @@ fits. Same128×4/U64/d8/H2/L8 protocol, no confirmation read or extra scale.
 Whole resource accounting and all seeds retained; source/rule initialization
 matching limitations documented. State-credit and count variants on other hosts
 remain their responsibility; no duplicated campaigns.
+
+
+## Crossed-sharing complete; occupied-capacity probe — 2 October
+
+All18 rule/seed stages complete and pushed. Common-seed mean accuracy rises
+private rules37.63→65.23%, shared rules32.42→63.41%. Sharing alone at fixed
+seed condition gives−5.21pp(private seed)/−1.82pp(common seed) on development.
+Do not attribute combined confirmed gain to maps alone; retain its original
+positive evidence and new scope beside it. All12 rows with common-unit work
+and source hashes: `AWS_RULE_SEED_FINDINGS_20261002.md` and diagnostic JSON.
+Next prioritized unchanged integrated model: common-seed S64, private/shared
+rules,8 queries/source/pass, four passes,16 dev populations, seeds6/7/8.
+Plan `experiments/gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`; protocol AWS_CAPACITY_EXPOSURE.md.
+18 guarded stages,4GiB RSS/6GiB VMS per slot,8GiB floor,7200s pilot cap.
+No new core source changes, no holdout use or automatic supremacy claims.
+Read latest other-host count64-credit findings; do not duplicate their fits.
