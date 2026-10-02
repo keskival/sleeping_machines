@@ -21,7 +21,7 @@ four noise histories, two initial/fixed-pass4 seed6/7 pairs xfour settings,
 Temperature2/all NLL gains .011154728/.002256550, accuracy gains3.125/0 points:
 BOTH .02 gates FAIL. No unchanged integrated fit or selected tau4 rescue.
 Every prefix still scores168 keys/writes84 actual receivers;8 available units,
-720state bytes. Representative tau1 .591695..591849MF vs tau2/all .594131MF
+576..720live-state bytes (720 is maximum). Representative tau1 .591695..591849MF vs tau2/all .594131MF
 includes actual calibrated transforms/cumulative sums; not whole-audit FLOPs.
 Original trained fit2.285696GF/2.232125MF per1024 presentations each paid.
 No DEV/test/optimizer. Current-state common rate retained; later altered state
