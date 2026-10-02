@@ -360,3 +360,64 @@ uniform. (P389c) The escape gate alone, without (1), gives < .02. Run order:
 contracts, then the 2K native integrated fit (compare 2.734), then the carrier
 w32/w128 diagnostic. Labelled diagnostics stay labelled; the integrated native
 receiver is the promoted target.
+
+
+## 389.1. Review corrections and discriminating tests, 2 October, 03:02 UTC
+
+The measurements above are retained. Several interpretations need narrower
+claims; these corrections govern their use in the report and new experiments.
+
+1. **Equivalent count order is a quality calibration.** The §388 heading and
+   reading1 inferred context dependence from a scalar loss. Equal mean cross
+   entropy does not imply equal conditional predictions or a bigram-only
+   representation. The completed frozen native8K audit changes predictions by
+   .02252nats meanKL when removing history older than16 on32 positions; hence
+   strict bigram-only dependence is false in that audit. This slice does not
+   establish a useful benefit beyond16 or semantic/hierarchical abstraction.
+   The score table and its quality shortfall remain valid.
+2. **Standalone q need not beat count backoff to improve a composition.**
+   Reading388.4's necessity claim is too strong: §387.1 itself supplies residual
+   distributions with poor standalone cross entropy but improved combined
+   predictive probability. Equivalent order may be a diagnostic, not an
+   acceptance contract for a residual-trained base. Keep fixed-escape q
+   replacement and combined quality/work as the actual tests. The reported
+   8.17/11.34 base-only scores remain observations with unreplicated saved
+   checkpoint provenance here; they do not prove the base stopped learning.
+3. **Hidden count state changes the optimization problem.** §389's assertion
+   that the optimal base is the arithmetic conditional expectation of each
+   water-filled residual does not generally follow. For base features X, the
+   active-coordinate condition instead is
+
+       E[P_y * e / (a_y + e*q_y) | X] = lambda.
+
+   Conditional expectation and nonlinear minimization do not commute. Missing
+   count conditioning is a plausible information limitation, not an identified
+   unique cause of the measured width failure. A stream model can retain or
+   reconstruct some evidence. CountMessage and EscapeGate remain reasonable
+   nested interventions; their fits must test this hypothesis independently.
+4. **Gradient reach and usefulness differ.** The guarded initialization audit
+   verifies responsibility-scaled logit gradients (max error1.86e-9) and
+   nonzero gradients through every content layer. Saved composed w32/w128/w256
+   diagnostics show nonzero clock-weight changes in layers1–5 (norm ranges
+   .968–1.211/1.741–1.898/2.067–2.221). Only the unused final clock is unchanged.
+   An earlier local diagnosis misread these diagnostics as all-zero clocks;
+   that claim is withdrawn. No general disconnected-gradient or clock-learning
+   regression is established. Parameter movement alone does not prove deeper
+   useful features.
+5. **Repair output is not recurrent depth evidence.** CountMessage delivers
+   statistics additively into output logits; a gain there can arise at the
+   readout without richer recurrent state. P389b must distinguish the bare
+   backbone q from q conditioned by CountMessage. The current `base_only`
+   driver measures the bare backbone before CountMessage. Both definitions
+   should be reported before using standalone quality to accept the repair.
+
+The existing scope remains: native temporal/sparse addressed state and
+counterfactual producer credit are the core; carrier composition is a labelled
+diagnostic. None of these corrections replaces temporal computation with a
+dense model. The pending full-depth repair optimizer contracts retain zero
+parent nesting and exact recovery before any new integrated fit. A separate
+frozen native16/32/64 credit-horizon audit holds context, targets and race noise
+fixed, so extra memory is separated from extra graph reach. It measures missing
+surrogate credit, not fitting quality or unbiasedness. Resource guards and all
+losing-value/optimizer costs remain in force. See
+[the local evidence and planned comparisons](../LANGUAGE_LEARNING_DIAGNOSIS_20261002.md).
