@@ -138,6 +138,18 @@ def results():
         and r.get('actual_bank_uniform_pair_law_alias_verified')]
     tasks['joint_stateful_table']=[r for path in sorted((RES/'diagnostics').glob('local_joint_stateful_table_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
+    tasks['dvs_practical_controls']=[r for path in sorted((RES/'dvs_calibration').glob('local_dvs_calibration_*_controls.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
+    tasks['dvs_practical_native']=[]
+    for path in sorted((RES/'diagnostics').glob('local_dvs_native_analysis_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')!='completed':continue
+        for name,sha in r['inputs'].items():
+            if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
+                raise ValueError('Changed real-packet comparison evidence')
+        tasks['dvs_practical_native'].append(r)
+    tasks['dvs_practical_inference']=[r for path in sorted((RES/'diagnostics').glob('local_dvs_practical_inference_*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -575,6 +587,17 @@ def figures(M, tasks, ev):
             a.axhline(1,color=gray,linestyle='--',linewidth=1,label='Restricted query-count bound')
             a.set(xlabel='Fitting passes',ylabel='Development bits / query',title='Balanced distant dependency: '+key.replace('_',' '))
             a.legend(fontsize=7,ncol=2);f.tight_layout();save(f,r['args']['tag']+'_learning')
+    for r in tasks.get('dvs_practical_native',[]):
+        f,a=plt.subplots(figsize=(7.2,2.45))
+        a.plot([x['epoch'] for x in r['curve']],[x['nll'] for x in r['curve']],
+            marker='o',color=blue,label='Native p16/L2/H2',linewidth=1.5,markersize=3)
+        by={x['arm']:x for x in r['common_unit_ledger']}
+        for name,color,label in [('time_binned_naive_bayes',gray,'Calibrated time-aware counts'),
+                                 (r['selected_control'],orange,'Selected nonlinear control')]:
+            a.axhline(by[name]['development_nll'],color=color,linestyle='--',linewidth=1,label=label)
+        a.set(xlabel='Fixed fitting passes over984 gestures',ylabel='Subject-disjoint development NLL',
+            xticks=range(1,9),title='Real causal packets: completed learning versus strong controls')
+        a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
               and r['args']['clock_features']==0]
@@ -3791,6 +3814,98 @@ def blocks(M, tasks, ev):
              'threshold candidates, count/probability work and wall are saved. They are not converted '
              'to neural FLOPs. Full question lookup is a task-specific conventional control, not a '
              'general language model or the integrated research architecture. Theory72 records scope.')])
+    for r in tasks.get('dvs_practical_controls',[]):
+        rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts'),
+            f"{100*x['final']['accuracy']:.2f}",f"{x['final']['nll']:.4f}",
+            f"{x['fitting_wall_s']:.3f}",f"{x['inference_wall_s']:.3f}"] for x in r['rows']]
+        pages.append([('h1','Appendix B. Real gesture practical calibration'),
+            ('p','A meaningful practical region:984 first-second fitting gestures from users1–19 and192 '
+             'development gestures from users20–23. The common causal representation has4×4 spatial '
+             'cells, two polarities and20 observed50ms count closures. No official test was opened.'),
+            ('table',(['Control','Dev accuracy %','Dev NLL','Fit seconds','Dev inference seconds'],rows,[58,28,27,28,32])),
+            ('p',f"The lowest development-NLL control is {r['selected_by_dev_nll']}; its accuracy exceeds "
+             f"calibrated counts by{100*r['selected_control_accuracy_gain_over_counts']:.2f}points. Maximum "
+             'grid accuracy is74.48%, so this observation protocol has headroom rather than the99.5% '
+             'saturation of the cheap recency table. This admits an integrated learning test, not a '
+             'native advantage claim. The older weak dense gesture screens are not the practical ceiling.'),
+            ('p','All nine fixed learned cells are preserved. Linear/RBF controls use fitting-only '
+             'log-count centering/scaling. Counts use all640 time bins and3-fold fitting-only '
+             'alpha/temperature calibration; this avoids treating correlated camera events as '
+             'independent label evidence. SVM probability calibration is included in measured fitting.'),
+            ('small',f"Common raw preprocessing costs{r['preprocessing_wall_s']:.3f}s. The complete control "
+             f"campaign takes{r['wall_s']:.3f}s with{r['max_rss_kb']/1024:.1f}MiB peak process RSS. "
+             'Table inference uses the complete192-example batch. Third-party solver FLOPs are '
+             'unmeasured, not zero; CPU wall, arithmetic, storage and energy are distinct. Development '
+             'selection and one fitted seed are exploratory evidence, not independent confirmation.')])
+    for r in tasks.get('dvs_practical_native',[]):
+        def fmtwork(x):return 'Unmeasured' if x is None else f'{x:.3f}'
+        rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts').replace('native_temporal_p16_L2_H2_pool2_seed6','Ours p16/L2/H2'),
+            f"{100*x['development_accuracy']:.2f}",f"{x['development_nll']:.4f}",
+            fmtwork(x['whole_fit_gflops_estimate']),fmtwork(x['fit_mflops_per_presentation_estimate']),
+            fmtwork(x['inference_mflops_per_target_estimate'])] for x in r['common_unit_ledger']]
+        native=r['common_unit_ledger'][-1]; workflow=r['workflow_comparison']
+        pages.append([('h1','Appendix B. Integrated real-packet quality and work'),
+            ('table',(['Model','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[48,23,23,26,27,26])),
+            ('p','Same984 distinct fitting gestures and192 subject-disjoint development targets. '
+             'Ours fits eight fixed passes:7,872 target presentations and496 Adam updates,U16, '
+             'lr.003, seed6. Conventional solvers have their own convergence/calibration policies; '
+             'equal pass or fitting-work protocols are not claimed. Every learned baseline is retained.'),
+            ('p',f"Selected native pass{r['selected_epoch']}: accuracy difference versus minimum-NLL "
+             f"control{100*r['native_accuracy_gain_over_selected_control']:+.2f}points, NLL improvement "
+             f"{r['native_nll_gain_over_selected_control']:+.4f}. Development quality dominance flag: "
+             f"{r['native_dominates_selected_control_in_development_quality']}. Independent practical "
+             'advantage remains unproved; no pending, best-seed or official-test prediction fills this table.'),
+            ('small','Native estimates include complete prefix/query forward/backward, all scored keys, '
+             'candidate values, counterfactual value credit, normalization/clipping and Adam. '
+             'First/last windows are sampled by actual16/8 target size;2FLOPs/MAC and unit-weight '
+             'special functions. Solver arithmetic is unmeasured. Preprocessing, validation, traffic '
+             'and measured CPU latency must be charged separately; isolated inference estimates '
+             'cannot establish total resource or energy advantage.')])
+        pages.append([('h1','Appendix B. Real-packet learning, capacity and total workflow'),
+            ('figure',(r['args']['tag']+'_learning',145)),
+            ('table',(['Completed native quantity','Value'],[
+                ['Parameters / available receivers',f"{native['parameters']:,} / {native['available_receivers']}"],
+                ['Persistent state tensor bytes',str(native['state_tensor_bytes'])],
+                ['Keys / selected updates / counterfactual values per fitting prefix',
+                 f"{native['key_scores_per_fit_presentation']:.1f} / {native['selected_updates_per_fit_presentation']:.1f} / {native['counterfactual_values_per_fit_presentation']:.1f}"],
+                ['Fit plus nonfitting forward GFLOPs estimate',f"{r['native_fitting_plus_nonfitting_forward_gflops_estimate']:.3f}"],
+                ['Native workflow / whole control grid seconds',f"{workflow['native_wall_s']:.3f} / {workflow['control_grid_wall_s']:.3f}"],
+                ['Common raw preprocessing seconds',f"{workflow['raw_preprocessing_wall_s']:.3f}"],
+                ['Native / grid workflow plus preprocessing seconds',f"{workflow['native_workflow_plus_preprocessing_wall_s']:.3f} / {workflow['control_grid_plus_preprocessing_wall_s']:.3f}"],
+                ['Native peak process RSS MiB',f"{native['max_rss_kb']/1024:.1f}"]],[100,73])),
+            ('p','The unchanged native core computes through temporal races, separate keys/values, '
+             'sparse persistent receiver updates and local mixing. Nonempty observed packets arrive '
+             'at their physical closure and an observed query at1s; state resets per gesture. '
+             'Race noise depends on pass/fitting seed, never clip identity, index or label. '
+             'Counts are observed camera content rather than fitted statistical prediction experts.'),
+            ('p','Workflow wall includes fitting, validation, checkpoints and operation profiling; '
+             'the complete control-grid wall includes all fixed solvers, calibration, scoring and '
+             'serialization. Nonfitting neural forward work is estimated using completed prefix '
+             'samples; raw preprocessing is common and added once to each pipeline. Small tensor '
+             'state does not mean small process RSS, zero scoring cost, useful extra depth or '
+             'zero optimizer work. Earlier numerical admission/research costs remain separately saved.')])
+    for r in tasks.get('dvs_practical_inference',[]):
+        rows=[[x['arm'].replace('time_binned_naive_bayes','Calibrated counts'),
+            f"{100*x['quality']['accuracy']:.2f}",f"{x['quality']['nll']:.4f}",
+            f"{x['median_wall_ms_per_prefix']:.3f}",f"{x['uncompressed_joblib_bytes']/1024:.1f}"]
+            for x in r['common_sequential_inference_ledger']]
+        pages.append([('h1','Appendix B. Frozen practical inference and storage'),
+            ('table',(['Model','Dev accuracy %','Dev NLL','Sequential ms / prefix','Saved model KiB'],rows,[55,26,25,34,33])),
+            ('p','All models consume the same saved observed first-second packet counts, one prefix '
+             'at a time on one CPU thread. Fit-only feature transformation and native race simulation '
+             'are timed. Three deterministic repeats measure execution variation; they are not '
+             'independent fits. Warmup, loading and common raw event coalescing are reported separately.'),
+            ('p','Every frozen probability matches the completed development result and every repeated '
+             'prediction is identical. Native weights are the fixed minimum-NLL selected checkpoint; '
+             'no model is refitted, temperature-adjusted or selected during this audit. All conventional '
+             'cells remain visible, including faster or better alternatives.'),
+            ('p','Storage is uncompressed joblib serialization of each fitted model plus its necessary '
+             'fitting-only transform. It is not resident process memory or memory traffic. Native '
+             'parameter tensor bytes and persistent state bytes are separate quantities. CPU '
+             'emulator latency cannot be relabelled as event-hardware latency or measured energy.'),
+            ('small','Subject-disjoint development evidence only. A quality/resource tradeoff here '
+             'requires frozen independent confirmation before promotion. No test leakage, broad '
+             'supremacy, useful-depth premium or dormant-capacity advantage is inferred from this audit.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
