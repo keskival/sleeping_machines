@@ -2,7 +2,9 @@
 
 Same protocol, optimizer, credit and work tracing as native_language_benchmark.py. Adds addressed
 context-suffix count receivers (orders 1..K) composed by escape races with learnable discount and
-concentration; the native predictive is the base measure. Fitting counts are leave-one-out; development
+concentration; the native predictive is the base measure. Optional §389 repairs (--count-message, --escape-gate):
+the count receivers deliver their statistics into the base logits, and D_k/theta_k become per-position functions
+of base-predictive and evidence features; both zero-initialized, exactly nesting the scalar cascade. Fitting counts are leave-one-out; development
 counts are prequential (fit + development prefix before each target), i.e. persistent state with frozen weights.
 """
 import argparse
@@ -27,11 +29,12 @@ from race_language_screen import capture
 from parallel_head_gradient_accumulation import GradientAccumulator
 from native_language_gradient_contracts import accumulation_contracts
 from sleeping_machines.count_carrying_language import CountCarryingNativeModel, fit_stream_counts, eval_stream_counts
+from sleeping_machines.count_escape_gate import GatedCountCarryingNativeModel
 
 
 def sources():
     names=['experiments/count_carrying_language_benchmark.py','sleeping_machines/count_carrying_language.py',
-           'tests/test_count_carrying_language.py',
+           'tests/test_count_carrying_language.py','sleeping_machines/count_escape_gate.py','tests/test_count_escape_gate.py',
            'experiments/native_language_gradient_contracts.py',
            'experiments/parallel_head_gradient_accumulation.py']
     return {**baseline.source_hashes(),**{n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names}}
@@ -64,6 +67,7 @@ def main():
     p.add_argument('--recent',type=int,choices=(0,),default=0);p.add_argument('--seed',type=int,default=6)
     p.add_argument('--lr',type=float,default=.002);p.add_argument('--contracts-only',action='store_true')
     p.add_argument('--resume',action='store_true');p.add_argument('--orders',type=int,default=4)
+    p.add_argument('--count-message',action='store_true');p.add_argument('--escape-gate',action='store_true')
     a=p.parse_args();a.memory='receiver';a.candidate_index='observed_stream_address';a.cache_storage='persistent';a.native_event_core=True
     directory=ROOT/'experiments/results/count_carrying_language';directory.mkdir(parents=True,exist_ok=True)
     out=directory/(a.tag+'.json');running=out.with_suffix('.running.json');checkpoint=out.with_suffix('.progress.pt')
@@ -82,7 +86,11 @@ def main():
         result.update(status='completed',wall_s=time.perf_counter()-started)
         out.write_text(json.dumps(result,indent=2)+'\n');return
     train=torch.tensor(text_slice(0,a.fit));dev=torch.tensor(text_slice(90_000_000,a.dev))
-    model=CountCarryingNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders)
+    if a.count_message or a.escape_gate:
+        model=GatedCountCarryingNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders,
+            escape_gate=a.escape_gate,count_message=a.count_message)
+    else:
+        model=CountCarryingNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders)
     count_started=time.perf_counter()
     model.register_stream('fit',fit_stream_counts(train.numpy(),a.orders))
     model.register_stream('dev',eval_stream_counts(train.numpy(),dev.numpy(),a.orders))
@@ -183,6 +191,8 @@ def main():
         event=None;cursor=dict(epoch=epoch+1,next_target=0,total_loss=0.);persist()
         print(json.dumps(dict(epoch=epoch,dev_bpc=score['bpc'])),flush=True)
     model.load_state_dict(best_state);result['final']=dict(dev=evaluate_dev(),escape=escape_values())
+    if isinstance(model,GatedCountCarryingNativeModel):
+        model.base_only=True;result['final']['base_alone_dev']=evaluate_dev();model.base_only=False
     result['count_receivers']=dict(orders=a.orders,fit_transitions_counted=(a.fit-1)*a.orders,
         development_transitions_counted=(a.dev-1)*a.orders,lookups_per_target=a.orders,
         precompute_seconds=count_seconds,

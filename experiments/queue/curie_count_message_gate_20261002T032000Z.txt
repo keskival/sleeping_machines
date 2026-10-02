@@ -1,0 +1,9 @@
+# THEORY §389: composed bases cannot see the counts whose residual they must supply (bases alone 8.17/11.34 bpc at 131K).
+# Integrated native receiver, settings identical to curie_count_carrying_D2048_K4_H2_d16_depth8_s6 (2.734 bpc, untrained 2.741).
+# Predictions: P389a/b both-repairs 2K beats 2.734 by >= .02 and base alone stays < 4.75 bpc; P389c gate-only gains < .02.
+curie_count_message_gate_contracts_20261002T032000Z -m pytest -q tests/test_count_escape_gate.py tests/test_count_carrying_language.py
+curie_count_message_gate_smoke_20261002T032000Z experiments/count_carrying_language_benchmark.py --tag curie_count_message_gate_smoke_D129_K4_20261002T032000Z --fit 129 --dev 129 --epochs 1 --count-message --escape-gate
+curie_count_message_gate_D2048_both_20261002T032000Z experiments/count_carrying_language_benchmark.py --fit 2048 --dev 8192 --epochs 4 --orders 4 --tag curie_count_carrying_D2048_K4_message_gate_s6_20261002T032000Z --count-message --escape-gate
+curie_count_message_gate_D2048_message_20261002T032000Z experiments/count_carrying_language_benchmark.py --fit 2048 --dev 8192 --epochs 4 --orders 4 --tag curie_count_carrying_D2048_K4_message_s6_20261002T032000Z --count-message
+curie_count_message_gate_D2048_gate_20261002T032000Z experiments/count_carrying_language_benchmark.py --fit 2048 --dev 8192 --epochs 4 --orders 4 --tag curie_count_carrying_D2048_K4_gate_s6_20261002T032000Z --escape-gate
+curie_count_carrying_D8192_K4_s6_20261002T031500Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D8192_K4_H2_d16_depth8_s6_20261002T031500Z --fit 8192 --dev 8192 --epochs 4 --orders 4

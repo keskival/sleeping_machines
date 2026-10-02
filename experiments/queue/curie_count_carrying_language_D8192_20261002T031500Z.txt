@@ -1,3 +1,4 @@
+# SUPERSEDED before launch (02:20 UTC) by curie_count_message_gate_20261002T032000Z, which runs the §389 2K test first and keeps this 8K job unchanged at its end.
 # Integrated stage after the 2K gate passed (2.734 vs native 3.765, stream-adaptive counts 2.776).
 # Native settings identical to local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z (3.557 bpc); orders 4.
 # Predeclared (Theory 388.3): trained base adds <= ~.01 bpc over untrained composition; gate vs stream-adaptive counts at 8K (2.699) by >= .02.

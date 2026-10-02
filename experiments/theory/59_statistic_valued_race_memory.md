@@ -302,3 +302,61 @@ needs to match the fitted model.
    represent (generalization, retrieval). Equivalent order is therefore a
    cheap acceptance metric for any learned component. It should rise with `N`
    faster than the count-optimal order before composition can pay off.
+
+## 389. Why a composed learned base adds nothing: it cannot see the counts it must complement
+
+**Measured failure (131K, seed 6, development only).** Count receivers (K5) over
+the input-gated carrier reach 2.313 dev bpc at both w32 and w128, identical to
+three decimals at every epoch, with identical learned escape parameters, at
+12.7× different fitting work. Alone, the same carriers differ by .26 bpc (2.848
+vs 2.587). An untrained random base already composes to 2.371. Scored alone
+from their saved composed checkpoints, the trained bases give **8.17 and 11.34
+bpc**, worse than uniform (4.75). The width-insensitivity is therefore not a
+saturation of useful learning. The base has stopped being a predictor at all.
+
+**Derivation.** By §387.1 the optimal base at one context is the water-filled
+residual `q*_y ∝ max(P_y/λ − a_y/e, 0)`. It depends on the count part `a` (which
+symbols the tables already cover, and how much) and on the escape mass `e`. The
+base network receives only the token stream, never `a` or `e`. Its best achievable
+output is therefore the conditional expectation of the residual given the
+stream features it can compute. In practice it learns the *average*
+residual: mass on symbols that are novel continuations of their contexts,
+anti-correlated with the ordinary predictive. Alone this is a terrible
+predictor, which explains the 8–11 bpc. It cannot become context-specific
+without re-deriving the counts internally, which is exactly the memorization
+work the composition was meant to remove (§386). Wider bases fit the same
+average residual, so width does not matter. Responsibility-gated credit
+(§379.1) is correct but does not fix this. It routes gradient to the escape
+branch without supplying the information the residual depends on.
+
+**What it says about learned features.** The learned models were already
+below the count-optimal order alone (§388: equivalent order 0.9–3.6 against
+4–6). In composition they are not even asked to learn longer-range features.
+Their loss is dominated by an unknowable residual of the local tables. Two
+distinct deficits follow, and they need different repairs:
+
+1. *Information path (this section).* The base must condition on the count
+   state it complements. Make the count receivers deliver into the base: base
+   logits `z' = z + Σ_k [log1p(c_k) W_k + 1[c_k>0] V_k]`, per-order `A×A` maps,
+   zero-initialized so the untrained model nests the scalar cascade exactly.
+   This is the thesis's "small messages mixing incoming content with persistent
+   memory": the addressed statistic is a message to the learned receiver. It
+   adds 2KA² parameters and O(KA²) work per target, with no dense history.
+   It retains races, sparse addressed state, counts and credit, and removes
+   nothing.
+2. *Escape gate (§387.3).* Even a correct residual cannot override a
+   confidently wrong table, where `a_y > P_y`, without raising the escape.
+   Make `D_k, θ_k` per-position functions of base-predictive and evidence
+   features (zero-initialized, nested).
+3. *Learning horizon (open).* Information beyond `K` characters (words, topic,
+   copy) is what a learned component must add once (1)–(2) hold. Its credit is
+   truncated at the chunk length. Equivalent order rising above count-optimal
+   remains the acceptance metric (§388.4).
+
+**Predictions and test.** (P389a) With the count-conditioned base, composed
+bpc improves with width: w128 beats w32 by ≥ .02 at 131K. Under the scalar
+cascade the gap is 0. (P389b) The trained base's standalone bpc stays below
+uniform. (P389c) The escape gate alone, without (1), gives < .02. Run order:
+contracts, then the 2K native integrated fit (compare 2.734), then the carrier
+w32/w128 diagnostic. Labelled diagnostics stay labelled; the integrated native
+receiver is the promoted target.
