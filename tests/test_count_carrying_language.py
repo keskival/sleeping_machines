@@ -125,3 +125,23 @@ def test_frozen_composition_reproduces_e64_base_scores_and_runs(tmp_path):
     r = json.loads(out.read_text())['results']
     assert r['composed']['test']['bpc'] < r['base_only_test_bpc']  # random base: counts must help
     assert 0 <= r['composed']['test']['mean_responsibility'] <= 1
+
+
+def test_generic_wrapper_keeps_positions_across_chunks_and_proxies_state():
+    from sleeping_machines.count_composed_stream import CountComposedModel
+    from sleeping_machines.selective_stream_language import SelectiveEventLanguageModel
+    torch.manual_seed(0)
+    model = CountComposedModel(SelectiveEventLanguageModel(width=8, modes=4, depth=2), 2).double()
+    rng = np.random.default_rng(7)
+    tokens = torch.tensor(rng.integers(0, M.A, 50))
+    model.register_stream('s', M.eval_stream_counts(rng.integers(0, M.A, 300), tokens.numpy(), 2))
+    model.use_stream('s')
+    whole, s1 = model.forward_chunk(tokens)
+    state, parts = model.new_state(), []
+    for s in range(0, 50, 16):
+        out, state = model.forward_chunk(tokens[s:s + 16], state)
+        state = state.detach()
+        parts.append(out)
+    assert torch.allclose(whole, torch.cat(parts), atol=1e-10)
+    assert state.position == 50 and state.deliveries == s1.deliveries
+    assert torch.allclose(whole.exp().sum(-1), torch.ones(50, dtype=torch.float64))
