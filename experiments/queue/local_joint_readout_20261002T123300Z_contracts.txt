@@ -1,0 +1,1 @@
+local_joint_readout_20261002T123300Z_contracts experiments/joint_readout_diagnostic.py --tag local_joint_readout_20261002T123300Z_contracts --contracts-only

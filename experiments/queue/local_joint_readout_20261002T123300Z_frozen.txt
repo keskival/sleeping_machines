@@ -1,0 +1,1 @@
+local_joint_readout_20261002T123300Z_frozen experiments/joint_readout_diagnostic.py --tag local_joint_readout_20261002T123300Z_frozen --plan experiments/queue/local_balanced_joint_20261002T121500Z.json --contracts experiments/results/diagnostics/local_joint_readout_20261002T123300Z_contracts.json
