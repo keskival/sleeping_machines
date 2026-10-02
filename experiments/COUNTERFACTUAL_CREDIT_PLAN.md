@@ -92,3 +92,34 @@ then the same24/8 learning/accounting smoke precedes a matched256/192 pilot.
 Do not call this exact joint-clock or whole-core credit. The.02NLL/1pp/1.50work/
 900000KiB gates remain. Independent-noise and learned-baseline comparisons
 need their own matched controls; do not silently change sampling protocol.
+
+## Decision update, 2 October20:20 UTC
+
+Actual-write choice contracts/smoke and fixed seed6 pilot pass; seed7 confirmation
+fails (1.336201 versus1.306508NLL, both55.21% accuracy). Preserve the first gain
+and failed repeat together; no unchanged full-data run or extra-seed fishing.
+The existing.02NLL/1pp/1.50work gates have not been relaxed.
+
+Theory85 calibration contracts pass, but normalization is not a demonstrated
+quality repair. Theory86 paired alternative proposals have finite2/3/8/64,
+native2/8pool write/gradient/recovery/accounting contracts and a completed24/8/
+two-pass pool8 readiness fit, not a larger-pool quality result. A no-grad shadow
+teaches choice utility without directly training losing message maps on that
+realization; it does not prove expected branch credit is absent.
+
+Use theory87/88 as the current decision plan. First bounded fitting-only frozen
+audit separates choice fidelity, branch derivatives/exposure, clock noise,
+parameter covariance and route-utility drift. Independent diagnostic draws
+are required for noise estimates; current common-per-pass fitting draws remain
+explicit. Select ONE repair from the resulting evidence. Message/route
+alternation is a schedule comparison conditional on drift/interference, with
+shared-map ownership, current-time versus delivered-winner identity, inactive
+Adam state and equal total work made explicit. Do not combine it with new
+content replay in the same first pilot. No universal alternation benefit follows.
+
+Any branch-gradient repair needs separate numerical contracts and a tiny fit.
+Measure its full cost before preregistering a new matched-work pilot; a second
+backward is not free. Independent confirmation precedes full-data comparisons.
+Other-host tied-map/depth plans and AWS strong dense comparisons stay reserved.
+Charge discovery, proposals, optimizer and traffic; retain sparse temporal
+inference, actual memory writes and the strongest valid control evidence.

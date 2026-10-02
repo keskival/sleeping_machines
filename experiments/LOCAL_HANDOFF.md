@@ -1,5 +1,57 @@
 # Local host: current research continuation
 
+## Bird's-eye decision and failed confirmation, 2 October20:20 UTC
+
+Read theory87/88 for the current synthesis and primary-paper-inspired plan.
+Objective remains useful trained capacity beyond sparse active temporal work;
+no broad superiority is established. Prioritized inference model remains
+native p16/L2/H2/pool2. The next justified research job is a small fitting-only
+frozen joint-route/content/clock diagnostic, not unchanged full-data training.
+Distinguish lost information, incorrect credit, noisy/rare content exposure,
+shared-parameter interference and private-map dilution before selecting ONE
+repair. Alternating route/message updates is conditional on measured utility
+drift/interference, with coupled forward computation and explicit shared-map
+ownership retained. Do not detach dependencies and call it just a schedule.
+
+Choice correction seed6 passes but seed7 FAILS: local55.2083%/1.306508 versus
+treatment55.2083%/1.336201, gain-.029693NLL, work ratio1.33867. Both fixed
+256-fit/192-dev/four-pass comparisons193500Z/192100Z are completed and preserved.
+No unchanged full984-fit stage, third seed or extra passes are admitted.
+Seed6's+.111931NLL/+4.6875pp remains exploratory positive evidence.
+
+Five calibration-coordinate contracts193300Z pass; note85 is source-frozen
+with its original then-pending replication statement, superseded explicitly
+here and in notes86/87. Five paired-credit contracts195800Z pass finite
+2/3/8/64 expectation/proposal tests, exact2-route native state/parameter-gradient
+nesting,8-route actual legal writes and actual2/8pool Adam/cursor/RNG recovery
+with U3/partialU1 and complete operator coverage.59.332s/380176KiB. Failed
+195200Z unsupported-op audit remains preserved; equivalent covered subtraction
+passed in the fresh run. Numerical dependencies and notes84–86 stay frozen.
+
+Paired pool8 readiness smoke201100Z completes27.533s/358024KiB:24fit/eightdev/
+two passes/U16+partialU8,48presentations/four updates. FitNLL2.51701->2.17388;
+tiny selected dev12.50%/2.29890, not a benchmark quality claim.42,091params/
+32receivers,672inferencekeys/84commits/672candidatevalues,2376statebytes.
+Fullfit.414378GFLOPs/8.632876MFLOPs per presentation/.872348MFinference.
+One full alternative forward/window and epsilon.1 proposal; candidate scoring,
+full shadows and optimizer charged;8auxiliary exponentials/target separate.
+No direct losing-message derivative from no-grad shadows; winner sampling can
+still have the correct branch derivative in expectation. Exposure/variance,
+other local teachers and future timing-jump terms remain unresolved.
+
+Other-host tied-map capacity and depth-fidelity/nested-growth work (note59
+§§398–399) remain separately owned. AWS exact prefix-reuse readiness result
+saves10.738% counted fitting work with identical curves/parameters/Adam/RNG;
+scope24fit/eightdev/two passes, not strong-control superiority. Report source
+now retains that evidence plus both credit seeds and new contracts/readiness.
+Previous canonical129-page publication192900Z passed bounds/orphans after
+the preserved192300Z orphan failure. Fresh consolidated publication pending.
+
+No numerical job remains active after the smoke. One thread/nice19,3,000,000KiB
+VMS/1,250,000KiB RSS watchdog and8GiB MemAvailable floor; host available~11.5GiB.
+Main branch, three stashes preserved; no unresolved git index conflicts observed.
+No local dense fit, official-test read or duplicated other-host campaign.
+
 ## Actual-write choice correction passes first pilot, 2 October19:20 UTC
 
 Prioritized native integrated p16/L2/H2/pool2 remains unchanged in inference.

@@ -173,6 +173,18 @@ def results():
         if (path:=RES/'dvs_native'/name).exists()]
     tasks['dvs_state_choice_smokes']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'dvs_native').glob('local_dvs_state_choice_smoke_*Z.json'))]
+    tasks['dvs_paired_choice_smokes']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'dvs_native').glob('local_dvs_paired_choice_smoke_pool8_*Z.json'))]
+    tasks['dvs_paired_choice_contracts']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_paired_choice_contracts_*Z.json'))]
+    tasks['dvs_calibration_contracts']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_credit_calibration_contracts_*Z.json'))]
+    tasks['dvs_prefix_replay_savings']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('aws_prefix_replay_smokes_*_analysis.json'))]
+    for audit in tasks['dvs_prefix_replay_savings']:
+        for row in audit['rows']:
+            if hashlib.sha256((ROOT/row['result']).read_bytes()).hexdigest()!=row['result_sha256']:
+                raise ValueError('Changed prefix-replay saving parent')
     tasks['dvs_credit_balance_audits']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_credit_gradient_balance_*Z.json'))]
     tasks['dvs_credit_comparisons']=[]
@@ -657,7 +669,7 @@ def figures(M, tasks, ev):
             a.plot([x['epoch'] for x in row['curve']],[x['nll'] for x in row['curve']],
                 marker='o',color=color,label=row['arm'].replace('_',' '),linewidth=1.5,markersize=3)
         a.set(xlabel='Fixed passes over256 fitting gestures',ylabel='Development NLL',xticks=range(1,5),
-            title='Matched sparse native credit screen: '+r['args']['kind'].replace('_',' '))
+            title='Matched sparse native credit screen: '+r['args']['kind'].replace('_',' ')+f" / seed{r['args'].get('seed',6)}")
         a.legend(fontsize=7);f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
@@ -4060,7 +4072,7 @@ def blocks(M, tasks, ev):
         resources=[[x['arm'].replace('_',' '),f"{x['wall_s']:.3f}",f"{x['max_rss_kb']/1024:.1f}",
             str(int(x['key_scores_per_fit_presentation'])),str(int(x['selected_updates_per_fit_presentation'])),
             str(int(x['counterfactual_values_per_fit_presentation']))] for x in r['common_unit_ledger']]
-        pages.append([('h1','Appendix B. Completed matched credit pilot: '+r['args']['kind'].replace('_',' ')),
+        pages.append([('h1','Appendix B. Completed matched credit pilot: '+r['args']['kind'].replace('_',' ')+f" / seed{r['args'].get('seed',6)}"),
             ('figure',('report/figures/'+r['args']['tag']+'_learning.png',173)),
             ('table',(['Credit','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[29,25,24,31,32,32])),
             ('table',(['Credit','Workflow seconds','Peak RSS MiB','Keys / fit target','Commits / fit target','Values / fit target'],resources,[29,29,26,29,30,30])),
@@ -4077,6 +4089,29 @@ def blocks(M, tasks, ev):
              'specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting '
              'data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, '
              'no official test or superiority claim. '+r['args']['tag']+'.json; theory77/80–84.')])
+    choice_repeats=[r for r in tasks.get('dvs_credit_comparisons',[]) if r['args']['kind']=='state_choice']
+    if len(choice_repeats)>=2:
+        rows=[[str(r['args']['seed']),f"{r['nll_improvement']:+.6f}",
+            f"{-r['accuracy_decline_percentage_points']:+.4f}",f"{r['whole_fit_work_ratio']:.5f}",
+            'Pass' if r['promotion_gate_passed'] else 'FAIL'] for r in choice_repeats]
+        pages.append([('h1','Appendix B. Actual-write choice: independent-seed gate fails'),
+            ('table',(['Seed','NLL improvement','Accuracy gain pp','Fit work ratio','Declared gate'],rows,[20,46,40,35,32])),
+            ('p','Same256 fitting/192 development gestures, four fixed passes and1,024 presentations per arm/seed. '
+             'Seed6 improves54.17%/1.305937 to58.85%/1.194006. Seed7 gives55.21%/1.306508 local versus '
+             '55.21%/1.336201 corrected credit. Every pass and both completed comparisons are retained.'),
+            ('p','The unchanged method fails its independent confirmation gate. No full984-fit campaign, '
+             'extra pass extension or best-seed promotion is admitted. Numerical credit correctness remains '
+             'established for the isolated categorical component; repeatable predictive benefit is not. '
+             'Averaging seeds does not override the predeclared gate.'),
+            ('p','Next distinguish information access, branch/content credit exposure, common-clock noise '
+             'and private-map dilution on fitting-only frozen probes. Alternative no-grad forwards teach '
+             'choices without directly teaching losing content on that realization. Winner-sampled branch '
+             'derivatives can nevertheless be correct in expectation; rare exposure and other approximate '
+             'teachers require separate tests. A larger pool is not an automatic repair.'),
+            ('small','Theory87/88 prioritize one diagnosed repair, numerical contracts, a tiny integrated '
+             'fit and a prespecified matched-work comparison before independent confirmation. Joint versus '
+             'alternating route/message updates is a conditional schedule experiment, not a change to the '
+             'coupled temporal forward computation or a currently demonstrated advantage.')])
     for audit in tasks.get('dvs_suffix_credit_audits',[]):
         rows=[[Path(x['native']).stem.replace('local_dvs_',''),str(x['opposed_teacher_directions'])+'/'+str(x['nonzero_comparable_policy_gradients']),
             f"{x['mean_absolute_value_only_effect']:.5f}",f"{x['mean_absolute_write_only_effect']:.5f}",
@@ -4208,6 +4243,79 @@ def blocks(M, tasks, ev):
              f"{audit['max_rss_kb']/1024:.1f}MiB. Every intervention's forward/replay, backward and "
              'normalization operator coverage passes. No measured expected variance, batch covariance, '
              'Adam trajectory or fitted benefit from gradient normalization follows.')])
+    if tasks.get('dvs_calibration_contracts'):
+        contract=tasks['dvs_calibration_contracts'][-1]
+        pages.append([('h1','Appendix B. Credit calibration: coordinates and limits'),
+            ('p',f"Completed calibration contracts: {contract['contracts_passed']} passed. Common log-rate c "
+             'and relative logits u define rates exp(c)*softmax(u). The joint winner/time score pulls back '
+             'to common-clock credit(1-Lambda*T)*(R-b), and categorical credit pi_i*(F_i-R). The choice '
+             'component is independent of common baseline error; the clock component remains useful and noisy.'),
+            ('p','Recomposing c=logsumexp(old scores) and u=old scores preserves BOTH the old forward and '
+             'the old gradient. A coordinate identity does not remove clock noise. Separately learned '
+             'output maps require an architectural comparison; shared incoming content can still receive '
+             'both derivatives. Eligible-key normalization and discovery remain paid.'),
+            ('p','A positive score-space rescaling can oppose parameter descent through coupled Jacobians. '
+             'The contract gives true parameter gradient[-1,-1] versus rescaled[8,-1], dot product-7. '
+             'Per-sample unit normalization also biases an explicitly zero-mean scalar estimator. '
+             'RMS equalization is therefore not a universal calibration rule.'),
+            ('p','Primary-paper analogues suggest variance-trained legal control variates(RELAX), conditional '
+             'averaging, phasic updates with constrained route drift(PPG), exposure accounting(MoE) and '
+             'event derivative jumps(EventProp). These are distinct repairs. MoE common-logit z-loss '
+             'would regularize this race clock itself; higher-order optionality needs correct stochastic '
+             'derivatives(DiCE), not repeated differentiation of detached first-order teachers.'),
+            ('small','Theory85 mathematical contracts and theory88 linked primary papers; no fitted benefit '
+             'from these normalization/alternation proposals. Parameter-space covariance and branch exposure '
+             'on independent-noise fitting probes determine the next single repair. Keep coupled forward '
+             'messages/races/timing, sparse addressed writes and all existing negative evidence.')])
+    for smoke in tasks.get('dvs_paired_choice_smokes',[]):
+        w=smoke['work'];act=smoke['activity'];n=act['targets']
+        rows=[]
+        for label,x in [('Enumerated2 / readiness',tasks['dvs_state_choice_smokes'][-1]),
+                        ('Paired8 / readiness',smoke)]:
+            a=x['work']
+            rows.append([label,f"{100*x['final']['accuracy']:.2f}",f"{x['final']['nll']:.4f}",
+                f"{a['whole_fit_unit_special_flops_estimate']/1e9:.6f}",
+                f"{a['fit_unit_special_flops_per_target_estimate']/1e6:.6f}",
+                f"{a['inference_unit_special_flops_per_target_estimate']/1e6:.6f}"])
+        pages.append([('h1','Appendix B. Larger alternative pools: paired-credit readiness'),
+            ('table',(['Credit / pool','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[42,25,22,28,28,28])),
+            ('p',f"Both24 fit/eight dev/two passes/48 presentations/four Adam updates,U16+partial U8. "
+             f"Paired8 fitting NLL{smoke['initial_fit']['nll']:.4f} to{smoke['final_fit_diagnostic']['nll']:.4f}; "
+             f"{smoke['wall_s']:.3f}s/{smoke['max_rss_kb']/1024:.1f}MiB peak RSS. These tiny fits establish "
+             'readiness, not quality rankings, larger-pool headroom or practical superiority.'),
+            ('p',f"Paired8 has{smoke['parameters']:,} parameters/32 available receivers versus15,523/eight "
+             'for pool2. Per21-event inference prefix:672 scored keys/84 selected commits/672 candidate '
+             'values; persistent state2,376 bytes. Fitting includes the full shadow: '
+             f"{act['key_scores']/n:.0f} keys/{act['selected_updates']/n:.0f} commits/{act['counterfactual_values']/n:.0f} "
+             'values per target. More state does not mean free key discovery or training.'),
+            ('p','One full alternative write/suffix forward per fitting window supplies loss-difference '
+             'credit with recorded proposal propensity. Epsilon.1 gives importance multiplier at most '
+             '1/.9; eight auxiliary proposal exponentials/target are recorded separately from arithmetic. '
+             'Finite2/3/8/64-candidate contracts match independent expected-risk derivatives; pool2 nests '
+             'enumerated credit exactly. Pool8 legal writes, every-parameter pool2 nesting and actual '
+             'Adam/cursor/RNG recovery with full/partial windows pass; all operators are covered.'),
+            ('small','Contracts195800Z, smoke201100Z; theory86/87. Inference and native timing remain '
+             'unchanged at each shape. No-grad alternatives do not directly teach losing payload maps. '
+             'Other local teachers and future timing jumps remain approximate. The failed initial195200Z '
+             'operator-accounting attempt is preserved; covered equivalent subtraction passes a fresh run.')])
+    for audit in tasks.get('dvs_prefix_replay_savings',[]):
+        rows=[[x['variant'],f"{100*x['accuracy']:.2f}",f"{x['nll']:.4f}",
+            f"{x['whole_fit_gflops']:.6f}",f"{x['fit_mflops_per_target']:.6f}",
+            f"{x['inference_mflops_per_target']:.6f}"] for x in audit['rows']]
+        pages.append([('h1','Appendix B. Exact prefix reuse reduces integrated fitting work'),
+            ('table',(['Replay','Dev accuracy %','Dev NLL','Whole fit GFLOPs est.','Fit MFLOPs / target est.','Infer MFLOPs / prefix est.'],rows,[26,28,25,33,33,28])),
+            ('p',f"Detached causal-prefix reuse saves{100*(1-audit['fit_work_ratio']):.3f}% counted fitting "
+             'work with identical entire learning curves, predictions, model weights, Adam, cursor and '
+             'RNG recovery. Same24-fit/eight-dev/two-pass/48-target native p16/L2/H2/pool2 protocol. '
+             'Both rows use the same full-fit and presentation denominators.'),
+            ('p','Reuse skips repeated alternative-prefix computation while preserving the exact '
+             'actual-write estimator. This is completed implementation advantage against its full-replay '
+             'reference, not quality advantage against the strong gesture controls. Snapshot/copy memory '
+             'traffic and energy remain unmeasured; all retained suffix and optimizer work is charged.'),
+            ('small','Other-host evidence retained from AWS_PREFIX_REPLAY_FINDINGS_20261002.md and '
+             'aws_prefix_replay_smokes_20261002T201100Z_analysis.json, with verified parent hashes. '
+             'Observed13.609 versus12.653 seconds is one concurrent-host observation, not a general '
+             'latency claim. Exact reuse may support future credit comparisons after matching contracts.')])
     if tasks.get('dvs_external_capacity_completed'):
         reference=tasks['dvs_practical_native'][0];clock=tasks['dvs_clock_completed'][0]
         selected_references={'time_binned_naive_bayes',reference['selected_control'],
