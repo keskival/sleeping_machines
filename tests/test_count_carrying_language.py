@@ -87,3 +87,41 @@ def test_chunked_forward_uses_the_same_stream_positions_as_one_pass():
             out, state = model.forward_chunk(torch.tensor(tokens[s:s + 16]), state)
             parts.append(out)
     assert torch.allclose(whole, torch.cat(parts), atol=1e-10)
+
+
+def _tiny_checkpoint(tmp_path, model):
+    import sys
+    sys.path.insert(0, 'experiments')
+    import e64_lm_baselines as E
+    torch.manual_seed(0)
+    net = E.LSTMLM(16) if model == 'lstm' else E.TfLM(16, 1, 32)
+    args = dict(model=model, D=20000, size=16, layers=1, ctx=32, dropout=0.0)
+    path = tmp_path / f'{model}.pt'
+    torch.save({'args': args, 'state': net.state_dict()}, path)
+    return path, net, args
+
+
+def test_frozen_composition_reproduces_e64_base_scores_and_runs(tmp_path):
+    """THEORY §386 frozen-composition plumbing: base-only bpc equals e64 score() on the same positions."""
+    import math
+    import sys
+    sys.path.insert(0, 'experiments')
+    import e64_lm_baselines as E
+    import count_composition_frozen as Z
+    import count_reference_scale as S
+    x = S.load()
+    seg = x[95_000_000:95_000_000 + 3000]
+    for model in ('lstm', 'tf'):
+        path, net, args = _tiny_checkpoint(tmp_path, model)
+        t, lq = Z.base_logprobs(net, model, seg, 32)
+        ours = float(-lq.gather(1, torch.as_tensor(seg[t].astype(np.int64))[:, None]).sum()) / len(t) / math.log(2)
+        ref = E.score(net, torch.as_tensor(seg.astype(np.int64)), type('a', (), dict(model=model, batch_size=16)), 32)
+        assert abs(ours - ref) < 1e-4
+    out = tmp_path / 'z.json'
+    sys.argv = ['z', '--checkpoint', str(path), '--K', '3', '--valid', '2000', '--test', '3000', '--fit', '20000',
+                '--out', str(out)]
+    Z.main()
+    import json
+    r = json.loads(out.read_text())['results']
+    assert r['composed']['test']['bpc'] < r['base_only_test_bpc']  # random base: counts must help
+    assert 0 <= r['composed']['test']['mean_responsibility'] <= 1
