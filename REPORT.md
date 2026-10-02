@@ -2506,3 +2506,36 @@ The event hazard models use sparse conditional memories and local rate/flow stat
 The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E173/E174 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the language/depth screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal residual learner, and E144 audits simultaneous state/query pooling. E171 reproduces the consolidated screens and selected speech answers, and checks causal input boundaries. E172 records complete training-step arithmetic; E175 checks the generic persistent language stream.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
+
+## AWS appendix: exact prefix reuse reduces actual-write credit cost
+
+Completed 2 October. The integrated native actual-write learning driver can
+reuse the unchanged first nine events for its no-gradient alternative suffix.
+Matched24-fit/8-development/two-pass smoke retains bit-identical curves,
+predictions, model weights, Adam, cursor and RNG. Eight rotating-site float32/
+float64 contracts preserve all parameter gradients and actual alternate state;
+interrupted training recovery also passes. Original reference files unchanged.
+
+|Implementation|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
+|---|---:|---:|---:|---:|---:|
+|Full replay|25.00%|2.311338|0.143986|2.999703|0.591695|
+|Reused prefix|25.00%|2.311338|0.128525|2.677607|0.591695|
+
+Same24 distinct real fitting gestures,48 fitting targets over two passes;
+p16/L2/H2/pool2 gives8 available receiver states and4 selected updates per
+observed event. Charged factual+shadow fitting activity is2016→1584 events,
+16128→12672 key scores and8064→6336 selected writes. Inference uses the same
+hard races, selected values, clocks and persistent state. Whole-fit and
+per-target columns use the same traced arithmetic-plus-unit-special convention
+for both implementations, including clipping/Adam and replay setup. Fitting
+work falls10.74%. Simultaneous AWS one-thread walls13.61→12.65s and peak
+RSS459616→459672KiB are observations, not repeated latency or energy claims.
+Snapshot/copy traffic is unmeasured. Small recovery/engineering fits are
+separate research work and this smoke is not a new quality benchmark.
+
+This is a resource improvement over the identical integrated learning
+implementation, with retained outputs and updates. It does not establish
+practical superiority over the stronger full-data gesture controls or a
+whole-model unbiased credit rule. Completed raw/source-hashed evidence and
+scopes: experiments/AWS_PREFIX_REPLAY_FINDINGS_20261002.md and
+experiments/results/diagnostics/aws_prefix_replay_smokes_20261002T201100Z_analysis.json.

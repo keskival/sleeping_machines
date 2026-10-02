@@ -1609,3 +1609,22 @@ recovery. Full audit window168->132 events,12.203334->10.938926M arithmetic,
 no measured traffic/energy claim. Integrated24/8/two-pass/U16+partialU8 paired
 smokes next, unique queues under safe worker,2GiB RSS/6GiB VMS/8GiB floor.
 Engineering equivalence/savings only; no new practical quality advantage yet.
+
+## AWS exact prefix reuse completed — 2 October, 20:00 UTC
+
+Both guarded paired learning smokes and completed analysis pass. Every curve,
+prediction, selected/online parameter, Adam/cursor/RNG is bit-identical;24fit,
+8dev,two passes,U16+partialU8. Same25%/2.311338 smoke quality retained, not a
+new held-out quality campaign. Fitting .143985744→.128525136GFLOPs (ratio
+.892624,10.74% less); per-target2.999703→2.677607MFLOPs; inference unchanged
+.591695MFLOPs. Factual+shadow events2016→1584, keys16128→12672,writes8064→6336.
+Same available8 receivers. Walls13.61/12.65s, RSS459616/459672KiB. Completed
+REPORT appendix and AWS_PREFIX_REPLAY_FINDINGS show both same-unit ledgers.
+
+Local agent can adopt experiments/aws_checkpointed_choice_credit.py after
+checking its frozen contracts; reference drivers remain untouched. This is
+pure engineering reuse of detached alternative prefixes, not truncating the
+factual credit graph. Local actual-write quality replication/curie capacity
+ownership retained. All AWS stages complete, no trainer pending. Primary
+quality hypothesis remains actual-write choice utility with original timing;
+clock/support variance and full-data control quality gaps remain open.

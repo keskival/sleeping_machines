@@ -1,0 +1,48 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "variant": "full",
+      "result": "experiments/results/dvs_native/aws_prefix_replay_smokes_20261002T201100Z_full.json",
+      "result_sha256": "7c91315b104bc97a419f868ca1f04cf6a280f6fcc2df64cf9b0c91e15f018b36",
+      "accuracy": 0.25,
+      "nll": 2.311337888240814,
+      "whole_fit_gflops": 0.143985744,
+      "fit_mflops_per_target": 2.999703,
+      "inference_mflops_per_target": 0.591695,
+      "wall_s": 13.608826664974913,
+      "max_rss_kb": 459616,
+      "activity": {
+        "targets": 48,
+        "events": 2016,
+        "key_scores": 16128,
+        "selected_updates": 8064,
+        "counterfactual_values": 16128
+      },
+      "available_receivers": 8
+    },
+    {
+      "variant": "reuse",
+      "result": "experiments/results/dvs_native/aws_prefix_replay_smokes_20261002T201100Z_reuse.json",
+      "result_sha256": "1815101c3da86651dc0ffbecc3e373e5d9c208ede61b25757003a1125c80f458",
+      "accuracy": 0.25,
+      "nll": 2.311337888240814,
+      "whole_fit_gflops": 0.128525136,
+      "fit_mflops_per_target": 2.677607,
+      "inference_mflops_per_target": 0.591695,
+      "wall_s": 12.652518533053808,
+      "max_rss_kb": 459672,
+      "activity": {
+        "targets": 48,
+        "events": 1584,
+        "key_scores": 12672,
+        "selected_updates": 6336,
+        "counterfactual_values": 12672
+      },
+      "available_receivers": 8
+    }
+  ],
+  "fit_work_ratio": 0.892624036446275,
+  "all_curves_predictions_model_adam_cursor_rng_identical": true,
+  "scope": "24fit/8dev/two-pass matched implementation smoke; no broad quality or model supremacy claim. Window-traced unit-special work convention; no measured energy."
+}
