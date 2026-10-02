@@ -28,6 +28,7 @@ from sleeping_machines.parallel_stream_language import ParallelEventLanguageMode
 from sleeping_machines.language_memory import PROFILES, initialize_language_memory
 from sleeping_machines.selective_stream_language import SelectiveEventLanguageModel
 from sleeping_machines.count_composed_stream import CountComposedModel
+from sleeping_machines.count_escape_gate import GatedCountComposedModel
 from sleeping_machines.count_carrying_language import fit_stream_counts, eval_stream_counts
 
 
@@ -145,6 +146,8 @@ def main():
     parser.add_argument('--memory-profile',choices=PROFILES,default='inherited')
     parser.add_argument('--content-memory',action='store_true')
     parser.add_argument('--orders',type=int,default=5)
+    parser.add_argument('--count-message',action='store_true')
+    parser.add_argument('--escape-gate',action='store_true')
     args = parser.parse_args()
     out = ROOT/'experiments/results/count_composed_carrier'/f'{args.tag}.json'
     out.parent.mkdir(parents=True,exist_ok=True)
@@ -174,7 +177,11 @@ def main():
     started = time.perf_counter()
     train = torch.tensor(text_slice(0,args.fit)); dev = torch.tensor(text_slice(90_000_000,args.dev))
     model_class = SelectiveEventLanguageModel if args.content_memory else ParallelEventLanguageModel
-    model = CountComposedModel(model_class(width=args.width,modes=args.modes,depth=args.depth),args.orders)
+    base = model_class(width=args.width,modes=args.modes,depth=args.depth)
+    if args.count_message or args.escape_gate:  # THEORY §389 repairs, zero-initialized and exactly nested
+        model = GatedCountComposedModel(base,args.orders,escape_gate=args.escape_gate,count_message=args.count_message)
+    else:
+        model = CountComposedModel(base,args.orders)
     initialize_language_memory(model.base,args.memory_profile)
     count_started = time.perf_counter()
     model.register_stream('fit',fit_stream_counts(train.numpy(),args.orders))
@@ -192,7 +199,7 @@ def main():
                ROOT/'sleeping_machines/event_memory.py',ROOT/'sleeping_machines/operation_audit.py',
                ROOT/'experiments/e120_shared_tasks.py',ROOT/'sleeping_machines/language_memory.py',
                ROOT/'sleeping_machines/selective_stream_language.py',ROOT/'sleeping_machines/count_composed_stream.py',
-               ROOT/'sleeping_machines/count_carrying_language.py']
+               ROOT/'sleeping_machines/count_carrying_language.py',ROOT/'sleeping_machines/count_escape_gate.py']
     result = dict(status='running',args=vars(args),parameters=sum(p.numel() for p in model.parameters()),
                   curve=[],monitor_curve=[],initial_dev=evaluate_dev(dev),
                   protocol=dict(fitting=[0,args.fit],development=[90_000_000,90_000_000+args.dev],
@@ -265,6 +272,8 @@ def main():
         epoch,next_start,total,steps,state = epoch+1,0,0.,0,model.new_state();persist()
     model.load_state_dict(best_state)
     result['final'] = dict(dev=evaluate_dev(dev))
+    if isinstance(model,GatedCountComposedModel):
+        model.base_only = True; result['final']['base_alone_dev'] = evaluate_dev(dev); model.base_only = False
     result['count_receivers'] = dict(orders=args.orders,fit_transitions_counted=(args.fit-1)*args.orders,
         development_transitions_counted=(args.dev-1)*args.orders,lookups_per_target=args.orders,precompute_seconds=count_seconds,
         scope='Integer count increments/lookups reported separately from FLOPs; cascade arithmetic is inside traced forward/backward.')
