@@ -1828,6 +1828,17 @@ justify reduced-replay training. Artifacts retained in signed_variance230400Z;
 next bounded gap is utility-scale/calibration and parameter covariance, not
 extra epochs on these failed variants. No numerical AWS trainer left running.
 
+## Local race-scaled support audit complete — 2 October, 22:52 UTC
+
+Theory99 / local_dvs_race_support_20261002T225200Z completes43,008 actual
+races and six mathematical contracts, no optimizer/DEV/test. See current
+LOCAL_HANDOFF.md for exact activity/entropy/source and costs. Relative
+reception removes common-speed-shift dependence but does not fix concentrated
+choices; trained allsite top99 fractions44.47%/34.59%, selected oldsite71.88%/
+57.03%. No utility or automatic fit admission. Next bounded local diagnostic
+separates static keys from persistent-memory score contribution; other-host
+batched corrected replay/shadow fits and AWS critic calibration stay owned.
+
 ## Actual-native reception diagnostic completed — 2 October, 22:22 UTC
 
 After theory97, local_dvs_native_window_intervention_20261002T223000Z runs

@@ -1,5 +1,35 @@
 # Local host: current research continuation
 
+## Race-scaled reception support completed, 2 October22:52 UTC
+
+New theory99 proves a relative deadline g((1+c)T), exact common-speed-shift
+membership invariance, closed expected receiver count and unchanged native
+11ms local delay bound. Six numerical contracts pass. Unique guarded
+local_dvs_race_support_20261002T225200Z collects43,008 actual races across
+all84sites, two fixed-pass4 native producers+initial reservoirs,16 unused FIT
+inputs x8 whole-history draws. No hypothetical deliveries/writes, optimizer,
+DEV/test evaluation or automatic training admission. Original logits/state
+reproduce, all weights fixed;59.553s/335536KiB. Full score/arrival/site/noise
+profile preserved with checksum; prior trained core fits2.285696GF each.
+FLOPs/traffic/energy unknown, not zero. Positive prototype remains unfitted.
+
+Trained normalized route entropy .335/.399 versus initial .750/.726;
+99%-probability concentration44.47%/34.59% across allsites. Former event19/
+L0/H0 site is more decisive (71.88%/57.03%). Relative c4 expected receiver
+counts1.228/1.272 with actual meanextra waiting1.406/1.675ms; fixed3ms
+expected1.341/1.394. Earlier1ms single-draw lack of extra reception is local,
+not proof all alternative arrival support is absent. Relative timing fixes
+common-shift dependence but does not solve categorical concentration or
+establish useful alternatives. No unchanged failed one-site fit is admitted.
+
+Next independent diagnostic: decompose native score into query/static-key/
+clock-bias and query/key-read(persistent memory), preserving actual forward
+and RNG. Test whether memory-conditioned routing rather than static keys
+accounts for confidence; no key normalization fit before that evidence.
+Other-host episode-batched corrected replay/shadow quality remains prioritized;
+AWS owns critic calibration. Generated153-page report and all earlier results
+remain valid while new profile/critic report pages are prepared.
+
 ## Git conflict repaired; producer-held check agrees, 2 October21:57 UTC
 
 Autostash REPORT.md conflict after shared-main update is resolved by retaining
