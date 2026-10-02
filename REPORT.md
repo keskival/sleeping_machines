@@ -17,7 +17,7 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 - **Generalization.** Race retrieval reaches **100% at four times the training context** within 4,000 examples in all five runs. A learned phase rule solves **all 3,440 unseen modular triples**, using the supplied period 17.
 - **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
-- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets, so these fits do not yet surpass counting statistics (Theory §376).
+- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets, so these fits do not surpass counting statistics, as expected in this regime (Theory §376). Stream-adaptive interpolated Kneser–Ney is stronger still (Theory §393); below tens of millions of characters counting is expected to dominate any learner, Transformers included (§394).
 
 ![accomplishments](report/figures/accomplishments.png)
 
@@ -33,9 +33,9 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fitting/128 development rows; four fixed selection opportunities. Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. The original development lead, 95.3% versus 93.0%, is retained in Appendix B. CatBoost seed8 was stopped without a score; full confirmation is incomplete. Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.
 
-**Causal statistical language advantage.** On the same999,999 test targets after10M fitting characters, ours count/copy race mixture scores **1.727bpc** versus **1.799** for LSTM and **1.908** for Transformer. This corrected specialized predictor uses statistical memory; it is not the learned native model. Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.
+**Statistical memory where counting is strong (10M characters).** On the same999,999 test targets, ours count/copy race mixture scores **1.727bpc** versus **1.799** for LSTM and **1.908** for Transformer; closed-form counts alone (untuned mkn, order 7) score **1.788**. This is a count/copy predictor winning in a regime where counting statistics are expected to be near-optimal: the small dense controls sit at count level here, and learned models overtake counts only with far more data and parameters (Theory §§381, 394). It shows that statistical memory is a useful information path, **not** that learning beats counts, and it is not the learned native model. Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.
 
-**A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
+**Work between two learned language models.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam. This compares two learned models only. Both are far worse than count statistics on the same protocol (Theory §393); it is not a language-quality claim against counts.
 
 **Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
 
@@ -1462,8 +1462,20 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 | Native alone 8,192 | 8,192/4 | 3.557 | 15.116 | 0.461 | 0.0974 |
 | Count-carrying native K4 8,192 | 8,192/4 | 2.671 | 15.227 | 0.465 | 0.0982 |
 | Same, untrained base 8,192 | 8,192/0 | 2.682 | Not trained | Not trained | 0.0982 |
+| Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 2.595 | 16.853 | 0.514 | 0.1155 |
 | Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 2.601 | 15.314 | 0.467 | 0.0993 |
+| Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 2.592 | 4.181 | 0.128 | 0.0358 |
+| Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 3.492 | 4.161 | 0.127 | 0.0358 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 0.288 | 0.009 | 0.0031 |
+| KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 5.995 | 0.183 | 0.0632 |
+| KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.593 | 1.744 | 0.053 | 0.0184 |
+| KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 3.471 | 1.744 | 0.053 | 0.0184 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Count-carrying native K4 32,768 | 32,768/4 | 2.560 | 60.790 | 0.464 | 0.0982 |
@@ -1473,7 +1485,7 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 | KN counts, frozen o5 | 32,768/1 | 2.704 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o4 | 32,768/1 | 2.579 | Not FLOPs | Not FLOPs | Not FLOPs |
 
-Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural controls. Exploratory development evidence; no comparable-quality Transformer claim.
+Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural controls. Correction (Theory §393): these count rows are not the strongest counting model. Stream-adaptive interpolated Kneser–Ney with continuation statistics scores better than every row of ours here (preliminary 2.521 / 2.414 / 2.271 bpc at 2K / 8K / 32K; official reference file pending), so wins over the rows shown are wins over weaker counts, not learning beating counts. At these sizes counting is expected to dominate any learner (§394). Exploratory development evidence; no comparable-quality Transformer claim.
 
 At 2,048 fitting characters, fitting the native base and escape parameters improves 0.0071 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
@@ -1494,6 +1506,18 @@ At 32,768 fitting characters, fitting the native base and escape parameters impr
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0108 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0988 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0988 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0922 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0890 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0915 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves -0.2996 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves -0.3213 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0809 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
@@ -1686,7 +1710,7 @@ Labelled diagnostic, not the integrated native architecture. The input-gated tem
 | KN counts, frozen o5 | 131,072/1 | 2.349 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o4 | 131,072/1 | 2.346 | Not FLOPs | Not FLOPs | Not FLOPs |
 
-Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap; both hold formally for the scalar cascade, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the standalone base is trained as a conditional residual, so this alone cannot establish an inert base (Theory §389.1). With the escape gate (+ count message) every width reaches 2.12–2.14, and a minimal 2-wide, one-layer base matches w128 (2.124 vs 2.129) at 1/50 of the work: the gain is learned count smoothing, not the temporal carrier. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
+Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap; both hold formally for the scalar cascade, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the standalone base is trained as a conditional residual, so this alone cannot establish an inert base (Theory §389.1). With the escape gate (+ count message) every width reaches 2.12–2.14, and a minimal 2-wide, one-layer base matches w128 (2.124 vs 2.129) at 1/50 of the work: the gain is learned count smoothing, not the temporal carrier. These rows beat the frozen-KN and Witten–Bell references shown, which are not the strongest counting model: stream-adaptive interpolated Kneser–Ney (continuation statistics) is stronger and beats every learned model of ours at 2K–32K (Theory §393). No row here shows learning beating counts in this count-favoured regime. Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
 
 ## Appendix B (continued). Ours: native temporal-core language
 

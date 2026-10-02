@@ -722,3 +722,36 @@ learner. Lower cascade orders should carry continuation statistics (a cheap, exa
 receivers; the top order keeps occurrence counts, as in interpolated KN). Any core contribution must then beat
 that stronger floor in the unseen and 1–2 strata. The top-placed pooled memory, the next queued series, is the
 mechanism aimed at this stratum; its result must be read there, not in the mean.
+
+## 394. Calibration: compare only where learning matters; a joint language–event task
+
+**Calibration rule.** A comparison is informative about learning only if a strong conventional learner beats
+the strongest table or count method on the task by a clear margin. On character text the repository's own
+controls fail that test below about 90M characters: frozen modified-KN o7 scores 1.788 at 10M (LSTM 1.799,
+Transformer 1.908), and the Transformer leads by only .05 at 90M (§381). Stream-adaptive interpolated KN is
+stronger still (§393). Small-N language therefore measures closeness to counts for *every* learner, ours and
+Transformers alike. Every new task reports three bars: the strongest table, a tuned conventional learned
+control with the same input information, and ours, with quality, whole-fit and per-query work. A task where
+the learned control does not beat tables is reported as non-informative for learning.
+
+**Milestone task (joint text + irregular events, one persistent address).** Each episode is one stream on a
+single native source address. The content vector carries 27 characters, 4 event marks and a query flag, and
+every event has a physical timestamp. Phases: background marked events; a spelled question ("is <word>
+recent", with optional filler words, characters at irregular intervals, some background events interleaved);
+then the decisive phase, the last event of the named mark followed by k ∈ {0..3} distractor events of other
+marks; then a query. Label: 1 iff the elapsed time from the last event of the named mark to the query is
+below Δ. Offsets are drawn from [.3Δ, .95Δ] for label 1 and [1.05Δ, 2.5Δ] for label 0, with balanced labels.
+
+Shortcuts removed by construction: (i) time-blind tables (marks, words, orders, counts) are at chance
+because the label depends only on the offset; (ii) rank-only models are at chance because k, the
+number of events after the named mark, and the text placement are drawn independently of the label;
+(iii) a text-blind model cannot tell which mark is asked about; (iv) the named mark's last event sits after
+the text, so the word must persist in state while events arrive. A solution must read the word from
+characters, bind it to the mark stream, keep the binding across events, and compare an exact elapsed time
+with Δ. That is language, irregular time and persistent state in one computation.
+
+Arms: native (unchanged AddressedEventHeads, one address, observed time); the native rank-time control;
+cleared-text control (text events removed, an information ablation); a table bar (best discrete lookup on
+time-blind features, fitted on the fit set); and, on AWS, a Δt-input GRU and a time-encoded Transformer with
+the same events. Calibration passes if a learned control beats the table bar by ≥ 20 points. Ours is then
+judged on accuracy, whole-fit and per-query work against those controls.

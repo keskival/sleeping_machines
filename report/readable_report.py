@@ -363,6 +363,14 @@ def count_reference_bpc(fit):
     return min((row['bpc'] for row in rows),default=None)
 
 
+def count_scale_reference(fit, segment='e64_test_95M_1M'):
+    """Best completed closed-form count model (any order/method) on a large-data segment (Theory §381)."""
+    rows=[row for path in sorted((RES/'count_reference').glob('*scale*.json'))
+          for row in json.loads(path.read_text()).get('rows',[])
+          if row.get('fit')==fit and row.get('segment')==segment]
+    return min(rows,key=lambda r:r['bpc'],default=None)
+
+
 def aws_e64_reference(model, data_size):
     """Read completed AWS reference evidence, including its cost and source path."""
     for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
@@ -1476,8 +1484,9 @@ def blocks(M, tasks, ev):
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
          "Embeddings, temporal state and vector maps learn."
          +(f" Calibration: closed-form Kneser–Ney counts of the same fitting data score {count_reference_bpc(131072):.3f} / "
-           f"{count_reference_bpc(1048576):.3f} bpc on the same targets, so these fits do not yet surpass counting statistics "
-           "(Theory §376)." if count_reference_bpc(131072) is not None and count_reference_bpc(1048576) is not None else "")]),
+           f"{count_reference_bpc(1048576):.3f} bpc on the same targets, so these fits do not surpass counting statistics, as expected in this regime "
+           "(Theory §376). Stream-adaptive interpolated Kneser–Ney is stronger still (Theory §393); below tens of millions "
+           "of characters counting is expected to dominate any learner, Transformers included (§394)." if count_reference_bpc(131072) is not None and count_reference_bpc(1048576) is not None else "")]),
         ("figure",("accomplishments",174)),
         ("small","Left: means and recorded ranges, five event runs and two Transformer runs; "
          "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
@@ -1515,15 +1524,22 @@ def blocks(M, tasks, ev):
              f'The original development lead, {100*ours["accuracy"]:.1f}% versus {100*trees["accuracy"]:.1f}%, is retained in Appendix B. '
              +(banknote_last_cell if not all(len(v)==3 for v in banknote_confirmation.values()) else '')+
              'Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.'),
-            ('p',f'<b>Causal statistical language advantage.</b> On the same999,999 test targets after10M fitting characters, '
+            ('p',f'<b>Statistical memory where counting is strong (10M characters).</b> On the same999,999 test targets, '
              f'ours count/copy race mixture scores <b>{ev["native10"]:.3f}bpc</b> versus '
-             f'<b>{ev["lstm10"]:.3f}</b> for LSTM and <b>{ev["tf10"]:.3f}</b> for Transformer. '
-             'This corrected specialized predictor uses statistical memory; it is not the learned native model. '
-             'Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.'),
-            ('p','<b>A near-quality language work advantage.</b> Ours native2K uses <b>3.78 whole-fit GFLOPs</b> versus '
+             f'<b>{ev["lstm10"]:.3f}</b> for LSTM and <b>{ev["tf10"]:.3f}</b> for Transformer'
+             +(f'; closed-form counts alone (untuned {count_scale_reference(10_000_000)["method"]}, order {count_scale_reference(10_000_000)["order"]}) '
+               f'score <b>{count_scale_reference(10_000_000)["bpc"]:.3f}</b>' if count_scale_reference(10_000_000) else '')+'. '
+             'This is a count/copy predictor winning in a regime where counting statistics are expected to be near-optimal: '
+             'the small dense controls sit at count level here, and learned models overtake counts only with far more data '
+             'and parameters (Theory §§381, 394). It shows that statistical memory is a useful information path, '
+             '<b>not</b> that learning beats counts, and it is not the learned native model. Capacity and fitting budgets differ. '
+             'Appendix B charges floating mixing work and reports integer table work separately.'),
+            ('p','<b>Work between two learned language models.</b> Ours native2K uses <b>3.78 whole-fit GFLOPs</b> versus '
              '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
              'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
-             'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
+             'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam. '
+             'This compares two learned models only. Both are far worse than count statistics on the same protocol '
+             '(Theory §393); it is not a language-quality claim against counts.'),
             ('small','This banknote comparison concerns one task. Strong synthetic order/retrieval evidence '
              'on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.')])
         native8=[r for r in tasks.get('native_language',[]) if r['args']['fit']==8192
@@ -3258,7 +3274,11 @@ def blocks(M, tasks, ev):
             ('small','Same 8,191 development targets for every row; one seed. Count increments/lookups are '
              'integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures '
              'whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural '
-             'controls. Exploratory development evidence; no comparable-quality Transformer claim.'),
+             'controls. Correction (Theory §393): these count rows are not the strongest counting model. Stream-adaptive '
+             'interpolated Kneser–Ney with continuation statistics scores better than every row of ours here (preliminary '
+             '2.521 / 2.414 / 2.271 bpc at 2K / 8K / 32K; official reference file pending), so wins over the rows shown are wins '
+             'over weaker counts, not learning beating counts. At these sizes counting is expected to dominate any learner '
+             '(§394). Exploratory development evidence; no comparable-quality Transformer claim.'),
             *[('small',f'At {r["args"]["fit"]:,} fitting characters, fitting the native base and escape parameters '
                 f'improves {r["initial_dev"]["bpc"]-r["final"]["dev"]["bpc"]:.4f} bpc over their untrained initialization. '
                 'The complete composed predictor improves over native-alone, while this smaller learning contribution '
@@ -3523,6 +3543,9 @@ def blocks(M, tasks, ev):
              'standalone base is trained as a conditional residual, so this alone cannot establish an inert base (Theory §389.1). '
              'With the escape gate (+ count message) every width reaches 2.12–2.14, and a minimal 2-wide, one-layer base matches '
              'w128 (2.124 vs 2.129) at 1/50 of the work: the gain is learned count smoothing, not the temporal carrier. '
+             'These rows beat the frozen-KN and Witten–Bell references shown, which are not the strongest counting model: '
+             'stream-adaptive interpolated Kneser–Ney (continuation statistics) is stronger and beats every learned model '
+             'of ours at 2K–32K (Theory §393). No row here shows learning beating counts in this count-favoured regime. '
              'Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory '
              'development evidence; no comparable-quality Transformer claim.')])
     for begin in range(0,len(tasks.get('native_language',[])),4):
