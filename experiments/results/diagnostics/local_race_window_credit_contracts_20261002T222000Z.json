@@ -1,0 +1,85 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_race_window_credit_contracts_20261002T222000Z"
+  },
+  "contracts_passed": 7,
+  "original_and_factorized_joint_density_equal": true,
+  "physical_cutoff_zero_width_and_cap_passed": true,
+  "conditional_membership_normalization_and_activity_passed": true,
+  "conditional_quadrature_and_boundary_choice_path_gradients_equal": true,
+  "every_score_width_message_and_decay_finite_difference_passed": true,
+  "zero_width_one_sided_boundary_credit_passed": true,
+  "actual_write_differs_from_delivery_only": true,
+  "conditional_noise_exp1": 0.9,
+  "quadrature_degree": 64,
+  "candidates": 3,
+  "membership_histories": 12,
+  "boundary_pairs_per_other_history": 12,
+  "expected_selected_given_winner": [
+    1.5535760834199221,
+    1.4603833491668081,
+    1.3388251631077193
+  ],
+  "exact_conditional_expected_loss": 0.5273188938537499,
+  "exact_score_gradient": [
+    0.02316637170406204,
+    0.08163315460474849,
+    -0.12148589795615919
+  ],
+  "ordinary_history_score_gradient": [
+    -2.143574429814803e-05,
+    -9.74560477061345e-05,
+    0.00016244998719591296
+  ],
+  "exact_width_gradient": -27.662490437139432,
+  "ordinary_history_width_gradient": 0.6566181283475622,
+  "zero_width_one_sided_gradient": -34.323669866414534,
+  "finite_difference_max_errors": [
+    9.132403167022574e-12,
+    4.405599440815422e-09,
+    5.007827486025462e-12,
+    5.295520559599545e-13
+  ],
+  "boundary_loss_differences": [
+    {
+      "winner": 0,
+      "candidate": 1,
+      "actual_write_boundary_loss_difference": 0.17466619030686142
+    },
+    {
+      "winner": 0,
+      "candidate": 2,
+      "actual_write_boundary_loss_difference": -0.34768931438043366
+    },
+    {
+      "winner": 1,
+      "candidate": 0,
+      "actual_write_boundary_loss_difference": 0.05159374872116788
+    },
+    {
+      "winner": 1,
+      "candidate": 2,
+      "actual_write_boundary_loss_difference": -0.3857338708674965
+    },
+    {
+      "winner": 2,
+      "candidate": 0,
+      "actual_write_boundary_loss_difference": 0.03214852852916371
+    },
+    {
+      "winner": 2,
+      "candidate": 1,
+      "actual_write_boundary_loss_difference": 0.12073371625073194
+    }
+  ],
+  "source_sha256": {
+    "sleeping_machines/race_window.py": "394bc405c68c29ffbf54d4a7394ed6f0d8c568fa6e0633fcc8c6c8e0718c1de1",
+    "experiments/race_window_credit_contracts.py": "b3f1bc4aa902b8e42b96cdc853ed4dfe4d585a9e906a50d976b689efe71331de",
+    "experiments/theory/97_multi_arrival_race_window_credit.md": "6e51f62b8649c52a1d2e1784d2a7eae638b4a6344b27707de10fefce190df174"
+  },
+  "wall_s": 0.7429275500035146,
+  "max_rss_kb": 295904,
+  "numerical_reference_flops": null,
+  "scope": "Three-candidate exact conditional arrival-law and full multi-arrival boundary-gradient reference; decaying content, actual separate writes and later fixed-address read. Conditional first-noise fixed, deterministic quadrature, no optimizer/fit/native window installation or benchmark advantage. Enumeration and numerical reference work paid; FLOPs/traffic/energy unmeasured, not zero. Fixed-first deadline differs from silence-reset popcorn; full-sequence credit/scheduler remain open."
+}

@@ -256,3 +256,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - [Payload, clock and layer partitions](theory/95_state_payload_clock_and_layer_partitions.md) — completed state-access signal admits four cached diagnostic partitions and fixed decoder-setting cross-checks; distinguishes retained payloads from metadata and finite regularization without claiming causal depth or sparse advantage.
 
 - [Producer-held decoder selection](theory/96_producer_held_selection_and_mean_regularization.md) — a label-trained-feature CV confidence counterexample; fixed-pass native pilots compare conditional versus untouched-FIT decoder selection with sample-size-invariant mean regularization and an exact affine native-head port.
+
+- [Multi-arrival race window credit](theory/97_multi_arrival_race_window_credit.md) — exact residual-arrival factorization and physical bounded-delay cutoff; full boundary/winner/history-cell derivative identity, zero-width birth credit and seven numeric contracts. Constructed width gradient reverses ordinary autograd; not an installed native window or quality claim.

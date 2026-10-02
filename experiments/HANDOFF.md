@@ -1785,3 +1785,24 @@ Next bounded candidate: compact local RBF/prototype head on native current
 context, with initial reservoirs and strongest same-host compact/raw controls;
 no dense prefix carrier or resident reader, full lookup and costs explicit.
 No prototype/convex primitive is promoted before integrated prediction checks.
+
+## Multi-arrival boundary credit contracts pass — 2 October, 22:14 UTC
+
+New theory97 derives complete exponential residual-arrival law after the first
+winner, physical native delay cutoff and loser Bernoulli membership. Paired
+boundary credit includes actual separate writes and downstream loss. Ordinary
+unconditional history-cell derivatives + boundary flux + winner choice equal
+conditional membership/truncated-arrival gradients. Do not add full boundary
+flux to conditional inverse-CDF derivatives (double counting). This is fixed
+first-arrival deadline, not silence-reset popcorn, and not native installed fit.
+
+Unique guarded local_race_window_credit_contracts_20261002T222000Z completes
+seven contracts in .743s/295904KiB: density, cutoff/cap/zero nesting, membership
+normalization/activity, every score/width/content/decay gradient, independent
+finite differences, one-sided zero-width birth and actual-write vs delivery.
+Constructed exact dL/dH=-27.662490 versus ordinary+.656618; maximum width
+finite-difference error4.41e-9. Source/notes frozen with completed result.
+No optimizer/quality/sparse advantage claim; deterministic enumeration work paid
+but FLOPs unmeasured. Next bounded independent step: frozen one-site native
+multi-arrival intervention, unused-FIT examples, waiting/amplitude and actual
+write controls. No new full fit or changed core learning credit admitted yet.
