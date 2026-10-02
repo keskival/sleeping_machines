@@ -1,0 +1,1 @@
+local_dvs_persistent_state_probe_20261002T213300Z experiments/dvs_persistent_state_probe.py --tag local_dvs_persistent_state_probe_20261002T213300Z --reference-probe experiments/results/diagnostics/local_dvs_frozen_features_20261002T151800Z.json

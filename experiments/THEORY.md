@@ -250,3 +250,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - [Conditional replay clocks and critic sampling](theory/92_conditional_replay_clocks_and_critic_sampling.md) — a time-only direction reversal for individual-arrival forced replays, correct first-time conditional/joint-score alternatives, and the requirement to freeze a critic before its correction sample. External empirical candidates remain preserved; no new fit admitted.
 
 - [Race-noise coupling and effective batches](theory/93_race_noise_coupling_and_effective_batch_size.md) — covariance decomposition for shared clip noise and a separate adaptive-update freshness issue; fitting-prefix audit gates any independent-row comparison before unchanged architecture/protocol pilots.
+
+- [Retained state versus sparse access](theory/94_retained_state_and_sparse_access.md) — conditional-information identity motivates a causal pre-query memory/age/occupancy augmentation of the saved query probe; dense diagnostic access is explicitly separate from the sparse architecture and practical advantage.
