@@ -1,0 +1,1 @@
+aws_depth8_language_20261002T234100Z_depth_contracts_s7 experiments/aws_depth8_language.py --tag aws_depth8_language_20261002T234100Z_depth_contracts_s7 --receiver-sharing depth --fit 129 --dev 129 --epochs 1 --depth 8 --heads 2 --payload 16 --pool 2 --chunk 16 --update-targets 256 --warmup-targets 4096 --lr .002 --seed 7 --contracts-only

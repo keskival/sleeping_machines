@@ -2030,3 +2030,13 @@ User also requests new models on language again. Inspect existing causal
 native language architecture and protocol, port corrected replay/shared-map
 contracts before admitting language training; no substitution of DVS labels
 or gesture episodes for genuine causal next-token prediction.
+
+User requests new-model language comparisons at AT LEAST10M characters.
+AWS prepared aws_depth8_language_20261002T234100Z/manifest.json: actual causal
+native depth8 private/depth-shared maps, original teacher credit, first10M FIT,
+1M disjoint DEV, same onepass/lr/update settings. Corrected full replay is NOT
+yet in this language driver. Contracts and1025-char smokes are admission only;
+all four must pass before either10M job. Original bounded driver preserved.
+Language coordinator waits until gesture matrix fully completes, then takes
+its own reserved2slot guarded host lease. Protocol scope and known missing
+language replay port: theory/aws_20261002_depth8_language_10m_protocol.md.
