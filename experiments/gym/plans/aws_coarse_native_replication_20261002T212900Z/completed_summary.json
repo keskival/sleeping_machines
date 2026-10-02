@@ -1,0 +1,68 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_coarse_native_contracts_20261002T212500Z",
+      "result": "experiments/results/diagnostics/aws_coarse_native_contracts_20261002T212500Z.json",
+      "reused": true,
+      "max_rss_kb": 510372,
+      "wall_s": 21.377421606972348
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_fine_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_fine_smoke.json",
+      "reused": true,
+      "max_rss_kb": 459084,
+      "wall_s": 11.600898112985305
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_fastclock_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_fastclock_smoke.json",
+      "reused": true,
+      "max_rss_kb": 455500,
+      "wall_s": 3.5973885119892657
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_matchedclock_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_matchedclock_smoke.json",
+      "reused": true,
+      "max_rss_kb": 455100,
+      "wall_s": 3.588603730953764
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_admission",
+      "result": "experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_admission.json",
+      "reused": true,
+      "max_rss_kb": 0,
+      "wall_s": null
+    },
+    {
+      "tag": "aws_coarse_native_replication_20261002T212900Z_coarse_matchedclock_s7",
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_coarse_matchedclock_s7.json",
+      "reused": false,
+      "max_rss_kb": 457096,
+      "wall_s": 14.183933506952599
+    },
+    {
+      "tag": "aws_coarse_native_replication_20261002T212900Z_coarse_fastclock_s7",
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_coarse_fastclock_s7.json",
+      "reused": false,
+      "max_rss_kb": 456932,
+      "wall_s": 13.919716561038513
+    },
+    {
+      "tag": "aws_coarse_native_replication_20261002T212900Z_fine_s7",
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_fine_s7.json",
+      "reused": false,
+      "max_rss_kb": 463632,
+      "wall_s": 42.52893807599321
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T21:27:09.046522+00:00",
+  "active_jobs": [
+    "aws_coarse_native_replication_20261002T212900Z_fine_s7"
+  ],
+  "max_parallel_jobs": 3
+}
