@@ -1950,3 +1950,12 @@ paid unknown. Diagnostic40lanes/prefix, NOT proposed6vs8lane execution.
 No integratedlearningfit admitted. Next parameter-targeted priority diagnostic
 runs underguard, TRAIN0..31 trueparameter route norms, NEW FIT96..127 confirmation,
 samefeature/predictor settings/proposal/gates. Main replay quality ownedelsewhere.
+
+Parameter-targeted replay priorities complete11.439s/531560KiB,TRAIN0..31 true
+parameter norms,NEW FIT96..127. Scoreaggregate .906188/.958262passes;
+parameter cases .599166/.486158 and.614246/1.137133 =>combinedgateFAIL.
+Diagnostic two-case parameter aggregates .516746/.658755 are supported
+positive48.3%/34.1% reductions, NOT a replacement of the everycasegate.
+1280TRAIN+80confirmationVJPs/2560shadowlanespaid. Artifactsfullproposal/models
+saved. No unchanged reduced-replay qualityfit. Future robust allocation needs
+state-dependent guard/conditioning and a separately fixed expected-risk protocol.

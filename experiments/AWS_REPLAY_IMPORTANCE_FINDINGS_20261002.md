@@ -55,3 +55,21 @@ computation averages .742/.747ms/prefix; tree/discovery/VJP costs additional.
 No unchanged integratedfit. Next distinct hypothesis directly predicts
 parameter route norm on TRAIN instead of score norm; freezes before another
 fresh critic-heldout block, with the SAME stringent gate.
+
+## Parameter-targeted priority: stronger aggregate signal, strict gate fails
+
+New training target is log norm of actual full parameter route vector J_r^Tg_r;
+same fixed tree/features/proposal, first32 FIT only,1280additional TRAIN VJPs.
+Freeze before fresh critic-heldout FIT96..127. Both scoreaggregate ratios pass:
+.906188/.958262. Fixed parameter cases .599166/.486158(seed7), .614246/
+1.137133(seed8), so combined nomination FAILS (one case13.7% worse).
+
+Supported diagnostic aggregates of the two parameter cases are.516746/.658755:
+48.3%/34.1% variance reduction with three versus four sampled sites is meaningful
+conditional evidence. It does NOT replace the predeclared every-case gate,
+prove prediction quality, or count actual diagnostic40-lane work as6-lanefit.
+1280TRAIN+80confirmationVJPs and2560shadowlanes paid,11.439s/531560KiB.
+Original producer/tree/cache costs retained; new FLOPs unknown. Parameters
+have seen FIT labels; no producer cross-fitting or official test. This narrows
+failure to allocation robustness across individual prefixes, not absence of
+any resource-allocation signal. No unchanged integratedfit admitted.
