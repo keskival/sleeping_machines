@@ -7,7 +7,7 @@ def alternative_probabilities(probabilities,winner,exploration=.1):
     if probabilities.ndim!=2 or probabilities.shape[1]<2 or not 0<=exploration<1:
         raise ValueError('At least two candidates and exploration in[0,1) required')
     pi=probabilities.double();pool=pi.shape[1]
-    nonwinner=1-F.one_hot(winner,pool).to(pi.dtype)
+    nonwinner=torch.ones_like(pi)-F.one_hot(winner,pool).to(pi.dtype)
     conditional=pi*nonwinner
     return (1-exploration)*conditional/conditional.sum(-1,keepdim=True)+exploration*nonwinner/(pool-1)
 
