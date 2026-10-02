@@ -1310,6 +1310,14 @@ def blocks(M, tasks, ev):
              'width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.'),
             ('small','This banknote comparison concerns one task. Strong synthetic order/retrieval evidence '
              'on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.')])
+        native8=[r for r in tasks.get('native_language',[]) if r['args']['fit']==8192
+                 and r['args']['seed']==6 and (r['args']['heads'],r['args']['payload'],r['args']['depth'])==(2,16,8)]
+        if native8:
+            scaled=native8[0]
+            pages[-1].insert(-1,('p',f'<b>Native data scaling.</b> The same 54,907-parameter construction improves '
+                f'from <b>3.765 to {scaled["final"]["dev"]["bpc"]:.3f} bpc</b> when fitting data grows from2K to8K characters, '
+                f'using <b>{scaled["work"]["cpu_emulator"]["total_training_unit_special_flops"]/1e9:.2f} whole-fit GFLOPs</b>. '
+                'Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.'))
 
     reference_rows=[
         ["Ours: learned event-state model (planned)", "10M / four passes", "Pending", "Pending"],

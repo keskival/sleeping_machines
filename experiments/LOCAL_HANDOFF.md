@@ -31,6 +31,15 @@ await final validation/publication before treating it as completed quality.
 No second local trainer or optimizer diagnostic was launched. New banknote
 confirmation manifest remains frozen; all its five read-only tests passed.
 
+Subsequent completion: native8K is published in eac1fb6 at3.557380bpc /
+15.115512 whole CPU fit GFLOPs,54,907 parameters. Same-data KV8K is3.490090 /
+89.998971GF:5.95x less native work at.067290bpc worse, with different width/
+history/capacity. Native2K→8K gains.207332bpc; no extrapolated supremacy claim.
+The original native continuation has started its guarded full timing pilot,
+local_native_event_timing_S4_s6_pilot_20261001T174000Z. Preserve that live source
+and the serial host lock. Opening evidence now also states the completed native
+data gain; repair plans and losing variants remain in the appendix.
+
 ## Autonomous continuation and banknote confirmation, 1 October, 23:48 UTC
 
 Native8K is running under the existing delay recovery; the completed waiting
