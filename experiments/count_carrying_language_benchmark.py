@@ -32,6 +32,7 @@ from sleeping_machines.count_carrying_language import CountCarryingNativeModel, 
 from sleeping_machines.count_escape_gate import GatedCountCarryingNativeModel
 from sleeping_machines.statistic_race_memory import StatisticRaceNativeModel
 from sleeping_machines.statistic_race_sampled import SampledStatisticRaceNativeModel
+from sleeping_machines.statistic_race_top import TopStatisticRaceNativeModel
 
 
 def sources():
@@ -39,6 +40,7 @@ def sources():
            'tests/test_count_carrying_language.py','sleeping_machines/count_escape_gate.py','tests/test_count_escape_gate.py',
            'sleeping_machines/statistic_race_memory.py','tests/test_statistic_race_memory.py',
            'sleeping_machines/statistic_race_sampled.py','tests/test_statistic_race_sampled.py',
+           'sleeping_machines/statistic_race_top.py','tests/test_statistic_race_top.py',
            'experiments/native_language_gradient_contracts.py',
            'experiments/parallel_head_gradient_accumulation.py']
     return {**baseline.source_hashes(),**{n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names}}
@@ -74,6 +76,7 @@ def main():
     p.add_argument('--count-message',action='store_true');p.add_argument('--escape-gate',action='store_true')
     p.add_argument('--pool-addresses',type=int,default=0);p.add_argument('--pool-key-dim',type=int,default=16)
     p.add_argument('--pool-write-race',choices=('argmax','sample'),default='argmax')
+    p.add_argument('--pool-position',choices=('bottom','top'),default='bottom')
     a=p.parse_args();a.memory='receiver';a.candidate_index='observed_stream_address';a.cache_storage='persistent';a.native_event_core=True
     directory=ROOT/'experiments/results/count_carrying_language';directory.mkdir(parents=True,exist_ok=True)
     out=directory/(a.tag+'.json');running=out.with_suffix('.running.json');checkpoint=out.with_suffix('.progress.pt')
@@ -93,7 +96,9 @@ def main():
         out.write_text(json.dumps(result,indent=2)+'\n');return
     train=torch.tensor(text_slice(0,a.fit));dev=torch.tensor(text_slice(90_000_000,a.dev))
     if a.pool_addresses:  # THEORY §392: statistic-valued race memory over learned keys
-        race_class=SampledStatisticRaceNativeModel if a.pool_write_race=='sample' else StatisticRaceNativeModel
+        if a.pool_position=='top' and a.pool_write_race!='sample':raise ValueError('top placement uses sampled race writes')
+        race_class=(TopStatisticRaceNativeModel if a.pool_position=='top' else
+                    SampledStatisticRaceNativeModel if a.pool_write_race=='sample' else StatisticRaceNativeModel)
         model=race_class(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders,addresses=a.pool_addresses,
             key_dim=a.pool_key_dim,escape_gate=a.escape_gate,count_message=a.count_message)
     elif a.count_message or a.escape_gate:
