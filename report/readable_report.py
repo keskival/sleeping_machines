@@ -79,6 +79,15 @@ def results():
     tasks['count_carrying_language'] = [r for path in sorted((RES/'count_carrying_language').glob('*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
+    tasks['count_credit_pair']=[]
+    for path in sorted((RES/'diagnostics').glob('local_count_credit64_analysis_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')=='completed':
+            for entry in r['common_unit_ledger']:
+                result=ROOT/entry['result']
+                if hashlib.sha256(result.read_bytes()).hexdigest()!=entry['result_sha256']:
+                    raise ValueError('Count-credit ledger result changed')
+            tasks['count_credit_pair'].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3173,7 +3182,8 @@ def blocks(M, tasks, ev):
         def variant(r):
             g,m=r['args'].get('escape_gate'),r['args'].get('count_message')
             core='' if (r['args']['payload'],r['args']['depth'])==(16,8) else f" [minimal core p{r['args']['payload']}/d{r['args']['depth']}]"
-            return (' + gate + message' if g and m else ' + escape gate' if g else ' + count message' if m else '')+core
+            credit='' if r['args']['chunk']==16 else f" [credit{r['args']['chunk']}]"
+            return (' + gate + message' if g and m else ' + escape gate' if g else ' + count message' if m else '')+core+credit
         for r in sorted(tasks['count_carrying_language'],key=lambda r:(r['args']['fit'],variant(r))):
             N=r['args']['fit'];first=N not in seen_sizes;seen_sizes.add(N)
             if first:
@@ -3204,14 +3214,40 @@ def blocks(M, tasks, ev):
             ('table',(['Model','Fit chars / passes','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],
              count_rows,[44,27,20,27,28,27])),
             ('small','Same 8,191 development targets for every row; one seed. Count increments/lookups are '
-             'integer table work reported in the result files, not FLOPs. The untrained-base row isolates '
-             'what training the native base adds. Count rows are dev-selected-order references, not neural '
+             'integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures '
+             'whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural '
              'controls. Exploratory development evidence; no comparable-quality Transformer claim.'),
             *[('small',f'At {r["args"]["fit"]:,} fitting characters, fitting the native base and escape parameters '
                 f'improves {r["initial_dev"]["bpc"]-r["final"]["dev"]["bpc"]:.4f} bpc over their untrained initialization. '
                 'The complete composed predictor improves over native-alone, while this smaller learning contribution '
                 'is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.')
               for r in tasks['count_carrying_language']]])
+    for comparison in tasks.get('count_credit_pair',[]):
+        ledger=comparison['common_unit_ledger'];quality=[];activity=[]
+        for r in ledger:
+            name=('Ours: full core' if r['arm'].startswith('full') else 'Minimal core control')+f" /credit{r['credit_targets']}"
+            quality.append([name,f"{r['bpc']:.4f}",f"{r['cpu_whole_fit_gflops']:.3f}",
+                f"{r['cpu_fit_mflops_per_target']:.3f}",f"{r['cpu_inference_mflops_per_character']:.4f}"])
+            activity.append([name,f"{r['parameters']:,}",str(r['core_receiver_slots']),
+                f"{r['selected_core_updates_per_target']:.0f}/{r['core_key_scores_per_target']:.0f}/{r['counterfactual_values_per_target']:.0f}"])
+        pages.append([('h1','Appendix B. Longer credit versus learned count smoothing'),
+            ('p','Completed four-arm integrated comparison, seed6: same2K fitting characters/four passes, '
+             '8,191 development targets, K4 escape gate, U64/lr.002/warmup512. Each fit processes8,188 targets '
+             'and128 optimizer updates. Full H2/d16/depth8 and minimal H2/d2/depth1 each compare16 versus64 '
+             'tokens of graph reach; persistent state and forward mechanisms remain unchanged within each core.'),
+            ('table',(['Model/credit','Dev bpc','Whole fit GFLOPs','Fit MFLOPs/target','Infer MFLOPs/char'],quality,[54,25,30,32,32])),
+            ('table',(['Model/credit','Parameters','Core state slots','Updates/scores/teacher values per target'],activity,[54,33,31,55])),
+            ('p',f"Full-core longer-credit gain{comparison['full_core_credit_gain_bpc']:.4f}bpc; "
+             f"minimal-core gain{comparison['minimal_core_credit_gain_bpc']:.4f}bpc. "
+             f"Full versus minimal advantage at64:{comparison['full_core_advantage_bpc_at64']:.4f}bpc, "
+             f"with{comparison['full_core_fitting_work_ratio']:.3f}× full-core fitting work versus16. "
+             f"The predeclared follow-up gate {'passes' if comparison['followup_gate_passed'] else 'fails'}."),
+            ('small','All neural fitting forward/loss/backward/normalization/clipping/Adam and admitted losing-value '
+             'credit are charged in CPU emulator units; projected clockless work is a separate result ledger. '
+             'Each target also looks up4 count addresses; integer counts, discovery, traffic and energy stay separate. '
+             'This reuses development data and is a single-seed screen, not confirmation, semantic-feature proof or supremacy. '
+             'Passing requires at least.02bpc full-core credit gain AND at least.02bpc advantage over the matched '
+             'minimal64 core at no more than2× full-core fitting work. No automatic larger fit.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3258,7 +3294,7 @@ def blocks(M, tasks, ev):
             ('small','Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and '
              'passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier '
              'gap; both hold formally for the scalar cascade, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the '
-             'base cannot see the counts it complements, so flat width reflects an inert base (Theory §389), not tax relief. '
+             'standalone base is trained as a conditional residual, so this alone cannot establish an inert base (Theory §389.1). '
              'With the escape gate (+ count message) every width reaches 2.12–2.14, and a minimal 2-wide, one-layer base matches '
              'w128 (2.124 vs 2.129) at 1/50 of the work: the gain is learned count smoothing, not the temporal carrier. '
              'Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory '

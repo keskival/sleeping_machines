@@ -500,3 +500,11 @@ Follow-up nomination requires full64 improve over full16 by.02bpc AND beat
 matched minimal64 by.02bpc with≤2× full-core fitting work. No automatic scale-up.
 Small single-seed/development evidence; semantic abstraction, available capacity
 beyond activity, discovery/traffic and unbiased hard-route credit remain open.
+
+64-credit full/minimal contracts pass22.699s/671304KiB: exact normalization,
+head/escape gradients, persistent count cursor, next Adam recovery and64 vs16
+partition forward equality. Full accounting smoke is active; no pilot admitted
+yet. Native64 graphs fit inside900000KiB prerequisite margin. Report publication
+waiter local_count_credit64_publication_20261002T060400Z waits exact worker
+identity/completed analysis, renders completed common-unit ledger and validates
+PDF bounds/orphans before committing. Reports keep old evidence while pending.
