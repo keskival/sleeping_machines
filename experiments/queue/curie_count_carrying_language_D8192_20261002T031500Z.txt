@@ -1,0 +1,4 @@
+# Integrated stage after the 2K gate passed (2.734 vs native 3.765, stream-adaptive counts 2.776).
+# Native settings identical to local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z (3.557 bpc); orders 4.
+# Predeclared (Theory 388.3): trained base adds <= ~.01 bpc over untrained composition; gate vs stream-adaptive counts at 8K (2.699) by >= .02.
+curie_count_carrying_D8192_K4_s6_20261002T031500Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D8192_K4_H2_d16_depth8_s6_20261002T031500Z --fit 8192 --dev 8192 --epochs 4 --orders 4
