@@ -29,7 +29,28 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'experiments'))
 import joint_event_language_tasks as J  # noqa: E402
 from parallel_head_accumulated_language import merge  # noqa: E402
-from race_language_screen import capture  # noqa: E402
+from sleeping_machines.operation_audit import OperationAudit, floating_size  # noqa: E402
+
+
+class DenseControlAudit(OperationAudit):
+    def formula(self, func, args, kwargs, out):
+        name = str(func).split('.')[1]
+        if name == 'unsafe_split':
+            return 0, 0, 0, 'split views; no arithmetic (memory excluded)'
+        if name == 'triu':
+            return 0, 0, floating_size(out), 'triangular mask selection; no arithmetic'
+        if name == 'linspace':
+            return 2 * floating_size(out) + 2, 0, 0, 'linear grid: step setup plus multiply/add per element upper count'
+        return super().formula(func, args, kwargs, out)
+
+
+def capture(callback):
+    with DenseControlAudit() as audit:
+        callback()
+    result = audit.result()
+    if not result['formula_coverage_complete']:
+        raise ValueError(result['unsupported_floating_operators'])
+    return result
 
 
 def tensors(row):

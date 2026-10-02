@@ -26,3 +26,10 @@ Selection by lowest development NLL; fixed1024 confirmation queries. Calibration
 requires >=20 percentage points over matching table accuracy. No history ladder
 until completed calibration passes. A failed calibration is preserved and
 blocks automatic scaling; no native advantage claim from failed controls.
+
+Initial smokes stopped before fitting: operation audit lacked unsafe_split,
+linspace and triu formulas. Failed records preserved. AWS-local audit adds
+split view zero arithmetic, triangular mask comparisons and conservative
+2N+2 grid-generation arithmetic; shared audit/model files stay unchanged.
+New immutable recovery plan/tags required. Current v2 table confirmation is
+58.3984% (NLL .741589), so base calibration requires >=78.3984% accuracy.
