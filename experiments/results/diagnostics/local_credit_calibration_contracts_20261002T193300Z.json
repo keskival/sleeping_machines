@@ -1,0 +1,72 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_credit_calibration_contracts_20261002T193300Z"
+  },
+  "contracts_passed": 5,
+  "trials": [
+    {
+      "logits": [
+        -0.8,
+        0.7
+      ],
+      "common_log_rate": 0.2,
+      "time": 0.4,
+      "baseline": 0.6,
+      "common_clock_credit": 0.2817556823076861,
+      "choice_credit": [
+        -0.14914645207033284,
+        0.14914645207033284
+      ]
+    },
+    {
+      "logits": [
+        0.0,
+        0.0
+      ],
+      "common_log_rate": -0.4,
+      "time": 1.8,
+      "baseline": 0.0,
+      "common_clock_credit": -0.17214673572012562,
+      "choice_credit": [
+        -0.25,
+        0.25
+      ]
+    },
+    {
+      "logits": [
+        0.1,
+        -0.3,
+        0.8
+      ],
+      "common_log_rate": 0.7,
+      "time": 0.6,
+      "baseline": 2.0,
+      "common_clock_credit": 0.005641110232602942,
+      "choice_credit": [
+        -0.44504515064944944,
+        -0.11637186923832675,
+        0.5614170198877761
+      ]
+    }
+  ],
+  "categorical_utility_and_loss_offset_invariance": true,
+  "complete_joint_density_coordinate_pullback": true,
+  "identity_reparameterization_preserves_original_gradient": true,
+  "zero_mean_sample_normalization_bias": {
+    "raw_mean": 0.0,
+    "unit_normalized_mean": -0.3333333333333333
+  },
+  "positive_score_scaling_parameter_ascent": {
+    "gradient_alignment": -7.0,
+    "loss_before": 0.2,
+    "loss_after": 0.27
+  },
+  "source_sha256": {
+    "experiments/credit_calibration_contracts.py": "b9f6be80b7ec868eeb759250d283804faab90e79f035be1f7f1485e5c9a4c6d8",
+    "experiments/theory/85_credit_calibration_coordinates.md": "8220085513740040b7171e34bd00f1917e7786f27447c79dd7e306d93374cd25"
+  },
+  "wall_s": 0.4703428559951135,
+  "max_rss_kb": 280704,
+  "scope": "Finite isolated-rate mathematical contracts; no integrated clock-normalized model, fitted quality, optimizer-noise reduction, independent confirmation or advantage claim."
+}

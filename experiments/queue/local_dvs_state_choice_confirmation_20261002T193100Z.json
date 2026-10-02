@@ -1,0 +1,35 @@
+{
+  "status": "admitted_by_completed_gate",
+  "host": "curie",
+  "requires": "experiments/results/diagnostics/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z.json",
+  "requires_sha256": "c0b5e733a7f08c13d5470b2963dc9c5ef1a6c5b38a22aba6b8a8c63399d7c8e9",
+  "jobs": [
+    {
+      "tag": "local_dvs_batched_local_pilot_s7_20261002T192400Z",
+      "queue": "experiments/queue/local_dvs_batched_local_pilot_s7_20261002T192400Z.txt",
+      "queue_sha256": "8c91d4b01ff717dc3209cf558ddc59d7b523fd5ec6a89d7251658423eff8a9e7",
+      "timeout_s": 600,
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json"
+    },
+    {
+      "tag": "local_dvs_state_choice_pilot_s7_20261002T192600Z",
+      "queue": "experiments/queue/local_dvs_state_choice_pilot_s7_20261002T192600Z.txt",
+      "queue_sha256": "15ce52610954433749dc8dd270d1d0dc7bf4cc50c6136d58c356cdc7c32baacd",
+      "timeout_s": 600,
+      "result": "experiments/results/dvs_native/local_dvs_state_choice_pilot_s7_20261002T192600Z.json"
+    }
+  ],
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "protocol": "Same256fit/192dev/four fixed passes/U16/lr.003/seed7; separate one-job queues, serialized guards; same selection rule and all passes retained",
+  "promotion_gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "scope": "Predeclared confirmation of seed6 gain; no pass extension, best-seed selection, official test or practical supremacy. Full data only if this seed independently passes the unchanged gate."
+}
