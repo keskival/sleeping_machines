@@ -3332,7 +3332,7 @@ def blocks(M, tasks, ev):
              'smoothed counting is a near-optimal estimator, and no learner (Transformers included) is expected to exceed it. '
              'At 10M characters the repository\'s dense Transformer control is still .12 bpc worse than frozen counts (§381). '
              'The strongest such reference, stream-adaptive interpolated Kneser–Ney, scores 2.521 / 2.414 / 2.271 bpc at '
-             '2K / 8K / 32K (preliminary; official file pending). It is a calibration ceiling, not a competitor. Distances to it '
+             '2K / 8K / 32K and 2.101 at 131K (results/count_reference/curie_adaptive_kn_language_reference_20261002T131500Z.json). It is a calibration ceiling, not a competitor. Distances to it '
              'measure remaining smoothing, and the rows here are mechanism diagnostics, not a verdict on the architecture, '
              'whose claims are tested on tasks where learning matters (§394). Exploratory development evidence.'),
             *[('small',f'At {r["args"]["fit"]:,} fitting characters, fitting the native base and escape parameters '

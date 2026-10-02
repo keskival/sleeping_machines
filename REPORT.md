@@ -258,6 +258,18 @@ Analytic state evolution avoids periodic simulation during silence. Decay can st
 
 The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local causal waits remain paid. The ordered kernel is a restricted algebraic identity, not an achieved capability of the fitted model. Full-depth contracts and accounting smokes pass; quality pilots, refitted controls and independent seeds determine further scaling. Theory §§330–336; completed results and the executable priority appear in Appendix B.
 
+## Useful old evidence: a completed joint-learning intervention
+
+Protected outcome state and two learned key/value races reach 96.09% on new suffixes, versus 78.12% with matched local-credit training. The query suffix and its actual count inputs are identical within each opposite-label group. Predicting the distant relation therefore requires additional observed evidence.
+
+![report/figures/local joint outcome 20261002T125700Z analysis learning.png](report/figures/report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png.png)
+
+Reserved loss:0.102 versus 0.750bits/query. All1,024 fitting presentations, complete prefix and optimizer work charged: 0.2379 versus 0.2319GFLOPs estimated. Joint training teaches the loss of candidate pairs; inference delivers only two values after scoring all occupied keys. Initial models and inference mechanisms match.
+
+Shallow joint reaches95.31% at 0.1534GFLOPs. This task supports protected evidence and terminal joint learning; useful extra core depth is not established. Earlier native/tapped fits and frozen readout failures remain in the appendix.
+
+One fitted seed,128 reserved synthetic queries. Observed predecessor addresses are fixed; terminal content-risk derivatives are exact conditionally, earlier native route derivatives remain scoped. The bound concerns query-count inputs, not all counting. No natural-language or iso-quality resource superiority is inferred.
+
 ## Ours: the integrated sparse temporal language experiment
 
 This candidate has no dense language carrier. Each event mixes its embedding with the previous deep message and traverses contextual key races. Only selected receivers update their persistent rotating/decaying state and emit values. Time is part of the computation; inactive receivers are not evaluated on empty ticks.
@@ -1458,34 +1470,35 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 | Count-carrying native K4 + escape gate [minimal core p2/d1] [credit64] 2,048 | 2,048/4 | 2.694 | 0.072 | 0.009 | 0.0031 |
 | Count-carrying native K4 + gate + message 2,048 | 2,048/4 | 2.703 | 4.053 | 0.495 | 0.1113 |
 | KN counts, frozen o4 | 2,048/1 | 3.615 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o3 | 2,048/1 | 2.776 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o6 | 2,048/1 | 2.521 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Native alone 8,192 | 8,192/4 | 3.557 | 15.116 | 0.461 | 0.0974 |
 | Count-carrying native K4 8,192 | 8,192/4 | 2.671 | 15.227 | 0.465 | 0.0982 |
 | Same, untrained base 8,192 | 8,192/0 | 2.682 | Not trained | Not trained | 0.0982 |
 | Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 2.595 | 16.853 | 0.514 | 0.1155 |
+| Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 3.474 | 16.789 | 0.512 | 0.1155 |
 | Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 2.601 | 15.314 | 0.467 | 0.0993 |
 | Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 2.592 | 4.181 | 0.128 | 0.0358 |
 | Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 3.492 | 4.161 | 0.127 | 0.0358 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 0.288 | 0.009 | 0.0031 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o6 | 8,192/1 | 2.414 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 5.995 | 0.183 | 0.0632 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o6 | 8,192/1 | 2.414 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.593 | 1.744 | 0.053 | 0.0184 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o6 | 8,192/1 | 2.414 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 3.471 | 1.744 | 0.053 | 0.0184 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o6 | 8,192/1 | 2.414 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Count-carrying native K4 32,768 | 32,768/4 | 2.560 | 60.790 | 0.464 | 0.0982 |
 | Same, untrained base 32,768 | 32,768/0 | 2.593 | Not trained | Not trained | 0.0982 |
 | Count-carrying native K4 + escape gate 32,768 | 32,768/4 | 2.447 | 60.790 | 0.464 | 0.0993 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 32,768 | 32,768/4 | 2.401 | 1.151 | 0.009 | 0.0031 |
 | KN counts, frozen o5 | 32,768/1 | 2.704 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o4 | 32,768/1 | 2.579 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o8 | 32,768/1 | 2.271 | Not FLOPs | Not FLOPs | Not FLOPs |
 
-Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural controls. How to read these rows (Theory §§393–394): at a few thousand to tens of thousands of characters, smoothed counting is a near-optimal estimator, and no learner (Transformers included) is expected to exceed it. At 10M characters the repository's dense Transformer control is still .12 bpc worse than frozen counts (§381). The strongest such reference, stream-adaptive interpolated Kneser–Ney, scores 2.521 / 2.414 / 2.271 bpc at 2K / 8K / 32K (preliminary; official file pending). It is a calibration ceiling, not a competitor. Distances to it measure remaining smoothing, and the rows here are mechanism diagnostics, not a verdict on the architecture, whose claims are tested on tasks where learning matters (§394). Exploratory development evidence.
+Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural controls. How to read these rows (Theory §§393–394): at a few thousand to tens of thousands of characters, smoothed counting is a near-optimal estimator, and no learner (Transformers included) is expected to exceed it. At 10M characters the repository's dense Transformer control is still .12 bpc worse than frozen counts (§381). The strongest such reference, stream-adaptive interpolated Kneser–Ney, scores 2.521 / 2.414 / 2.271 bpc at 2K / 8K / 32K and 2.101 at 131K (results/count_reference/curie_adaptive_kn_language_reference_20261002T131500Z.json). It is a calibration ceiling, not a competitor. Distances to it measure remaining smoothing, and the rows here are mechanism diagnostics, not a verdict on the architecture, whose claims are tested on tasks where learning matters (§394). Exploratory development evidence.
 
 At 2,048 fitting characters, fitting the native base and escape parameters improves 0.0071 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
@@ -1516,6 +1529,8 @@ At 8,192 fitting characters, fitting the native base and escape parameters impro
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0915 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves -0.2996 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 8,192 fitting characters, fitting the native base and escape parameters improves -0.2977 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves -0.3213 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
@@ -1686,6 +1701,117 @@ Same1,024 fit characters and2,047 dev targets, reused count-reference implementa
 
 KN: interpolated Kneser–Ney; WB: Witten–Bell; AD: absolute discount. Integer represented count increments/lookups and measured construction/scoring wall time are in the completed audit, without conversion to neural FLOPs. Equal scalar loss calibrates prediction quality; it does not establish identical features or a same-quality compute advantage. No per-target order selection or official-test access. Full spectra, data/checkpoint hashes and diagnostic boundaries are retained in local_value_credit_frozen_20261002T090800Z.json.
 
+## Appendix B. Beyond query counts: balanced joint learning
+
+Each episode observes a bit followed by its complement, then another such pair, eight shared noise symbols and a unique query cue. The target is the relation between the earlier bits. All four bit combinations occur for each noise suffix. Observed symbol totals and actual order-0..8 query count vectors match; all 36 declared WB/AD controls score one bit.
+
+| Integrated model | Dev bits/query | Dev accuracy | Selected pass |
+| --- | --- | --- | --- |
+| native_full | 0.9995 | 50.00% | 8 |
+| tapped_full | 1.0002 | 48.44% | 14 |
+| tapped_shallow | 1.0002 | 50.00% | 16 |
+
+![report/figures/local balanced joint 20261002T121500Z analysis learning.png](report/figures/report/figures/local_balanced_joint_20261002T121500Z_analysis_learning.png.png)
+
+The native and learned-delay variants fail the predeclared 75%/.8-bit dependency gate. Eight fitting suffix groups give 32 targets/pass; 16 passes,512 target presentations,64 Adam updates,64 held-out dev targets. All arms have query-only binary supervision and full 15-event credit; the target is never an input. Noise couples the quartet and variants.
+
+The one-bit bound restricts the predictor to query suffix/count inputs, including root marginals. It excludes arbitrary inspection of the full prefix or other count addresses. Counts should lead in their supported local regime; this test asks for useful nonlocal prediction. One selected seed/development set, not semantic language or supremacy.
+
+## Appendix B. Balanced-core fitting and inference work
+
+| Model | Whole fit GFLOPs est. | Fit MFLOPs/target est. | Inference MFLOPs/query | State tensor bytes |
+| --- | --- | --- | --- | --- |
+| native_full | 0.5603 | 1.0943 | 0.2424 | 720 |
+| tapped_full | 0.6186 | 1.2081 | 0.2750 | 4560 |
+| tapped_shallow | 0.1998 | 0.3903 | 0.0978 | 496 |
+
+All rows use 512 query-target presentations as the fitting denominator. Inference includes all 15 episode inputs and query loss. Full prefix forward/backward, losing receiver values, normalization/clipping and Adam are charged. First/last complete optimizer windows supply the whole-fit estimates; routing occupancy is not exhaustively traced.2FLOPs/MAC plus unit specials, including declared delay-index rounding. Actual keys/commits/input events and wall/RSS are saved separately.
+
+Delay taps add bounded per-layer input buffers, trainable delays and projections while retaining native temporal races and private persistent receivers. Zero taps exactly nest native prediction and parent gradients. Seven contracts include actual interrupted-driver and full-shape Adam recovery. The same-width shallow control retains these mechanisms but has fewer layers; initialization also changes, so this is an architecture comparison.
+
+Memory traffic, integer/index bookkeeping, RNG, checkpoint I/O and hardware energy remain outside floating arithmetic. More retention capacity or a valid derivative is not a completed quality advantage. All unsuccessful arms and previous language evidence remain preserved; full source/data/result hashes are in the completed analysis JSON.
+
+## Appendix B. Frozen retention versus interaction decoding
+
+| Encoder / degree | Fit bits/query | Fresh bits/query | Fresh accuracy |
+| --- | --- | --- | --- |
+| native full selected / 1 | 0.994 | 1.063 | 50.78% |
+| native full selected / 2 | 0.920 | 12.138 | 50.78% |
+| native full initial / 1 | 0.999 | 1.026 | 50.00% |
+| native full initial / 2 | 0.876 | 25.333 | 50.78% |
+| tapped full selected / 1 | 0.999 | 1.011 | 49.22% |
+| tapped full selected / 2 | 0.943 | 21.694 | 50.00% |
+| tapped shallow selected / 1 | 1.000 | 1.011 | 50.00% |
+| tapped shallow selected / 2 | 0.980 | 7.876 | 50.00% |
+
+| Frozen encoder | First-bit probe accuracy | Second-bit probe accuracy |
+| --- | --- | --- |
+| native_full_selected | 50.78% | 51.56% |
+| native_full_initial | 50.78% | 48.44% |
+| tapped_full_selected | 50.78% | 53.12% |
+| tapped_shallow_selected | 50.78% | 51.56% |
+
+Freeze the selected encoders, plus native initial weights as a reservoir control. Fit zero-initialized affine or standard degree-2 polynomial residuals on actual query features. Fitting standardization only; four race-noise views of the same32 fitting episodes. Regularized full-batch L-BFGS, fixed lambda1e-5/100 iterations; reported derivatives do not establish convergence. New seed73001 has32 paired suffix groups/128 targets and never selects readout settings or weights.
+
+Neither readout generalizes; polynomial heads become badly overconfident. Separate one-bit probes also remain near chance. They use extra bit supervision only for diagnosis; their outputs never enter the relation predictor. These failures motivate evidence-access tests rather than assuming a larger decoder solves the current model.
+
+Zero core optimizer steps and encoder fingerprints preserved. Eight predeclared readout arms on one fresh synthetic distribution, not general confirmation or a semantic claim. Failed probes do not prove all information was erased or a universal learning ceiling.
+
+## Appendix B. Complete frozen-readout pipeline resource boundary
+
+| Encoder / degree | Total fitting GFLOPs est. | MFLOPs/distinct fit query | Inference MFLOPs/query est. |
+| --- | --- | --- | --- |
+| native full selected / 1 | 0.5918 | 18.495 | 0.2424 |
+| native full selected / 2 | 0.6061 | 18.942 | 0.2428 |
+| native full initial / 1 | 0.0315 | 0.985 | 0.2424 |
+| native full initial / 2 | 0.0456 | 1.426 | 0.2428 |
+| tapped full selected / 1 | 0.6543 | 20.447 | 0.2751 |
+| tapped full selected / 2 | 0.6686 | 20.894 | 0.2755 |
+| tapped shallow selected / 1 | 0.2129 | 6.654 | 0.0979 |
+| tapped shallow selected / 2 | 0.2270 | 7.095 | 0.0983 |
+
+Every total includes the entire earlier encoder fit, four-view feature-prefix replay and actual residual-head optimization/feature construction. Initial weights pay zero encoder fitting. The common denominator here is32 DISTINCT fitting queries for every row, rather than differing L-BFGS closure counts. This denominator differs explicitly from the presentation-based table above. Closure target evaluations and exact head work are saved separately. The same feature replay is charged once to each hypothetical standalone arm.
+
+Every inference estimate includes processing the complete prefix plus the chosen query head. Encoder replay/inference estimates use coupled first-quartet operation audits; head construction, loss, backward and optimizer operations are traced directly. Separate retention-probe supervision/work is diagnostic overhead, not free parity training. Raw candidate/traffic/metadata/RNG costs and measured energy remain separate.
+
+Local vector products are supporting primitives, not substitutes for the native temporal core or evidence of learned KV routing. Numerical contracts verify polynomial adjoints, regularized fixed-feature gradients, zero nesting, causal integrated prediction and restored head outputs. Preserve these negative results beside the subsequent protected-memory hypothesis; no favorable cell is inferred from unfinished training.
+
+## Appendix B. Protected outcomes and joint terminal races
+
+Each observed token writes its observed successor at its predecessor address, never a target-derived or hand-selected bit address. All occupied addresses are candidates. Two learned query/key exponential races deliver small interpreted symbol values to a generic bilinear query decoder. Native temporal computation, sparse vector receivers and earlier counterfactual learning remain. No XOR extraction enters prediction.
+
+| Integrated arm | Selected dev bits | Reserved bits | Reserved accuracy | Selected pass |
+| --- | --- | --- | --- | --- |
+| joint_full | 0.077 | 0.102 | 96.09% | 16 |
+| local_full | 0.933 | 0.750 | 78.12% | 13 |
+| joint_shallow | 0.062 | 0.119 | 95.31% | 16 |
+
+![report/figures/local joint outcome 20261002T125700Z analysis learning.png](report/figures/report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png.png)
+
+Reserved seed74001/32 groups/128 queries scores fixed selected weights after all fits; no retuning. Joint-minus-local loss improvement:+0.648 bits; full-minus-shallow improvement:+0.017 bits. The joint-credit gate passes; all arms remain visible.
+
+One fitted seed and structured generator. Sixteen fit groups/64 queries,16 passes, U4/lr.01/p4/H2/pool2,fullL2/shallowL1. The one-bit bound applies to identical query suffix/count inputs including root marginals, not arbitrary inspection of other count addresses. No natural-language, dense-control or resource-supremacy claim.
+
+## Appendix B. Joint-credit work, capacity and activity
+
+| Arm | Whole fit GFLOPs est. | Fit MFLOPs/query est. | Inference MFLOPs/query |
+| --- | --- | --- | --- |
+| joint_full | 0.2379 | 0.2323 | 0.0534 |
+| local_full | 0.2319 | 0.2265 | 0.0534 |
+| joint_shallow | 0.1534 | 0.1498 | 0.0361 |
+
+| Arm | Core / raw address capacity | Mean raw occupied | Core commits / raw writes per query | Terminal keys / values per query | Training loss pairs per query |
+| --- | --- | --- | --- | --- | --- |
+| joint_full | 8 / 27 | 10.56 | 60 / 14 | 21.12 / 2 | 112.06 |
+| local_full | 8 / 27 | 10.56 | 60 / 14 | 21.12 / 2 | 0.00 |
+| joint_shallow | 4 / 27 | 10.56 | 30 / 14 | 21.12 / 2 | 112.06 |
+
+All fitting columns use1,024 query presentations,256 Adam updates and all15 observed prefix events per query. Whole-fit first/last-window estimates include native candidates, losing proposals, protected-state discovery, terminal decoder/loss, backward, clipping and Adam. Inference scores every occupied key and delivers only two values. Available addresses, occupied state, scored keys, commits, raw writes and value deliveries are distinct; sparse activity does not imply zero key or learning cost.
+
+Joint training enumerates C² terminal losses and differentiates their categorical expected risk, giving exact conditional terminal content-choice credit. Local training uses a sampled pair and the existing value-linearized race surrogate. Their initial forward predictions and inference policy match; learning estimators differ. Earlier native route surrogates, raw fixed-address writes and downstream timing credit remain separate limitations. No exact whole-sequence gradient is claimed.
+
+Joint/local whole-fitting work ratio:1.026. 2FLOPs/MAC plus unit specials; traffic, raw integer state, Python objects, RNG and energy separate. Five contracts and three accounting smokes precede fits. The same-width shallow comparison changes initialization too. A successful protected-state read does not prove learned context pooling, arbitrary-distance KV retrieval or useful deep producer credit.
+
 ## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
 
 Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact local statistics, a small learned base should lose far less than the carrier alone does.
@@ -1708,7 +1834,7 @@ Labelled diagnostic, not the integrated native architecture. The input-gated tem
 | Carrier w256 + counts K5 | 131,072/4 | 2.316 | 4026.9 | 7.681 | 2.4580 |
 | Same, untrained base w256 | 131,072/0 | 2.370 | Not trained | Not trained | 2.4580 |
 | KN counts, frozen o5 | 131,072/1 | 2.349 | Not FLOPs | Not FLOPs | Not FLOPs |
-| Counts, stream-adaptive o4 | 131,072/1 | 2.346 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o8 | 131,072/1 | 2.101 | Not FLOPs | Not FLOPs | Not FLOPs |
 
 Same 8,191 development targets; seed 6, one seed per row; same depth, chunk, learning rate and passes per width. Predeclared: P1 composed w128 < 2.326; P2 composed w32−w256 gap < half the carrier gap; both hold formally for the scalar cascade, but the trained bases alone score 8.17 (w32) / 11.34 (w128) bpc, worse than uniform: the standalone base is trained as a conditional residual, so this alone cannot establish an inert base (Theory §389.1). With the escape gate (+ count message) every width reaches 2.12–2.14, and a minimal 2-wide, one-layer base matches w128 (2.124 vs 2.129) at 1/50 of the work: the gain is learned count smoothing, not the temporal carrier. Count references are near-optimal estimators at this size. The rows above exceed the frozen-KN and Witten–Bell references, and the stronger stream-adaptive interpolated Kneser–Ney is the calibration ceiling here (§393). This is a mechanism diagnostic in a regime where counting is expected to be near-optimal for any learner, not an architecture verdict (§394). Count increments/lookups (5 per target) are integer table work outside FLOPs. Exploratory development evidence; no comparable-quality Transformer claim.
 
