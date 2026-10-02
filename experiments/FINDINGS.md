@@ -1,5 +1,22 @@
 # Findings log
 
+## Gradient-propagation audit of the count-composition models — 2 October
+
+tests/test_gradient_audit_downstream.py (double precision, fixed race noise). **Downstream parameters**
+(head, count message, escape gate, escape D/θ; statistic-race query, keys, temperature, pool D/θ) match
+central differences to 1e-5 relative error for the gated, bottom-pooled (argmax and sampled writes) and
+top-pooled models. Discrete pooled writes that switch inside a bracket are detected and skipped. **Core
+plumbing**: with the diagnostic pathwise race and one undetached chunk, every core parameter group
+(embedding, content, channel mixes, queries, units' memories/rotations/gates, transport, context gates,
+head) matches finite differences to 1e-4. The core race parameters receive credit in the counterfactual
+mode. **Race surrogate**: TemporalRoute's score credit `rate_i·T·g·(v_i − v̄)` with winner-side conservation has
+expectation `π_i·g·(v_i − Σπ_j v_j)` over the winner, i.e. it is unbiased for the linearized expected loss
+(T is independent of the winner for exponential clocks); it is not exact for nonlinear route changes, as
+documented. **Accumulator**: summed loss, division by actual pending targets, clipping after normalization,
+Adam warm-up; correct. Only the two declared deviations from exact gradients remain: the race surrogate and
+chunk-boundary truncation (the latter reproduces a 3% embedding-gradient difference on a two-chunk slice).
+No gradient bug was found in the reviewed paths.
+
 ## 32K ladder: minimal core beats the full core with the gate — 2 October
 
 Native + K4 counts, seed 6, 8,191 dev targets (unit-special whole-fit GFLOPs). Scalar escape, full core:
