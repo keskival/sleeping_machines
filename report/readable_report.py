@@ -3169,14 +3169,21 @@ def blocks(M, tasks, ev):
             return [f"{w['total_training_unit_special_flops']/1e9:.3f}",
                     f"{w['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
                     f"{(w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'])/1e6:.4f}"]
-        count_rows=[]
-        for r in tasks['count_carrying_language']:
-            N=r['args']['fit']
-            for ref in tasks.get('native_language',[]):
-                if ref['args']['fit']==N:
-                    count_rows.append([f"Native alone {N:,}",f"{N:,}/{ref['args']['epochs']}",f"{ref['final']['dev']['bpc']:.3f}",*work_cells(ref)])
-            count_rows.append([f"Count-carrying native K{r['args']['orders']} {N:,}",f"{N:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",*work_cells(r)])
-            count_rows.append([f"Same, untrained base {N:,}",f"{N:,}/0",f"{r['initial_dev']['bpc']:.3f}",'Not trained','Not trained',work_cells(r)[2]])
+        count_rows=[];seen_sizes=set()
+        def variant(r):
+            g,m=r['args'].get('escape_gate'),r['args'].get('count_message')
+            return ' + gate + message' if g and m else ' + escape gate' if g else ' + count message' if m else ''
+        for r in sorted(tasks['count_carrying_language'],key=lambda r:(r['args']['fit'],variant(r))):
+            N=r['args']['fit'];first=N not in seen_sizes;seen_sizes.add(N)
+            if first:
+                for ref in tasks.get('native_language',[]):
+                    if ref['args']['fit']==N:
+                        count_rows.append([f"Native alone {N:,}",f"{N:,}/{ref['args']['epochs']}",f"{ref['final']['dev']['bpc']:.3f}",*work_cells(ref)])
+            count_rows.append([f"Count-carrying native K{r['args']['orders']}{variant(r)} {N:,}",f"{N:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",*work_cells(r)])
+            if not variant(r):
+                count_rows.append([f"Same, untrained base {N:,}",f"{N:,}/0",f"{r['initial_dev']['bpc']:.3f}",'Not trained','Not trained',work_cells(r)[2]])
+            if not all(x['args']['fit']!=N or variant(x)<=variant(r) for x in tasks['count_carrying_language']):
+                continue
             refs=[row for path in sorted((RES/'count_reference').glob('*language_*.json'))
                   for row in json.loads(path.read_text())['rows'] if row['fit']==N]
             kn=min((row for row in refs if row['method']=='kn' and not row['adaptive']),key=lambda row:row['bpc'],default=None)
@@ -3188,7 +3195,9 @@ def blocks(M, tasks, ev):
             ('h1','Appendix B (continued). Ours: count-carrying native receivers'),
             ('p','The unchanged native eight-block core supplies the base predictive; addressed context-suffix '
              'receivers of orders 1..K carry sufficient statistics and deliver by an escape-race cascade with '
-             'learned discount and concentration (Theory §§376–380, 387). Fitting counts are leave-one-out; '
+             'learned discount and concentration (Theory §§376–380, 387). The escape-gate variant makes discount and '
+             'concentration per-position functions of the native predictive and count evidence; the count-message '
+             'variant adds the counts to the base logits (Theory §389). Fitting counts are leave-one-out; '
              'development counts are prequential persistent state with frozen weights. Count tables are '
              'capacity; each target touches K addresses.'),
             ('table',(['Model','Fit chars / passes','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],

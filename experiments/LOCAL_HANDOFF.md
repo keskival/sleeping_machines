@@ -1,5 +1,13 @@
 # Local host: current research continuation
 
+## §389 ablation result (host curie), 2 October, 03:25 UTC
+
+Native 2K: scalar 2.734, message 2.744, gate **2.695** (+0.5% work), both 2.703. Promoted candidate:
+native receiver + escape gate. tmux `curie_count_message_gate` is running the 8K scalar reference;
+tmux `curie_count_next` then runs curie_count_gate_D8192_20261002T042000Z (8K gate), then the 131K
+carrier diagnostics (both repairs and gate-only, w32/w128). The next open problem is learning beyond
+short local context: equivalent order above count-optimal at 131K+, credit horizon and retrieval.
+
 ## Count composition diagnosis and §389 repair (host curie), 2 October, 02:25 UTC
 
 Composed carrier+counts 131K: 2.313/2.313/2.316 at w32/w128/w256. Bases alone are 8.17/11.34 bpc

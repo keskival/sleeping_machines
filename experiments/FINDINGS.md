@@ -1,5 +1,27 @@
 # Findings log
 
+## Escape gate lets the native learner override count tables, 2K — 2 October
+
+Integrated native receiver + K4 count receivers, seed 6, 2K fit, 8,191 dev targets.
+Unit-special whole-fit GFLOPs, same convention for every row:
+
+| Variant | Dev bpc | GFLOPs |
+|---|---:|---:|
+| Scalar escape cascade (reference) | 2.734 | 3.806 |
+| + count message into base logits | 2.744 | 4.032 |
+| + escape gate (per-position D, θ from native predictive + evidence) | **2.695** | 3.824 |
+| + both | 2.703 | 4.053 |
+| Stream-adaptive counts (no learning) | 2.776 | — |
+
+The escape gate gains .039 bpc for 0.5% more counted work in this convention, and
+beats stream-adaptive counts by .081. Training adds .046 over the untrained
+composition (2.741); under the scalar cascade it added .007. Predeclared P389c
+(gate < .02) is falsified. The binding constraint was the override path, not
+the information path (Theory §389 revision). Bases alone score 4.6–5.1 bpc: a
+residual measure, which §387 permits to be worse than uniform; P389b was
+mis-posed. Single seed, development only. The 8K gate stage and 131K carrier
+diagnostics are queued.
+
 ## Count receivers over the temporal carrier, 131K: base inert (diagnostic) — 2 October
 
 Labelled diagnostic (carrier base, not the integrated native model; seed 6, dev only).
