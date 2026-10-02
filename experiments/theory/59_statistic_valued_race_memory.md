@@ -475,3 +475,47 @@ and actual64-credit optimizer/cursor recovery precede the fits. A≥.02bpc
 full-core gain must also beat the matching minimal64 arm by≥.02bpc before
 nomination; improvement over scalar counts alone is insufficient. This remains
 an exploratory single-seed2K fit, with no core substitution or automatic scale-up.
+
+## 390. Can the temporal core learn deep features? Obstacles, a mechanism gap, and the test
+
+**No impossibility.** Delays, races and persistent addressed state can implement finite automata, gated linear
+recurrences and (via §96) exact softmax retrieval. Counterfactual route credit is unbiased for one hard
+choice. Nothing forbids learning features beyond local counts. The attribution result (§389) therefore
+says something about the *configuration and protocol*, and three separable obstacles explain it:
+
+1. **Sample complexity.** Character models overtake well-smoothed counts only at millions of characters.
+   At 2K–32K little learnable structure lies beyond local statistics, so minimal ≈ full is expected for
+   any architecture. Real text is a weak test below the crossover.
+2. **Memory timescale and credit reach.** History crosses events by two paths in the native core.
+   (a) The previous event's top-layer output re-enters the next event through gate + layer norm and all
+   `depth` layers again: a gradient k events back crosses ≈ depth·k nonlinear layers. (b) Per-unit
+   addressed memories `m ← rotate(m·e^{−age·rate·forget}) + write·W x` form a linear rotating recurrence
+   with initial timescales 1–100 events, a good gradient path. Credit is truncated at 16 events, and the
+   frozen 8K audit finds the 16-event gradient 31% (norm) away from the 64-event one.
+3. **Storage that is addressable by content.** The native core's `pool = 2` units per head and its disabled
+   episodic index (`matching = recent = 0`) give a handful of 16-dim superposed memories per layer. Induction
+   over W stored pairs needs W separately retrievable items; a superposed memory of dimension d recovers
+   O(d) of them at best, with interference. **The thesis's race attention over stored keys/values is
+   absent from the native core.** It exists in ParallelHeadRaceLanguageModel: a per-position KV bank, bounded
+   hashed and recent candidates, a hard race with counterfactual credit. This is a mechanism-coverage gap,
+   not a limit of the family.
+
+**Sparse exact credit is a structural advantage, still untested.** Exact forward-mode credit (RTRL)
+costs O(n⁴) per step for a dense n-unit recurrence. With addressed updates, the sensitivity of a
+memory entry is nonzero only for parameters of units that wrote it. Sparse forward credit (SnAp,
+Menick et al. 2020) then scales with active writes rather than total state. That is what "capacity
+beyond activity" means for learning work. It is a candidate repair for obstacle 2 that dense recurrent
+models cannot match at equal cost. A cost/error contract must come before any fit.
+
+**Test (queued: curie_long_range_core_20261002T072000Z).** Synthetic streams with i.i.d. fillers, where
+count tables of every order are at chance on targets (4.585 bits; contract-tested): lag-L copy (timing
+memory) and induction over W (content-addressed recall). The unchanged native core runs at L = 12/48 and
+W = 64, with 16- versus 64-event credit; the KV arm adds race retrieval at equal budget.
+
+Predictions: (P390a) native learns lag-12 but not lag-48 at 16-event credit; (P390b) 64-event credit
+improves lag-48 target bpc by ≥ .2 bits; (P390c) native fails induction-64 (within .3 bits of chance)
+at either credit; (P390d) the KV arm reduces induction-64 target bpc by ≥ 1 bit. If P390c and P390d hold,
+race retrieval is restored to the integrated native receiver as a nested option. That keeps addressed
+units, races and counterfactual credit, adds KV candidate scoring, value-delivery and teacher work
+(charged), and is tested against the minimal-core count composition on text at ≥ 1M characters. If the
+KV arm also fails, credit through retrieval (variance, reach) is the next diagnosis, not a dense substitute.
