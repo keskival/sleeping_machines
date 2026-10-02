@@ -1,0 +1,153 @@
+{
+  "status": "completed",
+  "models": {
+    "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 4,
+        "heads": 2,
+        "pool": 2,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.5729166666666666,
+      "by_depth": {
+        "0": {
+          "races": 35,
+          "sign_agreement": 0.7142857142857143,
+          "exact_pi_sign_agreement": 0.5142857142857142,
+          "exact_pi_mean_cosine": 0.05577575394353797,
+          "exact_pi_median_magnitude_ratio": 0.1300518519541243,
+          "mean_cosine": 0.30319562634661357,
+          "median_magnitude_ratio": 0.18544314830662315
+        },
+        "1": {
+          "races": 36,
+          "sign_agreement": 0.5555555555555556,
+          "exact_pi_sign_agreement": 0.6388888888888888,
+          "exact_pi_mean_cosine": 0.2777777777777778,
+          "exact_pi_median_magnitude_ratio": 0.1342006967684649,
+          "mean_cosine": 0.12745649480071317,
+          "median_magnitude_ratio": 0.18949263240189007
+        },
+        "2": {
+          "races": 38,
+          "sign_agreement": 0.5526315789473685,
+          "exact_pi_sign_agreement": 0.6052631578947368,
+          "exact_pi_mean_cosine": 0.22613095362690003,
+          "exact_pi_median_magnitude_ratio": 0.07297852120106853,
+          "mean_cosine": 0.12205101120298904,
+          "median_magnitude_ratio": 0.32870939796055143
+        },
+        "3": {
+          "races": 29,
+          "sign_agreement": 0.5862068965517241,
+          "exact_pi_sign_agreement": 0.4827586206896552,
+          "exact_pi_mean_cosine": 0.0852078162067461,
+          "exact_pi_median_magnitude_ratio": 0.07206622821946132,
+          "mean_cosine": 0.13207516219190896,
+          "median_magnitude_ratio": 0.15441939198424806
+        }
+      }
+    },
+    "curie_dvs_clock_p16d2pool8_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d2pool8_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 2,
+        "heads": 2,
+        "pool": 8,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.625,
+      "by_depth": {
+        "0": {
+          "races": 72,
+          "sign_agreement": 0.6388888888888888,
+          "exact_pi_sign_agreement": 0.5416666666666666,
+          "exact_pi_mean_cosine": 0.15833991819574098,
+          "exact_pi_median_magnitude_ratio": 0.05178511856193871,
+          "mean_cosine": 0.20693347037251567,
+          "median_magnitude_ratio": 0.04690493936174113
+        },
+        "1": {
+          "races": 72,
+          "sign_agreement": 0.5694444444444444,
+          "exact_pi_sign_agreement": 0.5555555555555556,
+          "exact_pi_mean_cosine": 0.19622626038499213,
+          "exact_pi_median_magnitude_ratio": 0.08585719318961035,
+          "mean_cosine": 0.09351620120382785,
+          "median_magnitude_ratio": 0.019118175750603407
+        }
+      }
+    },
+    "curie_dvs_clock_p16d2pool2_s7_20261002T183000Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d2pool2_s7_20261002T183000Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 2,
+        "heads": 2,
+        "pool": 2,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 7,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.578125,
+      "by_depth": {
+        "0": {
+          "races": 72,
+          "sign_agreement": 0.5972222222222222,
+          "exact_pi_sign_agreement": 0.5833333333333334,
+          "exact_pi_mean_cosine": 0.17564792770858514,
+          "exact_pi_median_magnitude_ratio": 0.22591140341724925,
+          "mean_cosine": 0.14890200850947005,
+          "median_magnitude_ratio": 0.4570848680739835
+        },
+        "1": {
+          "races": 71,
+          "sign_agreement": 0.5352112676056338,
+          "exact_pi_sign_agreement": 0.49295774647887325,
+          "exact_pi_mean_cosine": 0.005521888773190191,
+          "exact_pi_median_magnitude_ratio": 0.12911458090378347,
+          "mean_cosine": 0.03469170196902421,
+          "median_magnitude_ratio": 1.5803302851391596
+        }
+      }
+    }
+  },
+  "episodes": 6,
+  "wall_s": 330.9431358120055,
+  "max_rss_kb": 343992,
+  "scope": "Frozen read-only single-race counterfactual audit on development gestures; exact for one race with other races' noise fixed; not a whole-route gradient."
+}

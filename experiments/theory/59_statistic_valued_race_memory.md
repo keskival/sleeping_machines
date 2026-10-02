@@ -941,3 +941,35 @@ races. If it is much higher, (a) dominates. Then exact-π training of the baseli
 Prediction (P400): exact-π raises sign agreement above .8. If it does, exact-π depth 4 closes at least half the
 gap to depth 2. If agreement stays near chance, linearization dominates, and multi-step credit (replay or
 lookahead over the small pools) is the next construction.
+
+**§400 audit result (2 October, 20:32 UTC; curie_dvs_credit_audit_v2_20261002T201500Z.json): P400 fails.**
+Exact-π linearized credit is no more faithful than the surrogate on the same races. Sign agreement is .48–.64
+against .53–.71, and cosine .01–.28 against .04–.30. Estimator noise is not the bottleneck; **linearization is.**
+The seed-7 baseline scores 57.8% against 66.15% for seed 6, an 8-point seed spread, so single-seed ladder
+rankings (§399) are confounded by seed noise and need the seed replicates.
+
+## 401. Commit-aware race credit: the write effect the linearization misses
+
+A race outcome changes the loss through two paths: (i) the delivered value at this event, the only path the
+surrogate and the exact-π estimator linearize; (ii) the **commit**. The winner's proposed memory is written to its
+slot and carried into every later read, while each loser's slot keeps its old memory. The AWS factorial write
+audit (§373, ROUTE_WRITE_DIAGNOSTIC) measured mean |commit effect| .0127 against .0003 for the
+delivered-value residual. The commit path dominates.
+
+**Linearized commit credit.** Let G_u be the gradient of the loss with respect to slot u's stored content after
+event t (from future reads only), and Δ_u = m_u^new − m_u^old the change a write to u makes (the decayed old
+content plus write_u·W_in,u x). To first order, replacing winner w by alternative i changes the loss by
+
+    L(i) − L(w) ≈ g·(v_i − v_w) + G_i·Δ_i − G_w·Δ_w,
+
+and the expected-loss score credit is π_i(ℓ_i − Σ_j π_j ℓ_j) with ℓ_i = g·v_i + G_i·Δ_i (the terms involving only
+w are constant across i). G_w is the gradient of the winner's stored memory. G_i for losers is the gradient
+of their unchanged slot from reads after t, which is isolated by aliasing each slot after every event. All of
+these exist after one backward pass. Adding the correction to the score gradients costs a second backward through the
+retained graph, about 2× backward. Approximations: slot gradients are taken on the realized trajectory, and the
+arrival-time representation of a rewritten slot is linearized.
+
+**Test before training.** An audit estimator computes ℓ_i with commit terms on the same races as §400. Prediction
+(P401): sign agreement with the exact single-race gradient rises above .75. If it does, commit-aware credit
+goes into training (depth 4 and the baseline, seeds 6–8). If it does not, the remaining gap is the
+nonlinear routing cascade, and multi-step replay credit over the small pools is the construction to cost.
