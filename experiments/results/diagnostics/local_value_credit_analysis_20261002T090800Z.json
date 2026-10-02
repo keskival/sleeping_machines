@@ -1,0 +1,459 @@
+{
+  "status": "completed",
+  "kind": "exploratory_deferred_value_projection_attribution",
+  "common_unit_ledger": [
+    {
+      "arm": "native_full",
+      "result": "experiments/results/addressed_memory_language/local_value_credit_native_full_D1024_20261002T090800Z.json",
+      "result_sha256": "aa08c3bef5842882bee8689907a2a7b06ba271923d9ad884afa5fa3e4248a92f",
+      "cold_bpc": 3.968133499363949,
+      "frozen_fit_replay_bpc": 3.967377291900156,
+      "selected_epoch": 4,
+      "fit": 1024,
+      "passes": 4,
+      "development_targets": 2047,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "model": "native",
+      "parameters": 54907,
+      "fitting_targets": 4092,
+      "optimizer_updates": 64,
+      "cpu_whole_fit_gflops_estimate": 1.89299874,
+      "cpu_fit_mflops_per_target_estimate": 0.46260966275659826,
+      "cpu_inference_mflops_per_target": 0.097376,
+      "projected_whole_fit_gflops_estimate": 1.892474964,
+      "projected_fit_mflops_per_target_estimate": 0.46248166275659824,
+      "replay_cpu_gflops_estimate": 0.099592697,
+      "replay_amortized_cpu_mflops_per_dev_target_estimate": 0.04865300293111871,
+      "warm_inference_cpu_mflops_per_target": 0.097376,
+      "core_capacity": 32,
+      "context_capacity": 0,
+      "cold_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 2448,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate"
+      },
+      "warm_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 2448,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate"
+      },
+      "actual_fitting_activity": {
+        "receiver_scores": 130944,
+        "receiver_updates": 65472,
+        "receiver_teacher_values": 130944,
+        "race_count": 65472,
+        "scored_clock_rates": 130944,
+        "kv_queries": 0,
+        "kv_scores": 0,
+        "kv_delivered_values": 0,
+        "kv_teacher_values": 0,
+        "context_reads": 0,
+        "context_writes": 0
+      },
+      "selected_updates_per_target": 16.0,
+      "key_scores_per_target": 32.0,
+      "teacher_values_per_fit_target": 32.0,
+      "context_reads_per_target": 0.0,
+      "context_writes_per_target": 0.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "cold_bpc": 4.309411673578267
+        },
+        {
+          "epoch": 2,
+          "cold_bpc": 4.177803401649978
+        },
+        {
+          "epoch": 3,
+          "cold_bpc": 4.076341994972746
+        },
+        {
+          "epoch": 4,
+          "cold_bpc": 3.968133499363949
+        }
+      ],
+      "wall_s": 526.047710797,
+      "max_rss_kb": 420472
+    },
+    {
+      "arm": "addressed_full",
+      "result": "experiments/results/addressed_memory_language/local_value_credit_addressed_full_D1024_20261002T090800Z.json",
+      "result_sha256": "aec5cf6d1ba54fe3fd6a6e7a324f040fc6005ed510cf00fd3e5f9e0dc14969b1",
+      "cold_bpc": 3.902969540125861,
+      "frozen_fit_replay_bpc": 3.8966533558684633,
+      "selected_epoch": 4,
+      "fit": 1024,
+      "passes": 4,
+      "development_targets": 2047,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "model": "addressed",
+      "parameters": 56987,
+      "fitting_targets": 4092,
+      "optimizer_updates": 64,
+      "cpu_whole_fit_gflops_estimate": 1.924300268,
+      "cpu_fit_mflops_per_target_estimate": 0.4702591075268817,
+      "cpu_inference_mflops_per_target": 0.101582,
+      "projected_whole_fit_gflops_estimate": 1.923776492,
+      "projected_fit_mflops_per_target_estimate": 0.47013110752688175,
+      "replay_cpu_gflops_estimate": 0.103947769,
+      "replay_amortized_cpu_mflops_per_dev_target_estimate": 0.05078054176844162,
+      "warm_inference_cpu_mflops_per_target": 0.1016,
+      "core_capacity": 32,
+      "context_capacity": 4096,
+      "cold_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 99344,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 757,
+        "context_slot_tensor_bytes": 96896,
+        "context_count_entries": 757
+      },
+      "warm_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 125712,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 963,
+        "context_slot_tensor_bytes": 123264,
+        "context_count_entries": 963
+      },
+      "actual_fitting_activity": {
+        "receiver_scores": 130944,
+        "receiver_updates": 65472,
+        "receiver_teacher_values": 130944,
+        "race_count": 65472,
+        "scored_clock_rates": 130944,
+        "kv_queries": 0,
+        "kv_scores": 0,
+        "kv_delivered_values": 0,
+        "kv_teacher_values": 0,
+        "context_reads": 4092,
+        "context_writes": 4088
+      },
+      "selected_updates_per_target": 16.0,
+      "key_scores_per_target": 32.0,
+      "teacher_values_per_fit_target": 32.0,
+      "context_reads_per_target": 1.0,
+      "context_writes_per_target": 0.9990224828934506,
+      "curve": [
+        {
+          "epoch": 1,
+          "cold_bpc": 4.314577590817214
+        },
+        {
+          "epoch": 2,
+          "cold_bpc": 4.174833899294126
+        },
+        {
+          "epoch": 3,
+          "cold_bpc": 4.060958366473317
+        },
+        {
+          "epoch": 4,
+          "cold_bpc": 3.902969540125861
+        }
+      ],
+      "wall_s": 526.3739748589978,
+      "max_rss_kb": 422732
+    },
+    {
+      "arm": "late_full",
+      "result": "experiments/results/addressed_memory_language/local_value_credit_late_full_D1024_20261002T090800Z.json",
+      "result_sha256": "8f613ad482cc9dc82030dbe8198327e822110f3be33ae021c4de72ba76c5708f",
+      "cold_bpc": 3.942092468775645,
+      "frozen_fit_replay_bpc": 3.98088271190034,
+      "selected_epoch": 4,
+      "fit": 1024,
+      "passes": 4,
+      "development_targets": 2047,
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "model": "late",
+      "parameters": 56987,
+      "fitting_targets": 4092,
+      "optimizer_updates": 64,
+      "cpu_whole_fit_gflops_estimate": 1.93282022,
+      "cpu_fit_mflops_per_target_estimate": 0.47234120723362655,
+      "cpu_inference_mflops_per_target": 0.099918,
+      "projected_whole_fit_gflops_estimate": 1.932296444,
+      "projected_fit_mflops_per_target_estimate": 0.4722132072336266,
+      "replay_cpu_gflops_estimate": 0.103917049,
+      "replay_amortized_cpu_mflops_per_dev_target_estimate": 0.05076553444064485,
+      "warm_inference_cpu_mflops_per_target": 0.100576,
+      "core_capacity": 32,
+      "context_capacity": 4096,
+      "cold_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 99344,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 757,
+        "context_slot_tensor_bytes": 96896,
+        "context_count_entries": 757
+      },
+      "warm_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 32,
+        "persistent_tensor_bytes": 125712,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 963,
+        "context_slot_tensor_bytes": 123264,
+        "context_count_entries": 963
+      },
+      "actual_fitting_activity": {
+        "receiver_scores": 130944,
+        "receiver_updates": 65472,
+        "receiver_teacher_values": 130944,
+        "race_count": 65472,
+        "scored_clock_rates": 130944,
+        "kv_queries": 0,
+        "kv_scores": 0,
+        "kv_delivered_values": 0,
+        "kv_teacher_values": 0,
+        "context_reads": 4092,
+        "context_writes": 4088
+      },
+      "selected_updates_per_target": 16.0,
+      "key_scores_per_target": 32.0,
+      "teacher_values_per_fit_target": 32.0,
+      "context_reads_per_target": 1.0,
+      "context_writes_per_target": 0.9990224828934506,
+      "curve": [
+        {
+          "epoch": 1,
+          "cold_bpc": 4.3065315060854985
+        },
+        {
+          "epoch": 2,
+          "cold_bpc": 4.176644107852824
+        },
+        {
+          "epoch": 3,
+          "cold_bpc": 4.06244486923615
+        },
+        {
+          "epoch": 4,
+          "cold_bpc": 3.942092468775645
+        }
+      ],
+      "wall_s": 522.474621182002,
+      "max_rss_kb": 422604
+    },
+    {
+      "arm": "late_shallow",
+      "result": "experiments/results/addressed_memory_language/local_value_credit_late_shallow_D1024_20261002T090800Z.json",
+      "result_sha256": "acbfe5c0f0fd39bee742f7a84ef448157292a2878ff95ec76950164f9b9fbc6f",
+      "cold_bpc": 4.086240780664479,
+      "frozen_fit_replay_bpc": 4.080072981055447,
+      "selected_epoch": 4,
+      "fit": 1024,
+      "passes": 4,
+      "development_targets": 2047,
+      "payload": 16,
+      "depth": 1,
+      "heads": 2,
+      "model": "late",
+      "parameters": 11431,
+      "fitting_targets": 4092,
+      "optimizer_updates": 64,
+      "cpu_whole_fit_gflops_estimate": 0.347703596,
+      "cpu_fit_mflops_per_target_estimate": 0.0849715532746823,
+      "cpu_inference_mflops_per_target": 0.0203,
+      "projected_whole_fit_gflops_estimate": 0.347638124,
+      "projected_fit_mflops_per_target_estimate": 0.08495555327468231,
+      "replay_cpu_gflops_estimate": 0.022392529,
+      "replay_amortized_cpu_mflops_per_dev_target_estimate": 0.01093919345383488,
+      "warm_inference_cpu_mflops_per_target": 0.020958,
+      "core_capacity": 4,
+      "context_capacity": 4096,
+      "cold_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 4,
+        "persistent_tensor_bytes": 97328,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 757,
+        "context_slot_tensor_bytes": 96896,
+        "context_count_entries": 757
+      },
+      "warm_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 4,
+        "persistent_tensor_bytes": 123696,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 963,
+        "context_slot_tensor_bytes": 123264,
+        "context_count_entries": 963
+      },
+      "actual_fitting_activity": {
+        "receiver_scores": 16368,
+        "receiver_updates": 8184,
+        "receiver_teacher_values": 16368,
+        "race_count": 8184,
+        "scored_clock_rates": 16368,
+        "kv_queries": 0,
+        "kv_scores": 0,
+        "kv_delivered_values": 0,
+        "kv_teacher_values": 0,
+        "context_reads": 4092,
+        "context_writes": 4088
+      },
+      "selected_updates_per_target": 2.0,
+      "key_scores_per_target": 4.0,
+      "teacher_values_per_fit_target": 4.0,
+      "context_reads_per_target": 1.0,
+      "context_writes_per_target": 0.9990224828934506,
+      "curve": [
+        {
+          "epoch": 1,
+          "cold_bpc": 4.286796416410774
+        },
+        {
+          "epoch": 2,
+          "cold_bpc": 4.167039970198432
+        },
+        {
+          "epoch": 3,
+          "cold_bpc": 4.130538209722538
+        },
+        {
+          "epoch": 4,
+          "cold_bpc": 4.086240780664479
+        }
+      ],
+      "wall_s": 80.00188142700063,
+      "max_rss_kb": 343320
+    },
+    {
+      "arm": "late_minimal",
+      "result": "experiments/results/addressed_memory_language/local_value_credit_late_minimal_D1024_20261002T090800Z.json",
+      "result_sha256": "e3024b042246705b42615968f67abcb3a20c7e764e578e0be271eb64187a3fe3",
+      "cold_bpc": 4.539614380053605,
+      "frozen_fit_replay_bpc": 4.527428285261517,
+      "selected_epoch": 4,
+      "fit": 1024,
+      "passes": 4,
+      "development_targets": 2047,
+      "payload": 2,
+      "depth": 1,
+      "heads": 2,
+      "model": "late",
+      "parameters": 455,
+      "fitting_targets": 4092,
+      "optimizer_updates": 64,
+      "cpu_whole_fit_gflops_estimate": 0.017847528,
+      "cpu_fit_mflops_per_target_estimate": 0.004361565982404693,
+      "cpu_inference_mflops_per_target": 0.00121975,
+      "projected_whole_fit_gflops_estimate": 0.017782056,
+      "projected_fit_mflops_per_target_estimate": 0.004345565982404692,
+      "replay_cpu_gflops_estimate": 0.001168557,
+      "replay_amortized_cpu_mflops_per_dev_target_estimate": 0.0005708632144601856,
+      "warm_inference_cpu_mflops_per_target": 0.001232,
+      "core_capacity": 4,
+      "context_capacity": 4096,
+      "cold_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 4,
+        "persistent_tensor_bytes": 12208,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 757,
+        "context_slot_tensor_bytes": 12112,
+        "context_count_entries": 757
+      },
+      "warm_final_state": {
+        "occupied_sources": 1,
+        "occupied_receivers": 4,
+        "persistent_tensor_bytes": 15504,
+        "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+        "context_slots": 963,
+        "context_slot_tensor_bytes": 15408,
+        "context_count_entries": 963
+      },
+      "actual_fitting_activity": {
+        "receiver_scores": 16368,
+        "receiver_updates": 8184,
+        "receiver_teacher_values": 16368,
+        "race_count": 8184,
+        "scored_clock_rates": 16368,
+        "kv_queries": 0,
+        "kv_scores": 0,
+        "kv_delivered_values": 0,
+        "kv_teacher_values": 0,
+        "context_reads": 4092,
+        "context_writes": 4088
+      },
+      "selected_updates_per_target": 2.0,
+      "key_scores_per_target": 4.0,
+      "teacher_values_per_fit_target": 4.0,
+      "context_reads_per_target": 1.0,
+      "context_writes_per_target": 0.9990224828934506,
+      "curve": [
+        {
+          "epoch": 1,
+          "cold_bpc": 5.282526002392047
+        },
+        {
+          "epoch": 2,
+          "cold_bpc": 4.97024101599521
+        },
+        {
+          "epoch": 3,
+          "cold_bpc": 4.700308333698937
+        },
+        {
+          "epoch": 4,
+          "cold_bpc": 4.539614380053605
+        }
+      ],
+      "wall_s": 80.91944943299677,
+      "max_rss_kb": 342624
+    }
+  ],
+  "late_vs_native_full_bpc": 0.026041030588304093,
+  "late_vs_addressed_full_bpc": -0.03912292864978406,
+  "late_full_vs_minimal_bpc": 0.5975219112779597,
+  "late_full_vs_same_width_shallow_bpc": 0.1441483118888338,
+  "late_vs_original_fitting_work_ratio_estimate": 1.004427558495772,
+  "followup_gate_passed": false,
+  "gate": {
+    "minimum_all_cold_quality_gains_bpc": 0.02,
+    "maximum_late_vs_original_fitting_work_ratio": 2,
+    "same_width_shallow_control_required": true
+  },
+  "protocol": {
+    "fitting": [
+      0,
+      1024
+    ],
+    "development": [
+      90000000,
+      90002048
+    ],
+    "passes": 4,
+    "credit": 16,
+    "update_targets": 64,
+    "seed": 6,
+    "warmup_targets": 512,
+    "selection": "cold development only; warm replay scored at that same checkpoint"
+  },
+  "accounting_scope": "Whole-fit costs are representative-window estimates, same convention for every arm; CPU and projected clockless ledgers separate. Replay is extra frozen work. Integer/hash/traffic/RNG/energy not FLOPs.",
+  "scope": "Reused development and one seed, not confirmation/semantics/supremacy. Original addressed/minimal-original treatment contrast incomplete; shallow same-width control isolates depth better than the minimal width change. Gate nominates further controlled evidence, no automatic scale-up.",
+  "args": {
+    "tag": "local_value_credit_analysis_20261002T090800Z",
+    "plan": "experiments/queue/local_value_credit_20261002T090800Z.json"
+  },
+  "official_test_read": false,
+  "wall_s": 0.021777119000034872,
+  "max_rss_kb": 21360,
+  "source_sha256": {
+    "experiments/addressed_memory_pair_analysis.py": "ea8355b4f8fff970bd9916c1f48acf9700d5e21699783cca94dfaa10eeec30af"
+  }
+}
