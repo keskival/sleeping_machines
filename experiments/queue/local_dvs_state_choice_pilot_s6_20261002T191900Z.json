@@ -1,0 +1,45 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "queue": "experiments/queue/local_dvs_state_choice_pilot_s6_20261002T191900Z.txt",
+  "queue_sha256": "6e4c5959608e93443d99b4925f2f28cec6eba64faa692fda40453421ac32f64b",
+  "result": "experiments/results/dvs_native/local_dvs_state_choice_pilot_s6_20261002T191900Z.json",
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_state_choice_credit_benchmark.py": "c51152512a46cb015bf50e192f550a6c45a0a033aa73d0a073fc671dfebfcbd7",
+    "experiments/dvs_state_choice_credit_contracts.py": "4a5ffa5c328fffa5a0cd7432a642684b9244245211803dbc72add6acf75ee610",
+    "experiments/dvs_state_clock_credit_benchmark.py": "8e7e0f33a1175b5d147ef3c2695e49e860b7d4a820bc5ba14c141c8de5cdd149",
+    "experiments/dvs_counterfactual_route_audit.py": "3c7ef4a42700a5eede2f49c6feb790bba86bab4958c6f724a0c7a4c5f9256758",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/theory/84_actual_write_choice_with_timing.md": "7fcfc5a78fe09b69c6ab69bdbca39562318aecb1951796b2fcb230b4e8056b30"
+  },
+  "admission": {
+    "contracts": "experiments/results/diagnostics/local_dvs_state_choice_contracts_20261002T191100Z.json",
+    "smoke": "experiments/results/dvs_native/local_dvs_state_choice_smoke_20261002T191400Z.json",
+    "learning_passed": true,
+    "rss_kb": 343548
+  },
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "timeout_s": 600,
+  "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+  "promotion_gate": {
+    "minimum_nll_gain": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_fit_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "scope": "Fixed256fit/192dev/four passes/seed6; one event9 head/layer rotates per pass. Exact conditional actual-write choice utility, native timing retained; no full-model or timing-jump exactness. No changed schedule/extra passes on dev. Strong full-data controls are unequal-data references; no official test or supremacy."
+}
