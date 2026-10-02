@@ -1,0 +1,68 @@
+{
+  "status": "completed",
+  "timing": {
+    "mean_accuracy_gain_pp": 38.54166666666667,
+    "accuracy_gain_pp_by_seed": [
+      43.06640625,
+      36.5234375,
+      36.03515625
+    ],
+    "adjusted_97_5_interval_pp": [
+      33.88671875,
+      43.5546875
+    ],
+    "independent_populations": 128,
+    "seeds": 3,
+    "ours_accuracy_by_seed": [
+      0.9306640625,
+      0.865234375,
+      0.8603515625
+    ],
+    "control_accuracy_by_seed": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "whole_fit_work_ratio_by_seed": [
+      0.9999895809627366,
+      1.0001609220753784,
+      0.9999601320154441
+    ],
+    "scope": "Crossed seed/population bootstrap on one fixed synthetic split; only three seeds. Bonferroni across two predeclared accuracy contrasts; timing keeps whole short/long pairs together. No broad task-class, real-data or energy supremacy follows."
+  },
+  "sharing": {
+    "mean_accuracy_gain_pp": 25.813802083333332,
+    "accuracy_gain_pp_by_seed": [
+      31.8359375,
+      10.64453125,
+      34.9609375
+    ],
+    "adjusted_97_5_interval_pp": [
+      9.66796875,
+      36.62109375
+    ],
+    "independent_populations": 64,
+    "seeds": 3,
+    "ours_accuracy_by_seed": [
+      0.7958984375,
+      0.41796875,
+      0.7080078125
+    ],
+    "control_accuracy_by_seed": [
+      0.4775390625,
+      0.3115234375,
+      0.3583984375
+    ],
+    "whole_fit_work_ratio_by_seed": [
+      0.9335133700190491,
+      0.9336497990316581,
+      0.9338428318573698
+    ],
+    "scope": "Crossed seed/population bootstrap on one fixed synthetic split; only three seeds. Bonferroni across two predeclared accuracy contrasts; timing keeps whole short/long pairs together. No broad task-class, real-data or energy supremacy follows."
+  },
+  "promotion_gates": {
+    "timing": true,
+    "sharing": true
+  },
+  "promotion": "Passing admits a separately frozen larger capability test; no automatic launch"
+}
