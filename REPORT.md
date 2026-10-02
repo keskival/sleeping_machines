@@ -3123,3 +3123,29 @@ NLLgains.048942/.083718, BOTHheldoutgatesFAIL.81920actualshadowlanes paid.
 No unchanged fullfit or supremacyclaim; shallow failure does not establish deep
 impossibility. Full common-unit work/data/activity/quality table and next shared
 DEEP-family hypothesis: experiments/AWS_DEEP_REPLAY_FINDINGS_20261002.md.
+
+## Depth8 corrected replay: both seed7 quality nominations pass
+
+Matched256FIT/192DEV/fourpasses (1024 fitting presentations), p16/L8/H2/pool2,
+coarse4/.25clock, fixedAdam/window/seed7. Completed results only; full
+gradient/recovery/accounting contracts and allsix learning smokes pass.
+
+| Family/credit | DEV accuracy | DEV NLL | Parameters | Available/selected per event | Whole-fit GFLOPs | Per-fit-target MFLOPs | Inference MFLOPs/target |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| private/teacher | 48.438% | 1.369199 | 54571 | 32/16 | 2.022431 | 1.975030 | 0.475853 |
+| private/factorized | 47.396% | 1.399592 | 54571 | 32/16 | 2.124006 | 2.074225 | 0.475713 |
+| private/replay | 56.771% | 1.316790 | 54571 | 32/16 | 109.118229 | 106.560770 | 0.475769 |
+| depth/teacher | 52.604% | 1.410495 | 22351 | 32/16 | 1.989397 | 1.942771 | 0.475699 |
+| depth/factorized | 46.875% | 1.395239 | 22351 | 32/16 | 2.090973 | 2.041966 | 0.475909 |
+| depth/replay | 52.083% | 1.348356 | 22351 | 32/16 | 109.085195 | 106.528511 | 0.475923 |
+
+Private replay improves NLL .052409 versus teacher and .082802 versus
+factorized, with higher accuracy. Shared replay improves .062138/.046883;
+its accuracy decline versus teacher is .521pp, within the1pp gate. BOTH
+families pass predeclared .03NLL gates and receive unchanged seed8 confirmation.
+Each fullreplay fit pays163840shadowlanes/819200events; roughly52–55x control
+trainingwork prevents a resource-advantage claim. Private replay is the
+strongest completed depth8 quality. ReusedDEV epoch selection, single-seed
+evidence, officialtest untouched; confirmation pending. Data preprocessing,
+traffic/RNG andenergy separate; same2FLOPs/MAC+unit-special conventions for
+ALL columns. Full result lineage: experiments/AWS_DEPTH8_REPLAY_FINDINGS_20261002.md.
