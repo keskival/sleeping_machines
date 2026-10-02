@@ -1520,12 +1520,7 @@ def blocks(M, tasks, ev):
          "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
          "reach 100% within 4,000 examples; the control is the best saved result across seven "
          "Transformer configurations and their learning curves. These synthetic tasks use different "
-         "architectures and structural priors. Sources: E53/E36 and E61."),
-        ("small","<b>New integrated evidence:</b> "
-         +('banknote test: <b>ours 91.8% versus trees 94.0%</b>, competitive accuracy without a confirmed win; '
-           if replicated_banknote else 'banknote development: <b>ours 95.3% versus trees 93.0%</b>, confirmation pending; ')+
-         "native language uses <b>6.02× less counted fitting work</b> than the saved KV model at 0.032 bpc worse. "
-         "Protocols and limits follow on the next page; comparable 10M language remains pending.")])
+         "architectures and structural priors. Sources: E53/E36 and E61.")])
 
     banknote={r['args']['model']+str(r['args']['clock_features']):r for r in tasks.get('native_tabular',[])
               if r['args']['dataset']=='banknote' and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')}

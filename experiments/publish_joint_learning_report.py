@@ -64,6 +64,10 @@ def main():
             if {name: digest(name) for name in sources} != source_before:
                 raise ValueError('Report source changed during rendering')
         except BaseException:
+            failed = ROOT / '.git' / 'report-validation'
+            failed.mkdir(parents=True, exist_ok=True)
+            if (ROOT / artifacts[1]).exists():
+                shutil.copy2(ROOT / artifacts[1], failed / (a.tag + '.pdf'))
             for name in artifacts:
                 if name in backups:
                     shutil.copy2(backups[name], ROOT / name)
