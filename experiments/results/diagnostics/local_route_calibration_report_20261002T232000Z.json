@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_route_calibration_report_20261002T232000Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_clock_preserving_calibration_20261002T231600Z.json",
+      "experiments/results/diagnostics/local_dvs_race_support_20261002T225200Z.json",
+      "experiments/results/diagnostics/local_dvs_key_score_decomposition_20261002T230300Z.json",
+      "experiments/results/diagnostics/aws_distinct_replay_priority_20261002T232600Z.json",
+      "experiments/results/diagnostics/aws_compact_context_20261002T232000Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_clock_preserving_calibration_20261002T231600Z.json": "66b57f5936c6a19191b5d6a6a82d9d090334879dcf5cb0d038fa2c489ee22ff1",
+    "experiments/results/diagnostics/local_dvs_race_support_20261002T225200Z.json": "416b3380b1e06c3224df00eb4c8c5b9d63ff2dd4a3bd32b0cb5db0b60994a385",
+    "experiments/results/diagnostics/local_dvs_key_score_decomposition_20261002T230300Z.json": "1f53053bd5bbe59d957e8f02df8cbc7b0899b2de0107e8e77ce373fee3b5eeb8",
+    "experiments/results/diagnostics/aws_distinct_replay_priority_20261002T232600Z.json": "13a4ccd0d4906577b23f7efe9dbae698e377a7a40d456f5934a181678e17bb28",
+    "experiments/results/diagnostics/aws_compact_context_20261002T232000Z.json": "77d1c2fa9f94ba56e084fa1825eda4775ea2534ca5e7f737042f752649d22804"
+  },
+  "pdf_pages": 161,
+  "wall_s": 23.26651109701197,
+  "max_rss_kb": 68808,
+  "source_sha256": {
+    "experiments/publish_route_calibration_report.py": "e07b255e433110616c5dcda17b318126ebdd9b7412f17731d0da3c8831cf3b03",
+    "report/readable_report.py": "cf45cd850f5b396f9aec0e59223c45ead25b520752e96d94c174b55393c2eca9",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/current_dvs_appendix.py": "4370f1a032dbbf682276cc70a1f7fdac6f7f321d54f89c4d1043dc8ce6025e07",
+    "report/reception_evidence.py": "8d42f90c8dc9d2493034987ae5079b1ab0531a013647293944c83f9871fb325d",
+    "report/route_calibration_evidence.py": "d457d5e92ed33e48b93ee61fd78572aa6c0745849414fe80c3ec2046c3f91f3d"
+  },
+  "scope": "Completed cross-host DVS evidence, historical failures and common-unit boundaries preserved; exploratory scope retained."
+}

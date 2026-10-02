@@ -2956,65 +2956,146 @@ Fitted affine mean68.056%/.903627; quadratic69.965%/.885142. Only .018485 mean N
 
 Original trained encoder fit4.218015GF each, .535825MF per7,872 fitting presentations; initial optimizer work zero. Combined fitting and solver FLOPs UNKNOWN, so parent fit alone is not total work. Whole study126.813s/608,044KiB includes every fit/replay/evaluation/export; one convergence warning retained. Tensor bytes exclude shared input normalization and metadata. Conditional decoder folds reuse label-trained encoders; no pipeline cross-fit or test. RBF context evidence remains stronger; raw coarse77.604%/.686661 and historical compact66.667%/.902951 controls preserved. AWS owns the next compact context head.
 
-## AWS corrected replay critics: conditional variance gates fail
+## Appendix B. Race-scaled reception: available arrival support
 
-Sixteen guarded numerical tests pass before two FIT-only frozen screens.
-Against plain k4, critic k2 score-coordinate MSE ratios are2.083742/2.081475
-for initial fine seeds7/8 and2.429824/2.247774 for trained coarse seeds7/8.
-All k1/k2 nominations fail; mean heldout critic R² negative. Critic fixed before
-subset sampling and first-time-preserving actual-write replay remain correct.
-Unbiasedness is not sufficient for variance reduction. This conditional
-score-space evidence does not measure shared-parameter gradient covariance,
-learning quality or supremacy. Both screens retain targets/critics/replays;
-diagnostic FLOPs unknown,not zero. No unchanged reduced-replay long fit.
-Full scope/costs: experiments/AWS_REPLAY_VARIANCE_FINDINGS_20261002.md.
+| Seed | Encoder | Entropy | Top p>=.99 % | 1ms heard | 3ms heard | c4 heard |
+| --- | --- | --- | --- | --- | --- | --- |
+| 6 | initial | 0.750 | 5.13 | 1.197 | 1.523 | 1.510 |
+| 6 | fixed_pass4 | 0.335 | 44.47 | 1.120 | 1.341 | 1.228 |
+| 7 | initial | 0.726 | 7.02 | 1.202 | 1.513 | 1.493 |
+| 7 | fixed_pass4 | 0.399 | 34.59 | 1.144 | 1.394 | 1.272 |
 
-A distinct signed-message/label-aware critic on64 FIT prefixes also fails:
-k2/plaink4 conditional score-MSE2.143301/2.493344 in seeds7/8. Labels are
-learning-only detached critic inputs; inference unchanged.32 critic train/
-32 holdout,100 fixed updates. This is a negative bounded variance screen,
-not a model-quality result. Replay lanes5120 and critic updates200 retained;
-full diagnostic FLOPs unknown. Previous norm-only evidence preserved.
+A relative raw deadline (1+c)T maps through the actual bounded temporal delay. Its heard set is unchanged under a common entering-score shift: all raw clocks scale together. Physical computational times still change. The exact expected receiver count is 1+sum_w pi_w sum_(j!=w) c*pi_j/(1+c*pi_j). The maximum additional physical waiting is .010*(sqrt(1+c)-1)/(sqrt(1+c)+1):1.716ms at c1,3.820ms at c4. The local11ms delay bound remains. This fixes speed-dependent membership, not utility.
 
-## AWS critic calibration: actual parameter variance also fails
+43,008 actual native races across all84 sites,16 producer-unseen FIT inputs, eight noise histories and four encoders. The earlier event19/layer0/head0 site is more concentrated than the whole model: top probability>=.99 in71.88%/57.03% of trained races. First events have the most alternative support. A previous one-history1ms lack of reception is not proof that all alternatives are absent.
 
-Training-only shrinkage yields k2/plaink4 conditional score-MSE2.149378/2.493344
-(seeds7/8). Actual shared-parameter variance, including cross-site covariance,
-is2.383887/2.189517 on seed7 heldout FIT indices32/33 and37.462736/1.674462
-on seed8. Every nomination fails. Exhaustive finite-population and cached
-factual-probability contracts pass. No new model/critic optimization or quality
-claim;160new VJPs paid, FLOPs unknown. Prior failures remain. Full record:
-experiments/AWS_REPLAY_CALIBRATION_FINDINGS_20261002.md.
+Trained relative c4 mean additional waiting1.406/1.675ms. These are frozen arrival profiles, with no changed deliveries/writes, new loss, optimizer, DEV or test evaluation. No learned window or quality nomination follows from counts.
 
-## AWS compact native-context prototype readout: practical gate fails
+Theory99: six numerical contracts and original logit/state checks pass. 59.553s/335,536KiB; exact candidate/clock arrays and checksums retained. Theory100 independently verifies collector end-RNG preservation. Prior trained core fits 2.285696GF each remain paid. Whole audit FLOPs, traffic and energy unknown, not zero.
 
-Same984 FIT/192 DEV,threefrozen native fitted/initialpairs,33anchors and
-fit-user3foldCselection; all state/query/core/portable prediction contracts pass.
-Fitted native67.708%/.901193,64.583%/.938003,68.750%/.915083; raw4 compact
-65.625%/.888167 andraw20 66.146%/.902387. Native~115KB standalone export
-vs40.966KBcoarse/184.334KBfine. BOTHfixed stage/storage nominations FAIL.
-Learned-over-initial mean.277040NLL gain and fine-export savings retained;
-strong coarsecontrol prevents broad advantage. Allanchors scored/delivered:
-dense local RBF readout, not sparse attention. Combinedfit/per-targetfit and
-wholeinference work unknown forallarms; parentnative4.218015GF/cache costs
-retained. Full common-unit table/three-repeat latency/exports:
-experiments/AWS_COMPACT_CONTEXT_FINDINGS_20261002.md.
+## Appendix B. Memory-conditioned keys explain routing confidence
 
-Training-only ordinal replay priorities also fail: k2/plaink4 conditional
-score-MSE2.074656/3.053016(seeds7/8). Positivefloor,correct1/(kp) importance
-weights and exhaustive contracts pass. With-replacementproposal vswithout-
-replacementbaseline explicit. No quality or reduced-workfit claim.
+| Seed | Encoder | Static gap | Memory gap | Static entropy | Full entropy |
+| --- | --- | --- | --- | --- | --- |
+| 6 | initial | 0.070 | 1.350 | 0.999 | 0.744 |
+| 6 | fixed_pass4 | 0.110 | 5.322 | 0.996 | 0.333 |
+| 7 | initial | 0.105 | 1.450 | 0.998 | 0.732 |
+| 7 | fixed_pass4 | 0.128 | 4.340 | 0.996 | 0.402 |
 
-## Fresh replay allocation signal, with parameter failure retained
+Native entering score = query dot static key /sqrt(payload) + clock bias + query dot key_read(persistent memory)/sqrt(payload), then the existing clamp. Exact hooks reconstruct all candidate scores within1.91e-6. Trained memory gaps exceed static gaps in93.75%/92.86% of races. First-event memory is zero and routing is nearly uniform. Persistent-memory reads are the observed confidence source.
 
-Three learned weighted distinct sites on fresh FIT64..95 reduce conditional
-score variance23.2%/30.6% versus four uniform sites (seeds7/8); uniformthree
-would increase variance41.7%. Exact WITHOUTreplacement inclusion weights and
-numerical mean/variance contracts pass. Combined nomination still FAILS:
-shared-parameter ratios.600428/4.011873 and.639390/1.009399 on fixed examples.
-Six proposedshadowlanes vs eight baseline is unexecuted projected allocation,
-NOT the actual all-target diagnostic cost. No quality/supremacy or unchanged
-learningfit claim. Full cases/costs: AWS_REPLAY_IMPORTANCE_FINDINGS_20261002.md.
+Component-only entropies hold the current query fixed; they are algebraic local counterfactuals, not predictions from a modified model history. Large memory scores may express useful specialization or brittle commitment. This decomposition does not establish harmful confidence or a representation-learning regression.
+
+Conventional router z-loss penalizes logsumexp(scores) for numerical stability (ST-MoE, Zoph et al.,2022). Here that quantity is log total rate, so it controls actual first-arrival time. Subtracting it forces total rate1 and changes computation. Choice uncertainty and common speed must be distinguished before importing normalization.
+
+Theory100,5,376 race score pairs /10,752 candidate scalars; four frozen encoders x16 unused FIT prefixes xone noise history. Eight exact logit/state/end-RNG contracts;32.992s/328,876KiB. No loss, fitting, DEV/test or causal harm claim. All weights fixed; prior fits and diagnostic work retained. Full audit FLOPs unknown.
+
+## Appendix B. Clock-preserving route calibration, seed6
+
+| Encoder | Temp. | Scope | FIT NLL | FIT accuracy % | Prefix MF est. |
+| --- | --- | --- | --- | --- | --- |
+| initial | 1 | all | 2.779015 | 0.00 | 0.591695 |
+| initial | 2 | all | 2.773072 | 0.00 | 0.594131 |
+| initial | 4 | all | 2.771472 | 0.00 | 0.594131 |
+| initial | 2 | layer0 | 2.769006 | 0.00 | 0.592913 |
+| fixed_pass4 | 1 | all | 1.376994 | 31.25 | 0.591695 |
+| fixed_pass4 | 2 | all | 1.365840 | 34.38 | 0.594131 |
+| fixed_pass4 | 4 | all | 1.369226 | 32.81 | 0.594131 |
+| fixed_pass4 | 2 | layer0 | 1.362028 | 32.81 | 0.592913 |
+
+At each entering state, keep the original first raw time T and total rate Lambda. A losing exponential residual supplies a uniform independent of T; conditional inverse CDF changes the categorical winner to softmax(score/temperature). No extra random draws, losing value deliveries or receiver updates. The actual selected receiver changes, so subsequent memories and later clocks may change.
+
+Separate16 unused FIT examples, four prespecified noisy histories; every initial/fixed-four-pass model and setting retained. This is mean per-history loss/accuracy, not ensemble inference. No optimizer, new decoder, DEV or test. Temperature2/all NLL gain 0.011155, accuracy change 3.125 points; fixed both-seed smoke gate FAILS.
+
+Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units/720state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+
+## Appendix B. Clock-preserving route calibration, seed7
+
+| Encoder | Temp. | Scope | FIT NLL | FIT accuracy % | Prefix MF est. |
+| --- | --- | --- | --- | --- | --- |
+| initial | 1 | all | 2.444056 | 18.75 | 0.591695 |
+| initial | 2 | all | 2.445819 | 18.75 | 0.594131 |
+| initial | 4 | all | 2.451157 | 18.75 | 0.594131 |
+| initial | 2 | layer0 | 2.441686 | 18.75 | 0.592913 |
+| fixed_pass4 | 1 | all | 1.189652 | 43.75 | 0.591849 |
+| fixed_pass4 | 2 | all | 1.187395 | 43.75 | 0.594131 |
+| fixed_pass4 | 4 | all | 1.205503 | 43.75 | 0.594131 |
+| fixed_pass4 | 2 | layer0 | 1.193236 | 43.75 | 0.593067 |
+
+At each entering state, keep the original first raw time T and total rate Lambda. A losing exponential residual supplies a uniform independent of T; conditional inverse CDF changes the categorical winner to softmax(score/temperature). No extra random draws, losing value deliveries or receiver updates. The actual selected receiver changes, so subsequent memories and later clocks may change.
+
+Separate16 unused FIT examples, four prespecified noisy histories; every initial/fixed-four-pass model and setting retained. This is mean per-history loss/accuracy, not ensemble inference. No optimizer, new decoder, DEV or test. Temperature2/all NLL gain 0.002257, accuracy change 0.000 points; fixed both-seed smoke gate FAILS.
+
+Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units/720state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+
+## Appendix B. AWS frozen replay critics and parameter calibration
+
+| Frozen conditional score study | Seed | k2/plain k4 MSE | Gate |
+| --- | --- | --- | --- |
+| Initial fine norm | 7 | 2.083742 | FAIL |
+| Initial fine norm | 8 | 2.081475 | FAIL |
+| Trained coarse norm | 7 | 2.429824 | FAIL |
+| Trained coarse norm | 8 | 2.247774 | FAIL |
+| Signed/label critic | 7 | 2.143301 | FAIL |
+| Signed/label critic | 8 | 2.493344 | FAIL |
+| Training-only shrinkage | 7 | 2.149378 | FAIL |
+| Training-only shrinkage | 8 | 2.493344 | FAIL |
+
+Correct first-time-preserving actual-write replay and critics frozen before subset sampling retain unbiased credit. Every reduced-replay nomination fails. The initial fine screen uses84 races; trained coarse uses20. Signed-message and label-aware critic inputs are detached learning features, with32 critic-training and32 heldout FIT prefixes. Sixteen original numerical contracts precede screens.
+
+Score-coordinate MSE is insufficient for shared parameters: cross-site covariance contributes. Actual training-only calibrated parameter variance ratios 2.383887/2.189517 in seed7 and37.462736/1.674462 in seed8 also fail. Exhaustive finite-population and cached factual-probability contracts pass.160 new VJPs paid.
+
+All outcomes, targets, critics and original costs retained. No new producer fit, DEV/test quality or reduced-work learning claim. Diagnostic FLOPs unmeasured, not zero. This rejects unchanged critic reduction rather than counterfactual credit in general. AWS_REPLAY_VARIANCE_FINDINGS and AWS_REPLAY_CALIBRATION_FINDINGS carry lineage.
+
+## Appendix B. Replay allocation: fresh score gains, parameter failure
+
+| Proposal | Seed | Score variance/k4 | Two parameter ratios |
+| --- | --- | --- | --- |
+| Ordinal k2 | 7 | 2.074656 | Not measured |
+| Ordinal k2 | 8 | 3.053016 | Not measured |
+| Feature k2 | 7 | 1.206815 | Not measured |
+| Feature k2 | 8 | 1.519582 | Not measured |
+| Weighted distinct k3 | 7 | 0.768144 | 0.600428/4.011873 |
+| Weighted distinct k3 | 8 | 0.693763 | 0.639390/1.009399 |
+
+Ordinal and feature-conditioned k2 proposals sample WITH replacement, using exact1/(kp) correction and a positive floor. Baseline uniform k4 is WITHOUT replacement; uniform k2 with replacement is2.375x. Feature-conditioned priorities improve over that reference but fail reduced-budget gates. Diagnostic exact-return oracle ratios .631115/.519480 need all costly utilities and are not deployable.
+
+The frozen feature predictor then selects three distinct weighted sites on fresh FIT64..95, with exact marginal/pair inclusion probabilities and1/inclusion correction. Conditional score variance falls23.19%/30.62% versus uniform four; uniform three would increase it41.67%. Preserve this positive allocation result. The combined gate fails on actual parameter cases shown above.
+
+Exact expectation/shared-vector variance/uniform nesting contracts pass. 2560 actual diagnostic lanes and80 confirmation VJPs; distinct screen3.578s/ 518,380KiB. Inclusion computation .742/.747ms per prefix, plus tree/discovery/VJP costs. Proposed6 versus8 execution lanes is projected, not measured reduced-work training. Full diagnostic FLOPs unknown; no quality/supremacy claim or unchanged fit.
+
+## Appendix B. AWS compact context head: practical controls remain stronger
+
+| Predictor | Dev accuracy % | Dev NLL | Combined fit GF | Fit MF/target |
+| --- | --- | --- | --- | --- |
+| s6_initial | 58.85 | 1.268551 | Unknown | Unknown |
+| s6_fitted | 67.71 | 0.901193 | Unknown | Unknown |
+| s7_initial | 62.50 | 1.145877 | Unknown | Unknown |
+| s7_fitted | 64.58 | 0.938003 | Unknown | Unknown |
+| s8_initial | 55.73 | 1.170969 | Unknown | Unknown |
+| s8_fitted | 68.75 | 0.915083 | Unknown | Unknown |
+| raw4 | 65.62 | 0.888167 | Unknown | Unknown |
+| raw20 | 66.15 | 0.902387 | Unknown | Unknown |
+
+33-anchor dense local RBF readout uses all distances/basis outputs on frozen native query contexts, plus mandatory raw4/raw20 prototype controls.984 FIT/ 192 DEV, three native trained/initial pairs, fitting-user three-fold regularization selection.72 fold fits,8 refits and352 class-specific KMeans fits are paid. Six Torch and48 query/state contracts pass before decoder fitting.
+
+Both fixed stage/storage gates FAIL. Learned-over-initial mean NLL gain .277040 is supported. Native standalone exports ~115KB versus raw4 40.966KB and raw20 184.334KB; fine-control byte savings do not overcome stronger coarse quality/storage. Raw4 SVC77.604%/.686661 and earlier valid leaders remain.
+
+Whole/per-target combined fitting and inference FLOPs unknown for EVERY arm because solver/replay work is unmeasured. Trained native parent fit4.218015GF/ .535825MF per7872 presentations retained, not total fit. Initial/raw producer fit0 is not zero solver work. Study23.296s/690,896KiB. Portable prediction/roundtrip and three sequential latency repeats pass; exports include normalization/core/ anchors/decoder metadata. This is a dense readout diagnostic, not sparse race attention.
+
+## Appendix B. Integrated exact replay: first seed does not improve quality
+
+| Native seed7 method | Dev acc % | Dev NLL | Whole fit GF | Fit MF/presentation | Infer MF/prefix |
+| --- | --- | --- | --- | --- | --- |
+| Original route teacher | 57.81 | 1.105326 | 20.074 | 2.550 | 0.591709 |
+| Factorized clock only | 56.77 | 1.116189 | 18.244 | 2.318 | 0.591737 |
+| All-race exact replay | 58.33 | 1.141794 | 1040.397 | 132.164 | 0.591779 |
+
+Same984 fitting/192 development inputs, eight passes/7872 fitting presentations, p16/layer2/head2/pool2. Every method retains computational delays, temporal races, persistent sparse writes and separate keys/values. All-race replay forces alternatives at the factual first time with real writes; vectorized shadow histories include unrealized downstream effects. Factorized-clock-only removes the original local route teacher.
+
+All-race replay58.333%/1.141794 versus factorized56.771%/1.116189 and original57.812%/1.105326 is not a quality improvement under the prespecified loss criterion. Approximately1040GF counted fit versus18.24GF factorized is paid despite batched CPU execution. A large fit/dev gap motivates independent generalization diagnostics; it does not prove routing credit cannot help.
+
+Whole fitting and per-presentation fitting columns share units and7872 denominator. Inference mean first11 DEV prefixes;2FLOPs/MAC plus unit specials. Eight available receivers,168 scored keys/84 writes per21-event prefix. Candidate discovery, replay, backward and Adam charged; preprocessing, traffic, RNG and energy separate. Source/class/estimator variants and one-seed exploratory scope retained. Other host owns remaining replay/regularization comparisons.
 
 ## Exact native terminal-query admission: arithmetic saving, wall loss
 

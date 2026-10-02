@@ -1,5 +1,66 @@
 # Local host: current research continuation
 
+## Clock-preserving calibration and joint information contracts, 2 October23:23 UTC
+
+All local jobs complete under unique one-job safe queues; no local trainer
+active. Main only, existing four autostashes preserved. New numerical sources
+and completed notes101/102 are frozen. Preserve all original and new results.
+
+local_clock_preserving_contracts_20261002T231200Z completes29.010s/354328KiB:
+131072 sampled three-way clocks, conditional-uniform and winner/first-time
+screens, common score-shift coupling, exact native tau1 output/state/end-RNG/
+all-parameter gradients, positive-temperature sparse activity/target invariance
+and training refusal. Conditional losing-residual uniform preserves correct
+first-time independence; simply reweighting the original winner while retaining
+its time would not. Positive-temperature training remains uninstalled/refused.
+
+local_dvs_clock_preserving_calibration_20261002T231600Z completes115.746s/
+356292KiB:16 prespecified unused FIT inputs DISJOINT from notes98..100 cohort,
+four noise histories, two initial/fixed-pass4 seed6/7 pairs xfour settings,
+1024 prefixes. Every prediction/readiness/work trace retained; weights fixed.
+Temperature2/all NLL gains .011154728/.002256550, accuracy gains3.125/0 points:
+BOTH .02 gates FAIL. No unchanged integrated fit or selected tau4 rescue.
+Every prefix still scores168 keys/writes84 actual receivers;8 available units,
+720state bytes. Representative tau1 .591695..591849MF vs tau2/all .594131MF
+includes actual calibrated transforms/cumulative sums; not whole-audit FLOPs.
+Original trained fit2.285696GF/2.232125MF per1024 presentations each paid.
+No DEV/test/optimizer. Current-state common rate retained; later altered state
+legitimately changes times. Frozen post-fit softness does not test wider route
+support during training or rule out useful learned confidence calibration.
+
+Theory102 derives joint winner+first-time Fisher diag(pi), whereas winner-only
+Fisher diag(pi)-pi*pi^T has a common-clock null direction. Explicit log-total
+rate/categorical coordinates have orthogonal LOCAL information blocks without
+removing actual shared-content/history coupling. Guarded9 exact-moment/
+independent-quadrature/shared-Jacobian/noise contracts complete .530s/284704KiB;
+max Fisher error4.77e-15, risk-gradient error6.40e-14. Inverse metric amplifies
+rare-coordinate score noise by sum1/pi (1001 at pi=.001). Per-score division
+is not shared-parameter natural gradient. These are local identities, not an
+installed optimizer or empirical improvement. Logged scalar-conversion warning
+retained; no numerical failure or model mutation. Full audit work unknown.
+
+Guarded local_route_calibration_report_20261002T232000Z completes:161-page
+REPORT/PDF pass every page bounds/orphan/source check. Eight new pages include
+99/100/101, all AWS critics/calibration/allocation (including fresh score gains
+and actual parameter failures), compact context plus raw4/raw20 controls, and
+original/factorized/all-race seed7 common-unit fit/inference ledger. Verbatim
+old manual AWS appendix preserved in report/appendices/aws_allocation_history_
+20261002T231900Z.md. Failed gates do not erase learned-feature or score-allocation
+positive evidence. Report source module and publisher now frozen too.
+
+Prioritized integrated model: native p16/L2/H2/pool2 with computational times,
+sparse memory writes, key/value separation and unrealized-route credit.
+Independently owned replay confirmations queue:curie_dvs_lanes_20261002T224500Z;
+generalization/AdamW/input-noise/coarse campaign:curie_dvs_followup_20261002T183000Z.
+Do not duplicate or invoke these multi-job owner queues locally. AWS owns
+parameter-targeted allocation and deferred larger Transformer comparisons.
+Next local calibration requires measured shared-parameter noise/utility before
+any inverse-metric optimizer; numerical identities alone admit no training.
+Remaining mechanism gaps: learnable reception boundary credit/full native
+gradients/recovery/accounting, irregular-stream silence-reset scheduler,
+capacity beyond scored keys and practical matched-quality total-resource gains.
+No proposed departure from the integrated temporal/sparse direction.
+
 ## Memory-key confidence decomposition complete, 2 October23:02 UTC
 
 Unique guarded local_dvs_key_score_decomposition_20261002T230300Z completes:

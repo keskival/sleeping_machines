@@ -1,0 +1,75 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_joint_race_fisher_contracts_20261002T232600Z"
+  },
+  "contracts_passed": 9,
+  "joint_fisher": [
+    [
+      0.07082553080085083,
+      3.415973232597858e-16,
+      5.673596087298755e-16
+    ],
+    [
+      3.425609820559652e-16,
+      0.3508011505316102,
+      2.828899461416231e-15
+    ],
+    [
+      5.683828245301586e-16,
+      2.8299303005130394e-15,
+      0.5783733186675455
+    ]
+  ],
+  "joint_fisher_max_error": 4.773959005888173e-15,
+  "risk_gradient": [
+    -0.0006261810985607239,
+    -0.39106665393788403,
+    0.16166961874909358
+  ],
+  "quadrature_gradient": [
+    -0.0006261810985669691,
+    -0.39106665393791135,
+    0.16166961874902966
+  ],
+  "gradient_max_error": 6.392109064279339e-14,
+  "parameter_step": [
+    -0.6380443040838175,
+    -0.8257474693407195
+  ],
+  "score_division_shortcut": [
+    -0.5668953923811695,
+    -1.0047399224733087
+  ],
+  "noise_amplification": [
+    {
+      "rare_probability": 0.1,
+      "raw_score_mean_square": 1.0,
+      "inverse_metric_mean_square": 11.11111111111111
+    },
+    {
+      "rare_probability": 0.01,
+      "raw_score_mean_square": 1.0,
+      "inverse_metric_mean_square": 101.01010101010101
+    },
+    {
+      "rare_probability": 0.001,
+      "raw_score_mean_square": 1.0,
+      "inverse_metric_mean_square": 1001.001001001001
+    }
+  ],
+  "source_sha256": {
+    "experiments/joint_race_fisher_contracts.py": "5880566e006040f3a25544402ba8a2e504fd656324545391c83ec470d96233cd",
+    "experiments/theory/102_joint_race_fisher_and_calibration_limits.md": "b048572115c25e69087136be228eafa977d66c4d901eeecbabe08f434f76c30c"
+  },
+  "wall_s": 0.5295815710123861,
+  "max_rss_kb": 284704,
+  "hardware": {
+    "host": "curie",
+    "threads": 1
+  },
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "whole_audit_flops": null,
+  "scope": "Local common-start exponential winner+first-time law. Exact moment identities/independent quadrature, conditional-return gradient, common-clock/choice blocks, shared-parameter pullback and inverse-metric noise. No native estimator/optimizer replacement, fitted model, quality gain or free credit normalization."
+}
