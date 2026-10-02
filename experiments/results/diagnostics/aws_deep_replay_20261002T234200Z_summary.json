@@ -1,0 +1,39 @@
+{
+  "status": "completed",
+  "tag": "aws_deep_replay_20261002T234200Z",
+  "depth": 4,
+  "completed": [
+    "aws_deep_replay_20261002T234200Z_d4_teacher_smoke_s7",
+    "aws_deep_replay_20261002T234200Z_d4_factorized_smoke_s7",
+    "aws_deep_replay_20261002T234200Z_d4_replay_smoke_s7",
+    "aws_deep_replay_20261002T234200Z_d4_teacher_pilot_s7",
+    "aws_deep_replay_20261002T234200Z_d4_factorized_pilot_s7",
+    "aws_deep_replay_20261002T234200Z_d4_replay_pilot_s7"
+  ],
+  "pilots": {
+    "teacher": "aws_deep_replay_20261002T234200Z_d4_teacher_pilot_s7",
+    "factorized": "aws_deep_replay_20261002T234200Z_d4_factorized_pilot_s7",
+    "replay": "aws_deep_replay_20261002T234200Z_d4_replay_pilot_s7"
+  },
+  "pilot_gate": {
+    "comparisons": {
+      "teacher": {
+        "nll_gain": -0.03236610785825178,
+        "accuracy_gain": -1.9868214962137642e-08,
+        "fit_work_ratio": 27.860875105064743,
+        "passed": false
+      },
+      "factorized": {
+        "nll_gain": -0.00583493709564209,
+        "accuracy_gain": 0.010416626930236816,
+        "fit_work_ratio": 26.762640409327837,
+        "passed": false
+      }
+    },
+    "passed": false
+  },
+  "confirmation": null,
+  "full_fit_nomination_pass": false,
+  "wall_s": 108.20174077100819,
+  "scope": "Matched deep corrected full replay versus factorized control and original teacher; all costs paid; reused DEV epoch selection, no official test or supremacy claim"
+}
