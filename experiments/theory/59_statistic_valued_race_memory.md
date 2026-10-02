@@ -807,3 +807,19 @@ trees 48.8% (chance); time-blind table (word, last mark, rank) 60.4%; exact rank
 information 100%. Contracts: tests/test_joint_event_language_tasks.py (v1 leak kept as a regression check).
 The phase rule is literally a periodic elapsed-time computation, which the core's rotating memories can
 represent. Whether it is learned is the test.
+
+## 396. Real-data capacity ladder: DVS gestures (where practical headroom exists)
+
+Calibration (other host, theory 73/74): on subject-disjoint first-second DVS Gesture packets (984 fit / 192 dev),
+class counts score 58.85%, linear 61.46%, selected RBF 73.44% (grid max 74.48%), and a compact
+kernel/prototype control 66.67%. That leaves 14.6 points of practical headroom over counts, with every control
+below 75%. The native model (p16/depth2/H2/pool2, 15.5K parameters, 8 receivers) reaches 65.10%, or
+66.15% with packet-calibrated clocks, and learns real features (frozen-feature probe 57.8% → 67.2%). It is
+small relative to the task.
+
+Ladder, on the same driver, data, seed and protocol: pool 8 (4× receivers, the same depth·heads selected
+updates per event: capacity beyond activity), depth 4, payload 32, and all three combined. Predictions:
+(P396a) pool 8 gains ≥ 2 points over pool 2 at an unchanged selected-update count; (P396b) the combined shape
+reaches ≥ 70%, approaching RBF. Fitting work grows mainly through scored keys and losing-value credit,
+which are charged. Per-query inference work and selected updates are reported beside quality. A gain from
+pool alone would be the first real-data evidence that available capacity beyond activity pays.

@@ -1,5 +1,13 @@
 # Local host: current research continuation
 
+## curie: DVS capacity ladder claimed (§396), 2 October, 16:40 UTC
+
+curie runs a capacity ladder on the other host's clock-calibrated DVS driver (same data, controls, seed and
+protocol as local_dvs_clock_full_20261002T153000Z): pool 8, depth 4, payload 32, combined; tags curie_dvs_*;
+queue curie_dvs_capacity_20261002T164500Z after the joint v2 observed fit (its rank control is withdrawn: the joint
+task family is solved by stateful tables, so it is a capability diagnostic only). No change to the DVS sources;
+the other host's DVS inference/port work is not duplicated.
+
 ## Full-window batching admission passed, 2 October16:35 UTC
 
 Completed report refreshed and validated:121pages, publication
