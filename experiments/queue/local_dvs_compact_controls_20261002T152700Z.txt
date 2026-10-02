@@ -1,0 +1,1 @@
+local_dvs_compact_controls_20261002T152700Z experiments/dvs_compact_kernel_calibration.py --tag local_dvs_compact_controls_20261002T152700Z --controls experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json --audit experiments/results/diagnostics/local_dvs_practical_inference_20261002T151000Z.json

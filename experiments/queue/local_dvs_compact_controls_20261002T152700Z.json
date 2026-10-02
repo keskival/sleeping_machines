@@ -1,0 +1,34 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_dvs_compact_controls_20261002T152700Z",
+      "stage": "diagnostic",
+      "queue": "experiments/queue/local_dvs_compact_controls_20261002T152700Z.txt",
+      "queue_sha256": "31cc6c90feb1b5d9990a94df7a044db2156d2eab655d0d70c73aaf720d40a003",
+      "result": "experiments/results/diagnostics/local_dvs_compact_controls_20261002T152700Z.json",
+      "timeout_s": 600,
+      "requires": []
+    }
+  ],
+  "references": [
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+    "experiments/results/diagnostics/local_dvs_practical_inference_20261002T151000Z.json"
+  ],
+  "source_sha256": {
+    "experiments/dvs_compact_kernel_calibration.py": "cd1a3492b9c5622e7233b12ce6cd74f6b23ef86849331a1197d7960879f210fb",
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json": "ad592825f529682b8eb7741cac7a01f59822aa485ed65f84cfeae8aec8acde2a",
+    "experiments/results/diagnostics/local_dvs_practical_inference_20261002T151000Z.json": "9f07f5e82a24421c08b735360494914b14880524bbea195906960d4592daa18d",
+    "scripts/run_addressed_memory_pair.py": "7125ea4992322ed4c410f99b86ca4b0d8ffa2ed8cd6450ac9296a7175b802e62",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "scope": "72 fixed compact kernel/class-prototype controls before considering native storage advantage. Existing full9-cell control grid15.9s; bounded heads<=44features,600s conservative grid/clustering cap. All full/compact cells preserved, no test or native advantage assumed."
+}
