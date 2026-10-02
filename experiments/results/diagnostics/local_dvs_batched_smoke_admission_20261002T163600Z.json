@@ -1,0 +1,39 @@
+{
+  "status": "completed",
+  "full_partial_learning_memory_accounting_admission_passed": true,
+  "rows": [
+    {
+      "credit": "local",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_smoke_20261002T163400Z.json",
+      "result_sha256": "9645d9a07a6b135abdc612f5ea54f65b3c20f58eddf57373b6526915a4b1873a",
+      "wall_s": 20.820670973000233,
+      "max_rss_kb": 342808,
+      "initial_fit_nll": 2.6409492641687393,
+      "final_fit_nll": 2.1144652366638184,
+      "whole_fit_gflops": 0.107699332,
+      "fit_mflops_per_target": 2.2437360833333333,
+      "inference_mflops_per_prefix": 0.591695,
+      "window_size_counts": {
+        "16": 2,
+        "8": 2
+      }
+    },
+    {
+      "credit": "pairs",
+      "result": "experiments/results/dvs_native/local_dvs_batched_pairs_smoke_20261002T163400Z.json",
+      "result_sha256": "e33d3059f5f3289f96aa2b2a0b9eb1a81b5b90d5f079c1d14c69be3cd3c46b1f",
+      "wall_s": 20.52423749599984,
+      "max_rss_kb": 342932,
+      "initial_fit_nll": 2.6409492641687393,
+      "final_fit_nll": 2.113325367371241,
+      "whole_fit_gflops": 0.108205056,
+      "fit_mflops_per_target": 2.254272,
+      "inference_mflops_per_prefix": 0.591695,
+      "window_size_counts": {
+        "16": 2,
+        "8": 2
+      }
+    }
+  ],
+  "scope": "Two fixed 24fit/8dev/two-pass mechanism smokes,48 target presentations/four updates each. Supports bounded matched credit pilot only; no practical benchmark or superiority."
+}

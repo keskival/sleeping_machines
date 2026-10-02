@@ -1,5 +1,23 @@
 # Local host: current research continuation
 
+## Full-window batching admission passed, 2 October16:35 UTC
+
+Both unique guarded `local_dvs_batched_{local,pairs}_smoke_20261002T163400Z`
+fits completed,24fit/8dev/two fixed passes. Each has two U16 and two partial
+U8 updates,48 target presentations; every stage's operation accounting passes,
+all frozen source SHA match and fitting NLL falls by more than.01. Admission
+record `results/diagnostics/local_dvs_batched_smoke_admission_20261002T163600Z.json`
+contains same-unit work, wall and RSS for both. Peak memory remains below
+900000KiB. This is integrated learning/accounting admission, not quality evidence.
+
+Next priority: bounded matched local/pair credit pilot at fixed data, seed,
+capacity, optimizer windows/passes and selection rule before increasing native
+capacity. Both smokes and all older failures remain preserved. Inference-only
+NumPy timing audit is also ready to prepare from passed contracts; no speed
+claim before repeated matched measurements. No job is left running at this
+handoff. The rebase is complete,119-page combined report validated, all three
+stashes preserved; work remains on main.
+
 ## Rebase recovered; real-stream evidence and next gate, 2 October16:32 UTC
 
 Rebase onto `bda9f4a` completed on main. Conflicts were generated REPORT/PDF;
