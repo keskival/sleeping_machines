@@ -1,0 +1,23 @@
+{
+  "status": "completed_supervisor_resumed",
+  "supervisor": {
+    "pid": 505,
+    "state": "S",
+    "ppid": 504,
+    "start_ticks": "68801",
+    "command": ".venv-docker/bin/python -u scripts/run_local_frozen_recovery.py --plan experiments/queue/local_state_credit_recovery_20261002T021222Z.json "
+  },
+  "backup": "/tmp/sleeping-machines-stash-resolution-20261002T022900Z",
+  "unmerged_index": "100644 e4f759bc6333e4351665f062256b319425f87e2e 1\tREPORT.md\n100644 ec390f1ea21c25519720ef19603b7883b61dbd50 2\tREPORT.md\n100644 ce2b904e86a89dd4fc8f5de718b07ea45c6cf5c9 3\tREPORT.md\n100644 fb93143fa7a629aa21a5cac1be1ed1b70bcdce0d 1\treport/sleeping_machines_status.pdf\n100644 e6d9227711aedbaedcee36118c6f98ce5ba6749c 2\treport/sleeping_machines_status.pdf\n100644 acaf7a1cc3239f80cb5071de7c605ba3f8fc1d68 3\treport/sleeping_machines_status.pdf\n",
+  "stashes": [
+    "5d4ddea7960d776eaa889897845d930204a26f85 On main: autostash",
+    "3397d7abc4285703f541de8913b3c4f3100b4d62 On main: autostash",
+    "afd6e5b6c8c23a005ae9f1998a254021ac3f8a82 On main: autostash"
+  ],
+  "started_utc": "2026-10-02T02:28:41.105957+00:00",
+  "resolution": "Rebuild both generated reports from current source and completed evidence; retain all stashes",
+  "completed_utc": "2026-10-02T02:29:57.484577+00:00",
+  "head": "f400a2f26b7f57f4a2ec3578da2aedaf473eca37",
+  "pdf_pages": 82,
+  "stash_versions_preserved": true
+}

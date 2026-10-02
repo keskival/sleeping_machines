@@ -1,0 +1,14 @@
+{
+  "status": "completed_supervisor_resumed",
+  "supervisor": {
+    "pid": 505,
+    "state": "S",
+    "ppid": 504,
+    "start_ticks": "68801",
+    "command": ".venv-docker/bin/python -u scripts/run_local_frozen_recovery.py --plan experiments/queue/local_state_credit_recovery_20261002T021222Z.json "
+  },
+  "observed_utc": "2026-10-02T02:18:29.576679+00:00",
+  "trainer_and_guard_unchanged": true,
+  "completed_utc": "2026-10-02T02:18:42.860189+00:00",
+  "rebase_head": "38779e530aea6d1128cdd7f9d45bb1a058b0a74b"
+}
