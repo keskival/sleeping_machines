@@ -38,3 +38,29 @@ Numeric gates:
   }
 }
 ```
+
+## Unchanged seed8 confirmation: both gates fail
+
+Same256FIT/192DEV/fourpasses/1024targets and settings as seed7.
+
+| Family/credit | DEV accuracy | DEV NLL | Whole-fit GFLOPs | Per-fit-target MFLOPs | Inference MFLOPs/target |
+|---|---:|---:|---:|---:|---:|
+| private/teacher | 55.729% | 1.331247 | 2.022431 | 1.975030 | 0.475909 |
+| private/factorized | 48.438% | 1.270459 | 2.124006 | 2.074225 | 0.475993 |
+| private/replay | 54.167% | 1.282510 | 109.118229 | 106.560770 | 0.475699 |
+| depth/teacher | 48.438% | 1.283150 | 1.989397 | 1.942771 | 0.475825 |
+| depth/factorized | 50.000% | 1.271398 | 2.090973 | 2.041966 | 0.475783 |
+| depth/replay | 48.958% | 1.270943 | 109.085195 | 106.528511 | 0.475811 |
+
+Private replay retains .048736NLL improvement versus teacher, but loses
+1.5625pp accuracy and is .012051NLL worse than factorized control: confirmation
+FAILS. Shared replay gains only .012207/.000455NLL (teacher/factorized) and
+misses both .03NLL gates; factorized accuracy drops1.0417pp: FAILS. Preserve
+the positive depth8 seed7 results, with limited robustness beside them.
+No unchanged full984FIT gesture promotion and no supremacy claim.
+
+Both independent native language causal/recovery contracts and1025-char
+learning checks pass (private5.311638→4.832740BPC; shared5.273659→4.807838BPC).
+These small fits are admission only, not language advantage evidence. Separate
+private/shared original-teacher models proceed to10,000,000-character FIT and
+1M disjointDEV; corrected full replay is not yet installed in language.

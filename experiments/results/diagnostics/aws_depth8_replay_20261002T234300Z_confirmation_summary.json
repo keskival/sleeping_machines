@@ -1,0 +1,33 @@
+{
+  "status": "completed",
+  "depth": 8,
+  "pilot_both_families_pass": true,
+  "confirmation": {
+    "private": {
+      "teacher": {
+        "nll_gain": 0.048736392171122134,
+        "accuracy_gain": -0.015624980131785038,
+        "passed": false
+      },
+      "factorized": {
+        "nll_gain": -0.01205134391784668,
+        "accuracy_gain": 0.05729168653488159,
+        "passed": false
+      }
+    },
+    "depth": {
+      "teacher": {
+        "nll_gain": 0.01220683056938765,
+        "accuracy_gain": 0.005208343267440796,
+        "passed": false
+      },
+      "factorized": {
+        "nll_gain": 0.00045478343963623047,
+        "accuracy_gain": -0.010416656732559204,
+        "passed": false
+      }
+    }
+  },
+  "full_gesture_fit_nomination_pass": false,
+  "scope": "Two matched exploratory seeds; positive seed7 quality retained, seed8 prevents unchanged full-fit promotion; language10M separate task"
+}

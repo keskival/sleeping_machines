@@ -2055,3 +2055,17 @@ aws_depth8_confirm_language_20261002T234300Z/manifest.json reuses completed
 language contracts/smokes, admits confirmations as checks, then both10M
 language jobs. Recovery helper drains current smokes before releasing old
 coordinator lock; no training/watchdog killed. Old worker lifecycle retained.
+
+Depth8 unchanged seed8 confirmation complete: BOTH full-gesture nomination
+familiesFAIL. Private teacher55.729%/1.331247, factorized48.438%/1.270459,
+replay54.167%/1.282510. Shared teacher48.438%/1.283150,factorized50%/1.271398,
+replay48.958%/1.270943. Private improves teacherNLL butloses1.5625ppaccuracy/
+worsefactorizedNLL; sharedNLLgains<.03andfactorizedaccuracydrop>1pp. Preserve
+positive seed7 result; no unchanged full984FIT gesturepromotion. Common-unit
+appendix/summary published beside original positive claims.
+Language smokes bothPASS,250/251s,<534MiB, initial/finalBPCprivate5.3116→4.8327,
+shared5.2737→4.8078. These are admission only. Prioritized integrated long
+models now10M-char causal native depth8 private versusdepth-shared maps,
+ORIGINALteacher credit, guarded2CPUjobs in replacementmatrix3-slotreservation.
+Missingmechanism: corrected fullreplay language shadowport; theory records
+all-targetcausalreturn and scalingcontracts, notinstalledqualityevidence.
