@@ -3,8 +3,12 @@
 # 64-target credit; lag (timing memory) and induction (content-addressed recall). Chance target bpc 4.585.
 curie_long_range_contracts_20261002T072000Z -m pytest -q tests/test_long_range_core.py
 curie_long_range_smoke_20261002T072000Z experiments/long_range_core_benchmark.py --tag curie_long_range_smoke_20261002T072000Z --task lag --distance 4 --fit 256 --dev 256 --epochs 1
+curie_long_range_kv_smoke_20261002T072000Z experiments/long_range_core_benchmark.py --tag curie_long_range_kv_smoke_20261002T072000Z --model kv --task induction --distance 32 --fit 256 --dev 256 --epochs 1
 curie_long_range_lag12_c16_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_lag12_c16_s6_20261002T072000Z --task lag --distance 12 --chunk 16
 curie_long_range_lag48_c16_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_lag48_c16_s6_20261002T072000Z --task lag --distance 48 --chunk 16
 curie_long_range_lag48_c64_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_lag48_c64_s6_20261002T072000Z --task lag --distance 48 --chunk 64
 curie_long_range_ind64_c16_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_ind64_c16_s6_20261002T072000Z --task induction --distance 64 --chunk 16
 curie_long_range_ind64_c64_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_ind64_c64_s6_20261002T072000Z --task induction --distance 64 --chunk 64
+# KV arm: the thesis's race attention over stored keys/values (absent from the native core), same budget and credit.
+curie_long_range_kv_ind64_c16_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_kv_ind64_c16_s6_20261002T072000Z --model kv --task induction --distance 64 --chunk 16
+curie_long_range_kv_lag48_c16_20261002T072000Z experiments/long_range_core_benchmark.py --fit 8192 --dev 4096 --epochs 4 --tag curie_long_range_kv_lag48_c16_s6_20261002T072000Z --model kv --task lag --distance 48 --chunk 16

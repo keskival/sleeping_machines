@@ -43,3 +43,11 @@ def test_native_core_runs_on_the_stream_and_scores_targets():
     m = L.NativeStreamLanguageModel(payload=4, depth=2, pool=2, heads=2)
     s = L.score(m, torch.tensor(toks), mask, 16)
     assert s['targets'] == int(mask[1:].sum()) and np.isfinite(s['target_bpc'])
+
+
+def test_kv_model_runs_on_the_stream():
+    toks, mask = L.make_stream('induction', 200, 32, 5)
+    torch.manual_seed(0)
+    m = L.ParallelHeadRaceLanguageModel(4, 2, 2, matching=2, recent=2, heads=2)
+    s = L.score(m, torch.tensor(toks), mask, 16)
+    assert np.isfinite(s['target_bpc'])

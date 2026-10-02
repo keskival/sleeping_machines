@@ -11,7 +11,9 @@ predicts a target at chance (log2 24 = 4.585 bits) unless the exact (K-context, 
 Cues arrive after random gaps.  The model is the integrated NativeStreamLanguageModel (races, addressed
 persistent state, learned delays, counterfactual route credit) trained as a stream language model on every
 position with per-chunk truncated credit; only the score is split into target positions and filler.
-Width/depth set the full versus minimal core.  Exploratory: one seed, synthetic, no FLOP audit (parameters,
+Width/depth set the full versus minimal core.  --model kv adds the thesis's race attention over stored
+keys/values (ParallelHeadRaceLanguageModel: per-position KV bank, bounded hashed candidates + recent entries,
+hard race retrieval with counterfactual credit), which the native core omits.  Exploratory: one seed, synthetic, no FLOP audit (parameters,
 targets and wall time recorded), not a language benchmark.
 """
 import argparse
@@ -31,6 +33,7 @@ from torch.nn import functional as F
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from sleeping_machines.native_stream_language import NativeStreamLanguageModel  # noqa: E402
+from sleeping_machines.parallel_head_race_language import ParallelHeadRaceLanguageModel  # noqa: E402
 
 FILLER, LAG_CUE, INDUCTION_CUE = 24, 24, 25
 
@@ -82,6 +85,8 @@ def main():
     p.add_argument('--depth', type=int, default=8); p.add_argument('--heads', type=int, default=2)
     p.add_argument('--pool', type=int, default=2); p.add_argument('--lr', type=float, default=.002)
     p.add_argument('--seed', type=int, default=6)
+    p.add_argument('--model', choices=('native', 'kv'), default='native')
+    p.add_argument('--matching', type=int, default=8); p.add_argument('--recent', type=int, default=4)
     a = p.parse_args()
     out = ROOT / 'experiments/results/long_range_core' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -91,9 +96,11 @@ def main():
     fit, fit_mask = make_stream(a.task, a.fit, a.distance, a.seed)
     dev, dev_mask = make_stream(a.task, a.dev, a.distance, a.seed + 10_000)
     fit_t, dev_t = torch.tensor(fit), torch.tensor(dev)
-    model = NativeStreamLanguageModel(a.payload, a.depth, a.pool, a.heads)
+    model = (NativeStreamLanguageModel(a.payload, a.depth, a.pool, a.heads) if a.model == 'native' else
+             ParallelHeadRaceLanguageModel(a.payload, a.depth, a.pool, matching=a.matching, recent=a.recent, heads=a.heads))
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
-    sources = ['experiments/long_range_core_benchmark.py', 'sleeping_machines/native_stream_language.py']
+    sources = ['experiments/long_range_core_benchmark.py', 'sleeping_machines/native_stream_language.py',
+               'sleeping_machines/parallel_head_race_language.py']
     result = dict(status='running', args=vars(a), parameters=sum(q.numel() for q in model.parameters()),
                   chance_target_bpc=math.log2(FILLER), initial_dev=score(model, dev_t, dev_mask, a.chunk), curve=[],
                   data_sha256=hashlib.sha256(fit.tobytes() + dev.tobytes()).hexdigest(),
