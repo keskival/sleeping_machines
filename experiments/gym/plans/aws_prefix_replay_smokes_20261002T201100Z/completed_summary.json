@@ -1,0 +1,33 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_prefix_replay_contracts_20261002T201000Z",
+      "result": "experiments/results/diagnostics/aws_prefix_replay_contracts_20261002T201000Z.json",
+      "reused": true,
+      "max_rss_kb": 499144,
+      "wall_s": 14.504149539978243
+    },
+    {
+      "tag": "aws_prefix_replay_smokes_20261002T201100Z_reuse",
+      "result": "experiments/results/dvs_native/aws_prefix_replay_smokes_20261002T201100Z_reuse.json",
+      "reused": false,
+      "max_rss_kb": 459672,
+      "wall_s": 12.652518533053808
+    },
+    {
+      "tag": "aws_prefix_replay_smokes_20261002T201100Z_full",
+      "result": "experiments/results/dvs_native/aws_prefix_replay_smokes_20261002T201100Z_full.json",
+      "reused": false,
+      "max_rss_kb": 459616,
+      "wall_s": 13.608826664974913
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T19:58:43.874654+00:00",
+  "active_jobs": [
+    "aws_prefix_replay_smokes_20261002T201100Z_full"
+  ],
+  "max_parallel_jobs": 2
+}
