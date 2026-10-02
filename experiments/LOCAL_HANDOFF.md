@@ -508,3 +508,14 @@ yet. Native64 graphs fit inside900000KiB prerequisite margin. Report publication
 waiter local_count_credit64_publication_20261002T060400Z waits exact worker
 identity/completed analysis, renders completed common-unit ledger and validates
 PDF bounds/orphans before committing. Reports keep old evidence while pending.
+
+06:08 status: both accounting smokes complete (full157.127s/550596KiB;
+minimal24.689s/361584KiB), formula coverage complete for first/persistent/
+partial steps. Full64-credit2K pilot starts06:04:23, PID12404 under guard
+PID12388, tmux local-count-credit64-20261002T060000Z; workerPID11662.
+One trainer only, nice19/one thread; observed~671MiB RSS/~11.1GiB available.
+Frozen hashes are unchanged. Minimal pilot, four-arm analysis and guarded
+report publication are automatic after successful completion. New five
+protocol tests reject pending output, mismatched data/seed/update budgets and
+check consistent target denominators; with ten publication regressions,15pass.
+No fit-quality score is completed or promoted yet.
