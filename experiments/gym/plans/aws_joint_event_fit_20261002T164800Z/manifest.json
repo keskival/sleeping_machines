@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "status": "prepared",
+  "run_prefix": "aws_joint_event_fit_20261002T164800Z",
+  "parallel_host": "ip-172-31-47-132",
+  "jobs": [
+    {
+      "tag": "aws_joint_event_calibration_20261002T164400Z_table",
+      "domain": "joint_event",
+      "variant": "table",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_calibration_20261002T164400Z_table.txt",
+      "queue_sha256": "add8c4a11d70a1dad0403c67ba8f68705492ebc34429b9401dfce22a3300dd1f",
+      "result": "experiments/results/diagnostics/aws_joint_event_calibration_20261002T164400Z_table.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+      "domain": "joint_event",
+      "variant": "gru",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_gru_smoke.txt",
+      "queue_sha256": "024d88c6ffaafa4f76fcc9f1bad1e7d7cac01858fbc72088444460ba0b2590a2",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_smoke.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_smoke",
+      "domain": "joint_event",
+      "variant": "transformer",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_transformer_smoke.txt",
+      "queue_sha256": "daa58fd43acacf7d2e59daffdf1e56693b406b5e4aa701c802ee08889f6398e9",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_smoke.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s6",
+      "domain": "joint_event",
+      "variant": "gru",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_gru_s6.txt",
+      "queue_sha256": "e07b37bd5cbc8301c30e47a20ecdeac3e9ab45e666a6de8471bb9d822158bb89",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s6.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s7",
+      "domain": "joint_event",
+      "variant": "gru",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_gru_s7.txt",
+      "queue_sha256": "b3446a2196ffad01df2fa5cb257deb3dfc20a49dd53e1a0cb460b8c1cc77f44a",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s7.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s8",
+      "domain": "joint_event",
+      "variant": "gru",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_gru_s8.txt",
+      "queue_sha256": "d4d2398d02ddc44b8f97e7da32bbc0a08d6b949a8aae86258fd97d419cf2e53c",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s8.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s6",
+      "domain": "joint_event",
+      "variant": "transformer",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_transformer_s6.txt",
+      "queue_sha256": "16fbb401cc16690e9a3fb8a7b81059ddc4d98dc2aa4aa9325502c3d32e7ec0de",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s6.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s7",
+      "domain": "joint_event",
+      "variant": "transformer",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_transformer_s7.txt",
+      "queue_sha256": "68186df766c5622677607b90bdf972549f7594efa1fa48f96423ca09bd87168d",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s7.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s8",
+      "domain": "joint_event",
+      "variant": "transformer",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_joint_event_fit_20261002T164800Z_transformer_s8.txt",
+      "queue_sha256": "12082b494a8788ee56534a70898b57277293dcef57062c4075bddf8329133797",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s8.json",
+      "requires": [
+        "aws_joint_event_calibration_20261002T164400Z_table",
+        "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+        "aws_joint_event_fit_20261002T164800Z_transformer_smoke"
+      ],
+      "timeout_s": 900,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/aws_joint_event_dense_controls.py": "4edf772efdde8302317f4f8cc1c464788b9a8da063bc376cd029d546c633690b",
+    "experiments/joint_event_dense_controls.py": "87137b2f17173fe783fb9292fb153ed089e208f9ab318fa67bb3d468615effaf",
+    "experiments/joint_event_stateful_table.py": "ed2bd4aecd65dbcbde39047d450fb40a10b801a7414007c01446f355d93da8aa",
+    "experiments/joint_event_language_tasks.py": "ac3ff16c543224bbccfc26ceedd3d5ea7b2b79701ed10014b1fbc74dc00e9d46",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec"
+  }
+}

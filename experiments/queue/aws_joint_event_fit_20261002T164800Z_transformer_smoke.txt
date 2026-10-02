@@ -1,0 +1,1 @@
+aws_joint_event_fit_20261002T164800Z_transformer_smoke experiments/aws_joint_event_dense_controls.py --tag aws_joint_event_fit_20261002T164800Z_transformer_smoke --model transformer --fit 48 --dev 32 --epochs 1

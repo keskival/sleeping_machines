@@ -1566,3 +1566,14 @@ Pilots require complete audit/resource margin; three seeds and original fixed
 budgets, >=20pp calibration over comparable table. No pending quality claim.
 Prioritized research architecture remains native joint text/event race core;
 these dense controls calibrate its information/learning gap. No substitution.
+
+AWS calibration repair: current v2 table58.3984%; base threshold78.3984%.
+Failures are preserved beside original plans (missing operator formulas,
+merge-schema field, opaque Transformer inference fast path). Scoped AWS audit
+repairs and disabling inference fast path expose computation without changing
+architecture. Final plan aws_joint_event_fit_20261002T164800Z requires both
+complete accounting smokes and table before six fixed-budget base fits;
+phase barrier/RSS admission retained. Three slots,2GiB RSS/job,8GiB floor,
+900s fit timeout from small bounded workload. Worker auto-commits/pushes each
+completed result, stops admission on failure and preserves in-flight results.
+No history ladder queued; calibration decision requires completed results.

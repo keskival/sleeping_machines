@@ -129,6 +129,7 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     if Path(a.tag).name != a.tag or out.exists():
         raise ValueError('Unique unused tag required')
+    torch.backends.mha.set_fastpath_enabled(False)  # expose inference operators to audit
     torch.set_num_threads(1); torch.manual_seed(a.seed); started = time.perf_counter()
     fit, dev = J.episodes(a.fit, 1301, tuple(a.background)), J.episodes(a.dev, 2301, tuple(a.background))
     model = TimeGRU(a.width) if a.model == 'gru' else TimeTransformer(a.width)

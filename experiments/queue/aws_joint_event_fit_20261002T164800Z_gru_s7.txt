@@ -1,0 +1,1 @@
+aws_joint_event_fit_20261002T164800Z_gru_s7 experiments/aws_joint_event_dense_controls.py --tag aws_joint_event_fit_20261002T164800Z_gru_s7 --model gru --seed 7
