@@ -254,3 +254,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - [Retained state versus sparse access](theory/94_retained_state_and_sparse_access.md) — conditional-information identity motivates a causal pre-query memory/age/occupancy augmentation of the saved query probe; dense diagnostic access is explicitly separate from the sparse architecture and practical advantage.
 
 - [Payload, clock and layer partitions](theory/95_state_payload_clock_and_layer_partitions.md) — completed state-access signal admits four cached diagnostic partitions and fixed decoder-setting cross-checks; distinguishes retained payloads from metadata and finite regularization without claiming causal depth or sparse advantage.
+
+- [Producer-held decoder selection](theory/96_producer_held_selection_and_mean_regularization.md) — a label-trained-feature CV confidence counterexample; fixed-pass native pilots compare conditional versus untouched-FIT decoder selection with sample-size-invariant mean regularization and an exact affine native-head port.
