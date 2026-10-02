@@ -1,0 +1,201 @@
+{
+  "status": "completed",
+  "strata_order": 4,
+  "development": [
+    90000000,
+    90008192
+  ],
+  "summary": {
+    "counts_stream_adaptive_wb_o4_8192": {
+      "fit": 8192,
+      "mean_bpc": 2.711257500408593,
+      "strata": {
+        "unseen": {
+          "positions": 2108,
+          "bpc": 3.748955008397449
+        },
+        "1-2": {
+          "positions": 1983,
+          "bpc": 2.5673520502157268
+        },
+        "3-9": {
+          "positions": 2244,
+          "bpc": 2.3350748447435263
+        },
+        ">=10": {
+          "positions": 1856,
+          "bpc": 2.141242435863524
+        }
+      }
+    },
+    "counts_frozen_kn_o5_8192": {
+      "fit": 8192,
+      "mean_bpc": 3.0829442028806207,
+      "strata": {
+        "unseen": {
+          "positions": 2108,
+          "bpc": 3.464077794952486
+        },
+        "1-2": {
+          "positions": 1983,
+          "bpc": 3.317427088458768
+        },
+        "3-9": {
+          "positions": 2244,
+          "bpc": 2.943925498343581
+        },
+        ">=10": {
+          "positions": 1856,
+          "bpc": 2.567614891885015
+        }
+      }
+    },
+    "curie_count_carrying_D8192_K4_gate_s6_20261002T042000Z": {
+      "fit": 8192,
+      "mean_bpc": 2.600606918334961,
+      "saved_dev_bpc": 2.600606869144944,
+      "payload": 16,
+      "depth": 8,
+      "strata": {
+        "unseen": {
+          "positions": 2108,
+          "bpc": 3.512982130050659
+        },
+        "1-2": {
+          "positions": 1983,
+          "bpc": 2.4842169284820557
+        },
+        "3-9": {
+          "positions": 2244,
+          "bpc": 2.240161657333374
+        },
+        ">=10": {
+          "positions": 1856,
+          "bpc": 2.1245038509368896
+        }
+      }
+    },
+    "curie_count_carrying_D8192_K4_gate_minimal_p2_d1_s6_20261002T050000Z": {
+      "fit": 8192,
+      "mean_bpc": 2.5878193378448486,
+      "saved_dev_bpc": 2.587819539542445,
+      "payload": 2,
+      "depth": 1,
+      "strata": {
+        "unseen": {
+          "positions": 2108,
+          "bpc": 3.4897937774658203
+        },
+        "1-2": {
+          "positions": 1983,
+          "bpc": 2.466620922088623
+        },
+        "3-9": {
+          "positions": 2244,
+          "bpc": 2.2315938472747803
+        },
+        ">=10": {
+          "positions": 1856,
+          "bpc": 2.123565912246704
+        }
+      }
+    },
+    "counts_stream_adaptive_wb_o4_32768": {
+      "fit": 32768,
+      "mean_bpc": 2.579223107274559,
+      "strata": {
+        "unseen": {
+          "positions": 1271,
+          "bpc": 4.016542110984551
+        },
+        "1-2": {
+          "positions": 1383,
+          "bpc": 2.612053119782328
+        },
+        "3-9": {
+          "positions": 2069,
+          "bpc": 2.299679656256477
+        },
+        ">=10": {
+          "positions": 3468,
+          "bpc": 2.2061374784229932
+        }
+      }
+    },
+    "counts_frozen_kn_o5_32768": {
+      "fit": 32768,
+      "mean_bpc": 2.7040362974314913,
+      "strata": {
+        "unseen": {
+          "positions": 1271,
+          "bpc": 3.47660901620221
+        },
+        "1-2": {
+          "positions": 1383,
+          "bpc": 3.0868125710002867
+        },
+        "3-9": {
+          "positions": 2069,
+          "bpc": 2.640432918160649
+        },
+        ">=10": {
+          "positions": 3468,
+          "bpc": 2.306191972116654
+        }
+      }
+    },
+    "curie_count_carrying_D32768_K4_gate_s6_20261002T044000Z": {
+      "fit": 32768,
+      "mean_bpc": 2.4472391605377197,
+      "saved_dev_bpc": 2.4472390797506467,
+      "payload": 16,
+      "depth": 8,
+      "strata": {
+        "unseen": {
+          "positions": 1271,
+          "bpc": 3.63187313079834
+        },
+        "1-2": {
+          "positions": 1383,
+          "bpc": 2.474794864654541
+        },
+        "3-9": {
+          "positions": 2069,
+          "bpc": 2.182729959487915
+        },
+        ">=10": {
+          "positions": 3468,
+          "bpc": 2.1598947048187256
+        }
+      }
+    },
+    "curie_count_carrying_D32768_K4_gate_minimal_p2_d1_s6_20261002T044000Z": {
+      "fit": 32768,
+      "mean_bpc": 2.400775671005249,
+      "saved_dev_bpc": 2.400775695004506,
+      "payload": 2,
+      "depth": 1,
+      "strata": {
+        "unseen": {
+          "positions": 1271,
+          "bpc": 3.576723575592041
+        },
+        "1-2": {
+          "positions": 1383,
+          "bpc": 2.3843212127685547
+        },
+        "3-9": {
+          "positions": 2069,
+          "bpc": 2.1268362998962402
+        },
+        ">=10": {
+          "positions": 3468,
+          "bpc": 2.139791488647461
+        }
+      }
+    }
+  },
+  "wall_s": 178.85232373300096,
+  "max_rss_kb": 261604,
+  "scope": "Frozen read-only stratified audit; strata by prequential top-order context evidence; one seed per model."
+}

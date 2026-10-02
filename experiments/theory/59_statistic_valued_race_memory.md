@@ -699,3 +699,26 @@ router gradients and direct-claim contracts pass). The bottom-placed series (min
 as recorded evidence about that placement. The top-placed series is next, with the same controls.
 Predictions (P392a′/b′): top pooled minimal ≤ 2.568; top pooled full beats top pooled minimal and shallow by
 ≥ .02, concentrated in the unseen and low-evidence strata (§393).
+
+**§393 result (2 October, 12:52 UTC; results/diagnostics/curie_count_limit_stratified_20261002T121500Z.json).**
+Strata by prequential order-4 context evidence. Saved means are reproduced exactly.
+
+| bpc | unseen | 1–2 | 3–9 | ≥ 10 |
+|---|---:|---:|---:|---:|
+| 8K counts WB o4 adaptive / KN o5 frozen | 3.749 / **3.464** | 2.567 / 3.317 | 2.335 / 2.944 | 2.141 / 2.568 |
+| 8K ours gate full / minimal | 3.513 / 3.490 | 2.484 / 2.467 | 2.240 / 2.232 | 2.125 / 2.124 |
+| 32K counts WB o4 adaptive / KN o5 frozen | 4.017 / **3.477** | 2.612 / 3.087 | 2.300 / 2.640 | 2.206 / 2.306 |
+| 32K ours gate full / minimal | 3.632 / 3.577 | 2.475 / **2.384** | 2.183 / **2.127** | 2.160 / **2.140** |
+
+(1) The composition beats both count references in every stratum with evidence. (2) In the **unseen** stratum,
+where counting runs out, frozen Kneser–Ney beats it by .03–.16 bpc. KN's lower orders use continuation counts
+(the number of distinct preceding contexts a symbol completes), which estimate the law of novel continuations;
+our cascade backs off through raw occurrence counts, which overweight frequent symbols exactly where the top
+context is new. (3) **P393 fails:** the full core is worse than the minimal core in every stratum, unseen
+included. At 8K–32K the current core supplies no generalization beyond counts.
+
+Consequences. The unseen stratum is the decisive arena, and its floor is set by the backoff statistic, not the
+learner. Lower cascade orders should carry continuation statistics (a cheap, exact change to the count
+receivers; the top order keeps occurrence counts, as in interpolated KN). Any core contribution must then beat
+that stronger floor in the unseen and 1–2 strata. The top-placed pooled memory, the next queued series, is the
+mechanism aimed at this stratum; its result must be read there, not in the mean.
