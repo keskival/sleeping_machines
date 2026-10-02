@@ -2012,3 +2012,21 @@ aws_shared_depth_replay_contracts234600Z checks sharedgradients==sumuntied
 identicalweightreference, privategradients/state, fullreplay sequentialequivalence,
 actualoptimizer/alias/RNG recovery and completework before p16smokes/pilots.
 Otherhost fineD4sampled8 and factorizedregularization queues stay separatelyowned.
+
+## AWS depth8 priority and language follow-up — 2 October
+
+User explicitly requires DEPTH8. Completed aws_depth8_replay_contracts235000Z
+passes every-parameter corrected replay equivalence, shared-map alias/private
+state contracts and actual optimizer/cursor/RNG/work recovery for ALL SIX
+private/depth-shared × teacher/factorized/full-replay arms. Shared-depth4
+contracts234600Z also pass; its training is deferred in favor of depth8.
+Prioritized integrated matrix: aws_depth8_replay_20261002T235500Z/manifest.json,
+six learning smokes before six256FIT/192DEV/four-pass seed7 pilots; up to3
+single-thread CPU slots on this AWS host with global reservation/slot locks,
+RSS guards and8GiB available floor. Full depth8 replay:80 races/160 shadow
+lanes per target. No heldout depth8 result yet; contracts are correctness only.
+Each completed JSON and optimizer checkpoint is automatically committed/pushed.
+User also requests new models on language again. Inspect existing causal
+native language architecture and protocol, port corrected replay/shared-map
+contracts before admitting language training; no substitution of DVS labels
+or gesture episodes for genuine causal next-token prediction.
