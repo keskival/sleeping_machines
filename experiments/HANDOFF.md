@@ -1478,3 +1478,19 @@ Plan `experiments/gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json
 18 guarded stages,4GiB RSS/6GiB VMS per slot,8GiB floor,7200s pilot cap.
 No new core source changes, no holdout use or automatic supremacy claims.
 Read latest other-host count64-credit findings; do not duplicate their fits.
+
+
+## AWS assignment review and capacity publication — 2 October, 09:10 UTC
+
+Pulled/rebased througha238d3d while preserving active trainers. Latest local
+retrieval/value-credit/statistic-race plans belong to other hosts; no duplicate
+AWS fit added. AWS_NEXT_BATCH now reflects completed predecessors and active
+source64 capacity plan instead of obsolete banknote/confirmation waiters.
+15/18 stages complete, three fits active,~24GiB MemAvailable; guards intact.
+New `experiments/capacity_exposure_analysis.py` validates all six completed
+pilots, preserves each seed/control and inventories historical source16 and
+new source64 quality/capacity/work with common units and explicit unequal-data
+scope. Scripts compile. `scripts/run_aws_capacity_summary.py` waits exact
+worker835962 terminal completion, then reserves host lock during publication.
+Session `aws-capacity-summary-20261002`; log
+`queue/aws_capacity_summary_20261002.out`. No pending scores promoted.

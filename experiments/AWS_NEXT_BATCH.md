@@ -1,29 +1,39 @@
-# Next AWS work
+# Current AWS work
 
-The native split-event battery has completed all33 stages. Preserve its results
-and terminal worker state. Banknote confirmation is active; the AWS supervisor
-already reserves [development seed replications](AWS_EVENT_REPLICATION.md)
-after it. Let that chain complete without a second worker.
+The prioritized active integrated experiment is
+`gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`:
+common-source-seed native H2/d8/depth8, occupied sources64, private/shared
+rules, matched8 fit queries/source/pass, four passes and seeds6/7/8.
+See [the capacity protocol](AWS_CAPACITY_EXPOSURE.md). Three guarded CPU slots
+on this AWS host only;4GiB RSS/6GiB VMS/job and8GiB available-memory floor.
+Do not start a second worker or modify its frozen sources.
 
-The prepared follow-up after those replications is:
+As of this review,15/18 stages are complete and published; three pilot fits are
+active. Completed results are95.02%/98.34% private-rule seeds6/7 and99.90%
+shared-rule seed6 on development. Keep remaining cells pending. Total data is
+larger than the16-source references; this is not an iso-data supremacy result.
+The new capacity-summary supervisor waits for full completion, validates every
+result, and publishes a common-unit quality/work inventory automatically.
 
-**[Native confirmation](AWS_NATIVE_CONFIRMATION.md)** — manifest
-`gym/plans/aws_native_confirmation_20261002T010500Z/manifest.json`.
-Two new private-rule fits, ten completed/forthcoming checkpoint reuses; paired timing
-and shared-rule/private-state confirmation across three seeds and fresh data.
-The command, caps, fixed analysis and gates are in the linked protocol.
+Completed predecessors remain preserved:
 
-Do not duplicate an active worker or bypass run_safe. The ongoing
-**[banknote confirmation](AWS_BANKNOTE_CONFIRMATION.md)** tests the observed
-tabular lead against original trees, CatBoost and logistic regression with
-reserved test rows. Original selected checkpoints are required.
+- Native fresh-data timing and shared+common-source confirmation both passed
+  their prespecified gates. The independent chain and replication summary are
+  complete; do not restart them.
+- Crossed rule/source-seed pilots isolate the combined effect. Common seed
+  explains most quality gain; shared rules alone did not improve mean accuracy.
+  See [the full factorial findings](AWS_RULE_SEED_FINDINGS_20261002.md).
+- The causal two-trace timing reference completed1024/1024; it uses known
+  generator constants and is a diagnostic, not a learned competitive control.
+- Banknote remains11/12 final comparisons. CatBoost seed8 was stopped after
+  an anomalous3128s with no completed candidates; its failure is preserved.
+  Logistic has lower reserved-test NLL than our variant. Do not rerun a completed
+  tag or report the full banknote gate as complete.
 
-The uniquely queued `aws_route_write_decomposition_20261001T235000Z` completed
-as a bounded frozen-state diagnostic. Actual write effects dominate the
-message-linearization residual in its12 fixed probes. Preserve its JSON/logs;
-do not rerun the completed name. It motivates a separately named full-state
-teacher contract, not an untested change to a frozen model source.
-
+Other hosts own current count/statistic-retrieval, late-projection and value-
+credit language comparisons. Do not duplicate their queued variants. Review
+LOCAL_HANDOFF and THEORY before assigning a new architectural comparison.
 Large Transformer controls remain AWS work under their original protocols and
-resource requirements. Report only completed quality/work; do not substitute
-pending confirmation or extrapolated scores for leading valid evidence.
+resource requirements; completed90M controls are historical evidence, not a
+request to blindly rerun old queues. No additional newly assigned AWS battery
+was found in this pull. Preserve invalid-protocol quarantine and pending cells.
