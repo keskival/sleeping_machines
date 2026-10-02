@@ -1591,3 +1591,21 @@ retention/phase probes rather than automatic scale-up. Native joint-event
 architecture remains prioritized; local host owns its fits/credit changes.
 No native-versus-control or supremacy claim from uncalibrated controls.
 AWS worker and summary publisher completed; no AWS training remains active.
+
+## AWS prefix-reuse engineering comparison — 2 October
+
+Pulled ccc0bf1; local host owns actual-write choice quality replication and
+curie owns tied pools/depth controls. AWS addresses the extra replay cost,
+not a new architecture or duplicated quality campaign. See theory note
+aws_20261002_prefix_replay.md: retain factual producer graph, snapshot before
+event9, detach/clone only no-grad alternate starting state and RNG; replay
+12 suffix events instead of21. Reference source files untouched.
+
+Guarded contracts aws_prefix_replay_contracts_20261002T201000Z pass14.50s/
+499144KiB:8 rotating-head/layer float32/64 comparisons, every factual/alternate
+state/loss/parameter gradient, next Adam, fixed RNG and interrupted driver
+recovery. Full audit window168->132 events,12.203334->10.938926M arithmetic,
+.167342->.143366M specials. Includes snapshot/copy/setup executed operations;
+no measured traffic/energy claim. Integrated24/8/two-pass/U16+partialU8 paired
+smokes next, unique queues under safe worker,2GiB RSS/6GiB VMS/8GiB floor.
+Engineering equivalence/savings only; no new practical quality advantage yet.
