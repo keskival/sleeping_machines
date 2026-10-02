@@ -1,5 +1,41 @@
 # Local host: current research continuation
 
+## Protected outcome/joint-credit test admitted, 2 October, 12:57 UTC
+
+Balanced native/tapped/full/shallow cycle and frozen query-readout diagnostic
+completed. None learns the joint label: native/tapped/shallow dev .999542/
+1.000231/1.000243bits, accuracy .500/.484/.500. Whole fitting estimates
+.560270/.618554/.199843GFLOPs,512targets/64updates. Frozen affine bit probes
+are near chance on fresh suffixes, and degree2 heads fail badly (7.88–25.33
+fresh bits,~50%). Preserve these negative results; neither mere retention
+norm nor adding a larger readout established usable old evidence.
+
+Theory68 states the next concrete information-path change. Generic causal
+outcome bank writes the observed successor at the observed predecessor address,
+without bit extraction or marker filtering. Every occupied address is scored;
+two learned key races deliver values to a bilinear terminal decoder while the
+native time/race/persistent-vector core remains. Joint training enumerates
+terminal candidate pairs for exact conditional content-risk credit; earlier
+native teacher and unlearned write-address scope stay explicit. Added raw
+symbol storage, discovery, losing values and pair/optimizer work are charged.
+
+Five numerical/driver contracts pass66.400s: results/diagnostics/
+local_joint_outcome_contracts_20261002T125300Z.json. Zero parent nesting,
+generic protected writes, exact joint-key derivatives/finite differences,
+real interrupted model/Adam recovery for joint/local credit, trained local
+teacher/inference and chunk identity. Guarded peak groupRSS594,540KiB;
+host>=11GiB available. No frozen parent source changed.
+
+Next serial plan queue/local_joint_outcome_20261002T125700Z.json:
+joint full/local full/joint same-width shallow, p4,L2/L1,H2,pool2,key/value4,
+16fitgroups/64queries,16passes,U4,lr.01,seed6,gap8. Three full-shape smokes
+precede pilots. Held-out seed72001 dev selects across fixed passes; reserved
+seed74001/32groups evaluates fixed selected models once after all fits.
+All three arms reported, count bound limited to query suffix/count inputs,
+no dense control duplication or automatic supremacy claim. Main, one safe
+CPU job,1thread,1.25MKiB RSS/3MKiB VMS/8GiB availability guard. Other-host
+language pooled-receiver and evidence-stratified studies remain unduplicated.
+
 ## Balanced joint-feature fitting admitted, 2 October, 12:13 UTC
 
 Read theory/66_balanced_joint_learning.md. Counts are expected to lead in their
