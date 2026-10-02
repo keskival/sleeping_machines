@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_reception_evidence_report_20261002T222500Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_race_window_credit_contracts_20261002T222000Z.json",
+      "experiments/results/diagnostics/local_dvs_native_window_intervention_20261002T223000Z.json",
+      "experiments/results/diagnostics/aws_frozen_polynomial_20261002T215500Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_race_window_credit_contracts_20261002T222000Z.json": "23a45afff9023f402028299c7319706af6ffd661d8de0bcad650394af3c49034",
+    "experiments/results/diagnostics/local_dvs_native_window_intervention_20261002T223000Z.json": "b2d02eb96afe49dfb06dd8127ece7df1f3b2569057b9259f167a881334a70aa6",
+    "experiments/results/diagnostics/aws_frozen_polynomial_20261002T215500Z.json": "f7015395629dfaf7c0033915c82f9889a51ca07e8e7efd8523aa19f675662226"
+  },
+  "pdf_pages": 153,
+  "wall_s": 22.49862772099732,
+  "max_rss_kb": 71764,
+  "source_sha256": {
+    "experiments/publish_reception_report.py": "c0b42d33c14481164879c427b2c9ee97ebcb9298e06d196c929800f9cdf25fa4",
+    "report/readable_report.py": "7fb58d9a383c4253b3bb7fd714e393f2d7cde6cfe960f88d9d39e291bb08599b",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/current_dvs_appendix.py": "4370f1a032dbbf682276cc70a1f7fdac6f7f321d54f89c4d1043dc8ce6025e07",
+    "report/reception_evidence.py": "8d42f90c8dc9d2493034987ae5079b1ab0531a013647293944c83f9871fb325d"
+  },
+  "scope": "Completed cross-host DVS evidence, historical failures and common-unit boundaries preserved; exploratory scope retained."
+}

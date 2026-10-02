@@ -1846,8 +1846,8 @@ traffic/energy unknown rather than zero. No DEV or test evaluation/optimizer.
 
 Prespecified 1ms mean-vs-wait nomination FAILS in both trained seeds: no second
 message is heard on any16 prefix at this site, so NLL gain exactly0. Wider3ms
-hears extras4/16 and7/16; mean NLL1.069441/1.023701 versus wait1.070734/
-1.026013 (small ~.0013/.0023), not a substituted gate. Seed6 unnormalized sum
+hears extras4/16 and7/16; mean NLL1.069441/1.023701 versus wait1.070549/
+1.026013 (small ~.0011/.0023), not a substituted gate. Seed6 unnormalized sum
 worsens1.104131; seed7 sum1.022673. Initial receivers hear more at this one
 site (6/1 cases at1ms,11/5 at3ms); scope is local sample, not global race gap.
 This unchanged one-site proposal is NOT admitted to a learning smoke. Its
@@ -1861,3 +1861,26 @@ work is separately owned. Local contribution is complete arrival/boundary
 math and a real-native diagnostic with controls, not a new leading model.
 Rebase onto d112051 was resolved retaining BOTH AWS polynomial and theory97
 handoff sections, keeping four autostashes and in-progress files intact.
+
+## Reception and latest AWS decoder report published — 2 October, 22:26 UTC
+
+Unique guarded local_reception_evidence_report_20261002T222500Z completes:
+153-page MD/PDF, missing-section/page-bounds/orphan/source-change/parent checks
+pass. The prior149pages are retained and new theory97 boundary contracts,
+all44 real-native intervention outcomes (paired per-seed tables), measured
+readiness, actual capacity/activity/prior-fit/representative-inference costs,
+and all12 completed AWS frozen-polynomial outcomes are integrated. Verbatim
+former AWS polynomial appendix is preserved in report/appendices. Unknown
+solver/whole-audit/traffic/energy costs and failed nomination gates remain
+explicit. No leading result replaced; no new fit or pending quality claim.
+
+No local queue job remains active. Prioritized integrated training remains
+other-host corrected replay/shadow-lane credit (see its main queue/protocol),
+with AWS compact native context heads independently owned. Reception has now
+progressed from isolated law/primitive to a controlled frozen actual-native
+intervention, but lacks an installed boundary estimator, learnable widths,
+whole-model gradient/recovery/work contracts and irregular-stream popcorn
+scheduler. The predeclared1ms one-site proposal failed; no unchanged local
+learning smoke is admitted. Next reception investigation should measure useful
+candidate-arrival support and matching observed-information controls before
+choosing another site/width, with those choices prespecified on FIT, not DEV.

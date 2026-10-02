@@ -2860,38 +2860,101 @@ Four contracts include a constructed feature-selection confidence counterexample
 
 Theory96. The mathematical counterexample establishes a possible failure, not its occurrence in these pilots. Original encoder fits, feature replay and head-port verification replay are separate costs; solver/transformation/traffic/ energy work remains unknown. Same reused192 development examples; no official test or new main model. No guessed global regularization fit is admitted from this result.
 
-Frozen gate FAILS: NLL worsens.166618; fitratio1.083617 and inference1.458782
-remain within fixed limits. New5808 head weights and all5 sequential head
-calls paid.8 available receivers/4writes per event and factual/key/losing-value
-activity identical. Deep state/parameter-gradient and interrupted recovery
-contracts remain valid; they do not predict quality. No unchanged seed7,
-full-fit, epoch extension or automatic promotion. Earlier full-coarse seed8
-failure and all positive frozen readout/reservoir controls remain preserved.
-A frozen affine-versus-polynomial convex-fit diagnostic can separate decoder
-fitting from encoder drift before a new learning intervention.
+## Appendix B. Receiving losing arrivals requires boundary credit
 
-## AWS frozen polynomial optimization study complete: gates fail
+| Constructed gradient | Complete conditional reference | Ordinary history-cell autograd |
+| --- | --- | --- |
+| Width dL/dH | -27.662490 | 0.656618 |
+| Zero-width right derivative | -34.323670 | Birth credit required |
 
-All three984-fit coarse encoders and matching initial reservoirs compare
-fit-user-selected affine/degree2 logistic heads;108CV/12refits,6replays,
-192 development, official test unopened. Folded coefficients exactly reproduce
-explicit normalized-feature logits; full native query predictions agree within
-frozen tolerance. All5 sequential head calls charged, native state unchanged.
-Fitted affine68.056%/.903627mean; quadratic69.965%/.885142. Polynomial adds
-only.018485NLL/+1.910pp and worsens seed6 relative to affine, failing .05/+3pp/
-everyseed nomination. Parent-native polynomial NLL gains .020633/.157749/
-.034854 fail everyseed>=.05. Initial affine58.507%/1.138019 and quadratic
-62.847%/1.012070 retained. Numeric contracts do not guarantee predictive gates.
+For a common-start exponential race, winner W and first time T factor as W~Categorical(lambda/sum lambda), T=E0/sum lambda. Conditional losing residual arrivals are independent Exp(lambda_j). Winner-only replay omits those residuals when a layer receives several messages. Under the native increasing bounded delay map, a deadline H after the first arrival gives an explicit raw residual cutoff R(T,H) and losing membership q_j=1-exp(-lambda_j R).
 
-Native parent4.218015GFLOPs is charged for fitted encoders,0 for initial
-reservoirs; COMBINED fit FLOPs remain UNKNOWN because decoder solver FLOPs are
-unknown. Tensor-state/storage, inference MFLOPs,3repeat walls and every fold
-are in AWS_FROZEN_POLYNOMIAL_FINDINGS_20261002.md/raw ledger. Packet-normalization
-arrays and serialization metadata are outside its tensor-only storage figures.
-All selected portable encoder/head states and reusable feature arrays preserved.
-This restricts a polynomial hypothesis; it does not overturn the positive RBF
-information result or imply a general architectural impossibility. No unchanged
-polynomial escalation, test access or broad advantage claim.
+The complete expected gradient decomposes into ordinary fixed-history derivatives, winner choice and paired boundary flux. At a losing arrival crossing the deadline, dq_j multiplies the downstream loss difference between heard and unheard outcomes, including the actual separate receiver write. This produces faster/slower emitter and reception-width credit while preserving coupled contents and physical times.
+
+Seven numerical contracts verify joint arrival density, physical cutoff/cap, membership normalization/activity, every score/content/decay/width derivative, independent finite differences, zero-width birth and actual-write effects. Three candidates, decaying messages and a later addressed-memory read; quadrature agrees with the boundary/winner/history formula. Maximum width finite-difference error 4.41e-9. The constructed sign reversal shows ordinary autograd can widen or narrow in the wrong direction; it does not identify a benchmark failure.
+
+Enumerating membership histories grows exponentially. Paired boundary sampling can avoid enumeration, but every candidate discovery, actual timed counterfactual and future replay is paid and variance remains. Conditional inverse-CDF derivatives already redistribute heard arrival times; adding the full unconditional boundary term to them double counts credit. Neither primitive supplies a free whole-model gradient.
+
+Theory97, guarded .743s/295,904KiB reference. No optimizer or fitted native window. Fixed-first deadline differs from silence-reset popcorn, whose scheduler and merge/split credit remain separate. FLOPs/traffic/energy unmeasured, not zero. The next pages test real native information/access before any training admission.
+
+## Appendix B. Native reception intervention, seed6: no smoke admission
+
+| H ms | One-site mode | Initial NLL | Trained NLL | Initial acc % | Trained acc % | Extra arrivals |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | Winner only | 2.820885 | 1.071110 | 6.25 | 50.00 | 0/16 |
+| 1 | Heard sum + writes | 2.817558 | 1.070983 | 6.25 | 50.00 | 0/16 |
+| 1 | Heard mean + writes | 2.824706 | 1.070983 | 6.25 | 50.00 | 0/16 |
+| 1 | Winner x heard count | 2.811214 | 1.070983 | 6.25 | 50.00 | 0/16 |
+| 1 | Winner + same wait | 2.820885 | 1.070983 | 6.25 | 50.00 | 0/16 |
+| 1 | Heard sum, winner write | 2.817760 | 1.070983 | 6.25 | 50.00 | 0/16 |
+| 3 | Heard sum + writes | 2.799750 | 1.104131 | 6.25 | 50.00 | 4/16 |
+| 3 | Heard mean + writes | 2.819896 | 1.069441 | 6.25 | 50.00 | 4/16 |
+| 3 | Winner x heard count | 2.800960 | 1.105012 | 6.25 | 50.00 | 4/16 |
+| 3 | Winner + same wait | 2.820911 | 1.070549 | 6.25 | 50.00 | 4/16 |
+| 3 | Heard sum, winner write | 2.800910 | 1.104000 | 6.25 | 50.00 | 4/16 |
+
+| Mean/winner H ms | First-prefix core MF est. | Minimum ready time s | Maximum ready time s |
+| --- | --- | --- | --- |
+| 0 | 0.591695 | 1.004001 | 1.012672 |
+| 1 | 0.591874 | 1.005001 | 1.012672 |
+| 3 | 0.591874 | 1.007001 | 1.014160 |
+
+Frozen fixed-four-pass producer and its initial reservoir; 16 prespecified evenly spaced FIT examples unused by the256-label producer. No optimizer, decoder refit, development or official-test evaluation. One actual site: observed packet event19/layer0/head0; the following deeper computation/query sees real changed receiver memories. Transport runs to the actual deadline.
+
+Prespecified1ms heard-mean versus same-wait winner gate FAILS in both trained seeds: zero extra arrivals and zero NLL difference. At3ms seed6 hears extras4/16, seed7 7/16; mean-over-wait NLL gains .001108/.002312. Seed6 sum worsens loss. Those diagnostic settings cannot replace the frozen gate. Failure concerns this site/width/sample, not all learned windows.
+
+Theory98. Eight available receivers, four original writes/event and 168 scored keys/prefix; only this site can add one actual write. Original trained fit2.285696GF/2.232125MF per fitting presentation retained. Table inference MF is the first selected prefix only, not full-audit FLOPs. All44 model/configurations104.222s/396,720KiB; twelve zero-nesting/gradient/ causality/write/target-invariance/refused-training contracts pass. Frozen weights remain bitwise equal. Unknown audit/scheduler/traffic/energy work is not zero. Processing readiness is charged beyond the1s observation cutoff.
+
+## Appendix B. Native reception intervention, seed7: no smoke admission
+
+| H ms | One-site mode | Initial NLL | Trained NLL | Initial acc % | Trained acc % | Extra arrivals |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | Winner only | 2.461633 | 1.025841 | 12.50 | 56.25 | 0/16 |
+| 1 | Heard sum + writes | 2.459791 | 1.025891 | 12.50 | 56.25 | 0/16 |
+| 1 | Heard mean + writes | 2.460627 | 1.025891 | 12.50 | 56.25 | 0/16 |
+| 1 | Winner x heard count | 2.461396 | 1.025891 | 12.50 | 56.25 | 0/16 |
+| 1 | Winner + same wait | 2.461622 | 1.025891 | 12.50 | 56.25 | 0/16 |
+| 1 | Heard sum, winner write | 2.459954 | 1.025891 | 12.50 | 56.25 | 0/16 |
+| 3 | Heard sum + writes | 2.458680 | 1.022673 | 12.50 | 56.25 | 7/16 |
+| 3 | Heard mean + writes | 2.455532 | 1.023701 | 12.50 | 56.25 | 7/16 |
+| 3 | Winner x heard count | 2.454758 | 1.024533 | 12.50 | 56.25 | 7/16 |
+| 3 | Winner + same wait | 2.452995 | 1.026013 | 12.50 | 56.25 | 7/16 |
+| 3 | Heard sum, winner write | 2.458298 | 1.022674 | 12.50 | 56.25 | 7/16 |
+
+| Mean/winner H ms | First-prefix core MF est. | Minimum ready time s | Maximum ready time s |
+| --- | --- | --- | --- |
+| 0 | 0.591695 | 1.004017 | 1.015801 |
+| 1 | 0.591874 | 1.005011 | 1.016597 |
+| 3 | 0.591874 | 1.007011 | 1.019004 |
+
+Frozen fixed-four-pass producer and its initial reservoir; 16 prespecified evenly spaced FIT examples unused by the256-label producer. No optimizer, decoder refit, development or official-test evaluation. One actual site: observed packet event19/layer0/head0; the following deeper computation/query sees real changed receiver memories. Transport runs to the actual deadline.
+
+Prespecified1ms heard-mean versus same-wait winner gate FAILS in both trained seeds: zero extra arrivals and zero NLL difference. At3ms seed6 hears extras4/16, seed7 7/16; mean-over-wait NLL gains .001108/.002312. Seed6 sum worsens loss. Those diagnostic settings cannot replace the frozen gate. Failure concerns this site/width/sample, not all learned windows.
+
+Theory98. Eight available receivers, four original writes/event and 168 scored keys/prefix; only this site can add one actual write. Original trained fit2.285696GF/2.232125MF per fitting presentation retained. Table inference MF is the first selected prefix only, not full-audit FLOPs. All44 model/configurations104.222s/396,720KiB; twelve zero-nesting/gradient/ causality/write/target-invariance/refused-training contracts pass. Frozen weights remain bitwise equal. Unknown audit/scheduler/traffic/energy work is not zero. Processing readiness is charged beyond the1s observation cutoff.
+
+## Appendix B. AWS frozen polynomial decoder: both nomination gates fail
+
+| Encoder | Seed | Degree | Accuracy % | Dev NLL | Native infer MF/query |
+| --- | --- | --- | --- | --- | --- |
+| Initial | 6 | 1 | 57.81 | 1.162621 | Unmeasured |
+| Initial | 6 | 2 | 64.06 | 1.065509 | Unmeasured |
+| Fitted | 6 | 1 | 68.75 | 0.835175 | 0.138119 |
+| Fitted | 6 | 2 | 68.75 | 0.870350 | 0.201534 |
+| Initial | 7 | 1 | 56.77 | 1.154207 | Unmeasured |
+| Initial | 7 | 2 | 59.90 | 0.994128 | Unmeasured |
+| Fitted | 7 | 1 | 66.67 | 0.939479 | 0.138007 |
+| Fitted | 7 | 2 | 69.79 | 0.899185 | 0.201422 |
+| Initial | 8 | 1 | 60.94 | 1.097227 | Unmeasured |
+| Initial | 8 | 2 | 64.58 | 0.976572 | Unmeasured |
+| Fitted | 8 | 1 | 68.75 | 0.936226 | 0.138035 |
+| Fitted | 8 | 2 | 71.35 | 0.885890 | 0.201450 |
+
+All three coarse trained encoders and exact initial reservoirs,984 fitting/ 192 development examples. Local affine/quadratic heads selected by fitting-user GroupKFold over C(.01,.1,1);108 fold fits,12 final fits and six feature replays. No encoder retraining, dense prefix carrier or resident-memory read. Algebraic folding reproduces actual native predictions/state; every sequential head is charged.
+
+Fitted affine mean68.056%/.903627; quadratic69.965%/.885142. Only .018485 mean NLL gain and1.910 accuracy points, with seed6 NLL regression .035176, fail the polynomial nomination. Gains over parent native .020633/.157749/ .034854 miss the each-seed .05 requirement. Initial affine58.507%/1.138019 and quadratic62.847%/1.012070 remain visible. Both gates FAIL; no unchanged scaling.
+
+Original trained encoder fit4.218015GF each, .535825MF per7,872 fitting presentations; initial optimizer work zero. Combined fitting and solver FLOPs UNKNOWN, so parent fit alone is not total work. Whole study126.813s/608,044KiB includes every fit/replay/evaluation/export; one convergence warning retained. Tensor bytes exclude shared input normalization and metadata. Conditional decoder folds reuse label-trained encoders; no pipeline cross-fit or test. RBF context evidence remains stronger; raw coarse77.604%/.686661 and historical compact66.667%/.902951 controls preserved. AWS owns the next compact context head.
 
 ## AWS corrected replay critics: conditional variance gates fail
 

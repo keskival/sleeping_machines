@@ -1488,3 +1488,10 @@ and local law contracts; main updated, four autostashes preserved. Generated
 reception results need the next guarded generated publication. Do not duplicate
 shared-main replay/shadow-lane or AWS compact-head jobs. No unchanged one-site
 window training admitted. Existing pure popcorn primitive is still not fitted.
+
+The153-page generated report now includes theory97 contracts, both seeds'
+all44 native outcomes/common resource scope and the AWS frozen polynomial
+negative study. Guarded publication222500Z passes all layout/source checks.
+Verbatim historical AWS appendices preserved. No local active training/job;
+next integrated numerical priority is independently owned replay/shadow-lane,
+not an unchanged failed reception smoke. Read HANDOFF before admitting work.

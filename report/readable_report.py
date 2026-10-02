@@ -152,6 +152,7 @@ def results():
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
     appendix=runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))
     tasks['current_dvs_appendix']=appendix['load'](read)
+    tasks['reception_evidence']=runpy.run_path(str(ROOT/'report/reception_evidence.py'))['load'](read)
     tasks['dvs_noise_covariance']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_noise_covariance_audit_*Z.json'))]
     tasks['dvs_persistent_state_probes']=[read(str(path.relative_to(RES)))
@@ -5267,6 +5268,7 @@ def blocks(M, tasks, ev):
                        2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1)
     pages[opening_index:opening_index]=architectural_pages
     pages.extend(runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))['pages'](tasks['current_dvs_appendix']))
+    pages.extend(runpy.run_path(str(ROOT/'report/reception_evidence.py'))['pages'](tasks['reception_evidence']))
     return pages
 
 
