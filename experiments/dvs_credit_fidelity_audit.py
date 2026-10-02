@@ -1,4 +1,4 @@
-"""Frozen race-credit fidelity by depth on trained DVS checkpoints (THEORY §399).  Read-only, no optimizer step.
+"""Frozen race-credit fidelity by depth (surrogate and exact-pi linearized estimator, §400) on trained DVS checkpoints (THEORY §399).  Read-only, no optimizer step.
 
 For sampled races in development gestures, compare the counterfactual surrogate's gradient on that race's clock
 scores (TemporalRoute.backward, captured by a hook) with the exact expected-loss gradient for that single race:
@@ -39,9 +39,12 @@ def run_episode(model, row, seed, force=None, capture=None):
             times = torch.empty_like(rates).exponential_() / rates           # same RNG consumption as the real race
             i = force[1]; t = times[i]
             return values[i], .001 + .010 * t / (1 + t), torch.tensor(i)
+        out = original(scores, values)
         if capture is not None:
-            capture.append(scores)
-        return original(scores, values)
+            if out[0] is not None and out[0].requires_grad:
+                out[0].retain_grad()
+            capture.append((scores, values, out[0]))
+        return out
     model.race = race
     try:
         model.train(); state = model.new_state()
@@ -71,12 +74,14 @@ def main():
         for row in dev[:a.episodes]:
             seed = 271828 + row['index']; scores_list = []
             loss, races = run_episode(model, row, seed, capture=scores_list)
-            for s in scores_list:
+            for s, _, _ in scores_list:
                 s.retain_grad()
             model.zero_grad(); loss.backward()
             chosen = rng.choice(races, size=min(a.races_per_episode, races), replace=False)
             for r in chosen:
-                s = scores_list[r]; g = s.grad.detach().double(); pi = torch.softmax(s.detach().double(), 0)
+                s, vals, delivered = scores_list[r]; g = s.grad.detach().double(); pi = torch.softmax(s.detach().double(), 0)
+                dv = delivered.grad.detach().double() if delivered.grad is not None else torch.zeros(vals.shape[1], dtype=torch.float64)
+                d = vals.detach().double() @ dv; est = pi * (d - (pi * d).sum())   # exact-pi linearized (§400)
                 with torch.no_grad():
                     L = torch.tensor([float(run_episode(model, row, seed, force=(int(r), i))[0]) for i in range(len(pi))],
                                      dtype=torch.float64)
@@ -84,13 +89,21 @@ def main():
                 depth = (int(r) // per_layer) % model.depth
                 cos = float(F.cosine_similarity(g[None], exact[None]).item()) if exact.norm() > 0 and g.norm() > 0 else 0.
                 w = int(pi.argmax())
+                cos_pi = float(F.cosine_similarity(est[None], exact[None]).item()) if exact.norm() > 0 and est.norm() > 0 else 0.
                 rows.append(dict(depth=depth, cosine=cos, sign_agree=bool(np.sign(float(g[w] - g.mean())) == np.sign(float(exact[w] - exact.mean()))),
-                                 ratio=float(g.norm() / exact.norm()) if exact.norm() > 0 else None, exact_norm=float(exact.norm())))
+                                 ratio=float(g.norm() / exact.norm()) if exact.norm() > 0 else None, exact_norm=float(exact.norm()),
+                                 cosine_exact_pi=cos_pi,
+                                 sign_agree_exact_pi=bool(np.sign(float(est[w] - est.mean())) == np.sign(float(exact[w] - exact.mean()))),
+                                 ratio_exact_pi=float(est.norm() / exact.norm()) if exact.norm() > 0 else None))
         by = {}
         for d in range(model.depth):
             sub = [x for x in rows if x['depth'] == d and x['exact_norm'] > 1e-9]
             ratios = [x['ratio'] for x in sub if x['ratio'] is not None]
+            rp = [x['ratio_exact_pi'] for x in sub if x['ratio_exact_pi'] is not None]
             by[str(d)] = dict(races=len(sub), sign_agreement=float(np.mean([x['sign_agree'] for x in sub])) if sub else None,
+                              exact_pi_sign_agreement=float(np.mean([x['sign_agree_exact_pi'] for x in sub])) if sub else None,
+                              exact_pi_mean_cosine=float(np.mean([x['cosine_exact_pi'] for x in sub])) if sub else None,
+                              exact_pi_median_magnitude_ratio=float(np.median(rp)) if rp else None,
                               mean_cosine=float(np.mean([x['cosine'] for x in sub])) if sub else None,
                               median_magnitude_ratio=float(np.median(ratios)) if ratios else None)
         report[Path(path).stem] = dict(args=res['args'], final_accuracy=res['final']['accuracy'], by_depth=by)

@@ -1,0 +1,129 @@
+{
+  "status": "completed",
+  "models": {
+    "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 4,
+        "heads": 2,
+        "pool": 2,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.5729166666666666,
+      "by_depth": {
+        "0": {
+          "races": 35,
+          "sign_agreement": 0.7142857142857143,
+          "mean_cosine": 0.30319562634661357,
+          "median_magnitude_ratio": 0.18544314830662315
+        },
+        "1": {
+          "races": 36,
+          "sign_agreement": 0.5555555555555556,
+          "mean_cosine": 0.12745649480071317,
+          "median_magnitude_ratio": 0.18949263240189007
+        },
+        "2": {
+          "races": 38,
+          "sign_agreement": 0.5526315789473685,
+          "mean_cosine": 0.12205101120298904,
+          "median_magnitude_ratio": 0.32870939796055143
+        },
+        "3": {
+          "races": 29,
+          "sign_agreement": 0.5862068965517241,
+          "mean_cosine": 0.13207516219190896,
+          "median_magnitude_ratio": 0.15441939198424806
+        }
+      }
+    },
+    "curie_dvs_clock_p32d2pool2_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p32d2pool2_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 32,
+        "depth": 2,
+        "heads": 2,
+        "pool": 2,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.59375,
+      "by_depth": {
+        "0": {
+          "races": 65,
+          "sign_agreement": 0.5692307692307692,
+          "mean_cosine": 0.12102627025232318,
+          "median_magnitude_ratio": 0.2755394878238299
+        },
+        "1": {
+          "races": 56,
+          "sign_agreement": 0.5714285714285714,
+          "mean_cosine": 0.07858547862795107,
+          "median_magnitude_ratio": 0.16373700815635944
+        }
+      }
+    },
+    "curie_dvs_clock_p16d2pool8_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d2pool8_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 2,
+        "heads": 2,
+        "pool": 8,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.625,
+      "by_depth": {
+        "0": {
+          "races": 72,
+          "sign_agreement": 0.6388888888888888,
+          "mean_cosine": 0.20693347037251567,
+          "median_magnitude_ratio": 0.04690493936174113
+        },
+        "1": {
+          "races": 72,
+          "sign_agreement": 0.5694444444444444,
+          "mean_cosine": 0.09351620120382785,
+          "median_magnitude_ratio": 0.019118175750603407
+        }
+      }
+    }
+  },
+  "episodes": 6,
+  "wall_s": 320.7321874720001,
+  "max_rss_kb": 329600,
+  "scope": "Frozen read-only single-race counterfactual audit on development gestures; exact for one race with other races' noise fixed; not a whole-route gradient."
+}

@@ -917,3 +917,27 @@ depth (forced-winner exact gradients; queued); (2) depth-4 controls (pathwise cr
 near-identity initialization (new units' gates closed, identity channel mixes), so the grown model starts at the
 parent's quality and can only use the extra depth if credit can move it. This separates "can depth add anything" from
 "can depth be trained from scratch".
+
+## 400. Race credit fidelity on trained DVS models is near chance; exact-π linearized credit
+
+**Measured** (frozen audit, results/diagnostics/curie_dvs_credit_audit_20261002T192000Z.json; 6 development
+gestures, 24 sampled races each; the exact single-race gradient comes from forced-winner replays with all other
+race noise fixed). Sign agreement of the counterfactual surrogate with the exact gradient is .714 at depth 0 of
+the depth-4 model and .55–.64 elsewhere. Mean cosine is .08–.30. The surrogate's magnitude is 15–33% of exact
+(pool 2) and 2–5% (pool 8). Routers, keys and clocks learn from a signal barely better than random in
+direction, at every depth. That is consistent with depth hurting, pool 8 not using its receivers, and full ≈
+minimal cores on language.
+
+**Two separable degradations.** (a) *Estimator noise.* The teacher rate_i·T·g·(v_i − v̄), with conservation at
+the winner, uses the realized race time as a one-sample estimate of π_i. Its expectation over the winner is
+π_i g·(v_i − Σπ_j v_j) (Monte-Carlo-verified in tests/test_exact_pi_race.py), and π is known exactly from the
+scores. **Exact-π linearized credit** (sleeping_machines/exact_pi_race.py) has the same expectation, zero
+estimator variance and identical cost. The forward race is unchanged. (b) *Linearization.* Both ignore how a
+different winner changes later races. Correcting that needs lookahead or replay credit, which costs more.
+
+**Tests.** The extended audit (v2) reports the exact-π estimator's fidelity beside the surrogate's on the same
+races. If it is much higher, (a) dominates. Then exact-π training of the baseline shape and depth 4 on seed 7
+(queue curie_dvs_exact_pi_20261002T201500Z), against the seed-7 baseline and the seed-7 depth controls.
+Prediction (P400): exact-π raises sign agreement above .8. If it does, exact-π depth 4 closes at least half the
+gap to depth 2. If agreement stays near chance, linearization dominates, and multi-step credit (replay or
+lookahead over the small pools) is the next construction.

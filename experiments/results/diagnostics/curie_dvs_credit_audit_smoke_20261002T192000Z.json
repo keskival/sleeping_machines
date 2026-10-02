@@ -1,0 +1,57 @@
+{
+  "status": "completed",
+  "models": {
+    "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z": {
+      "args": {
+        "tag": "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z",
+        "data": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+        "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+        "payload": 16,
+        "depth": 4,
+        "heads": 2,
+        "pool": 2,
+        "epochs": 8,
+        "update_targets": 16,
+        "lr": 0.003,
+        "seed": 6,
+        "fit": null,
+        "dev": null,
+        "contracts": "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+        "resume": false,
+        "stop_after_updates": null,
+        "clock_step": 0.05
+      },
+      "final_accuracy": 0.5729166666666666,
+      "by_depth": {
+        "0": {
+          "races": 0,
+          "sign_agreement": null,
+          "mean_cosine": null,
+          "median_magnitude_ratio": null
+        },
+        "1": {
+          "races": 1,
+          "sign_agreement": 0.0,
+          "mean_cosine": -0.18055907948196664,
+          "median_magnitude_ratio": 0.00877663948600985
+        },
+        "2": {
+          "races": 2,
+          "sign_agreement": 0.0,
+          "mean_cosine": -0.6738937540716265,
+          "median_magnitude_ratio": 3.4113839078912243
+        },
+        "3": {
+          "races": 0,
+          "sign_agreement": null,
+          "mean_cosine": null,
+          "median_magnitude_ratio": null
+        }
+      }
+    }
+  },
+  "episodes": 1,
+  "wall_s": 13.830241098999977,
+  "max_rss_kb": 292352,
+  "scope": "Frozen read-only single-race counterfactual audit on development gestures; exact for one race with other races' noise fixed; not a whole-route gradient."
+}
