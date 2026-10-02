@@ -1,0 +1,51 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_dvs_batched_local_smoke_20261002T163400Z",
+      "queue": "experiments/queue/local_dvs_batched_local_smoke_20261002T163400Z.txt",
+      "queue_sha256": "cff45fe23a011dc62b2bb9c3e947f1c29acb64597622fd67c44714721844d5dc",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_smoke_20261002T163400Z.json",
+      "timeout_s": 300,
+      "requires": [
+        "experiments/results/diagnostics/local_dvs_batched_contracts_20261002T161500Z.json"
+      ]
+    },
+    {
+      "tag": "local_dvs_batched_pairs_smoke_20261002T163400Z",
+      "queue": "experiments/queue/local_dvs_batched_pairs_smoke_20261002T163400Z.txt",
+      "queue_sha256": "fd7bcc077007f463f39593a1533740ff2553d4459fcc141195f573fc95a07395",
+      "result": "experiments/results/dvs_native/local_dvs_batched_pairs_smoke_20261002T163400Z.json",
+      "timeout_s": 300,
+      "requires": [
+        "experiments/results/diagnostics/local_dvs_batched_contracts_20261002T161500Z.json",
+        "experiments/results/dvs_native/local_dvs_batched_local_smoke_20261002T163400Z.json"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_native_contracts.py": "49d03a0e6a079cbe6ebec57c10b3aa13bf49e073950c96d5c0d11d8d8683d86a"
+  },
+  "scope": "Full U16 and partial U8 batched local/pair integrated smokes. Gate each completed learning drop and all accounting coverage before subsequent work; no quality or superiority benchmark."
+}
