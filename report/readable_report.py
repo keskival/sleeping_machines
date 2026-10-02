@@ -3766,6 +3766,8 @@ def blocks(M, tasks, ev):
         for label,row in (('KN counts, frozen',min((x for x in refs if x['method']=='kn' and not x['adaptive']),key=lambda x:x['bpc'],default=None)),
                           ('Counts, stream-adaptive',min((x for x in refs if x['adaptive']),key=lambda x:x['bpc'],default=None))):
             if row:
+                if row.get('method')=='kn_interpolated':
+                    label='Calibration ceiling: adaptive interpolated KN'
                 crow.append([f"{label} o{row['order']}","131,072/1",f"{row['bpc']:.3f}",'Not FLOPs','Not FLOPs','Not FLOPs'])
         pages.append([
             ('h1','Appendix B (continued). Diagnostic: count receivers over the temporal carrier'),
