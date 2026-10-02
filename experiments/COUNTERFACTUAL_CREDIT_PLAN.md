@@ -74,3 +74,21 @@ Current proofs and scopes: theory57,78,79,80. This plan spends compute on a
 specific observed credit blind spot and uses failures to stop campaigns. No
 general impossibility is demonstrated; practical advantage remains an open
 measured objective, not a guaranteed outcome.
+
+## Completed decision update, 2 October17:50 UTC
+
+Stages2/3 passed. Stage4 joint-clock correction fails:47.3958%/1.450687NLL
+versus54.1667%/1.305937 local; work ratio1.33904. No seed7 or larger unchanged
+fit. Frozen variance audit on four fitting prefixes/model shows common-clock
+RMS904–1332 times choice RMS, with large baseline mismatch. Expensive oracle
+replays remove almost all estimated score-space variance; not a cheap fix or
+causal explanation of held-out regression. Theory82/83 preserve all scopes.
+
+Next prioritized integrated credit test: exact conditional actual-write choice
+utility with the original pathwise timing derivative retained, at unchanged
+inference and one-shadow fitting work with a fixed schedule. Contracts must
+show both components separately (especially nonzero retained delay credit),
+then the same24/8 learning/accounting smoke precedes a matched256/192 pilot.
+Do not call this exact joint-clock or whole-core credit. The.02NLL/1pp/1.50work/
+900000KiB gates remain. Independent-noise and learned-baseline comparisons
+need their own matched controls; do not silently change sampling protocol.

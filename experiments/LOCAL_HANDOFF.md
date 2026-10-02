@@ -1,5 +1,37 @@
 # Local host: current research continuation
 
+## Completed credit gate and variance diagnosis, 2 October17:50 UTC
+
+State-clock pilot174300Z completes17:43:02:47.3958%/1.450687NLL versus local
+54.1667%/1.305937; gain-.144750NLL, accuracy decline6.7708pp, full work
+ratio1.33904. The quality gate fails; no unchanged seed7/scale-up. Completed
+comparison174600Z and124-page validated publication174700Z preserve results.
+Smokes and exact isolated-node contracts remain valid despite failed quality.
+
+Variance audit175100Z passes23.205s/314672KiB: first four fitting prefixes/model,
+both layers/heads at event9, both legal actual writes/full suffix at8/16 time
+quadrature nodes. Common-clock RMS is1332x/local and904x/treatment choice RMS;
+oracle prefix/future-specific baseline removes>99.9999% estimated score-space
+variance.192 paid legal full forward shadows/model, no optimizer. Limited
+fixed-future probes and finite quadrature are not independent confirmation,
+batch covariance, causal explanation of regression or cheap baseline proof.
+Theory82/83 derive variance decomposition and retain every negative result.
+
+Next prioritized integrated model remains native p16/L2/H2/pool2 temporal
+addressed memory. Isolate full actual-write *choice* credit, retaining the
+original pathwise clock derivative and ordinary factual content gradients.
+Next variant is specified, not fitted. Need separate component/commit/gradient/
+recovery/accounting contracts, then24fit/8dev/two-pass smoke before fixed256/
+192/four-pass/s6 comparison. Same.02NLL/1pp/1.50work/RSS900000 gates. Larger
+memory support/windows and independent-noise/learned-baseline repairs remain
+separate conditional hypotheses. Core mechanisms/inference remain; downstream
+timing jumps and uncorrected route teachers remain explicit learning gaps.
+
+No numerical job is left active after the completed diagnostic. Main branch,
+three stashes preserved; one-thread guards and8GiB host floor retained. No
+new local dense training or official-test read. Other-host capacity ladder and
+AWS assignments retained. Variance report addition is prepared pending render.
+
 ## Native DVS credit diagnosis and bounded correction, 2 October17:40 UTC
 
 Read other-host capacity ladder and AWS completed dense calibration before

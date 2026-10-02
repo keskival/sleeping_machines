@@ -176,6 +176,14 @@ def results():
         tasks['dvs_credit_comparisons'].append(r)
     tasks['dvs_suffix_credit_audits']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_counterfactual_route_audit_*Z.json'))]
+    tasks['dvs_clock_variance_audits']=[read(str(path.relative_to(RES)))
+        for path in sorted((RES/'diagnostics').glob('local_dvs_joint_credit_variance_*Z.json'))]
+    for key in ('dvs_suffix_credit_audits','dvs_clock_variance_audits'):
+        for audit in tasks[key]:
+            for model in audit['models']:
+                expected=model.get('native_result_sha256',model.get('result_sha256'))
+                if hashlib.sha256((ROOT/model['native']).read_bytes()).hexdigest()!=expected:
+                    raise ValueError('Changed frozen credit audit parent')
     tasks['dvs_batched_smoke_admission']=[]
     for path in sorted((RES/'diagnostics').glob('local_dvs_batched_smoke_admission_*Z.json')):
         r=read(str(path.relative_to(RES)))
@@ -4091,6 +4099,43 @@ def blocks(M, tasks, ev):
             ('small','Sources: completed frozen route-content audit171500Z, suffix audit172000Z, curvature '
              'contracts165900Z, silence-burst contracts170500Z and joint-clock contracts173000Z; '
              'theory78–81. Numerical diagnostics are not held-out superiority evidence.')])
+    for audit in tasks.get('dvs_clock_variance_audits',[]):
+        rows=[[('Local' if 'batched_local' in x['native'] else 'Joint-clock treatment'),
+            f"{x['mean_choice_rms']:.6f}",f"{x['mean_common_clock_rms']:.6f}",
+            f"{x['mean_common_clock_rms']/x['mean_choice_rms']:.0f}",
+            f"{x['summed_prefix_baseline_variance']:.6f}"] for x in audit['models']]
+        pages.append([('h1','Appendix B. Frozen variance audit after the failed clock pilot'),
+            ('table',(['Selected checkpoint','Choice RMS','Common-clock RMS','Clock / choice RMS','Summed variance'],rows,[47,30,32,32,32])),
+            ('p','First four previously used fitting prefixes/model, event9/both layers/heads. Replay both '
+             'legal delivered values and actual persistent writes through the complete suffix at8/16 '
+             'exponential-time quadrature nodes, with fixed future draws. Each model pays192 complete '
+             'legal shadow forwards. No optimizer or new quality score. Magnitudes and summed variances '
+             'are in score space with the same per-clip/probe convention for both rows.'),
+            ('p','Decompose the conditional-winner joint score into choice credit pi_i(F_i-R) and '
+             'common-clock credit pi_i(1-Lambda*T)(R-b). If branch losses are independent of T, the '
+             'common-clock mean is zero and baseline mismatch alone produces variance '
+             '||pi||^2(R-b)^2. Choosing b=R removes it exactly; the constant-outcome numerical '
+             'contract passes. Time-dependent later route jumps can make the common-clock mean useful, '
+             'so deleting it universally is not justified.'),
+            ('p','The current intermediate decoder baseline differs substantially from actual suffix '
+             'risk. Across these limited probes the common-clock RMS is900–1,300 times the choice '
+             'RMS; an oracle baseline computed with all quadrature replays removes more than99.9999% '
+             'of estimated variance. That oracle is a diagnostic ceiling with all replay cost paid, '
+             'not a deployable cheap baseline, optimizer-noise measurement or fitted improvement.'),
+            ('p','Eight-versus16-node mean-gradient L2 differences range4.3e-8 to7.3e-7. This agrees '
+             'numerically on these probes but does not establish convergence across discontinuous '
+             'histories. Per-pass shared draws also prevent assuming ordinary minibatch variance '
+             'reduction; actual batch covariance was not measured. Neither audit proves the cause '
+             'of the held-out regression or the primary bottleneck on other benchmarks.'),
+            ('p','Decision: stop the failed joint-clock campaign. Next isolate exact conditional '
+             'actual-write choice credit while retaining the native pathwise clock derivative and '
+             'all temporal/sparse mechanisms. This retains a known approximation for downstream '
+             'timing jumps; numerical contracts and one small smoke precede any matched fit. A '
+             'later independent-noise/control-variate comparison needs fresh matched local controls '
+             'and full recovery/work accounting. No automatic wider capacity or pass extension.'),
+            ('small',f"Completed diagnostic{audit['args']['tag']}.json;{audit['wall_s']:.3f}s/"
+             f"{audit['max_rss_kb']/1024:.1f}MiB peak RSS, one guarded CPU job. Theory82/83 and "
+             'COUNTERFACTUAL_CREDIT_PLAN.md preserve proof, negative fit and limited diagnostic scope.')])
     for r in tasks.get('dvs_compact_controls',[]):
         groups={}
         for x in r['rows']:
