@@ -1,0 +1,95 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_terminal_curvature_contracts_20261002T165900Z"
+  },
+  "rows": [
+    {
+      "first_probability": 0.2,
+      "endpoint_losses": [
+        1.3265626412674705,
+        2.126928110163621
+      ],
+      "endpoint_derivatives": [
+        -2.150984665868117,
+        0.8807966933107797
+      ],
+      "exact_score_gradient": [
+        -0.12805847502338405,
+        0.12805847502338405
+      ],
+      "mean_local_score_gradient": [
+        0.5080751890229349,
+        -0.5080751890229349
+      ],
+      "reference_batched_gradient_match": true,
+      "expected_winner_payload_gradient_is_exact": true,
+      "affine_loss_teacher_is_exact": true,
+      "risk_before": 1.9668550163843908,
+      "risk_after_exact_step": 1.9665267849063712,
+      "risk_after_local_step": 1.9681523171416575
+    },
+    {
+      "first_probability": 0.5,
+      "endpoint_losses": [
+        1.3265626412674705,
+        2.126928110163621
+      ],
+      "endpoint_derivatives": [
+        -2.150984665868117,
+        0.8807966933107797
+      ],
+      "exact_score_gradient": [
+        -0.20009136722403753,
+        0.20009136722403764
+      ],
+      "mean_local_score_gradient": [
+        0.7938674828483357,
+        -0.7938674828483357
+      ],
+      "reference_batched_gradient_match": true,
+      "expected_winner_payload_gradient_is_exact": true,
+      "affine_loss_teacher_is_exact": true,
+      "risk_before": 1.7267453757155455,
+      "risk_after_exact_step": 1.7259446456794094,
+      "risk_after_local_step": 1.7299222295787637
+    },
+    {
+      "first_probability": 0.8,
+      "endpoint_losses": [
+        1.3265626412674705,
+        2.126928110163621
+      ],
+      "endpoint_derivatives": [
+        -2.150984665868117,
+        0.8807966933107797
+      ],
+      "exact_score_gradient": [
+        -0.12805847502338405,
+        0.12805847502338402
+      ],
+      "mean_local_score_gradient": [
+        0.5080751890229351,
+        -0.5080751890229349
+      ],
+      "reference_batched_gradient_match": true,
+      "expected_winner_payload_gradient_is_exact": true,
+      "affine_loss_teacher_is_exact": true,
+      "risk_before": 1.4866357350467005,
+      "risk_after_exact_step": 1.4863080075750221,
+      "risk_after_local_step": 1.4879409694369228
+    }
+  ],
+  "contracts_passed": 5,
+  "maximum_tested_ce_hessian_eigenvalue": 0.31413082329002806,
+  "tested_taylor_remainder": 0.09078831954056188,
+  "source_sha256": {
+    "experiments/terminal_credit_curvature_contracts.py": "443b76b1cf9d799c688474d01b366486e7eee2757f7d6b4977fed84c39550096",
+    "experiments/theory/78_terminal_curvature_and_credit.md": "6446d2989296f8d3e80d616eb760adc9de002337a2f7477a717c9d58f712cfd1",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246"
+  },
+  "wall_s": 0.4305074739968404,
+  "max_rss_kb": 285264,
+  "scope": "Fixed-prefix/time two-candidate actual teacher mean, convex affine-head CE counterexample, exact winner payload and affine teacher contracts. Analytic conditions in theory78; no fit, test labels, whole-core gradient or empirical-cause claim."
+}
