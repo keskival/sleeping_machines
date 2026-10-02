@@ -1,0 +1,40 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_quadratic_native_contracts_20261002T214400Z",
+      "result": "experiments/results/diagnostics/aws_quadratic_native_contracts_20261002T214400Z.json",
+      "reused": true,
+      "max_rss_kb": 485360,
+      "wall_s": 4.336853943997994
+    },
+    {
+      "tag": "aws_quadratic_native_20261002T214600Z_smoke",
+      "result": "experiments/results/dvs_native/aws_quadratic_native_20261002T214600Z_smoke.json",
+      "reused": false,
+      "max_rss_kb": 456496,
+      "wall_s": 3.5469063970376737
+    },
+    {
+      "tag": "aws_quadratic_native_20261002T214600Z_admission",
+      "result": "experiments/results/diagnostics/aws_quadratic_native_20261002T214600Z_admission.json",
+      "reused": false,
+      "max_rss_kb": 0,
+      "wall_s": null
+    },
+    {
+      "tag": "aws_quadratic_native_20261002T214600Z_pilot",
+      "result": "experiments/results/dvs_native/aws_quadratic_native_20261002T214600Z_pilot.json",
+      "reused": false,
+      "max_rss_kb": 458184,
+      "wall_s": 14.150941515050363
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T21:45:50.096865+00:00",
+  "active_jobs": [
+    "aws_quadratic_native_20261002T214600Z_pilot"
+  ],
+  "max_parallel_jobs": 1
+}
