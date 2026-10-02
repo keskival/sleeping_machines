@@ -1,5 +1,18 @@
 # Local host: current research continuation
 
+## curie: regime calibration and milestone 3 (joint text + events), 2 October, 13:20 UTC
+
+Small-data language is the home ground of counting. Stream-adaptive interpolated KN (continuation statistics) is
+a near-optimal reference there (preliminary 2.521/2.414/2.271 bpc at 2K/8K/32K; official file queued as
+curie_adaptive_kn_reference_20261002T131500Z). The report presents such references as calibration ceilings, not
+competitors (§§393–394). New work follows the §394 calibration rule: strongest table, timestamp-aware learned
+control, and ours. Milestone 3 task: joint text + irregular events on one native address, shortcuts removed by
+construction (tests/test_joint_event_language_tasks.py). Native pilot queue: curie_joint_event_language_20261002T133000Z
+(observed vs rank-trained; table bar and cleared-text control inside). Dense controls ready for AWS:
+AWS_JOINT_EVENT_CONTROLS.md. Native AddressedEventHeads sources do not exchange state, so cross-address
+sharing is a future architectural option; the pilot uses one address. Batched training path
+(fast_native_core, contract-equal) is used by the joint driver. §392 top-placed pooled series finishes first.
+
 ## Protected outcome/joint-credit test admitted, 2 October, 12:57 UTC
 
 Balanced native/tapped/full/shallow cycle and frozen query-readout diagnostic
