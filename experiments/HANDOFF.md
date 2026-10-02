@@ -1429,3 +1429,18 @@ count-carrying2K result2.733599bpc. Do not duplicate their active variants.
 Invalid E63/E79 evidence stays quarantined per updated AGENTS.md. Prioritized
 AWS model remains native integrated H2/d8/depth8 event replication/confirmation;
 fixed-address/forced activity and local-surrogate credit gaps remain explicit.
+
+
+## Timing confirmation contrast completed — 2 October, 02:43 UTC
+
+Pull/rebase current; all six timing confirmations complete. Mean observed/rank
+gain38.542pp, adjusted97.5% interval[33.887,43.555]pp; every observed seed>85%,
+so the predeclared timing follow-up gate passes. Full native/sharing protocol
+awaits private seeds7/8. Hashed partial timing analysis preserved; no scale-up.
+Generator-informed causal two-trace reference adds four tested contracts and a
+separately queued accounted diagnostic, not a learned competitive control.
+Read `AWS_TIMING_CONFIRMATION_PROGRESS_20261002.md`. New supervisor waits
+chain788298 and summary801289 before run_safe, then publishes result. Session
+`aws-decay-reference-after-chain-20261002`; log
+`queue/aws_decay_timing_reference_20261002T024100Z.out`. No concurrent extra
+trainer, no core-source changes, no pending scores treated as evidence.

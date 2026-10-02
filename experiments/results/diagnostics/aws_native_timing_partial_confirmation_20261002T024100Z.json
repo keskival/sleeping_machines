@@ -1,0 +1,44 @@
+{
+  "status": "completed_partial_analysis",
+  "timing": {
+    "mean_accuracy_gain_pp": 38.54166666666667,
+    "accuracy_gain_pp_by_seed": [
+      43.06640625,
+      36.5234375,
+      36.03515625
+    ],
+    "adjusted_97_5_interval_pp": [
+      33.88671875,
+      43.5546875
+    ],
+    "independent_populations": 128,
+    "seeds": 3,
+    "ours_accuracy_by_seed": [
+      0.9306640625,
+      0.865234375,
+      0.8603515625
+    ],
+    "control_accuracy_by_seed": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "whole_fit_work_ratio_by_seed": [
+      0.9999895809627366,
+      1.0001609220753784,
+      0.9999601320154441
+    ],
+    "scope": "Crossed seed/population bootstrap on one fixed synthetic split; only three seeds. Bonferroni across two predeclared accuracy contrasts; timing keeps whole short/long pairs together. No broad task-class, real-data or energy supremacy follows."
+  },
+  "result_sha256": {
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s6_pilot.json": "34ec88873abf657062eda651591448cbb3ce17298ffae837fa247d82598aabe2",
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s6_pilot.json": "ab9f97f92e2fea942e0a380b3bf2261db8a97c2705efed1d90f0ef320daaec68",
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s7_pilot.json": "9b1b173ad2d3505abeb7fffa88ee57741004cc2d06961bd713c1cbeacbdf209a",
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s7_pilot.json": "0e04cd6a54789ac170af2674fd502ccf3e238b74018e7412f56268b7ba5a209d",
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s8_pilot.json": "2489bcb28c4073da5de5c1bbde2890ed0e9314ff93681161c8c32185109e058e",
+    "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s8_pilot.json": "da76b0227131cdbeebb54a1bde206404319960416b14e6edb25338c6ebe6a7eb"
+  },
+  "full_native_protocol_complete": false,
+  "timing_gate": true,
+  "scope": "Complete predeclared timing contrast with original two-comparison adjustment. Order contrast pending; no automatic scale-up or supremacy claim."
+}

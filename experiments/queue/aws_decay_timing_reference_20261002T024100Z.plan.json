@@ -1,0 +1,20 @@
+{
+  "status": "prepared_not_started",
+  "tag": "aws_decay_timing_reference_20261002T024100Z",
+  "queue": "experiments/queue/aws_decay_timing_reference_20261002T024100Z.txt",
+  "queue_sha256": "3b0c62d1e8a39f0a22b08038cd06e47c094d6cf5ca4d790795583220ce300676",
+  "source_sha256": {
+    "sleeping_machines/decay_timing_reference.py": "d490f4effd73e60918d5ef5097f8ee7fb59e13ab9b95a3c35298e718821e2ab3",
+    "experiments/decay_timing_reference_benchmark.py": "7c400160c660dbdcaaaa1ed0e2a98181dbdf627773d31d68b7706ad5da312e22",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b"
+  },
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192,
+    "JOB_TIMEOUT_S": 300
+  },
+  "scope": "No fitting; generator-informed diagnostic; run only after independent chain and summary"
+}
