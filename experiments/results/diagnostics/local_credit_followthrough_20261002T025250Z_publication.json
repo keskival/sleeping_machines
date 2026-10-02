@@ -1,0 +1,56 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_credit_followthrough_20261002T025250Z_publication",
+    "parent_plan": "experiments/queue/local_state_credit_recovery_20261002T021222Z.json"
+  },
+  "kind": "completed_evidence_publication",
+  "pdf_pages": 87,
+  "comparison": {
+    "status": "completed",
+    "kind": "exploratory_state_credit_comparison",
+    "source_results": [
+      "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_zero_pilot.json",
+      "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_teacher_pilot.json"
+    ],
+    "accuracy_gain": 0.0078125,
+    "nll_gain": 0.000913386233150959,
+    "whole_fitting_work_ratio": 1.0453513522881037,
+    "followup_gate_passed": false,
+    "scope": "Single seed, reused development populations; no benchmark or unbiased-gradient claim. No automatic larger fit."
+  },
+  "common_unit_ledger": [
+    {
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_zero_pilot.json",
+      "accuracy": 0.54296875,
+      "nll": 0.9787258794531226,
+      "fitting_targets": 512,
+      "whole_fit_gflops": 0.265263777,
+      "fit_mflops_per_query": 0.518093314453125,
+      "inference_mflops_per_query": 0.110369,
+      "available_receivers": 128,
+      "selected_updates_per_event": 16,
+      "scored_keys_per_event": 32
+    },
+    {
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_teacher_pilot.json",
+      "accuracy": 0.55078125,
+      "nll": 0.9778124932199717,
+      "fitting_targets": 512,
+      "whole_fit_gflops": 0.277293848,
+      "fit_mflops_per_query": 0.541589546875,
+      "inference_mflops_per_query": 0.1103885,
+      "available_receivers": 128,
+      "selected_updates_per_event": 16,
+      "scored_keys_per_event": 32
+    }
+  ],
+  "wall_s": 19.85084754599984,
+  "max_rss_kb": 64524,
+  "source_sha256": {
+    "experiments/publish_local_credit_report.py": "989c307eb85e41bf5ec8c4aa848c9feffae73b1de9ad992f2a594c47a5c64183",
+    "report/readable_report.py": "85038630ff4922ee0f96dd0b5b2ec0fa138b990ce7709c53e1efb3cacda93914",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed single-seed exploratory fits; no pending score, comparable-quality supremacy or physical-energy claim."
+}
