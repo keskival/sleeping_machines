@@ -1341,3 +1341,19 @@ Additional theory `theory/aws_20261002_joint_credit_variance.md` derives
 conditional score variance and optimal prefix baseline; arithmetic checked.
 State-aware integrated teacher remains unimplemented; require zero-credit
 nesting, joint state/time contracts, variance and complete work accounting.
+
+
+## Local joint-credit kernel verified — 2 October, 01:02 UTC
+
+New isolated `sleeping_machines/joint_race_credit.py` implements note57 affine
+analytic credit plus enumerated or full-support importance-sampled actual suffix
+residual. Detached LOCAL reference only; no frozen model/source substitution.
+Four tests verify polynomial expectation against finite differences, unequal
+proposal averaging, exact-affine zero residual and invalid/support rejection.
+Together with joint-clock and factorial contracts:9 tests passed.
+The variance note records integration gaps: prefix independence, explicit
+addressed branch costs, direct derivatives and avoiding double-counted rate credit.
+Banknote worker and queued event supervisor remain active; no extra trainer.
+CatBoost seed8 first candidate is substantially slower than seed6/7; CPU busy
+and RSS~474MiB, guarded5400s cap retained. Do not treat pending scores as evidence.
+Supervisor lifecycle JSON is now ignored as intended; commands/plans remain tracked.

@@ -70,3 +70,23 @@ fit. Charge prefix traces, addressed-state discovery, critic fitting and any
 suffix replay. Full joint credit may repair local fidelity and still lose on
 total fitting work or quality because of variance. No supremacy follows from
 the identity alone.
+
+## Executable local contract
+
+`sleeping_machines/joint_race_credit.py` now implements the analytic affine
+surrogate plus either enumerated or importance-sampled actual branch residual.
+It returns detached credit vectors; no training model installs this kernel.
+Four numerical tests check polynomial suffix expectations against finite
+differences, sampled-proposal averaging against branch enumeration, exact
+affine zero-residual variance, and invalid inputs/support. The polynomial
+contract retains nonzero common-rate credit. Losing-value and addressed-write
+effects belong in supplied branch losses, rather than being approximated by
+delivered payload equality.
+
+This kernel proves neither inexpensive replay nor an unbiased full-network
+teacher. It assumes prefix-independent surrogate coefficients and proposals;
+the API cannot certify that statistical condition. A model integration must
+keep direct derivatives separate, avoid counting existing rate credit twice,
+and define suffix credit at each stochastic node. Checkpoint replay at fixed
+sampled time tests branch costs but cannot supply the missing expectation over
+time merely by naming the resulting vector an exact gradient.
