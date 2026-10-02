@@ -1648,3 +1648,20 @@ recovery and operator coverage. Plan aws_coarse_native_20261002T212600Z first
 seed6 pilots. Preregistered .02NLLgain/<=1pp decline/<=.50 fitting-work gate;
 independent seed7 only after pass, no direct strong-control supremacy claim.
 Theory aws_20261002_coarse_native_admission.md and frozen diagnostic show scope.
+
+## AWS integrated coarse screen passes; replicate before scaling
+
+All initial stages completed/pushed. Native seed6 same256fit/192dev/4passes:
+20bin/.05clock48.958%/1.424195NLL,2.285696GF;4bin/.05clock57.812%/1.222135,
+.548517GF;4bin/.25clock55.729%/1.274860,.548517GF. Both predeclared gates pass;
+paid fitting ratio.239978. Inference .591709→.138119/.138133MF/query. Available
+8receivers/selected4per event retained, but4quarter packets+query versus20fine
+packets+query. Whole data/counts retained, within-quarter time deliberatelylost.
+No cross-control supremacy claim; strong984-fit4bincontrol77.604%/.686661 remains.
+
+Plan aws_coarse_native_replication_20261002T212900Z repeats ALL3arms at seed7,
+same frozen settings and prerequisites, no altered clock/selection afterscores.
+Only after this replication passes may full-data comparisons be proposed.
+REPORT appendix and diagnostic findings preserve common units/allattempts.
+Prioritized AWS integrated model: native4bin p16/L2/H2/pool2 under original
+and matched clocks, exploration only. No decoder/carrier or credit substitution.

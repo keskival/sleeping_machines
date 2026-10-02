@@ -2698,3 +2698,40 @@ The event hazard models use sparse conditional memories and local rate/flow stat
 The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E173/E174 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the language/depth screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal residual learner, and E144 audits simultaneous state/query pooling. E171 reproduces the consolidated screens and selected speech answers, and checks causal input boundaries. E172 records complete training-step arithmetic; E175 checks the generic persistent language stream.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
+
+## AWS appendix: coarse temporal packets in the integrated native core
+
+An exploratory fitting-user-selected RBF diagnostic gives4-bin77.604%/.686661
+versus20-bin74.479%/.707992 on the existing192 development gestures, using984
+fitting gestures. It selects only on fitting-user GroupKFold NLL. Solver
+FLOPs remain unknown. Coarser representation can reduce estimation/optimization
+error despite discarding information; this does not imply timing is useless.
+
+Completed integrated seed6 screen keeps p16/L2/H2/pool2, time computation,
+addressed state, separate keys/values and counterfactual learning. It coalesces
+five50ms counts into each250ms packet; within-quarter timing is lost, all raw
+counts and causal1s query retained. All three-arm numerical/recovery/accounting
+contracts and learning smokes pass. Same256 distinct fit gestures,4passes,
+1024 fitting targets,192 development,U16/Adam.003/clip1,8available receivers,
+4 selected writes per event, fixed4pass development selection:
+
+|Native input/clock|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
+|---|---:|---:|---:|---:|---:|
+|20bins/.05|48.958%|1.424195|2.285696|2.232125|.591709|
+|4bins/.05|57.812%|1.222135|.548517|.535661|.138119|
+|4bins/.25|55.729%|1.274860|.548517|.535661|.138133|
+
+Both coarse arms pass the frozen>=.02NLL gain/<=1pp decline/<=.50work gate.
+Fitting work ratio.239978 (76.002% lower); simulated events21504→5120,
+key scores172032→40960,selected writes86016→20480. Native stages use identical
+arithmetic+unit-special conventions including backward/Adam/clip. Input
+coalescing/normalization/loading/evaluation are included in whole-job wall,
+but NumPy preprocessing FLOPs/traffic and energy remain unmeasured. Three
+concurrent one-thread AWS jobs: fine42.846s/463736KiB,coarse14.031s/456672KiB,
+matched-clock14.046s/457148KiB. These walls are isolated observations.
+
+Seed7 unchanged replication is pending, not another quality result. This is
+within-family, single-seed development evidence, not a completed advantage
+over stronger984-fit gesture controls. Older full-data native/control evidence
+remains leading. Raw results/common-unit fixed-gate analysis:
+experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_analysis.json.

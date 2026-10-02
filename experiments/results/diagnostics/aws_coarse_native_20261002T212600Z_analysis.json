@@ -1,0 +1,94 @@
+{
+  "status": "completed",
+  "args": {
+    "manifest": "experiments/gym/plans/aws_coarse_native_20261002T212600Z/manifest.json"
+  },
+  "rows": [
+    {
+      "variant": "fine",
+      "seed": 6,
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_fine_s6.json",
+      "bins": 20,
+      "clock_step": 0.05,
+      "selected_epoch": 4,
+      "accuracy": 0.4895833333333333,
+      "nll": 1.424195471025693,
+      "whole_fit_gflops": 2.28569632,
+      "fit_mflops_per_target": 2.2321253125,
+      "inference_mflops_per_target": 0.591709,
+      "fit_work_ratio": 1.0,
+      "nll_improvement": 0.0,
+      "accuracy_difference": 0.0,
+      "gate_pass": false,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 21504,
+        "key_scores": 172032,
+        "selected_updates": 86016,
+        "counterfactual_values": 172032
+      },
+      "wall_s": 42.84619028295856,
+      "max_rss_kb": 463736
+    },
+    {
+      "variant": "coarse_fastclock",
+      "seed": 6,
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_fastclock_s6.json",
+      "bins": 4,
+      "clock_step": 0.05,
+      "selected_epoch": 4,
+      "accuracy": 0.578125,
+      "nll": 1.2221352853618253,
+      "whole_fit_gflops": 0.548517184,
+      "fit_mflops_per_target": 0.5356613125,
+      "inference_mflops_per_target": 0.138119,
+      "fit_work_ratio": 0.23997815422829225,
+      "nll_improvement": 0.20206018566386774,
+      "accuracy_difference": 0.08854166666666669,
+      "gate_pass": true,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 14.031280342955142,
+      "max_rss_kb": 456672
+    },
+    {
+      "variant": "coarse_matchedclock",
+      "seed": 6,
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_matchedclock_s6.json",
+      "bins": 4,
+      "clock_step": 0.25,
+      "selected_epoch": 4,
+      "accuracy": 0.5572916666666666,
+      "nll": 1.2748601092025638,
+      "whole_fit_gflops": 0.548517184,
+      "fit_mflops_per_target": 0.5356613125,
+      "inference_mflops_per_target": 0.138133,
+      "fit_work_ratio": 0.23997815422829225,
+      "nll_improvement": 0.14933536182312923,
+      "accuracy_difference": 0.06770833333333331,
+      "gate_pass": true,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 14.046145037049428,
+      "max_rss_kb": 457148
+    }
+  ],
+  "passing_variants": [
+    "coarse_fastclock",
+    "coarse_matchedclock"
+  ],
+  "scope": "Fixed exploratory integrated screen, same data/passes/model, different packet precision. Whole fit arithmetic+unit specials estimates; coalescing/normalization/loading included in wall, NumPy preprocessing FLOPs/traffic/energy unmeasured. No strong-control superiority or fresh confirmation claim."
+}
