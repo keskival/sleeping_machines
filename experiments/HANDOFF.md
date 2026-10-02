@@ -1408,3 +1408,24 @@ lead did not replicate consistently. Partial findings/hashed paired JSON saved;
 CatBoost seed8 still incomplete and full primary gate unevaluated. No retuning
 on observed confirmation scores. Independent event chain running/contracts
 publishing; read `AWS_BANKNOTE_PARTIAL_FINDINGS_20261002.md` before claims.
+
+
+## Replication robustness inventory prepared — 2 October, 02:09 UTC
+
+Reserved seed7 timing completes90.23% versus rank50%; shared order P0
+44.53% versus seed6 75.39%, so shared result is not yet seed-robust.
+No promotion based on a best seed. Original results retained and new fits active.
+`experiments/event_replication_analysis.py` requires all12 cell/seed results
+(including historical seed6), verifies settings/data and inventories per-seed
+quality, gaps, capacity/activity, whole fitting GFLOPs, per-query fitting and
+inference MFLOPs together. Special function counts remain separate. Partial
+admission rejection verified against actual pending pilots; scripts compile.
+`scripts/run_aws_replication_summary.py` waits independent chainPID788298,
+then reserves ordinary host admission lock during analysis/publication. Session
+`aws-replication-summary-20261002`; log `queue/aws_replication_summary_20261002.out`.
+Fresh-data native analysis is still handled by original independent chain.
+Pulled0654543; read other-host full-state surrogate integration and completed
+count-carrying2K result2.733599bpc. Do not duplicate their active variants.
+Invalid E63/E79 evidence stays quarantined per updated AGENTS.md. Prioritized
+AWS model remains native integrated H2/d8/depth8 event replication/confirmation;
+fixed-address/forced activity and local-surrogate credit gaps remain explicit.
