@@ -40,3 +40,6 @@ report/*.building.pdf
 experiments/gym/plans/**/worker_*.status.json
 experiments/gym/plans/**/worker_*.status.tmp
 experiments/gym/plans/**/confirmation_admission.status.json
+
+# Preserved local fitted-control artifacts; hashes live in result records.
+experiments/results/**/*.joblib
