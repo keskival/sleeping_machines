@@ -26,6 +26,8 @@ def scale_initial_clocks(model, step):
     if not math.isfinite(step) or not .01 <= step <= 1:
         raise ValueError('Bounded observed clock step required')
     scale = 1. / step
+    if scale == 1.:
+        return model
     with torch.no_grad():
         rates = [model.transport_rate]
         frequencies = [model.transport_frequency]
@@ -37,7 +39,8 @@ def scale_initial_clocks(model, step):
         for parameter in rates:
             # Include the existing1e-6 floor: actual new rate=scale*old rate.
             desired = (F.softplus(parameter) + 1e-6) * scale - 1e-6
-            parameter.copy_(torch.log(torch.expm1(desired)))
+            # Stable inverse softplus even at the bounded100x scale.
+            parameter.copy_(desired + torch.log(-torch.expm1(-desired)))
         for parameter in frequencies:
             parameter.mul_(scale)
     return model
