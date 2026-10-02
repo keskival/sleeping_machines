@@ -84,8 +84,8 @@ class StatisticRaceNativeModel(GatedCountCarryingNativeModel):
         D, th = torch.sigmoid(self.raw_pool_discount), F.softplus(self.raw_pool_theta)
         own = torch.clamp(counts - D, min=0.) / (n + th)  # (M, A)
         esc = (th + D * T) / (n + th)                     # (M, 1)
-        seen = (n > 0).to(q.dtype)
-        own, esc = own * seen, esc * seen + (1 - seen)    # empty receivers deliver q exactly
+        seen, empty = (n > 0).to(q.dtype), (n == 0).to(q.dtype)
+        own, esc = own * seen, esc * seen + empty         # empty receivers deliver q exactly
         return pi @ own + (pi @ esc) * q                  # (L, A)
 
     def forward_chunk(self, tokens, state=None):

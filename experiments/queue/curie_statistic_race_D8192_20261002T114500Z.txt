@@ -1,0 +1,12 @@
+# THEORY §392 relaunch: curie_statistic_race_D8192_20261002T090000Z failed at its smoke (FLOP-coverage audit rejected aten.rsub
+# from '1 - seen'; replaced by a comparison mask). Same settings, new tags. Predictions as in §392 (P392a/b vs gate-only
+# full 2.601, minimal 2.588 at 8K; same-width shallow control mandatory). The 8K 64-credit pair, never run because its
+# appended lines were lost when a rebase rewrote the live queue file, follows at lower priority.
+curie_statistic_race_contracts_20261002T114500Z -m pytest -q tests/test_statistic_race_memory.py tests/test_count_escape_gate.py tests/test_count_carrying_language.py
+curie_statistic_race_smoke_20261002T114500Z experiments/count_carrying_language_benchmark.py --tag curie_statistic_race_smoke_D192_20261002T114500Z --fit 192 --dev 129 --epochs 1 --escape-gate --pool-addresses 256
+curie_statistic_race_min_D8192_20261002T114500Z experiments/count_carrying_language_benchmark.py --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate --pool-addresses 256 --tag curie_count_carrying_D8192_K4_gate_pool256_minimal_p2_d1_s6_20261002T114500Z --payload 2 --depth 1
+curie_statistic_race_shallow_D8192_20261002T114500Z experiments/count_carrying_language_benchmark.py --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate --pool-addresses 256 --tag curie_count_carrying_D8192_K4_gate_pool256_shallow_p16_d1_s6_20261002T114500Z --depth 1
+curie_statistic_race_full_D8192_20261002T114500Z experiments/count_carrying_language_benchmark.py --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate --pool-addresses 256 --tag curie_count_carrying_D8192_K4_gate_pool256_s6_20261002T114500Z
+curie_count_gate_c64_smoke_20261002T114500Z experiments/count_carrying_language_benchmark.py --tag curie_count_gate_c64_smoke_D129_20261002T114500Z --fit 129 --dev 129 --epochs 1 --escape-gate --chunk 64 --update-targets 64
+curie_count_gate_c64_D8192_20261002T114500Z experiments/count_carrying_language_benchmark.py --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate --chunk 64 --update-targets 64 --tag curie_count_carrying_D8192_K4_gate_c64_s6_20261002T114500Z
+curie_count_gate_c64_min_D8192_20261002T114500Z experiments/count_carrying_language_benchmark.py --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate --chunk 64 --update-targets 64 --tag curie_count_carrying_D8192_K4_gate_c64_minimal_p2_d1_s6_20261002T114500Z --payload 2 --depth 1
