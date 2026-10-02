@@ -1,0 +1,12 @@
+{
+  "status": "control_attempt_stopped",
+  "tag": "aws_banknote_confirmation_20261001T234000Z_catboost_s8_pilot",
+  "reason": "More than50 minutes with zero completed candidates versus about1s for all four candidates in each previous seed; prioritize independent integrated research",
+  "utc": "2026-10-02T01:45:37.896669+00:00",
+  "signal": "SIGTERM to trainer only; coordinator/watchdog drain normally",
+  "confirmation_scope": "Incomplete banknote comparison; do not analyze as a complete primary gate",
+  "interrupted_waiter_pids": [
+    774142,
+    786291
+  ]
+}

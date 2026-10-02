@@ -1378,3 +1378,22 @@ local contracts without modifying model sources.12 relevant tests pass.
 nonfree lookup/discovery, distinct mixture objective and sequential-credit gaps.
 Banknote has only CatBoost seed8 still active; first candidate anomalously slow
 versus prior seeds. Existing5400s guard retained, result remains pending.
+
+
+## Independent event chain unblocked — 2 October, 01:46 UTC
+
+CatBoost seed8 was explicitly stopped with trainer-only SIGTERM after3128s
+and zero completed candidates (seed6/7 completed all candidates~1s). Original
+worker drained/published failure51e9a38 and exited needs_review; no score
+was invented. Manual-stop JSON records reason. All11 other final results remain
+preserved. Banknote confirmation is incomplete; full paired analysis withheld.
+Old waiting supervisors774142/786291 were terminated before this intervention;
+their original lifecycle files remain historical, superseded by new recovery.
+New `scripts/run_aws_independent_event_recovery.py` requires terminal preserved
+control failure, runs independent reserved24-stage replication then30-stage
+native fresh-data confirmation and publishes only the complete native analysis.
+Session `aws-independent-events-20261002T014600Z`; log
+`queue/aws_independent_events_20261002T014600Z.out`. Guarded worker alone owns
+host lock; active model sources stay frozen. Banknote control retry requires a
+new unique tag, unchanged comparison settings and a bounded isolated runtime
+diagnostic; it cannot block independent temporal/sparse research indefinitely.
