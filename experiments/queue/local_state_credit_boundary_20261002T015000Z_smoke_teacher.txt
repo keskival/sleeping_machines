@@ -1,0 +1,1 @@
+local_state_credit_boundary_20261002T015000Z_smoke_teacher experiments/state_credit_benchmark.py --tag local_state_credit_boundary_20261002T015000Z_smoke_teacher --payload 8 --depth 8 --heads 2 --sources 4 --state-credit 1 --fit-targets 4 --dev-targets 4 --epochs 1 --update-targets 4

@@ -1,0 +1,1 @@
+local_state_credit_boundary_20261002T015000Z_contract_order experiments/state_credit_benchmark.py --tag local_state_credit_boundary_20261002T015000Z_contract_order --payload 8 --depth 8 --heads 2 --sources 4 --state-credit 1 --contracts-only

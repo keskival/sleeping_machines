@@ -101,8 +101,8 @@ The [reserved-test confirmation](experiments/AWS_BANKNOTE_CONFIRMATION.md)
 now gives **91.8% versus 94.0% mean accuracy across three seeds**: competitive
 accuracy, **no confirmed advantage**. Logistic regression reaches 94.7% and
 substantially better log loss (0.091 versus ours 0.235). Accuracy intervals
-include zero difference but do not establish equivalence. The last CatBoost
-seed remains pending. Wine favors trees; extra reception has not earned its cost.
+include zero difference but do not establish equivalence. CatBoost seed8
+was stopped without a score; the full four-family confirmation is incomplete. Wine favors trees; extra reception has not earned its cost.
 The [admitted next AWS battery](experiments/AWS_SPLIT_EVENT_BATTERY.md) tests
 protected memory, shared rules/private state and identifiable elapsed time.
 The [advantage battery](experiments/ADVANTAGE_BATTERY.md) defines promotion,

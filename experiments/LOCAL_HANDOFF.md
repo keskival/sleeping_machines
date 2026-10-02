@@ -257,7 +257,7 @@ Robotics adapters remain pending; the task is supervised asynchronous streams,
 not RL. Core gaps: observed fixed addresses, forced activity, local surrogate
 loser credit, bounded ordinary credit and no validated physical clockless ASIC.
 
-## Review and publication, 2 October, 02:05 UTC
+## Review and publication, 2 October, 01:49 UTC
 
 User requests removal of target-leakage results so they cannot be reused. Ten
 E63/E79/raw word-keyed result/provenance files are moved outside the active
@@ -295,3 +295,42 @@ uncommitted pending its own full contracts/accounting/small fit. AWS now has a
 reserved fresh native confirmation supervisor after its event replication;
 do not duplicate that chain. Curie has a separate count-carrying smoke and2K
 pilot; avoid duplicate variants. No new local optimizer work ran beside trainer.
+
+## Integrated write-credit boundary plan, 2 October, 01:55 UTC
+
+Prepared `queue/local_state_credit_boundary_20261002T015000Z.json`: six
+one-job queues, full-depth order and shared/P2 paired-timing optimizer/recovery
+contracts, two accounting smokes, then matched strength0/strength1 order fits.
+New modules/driver/contracts/tests are fingerprinted; original split/native
+sources stay unchanged. Five new read-only model tests plus eight publication
+regressions pass. No numerical prerequisite optimizer ran outside run_safe.
+
+Supervisor `scripts/run_state_credit_boundary.py` verifies the original
+coordinator231951/current guard232027 start identities and parent relation,
+pauses only that coordinator, waits for the current timing pilot to complete,
+then executes each job through run_safe. SIGTERM/HUP and failures resume the
+original coordinator in finally. A hard-killed supervisor requires checking
+its status file and manually resuming only the verified original coordinator.
+No trainer/guard/watchdog is paused. Original campaign resumes after the
+bounded insertion; no large fit is scheduled by this new pilot gate.
+
+Caps:1,250,000KiB whole-job RSS/3,000,000KiB VMS,8GiB available-memory floor,
+600s contracts/smokes,3600s pilots. S4/d8 parent pilots/checks used well below
+1GiB; current host available~10.7GiB and only the preserved trainer~453MiB.
+Each smoke must stay below85% RSS cap before pilots. Complete operator coverage,
+finite results and source/queue fingerprints are mandatory. Auxiliary logical
+views and RSS are separate; total learning includes all losing proposals,
+backward and Adam. Teacher is a local full-state surrogate, not the exact
+joint-race reference kernel. See theory/state_write_credit_integration_20261002.md.
+
+Completed pilot results/paired comparison are committed automatically; the PDF
+appendix ingests completed fits only and is rebuilt after the pair. Main report
+code is outside the frozen training dependencies. User host pushes root commits.
+Do not blindly restart the insertion or reuse its changed queues/tags.
+
+New AWS update: CatBoost seed8 was manually stopped after3128s with zero
+completed candidates; original failure51e9a38 is preserved. No score exists.
+The report now says stopped/incomplete rather than still running. Independent
+AWS recovery has unblocked the reserved event replication/confirmation chain;
+contracts are arriving, not new completed quality scores yet. Banknote's valid
+three-seed family summaries remain; the full four-family gate is withheld.

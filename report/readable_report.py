@@ -140,6 +140,13 @@ def results():
             if path.exists():
                 r=json.loads(path.read_text())
                 if r.get('status')=='completed' and 'final' in r:tasks['gym_screen'].append(dict(job=job,result=r))
+    tasks['state_credit']=[]
+    for path in sorted((RES/'state_credit').glob('*_pilot.json')):
+        r=json.loads(path.read_text())
+        if r.get('status')=='completed' and 'final' in r:
+            for name,sha in r['source_sha256'].items():
+                if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:raise ValueError('State-credit source changed: '+name)
+            tasks['state_credit'].append(r)
     tasks['split_screen']=[]
     for path in sorted((RES/'event_variants').glob('*_pilot.json')):
         r=json.loads(path.read_text())
@@ -494,6 +501,16 @@ def figures(M, tasks, ev):
             ax.set_xticks(range(len(complete)),[labels[k] for k in complete],fontsize=8)
             ax.set_ylim(0,max(max(v) for v in vals)*1.19);ax.set_ylabel(title)
         f.tight_layout();save(f,'banknote_reserved_test')
+    credited=tasks.get('state_credit',[])
+    if credited:
+        f,ax=plt.subplots(figsize=(7.2,2.5))
+        for r in credited:
+            x=r['work']['total_training_unit_special_flops']/1e9;y=100*r['final']['dev']['accuracy']
+            label='Ours: baseline' if not r['args']['state_credit'] else 'Ours: state-write credit'
+            ax.scatter([x],[y],s=55,color=blue if r['args']['state_credit'] else orange,label=label)
+            ax.annotate(f'{label}\n{y:.2f}%, {x:.3f}GF', (x,y),xytext=(4,8),textcoords='offset points',fontsize=8)
+        ax.set_xlabel('Whole fitting work (GFLOPs) ↓');ax.set_ylabel('Development accuracy (%) ↑')
+        ax.set_ylim(0,110);ax.margins(x=.4);f.tight_layout();save(f,'state_credit_quality_work')
     split=completed_split_evidence(tasks)
     if split:
         f,axes=plt.subplots(1,2,figsize=(7.2,2.75))
@@ -1335,6 +1352,9 @@ def blocks(M, tasks, ev):
     banknote_confirmation={family:[r for r in tasks.get('tabular_confirmation',[])
         if r['args']['model']==family and r['args']['tag'].startswith('aws_banknote_confirmation_20261001T234000Z_')]
         for family in ('ours','trees','catboost','logistic')}
+    banknote_control_stopped=(ROOT/'experiments/gym/plans/aws_banknote_confirmation_20261001T234000Z/aws_banknote_confirmation_20261001T234000Z_catboost_s8_pilot.failure.json').exists()
+    banknote_last_cell=('CatBoost seed8 was stopped without a score; full confirmation is incomplete. '
+                        if banknote_control_stopped else 'The last CatBoost cell remains pending. ')
     replicated_banknote=all(sorted(r['args']['seed'] for r in banknote_confirmation[k])==[6,7,8]
                             for k in ('ours','trees'))
     def test_mean(family,metric):return sum(r['final']['test'][metric] for r in banknote_confirmation[family])/len(banknote_confirmation[family])
@@ -1409,7 +1429,7 @@ def blocks(M, tasks, ev):
               'Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. '
               if replicated_banknote else '128 fitting/128 development rows, four passes, seed6. ')+
              f'The original development lead, {100*ours["accuracy"]:.1f}% versus {100*trees["accuracy"]:.1f}%, is retained in Appendix B. '
-             +('The last CatBoost cell remains pending. ' if not all(len(v)==3 for v in banknote_confirmation.values()) else '')+
+             +(banknote_last_cell if not all(len(v)==3 for v in banknote_confirmation.values()) else '')+
              'Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.'),
             ('p',f'<b>Causal statistical language advantage.</b> On the same999,999 test targets after10M fitting characters, '
              f'ours count/copy race mixture scores <b>{ev["native10"]:.3f}bpc</b> versus '
@@ -2583,6 +2603,27 @@ def blocks(M, tasks, ev):
                     '(8.0% lower), for0.919 versus0.816 whole-fit GFLOPs (12.6% more). Trees retain lower RMSE0.649. '
                     'This positive within-model effect contrasts with banknote/language reception failures; it is not a cross-family win.'))
 
+    credited=tasks.get('state_credit',[])
+    if credited:
+        rows=[]
+        for r in credited:
+            w=r['work'];a=r['args'];q=r['final']['dev']
+            rows.append(['Ours: baseline' if not a['state_credit'] else 'Ours: write credit',
+                f'{100*q["accuracy"]:.2f}',f'{q["nll"]:.4f}',f'{w["total_training_unit_special_flops"]/1e9:.3f}',
+                f'{w["total_training_unit_special_flops"]/w["fitting_query_targets"]/1e6:.3f}',
+                f'{(w["inference_arithmetic_flops_per_event"]+w["inference_special_functions_per_event"])/1e6:.3f}'])
+        pages.append([('h1','Appendix B. Addressed-state write credit'),
+            ('p','Completed integrated pilots only: private S4/P0, eight blocks, two independent heads, d8/pool2, '
+             '128 fitting queries per pass/four passes,256 development queries, seed6. Both retain hard temporal '
+             'races and winner-only inference. The zero-credit model exactly nests the parent; added memory/time '
+             'credit is a local surrogate, not an arbitrary unbiased sequence-gradient estimator.'),
+            ('figure',('state_credit_quality_work',160)),
+            ('table',(['Model','Accuracy %','NLL','Whole fit GFLOPs','Fit MFLOPs/query','Infer MFLOPs/event'],rows,[40,24,23,30,29,28])),
+            ('small','All fitting forward/loss/backward/normalization/clipping/Adam and losing proposals are charged. '
+             'Special functions have unit weight beside arithmetic; integer discovery/traffic/energy remain separate. '
+             'Training-only auxiliary state views and whole-process RSS are recorded in each result. '
+             'Numerical/optimizer prerequisites and accounting smokes are excluded from benchmark plots. '
+             'This reuses exploratory development populations; independent seeds and fresh confirmation remain required.')])
     confirmed=tasks.get('tabular_confirmation',[])
     labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
     order=list(labels)
@@ -2605,7 +2646,7 @@ def blocks(M, tasks, ev):
              '(98.33% interval0.0338 to0.2660). These three-seed intervals are approximate and share one test split.'),
             ('small','Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, '
              '4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; '
-             'accuracy intervals are descriptive. This does not replace the pending full four-family gate. '
+             'accuracy intervals are descriptive. This does not replace the incomplete full four-family gate. '
              'The original95.3% versus93.0% development screen and all per-seed work remain below.')])
     for begin in range(0,len(confirmed),6):
         records=confirmed[begin:begin+6];quality=[];costs=[]

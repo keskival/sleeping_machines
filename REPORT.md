@@ -31,7 +31,7 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 ![banknote reserved test](report/figures/banknote_reserved_test.png)
 
-Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fitting/128 development rows; four fixed selection opportunities. Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. The original development lead, 95.3% versus 93.0%, is retained in Appendix B. The last CatBoost cell remains pending. Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.
+Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fitting/128 development rows; four fixed selection opportunities. Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. The original development lead, 95.3% versus 93.0%, is retained in Appendix B. CatBoost seed8 was stopped without a score; full confirmation is incomplete. Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.
 
 **Causal statistical language advantage.** On the same999,999 test targets after10M fitting characters, ours count/copy race mixture scores **1.727bpc** versus **1.799** for LSTM and **1.908** for Transformer. This corrected specialized predictor uses statistical memory; it is not the learned native model. Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.
 
@@ -874,7 +874,7 @@ Competitive accuracy, no confirmed advantage: the three-seed reserved test does 
 
 For the completed ours/tree comparison, the paired accuracy difference is −2.14 percentage points (descriptive95% crossed seed/feature-group interval −6.90 to +2.43). The control-minus-ours NLL difference is −0.0287 (98.33% interval −0.1738 to +0.1277). Logistic regression improves NLL by0.1447 (98.33% interval0.0338 to0.2660). These three-seed intervals are approximate and share one test split.
 
-Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, 4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; accuracy intervals are descriptive. This does not replace the pending full four-family gate. The original95.3% versus93.0% development screen and all per-seed work remain below.
+Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, 4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; accuracy intervals are descriptive. This does not replace the incomplete full four-family gate. The original95.3% versus93.0% development screen and all per-seed work remain below.
 
 ## Appendix B. Frozen banknote confirmation
 
