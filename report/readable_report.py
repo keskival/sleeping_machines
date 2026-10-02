@@ -3440,6 +3440,40 @@ def blocks(M, tasks, ev):
              'full/shallow controls, new-prefix generalization and complete prefix computation/credit '
              'accounting. Historical feature-producer credit, learned address pooling and KV races remain '
              'open. Source: local_value_credit_frozen_20261002T090800Z.json; theory63 records exact scope.')])
+        headrows=[]
+        for r in audit['models']:
+            fit=r['head_features']['fitting'];dev=r['head_features']['development']
+            headrows.append([r['arm'],f"{fit['frozen_bpc']:.4f}",f"{dev['frozen_bpc']:.4f}",
+                f"{fit['mean_head_weight_gradient_norm']:.3f}",f"{dev['feature_covariance_participation_rank']:.2f}"])
+        counts=[]
+        for order in (1,2,3,4):
+            values=[]
+            for method,adaptive in (('kn',False),('wb',False),('ad',False),('wb',True),('ad',True)):
+                row=next(x for x in audit['count_controls'] if x['order']==order and x['method']==method and x['adaptive']==adaptive)
+                values.append(f"{row['bpc']:.4f}")
+            counts.append([str(order),*values])
+        pages.append([('h1','Appendix B. Frozen feature geometry and matched count calibration'),
+            ('table',(['Model','Frozen fit bpc','Cold dev bpc','Fit head gradient norm','Dev feature participation rank'],headrows,[43,31,31,33,35])),
+            ('p','At the selected weights, replay1,023 fitting and2,047 development targets from cold state '
+             'with the primary evaluation RNG. Capture actual head inputs, then compute fixed-feature '
+             'linear-head loss derivatives and covariance in float64. No head fitting, optimizer step or '
+             'parameter changes. Frozen dev scores reproduce the primary results within1e−5bpc.'),
+            ('p','The participation rank is (trace C)²/trace(C²), a measure of feature geometry. Finite '
+             'joint training need not make the final head stationary; its gradient norm and covariance '
+             'rank alone do not identify a bug or semantic abstraction. Frozen fitting loss helps '
+             'separate training fit from development generalization without using online training scores.'),
+            ('table',(['Count order','Frozen KN bpc','Frozen WB bpc','Frozen AD bpc','Adaptive WB bpc','Adaptive AD bpc'],counts,[28,29,29,29,29,29])),
+            ('p','Same1,024 fit characters and2,047 dev targets, reused count-reference implementation, '
+             'fixed discount.75, all orders/methods shown separately. Count construction uses one pass; '
+             'learned models use four gradient passes. Counts are fit-prefilled; adaptive variants also '
+             'update from observed dev outcomes after prediction. These state/history policies differ '
+             'from cold neural scoring; frozen neural fit replay is reported separately above.'),
+            ('small','KN: interpolated Kneser–Ney; WB: Witten–Bell; AD: absolute discount. Integer represented '
+             'count increments/lookups and measured construction/scoring wall time are in the completed '
+             'audit, without conversion to neural FLOPs. Equal scalar loss calibrates prediction quality; '
+             'it does not establish identical features or a same-quality compute advantage. No per-target '
+             'order selection or official-test access. Full spectra, data/checkpoint hashes and diagnostic '
+             'boundaries are retained in local_value_credit_frozen_20261002T090800Z.json.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
