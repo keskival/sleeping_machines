@@ -1679,3 +1679,26 @@ Same2GiB RSS/6GiB VMS/job,8GiBhostfloor,three1threadslots,1800sfit timeout
 from measured42.8/14s256x4 workloads. Original credits/decoder/core retained;
 only disclosed packet precision and two clockinitializations differ. See
 aws_20261002_full_coarse_protocol.md. Full quality pending, no predictions.
+
+## AWS full coarse matrix and frozen probes completed — 2 October, 21:40 UTC
+
+All9fullfits complete/pushed; saved original fine controls retained. Coarse
+matched mean65.972%/.956220 versusfine60.764%/1.083660 at76%lesscountedwork,
+but BOTHcoarse arms FAILfrozen allseedgate (seed8 fineNLL.898591 vscoarse
+.920744/1.028562). No unchanged fit/seed/pass extension. Full matrices/common
+units/activity/uncertainty and originalstrongerhistoricalcontrols in findings.
+
+Newfrozen context/resident probes all3matched-clock encoders+initialreservoirs,
+fit-onlyCV, no encodertraining/testaccess. ContextRBFnominationgate passes:
+mean69.097%/.856456 vsnative65.972%/.956220,eachseedNLLgain positive.
+Residentmean72.743%/.829107 butextraNLLgain.027349 misses.05nominationgate;
+all128latentmemory values explicitlyread, no sparsityclaim. Initialcontext
+61.632%/1.036019,initialresident68.75%/.886478, allprobe costs saved. Fulljob
+53.61s/516444KiB, numpy/Torchwinners/state/probabilitychecks pass.
+
+Readtheory67and retainedfailedreadout history before newhypothesis: a standard
+zero-nested degree2 localqueryhead inunchangedcoarse p16/L2/H2/pool2. Retain
+all races/clocks/keys/values/sparsewrite/counterfactual paths; no densecarrier
+or label/time oracle. Numerical/deepgradient/recovery/accounting contracts and
+smalllearning smoke needed before fixed256/192/fourpassscreen. Otherhosts own
+offset/paired/exposure/tied-map work; no duplication.

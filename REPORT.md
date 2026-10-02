@@ -2744,3 +2744,40 @@ Both gates pass; source/data and all attempts preserved. This is seed replicatio
 on the reused development set, not independent fresh confirmation. Full984-fit,
 eight-pass seeds6/7/8 all-three-arm comparison is admitted under frozen protocol,
 with pending cells unfilled and strongest controls retained.
+
+## AWS full-data coarse comparison and readout diagnosis complete
+
+All nine native984fit/eightpass/192dev runs complete,7872 fitting targets/seed.
+Three-seed means: fine60.764%/1.083660NLL;4bin/.05 64.062%/1.011241;
+4bin/.25 65.972%/.956220. Native fit17.573520 versus4.218015GFLOPs (ratio.240021).
+Seed8 fine68.75%/.898591 exceeds4bin/.05 60.417%/1.028562 and has lowerNLL
+than4bin/.25 69.271%/.920744. Both frozen all-seed gates FAIL. The positive
+means and76% counted work savings are preserved, with no unchanged escalation.
+Crossed3seed/development-user diagnostic intervals include zero; not fresh
+confirmation. Original full-data native65.10%/.963161 and clock66.15%/1.041987,
+and stronger4bin RBF77.604%/.686661 remain preserved alongside matched batched
+references. Do not replace them with a weaker new baseline.
+
+Completed common-unit per-seed work/quality/capacity/activity ledger and every
+curve: experiments/AWS_FULL_COARSE_FINDINGS_20261002.md. Same8available
+receivers/4updates per event; coarse5 versusfine21 events/query. Coarse native
+fitting MFLOPs/query .535825, fine2.232408 (full7872target denominator);
+inference per-seed measured in the saved ledger. NumPy preprocessing FLOPs,
+physical traffic and energy unknown; wholejobwalls include preprocessing and
+all evaluations/checkpoint writing. All computations/losing-values/Adam paid.
+
+Frozen readout diagnosis uses ALLthree matched-clock encoders and their initial
+reservoirs. Fitted32-context RBF probes69.097%/.856456mean versus native65.972%/
+.956220; per-seed NLL improves .056455/.163228/.079610. Predeclared context
+nomination gate passes (+3.125pp/.099764NLL mean,eachseedNLL positive). Full
+resident probes additionally read all128memoryvalues/8ages/8seenflags, reaching
+72.743%/.829107; resident-over-context gain.027349NLL misses.05 gate. Initial
+context61.632%/1.036019 and resident68.75%/.886478 remain visible.
+
+This is information/readout evidence, not an installed native nonlinear head
+or sparse dormant-value retrieval result. Fitting-only GroupKFold selection,
+72probeCV/12refits,6wholeprefix replays and original native fits are charged.
+Solver FLOPs unknown, model storage/replay counts/native fitwork retained in
+experiments/AWS_COARSE_READOUT_FINDINGS_20261002.md and source-hashed analysis.
+Next hypothesis is an integrated zero-nested standarddegree2 query-head map;
+no test access, dense prefix carrier, decoder advantage or quality promise.
