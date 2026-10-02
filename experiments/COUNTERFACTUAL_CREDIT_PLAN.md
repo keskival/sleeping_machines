@@ -138,3 +138,13 @@ completed corrections/outcomes. Extra directions have a rigorous local fitting
 criterion, not a generalization guarantee. Next useful local work must diagnose
 predictive access versus actual credit with a bounded fitting-only protocol;
 other-host tied/depth/exact-pi work remains separately owned.
+
+## 2 October21:16 UTC: gate exact replay on its conditional law
+
+Theory92/212000Z contracts expose a wrong-law forced-replay direction reversal
+and sample-adaptive critic bias. Preserve external §402/403 candidates/results;
+their existing algebra/factual-winner tests do not prove expected-risk fidelity.
+First-time-preserving actual writes plus separately consistent clock credit are
+required before promoting an integrated exact-credit claim. Freeze the critic
+before correction sampling or prove the alternative conditioning. This is a
+formal/numerical contract advance, not an admitted local long training run.

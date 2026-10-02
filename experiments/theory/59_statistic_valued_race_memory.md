@@ -988,6 +988,16 @@ nonlinear routing cascade, and multi-step replay credit over the small pools is 
 
 ## 402. Races as stochastic computation graphs: local-expectation counterfactual credit with common random numbers
 
+**Conditional-law correction (2 October, [note92](92_conditional_replay_clocks_and_critic_sampling.md)):**
+The implementation below forces an alternative at its individual arrival time,
+changing identity AND clock. That is not the first-time-preserving categorical
+counterfactual in the claimed exact formula. A time-only two-route witness
+reverses one expected score direction when that correction is added to factual
+pathwise credit. Existing algebra/factual-winner tests do not establish unbiased
+expected-risk credit. Preserve this as an empirical combined-intervention
+candidate; require corrected law/clock contracts before an exactness claim.
+
+
 **Framing.** Each race is a discrete stochastic node of a stochastic computation graph (Schulman et al. 2015).
 The winner changes the delivered value, the committed memory, later scores and later winners: a change of
 event topology, analogous to the jump terms that event-based adjoints (EventProp; Wunderlich & Pehle 2021)
@@ -1023,6 +1033,14 @@ narrows the depth-4 gap, with route credit faithful by construction on the sampl
 work, the bottleneck is not route credit.
 
 ## 403. Scaling counterfactual credit: learned critics as control variates, synthetic gradients for truncation
+
+**Sampling qualification (2 October, [note92](92_conditional_replay_clocks_and_critic_sampling.md)):**
+The critic cancellation below holds for a critic fixed before the correction's
+race subset is sampled (or justified independent/cross-fitted conditioning).
+Training it on that same subset before the estimator can introduce bias. The
+correction also preserves the BASE replay target, so it cannot remove the
+conditional-time-law bias noted beside §402. Original proposal remains below.
+
 
 **Route credit at scale (user proposal; RUDDER, Arjona-Medina et al. 2019; COMA's critic, Foerster et al. 2018;
 REBAR/RELAX control variates).** §402 costs P forward replays per sampled race. Train a small local critic

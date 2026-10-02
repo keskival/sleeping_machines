@@ -1,0 +1,90 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_race_replay_law_contracts_20261002T212000Z"
+  },
+  "contracts_passed": 4,
+  "time_only_loss": {
+    "rates": [
+      1.0,
+      3.0
+    ],
+    "true_expected_gradient": [
+      -0.0625,
+      -0.18750000000000003
+    ],
+    "forced_individual_time_choice_gradient": [
+      0.125,
+      -0.12500000000000008
+    ],
+    "retained_interior_expected_gradient": [
+      -0.0625,
+      -0.18750000000000003
+    ],
+    "incorrect_combined_gradient": [
+      0.0625,
+      -0.3125000000000001
+    ],
+    "correct_joint_score_expected_gradient": [
+      -0.0625,
+      -0.18750000000000003
+    ],
+    "first_score_direction_reversed": true
+  },
+  "actual_replay_time_records": [
+    {
+      "seed": 7,
+      "actual_winner": 1,
+      "factual_delay": 0.0019632660499873185,
+      "forced_delays": [
+        0.0034678599232156834,
+        0.0019632660499873185
+      ]
+    },
+    {
+      "seed": 11,
+      "actual_winner": 0,
+      "factual_delay": 0.0027600957752125267,
+      "forced_delays": [
+        0.0027600957752125267,
+        0.005192089369487893
+      ]
+    },
+    {
+      "seed": 23,
+      "actual_winner": 1,
+      "factual_delay": 0.002372097098807668,
+      "forced_delays": [
+        0.004570122694784353,
+        0.002372097098807668
+      ]
+    },
+    {
+      "seed": 91,
+      "actual_winner": 1,
+      "factual_delay": 0.004743801146389344,
+      "forced_delays": [
+        0.006157974390859479,
+        0.004743801146389344
+      ]
+    }
+  ],
+  "critic_sampling": {
+    "fixed_critic_expectation": 1.1,
+    "true_sum": 1.1,
+    "sample_adaptive_critic_zero_target_expectation": -1.0,
+    "fixed_before_sampling_required": true
+  },
+  "source_sha256": {
+    "experiments/race_replay_law_contracts.py": "c1f89999df08d50d1a77893ed3b8221e45487a597ef87faa2ca58f737d4f8be0",
+    "experiments/theory/92_conditional_replay_clocks_and_critic_sampling.md": "5300ea4d166bd45c85d491e25a80bcffda6c20ce57d87abd200a5049b5eaf7ed"
+  },
+  "audited_source_sha256": {
+    "experiments/dvs_local_expectation_benchmark.py": "25eb75f18e8cb4d9a228ba20f02401b130d3308070ad89825dbac00746fd93a2",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "tests/test_dvs_local_expectation.py": "73246723489ab0bb39682b6720ef06c7085f5d79f6242b1d5e593eecb1f8b300"
+  },
+  "wall_s": 0.46642496999993455,
+  "max_rss_kb": 282356,
+  "scope": "Analytic finite expectation and actual one-race wrapper time identity. Audited external sources are version observations, not frozen campaign dependencies. No integrated model fit or whole-gradient exactness claim."
+}

@@ -1,5 +1,35 @@
 # Local host: current research continuation
 
+## Replay-law and critic-sampling correction, 2 October21:16 UTC
+
+New theory92 audits the newly arrived external §402/403 proposal without changing
+its model/queue/results. The actual local-expectation wrapper forces a losing
+alternative at its individual arrival; its softmax-algebra and factual-winner
+identity tests do NOT establish exact conditional choice credit. A time-only
+rates1/3 witness has true score gradient[-.0625,-.1875], but adding that forced-
+individual-time choice correction to factual pathwise credit yields[+.0625,
+-.3125], reversing one direction. Correct first-time-preserving choice and
+separately consistent clock estimators are required. Joint-score/factorized-law
+alternatives are derived, not promoted as completed integrated repairs.
+
+Four completed212000Z contracts verify analytic expectations, actual one-race
+wrapper time identity at four seeds, fixed-critic subset cancellation and a
+sample-adaptive critic counterexample. A critic must be fixed before its residual
+correction sample (or use justified independent/cross-fitted conditioning).
+Unbiased residual sampling cannot repair an already wrong base replay target.
+Own script/note92 are frozen; audited external hashes record observed versions
+and do not freeze another host's owned implementation. Qualifications now sit
+beside the original §§402/403 proposals; preserve their empirical outcomes as
+combined-intervention estimator evidence. No local new training is admitted.
+
+Current canonical140-page publication211300Z passed. A final appendix update
+with theory92/contracts is being published serially through the same memory
+watchdog; previous report preserved until validation. Next integrated credit
+candidate must first demonstrate correct time law, legal writes, estimator
+consistency, parameter gradients, recovery and complete work on a small fit.
+Other-host ownership and frozen source/results remain preserved. Do not duplicate
+its existing long queues or interpret their present algebra tests as exactness.
+
 ## Coupled evolution offsets and formal geometry, 2 October21:10 UTC
 
 Native integrated p16/L2/H2/pool2 remains the prioritized architecture. The
