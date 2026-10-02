@@ -1,5 +1,39 @@
 # Local host: current research continuation
 
+## Balanced joint-feature fitting admitted, 2 October, 12:13 UTC
+
+Read theory/66_balanced_joint_learning.md. Counts are expected to lead in their
+well-supported local regime; this local task instead holds query suffixes,
+order-0..8 query count vectors and symbol marginals identical while opposite
+labels depend on earlier ordered bits. New complement-balanced prefixes close
+the old probe's unigram-total loophole. This bound excludes arbitrary inspection
+of unrelated count addresses or the full prefix. No language/semantic claim.
+
+Seven actual contracts pass in 122.318s, including full p8/L4 tap zero nesting
+and parent gradients, full-shape Adam/next-update recovery, native/tapped real
+driver interruption/recovery, target normalization and trained causality.
+Result: results/diagnostics/local_balanced_joint_contracts_20261002T121000Z.json.
+First contract attempt stopped on unsupported floor/rsub accounting; failed log
+and unique queue preserved. Local audit now charges delay-index floor as a
+unit special and reverse subtraction as arithmetic; no frozen parent edited.
+Peak observed contract group RSS 619,824 KiB; host >=11 GiB available.
+
+Plan queue/local_balanced_joint_20261002T121500Z.json: three one-pass two-group
+smokes, then native full, tapped full and same-width tapped shallow fits, then
+completed-only summary. Eight fitting suffix groups/32 queries,16 development
+groups/64 queries,gap8,16 passes,p8,H2,pool2,L4/L1,Adam .003,U8,seed6.
+Every arm has query-only binary supervision and complete 15-event credit;
+all states reset per episode, noise coupled by quartet/pass, no target-derived
+input or clock. Target alphabet restricted to two symbols for count controls
+too. Prefix forward/backward and losing proposals are charged; fitting FLOPs
+are declared first/last full-window estimates, actual activity separate.
+Smokes/capacity guard precede fits; main, one thread,1,250,000KiB RSS cap,
+3,000,000KiB VMS,8GiB availability floor. Reuse serial stage worker; no new
+dense control or duplicate other-host sampled-pooling/evidence-strata run.
+Exploratory quality gate75%/.8bits; taps additionally need .05bits against
+native and same-width shallow to nominate. Fresh fixed-model confirmation
+is required for claims beyond this one-seed diagnostic. No automatic scale-up.
+
 ## Rebase conflict repaired, 2 October, 11:49 UTC
 
 Completed the main rebase onto 765ff48. The sole conflict was the generated
