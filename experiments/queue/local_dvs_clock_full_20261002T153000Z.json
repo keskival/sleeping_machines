@@ -1,0 +1,61 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_dvs_clock_full_20261002T153000Z",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_dvs_clock_full_20261002T153000Z.txt",
+      "queue_sha256": "d6300c3c952f2abf453d26a72bfcaf7c675fc698d1ec4e60622baa466505b052",
+      "result": "experiments/results/dvs_native/local_dvs_clock_full_20261002T153000Z.json",
+      "timeout_s": 3600,
+      "requires": []
+    }
+  ],
+  "references": [
+    "experiments/results/dvs_native/local_dvs_clock_admission_20261002T152200Z_smoke.json",
+    "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json",
+    "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+    "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json",
+    "experiments/results/diagnostics/local_dvs_compact_controls_20261002T152700Z.json"
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "experiments/results/dvs_native/local_dvs_clock_admission_20261002T152200Z_smoke.json": "5c19ff4a4f6873d230fc54e71dc82ae3393ffea1bd2617c3272adbacbd504834",
+    "experiments/results/diagnostics/local_dvs_clock_admission_20261002T152200Z_contracts.json": "82667db120a2741569bcea5309f95a64ee3841b7d53cdbf9cfb8646ba2834a76",
+    "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json": "b506bd3650e7410cffbe174ca2e1acc28c90972e65eba9c0dbec969b82006ebf",
+    "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json": "0fb1ed5c20f921c8ff7496aa625a4a72c5f40355dde899c769d6c1788c79517f",
+    "experiments/results/diagnostics/local_dvs_compact_controls_20261002T152700Z.json": "853ea103fa8cd41e125a89b88dc0285b45d0980aea0e9109978a2cfb418710ef",
+    "scripts/run_addressed_memory_pair.py": "7125ea4992322ed4c410f99b86ca4b0d8ffa2ed8cd6450ac9296a7175b802e62",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "experiments/dvs_native_contracts.py": "49d03a0e6a079cbe6ebec57c10b3aa13bf49e073950c96d5c0d11d8d8683d86a"
+  },
+  "admission": {
+    "clock_contracts": 6,
+    "smoke_learning_passed": true,
+    "smoke_wall_s": 29.463834285001212,
+    "smoke_max_rss_kb": 343532,
+    "original_full_wall_s": 1557.590093648003,
+    "timeout_reason": "Same core/data/eight passes, no added operations/capacity; measured calibrated smoke29.46s vs original29.70s, original full1557.59s.3600s supplies >2x measured full margin."
+  },
+  "scope": "Matched temporal initial rates/frequencies20x only, same984/192 p16/L2/H2/pool2 U16 eight passes Adam.003 seed6. Strong full and bounded-storage controls preserved. No epoch extension, test or anticipated advantage."
+}
