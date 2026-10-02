@@ -1971,3 +1971,24 @@ Every coreclock/race/key/message/write remains, only4unused affine heads removed
 All3repeattimings/ATenauditsretained, fullcoverage.65.025s/465880KiB.
 No trainingpromotion; helperinference-onlyexplicitterminalquery. See
 AWS_QUERY_ONLY_FINDINGS_20261002.md. Originalparent4.218015GFfit paid unchanged.
+
+## AWS coarse tied family closed; DEEP replay now prioritized — 2 October
+
+Tied2/8 everyparameter/state/recovery/Adam/RNG/work contracts and both smokes
+pass. Two256FIT/192DEV/fourpass seed6 pilots complete andpublish. Tied2
+53.125%/1.276615,.544113GF,11227params; tied8 54.688%/1.233413,1.554905GF,
+12019params,32available/4selectedwrites. BOTH fixedgatesFAIL, no confirmation/
+fullscale. Tied8 .041447NLLgain andlowerparamcapacity retained,notpromoted.
+Firstdiagnostic failed missingcoalesceadapteralias; fixedbeforefits withnewqueue.
+Full common-unit table/costs: AWS_COARSE_TIED_FINDINGS_20261002.md.
+
+USER explicitly prioritizes replay for DEEPER models. AWS owns coarse4/.25-clock
+DEPTH4 all40races/80shadowlanes versus matched factorizedcontrol ANDoriginal
+teacher, separate from otherhost fine-depth4 sampled8 queue. Prioritized
+aws_deep_replay_contracts234100Z tests depth4 full everyparameter replaygradient
+against sequential/forked reference and3mode actual recovery/work before
+learning smokes/pilots. No independent-noise orregularization mixed in.
+First234000Z diagnostic found missingterminal_risk adapterarg; fixedbefore
+admitted learning runs. Numerical correctness/phase law remainsfirst-time
+preserving, actualwrites, separatefactorizedclock. Do not infer deepfailure
+from shallow no-gain. Original controls and allfailed shallow work preserved.
