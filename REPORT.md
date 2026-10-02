@@ -17,7 +17,7 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 - **Generalization.** Race retrieval reaches **100% at four times the training context** within 4,000 examples in all five runs. A learned phase rule solves **all 3,440 unseen modular triples**, using the supplied period 17.
 - **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
-- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn.
+- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets, so these fits do not yet surpass counting statistics (Theory §376).
 
 ![accomplishments](report/figures/accomplishments.png)
 
@@ -453,6 +453,8 @@ On the identical 131K-character/four-pass screen, widening the gated model buys 
 
 The fixed-capacity data comparison and fixed-data capacity comparison answer different questions. Equal passes and data do not imply equal compute. The pipeline checks finite learning, trained value blocks, complete work and source provenance before promotion. A development gain is not an official-test or frontier claim.
 
+Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated Kneser–Ney counts of the same fitting characters score 2.349 bpc at 131K and 2.007 at 1M, with one counting pass and no gradient work. Every completed fit from 2K to 1M characters is above this bar. Small-N character modelling is limited by estimation; fixed learned gates under truncated credit cannot be consistent per-address estimators, which motivates count-carrying receivers with escape races and a learned base measure. Counts are reference predictors, not neural controls or a large-data comparison.
+
 Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. Special functions, evaluation passes and physical traffic are separate from the arithmetic ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.
 
 ## What establishes the larger advantage
@@ -862,20 +864,42 @@ Completed test scores only. Checkpoints/candidates were selected on128 developme
 | Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
 | --- | --- | --- | --- | --- | --- | --- |
 | Ours native/s6 | 0.1553 | 0.1426 | 94.31 | 0.335 | 0.655 | 0.139 |
+| Ours native/s7 | 0.2594 | 0.2494 | 90.75 | 0.335 | 0.655 | 0.139 |
+| Ours native/s8 | 0.3270 | 0.3138 | 90.39 | 0.335 | 0.655 | 0.139 |
 | Boosted trees/s6 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
 | Boosted trees/s7 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
 | Boosted trees/s8 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
-| CatBoost/s6 | 0.1023 | 0.1207 | 93.95 | Not counted | Not counted | Not counted |
-| CatBoost/s7 | 0.1042 | 0.1078 | 95.37 | Not counted | Not counted | Not counted |
 
 | Model/seed | Charged fit wall s | Test wall s | Peak RSS MiB | Fit provenance |
 | --- | --- | --- | --- | --- |
 | Ours native/s6 | 981.79 | 4.54 | 334.3 | Historical fit reused |
+| Ours native/s7 | 976.56 | 4.65 | 447.0 | New fit |
+| Ours native/s8 | 989.25 | 4.61 | 447.0 | New fit |
 | Boosted trees/s6 | 0.09 | 0.00 | 434.3 | New fit |
 | Boosted trees/s7 | 0.09 | 0.00 | 434.9 | New fit |
 | Boosted trees/s8 | 0.09 | 0.00 | 434.9 | New fit |
+
+Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis and all three prespecified seeds are required for the confirmation claim.
+
+## Appendix B. Frozen banknote confirmation
+
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. Partial publication is a snapshot, not a completed three-seed comparison.
+
+| Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| CatBoost/s6 | 0.1023 | 0.1207 | 93.95 | Not counted | Not counted | Not counted |
+| CatBoost/s7 | 0.1042 | 0.1078 | 95.37 | Not counted | Not counted | Not counted |
+| Logistic/s6 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+| Logistic/s7 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+| Logistic/s8 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+
+| Model/seed | Charged fit wall s | Test wall s | Peak RSS MiB | Fit provenance |
+| --- | --- | --- | --- | --- |
 | CatBoost/s6 | 0.35 | 0.00 | 461.6 | New fit |
 | CatBoost/s7 | 0.35 | 0.00 | 460.8 | New fit |
+| Logistic/s6 | 0.01 | 0.00 | 429.6 | New fit |
+| Logistic/s7 | 0.01 | 0.00 | 429.7 | New fit |
+| Logistic/s8 | 0.01 | 0.00 | 429.9 | New fit |
 
 Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis and all three prespecified seeds are required for the confirmation claim.
 

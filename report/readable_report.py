@@ -286,6 +286,14 @@ def episodic_pairs(tasks):
     return sorted(pairs,key=lambda group:group['kv']['args']['fit'])
 
 
+def count_reference_bpc(fit):
+    """Best frozen Kneser-Ney reference on the shared 8,191-target development window (THEORY §376)."""
+    rows=[row for path in sorted((RES/'count_reference').glob('*.json'))
+          for row in json.loads(path.read_text()).get('rows',[])
+          if row['fit']==fit and row['method']=='kn' and not row['adaptive']]
+    return min((row['bpc'] for row in rows),default=None)
+
+
 def aws_e64_reference(model, data_size):
     """Read completed AWS reference evidence, including its cost and source path."""
     for provenance_path in sorted((RES / "aws_20260929").glob("*/provenance.json")):
@@ -1318,7 +1326,10 @@ def blocks(M, tasks, ev):
          +(f"<b>{stage_bpc:.3f} bpc at 131K</b> " if stage_bpc is not None else "")+
          (f"and <b>{data_bpc:.3f} at 1M fitting characters</b>, four passes. " if data_bpc is not None else "fitting characters. ")+
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
-         "Embeddings, temporal state and vector maps learn."]),
+         "Embeddings, temporal state and vector maps learn."
+         +(f" Calibration: closed-form Kneser–Ney counts of the same fitting data score {count_reference_bpc(131072):.3f} / "
+           f"{count_reference_bpc(1048576):.3f} bpc on the same targets, so these fits do not yet surpass counting statistics "
+           "(Theory §376)." if count_reference_bpc(131072) is not None and count_reference_bpc(1048576) is not None else "")]),
         ("figure",("accomplishments",174)),
         ("small","Left: means and recorded ranges, five event runs and two Transformer runs; "
          "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
@@ -2023,6 +2034,13 @@ def blocks(M, tasks, ev):
              'questions. Equal passes and data do not imply equal compute. The pipeline checks finite '
              'learning, trained value blocks, complete work and source provenance before promotion. '
              'A development gain is not an official-test or frontier claim.'),
+            *([('p',"Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated "
+              f"Kneser–Ney counts of the same fitting characters score {count_reference_bpc(131072):.3f} bpc at 131K and "
+              f"{count_reference_bpc(1048576):.3f} at 1M, with one counting pass and no gradient work. Every completed "
+              'fit from 2K to 1M characters is above this bar. Small-N character modelling is limited by estimation; '
+              'fixed learned gates under truncated credit cannot be consistent per-address estimators, which motivates '
+              'count-carrying receivers with escape races and a learned base measure. Counts are reference '
+              'predictors, not neural controls or a large-data comparison.')] if count_reference_bpc(1048576) is not None else []),
             ('small','Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. '
              'Special functions, evaluation passes and physical traffic are separate from the arithmetic '
              'ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.')]

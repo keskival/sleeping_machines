@@ -1,5 +1,23 @@
 # Local host: current research continuation
 
+## Count calibration and sufficient-statistic theory (host curie), 2 October, 01:20 UTC
+
+Guarded queue `curie_count_reference_language_20261002T012000Z` scored closed-form
+count references on the exact shared language protocol (fit text8[0:N], 8,191
+development targets, hash 65efabd8ceea). Frozen Kneser–Ney: 3.615 / 3.081 /
+2.704 / 2.349 / 2.007 bpc at 2K / 8K / 32K / 131K / 1M; every completed fitted
+model is .107–.402 bpc worse at the same N (native8K 3.557). Counting over the
+development stream alone, with no fit data, gives 2.884. Theory note 58
+(§§376–380) explains why: fixed learned gates under truncated credit cannot
+be consistent per-address estimators. It derives escape-race cascades and
+responsibility-gated learned base measures, and proposes **count-carrying
+receivers**: native model + occupancy-gated addressed counts + escape races,
+with the native predictive as base measure. Gate: beat both KN stream-adaptive
+(2.699 at 8K) and native-alone by ≥.02 bpc at 2K/8K before any scale-up.
+Contracts are specified; no model source changed, no trainer launched. All
+future language tables should carry the KN reference row. curie has no text8
+by default: it was downloaded to the ignored data/text8.
+
 ## Validated native strengths, live AWS follow-through, 2 October, 01:12 UTC
 
 All11 split-event pilots validate source hashes, finite metrics and complete

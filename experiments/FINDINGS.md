@@ -1,5 +1,20 @@
 # Findings log
 
+## Count references calibrate the language protocol — 2 October
+
+On the shared development window (8,191 targets), closed-form interpolated
+Kneser–Ney counts of the same fitting characters score **3.615 / 3.081 / 2.704 /
+2.349 / 2.007 bpc** at 2K / 8K / 32K / 131K / 1M. The best completed fitted models
+score 3.722 / 3.311 / 3.106 / 2.572 / 2.210, so none yet surpasses closed-form
+statistics of its own fitting data. A fixed counting rule run only over the
+development stream scores 2.884, which is better than any fit up to 32K. This is
+deterministic, with a dev-selected order (flat near its optimum). It is a
+reference, not a neural control or a large-data comparison. **Learned:**
+small-N results are limited by estimation, and the persistent state does not act
+as a sufficient statistic. Theory §§376–380 derive the cause and the
+count-carrying receiver test. Source:
+`experiments/results/count_reference/curie_count_reference_language_20261002T012000Z.json`.
+
 ## Frozen head checkpoint diagnosis and retained information paths
 
 A guarded no-update audit of selected H2/H4 8K checkpoints scored256 development

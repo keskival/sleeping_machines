@@ -5,6 +5,8 @@ numerically (table at the end) before later experiments rely on it.
 
 ## Synthesis: the principles so far (read this first)
 
+**Calibration first (2 Oct, §§376–380):** [sufficient-statistic state, escape races and count references](theory/58_sufficient_statistic_state_and_count_references.md). Closed-form Kneser–Ney counts beat every completed fitted language model on the shared protocol at 2K–1M fitting characters, and counting over the development stream alone scores 2.884 bpc. It proves fixed learned gates cannot be consistent per-address estimators, shows hierarchical backoff is an exact cascade of escape races, derives responsibility-gated credit for a learned base measure, and proposes count-carrying receivers.
+
 Latest empirical design update: [what the completed October 1 results change](theory/RESULTS_DESIGN_UPDATE_20261001.md).
 It connects depth, native language quality/work, temporal function contracts
 and training-memory exposure to the next matched comparisons.
@@ -167,3 +169,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - [Full-state and joint-clock credit](theory/57_full_state_and_joint_clock_credit.md) — §§373–375: factorial delivery/write diagnosis; joint likelihood credit through downstream timing jumps; exact local-score residual correction and its conditional-independence/resource requirements. No frozen teacher is changed.
 
 - [Reusable rules and private predictive state](theory/58_reusable_rules_and_private_predictive_state.md) — §§376–378: exact paired-timing information ceiling, two-state generator receptor, qualified shared-rule estimation/exposure law, private-state resource boundaries, and invariant-memory versus useful-time decomposition. Motivated by completed native mechanism gains; no frozen model is changed.
+
+- [Sufficient-statistic state and count references](theory/58_sufficient_statistic_state_and_count_references.md) — §§376–380: count references on the shared protocol, count-gated writes as exact Dirichlet posteriors, inconsistency of fixed gates, hierarchical backoff as escape-race cascades, responsibility-gated learned base measure, and the count-carrying receiver test.

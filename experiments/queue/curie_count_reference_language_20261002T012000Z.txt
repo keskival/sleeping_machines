@@ -1,0 +1,3 @@
+# Closed-form count references on the native language protocol (fit text8[0:N], dev text8[90M:+8192]).
+# Host curie (CPU-only, 31 GiB, ~11 GiB available). Not a neural training job; reference predictors only.
+curie_count_reference_language_20261002T012000Z experiments/count_reference_language.py --out experiments/results/count_reference/curie_count_reference_language_20261002T012000Z.json

@@ -1,0 +1,2 @@
+# Rebuild report with count-reference calibration (Theory 376-380).
+curie_report_count_reference_20261002T014000Z report/make_pdf.py
