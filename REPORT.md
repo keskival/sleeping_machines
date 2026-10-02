@@ -2975,3 +2975,13 @@ learning-only detached critic inputs; inference unchanged.32 critic train/
 32 holdout,100 fixed updates. This is a negative bounded variance screen,
 not a model-quality result. Replay lanes5120 and critic updates200 retained;
 full diagnostic FLOPs unknown. Previous norm-only evidence preserved.
+
+## AWS critic calibration: actual parameter variance also fails
+
+Training-only shrinkage yields k2/plaink4 conditional score-MSE2.149378/2.493344
+(seeds7/8). Actual shared-parameter variance, including cross-site covariance,
+is2.383887/2.189517 on seed7 heldout FIT indices32/33 and37.462736/1.674462
+on seed8. Every nomination fails. Exhaustive finite-population and cached
+factual-probability contracts pass. No new model/critic optimization or quality
+claim;160new VJPs paid, FLOPs unknown. Prior failures remain. Full record:
+experiments/AWS_REPLAY_CALIBRATION_FINDINGS_20261002.md.

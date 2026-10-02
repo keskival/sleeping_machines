@@ -1884,3 +1884,16 @@ scheduler. The predeclared1ms one-site proposal failed; no unchanged local
 learning smoke is admitted. Next reception investigation should measure useful
 candidate-arrival support and matching observed-information controls before
 choosing another site/width, with those choices prespecified on FIT, not DEV.
+
+## AWS calibration and shared-parameter variance complete — 2 October
+
+Frozen training-only critic scale .691189/1 gives heldoutk2/plaink4 score-MSE
+2.149378/2.493344, BOTHFAIL. Actual shared-parameter route variance includes
+cross-site covariance and fails all4 prespecified examples (2.383887,2.189517,
+37.462736,1.674462). Cached factual probabilities reproduce bitwise; exhaustive
+finite-population contract passes.160new VJPs paid, no new encoder/criticfit,
+no quality/test evaluation. See AWS_REPLAY_CALIBRATION_FINDINGS_20261002.md.
+Stop unchanged critic reduction; other host owns prioritized integrated replay
+quality. Next AWS independent direction is already frozen compact33prototype
+LOCAL native context head with mandatory raw4/raw20 controls, actual array
+exports, query-only inference contracts. No sparse RBF or whole-fit claim.
