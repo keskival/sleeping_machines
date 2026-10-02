@@ -633,3 +633,20 @@ keys and temperature is exact at every read, even after chunk detachment. Stalen
 *assignment*: counts at address a were written under older keys and queries. Restarting counts at every
 fitting pass bounds that drift to one pass. Measure it as the pooled-level loss gap between end-of-pass counts
 and a frozen re-assignment replay of the same pass, before scaling M or the data.
+
+**§392 first result: dead-receiver deadlock, not a test of pooling (2 October, 11:50 UTC).** Pooled minimal 8K
+(M = 256, argmax writes) scores 2.5878, identical to gate-only minimal (2.5878), at 6.0 versus 0.29 whole-fit
+GFLOPs. The frozen router audit (results/diagnostics/curie_statistic_race_router_audit_20261002T115500Z.json)
+finds π ≈ uniform: mean entropy 5.529 nats (uniform 5.545), mean max share .0074 (1/M = .0039), and the
+same argmax receiver at all 1,024 audited positions. Two receivers were ever written.
+
+The mechanism is self-reinforcing. A flat untrained router sends every argmax write to one receiver, the
+other M − 1 stay empty and deliver exactly q, and with identical candidates the delivery gradient
+`Σ_a ∇π_a (p_a(y) − p̄(y))` vanishes, so the router never learns. This is the dead-unit failure of hard
+k-means/EM. P392a/b are therefore untested, not falsified; the shallow and full runs were withdrawn as
+uninformative.
+
+Repair: sampled race writes (the substrate's actual race; rates π, a generator seeded by event index), so
+early writes spread in proportion to π. Receivers then differ, the delivery gradient becomes nonzero, and
+the router can specialize (soft-to-hard EM). Use M = 64 at 8K: about 128 counts per receiver instead of 32,
+and a quarter of the lookup work. Same predictions and controls.

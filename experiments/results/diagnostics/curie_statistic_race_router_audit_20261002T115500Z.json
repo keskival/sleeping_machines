@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "result": "experiments/results/count_carrying_language/curie_count_carrying_D8192_K4_gate_pool256_minimal_p2_d1_s6_20261002T114500Z.json",
+  "positions": 1024,
+  "addresses": 256,
+  "entropy_nats_mean": 5.529189525196788,
+  "uniform_entropy_nats": 5.545177444479562,
+  "effective_receivers_mean": 251.93977115227958,
+  "max_share_mean": 0.0073619467952994455,
+  "argmax_distinct": 1,
+  "argmax_top5_share": 1.0,
+  "seed_occupied_receivers": 2,
+  "temperature": 0.9902016520500183,
+  "key_query_gain_norm_mean": 0.5057241320610046,
+  "key_query_gain_norm_max": 1.2190765142440796,
+  "wall_s": 1.9596111640057643,
+  "max_rss_kb": 255452,
+  "scope": "Frozen read-only router audit; development positions from saved fit-pass counts; no optimizer."
+}
