@@ -1021,3 +1021,27 @@ fitting work. That is charged, and it scales with the sampled races, not with al
 Prediction (P402): local-expectation credit beats the counterfactual-surrogate baseline at equal passes and
 narrows the depth-4 gap, with route credit faithful by construction on the sampled races. If it fails at matched
 work, the bottleneck is not route credit.
+
+## 403. Scaling counterfactual credit: learned critics as control variates, synthetic gradients for truncation
+
+**Route credit at scale (user proposal; RUDDER, Arjona-Medina et al. 2019; COMA's critic, Foerster et al. 2018;
+REBAR/RELAX control variates).** §402 costs P forward replays per sampled race. Train a small local critic
+Q_φ(r, i) ≈ L_r(i), predicting the counterfactual episode loss of alternative i at race r from local features (the
+unit's state, its proposed value and memory, the scores, the query). Regress it on the exact targets the sampled
+common-random-number replays already produce. Use it as a control variate:
+
+    ĝ = Σ_{all r} Σ_i ∇π_{r,i} Q_φ(r, i)  +  (R/k) Σ_{sampled r} Σ_i ∇π_{r,i} (L_r(i) − Q_φ(r, i)).
+
+The expectation of the second term over the sampled races cancels the critic's bias exactly, so ĝ is **unbiased
+for any critic**. Its variance falls as Q_φ approaches L, letting k (replays) shrink while every race still receives
+credit. The cost is one small critic evaluation per race plus k·P replays. Critic training and replays are charged
+as fitting work.
+
+**Truncation (Decoupled Neural Interfaces; Jaderberg et al. 2017).** Credit is truncated at chunk boundaries
+(16-event windows; the 16- and 64-event gradients differ by 31% in norm, §390). A small synthetic-gradient model
+predicts ∂L_future/∂(carried memory, context) at the boundary and is trained on the true gradients available
+within longer windows. Unlike the control variate, it is biased unless accurate. It needs a fidelity contract
+(cosine with the true long-window gradient) before use.
+
+**Order.** Only after P402 shows that exact replay credit improves training: (1) the critic as a control variate,
+measuring quality against k at fixed passes; (2) synthetic gradients for truncation as a separate, contract-gated test.
