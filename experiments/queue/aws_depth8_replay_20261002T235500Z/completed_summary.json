@@ -1,0 +1,103 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_depth8_replay_contracts_20261002T235000Z",
+      "result": "experiments/results/diagnostics/aws_depth8_replay_contracts_20261002T235000Z.json",
+      "reused": true,
+      "max_rss_kb": 502216,
+      "wall_s": 108.60711993300356
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_factorized_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_factorized_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 466084,
+      "wall_s": 11.693108963954728
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_teacher_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_teacher_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 462180,
+      "wall_s": 10.946679984976072
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_replay_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_replay_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 499592,
+      "wall_s": 19.783371120982338
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_teacher_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_teacher_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 459784,
+      "wall_s": 10.36867205001181
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_factorized_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_factorized_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 463800,
+      "wall_s": 11.170247500995174
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_replay_smoke_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_replay_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 496908,
+      "wall_s": 18.951717250980437
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_factorized_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_factorized_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 469564,
+      "wall_s": 22.074302314955276
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_teacher_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_teacher_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 463648,
+      "wall_s": 38.97182044602232
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_private_replay_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_private_replay_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 508824,
+      "wall_s": 48.22327456896892
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_factorized_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_factorized_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 467396,
+      "wall_s": 20.397412092948798
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_teacher_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_teacher_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 461836,
+      "wall_s": 38.31021362502361
+    },
+    {
+      "tag": "aws_depth8_replay_20261002T235500Z_depth_replay_pilot_s7",
+      "result": "experiments/results/dvs_native/aws_depth8_replay_20261002T235500Z_depth_replay_pilot_s7.json",
+      "reused": false,
+      "max_rss_kb": 506188,
+      "wall_s": 47.089295351994224
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T23:39:15.777094+00:00",
+  "active_jobs": [
+    "aws_depth8_replay_20261002T235500Z_depth_replay_pilot_s7"
+  ],
+  "max_parallel_jobs": 3
+}
