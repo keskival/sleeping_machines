@@ -51,3 +51,11 @@ def test_kv_model_runs_on_the_stream():
     m = L.ParallelHeadRaceLanguageModel(4, 2, 2, matching=2, recent=2, heads=2)
     s = L.score(m, torch.tensor(toks), mask, 16)
     assert np.isfinite(s['target_bpc'])
+
+
+def test_tapped_model_runs_on_the_stream():
+    from sleeping_machines.dilated_delay_taps import TappedNativeStreamLanguageModel
+    toks, mask = L.make_stream('lag', 200, 8, 6)
+    torch.manual_seed(0)
+    s = L.score(TappedNativeStreamLanguageModel(4, 3, 2, 2), torch.tensor(toks), mask, 16)
+    assert np.isfinite(s['target_bpc'])

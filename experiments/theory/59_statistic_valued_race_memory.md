@@ -519,3 +519,33 @@ race retrieval is restored to the integrated native receiver as a nested option.
 units, races and counterfactual credit, adds KV candidate scoring, value-delivery and teacher work
 (charged), and is tested against the minimal-core count composition on text at ≥ 1M characters. If the
 KV arm also fails, credit through retrieval (variance, reach) is the next diagnosis, not a dense substitute.
+
+## 391. Dilated delay taps: WaveNet's receptive field as literal event delay
+
+**Failure addressed.** §390 obstacle 2: in the native core a dependency k events back crosses about
+depth·k nonlinear layers through the per-event context path. Credit and signal both decay along it.
+
+**Construction.** At layer d the channel mix also reads that layer's own input from τ_d events earlier:
+`mixed_d(t) = W_d x_d(t) + U_d x_d(t − τ_d)`, with `τ_d = softplus(r_d)` initialized to 2^d and read by
+linear interpolation between buffered events, so τ_d learns. With depth L, a dependency up to 2^L − 1
+events back is reachable through at most L taps (binary decomposition of the lag), as in WaveNet's dilated
+causal convolutions (van den Oord et al. 2016). Here the dilation is a learned delay in event time, not a
+fixed index offset, and it runs in the asynchronous stream.
+
+**Retained / added / removed.** Races, addressed units, persistent rotating memories, counterfactual route
+credit and the context path are all retained; nothing is removed. Added: one d×d product per layer per event,
+and a bounded buffer of recent layer inputs (capacity 2^L + 2 vectors per layer; 258 × 32 floats per layer at
+depth 8). Inference work stays O(L) per event, independent of history length. `U_d = 0` at
+initialization, so the model equals the native core exactly (contract-tested, bitwise).
+
+**Limits.** Taps are position-addressed. They cover lag, periodic and hierarchical timing, not content
+recall at arbitrary distance (induction), which needs race retrieval (§390.3). Credit through a tap reaches
+only events inside the current credit chunk, because buffered entries are detached at chunk boundaries. The
+benefit therefore needs a 64-event chunk, or sparse forward credit (§390), for lags beyond 16.
+
+**Predictions.** (P391a) Tapped lag-48 at 64-event credit improves target bpc by ≥ 1 bit over the native
+core at the same credit. (P391b) At 16-event credit the gain is < .3 bits: there is no credit across the
+boundary. (P391c) Taps do not solve induction-64 (within .3 bits of the native core). If P391a holds and
+P390d (KV solves induction) holds, the integrated receiver combines taps and race retrieval. Next tests are
+then text at ≥ 1M characters against the minimal-core count composition, and sparse forward credit to remove
+the chunk limit.
