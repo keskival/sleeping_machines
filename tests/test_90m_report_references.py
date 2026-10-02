@@ -12,7 +12,7 @@ spec.loader.exec_module(report)
 class ReferenceTextTests(unittest.TestCase):
     def render(self, lstm=None, transformer=None):
         return report.language_90m_reference_text(
-            {'e79': {90_000_000: 1.504}, 'lstm90': lstm, 'tf90': transformer})
+            {'lstm90': lstm, 'tf90': transformer})
 
     def test_pending_controls_do_not_claim_completed_scores(self):
         text = self.render()

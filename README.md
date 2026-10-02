@@ -44,7 +44,7 @@ single-seed synthetic development results; independent confirmation and strong
 time-aware controls are required for broader superiority claims.
 The [next AWS battery](experiments/AWS_NEXT_BATCH.md) fixes those replication
 tests before new holdout scores are read. The
-[theory update](experiments/theory/58_reusable_rules_and_private_predictive_state.md)
+[theory update](experiments/theory/61_reusable_rules_and_private_predictive_state.md)
 separates shared learning, private information and task-sensitive time.
 
 The completed full-core reception comparison tested **content-dependent temporal reception**:
@@ -96,11 +96,13 @@ quality; it is a near-quality resource tradeoff, not established language suprem
 The report retains those distinctions and the negative depth/residual findings.
 
 The [first cross-domain screen](experiments/FIRST_SCREEN_FINDINGS_20261001.md)
-finds a promising **95.3% versus 93.0% banknote accuracy / 33% lower log loss**
-for ours versus the boosted-tree screen (128 development rows, one seed).
-Wine currently favors trees, and extra reception has not earned its cost.
-The [banknote confirmation protocol](experiments/AWS_BANKNOTE_CONFIRMATION.md)
-adds repeated seeds, stronger controls and frozen reserved-test scoring.
+showed 95.3% versus 93.0% banknote development accuracy for ours and boosted trees.
+The [reserved-test confirmation](experiments/AWS_BANKNOTE_CONFIRMATION.md)
+now gives **91.8% versus 94.0% mean accuracy across three seeds**: competitive
+accuracy, **no confirmed advantage**. Logistic regression reaches 94.7% and
+substantially better log loss (0.091 versus ours 0.235). Accuracy intervals
+include zero difference but do not establish equivalence. The last CatBoost
+seed remains pending. Wine favors trees; extra reception has not earned its cost.
 The [admitted next AWS battery](experiments/AWS_SPLIT_EVENT_BATTERY.md) tests
 protected memory, shared rules/private state and identifiable elapsed time.
 The [advantage battery](experiments/ADVANTAGE_BATTERY.md) defines promotion,

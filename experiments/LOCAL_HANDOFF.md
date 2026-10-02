@@ -256,3 +256,42 @@ for trainable windows/trains are proved/tested, not a fitted full-model claim.
 Robotics adapters remain pending; the task is supervised asynchronous streams,
 not RL. Core gaps: observed fixed addresses, forced activity, local surrogate
 loser credit, bounded ordinary credit and no validated physical clockless ASIC.
+
+## Review and publication, 2 October, 02:05 UTC
+
+User requests removal of target-leakage results so they cannot be reused. Ten
+E63/E79/raw word-keyed result/provenance files are moved outside the active
+results tree to `archive/invalid_protocol/target_leakage_20261002`, with original
+paths, hashes and a manifest marking them ineligible. Historical reports and
+withdrawn numerical findings are quarantined too. Report reader rejects stale
+E63/E79 paths; old benchmark entry points and legacy report generation refuse
+execution. Eight publication/quarantine regressions pass. Current PDF contains
+none of the withdrawn mixture scores. Causal E173/E174 evidence remains valid.
+
+Banknote:11/12 final cells; ours/tree/logistic each complete seeds6/7/8, last
+CatBoost pending. Three-seed means: ours91.81%/NLL.2353, trees93.95%/.2065,
+logistic94.66%/.0906. Competitive accuracy, no confirmed advantage; descriptive
+accuracy intervals include zero but do not establish equivalence. Partial
+paired analysis JSON records source hashes and98.33% NLL intervals. Original
+development signal remains beside this revision in the appendix. Opening
+figure now shows reserved-test means/seed points, not just the dev lead.
+PDF rebuilt:78pages, no short orphan pages or off-page text. Repaired causal
+10M count/copy comparison is now prominent alongside the native work tradeoff.
+
+Other-host count-reference analysis is incorporated. Fixed-gate inconsistency
+is not a theorem about every learned recurrent gate. Corrected pre-increment
+count-update denominator n+1+Aα. Predictive responsibility bounds apply to
+logit gradients/current prediction; state advance/future credit and parameter
+Jacobians remain needed before claiming executed skip savings. Statistic
+write formula is exact for one future visit under supplied q. Memorization-tax
+numbers are conditional scenarios, not a dense-model lower bound. These review
+corrections preserve measured positive gaps and frozen models. Root rule/state
+note now uses named RS1–RS3 to avoid live global-number collisions.
+
+Local native timing pilot remains guarded, single trainer, at epoch5 of8;
+interim results are excluded. Original coordinator/guard/trainers and sources
+are unchanged. Addressed-state write-credit implementation is separate and
+uncommitted pending its own full contracts/accounting/small fit. AWS now has a
+reserved fresh native confirmation supervisor after its event replication;
+do not duplicate that chain. Curie has a separate count-carrying smoke and2K
+pilot; avoid duplicate variants. No new local optimizer work ran beside trainer.

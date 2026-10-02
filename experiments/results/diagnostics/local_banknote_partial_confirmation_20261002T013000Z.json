@@ -1,0 +1,115 @@
+{
+  "status": "completed",
+  "kind": "partial_confirmation_analysis",
+  "completed_final_cells": 11,
+  "expected_final_cells": 12,
+  "comparisons": {
+    "trees": {
+      "mean_control_minus_ours_nll": -0.028714704376185566,
+      "mean_ours_minus_control_accuracy": -0.021352313167259787,
+      "nll_interval": [
+        -0.17375228768861942,
+        0.1277165537376651
+      ],
+      "nll_interval_level": 0.9833333333333333,
+      "accuracy_descriptive_95_interval": [
+        -0.06901307929321511,
+        0.02430767276422765
+      ],
+      "paired_nll_by_seed": [
+        0.06394922751956668,
+        -0.04281341271650823,
+        -0.10727992793161517
+      ],
+      "paired_accuracy_by_seed": [
+        0.0035587188612099642,
+        -0.03202846975088968,
+        -0.03558718861209965
+      ],
+      "seeds": 3,
+      "test_rows": 281,
+      "independent_feature_groups": 270,
+      "bootstrap_draws": 4000,
+      "scope": "Crossed seed/group bootstrap on one fixed data split; approximate uncertainty with only three seeds. NLL intervals use Bonferroni for three control comparisons; accuracy intervals are descriptive. No ensemble, test-time model selection or independent-data-split replication."
+    },
+    "logistic": {
+      "mean_control_minus_ours_nll": -0.1446532247201941,
+      "mean_ours_minus_control_accuracy": -0.028469750889679714,
+      "nll_interval": [
+        -0.266013500416261,
+        -0.03377542388094601
+      ],
+      "nll_interval_level": 0.9833333333333333,
+      "accuracy_descriptive_95_interval": [
+        -0.07913817881864721,
+        0.02161547212741752
+      ],
+      "paired_nll_by_seed": [
+        -0.05198929282444184,
+        -0.15875193306051677,
+        -0.2232184482756237
+      ],
+      "paired_accuracy_by_seed": [
+        -0.0035587188612099642,
+        -0.03914590747330961,
+        -0.042704626334519574
+      ],
+      "seeds": 3,
+      "test_rows": 281,
+      "independent_feature_groups": 270,
+      "bootstrap_draws": 4000,
+      "scope": "Crossed seed/group bootstrap on one fixed data split; approximate uncertainty with only three seeds. NLL intervals use Bonferroni for three control comparisons; accuracy intervals are descriptive. No ensemble, test-time model selection or independent-data-split replication."
+    }
+  },
+  "families": {
+    "ours": {
+      "seeds": [
+        6,
+        7,
+        8
+      ],
+      "mean_accuracy": 0.9181494661921707,
+      "mean_nll": 0.23525723814964294
+    },
+    "trees": {
+      "seeds": [
+        6,
+        7,
+        8
+      ],
+      "mean_accuracy": 0.9395017793594306,
+      "mean_nll": 0.20654253499041653
+    },
+    "catboost": {
+      "seeds": [
+        6,
+        7
+      ],
+      "mean_accuracy": 0.9466192170818506,
+      "mean_nll": 0.11424783891151302
+    },
+    "logistic": {
+      "seeds": [
+        6,
+        7,
+        8
+      ],
+      "mean_accuracy": 0.9466192170818505,
+      "mean_nll": 0.0906040146946907
+    }
+  },
+  "result_sha256": {
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_ours_s6_pilot.json": "68777f677024b75cc8588aebb99af45d65ee5c3b62bcb6634c37d7f89f36a740",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_ours_s7_pilot.json": "c1455952dee194d0ccaf19c212003423d94e87f0bed83532ac7b393fdade7bdc",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_ours_s8_pilot.json": "0cad3d356e848b3fb10f156c4812da42b3e773879075b6f0e26b32d9502fdb4e",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_trees_s6_pilot.json": "0c65b1931cba600a86907c5c1f7775d532185bd9f0964bae024af594c8e098cb",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_trees_s7_pilot.json": "59e8dbf35e0d2175318d42b0c02de5a8ec5fa344305c92bb1066a0d6d054e0da",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_trees_s8_pilot.json": "178155cc774f05cd93c3c76d55433c667a2567be4b80b01501b4fcb9d41bc970",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_catboost_s6_pilot.json": "90ee3ac11c35c39c54892ddda8cd2713d5c3cb7857822875e7be3088d980a1df",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_catboost_s7_pilot.json": "f39fca3bde1fde2f814aec857124a5b3c8a7daa444901427f35b6f9f55d9a05a",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_logistic_s6_pilot.json": "73764e3ff9e4d38d3e2945049391a95677e9ab2a5ca134f0463e6a9efae451a4",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_logistic_s7_pilot.json": "5875acdd5fc9228a8b224ec354a3bcc418fb9c22187310dc64d0507593852124",
+    "experiments/results/tabular_confirmation/aws_banknote_confirmation_20261001T234000Z_logistic_s8_pilot.json": "99625afd905778bc46dc8a63e3804e8144287074b443b3d5d2aba30061800348"
+  },
+  "scope": "Prespecified three-seed comparisons against two completed controls; CatBoost seed8 is pending. No completed all-control gate or model selection. Original screening result is retained with revised interpretation."
+}

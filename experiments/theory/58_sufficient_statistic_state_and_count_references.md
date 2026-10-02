@@ -1,6 +1,6 @@
 # Sufficient-statistic state, escape races and count references
 
-[Theory index](../THEORY.md) · Global sections 376–380. Written 2026-10-02 on host `curie`.
+[Theory index](../THEORY.md) · Global sections 376–381. Written 2026-10-02 on host `curie`.
 
 This note starts from a measurement that changes how every completed language
 result in this repository should be read. Then it derives why it happens and
@@ -63,7 +63,7 @@ Take one persistent address `a` (a context, receiver or stream key) that
 receives symbol events `y ∈ {1..A}`. Its state is a predictive distribution
 `s_a` and an occupancy counter `n_a`.
 
-**Proposition 377.1 (count-gated write).** With `s_a ← s_a + (e_y − s_a)/(n_a + αA)`
+**Proposition 377.1 (count-gated write).** With `s_a ← s_a + (e_y − s_a)/(n_a + 1 + αA)`
 followed by `n_a ← n_a + 1`, starting from `s_a = 1/A` and `n_a = 0`, `s_a`
 equals the Dirichlet(α) posterior predictive `(c_a + α)/(n_a + αA)` after every
 event.
@@ -73,11 +73,11 @@ event.
 
 This is the core substrate operation: a small message `e_y` mixed into
 persistent memory through a gate, touching only the addressed state. The gate is
-not free, though. It must be `1/(n_a + αA)`, a function of an **occupancy
+not free, though. It must be `1/(n_a + 1 + αA)`, a function of an **occupancy
 statistic** that the state has to carry.
 
 **Proposition 377.2 (a fixed gate is inconsistent).** Let `s ← (1−g)s + g e_y` with
-fixed `g` on a stationary source `q`. Then `E s → q` and `Var s_c → g q_c(1−q_c)/(2−g)`.
+fixed `0 < g < 1` on an iid stationary source `q`. Then `E s → q` and `Var s_c → g q_c(1−q_c)/(2−g)`.
 For symbols with `q_c ≫ g`, the expected excess log-loss per visit tends to the
 constant `≈ g(A_eff − 1)/(2(2−g))` nats. The count-gated estimator's excess is
 `≈ (A_eff − 1)/(2n)`, so its cumulative regret is `((A_eff−1)/2) log n`, against
@@ -164,11 +164,15 @@ test in `tests/test_count_reference_language.py`.)
 
 **Corollary 379.2 (bounded sparse learning and inference).**
 (a) Skipping backward work for events with `r_y < ε` changes each
-example's gradient by at most `ε‖e_y − q‖₂ ≤ ε√2`.
+example's **logit** gradient by at most `ε‖e_y − q‖₂ ≤ ε√2`.
+For parameters θ this becomes `ε√2‖∂z/∂θ‖_op`; the logit bound alone
+does not bound the parameter update or accumulated sequence gradient.
 (b) Skipping the learned forward pass entirely, by replacing `q` with any
 fallback, changes the prediction by at most `e_h` in total variation.
-The learned model's work is therefore needed only where the tables lack
-evidence.
+These bounds concern one predictive distribution at fixed state. A recurrent
+base may still need to process this event and receive future adjoints even
+when its current predictive contribution is small. Skipping the whole
+transition requires a separately proved state/credit contract.
 
 **Measured on the shared development stream** (KN tables, top-level
 responsibilities, with lower-order counts standing in for `q`; a learned `q`
@@ -199,12 +203,14 @@ through `K` and that gate.
 ## 380. What this changes, and the integrated test it calls for
 
 **Diagnosis.** The persistent state of the integrated and native models is
-updated by learned gates under truncated credit. By §377 it cannot become a
-consistent per-address estimator, and the 2.884 bpc dev-only counting result
-measures how much stream information it leaves unused. Small-N language
-results in this repository have been limited by *estimation*, and no tested
-mechanism variant (heads, repeated arrivals, write credit, reception clocks)
-addresses estimation. This is consistent with each of those variants missing
+updated by learned gates under bounded credit. Section377 proves inconsistency
+for a **fixed-gate iid estimator**, not for every learned recurrent gate: a
+learned state can encode occupancy implicitly. The2.884bpc dev-only counting
+result shows useful stream statistics that the completed fits do not exploit
+as well. Missing reliable accumulation is therefore a concrete estimation
+hypothesis, alongside optimization, credit and representation limits. The
+completed mechanism variants (heads, repeated arrivals, write credit, reception
+clocks) did not explicitly enforce the count-estimation identity. This is consistent with each of those variants missing
 its .02 bpc gate.
 
 **Proposed integrated model: count-carrying receivers.** The concrete failure
@@ -248,11 +254,13 @@ to strong Transformers (≈1.1 at 90M) has three parts:
    retrieval).
 
 A credible advantage claim for this substrate has to win parts 2 and 3 at
-lower total work while keeping part 1 exact and cheap. Section 379 shows the
-composition makes the learned component's work shrink with data. That is the
+lower total work while keeping part 1 exact and cheap. Section379 derives shrinking immediate predictive responsibility; turning
+that into shrinking executed learning work remains a state/credit hypothesis. That is the
 specific, testable route by which sparse addressed temporal state could beat
-dense models on quality per unit of training work. Dense models must spend
-parameter-wide updates to memorize what counters store for free. Every
+dense models on quality per unit of training work. Dense models typically train shared parameter maps to represent frequent
+contexts; counters instead pay integer writes, lookup and table storage.
+This is an alternative resource boundary, not free work or a dense-model
+lower bound. Every
 language comparison table should carry the KN reference row from now on.
 
 ## 381. Large-data calibration: the dense controls sit at count level
@@ -269,12 +277,15 @@ result. Its queue file records why.
 
 All rows below score the same 999,999 test targets, in bits per character.
 
-| Fit chars | mKN counts, order 7 | E79 race mixer of count/copy experts (frozen / online) | AWS LSTM | AWS Transformer |
-|---:|---:|---:|---:|---:|
-| 10M | **1.788** | **1.613** / 1.593 | 1.799 | 1.908 |
-| 90M | 1.653 | **1.504** / 1.483 | 1.661 | 1.604 |
+| Fit chars | mKN counts, order7 | AWS LSTM | AWS Transformer |
+|---:|---:|---:|---:|
+|10M|1.788|1.799|1.908|
+|90M|1.653|1.661|1.604|
 
-E79 uses its 256-character copy window, and the online column is prequential.
+The target-dependent historical E79 mixtures are quarantined and excluded
+from this comparison. Corrected E173 at10M scores1.727 without word context
+and1.719 with a causal word key. Corrected90M comparison is open.
+
 The controls are a 1.2M-parameter LSTM and a 3.2M-parameter, four-layer
 Transformer, each one seed. The count order is not tuned on test: order 7 is
 the largest order built, and the curve is still falling at 90M.
@@ -287,13 +298,12 @@ the largest order built, and the curve is still falling at 90M.
    the standard text8 test split (Transformer-XL 1.08; Dai et al. 2019). The
    E64 segment is the first million characters of that split, so the numbers
    are approximately, not exactly, comparable.
-2. Our strongest language result remains E79 (§108(e)): addressed
-   sufficient-statistic experts mixed by a race with exact local log-loss
-   credit. It is 0.100 bpc better than the 90M Transformer control and 0.149
-   better than mKN. Sections 376–380 explain why this line works and the
-   gradient-only persistent state does not. E79 lacks learned representations
-   (§382), so the remaining gap to frontier quality, roughly 1.50 → 1.1 bpc, is
-   the generalization and retrieval gap of §380's supremacy map.
+2. The historical E79 route is motivation, not valid90M evidence. Its
+   causally corrected10M successor E173 preserves a positive count/copy
+   mixture comparison against saved controls. Counts are therefore a useful
+   information path to retain, but the magnitude of a90M mixture advantage
+   must be measured under the repaired protocol. Generalization and retrieval
+   remain the missing learned contributions.
 3. **Learning sparsity grows with data.** Mean top-level responsibility of the
    next-coarser predictive on the shared development window, at the
    count-optimal or largest order: .75 (8K) → .51 (131K) → .39 (1M, mKN) →
@@ -308,3 +318,10 @@ not sufficient evidence of an architectural advantage. Language claims should
 be stated against three bars: closed-form counts (now measured at every
 `N`), the AWS controls, and published frontier values marked as
 non-matched references.
+
+
+**Review correction, 2 October.** The count-write denominator above now uses
+the pre-increment occupancy plus one, consistent with its original induction
+proof. Fixed-gate inconsistency and predictive skip bounds have been narrowed
+to their actual assumptions; none invalidates the measured count-reference
+gaps. These corrections do not change frozen drivers or completed scores.

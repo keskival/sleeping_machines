@@ -1,11 +1,11 @@
 # Reusable rules and private predictive state
 
-Global §§376–378. Completed screen evidence is in
+Named sections RS1–RS3 (kept outside the live global sequence to avoid cross-host collisions). Completed screen evidence is in
 [SPLIT_SCREEN_FINDINGS_20261002.md](../SPLIT_SCREEN_FINDINGS_20261002.md).
 This note explains the observed mechanism contrasts and their limits. It does
 not revise frozen forward mechanisms or assert asymptotic supremacy.
 
-## 376. Timing information, not merely ordering
+## RS1. Timing information, not merely ordering
 
 Consider each balanced short/long pair with the same marks M and observed
 order O, but opposite deterministic labels. Let Q denote which age regime is
@@ -46,7 +46,7 @@ Next informative tasks should vary unknown spectra, interacting marked sources,
 irregular gaps and hierarchical factors; then use real recorded events. Do
 not equate fitting one two-exponential kernel with frontier expressivity.
 
-## 377. Share a receiver law, not stream information
+## RS2. Share a receiver law, not stream information
 
 Assume independent streams have the same conditional transition/readout law
 with unknown parameter theta, and private evolving state z_s. A statistically
@@ -90,7 +90,7 @@ communication are additional costs. None disappears by declaring dormant
 capacity. Shared-weight addressed recurrent systems can share these benefits;
 our distinction must also earn its time/routing/learning advantages.
 
-## 378. Separate invariant memory from task-sensitive time
+## RS3. Separate invariant memory from task-sensitive time
 
 For an order task invariant under strictly monotone time warps, the relevant
 history is the equivalence class that preserves marked event order. A sufficient

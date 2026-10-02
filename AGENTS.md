@@ -108,3 +108,12 @@
   Read `experiments/THEORY.md` and its relevant notes before redesigning a core
   mechanism. `HISTORICAL_MOTIVATION_MANIFESTO.md` records the original motivation;
   it is not a substitute for current proofs or measurements.
+
+# Invalid-protocol quarantine
+
+- Target-dependent E63/E79 mixtures, including word-keyed extensions, are
+  quarantined in experiments/archive/invalid_protocol/target_leakage_20261002.
+  Never use their scores as research evidence or restore them into active
+  result paths. Old queues/drivers are retired. Use causal E173/E174 results;
+  a corrected90M mixture comparison is still open. Audit-only archives and
+  old rendered reports are not a source of benchmark claims.

@@ -1,6 +1,6 @@
 """Reader-first MD/PDF report, assembled from the same editorial blocks.
 
-The previous chronological narrative is retained in report/archive/. Raw
+Superseded reports with leaked comparisons are quarantined in experiments/archive/invalid_protocol/. Raw
 experiment histories remain in FINDINGS.md and the numbered theory notes.
 """
 from datetime import date
@@ -20,6 +20,9 @@ full_bank_comparison=runpy.run_path(str(ROOT/'report/language_scaling.py'))['ful
 
 
 def read(path):
+    relative=Path(path)
+    if (relative.parts and relative.parts[0] in ('e63','e79')) or 'aws_e79wk_' in str(relative):
+        raise ValueError(f'Quarantined target-leakage result is ineligible for report: {path}; use causal E173')
     row = json.loads((RES/path).read_text())
     if row.get("status", "completed") != "completed":
         raise ValueError(f"Report requires completed result: {path}")
@@ -376,7 +379,8 @@ def language_90m_reference_text(ev):
             best = rows[0]
             text += (f"Calibration (Theory §381): untuned modified Kneser–Ney counts of the same 90M characters score "
                      f"{best['bpc']:.3f} on the same test targets, so these controls sit near count level and are not "
-                     "frontier bars. E79's race mixture of count/copy experts scores 1.504 there. ")
+                     "frontier bars. Target-leaked historical mixtures have been quarantined; "
+                     "a corrected 90M mixture comparison remains open. ")
     return text
 
 
@@ -473,6 +477,23 @@ def figures(M, tasks, ev):
             axis.set_ylim(0,max(values)*1.2)
             for j,value in enumerate(values):axis.text(j,value+max(values)*.025,f'{value:.2f}',ha='center',fontsize=9)
         f.tight_layout();save(f,'banknote_first_screen')
+    confirmation={family:[r for r in tasks.get('tabular_confirmation',[])
+        if r['args']['model']==family and r['args']['tag'].startswith('aws_banknote_confirmation_20261001T234000Z_')]
+        for family in ('ours','trees','catboost','logistic')}
+    complete=[family for family,rows in confirmation.items() if sorted(r['args']['seed'] for r in rows)==[6,7,8]]
+    if 'ours' in complete and 'trees' in complete:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.35))
+        labels={'ours':'Ours: native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
+        for ax,metric,scale,title in zip(axes,('accuracy','nll'),(100,1),('Reserved-test accuracy (%) ↑','Reserved-test log loss ↓')):
+            vals=[[r['final']['test'][metric]*scale for r in confirmation[k]] for k in complete]
+            means=[sum(v)/len(v) for v in vals]
+            ax.bar(range(len(means)),means,color=[blue if k=='ours' else orange for k in complete],width=.6)
+            for j,v in enumerate(vals):
+                ax.plot([j]*len(v),v,'o',color='#172431',markersize=3)
+                ax.text(j,max(v)+max(means)*.03,f'{means[j]:.3f}' if metric=='nll' else f'{means[j]:.1f}%',ha='center',fontsize=8)
+            ax.set_xticks(range(len(complete)),[labels[k] for k in complete],fontsize=8)
+            ax.set_ylim(0,max(max(v) for v in vals)*1.19);ax.set_ylabel(title)
+        f.tight_layout();save(f,'banknote_reserved_test')
     split=completed_split_evidence(tasks)
     if split:
         f,axes=plt.subplots(1,2,figsize=(7.2,2.75))
@@ -1311,6 +1332,19 @@ def blocks(M, tasks, ev):
     data_stage=[row for row in tasks['language_scaleup'] if row['args']['fit']==1048576]
     data_bpc=min((row['final']['dev']['bpc'] for row in data_stage),default=None)
     lm_costs={row["model"]:row for row in tasks["training_work"]["language_rows"]}
+    banknote_confirmation={family:[r for r in tasks.get('tabular_confirmation',[])
+        if r['args']['model']==family and r['args']['tag'].startswith('aws_banknote_confirmation_20261001T234000Z_')]
+        for family in ('ours','trees','catboost','logistic')}
+    replicated_banknote=all(sorted(r['args']['seed'] for r in banknote_confirmation[k])==[6,7,8]
+                            for k in ('ours','trees'))
+    def test_mean(family,metric):return sum(r['final']['test'][metric] for r in banknote_confirmation[family])/len(banknote_confirmation[family])
+    banknote_scope=('Competitive accuracy, no confirmed advantage: the three-seed reserved test does not sustain the development lead. ' if replicated_banknote else '')
+    if replicated_banknote:
+        banknote_scope+=f'Ours averages {100*test_mean("ours","accuracy"):.1f}% versus {100*test_mean("trees","accuracy"):.1f}% for the original trees. '
+        if len(banknote_confirmation['logistic'])==3:banknote_scope+='Logistic regression has lower test log loss. '
+        banknote_scope+=('All twelve final cells are completed. ' if all(len(v)==3 for v in banknote_confirmation.values())
+                         else 'The full four-family confirmation remains incomplete. ')
+    else:banknote_scope+='Independent confirmation is pending. '
     pages.append([
         ("title","Sleeping Machines"),
         ("sub","Deep learning that computes with time"),
@@ -1346,7 +1380,9 @@ def blocks(M, tasks, ev):
          "reach 100% within 4,000 examples; the control is the best saved result across seven "
          "Transformer configurations and their learning curves. These synthetic tasks use different "
          "architectures and structural priors. Sources: E53/E36 and E61."),
-        ("small","<b>New integrated evidence:</b> banknote pilot <b>ours 95.3% versus trees 93.0%</b>; "
+        ("small","<b>New integrated evidence:</b> "
+         +('banknote test: <b>ours 91.8% versus trees 94.0%</b>, competitive accuracy without a confirmed win; '
+           if replicated_banknote else 'banknote development: <b>ours 95.3% versus trees 93.0%</b>, confirmation pending; ')+
          "native language uses <b>6.02× less counted fitting work</b> than the saved KV model at 0.032 bpc worse. "
          "Protocols and limits follow on the next page; comparable 10M language remains pending.")])
 
@@ -1360,16 +1396,26 @@ def blocks(M, tasks, ev):
         gain=100*(1-ours['nll']/trees['nll'])
         pages.append([
             ('h1','New evidence: quality and complete work'),
-            ('p',f'<b>Tabular quality signal.</b> Ours reaches <b>{100*ours["accuracy"]:.2f}%</b> banknote accuracy versus '
-             f'<b>{100*trees["accuracy"]:.2f}%</b> for the boosted-tree screen, with <b>{gain:.1f}% lower log loss</b> '
-             f'({ours["nll"]:.3f} versus {trees["nll"]:.3f}). The native eight-block model mixes content and memory '
-             'through parallel temporal receiver heads.'),
-            ('figure',('banknote_first_screen',174)),
-            ('small','128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. '
-             'Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. '
-             'This is an exploratory development quality advantage. Reserved-test results and stronger controls '
-             'are in Appendix B; the full three-seed analysis is pending. '
-             'Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.'),
+            ('p',f'<b>Tabular: competitive accuracy, no confirmed win.</b> '+
+             (f'Ours averages <b>{100*test_mean("ours","accuracy"):.1f}%</b> reserved-test accuracy versus '
+              f'<b>{100*test_mean("trees","accuracy"):.1f}%</b> for boosted trees across three seeds. '
+              f'Logistic regression reaches <b>{100*test_mean("logistic","accuracy"):.1f}%</b> and lower log loss '
+              f'(<b>{test_mean("logistic","nll"):.3f}</b> versus ours <b>{test_mean("ours","nll"):.3f}</b>). '
+              if replicated_banknote and len(banknote_confirmation['logistic'])==3 else banknote_scope)+
+             'The native eight-block model mixes content and memory through parallel temporal receiver heads.'),
+            ('figure',('banknote_reserved_test' if replicated_banknote else 'banknote_first_screen',174)),
+            ('small',('Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). '
+              '128 fitting/128 development rows; four fixed selection opportunities. '
+              'Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. '
+              if replicated_banknote else '128 fitting/128 development rows, four passes, seed6. ')+
+             f'The original development lead, {100*ours["accuracy"]:.1f}% versus {100*trees["accuracy"]:.1f}%, is retained in Appendix B. '
+             +('The last CatBoost cell remains pending. ' if not all(len(v)==3 for v in banknote_confirmation.values()) else '')+
+             'Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.'),
+            ('p',f'<b>Causal statistical language advantage.</b> On the same999,999 test targets after10M fitting characters, '
+             f'ours count/copy race mixture scores <b>{ev["native10"]:.3f}bpc</b> versus '
+             f'<b>{ev["lstm10"]:.3f}</b> for LSTM and <b>{ev["tf10"]:.3f}</b> for Transformer. '
+             'This corrected specialized predictor uses statistical memory; it is not the learned native model. '
+             'Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.'),
             ('p','<b>A near-quality language work advantage.</b> Ours native2K uses <b>3.78 whole-fit GFLOPs</b> versus '
              '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
              'at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; '
@@ -2541,6 +2587,26 @@ def blocks(M, tasks, ev):
     labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}
     order=list(labels)
     confirmed=sorted(confirmed,key=lambda r:(order.index(r['args']['model']),r['args']['seed']))
+    if replicated_banknote:
+        means=[]
+        for family in ('ours','trees','catboost','logistic'):
+            rows=banknote_confirmation[family]
+            if sorted(r['args']['seed'] for r in rows)==[6,7,8]:
+                means.append([labels[family], '3',f'{100*test_mean(family,"accuracy"):.2f}',f'{test_mean(family,"nll"):.4f}'])
+            else:means.append([labels[family],f'{len(rows)}/3','Pending','Pending'])
+        pages.append([('h1','Appendix B. Banknote: no confirmed advantage'),
+            ('p',banknote_scope+'The reserved-test accuracy point estimates are close, but no equivalence margin was specified. '
+             'Parity is therefore a descriptive reading, not a proven equivalence claim.'),
+            ('figure',('banknote_reserved_test',174)),
+            ('table',(['Model','Completed seeds','Mean test accuracy %','Mean test NLL'],means,[45,33,48,48])),
+            ('p','For the completed ours/tree comparison, the paired accuracy difference is −2.14 percentage points '
+             '(descriptive95% crossed seed/feature-group interval −6.90 to +2.43). The control-minus-ours NLL '
+             'difference is −0.0287 (98.33% interval −0.1738 to +0.1277). Logistic regression improves NLL by0.1447 '
+             '(98.33% interval0.0338 to0.2660). These three-seed intervals are approximate and share one test split.'),
+            ('small','Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, '
+             '4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; '
+             'accuracy intervals are descriptive. This does not replace the pending full four-family gate. '
+             'The original95.3% versus93.0% development screen and all per-seed work remain below.')])
     for begin in range(0,len(confirmed),6):
         records=confirmed[begin:begin+6];quality=[];costs=[]
         for r in records:
@@ -2556,7 +2622,7 @@ def blocks(M, tasks, ev):
         pages.append([('h1','Appendix B. Frozen banknote confirmation'),
             ('p','Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting '
              '128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. '
-             'Partial publication is a snapshot, not a completed three-seed comparison.'),
+             'The per-seed ledger preserves completed scores; the summary identifies families with all three seeds.'),
             ('table',(['Model/seed','Dev NLL','Test NLL','Test accuracy%','Whole fit GFLOPs','Fit MFLOPs/row','Infer MFLOPs/row'],quality,[36,22,23,24,23,23,23])),
             ('table',(['Model/seed','Charged fit wall s','Test wall s','Peak RSS MiB','Fit provenance'],costs,[36,36,29,29,44])),
             ('small','Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting '
@@ -3276,12 +3342,6 @@ def blocks(M, tasks, ev):
          'and the <a href="experiments/FRONTIER_COMPUTE_PROTOCOL.md">frontier compute protocol</a> '
          "specify these tests. Modern architecture and larger-scale comparison arms remain proposed, not completed.")])
 
-    historical_language=[]
-    for size,k in ((1_000_000,5),(10_000_000,6),(90_000_000,7)):
-        path=f"e79/race_mixer_D{size}_K{k}_e77none.json"
-        old=read(path)['copy_window_256']
-        historical_language.append([f"{size/1e6:g}M",f"{old['race_frozen_test_bpc']:.3f}",
-                                    f"{old['race_online_test_bpc']:.3f}"])
     historical_market=[]
     for path,label in (("e57/regime_m5.json","Ours: event hazard + rate/flow state"),
                        ("e57/regime_m5_pt.json","Ours: event hazard + per-type state"),
@@ -3296,13 +3356,10 @@ def blocks(M, tasks, ev):
          "older report headlines and why their interpretation changed. They are preserved here with the "
          "identified protocol errors; they are not current valid benchmark comparisons."),
         ("h2","Earlier statistical language results"),
-        ("table",(["Ours: fitting characters","Frozen historical bpc","Online historical bpc"],
-                  historical_language,[48,63,63])),
-        ("p","These E79 mixtures use counts, a partial-word expert and a 256-character copy window. "
-         "The partial-word key depended on whether the target character was a space: changing the unseen "
-         "target changed the predicted distribution. The old 1.613/1.504 headlines therefore cannot establish "
-         "a causal language advantage. The corrected E173 10M results are 1.727 without word context and "
-         "1.719 with causal word context; a corrected 90M mixture comparison remains open."),
+        ("p","The target-dependent partial-word mixtures have been removed from the active results tree and "
+         "all numerical comparisons. Raw records are quarantined for audit only. The corrected E17310M "
+         "results are1.727 without word context and1.719 with causal word context; "
+         "a corrected90M mixture comparison remains open."),
         ("h2","Earlier event world-model results"),
         ("table",(["Historical predictor","Day 6 log-likelihood ↑","Day 7 log-likelihood ↑"],
                   historical_market,[94,40,40])),
@@ -3312,7 +3369,6 @@ def blocks(M, tasks, ev):
          "event and neural references. Day resets and warmup exclusions also differ. The recorded gap "
          "needs fitting-only preprocessing and aligned rescoring before it supports a held-day advantage."),
         ("small",'<a href="experiments/EXPERIMENTAL_REVIEW.md">Source and numerical review</a>; '
-         '<a href="experiments/results/e79/">E79 language records</a>; '
          '<a href="experiments/results/e57/">E57 world-model records</a>. '
          "Preserved timing, composition, retrieval and modular results remain in the main report. "
          "New learned-model benchmarks add evidence; they do not erase these earlier runs.")])

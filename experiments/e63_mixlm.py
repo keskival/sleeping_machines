@@ -106,6 +106,7 @@ def hedge(P, sel, eta, W):
 
 
 def main():
+    raise RuntimeError('Retired target-dependent benchmark; use experiments/e173_causal_language.py and the causal protocol')
     ap = argparse.ArgumentParser()
     ap.add_argument("--D", type=int, default=10_000_000)
     ap.add_argument("--K", type=int, default=6)

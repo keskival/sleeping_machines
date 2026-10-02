@@ -1,1851 +1,1514 @@
-# Sleeping Machines: what is known
-
-*29 September 2026. The illustrated version is the PDF built by `report/make_pdf.py`
-(`report/sleeping_machines_status.pdf`); derivations and proofs are in `experiments/THEORY.md` (cited as §n);
-the experiment log is `experiments/FINDINGS.md` and git history.*
-
-## In plain terms
-
-**Sleeping Machines compute through timed messages.** A node holds a local memory, receives a signal,
-and may schedule, cancel, or send another signal. A message can carry a vector as well as a time:
-its content determines where it goes and how long it takes, while its arrival changes the receiver's state.
-A network can build features, retrieve a memory, or accumulate enough evidence to give an answer.
-
-The goal is for **both learning and inference to spend work on relevant events and alternatives**.
-Inactive capacity can remain asleep. Lost races and nearby unrealized routes supply learning signals
-for choices that could have produced a better answer. Deep layers compose these operations into learned
-representations. This is the design target; individual prototypes currently implement different parts of it.
-
-## Frontier signals
-
-Three completed comparisons show the opportunity: language prediction on shared text8 splits,
-learned retrieval that generalizes to longer contexts, and deep composition with much less data and
-counted computation.
-
-- **Real language:** on the same 1M-character text8 training and test split, E79's native race mixture scores **1.808
-  bpc frozen**, versus **2.179** for the completed LSTM and **2.367** for the 2-layer Transformer. At 10M training
-  characters, E79 scores **1.613 bpc frozen** versus **1.799** for the completed two-layer, 512-unit LSTM on the same
-  test segment and **1.908** for the completed four-layer Transformer—a **0.186 bpc lead** over the LSTM and
-  **0.295 bpc** over the Transformer. The Transformer checkpoint was selected on validation, then scored **1.9083**
-  bpc on held-out test after 4,882 updates. The runs share the text split but not model size or training schedule: the Transformer has
-  3.24M parameters and four passes, versus the LSTM's 1.20M parameters and six passes. E79 also includes six native
-  experts and copy memory. These are strong same-split results, not compute-matched architecture comparisons, and
-  each uses one seed.
-- **Learned associative retrieval:** on E61's synthetic recall task, local race attention reaches **100% at 4× context
-  after at most 4,000 examples in all five runs**. The best of seven Transformer settings reaches **71.6%** on those
-  longer contexts after as many as 1M examples.
-- **Depth and composition:** on a depth-4 order task, the event model reaches **99.9–100% after 10–15k examples**
-  (5/5 runs); a Transformer reaches **99.0% after 40k examples repeated 50 times**, and **99.2–99.6%** on 2M fresh
-  examples. On a separate shared-motif composition task,
-  the event model averages **99.65% after one pass**, at roughly **10,000× lower counted work** than its Transformer
-  reference.
-
-![Frontier potential signals: text8 language-model results and learned associative retrieval](report/figures/potential_evidence.png)
-
-The language comparisons use one seed and different model sizes and schedules. The strongest depth and
-retrieval comparisons use controlled synthetic tasks. They establish the stated task-level advantages;
-matched scaling curves and measured training energy are the next evidence needed for frontier superiority.
-
-![Measured accuracy and work across controlled event tasks](report/figures/supremacy_map.png)
-
-![Timed messages, local state, and selective computation](report/figures/concept.png)
-
-## Highlights
-
-- **Same accuracy, 10,000–100,000× less computation.** On timing-pattern recognition a learned event network is
-  perfect (1.000) using ≈ 7.5 events per example; Transformers reach 0.989–0.998 at 150k–1.2M multiply-adds after
-  1–2M training examples.
-- **It groks where a Transformer does not.** Trained on 30% of all (a, b, c) triples, it learns (a + b + c) mod 17 and
-  is 99.4–99.9% correct on the triples it never saw; a Transformer with weight decay stays at 3–63%.
-- **Ten times less data.** On the depth-3 order task the event network is 99.8–99.9% correct after 1,000–2,000 examples,
-  each seen once; a Transformer allowed as many passes as it likes needs about 10,000–20,000 examples for 99% (with 2,000
-  it reaches 33–41%, with 5,000 82–90%).
-- **Learning to retrieve from ≥ 250× less data.** In a recall task where the network must learn which stored key a query
-  refers to (what attention learns), race attention trained by local credit is 100% correct after 1,000–4,000 examples
-  (5 of 5 runs) and stays 100% on contexts four times longer. Of seven Transformer configurations (width 64–128, 2–4
-  layers, absolute or relative positions), only the two largest solve it, after 400k–1M examples, and they reach at most
-  72% on the longer contexts (E61; the best configuration twice, solving it between 400k and 1M examples).
-- **Deep order from a few thousand examples.** Recognizing which of 20 *orders* of four patterns occurred needs four
-  levels of "this, then that". The network finds the right detectors among 55 million candidates and is 99.9–100%
-  correct on 5 of 5 runs after 10–15k examples, with ≈ 2,000 learning updates, ≈ 150 events per example, and only
-  ≈ 80k connections ever created. **At depth 4 a Transformer given the same 40k examples makes about ten times as many
-  errors (0.990 vs 0.999–1.000), and even with 2M examples (≈ 150× the data) still 4–8 times as many (0.992–0.996)**, at
-  ≈ 7,000× the computation per example; at depth 3 it reaches the same accuracy only with 8–400× more data.
-- **Composing parts: Transformer-level accuracy from one pass over the data, at ≈ 10⁴× less computation.** On a task of 15 classes
-  built from ordered pairs of shared motifs, the event network reaches 0.990–0.999 (mean 0.9965) from 40k examples
-  seen once, learning its own timing windows, at ≈ 20 events per example; a Transformer needs 2M examples for
-  0.9955–0.998, and given the same 40k examples 50 times it reaches 0.9935–0.9965 (0.955–0.985 with weight decay or 10k
-  examples).
-- **A world model of a real market stream within 0.08–0.19 nats of a Transformer at ≈ 1/3000 of the computation.**
-  Predicting the next trade events of BTC on days it never saw, a small event network with slow "regime" counters beats
-  a recurrent neural point process (GRU) and comes within 0.08–0.19 nats per event of a Transformer point process, using
-  ≈ 40 operations per event instead of ≈ 110k–130k multiply-adds. The Transformer is the more accurate model.
-- **Learning cost follows activity, not size.** Eight times more inputs (12 → 96 channels) costs no more learning
-  mistakes.
-- **New theory, proved:** exactly what one event node can compute and where depth is needed; why a fixed weight budget
-  lets a node learn an AND without knowing which half was wrong; that deep order is trainable with the fewest mistakes
-  any learner can guarantee; and that a race of clocks carries both the softmax (which clock fires) and its normalizer
-  (when), so Transformer attention and its gradients are computed on average exactly by local rules: Transformers,
-  including their training, are a limit of these networks. And event networks are exactly controlled differential
-  equations driven by their events: the order detectors they learn are the universal features of event streams, the
-  state-space units behind today's best event-stream models are a special case, and a race run in continuous time is more
-  expressive than a softmax, the more so the longer it deliberates (§104). When signals carry vectors whose content sets
-  their delays, a receiver whose state fades computes exactly softmax attention, paying only for the messages that match
-  (§105), and the work attention then costs is set by how sharp it is, not by how much context there is (§106).
-
-**Scope of the evidence.** The supremacy results (timing, composition, deep order, grokking) are on synthetic tasks built
-to test one capability at a time, where the target is exactly expressible by the network's primitives. The theory behind
-them (what a node computes, mistake bounds logarithmic in the candidate basis, cost proportional to events) is not
-task-specific, which is the reason to expect them to carry over to sparse, precisely timed real streams. On the real data
-tested so far the event network is competitive at a small fraction of the computation, but not ahead: spoken digits
-0.675 vs 0.857 for an LSTM and 95–96% for event-by-event state-space models; a market-stream world model 0.08–0.19 nats per event behind a Transformer point process; and
-no trading edge after fees in four markets; and on a real event-camera benchmark (DVS128 Gesture) far behind: 0.70 vs
-94–98% published.
-
-![Where the event network stands against dense models, task by task](report/figures/supremacy_map.png)
-
-**What the network actually does** on one example: spikes arrive; part detectors fire when two spikes are close
-enough in time; an order detector fires when part B follows part A; the class node holds that and fires when C
-arrives. With the same motifs in another order, the "A then B" detector still fires but nothing completes the pattern.
-
-![One decision, event by event: the right order fires the class node, a decoy does not](report/figures/anatomy.png)
-
-**Why learning it is not trivial.** When a detector for "A, then B, then C" fails to fire, which of its connections
-should change? Crediting every candidate spreads the weight so thinly that the node never fires; crediting the
-tempting shortcut ("A, then B" is shared with another class) traps it; exploring a little, then settling, finds the
-right order and keeps it (§84).
-
-![Three credit rules on the same class node: never fires, trapped on the shared prefix, finds the order](report/figures/credit_dynamics.png)
-
-**Where it does not win yet:** event-camera gestures (0.70 vs 94–98% published), spoken digits (0.675 vs 0.70 for a
-published LSTM and 95–96% for event-by-event state-space models, whose unit the new theory identifies as a special case of
-ours; E74's initial time-vector pilot reached 0.146 peak held-out speaker accuracy, with the E82 readout sweep reaching
-0.184), and trading, where no learner beats
-buy-and-hold on this data (an audit shows why: the predictable edge, about 1 bp per trade, is below any taker fee).
-**Next:** a path to generative language models built this way ([§10](#10-next-frontier-generative-language-models)).
-
----
-
-Technically, Sleeping Machines proposes that computation can happen **in time rather than memory**: candidate events
-race, the first to fire cancels the rest, and what a node computes is set by delays, by how long it holds an input,
-and by inhibition that arrives in time. The rest of this report states what is now known about such networks, why,
-and what remains open.
-
-![One race: B fires, A and C are cancelled but keep their distance to threshold](report/figures/race.png)
-
-**Contents:** [In plain terms](#in-plain-terms) · [Frontier signals](#frontier-signals) · [Highlights](#highlights) · [Summary](#summary) · [1. What an event node computes](#1-what-an-event-node-computes) ·
-[2. How event networks learn](#2-how-event-networks-learn) · [3. Against dense models and Transformers](#3-against-dense-models-and-transformers) ·
-[4. Depth and composition](#4-depth-and-composition) · [5. Generalization and grokking](#5-generalization-and-grokking) ·
-[6. The weight race](#6-the-weight-race) · [7. Real data](#7-real-data) · [8. Open problems](#8-open-problems-and-next-steps) · [9. Hardware](#9-hardware-what-these-networks-need-and-what-exists) · [10. Language models](#10-next-frontier-generative-language-models) ·
-[Experiment index](#experiment-index) · [Reproducing](#reproducing)
-
-## Summary
-
-1. **What one node computes is exactly characterized, and it says where depth is needed.** A node with a trigger,
-   hold and veto inputs accepts a product set in lag coordinates relative to its trigger; one node can order at most
-   three events; two layers compute every conjunction of bounded time differences, three layers every union (§71,
-   proved; checked by exhaustive search). Nodes with state (arm/disarm) are strictly stronger.
-2. **Event networks learn timing with very few mistakes, if they obey two rules:** winning is positional (pull the
-   event that should have won; never push a loser later), and order needs held intervals, not aligned delays. Under
-   these rules a node's routing, hold duration and vetoes are learned in O(log N + its few parameters) mistakes.
-3. **On a timing task, a learned event network matches or beats dense models at 10⁴–10⁵× lower cost**, with nothing
-   given: 1.000 accuracy at 7.5 synaptic events per episode, against 0.989–0.996 for event-token Transformers at
-   146k–1.16M multiply-adds and 0.995 for a clocked conv net at 3.07M.
-4. **Depth is learned natively when credit is right (§83–§86).** Summed potentials with conserved multiplicative
-   credit, credit given to one instant with cooled exploration, and synapses grown only when credited (provably the
-   same decisions as dense weights) learn order among three and four parts: 0.999–1.000 on 5/5 seeds at depth 4, with
-   ≈ 2,000 updates and ≈ 80k grown synapses out of 5.5·10⁷ candidates. With learned timing windows and credit given to
-   the latest instant (complete evidence), the composition task that a Transformer led reaches 0.990–0.999 (mean
-   0.9965) from 40k examples seen once, against 0.9955–0.998 for a Transformer after 2M examples (§88–§89).
-5. **Grokking occurs, by a route change under sleep, and only for relations the substrate can express.** A network
-   that can memorize, given a rhythm resource, memorizes without sleep and generalizes after a delay with sleep
-   (0.95–0.99 on unseen pairs in 5/5 seeds with cooled timing noise at the right temperature); it stays at chance on relations
-   the rhythm cannot express. A data × sleep phase diagram shows memorization, grokking and collapse regimes. Grokking
-   also works with depth: (a + b + c) mod p through two composed rhythm stages (0.99–1.00, 3/3 seeds at p = 17 and 31).
-6. **Learning cost follows activity, not model size.** Growing the candidate inputs from 12 to 96 channels leaves the
-   number of learning mistakes flat and makes inference cheaper (§77).
-7. **Real asynchronous benchmarks remain open, with a seed-dependent SHD signal.** In the matched four-layer E83
-   comparison, seed 6 reached 17/128 terminal accuracy versus 7/128 deepest-only; race-plus-fallback outputs were
-   correct on 20 versus 7 examples (McNemar $p=0.0146$). Seed 7 reached 9/128 versus 7/128, with 9 versus 6 paired
-   race-plus-fallback answers ($p=0.607$), so the seed-6 gain has not replicated. Layer-4 support was 61.7% versus
-   4.7% in seed 6 and 22.7% versus 16.4% in seed 7. A sparse layer-1 event skip raised it to 99.2% and 100%, without
-   paired accuracy gains. The all-depth race reported mean emitted confidence 63.8% / 63.1% against accuracy 23.8% / 0%
-   across the two seeds; prefix NLL and calibration remain poor, and the layer-4 branch showed no stable readout gain.
-   A matched spike replay now shows that the small L1 all-depth utility is a shallow-readout bypass: its deepest-only
-   loss change is exactly zero and it creates no downstream hidden spikes. These controlled runs identify support and
-   calibration failures, while performance remains far below dense and published event-model baselines. On the market
-   stream, a correctly posed trading task (profit after
-   costs) is not profitable for any learner, and
-   the native learner learns to stay out. An online world model of the stream, built as an event network with state and
-   window nodes, beats a neural point process by 0.5–0.9 nats per event, also on held-out days, at ≈ 19 synaptic
-   operations per event.
-8. **Transformers are a limit of these networks, including their training, and time adds what they lack (§96,
-   §101–§106).** A race of random clocks computes softmax attention and its gradient on average from local quantities;
-   event networks are controlled differential equations whose universal features are the order detectors they learn;
-   content-dependent delays compute softmax attention exactly at a cost set by its sharpness; and a network laid out on
-   positions and time scales is exactly equivariant to shifts and tempo changes, the two ways speakers differ. E79's race
-   mixture leads the completed 1M text8 LSTM and Transformer baselines on the same split, and scores 1.613 test BPC
-   against 1.799 for the 10M LSTM and 1.908 for the completed 10M four-layer Transformer. The Transformer checkpoint
-   was selected on validation and then scored 1.9083 on held-out test. E79 uses a different model and training budget, so
-   this is a same-split performance signal rather than a compute-matched result.
-
-## Where the event paradigm wins, and where it does not
-
-Each claim below is stated with its evidence and its caveat; "supremacy" here means a measured advantage over dense
-networks (clocked conv nets, MLPs, GRUs, Transformers) given the same data.
-
-| claim | evidence | caveat |
-|---|---|---|
-| **Equal or better accuracy at 10⁴–10⁵× lower cost on timing tasks** | E35: 1.000 at 7.5 synaptic events per episode, nothing given; best conv net 0.995 at 3.07M multiply-adds; event-token Transformer 0.989–0.996 at 146k–1.16M after 10× more training | one task family built around the primitives; the cost gap is largely the clock (an event-driven conv net would narrow it to ≈ 10×) |
-| **Groks composed arithmetic where a Transformer does not** | E41, (a + b + c) mod 17 from 30% of triples: 0.994–0.999 on unseen triples (3/3 seeds) in 200 epochs; Transformer with AdamW and weight decay, 100k steps: 0.29 and 0.63 (seed 0, d = 32 / 64), 0.06 and 0.03 (seed 1; chance 0.06) | the event network is given a two-stage rhythm route as a resource (it chooses it over memorizing, E45 shows it can choose among routes); the Transformer might grok with far more steps |
-| **A world model of a real market stream: better than a GRU point process, within 0.08–0.19 nats of a Transformer point process, at ≈ 1/3000 of its cost** | E48: online −2.11 nats per event vs −2.62 for a GRU neural point process; frozen on held-out days −2.38 / −2.10 vs −3.15 / −2.98; ≈ 19 synaptic operations per event vs thousands of multiply-adds | a Transformer Hawkes process is more accurate on the held-out days (−1.97 / −1.82 vs −2.16 / −1.97 with the same hazard family; E52, E57) |
-| **Learning cost follows activity, not model size** | E35: 12 → 96 input channels: accuracy 0.999–1.000, learning mistakes flat, inference cheaper (7.5 → 3.2–4.0 synaptic events); §77, §81 give the reason and a mistake bound | measured up to 96 channels |
-| **Structure discovery with an implicit Occam razor** | E45 (pilot): from a menu of routes the network picks one rhythm for a + b (1.000), the two-stage chain for a + b + c (0.999), nothing for random tables | pilot, 2 seeds; 5-seed runs queued |
-| **Learned retrieval from ≥ 250× less data** | E61: race attention with a learned query–key match, 5/5 runs 100% after 1–4k examples (64–68 mistakes), 100% on 4× longer contexts; Transformers (7 configurations): only d = 128 with 4 layers solves it, after 400k–1M examples (absolute positions: 0.25 on 4× length; relative ALiBi: 0.72) | the event learner's candidate routes are (item, offset) pairs, i.e. relative offsets are its native coordinates (ALiBi gives the Transformer the same); one run per Transformer configuration, two for the best (solved between 400k–700k and 700k–1M examples) |
-| **Deep order learned from few examples** | E54: which of 20 orders of four motifs occurred: 0.999–1.000 on 5/5 seeds after 10–15k examples, ≈ 2,000 updates, ≈ 150 events per example, ≈ 80k synapses grown out of 5.5·10⁷ candidates; depth 3: 0.997–0.999 from ≤ 5k examples seen once | depth 3: a Transformer reaches the same accuracy (0.996–0.999 given 40k × 50 or 2M fresh) at ≈ 5,000× the computation; depth 4: 0.990 given 40k × 50 and 0.992–0.996 given 2M fresh examples (4–10× the error rate) at ≈ 7,000× the computation |
-| **Composition: Transformer-level accuracy from one pass, ≈ 10⁴× less computation** | E89: learned windows + latest-instant credit 0.990–0.999 (mean 0.9965) from 40k examples seen once, ≈ 20 events; Transformer 0.9955–0.998 after 2M examples, 0.9935–0.9965 given the same 40k × 50 passes without weight decay (0.982–0.985 with), 0.955–0.976 given 10k × 200 (≈ 175k multiply-adds) | one of five seeds at 0.990; post-convergence dips on two seeds without a margin |
-| *Not supremacy:* spoken digits (SHD) | E59: class-conditional event world models with speaker-relative band coding reach 0.675 test (E51: 0.647), our best by far, but below a published LSTM (0.857) and far below the state of the art (95.9–96.3%, event-by-event state-space models) | unseen test speakers expose overfitting to training speakers |
-| *Not supremacy:* trading profit | E42: no learner beats buy-and-hold after costs; the priced native one learns to stay out. E55, E55b (confirmed on 21 unseen days, four markets): the predictable edge is at most ≈ 1 bp per trade, below any taker fee | staying out is correct for a taker here (§87) |
-
-## 1. What an event node computes
-
-**Primitives.** Spike times; a delay; first-of (min) and all-of (max); hold (an input opens a window of given
-duration); veto (an input blocks the node while it is within its window). A node fires at its trigger's arrival if
-its hold conditions are met and no veto is active.
-
-**Theorem (§71).** In lag coordinates relative to the trigger, a stateless node accepts a product set: each input's
-lag is constrained independently. Consequences:
-- one node orders at most three events on the scale-free domain (trigger the middle one, hold the first, veto the
-  last until it arrives); for four or more, two inputs fall on the same side of the trigger and a product set cannot
-  order them;
-- two layers (one node per constraint, then all-of) compute every conjunction of bounded differences
-  t_j − t_i ∈ [lo, hi] with exclusions: every zone in the sense of timed-automata verification;
-- three layers (then first-of) compute every finite union of zones.
-
-![A node's accept set is a product set; the order a < b is not](report/figures/depth_theorem.png)
-
-*Evidence.* An exhaustive search over single nodes (every trigger, role, delay and window on a grid) finds nodes for
-the order of 2 and 3 events (for 3, exactly the construction in the proof) and none for 4 events on grids of 1,680
-and 11,880 configurations (E39). All thirteen of Allen's interval relations, built as depth-2 networks, are exact on
-~19,900 random interval pairs (E39).
-
-**Stateful nodes are stronger.** A node armed by A, disarmed by C and fired by B computes "B after A and C not
-between them", which is an XNOR of two order relations; it is not a product set, and no stateless node computes it
-(exhaustive search, E39b). A toggle node computes the parity of the number of its input events (§75).
-
-**Clockless computation computes relations, not sums.** A network of delays, first-ofs, coincidences and vetoes
-commutes with time shifts, so it cannot add two times; one shared rhythm breaks the symmetry to shifts by a period
-and makes cyclic arithmetic computable (§56).
-
-**Completeness and reliability.** A two-counter Minsky machine wired from delay, first-of, coincidence and veto
-nodes plus one oscillator runs every test program exactly, so the basis is Turing-complete given enough timing
-precision (E30). Timing jitter accumulates like a random walk; one restoring coincidence per counter per cycle
-makes reliability independent of program length (q/σ = 20: 1.00 at 25 and 81 steps, against 0.60 and 0.30
-unrestored). Precision plays the role of the tape.
-
-![Programs computed exactly vs timing precision, with and without restoration](report/figures/e30_restoration.png)
-
-## 2. How event networks learn
-
-**Winning is positional (§54).** In a race a class wins by being earliest; cancellation already does the competing.
-Learning therefore pulls the event that should have won toward its anchored time and never pushes a loser later:
-pushing makes the next loser the winner and collapses all detectors onto one phase. On (a + b) mod p with learned
-delays (E26): push stays at chance in all 15 runs; pull-only reaches 0.97–0.98 (p = 31, half the pairs) with 10×
-fewer updates. False positives are removed by veto, not by displacement (E27: displacement 0.195).
-
-![Delay learning on the ring: pull-only vs push, with and without timing noise](report/figures/e26_learning.png)
-
-**Order needs held intervals, not aligned delays (§61).** Tolerance can come from delaying A to meet B (alignment) or
-from A opening a window that B must fall into (holding). Alignment compresses the interval, so a veto cannot see
-where C fell; holding keeps it. With directional holding the detector for "B within Δ after A unless C" reaches
-1.000 on all 5 seeds with ~450 updates in 200k episodes, and the veto is worth 19 points; with alignment it reaches
-0.914 and the veto is worth 1.8 (E27).
-
-**The rules are online learning on the simplex (§68).** Pulls that move a fixed fraction of a node's conserved
-synaptic budget are normalized (Winnow/Hedge-type) updates, with O(k log N) mistake bounds for choosing k of N
-inputs; hold durations are interval learning (O(log range) mistakes), vetoes monotone disjunctions (≤ N). This is why
-learning stops after a few hundred mistakes and why unnormalized pulls fail: they saturate every synapse. With
-nothing given, detectors learn their channels, durations and vetoes: 1.000 ×4 and 0.9995, 443–1,530 updates (E35).
-
-**Routing needs counterfactuals (§57).** A spike's time depends on one causal path, so credit along it cannot say
-whether another route should have been taken. Cancelled near misses and runners-up supply that information; without
-it a two-layer network stays at chance (E28: 0.17 vs 0.72–0.74).
-
-**Timing noise helps search if it cools to zero.** Noise that shrinks with the learner's own update count makes
-generalization at small data reliable (3/3 seeds instead of 1/3) without capping accuracy (E26c).
-
-**A learning calculus for deep event networks (§83–§88).** Learning deep order natively needed five rules, each
-derived from a failure, each local to a node and paid for by events:
-
-| problem | rule | why it works | evidence |
-|---|---|---|---|
-| an AND fails: which half was wrong? | sum held and coincident inputs; multiplicative credit under a conserved budget | conservation moves weight toward the target on every false fire iff the threshold exceeds half the budget (§83, proved) | 4× more candidates cost 1.3× more updates (E34w) |
-| candidates fire at different instants | credit one instant, chosen by cooled exploration | crediting all instants splits the weight forever (deadlock, proved); greedy credit cycles on shared prefixes; a valid route is absorbing (§84) | depth 3: 0.998–0.999 vs 0.71–0.85 greedy, 0.33 all-instants (E53) |
-| the candidate basis grows as P^depth | grow a synapse only when it is first credited | exactly the decisions of dense weights (§85, proved and checked); memory and time follow activity | depth 4: 80k of 5.5·10⁷ synapses grown, 0.999–1.000 (E54) |
-| converged nodes sit on their threshold | a margin kept by near-miss credit, earned by the node's recent precision | margins survive r demotions (θ_r ladder, §86); an unearned margin also protects wrong routes (§86b) | 0.997–0.999 at every checkpoint (E53g) |
-| timing precision | tune one window per part from its own lags (version space) | selecting windows from a bank costs activity quadratic in resolution; tuning costs none (§88) | learned windows converge to the true intervals and equal hand-tuned ones (E56) |
-| first-to-fire commits on partial evidence | on a miss, credit the latest candidate instant | the pattern is complete only at its last event; earlier instants are prefixes, valid only if unshared (§89) | composition 0.990–0.999 (from 0.988–0.995); depth 3 at half the updates (E89) |
-
-**A derived law, measured (§91).** Crediting the latest instant works because noise after the pattern is inconsistent
-between examples; the bound says learning slows as 1/(1 − q − 2f), with q the share of examples whose last event is
-noise. Sweeping the noise level and measuring q directly, the updates needed follow the law with one fitted parameter
-(f ≈ 0.03), and learning fails only as q approaches its limit:
-
-![Updates to learn depth-3 order versus measured trailing noise q, with the derived law](report/figures/drift_law.png)
-
-## 3. Against dense models and Transformers
-
-On the timing task, with priors on both sides (hold/veto nodes; a receptive field matched to the pattern length for
-the conv net):
-
-| model | test accuracy | cost per episode | learning |
-|---|---|---|---|
-| **event network, nothing given (E35)** | **1.000 ×4, 0.9995** | **7.5 synaptic events** | 443–1,530 local updates, 200k episodes |
-| event-token Transformer, 2M episodes (E36) | 0.989–0.996 | 146k–1.16M multiply-adds | backprop |
-| Transformer with learned relative-time attention bias, 1M episodes (E36f) | 0.996, 0.998 | 149k–150k multiply-adds | backprop |
-| event-token Transformer, 200k episodes | 0.65–0.97 | 5k–576k | backprop |
-| clocked conv net (E32) | 0.995 / 0.984 / 0.895 | 3.07M / 123k / 1.9k | backprop, 200k episodes |
-
-![Accuracy vs operations per episode on the timing task](report/figures/e32_frontier.png)
-
-**Why.** Attention cannot see order without position information and must synthesize comparisons of times from dot
-products at O(n²·d) per layer; a hold/trigger node computes the comparison as its primitive, at the cost of the
-events it receives (§70). The advantage belongs to the event paradigm: it grows with silence (a clocked model pays
-per time bin; 99% silence multiplies its cost by 100), and a conv net evaluated only where spikes are would cost
-≈ 100 multiply-adds rather than millions (§63). Energy at published per-operation costs (≈ 24 pJ per synaptic event
-on Loihi, ≈ 10 pJ per multiply-add with its weight read) gives ≈ 10⁴× at equal accuracy.
-
-**Limits.** One task, designed around the primitives; the dense search covered a grid of sizes. The Transformer
-needed 10× more training to reach parity. Giving it a learned relative-time attention bias (the fair strengthening:
-time differences enter attention directly) brings it to 0.996–0.998 at ≈ 150k multiply-adds after 1M episodes,
-still below the event network and ≈ 2·10⁴× its cost.
-
-**Scaling with the size of the input basis (E35, §74, §77).** With the spikes per episode held fixed, widening the
-candidate inputs from 12 to 96 channels leaves accuracy at ≈ 1.0 (96 channels: 1.000, 0.999, 1.000) and the number of
-learning updates flat (566–1,493, 194–535, 330–1,198 and 267–1,056 per 100k episodes at 12, 24, 48 and 96 channels;
-3 seeds each), while synaptic events per episode fall (7.2–8.2 → 3.2–4.0).
-Learning touches only synapses of active inputs, so its cost scales with activity, not with the basis; a dense model
-pays for every input at every step.
-
-## 4. Depth and composition
-
-Classes that are ordered combinations of shared parts (15 classes, each an ordered pair of 6 motifs) are zones over
-part events, so the theorem prescribes two layers: parts (hold nodes on channel pairs) and class nodes that hold one
-part's spike and are triggered by another's. A single part cannot satisfy both roles, so a class node is a
-conjunction and an order by construction.
-
-![Depth by composition: test accuracy by architecture](report/figures/e34_depth.png)
-
-- Hold/trigger chains learned natively: 0.97 with part windows matched to the motif scale, 0.86 with a generic bank
-  of window scales, 0.79 with one wide window; depth 1 with the same nodes 0.39 (5 seeds, 40k episodes; E34).
-- A readout that accumulates evidence instead fails at conjunction: its hidden nodes do learn parts (86 of 124 draw
-  both strongest inputs from one motif), but one detected part fires a class; 56% of its answers share one motif with
-  the truth (E28).
-- An event-token Transformer trained on 2M episodes reaches 0.998 at ≈ 175k–690k multiply-adds per episode, against
-  ≈ 14 events for the chains. The chains are not training-limited: with 5× more training (200k episodes) they stay at
-  0.954 (tuned windows, 0.90–0.99) and 0.87 (window bank, 0.81–0.96); two seeds in five plateau near 0.90 because
-  some class routes lock onto the wrong parts (under E34's original credit rule; the rules below remove this). With the
-  window bank, the chains' errors came mostly from classes that never form a route (copies of a part at several scales
-  split the pulls).
-- **What the credit rule must be (§83).** A class node should sum its held inputs and its coincident trigger inputs, as a
-  membrane does, and learn by full-information multiplicative updates under a conserved budget. Proved: a false fire
-  cannot say which half of the AND was wrong, yet conservation still moves the weights toward the target whenever the
-  firing threshold exceeds half the budget. Measured (E34w, 5 seeds): 0.911–0.990 at 40k episodes with 890–1,531
-  updates (E34: thousands), reached by 8k episodes; 4× more candidate parts (16 → 32 channels) costs 1.3× more updates,
-  as the log-of-the-basis bound predicts. The remaining floor is partly the task setup: the class window (3.5) is
-  shorter than the longest span between the two part events (4.0), leaving 0.07–1.4% of test examples unreachable.
-- **Credit goes to one instant, found by cooled exploration (§84).** If units fire in every positive example at
-  *different* instants, crediting them all keeps the mass split across instants: no instant crosses the threshold, the
-  node never fires, and nothing corrects it (window bank under that rule: 0.05–0.10). Crediting the one instant closest
-  to firing fixes the split but can cycle between invalid prefixes forever; choosing the instant with probability
-  ∝ exp(potential/T) reaches the valid route, which is then absorbing. With the class window covering the task's span
-  (4.2), E34's task gives per-seed plateaus of 0.988–0.995 by either credit rule, and the generic window bank now
-  reaches 0.97–0.99 (E34x). Fixed windows cannot express the task's minimum intervals (a naive oracle route with the
-  same windows scores 0.91–0.99); learned windows plus latest-instant credit close the gap (below).
-
-**Order among three parts: depth 3 (E53, E54).** Classes that are different *orders* of the same motif sets (20
-classes; decoys are the other orders) cannot be separated by summing held inputs, which is unordered. A layer of
-composite units (u → v, firing at v if u fired within a window) supplies ordered intermediates; the candidate basis is
-every ordered pair of parts (57,840 units), paid for only when both parts fire (≈ 41 events per episode).
-
-| E53, 5 seeds, 40k episodes | test accuracy | updates |
-|---|---|---|
-| **depth 3, + margin earned by reliability (§86b)** | **0.997–0.999 at every checkpoint, 5/5 seeds** | ≈ 1,100–1,400 + ≈ 250 near-miss |
-| depth 3, instant credit, cooled exploration (T = 0.3) | 0.998–0.999 on all seeds by 5k episodes; final 0.963–0.999 (dips) | ≈ 1,100 to converge |
-| depth 3, greedy instant credit (T = 0) | 0.71–0.85 (cycles between shared prefixes) | 4k–11k |
-| depth 3, credit to every candidate | 0.33–0.36 (never fires) | ≈ 26k |
-| depth 2, same credit | 0.32–0.42 | ≈ 24k |
-| *event-token Transformer, 2M fresh examples* | *0.997–0.999* | *≈ 215k–843k multiply-adds per example* |
-| *event-token Transformer, 40k examples × 50 passes (no / 0.1 weight decay)* | *0.9975, 0.996 / 0.981, 0.994* | *≈ 215k multiply-adds per example* |
-
-Without a margin, converged classes dip: a node sits just above its threshold and one demotion as a false winner knocks
-it under until relearned. A margin kept by near-miss credit removes the dips but also protects wrong routes (3/5 seeds
-freeze on a shared prefix); a margin *earned by reliability*, applied only when the node's recent fires were mostly
-correct, keeps the search open for unreliable nodes and protects reliable ones (§86b): stable at 0.997–0.999. With synapses grown only when first credited (§85: provably the same
-decisions as dense weights), depth 3 with 20 channels gives 0.981–1.000 (5 seeds) with 9.5k–13.7k synapses ever grown
-out of 145k candidates.
-At depth 4 (which of 20 orders of four motifs; 5.5·10⁷ candidate units per role), the same rules give 0.999–1.000 on
-5/5 seeds after 10–15k examples, with ≈ 2,000 updates, ≈ 150 events per example and 77k–84k synapses ever grown; with
-one level of composites too few the network cannot express the order and stays at 0.57–0.76 (E54). An event-token
-Transformer given the same kind of data (40k examples, 50 passes) reaches 0.9895 / 0.9905 without weight decay (0.977 /
-0.9705 with it): about ten times the chains' error rate, at ≈ 265k multiply-adds per example; with 2M fresh examples
-0.992 / 0.996, still 4–8 times the error rate. At depth 3 it matched the chains; the gap opens with depth.
-**Inference cost follows the learned structure (§93).** After a warm-up, a unit is extended to the next level only if one
-of its children carries weight (checked periodically, like sleep): accuracy is unchanged (depth 3: identical per seed;
-depth 4: 0.995–1.000) while events per example fall by 42% at depth 3 (44 → 26) and 75% at depth 4 (≈ 155 → 39); the
-saving grows with depth (E93).
-- A Transformer with a learned relative-time attention bias reaches 0.996–0.9985 on this task after 1M episodes
-  (≈ 180k multiply-adds per episode).
-- **Closing the gap: learned windows plus latest-instant credit (§88–§89).** The remaining errors were lost races to a
-  *shortcut*: a class that fires as soon as its second motif begins, right about 99% of the time. Crediting the latest
-  instant of an example (where the pattern is complete) removes it, once the windows (including the gap between the
-  motifs) are learned: 0.9987 / 0.9967 / 0.9993 / 0.990 / 0.998 from 40k examples seen once (E89), against the
-  Transformer's 0.9955–0.998 after 2M examples and 0.9935 / 0.9965 given the same 40k examples 50 times (without
-  weight decay; 0.982 / 0.985 with): parity at equal data, from one pass instead of fifty, at ≈ 10⁴× less computation.
-- **With 10k examples the chains are more accurate.** Given a fixed set of 10k examples and 200 passes over it (AdamW,
-  weight decay), the Transformer reaches 0.955 and 0.976; the chains reach their plateaus (0.988–0.995) within 8k
-  examples seen once each (E36g). With one credit rule (instant credit, cooled exploration, margin earned by precision),
-  the chains are stable on every task tried: 0.988–0.995 with tuned windows, 0.984–0.992 with a generic window bank.
-
-## 5. Generalization and grokking
-
-**What counts (§58).** A learner generalizes by restriction (its class contains little besides the relation), by
-forced generalization (above its capacity), or by grokking (it reaches the relation while memorizing solutions are
-available). Every claim reports ρ = n/params.
-
-**Per-class parameters cannot generalize on (a + b) mod p (§66).** For a fixed class each operand occurs in exactly
-one pair, so a training pair constrains only its own parameters: generalization needs intermediates shared across
-classes. In time, the natural shared intermediate is a sum, and a sum of times needs a rhythm (§56).
-
-**Grokking as a route change (E37).** Each class has two routes: a pair-node lookup that can memorize every pair
-(ρ ≈ 0.016) and fires first, and a shared route through a rhythm with learned delays. Learning is errors-only.
-
-| condition (p = 31, half the pairs, 3 seeds) | train | test (chance 0.032) |
-|---|---|---|
-| no sleep | 1.000 | 0.03–0.04 |
-| sleep λ = 0.02 / 0.05 / 0.2, no timing noise | ≈ 1.0 (2 seeds) | 0.93–0.97 (2 seeds); the third seed collapses |
-| sleep + cooled timing noise σ = 2 on the shared route (5 seeds) | 1.0 | 0.95–0.99 (5/5 seeds; σ = 0, 1, 4: 4/5) |
-| sleep, no rhythm | 0.45 | 0.00 |
-
-**Phase diagram (data × sleep; 3 seeds per cell, cooled noise).**
-
-![Grokking phase diagram: mean test accuracy (and seed range) by training fraction and sleep strength](report/figures/e37_phase.png)
-
-| fraction of pairs ↓ / sleep λ → | 0.01 | 0.05 | 0.2 | 0.5 |
-|---|---|---|---|---|
-| 0.2 | 0.02–0.03 | 0.03–0.04 | 0.02–0.04 | 0.03–0.04 |
-| 0.3 | 0.08–0.39 | 0.03–0.76 | 0.04–0.88 | 0.89–0.96 |
-| 0.5 | 0.03–0.98 | 0.96–0.99 | 0.98–0.99 | 0.97–0.99 |
-| 0.7 | 0.95–0.98 | 0.98–1.00 | 0.99 | 0.98–0.99 |
-
-**Scaling with the problem size (3 seeds, half the pairs, noise ∝ p):** p = 31: 2 of 3 seeds grok (0.95–0.99); p = 59:
-2 of 3 (0.96–0.98); **p = 97: 3 of 3 (0.96–1.00) at ρ ≈ 0.005**. Larger problems grok more reliably although memorizers
-are relatively more plentiful: at a fixed fraction each shared delay is reused ≈ n/p = p/2 times, which grows with p
-(§72).
-
-Below a data threshold (between 20% and 30% of pairs) no sleep strength groks: weak sleep memorizes, strong sleep
-erodes the memorized pairs with nothing taking over (train falls to 0.64). Above it, grokking needs a minimum sleep
-that falls with data: sleep must dismantle memorization faster than errors relearn it, and more data makes the shared
-route learn faster.
-
-![Train (dashed) and test (solid) accuracy over epochs, with and without sleep](report/figures/e37_grokking.png)
-
-**Why (§69, §72).** With error-gated learning, once the lookup answers a pair correctly nothing else learns:
-memorization is absorbing. Sleep decays parameters; a parameter used by m examples settles near m·e·η/λ and survives
-only if m exceeds m* = λθ/(eη). Lookup entries serve one example and die; the rhythm's delays serve many and survive;
-once the rhythm answers a pair, its decayed lookup entry is never relearned, so the relation becomes absorbing. This
-predicts three regimes (memorization, grokking, collapse), all observed, and a data threshold n* ∝ p·λθ/(eη). The
-delay shrinks with λ more slowly than 1/λ, because the shared route's own learning time dominates.
-
-**The rhythm is used only where it fits.** On relations the rhythm can express the network groks; on relations it
-cannot, it stays at chance on unseen pairs, and under sleep its memorized training pairs erode with nothing to take
-over (3 seeds each, λ = 0.05, cooled timing noise on the shared route):
-
-| relation | expressible by one rhythm | train | test (chance ≈ 0.03) |
-|---|---|---|---|
-| a + b, a − b, relabelled sum | yes | 1.00 | 0.95–0.98 |
-| a · b (the delays must find the discrete logarithm) | yes | 0.53–1.00 | 0.98 in 1 seed, 0.51 and 0.08 in the others |
-| a² + ab + b² | no | 0.48–0.56 | 0.03–0.04 |
-| random table | no | 0.46–0.56 | 0.01–0.04 |
-
-**Grokking with depth (E41, 3 seeds per cell).** (a + b + c) mod p cannot be computed by one rhythm read; the shared
-route composes two stages (a and b set a spike time, which c then offsets). A memorizer for every triple is available.
-
-| (a + b + c) mod p | p = 17 | p = 31 |
-|---|---|---|
-| 30% of triples, sleep | 0.994–0.999 (3/3) | 0.992–1.000 (3/3) |
-| 10% of triples, sleep | 0.79–0.93 | 0.94, 0.98 (2/3; ρ ≈ 0.003) |
-| no sleep | train 1.0, test at chance | train 1.0, test at chance |
-| no chain (lookup only), sleep | train 0.23, test at chance | train 0.11, test at chance |
-
-![Grokking with depth: test accuracy on unseen triples by condition](report/figures/e41_depth_grok.png)
-
-The network discovers the composed relation and generalizes almost perfectly. The fraction of data it needs is far
-above the information-theoretic (Occam) bound of a few percent (§78): at 1–7% of triples it memorizes (train
-0.75–1.00) and stays at chance on unseen triples, also when trained 7–10× longer (2%: 2,000 epochs; 4%: 1,500 epochs;
-3 seeds each). Training time is therefore not what binds; the threshold at p = 17 lies between 7% and 30%.
-
-**Limits.** The shared route's form (one rhythm, or a two-stage chain) is a resource that restricts which relations
-can be grokked; the network chooses it over memorization but does not build it. Timing noise on the shared route
-(cooled with its own updates) is needed for reliability across seeds.
-
-## 6. The weight race
-
-The original architecture, integrate-to-threshold nodes with learned weights racing in groups, holds its first
-results, all at full length with 2–5 seeds:
-- **A cancelled node can be taught (E4):** crediting near misses reaches 0.79 at K = 128 where reward-modulated
-  rules are at chance, with 6% of the updates of uniform credit.
-- **Races decide as fast as the evidence allows (E2):** an accumulator race beats fixed-time decoding at every
-  decision time and matches the optimal MSPRT.
-- **Learning work tracks activity (E5):** about 300× fewer weight updates than a sparse softmax.
-- **Local learning reaches ≈ 0.96 on latency-coded MNIST** (E6, E14); counterfactual credit pays more with depth
-  (+0.2 to +2.5 points at depths 1–5) and credit conservation adds +1.0 to +1.7.
-
-![Depth study on MNIST](report/figures/e14_depth.png)
-
-Its limits: depth still costs accuracy (0.960, 0.952, 0.941 at depths 1–3); only its single racing layer beats an
-equally accurate dense model at inference (≈ 2.4×); it forgets more than SGD in class-incremental learning (E23); it
-memorizes instead of grokking (E24); and the rules that fixed the timing networks (pull-only, conserved budgets,
-prices) do not transfer to its weights (SHD 0.04–0.29 vs 0.35).
-
-## 7. Real data
-
-- **Spiking Heidelberg Digits:** the class-conditional event world model reaches **67.5% test accuracy**
-  with speaker-relative bands (E59). Vector-event pilots reached 14.6% peak held-out accuracy (E74) and 18.4%
-  in a partial readout sweep (E82). Deep E83 has not established reliable recognition or a benefit from depth.
-  Its ongoing route, payload, loss, and calibration diagnostics are collected in **Appendix A**.
-
-- **Market stream (BTCUSDT trades), posed as a trading problem (E42, preregistered; confirmed on 21 unseen days).** Position
-  ∈ {short, flat, long}, decisions at price events, objective profit after costs (2 and 10 bp). Imitating a cost-aware
-  hindsight teacher over-trades (7 pilot days at 2 bp: event learner −12k bp, logistic −4.9k), because a learner that
-  predicts direction only ≈ 60% of the time pays for every switch. A profit-priced event learner (evidence
-  accumulates against prices learned from realized profit) makes 26 changes in 7 days and nets −170 bp, close to
-  buy-and-hold: it learns that trading does not pay here. **Confirmed on 21 unseen days (preregistered):** at 2 bp the
-  imitating event learner loses 15,236 bp (4,760 position changes) and the logistic learner 24,302 bp; the priced event
-  learner nets +226 bp with 8 changes; buy-and-hold +932 bp; the hindsight teacher +9,211 bp. At 10 bp every learner
-  stays out (buy-and-hold +764 bp). No learner beats buy-and-hold; pricing the decision is what stops the losses.
-- **Is staying out right? An edge audit (E55, §87).** Measuring executable round trips from the tape (buy at the ask,
-  sell at the bid, so bid-ask bounce cannot fake predictability), states of BTC spot's own event stream carry a real
-  out-of-sample edge of +0.3 to +0.9 bp per trade before fees, and adding lead–lag states of BTC perpetual futures and
-  ETH raises it to +1.1 to +1.5 bp (pilot, held-out days): more markets do carry more information. But even a 2 bp
-  round-trip fee (a tenth of a realistic taker fee) removes it: staying out is the correct policy for a taker on this
-  data, and the edge that exists would need market-making economics. **Confirmed on the 21 untouched days**
-  (preregistered; fit on the pilot days): before fees +0.26 to +1.05 bp per trade from the own state, +0.47 to +1.40 bp
-  with perp and ETH; at 2 bp every selected state loses (−0.11 to −1.35 bp); at 5 bp no state qualifies.
-  **Across four markets (E55b):** trading ETH spot, SOL spot or the BTC perpetual instead, each with the other three as
-  leaders (horizon and side chosen on the pilot days, read once on the untouched days), the edge before fees is at most
-  ≈ 1 bp (BTC ≈ +1.0, perpetual ≈ +0.6, ETH and SOL ≈ 0 to +0.5), and every selection is negative or empty at a 2 bp fee.
-- **Event-camera gestures (DVS128 Gesture, E60; 11 gestures, 29 people, the official split).** Native motion events
-  (coarse cells with a refractory hold, onset detection, direction-selective pair detectors with an opponent veto, verified
-  on a synthetic moving edge) turn ≈ 410k raw events per gesture into ≈ 15k motion events. A bag of motion events scored
-  by counting reaches 0.663 on unseen people; adding depth (pairs of successive motions in a region) and the
-  multiplicative learner of §83 reaches 0.776 on held-out training users and **0.701 on the test users** (configuration
-  chosen on validation only). Published systems reach 94–98% (trained spiking networks and CNNs). The representation is
-  far from what these gestures need (rotation sense and trajectory shape); depth helps, but this is not yet competitive.
-- **Against a Transformer point process (E52, E57, §90).** A Transformer Hawkes process given the event network's own
-  hazard family (one intensity per event type and gap window) and 128 events of context, selected on day 5 and tested
-  on days 6–7, scores −1.97 / −1.82 nats per event (≈ 108k multiply-adds per event); with 12 finer windows −1.83 / −1.65.
-  The semi-Markov event network scores −2.38 / −2.10; adding slow regime state (leaky event counters at 5 s and 60 s
-  and an order-flow counter, with backoff to the plain model) brings it to −2.18 / −2.00, and a third backoff level of per-type counters −2.16 / −1.97 (fine windows: −1.91 / −1.73; each chosen on day 5)
-  at ≈ 30 operations per event. The Transformer is the better world model by 0.08–0.19 nats per event; the event network
-  gets within that at ≈ 1/3000 of the computation. Estimating the slow state by counts transfers to unseen days;
-  constant-step multiplicative factors track the end of training and do not (E58).
-- **Deeper market event models (E84, queued).** E57 identifies slow rate and order-flow counters as useful market state,
-  with a remaining 0.08–0.19 nats/event gap to the Transformer point process at a small fraction of its counted work.
-  E84 carries the same point-process objective into strict adjacent-layer event chains at depth 2/4/8/16. It pairs auxiliary
-  loss weights 0 and 0.2; predictions use only the deepest layer. The day-1–4/day-5 pilot logs gradients, candidate score
-  pairs, accepted messages, state scans, and gradient alignment. Its work counters now aggregate across all training
-  minibatches and overlapping day-5 windows, reporting per-event training work and per-scored-event inference work.
-  No deeper-market result exists yet; confirmation days remain reserved.
-- **The world model of the stream is an event network, and it beats a neural point process (E44, E48; pilot days).**
-  Decomposing the likelihood showed where a recurrent neural point process (GRU) beat our first native model: in *which*
-  event comes next, not when. Count baselines located the missing information: the time since the last event. A
-  semi-Markov event network (state nodes armed by the last two event types, a bank of window nodes opened by the expiry
-  events of a delay line, hazard and type detectors learned by synaptic counts) reproduces that model exactly and beats
-  the GRU online and on held-out days:
-
-  | nats per event | days 1–5, online (mean) | day 6, frozen | day 7, frozen |
-  |---|---|---|---|
-  | GRU neural point process (online Adam, then frozen) | −2.62 | −3.15 | −2.98 |
-  | native Hawkes-type | −2.81 | −3.01 | −2.86 |
-  | **semi-Markov event network** | **−2.11** | **−2.38** | **−2.10** |
-
-  Cost: ≈ 4 network events and ≈ 19 synaptic operations per market event, against thousands of multiply-adds for the
-  GRU. The model class is classical (Markov renewal processes); what is shown is that the event network with window
-  nodes is the right world model here and generalizes across days. A GRU trained offline for several epochs on days
-  1–5, the strongest recurrent baseline, scores −2.72 / −2.53 on the held-out days: the event network is ahead of it too
-  (E49); the Transformer point process is ahead of both (below, E52).
-- **Earlier native world model (E44, pilot days).** Four event types (price up/down moves, large aggressive
-  buys/sells) as a temporal point process learned online from every event (§79), scored by the prequential
-  log-likelihood of each event's type and timing:
-
-  | model | nats per event, days 1 / 2 / 3 |
-  |---|---|
-  | constant rates (Poisson) | −3.00 / −3.42 / −3.32 |
-  | Hawkes process, Adam | −2.62 / −2.94 / −2.84 |
-  | native (normalized multiplicative learning) | −2.64 / −2.85 / −2.70 |
-  | native + fast/slow surprise-gated plasticity | −2.64 / −2.85 / −2.69 |
-  | recurrent neural point process (GRU, Adam) | – / −2.61 / −2.52 |
-
-  The native world model matches or beats Hawkes but trailed the neural point process by ≈ 0.2 nats; the semi-Markov
-  network of E48 (above) closed that gap. Adding pair-part state was neutral; adding inhibition (to express suppression)
-  destabilized learning as implemented; learning-to-learn plasticity was neutral on whole-day averages.
-
-## 8. Open problems and next steps
-
-### The missing bridge
-
-The manifesto calls for learned computation in time, with sparse activity, local state, and credit to unrealized
-alternatives. The results establish several parts of that vision in different model families. The next goal is
-one deep representation learner that combines them.
-
-| Required capability | Present evidence | Next decisive result |
-|---|---|---|
-| Correct event computation and credit | Exact race/route calculus; arrival reconstruction defect now isolated | Correct jump/reset/payload semantics and matching derivatives |
-| Useful learned depth | Synthetic depth-4 wins; E77 eight-layer gradient reach | Deep transformations improve real-data predictions under matched budgets |
-| Productive counterfactual choices | Lost-race credit works in controlled tasks | Optionality predicts transferable learning, with search/replay cost counted |
-| Asynchronous recognition | E59 reaches 67.5% SHD test; E119 depth-8 reaches 59.0% final / 63.7% best-checkpoint on 256 held-out-speaker development examples | Useful depth under matched protocols, full-data speaker generalization, calibrated early answers |
-| Sparse frontier scaling | Language-mixture and retrieval advantages | Learned shared representations, affordable candidate search, matched scaling curves |
-| Systems advantage | Large counted-work leads on controlled tasks | Lower measured training and inference energy at matched quality |
-
-The analytical priorities are hybrid-system jump derivatives, label-sensitive Jacobian conditioning, and
-budgeted optionality over attainable future decisions. A new derivation shows that same-sample virtual learning
-progress includes a gradient-noise term; independent adaptation and evaluation separate that from transferable
-learning (§§155–163). Detailed SHD development results are in Appendix A. AWS owns the non-SHD benchmark work.
-
-**Optionality, sharpened (§§159–163).** Useful alternatives are distinct attainable futures under a causal
-information and work budget. The value of waiting to choose is E[max utility after evidence] minus
-max E[utility before evidence]; noisy or duplicate choices need not add value. A fixed continuation objective
-can return one scalar from each child, but a standalone premium generally cannot be backed up without its baseline.
-For virtual learning with fixed metric M, same-sample expected progress contains tr(M Cov(g)); independent
-adaptation/evaluation removes that first-order noise bonus. These are analytic results; their effect on SHD learning
-has not yet been tested. A further constraint is realizability: forced-event combinations may be incompatible with shared routing parameters. Section 163 derives the minimum local control cost to cross a margin and requires counterfactual payload/reset semantics to match ordinary execution.
-
-![Optionality and transferable learning: exact finite examples](report/figures/optionality_contract.png)
-
-The cross-domain mathematical synthesis, scope limits, and falsifiable route to the language-model frontier are in [MATHEMATICAL_PROGRAM.md](experiments/MATHEMATICAL_PROGRAM.md).
-
-The synthesis now treats topology and representation as separate experimental axes. Events may carry dense embeddings, low-rank features, sparse/codebook vectors, structured codes, or symbolic payloads with timing, and may interact with recurrent state or retrieved key–value memory. No payload form is assumed best. It also gives an amortized cost model that charges candidate search, topology learning, index construction, memory traffic, and synchronization alongside active events. E79's race mixture scores 1.808 frozen test bpc at 1M text8 characters, against 2.179 for the completed LSTM and 2.367 for the 2-layer width-256 Transformer on the same split. At 10M, E79 scores 1.613 frozen test bpc versus 1.799 for the completed 1.2M-parameter, two-layer 512-unit LSTM and 1.908 for the completed 3.24M-parameter, four-layer Transformer on the shared test segment. The four-layer Transformer checkpoint was selected on validation and scored 1.9083 held-out test bpc after 4,882 updates. The E79 comparisons are single-seed and include six experts plus copy memory; the Transformer and LSTM also use different pass counts. This is a same-split language-model result, not a compute- or parameter-matched architecture comparison. E77 has no completed scale-level LM result yet. A parameter-matched 8-layer Transformer control completed 1M training characters over five passes (1.251M parameters, 4,882 updates, 1,617 s), with 2.322 validation and 2.352 test BPC. Its E77 partner exceeded the 3.5 GB process RSS cap at 3.83 GB before training, so the guarded runner stopped it while host memory remained above 10 GB. E77's bounded 100k-character, one-pass depth-8 run is now prioritized; no new Transformer run is scheduled until we review that result. A default-width depth-4 pilot showed why raw voltage quantiles were insufficient: they left the stack nearly silent. Matching the realized post-reset spike rate restored gradients through all four layers; an 8-layer, width-8 pilot then had gradients in every layer at all 16 validation points with sparse test activity. These are trainability diagnostics, not language-model quality or scaling results.
-
-- **Stability of the full rule set on every task at once:** the margin earned by reliability is stable at depth 3 and
-  4 and with fixed windows, but hurts when windows are learned: at the firing instant it entrenches early shortcuts, and
-  at the latest instant it keeps promoting noise that follows the pattern (§89). The margin needs another anchor.
-- **Deep representation learning:** connect event support, payload information, and label-aligned credit.
-  The current E83 simulator has an arrival/emission inconsistency under investigation (§155); Appendix A
-  records the mechanism audits and matched correction pilot. Restoring activity alone has already failed
-  to restore recognition. The next gates are a correct hybrid event kernel, fit-set learnability,
-  held-out-speaker generalization, and a demonstrable contribution from deeper transformations.
-- **Anytime classification of sparse streams (§§119–§129):** for a true prefix posterior, emitting at its first
-  confidence crossing of $1-\epsilon$ bounds the error among emitted answers by $\epsilon$; this is a derived guarantee,
-  conditional on sequential calibration, not yet an E83 result. For point-process inputs, both observed events and
-  class-dependent silence carry evidence, so between-event crossings may require scheduled clock updates. When an event
-  changes only $r$ class logits, indexed max and log-sum-exp trees maintain the exact confidence threshold in
-  $O(r\log C)$ work; a reference implementation is in `experiments/sparse_anytime_readout.py`, not integrated or
-  benchmarked yet. Sampled-prefix log loss is proper for the posterior given a prefix despite having only one label per
-  complete stream; the race objective alone does not determine calibrated prefix probabilities. The staged
-  route-credit → posterior → stopping-policy plan is in §§127–§129. Max pooling can add a further dead zone: a shadow route
-  gets no terminal loss credit unless it changes a temporal winner; smooth-max can soften this while retaining sparse
-  event updates. This task structure covers SHD speech and event-camera
-  clips with one label per stream.
-- **A time-vector language model (§§107, 133–134; E77):** exact replay of threshold/reset dynamics restored gradients
-  at default width, and the width-8 depth-8 pilot had gradients in all eight layers at all 16 validation points. This is
-  the first evidence that initialization can support learning past depth 4; BPC remains a tiny-smoke diagnostic, not a
-  quality result. Route-shadow effects remain small and uncertain, so the correction stays disabled. The next open
-  questions are scale-level quality, evidence-conditioned local updates, and actual retrieved keys/work per character.
-- **The work law of attention in language (§106a):** how many keys the queries of a trained character-level Transformer
-  actually need, as the context grows (E76); this fixes how much delay-coded attention saves on text.
-- **Structure discovery for grokking:** a bank of rhythms and chain depths from which the network must pick, so that
-  grokking no longer relies on a provided route (E45 pilot: it picks correctly).
-- **The data threshold of grokking** is far above the Occam bound (E41: between 7% and 30% of triples at p = 17); the
-  sleep reuse filter (§72) is the candidate constraint; untested.
-- **Native learning of sparse parity** with toggle nodes: representable by one node, learnability open (§75).
-- **A real benchmark where the paradigm should win:** streams with rare, precisely timed events (§55), and a
-  representation for speech that the native learner can use.
-- **Joules, not operation counts:** run trained networks on neuromorphic hardware (§9).
-
-**Working constraints.** The target is local state with computation and credit triggered by messages and
-scheduled events. E83 currently scans a 1 ms grid; E77 also has dense candidate-scoring paths. The new jump/payload
-audit shows why an event-driven adjoint must be derived for the exact implemented hybrid dynamics, rather than assumed
-from a smooth-crossing formula. These prototypes have not demonstrated full-model asynchronous training cost.
-All local jobs run one at a time through `experiments/queue/run_safe.sh` with memory and time guards.
-
-## 9. Hardware: what these networks need, and what exists
-
-**What the model asks of hardware.** Each primitive the theory and experiments settled on maps to a hardware feature:
-
-| what the network does | what hardware must provide | why (theory / evidence) |
-|---|---|---|
-| work only when an event arrives | event-driven execution, no global clock sweep; memory next to compute | cost follows activity (§55, §63, §77) |
-| delays and hold windows (“B within 1.5 s after A”) | per-synapse programmable delays and per-node hold timers, fine time resolution, ideally timestamps rather than time steps | order is held intervals (§61); one node = a product set in lag coordinates (§71) |
-| first to fire wins, the rest are cancelled | fast arrival-order resolution and inhibition (winner-take-all) | the race readout; timing precision bounds exact computation (§59) |
-| summed held and coincident inputs | integrate-and-threshold at the event | §83 |
-| learning: multiplicative credit under a conserved budget | per-synapse multiplicative update plus per-node renormalization, a tag marking which synapses contributed at the credited instant, a local random source, a per-node precision counter | §83–§86b, §89 |
-| synapses grown only when first credited | run-time allocation of synapses in a sparse store (the candidate basis is 10⁵–10¹⁰ units; only 10⁴–10⁵ are ever grown) | §85 (exactly dense Winnow) |
-| part windows tuned from their own lags | per-synapse window edges updated by a local rule | §88 |
-| signals that carry small vectors whose content sets their delay | an 8–32-value payload per event, a small dense core per unit, a delay computed per message, and a jitter small against the delay scale | delay-coded attention (§105); latency × weight error = jitter × logit range (§106b) |
-
-**The optimal machine (a sketch).** Clockless digital cores with timestamped events, per-synapse delay and window
-fields, and per-node timers; arrival-order comparators and inhibition trees for the race; a small event-triggered
-learning engine per core (multiply, renormalize, tag, random draw); and a content-addressed sparse synapse store with
-allocation on credit. This is close to *race logic* (computing with the arrival times of signal edges: first arrival is
-a minimum, a delay is an addition; the same tropical, max-plus algebra as the weaving operator of §79), plus learning.
-At published costs of ≈ 24 pJ per synaptic event (Loihi, 2018), the networks of this report would spend about 0.2 nJ per
-example on the timing task (7.5 events), ≈ 0.5 nJ on composition (≈ 20) and ≈ 4 nJ at depth 4 (≈ 150); a Transformer
-at 175k multiply-adds per example on a GPU spends on the order of a microjoule (orders of magnitude, not measurements).
-
-**What exists (September 2026).**
-
-| system | availability | fit for these networks |
-|---|---|---|
-| Intel Loihi 2 (and Hala Point, 1,152 chips) | research access only (Intel's research community); Hala Point is a prototype at Sandia; Loihi 3 announced, specifications unpublished | **best current match for prototyping:** asynchronous event-driven cores; weight, delay (up to 62 time steps) and tag per synapse; learning rules programmable in microcode. Missing: synapses allocated at run time, delays beyond ~60 steps, continuous timestamps |
-| SpiNNaker2 (SpiNNcloud) | commercially available systems (152 ARM cores per chip); deployed at Sandia | **most flexible:** every rule here, including synapse growth, can be written in software; less energy-efficient per event than dedicated logic; time-stepped |
-| BrainChip Akida (AKD1000/1500; Akida Pico) | commercial; Pico in FPGA-cloud evaluation since Feb 2026; Akida 2 in development | built for converted convolutional spiking networks with limited on-device learning; no programmable delays of the kind needed: poor fit |
-| Innatera Pulsar | in volume production (2026): spiking fabric plus RISC-V and CNN/FFT accelerators, µW–mW | deployment of small, already trained networks at the sensor; learning of the kind here not advertised |
-| SynSense Speck (vision, with an event camera on chip) and Xylo (audio, time series) | commercial dev kits | inference-only spiking ASICs: deployment of small trained networks |
-| DYNAP-SE2, BrainScaleS-2 | research | analog continuous-time dynamics (delays through synaptic time constants, ~10 ms); natural time, but device mismatch |
-| IBM NorthPole | research | synchronous, dense near-memory inference: not event-driven, not a fit |
-| FPGAs | commercial | delays as timestamp queues, synapses in block-RAM hash tables: **the most practical way to build the full rule set faithfully today** |
-| event sensors: Sony/Prophesee IMX636/637, iniVation; event audio | commercial | natural front ends: they emit exactly the event streams these networks consume |
-| CPUs / GPUs | commercial | a CPU simulates sparse events efficiently (all experiments here ran on a few CPU cores); GPUs suit dense, regular work and fit poorly |
-
-**What to do with it.** (1) Measure joules, not operation counts: map trained networks onto Loihi 2 (inference) and
-the full learning calculus onto SpiNNaker2 or an FPGA, against a Transformer on a GPU. (2) Deploy frozen networks on
-sensor-edge chips (Pulsar, Xylo, Speck) where event sensors already exist. (3) The feature no commercial chip offers,
-and the one these results say matters most, is **run-time synapse allocation on credit** (with per-node conserved
-budgets): it is what lets a network search a basis of 10⁷–10¹⁰ candidates while storing only what it uses.
-
-*Sources:* [Intel Hala Point](https://newsroom.intel.com/artificial-intelligence/intel-builds-worlds-largest-neuromorphic-system-to-enable-more-sustainable-ai) ·
-[Loihi 2 overview](https://open-neuromorphic.org/neuromorphic-computing/hardware/loihi-2-intel/) ·
-[Loihi 2 learning and delays](https://www.emergentmind.com/topics/loihi-2-neuromorphic-chip) ·
-[SpiNNcloud SpiNNaker2 launch](https://siliconangle.com/2024/05/08/spinncloud-systems-launches-spinnaker2-first-commercial-neuromorphic-supercomputer/) ·
-[SpiNNaker2 at Sandia](https://www.hpcwire.com/off-the-wire/sandia-deploys-spinnaker2-neuromorphic-system-from-spinncloud/) ·
-[Akida Pico](https://brainchip.com/brainchip-announces-immediate-availability-of-akida-pico-for-remote-evaluation-via-fpga-cloud/) ·
-[Innatera Pulsar](https://www.innatera.com/newsroom/innatera-unveils-pulsar-the-worlds-first-mass-market-neuromorphic-microcontroller-for-the-sensor-edge/) ·
-[SynSense Speck and Xylo](https://www.synsense.ai/synsense-launches-speck-xylo-neuromorphic-development-kits-for-edge-ai-vision-and-audio-work/) ·
-[DYNAP-SE2](https://arxiv.org/pdf/2310.00564) ·
-[Sony event-based vision sensors](https://www.sony-semicon.com/en/products/is/industry/evs.html) ·
-[Race logic (Madhavan, Sherwood, Strukov)](https://ieeexplore.ieee.org/document/6853226/) ·
-[Loihi energy per synaptic operation (Davies et al., 2018)](https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf)
-
-## 10. Next frontier: generative language models
-
-**The aim** is not to approximate Transformers but to exceed them: the same or better quality, with work per word that does
-not grow with model size or text length, learned by local rules from less data.
-
-The clearest real-language signal so far is E79's race mixture: at 1M training characters it scores 1.808 bpc frozen
-(1.782 with online weight adaptation), against 2.179 for the completed validation-selected LSTM and 2.367 for the
-2-layer Transformer on the same text8 training and test split. This is a strong result for combining native predictive
-experts and associative copy memory. The expert mixture has additional memory and its compute is not yet matched, so
-this result motivates the deeper E77 test rather than standing in for it. In a separate synthetic task, E61 learned
-query–key retrieval with local credit and generalized to four times the context. Together with the exact delay-coded
-attention result and the associative state scan, these results make the architectural path concrete: learn to retrieve,
-compose state in parallel, then build depth and measure the full model.
-
-### Potential: a different route to frontier models
-
-#### Within reach from the results already obtained
-
-The nearest opportunity is a set of useful specialized components. On controlled temporal tasks, the networks already learn accurate order detectors and deep compositions from relatively little data and counted work. That supports building bounded event-pattern recognition modules where the task matches those primitives. E61's learned associative retrieval reaches 100% accuracy at four times its training context in all five runs; this supports developing a selective retrieval component, with candidate-search cost as the next engineering question. E79's frozen text8 mixtures lead the completed same-split language baselines at both 1M and 10M training characters. Predictive mixtures with copy memory are therefore a concrete starting point for further stream prediction and compression work. These capabilities exist in separate prototypes.
-
-#### The next capability gains the evidence motivates
-
-The market event world model approaches its Transformer reference within 0.08–0.19 nats per event at roughly one three-thousandth of the counted computation, while the Transformer remains more accurate. This motivates low-work streaming prediction components and better learned temporal state; it establishes no profitable trading system. SHD's event world model reaches 67.5% test accuracy, showing that native event representations extract substantial information from speech. An eight-layer winner-only event model now reaches 59.0% at its final epoch, with a best development checkpoint of 63.7%, on 256 held-out-speaker examples after training on 1,024 utterances. An earlier controlled depth comparison favored eight layers by 15.2 percentage points. Stable signal transport and conditioned credit have made deep recognition learnable in this configuration. An exact event-memory implementation also makes its audited forward/backward computation 1.68 times faster on this CPU while preserving the checked predictions and gradients. This gives a concrete way to spend less computation per update and use the saving for more learning. Full-data speaker generalization, measured joules and calibrated early decisions are the next SHD milestones. A realistic next milestone is to connect these predictive, memory, and temporal components, establish useful depth on real streams, and measure their practical latency and energy. The evidence supports this focused engineering and research program more directly than it supports a general-purpose frontier model today.
-
-#### What could become reachable in principle
-
-If one architecture combines learned representations, reliable deep credit, useful counterfactual route discovery, and affordable sparse retrieval, the ambition expands to frontier language and multimodal models. The existing theory gives mechanisms for attention-like associative computation, temporal composition, and local credit; it does not require every layer to be an attention layer. A successful synthesis could support large persistent memories, computation that grows with task difficulty, and continual learning inside a mobile or embedded power budget. Better quality per training joule could also make substantially larger frontier training runs practical for a given power budget. These outcomes are possibilities conditional on the missing optimization and systems results, rather than consequences of expressive power alone.
-
-#### The ambition: a different scaling regime for intelligence
-
-If Sleeping Machines combine frontier predictive quality, reliable deep learning, and lower total training and inference cost, the opportunity extends to how intelligent systems are built and used. A model could grow its repertoire of representations, memories, and skills while activating a small relevant portion for each situation. Time, persistent state, and selective communication would become resources the model learns to use. The central prospect is capable intelligence whose computation follows the difficulty and information content of its task. The measured language, retrieval, and compositional results give distinct footholds toward that goal.
-
-#### Training is part of the transformation
-
-Efficient credit assignment could change the economics of creating capability as much as the cost of using it. A fixed power and research budget could support deeper models, larger useful memories, more training data, and more experiments. If improvements come from better sample efficiency as well as cheaper updates, each unit of experience could produce more learning. Small research groups and industrial teams could explore model scales and specialties that are currently beyond their budgets. Establishing this requires accounting for route discovery, counterfactual replay, optimizer state, and communication throughout training.
-
-#### Capacity that does not all have to wake up
-
-A large store of dormant skills and memories could be economical when queries locate useful entries cheaply and credit touches only relevant structure. That opens a path toward systems that retain much more experience without revisiting all of it for each decision. The decisive mathematical and systems requirement is that candidate search and maintenance remain affordable as capacity grows. Success would make useful capacity, active computation, and learning cost separately controllable design variables.
-
-#### Persistent learning in the physical world
-
-A robust event-to-decision module could unite hearing, event vision, touch, telemetry, and language in a system that keeps context across long periods and reacts when sufficient evidence arrives. Phones, robots, vehicles, wearables, and remote instruments could learn local patterns while operating, with brief periods of intense computation separated by low-activity intervals. The transformative capability would be sustained perception, memory, adaptation, and action within a mobile power envelope. Reliable continual learning, retention, and calibrated decisions are additional milestones; SHD is an early test of this reusable task class.
-
-#### Scientific and industrial systems that learn from events
-
-Laboratories and instruments could use these models to select informative measurements, detect rare events, and update hypotheses as evidence arrives. Industrial systems could combine fast local responses with slower learned models of machines, processes, and fleets. The same architecture could allocate effort across milliseconds of control and months of accumulated experience. Such systems could make experimentation and maintenance more adaptive, provided their learned predictions and decision policies are validated for each application.
-
-#### A different frontier hardware and infrastructure strategy
-
-If an event architecture delivers the best measured quality per training joule, frontier investment would rationally target the hardware that executes it best. Cheap delayed messages, local memory, sparse routing, efficient candidate lookup, and selective learning updates could become central accelerator capabilities. Data-center design would optimize useful learning and communication per watt. The architecture could change which processors are worth building and which workloads need a large centralized installation. A successful model could also justify larger training runs within the same energy envelope, so greater efficiency expands the set of feasible frontier systems as well as lowering their cost.
-
-#### Optionality as a learned computational resource
-
-A network that can preserve useful alternatives until later evidence arrives has a richer way to allocate computation. It can delay commitment, explore a small counterfactual, recruit a new route, or stop when further work has little value. The potential is to learn how much thinking and learning a situation deserves. The revised theory distinguishes this reserve from uncertainty and immediate improvement, and identifies a key requirement: later choices must be attainable, distinguishable, and useful under the available information and work budget. This could connect adaptive inference and adaptive training in one framework.
-
-#### What would establish the paradigm shift
-
-The strongest outcome would be one architecture demonstrating these advantages together: competitive frontier quality, improved scaling with depth and data, useful continual adaptation, and lower measured total resource cost. That would give the field a new practical recipe for building frontier models and move the design space toward temporal, selective, stateful computation. The current evidence motivates pursuing that outcome. The next work connects the successful model families through correct event semantics, transferable representation learning, useful deep credit, and a fully measured sparse implementation.
-
-#### The mathematical bridge
-
-Sleeping Machines can combine mechanisms that dense sequence models usually bundle together. Event-state layers build and
-update representations only when messages arrive. Time carries order, duration, and confidence; payload vectors carry
-content. A separate retrieval interface can learn key/value attention when a query needs stored detail, while a recurrent
-state path can carry useful summaries at linear sequence cost. Local event credit can train the active causal path, and
-near-miss credit can recruit alternatives that did not win. This gives the architecture room to choose *how* to compute
-for each input rather than forcing every layer to perform the same dense operation.
-
-The strongest opportunity is to combine these parts into a deep, heterogeneous stack: temporal feature layers, selective
-state updates, query-driven retrieval, and learned decision/readout layers. Softmax key/value attention is a one-step
-modern Hopfield retrieval rule under its associative-memory interpretation; the attention/Hopfield connection is
-established in the literature ([Ramsauer et al.](https://arxiv.org/abs/2008.02217)). E77 now applies a separate
-query/key/value associative update directly to emitted event payloads, then carries the retrieved payload onward through
-the event stream. The exact score gradient is centered around the retrieved value, so it teaches both which keys to
-address and which payloads to transmit. This gives event message passing an attention-capable associative primitive
-without making every temporal layer an attention layer.
-
-The auto-associative case has additional structure: retrieval is the gradient of a convex log-partition function, and
-its Hessian is a positive-semidefinite key covariance. Repeated retrieval is contractive when
-β × key-diameter² / 4 < 1; above that sufficient threshold, this argument no longer ensures stable settling. Decoupling
-keys from values enables hetero-associative memory but makes the query Jacobian a cross-covariance that need not be
-symmetric. E77 therefore uses one gated Hopfield update per event layer and retains an identity path instead of assuming
-that repeated associative settling will converge.
-
-There is now a useful local depth result (§107(g–h)): for fixed stored keys and values, the query sensitivity is a
-cross-covariance bounded by (inverse temperature × key diameter × value diameter / 4), independent of the number of
-memories. For a full event sequence, however, a key shared by many later queries can amplify gradients. §107(h) bounds
-the sequence Jacobian using each key's accumulated attention mass, plus query/key/value projection gains and the output
-gate. If every event-level correction satisfies the resulting bound, residual scaling by 1/depth keeps the payload-path
-Jacobian between positive, depth-independent bounds. E77 now logs key fan-out, the sequence-level bound, its scaled value
-and layer sum, score spread, retrieval entropy, update size, key/value diameter bounds, and role-specific gradients.
-The certificate is local to a fixed event order and candidate set; hard event births, route discovery, and changes in
-top-k membership remain outside it. These measurements will show whether the 2/4/8/16-layer models meet the sufficient
-condition rather than assuming they do.
-
-Retrieval precision also trades off with learning credit. If the best key leads by score margin $m$, the non-winner
-softmax mass is at most $(N-1)e^{-\beta m}$. Yet for two candidates the derivative is $\beta p(1-p)$: it is largest
-at a tie and vanishes after one route becomes certain; a hard-excluded key receives no gradient. This derives a concrete
-learning schedule: begin with broad associative retrieval and near-miss credit, then sharpen and sparsify only while
-candidate recall and score-gradient coverage remain high. New analysis (§112) uses the law of total covariance to split
-the query-gradient error from pruning into omitted within-set covariance and a between-set key/advantage term. Its norm is
-at most $\\beta\\epsilon(3/2-\\epsilon)D_KD_A$, where $D_K$ is key diameter and $D_A$ is the range of the key's
-loss advantage. Thus mass recall bounds absolute error but can miss all of a weak gradient: in a two-key example, retaining
-99.9% of the mass leaves the sparse query gradient zero while the omitted key carries the entire dense gradient. The same
-section shows that adding a missing key changes the loss by $rA+O(Hr^2D_V^2)$, where $A=\\nabla F(y)^\\top(v-y)$ is
-the already-derived attention credit and $H$ bounds downstream curvature. This supplies an attention-specific, curvature-
-controlled counterfactual loss estimate for the existing sparse-expert router (§§19, 57). Substituting it into the
-existing route-boundary gradient gives an explicit counterfactual error budget; this can direct exact shadow work toward
-near-miss keys where curvature makes the local estimate least reliable. It does not reduce the cost of finding keys. The
-same analysis now closes the smooth-loss VJP gap: the query-gradient truncation error is bounded by
-$\\beta\\epsilon D_K[(3/2-\\epsilon)D_A^C+HD_V^2/4]$, with matching key- and value-VJP bounds. The curvature term accounts
-for the upstream gradient changing when retrieval changes the output; the bound remains absolute and gives no alignment
-guarantee near a zero dense gradient. This is a mathematical result awaiting autodiff checks, not an experimental result. The proposed 1M/5-pass depth sweep did not produce an E77 result: its width-128 depth-8 attempt crossed the 3.5 GB process RSS cap before training. The matched 8-layer Transformer control completed at 2.352 test BPC, but cannot be compared with E77. A bounded 100k-character, one-pass depth-8 E77 run now takes priority; no Transformer control is scheduled until its result is reviewed.
-
-**Deep sparse-stack stability (§§113–114; derived, with a small numerical diagnostic).** Section 113 composes local output and
-Jacobian error through residual depth; under $1/L$ residual scaling and bounded per-layer constants, the error bounds
-remain depth-independent. Section 114 now lifts fixed-support softmax truncation to a full sequence Jacobian:
-$\|D\mathcal A-D\tilde{\mathcal A}\|_{2\to2}\le\sqrt{RC}$, where $R$ is a per-query row-sum bound and $C$ is a
-shared-key column-sum bound. Its $F_j$ term measures how truncation changes the influence of key $j$ across all queries,
-so the certificate includes key fan-out rather than treating queries independently. These results compose for smooth,
-fixed-support residual attention. For E77, constants must hold throughout the state region; the sparse Jacobian's
-Lipschitz constant, parameter-VJP errors, and input-dependent gate terms still need bounds. Route changes remain the
-existing §§19/57 boundary problem. This advances the analytic bridge but does not prove task-gradient alignment or
-training convergence. E114 checked 144 fixed-support synthetic cases by central finite differences: no absolute bound
-violation exceeded $10^{-8}$; among cases with nontrivial bounds, the largest Jacobian and forward-error ratios were
-0.897 and 0.687. The largest positive absolute Jacobian excess was $1.32\times10^{-10}$. Exact-support cases have
-essentially zero bounds, so their finite-difference residue is assessed absolutely instead of by relative ratio.
-Autodiff checks, learned supports, and architecture-scale uniform constants remain to be tested.
-
-#### If these mechanisms scale
-
-If deep event stacks preserve the Hopfield address/value learning signal, learn the routes that matter, and find
-retrieval candidates without scanning every stored key, frontier models could grow their useful memory and reasoning
-capacity without making every token pay for every possible interaction. Training work would follow the examples and
-routes that create predictive value; inference work would follow emitted events and retrieved candidates. The model
-could retain a large associative store while only a small, input-dependent fraction participates in each prediction.
-
-That would change the practical scaling strategy. More capability would come from composing sparse temporal features,
-event-triggered memory updates, and content-addressed retrieval—not only from increasing dense matrix size and token
-throughput. A stronger accuracy-per-compute curve would shift investment toward memory bandwidth, fast sparse routing,
-event-capable processors, and distributed associative stores. Frontier development could become less dependent on
-ever-larger dense GPU clusters, while training becomes more data- and update-efficient. The paradigm shift would be a
-new way to scale model capacity and learning together: preserve Transformer-level associative recall, compose it deeply,
-and spend computation where the learned model says information is needed.
-
-The mathematical work now points to concrete levers for that outcome: keep score credit alive near competing routes,
-bound payload and layer gains as depth grows, and reduce candidate search with an index that preserves retrieval mass.
-The depth-4/8/16 queue is the first language-model test of whether those levers work together beyond shallow stacks.
-
-### Evidence to date
-
-The E79 text8 scores at 1M / 10M / 90M characters are 1.808 / 1.613 / 1.504 bpc frozen and 1.782 / 1.593 / 1.483
-with online adaptation. The expert count also rises from five to seven, so this is a joint data-and-capacity trend. The
-completed 1M same-split gradient baselines score 2.179 for the 256-unit LSTM and 2.367 for the two-layer Transformer.
-At 10M, the completed two-layer, 512-unit LSTM scores 1.799 test bpc (1,199,323 parameters, six passes); E79's frozen
-mixture scores 1.613 on the same test segment, a 0.186 bpc lead. The four-layer Transformer checkpoint was selected
-on validation and scored 1.9083 held-out test bpc after 4,882 updates, 0.1090 above the LSTM's test score. The Transformer has 3.24M parameters and used four
-passes; the LSTM has 1.20M parameters and used six. E79 combines six native experts and copy memory. These comparisons
-share data and test segments, but not model capacity or training budget. E79 supplies the strongest completed
-project-internal real-language result; compute-matched and deep-model comparisons remain open. E79's expert-race
-mixture validates credit for allocating among component predictors, not gradient training through a deep event stack.
-E77 is the separate deep time-vector language model with vector messages, delays, and causal key–value retrieval; it has
-not produced a completed language-model result yet.
-
-Depth is now a first-class variable in E77. Each deeper layer receives the retained event stream, appends its newly
-emitted events, and also receives sparse raw-input skips; it does not add a dense per-token residual computation. THEORY
-§107(f) proves a non-contracting inclusion path for existing event payloads under fixed topology, while §107(g–h) bounds
-the Hopfield residual correction when its sequence-level gain and key fan-out are controlled. E77 logs per-layer
-activity, associative score spread/entropy, update size, key/value diameter upper bounds, key fan-out, the payload
-Jacobian certificate and its residual-scaled value, and role-specific gradients. Retaining events can increase pairwise
-retrieval work with depth, so the same sweeps also report messages, events, and score candidates.
-
-The first activity-bootstrap pilot at width 8 exposed a fixed-threshold failure, but its raw voltage quantile was not
-enough at the default width. On a matched depth-4, width-128 run (10k training characters, 39 updates, one seed),
-quantile-only initialization yielded selected-checkpoint test activity [0, 0.007, 0.009, 0.004] spikes/character and
-nonzero gradients at only [1, 9, 12, 6] of 13 validation points. E77 now replays the exact threshold/reset recurrence
-on saved voltage traces and chooses a threshold by realized firing rate. It matched the initial layer rates to
-[0.096, 0.082, 0.094, 0.100] around a 0.1 target and reached all four layers at all 13 validation points. Activity
-then grew to [0.204, 0.190, 0.456, 0.802] spikes/character by the selected checkpoint, showing that the learned
-representation shifts event statistics; online homeostasis is not implemented. The held-out BPCs 3.765 and 3.824
-were measured on 1,000 characters and do not support a quality comparison.
-
-The same calibration carried a width-8 stack to depth 8 on 4,096 training characters and 16 updates. All eight layers
-had nonzero gradients at all 16 validation points; initial rates were [0.102, 0.086, 0.109, 0.102, 0.086, 0.102,
-0.098, 0.102], and test rates were [0.115, 0.125, 0.217, 0.075, 0.081, 0.138, 0.124, 0.121]. Its BPC of 4.319
-on 512 test characters is too noisy to establish quality; the matched 4-layer smoke scored 4.254. This is the first
-evidence that the initialized training path extends beyond four layers, not a depth-scaling law or supremacy result.
-
-A fresh depth-4 route-shadow pass used 64 candidate openings per layer. Trajectory-cluster means ± SE for
-$L_{open}-L_{closed}$ were [+0.000360 ± 0.000218, −0.001115 ± 0.000325, +0.000220 ± 0.000278,
-−0.000435 ± 0.000290]. Layer 2's routes tended to help, but the network changed after each minibatch, so these are
-not independent replicates. The mean counterfactual/pathwise norm ratio was 0.77% and cosine 0.0040; the correction
-remains disabled. This is a weak route-utility signal, separate from the much stronger evidence that rate matching
-reopens pathwise gradients.
-
-![Depth-4 rate-matching comparison and depth-8 E77 gradient reach](report/figures/e77_depth_trainability_bootstrap.png)
-The token-level adaptive retrieval interface has a linear-time recurrent-state path, but both token retrieval and
-event-level Hopfield lookup currently score every eligible query/key pair. In addition,
-`TVLayer` simulates state in dense time-by-batch-by-unit tensors even though its synaptic connectivity is sparse. Thus
-the design remains event-oriented and has sparse routing, while this implementation has not yet achieved fully sparse,
-event-driven execution or demonstrated lower energy. Both simulator work and retrieval search must be measured and
-optimized before claiming a compute advantage.
-
-**Depth fairness is mandatory.** E77's two-block setting is a prototype configuration, not a frontier comparison. The
-queued text Transformer baseline has two layers; the best E61 recall Transformer used four, and the published large-model
-text8 numbers cited elsewhere are not matched in depth, parameters, or training budget. E79's 90M result is a contextual
-reference, not proof that a small native mixture has lost to a comparable frontier model. Before drawing an architectural
-conclusion, sweep event depth (2, 4, 8, 16), widen capacity, train to comparable validation convergence, and compare both
-at matched depth and matched total training work. If loss is worse, inspect training loss, residual gradient norms, event
-activity/route coverage, retrieval recall, and scaling with data; then fix the diagnosed bottleneck and rerun. Depth is a
-core capability to build and measure, not an optional ablation.
-
-The strategic upside is substantial: if learned topology keeps useful information and credit flowing while inactive
-routes remain quiet, models can grow in representational capacity without making every token pay for every possible
-interaction. That would change the practical scaling curve for both learning and inference. The E77 implementation is the
-next concrete step toward this architecture; its adaptive interaction, residual depth, and resource frontier need the
-depth and compute experiments above.
-
-**Why that is a reasonable aim** (theory; details in §96–§98):
-- *Nothing a Transformer computes is out of reach.* Every part of a Transformer layer has an event form: similarity between
-  a query and stored keys is the overlap of their spike codes; a race among the stored keys picks the best match, and a
-  race of randomly ticking clocks picks each key with exactly the probability softmax attention gives it; relative position
-  is native (delays and windows measure time differences directly); the feed-forward block is threshold units over codes.
-  Stacking layers is composition. So a Sleeping Machines network can express any Transformer.
-- *It has freedoms a Transformer lacks.* The *order* in which signals fire is a second axis for information (n signals can
-  carry up to log₂ n! extra bits in their order); only active units work, so a model can be very large while each word
-  stays cheap; structure is grown where it proves useful; sampling is a race, and retrieval can aggregate only the keys
-  that pass its match window. Finding those keys still requires candidate search.
-- *Local learning is not a handicap in principle* (and for Transformer-style attention it is exact on average; below). A
-  race computes with minima and sums; the exact gradient that
-  backpropagation would compute for it runs only along the chain of spikes that caused the output, which each node can
-  trace locally. Credit along that chain *is* backpropagation for these networks; what gradients cannot provide (a
-  signal for the paths that lost) comes from near misses. For races of random clocks the exact gradient is also local.
-- *Depth is trainable, and optimally so.* For networks that detect ordered patterns of depth d, the number of learning
-  mistakes grows as d × log(size of the candidate pool), and no learner of any kind can do better in the worst case (§97, §98).
-
-**Training, subsumed (theory, §101–§103).** A race of randomly ticking clocks splits its output into two independent
-channels: *which* clock fires first (a sample from the softmax) and *when* (the decision time, which carries the softmax's
-normalizer). Three consequences, each proved:
-- every competitor can compute its own softmax probability from purely local information: its own rate times the decision
-  time that everyone observes;
-- if every stored key emits its value scaled by that product, the sum is, on average, exactly softmax attention: a native
-  attention head with no normalization circuit;
-- the gradient of this race with respect to its scores, computed locally at each key, is on average exactly the gradient
-  of softmax attention.
-So a network built from such races, with small dense cores for the rest, is trained by local message passing as stochastic
-gradient descent on the Transformer objective, up to an error that shrinks as 1/R with R races per head. Transformers are,
-in this precise sense, a limit of these networks, including how they are trained. The figure checks the three statements
-numerically; completed E68 recall-learning controls are plotted below, with the text benchmark still in progress.
-
-![Race estimates against exact softmax quantities: attention outputs, softmax probabilities from rate times decision time, and pathwise attention gradients all lie on the diagonal](report/figures/race_theory.png)
-
-![E68 race-count ablation on synthetic recall; lines are completed seeds and dots mark final checkpoints](report/figures/e68_recall_training.png)
-
-**Time and content, one system (theory, §104).** Continuous-time neural models describe a hidden state that flows and is
-pushed by its input: neural ODEs, controlled differential equations, and the state-space models behind Mamba-class language
-models. An event network is exactly such a system. Between events its state flows in closed form, and at each event it jumps.
-The only nonlinearity is in *which* units fire *when*. Four consequences follow:
-- *Order detectors are the natural features of event streams.* The iterated integrals that make these models universal (the
-  "signature" of a path) are, for event streams, the counts of ordered event patterns: exactly what our "this, then that"
-  detectors learn. Stacking such detectors builds the universal feature set.
-- *Selection comes free.* Mamba-class models gain their power by letting the input set how fast the state forgets. In an
-  event network, which channel fired is that signal. A unit that an event does not address need not be touched at all, and
-  skipping it is exact, not an approximation (sleeping execution). The best published models on spoken digits (95.9–96.3%)
-  are such units with every unit updated on every event, and time only fades their state: they do not compute with delays.
-- *A race unit is an integrate-and-fire neuron with a random threshold.* It integrates its rate and fires when the integral
-  crosses a random level. Its gradient is the event-based backpropagation used for spiking networks, but the random
-  threshold keeps the expected loss smooth even when spikes appear or vanish. At the moment of decision, each unit's own
-  integral is on average exactly its probability of winning, for any time-varying rates.
-- *Time adds expressiveness.* If the scores change while the race runs, the race outputs a mixture of softmaxes over its own
-  decision time. That is more expressive than the single softmax at the end of every Transformer (the "softmax bottleneck").
-  A fast race is one softmax; a slower race buys expressiveness with time rather than with parameters.
-
-![A race unit integrates its rate until a random threshold; each unit's own integral at the decision estimates its win probability; slower races escape the single-softmax rank bound](report/figures/race_time.png)
-
-**Delays and vectors, computing together (theory, §105).** In this design an event carries a small vector, and its content
-decides *when* it arrives: a message whose content matches the receiver is delayed in proportion to the match, and a message
-that does not match is never sent. The receiver's state fades with time, so a later arrival counts more. Consequence, proved
-and checked: the receiver holds exactly softmax attention over the matching messages, with no multiplications for the
-weights and no sampling. Payload aggregation pays only for messages that were sent; an unindexed implementation still
-scores every key, so total search work can grow with context length. Races compute the same softmax by *sampling* (fast,
-slightly noisy); delays compute it by *waiting* (exact, slower for a wider range of scores). A unit then fires when its
-evidence crosses threshold and sends on its state at that moment, so what it says and when it says it are one computation.
-Networks built this way compute in the log semiring: delays add, and gains multiply. E74 has tested it in an initial spoken-digit pilot.
-
-**Two memories (theory, §107).** A time-vector unit has a *restricted affine-accumulator resemblance* to exponential-gated
-recurrent memories: for a fixed event schedule, elapsed time supplies decay, content-dependent delay supplies an
-exponential write factor, and a count channel normalizes the read. This is not an algebraic identity with a full xLSTM
-layer. Current E74/E77 do not implement sLSTM's learned gate/memory-mixing cell or mLSTM's matrix state of key/value
-outer products. E77's causal event-Hopfield update and token query/key/value retrieval are separate associative
-operations. xLSTM is a useful topology and scaling precedent: its 7B model was trained on 2.3T tokens, and a separate
-672-run study covered 80M–7B parameters and 2B–2T tokens, reporting better compute/loss trade-offs than its tested
-Llama2-style Transformer baseline ([xLSTM architecture](https://arxiv.org/abs/2405.04517), [xLSTM 7B](https://arxiv.org/abs/2503.13427), [xLSTM scaling study](https://arxiv.org/abs/2510.02228)).
-Those results establish that a nonstandard recurrent/matrix-memory family can be built and scaled deeply; they do not
-transfer to E77. For our design, the actionable lessons are explicit repeatable blocks, stable gate/residual settings,
-systematic parameter/data/context sweeps, and kernel performance treated as part of the architecture. E77 should retain
-event-state layers and sparse event routes while applying that disciplined scale methodology.
-
-A write-time memory cannot answer arbitrary questions asked later: remembering N facts for any future question needs at
-least N × (bits per fact) of state. So a language model built this way needs a second memory, *retrieval*, done natively:
-a question is sent to stored keys, which reply sooner the better they match; the first reply opens a short window, and
-replies inside it are weighted exponentially, which is exactly softmax attention over the good matches. Its aggregation
-cost is the number of good matches. Its search cost is still linear in the context without an index. E77 combines a
-configurable stack of spiking time-vector layers, recurrent state, and adaptive retrieval. Deeper layers have sparse
-raw-event skips; retrieval can mix delay-coded attention with a linear-time state route. An indexed candidate search is
-still needed to reduce total attention search work.
-
-**Parallel state scan (theory, §107(i)).** With event arrivals/topology fixed, each time-vector memory step is an affine
-map $z_k=A_kz_{k-1}+x_k$. These maps compose associatively, so an exact prefix scan computes all states in logarithmic
-parallel depth while keeping linear arithmetic work. The count normalizer has the same form. This gives a concrete route
-to parallelizing the recurrent state path without dense pairwise attention. It does not remove the current dense
-time-by-batch-by-unit tensors, parallelize hard event births or reset decisions, or establish an energy advantage. The
-next step is output/gradient equivalence on fixed event schedules, followed by a small, safe timing pilot.
-
-**Local learning that provably suffices (theory, §108–§109).** When units predict the next character by racing (each
-candidate's clock rate a weighted sum of the log-probabilities its inputs assign), a network of such units is a *gated
-linear network*: every unit predicts the target itself and learns only its own convex loss, so no error ever has to be
-sent backwards, and such networks are known to be universal and to learn well in a single pass (Veness et al., 2021). The
-network is also never worse than its best part (a mixture's guarantee). What these units do not do is build features;
-in this design features come from the time-vector layers and the native detectors, and the race units combine them.
-
-**First evidence.**
-- Deep order is learned from about ten times less data than a Transformer needs (§4).
-- *Language, stage 1 (counting experts, copy memories, word-keyed memories, mixed by conserved multiplicative credit).*
-  The stage is measured on text8 test text at 1M, 10M and 90M training characters. The mixture reaches 2.00, 1.79 and 1.65
-  bits per character (E63), and word-keyed experts bring it to 1.98 and 1.73 at 1M and 10M (E66). Its stored contexts grow
-  as D^0.41 and its pairs as D^0.49. Counting alone (E62, 2.31 → 1.81) fits a floor near 1.73 bpc, which the mixture
-  already passes: that floor belongs to the component, not to the design. **Mixing by a race (§108)** instead of linear
-  Hedge (each next-character candidate's clock rate is the weighted sum of the experts' log-probabilities: a product of
-  experts, as the best text compressors mix) takes the same experts at 10M training characters from 1.80 to **1.61 bits
-  per character**, with weights frozen after the validation text, at a few hundred operations per character (E79). Across
-  the single-seed E79 runs, the 256-character-copy-window mixture scores 1.808 / 1.613 / 1.504 frozen and 1.782 / 1.593 /
-  1.483 online at 1M / 10M / 90M training characters. Expert count also rises from 5 to 6 to 7, so this is a promising
-  data-and-capacity scaling signal, not an isolated data-scaling law. Comparing unbounded copy against the 256-character
-  window gives frozen scores 1.779 vs 1.808 at 1M, 1.612 vs 1.613 at 10M, and 1.512 vs 1.504 at 90M. Long-range copy
-  helps modestly in the smallest run, but has no measured advantage at 10M or 90M; the small differences are single-seed
-  results without uncertainty estimates. This supports testing bounded copy/retrieval spans at scale, while preserving
-  long-range associative retrieval as a separate mechanism. For scale, published text8 results: a standard LSTM ≈ 1.43,
-  stronger recurrent models 1.27–1.36, large
-  Transformers ≈ 1.08; so at full scale the native model is near an LSTM and behind Transformers. Fixed share, which
-  carries the §108 guarantee, gives 1.945 at 1M (E78). For scale, large Transformers reach ≈ 1.1 on
-  text8 from 90M characters. The first gradient-trained 10M baselines (one pass: LSTM 2.17, Transformer 2.43) were
-  unconverged. E64b's 1M, 20-pass validation-selected runs now score 2.179 for the LSTM and 2.367 for the 2-layer
-  Transformer; both selected checkpoints were taken at their final validation points. At 10M, the two-layer 512-unit LSTM
-  completed six passes and scored 1.7993 test bpc (1,199,323 parameters); its selected checkpoint is the final one, so
-  convergence is not established. The four-layer 10M Transformer checkpoint was selected on validation and scored
-  1.9083 held-out test bpc after 4,882 updates, 0.1090 above the LSTM on test. The Transformer used four passes and
-  3.24M parameters, compared with the LSTM's six passes and
-  1.20M parameters, so the scores are data-matched but not capacity- or budget-matched. The 1M depth-8 Transformer control scored 2.352 test BPC, but its E77 partner was stopped before training at the 3.5 GB RSS cap, so this is not an architecture comparison. A bounded 100k-character, one-pass E77 depth-8 run now has priority; its Transformer control is deferred until we review the E77 result. The earlier 1M/5-pass E77 matrix is removed from the queue. No language-model advantage for E77 is established yet.
-- *Attention is learnable by local credit, from far less data.* In a recall task where the network must learn which key
-  a query refers to and which neighbour to read (a learned query–key match, as a Transformer's attention learns), a
-  race-attention layer trained by local credit alone is 100% correct after 1–4k examples and 64–68 mistakes (5/5 runs),
-  and 100% on contexts four times longer; the Transformers that solve it need 400k–1M examples and reach at most 72% on
-  the longer contexts (E61).
-
-![A planned event language model: characters flow through shared codes, context detectors and slow memory into a race that picks the next character](report/figures/lm_topology.png)
-
-E76 audits candidate demand on the trained 1M-character Transformer. It measures the number of visible keys needed to capture
-95% or 99% of softmax attention mass; this does not include the cost of finding those keys with an index.
-
-![E76 measured keys needed for target softmax mass as the causal context grows, compared with a tilted-Gaussian estimate](report/figures/e76_attention_work.png)
-
-**The plan, in stages, each measured on character-level text (text8):**
-1. *Counting baseline* (measured, E62–E66; above): context detectors of increasing length with counts of what follows, plus a copy
-   memory. This is not the goal; it measures how memory and loss scale with data (§95) and gives a floor to build on.
-2. *Attention over the stream*, by races (the E61 mechanism at scale; E68) or by content-dependent delays (§105:
-   exact; retrieved-value aggregation is as cheap as attention is sharp, while total search cost needs a separate index
-   (E76 measures how sharp a trained model's attention on text is).
-   E77 is the first full model of this kind: spiking time-vector layers for the recurrent memory and a delay-coded
-   retrieval layer (§107), with messages, spikes, retrieved keys and score candidates per character reported.
-3. *Learned shared codes*, so similar characters and chunks overlap and learning transfers between them.
-4. *Stacked layers* with credit along causal chains and near misses.
-At each stage: the same text, a recurrent network and a Transformer trained by gradients on the same data, and three
-measures: bits per character, examples needed, and work per character.
-
-![Predicted scaling: work per character stays flat as the model grows; the full design contains the counting stage, so it is never worse than it, and aims at or below the better of counting and Transformer at every data size](report/figures/lm_scaling.png)
-
-**What is established and what is not.** Established: the expressive equivalence, the locality of exact credit for
-races, the optimality of the depth bound, exact delay-coded attention and its work law (theory, checked), learned
-attention on a recall task from ≥ 250× less data than a Transformer, and data efficiency on deep order.
-Not yet shown: that stacked race-attention layers with learned codes, trained by local credit, match or beat a Transformer
-on language itself. The stages above are how that will be decided.
-
-## Experiment index
-
-| exp. | question | result |
-|---|---|---|
-| E2 | adaptive decisions | race matches MSPRT |
-| E4 | teaching cancelled nodes | 0.79 at K = 128 |
-| E5 | work vs capacity | ≈ 300× fewer updates |
-| E6, E14 | local learning, depth (MNIST) | ≈ 0.96; counterfactual credit and conservation pay with depth |
-| E16 | counterfactual routing in MoE | ties load balancing |
-| E17 | market stream | no edge after costs |
-| E22 | SHD with the weight race | 0.35 |
-| E23 | class-incremental learning | forgets more than SGD |
-| E24 | grokking with the weight race | memorizes |
-| E25 | modular arithmetic with delays | restriction, not grokking |
-| E26 | native delay learning | pull-only 0.97–0.98; push at chance |
-| E27, E35 | timing patterns with veto | 1.000 (directional hold); nothing given 1.000 |
-| E28 | depth with accumulating readouts | fails at conjunction |
-| E29 | first grokking design | failed |
-| E30 | Turing completeness, restoration | exact; length-independent reliability |
-| E32, E36 | vs clocked conv nets and Transformers | parity or better at 10⁴–10⁵× lower cost |
-| E33, E39, E39b | depth theorem checks | agree with §71 and §75 |
-| E34 | depth by composition | 0.97 vs 0.39 |
-| E37 | grokking by a route change | 0.93–0.97 in 2 of 3 seeds |
-| E38, E40 | SHD with the timing architecture | not yet |
-| E51 | SHD with class-conditional event world models | 0.647 test |
-| E36 (add3) | Transformer on E41's task | 0.03–0.63 after 100k steps (chance 0.06) |
-| E41 | grokking with depth (a + b + c) mod p | 0.99–1.00 (3/3 seeds, p = 17, 31) |
-| E42 | trading with costs, when to transact | learns not to trade (confirmed on 21 unseen days) |
-| E44, E48 | online world model (point process) | semi-Markov event network beats a GRU point process, held-out too |
-| E57 | market world model with slow regime counters | within 0.08–0.19 nats of a Transformer point process |
-| E59 | SHD, speaker-relative bands, selected on held-out speakers | 0.675 test |
-| E61 | race attention with learned query–key match (recall) | 100% after 1–4k examples, length ×4 (5/5); Transformers need 400k–1M |
-| E62, E63, E66 | event language model, stage 1 (text8) | 2.00 / 1.79 / 1.65 bpc at 1M / 10M / 90M; word keys 1.98 / 1.73 |
-| E64, E64b | LSTM and Transformer LMs at equal data | test BPC: 1M LSTM 2.179, Transformer-2L 2.367; 10M LSTM 1.799, 4-layer Transformer 1.908 after validation-based checkpoint selection and 4,882 updates |
-| E67 | learning from race timing (MNIST) | race-time rule ≈ exact softmax (one seed); grid queued |
-| E68, E69 | race Transformer vs softmax Transformer; race-attention market model | queued |
-| E70 | SHD: race attention over onsets | queued |
-| E71, E72 | dense event-SSM units (SHD, market) | withdrawn: they do not compute with delays |
-| E73 | scalar delay network, exact spike-time gradients | gradient check 0.06%; the vector-free limit of E74 |
-| E74 | SHD: time-vector network (content delays, snapshot payloads) | 2k-train pilot: peak held-out speaker accuracy 0.146, final 0.120 after 6 epochs; chance is 0.05 |
-| E75 | SHD: equivariant time-vector network (band shift × tempo) | symmetry check passed; two-epoch pilot reached 0.044 and did not learn; strict-depth and auxiliary-credit diagnostics follow in E83 |
-| E76 | attention work law in trained character-level Transformers | measured keys needed for 95%/99% softmax mass across a 1M-character, 2-layer Transformer; candidate demand only, no indexed-search cost |
-| E77 | time-vector language model with delay-coded retrieval (text8) | width-8 depth-8 gradient-reach pilot; 1M Transformer control scored 2.352 test BPC; matching E77 job hit the 3.5 GB cap before training; bounded 100k depth-8 E77 run prioritized |
-| E78 | lower envelope: native experts mixed (Bayes, fixed share, Hedge) | 1M: Bayes = best expert (2.218); fixed share 1.945 |
-| E79 | race (product-of-experts) mixer of the native experts | 1M / 10M / 90M: 1.808 / 1.613 / 1.504 bpc frozen, 256-character copy window; K rises 5 / 6 / 7; no matched compute/energy baseline |
-| E80 | market as vector events (with transaction magnitudes): world model and edge audit | not yet run; deeper, budgeted day-5 pilot is E84 |
-| E81 | race gated linear network (layers of local race neurons) over the native experts | queued; with word-keyed experts |
-| E83 | deep time-vector model on speaker-held-out SHD | causal prefix posterior fixed a sampler leak; strict chains have nested per-utterance support; matched D4 seed 6: all-depths 17/128 versus deepest-only 7/128 terminal, paired race-plus-fallback 20 versus 7 (McNemar p=0.0146); poor late-prefix NLL and no layer-4 ablation gain; count marks restore support without class accuracy; depth-8 activity alternates between extinction and cascade (§137); 1,024-example pair replay found sparse deep event utility but almost no pair-only interaction (§146) |
-| E84 | deep time-vector market world model | paired depth 2/4/8/16 day-5 pilot queued (aux loss 0 vs 0.2); full-window work aggregation; no confirmatory test |
-| E49 | offline-trained GRU point process (market) | −2.72 / −2.53 held-out: behind the event network (−2.38 / −2.10) |
-
-## 11. Potential applications and the transformation
-
-If deep event models learn Transformer-level representations and remain trainable as data, depth, and memory grow, this
-could open a different route to frontier AI. Computation in training and inference would follow useful messages, retrieved
-memories, and active parameter updates. A model could keep a large associative store and spend work on the information
-each prediction actually uses. Lower cost per token would expand the number and scale of experiments a fixed research
-budget can support, and would make high-capability models cheaper to serve continuously.
-
-### Applications
-
-- **Language and knowledge work:** deep models could combine persistent event memory, recurrent state, and key–value
-  retrieval to reason across long-running projects without reprocessing every token in a large dense context. Lower
-  inference cost would make capable personal and organizational assistants practical to run more often.
-- **Autonomous mobile platforms:** phones, wearables, vehicles, and robots continuously receive asynchronous camera,
-  audio, motion, and location streams. Event-based routing could keep perception and decision making local, responding
-  immediately to salient changes while preserving longer-lived associative memory. That could reduce dependence on a
-  cloud round trip, conserve battery during quiet periods, keep sensitive sensor data on the device, and let a platform
-  maintain useful autonomy when disconnected.
-- **Robotics and industrial systems:** machines could combine fast event reactions with selective recall of past
-  situations, adapting to changing workflows without running a dense model over every sensor frame. The same design
-  could support low-latency inspection, logistics, process control, and collaborative machines.
-- **Scientific and environmental sensing:** instruments and distributed sensors could analyze rare events continuously,
-  retain causal context, and coordinate through compact messages rather than transmitting every raw sample.
-
-### Economic and industry shift
-
-At frontier quality, the main benefit would be a new compute scaling curve for both training and inference. Fewer dense
-operations and fewer unnecessary weight updates would reduce accelerator-hours and energy per useful token. The same
-capital and power envelope could then support larger training runs, broader ablations, more continual adaptation, or
-more users. Increased demand would move toward high-bandwidth memory near compute, sparse routing networks, rapid event
-resolution, and associative stores. GPU data centers could evolve into heterogeneous facilities where GPUs handle
-dense kernels and event-capable processors handle sparse temporal work; investments would be guided by useful learning
-and retrieval throughput rather than peak dense FLOPs alone.
-
-That would change the economics of frontier development. Research teams could explore more architectures at the same
-budget, service providers could lower inference cost, and capable models could reach devices and organizations that
-cannot justify today's energy and infrastructure footprint. A shift from scaling dense tensor operations to scaling
-learned routes and associative memory would be an architectural transition across model software, accelerator design,
-data-center layout, and the products built on top of them.
-
-### Mobile autonomy
-
-The most visible change could be an autonomous device that listens and watches continuously while using little power
-between meaningful events. A phone or robot could build a persistent local model of people, places, and ongoing tasks;
-retrieve relevant past observations when something changes; and coordinate applications or physical actions without
-shipping a continuous sensor feed to a remote service. Fast local response, longer battery life, offline capability,
-and user-controlled memory would make autonomy feel like a property of the platform itself rather than a remote feature
-that must be explicitly invoked. As autonomy grows, dependable permission boundaries, memory controls, and clear action
-records become core product capabilities.
-
-### The evidence path to that outcome
-
-The current signals provide a reason to pursue this path: E79's native expert mixture leads the completed 1M text8
-gradient baselines on the same split and the completed 10M LSTM on the same test segment; E61 learns associative
-retrieval and context extrapolation with local credit; and the theory gives exact attention and a linear-work associative
-scan for fixed event schedules. The decisive next step
-is to show these capabilities working together in the deeper E77 language model, then measure matched quality,
-training cost, inference work, and energy on real hardware. That is the route from a promising mechanism to a new
-frontier-computing paradigm.
-
-## Reproducing
-
-```bash
-experiments/queue/run_safe.sh experiments/queue/<queue>.txt      # runs a queue file, one job at a time
-python experiments/e35_free.py                                    # timing task, nothing given
-python experiments/e36_transformer.py --task e27                  # Transformer baseline
-python experiments/e34_compose.py                                 # depth by composition
-python experiments/e37_grok.py --lam 0.05                         # grokking
-python experiments/e39_depth.py                                   # checks of the depth theorem
-python report/figures_time.py && python report/make_pdf.py        # figures and the PDF
-```
-
-Dependencies: `numpy`, `matplotlib`, `reportlab`; `torch` for the gradient-trained models and baselines (E36, E52, E61, E64, E67–E76).
-
-## Appendix A. Ongoing SHD research
-
-These are development diagnostics, not supremacy results. Completed recognition results are summarized in section 7.
-
-### More learning per unit of event computation (§§173–175)
-
-**The completed eight-layer run reaches 151/256 (58.98%) at its final epoch**, up from 104/256
-(40.625%) on the same development examples: 64 earlier mistakes are corrected and 17 earlier correct answers are lost. It fits **827/1024 (80.76%)** training utterances.
-The best development checkpoint is epoch 7 at **163/256 (63.67%)**; we distinguish this selected
-checkpoint from the final endpoint. Final held-out NLL is **1.6600**, versus **1.7496** in the earlier
-512-example run; best-checkpoint NLL is 1.4007. This is terminal classification with the official
-test file unopened, separate from E59's 67.5% test score.
-
-The model still has 53,296 parameters and eight winner-only layers. The new run uses 1,024 fitting
-utterances, eight epochs and a fixed cosine learning rate from 0.003 to 0.0003. The larger data budget,
-more updates, schedule and resulting fit-only conditioning values change together; this is an
-engineering progression, not a single-factor ablation. Online training NLL falls from **2.5123 to
-0.5786** across epochs. Fitting and development curves fluctuate, so checkpoint selection and
-cross-speaker generalization still matter. All eight routers receive nonzero credit and all three
-options are realized at every layer in the final development pass. No new optionality bonus was added.
-
-The guarded run completed in **739 seconds** with **585 MiB peak process RSS**, one CPU thread,
-and more than 11 GiB host memory available in the watchdog samples. Optimizer and random-generator
-states are saved after every epoch so interrupted runs can resume correctly.
-
-**An exact execution improvement is established.** E119 replaces the doubling memory scan with
-pair reduction and prefix reconstruction. Memory work is O(events), including its reverse credit,
-instead of O(events × log events). On the same frozen E118 checkpoint, all 256 development predictions
-agree at 104 correct. The audited race winners agree; relative parameter-gradient L2 error is
-2.34 × 10⁻⁷. Only the actual winning continuation emits in both implementations.
-
-| Frozen-checkpoint measure | Earlier doubling scan | Linear-work scan | Improvement |
-|---|---:|---:|---:|
-| Forward memory vector combines / 256 examples | 21,553,320 | 3,925,048 | 5.49× fewer |
-| Median inference / batch of four | 97.1 ms | 63.8 ms | 1.52× faster |
-| Median forward/backward / batch of four | 347.2 ms | 206.8 ms | 1.68× faster |
-
-Timings use one CPU thread and eight warm repetitions with alternating order; training-step timing
-excludes optimizer updates. Sorting still costs O(events × log events), local vector projections remain
-dense, and loser credit evaluates three candidate values during training. These are improvements to
-our own implementation. RAPL energy counters are unreadable in this container, so these are **work and
-latency gains, not measured joules or an external energy-frontier win**.
-
-**Causal packet coalescing yields a measured tradeoff.** With the completed final model frozen:
-
-| Input window | Held-out correct | Input packets relative to 10 ms | Median evaluation / 256 examples | Maximum extra input delay |
-|---|---:|---:|---:|---:|
-| 10 ms | 151/256 (59.0%) | 100.0% | 5.11 s | 0 ms |
-| 20 ms | 142/256 (55.5%) | 64.5% | 2.79 s | 10 ms |
-| 40 ms | 130/256 (50.8%) | 42.5% | 2.03 s | 30 ms |
-| 80 ms | 114/256 (44.5%) | 27.9% | 1.56 s | 70 ms |
-
-The 20 ms setting loses nine net correct examples (three corrected, twelve lost) while reducing
-packet work by 35.5% and model evaluation time by about 45%. Three warm timing repetitions exclude
-loading and input coalescing. The final model is unchanged; coarser inputs change its race histories
-and predictions. Choosing a window here is development selection. Temporal resolution carries real
-class information, so unconditional event reduction is not a free accuracy improvement.
-
-![Deep learning progression and the accuracy/work tradeoff](report/figures/e119_work_and_learning.png)
-
-**New analytical understanding.** The exact reverse memory adjoint is another event recurrence: credit
-crosses only the realized receiver history, with no silent-time updates. Local delay eligibility factors
-into old/new evidence balance, temporal scale, and payload contrast. A memory that contains only old
-or only new evidence, or whose alternatives look identical to the loss, supplies little timing credit.
-This gives a concrete diagnostic before changing delay initialization or increasing route counts.
-Terminal pooling remains insensitive to the final emitted time; calibrated early answering needs its
-own causal stopping objective. See [the derivations](experiments/theory/16_event_work_and_temporal_credit.md).
-The implementation applies established [parallel-prefix scan machinery](https://www.cs.cmu.edu/~scandal/papers/CMU-CS-90-190.html).
-
-**The external targets are explicit.** The original dataset paper reports **85.7% LSTM accuracy**, correcting
-the earlier report summary of approximately 70% ([Cramer et al., Section III](https://www.kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf)). Verified references include
-[EventSSM at 95.9%](https://github.com/Efficient-Scalable-Machine-Learning/event-ssm),
-[S7 at 96.3%](https://arxiv.org/html/2410.03464v1), and the
-[dataset leaderboard's 96.26 ± 0.08% for Sun et al.](https://zenkelab.org/resources/spiking-heidelberg-datasets-shd/).
-These standard SHD results use a different evaluation split from our development screens.
-[Chen et al.'s FPGA implementation](https://arxiv.org/html/2511.01158v1) reports 93.4% deployed accuracy,
-282 mW processor power and 1.71 W whole-SoC power at about 104 utterances/s. Power divided by throughput
-gives **2.71 mJ/utterance at the processor boundary**, or **16.44 mJ for the whole SoC**. Those derived
-numbers illustrate why accuracy, hardware and energy boundaries must travel together. They are verified
-reference points, not an exhaustive leaderboard. The [SHD frontier protocol](experiments/SHD_FRONTIER_PROTOCOL.md)
-records the comparisons and the next accuracy/energy measurements.
-
-### Eight-layer learning with genuine winning continuations (§§166–172)
-
-E118 uses local normalized temporal memory and three competing delayed continuations per arrival. Only the
-winner emits a vector to the next layer. Losing values do not contribute to the forward answer; they can supply
-a zero-forward counterfactual score gradient during training. The winner chooses both the actual payload
-transformation and its downstream arrival time. Every arrival has one winner, so layers retain signal support
-without treating losing routes as active computations.
-
-**Deep recognition now learns above chance.** With 512 fitting utterances, 256 held-out-speaker development
-utterances, four epochs, seed 6, and loser score credit, the eight-layer model reached **258/512 fitting and
-104/256 held-out correct (40.625%)**, with held-out NLL **1.7496**. This is terminal classification; the official
-SHD test set was not opened. It is a new architecture and protocol, not a one-variable repair of E83.
-
-**The matched larger-data depth comparison favors eight layers:** one layer reached **229/512 fitting and
-65/256 held-out correct (25.391%)**, with held-out NLL **2.2544**. Eight layers therefore gained **15.23 percentage
-points** and reduced NLL by **0.5049**. Of the same 256 examples, 50 became correct and 11 became wrong.
-Both use width 32, the same examples/order, four epochs, learning rate and conditioning procedure. D1 has
-7,537 parameters versus D8's 53,296 and uses less event work. This is positive evidence for added depth in
-this development protocol, not a matched-compute or parameter-matched claim.
-
-The smaller matched screen used 128 fitting / 128 held-out utterances and eight epochs:
-
-| Depth | Race credit | Fit correct | Held-out correct | Held-out NLL |
-|---|---|---:|---:|---:|
-| 1 | Winner pathwise | 70/128 | 33/128 (25.8%) | 2.3988 |
-| 8 | Winner pathwise | 64/128 | 34/128 (26.6%) | 2.4595 |
-| 1 | Plus loser score credit | 70/128 | 41/128 (32.0%) | 2.3500 |
-| 8 | Plus loser score credit | 76/128 | 30/128 (23.4%) | 2.4387 |
-
-There is **no established depth advantage** in that screen. The one-example edge for D8 pathwise is not
-convincing evidence; with loser credit, D1 performs better. Width, data order, epochs, learning rate and
-conditioning procedure are shared; parameter count and event work grow with depth. Residual scaling is 1/depth;
-at depth 1 the strict invertibility lower bound is zero. Within the D8 credit pair, initial predictions and
-calibration statistics match exactly. Loser credit improves fitting and slightly improves held-out log loss,
-but not held-out accuracy. Training evaluates three candidate values per arrival instead of one.
-
-**A causal optimization diagnosis.** An earlier fixed-route D8 carrier model (E117) scored 9/128 held-out
-with its trained head. A ridge probe recovered 36/128 from frozen deepest features (the input-feature probe
-reached 39/128). A subsequent head-only experiment held those features, zero initialization, Adam and the
-eight-epoch budget fixed. Changing only fit-only covariance conditioning changed held-out accuracy from
-**7/128 to 39/128** and NLL from **2.9728 to 2.2408**. Thus class information survived the stack while the
-raw head optimized poorly. This isolates conditioning for those frozen features; it does not assign all
-earlier E83 failures to the same cause.
-
-![Eight-layer race learning and the matched conditioning diagnosis](report/figures/e118_race_carriers.png)
-
-**Analytical advance.** The normalized history operator is nonexpansive in maximum sequence norm. For
-bounded residual corrections with fixed addresses and times, the entire D8 payload map has gain between
-0.3436 and 2.5658, with a matching dual L1 credit bound. This includes persistent history reuse, closing the
-earlier per-event gap. Learned race changes and delays require additional analysis. Optionality now has a
-constructive correction-ellipsoid formalism: it values feasible directions under a control budget, and its
-composition includes cross terms from shared trainable knobs. Those terms can cancel, so adding independent
-per-event optionality scores can invent unavailable capacity.
-
-**Execution and limits.** Input counts are released at the end of causal 10 ms windows, rather than attached
-to an earlier spike. Only addressed local memories update; there is no silent-unit time grid. The CPU
-training reference uses an associative event scan, with O(depth × events × log events) scan compositions;
-the serial recurrence has linear event work. Local vector projections remain dense. The D8 128-example
-pilots took about 178 seconds each, and the 512-example run took 335 seconds, with peak process RSS below
-0.9 GB and host available memory above 11 GB. These are one-seed development results, not measured energy
-or benchmark supremacy. Next: reproduce and explain the useful-depth gain under larger and matched-capacity
-protocols, improve cross-speaker transfer of race updates, and
-calibrate causal early decisions once terminal recognition is strong.
-
-### Count marks, stable evidence, and serial depth (§§164–165)
-
-A matched D4 screen used 512 fitting and 256 held-out-speaker development utterances, two epochs, seed 6,
-corrected grid emission, a deepest-layer primary loss, auxiliary weight 0.2, and no counterfactual route updates.
-No input count mark and a shared-vector additive mark both finished at **14/256 terminal accuracy**. Their
-final L4 support was **12.11% and 0%**. A subsequent input mode keeps the routing address independent of the
-count mark while writing the mark into payload state. It retained **91.80% L4 support**, but reached only
-**13/256 terminal and 14/256 anytime accuracy**. Training loss rose **232.64 → 497.94** and late-prefix NLL
-reached **297.14**. These are development results; the third arm was selected after the pair. No recognition
-improvement is established. All jobs completed under the safe runner at about 0.6 GB RSS.
-
-![Count-mark placement changes deep support without improving recognition](report/figures/e83_countmark_coupling.png)
-
-The shared-vector design lets marks alter both message admission and payload. The new mode provides a checked
-first-layer address/payload separation. It preserves the direct count credit path but permits later firing and
-routing to change. §165 derives why uninformative evidence incurs a variance penalty under class log loss:
-suppressing it can lower loss toward log(20) before useful features learn. This is a plausible mechanism,
-not a unique causal diagnosis. Keeping events active alone also failed.
-
-The next architecture follows §157: **sparse serial event continuation with bounded residual payload updates**,
-plus optional timed branches. Each stage receives learnable information without requiring a new threshold crossing.
-Local decayed-mass normalization can control accumulation gain while a separate feature retains rate information.
-First establish deepest-layer terminal learning and retention of class information; then calibrate causal prefix
-stopping and add route optionality measured by transfer to other examples. The current 1 ms reference scans roughly
-293k hidden state-vector updates per utterance and makes no asynchronous efficiency claim.
-
-### Event semantics: a concrete defect and its correction (§155)
-
-The legacy vector layer detects a spike from post-arrival state but reconstructs its payload from pre-arrival
-state. In a minimal one-message example it emits payload **0 with derivative 0**; the consistent grid reference
-returns the expected **1.9545 payload and 1.0852 derivative**. In the frozen SHD control, 853/892 L1 spikes
-coincide with a current-bin state jump; this counts coincident arrivals, not proven jump-only triggers.
-
-The matched four-epoch grid correction retains **96.9% L4 support versus 1.6%** in control, but terminal
-accuracy is **7/128 versus 8/128**. Its training loss falls 191.46 → 60.51 → 25.06 → 17.64; held-out prefix
-NLL remains badly scaled at 22.30/128.11. The correction fixes a reproducible payload-credit defect and changes
-propagation substantially; it does not establish recognition improvement. It also changes time/reset discretization,
-so this is a coherent reference comparison rather than a payload-only intervention. The guarded run completed in
-582 s of model-reported time, with observed RSS around 0.6 GB and over 11 GB host memory available.
-
-![Emission semantics: exact payload diagnostic and matched four-layer correction](report/figures/e83_emission_contract.png)
-
-### Causally eligible L4 shadow audit
-
-A frozen deepest-only replay on 1,024 development utterances found eligible, nonrefractory, already-reached
-receivers in 76/256 batches. Only 30 batches had a candidate within ±0.5 of threshold. Among 21 in-band
-natural-off candidates, opening helped 14 and harmed 7; mean main-loss change was −0.000708 (SE 0.00527),
-measured as a batch-mean loss difference. Effects do not establish a reliable mean benefit. The sampler selects
-one nearest boundary per eligible batch and falls back outside the band; the 46 outside-band cases are kept
-separate. This is selected counterfactual utility, not an accuracy result or an estimate over all routes.
-
-### Routing, support, and optionality
-
-- **Deep SHD route credit and depth (§§138–150; reachability, matched route-pair screens, and scalar optionality):** with only
-  1.56–7.03% layer-4 support, a size-four minibatch has a 75–94% chance of containing no layer-4 example. Yet exact
-  seed-6/7 wiring has static paths for 90.2%/98.0% of first-to-fourth unit pairs, and all 140 input bands can reach
-  layer 4. The bottleneck is therefore downstream of fixed connectivity: event-conditioned routes, thresholded firing,
-  and which alternatives receive label credit. Sparse skips restore 99–100% deep support without paired accuracy gain.
-  A matched D4 global route-pair pilot raised held-out anytime accuracy from 8/128 to 14/128 (paired exact McNemar
-  p=0.180), but every sampled pair was in layer 1, only 7/120 joint openings improved the matched loss, and layer-4
-  support fell to 3.9%. The layer-balanced follow-up sent 43/34/15/28 shadows to layers 1–4 and held layer-4 support
-  at 100%, but accuracy was 6/128 versus 8/128 control (paired p=0.791); its final layer emitted 1,647 events per
-  utterance, late-prefix NLL was 14,699, and predictions collapsed to two classes. This is evidence that support can
-  be recovered while useful recognition fails, with activity growth now a separate bottleneck. No SHD supremacy gain
-  is established. A frozen validation audit sampled 115 pairs by layer; joint opening improved the matched loss in
-  16%/31%/58%/50% of L1–L4 pairs. Layer-2 pairs added 4.24 layer-4 spikes and 10.76 layer-4 readout updates per
-  example on average, with outlier-sensitive means. Reconstructing the clipped pair-gradient formula points toward
-  closing early alternatives and weakly opening late ones. The matched late-layer-only arm produced only nine L3/L4
-  pair shadows in epoch 1 and none in epochs 2–4; final held-out accuracy was 6/128 (4.69%) with 0.78% L4 support,
-  versus 8/128 (6.25%) for control. Its training loss fell 59.78→3.07, but held-out prefix NLL was 2.985/3.167 in
-  the two time strata. The result exposes a second-order support bottleneck: deep events can persist in
-  a few examples while same-receiver, near-time pairs of closed routes disappear. This does not show that late routes
-  are intrinsically unhelpful; the pair estimator had no late proposals to measure for three epochs. The held-out audit
-  informed the sampler, so both are development evidence rather than untouched-test results. The theory now treats each
-  missed event as a candidate with a signed failure margin (route closed, below threshold,
-  race lost, or refractory) and assigns it paired downstream loss by replay. This generalizes the lost-route counterfactual:
-  more such comparisons can help routing only when useful alternatives are sampled with enough signal and without
-  overwhelming variance or replay cost. Under strict chains, depth multiplies support losses; preserving half the
-  examples to depth 8 or 16 requires 90.6% or 95.5% mean survival per transition. The proposed cause-stratified audit of
-  non-route failures has not yet been run, and neither route-pair utility nor improved SHD accuracy is established.
-  A frozen 25–1,000 ms sweep found only 6 L2, zero L3, and one L4 pair across the 120-example fit subset at the
-  widest window; widening time alone does not restore deep support. Section 144 derives why pair-proposal availability
-  collapses with sparse source-event occupancy and why importance weighting cannot repair missing support. Section 143
-  derives a cost-constrained route utility and requires simultaneous tracking of
-  deep-example support, event multiplicity, and class-aligned prefix evidence. New 1,024-example four-corner spike
-  replays separate event propagation from pair-specific credit: among natural-off L2 pairs, opening both raised
-  downstream spike counts in 38/64 control and 19/34 late-only cases, but lowered deepest-only loss in only 8/64 and
-  4/34. Of 113 natural-off L2/L3 pairs, none improved deepest loss when both singleton openings failed; only 2/42 L3
-  pairs and 0/210 L2 pairs had $|\Gamma|>0.01$. The replay chose distinct spike events without requiring a shared
-  receiver, so it is not evidence about same-receiver route-pair synergy. E83 still scans hidden state on a 1 ms grid;
-  it does not demonstrate sparse asynchronous training cost. A first trained scalar-option threshold pilot compared
-  pathwise, immediate-only, and $\lambda=10$ updates at depth 4; all three ended at 6/128 held-out accuracy. Scalar
-  credit raised L2 support from 8.6% to 27.3%, but L4 support remained 0.78% and the epoch-2 suffix-learning advantage
-  was slightly negative. Epoch-2 L3/L4 pathwise gradient norms were at most $6\times10^{-5}/0$ across arms. This points
-  to event and gradient survival through depth as the next bottleneck, not a demonstrated gain. Race coverage was zero,
-  so the network emitted no early answer in any arm.
-
-  A refractory-aware spike audit compared the matched no-pair control and
-  late-only checkpoint on the same held-out examples. Restricting to in-band,
-  nonrefractory candidates left L1/L2/L3/L4 counts of 22/21/8/0 in control
-  and 21/19/2/1 in late-only. On the fused main-answer loss, spike-on helped
-  12/22 control L1 candidates (mean ΔL=+0.0266) and 16/21 late-only candidates
-  (mean −0.0094, median −0.0020). The auxiliary loss has the same L1
-  direction. On only 13 batches where both arms supplied a valid candidate,
-  the mean difference between the two selected spike-on utilities was −0.037
-  (SE 0.035); the selected units/times can differ between checkpoints. This
-  is a small local signal, not a reliable treatment effect. L2 is not a robust
-  opening signal: 12/19 late-only candidates helped, but mean main-loss change
-  was +0.0040; L3/L4 samples are too sparse. A matched deepest-only replay of
-  the exact same checkpoints, examples, and valid candidates changes the
-  interpretation: every L1/L2 toggle has exactly zero deepest-only main-loss
-  delta, although L1's all-depth mean is −0.00936. The late-only L1 toggle
-  increases its own sparse readout-edge updates by 1.238/example, while its
-  hidden-spike deltas are [ +0.1429, 0, 0, 0 ] across L1–L4; no downstream
-  hidden spikes are added. The fused classifier can therefore reward a direct
-  shallow readout without credit traversing the deep stack. This audit exposes
-  an all-depth shortcut, not deep compositional credit or a training gain.
-  The next discriminating experiment must train with a deepest-only primary
-  objective or explicitly replay a sparse multi-layer event cascade, under a
-  declared downstream-work cap and matched control.
-
-![All-depth boundary utility is a shallow readout shortcut, while deepest-only L1/L2 utility is zero](report/figures/e83_spike_boundary_late.png)
-
-**Pair propagation is not pair synergy (§146).** A 1,024-example frozen
-four-corner replay found 141/69 eligible L2 spike pairs and 31/11 L3 pairs
-in control/late-only checkpoints. Among natural-off pairs, opening both
-increased downstream spike count in 38/64 and 19/34 L2 cases, but lowered
-deepest-only loss in only 8/64 and 4/34. At L3, the corresponding counts were
-6/10 versus 5/10 in control and 3/5 versus 4/5 late-only; the latter's median
-loss change was −0.032 but one +1.40 harmful outlier made its mean harmful.
-These few selected cases establish that some events can affect the deep
-objective, not a repeatable update direction.
-
-For independent logistic event risks, the pair-specific gradient is
-proportional to $\Gamma=L_{11}-L_{10}-L_{01}+L_{00}$. None of 113 sampled
-natural-off pairs improved the deepest loss when both singleton openings did
-not; $|\Gamma|>0.01$ occurred in 2/42 L3 cases and 0/210 L2 cases, with zero
-median interaction magnitude. Thus double-open utility usually came from
-first-order event effects. This audit pairs distinct hidden spikes within
-50 ms and does not require a shared receiver, so it does not test the
-topology-conditioned route-pair mechanism. The next test must compare pairs
-that actually converge on an integrating receiver with time-matched
-nonshared pairs, and track accepted messages plus event timing and payload.
-All results are validation diagnostics from one checkpoint per arm, not an
-accuracy gain or test-set result.
-
-![E83 pair-event replays: support, downstream propagation, and measured pair interaction](report/figures/e83_spike_pair_audit.png)
-
-**Counterfactual optionality through descendants (§§149–150).** A new frozen
-audit compared route swaps, route births, spike births, and a combined proposal
-pool on eight wrong held-out-speaker examples. The single-mechanism arms had
-zero measured class-loss or suffix-learning advantage. The combined pool
-created verified counterfactual paths with added layer-4 activity in 5/31
-leaves; three leaves improved both deepest-head loss and one-step suffix-SGD
-progress. Its recursively propagated scalar value was positive on one of the
-eight error trees at learning-option weights 0, 1, and 10, and two only at
-weight 100. That second tree's current loss worsens, so the large weight is
-not calibrated. This is a small but concrete signal that a sparse cascade of
-counterfactual events can expose a useful deep learning option. It is a frozen
-development diagnostic, not a trained update, an SHD accuracy gain, or
-supremacy evidence. SHD remains a major open performance gap.
-
-![Scalar optionality through route and spike counterfactuals](report/figures/e83_route_option_value.png)
-
-**Trained scalar optionality check (§151).** We converted the frozen option
-value into a local per-unit firing-threshold update and compared a pathwise
-control with immediate-only and scalar-option arms. All three depth-4 seed-6
-runs ended at 6/128 held-out accuracy after two epochs. The scalar arm raised
-L2 event support from 8.6% to 27.3%, but L4 support stayed at 0.78% in every
-arm. Its suffix-learning advantage was slightly negative in epoch 2. Local
-credit can change intermediate activity without creating durable deep task
-utility. This first pilot does not establish an accuracy improvement; it
-identifies event survival through depth as the next mechanism to resolve.
-Race coverage was zero in all three arms, so each answer came from the
-terminal fallback.
-
-![Scalar threshold-option training: held-out accuracy and event support by layer](report/figures/e83_spike_option_training.png)
-
-**State-conditioned optionality pilot (§152).** The next experiment made
-optionality a value of the current event state, label, remaining horizon, and
-explicit sparse continuation proposal. This is a per-state value estimated
-from route rollouts, not optimizer momentum. We also logged the proposal mass
-of futures that improve the current branch by at least 0.05 loss, so a single
-good continuation can be distinguished from a broad pool. Predictive class
-entropy, true-label surprise (negative log likelihood), route entropy, and
-future option reserve answer different questions: uncertainty is not the
-inverse likelihood, and many uncertain routes do not imply useful future
-choices.
-
-In a matched seed-6 depth-4 run, immediate-only and two-rollout
-continuation-aware threshold credit both finished at **6/128 held-out
-accuracy (4.69%)**. The continuation-aware reserve shift was only
-0.00006/0.00097 loss units per action in epochs 1/2. At the 0.05 cutoff,
-neither parent nor child had a helpful sampled continuation: 0/48 rollouts per
-side in epoch 1 and 0/54 per side in epoch 2. At epoch 2, event support was
-83.6% / 4.7% / 1.6% / 0.8% across L1–L4; nearly all counterfactual suffix
-correction still landed in the output head. The rollout arm took 224 seconds
-versus 177 seconds for the immediate control. This is evidence that the
-state-conditioned metric and update execute safely, not that optionality
-improves recognition. Later route alternatives remain mostly unreachable.
-
-![Matched immediate and continuation-aware SHD training: accuracy, final layer support, and sampled helpful continuations](report/figures/e83_optionality_state_value.png)
-
-**Six-epoch depth check (§153).** To test whether the two-epoch result was
-simply undertraining, we extended the same seed-6, depth-4, 120-train/128-held
-out-speaker comparison to six epochs. Both arms remained at 6/128 (4.69%) held
-out terminal accuracy in every epoch except the continuation-aware arm's first
-epoch (7/128); neither arm emitted an early race answer. Training loss finished
-at 2.9950 and 2.9957, both essentially uniform 20-class loss ($\log 20$).
-The immediate arm's per-layer held-out event support fell from
-98.4% / 40.6% / 2.3% / 0% in epoch 1 to 100% / 1.6% / 0% / 0% in epoch 6.
-The option arm started higher at 98.4% / 56.3% / 11.7% / 2.3%, but finished
-at 100% / 8.6% / 0% / 0%. The option update therefore gives a short-lived
-deep-activity signal and modestly retains L2 support, but does not sustain
-L3/L4 events or improve recognition. This points to route-proposal support
-and event survival as the bottleneck; simply training the current configuration
-longer is not a remedy. The estimate is still a one-seed, 128-example pilot.
-
-**Conditioned spike-margin support (§154).** A frozen pass now counts only
-nonfiring, nonrefractory margin states after an actually selected upstream
-message reached the receiver. In the current −0.5-to-0 proposal band, eligible
-time-receiver cells fell from **22,553 / 4,313 / 195 / 50** across L1–L4;
-utterances with at least one candidate fell from **128 / 114 / 24 / 4**. In the
-narrower −0.25-to-0 band, the counts were 4,205 / 1,074 / 57 / 7 across
-128 / 81 / 13 / 2 utterances. These time cells are correlated and are not
-independent route choices. Many broader-band margins sit at the −1 reset
-baseline, so widening the sampler indiscriminately could create unsupported
-spikes. This is a direct measurement of a sharp loss of near-threshold
-proposal support with depth, not evidence of improved accuracy or proof that
-this is the only bottleneck.
-
-![E83 near-threshold spike proposal support after actual upstream messages](report/figures/e83_conditioned_margin_support.png)
-
-
-### Earlier task and depth diagnostics
-
-- **Spiking Heidelberg Digits (spoken digits as cochlear spike trains, 700 channels, 20 classes, unseen test speakers).**
-  Class-conditional world models (E51): one semi-Markov event network per class, whose state is the last spike's band,
-  the time since it (window bank) and the time since the utterance onset; an utterance is assigned to the class whose
-  network predicts its spikes best. One counting pass, no gradients. Test 0.647 (validation on held-in speakers 0.734);
-  timing adds +0.06, the onset reference +0.21. The gap is the voice: 81% of the test utterances come from two speakers
-  never heard in training, and test accuracy barely moves across very different configurations (0.647–0.649), so
-  selecting on held-in speakers optimized speaker-specific detail (§92). **Validating on held-out speakers and coding
-  bands relative to the voice** (each utterance keeps a running sum and count of its spikes' bands; context and
-  prediction are relative to that centroid) raises accuracy on held-out speakers from 0.36–0.38 to 0.44–0.46 at every
-  configuration and, selected on held-out speakers only, reaches **0.675 on the test set** (absolute coding under the
-  same protocol 0.657; E59). A published LSTM reaches 0.857; the state of the art is 95.1% (learned delays, Hammouamri et al. 2024), 95.9%
-  (Event-SSM, Schöne et al. 2024) and 96.3% (S7, Soydan et al. 2024); the last two process the spikes one event at a time
-  with linear state-space units, which §104 shows are event units of our kind with every unit updated on every event (both
-  select checkpoints on the test set). These units do not compute with delays: time only fades their state. **E74's first
-  time-vector pilot** tests the paradigm's own design: events carry small vectors, content sets each message's delay (and
-  whether it is sent at all), the receiver's clock weights and rotates what arrives, units fire when their evidence crosses
-  threshold and emit their state at that moment (§105). On 2,000 training and 500 held-out-speaker utterances, its best
-  accuracy was 0.146 and its last-epoch accuracy 0.120 (20-class chance is 0.05). E82's 240-update readout diagnosis
-  reached 0.184 with a nonspiking state readout and layer normalization; the normalized spiking readout stayed near chance.
-  E75's exactly shift/tempo-covariant lattice passed its symmetry check, but its two-epoch pilot reached only 0.044 and
-  layer-2 activity collapsed. Symmetry by itself has not solved the learning problem. An objective audit found that E83's
-  original mean-over-time softmax let silent bins pull every utterance toward uniform and let co-batched duration change
-  a sample's prediction. Its depth-2 runs are debug observations, not depth evidence; the queued depth-4 run was stopped.
-  E83 now treats SHD as an utterance label with an online output race: emit the first class whose temperature-scaled
-  softmax crosses a confidence threshold, and keep silent before that. Training maximizes the probability that the
-  correct class wins, with an explicit latency discount; no class target is copied to every prefix. Cramer et al. used
-  max-over-time SNN readout potentials, while Spyx applies cross-entropy to integrated potentials
-  ([Cramer et al.](https://kip.uni-heidelberg.de/Veroeffentlichungen/download.php/6616/temp/4143-3.pdf),
-  [Spyx tutorial](https://spyx.readthedocs.io/en/latest/examples/surrogate_gradient/SurrogateGradientTutorial/)).
-  A tiny 80/40-example smoke reached 92.5% output coverage but only 10.8% accuracy among emitted answers after one
-  epoch; full-sequence max-potential accuracy was 2.5%. In the guarded depth-4 screen (512 train / 128 held-out-speaker
-  examples, two epochs), integral pooling ended at 4.69% max-over-time accuracy and 5.47% with terminal fallback;
-  race-only coverage was 17.97% and accuracy among emitted answers 4.35%. Max pooling ended at 4.69%; its default
-  threshold fallback accuracy was 3.91%. The stable-cause `anytime` run reached 6.25% max-over-time accuracy in epoch
-  two (8/128; chance-tail probability 0.31) and 5.47% race accuracy at 100% coverage; all tested thresholds from 0.3 to
-  0.9 emitted on every item, with peak confidence saturated at 1.0. Layer 4 activity rose from 932 to 1,024 spikes per
-  utterance. This diagnoses false-confidence/activity growth, not reliable evidence above chance. The stable-cause
-  race-only control ended at 3.12% max accuracy, 97.66% coverage, 4.8% emitted accuracy, and 0.981 peak confidence.
-  A readout-only shadow probe at seed-2 initialization (not trained weights) forced 32 near-gate routes on four held-out
-  utterances: 31 changed max-pooled CE by exactly zero and one reduced it by 0.045; its boundary-gradient norm was 2.2%
-  of pathwise norm with cosine 0.012. Section 129 derives the max-pooling winner-gap dead zone that can erase a route's
-  effect from terminal loss. This small probe says nothing conclusive about trained weights or hidden route births.
-  `TVLayer` still detaches its hard content gate and computes spike identities inside `no_grad`, so closed routes and
-  silent units get no pathwise task gradient for creating events. The event-prefix branch now adds the existing §§19/57
-  counterfactual credit to near-boundary content routes: each shadow toggles one route through the full downstream stack
-  and compares the same fixed, stratified 0–1000 ms causal prefix queries. This removes future-duration leakage from the
-  earlier per-utterance normalized-time sampler. A PyTorch timestamp-grouping autograd bug was also fixed; the hidden
-  simulator still scans a 1 ms grid.
-
-  The matched depth-4 pathwise-only run (128 train / 32 held-out-speaker, two epochs) stayed numerically stable but near
-  chance: 6.25% terminal accuracy (2/32), with epoch-2 prefix NLL [2.995, 3.202]. The first counterfactual implementation
-  used the unbiased candidate-count/shadow-count multiplier; with about 480k eligible routes and 128 shadows per epoch,
-  train loss and final-layer activity exploded. A bounded normalized update now averages sampled signals within each
-  layer, clips the shadow loss difference to ±5 and the global correction-gradient norm to 1, then applies a separate
-  0.001 SGD step. In the matched seed-6 depth-4 pilot it avoided that runaway, but did not improve recognition: terminal
-  accuracy remained 6.25%, race coverage fell from 9.38% to 3.12% by epoch 2 with no correct emitted answers, and epoch-2
-  prefix NLL was [2.996, 19.735]. Across 112 shadows, only 11.6% of sampled route openings helped; mean signed
-  open-minus-closed loss was +0.0063 (SD 0.0644). The counterfactual/pathwise gradient cosine was 0.0038, and its raw
-  norm was 1.6% of pathwise norm. At epoch 1 the per-layer mean route effects differed, but each was small relative to
-  its shadow-to-shadow spread. A separate depth-2 smoke had a 1.17e−5 gradient-norm ratio and cosine −0.002. This is
-  new evidence about estimator scale and route heterogeneity, not above-chance learning.
-  The layerwise trace now localizes an additional missing credit term. In the depth-4 pathwise run, held-out mean spikes
-  per utterance rounded to [4, 2, 0, 0]; on epoch 2's first training minibatch, the main-loss gradient norms were exactly
-  zero in all four hidden layers and the auxiliary gradients were zero in layers 3–4. The existing shadows toggle message
-  routes, not the separate hidden fire/no-fire gate. The route-counterfactual run did restore activity [21, 15, 4, 14],
-  yet remained at chance, so event support is a demonstrated bottleneck, not a complete explanation of recognition failure.
-  The 128-example paired spike audit on the trained depth-4 route-counterfactual checkpoint found near-threshold margins
-  (within ±0.25) averaging 349/batch in layer 1, 67 in layer 2, 7.9 in layer 3, and 6.6 in layer 4; layer 4 had none in
-  24 of 32 batches. Spike-on improved the loss in only 16/32, 17/32, 14/32, and 14/32 interventions respectively, with
-  near-zero mean effects. This confirms scarce deep boundaries but does not justify adding a single-spike update yet.
-  A separate input audit found that E83 discards the log-count mark returned when same-band spikes are merged: 55.6% of
-  fitting groups and 43.5% of held-out-speaker groups contain multiple raw spikes. This is a concrete information
-  bottleneck, not yet proven to explain the accuracy gap. The count-preserving D4 ablation did maintain deep support: held-out
-  layer-4 coverage was 56–94% and support remained nested, with zero violations. Accuracy nevertheless fell to 0/32 after
-  epoch 1 and epoch-4 prefix NLL was [8.48, 27.28]. The mark changes dynamics but did not produce class learning in this
-  single seed. The depth-8 fused run exposed the other failure mode. Its layer activity
-  changed from [16, 9, 3, 6, 27, 51, 141, 250] at epoch 1 to [24, 3, 1, 1, 4, 6, 32, 65] at epoch 2, then surged
-  to [59, 35, 97, 286, 1,137, 1,929, 4,125, 4,888] at epoch 3 and fell to [27, 3, 2, 2, 3, 11, 47, 58] at epoch 4.
-  Late-prefix NLL swung 39,815 → 1,692 → 19.8 million → 22.9, while terminal accuracy remained 3.1–12.5%. We stopped
-  the eight-epoch run after epoch 4 because its event rate and loss alternated between cascade and collapse. Section 137
-  formalizes a sharper support diagnosis: in the strict chain, a layer with no incoming events has zero state and cannot
-  fire spontaneously at the positive threshold. Thus each utterance's active-layer support is nested, even though spike
-  multiplicity among surviving utterances can cascade. The matched four-epoch depth-4 `all_depths` run did not reopen
-  support: held-out spikes per utterance rounded from [14, 6, 5, 28] to [16, 2, 1, 0], [9, 1, 0, 0], and [10, 1, 0, 0].
-  Accuracy stayed 3.1–6.25%; the first training minibatches in epochs 3 and 4 had exactly zero main-loss gradient in
-  layers 3–4. On the 32-example screen, deepest-only ended at 5/32 (15.6%), versus 2/32 for `all_depths`; the paired
-  comparison was inconclusive (exact McNemar p=0.453, five versus two discordant correct cases), and deepest-only prefix
-  NLLs [4.008, 4.741] were worse than the 20-class uniform NLL 2.996. A fresh `all_depths` run at the same training budget
-  with 128 held-out examples reached 17/128 (13.3%) at its fixed endpoint; nominal chance-tail p=0.00023, with 11/75
-  correct on one held-out speaker and 6/53 on the other. Its fixed-threshold race emitted 42 answers, 10 correct
-  (23.8%); their mean maximum class confidence was 63.8%, directly exposing severe sequential overconfidence. It reached
-  15.6% with terminal fallback. However, late-prefix NLL was still 17.57, and removing the layer-4 readout left
-  fused accuracy unchanged at 13.3%. Its standalone head accuracies were [7.0, 10.2, 8.6, 10.2]%, and leave-one-head-out
-  fused accuracies were [10.2, 7.0, 10.2, 13.3]%; the second-layer head helped most, while the fourth added no measured
-  accuracy. In the matched 128-example seed-6 comparison, `all_depths` ended at 17/128 terminal
-  accuracy and 61.7% layer-4 support; `deepest` ended at 7/128 and 4.7% support. The all-depth race emitted with mean
-  confidence 63.8% but only 23.8% accuracy among emitted answers. The fixed race-plus-fallback outputs
-  were correct on 20 versus 7 examples, with 19 versus 6 discordant correct cases favoring fusion (exact McNemar
-  p=0.0146). This is a nominal paired signal on two held-out speakers, not speaker-level replication. The all-depth
-  late-prefix NLL (17.57) was much worse than deepest-only (4.66), both above uniform 2.996; the deepest head's branch
-  ablation also left fused terminal accuracy unchanged. Thus the fused objective preserved deep support and improved
-  decisions in this seed, but the evidence is badly calibrated and the deepest branch has not shown task value.
-  The matched seed-7 pair ended at 9/128 versus 7/128 terminal accuracy and 9 versus 6 race-plus-fallback correct
-  (McNemar p=0.607); layer-4 support was 22.7% versus 16.4%. Its all-depth race emitted eight answers at mean confidence
-  63.1%, with none correct, and late-prefix NLL was 5.74. The seed-6 paired gain therefore did not replicate, while
-  overconfident stopping did.
-  The task loss is still sequence-to-class cross-entropy at two fixed causal prefixes plus EOS; it is proper for the
-  class posterior given each sampled prefix and does not demand an answer at utterance onset. The stopping threshold is
-  a separate policy. Sparse prefix sampling does not guarantee calibration at event-triggered stopping times (§128).
-  The support difference has a direct small-batch consequence: under an IID approximation, the chance that a batch of
-  four contains no layer-4-active example is (1−c)^4, where c is held-out support. It is 82.5% for seed-6 deepest-only
-  coverage 6/128, 48.8% for seed-7 deepest-only coverage 21/128, and 2.2% for seed-6 all-depth coverage 79/128. This
-  estimates support absence only; event presence is necessary but not sufficient for a useful gradient.
-  Historical runs shared evaluation-selection and training RNG, so changing `eval_limit` also changed training
-  permutations/augmentations; the 128-example run is a fresh training trajectory, not a larger re-evaluation of the
-  32-example checkpoint. E83 now defaults to separate RNG streams via `--rng_protocol split`; this implementation has
-  not yet been validated by a paired cross-evaluation-limit run. The seed-7 deepest-only control ended at 7/128 (5.5%),
-  layer-4 support 16.4%, and late
-  NLL 4.09; its fixed-threshold race emitted four answers and none were correct. Both sparse layer-1 skip controls are
-  complete. Seed 6 reached 99.2% layer-4 support for 1.8% more candidate-score work, with 9/128 terminal accuracy
-  versus 7/128 strict and no race emissions correct; paired race-plus-fallback McNemar p=0.791. Seed 7 reached 100%
-  support but only 5/128 accuracy, late NLL 48.80, and 22.3% more candidate-score work; its paired output comparison
-  was 5 vs 6 correct (p=1.0). These results restore support without improving paired classification, and the evidence
-  scale varies by seed. The skip masks use a separate topology RNG, preserving the strict adjacent masks. Candidate-score
-  differences do not measure total energy: the simulator still performs 288,008 vector-state updates per utterance on
-  a 1 ms grid. Use split RNG streams before comparing different evaluation sizes; `legacy_shared` reproduces the
-  historical coupled protocol. Useful firing-boundary credit is
-  still unestablished, and a fixed threshold/weight
-  scale does not control event gain.
-
-  The compute-matched data-diversity screen directly tested one possible
-  explanation without changing update count: 120 examples over four epochs
-  versus 480 examples over one epoch, at 120 updates per arm. Seed 6 favored
-  the larger set (20/128 versus 8/128; exact paired McNemar $p=0.0227$), while
-  seed 7 favored the smaller set (20/128 versus 8/128; $p=0.0357$). Layer-4
-  support stayed at 1.56–7.03% and late-prefix NLL at 3.02–6.58 across all
-  arms. The direction reversal means the test found no stable data-diversity
-  benefit and does not justify additional seed-only runs.
-
-  THEORY §138 derives the exact support-masked gradient moments and the
-  minibatch SNR penalty. It separately derives the smoothed spike birth/death
-  term and a sufficient firing-margin stability condition under an AdamW
-  step. Because norm clipping is applied before Adam's coordinatewise
-  preconditioner, it does not generally cap parameter or gate-margin motion.
-  E83's epoch-level activity swings are compatible with gate crossings but
-  do not establish them; log pre/post margins, predicted margin displacement,
-  actual AdamW updates, and observed gate flips before attributing the cause.
-  Support, event utility, boundary credit, and optimizer stability are four
-  different conditions for depth, and no one of them alone establishes
-  trainability.
-
-  THEORY §§131–132 derive why the total-estimator variance scales with candidate count, separate normalized-mean bias
-  from update magnitude, and specify layerwise loss-delta/norm/cosine diagnostics. A weak Bayesian prior is appropriate
-  at initialization, but these small shadow samples remain uncertain; the step size also needs an optimizer-metric trust
-  region. The next discriminating work is to increase shadow samples or stratify them by layer and route score, then
-  assess posterior sign and gradient variance before choosing any stronger gain. Hard silent-neuron firing still lacks
-  its own counterfactual boundary term. Earlier: the weight race
-  reaches 0.35 against 0.56–0.59 for a dense MLP (validation). For the timing
-  architecture the representation is the bottleneck: local band-pair parts give a dense readout only 0.40; adding
-  parts referenced to the utterance onset lifts it to 0.566 (a reference is what a clockless system needs to place
-  events); a native learner on those parts overfits (test 0.27–0.33). SHD is also a weak test of the paradigm: at the
-  10 ms bins dense models use, it is only ≈ 6× sparser than a clocked raster.
-
-### Outstanding implementation questions
-
-- **Deep time-vector networks on real streams (§§130–§132):** E83/E84 use strict adjacent-layer event chains and deepest-only
-  inference. The old mean-over-silent-and-padded-time objective was confounded by sequence duration and batching. E83 now
-  trains a causal prefix posterior with proper log loss at stratified queries in a fixed physical-time window; it then
-  evaluates the first-crossing race separately. The 128/32 depth-4 pathwise control remained near chance (6.25% terminal
-  accuracy). An unbiased total counterfactual estimator over roughly 480k near routes with 128 shadows per epoch exploded
-  in loss and activity. A clipped normalized local route update avoided that runaway but did not improve accuracy; its
-  matched seed-6 run stayed at 6.25%, with epoch-2 prefix NLL [2.996, 19.735] and only 11.6% helpful openings. Shadow
-  effects varied by layer and had low gradient alignment, so gain selection remains open. Hard silent-unit firing and
-  candidate edges outside the fixed route mask still lack boundary credit. E84 remains the guarded
-  day-5 market likelihood comparison;
-  no new market result exists.
-- **Depth-credit redesign for SHD (§136; completed control pairs):** the deepest-only classifier forces an early event to
-  survive every later hard route before it can affect the final loss. E83 now has a sparse `all_depths` readout that adds
-  causal class evidence from every layer at the same query prefix, while retaining the deepest-only control and local
-  auxiliary losses. The lost-route counterfactual compares the fused end-to-end objective, so an opening can receive
-  credit for its direct evidence as well as downstream changes. This relaxes serial credit but may let shallow branches
-  solve the task; branch ablations and matched seed-6/seed-7 depth-4 controls are complete. Seed 6 favored fusion on paired
-  race-plus-fallback decisions (20 versus 7; p=0.0146), but seed 7 did not replicate it (9 versus 6; p=0.607). No
-  repeatable accuracy gain is established. The depth-8 fused run was stopped after four epochs because late layers alternated
-  between near-extinction and thousands of spikes per utterance. E83's separate silence gap also remains: logits do not evolve between hidden events
-  until the next event or terminal EOS.
-- **Why the depth-4 SHD model stalls (§§137, 145–146):** seed-6 event counts and exactly zero-gradient training minibatches
-  confirm that the hard fire mask cuts off label credit when deep layers emit no events. Existing route shadows toggle
-  message edges but do not estimate the distinct spike birth/death boundary term. A 128-example paired spike audit found
-  deep near-threshold candidates rare and single-spike loss effects mixed, so spike credit is not yet shown to help. E83
-  also has a readout-confound result (§145): the L1 all-depth loss improvement vanished under the matched deepest-only
-  loss, and the event changed its own shallow readout without adding downstream hidden spikes. It also drops the merged
-  event-count payload: the mark exists in preprocessing, and over 40% of held-out merged events
-  contain multiplicity. A 1,024-example four-corner spike audit now shows that L2 event-pair openings often create
-  downstream spikes but only rarely improve deepest-only loss; none of 113 natural-off pairs showed a beneficial joint
-  opening when both singleton openings were unhelpful. Pair-specific interaction magnitude was usually exactly zero,
-  with two >0.01 L3 cases among 42 and none among 210 L2 cases. The audit selects hidden spikes without requiring a
-  shared receiver; a topology-conditioned route-pair audit remains open. **Structural result:** with zero initial state,
-  no bias drive, and positive firing threshold, an
-  empty input event set produces no output events. Therefore per-utterance active-example coverage is nested across a
-  strict event chain; all-depth readout cannot break this invariant. Event counts can still explode on the shrinking set of
-  active utterances, so track coverage and conditional multiplicity separately. In the original 32-example depth-4
-  trajectory, `all_depths` stayed at 3.1–6.25% and deep activity declined to [10, 1, 0, 0] spikes per utterance by
-  epoch 4; direct readout fusion did not restore support in that trajectory. In the matched 32-example evaluation, the deepest-only arm's final
-  accuracy was 15.6% (5/32) versus 6.25% (2/32) for fusion, but paired errors were inconclusive (McNemar p=0.453) and the
-  deepest arm's prefix NLL was worse than uniform. The count-preserving ablation kept layer-4 coverage between 56% and 94%
-  but ended at 0/32 accuracy and late-prefix NLL 27.28. This rejects support restoration as a sufficient fix. A fresh
-  `all_depths` run at 128 held-out examples reached 17/128 (13.3%) but had late-prefix NLL 17.57; its nominal chance tail
-  is 0.00023, while one seed and two speakers limit generalization. In the same-subset seed-6 pair, the all-depth model
-  outperformed deepest-only on race-plus-fallback answers (20 vs 7 correct; paired exact McNemar p=0.0146) and retained
-  layer-4 support (61.7% vs 4.7%). Seed-7 deepest-only remained at 7/128, with 16.4% layer-4 support. Historical
-  evaluation-size comparisons also changed training permutations and augmentation because their RNG stream was shared;
-  new runs default to split streams, but that protocol still needs cross-evaluation-limit validation.
-  Both sparse layer-1 skip seeds restored support without paired accuracy gain. The matched seed-7 all-depths replication
-  did not reproduce the seed-6 paired gain. The depth-8 pilot
-  alternated between a late-layer activity cascade and collapse; rate calibration remains a separate requirement.
-
-## Appendix B. Deep language trainability pilot
-
-- **Deep-stack trainability (new, not a supremacy result):** after exact replay of each layer's threshold and reset
-  dynamics, the E77 depth-8, width-8 pilot had nonzero gradients in **all eight layers at all 16 validation points**;
-  test activity stayed between **0.075 and 0.217 spikes per character per layer**. This is evidence that the deep
-  optimization path can remain open. It used one seed, 4,096 training characters, and 512 test characters; BPC was
-  4.319, so it does not establish useful language-model quality or a scaling advantage.
-# Historical snapshot — superseded
-
-This preserves an earlier report for provenance. Its language headline used a
-separate statistical count/copy system; it must not be attributed to the learned
-Sleeping Machines event backbone. Activity ratios in this snapshot are not
-complete training/inference FLOPs or energy ratios. Read the corrected current
-[report](../../REPORT.md) for model attribution, completed evidence and cost boundaries.
+# Sleeping Machines
+
+Deep learning that computes with time
+
+Tero Keski-Valkama and Karoliina Salminen · Research report · 2 October 2026
+
+Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, gate their updates and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
+
+## The differentiators at a glance
+
+- **Time performs computation.** Delays, races and phase transformations implement useful functions.
+- **Hard routes can learn.** Winning messages execute; unrealized alternatives receive counterfactual credit.
+- **Deep, persistent event representations.** Vector messages and local memory carry information and credit through layers; retrieval and temporal primitives share the model family.
+- **Capacity beyond activity.** The scaling goal is more useful dormant capacity, selectively recruited and judged by prediction quality at a given total work budget.
+
+## The strongest demonstrated results
+
+- **Generalization.** Race retrieval reaches **100% at four times the training context** within 4,000 examples in all five runs. A learned phase rule solves **all 3,440 unseen modular triples**, using the supplied period 17.
+- **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
+- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets, so these fits do not yet surpass counting statistics (Theory §376).
+
+![accomplishments](report/figures/accomplishments.png)
+
+Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
+
+**New integrated evidence:** banknote test: **ours 91.8% versus trees 94.0%**, competitive accuracy without a confirmed win; native language uses **6.02× less counted fitting work** than the saved KV model at 0.032 bpc worse. Protocols and limits follow on the next page; comparable 10M language remains pending.
+
+## New evidence: quality and complete work
+
+**Tabular: competitive accuracy, no confirmed win.** Ours averages **91.8%** reserved-test accuracy versus **94.0%** for boosted trees across three seeds. Logistic regression reaches **94.7%** and lower log loss (**0.091** versus ours **0.235**). The native eight-block model mixes content and memory through parallel temporal receiver heads.
+
+![banknote reserved test](report/figures/banknote_reserved_test.png)
+
+Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fitting/128 development rows; four fixed selection opportunities. Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. The original development lead, 95.3% versus 93.0%, is retained in Appendix B. The last CatBoost cell remains pending. Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.
+
+**Causal statistical language advantage.** On the same999,999 test targets after10M fitting characters, ours count/copy race mixture scores **1.727bpc** versus **1.799** for LSTM and **1.908** for Transformer. This corrected specialized predictor uses statistical memory; it is not the learned native model. Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.
+
+**A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
+
+**Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
+
+This banknote comparison concerns one task. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.
+
+## Native strengths: useful time and private state
+
+**Elapsed time carries useful information.** Ours reaches **95.31%** on paired short/long sequences with identical marks, addresses and event order but opposite labels. The refitted order-only control reaches exactly **50%**; paired noise makes that ceiling exact. Clearing persistent state also reduces ours to 50%.
+
+![native mechanism evidence](report/figures/native_mechanism_evidence.png)
+
+**Learning can be shared while memories stay private.** At 16 occupied sources, shared processing raises accuracy from **44.14% to 75.39%**, with **11.1× fewer parameters** and **6.6% less whole-fit work**. All 512 receiver slots remain available; each event commits 16 states and scores 32 keys in both constructions. Sharing also removes private source embeddings; these effects are tested together.
+
+| Construction | Dev accuracy<br/>% | Parameters | Whole fit<br/>GFLOPs | Fit/query<br/>MFLOPs | Infer/query<br/>MFLOPs |
+| --- | --- | --- | --- | --- | --- |
+| Ours: elapsed time | 95.31 | 42,898 | 0.265 | 0.518 | 0.110 |
+| Ours: order-only control | 50.00 | 42,898 | 0.265 | 0.518 | 0.110 |
+| Ours: 16-source shared rules | 75.39 | 14,180 | 0.262 | 0.511 | 0.110 |
+| Ours: 16-source private rules | 44.14 | 157,940 | 0.280 | 0.548 | 0.110 |
+
+Eight blocks, two independent heads, d8, pool 2; 128 fitting queries/pass, four passes, 256 development queries, seed 6. Timing uses 32 independent population pairs; 16-source order uses 16 populations. Exploratory population-bootstrap gains are 45.31 pp [42.97, 47.66] for time and 31.25 pp [25.39, 37.11] for shared rules; 95% intervals condition on selected checkpoints, not independent seeds or confirmation. Complete counted fitting includes losing proposals, backward, clipping and Adam; special functions have unit weight. These are synthetic mechanism advantages, not superiority over time-aware dense models or measured energy.
+
+Sources: [frozen11-pilot protocol](experiments/AWS_SPLIT_EVENT_BATTERY.md) and [validated findings](experiments/SPLIT_SCREEN_FINDINGS_20261002.md). Full variants and gap-retention diagnostics remain in Appendix B.
+
+## A general architecture for content, time and selective activity
+
+Language tokens, irregular observations and action requests can be expressed as content-bearing events with timestamps and source identities. Sleeping Machines aim to learn through this common interface: local state evolves between arrivals, delays perform computation, and only recruited modules act. This broader design is the central research target.
+
+![general temporal interface](report/figures/general_temporal_interface.png)
+
+## Why this could matter across domains
+
+- **Ordering as computation.** Earlier events change the state/routes encountered by later ones; elapsed time changes that state. The structured order-learning results support this prior for sequence-sensitive signals.
+- **Asynchronous sensing.** Updates can follow observations and required deadlines rather than a periodic sweep of all modules. Silence remains informative when the objective depends on waiting time.
+- **Instruction-conditioned control.** Language can guide event routing and memory; observations can ground language and update a world state that informs timed actions.
+- **Useful dormant capacity.** Stored modules need not all execute for each input. The gain depends on economical discovery and credit, and is judged at a fixed total work budget.
+- **Distributed hardware.** Local event-triggered state and communication can reduce global coordination. Globally clockless ASICs are a target; conventional FPGA prototypes retain clocks. Hardware joule savings remain to be measured.
+
+## What is established, and what is next
+
+| Ours: family evidence | Completed result / scope | Next generality test |
+| --- | --- | --- |
+| Temporal reasoning | 99.73–99.93% event-order accuracy; five runs, declared structured task | Unseen delays, gaps and concurrent streams |
+| Deep learned context | 3.121 development bpc; sparse six-block / 32K fit; eight-block models also train | Matched-quality work and capacity scaling |
+| Auditory events | 79.69% on 512 private development utterances; selected temporal encoder | Aligned official-test real-stream comparison |
+
+Joint multimodal learning and robot reliability remain research targets. Existing results use separately trained variants; native language uses 27 character pools. Sparse routing motivates tabular prediction: paired delays can represent feature thresholds (theory §323). Preserve feature IDs and avoid invented row order. Trees and tabular Transformers remain controls. The banknote screen leads the original trees; broader superiority requires the stronger-control confirmation.
+
+## The research upside: five routes to useful advantage
+
+The investment thesis is a trainable substrate with a known useful workload and broader capability beyond it. Reproducing relevant Transformer quality and convergence with lower whole-system energy would already be valuable. Temporal expressivity, selective capacity and cross-modal integration offer additional, independently testable upside.
+
+| Strength | Potential benefit | Evidence needed |
+| --- | --- | --- |
+| Temporal races and local state | Less digital normalization and value aggregation; a path to globally clockless hardware | Matched-quality full learning/inference, precision, throughput and measured system joules |
+| Evolving state and reused matches | More useful transformations per expensive match; potentially smaller models | Width/depth/data sweeps at fixed quality and complete work |
+| Capacity beyond activity | More specialized stored representations without executing all modules per observation | Improve quality as capacity grows; keep discovery, teaching and execution budgets economical |
+| Common content/time interface | Language-guided sensing and event-grounded reasoning/control in a shared model | Joint held-out modality combinations, task success and causal deadline tests |
+| Native learning during use | Adapt delays/routes/content locally on an event ASIC; reduce external trainer traffic | CPU online: 3.191→3.096 bpc; asynchronous on-chip credit/updates remain untested |
+
+## Quantitative scenarios, with conditions
+
+- **Compression.** At equal quality, half the width would give one-quarter projection arithmetic and roughly half the matching/state work. This compression is unproven.
+- **Energy scenario.** Assume baseline shares of 40% compute, 40% memory, 10% clock, 10% fixed. Halving compute/memory energy, removing the clock and adding 5% control gives 45% savings (1.82×). These are assumptions, not a chip forecast.
+- **Dormant units.** H2 stores 864 receivers and selects 16 updates/character (54× capacity/activity). Teaching evaluates 32 receiver alternatives and admitted historical values; shared maps execute. This is not a 54× resource saving.
+
+## Why this is a research program worth testing
+
+Multi-run structured learning/generalization, temporal algebra and deep trainable event representations provide starting evidence. The current language fits have not established a matched-quality resource advantage. Optimizer, width/head/data scaling and repeatability tests address that gap. Theory §320 proposes repeated Poisson arrivals that reuse matched keys without resetting all losing clocks.
+
+Current autograd, global clipping and block-window Adam do not demonstrate fully asynchronous learning. That needs dependency/version-aware credit and tested updates. On-chip learning has precedents ([Intel Loihi 2](https://www.intel.com/content/dam/www/central-libraries/us/en/documents/neuromorphic-computing-loihi-2-brief.pdf)); the proposed contribution is the complete temporal/sparse-credit construction. Compare competent synchronous learning ASICs and charge gradient/optimizer traffic. See HARDWARE_VALUE_PROPOSITION.md and EVENT_STREAM_ADVANTAGE_PROTOCOL.md.
+
+## The hypothesis: more capability per unit of active work
+
+Sleeping Machines combine trainable delays, temporal races, evolving local state and counterfactual credit. The hypothesis is that these mechanisms can approximate useful attention with less selected arithmetic and value movement, then use richer temporal computation and dormant capacity to reach comparable quality with smaller models or less fitting. A common content-and-time event interface can support tokens and irregular sensor streams, with task-specific adapters and losses. Existing cross-task models train separately; the integration target is language-guided event routing and shared state: events ground language and both inform actions. Shared-weight multimodal learning remains a further milestone.
+
+A softmax race samples exactly from its distribution. One winner does not equal its weighted average. Averaging m independent winners has mean-square error variance/m; approximate Transformer containment also requires historical coverage and stable propagation through depth. Temporal state permits additional computations beyond this attention analogue.
+
+## Matched attention work: retain all query/key matches
+
+Let d be total width, L depth, N historical keys, r the feed-forward expansion and B = (8 + 4r)d² the shared projection/content work per layer. S is extra evolving-state work per layer. Two FLOPs per multiply-add:
+
+| Per token / target | Transformer | Ours: race substitution |
+| --- | --- | --- |
+| Inference | L(B + 4Nd) | L(B + 2Nd + S) |
+| Training, approximate | 3LB + 12LNd + 19P/U | 3L(B + S) + 10LNd + 20P/U |
+| Logical value reads (FP32) | 4LNd bytes | 4Ld bytes |
+| Logical key + value reads | 8LNd bytes | 4L(N + 1)d bytes |
+
+P is updated parameter count and U targets per Adam update. The race training term includes admitted losing-value credit; it is not winner-only training. Our normalization of accumulated gradients adds one operation per updated parameter. Shared embeddings/output and lower-order operations are added in the plotted scenario.
+
+## What would make the case decisive?
+
+- **Matched-quality efficiency.** Repeated completed comparisons of full fitting work and inference work.
+- **Capacity beyond activity.** More useful stored modules with nearly fixed routing and execution budgets.
+- **Temporal expressivity.** Reuse expensive matches for distinct cheap races and evolving-state responses; test whether this reduces required width or depth.
+- **Common event interface.** Tokens, irregular sensors and instruction-conditioned control can use content-and-time events. Real-stream, joint-reasoning/control and hardware-energy advantages require their own benchmarks.
+
+This is a research hypothesis and an architectural comparison, not a frontier-language or measured-energy claim. Current deep sparse learning and structured-task results establish meaningful mechanisms; compression and broad language advantage need further evidence.
+
+## Expected architectural work and access scaling
+
+![full bank temporal scaling](report/figures/full_bank_temporal_scaling.png)
+
+Scenario: d = 256, four heads, r = 4, U = 128 and S = 128d per layer. Context plots use L = 8; the depth plot scores N = 4,096 keys. All keys are scored in both models. Both retain linear context and depth terms, and quadratic width terms. At fixed width, the attention-only arithmetic limit is about 2× at inference and 1.2× during counterfactual training; common projection work lowers these total-work ratios. If richer temporal computation reaches the same quality at width αd and depth βL, projection work scales by βα² and context work by βα. Those additional savings require matched-quality evidence.
+
+![full bank temporal traffic](report/figures/full_bank_temporal_traffic.png)
+
+Winner-only retrieval reduces logical value reads by N in this one-sample scenario. Including the key reads, total K/V access improves by at most about 2×. These counts are logical accesses, not measured off-chip transfers, cache behavior or joules. Multiple winners increase value reads. Explicit digital probability normalization is avoided in a physical race, but clock circuitry and rate setting still have costs.
+
+Shared content/projection structure isolates the attention substitution; this is not a quality-matched fit of our current receiver model. Additional receiver-alternative teaching, indexing and scheduling must be charged when present. Bounded candidate search is a separate coverage hypothesis. See theory note 48, §§313–323; measured quality/work curves remain in the appendix.
+
+## Why this research matters
+
+Sparse neural computation promises to spend work only where information changes. The hard part is teaching useful deep representations when routes can be silent, discrete or absent. A cheap forward pass is insufficient if discovering those routes consumes the savings.
+
+| Research lineage | What it established | The question we pursue |
+| --- | --- | --- |
+| Neuromorphic and spiking networks | Event-driven signals and trained spike timing; EventProp differentiates at events. | How do inactive alternatives receive useful credit without exhaustive replay? |
+| Temporal logic and learned delays | Race/delay algebra computes with time; delay learning already improves SNN recognition. | Can temporal computation coexist with rich vector content and deep learned state? |
+| Sparse conditional models / MoE | Selected experts allow capacity to grow faster than active work; Switch trains at scale. | Can message timing, communication and correction work also become selective? |
+| Asynchronous state-space models | EventSSM learns asynchronous streams with parallel scans; this is a strong precedent. | Can hard races and counterfactual alternatives add quality per unit of total work? |
+
+### What is distinctive here
+
+We combine computation through trainable time, content-bearing messages, persistent local state and credit to unrealized alternatives. Optionality asks whether distinct, reachable future corrections remain available under a work budget. The theory connects temporal algebra, key/value separation, credit transport and supervision that includes silence. The contribution is this construction and its tested consequences; learned delays and sparse capacity are established ideas.
+
+The integrated language candidates now exercise learned content, temporal races, sparse persistent receivers and counterfactual credit together. An eight-block variant also races historical key/value messages. These small-data experiments explore only a small part of the design space; larger-scale quality and complete resource advantages remain under test.
+
+Our earlier deep sparse-routing pilots often lost activity and useful credit before the final layers. Counterfactual proposals alone did not reliably fix that. The subsequent vector-state and persistent-memory work addresses those observed obstacles. Completed structured-task gains motivate the larger learned-model tests; broad quality, training efficiency and energy must still be measured together.
+
+Primary precedents: [EventProp](https://www.nature.com/articles/s41598-021-91786-z); [Space-Time Algebra](https://arxiv.org/abs/2001.04242); [Learning Delays in SNNs](https://arxiv.org/abs/2306.17670); [Switch Transformers](https://www.jmlr.org/papers/v23/21-0998.html); [EventSSM](https://arxiv.org/abs/2404.18508). Our routing failures and revised interpretations remain in the theory index and findings.
+
+## One architecture, several learned computations
+
+The common idea is local computation triggered by an arrival: retain memory, combine the incoming vector with that memory, and choose an outgoing time. A delay changes which messages meet and which race finishes first. This makes timing part of the learned function. The model family implements this idea at several levels of generality.
+
+![shared architecture](report/figures/shared_architecture.png)
+
+| Model | Mechanism | Evidence | What it establishes |
+| --- | --- | --- | --- |
+| Ours: integrated sparse temporal language | Learned content, state-dependent key races, selected receiver updates and episodic KV | Completed 32K receiver / 2K depth and KV screens | Combined mechanisms train; bounded candidate coverage and causal schedule |
+| Ours: learned event-state encoders | Source embeddings, temporal modes, nonlinear vector maps and competing clocks | Language E176; speech E165 | Learned representations and persistent state |
+| Ours: routed event query encoders | Candidate payloads, receiver memory and hard value/time races | Breadth E120; language E133 | Trainable event depth across tasks; text/market breadth variants add statistical evidence |
+| Ours: structured event mechanisms | Temporal chains, relative pointers and phase composition | E34/E53/E54, E61, E124 | Sample efficiency and generalization with declared structural priors |
+| Ours: statistical controls | Conditional counts, backoff and copy probabilities | E173; online pilot | Separate baselines; no event backbone |
+
+**Incoming content is retained.** In the event-state encoder, an incoming vector is projected into rotating, decaying memory. A learned memory read is mixed with a direct input path, normalized and gated. The outgoing vector adds that correction to the incoming vector. The payload therefore depends on both current content and history; timing supplies an additional control.
+
+Each task has separately fitted weights. Current learned encoders use fixed depth and locally dense vector maps; the language scheduler retains state and delayed messages across chunks. The routed query encoder instead rebuilds a supplied context per query. Clock learning uses declared surrogate credit through a hard schedule; it is not an exact derivative of every order change.
+
+## How the model computes and learns
+
+**Time performs computation.** An arrival time is a computational value. A delay adds to that value; a first-arrival race computes a minimum and selects a payload; coincidence detects the latest required arrival. Inhibition can veto a path. With a declared periodic reference, phase transformations compose reusable modular relations. Learned timing therefore changes the function and its causal paths, beyond deciding when a fixed dense calculation runs.
+
+- **Local temporal memory** accumulates observed content and elapsed time without evaluating empty time ticks.
+- **Computation through delays** uses waiting times, arrival order and clock races to transform information and select outcomes.
+- **Hard races and counterfactual credit** choose the emitted vector and delay. Losing alternatives teach better routes while remaining distinct from the winning forward message.
+- **Separate keys and values** let content-dependent keys set routes and clocks while value learning preserves the selected schedule.
+- **Trainable depth** carries representations and learning credit through a hierarchy. The reversible construction preserves conditional norms under its stated assumptions; readout visibility and routing remain necessary.
+- **Structured memories** include relative pointers, learned phase transformations and conditional evidence. Their task gains retain their declared priors; statistical experts are labeled separately.
+- **Appropriate supervision** teaches a completed class decision or the next event's type and waiting time, including information carried by silence.
+
+For a temporal pattern such as A followed by B, a learned delay can bring A's trace into coincidence with B. A competing path can veto the match when C intervenes. The timing-pattern and compositional experiments test these mechanisms; the language and speech encoders learn richer vector messages and temporal state.
+
+The simulator stores arrival coordinates on a common axis; the native function uses local elapsed intervals, precedence and causal joins, not a globally ticking execution clock. A time-origin shift preserves predictions. CPU serialization and a fabricated clockless ASIC are separate implementation claims. The primitives and their symmetry limits are developed in [temporal computation theory, §56](experiments/theory/05_temporal_computation_and_scaling.md); [counterfactual learning](experiments/theory/01_foundations_and_counterfactual_credit.md), [key/value separation](experiments/theory/22_key_value_separation_and_race_boundaries.md) and [reversible depth](experiments/theory/25_reversible_event_memory_and_depth.md) give the learning contracts. Clockless delay/race networks compute relative timing relations; phase arithmetic requires its reference. Each implemented model uses a declared subset. Candidate discovery and training alternatives are charged to the work ledger.
+
+## Useful functions from time, reception and repeated events
+
+A dot product is a compatibility score along one direction. Projecting a message into a learned two-dimensional plane and rotating a local clock vector changes which content direction is receptive. Separate clock modes and independent heads can gate different components, then compose a new vector while retaining the incoming content. This creates content–time interactions, rather than just delaying a fixed computation.
+
+![temporal reception windows trains](report/figures/temporal_reception_windows_trains.png)
+
+| Ours: construction | Analytical function and learning | Implementation status |
+| --- | --- | --- |
+| Temporal reception | Content dot a rotating learned direction; exact ordinary phase/projection gradients within a route history | Full native candidate; two/four-mode fits and same-clock waiting control |
+| Learnable integration window | Compact smooth kernel; exact membership gradients; five moment vectors, no silent-time ticks | Primitive contracts passed; full-model integration remains |
+| Information-bearing train | Same first spike, different later evidence, distinguishable train readout; exact fixed-count gradients | Closed-form event solver and train/window contracts passed |
+
+Parameters are useful when their interactions preserve relevant information, reach the readout and receive adequate credit and exposure. Consecutive affine maps can fuse into one; gated products and temporal state create new interactions. The appropriate mode count or local rank is determined by marginal held-out quality per complete work, not by maximizing parameter count.
+
+The figure is an analytical construction, not measured model performance. Hard destination changes and spike creation/deletion still require boundary or counterfactual credit. More emissions are charged; no biological rate-code or free-energy claim. Theory §§337–352 gives the proof, costs, timing-noise limits and frozen/refitted ablation protocol.
+
+## The ambition: useful capacity without proportional activity
+
+The proposed shift is to compute through event timing and selectively active paths. A larger network should be able to retain more useful dormant structure while spending work on the paths a query needs. Counterfactual credit must teach those hard choices, including useful alternatives that did not win. The earlier temporal-chain, pointer and phase results test parts of this case and remain central evidence.
+
+### What temporal softmax actually provides
+
+If candidate clocks have rates exp(score), their first-arrival winner has exactly the softmax choice probabilities. Competition supplies normalization in time. It can avoid an explicit normalizing sum/division in the winner path when those rates are physically available. Score formation, candidate discovery, value delivery and learning still cost work. This identity is not a measured near-zero-energy attention system.
+
+| Ours: mechanism | Completed evidence or status | What remains |
+| --- | --- | --- |
+| Temporal chains / hard pointers / phase rules | Strong structured-task accuracy, transfer and work comparisons | Transfer the useful priors to broad learned representations |
+| Temporal content carrier | Learned embeddings, state, gates and delay-dependent transport | Every layer executes; does not demonstrate dormant-unit scaling |
+| Integrated sparse temporal model | Hard races, content memory, sparse state updates and counterfactual teachers pass contracts | Scaling quality and complete learning work are under test |
+| Capacity beyond activity | Gains depend on useful sparsity and learning | Measure marginal useful capacity with bounded active work |
+
+### A direct mechanism experiment
+
+The native candidate combines the mechanisms: an addressed content/time event enters eight blocks with two independent receiver heads, selecting one persistent content-bearing unit per head at each depth. Separate state-dependent keys set rates; the winner mixes incoming content and retained memory, then emits a vector and learned arrival time. Addressed losing values receive counterfactual score credit during training. The dense carrier and carrier-plus-retrieval variants remain diagnostic controls.
+
+Observed-source pools and fixed depth are declared priors; learned topology growth and unrestricted asynchronous schedules remain open. RNG and physical traffic are additional. The old time-normalized value sum has a shared random amplitude; its covariance and cutoff claims are corrected beside the original theory, not silently deleted. A centered, conserved teacher is now tested. Its fixed-error expected Jacobian is not an unbiased sampled-loss gradient. Theory §§294–298: experiments/theory/45_race_attention_and_resource_identity.md.
+
+## A native path to more capability per unit of work
+
+The next integrated experiments test what this substrate does naturally: learned time computation, sparse addressed memory and hard choices trained through counterfactual credit. A derived gated-state kernel accumulates ordered interactions without enumerating past pairs; learning useful such representations is the target. Episodic race attention remains a useful preserved comparison; the native branch does not require a per-position attention bank.
+
+![native addressed event path](report/figures/native_addressed_event_path.png)
+
+| Ours: native construction | Exact activity boundary |
+| --- | --- |
+| S observed sources; L blocks; H heads; P candidates | Available receivers: S × L × H × P |
+| One selected receiver per head/block | Selected state commits per event: L × H |
+| All addressed candidates are scored | Key scores and training proposals per event: L × H × P |
+
+Useful capacity can grow while selected activity stays fixed, but its value must be learned. At a fixed data budget more local maps receive fewer examples. Sharing learned maps while retaining separate state is one way to improve learning exposure; the native language adapter tests this directly. It changes capacity and is a whole-construction comparison.
+
+Analytic state evolution avoids periodic simulation during silence. Decay can still erase information, so long-gap accuracy is measured separately from operation count. A protected-content subspace alongside evolving time modes is a derived next hypothesis, to test if the current construction loses useful memory.
+
+The current eight-block/two-head/pool2 model selects 16 commits and scores 32 keys per event. Shared maps, content transforms, losing proposals, backward, Adam and source-local causal waits remain paid. The ordered kernel is a restricted algebraic identity, not an achieved capability of the fitted model. Full-depth contracts and accounting smokes pass; quality pilots, refitted controls and independent seeds determine further scaling. Theory §§330–336; completed results and the executable priority appear in Appendix B.
+
+## Ours: the integrated sparse temporal language experiment
+
+This candidate has no dense language carrier. Each event mixes its embedding with the previous deep message and traverses contextual key races. Only selected receivers update their persistent rotating/decaying state and emit values. Time is part of the computation; inactive receivers are not evaluated on empty ticks.
+
+![full sparse language path](report/figures/full_sparse_language_path.png)
+
+The first six-depth, 16-dimensional candidate provides 324 units but updates only six states per character. Each depth scores two addressed keys; training additionally evaluates both candidate values to teach hard choices. Unaddressed pools remain dormant. The capacity experiment doubles available units to 648 while retaining six selected state updates. Key scoring and counterfactual work still grow and are charged.
+
+Checks establish causal predictions, identical chunked execution, precise clocks at 10M positions, equality of training forward values and winner-only inference, learned key/value/memory gradients and conserved route credit. The smoke fit learns, but is not a quality benchmark. Completed data, depth and memory interventions test progress before larger promotion.
+
+A matched payload-32 / 2K depth screen improves 3.633 to 3.542 development bpc from six to eight receiver blocks, for 32.6% more fitting work. The current eight-block KV variant adds historical races, giving sixteen selection steps after warmup. Fixed data/passes/seed do not isolate depth from increased capacity; this is exploratory evidence, not a scaling law.
+
+Fixed observed-character pools, bounded delays and six sequential event depths; no learned topology or complete frontier-language claim. Interior arrival-time derivatives and counterfactual score surrogates have distinct scope. FLOPs include teaching alternatives and optimizer work; representative sparse traces do not certify whole-run instruction or energy counts. Theory §§299–302; source: sleeping_machines/sparse_race_language.py.
+
+## Ours: queries, memory and context
+
+Race attention specifies how a candidate wins; memory organization specifies what the candidates represent. The integrated language model races between compressed persistent receivers. It does not replace a Transformer token KV cache entry for entry.
+
+![language queries and memory](report/figures/language_queries_and_memory.png)
+
+At each depth, a learned map turns the incoming message into a query. A candidate key combines its learned prototype and a read of its retained state. Query–key compatibility sets an exponential clock rate; the first arrival wins with the corresponding softmax probability. The observed character addresses two candidates per depth. Queries cannot search arbitrary past-token keys in this construction. Winner-only delivery also differs from a deterministic softmax-weighted sum, although its one-step expectation equals that sum.
+
+| Model / storage formula | Raw state / one stream | Forward history |
+| --- | --- | --- |
+| Ours: width 16, 324 states + clocks + last message | 22.84 KiB | Carried until stream reset |
+| Ours: width 32, 324 states + clocks + last message | 43.16 KiB | Carried until stream reset |
+| Transformer: conceptual FP32 KV, 4 layers × 256 positions × width 256 | 2,048 KiB | At most 256 characters |
+
+The raw width-32 state is about 47× smaller than this conceptual KV allocation and does not grow with history length. This is a storage-formula comparison, not matched recall capacity or measured total RAM: ours compresses history, whereas KV entries retain separate position-addressable representations. The saved Transformer actually recomputes windows without an implemented KV cache. Its 256-character window is a model setting, not an intrinsic dataset limit. Ours retains forward state beyond its 16-character training-credit horizon.
+
+Ours raw bytes = 324 × (4d + 8) + 4d; conceptual Transformer KV bytes = 2 × 4 × 256 × 256 × 4. Excludes weights, gradients, optimizer, activations, object/index overhead and traffic. Long-range recall and comparable-quality memory advantages remain to be measured. Recurrent compression resembles the memory organization of selective state-space models (Mamba, Gu & Dao, arXiv:2312.00752); our hard temporal races and counterfactual route teacher are separate mechanisms. Compression is not required by races: a separate integrated per-position KV experiment retains historical entries and tests sparse value delivery. Theory §§308–310.
+
+## Ours: completed integrated-language stages
+
+| Ours: fit / payload / pool | Development bpc ↓ | Fitting GFLOPs ↓ | Capacity / selected states |
+| --- | --- | --- | --- |
+| 32,768 / 32 / 2 | 3.106 | 110.09 | 324 / 6 |
+| 32,768 / 16 / 2 | 3.121 | 29.88 | 324 / 6 |
+| 8,192 / 16 / 2 | 3.398 | 7.49 | 324 / 6 |
+| 8,192 / 16 / 4 | 3.426 | 14.15 | 648 / 6 |
+
+These are the integrated model stages, with identical cold development targets. Each character selects one unit at each depth; addressed alternatives teach the races. Capacity and selected activity are different counts. The fitting ledger includes counterfactual values, backward, clipping and Adam.
+
+Quality, data efficiency and work must be judged together. Completed earlier carrier results remain preserved. Comparing these models also changes payload size, capacity and truncated credit, so a score difference does not isolate one mechanism. No official test or energy measurement is implied.
+
+One seed; observed-character index; no statistical expert. Whole-stream candidate scores, selected updates and teaching visits are recorded. Arithmetic is a representative saved-parameter extrapolation; sparse optimizer activity depends on the actual input and credit history. RNG, indexing and memory traffic are separate. Source: experiments/results/parallel_language/local_full_sparse_language_*.json.
+
+## A demonstrated advantage: generalization with less work
+
+The retrieval and phase computations preserve useful rules when the evaluation extends beyond the fitting examples. The saved compact Transformer and LSTM controls use the same synthetic evaluation targets. **Higher and further left is better:** more accurate answers from less estimated inference work. All points use one logical operation ledger.
+
+![consolidated work frontiers](report/figures/consolidated_work_frontiers.png)
+
+| Ours: event computation | Held-out capability | Estimated work per query |
+| --- | --- | --- |
+| Periodic path; 69 learned scalars | 3,440/3,440 unseen triples | 188 logical operations |
+| Two-layer carrier + hard pointer | 100% at four times context | 728,602 logical operations |
+
+The phase rule costs 188 logical operations per triple; the saved LSTM and Transformer cost 104,518 and 155,592 and score 1.95% and 3.60%. At four times the recall context, the event encoder plus learned pointer scores 100% at 728,602 operations; both compact controls score 7.42% at 2.24M and 4.46M operations. The phase model receives a periodic representation with period 17, and retrieval has a pointer mechanism. These useful priors explain the task advantage and are part of what must transfer to harder tasks.
+
+**Learning work is also selective.** The periodic teacher makes 29,003 mistaken-example updates and 145,015 learned-scalar update visits. The dense arithmetic controls make 4,800 Adam steps: 92.2M parameter visits for the LSTM and 132.5M for the Transformer. These count parameter updates, excluding optimizer state and backward arithmetic; they are not training FLOPs or joules.
+
+Arithmetic: 1,473 fitting triples, a 200-epoch budget, all 3,440 unseen triples; supplied period 17. The phase-only path stops after 47 passes, when an entire fitting pass makes no updates. Recall: 4,000 pointer-fitting examples plus 512 neural-fitting examples; the dense controls receive all 4,512 examples for eight epochs. Width 32 and two generic layers where present, seed 6, one small dense setting. Work is an analytic logical-operation estimate, including configured vector maps, routers, scans, normalization, clock candidates and pointer search. These inference counts are not measured joules or backward/optimizer counts. Full work definitions appear in the evidence appendix.
+
+## A demonstrated advantage: learning temporal structure
+
+Event chains learn timing patterns and compose recognizable parts into ordered structures. The preserved five-run results show accurate recognition and strong sample efficiency. The right panel compares distinct examples rather than incompatible activity counters.
+
+![supremacy map](report/figures/supremacy_map.png)
+
+| Preserved comparison | Ours | Transformer | Fitting protocol |
+| --- | --- | --- | --- |
+| Timing patterns | 99.95–100%; five runs | 99.60–99.80%; two runs | 200k examples once / 1M with relative-time bias |
+| Shared-motif composition | 99.00–99.93%; five runs | 99.60–99.85%; two runs | 40k examples once / 1M with relative-time bias |
+| Depth-four order | 99.90–100%; five runs | 98.95–99.05%; two runs | Same 40k distinct examples; one pass / 50 passes |
+| Depth-three order at 2k examples | 99.73–99.93%; five runs | 33.25–40.80%; two runs | One pass / repeated fitting on the same 2k examples |
+
+The strongest depth-four comparison has approximately ten times fewer classification errors despite the event learner seeing each fitting example once. The sample-efficiency curve makes the next question concrete: can learned embeddings and broader event representations retain that advantage when the inputs no longer supply known temporal parts?
+
+Completed E35, E34, E53/E54 and E36 files. Ranges describe the recorded runs, not confidence intervals. Architectures and optimization differ; synthetic evaluation sets were reused during research. Event deliveries remain activity measurements. Total arithmetic, backward and optimizer work require a declared ledger; activity divided by dense MACs is not a training-cost or power ratio.
+
+## Why asynchronous, sparse computation matters
+
+Persistent local state can retain experience without repeatedly reconstructing a whole history. An asynchronous node updates when useful information arrives. A hard race emits one chosen message. These mechanisms create a path to spending less computation and moving less data per useful answer. On an event-oriented processor, inactive nodes and communication links could remain idle.
+
+### Spend the next unit of work where it helps
+
+A larger budget can buy a longer memory, better retrieval, a deeper representation for difficult inputs or more local adaptation. The development rule is to measure the held-out improvement from each choice and allocate work to the most useful one. The phase and pointer results show why an appropriate computation can be much cheaper than a generic dense approximation. The scaling program tests how much of this flexibility survives when that computation must itself be learned.
+
+| Architecture | Fitting known sequences | Generating or processing a stream |
+| --- | --- | --- |
+| LSTM | Gates depend on prior hidden state; recurrent work is sequential | Retained hidden state; dense gate updates per token |
+| Transformer | Causal attention permits sequence-parallel fitting | Sequential token generation with a key/value cache; adaptation is possible |
+| Ours: Sleeping Machines | Affine event memory supports parallel scans once incoming values/times are known | Retained local state and delayed-message queue; only due arrivals execute |
+
+Parallel fitting and sequential generation are compatible. The precise-clock language scan gives a 12.30× complete-step CPU speedup against serial execution of the same width-256 model, including backward, clipping and Adam. Predictions, states, gradients, chunk boundaries and causality are checked. This follows a bounded-delay schedule; arbitrary reordering networks require their own contract.
+
+Parallel recurrent computation also appears in [linear attention](https://proceedings.mlr.press/v119/katharopoulos20a.html) and [selective state-space models](https://arxiv.org/abs/2312.00752). EventSSM already processes asynchronous events with scans. These are important controls. The distinctive hypothesis here is the combination of learned timing, sparse communication, credit to alternatives and independent compute budgets; it must earn its advantage empirically.
+
+Primary FLOPs describe the declared event algorithm, including required vector maps, candidate computation, scans, backward and optimizer updates. Simulator padding and dispatch are separate implementation overhead. Physical power also depends on memory, queues, communication and hardware utilization. Demonstrated work savings and projected power savings are distinguished; total device joules have not yet been measured.
+
+## A mathematical foundation for trainable computation
+
+| Principle | What it enables |
+| --- | --- |
+| Stable transport through depth | The reversible packet/memory construction preserves conditional value and credit norms under its stated operator and boundary assumptions. Readout visibility, routing and optimization remain separate requirements. |
+| Active communication support | Inputs need causal paths through which to interact. A context channel supplies joint information when sparse packets leave local groups disconnected. |
+| Credit to unrealized alternatives | A losing payload or timing choice can show how a different route would change the outcome, while forward computation remains a hard race. |
+| Periodic state as an isometry | Learned rotations/reflections have unit-magnitude occurrence derivatives. Their composition supports reusable arithmetic instead of a table of observed tuples. |
+| Certified composition | Target-constrained min/max composition of phase errors certifies the fitted modular rule across all 4,913 possible tuples; exhaustive checking confirms it. |
+| Natural supervised credit | Categorical and event likelihoods both credit predicted sufficient statistics minus observations. Silence enters through integrated exposure. |
+| Useful optionality | Reserve consists of distinct, attainable future corrections under a causal work budget. Reachability and transferable learning matter alongside immediate loss. |
+| Statistically useful credit | Expected improvement must overcome the curvature cost of fitting noise. Cross-example teacher agreement separates reproducible correction from raw gradient magnitude. |
+
+### From mathematics to an engineering discipline
+
+The theory connects representation, topology, clocks and optimization. Expressivity describes what a network can compute; transport describes whether information and credit survive; the objective describes what the teacher asks it to learn. These pieces must agree. The periodic certificate is one concrete case where the formal model explains and verifies a learned computation.
+
+A common implementation makes these principles reusable across tasks. Efficient primitives can own a computation when its structure is known; a deep carrier can learn representations when it is not. The research objective is to combine this flexibility with affordable route discovery and increasingly capable models.
+
+Formal derivations and their assumptions are indexed in the project's theory notes. Conditional stability and a certificate for a fitted rule do not establish global optimizer convergence or a scaling law. The program builds on established deep spiking and sparse conditional computation; its focus is the combination of useful temporal operators, hard causal routing and counterfactual learning. Related survey: [Direct training of deep spiking networks](https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2024.1383844/full).
+
+## Potential grounded in the completed evidence
+
+The objective is capable models that spend computation where it improves an answer. The saved structured-task results and learned stream pilots provide specific starting points. Moving from those mechanisms to frontier prediction requires useful representations, longer context and measured quality at a fixed total resource budget.
+
+| Opportunity | Present foundation | What would establish the larger case |
+| --- | --- | --- |
+| Compact prediction and memory | Persistent learned state; pointers generalize to longer contexts. | Competitive held-out language quality, retention and complete fitting/inference cost. |
+| Continuous perception | Learned temporal speech representations and composition. | Full speech/vision tests and confidence-based early decisions at measured latency. |
+| More useful training per budget | Structured-task sample efficiency; exact causal parallel scans. | Quality improvements at equal total fitting work, including route discovery. |
+| Dormant skills and selective depth | Hard race routing and compute-allocation theory. | Learned marginal work allocation that outperforms fixed allocation on real tasks. |
+| Mobile and industrial autonomy | Local state and event-triggered updates. | Device joules, memory traffic and task quality measured on deployable implementations. |
+
+### Why the hardware and economic implications could be large
+
+If comparable quality needs less total training and inference energy, a fixed power and capital budget can support more capable models, more research or continuous adaptation on robots, phones and instruments. Persistent local state and selective communication would favor hardware that handles message delivery, queues and memory efficiently. These are conditional consequences of measured savings, rather than savings inferred from event counts.
+
+The near-term experiment asks where the next unit of computation helps: longer memory, richer content transformations, retrieval, depth or local learning. Held-out gains and complete work determine promotion. A successful scaling result must show that those gains continue across independently fitted sizes and budgets.
+
+## Ours: language learning and staged scale-up
+
+These learned models use character embeddings, gated residual content transformations and persistent rotating/decaying state. Temporal modes encode relative token distance. No statistical count, copy or word experts provide their predictions. The goal is competitive quality from a learned backbone before claiming a language compute advantage.
+
+![language capacity scaling](report/figures/language_capacity_scaling.png)
+
+| Ours: width | Parameters | Development bpc ↓ | Total fitting GFLOPs ↓ |
+| --- | --- | --- | --- |
+| 32 | 21,741 | 2.858 | 76.11 |
+| 64 | 80,301 | 2.727 | 272.30 |
+| 128 | 308,013 | 2.643 | 1026.18 |
+
+All curves use six layers, seed 6, 131,072 fitting characters, four passes and the same 8,191 cold-context development targets. Credit is truncated every 64 characters; memory persists. FLOPs include forward/loss, backward, clipping and Adam; special functions are reported separately in each result. These runs vary capacity at equal data/passes, rather than equal compute, and establish neither a scaling law nor official-test superiority.
+
+### From longer memory to selective content
+
+| Ours: memory variant | Parameters | Development bpc ↓ | Fitting GFLOPs ↓ |
+| --- | --- | --- | --- |
+| Constant / inherited | 308,013 | 2.643 | 1,026.18 |
+| Constant / long decay | 308,013 | 2.752 | 1,026.18 |
+| Constant / long spectrum | 308,013 | 2.858 | 1,026.18 |
+| Input gates / inherited | 309,561 | 2.587 | 1,040.61 |
+| Input gates / long decay | 309,561 | 2.627 | 1,040.61 |
+
+Identical width, seed, data, four passes and 64-character credit horizon. Constant-memory arms vary initial timescales/frequencies. Input-gated arms add content-dependent write/forget controls (0.50% more parameters, 1.41% more fitting arithmetic). Longer decay alone worsens this fit. These are single-seed development comparisons; complete numerical contracts precede training.
+
+## Ours: content and memory in fitted language models
+
+An event carries information about its input. The learned vector is a transformation of incoming content and persistent state, with a residual path and an output gate. The new candidate also gates memory writing and forgetting from incoming content. These checks measure whether the fitted predictions use those paths.
+
+![language content memory audit](report/figures/language_content_memory_audit.png)
+
+Resetting all history before each character preserves its current embedding and learned content transformations, but raises the gated model's development loss from 2.587 to 4.519 bpc. Zeroing incoming embeddings raises it to 7.569. Both present input and earlier messages contribute to prediction.
+
+### Selective retention adds a useful control
+
+The two input gates start at one, preserving the constant-memory model exactly at initialization. During fitting they learn different write strengths and forgetting factors for different incoming vectors. A factor below one slows decay; above one accelerates it. The controls are known from the causal previous layer, so serial execution and parallel affine scans retain their checked outputs and teachers.
+
+In the matched small fit, gates improve 2.643 to 2.587 bpc for 0.50% more parameters and 1.41% more fitting arithmetic. This is a local quality/work improvement, with one seed. All six layers still execute for every character; dormant-unit scaling remains a separate target.
+
+Frozen selected checkpoints, identical 8,191 cold development targets, no training or official-test reads. These interventions disrupt a trained model; they establish fitted dependence, not the quality of retrained ablated architectures or lossless storage. Source: parallel_language/local_language_representation_20260930T162337Z.json.
+
+## Ours: larger language development stages
+
+Each stage fits independently from initialization. Data, capacity and memory controls are declared below. Development selects weights within the fixed four-pass budget; ongoing training logs are never substituted for a completed result.
+
+| Ours: memory / width | Fit characters | Parameters | Development bpc ↓ | Fitting TFLOPs ↓ |
+| --- | --- | --- | --- | --- |
+| Input gates / 256 | 131,072 | 1,208,889 | 2.572 | 4.009 |
+| Input gates / 128 | 1,048,576 | 309,561 | 2.210 | 8.325 |
+
+![language compute choices](report/figures/language_compute_choices.png)
+
+On the identical 131K-character/four-pass screen, widening the gated model buys 0.014 bpc for 3.85× the total fitting arithmetic. Adding input gates at width 128 instead improves 0.057 bpc for 1.41% more arithmetic. This makes the allocation question quantitative: measure useful correction before spending broadly on width. These are finite, single-seed interventions, rather than a scaling law.
+
+The fixed-capacity data comparison and fixed-data capacity comparison answer different questions. Equal passes and data do not imply equal compute. The pipeline checks finite learning, trained value blocks, complete work and source provenance before promotion. A development gain is not an official-test or frontier claim.
+
+Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated Kneser–Ney counts of the same fitting characters score 2.349 bpc at 131K and 2.007 at 1M, with one counting pass and no gradient work. Every completed fit from 2K to 1M characters is above this bar. Small-N character modelling is limited by estimation; fixed learned gates under truncated credit cannot be consistent per-address estimators, which motivates count-carrying receivers with escape races and a learned base measure. Counts are reference predictors, not neural controls or a large-data comparison.
+
+Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. Special functions, evaluation passes and physical traffic are separate from the arithmetic ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.
+
+## What establishes the larger advantage
+
+The ambition is a common model family whose strongest mechanisms remain useful as tasks, data and capacity grow. Arithmetic and retrieval retain their demonstrated strengths in the consolidated implementation. The strongest language mixture is specialized; the generic backbone still needs to demonstrate competitive learned representations. Character and subword-token budgets must be distinguished.
+
+| Objective | Decisive evidence |
+| --- | --- |
+| Generic language scaling | Train a learned event backbone that owns the prediction. Scale through declared data budgets with matched Transformer, recurrent and state-space references; record loss, capacity, complete training work, memory traffic, time and joules. |
+| Preserve capabilities | Repeat established generalization and sample-efficiency results within the common model family, with task-appropriate depth and explicit resource accounting. |
+| Strong real-event recognition | Accurate speech and event-camera decisions on complete held-out benchmarks; calibrated confidence and time-to-answer. |
+| Learn routes and representations at scale | Reliable deep credit and useful counterfactual alternatives as width, depth, memory and data increase. |
+| Efficient persistent operation | Maintain local state and pending messages across queries, preserving causal predictions while reducing repeated work. |
+| Lower total energy at useful quality | Measure training and inference joules, memory traffic, latency and communication under declared hardware and quality targets. |
+
+Success on these dimensions would turn the current task-level advantages into a broader foundation for frontier models. The project's distinctive resources—timing, local memory, hard selection and credit to alternatives—remain the guide for architecture and learning.
+
+## Appendix A. Deep event recognition
+
+The strongest completed speech result in the model family is **79.69%** on 512 private held-speaker utterances (selected single six-block prefix; trained with twelve blocks). Published official-test results below use a different partition; they are reference targets.
+
+| Ours: private development configuration | Correct | Accuracy ↑ |
+| --- | --- | --- |
+| Original eight-layer parent | 370/512 | 72.27% |
+| Parent + six-block residual; pass 3 | 408/512 | 79.69% |
+| Single six-block temporal encoder; pass 0 | 406/512 | 79.30% |
+| Calibrated six-block continuation | 400/512 | 78.12% |
+| Bounded twelve-block encoder | 400/512 | 78.12% |
+| Directional twelve-block encoder | 401/512 | 78.32% |
+| Selected single six-block prefix; trained with twelve blocks | 408/512 | 79.69% |
+
+![e143 temporal residual learning](report/figures/e143_temporal_residual_learning.png)
+
+A six-block width-128 temporal encoder learns corrections while the inherited eight-layer parent stays frozen. It adds 395,814 parameters to the parent's 53,296. Signed modal states, nonlinear gates and residual vectors learn from all source identities and original event times before causal pooling. This is a larger parallel model, not fourteen sequential layers; completed-utterance supervision does not yet teach calibrated early answers. On 657 disjoint utterances from the same held speakers, accuracy improves from 70.47% to 77.63%.
+
+| Published reference; official-test protocol | Reported accuracy ↑ |
+| --- | --- |
+| Ours: full official SHD comparison | Pending |
+| EventSSM: asynchronous learned state-space layers | 95.9% |
+| S7: input-dependent temporal state | 96.3% |
+
+Our private sample uses training-file speakers 3/6; official test accuracy is unmeasured. The temporal residual uses three passes and a fresh optimizer; its larger capacity and budget are not a matched single-factor comparison. Its listed score selects the best private-development epoch; the curve shows all three. The original parent was fitted on 4,096 examples. Continuation timers exclude loading; the residual timer includes it. Both include evaluation and are not energy measurements. One seed. References: [EventSSM](https://arxiv.org/html/2404.18508v2), [S7](https://arxiv.org/html/2410.03464v1). These published scores were checked against the original papers; they are targets for a full official-test comparison, not scores on our private split.
+
+## Appendix A (continued). Learned timing and transfer
+
+**Learned delays contribute to the answer.** Restoring the hidden clocks to their initial values, with source vectors, state/value maps and the trained classifier retained, loses 13 correct answers. Timing changes the temporal interactions used by the representation; it performs computation.
+
+![e145 learned timing and transfer](report/figures/e145_learned_timing_and_transfer.png)
+
+| Ours: same trained readout; subsystem reset | Correct | Accuracy ↑ |
+| --- | --- | --- |
+| All learned parameters retained | 408/512 | 79.69% |
+| Only hidden clocks reset | 395/512 | 77.15% |
+| Only source vectors reset | 373/512 | 72.85% |
+| Only state stack reset | 358/512 | 69.92% |
+| Only decay/frequency parameters reset | 407/512 | 79.49% |
+
+The temporal stack and source vectors also learn useful coordinated representations. Resetting the stack loses 50 correct answers; resetting sources loses 35. Decay/frequency resets change one decision. These changes depend on the fitted solution's coordination; their effects cannot be added or treated as a matched comparison of retrained architectures.
+
+The 657-utterance audit is disjoint from fitting and the development sample and uses the selected checkpoint unchanged. It gains 62 correct answers and loses 15, for a net improvement of 47. Both samples use the same two held training speakers. Official-test and additional-speaker generalization are the next evaluation targets.
+
+### A stronger mathematical account of routing
+
+An affine packet summary can preserve both the final state and the average of raw temporal states, including their teachers. This permits richer pooling before expensive nonlinear maps. A second derivation shows why many almost-equal delays may offer little usable choice: their effects point in nearly the same direction. Diverse payloads and temporal modes, sufficient delay spread and downstream visibility determine useful route reserve.
+
+One exploratory run: 449,110 total parameters, inherited parent plus a trained six-block encoder. Three passes use about 33 minutes including preparation/evaluation and 1.79 GiB peak RSS; the guarded host retains at least 10,361 MiB sampled available memory. Complete physical work and joules remain unmeasured. Formal statements and numerical contracts are in THEORY §§226–236.
+
+## Appendix A (continued). One temporal encoder
+
+A six-block temporal encoder retains nearly all the combined model's development accuracy through one ordinary query head. Deployment removes the frozen parent: 395,814 parameters replace 449,110. Modal states, gated vector messages and winning delays remain. Its weights inherit earlier encoder training; combined teacher predictions are used only to initialize the head.
+
+| Ours: private development configuration | Correct | Accuracy ↑ | NLL ↓ |
+| --- | --- | --- | --- |
+| Combined model: parent + temporal correction | 408/512 | 79.69% | 0.684 |
+| Single encoder: clean head, before continuation | 374/512 | 73.05% | 0.818 |
+| Single encoder: paired head, selected pass zero | 406/512 | 79.30% | 0.631 |
+| Single encoder: selected trained prefix | 408/512 | 79.69% | 0.625 |
+
+![e152 single encoder learning](report/figures/e152_single_encoder_learning.png)
+
+Fitting the head on clean and transformed speech improves held accuracy by 32 answers with the temporal features frozen. Its covariance penalty suppresses class-visible nuisance variation. The right panel compares the heads on the same features; the left shows all subsequent unrestricted encoder passes. The selected trained prefix reaches 518/657 (78.84%) versus 510/657 (77.63%) for the combined model on the reused disjoint audit. Audit labels do not choose the checkpoint.
+
+Training the directional twelve-block extension, then selecting its six-block prefix on development, retains the combined model's 408 correct answers with lower NLL and 395,814 deployed parameters. The extra training blocks are removed after their learned contributions reduce held accuracy. This improves deployment quality/work; it does not establish a positive deep-block accuracy gain.
+
+Seed 6, private train-file speakers 3/6; official-test parity remains unmeasured. Head fitting uses 6,144 unique fitting utterances: one clean view for the first arm, clean plus one transformed view for the paired arm. The arms also change regularization and use three/two encoder passes respectively, so total budgets are not matched. All continuation epochs are plotted; selection uses development accuracy, then NLL. Extra teacher/cache/head work and inherited fitting must be charged. Modal/vector maps are locally dense; no empty ticks or event-pair attention are added. The selected prefix additionally inherits the full twelve-block fitting pass; pruning does not erase that training cost. Prefix/full choice is post-hoc private-development selection. Formulae and numerical checks: THEORY §§237–264. One CPU forward evaluation takes 11.90 s for the selected prefix versus 23.71 s for the combined model. Packing/query included, loading excluded; one timing observation, not joules.
+
+## Appendix A (continued). Making depth useful
+
+Identity growth preserves the classifier and old teachers while added output maps receive label credit. They must also change useful features. A tightly bounded twelve-block extension learns weights but changes no audit decisions when its six appended blocks are removed.
+
+| Ours: one matched fitting pass | Parameters | Fit accuracy ↑ | Private accuracy ↑ | NLL ↓ |
+| --- | --- | --- | --- | --- |
+| Six-block control | 395,814 | 90.72% | 78.12% | 0.639 |
+| Twelve blocks: bounded outputs | 696,888 | 90.72% | 78.12% | 0.639 |
+| Twelve blocks: directional units | 696,120 | 90.77% | 78.32% | 0.644 |
+
+![e164 depth use and work](report/figures/e164_depth_use_and_work.png)
+
+Directional conditioning normalizes temporal-state features before their output map. An invertible coordinate change rescales classifier-sensitive directions and preserves hidden null directions for later computation. The fixed transform folds into an ordinary map at deployment. Initial outputs and old teachers remain exact; fitting replays verify the actual proposed update.
+
+The directional model reaches 509/657 on the reused audit. Removing its six appended blocks changes 11 predictions: 0 are correct only with the blocks and 9 only without them. This measures fitted contribution with the trained prefix/head retained; it is not a retrained architecture comparison.
+
+All arms inherit the paired-head checkpoint and use 6,144 fitting utterances, the same order, channel/time transformations and one encoder pass. Old-group LR is 0.0000203125; directional new groups use 0.0001953125 from fitting-only replay. Changed normalization and update coordinates form one intervention. New blocks initially add 36 ms latency; labels supervise completed untimed utterances. Audit reuse is explicit; official-test parity remains unmeasured. CPU points are one warmed observation per model, packing/query included and loading excluded; energy is unmeasured. Weight-coordinate folding, all source work and added depth must be charged during training. Local maps remain dense, with no empty ticks or event-pair attention. Theory §§249–264.
+
+## Appendix B. Breadth of the common implementation
+
+These small development screens test one implementation across tasks. Text and market variants include separately fitted statistical evidence. Ours denotes Sleeping Machines; TF is the saved Transformer. Accuracy improves upward; prediction loss and FLOPs improve downward.
+
+| Task / quality direction | Ours: quality | TF: quality | Ours: inference MFLOPs ↓ | TF: inference MFLOPs ↓ |
+| --- | --- | --- | --- | --- |
+| Text8<br/>bpc ↓ | 2.915 bpc | 3.729 bpc | 1.26 | 1.84 |
+| Market event prediction<br/>nats/event ↓ | 3.823 nats/event | 4.208 nats/event | 1.26 | 1.84 |
+| Temporal composition<br/>accuracy ↑ | 97.3% | 90.2% | 0.29 | 0.38 |
+| MNIST<br/>accuracy ↑ | 75.8% | 69.9% | 1.66 | 2.57 |
+| Event-camera gestures<br/>accuracy ↑ | 59.1% | 15.9% | 23.99 | 124.23 |
+
+![breadth work ratios](report/figures/breadth_work_ratios.png)
+
+Ours uses eight layers and TF two, both width 32, with the same neural-fitting examples, encoding, objective and eight epochs. Inference counts maps/scans (ours) and maps/attention (TF): two FLOPs per multiply-add, excluding padding, scalar nonlinearities and expert preparation. Training includes backward, clipping, Adam and our evidence/calibration; its ledger follows.
+
+**Lower core inference work in every screen.** Gestures use **5.18× less** with 59.1% versus 15.9% accuracy. That 44-query screen has an underfitting TF control; a general vision claim requires complete benchmarks and stronger references.
+
+**Why training can cost more:** the race core evaluates all three candidate vector payloads during training, versus only the winner during inference. Its eight layers also exceed the reference's two. With short contexts, that work outweighs the saved attention cost; these rows do not show a training efficiency advantage. On the longer event-camera prefixes, the common model's estimated total uses 49.0% of the reference training arithmetic, including calibration.
+
+Seed 6; neural fit/development counts: text 2,048/256, market 512/256, temporal 1,024/256, MNIST 1,024/256, gestures 88/44. The common text model also has a separately fitted 32,768-character evidence bank; market evidence is fitted on a prior day. The references have no such bank. MNIST uses pooled training-set images; gestures use first-second prefixes and disjoint users. Batch 16, or four for gestures. No official real-data test. Market fixed evidence: 3.670 nats/event.
+
+## Appendix B (continued). Total training cost
+
+The ledger estimates the entire completed fitting budget for each reported model. It includes prediction and loss, backpropagation, gradient clipping and Adam across all eight epochs. The common model also pays for its evidence bank and initial readout calibration. These models were trained from initialization; there is no inherited neural fitting to omit.
+
+![e172 complete training work](report/figures/e172_complete_training_work.png)
+
+| Model/task | Forward + loss | Backward | Clip | Adam | Evidence + calibration | Total |
+| --- | --- | --- | --- | --- | --- | --- |
+| Language: Ours | 62.633 | 130.873 | 0.165 | 0.658 | 2.930 | 197.26 |
+| Language: TF | 31.246 | 63.990 | 0.083 | 0.334 | 0 | 95.65 |
+| Market: Ours | 15.657 | 32.716 | 0.041 | 0.164 | 0.733 | 49.31 |
+| Market: TF | 7.811 | 15.996 | 0.020 | 0.081 | 0 | 23.91 |
+| Temporal: Ours | 7.725 | 16.546 | 0.081 | 0.324 | 0.364 | 25.04 |
+| Temporal: TF | 4.773 | 9.540 | 0.041 | 0.162 | 0 | 14.52 |
+| Mnist: Ours | 40.394 | 84.376 | 0.083 | 0.333 | 1.886 | 127.07 |
+| Mnist: TF | 33.026 | 68.489 | 0.049 | 0.197 | 0 | 101.76 |
+| Dvs: Ours | 51.580 | 107.386 | 0.028 | 0.112 | 2.404 | 161.51 |
+| Dvs: TF | 99.023 | 230.261 | 0.014 | 0.057 | 0 | 329.35 |
+
+All table values are estimated GFLOPs for the whole fitting run, not per query. A multiply-add counts as two operations. Forward/loss and backward use the saved E172 four-query operator trace scaled by recorded map/scan work. Ours uses its logged candidate-map/scan counts. Reference padding is reconstructed from all fitting prefix lengths, the original shuffle seed and batch sizes, including fused attention products. Clipping and Adam are charged once per original step. Other arithmetic and the small calibration eigensolver are estimates.
+
+Event-target arithmetic excludes padding and simulator dispatch/allocation; required candidate maps, losing-value teaching, scans and learning remain charged. References use the same FLOP convention. Evaluation, search, encoding, special functions, integer/index work, comparisons and memory traffic are outside these totals. These single-seed screens have different depths/quality and do not measure event hardware, matched-quality cost or energy. Ledger: [estimate_training_work.py](experiments/estimate_training_work.py).
+
+## Appendix B (continued). Completed language references
+
+The Transformer and LSTM benchmarks have already been run. Their completed result files remain in the repository and are reused as reference targets for the full learned-event benchmark. Lower bits per character (bpc) means better prediction.
+
+| Model | Fitting characters / passes | Test bpc ↓ | Full training FLOPs ↓ |
+| --- | --- | --- | --- |
+| Ours: learned event-state model (planned) | 10M / four passes | Pending | Pending |
+| LSTM; width 512, one recurrent layer | 10M / six passes | 1.799 | 432.59T |
+| Transformer; width 256, four layers | 10M / four passes | 1.908 | 888.78T |
+| LSTM; width 512, one recurrent layer | 90M / 6 passes | 1.661 | 3.89P |
+| Transformer; width 256, four layers | 90M / 4 passes | 1.604 | 8.00P |
+
+The 10M references score exactly the same 999,999 text8 targets in [95M,96M), with frozen validation-selected weights and cold initial context. The 90M LSTM uses the same test interval and its saved recurrent scoring protocol. All use the historical 27-character alphabet and 200,000-character validation selection; data budgets, capacities and fitting passes differ.
+
+Training estimates include every fitting step, forward/loss, backpropagation, gradient clipping and Adam. Backward is approximated as twice forward; multiply-add counts as two FLOPs. G/T/P mean billion/trillion/quadrillion. Validation/test evaluation, memory traffic and runtime are outside these arithmetic totals.
+
+### Ours: learned-language benchmark status
+
+The planned comparison uses 10M fitting characters, four passes, 200,000 validation characters and the same 1M test interval. Priority is the integrated sparse/timed architecture documented in the next appendix. Completed dense-carrier fits remain diagnostic controls; their quality does not establish sparse-model performance. Numerical contracts and progressively larger integrated development fits precede promotion. The aligned full-test result and its fitting work remain pending. The preserved 28,403-parameter pilot's 3.351 development bpc uses a smaller fitting budget and different split; it is not a comparable test result.
+
+Earlier 1M-character references also remain saved: LSTM **2.179** and Transformer **2.367 test bpc**, each with twenty fitting passes. The separate count/copy baseline and the cross-task Transformer/retrieval LSTM comparisons remain in their labeled sections and Appendix B.
+
+Saved evidence: [10M LSTM aligned result](experiments/results/e174/aligned_lstm_10m_20260930.json); [10M Transformer aligned result](experiments/results/e174/aligned_tf_10m_20260930.json); [90M LSTM saved result](experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json); [90M TF saved result](experiments/results/aws_20260929/aws_e64_tf_D90M_baseline_rss6g_20260930/tf_D90000000_s256_L4_p4_dr0.1_v.json). An earlier 90M Transformer attempt was interrupted by its RSS watchdog before producing a completed test result; its provenance is preserved.
+
+## Appendix B. New completed AWS language evidence
+
+The six-block sparse receiver model reaches 3.106 development bpc on 32K fitting characters. It learns meaningful prediction, but this is the older single-head, observed-character-pool variant, not the newer eight-block native/content-gated reception model. The large dense controls are completed reference targets with much better held-out quality and much larger fitting budgets.
+
+| Model | Fit chars / passes | Dev bpc ↓ | Test bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Ours sparse d32/L6 | 32,768/4 | 3.106 | Not scored | 114.25 | 0.872 |
+| LSTM512 | 90M/6 | 1.616 | 1.661 | 3,893,396.04 | 7.210 |
+| Transformer256/L4 | 90M/4 | 1.580 | 1.604 | 8,000,253.35 | 22.223 |
+
+| Model | Parameters | Guarded wall h | Peak RSS MiB | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- |
+| Ours sparse | 1,388,871 | 0.39 | 558.4 | 0.0885 |
+| LSTM512 | 1,199,323 | 10.64 | 2246.9 | 2.4024 |
+| Transformer256/L4 | 3,238,427 | 31.18 | 3822.5 | 14.8104 |
+
+All rows use the same units and whole-fit/per-target denominators within each column. Sparse work is a representative full-step arithmetic estimate with unit-weight special functions; dense work uses shapes and backward = twice forward, including clipping/Adam. Both exclude evaluation and traffic. Dense inference uses the saved shape convention, including Transformer window overlap; sparse inference is a winner-only trace. Guarded wall and RSS include different simulator/runtime overheads and are not energy measurements.
+
+The sparse development set has 8,191 targets; dense selection uses 200,000 validation characters and the saved 1M test interval. Neither their development scores nor their fitting budgets are matched. Raw resource gaps cannot establish comparable-quality or iso-FLOP supremacy. The interrupted Transformer attempt remains preserved; only its completed retry appears as a quality point. All completed points, including the 90M Transformer, are retained in the common quality/work and inference figures.
+
+## Appendix B. AWS hierarchy depth: a useful constraint
+
+These are older race-network diagnostics on the fixed depth-three Random Hierarchy Model. They test composition and depth, not the newer integrated language/event construction. Every shown model uses width 200, 64K fitting examples, ten passes, architecture seed 0 and rule seed 0.
+
+![aws hierarchy depth](report/figures/aws_hierarchy_depth.png)
+
+| Model | Depth | Final held-out accuracy | Guarded wall s | Peak RSS MiB |
+| --- | --- | --- | --- | --- |
+| Ours plain race | 1 | 70.12% | 70.4 | 129.3 |
+| Ours plain race | 2 | 83.72% | 227.4 | 202.4 |
+| Ours plain race | 3 | 85.06% | 382.2 | 249.7 |
+| Ours plain race | 4 | 84.12% | 536.5 | 252.1 |
+| Ours residual-2 | 2 | 72.72% | 266.1 | 217.4 |
+| Ours residual-2 | 3 | 74.54% | 610.4 | 369.3 |
+| Ours residual-2 | 4 | 72.56% | 1094.7 | 574.0 |
+
+Plain depth 1/2/3/4 gives 70.12/83.72/85.06/84.12%: depth helps to three blocks, then regresses slightly. The completed residual-2 depth 2/3/4 variants give 72.72/74.54/72.56%, below their plain counterparts. Depth-four residual accuracy rises throughout its ten passes; its longer-budget convergence is untested. This constrains the tested implementation and budget, not all residual paths.
+
+Only completed provenance files produce rows. Plain and residual depth-four runs are distinct. Final epoch is reported; evaluation curves are visible throughout fitting, so this is exploratory held-out evidence, not independent confirmation. Single rule/model seed; no 64K matched dense-control or complete FLOP/energy supremacy is inferred.
+
+## Appendix B. AWS early temporal mechanism screen
+
+Small completed integrated pilots from the committed fast matrix. These answer mechanism questions before larger scaling; their development budgets differ from the saved main language and native512-target results. Contracts and accounting smokes are excluded.
+
+![aws fast screen temporal](report/figures/aws_fast_screen_temporal.png)
+
+| Model | Fit / passes / dev | Dev quality | Whole fit GFLOPs | Fit MFLOPs / target | Infer MFLOPs / target |
+| --- | --- | --- | --- | --- | --- |
+| Ours timing full | 128/4/64 | 78.12% | 0.265 | 0.518 | 0.1101 |
+| Ours timing rank | 128/4/64 | 79.69% | 0.265 | 0.518 | 0.1100 |
+| Ours order full | 128/4/64 | 51.56% | 0.265 | 0.518 | 0.1104 |
+| Ours order pathwise | 128/4/64 | 51.56% | 0.263 | 0.514 | 0.1104 |
+
+| Model | Parameters | Receivers/commits/matches per event | Wall s | Seed |
+| --- | --- | --- | --- | --- |
+| Ours timing full | 42,898 | 128/16/32 | 791.8 | 6 |
+| Ours timing rank | 42,898 | 128/16/32 | 799.8 | 6 |
+| Ours order full | 42,932 | 128/16/32 | 789.3 | 6 |
+| Ours order pathwise | 42,932 | 128/16/32 | 768.4 | 6 |
+
+FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
+
+Interpretation: observed-time accuracy 78.12% versus refitted rank-time 79.69% does not yet demonstrate an elapsed-time advantage. State-clearing and stretched-gap probes are diagnostic interventions, not refitted controls.
+
+Next experimental questions: state clearing and stretched silent gaps damage order predictions; private source rules lose training exposure as capacity grows. The next integrated battery tests protected memory, shared rules with private state, and paired timing whose labels cannot be inferred from rank alone.
+
+## Appendix B. AWS early temporal mechanism screen
+
+Small completed integrated pilots from the committed fast matrix. These answer mechanism questions before larger scaling; their development budgets differ from the saved main language and native512-target results. Contracts and accounting smokes are excluded.
+
+![aws fast screen temporal](report/figures/aws_fast_screen_temporal.png)
+
+| Model | Fit / passes / dev | Dev quality | Whole fit GFLOPs | Fit MFLOPs / target | Infer MFLOPs / target |
+| --- | --- | --- | --- | --- | --- |
+| Ours order sources16 | 128/4/64 | 48.44% | 0.280 | 0.548 | 0.1103 |
+| Ours order sources64 | 128/4/64 | 32.81% | 0.341 | 0.666 | 0.1104 |
+| Ours order shallow control | 128/4/64 | 51.56% | 0.134 | 0.262 | 0.0569 |
+
+| Model | Parameters | Receivers/commits/matches per event | Wall s | Seed |
+| --- | --- | --- | --- | --- |
+| Ours order sources16 | 157,940 | 512/16/32 | 829.1 | 6 |
+| Ours order sources64 | 617,972 | 2048/16/32 | 980.5 | 6 |
+| Ours order shallow control | 21,684 | 64/8/16 | 403.3 | 6 |
+
+FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
+
+Capacity interpretation: commits and matches remain fixed while available state grows, but fixed queries reduce per-source training exposure. The 64-source development set has one population; its collapsed bootstrap interval is not useful uncertainty.
+
+## Appendix B. AWS early language mechanism screen
+
+Small completed integrated pilots from the committed fast matrix. These answer mechanism questions before larger scaling; their development budgets differ from the saved main language and native512-target results. Contracts and accounting smokes are excluded.
+
+![aws fast screen language](report/figures/aws_fast_screen_language.png)
+
+| Model | Fit / passes / dev | Dev quality | Whole fit GFLOPs | Fit MFLOPs / target | Infer MFLOPs / target |
+| --- | --- | --- | --- | --- | --- |
+| Ours native | 512/4/1023 | 4.2003 | 0.290 | 0.142 | 0.0301 |
+| Ours reception | 512/4/1023 | 4.1949 | 0.325 | 0.159 | 0.0348 |
+| Ours late | 512/4/1023 | 4.1962 | 0.319 | 0.156 | 0.0341 |
+| Ours waiting | 512/4/1023 | 4.1955 | 0.304 | 0.149 | 0.0318 |
+
+| Model | Parameters | Receivers/commits/matches per event | Wall s | Seed |
+| --- | --- | --- | --- | --- |
+| Ours native | 14,971 | 32/16/32 | 166.1 | 6 |
+| Ours reception | 16,123 | 32/16/32 | 239.2 | 6 |
+| Ours late | 16,123 | 32/16/32 | 205.1 | 6 |
+| Ours waiting | 16,123 | 32/16/32 | 207.6 | 6 |
+
+FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
+
+## Appendix B. Protected state/shared rules: order
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S16 private/P0/observed | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P2/observed | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
+| Ours S16 shared/P0/observed | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
+| Ours S16 shared/P2/observed | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
+| Ours S4 private/P0/observed | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S16 private/P0/observed | 128/256/4 | 157,940 | 512 | 16/32 |
+| Ours S16 private/P2/observed | 128/256/4 | 155,828 | 512 | 16/32 |
+| Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
+| Ours S16 shared/P2/observed | 128/256/4 | 13,988 | 512 | 16/32 |
+| Ours S4 private/P0/observed | 128/256/4 | 42,932 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: order
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P2/observed | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
+| Ours S4 shared/P0/observed | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
+| Ours S4 shared/P2/observed | 56.64 | 1.0367 | 0.252 | 0.493 | 0.107 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S4 private/P2/observed | 128/256/4 | 42,356 | 128 | 16/32 |
+| Ours S4 shared/P0/observed | 128/256/4 | 14,180 | 128 | 16/32 |
+| Ours S4 shared/P2/observed | 128/256/4 | 13,988 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: paired_timing
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P2/observed | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P2/observed | 128/256/4 | 42,322 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Persistent-write credit diagnosis
+
+A frozen selected native checkpoint is replayed with alternative delivered content, alternative persistent write, and both. The exact four-corner decomposition separates those effects from their interaction and the current message-linearization residual. The forward architecture and fitted weights remain unchanged.
+
+| Ours: frozen audit component | Mean absolute loss effect |
+| --- | --- |
+| Full alternative branch | 0.020980 |
+| Persistent-write effect | 0.012694 |
+| Delivered-value linearization residual | 0.000288 |
+| Delivery/write interaction | 0.000066 |
+
+The two opposed directions in the earlier audit are explained by persistent writes: at event0/block4 the value-only change is +0.001504 but the write-only change is −0.016749; at event7/block7 they are −0.001280 and +0.033918. The route chooses a memory address as well as a message. Training must teach that future state effect.
+
+Twelve fixed probes, one population/address/noise seed, fixed selected-node time. Mean absolute write effect 0.012694 versus value residual 0.000288; these absolute summaries are not additive percentages. Hybrids are diagnostic interventions, not legal proposed routes. Value residual includes nonlinear response and downstream route switches. This is conditional fidelity evidence, not an expected-gradient failure rate.
+
+Charged replay counts:48 forwards,12 backwards,12,288 races; 7.107s wall, 390.3MiB peak RSS. Arithmetic is uninstrumented. Checkpoint weights and outer RNG are preserved. Any new state-aware teacher needs integrated contracts, full accounting and a matched small fit.
+
+Source: [completed factorial audit](experiments/results/diagnostics/aws_route_write_decomposition_20261001T235000Z.json); [joint state/time theory](experiments/theory/57_full_state_and_joint_clock_credit.md).
+
+## Appendix B. Ours and boosted trees: banknote
+
+Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.
+
+| Model | Fit/dev rows | Dev NLL / RMSE ↓ | Dev accuracy / MAE | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ours R0 | 128/128 | 0.1553 | 0.9531 | 0.335 | 0.655 | 0.139 |
+| Ours R2 | 128/128 | 0.2700 | 0.8906 | 0.379 | 0.740 | 0.163 |
+| Boosted trees | 128/128 | 0.2319 | 0.9297 | Not counted | Not counted | Not counted |
+
+| Model | All fit wall s | Peak RSS MiB | Tree nodes / bytes |
+| --- | --- | --- | --- |
+| Ours R0 | 981.79 | 445.8 | Not applicable |
+| Ours R2 | 1452.02 | 453.7 | Not applicable |
+| Boosted trees | 0.09 | 404.0 | 890/49,840 |
+
+Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.
+
+Reception ablation: ours R2 reaches89.06% accuracy /0.270 NLL versus native R0 95.31% /0.155. Whole fitting work increases from0.335 to0.379 GFLOPs. The added reception capacity has not earned its cost in this single-seed static-data screen.
+
+Confirmation protocol: native checkpoint reuse plus seeds7/8, original trees, CatBoost and logistic regression; four development selection opportunities per family, then frozen reserved-test scoring. See experiments/AWS_BANKNOTE_CONFIRMATION.md. No pending test score is reported.
+
+## Appendix B. Ours and boosted trees: wine_red
+
+Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.
+
+| Model | Fit/dev rows | Dev NLL / RMSE ↓ | Dev accuracy / MAE | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ours R0 | 128/128 | 0.8238 | 0.6422 | 0.816 | 1.594 | 0.341 |
+| Ours R2 | 128/128 | 0.7579 | 0.6205 | 0.919 | 1.795 | 0.398 |
+| Boosted trees | 128/128 | 0.6489 | 0.4890 | Not counted | Not counted | Not counted |
+
+| Model | All fit wall s | Peak RSS MiB | Tree nodes / bytes |
+| --- | --- | --- | --- |
+| Ours R0 | 2553.48 | 468.1 | Not applicable |
+| Ours R2 | 3547.22 | 485.4 | Not applicable |
+| Boosted trees | 0.11 | 404.3 | 464/25,984 |
+
+Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.
+
+Reception helps this regression pilot: ours R2 RMSE0.758 versus R0 0.824 (8.0% lower), for0.919 versus0.816 whole-fit GFLOPs (12.6% more). Trees retain lower RMSE0.649. This positive within-model effect contrasts with banknote/language reception failures; it is not a cross-family win.
+
+## Appendix B. Banknote: no confirmed advantage
+
+Competitive accuracy, no confirmed advantage: the three-seed reserved test does not sustain the development lead. Ours averages 91.8% versus 94.0% for the original trees. Logistic regression has lower test log loss. The full four-family confirmation remains incomplete. The reserved-test accuracy point estimates are close, but no equivalence margin was specified. Parity is therefore a descriptive reading, not a proven equivalence claim.
+
+![banknote reserved test](report/figures/banknote_reserved_test.png)
+
+| Model | Completed seeds | Mean test accuracy % | Mean test NLL |
+| --- | --- | --- | --- |
+| Ours native | 3 | 91.81 | 0.2353 |
+| Boosted trees | 3 | 93.95 | 0.2065 |
+| CatBoost | 2/3 | Pending | Pending |
+| Logistic | 3 | 94.66 | 0.0906 |
+
+For the completed ours/tree comparison, the paired accuracy difference is −2.14 percentage points (descriptive95% crossed seed/feature-group interval −6.90 to +2.43). The control-minus-ours NLL difference is −0.0287 (98.33% interval −0.1738 to +0.1277). Logistic regression improves NLL by0.1447 (98.33% interval0.0338 to0.2660). These three-seed intervals are approximate and share one test split.
+
+Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, 4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; accuracy intervals are descriptive. This does not replace the pending full four-family gate. The original95.3% versus93.0% development screen and all per-seed work remain below.
+
+## Appendix B. Frozen banknote confirmation
+
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. The per-seed ledger preserves completed scores; the summary identifies families with all three seeds.
+
+| Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ours native/s6 | 0.1553 | 0.1426 | 94.31 | 0.335 | 0.655 | 0.139 |
+| Ours native/s7 | 0.2594 | 0.2494 | 90.75 | 0.335 | 0.655 | 0.139 |
+| Ours native/s8 | 0.3270 | 0.3138 | 90.39 | 0.335 | 0.655 | 0.139 |
+| Boosted trees/s6 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+| Boosted trees/s7 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+| Boosted trees/s8 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+
+| Model/seed | Charged fit wall s | Test wall s | Peak RSS MiB | Fit provenance |
+| --- | --- | --- | --- | --- |
+| Ours native/s6 | 981.79 | 4.54 | 334.3 | Historical fit reused |
+| Ours native/s7 | 976.56 | 4.65 | 447.0 | New fit |
+| Ours native/s8 | 989.25 | 4.61 | 447.0 | New fit |
+| Boosted trees/s6 | 0.09 | 0.00 | 434.3 | New fit |
+| Boosted trees/s7 | 0.09 | 0.00 | 434.9 | New fit |
+| Boosted trees/s8 | 0.09 | 0.00 | 434.9 | New fit |
+
+Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis and all three prespecified seeds are required for the confirmation claim.
+
+## Appendix B. Frozen banknote confirmation
+
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. The per-seed ledger preserves completed scores; the summary identifies families with all three seeds.
+
+| Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| CatBoost/s6 | 0.1023 | 0.1207 | 93.95 | Not counted | Not counted | Not counted |
+| CatBoost/s7 | 0.1042 | 0.1078 | 95.37 | Not counted | Not counted | Not counted |
+| Logistic/s6 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+| Logistic/s7 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+| Logistic/s8 | 0.0832 | 0.0906 | 94.66 | Not counted | Not counted | Not counted |
+
+| Model/seed | Charged fit wall s | Test wall s | Peak RSS MiB | Fit provenance |
+| --- | --- | --- | --- | --- |
+| CatBoost/s6 | 0.35 | 0.00 | 461.6 | New fit |
+| CatBoost/s7 | 0.35 | 0.00 | 460.8 | New fit |
+| Logistic/s6 | 0.01 | 0.00 | 429.6 | New fit |
+| Logistic/s7 | 0.01 | 0.00 | 429.7 | New fit |
+| Logistic/s8 | 0.01 | 0.00 | 429.9 | New fit |
+
+Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis and all three prespecified seeds are required for the confirmation claim.
+
+## Appendix B (continued). Ours: language work as scaling develops
+
+This ledger updates from completed integrated-model stages. It shows the emerging work advantage alongside its quality and data budget. Per-target fitting work removes the difference in the number of presentations; it does not establish equal-quality superiority.
+
+![integrated language work progress](report/figures/integrated_language_work_progress.png)
+
+| Model | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ | Forward MFLOPs / position ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Ours / d32 / p2 | 32,768 / 4 | 3.106 / dev | 114.247 | 0.872 | 0.089 |
+| Ours / d16 / p2 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.026 |
+| Ours / d16 / p2 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.025 |
+| Ours / d16 / p4 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.449 | 0.032 |
+| LSTM / width 512 | 10M / six | 1.799 / test | 432,592.997 | 7.210 | 2.402 |
+| Transformer / width 256 | 10M / four | 1.908 / test | 888,775.443 | 22.223 | 7.405 |
+
+Compare within a column: whole-fit totals use GFLOPs for every model; per-target and forward work use MFLOPs for every model. One GFLOP is 1,000 MFLOPs. Whole-fit totals also depend on the number of training presentations; the per-target column divides that out.
+
+All table values, figures and ratios use arithmetic plus one operation per special function, matching the historical neural estimate convention. This is not a physical energy cost. Ours arithmetic-only whole-fit totals (GFLOPs): 32,768 / pool 2: 110.088; 32,768 / pool 2: 29.883; 8,192 / pool 2: 7.492; 8,192 / pool 4: 14.152. Separate special-function counts are preserved in each result.
+
+**The raw work gap is substantial.** The completed 32,768-character integrated stage's representative forward estimate is **84× smaller** than the larger saved Transformer estimate; fitting work per target is **25× smaller**. These are configuration-level work ratios. Our development score and the reference official test score use different targets and data budgets. The gap is not a matched-quality supremacy claim.
+
+Ours: d denotes payload width and p pool size; fixed character pools and event depths. Each result records its validation interval and credit horizon. References: width-512 LSTM or four width-256 Transformer layers, 256-position fitting chunks and 999,999 aligned official test targets. Ours uses representative operator traces including counterfactual credit, backward, clipping and Adam; neural references use shape formulas and backward ≈ twice forward. RNG, indexing, memory traffic and evaluation passes are additional. Same-quality and iso-FLOP conclusions await comparable completed runs.
+
+## Appendix B (continued). Ours and neural controls: accuracy versus FLOPs
+
+Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. Right: saved neural test results. Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
+
+![language quality vs work](report/figures/language_quality_vs_work.png)
+
+| Model type | Fitting budget | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ |
+| --- | --- | --- | --- | --- |
+| Ours: integrated d32/p2 | 32,768 / 4 passes | 3.106 / dev | 114.247 | 0.872 |
+| Ours: carrier w128g | 1,048,576 / 4 passes | 2.210 / dev | 8,373.302 | 1.996 |
+| LSTM: 512 | 90,000,000 / 6 passes | 1.661 / test | 3,893,396.042 | 7.210 |
+| Transformer: 256x4 | 90,000,000 / 4 passes | 1.604 / test | 8,000,253.349 | 22.223 |
+
+The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory (S uses the content index); C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
+
+Estimates include learning, clipping and Adam, with unit-weight special functions. Ours uses representative operator traces; neural controls use shape formulas and backward approximately twice forward. Scoring splits, data, passes, capacity and credit differ; these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.
+
+## Appendix B (continued). Accuracy versus inference FLOPs
+
+Inference predicts with frozen weights: no backward pass, clipping or optimizer update. These are the same completed checkpoints, quality scores and point IDs as the fitting graph. Ours uses saved forward operator traces; the integrated models read only winning values. LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.
+
+![language quality vs inference](report/figures/language_quality_vs_inference.png)
+
+| Model type | bpc / split ↓ | Inference MFLOPs / character ↓ | Cost boundary |
+| --- | --- | --- | --- |
+| Ours: integrated d32/p2 | 3.106 / dev | 0.0885 | Winner-only inference trace |
+| Ours: carrier w128g | 2.210 / dev | 0.6389 | Saved forward operator trace |
+| LSTM: 512 | 1.661 / test | 2.4024 | Recurrent shape estimate |
+| Transformer: 256x4 | 1.604 / test | 14.8104 | Overlapping-window shape estimate |
+
+Solid Transformer points estimate its saved 256-position scorer: full windows advanced by 128 positions, approximately two forward positions per scored character (boundary/tail overhead omitted). Hollow points show a hypothetical one-step decode with cached keys/values and 256 available positions, using L(24d² + 4Td + 30d + 20T) + 54d + 135 unit-weight operations, T = 256. No cached decoder was run. Its plotted bpc belongs to the saved window scorer; learned positions reset between windows, so cache reuse has not been shown to preserve those scores.
+
+Two FLOPs per multiply-add; special functions count as one operation. Ours traces include numerical clocks and loss scoring; neural elementwise overhead is approximate. Traces are representative warm-state costs, not full-stream measurements; growing KV candidate occupancy can change work. The separate KV pages also show projected event-architecture costs that remove numerical clock simulation. RNG, indexing, memory traffic and physical race energy are additional. These are work estimates, not latency or joules, and differing data, quality and evaluation protocols prevent a supremacy conclusion.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1. Ours: AWS I32/p2/32K/s6 | 1,388.9 | 32,768 / 4 | 3.106 / dev | 114.247 | 0.872 | 0.0885 |
+| 2. Ours: I16/p2/32K/s6 | 361.4 | 32,768 / 4 | 3.121 / dev | 31.053 | 0.237 | 0.0255 |
+| 3. Ours: I16/p2/8K/s6 | 361.4 | 8,192 / 4 | 3.398 / dev | 7.788 | 0.238 | 0.0255 |
+| 4. Ours: I16/p4/8K/s6 | 720.0 | 8,192 / 4 | 3.426 / dev | 14.721 | 0.449 | 0.0321 |
+| 5. Ours: IHR2x32/b64/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.740 / dev | 23.019 | 2.811 | 0.5060 |
+| 6. Ours: IHR2x32D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.786 / dev | 27.731 | 3.387 | 0.5059 |
+| 7. Ours: IHR2x32/u128@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.779 / dev | 19.999 | 2.442 | 0.5058 |
+| 8. Ours: IHR2x32/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.733 / dev | 22.753 | 2.779 | 0.5059 |
+| 9. Ours: IHR2x32/u64@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.800 / dev | 22.750 | 2.779 | 0.5060 |
+| 10. Ours: IHR2x32/u128@0.004D8/8K/s6 | 3,819.5 | 8,192 / 4 | 3.485 / dev | 79.953 | 2.440 | 0.5059 |
+| 11. Ours: IHR2x32/u64@0.002D8/8K/s6 | 3,819.5 | 8,192 / 4 | 3.490 / dev | 89.999 | 2.747 | 0.5058 |
+| 12. Ours: IHR4x32/u128@0.004D8/2K/s6 | 7,778.3 | 2,048 / 4 | 3.981 / dev | 48.431 | 5.915 | 1.2898 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 13. Ours: IHR4x32/u128@0.004D8/8K/s6 | 7,778.3 | 8,192 / 4 | 3.543 / dev | 193.751 | 5.914 | 1.2882 |
+| 14. Ours: IKV32D6/2K/s6 | 1,413.6 | 2,048 / 4 | 3.620 / dev | 9.035 | 1.103 | 0.1466 |
+| 15. Ours: IKV32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.539 / dev | 11.992 | 1.465 | 0.1941 |
+| 16. Ours: IKVS32D8/2K/s6 | 1,883.9 | 2,048 / 4 | 3.554 / dev | 11.999 | 1.465 | 0.1968 |
+| 17. Ours: IKVS32D8/8K/s6 | 1,883.9 | 8,192 / 4 | 3.357 / dev | 50.006 | 1.526 | 0.1969 |
+| 18. Ours: I32D6/2K/s6 | 1,388.9 | 2,048 / 4 | 3.633 / dev | 7.207 | 0.880 | 0.0890 |
+| 19. Ours: I32D8/2K/s6 | 1,850.9 | 2,048 / 4 | 3.542 / dev | 9.557 | 1.167 | 0.1173 |
+| 20. Ours: I32D8/8K/s6 | 1,850.9 | 8,192 / 4 | 3.311 / dev | 40.243 | 1.228 | 0.1173 |
+| 21. Ours: IHR2x32/m2/u128@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.820 / dev | 20.495 | 2.503 | 0.5165 |
+| 22. Ours: IHR2x32/m4/u128@0.004D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.771 / dev | 20.914 | 2.554 | 0.5268 |
+| 23. Ours: IHR2x32/wc0.25/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.722 / dev | 23.469 | 2.866 | 0.5059 |
+| 24. Ours: IHR2x32/wc1/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.724 / dev | 23.464 | 2.866 | 0.5058 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 25. Ours: Native H2d16/p2/2K/s6 | 54.9 | 2,048 / 4 | 3.765 / dev | 3.778 | 0.461 | 0.0974 |
+| 26. Ours: Native H2d16/p2/8K/s6 | 54.9 | 8,192 / 4 | 3.557 / dev | 15.116 | 0.461 | 0.0974 |
+| 27. Ours: R2/uniform/reception/2K/s6 | 57.1 | 2,048 / 4 | 3.796 / dev | 4.032 | 0.492 | 0.1056 |
+| 28. Ours: R4/uniform/reception/2K/s6 | 59.3 | 2,048 / 4 | 3.795 / dev | 4.183 | 0.511 | 0.1109 |
+| 29. Ours: R4/late/reception/2K/s6 | 57.1 | 2,048 / 4 | 3.795 / dev | 3.979 | 0.486 | 0.1041 |
+| 30. Ours: R4/uniform/waiting/2K/s6 | 59.3 | 2,048 / 4 | 3.764 / dev | 3.897 | 0.476 | 0.1007 |
+| 31. Ours: C128/128K | 308.0 | 131,072 / 4 | 2.643 / dev | 1,032.197 | 1.969 | 0.6296 |
+| 32. Ours: C32/128K | 21.7 | 131,072 / 4 | 2.858 / dev | 77.197 | 0.147 | 0.0470 |
+| 33. Ours: C64/128K | 80.3 | 131,072 / 4 | 2.727 / dev | 274.735 | 0.524 | 0.1675 |
+| 34. Ours: C128g/128K | 309.6 | 131,072 / 4 | 2.587 / dev | 1,046.656 | 1.996 | 0.6389 |
+| 35. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 7.678 | 2.4571 |
+| 36. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 1.996 | 0.6389 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 37. L256/1M | 338.4 | 1,000,000 / 20 | 2.179 / test | 40,628.875 | 2.032 | 0.6770 |
+| 38. L256/10M | 338.4 | 10,000,000 / 1 | 2.171 / test | 20,306.115 | 2.032 | 0.6770 |
+| 39. L512/10M | 1,199.3 | 10,000,000 / 6 | 1.799 / test | 432,592.997 | 7.210 | 2.4024 |
+| 40. T112x8/1M | 1,250.6 | 1,000,000 / 5 | 2.352 / test | 51,107.144 | 10.223 | 6.7999 |
+| 41. T256x2/1M | 1,658.9 | 1,000,000 / 20 | 2.367 / test | 222,614.402 | 11.133 | 7.4192 |
+| 42. T256x2/10M | 1,658.9 | 10,000,000 / 1 | 2.427 / test | 111,261.602 | 11.133 | 7.4192 |
+| 43. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 22.223 | 14.8104 |
+| 44. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 7.210 | 2.4024 |
+| 45. T256x4/90M | 3,238.4 | 90,000,000 / 4 | 1.604 / test | 8,000,253.349 | 22.223 | 14.8104 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 6 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth6 character](report/figures/episodic_language_comparison_D2048_depth6_character.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.633 | 7.206 | 7.207 | 0.0890 |
+| kv | 3.620 | 9.034 | 9.035 | 0.1464 |
+
+Completed KV improvement over receiver memory: +0.013 bpc (positive is better). The index admits up to 8 recent matching-character entries plus 4 recent positions. Older entries outside these tails cannot be addressed by this index. Duplicates are removed. Development averages 11.36 keys scored and one value delivered per retrieval query. All 12,282 entries remain stored (3.00 MiB raw keys/values); the oldest selected entry is 1,829 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 8 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth8 character](report/figures/episodic_language_comparison_D2048_depth8_character.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.542 | 9.556 | 9.557 | 0.1172 |
+| kv | 3.539 | 11.990 | 11.992 | 0.1939 |
+
+Completed KV improvement over receiver memory: +0.003 bpc (positive is better). The index admits up to 8 recent matching-character entries plus 4 recent positions. Older entries outside these tails cannot be addressed by this index. Duplicates are removed. Development averages 11.36 keys scored and one value delivered per retrieval query. All 16,376 entries remain stored (4.00 MiB raw keys/values); the oldest selected entry is 1,829 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 2,048 characters for 4 passes, with payload 32, 8 sparse receiver depths, seed 6 and 2,047 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D2048 depth8 semantic](report/figures/episodic_language_comparison_D2048_depth8_semantic.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.542 | 9.556 | 9.557 | 0.1172 |
+| kv | 3.554 | 11.997 | 11.999 | 0.1965 |
+
+Completed KV improvement over receiver memory: -0.012 bpc (positive is better). The content index uses three random-hyperplane bits of learned keys/queries, with up to 8 recent/full-history samples in the query bucket and its one-bit neighbors, plus 4 recent positions. Duplicates are removed. Development averages 10.07 keys scored and one value delivered per retrieval query. All 16,376 entries remain stored (4.00 MiB raw keys/values); the oldest selected entry is 2,026 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: per-position race KV memory
+
+Both integrated models fit 8,192 characters for 4 passes, with payload 32, 8 sparse receiver depths, seed 6 and 8,191 identical cold development targets. The KV arm retains separate historical keys and values at every depth; learned queries select one value through time. Incoming content is retained and gated with the retrieved message. No dense carrier is added.
+
+![episodic language comparison D8192 depth8 semantic](report/figures/episodic_language_comparison_D8192_depth8_semantic.png)
+
+| Ours: memory | Dev bpc ↓ | Projected fit GFLOPs ↓ | CPU fit GFLOPs ↓ | Projected forward MFLOPs/char ↓ |
+| --- | --- | --- | --- | --- |
+| receiver | 3.311 | 40.241 | 40.243 | 0.1173 |
+| kv | 3.357 | 49.998 | 50.006 | 0.1967 |
+
+Completed KV improvement over receiver memory: -0.047 bpc (positive is better). The content index uses three random-hyperplane bits of learned keys/queries, with up to 8 recent/full-history samples in the query bucket and its one-bit neighbors, plus 4 recent positions. Duplicates are removed. Development averages 10.40 keys scored and one value delivered per retrieval query. All 65,528 entries remain stored (16.00 MiB raw keys/values); the oldest selected entry is 8,135 characters old. This bounds reads, not stored history.
+
+Physical clock competition replaces explicit numerical rate exponentiation and noise/rate division plus the bounded-delay simulation in the projected ledger. Query/key/value maps, scored candidates, gated content, backward, counterfactual teaching, clipping and actual Adam remain charged. Counts are representative first/mature/partial traces; special functions have unit weight here and are separate in JSON. Physical rate setting, clock circuits, index/address operations, RNG and traffic need their own implementation costs; FLOPs do not certify energy.
+
+Temporal races avoid the explicit normalizing reduction/division and deliver one value at inference; training reads all admitted values for route credit. The orange bar is an analytical same-shortlist aggregation comparison, not another trained model. Candidate coverage is approximate and does not guarantee full-bank attention equivalence. Random-hyperplane indexing is an established primitive (Charikar, STOC 2002); novelty is not claimed for this index. Historical activations are detached at the credit boundary and are not recomputed after parameter updates. One seed and a small data budget; no equal-quality Transformer or frontier claim.
+
+## Appendix B (continued). Ours: cheaper learning updates
+
+Credit still propagates over 16-character segments. Gradients are summed over U targets, normalized by their actual count, clipped once and used for one Adam update. All models here use two independent heads, payload 32/head, eight blocks, seed 6, four passes over 2,048 fitting characters and 8,191 frozen development targets.
+
+![parallel optimizer work](report/figures/parallel_optimizer_work.png)
+
+| Ours: U / learning rate | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Adam + clip GFLOPs ↓ |
+| --- | --- | --- | --- | --- |
+| U16 / 0.001 | 3.786 | 27.731 | 3.387 | 10.521 |
+| U64 / 0.002 | 3.733 | 22.753 | 2.779 | 5.225 |
+| U64 / 0.004 | 3.800 | 22.750 | 2.779 | 5.225 |
+| U128 / 0.004 | 3.779 | 19.999 | 2.442 | 2.645 |
+
+The cheapest schedule within the declared 0.05 bpc tolerance of the best pilot uses U128, lr 0.004: 3.779 bpc and 27.9% less whole fitting work than reference. The best quality is 3.733 bpc. These completed results support optimizer amortization in this configuration, not language-model supremacy.
+
+Learning rates and warmup differ across configurations, so this is not an isolated optimizer-interval ablation. Selected checkpoints minimize frozen development loss over the fixed four passes; all fitting work remains charged. Each result is one seed. Candidate scoring, losing-value credit, backward and gradient accumulation/normalization remain in the operator ledger. Larger-data and repeat-seed comparisons must establish transfer of the selected schedule.
+
+## Appendix B (continued). Ours: shared-match temporal arrivals
+
+2 independent spatial heads, payload 32/head, 8 blocks. All rows fit 2,048 characters for 4 passes and score 8,191 cold development targets. Each query forms its candidate matches once. Multiple temporal marks reuse those rates; only the winning emitter renews its clock. The receiver and each selected message evolve until the last local read, then the messages are averaged and gated.
+
+![repeated arrival quality work 1df4adaf89](report/figures/repeated_arrival_quality_work_1df4adaf89.png)
+
+Ours delivers 4 times as many historical winner messages for 4.57% additional whole fitting arithmetic in this completed screen. Quality changes from 3.779 to 3.771 bpc. This supports cheap arrival multiplicity under shared matches; it does not establish language-model superiority.
+
+| Ours: arrivals / head | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- |
+| m=1 | 3.779 | 19.999 | 2.442 | 0.5058 |
+| m=2 | 3.820 | 20.495 | 2.503 | 0.5165 |
+| m=4 | 3.771 | 20.914 | 2.554 | 0.5268 |
+
+Candidate discovery and independent Q/K/V projections are retained. Multiple marks reuse one rate setting within each query; trained scores and candidate trajectories can differ across runs. More marks can retrieve the same value; they do not create extra learned spatial heads or discover absent candidates. Training reads all admitted values once and aggregates the conserved per-arrival teacher in O(Cd + md). All delivered messages, temporal transports, backward, clipping and Adam remain charged.
+
+Completed single-seed development screens; m=1 reuses the saved reference under exact nesting contracts. Unit-weight special functions are included; CPU minimum comparisons/RNG and memory traffic are separate counters. The bounded numerical time encoding is not a demonstrated homogeneous physical Poisson clock. This local counterfactual teacher is a declared surrogate, not an exact gradient through nonlinear route changes. No matched-quality dense-model, physical-energy or frontier superiority is inferred.
+
+## Appendix B (continued). Ours: independent temporal heads
+
+Each head has its own receiver pool, historical bank and query/key/value/gate matrices. A winning content vector evolves through learned rotation and decay until its channel is read. The next block reads at the latest parallel arrival, preserves each channel and learns their mix. Heads need not arrive simultaneously. This is implemented in the CPU emulator; execution there is serial.
+
+![parallel temporal heads](report/figures/parallel_temporal_heads.png)
+
+![parallel temporal head pilots](report/figures/parallel_temporal_head_pilots.png)
+
+| Ours: heads / update | Fit / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ |
+| --- | --- | --- | --- |
+| H2 / U128 / lr 0.004 | 8,192 / 4 | 3.485 | 79.953 |
+| H2 / U64 / lr 0.002 | 8,192 / 4 | 3.490 | 89.999 |
+| H4 / U128 / lr 0.004 | 2,048 / 4 | 3.981 | 48.431 |
+| H4 / U128 / lr 0.004 | 8,192 / 4 | 3.543 | 193.751 |
+
+Payload 32 per head: H2 total width 64, H4 total width 128; eight blocks. More heads also increase capacity, and source/channel dynamics differ from the old single-head model. The baseline H2 pilot selects epoch 2 and overfits later; no head-count quality benefit is established. Adam interval U is separate from 16-character credit. Training reads admitted losing values and charges gradients, clipping and optimizer work. Contracts pass for causality, independent projections, evolving channels, all-head gradients and exact next-update recovery. All completed variants remain in the ledger; this table shows the latest four records.
+
+## Appendix B (continued). Ours: completed head/data scaling
+
+Fixed d32 per head, eight blocks, pool2, credit16, U128/lr.004, four fitting passes, seed6. Every point scores the same 8,191 frozen development targets. More data improves these configurations, while four heads increase both width/capacity and fitting cost.
+
+![parallel head data work](report/figures/parallel_head_data_work.png)
+
+| Ours: heads / fit | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ |
+| --- | --- | --- | --- |
+| H2 / 2,048 | 3.779 | 19.999 | 2.442 |
+| H2 / 8,192 | 3.485 | 79.953 | 2.440 |
+| H4 / 2,048 | 3.981 | 48.431 | 5.915 |
+| H4 / 8,192 | 3.543 | 193.751 | 5.914 |
+
+The earlier 8K single-head controls reach receiver 3.311 and indexed KV 3.357 bpc. The multihead construction also changes source/channel dynamics and total width, so this is not a pure head-count ablation. The completed parallel-head 8K results missed the declared 0.10 bpc tolerance of the indexed control; the campaign stopped before 32K/131K promotion. Route-credit fidelity, recurrent/channel conditioning, candidate coverage and optimization are diagnosis targets. These results constrain this implementation rather than the whole substrate.
+
+One seed and small fitting budgets. Whole fitting includes all four passes, backward, admitted losing-value credit and optimizer work. Development selection uses the lowest full development loss over those passes. Logical FLOPs and unit-weight special functions do not measure wall time, physical traffic or energy; no language supremacy follows from these points.
+
+## Appendix B (continued). Ours: longer temporal credit
+
+Independent H2 heads, d32/head, 8 event blocks, pool2. 2,048 fitting characters / 4 passes; 8,191 frozen development targets, seed6. Adam uses U64 / lr0.002. Graphs remain live for 64 targets before detachment. Forward stored history and the inference architecture are retained.
+
+| Ours: credit | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- |
+| 16 | 3.733 | 22.753 | 2.779 | 0.5059 |
+| 64 | 3.740 | 23.019 | 2.811 | 0.5060 |
+
+Sealed historical keys and values still affect predictions, but detachment removes later loss paths to their old producers. Longer credit restores those paths for more writes inside each optimizer window; it does not backpropagate through unlimited history. Temporal races, sparse receiver commits, separate Q/K/V and losing-route credit remain active.
+
+Matched 16-credit records are shown when completed under identical settings. Additional backward/normalization/clip/Adam work is counted and peak memory is guarded. Inference traces average different representative spans; the operation definitions and inference architecture are the same. One seed, development selection, no frontier claim. Forward-partition equality and full 64-credit gradient/update contracts precede fitting.
+
+## Appendix B (continued). What most reduces research uncertainty
+
+The main direction now tests native content-and-time computation directly. Episodic race attention remains a preserved comparison. Its small language improvements do not yet establish that an attention scaffold is the best use of this substrate.
+
+| Priority | Experiment | Doubt resolved |
+| --- | --- | --- |
+| 1 | Integrated order/time learning; refitted credit/time controls; three seeds | Can deep sparse temporal state learn useful representations? |
+| 2 | Native-core text8 adapter and small-to-larger data ladder | Does the native construction learn economically without a KV attention bank? |
+| 3 | Occupy 4, 16, 64 stream states at fixed event/query budgets | Does useful state grow without proportional per-event activity? |
+| 4 | Chronological real streams and predict-before-update adaptation | Does the advantage survive real data and online change? |
+| 5 | Timestamp-aware AWS controls, equal-budget/quality curves | Is the quality/resource advantage reproducible? |
+| 6 | Whole-system FPGA/ASIC timing, traffic and energy measurement | Does the physical substrate deliver the projected savings? |
+
+The first native branch uses eight event blocks, two independent receiver heads, observed source addresses, persistent content/state, analytic temporal evolution and counterfactual learning. It has no per-position KV attention. Other sources keep independent progress; source-local causal dependencies and internal joins remain charged.
+
+The same native core receives token content for the language test. Sharing receiver maps across tokens changes capacity and parameter exposure; it is a whole-construction comparison, not an isolated attention-removal ablation. Persistent state is not a full-cache equivalence claim.
+
+Contracts/smokes precede fixed-budget pilots, conditional capacity/data scaling and independent replication. Whole fitting, per-target work, inference, occupancy, memory and confidence intervals are published from completed files. Synthetic learning, real-data Pareto advantage and physical joules are separate milestones. The executable protocol, gates and current host limitations are documented in experiments/RESEARCH_VALUE_PLAN.md.
+
+## Appendix B (continued). Ours: content-gated temporal reception
+
+Native eight-block independent-head models reuse key/query matches for two/four additional scalar clock policies. Local rotating/decaying clock vectors gate content-dependent projections and compose the next message. The waiting control retains the same clocks and joins but removes temporal reception/readout. The native parent has no extra clock branch.
+
+![delay language quality work](report/figures/delay_language_quality_work.png)
+
+| Ours | Fit chars / passes | Dev bpc ↓ | CPU fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| Native | 2,048/4 | 3.765 | 3.778 | 0.461 | 0.0974 |
+| R2 uniform | 2,048/4 | 3.796 | 4.032 | 0.492 | 0.1056 |
+| R4 uniform | 2,048/4 | 3.795 | 4.183 | 0.511 | 0.1109 |
+| R4 late | 2,048/4 | 3.795 | 3.979 | 0.486 | 0.1041 |
+| R4 uniform wait | 2,048/4 | 3.764 | 3.897 | 0.476 | 0.1007 |
+
+| Ours | Projected whole fit GFLOPs | Receivers / commits per token | Matches / clocks per token | Parameters |
+| --- | --- | --- | --- | --- |
+| Native | 3.777 | 32/16 | 32/16 | 54,907 |
+| R2/uniform/on | 4.029 | 32/16 | 32/48 | 57,083 |
+| R4/uniform/on | 4.178 | 32/16 | 32/80 | 59,259 |
+| R4/late/on | 3.976 | 32/16 | 32/48 | 57,083 |
+| R4/uniform/waiting | 3.891 | 32/16 | 32/80 | 59,259 |
+
+Completed fits only; identical frozen 8,191-target development protocol, four passes, U64/lr.002/warm512, ordinary credit16. Different fitting sizes are explicitly marked. All scalar policies, projections, temporal bases, gates, counterfactual content teachers and actual Adam remain charged. Projected arithmetic removes only numeric clock simulation. Physical rate setting, clock circuits, traffic, precision and measured joules remain separate. Exploratory development results; these do not alone establish comparable-quality Transformer superiority.
+
+Current matched-fit interpretation: best completed added-clock row is 0.0010 bpc better than native, with 3.13% more fitting work. Pending allocations and waiting controls cannot establish a benefit yet.
+
+## Appendix B (continued). Ours: native temporal-core language
+
+27-character text8 content enters one conversation address in the native event core. Independent receiver heads, persistent state, learned delays, evolving channels and losing-route credit remain; no historical KV attention or dense carrier is added. The receiver maps now learn across all token marks.
+
+![native language quality work](report/figures/native_language_quality_work.png)
+
+| Ours | Fit chars / passes | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Infer MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- |
+| d16/p2/s6 | 2,048/4 | 3.765 | 3.778 | 0.461 | 0.0974 |
+| d16/p2/s6 | 8,192/4 | 3.557 | 15.116 | 0.461 | 0.0974 |
+
+Fixed passes and frozen 8,191-target development selection; official test untouched. Existing stronger receiver and dense-reference evidence is preserved in the common ledger. Architecture, capacity and weight sharing differ from the KV variants. Work uses audited representative optimizer windows including backward, teachers and Adam; special functions have unit weight here, with separate JSON counts. These are exploratory scaling points, not a frontier score or a measured energy advantage. With H2/depth8/pool2, available receivers are 32, selected commits 16/token, scored keys and training proposals 32/token. Parameter counts and occupied state are retained in completed records.
+
+## Appendix B (continued). Ours: native event/state capability
+
+Each source writes three signed marks then receives an explicit causal query. Fits use 512 queries / 2,048 input events per pass, eight passes; development has 256 queries. All source populations are occupied. The order task predicts the last two signs; the timing task predicts a two-mode temporal trace. All events, timestamps and query flags are observed; target labels never address a module.
+
+![native event quality work](report/figures/native_event_quality_work.png)
+
+| Ours: task / sources / seed | Credit / time | Dev accuracy ↑ | Whole fit GFLOPs ↓ | Fit MFLOPs / query ↓ | Infer MFLOPs / event ↓ |
+| --- | --- | --- | --- | --- | --- |
+| order/S4/s6 | CF/observed | 100.0% | 7.099 | 1.733 | 0.0923 |
+
+Equal declared query/event budgets; available receivers scale with source population while per-event key scores and selected commits are logged explicitly. All fitting arithmetic is summed from executed operators, including complete producer graphs, losing proposals, clipping and Adam; CPU numerical clocks and unit-weight specials are included. Bootstrap intervals by population and raw state-clearing/time/long-gap probes remain in the completed JSON. More addresses change training exposure. Synthetic capability and bounded activity do not establish superiority over timestamp-aware recurrent/attention controls, real-stream generalization or clockless energy savings.
+
+## Appendix B (continued). Ours: occupied state and activity
+
+Every source stores three content events and receives a query. These are useful-state tests rather than padded unused capacity. Event budgets, active depth, head count and candidate pool are fixed. More addresses reduce observations per local parameter; addressing is input information that strong controls must also receive.
+
+| Ours: task / sources / seed | Available / occupied receivers | Commits / scores per event | Persistent state KiB | Parameters |
+| --- | --- | --- | --- | --- |
+| order/S4/s6 CF/observed | 128/122 | 16/32 | 9.14 | 159,716 |
+
+| Ours: task / sources / seed | Whole fit GFLOPs | Fit MFLOPs / input event | Infer MFLOPs / query |
+| --- | --- | --- | --- |
+| order/S4/s6 CF/observed | 7.099 | 0.433 | 0.369 |
+
+| Ours: task / sources / seed | Selected dev accuracy | Clear-history accuracy | Independent confirmation |
+| --- | --- | --- | --- |
+| order/S4/s6 CF/observed | 100.0% | 27.7% | Not read |
+
+Occupied receivers and stored float bytes come from the audited inference population, not parameter storage, Python metadata, graphs or host RSS. Inference/query includes all four producer/query events. Full fitting includes every event and optimizer operation. Arithmetic plus unit-weight specials; traffic/RNG/energy separate. Development selects checkpoints; independent confirmation is read once only on fixed promoted seed protocols. Population bootstrap intervals in the quality plot condition on the selected model and do not correct development selection or substitute for independent seed uncertainty.
+
+## Appendix B (continued). Ours: compact delayed learning
+
+Available historical content is not automatically learned historical content. After graph detachment, a retrieved old key/value can affect the prediction while its write map receives no later loss credit. Increasing the ordinary credit span from 16 to 64 did not improve the completed matched 2K pilot.
+
+![historical write credit flow](report/figures/historical_write_credit_flow.png)
+
+The tested integrated construction saves the normalized feature φ of each historical write. Later queries send a compact producer teacher to sealed key/value maps while preserving independent heads, temporal races, incoming content and persistent addressed state.
+
+| Ours: added teacher | Factorization | Extra work / query |
+| --- | --- | --- |
+| Old keys | α q (Σ eᵢ φᵢ)ᵀ | O(C_old d + d²) |
+| Old winning value | α a φ_wᵀ | O(d²) |
+| Saved eligibility | One detached d-vector / write | 50% extra K/V float storage |
+
+A shared offset of all race scores leaves winner probabilities unchanged but rescales arrival time. Content contrasts can teach which value wins; a separate clock signal can teach when it arrives and how persistent state evolves. The new write teacher retains both signals.
+
+The shared query factors all admitted old key teachers into one matrix update. Live writes keep ordinary gradients without duplicate credit. Six read-only numerical checks and guarded full eight-block update/recovery contracts passed; disabling the new teacher exactly reproduces parent outputs, RNG, gradients and two Adam windows.
+
+This is exact for a hypothetical common perturbation of historical write maps with saved features fixed. Transport to current maps is a delayed local surrogate: old weight versions and omitted representation paths remain limitations. Additional learning arithmetic and eligibility traffic are real costs. Existing counterfactual score credit is retained. Fitting work uses representative audited windows, with exact credit-coverage counters logged separately. Matched quality/work results require completed fits; improved language accuracy and native clockless learning are not established by these contracts.
+
+## Appendix B (continued). Ours: historical write credit
+
+H2, d32/head, 8 event blocks, pool2; 2,048 fitting characters / 4 passes; 8,191 frozen development targets, seed6. Credit16, Adam U64, lr0.002, warmup512. Forward races/history are preserved; sealed writes gain a compact local producer teacher.
+
+![historical write quality work 003fd093a8](report/figures/historical_write_quality_work_003fd093a8.png)
+
+| Ours: credit | Dev bpc ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- |
+| parent | 3.733 | 22.753 | 2.779 | 0.5059 |
+| α=0.25 | 3.722 | 23.469 | 2.866 | 0.5059 |
+| α=1 | 3.724 | 23.464 | 2.866 | 0.5058 |
+
+A historical normalized write feature φ is retained alongside each cached key/value. The old key-map teacher factors as α q (Σ eᵢ φᵢ)ᵀ: one weighted feature sum and one matrix outer product per query. The old winning value map receives α a φᵀ. Live writes keep ordinary credit without duplication; no full-history graph is reopened.
+
+One extra feature vector raises K/V float storage by 50%. The update is exact for a common hypothetical perturbation of historical maps at fixed saved features; transporting it to current maps is a delayed local surrogate with stale weight versions and omitted representation paths. Additional teacher/optimizer arithmetic is counted; feature traffic and physical energy are separate. Parent reuse requires exact forward/RNG/gradient/Adam nesting at α=0. One-seed exploratory development selection, not comparable-quality supremacy.
+
+## Appendix B (continued). Ours: frozen information-flow diagnosis
+
+Saved selected H2/H4 eight-block 8K checkpoints; 256 targets from the development prefix. Weights remain fixed. Each intervention removes one path only during this short evaluation; these are diagnostic probes rather than refitted architecture comparisons.
+
+| Ours | Frozen intervention | Window bpc ↓ | Context RMS mean |
+| --- | --- | --- | --- |
+| H2 | unaltered | 3.316 | 1.770 |
+| H2 | source off | 4.013 | 1.676 |
+| H2 | kv off | 3.312 | 1.750 |
+| H2 | channel identity | 3.773 | 1.488 |
+| H4 | unaltered | 3.331 | 2.144 |
+| H4 | source off | 4.001 | 2.066 |
+| H4 | kv off | 3.375 | 2.073 |
+| H4 | channel identity | 3.786 | 1.477 |
+
+Removing source-message carry and learned channel mixing worsens both saved checkpoints in this window. These content/state paths are useful here; short-window removal probes do not warrant discarding them or demonstrate a refitted architecture advantage.
+
+A route-credit audit replays each admitted historical value at three depths/head0 for the two-head model. It holds one realized race time and continuation seed fixed, then compares the centered local content teacher with the conditional categorical loss gradient.
+
+| Ours: local audit | Probes | Mean cosine | Opposed directions | Mean oracle gap (nats) |
+| --- | --- | --- | --- | --- |
+| H2 / head0 | 24 | 0.717 | 1 / 24 | 0.071 |
+
+Higher cosine means better alignment in this narrow replay. The oracle gap is realized loss minus the best candidate replay, not achieved improvement. Different routing can change subsequent candidate/RNG paths. The audit conditions away time derivatives and does not estimate the full expected gradient, long-history utility or discovery coverage. Interventions have no refitting and no confidence intervals; do not use these window scores as promotion metrics or dense-model superiority evidence.
+
+## Appendix B (continued). Ours: separate online neural learning
+
+Both arms start from the same selected integrated-model checkpoint and maintain persistent event memory on the same new development stream. The frozen arm retains its parameters. The online arm updates the complete neural backbone after making the causal predictions in each 16-character block, with no replay.
+
+![integrated online language](report/figures/integrated_online_language.png)
+
+| Ours: mode | Stream bpc ↓ | Whole stream MFLOPs ↓ | Parameter change L2 | Updates |
+| --- | --- | --- | --- | --- |
+| Ours: frozen | 3.191 | 210.903 | 0.000 | 0 |
+| Ours: online | 3.096 | 2,264.163 | 1.551 | 512 |
+
+The 8,191 targets come from [90,065,536, 90,073,728). Learning rate 0.0001 was fixed before this stream; Adam starts with fresh moments. Both arms use paired block race noise. Parameter updates precede only future blocks; the current target cannot change its own prediction. Their contexts can diverge after learning.
+
+This measures block-delayed online adaptation, not instant per-character updates or a frozen official-test score. One inherited model/window/rate. All neural parameters may learn, including content, keys, clocks and retention; this differs from the earlier statistical expert-mixing-only ablation. Inherited fitting is additional and identical in both arms. Work estimates observe the actual first/middle/last blocks and include counterfactual learning, backward, clipping and Adam; RNG, indexing and physical traffic remain additional. Lower online loss, if observed, is evidence only for this protocol.
+
+## Appendix B (continued). Separate statistical language baseline
+
+This count/copy predictor does not use the learned Sleeping Machines event backbone. It is a separate statistical system: order-0 through order-6 counts, backoff probabilities and a bounded causal copy cache, combined by learned mixing weights. Its quality/work results must not be attributed to the event architecture.
+
+The statistical predictor and saved neural references score the same 999,999 character targets, starting from a cold context. Parameters are frozen during testing. Earlier observed test characters can supply causal context, including the mixture's bounded 256-character copy cache. Lower bits per character means better prediction.
+
+| Predictor | Test bpc ↓ | Fitting and selection budget | Estimated training FLOPs ↓ |
+| --- | --- | --- | --- |
+| Ours: separate statistical count/copy baseline | 1.727 | 10M count fitting + three 1M mixing-rate trials | 4.47G + integer count construction |
+| Ours: count/copy plus causal word context | 1.719 | 10M count fitting + three 1M mixing-rate trials | 4.80G + integer count construction |
+
+The neural totals charge all original optimizer steps that produced the inherited E174 checkpoints: forward, estimated 2×-forward backward, clipping and Adam. Alignment evaluation is excluded. The statistical floating estimate charges expert probability preparation and all three mixing-rate trials, including local gradients and weight updates. Exp/log/root evaluations count as one operation in these language estimates. Count construction additionally uses about 80M integer count presentations, plus sorting, lookup and hashing; that work is not quantified as FLOPs. The floating totals alone cannot establish total compute, runtime or energy savings.
+
+The count/copy mixture improves on LSTM by 0.072 bpc and Transformer by 0.181 bpc. These results establish useful specialized prediction; generic learned representations are assessed in the separate language screen.
+
+The statistical baseline's count arrays occupy 66.55 MB. Vocabulary, capacities, optimization and fitting budgets differ from the neural references. The comparison does not measure total training energy or a matched-capacity advantage.
+
+All three use the same historical 27-character alphabet. Modern shared subword tokenization is a separate comparison gate for the learned event architecture, described later in this appendix.
+
+One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM, 1.604 for the four-layer Transformer. Estimated training work (forward, backward, Adam and gradient clipping): LSTM: 3.89 PFLOP, TF: 8.00 PFLOP. Shape-based estimates count multiply-add as two operations; backward is approximated as twice forward. Validation/test inference is excluded. These are single-seed comparisons; capacities and fitting budgets are not matched. Calibration (Theory §381): untuned modified Kneser–Ney counts of the same 90M characters score 1.652 on the same test targets, so these controls sit near count level and are not frontier bars. The historical E79 1.504 score has target leakage and is retained only in Appendix C; a corrected 90M mixture comparison remains pending.
+
+## Appendix B (continued). Learned language and depth
+
+A bounded screen trains the common event backbone to predict the next character. Both configurations use width 32, the same 8,192 training characters, four passes, 32-character contexts and 1,024 validation predictions. All eight layers' value, route and memory-time parameters update. Lower bits per character means better prediction.
+
+![e133 generic language](report/figures/e133_generic_language.png)
+
+| Ours: depth | Learned parameters | Validation bpc: lower is better | Total CPU wall time |
+| --- | --- | --- | --- |
+| 1 | 7,671 | 3.464 | 27.4 s |
+| 8 | 53,430 | 3.395 | 170.5 s |
+
+Eight layers improve validation loss from 4.752 to 3.395 bpc, versus 3.464 with one layer. Shuffling preceding characters while preserving the last character, count and timestamps increases the deeper model's loss to 3.805; replacing preceding context raises it to 3.777. These frozen input probes show context sensitivity, not a retrained baseline comparison.
+
+The deeper model has more parameters and takes more CPU time. The quality/time panel includes fitting and evaluation, with backpropagation and optimizer updates executed during fitting. These bounded-query models replay preceding context. The following persistent implementation consumes each character once. Physical memory traffic and joules remain unmeasured.
+
+One seed; different parameter counts. This establishes a generic learned-language foothold and a small depth gain, not competitive large-scale representation, a matched tuned dense-model advantage or a scaling law. The statistical 10M-character mixture remains a separate result. Official test data are untouched. E133 preserves commands, source/data hashes, layer diagnostics and work coverage.
+
+## Appendix B (continued). Persistent learned language
+
+The event-state language model consumes each character once and retains local modal memories and its delayed-message queue. Chunk boundaries truncate learning credit without discarding the observed history. Only actual event arrivals evaluate layers; text time is measured in token intervals.
+
+![e176 stream language learning](report/figures/e176_stream_language_learning.png)
+
+| Ours: representation | Parameters | Fitting bpc ↓ | Validation bpc ↓ | Deliveries/pass |
+| --- | --- | --- | --- | --- |
+| Characters | 28,403 | 3.142 | 3.351 | 65,784 |
+| Causal prefix tokens | 35,163 | 3.085 | 3.517 | 45,816 |
+
+Validation loss falls from 5.329 to 3.351 bpc. All eight layer teachers are nonzero in every fitting pass. Each pass consumes 8,223 characters including warmup and makes 65,784 block deliveries. The result establishes learning with persistent causal state and no prefix replay.
+
+A train-only 131-token prefix dictionary reduces layer deliveries by 30.4% and observed CPU time by 26.2%, while validation bpc is 3.517. Exact partial-token marginalization scores identical raw targets. Its larger vocabulary fits better but generalizes less well in this small screen: compression alone does not explain or resolve the quality gap.
+
+One seed; 28,403 parameters, width 32, sixteen temporal modes per block. Four passes, 128 Adam steps/pass, credit truncated every 64 characters, 31 warm characters and 1,024 validation targets. Target offsets match the bounded E133 screen; topology, capacity, history and update counts differ, so this is not a matched intervention. Total CPU wall time 364.9 s including fitting/evaluation; peak RSS 364.8 MiB. These are event counts and observed resources, not total arithmetic, physical memory traffic or energy. No official test or large-corpus claim. E176.
+
+## Appendix B (continued). Learned event language: training and inference work
+
+These counts belong to the learned eight-layer persistent Sleeping Machines event model that reaches 3.351 validation bpc. It has no count/copy/word experts. Primary counts describe the logical event algorithm; simulator dispatch/allocation is excluded.
+
+| Ours: fitting stage | Estimated arithmetic FLOPs |
+| --- | --- |
+| Forward and loss | 1.96G |
+| Backward | 4.77G |
+| Gradient clipping | 43.52M |
+| Optimizer | 173.95M |
+| Warmup | 7.42M |
+| Total | 6.96G |
+
+The entire completed budget includes 32,768 fitting targets, 512 Adam/clipping steps and four stream warmups. Special functions add 85.431M evaluations, reported separately from arithmetic FLOPs.
+
+| Ours: inference boundary | Per character |
+| --- | --- |
+| Prediction plus NLL-scoring arithmetic | 59,741 FLOPs |
+| Additional special functions | 1,212 evaluations |
+
+A 64-character saved-checkpoint trace measures forward/loss, backward, clipping and warm Adam; the fitting ledger scales those stages by the original 512 steps and separately charges warmup. This is a representative arithmetic estimate, not a whole-run trace. The traced chunk has complete floating-operator formula coverage. Index/queue work, comparisons, memory traffic and evaluation passes are outside the fitting arithmetic boundary.
+
+The 10M-character LSTM/Transformer checkpoints have different data, capacity and achieved quality. Dividing their full fitting budgets by this small run would not establish a fair training advantage. Full learned-event runs must complete before a larger aligned quality/work comparison.
+
+Evidence: event_language_work/local_event_language_work_20260930T124646Z.json; quality: E176. Two arithmetic FLOPs per multiply-add. Additional unit-weight special functions would give a different logical-operation total; no event-device runtime or energy has been measured.
+
+## Appendix B (continued). Statistical online-learning pilot
+
+The official language comparison freezes parameters during evaluation. A new development-only pilot asks whether causal local learning improves prediction: score each character first, reveal it, then update only the expert mixing weights. Count experts stay frozen and both arms use identical causal copy-cache behavior.
+
+| Ours: statistical expert set | Frozen bpc ↓ | Online bpc ↓ | Extra update FLOPs |
+| --- | --- | --- | --- |
+| Without word | 2.605 | 2.564 | 2.75M |
+| With causal word | 2.537 | 2.487 | 3.21M |
+
+This pilot reuses a 100,000-character count checkpoint and its learning rate selected on an earlier 2,048-character validation window. It scores 8,191 targets in a fresh 8,192-character development window [90,032,768,90,040,960), excluding the first target. Each adaptive arm performs 8,192 updates, including first-position warmup. Official test data are untouched.
+
+One checkpoint and one window; a specialized adaptive readout, not deep learned TTT or a frontier result. The extra arithmetic column counts only local gradient/weight updates, on top of shared prediction and inherited fitting costs. Total pilot CPU wall time is 0.587 s. Evidence: online_language/local_online_language_20260930T121741Z.json.
+
+### Compute allocation is the next architectural hypothesis
+
+Independent budgets for active width/depth, dormant capacity, temporal memory, retrieval, credit and adaptation may let extra work buy more prediction quality. The new theory derives conditional marginal-value allocation and retrieval-error bounds, and identifies exposure, routing overhead and hardware utilization as possible limits. A small-scale win does not prove a better scaling exponent or a widening frontier advantage.
+
+Next learned-language comparisons need shared modern subword tokenization, Unicode/byte coverage, suitable rotary/relative position, packed optimized Transformer kernels, sparse MoE and modern recurrent/attention-hybrid controls. Existing event memory already uses relative-time rotations. Token coordinates must remain distinct from learned scheduling delays.
+
+Known sequences can be fitted with input-known affine scans and then generated sequentially with persistent state. Sequence-parallel fitting also permits Transformer adaptation between tokens/chunks. Compare frozen and online arms at identical observations and adaptation budgets; charge cache consistency and update work.
+
+[Theory §§280–286](experiments/theory/43_compute_allocation_and_frontier_scaling.md) and the [frontier compute protocol](experiments/FRONTIER_COMPUTE_PROTOCOL.md) specify these tests. Modern architecture and larger-scale comparison arms remain proposed, not completed.
+
+## Appendix C. Preserved historical results and revisions
+
+Earlier result files remain part of the research record. The following numbers explain older report headlines and why their interpretation changed. They are preserved here with the identified protocol errors; they are not current valid benchmark comparisons.
+
+### Earlier statistical language results
+
+| Ours: fitting characters | Frozen historical bpc | Online historical bpc |
+| --- | --- | --- |
+| 1M | 1.808 | 1.782 |
+| 10M | 1.613 | 1.593 |
+| 90M | 1.504 | 1.483 |
+
+These E79 mixtures use counts, a partial-word expert and a 256-character copy window. The partial-word key depended on whether the target character was a space: changing the unseen target changed the predicted distribution. The old 1.613/1.504 headlines therefore cannot establish a causal language advantage. The corrected E173 10M results are 1.727 without word context and 1.719 with causal word context; a corrected 90M mixture comparison remains open.
+
+### Earlier event world-model results
+
+| Historical predictor | Day 6 log-likelihood ↑ | Day 7 log-likelihood ↑ |
+| --- | --- | --- |
+| Ours: event hazard + rate/flow state | -2.184 | -1.999 |
+| Ours: event hazard + per-type state | -2.159 | -1.973 |
+| Ours: event hazard + per-type state; finer gap bank | -1.912 | -1.734 |
+| Saved Transformer Hawkes reference | -1.971 | -1.816 |
+
+The event hazard models use sparse conditional memories and local rate/flow state. Their frozen test parameters and causal state updates are useful mechanisms. However, the event-size threshold was fitted across all seven pilot days, including the evaluation days, for both the event and neural references. Day resets and warmup exclusions also differ. The recorded gap needs fitting-only preprocessing and aligned rescoring before it supports a held-day advantage.
+
+[Source and numerical review](experiments/EXPERIMENTAL_REVIEW.md); [E79 language records](experiments/results/e79/); [E57 world-model records](experiments/results/e57/). Preserved timing, composition, retrieval and modular results remain in the main report. New learned-model benchmarks add evidence; they do not erase these earlier runs.
+
+## Appendix D. Evidence and metric definitions
+
+| Metric | Interpretation |
+| --- | --- |
+| Bits per character | Held-out negative log probability in base two; lower is better next-character prediction. |
+| Accuracy | Fraction of correct class decisions on the declared development or test protocol. |
+| Event likelihood | Scores both the next event type and waiting time, including the observed silence. |
+| Arithmetic FLOPs | Multiply-add counts as two operations. Tables state whether special functions are separate or assigned unit cost; these conventions must be aligned before forming ratios. |
+| Logical operations | The structured-task ledger assigns 2 units per MAC and 1 per other scalar arithmetic/nonlinear operation or estimated sort comparison. |
+| Resource boundary | Event-target arithmetic includes required active algorithm work. Memory traffic, queues, indexing and simulator overhead are reported separately where measured. Activity counts alone do not determine total FLOPs. |
+| Energy | Measured total joules over an explicit boundary. Operation estimates and CPU timings support work comparisons, but are not joule measurements. |
+
+The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E173/E174 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the language/depth screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal residual learner, and E144 audits simultaneous state/query pooling. E171 reproduces the consolidated screens and selected speech answers, and checks causal input boundaries. E172 records complete training-step arithmetic; E175 checks the generic persistent language stream.
+
+The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.

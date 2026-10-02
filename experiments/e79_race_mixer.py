@@ -127,6 +127,7 @@ def race_mix(LP, y, sel, lr, W=None, update=True):
 
 
 def main():
+    raise RuntimeError('Retired target-dependent benchmark; use experiments/e173_causal_language.py and the causal protocol')
     ap = argparse.ArgumentParser()
     ap.add_argument("--D", type=int, default=1_000_000)
     ap.add_argument("--K", type=int, default=5)

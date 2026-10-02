@@ -1,0 +1,68 @@
+{
+  "status": "invalid_protocol",
+  "eligible_for_benchmark": false,
+  "reason": "Unseen target changes the partial-word key and predictive distribution; E171 causality audit. User requested removal from active references.",
+  "replacement": "experiments/results/e173/causal_language_10m_20260930.json",
+  "files": [
+    {
+      "original_path": "experiments/results/aws_20260929/aws_e79wk_D10M_20260929/provenance.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/aws_20260929/aws_e79wk_D10M_20260929/provenance.json",
+      "sha256": "79695328a8434298d798ed47629cc5285cb6f594080acb6ba4a6fdfe88009c88",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/aws_20260929/aws_e79wk_D10M_20260929/race_mixer_D10000000_K6_e77none_wk.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/aws_20260929/aws_e79wk_D10M_20260929/race_mixer_D10000000_K6_e77none_wk.json",
+      "sha256": "c49c33976e230fe4e1cc41834fa1a98e746bc179d537c0d90d4131cc98d3b33a",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/aws_20260929/aws_e79wk_D1M_20260929/provenance.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/aws_20260929/aws_e79wk_D1M_20260929/provenance.json",
+      "sha256": "02929c25674a2aa662780c6beb160452bf8a535c92e0f0def3722ca83fed114d",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/aws_20260929/aws_e79wk_D1M_20260929/race_mixer_D1000000_K5_e77none_wk.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/aws_20260929/aws_e79wk_D1M_20260929/race_mixer_D1000000_K5_e77none_wk.json",
+      "sha256": "21a6fe26f61965516535c884c2925c2db29df393906f00736e72188048ac2f0f",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e63/mix_D10000000_K6.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e63/mix_D10000000_K6.json",
+      "sha256": "01185bcb62aa4442d95c669f11ba9161959e4c769ac423d7f356ccdf2e1e105f",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e63/mix_D1000000_K5.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e63/mix_D1000000_K5.json",
+      "sha256": "ce1c9edc8569da9b989026d7118a2cf238e3c673cefad3adda74436c058a8649",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e63/mix_D90000000_K7.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e63/mix_D90000000_K7.json",
+      "sha256": "68d34c04c18b959158b375f7ab69ffed2c730a7c1388fd4f0d308937dca3720f",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e79/race_mixer_D10000000_K6_e77none.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e79/race_mixer_D10000000_K6_e77none.json",
+      "sha256": "c33dd6468259fed812ee825b6509fce683aeb7ec913d029621bbcb80b2c3148f",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e79/race_mixer_D1000000_K5_e77none.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e79/race_mixer_D1000000_K5_e77none.json",
+      "sha256": "937cab8f33e0b62f83d0ab08ddd9ea82bb2775e0eb9590d6eb9d3f1815502b07",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    },
+    {
+      "original_path": "experiments/results/e79/race_mixer_D90000000_K7_e77none.json",
+      "quarantined_path": "experiments/archive/invalid_protocol/target_leakage_20261002/experiments/results/e79/race_mixer_D90000000_K7_e77none.json",
+      "sha256": "8f2f47da8158fd14522bad01db606cddbed10eadd62354b37f1dc37e9aa4ec93",
+      "reason": "Target-dependent partial-word expert; not a causal prediction benchmark"
+    }
+  ]
+}

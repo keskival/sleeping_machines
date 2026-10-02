@@ -23,15 +23,17 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
 
-**New integrated evidence:** banknote pilot **ours 95.3% versus trees 93.0%**; native language uses **6.02× less counted fitting work** than the saved KV model at 0.032 bpc worse. Protocols and limits follow on the next page; comparable 10M language remains pending.
+**New integrated evidence:** banknote test: **ours 91.8% versus trees 94.0%**, competitive accuracy without a confirmed win; native language uses **6.02× less counted fitting work** than the saved KV model at 0.032 bpc worse. Protocols and limits follow on the next page; comparable 10M language remains pending.
 
 ## New evidence: quality and complete work
 
-**Tabular quality signal.** Ours reaches **95.31%** banknote accuracy versus **92.97%** for the boosted-tree screen, with **33.0% lower log loss** (0.155 versus 0.232). The native eight-block model mixes content and memory through parallel temporal receiver heads.
+**Tabular: competitive accuracy, no confirmed win.** Ours averages **91.8%** reserved-test accuracy versus **94.0%** for boosted trees across three seeds. Logistic regression reaches **94.7%** and lower log loss (**0.091** versus ours **0.235**). The native eight-block model mixes content and memory through parallel temporal receiver heads.
 
-![banknote first screen](report/figures/banknote_first_screen.png)
+![banknote reserved test](report/figures/banknote_reserved_test.png)
 
-128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. This is an exploratory development quality advantage. Reserved-test results and stronger controls are in Appendix B; the full three-seed analysis is pending. Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.
+Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fitting/128 development rows; four fixed selection opportunities. Accuracy uncertainty includes zero difference, but does not establish statistical equivalence. The original development lead, 95.3% versus 93.0%, is retained in Appendix B. The last CatBoost cell remains pending. Tree FLOPs are unavailable and CPU fits are faster; no resource advantage over trees is established.
+
+**Causal statistical language advantage.** On the same999,999 test targets after10M fitting characters, ours count/copy race mixture scores **1.727bpc** versus **1.799** for LSTM and **1.908** for Transformer. This corrected specialized predictor uses statistical memory; it is not the learned native model. Capacity and fitting budgets differ. Appendix B charges floating mixing work and reports integer table work separately.
 
 **A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
 
@@ -857,9 +859,26 @@ Four development checkpoints or four separately fitted tree candidates; all cand
 
 Reception helps this regression pilot: ours R2 RMSE0.758 versus R0 0.824 (8.0% lower), for0.919 versus0.816 whole-fit GFLOPs (12.6% more). Trees retain lower RMSE0.649. This positive within-model effect contrasts with banknote/language reception failures; it is not a cross-family win.
 
+## Appendix B. Banknote: no confirmed advantage
+
+Competitive accuracy, no confirmed advantage: the three-seed reserved test does not sustain the development lead. Ours averages 91.8% versus 94.0% for the original trees. Logistic regression has lower test log loss. The full four-family confirmation remains incomplete. The reserved-test accuracy point estimates are close, but no equivalence margin was specified. Parity is therefore a descriptive reading, not a proven equivalence claim.
+
+![banknote reserved test](report/figures/banknote_reserved_test.png)
+
+| Model | Completed seeds | Mean test accuracy % | Mean test NLL |
+| --- | --- | --- | --- |
+| Ours native | 3 | 91.81 | 0.2353 |
+| Boosted trees | 3 | 93.95 | 0.2065 |
+| CatBoost | 2/3 | Pending | Pending |
+| Logistic | 3 | 94.66 | 0.0906 |
+
+For the completed ours/tree comparison, the paired accuracy difference is −2.14 percentage points (descriptive95% crossed seed/feature-group interval −6.90 to +2.43). The control-minus-ours NLL difference is −0.0287 (98.33% interval −0.1738 to +0.1277). Logistic regression improves NLL by0.1447 (98.33% interval0.0338 to0.2660). These three-seed intervals are approximate and share one test split.
+
+Partial analysis: local_banknote_partial_confirmation_20261002T013000Z.json;11/12 final cells, 4000 bootstrap draws,270 feature groups, three seeds. NLL intervals allow for three control comparisons; accuracy intervals are descriptive. This does not replace the pending full four-family gate. The original95.3% versus93.0% development screen and all per-seed work remain below.
+
 ## Appendix B. Frozen banknote confirmation
 
-Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. Partial publication is a snapshot, not a completed three-seed comparison.
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. The per-seed ledger preserves completed scores; the summary identifies families with all three seeds.
 
 | Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -883,7 +902,7 @@ Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its o
 
 ## Appendix B. Frozen banknote confirmation
 
-Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. Partial publication is a snapshot, not a completed three-seed comparison.
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. The per-seed ledger preserves completed scores; the summary identifies families with all three seeds.
 
 | Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1366,7 +1385,7 @@ The statistical baseline's count arrays occupy 66.55 MB. Vocabulary, capacities,
 
 All three use the same historical 27-character alphabet. Modern shared subword tokenization is a separate comparison gate for the learned event architecture, described later in this appendix.
 
-One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM, 1.604 for the four-layer Transformer. Estimated training work (forward, backward, Adam and gradient clipping): LSTM: 3.89 PFLOP, TF: 8.00 PFLOP. Shape-based estimates count multiply-add as two operations; backward is approximated as twice forward. Validation/test inference is excluded. These are single-seed comparisons; capacities and fitting budgets are not matched.
+One exploratory seed. Text8 offsets: count fitting [0,10M), mixing-weight validation [90M,91M), test [95M,96M); test index zero is excluded for all three predictors. The mixture selects its update rate on validation. Saved neural weights are unchanged. Results: E173/E174; stream contract: E175. At 90M training characters, reference test scores are 1.661 for the LSTM, 1.604 for the four-layer Transformer. Estimated training work (forward, backward, Adam and gradient clipping): LSTM: 3.89 PFLOP, TF: 8.00 PFLOP. Shape-based estimates count multiply-add as two operations; backward is approximated as twice forward. Validation/test inference is excluded. These are single-seed comparisons; capacities and fitting budgets are not matched. Calibration (Theory §381): untuned modified Kneser–Ney counts of the same 90M characters score 1.652 on the same test targets, so these controls sit near count level and are not frontier bars. Target-leaked historical mixtures have been quarantined; a corrected 90M mixture comparison remains open.
 
 ## Appendix B (continued). Learned language and depth
 
@@ -1457,13 +1476,7 @@ Earlier result files remain part of the research record. The following numbers e
 
 ### Earlier statistical language results
 
-| Ours: fitting characters | Frozen historical bpc | Online historical bpc |
-| --- | --- | --- |
-| 1M | 1.808 | 1.782 |
-| 10M | 1.613 | 1.593 |
-| 90M | 1.504 | 1.483 |
-
-These E79 mixtures use counts, a partial-word expert and a 256-character copy window. The partial-word key depended on whether the target character was a space: changing the unseen target changed the predicted distribution. The old 1.613/1.504 headlines therefore cannot establish a causal language advantage. The corrected E173 10M results are 1.727 without word context and 1.719 with causal word context; a corrected 90M mixture comparison remains open.
+The target-dependent partial-word mixtures have been removed from the active results tree and all numerical comparisons. Raw records are quarantined for audit only. The corrected E17310M results are1.727 without word context and1.719 with causal word context; a corrected90M mixture comparison remains open.
 
 ### Earlier event world-model results
 
@@ -1476,7 +1489,7 @@ These E79 mixtures use counts, a partial-word expert and a 256-character copy wi
 
 The event hazard models use sparse conditional memories and local rate/flow state. Their frozen test parameters and causal state updates are useful mechanisms. However, the event-size threshold was fitted across all seven pilot days, including the evaluation days, for both the event and neural references. Day resets and warmup exclusions also differ. The recorded gap needs fitting-only preprocessing and aligned rescoring before it supports a held-day advantage.
 
-[Source and numerical review](experiments/EXPERIMENTAL_REVIEW.md); [E79 language records](experiments/results/e79/); [E57 world-model records](experiments/results/e57/). Preserved timing, composition, retrieval and modular results remain in the main report. New learned-model benchmarks add evidence; they do not erase these earlier runs.
+[Source and numerical review](experiments/EXPERIMENTAL_REVIEW.md); [E57 world-model records](experiments/results/e57/). Preserved timing, composition, retrieval and modular results remain in the main report. New learned-model benchmarks add evidence; they do not erase these earlier runs.
 
 ## Appendix D. Evidence and metric definitions
 
