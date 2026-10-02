@@ -1,0 +1,53 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "jobs": [
+    {
+      "tag": "local_dvs_native_full_20261002T145300Z",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_dvs_native_full_20261002T145300Z.txt",
+      "queue_sha256": "bf5eca8ab6b022b3458399af290f873e4a0650ce7519873f6be21e663e98933a",
+      "result": "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+      "timeout_s": 7200,
+      "requires": []
+    }
+  ],
+  "references": [
+    "experiments/results/dvs_native/local_dvs_native_smoke_20261002T144500Z.json",
+    "experiments/results/diagnostics/local_dvs_native_contracts_20261002T143900Z.json",
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json"
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/results/dvs_native/local_dvs_native_smoke_20261002T144500Z.json": "f7c5f161b342d2dbd8e38d81bc354821e4c53dd4416d7b9c6e1c08b830fb307a",
+    "experiments/results/diagnostics/local_dvs_native_contracts_20261002T143900Z.json": "1501d7e67091157227c6f3bc62f35c407ab7ca92bfe21d546411d04400f19120",
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json": "89dba01399830ba638ba5543b87d4479dcc55366f495c6105d44f5b4f5b617cb",
+    "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json": "ad592825f529682b8eb7741cac7a01f59822aa485ed65f84cfeae8aec8acde2a",
+    "scripts/run_addressed_memory_pair.py": "7125ea4992322ed4c410f99b86ca4b0d8ffa2ed8cd6450ac9296a7175b802e62",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "admission": {
+    "small_fit_learning_passed": true,
+    "smoke_wall_s": 29.697448150000127,
+    "smoke_max_rss_kb": 344108,
+    "timeout_reason": "Pilot29.7s for approximately72 prefix calls, all fit windows traced. Full approximately9,867 prefix calls gives naive ratio4070s;7200s covers workload/checkpoint overhead. Backprop per clip bounds live graph; watchdog retained."
+  },
+  "scope": "Fixed eight passes984 fit/192 dev native p16/L2/H2/pool2 U16 Adam.003 seed6. Strong controls retained; no official test, epoch extension or supremacy claim."
+}
