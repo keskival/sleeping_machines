@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_joint_report_recovery_20261002T140500Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_balanced_joint_20261002T121500Z_analysis.json",
+      "experiments/results/diagnostics/local_joint_readout_20261002T123300Z_frozen.json",
+      "experiments/results/diagnostics/local_joint_outcome_20261002T125700Z_analysis.json",
+      "experiments/results/diagnostics/local_joint_confirmation_20261002T131700Z_analysis.json",
+      "experiments/results/diagnostics/local_joint_publication_20261002T133100Z_contracts.json",
+      "experiments/results/diagnostics/local_joint_stateful_table_20261002T134700Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_balanced_joint_20261002T121500Z_analysis.json": "d061e98a06f5e82c3edf8f9e072b769a2f2090dbe01cd807e3ca9026e222ac8b",
+    "experiments/results/diagnostics/local_joint_readout_20261002T123300Z_frozen.json": "1ab2649559ee45634b1fb79d60f7aceb51890f04694b969c5b645f4a44a8043f",
+    "experiments/results/diagnostics/local_joint_outcome_20261002T125700Z_analysis.json": "033577447dfd7b137f704280831510f2ff0a242c58cb5293471bab6f032f8b5e",
+    "experiments/results/diagnostics/local_joint_confirmation_20261002T131700Z_analysis.json": "68dd702f6ec2e3d6d808166f9e5eea7756a4fdb8596e78a69c25aba2e762894f",
+    "experiments/results/diagnostics/local_joint_publication_20261002T133100Z_contracts.json": "e970311f249e36664e7b228dccb1fdc48d4f9fb45d7d287261d6baa34efd8717",
+    "experiments/results/diagnostics/local_joint_stateful_table_20261002T134700Z.json": "ce5c45abeb79dd90d3abdbb9c4000657dc2926e5cb6010c94ae77a2070294227"
+  },
+  "pdf_pages": 113,
+  "wall_s": 20.080696097000327,
+  "max_rss_kb": 71196,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "cc3e697ee547133c80aa2e2531ba2cdb284c6d0e9e6f55674aa91728d8c32002",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}

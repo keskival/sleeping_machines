@@ -17,13 +17,11 @@ Messages carry content and an arrival time. Nodes mix incoming vectors with pers
 
 - **Generalization.** Race retrieval reaches **100% at four times the training context** within 4,000 examples in all five runs. A learned phase rule solves **all 3,440 unseen modular triples**, using the supplied period 17.
 - **Learning from fewer examples.** Depth-three event chains reach **99.73–99.93%** after 2,000 examples seen once; saved Transformer controls reach **33.25–40.80%** with the same number of distinct examples and repeated fitting. Depth-four chains reach 99.9–100%.
-- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets, so these fits do not surpass counting statistics, as expected in this regime (Theory §376). At these sizes smoothed counting is a near-optimal reference that no learner, Transformers included, is expected to exceed (§§381, 393–394); these are representation diagnostics, and the architecture is tested where learning matters.
+- **Learned representations.** Completed temporal-carrier development screens reach **2.572 bpc at 131K** and **2.210 at 1M fitting characters**, four passes. A learned speech encoder reaches **79.69%** on 512 private development utterances. Embeddings, temporal state and vector maps learn. Calibration: closed-form Kneser–Ney counts of the same fitting data score 2.349 / 2.007 bpc on the same targets and lead these small-data comparisons. They are strong references where local statistics are well supported; architecture advantage requires practical headroom (§§376,393–394).
 
 ![accomplishments](report/figures/accomplishments.png)
 
 Left: means and recorded ranges, five event runs and two Transformer runs; 2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs reach 100% within 4,000 examples; the control is the best saved result across seven Transformer configurations and their learning curves. These synthetic tasks use different architectures and structural priors. Sources: E53/E36 and E61.
-
-**New integrated evidence:** banknote test: **ours 91.8% versus trees 94.0%**, competitive accuracy without a confirmed win; native language uses **6.02× less counted fitting work** than the saved KV model at 0.032 bpc worse. Protocols and limits follow on the next page; comparable 10M language remains pending.
 
 ## New evidence: quality and complete work
 
@@ -268,6 +266,11 @@ Reserved loss:0.102 versus 0.750bits/query. All1,024 fitting presentations, comp
 
 Shallow joint reaches95.31% at 0.1534GFLOPs. This task supports protected evidence and terminal joint learning; useful extra core depth is not established. Earlier native/tapped fits and frozen readout failures remain in the appendix.
 
+<<<<<<< HEAD
+=======
+Unchanged seed7/8 confirmation: 0 of2 declared joint-versus-local gates pass. All four arms and delivered-value interventions are reported separately in the appendix; the new suffix set does not select settings.
+
+>>>>>>> c183ca5 (Publish complete controlled learning and practical headroom evidence)
 One fitted seed,128 reserved synthetic queries. Observed predecessor addresses are fixed; terminal content-risk derivatives are exact conditionally, earlier native route derivatives remain scoped. The bound concerns query-count inputs, not all counting. No natural-language or iso-quality resource superiority is inferred.
 
 ## Ours: the integrated sparse temporal language experiment
@@ -1478,13 +1481,17 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 | Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 3.474 | 16.789 | 0.512 | 0.1155 |
 | Count-carrying native K4 + escape gate 8,192 | 8,192/4 | 2.601 | 15.314 | 0.467 | 0.0993 |
 | Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 2.592 | 4.181 | 0.128 | 0.0358 |
-| Count-carrying native K4 + escape gate [minimal core p16/d1] 8,192 | 8,192/4 | 3.492 | 4.161 | 0.127 | 0.0358 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 0.288 | 0.009 | 0.0031 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 5.995 | 0.183 | 0.0632 |
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.593 | 1.744 | 0.053 | 0.0184 |
+<<<<<<< HEAD
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 3.471 | 1.744 | 0.053 | 0.0184 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Calibration ceiling: adaptive interpolated KN o6 | 8,192/1 | 2.414 | Not FLOPs | Not FLOPs | Not FLOPs |
+=======
+| KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+>>>>>>> c183ca5 (Publish complete controlled learning and practical headroom evidence)
 | Count-carrying native K4 32,768 | 32,768/4 | 2.560 | 60.790 | 0.464 | 0.0982 |
 | Same, untrained base 32,768 | 32,768/0 | 2.593 | Not trained | Not trained | 0.0982 |
 | Count-carrying native K4 + escape gate 32,768 | 32,768/4 | 2.447 | 60.790 | 0.464 | 0.0993 |
@@ -1522,12 +1529,15 @@ At 8,192 fitting characters, fitting the native base and escape parameters impro
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0915 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
+<<<<<<< HEAD
 At 8,192 fitting characters, fitting the native base and escape parameters improves -0.2996 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves -0.2977 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves -0.3213 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
+=======
+>>>>>>> c183ca5 (Publish complete controlled learning and practical headroom evidence)
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0809 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 2,048 fitting characters, fitting the native base and escape parameters improves 0.0464 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
@@ -1806,6 +1816,87 @@ Joint training enumerates C² terminal losses and differentiates their categoric
 
 Joint/local whole-fitting work ratio:1.026. 2FLOPs/MAC plus unit specials; traffic, raw integer state, Python objects, RNG and energy separate. Five contracts and three accounting smokes precede fits. The same-width shallow comparison changes initialization too. A successful protected-state read does not prove learned context pooling, arbitrary-distance KV retrieval or useful deep producer credit.
 
+<<<<<<< HEAD
+=======
+## Appendix B. Fixed joint-credit confirmation
+
+| Fit seed / credit | Selected dev bits | New suffix bits | New suffix accuracy | Pass | Zero-value accuracy |
+| --- | --- | --- | --- | --- | --- |
+| s7 / joint | 0.055 | 0.050 | 99.22% | 16 | 98.83% |
+| s7 / local | 0.009 | 0.003 | 100.00% | 15 | 100.00% |
+| s8 / joint | 0.000 | 0.000 | 100.00% | 16 | 75.00% |
+| s8 / local | 0.001 | 0.004 | 100.00% | 16 | 99.22% |
+
+| Fit seed | Joint improvement bits/query | Paired suffix interval | Joint/local fitting work |
+| --- | --- | --- | --- |
+| 7 | -0.046 | [-0.093, -0.016] | 1.025 |
+| 8 | +0.003 | [+0.000, +0.008] | 1.026 |
+
+Two additional fitted seeds7/8 use the unchanged full p4/L2 configuration and16 passes. All four declared fits are shown. Development seed72001 selects the minimum across fixed passes; seed75001/64 suffix groups/256 targets is reserved for fixed selected models. No parameter, learning rate, stopping rule or evaluation setting is retuned on this set.
+
+0 of2 declared joint-versus-local gates pass. A seed must reach at least75%/.8bits and improve local credit by.05bits. Paired suffix bootstrap intervals are conditional on the fitted seed and synthetic generator; they are not a broad confidence interval over learning algorithms or tasks.
+
+Initial predictions, race choices and probabilities match within each joint/local pair. Inference mechanisms are identical. The differing training risk/credit objectives therefore test this terminal learning intervention, while protecting all earlier negative evidence.
+
+Zero-value evaluation removes delivered content while keeping native context, query/key races and contextual decoder. No fitting or model selection; every parameter is restored and verified afterwards. Three arms retain98.8–100% accuracy: native context has learned useful nonlocal prediction. Joint seed8 drops to75%. Value delivery is therefore not necessary in every selected fit; neither its training benefit nor a depth premium is isolated.
+
+Query-suffix/count bound only. The protected bank has fixed observed predecessor addresses and no learned writes; the standard bilinear decoder and exact terminal content credit do not establish deep core learning, clock-gradient accuracy or natural-text gains.
+
+## Appendix B. Confirmation fitting and inference resources
+
+| Seed / credit | Whole fit GFLOPs est. | Fit MFLOPs/query est. | Inference MFLOPs/query | Fit wall seconds |
+| --- | --- | --- | --- | --- |
+| s7 / joint | 0.2373 | 0.2318 | 0.0534 | 302.3 |
+| s7 / local | 0.2314 | 0.2260 | 0.0534 | 315.3 |
+| s8 / joint | 0.2380 | 0.2324 | 0.0534 | 307.6 |
+| s8 / local | 0.2320 | 0.2266 | 0.0534 | 309.0 |
+
+Every row fits64 distinct queries for16 passes:1,024 target presentations and256 Adam updates, all15 prefix events per query. Whole-fit and per-target columns share that denominator. First/last complete optimizer-window estimates include prefix/native races, all terminal candidate values, joint pair losses where applicable, backward, normalization/clipping and Adam. Measured wall and RSS are separate from FLOPs.
+
+All models have8 native receivers plus27 raw outcome addresses. Each query causes 60 native state commits and14 raw outcome writes. Terminal inference scores2C keys and delivers2 values. Joint training enumerates C² losses; both training arms inspect C candidate values. C depends on observed occupancy and is recorded in activity traces.
+
+Additional counterfactual arithmetic buys prediction improvement only where completed results support it. A quality advantage at this budget is not an iso-quality compute advantage; shorter or better-controlled local fits have not been optimized. No measured energy, candidate-discovery latency or hardware throughput claim is inferred.
+
+One guarded one-thread CPU job at a time, watchdog active,8GiB available-memory floor. Unique queues, checkpoints, source/data hashes and failed results preserved. This confirmation adds seed evidence for a small structured nonlocal relation, not architectural supremacy or superiority to an unrestricted count-memory algorithm.
+
+## Appendix B. A terminal symmetry, not a learning impossibility
+
+| Numerical contract | Completed result |
+| --- | --- |
+| Actual outcome bank | Uniform two-value law identical across second-bit alternatives |
+| Fixed zero-context risk | 1.000000bits |
+| Maximum decoder gradient | 6.939e-18 |
+| Maximum policy gradient | 0.000e+00 |
+| Analytic marker-policy witness | 6.921e-09expected bits |
+
+At query time the four distinguished outcome addresses contain b1,b2,1−b2,n0. Their multiset is b1,0,1,n0. Remaining entries depend only on the shared noise suffix. Uniform independent value reads therefore have the same full joint distribution for both second-bit alternatives. If additional context also lacks that bit, no decoder of those values can predict the balanced relation better than one bit.
+
+At zero residual, every candidate pair has the parent logit. Exact terminal key credit is initially zero. With fixed zero-logit uninformative context, uniform policies and balanced examples, decoder gradients are zero too. The actual bank and decoder contracts verify this conditional stationary point in float64 on four suffix groups. This is not a stationary-point proof for the whole trainable native core.
+
+An explicit target-independent existence witness selects marker addresses24/25 and interprets symbols0/1 as signed values. A bilinear interaction can predict their relation with very small expected loss. The witness is analytic and never enters the fitted model or benchmark score. Finite score clamps leave a nonzero routing error floor, so unlimited decoder confidence need not reduce unconditional expected loss.
+
+The useful solution and terminal symmetry coexist. Random key contrast may break the alias, which is compatible with late fitted transitions but does not prove their cause. A new controlled conditioning study must retain all seeds and mechanisms; these fixed confirmation fits are neither extended nor tuned after observation.
+
+Theory70 states the information conditions and proof. Numerical result records source hashes, targets, wall and RSS. The obstruction concerns addressed value pooling and terminal initialization; it does not imply that all counting, temporal computation or architectural adaptation faces a mathematical ceiling.
+
+## Appendix B. Practical headroom: a stronger joint-event table
+
+| Fixed table evaluation | Queries | Accuracy | NLL | Maximum accuracy headroom |
+| --- | --- | --- | --- | --- |
+| development | 256 | 99.609% | 0.051632 | 0.391pp |
+| confirmation | 1024 | 99.512% | 0.055258 | 0.488pp |
+
+This control consumes observed timestamps as well as text. It retains the complete question string and the latest observed time for each of four marks. A generic fit learns one mark-age split per question: which mark, threshold, split direction and both leaf probabilities. The generator word/mark mapping and recency threshold are not supplied.
+
+Same512 distinct fitting episodes/seed1301,one fitting pass,20 question strings; fit wall0.027026s,maxRSS67,940KiB. Fixed learner; dev2301/256 and confirmation3301/1,024 episodes do not tune it. Contracts verify label mutation, appended future observations and common clock shifts cannot change causal prediction features.
+
+Less than half a percentage point of accuracy headroom remains. The proposed20-point learned-control advantage gate is impossible against this reference on these episodes, even for a perfect learner. A gain over the time-blind table would therefore measure extra supplied information rather than demonstrate the requested practical advantage.
+
+The joint recency task remains a capability and mechanism diagnostic. Likelihood may still improve; neither saturated accuracy nor tiny fitting cost supports general supremacy. Strong real-stream calibration with causal common inputs takes priority. Old successful mechanism evidence and negative results are preserved.
+
+Logical content inspections, timestamp writes, age subtraction, sorting comparisons, threshold candidates, count/probability work and wall are saved. They are not converted to neural FLOPs. Full question lookup is a task-specific conventional control, not a general language model or the integrated research architecture. Theory72 records scope.
+
+>>>>>>> c183ca5 (Publish complete controlled learning and practical headroom evidence)
 ## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
 
 Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact local statistics, a small learned base should lose far less than the carrier alone does.
