@@ -455,7 +455,7 @@ On the identical 131K-character/four-pass screen, widening the gated model buys 
 
 The fixed-capacity data comparison and fixed-data capacity comparison answer different questions. Equal passes and data do not imply equal compute. The pipeline checks finite learning, trained value blocks, complete work and source provenance before promotion. A development gain is not an official-test or frontier claim.
 
-Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated Kneser–Ney counts of the same fitting characters score 2.349 bpc at 131K and 2.007 at 1M, with one counting pass and no gradient work. Every completed fit from 2K to 1M characters is above this bar. Small-N character modelling is limited by estimation; fixed learned gates under truncated credit cannot be consistent per-address estimators, which motivates count-carrying receivers with escape races and a learned base measure. Counts are reference predictors, not neural controls or a large-data comparison.
+Count reference (Theory §§376–380): on the same 8,191 development targets, interpolated Kneser–Ney counts of the same fitting characters score 2.349 bpc at 131K and 2.007 at 1M, with one counting pass and no gradient work. Every completed earlier fit without count-carrying receivers from 2K to 1M characters is above this bar. The fixed-step estimator analyzed in Theory §377 has a variance floor; this is not an impossibility theorem for learned recurrent gates or short credit. It motivates testing count-carrying receivers with escape races and a learned base measure. Counts are reference predictors, not neural controls or a large-data comparison.
 
 Precise clocks; float32 payloads; causal persistent state; 64-character credit horizon. Special functions, evaluation passes and physical traffic are separate from the arithmetic ledger. One seed, no statistical experts. Source: experiments/results/parallel_language.
 
@@ -747,18 +747,18 @@ Completed integrated pilots only. Protected modes retain information during sile
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
 | Ours S16 shared/P0/observed/s7 | 44.53 | 1.3721 | 0.262 | 0.511 | 0.110 |
+| Ours S16 shared/P2/observed/s7 | 26.17 | 1.3999 | 0.253 | 0.494 | 0.107 |
 | Ours S16 private/P0/observed/s6 | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
 | Ours S16 private/P2/observed/s6 | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
 | Ours S16 shared/P0/observed/s6 | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
-| Ours S16 shared/P2/observed/s6 | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
 | Ours S16 shared/P0/observed/s7 | 128/256/4 | 14,180 | 512 | 16/32 |
+| Ours S16 shared/P2/observed/s7 | 128/256/4 | 13,988 | 512 | 16/32 |
 | Ours S16 private/P0/observed/s6 | 128/256/4 | 157,940 | 512 | 16/32 |
 | Ours S16 private/P2/observed/s6 | 128/256/4 | 155,828 | 512 | 16/32 |
 | Ours S16 shared/P0/observed/s6 | 128/256/4 | 14,180 | 512 | 16/32 |
-| Ours S16 shared/P2/observed/s6 | 128/256/4 | 13,988 | 512 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
 
@@ -768,6 +768,7 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
+| Ours S16 shared/P2/observed/s6 | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
 | Ours S4 private/P0/observed/s6 | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P2/observed/s6 | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
 | Ours S4 shared/P0/observed/s6 | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
@@ -775,6 +776,7 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
+| Ours S16 shared/P2/observed/s6 | 128/256/4 | 13,988 | 512 | 16/32 |
 | Ours S4 private/P0/observed/s6 | 128/256/4 | 42,932 | 128 | 16/32 |
 | Ours S4 private/P2/observed/s6 | 128/256/4 | 42,356 | 128 | 16/32 |
 | Ours S4 shared/P0/observed/s6 | 128/256/4 | 14,180 | 128 | 16/32 |
@@ -789,16 +791,32 @@ Completed integrated pilots only. Protected modes retain information during sile
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
 | Ours S4 private/P0/observed/s7 | 90.23 | 0.3483 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/observed/s8 | 91.80 | 0.1989 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P0/rank/s7 | 50.00 | 0.7153 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank/s8 | 50.00 | 0.7151 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P0/observed/s6 | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/observed/s8 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank/s8 | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/observed/s6 | 128/256/4 | 42,898 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: paired_timing
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
 | Ours S4 private/P0/rank/s6 | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P2/observed/s6 | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
-| Ours S4 private/P0/observed/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P0/rank/s7 | 128/256/4 | 42,898 | 128 | 16/32 |
-| Ours S4 private/P0/observed/s6 | 128/256/4 | 42,898 | 128 | 16/32 |
 | Ours S4 private/P0/rank/s6 | 128/256/4 | 42,898 | 128 | 16/32 |
 | Ours S4 private/P2/observed/s6 | 128/256/4 | 42,322 | 128 | 16/32 |
 
@@ -808,9 +826,9 @@ Exact full fitting includes producer graphs, losing proposals, backward, clippin
 
 Shared S16/P0 order replications: seed7: 44.53%. The original seed6 screen was75.39%; training-seed variation remains material. Private S16 replication controls and fresh-population confirmation are required for the paired sharing claim; a completed shared-only score cannot pass that gate.
 
-Observed-time paired replications: seed7: 90.23%. Original seed6 was95.31%, with the exact rank-only paired ceiling50%. These reuse the development distribution and were chosen after seed6; they are training-seed evidence, not independent confirmation.
+Observed-time paired replications: seed7: 90.23%, seed8: 91.80%. Original seed6 was95.31%, with the exact rank-only paired ceiling50%. These reuse the development distribution and were chosen after seed6; they are training-seed evidence, not independent confirmation.
 
-3 of8 reserved replication pilots are complete in this checkout. Every completed seed is listed in the preceding common-unit tables; pending cells carry no score. The frozen AWS replication/confirmation chain owns the remaining work; no local duplicates.
+6 of8 reserved replication pilots are complete in this checkout. Every completed seed is listed in the preceding common-unit tables; pending cells carry no score. The frozen AWS replication/confirmation chain owns the remaining work; no local duplicates.
 
 ## Appendix B. Persistent-write credit diagnosis
 
@@ -1275,6 +1293,8 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 
 Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The untrained-base row isolates what training the native base adds. Count rows are dev-selected-order references, not neural controls. Exploratory development evidence; no comparable-quality Transformer claim.
 
+At 2,048 fitting characters, fitting the native base and escape parameters improves 0.0071 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
 ## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
 
 Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact local statistics, a small learned base should lose far less than the carrier alone does.
@@ -1284,6 +1304,12 @@ Labelled diagnostic, not the integrated native architecture. The input-gated tem
 | Carrier alone w32 | 131,072/4 | 2.848 | 80.9 | 0.154 | 0.0494 |
 | Carrier + counts K5 w32 | 131,072/4 | 2.313 | 82.3 | 0.157 | 0.0504 |
 | Same, untrained base w32 | 131,072/0 | 2.371 | Not trained | Not trained | 0.0504 |
+| Carrier alone w128 | 131,072/4 | 2.587 | 1046.7 | 1.996 | 0.6389 |
+| Carrier + counts K5 w128 | 131,072/4 | 2.313 | 1048.1 | 1.999 | 0.6399 |
+| Same, untrained base w128 | 131,072/0 | 2.370 | Not trained | Not trained | 0.6399 |
+| Carrier alone w256 | 131,072/4 | 2.572 | 4025.5 | 7.678 | 2.4571 |
+| Carrier + counts K5 w256 | 131,072/4 | 2.316 | 4026.9 | 7.681 | 2.4580 |
+| Same, untrained base w256 | 131,072/0 | 2.370 | Not trained | Not trained | 2.4580 |
 | KN counts, frozen o5 | 131,072/1 | 2.349 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o4 | 131,072/1 | 2.346 | Not FLOPs | Not FLOPs | Not FLOPs |
 

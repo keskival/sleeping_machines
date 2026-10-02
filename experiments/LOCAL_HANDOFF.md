@@ -1,5 +1,16 @@
 # Local host: current research continuation
 
+## Count composition diagnosis and §389 repair (host curie), 2 October, 02:25 UTC
+
+Composed carrier+counts 131K: 2.313/2.313/2.316 at w32/w128/w256. Bases alone are 8.17/11.34 bpc
+(scratch check from the progress checkpoints), so the base is inert: it never sees the counts (§389).
+New zero-init nested repairs are in sleeping_machines/count_escape_gate.py (CountMessage, EscapeGate)
+with 6 contract tests. Running in tmux `curie_count_message_gate`, queue
+curie_count_message_gate_20261002T032000Z: contracts, smoke, then integrated native 2K with both repairs,
+message-only and gate-only, then the unchanged 8K scalar reference. The 031500Z 8K queue was superseded
+before launch. Gates: both-repairs beats 2.734 by >= .02, base alone < 4.75, gate-only < .02. Next if they
+pass: 8K with the repairs, then the credit horizon/retrieval work needed for equivalent order above count-optimal.
+
 ## Count calibration and sufficient-statistic theory (host curie), 2 October, 01:20 UTC
 
 Guarded queue `curie_count_reference_language_20261002T012000Z` scored closed-form

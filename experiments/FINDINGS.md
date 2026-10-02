@@ -1,5 +1,19 @@
 # Findings log
 
+## Count receivers over the temporal carrier, 131K: base inert (diagnostic) — 2 October
+
+Labelled diagnostic (carrier base, not the integrated native model; seed 6, dev only).
+Count receivers K5 composed over the input-gated carrier score **2.313 / 2.313 /
+2.316 dev bpc at w32 / w128 / w256** (82 / 1,048 / 4,027 whole-fit GFLOPs). Carrier
+alone: 2.848 / 2.587 / 2.572. Frozen KN o5 2.349; stream-adaptive counts 2.346.
+Predeclared P1 (w128 < 2.326) and P2 (composed width gap < half the carrier gap .276)
+both hold formally. **Revised interpretation (Theory §389):** the trained bases
+alone score 8.17 (w32) and 11.34 (w128) bpc, worse than uniform, and an untrained
+base composes to 2.371. The width-insensitivity therefore reflects a base that
+cannot see the count state whose residual it must supply. It is not evidence of
+memorization-tax relief. Repairs (count message into base logits; state-dependent
+escape gate), both exactly nested, are queued as an integrated native 2K test.
+
 ## Count-carrying native receivers, 2K — 2 October
 
 The unchanged native core composed with order-1..4 count receivers (escape-race
