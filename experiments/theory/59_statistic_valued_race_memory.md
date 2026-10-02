@@ -782,3 +782,15 @@ above the table bar by ≥ 20 points.
 longest rung, while ours stays within 1.5×. (P395b) The Δt-GRU's accuracy falls by ≥ 10 points across the ladder.
 (P395c) Ours stays within 5 points of its base accuracy. P395c is the risky one: it requires the addressed
 persistent state and race selection to protect the binding from distractors.
+
+**§392 top-placement result (2 October, 13:52 UTC): falsified as implemented.** Top-placed pooled memory
+(M = 64, sampled writes, 8K, seed 6) scores 3.471 (minimal) / 3.492 (shallow) / 3.474 (full), against 2.59
+for bottom placement and gate-only. Every core size is badly worse, so P392a′/b′ fail. Diagnosis: the
+specificity ordering assumes the more specific level holds fewer counts. With 64 receivers pooling about 128
+counts from unrelated contexts each, an untrained pooled receiver is *less* specific than an order-4 suffix
+(nearly a unigram), yet with n_a large it claims nearly all mass on top of the exact cascade. Four passes did
+not separate the routing. The construction can only work once routing creates receivers that really are more
+specific than the exact suffixes. Before that, a learned evidence gate must decide between the pooled level and
+the exact cascade (a parallel expert with a per-position responsibility, as in the escape gate), not a fixed
+ordering. Both placements are recorded. Following the §394 calibration rule, further pooled-memory work moves
+to tasks where pooled generalization is needed, not small-data language, where counts are near-optimal.
