@@ -436,3 +436,30 @@ state and the evidence features set `D_k, θ_k` per position lets learning act w
 wrong. The information-path argument may still matter where residuals are context-specific at larger N.
 The 131K carrier test therefore runs gate-only and both-repairs side by side. The integrated promotion
 candidate is the gate-only native receiver, next at 8K.
+
+**Attribution, 2 October 05:10 UTC: the gate gains are learned count smoothing, not temporal-core
+learning.** Minimal-core controls with identical cascades (seed 6, dev only; unit-special whole-fit GFLOPs):
+
+| Setting | Full core | Minimal core | Work ratio |
+|---|---:|---:|---:|
+| Native + gate, 2K | 2.695 (3.824) | 2.694 (0.072; p2/d1, 467 params) | 53× |
+| Native + gate, 8K | 2.601 (15.31) | **2.588** (0.288) | 53× |
+| Carrier + gate, 131K | 2.136 w32 / 2.130 w128 | 2.178 (3.6; w2/d1, 232 params) | 23× / 290× |
+| Carrier + gate + message, 131K | 2.127 w32 / 2.129 w128 | **2.124** (20.5; 7.5K params) | 5× / 52× |
+
+A near-empty base with a per-position learned escape and per-order `A×A` count maps beats KN (2.349)
+and stream-adaptive counts (2.346) by .22 bpc at 131K. That is a useful, cheap, causal learned smoother,
+and it belongs to the sufficient-statistic memory (§§377–379). It is not evidence for the temporal core.
+At 2K–8K the native core adds nothing over a minimal core, and at 131K the carrier adds at most what
+the count maps already supply. With the gate, the base predictive works only as a feature of local
+smoothing.
+
+**Consequence for the research direction.** The binding problem is the one §388 named: learned components
+do not yet capture information beyond the count orders (equivalent order below count-optimal). The
+count tables now set a high and cheap floor, so any temporal, retrieval or word-level mechanism must
+beat the *minimal-core* composition, not the scalar one. That is the acceptance control from now on. The
+full-core 32K run, now in progress, has its matched minimal-core control queued. A core contribution
+must appear as full < minimal by ≥ .02. Mechanisms aimed at the gap, all to be tested against this
+control: longer credit horizons; content retrieval (copy/induction over persistent addressed state,
+§384); and learned keys pooling contexts by evidence (§382), so the core supplies generalization the
+counts cannot.

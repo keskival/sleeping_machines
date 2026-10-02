@@ -1,5 +1,19 @@
 # Findings log
 
+## Attribution: gate gains are learned count smoothing; temporal core adds nothing yet — 2 October
+
+Minimal-core controls (same cascade and gate, seed 6, dev only; unit-special whole-fit GFLOPs):
+native 2K full 2.695 / 3.82 vs minimal (payload 2, depth 1) **2.694 / 0.072**; native 8K full
+2.601 / 15.31 vs minimal **2.588 / 0.288**. At 131K the carrier with gate scores 2.136 (w32)
+and 2.130 (w128); a 2-wide one-layer base scores 2.178. With gate + count message, w32 2.127,
+w128 2.129, minimal **2.124 / 20.5** (vs 1,067 for w128). The repaired compositions beat KN
+(2.349) and stream-adaptive counts (2.346) at 131K by about .22. That gain belongs to a cheap
+learned count smoother, **not** to the temporal core. The earlier 2K/8K gate entries remain
+valid as measurements. Their attribution to "the native learner" is revised here. The native
+core does not yet learn information beyond what local count tables plus a small gate provide.
+Minimal-core composition is now the acceptance control for every temporal/retrieval mechanism
+(Theory §389 attribution).
+
 ## Escape gate at native 8K: learned contribution grows with data — 2 October
 
 Same integrated native receiver + K4 counts, 8K fit, seed 6, 8,191 dev targets.
@@ -7,8 +21,8 @@ Scalar escape **2.671** bpc / 15.23 whole-fit GFLOPs (untrained 2.682);
 escape gate **2.601** / 15.31. Stream-adaptive counts 2.699; native alone 3.557.
 The gate beats the scalar cascade by .070 (2K: .039) and the counts by .098, for
 0.6% more counted work. Training adds .081 over the untrained composition (2K:
-.046; scalar 8K: .011). The learned share rises with data, as §387 requires
-for a useful residual learner. Single seed, development only. The 32K gate and
+.046; scalar 8K: .011). The learned share rises with data. *Revised below: a minimal core reaches 2.588, so this learned
+share is count smoothing, not temporal-core learning.* Single seed, development only. The 32K gate and
 scalar stages are queued.
 
 ## Escape gate lets the native learner override count tables, 2K — 2 October
