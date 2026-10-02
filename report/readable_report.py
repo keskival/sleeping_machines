@@ -1895,6 +1895,37 @@ def blocks(M, tasks, ev):
          'refitted controls and independent seeds determine further scaling. Theory §§330–336; '
          'completed results and the executable priority appear in Appendix B.')])
 
+    if tasks.get('joint_outcome'):
+        relation=tasks['joint_outcome'][-1]
+        rows={row['arm']:row for row in relation['common_unit_ledger']}
+        j,l,s=[rows[key] for key in ('joint_full','local_full','joint_shallow')]
+        blocks=[('h1','Useful old evidence: a completed joint-learning intervention'),
+            ('p',f"Protected outcome state and two learned key/value races reach "
+             f"{100*j['fresh']['accuracy']:.2f}% on new suffixes, versus "
+             f"{100*l['fresh']['accuracy']:.2f}% with matched local-credit training. "
+             'The query suffix and its actual count inputs are identical within each opposite-label '
+             'group. Predicting the distant relation therefore requires additional observed evidence.'),
+            ('figure',('report/figures/'+relation['args']['tag']+'_learning.png',173)),
+            ('p',f"Reserved loss:{j['fresh']['query_bits']:.3f} versus {l['fresh']['query_bits']:.3f}bits/query. "
+             f"All1,024 fitting presentations, complete prefix and optimizer work charged: "
+             f"{j['whole_fit_gflops_estimate']:.4f} versus {l['whole_fit_gflops_estimate']:.4f}GFLOPs estimated. "
+             'Joint training teaches the loss of candidate pairs; inference delivers only two values '
+             'after scoring all occupied keys. Initial models and inference mechanisms match.'),
+            ('p',f"Shallow joint reaches{100*s['fresh']['accuracy']:.2f}% at "
+             f"{s['whole_fit_gflops_estimate']:.4f}GFLOPs. This task supports protected evidence and "
+             'terminal joint learning; useful extra core depth is not established. Earlier native/tapped '
+             'fits and frozen readout failures remain in the appendix.'),
+            ('small','One fitted seed,128 reserved synthetic queries. Observed predecessor addresses '
+             'are fixed; terminal content-risk derivatives are exact conditionally, earlier native '
+             'route derivatives remain scoped. The bound concerns query-count inputs, not all counting. '
+             'No natural-language or iso-quality resource superiority is inferred.')]
+        if tasks.get('joint_replication'):
+            confirmation=tasks['joint_replication'][-1]
+            blocks.insert(-1,('p',f"Unchanged seed7/8 confirmation: "
+                f"{'both declared gates pass' if confirmation['confirmation_gate_passed'] else 'both declared gates do not pass'}. "
+                'All four arms and delivered-value interventions are reported separately in the appendix; '
+                'the new suffix set does not select settings.'))
+        pages.append(blocks)
     full_rows=tasks['language_full_sparse']
     full_blocks=[
         ('h1','Ours: the integrated sparse temporal language experiment'),

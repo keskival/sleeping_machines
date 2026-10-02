@@ -13,6 +13,45 @@ AWS_JOINT_EVENT_CONTROLS.md. Native AddressedEventHeads sources do not exchange 
 sharing is a future architectural option; the pilot uses one address. Batched training path
 (fast_native_core, contract-equal) is used by the joint driver. §392 top-placed pooled series finishes first.
 
+## Completed relation advantage; fixed confirmation active, 2 October13:17 UTC
+
+Plan `queue/local_joint_outcome_20261002T125700Z.json` is completed, with all
+three fits and reserved fixed-model evaluation in
+`results/diagnostics/local_joint_outcome_20261002T125700Z_analysis.json`.
+Full joint/local:0.101897516/0.749780357bits,96.09375/78.125% on seed74001,
+32suffix groups/128queries. Joint/local gain0.647883bits; conditional paired
+suffix interval[0.398637,0.914683]. Full versus shallow gain0.017362bits,
+not evidence that core depth earns its work. Shallow95.3125%/0.119259bits.
+
+All arms fit64 distinct queries for16 passes,1,024 target presentations,
+256updates. Full joint/local/shallow whole-fit estimates0.237875456/
+0.231934208/0.153391616GFLOPs; per-target0.23230025/0.22649825/0.1497965MF;
+inference0.053408/0.053368/0.036098MF per complete15-event query.
+Joint costs2.56% more estimated fitting arithmetic than matched local.
+Full native capacity8receivers,60commits/query; shallow4/30. All use27raw
+addresses,mean10.5625occupied,14rawwrites/query,2Cterminal key scores,
+2deliveries,Cshared losing candidate values during fitting,mean112.0625
+pair losses for joint. Fixed observed predecessor addresses, no learned
+write route, no whole-core exact-gradient/depth/language/supremacy claim.
+
+Native/tap/full/shallow balanced stage and frozen readout failures remain
+saved beside this positive result. Reporter source now ingests completed
+stages; generated PDF/REPORT remain the previous publication until guarded
+rendering succeeds. Both older report evidence and all old results persist.
+
+Active confirmation: `queue/local_joint_confirmation_20261002T131700Z.json`,
+tmux `local-joint-confirmation-20261002T131700Z`. Four unchanged full-depth
+fits:joint/local s7,then joint/local s8. All selected fixed checkpoints score
+new seed75001/64groups/256queries, plus delivered-value-zero intervention
+with exact parameter restoration. No retuning or weak-seed extension.
+Theory69 declares gates and scope. Frozen model/driver/analysis/plan source
+hashes must remain unchanged. Main,one safe one-thread job,RSS1.25MKiB,
+VMS3MKiB,8GiB MemAvailable floor; observed pilots~353MiB and>=11GiB free.
+Next: finish every confirmation fit, report both seeds and any gate failure,
+publish combined report through unique guarded queue, then final interpretation.
+Other-host language pooling/evidence-strata and AWS dense/capacity work remain
+unduplicated.3stashes intact; no rebase or unmerged index was present.
+
 ## Protected outcome/joint-credit test admitted, 2 October, 12:57 UTC
 
 Balanced native/tapped/full/shallow cycle and frozen query-readout diagnostic

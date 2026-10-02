@@ -5,6 +5,20 @@ numerically (table at the end) before later experiments rely on it.
 
 ## Synthesis: the principles so far (read this first)
 
+**Completed conditional joint-learning result (2 Oct):** [protected outcome
+races](theory/68_joint_addressed_outcome_races.md) learn the balanced distant
+relation on reserved suffixes: full joint0.101898bits/96.09%, matched local
+0.749780bits/78.13%; identical inference initialization and1,024 fitting
+presentations. Full joint estimated fitting work0.237875GFLOPs versus
+local0.231934GFLOPs (2.56% extra). Shallow joint0.119259bits/95.31% for
+0.153392GFLOPs: useful extra core depth is not established here. The restricted
+query-count bound is1bit, not a bound on all counting. Earlier native/tap and
+frozen-readout failures remain preserved. [Fixed confirmation](theory/69_joint_credit_confirmation.md)
+uses new fit seeds7/8 and new suffix seed75001 without retuning; pending fits
+are not additional evidence. This is a protected-state/conditional-credit
+diagnostic, with fixed observed addresses, not a natural-language superiority
+or exact whole-core gradient claim.
+
 **Calibration first (2 Oct, §§376–381):** [sufficient-statistic state, escape races and count references](theory/58_sufficient_statistic_state_and_count_references.md). Closed-form Kneser–Ney counts beat every completed fitted language model on the shared protocol at 2K–1M fitting characters, and counting over the development stream alone scores 2.884 bpc. It proves fixed learned gates cannot be consistent per-address estimators, shows hierarchical backoff is an exact cascade of escape races, derives responsibility-gated credit for a learned base measure, and proposes count-carrying receivers. [Note 59](theory/59_statistic_valued_race_memory.md) (§§382–392) extends it: learned race keys over statistic-valued receivers make counterfactual route and write credit exact and cheap.
 
 Latest empirical design update: [what the completed October 1 results change](theory/RESULTS_DESIGN_UPDATE_20261001.md).

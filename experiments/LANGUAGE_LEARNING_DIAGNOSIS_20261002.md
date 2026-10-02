@@ -1,5 +1,39 @@
 # Language representation and credit: evidence before repair
 
+## October2 completed intervention and current interpretation
+
+The new balanced joint-learning task matches actual query count vectors for
+orders0–8 and unigram totals within every quartet. Native full and learned
+delay full/shallow fits stay at chance; frozen affine/degree2 readouts and
+individual-bit probes fail on fresh suffixes too. This strengthens the case
+for testing evidence access instead of inferring useful depth from gradient
+reach or feature norms. It does not prove an information-erasure theorem.
+
+Protecting generic observed predecessor–successor outcomes and adding two
+learned key/value query races gives a positive result. With a bilinear decoder,
+exact conditional terminal pair risk learns96.09%/0.101898bits on reserved
+seed74001/128 targets versus78.13%/0.749780bits for matched local-credit
+training. Both infer through the same construction and initialize identically.
+Joint fitting costs0.237875 versus0.231934GFLOPs estimated, all1,024 target
+presentations, full prefix and optimizer included. This attributes improvement
+to the terminal risk/credit intervention, not solely the credit estimator or
+a general autograd fix. Earlier native core routes still use the scoped
+surrogate; observed address writes are fixed, not learned.
+
+The shallow joint model scores95.31%/0.119259bits at0.153392GFLOPs, so this
+task does not establish a useful full-depth premium. Learned full routes often
+select addresses24/0; shallow24/1, rather than assuming marker24/25 discovery.
+Raw outcome information at other addresses can encode the second bit.
+Prediction quality, actual selected values and credit are separate evidence.
+
+Counts are expected to excel in their favorable local regime. The1bit bound
+here concerns identical query suffix/count inputs, not arbitrary count-memory
+inspection. These controlled synthetic results do not demonstrate natural-text
+advantage. They refute an architectural impossibility claim on this relation
+and motivate contextual protected evidence plus charged joint learning.
+Unchanged seed7/8 pairs and frozen delivered-value erasure are running under
+the one-job guard; their reserved seed75001 result remains pending.
+
 The user's concern is whether learned language representations have lost useful
 depth and reduced to surface counting. The current integrated model, the older
 temporal carrier and the carrier/count composition are different constructions.
