@@ -1,0 +1,110 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_credit_comparison_state_clock_20261002T174600Z",
+    "reference": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+    "treatment": "experiments/results/dvs_native/local_dvs_state_clock_pilot_s6_20261002T174300Z.json",
+    "kind": "state_clock",
+    "maximum_work_ratio": 1.5
+  },
+  "common_unit_ledger": [
+    {
+      "arm": "local",
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.5416666666666666,
+      "development_nll": 1.3059374957034986,
+      "whole_fit_gflops_estimate": 2.28569632,
+      "fit_mflops_per_presentation_estimate": 2.2321253125,
+      "inference_mflops_per_target_estimate": 0.591737,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 168.0,
+      "selected_updates_per_fit_presentation": 84.0,
+      "counterfactual_values_per_fit_presentation": 168.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.7942547844722867,
+          "accuracy": 0.3854166666666667
+        },
+        {
+          "epoch": 2,
+          "nll": 1.5219685196255643,
+          "accuracy": 0.4479166666666667
+        },
+        {
+          "epoch": 3,
+          "nll": 1.317523285203303,
+          "accuracy": 0.5729166666666666
+        },
+        {
+          "epoch": 4,
+          "nll": 1.3059374957034986,
+          "accuracy": 0.5416666666666666
+        }
+      ],
+      "wall_s": 94.46436668199749,
+      "max_rss_kb": 347060
+    },
+    {
+      "arm": "state_clock",
+      "result": "experiments/results/dvs_native/local_dvs_state_clock_pilot_s6_20261002T174300Z.json",
+      "result_sha256": "49f0131324c4b206a3a8e1b8eb2dfd436105417ab46196af023e4f8008d3229d",
+      "distinct_fit_targets": 256,
+      "fit_presentations": 1024,
+      "development_accuracy": 0.4739583333333333,
+      "development_nll": 1.4506872955244035,
+      "whole_fit_gflops_estimate": 3.060637952,
+      "fit_mflops_per_presentation_estimate": 2.98890425,
+      "inference_mflops_per_target_estimate": 0.591849,
+      "parameters": 15523,
+      "available_receivers": 8,
+      "key_scores_per_fit_presentation": 336.0,
+      "selected_updates_per_fit_presentation": 168.0,
+      "counterfactual_values_per_fit_presentation": 336.0,
+      "curve": [
+        {
+          "epoch": 1,
+          "nll": 1.894508112842838,
+          "accuracy": 0.390625
+        },
+        {
+          "epoch": 2,
+          "nll": 1.545211799442768,
+          "accuracy": 0.453125
+        },
+        {
+          "epoch": 3,
+          "nll": 1.6854102263847988,
+          "accuracy": 0.3697916666666667
+        },
+        {
+          "epoch": 4,
+          "nll": 1.4506872955244035,
+          "accuracy": 0.4739583333333333
+        }
+      ],
+      "wall_s": 99.31374112000049,
+      "max_rss_kb": 347668
+    }
+  ],
+  "nll_improvement": -0.14474979982090486,
+  "accuracy_decline_percentage_points": 6.770833333333331,
+  "whole_fit_work_ratio": 1.3390396288514828,
+  "promotion_gate_passed": false,
+  "gate": {
+    "minimum_nll_improvement": 0.02,
+    "maximum_accuracy_decline_pp": 1,
+    "maximum_work_ratio": 1.5,
+    "maximum_rss_kb": 900000
+  },
+  "source_sha256": {
+    "experiments/dvs_credit_comparison.py": "96f7b4045900a85a5a678deb5a29fd2755cef916f40e10bed1f87f43ca7e0187"
+  },
+  "wall_s": 0.021163552002690267,
+  "max_rss_kb": 19476,
+  "scope": "Single-seed fixed256-fit/192-dev/four-pass screen, minimum devNLL selection. Every branch replay and optimizer charged. Full984-fit strong controls have unequal fitting data and remain separate references. No official test, confirmation or practical superiority claim."
+}
