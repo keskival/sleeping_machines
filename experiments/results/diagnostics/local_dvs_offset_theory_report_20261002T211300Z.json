@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_offset_theory_report_20261002T211300Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_branch_exposure_audit_20261002T203600Z.json",
+      "experiments/results/diagnostics/local_race_teacher_expectation_contracts_20261002T204000Z.json",
+      "experiments/results/diagnostics/local_dvs_evolution_offset_comparison_s6_20261002T210100Z.json",
+      "experiments/results/diagnostics/local_dvs_evolution_offset_comparison_s7_20261002T210800Z.json",
+      "experiments/results/diagnostics/local_credit_geometry_contracts_20261002T211000Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_branch_exposure_audit_20261002T203600Z.json": "68c5da514a7900ca75100969eb5d3b1ade5bd6d422b228e40b16e65a4b027fb9",
+    "experiments/results/diagnostics/local_race_teacher_expectation_contracts_20261002T204000Z.json": "896c2c98876c05d32e86de999ce9506bacb28a2af41e4e09b232721f893bf057",
+    "experiments/results/diagnostics/local_dvs_evolution_offset_comparison_s6_20261002T210100Z.json": "d29b48a5c4f5fa0d1fd96b6582e684d50c0fe8884b63e77dcf7466c05c2285e5",
+    "experiments/results/diagnostics/local_dvs_evolution_offset_comparison_s7_20261002T210800Z.json": "b46c25d3084965abbe2d86916543b5e0722dfaae1a4cf58b3d7bf30cd20f6f85",
+    "experiments/results/diagnostics/local_credit_geometry_contracts_20261002T211000Z.json": "bd5562a7921fb4154a47d5c565bfdfccf74ecb83da077503681dff1973eae31d"
+  },
+  "pdf_pages": 140,
+  "wall_s": 22.14632867000182,
+  "max_rss_kb": 65308,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "7cdc43e26876c1662dcec1ece31e17e12465a7b20b8b0d98130415c3ae0fc312",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}

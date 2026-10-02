@@ -54,8 +54,9 @@ exact-pi work and AWS large Transformer comparisons stay separately owned.
 Host curie CPU-only,11.5GiB available; one-job lock, one thread/nice19,
 3,000,000KiB VMS/1,250,000KiB RSS watchdog and8GiB available-memory floor.
 No active training after confirmation. Main branch; no unresolved index conflict,
-three stashes preserved. Report rendering is pending; canonical older report
-remains until completed validated publication replaces it.
+three stashes preserved. Publication211300Z completes21:09:24 UTC:140-page canonical PDF and REPORT.md
+retain both seeds, diagnostics, corrected teacher scope, contracts and theory91.
+PDF bounds/orphans and git diff checks pass; prior134-page evidence is archived.
 
 ## Bird's-eye decision and failed confirmation, 2 October20:20 UTC
 
