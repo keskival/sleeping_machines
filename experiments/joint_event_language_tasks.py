@@ -7,7 +7,8 @@ characters 0..26 (text8 alphabet), marks 27..30 (four event types), query flag 3
   phase T   spelled question "[filler ]is <word> recent" (word names a mark), characters at irregular
             intervals, with some background events interleaved
   phase B   the last event of the named mark, then k in {0..3} distractor events of other marks
-  query     label 1 iff (query time - last named-mark time) < DELTA
+  query     v1 (retired): label 1 iff (query time - last named-mark time) < DELTA; v2 (current): label 1 iff
+            that elapsed time lies in an even band of width DELTA (see episode_v2)
 
 Offsets: [.3, .95]*DELTA for label 1 and [1.05, 2.5]*DELTA for label 0; labels balanced; k and text placement
 are drawn independently of the label, so time-blind and rank-only information is at chance by construction.
@@ -59,11 +60,49 @@ def episode(rng, label=None, background=(2, 6)):
     return events
 
 
-def episodes(n, seed, background=(2, 6)):
-    """background = [low, high) count of phase-A events: the history-length knob (default = pilot data)."""
+def episode_v2(rng, label, background=(2, 6)):
+    """v2 (THEORY §394 revision): label = phase of the named mark's exact elapsed time.
+
+    Built backwards from the query Q.  Each mark's last occurrence lies in one of six bands of width DELTA
+    (0.1*DELTA from every band edge); exactly two marks are in even bands and two in odd bands.  Label 1 iff the
+    named mark's band is even.  So every text-blind statistic (per-mark elapsed multiset, time since the last
+    event, time since the last character) is label-independent, and recency rank is only weakly informative
+    (a measured bar): the label needs exact elapsed time.  The question ends 6*DELTA + U(.3, 2) before Q, before
+    every last occurrence; background events precede it.
+    """
+    named = int(rng.integers(4))
+    others = [m for m in range(4) if m != named]
+    rng.shuffle(others)
+    even = ([named, others[0]] if label else others[:2])
+    band = {m: int(rng.choice((0, 2, 4) if m in even else (1, 3, 5))) for m in range(4)}
+    offsets = {m: DELTA * (band[m] + rng.uniform(.1, .9)) for m in range(4)}
+    words = [str(rng.choice(FILLERS))] if rng.random() < .5 else []
+    text = ' '.join(words + ['is', WORDS[named], 'recent'])
+    text_end = -(6 * DELTA + rng.uniform(.3, 2.))
+    gaps = rng.uniform(.05, .3, len(text))
+    char_times = text_end - np.concatenate([np.cumsum(gaps[::-1])[::-1][1:], [0.]])
+    events = []
+    t = char_times[0] - rng.uniform(.3, 2.)
+    background_times = t - np.cumsum(rng.uniform(.3, 2., int(rng.integers(*background))))[::-1]
+    for bt in background_times:
+        events.append(Event(0, float(bt), one_hot(MARK0 + int(rng.integers(4)))))
+    for c, ct in zip(text, char_times):
+        events.append(Event(0, float(ct), one_hot(char_index(c))))
+    for m in range(4):
+        events.append(Event(0, float(-offsets[m]), one_hot(MARK0 + m)))
+    events.sort(key=lambda e: e.time)
+    events.append(Event(0, 0., one_hot(QUERY), label))
+    origin = events[0].time - rng.uniform(.1, 1.)                  # shift so time starts near zero
+    return [Event(e.source, e.time - origin, e.mark, e.target) for e in events]
+
+
+def episodes(n, seed, background=(2, 6), version=2):
+    """background = [low, high) count of background events (history length).  version 1 = the retired pilot task
+    (time since the last character leaks the label, 97.4% text-blind); version 2 is the corrected task."""
     rng = np.random.default_rng(seed)
     labels = rng.permutation(np.arange(n) % 2)                     # exactly balanced
-    return [episode(rng, int(y), background) for y in labels]
+    make = episode if version == 1 else episode_v2
+    return [make(rng, int(y), background) for y in labels]
 
 
 def data_hash(rows):

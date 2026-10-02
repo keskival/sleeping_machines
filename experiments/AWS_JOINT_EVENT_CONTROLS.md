@@ -4,6 +4,8 @@ Purpose: the calibration bar for milestone 3. The native pilot runs on curie
 (queue curie_joint_event_language_20261002T133000Z). The task, its shortcut-removal contracts and the table bar
 are in experiments/joint_event_language_tasks.py and tests/test_joint_event_language_tasks.py.
 
+Task version 2 (phase-of-elapsed-time rule; v1 leaked and is retired, Theory §394 revision).
+
 Controls (experiments/joint_event_dense_controls.py, contracts in tests/test_joint_event_dense_controls.py):
 continuous-time GRU (learned per-unit decay, log(1+dt) input) and a causal time-encoded Transformer (absolute
 time + gap encodings). Same fit/dev/confirmation seeds (1301/2301/3301), 512 fit / 256 dev episodes, 8 passes,

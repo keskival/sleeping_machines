@@ -794,3 +794,16 @@ specific than the exact suffixes. Before that, a learned evidence gate must deci
 the exact cascade (a parallel expert with a per-position responsibility, as in the escape gate), not a fixed
 ordering. Both placements are recorded. Following the §394 calibration rule, further pooled-memory work moves
 to tasks where pooled generalization is needed, not small-data language, where counts are near-optimal.
+
+**§394 task revision (2 October, 14:30 UTC): the v1 task leaked; v2 replaces it.** The v1 smoke reached 90.6%
+after 32 episodes. The time since the last character predicts the v1 label with 97.4% accuracy text-blind,
+because the text ended a nearly fixed gap before the decisive event. The time since the last event gives 72%.
+The v1 pilot was stopped at start and its smoke result is retained as a record of the leak. Any *monotone* elapsed
+rule ("within Δ") also lets recency rank stand in for time: a time-blind table then reaches 90%. v2 therefore
+uses a non-monotone exact-time rule. Label 1 iff the named mark's elapsed time lies in an even band of width Δ
+(six bands, 0.1Δ edge margins), with exactly two marks in even bands and two in odd bands, and the question
+ending 6Δ + U(.3, 2) before the query. Measured bars on independent sets: text-blind time-aware gradient-boosted
+trees 48.8% (chance); time-blind table (word, last mark, rank) 60.4%; exact rank + text Bayes bound 62.0%; full
+information 100%. Contracts: tests/test_joint_event_language_tasks.py (v1 leak kept as a regression check).
+The phase rule is literally a periodic elapsed-time computation, which the core's rotating memories can
+represent. Whether it is learned is the test.
