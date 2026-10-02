@@ -682,3 +682,20 @@ frozen, with per-position losses and stream-adaptive Witten–Bell o4 and frozen
 Prediction (P393): if the full core contributes anything, it does so in the unseen and 1–2 strata. If full ≤
 minimal there too, the current core supplies no generalization beyond counts at these N, whatever the
 average says.
+
+**§392 placement correction (2 October, 12:10 UTC).** The pooled level was placed below the exact suffix orders,
+q → pooled → order 1 … K. Its delivery is then multiplied by the escape mass of every exact order. That is
+the same product that starves the residual base (median responsibility .0045). The §392 claim that it "carries
+responsibility on low-evidence contexts" was wrong for that placement: it carries responsibility only where all
+exact orders escape. Pooled minimal 8K with sampled writes (64/64 receivers occupied) scores 2.593 against
+gate-only 2.588. P392a fails, consistent with this.
+
+A context routed by the core's state, which summarizes the whole history, is *more* specific than an order-K
+suffix. By the hierarchical-Pitman–Yor ordering (more specific contexts back off to less specific ones) it
+belongs on **top**: `p(y) = Σ_a π_a [max(c_ay − D, 0) + (θ + D T_a) p_exact(y)]/(n_a + θ)`. A receiver with
+evidence claims mass directly, and the router gets first-order credit. Implemented as
+TopStatisticRaceNativeModel (sleeping_machines/statistic_race_top.py; nesting, causality, chunk invariance,
+router gradients and direct-claim contracts pass). The bottom-placed series (minimal, shallow, full) completes
+as recorded evidence about that placement. The top-placed series is next, with the same controls.
+Predictions (P392a′/b′): top pooled minimal ≤ 2.568; top pooled full beats top pooled minimal and shallow by
+≥ .02, concentrated in the unseen and low-evidence strata (§393).
