@@ -1918,3 +1918,11 @@ and exhaustive mean/variance verified; no moreproducerfits. Separately fixed
 feature-conditioned magnitude proposal runs next; diagnostic oracle needsall
 expensive utilities and cannot establish deployable advantage. Main integrated
 priority remains independently owned episode-batched corrected replay queue.
+
+Feature-conditioned learned replay magnitudes complete: heldoutk2/plaink4
+score-MSE1.206815/1.519582, BOTHFAIL but improved versus uniformreplacement
+2.375. Diagnostic all-target oracle .631115/.519480 shows mathematical
+allocation headroom and is NOT deployable credit/work evidence.64tree fixed
+predictor and all cases saved. Next bounded allocation question is distinct
+without-replacement weighted selection with EXACT inclusion probabilities;
+never use naive1/(kp) there. No long fit admitted from the failedk2 screen.

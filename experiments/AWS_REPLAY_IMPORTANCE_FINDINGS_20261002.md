@@ -17,3 +17,18 @@ critic costs paid; additional arithmetic FLOPs unknown. Ordinal-site structure
 alone does not reliably predict heldout route utility. Do not scale unchanged.
 Feature-conditioned magnitude priority is a separate frozen hypothesis; oracle
 magnitude priorities require all expensive returns and are diagnostic only.
+
+## Feature-conditioned magnitude prediction: useful signal, gate still fails
+
+Fixed64-tree depth6/minleaf8 predictor trains on first32 FIT log route norms,
+using both candidates' signed/value/label-aware features. Next32 heldout,
+90%normalizedprediction/10%uniform, k2 WITH replacement, exact correction.
+Seed7 MSE1.206815× plaink4,seed8 1.519582×: BOTHFAIL. This is better than
+uniform WITH replacement2.375× and ordinal priorities2.074656/3.053016×,
+but does not yet justify the proposed half-replay budget.
+
+Diagnostic oracle p proportional exact route norm yields.631115/.519480×.
+It needs EVERY expensive replay utility, so this is a mathematical lower bound
+showing remaining allocation headroom, not a deployable advantage. Do not report
+its numbers as reduced-work training. Saved models/proposals/cases retained.
+Conditional score-space scope only, no parameter covariance/quality claim.
