@@ -168,8 +168,9 @@ its combination with deep expressive temporal computation and sparse credit.
 Sparse conditional routing also motivates a [tabular-data hypothesis](experiments/TABULAR_RESEARCH_PROTOCOL.md):
 learn feature-dependent paths and useful optional modules while preserving feature
 identity. Static rows need no invented event ordering. Boosted trees and modern
-tabular Transformers are essential controls; no tabular advantage has been
-measured here.
+tabular Transformers are essential controls. The banknote screen gives an
+exploratory quality lead over the original boosted-tree control; stronger-control
+three-seed confirmation is underway. Broad tabular superiority is not established.
 
 ### The differentiators at a glance
 

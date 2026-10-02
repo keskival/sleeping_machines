@@ -3344,7 +3344,8 @@ def blocks(M, tasks, ev):
          'and robot reliability need dedicated benchmarks. Sparse conditional routing also motivates tabular '
          'prediction: paired delays can represent feature thresholds (theory §323). Preserve feature IDs '
          'and avoid invented row order; trees and modern tabular Transformers remain controls. '
-         'No tabular advantage is established (TABULAR_RESEARCH_PROTOCOL.md).'),
+         'The banknote screen gives an exploratory quality lead over the original boosted-tree control; '
+         'stronger-control confirmation is underway. Broad tabular superiority remains unestablished.'),
     ]
     investment_page=[
         ('h1','The research upside: five routes to useful advantage'),
