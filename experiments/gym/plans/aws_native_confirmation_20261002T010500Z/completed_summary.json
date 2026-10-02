@@ -1,0 +1,222 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.json",
+      "reused": true,
+      "max_rss_kb": 553432,
+      "wall_s": 2.5893069729791023
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.json",
+      "reused": true,
+      "max_rss_kb": 566452,
+      "wall_s": 17.02747625898337
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.json",
+      "reused": true,
+      "max_rss_kb": 553556,
+      "wall_s": 2.5816761949972715
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.json",
+      "reused": true,
+      "max_rss_kb": 566404,
+      "wall_s": 17.31338298099581
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s7_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s7_restore.json",
+      "reused": false,
+      "max_rss_kb": 355632,
+      "wall_s": 3.284658265998587
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s6_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s6_restore.json",
+      "reused": false,
+      "max_rss_kb": 355588,
+      "wall_s": 3.302557355025783
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s8_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s8_restore.json",
+      "reused": false,
+      "max_rss_kb": 355668,
+      "wall_s": 3.3070271630131174
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.json",
+      "reused": true,
+      "max_rss_kb": 861988,
+      "wall_s": 7.044606045004912
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.json",
+      "reused": true,
+      "max_rss_kb": 876716,
+      "wall_s": 38.01630852802191
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s7_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s7_restore.json",
+      "reused": false,
+      "max_rss_kb": 355480,
+      "wall_s": 3.3112199520110153
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s8_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s8_restore.json",
+      "reused": false,
+      "max_rss_kb": 355284,
+      "wall_s": 3.298510476015508
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s6_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s6_restore.json",
+      "reused": false,
+      "max_rss_kb": 355448,
+      "wall_s": 3.288994799979264
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.json",
+      "reused": true,
+      "max_rss_kb": 959720,
+      "wall_s": 9.31886976500391
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.json",
+      "reused": true,
+      "max_rss_kb": 959852,
+      "wall_s": 43.9999651699909
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s6_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s6_restore.json",
+      "reused": false,
+      "max_rss_kb": 344420,
+      "wall_s": 3.2706426250224467
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s7_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s7_restore.json",
+      "reused": false,
+      "max_rss_kb": 344324,
+      "wall_s": 3.3316646539897192
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s8_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s8_restore.json",
+      "reused": false,
+      "max_rss_kb": 344344,
+      "wall_s": 3.2943704939971212
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_private_s6_restore",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_private_s6_restore.json",
+      "reused": false,
+      "max_rss_kb": 404716,
+      "wall_s": 3.5199159320036415
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s7_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 356956,
+      "wall_s": 16.124793611990754
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s6_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 357048,
+      "wall_s": 16.224438592995284
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_observed_s8_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_observed_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 357240,
+      "wall_s": 16.20025643100962
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s6_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 357364,
+      "wall_s": 16.44112471700646
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s7_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 357168,
+      "wall_s": 16.353467662993353
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_paired_timing_rank_s8_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_paired_timing_rank_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 357480,
+      "wall_s": 16.340661258000182
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s7_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 344876,
+      "wall_s": 16.56611573000555
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s6_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 344728,
+      "wall_s": 16.305598665989237
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_shared_s8_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_shared_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 344876,
+      "wall_s": 15.95915640500607
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_private_s6_pilot",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010500Z_order_S16_private_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 405252,
+      "wall_s": 17.182070253998972
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_private_s7_pilot",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010500Z_order_S16_private_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 959816,
+      "wall_s": 858.206662422017
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010500Z_order_S16_private_s8_pilot",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010500Z_order_S16_private_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 959924,
+      "wall_s": 856.177517233009
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T02:29:54.574087+00:00",
+  "active_jobs": [
+    "aws_native_confirmation_20261002T010500Z_order_S16_private_s8_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
