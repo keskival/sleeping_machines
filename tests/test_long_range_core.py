@@ -59,3 +59,11 @@ def test_tapped_model_runs_on_the_stream():
     torch.manual_seed(0)
     s = L.score(TappedNativeStreamLanguageModel(4, 3, 2, 2), torch.tensor(toks), mask, 16)
     assert np.isfinite(s['target_bpc'])
+
+
+def test_addressed_model_runs_on_the_stream():
+    from sleeping_machines.context_addressed_memory import ContextAddressedNativeModel
+    toks, mask = L.make_stream('lag', 200, 8, 7)
+    torch.manual_seed(0)
+    s = L.score(ContextAddressedNativeModel(4, 2, 2, 2, order=2, buckets=64), torch.tensor(toks), mask, 16)
+    assert np.isfinite(s['target_bpc'])

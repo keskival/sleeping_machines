@@ -35,6 +35,7 @@ sys.path.insert(0, str(ROOT))
 from sleeping_machines.native_stream_language import NativeStreamLanguageModel  # noqa: E402
 from sleeping_machines.parallel_head_race_language import ParallelHeadRaceLanguageModel  # noqa: E402
 from sleeping_machines.dilated_delay_taps import TappedNativeStreamLanguageModel  # noqa: E402
+from sleeping_machines.context_addressed_memory import ContextAddressedNativeModel  # noqa: E402
 
 FILLER, LAG_CUE, INDUCTION_CUE = 24, 24, 25
 
@@ -79,14 +80,15 @@ def score(model, tokens, mask, chunk):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--tag', required=True); p.add_argument('--task', choices=('lag', 'induction'), required=True)
-    p.add_argument('--distance', type=int, required=True); p.add_argument('--fit', type=int, default=8192)
+    p.add_argument('--tag', required=True); p.add_argument('--task', choices=('lag', 'induction', 'text'), required=True)
+    p.add_argument('--distance', type=int, default=0); p.add_argument('--fit', type=int, default=8192)
     p.add_argument('--dev', type=int, default=4096); p.add_argument('--epochs', type=int, default=6)
     p.add_argument('--chunk', type=int, default=16); p.add_argument('--payload', type=int, default=16)
     p.add_argument('--depth', type=int, default=8); p.add_argument('--heads', type=int, default=2)
     p.add_argument('--pool', type=int, default=2); p.add_argument('--lr', type=float, default=.002)
     p.add_argument('--seed', type=int, default=6)
-    p.add_argument('--model', choices=('native', 'kv', 'tapped'), default='native')
+    p.add_argument('--model', choices=('native', 'kv', 'tapped', 'addressed'), default='native')
+    p.add_argument('--order', type=int, default=3); p.add_argument('--buckets', type=int, default=4096)
     p.add_argument('--matching', type=int, default=8); p.add_argument('--recent', type=int, default=4)
     a = p.parse_args()
     out = ROOT / 'experiments/results/long_range_core' / f'{a.tag}.json'
@@ -94,15 +96,24 @@ def main():
     if Path(a.tag).name != a.tag or out.exists():
         raise ValueError('Unique unused tag required; prior results are preserved')
     torch.set_num_threads(1); torch.manual_seed(a.seed); started = time.perf_counter()
-    fit, fit_mask = make_stream(a.task, a.fit, a.distance, a.seed)
-    dev, dev_mask = make_stream(a.task, a.dev, a.distance, a.seed + 10_000)
+    if a.task == 'text':  # shared language protocol: text8[0:fit] and the 8,191-target development window
+        sys.path.insert(0, str(ROOT / 'experiments'))
+        from e120_shared_tasks import text_slice
+        fit, dev = np.array(text_slice(0, a.fit), np.int64), np.array(text_slice(90_000_000, a.dev), np.int64)
+        fit_mask, dev_mask = np.ones(len(fit), bool), np.ones(len(dev), bool)
+    else:
+        fit, fit_mask = make_stream(a.task, a.fit, a.distance, a.seed)
+        dev, dev_mask = make_stream(a.task, a.dev, a.distance, a.seed + 10_000)
     fit_t, dev_t = torch.tensor(fit), torch.tensor(dev)
     model = (NativeStreamLanguageModel(a.payload, a.depth, a.pool, a.heads) if a.model == 'native' else
              TappedNativeStreamLanguageModel(a.payload, a.depth, a.pool, a.heads) if a.model == 'tapped' else
+             ContextAddressedNativeModel(a.payload, a.depth, a.pool, a.heads, order=a.order, buckets=a.buckets)
+             if a.model == 'addressed' else
              ParallelHeadRaceLanguageModel(a.payload, a.depth, a.pool, matching=a.matching, recent=a.recent, heads=a.heads))
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
     sources = ['experiments/long_range_core_benchmark.py', 'sleeping_machines/native_stream_language.py',
-               'sleeping_machines/parallel_head_race_language.py', 'sleeping_machines/dilated_delay_taps.py']
+               'sleeping_machines/parallel_head_race_language.py', 'sleeping_machines/dilated_delay_taps.py',
+               'sleeping_machines/context_addressed_memory.py']
     result = dict(status='running', args=vars(a), parameters=sum(q.numel() for q in model.parameters()),
                   chance_target_bpc=math.log2(FILLER), initial_dev=score(model, dev_t, dev_mask, a.chunk), curve=[],
                   data_sha256=hashlib.sha256(fit.tobytes() + dev.tobytes()).hexdigest(),
