@@ -199,3 +199,39 @@ about a dominant term, not a claim that counts generalize.
 If prediction 1 fails, meaning the gains do not depend on `P`, then the
 parity of §381 is not a capacity effect, and this route to an advantage is
 weaker than argued here.
+
+## 387. The learned base learns the residual distribution
+
+Fix one context with true law `P`, count part `a` (where `Σa = 1 − e`) and escape
+mass `e`. Minimize `−Σ_y P_y log(a_y + e q_y)` over the simplex.
+
+**Proposition 387.1.** The optimum is the water-filled residual
+`q*_y = max(P_y/λ − a_y/e, 0)`, with `λ` fixed by `Σq* = 1`. When `P_y ≥ a_y` for
+every `y`, there is no clipping and `q* = (P − a)/e` exactly: the base learns
+precisely the probability mass that the discounted counts fail to explain.
+
+*Proof.* The KKT stationarity condition is `e P_y/(a_y + e q_y) = λ` on the
+support of `q`; summing gives `λ = e` when nothing is clipped. ∎ Checked with
+L-BFGS on softmax logits for five random `(P, a, e)` triples. Agreement with the
+water-filling solution is within optimizer tolerance (≤ 9×10⁻⁴; the largest
+deviations are at coordinates driven to zero).
+
+Consequences:
+
+1. **Division of labor is automatic.** Combined with responsibility-gated
+   credit (379.1), the learned model receives gradient only where counts fall
+   short, and its target is that shortfall. It is not asked to relearn the
+   frequent statistics. This is the mechanism behind the memorization-tax
+   relief of §386.
+2. **The target moves with the counts.** The residual depends on the count
+   state. Training on leave-one-out counts of the fitting stream and evaluating
+   with fit-plus-prefix counts is consistent in expectation. But the
+   residual target shifts as tables grow, so a base fitted at one `N`
+   transfers imperfectly to another. Refit or condition the base on evidence
+   features (`n_h`, `T_h`) when tables change scale.
+3. **Escape modulation is the right learned gate.** Clipping occurs where the
+   counts overpredict (`a_y > P_y`). The learned model can fix that only by
+   raising the escape mass, that is, through a learned discount or
+   concentration that depends on its state. This motivates making `θ_k` and
+   `D_k` functions of the native state, not only scalars, with the work bounds
+   of §379 applied to the learned escape.

@@ -1,0 +1,2 @@
+# Exploratory elapsed-time-decayed in-stream counts on the shared dev window (Theory 387). Waits for the host lock.
+curie_count_decay_reference_20261002T021500Z experiments/count_decay_reference.py experiments/results/count_reference/curie_count_decay_reference_20261002T021500Z.json

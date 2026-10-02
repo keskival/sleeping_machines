@@ -68,3 +68,28 @@ def test_expected_route_loss_gradient_is_exact_over_all_candidates():
     (pi * ell).sum().backward()
     p = pi.detach()
     assert torch.allclose(z.grad, p * (ell - (p * ell).sum()), atol=1e-12)
+
+
+def test_learned_base_optimum_is_the_water_filled_residual():
+    """THEORY §387: argmin_q -sum P log(a + e q) is max(P/lam - a/e, 0) normalized; (P-a)/e without clipping."""
+    torch = __import__('torch')
+    gen = np.random.default_rng(9)
+    e = torch.tensor(.4, dtype=torch.float64)
+    while True:  # a residual r different from P, with counts a = P - e r >= 0 (no clipping)
+        P = torch.tensor(gen.dirichlet(np.full(A, 3.)), dtype=torch.float64)
+        r = torch.tensor(gen.dirichlet(np.full(A, 3.)), dtype=torch.float64)
+        a = P - e * r
+        if bool(torch.all(a >= 0)):
+            break
+    z = torch.zeros(A, dtype=torch.float64, requires_grad=True)
+    opt = torch.optim.LBFGS([z], max_iter=500, line_search_fn='strong_wolfe', tolerance_grad=1e-12, tolerance_change=1e-15)
+
+    def f():
+        opt.zero_grad()
+        loss = -(P * torch.log(a + e * torch.softmax(z, 0))).sum()
+        loss.backward()
+        return loss
+    for _ in range(5):
+        opt.step(f)
+    assert torch.allclose((P - a) / e, r, atol=1e-12)
+    assert torch.allclose(torch.softmax(z, 0).detach(), r, atol=1e-6)
