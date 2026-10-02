@@ -1,0 +1,54 @@
+{
+  "status": "completed",
+  "args": {
+    "manifest": "experiments/gym/plans/aws_quadratic_native_20261002T214600Z/manifest.json"
+  },
+  "rows": [
+    {
+      "variant": "affine",
+      "seed": 6,
+      "accuracy": 0.5572916666666666,
+      "nll": 1.2748601092025638,
+      "parameters": 15523,
+      "whole_fit_gflops": 0.548517184,
+      "fit_mflops_per_target": 0.5356613125,
+      "inference_mflops_per_target": 0.138133,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 14.046145037049428,
+      "max_rss_kb": 457148
+    },
+    {
+      "variant": "quadratic",
+      "seed": 6,
+      "accuracy": 0.5520833333333334,
+      "nll": 1.441478203846297,
+      "parameters": 21331,
+      "whole_fit_gflops": 0.594382336,
+      "fit_mflops_per_target": 0.5804515,
+      "inference_mflops_per_target": 0.201506,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 14.150941515050363,
+      "max_rss_kb": 458184
+    }
+  ],
+  "nll_gain": -0.16661809464373323,
+  "accuracy_gain": -0.005208333333333259,
+  "fit_work_ratio": 1.0836166182899385,
+  "inference_work_ratio": 1.4587824777569445,
+  "gate_pass": false,
+  "scope": "Small integrated degree2 head screen; same native temporal/race/state paths, different local readout. Same256fit/192dev/4passes, initial logits/original gradients nested. Fixed local teacher remains approximate. No fresh confirmation or supremacy claim."
+}

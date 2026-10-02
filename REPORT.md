@@ -2781,3 +2781,26 @@ Solver FLOPs unknown, model storage/replay counts/native fitwork retained in
 experiments/AWS_COARSE_READOUT_FINDINGS_20261002.md and source-hashed analysis.
 Next hypothesis is an integrated zero-nested standarddegree2 query-head map;
 no test access, dense prefix carrier, decoder advantage or quality promise.
+
+## AWS integrated quadratic screen fails; context evidence remains scoped
+
+After positive frozen context probes, a standard degree2 residual head starts
+at zero and nests native initial logits/RNG/all old gradients exactly. Six
+independent numerical/recovery/accounting prerequisites pass;24fit/8dev/two
+passes learning smoke passes fit1.085x/inference1.459x resource admission.
+Same256fit/192dev/four-pass seed6 core,4bins/.25clock,p16/L2/H2/pool2:
+
+|Readout|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
+|---|---:|---:|---:|---:|---:|
+|Affine|55.729%|1.274860|.548517|.535661|.138133|
+|Quadratic residual|55.208%|1.441478|.594382|.580452|.201506|
+
+Frozen gate FAILS: NLL worsens.166618; fitratio1.083617 and inference1.458782
+remain within fixed limits. New5808 head weights and all5 sequential head
+calls paid.8 available receivers/4writes per event and factual/key/losing-value
+activity identical. Deep state/parameter-gradient and interrupted recovery
+contracts remain valid; they do not predict quality. No unchanged seed7,
+full-fit, epoch extension or automatic promotion. Earlier full-coarse seed8
+failure and all positive frozen readout/reservoir controls remain preserved.
+A frozen affine-versus-polynomial convex-fit diagnostic can separate decoder
+fitting from encoder drift before a new learning intervention.

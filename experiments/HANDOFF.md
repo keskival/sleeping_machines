@@ -1720,3 +1720,20 @@ Plan aws_quadratic_native_20261002T214600Z requires24/8/two-pass learning smoke
 and <=1.25fit/<=1.50inference resource admission before256/192/four-pass seed6
 pilot. Frozen pilot gate also demands >=.05NLL gain/<=1pp accuracy decline.
 No larger/seed7 run until it passes; earlier full coarse seed8 failure retained.
+
+## AWS quadratic first pilot fails quality gate — 2 October, 21:48 UTC
+
+All prerequisites/smoke/resource admission/pilot finish and are pushed. Same
+256/192/4pass/s6 comparison: affine55.729%/1.274860NLL,.548517GF versus
+quadratic55.208%/1.441478,.594382GF. NLL worsens.166618, frozen gate FAIL.
+Fitratio1.083617/inference1.458782 valid; no unchangedseed7/fullfit/extraepochs.
+Newhead21331params versus15523, same8receivers/candidates/selectedactivity;
+all5 sequentialheads charged. Initialnesting/deepgrad/recovery contracts remain.
+
+Positive frozen RBFcontext information does not establish trainability of this
+coupled head/encoder variant. Next bounded hypothesis is separately frozen
+encoder affine-vs-quadratic convex decoder fitting, ALL3fittedandinitial coarse
+encoders, fit-only selection, folded equivalent native head coefficients,
+oldnativefit/replay/solver costs retained. It tests decoder adequacy versus
+coupled representation drift, not broadconvextraining or sparseRBFsupremacy.
+No architecture or additionalencoderfit promoted from pending diagnostics.
