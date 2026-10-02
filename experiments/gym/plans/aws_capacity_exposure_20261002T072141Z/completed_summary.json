@@ -1,0 +1,138 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2179256,
+      "wall_s": 28.41145535101532
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2586540,
+      "wall_s": 40.5853337229928
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2586288,
+      "wall_s": 40.626284478988964
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2186984,
+      "wall_s": 153.48729364699102
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2179828,
+      "wall_s": 28.04018997901585
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2586568,
+      "wall_s": 186.41812561400002
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2586672,
+      "wall_s": 185.4833668509964
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2179696,
+      "wall_s": 27.991587227996206
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_contracts",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 2586208,
+      "wall_s": 40.050942939997185
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2186680,
+      "wall_s": 153.87619996501599
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2186228,
+      "wall_s": 153.32483080300153
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_smoke",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 2586624,
+      "wall_s": 182.26591800400638
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2190752,
+      "wall_s": 3328.6273282139737
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2586524,
+      "wall_s": 3870.2100548970047
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2586572,
+      "wall_s": 3877.806918873015
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2191256,
+      "wall_s": 3333.1664015050046
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2190968,
+      "wall_s": 3347.1274385380093
+    },
+    {
+      "tag": "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_pilot",
+      "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 2586784,
+      "wall_s": 3890.8436025640112
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T07:22:14.309944+00:00",
+  "active_jobs": [
+    "aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
