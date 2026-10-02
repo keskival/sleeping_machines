@@ -136,6 +136,8 @@ def results():
     tasks['uniform_address']=[r for path in sorted((RES/'diagnostics').glob('local_joint_publication_*_contracts.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed'
         and r.get('actual_bank_uniform_pair_law_alias_verified')]
+    tasks['joint_stateful_table']=[r for path in sorted((RES/'diagnostics').glob('local_joint_stateful_table_*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3766,6 +3768,34 @@ def blocks(M, tasks, ev):
              'source hashes, targets, wall and RSS. The obstruction concerns addressed value pooling '
              'and terminal initialization; it does not imply that all counting, temporal computation '
              'or architectural adaptation faces a mathematical ceiling.')])
+    for r in tasks.get('joint_stateful_table',[]):
+        scores=[]
+        for split,score in r['final'].items():
+            scores.append([split,str(score['targets']),f"{100*score['accuracy']:.3f}%",f"{score['nll']:.6f}",
+                f"{100*(1-score['accuracy']):.3f}pp"])
+        pages.append([('h1','Appendix B. Practical headroom: a stronger joint-event table'),
+            ('table',(['Fixed table evaluation','Queries','Accuracy','NLL','Maximum accuracy headroom'],scores,[47,24,34,34,34])),
+            ('p','This control consumes observed timestamps as well as text. It retains the complete '
+             'question string and the latest observed time for each of four marks. A generic fit learns '
+             'one mark-age split per question: which mark, threshold, split direction and both leaf '
+             'probabilities. The generator word/mark mapping and recency threshold are not supplied.'),
+            ('p',f"Same512 distinct fitting episodes/seed1301,one fitting pass,20 question strings; "
+             f"fit wall{r['fitting_wall_s']:.6f}s,maxRSS{r['max_rss_kb']:,}KiB. "
+             'Fixed learner; dev2301/256 and confirmation3301/1,024 episodes do not tune it. '
+             'Contracts verify label mutation, appended future observations and common clock shifts '
+             'cannot change causal prediction features.'),
+            ('p','Less than half a percentage point of accuracy headroom remains. The proposed20-point '
+             'learned-control advantage gate is impossible against this reference on these episodes, '
+             'even for a perfect learner. A gain over the time-blind table would therefore measure '
+             'extra supplied information rather than demonstrate the requested practical advantage.'),
+            ('p','The joint recency task remains a capability and mechanism diagnostic. Likelihood may '
+             'still improve; neither saturated accuracy nor tiny fitting cost supports general '
+             'supremacy. Strong real-stream calibration with causal common inputs takes priority. '
+             'Old successful mechanism evidence and negative results are preserved.'),
+            ('small','Logical content inspections, timestamp writes, age subtraction, sorting comparisons, '
+             'threshold candidates, count/probability work and wall are saved. They are not converted '
+             'to neural FLOPs. Full question lookup is a task-specific conventional control, not a '
+             'general language model or the integrated research architecture. Theory72 records scope.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]

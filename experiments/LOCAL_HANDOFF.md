@@ -1,5 +1,42 @@
 # Local host: current research continuation
 
+## Strong practical calibration changes priority, 2 October13:50 UTC
+
+User explicitly requires advantage where existing solutions are not already
+practically optimal. Guarded `queue/local_joint_stateful_table_20261002T134700Z.txt`
+completed, result `results/diagnostics/local_joint_stateful_table_20261002T134700Z.json`.
+Same planned joint-task fit512/seed1301,dev256/2301,confirmation1024/3301.
+Question-string table learns a split over four causal mark ages, without
+generator lexical mapping/threshold.20strings,one fitting pass,0.027026s
+fit,67,940KiB RSS; dev99.61%/0.051632NLL; confirmation99.51%/0.055258NLL.
+The20-point learned-control-versus-table gate cannot pass against this
+reference. Keep the recency task as capability diagnosis; do not claim
+advantage versus its time-blind table. Theory72 records admission priorities.
+
+All relation confirmations completed. New seed75001/256targets: s7joint
+99.21875%/0.0496041bits,local100%/0.00316024; s8joint100%/0.000147362,
+local100%/0.00353496.0of2 .05-bit joint-over-local gates pass. Joint fits
+remain~2.55% more arithmetic than local at unchanged inference architecture.
+Value-zero accuracy98.828125/100/75/99.21875% respectively: three native
+contexts learned useful nonlocal prediction without delivered values. This
+does not isolate outcome-bank training benefit; no matched bare-core refit.
+No generic gradient regression or general learning ceiling is established.
+
+Rebase onto658932a completed at13:24, preserving both handoff sections;
+all frozen sources verified unchanged,3stashes preserved. Theory70 alias/
+conditional stationary-point/analytic-witness contracts passed0.556879s
+and249,636KiB. Theory71 specializes existing full-support joint credit;
+sampling remains unimplemented. Report publication first attempt stopped
+on an orphan page2 after the concurrent cover expansion; oldPDF/REPORT
+restored. Recovery will retain all completed negative and positive results.
+
+Current priority after report recovery: calibrate real DVS Gesture under
+subject-disjoint first-second observations against strong class-count,
+time-aware linear and kernel controls. Old dense DVS controls predict the
+majority class and cannot prove practical advantage. Reuse bounded raw
+adapter; no official-test access during selection and no duplication of
+other-host language or AWS dense control campaigns. No DVS fit launched yet.
+
 ## curie: regime calibration and milestone 3 (joint text + events), 2 October, 13:20 UTC
 
 Small-data language is the home ground of counting. Stream-adaptive interpolated KN (continuation statistics) is

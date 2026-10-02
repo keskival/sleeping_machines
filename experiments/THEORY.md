@@ -5,6 +5,15 @@ numerically (table at the end) before later experiments rely on it.
 
 ## Synthesis: the principles so far (read this first)
 
+**Practical-region correction (2 Oct):** [stronger calibration](theory/72_practical_region_calibration.md)
+learns a timestamp-aware question table on the proposed joint recency task:
+99.51% reserved accuracy,0.05526NLL,0.027s fitting. The20-point advantage
+gate is impossible against this control; time-blind tables are insufficient.
+Joint-credit repeats also fail their .05-bit superiority gates, although
+learned nonlocal prediction reaches99.2–100% and often survives delivered
+value erasure. Preserve the first-seed gain as scoped evidence. Priority:
+strong real-stream controls and practical headroom before further promotion.
+
 **Completed conditional joint-learning result (2 Oct):** [protected outcome
 races](theory/68_joint_addressed_outcome_races.md) learn the balanced distant
 relation on reserved suffixes: full joint0.101898bits/96.09%, matched local
