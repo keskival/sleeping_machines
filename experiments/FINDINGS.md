@@ -1,5 +1,16 @@
 # Findings log
 
+## Escape gate at native 8K: learned contribution grows with data — 2 October
+
+Same integrated native receiver + K4 counts, 8K fit, seed 6, 8,191 dev targets.
+Scalar escape **2.671** bpc / 15.23 whole-fit GFLOPs (untrained 2.682);
+escape gate **2.601** / 15.31. Stream-adaptive counts 2.699; native alone 3.557.
+The gate beats the scalar cascade by .070 (2K: .039) and the counts by .098, for
+0.6% more counted work. Training adds .081 over the untrained composition (2K:
+.046; scalar 8K: .011). The learned share rises with data, as §387 requires
+for a useful residual learner. Single seed, development only. The 32K gate and
+scalar stages are queued.
+
 ## Escape gate lets the native learner override count tables, 2K — 2 October
 
 Integrated native receiver + K4 count receivers, seed 6, 2K fit, 8,191 dev targets.
