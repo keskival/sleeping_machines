@@ -1510,10 +1510,9 @@ def blocks(M, tasks, ev):
          "A learned speech encoder reaches <b>79.69%</b> on 512 private development utterances. "
          "Embeddings, temporal state and vector maps learn."
          +(f" Calibration: closed-form Kneser–Ney counts of the same fitting data score {count_reference_bpc(131072):.3f} / "
-           f"{count_reference_bpc(1048576):.3f} bpc on the same targets, so these fits do not surpass counting statistics, as expected in this regime "
-           "(Theory §376). At these sizes smoothed counting is a near-optimal reference that no learner, Transformers "
-           "included, is expected to exceed (§§381, 393–394); these are representation diagnostics, and the architecture "
-           "is tested where learning matters." if count_reference_bpc(131072) is not None and count_reference_bpc(1048576) is not None else "")]),
+           f"{count_reference_bpc(1048576):.3f} bpc on the same targets and lead these small-data comparisons. "
+           "They are strong references where local statistics are well supported; architecture advantage "
+           "requires practical headroom (§§376,393–394)." if count_reference_bpc(131072) is not None and count_reference_bpc(1048576) is not None else "")]),
         ("figure",("accomplishments",174)),
         ("small","Left: means and recorded ranges, five event runs and two Transformer runs; "
          "2,000 distinct examples, seen once / presented 400,000 times. Right: all five event runs "
@@ -3711,8 +3710,9 @@ def blocks(M, tasks, ev):
              'test this terminal learning intervention, while protecting all earlier negative evidence.'),
             ('p','Zero-value evaluation removes delivered content while keeping native context, query/key '
              'races and contextual decoder. No fitting or model selection; every parameter is restored '
-             'and verified afterwards. A quality drop attributes dependence to value delivery, not '
-             'to useful extra native depth or a generic semantic representation.'),
+             'and verified afterwards. Three arms retain98.8–100% accuracy: native context has learned '
+             'useful nonlocal prediction. Joint seed8 drops to75%. Value delivery is therefore not '
+             'necessary in every selected fit; neither its training benefit nor a depth premium is isolated.'),
             ('small','Query-suffix/count bound only. The protected bank has fixed observed predecessor '
              'addresses and no learned writes; the standard bilinear decoder and exact terminal content '
              'credit do not establish deep core learning, clock-gradient accuracy or natural-text gains.')])
