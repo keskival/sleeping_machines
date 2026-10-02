@@ -160,3 +160,30 @@ conditional gains. No all-state head is a new sparse main model. Theory94/95
 preserve all results and selection/cost scopes. Next diagnose producer-held
 decoder selection using fixed-pass pilot checkpoints and untouched FIT examples;
 no new Transformer/LSTM, unchanged offset/choice campaign or duplicate replay.
+
+## curie: implementation and test plan for replay-credit scaling (2 October, 22:30 UTC; theory 59 §§402–404, note 92)
+
+Phase 0 (running). Corrected local-expectation credit (first-time-preserving replays plus factorized clock) at DVS depth 2
+and depth 4, seed 7, then coarse 250 ms packets with and without it at full data, seeds 7 and 8. Gate P402: beats the
+current teacher at equal passes on at least two seeds. A failure stops replay-credit work, and effort moves to generalization.
+
+Phase 1 (exact cost). (1) Forked replays: done (experiments/dvs_fork_replay.py; identical losses and gradients).
+(2) Shadow lanes: a lane-batched fast core in which the factual lane and the P−1 counterfactual lanes per sampled race
+advance together. Contracts: lane 0 bitwise equals the unbatched factual run, every shadow lane equals its forked
+replay, and no gradient leaks from shadow lanes. Target: under 1.5× baseline wall time at k = 4.
+
+Phase 2 (variance). (3) Critic control variate (experiments/dvs_critic_le_benchmark.py; cross-fitted in time;
+cancels exactly when all races are corrected). Test k = 1 and 2 with critic against k = 4 without, depth 2, seeds 7 and 8,
+reporting critic R² and route-gradient variance. Gate: within 1 point at no more than half the replay work.
+
+Phase 3 (approximations with correction). (4) Bounded-horizon shadow lanes with critic bootstrap and an occasional
+full replay; contract: H = ∞ reproduces exact credit; H in {2, 4, 8}, measuring bias and the frontier. (5) Intra-event shadow
+lookahead, audited first (sign agreement against the exact target, compared with .51–.64 for the linearizations);
+used only as a critic feature, never alone.
+
+Phase 4 (beyond the chunk). (6) Synthetic gradients for carried state at chunk boundaries. Fidelity contract
+against true longer-window gradients on frozen checkpoints before any training use. Applies to language and long
+streams, not to single-chunk DVS gestures.
+
+Phase 5 (combine and scale). Coarse packets, forks or lanes, critic and tied pools at full DVS data, seeds 6–8,
+against the strong 4-bin control (77.6%) and RBF in common work units. Then re-run the depth and pool ladder.
