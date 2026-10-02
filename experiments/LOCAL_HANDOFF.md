@@ -334,3 +334,31 @@ The report now says stopped/incomplete rather than still running. Independent
 AWS recovery has unblocked the reserved event replication/confirmation chain;
 contracts are arriving, not new completed quality scores yet. Banknote's valid
 three-seed family summaries remain; the full four-family gate is withheld.
+
+## Safe session recovery, 2 October, 02:13 UTC
+
+This session starts on curie with no live trainer, guard or tmux server. Saved
+native timing and state-credit insertion lifecycles remain nonterminal, but
+their original PIDs/start identities are absent. Preserve these files and the
+native timing progress checkpoint; do not signal stale PIDs, restart the old
+insertion, or treat epoch5's score as completed evidence.
+
+New recovery plan: `queue/local_state_credit_recovery_20261002T021222Z.json`;
+interruption reconciliation is stored beside it. New supervisor
+`scripts/run_local_frozen_recovery.py` runs the original six unchanged one-job
+queues serially through run_safe, preserving all source/queue fingerprints.
+Original models, settings, output tags and pilot gates are unchanged. It checks
+absent predecessor identities, enforces each prerequisite and rejects changed
+settings/data in the final comparison. Numerical contracts and accounting smokes
+precede both fits; no automatic larger fit. Each completed result is committed
+locally on main. Root publishing handles remote coordination separately.
+
+User explicitly reiterates avoiding host hangs and otherwise continuing
+autonomously. Retain1,250,000KiB groupRSS/3,000,000KiB VMS,8192MiB available
+floor, one thread, nice19, watchdog,600s checks/smokes and3600s fits. Host starts
+with about11.6GiB available, no GPU. The integrated addressed-write teacher
+comparison takes priority over carrier-only scale queues. Native timing exact
+checkpoint recovery follows the bounded comparison; AWS reserved replication/
+confirmation and count-carrying work are not duplicated. Fixed observed addresses,
+forced activity, full producer graphs, surrogate credit and hardware energy remain
+limitations. This is lifecycle recovery, not an architectural departure.

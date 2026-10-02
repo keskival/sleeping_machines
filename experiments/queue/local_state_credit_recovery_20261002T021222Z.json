@@ -1,0 +1,121 @@
+{
+  "status": "prepared",
+  "host": "curie",
+  "source_sha256": {
+    "experiments/state_credit_benchmark.py": "ba4a6e5ad2968f2256b38cd4d8427da2ae06fcc654db4d7351b0e3f0662320cf",
+    "experiments/split_event_benchmark.py": "a078c890d5e21bac469a4f9e85f6e1cbce61633c54699b7bdf88ed0adcbe3080",
+    "experiments/state_credit_contracts.py": "060ccacf36f027534d6e4d65743a2c4585c7885c48160217da9df80cb3639021",
+    "sleeping_machines/state_write_credit.py": "061f4cd62bb539fb31a8bfdf222e43624cff98b045a1045756a533cc4a9c93b6",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/split_event_contracts.py": "7cc951b0f12196f9c02107012cbf032253a14afa9d69af243793242014e68a40",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "scripts/run_state_credit_boundary.py": "b9e3a7b6b7e59ca799ff403c003ef9bbf671316536ea2aa0a89065d2d5d2ce7c",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "tests/test_state_write_credit.py": "bbe7984a11ab035b806f3901495a2f75b65282e9b2b30a014952cbc073226935",
+    "scripts/run_local_frozen_recovery.py": "18877ee24aeb451b71c79ec2a76e19c83fff934aca3e1f16117932195f09de7d"
+  },
+  "jobs": [
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_contract_order",
+      "stage": "contracts",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_contract_order.txt",
+      "queue_sha256": "2766b1139a3fc803ebdef3246639effe4e43d823d20e30ae9546971f37aa2760",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_contract_order.json",
+      "timeout_s": 600,
+      "requires": []
+    },
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_contract_shared_timing",
+      "stage": "contracts",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_contract_shared_timing.txt",
+      "queue_sha256": "4ca312e608ea642f1867297c75c2626003947be7a4b20633e0b3b1a8814c3c94",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_contract_shared_timing.json",
+      "timeout_s": 600,
+      "requires": [
+        "local_state_credit_boundary_20261002T015000Z_contract_order"
+      ]
+    },
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_smoke_zero",
+      "stage": "smoke",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_smoke_zero.txt",
+      "queue_sha256": "5cfe4f3a9e43405fe84d84592a5ed4e1a2230e88b1769c1e69f2dd68d03cd2e0",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_smoke_zero.json",
+      "timeout_s": 600,
+      "requires": [
+        "local_state_credit_boundary_20261002T015000Z_contract_order",
+        "local_state_credit_boundary_20261002T015000Z_contract_shared_timing"
+      ]
+    },
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_smoke_teacher",
+      "stage": "smoke",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_smoke_teacher.txt",
+      "queue_sha256": "e5f26728fc222c07129fd2b7e8a05bc758fce74060d630e2d16bca83dc4239cf",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_smoke_teacher.json",
+      "timeout_s": 600,
+      "requires": [
+        "local_state_credit_boundary_20261002T015000Z_contract_order",
+        "local_state_credit_boundary_20261002T015000Z_contract_shared_timing",
+        "local_state_credit_boundary_20261002T015000Z_smoke_zero"
+      ]
+    },
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_zero_pilot",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_zero_pilot.txt",
+      "queue_sha256": "0e742883ed60a52ef972a89e43f6413503e57fc3b5c7906377ce75a646508332",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_zero_pilot.json",
+      "timeout_s": 3600,
+      "requires": [
+        "local_state_credit_boundary_20261002T015000Z_contract_order",
+        "local_state_credit_boundary_20261002T015000Z_contract_shared_timing",
+        "local_state_credit_boundary_20261002T015000Z_smoke_zero",
+        "local_state_credit_boundary_20261002T015000Z_smoke_teacher"
+      ]
+    },
+    {
+      "tag": "local_state_credit_boundary_20261002T015000Z_teacher_pilot",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_state_credit_boundary_20261002T015000Z_teacher_pilot.txt",
+      "queue_sha256": "352f1ba6e4deaa3c31f47d010cb552809f5fd10d90271569587a918cf03c9df6",
+      "result": "experiments/results/state_credit/local_state_credit_boundary_20261002T015000Z_teacher_pilot.json",
+      "timeout_s": 3600,
+      "requires": [
+        "local_state_credit_boundary_20261002T015000Z_contract_order",
+        "local_state_credit_boundary_20261002T015000Z_contract_shared_timing",
+        "local_state_credit_boundary_20261002T015000Z_smoke_zero",
+        "local_state_credit_boundary_20261002T015000Z_smoke_teacher",
+        "local_state_credit_boundary_20261002T015000Z_zero_pilot"
+      ]
+    }
+  ],
+  "predecessor_result": "experiments/results/native_event/local_native_event_timing_S4_s6_pilot_20261001T174000Z.json",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "scope": "Serial unchanged six-stage integrated comparison after host session interruption. No stale PID signals; no larger fits; preserve original timing checkpoint and insertion lifecycle.",
+  "recovery_of": "experiments/queue/local_state_credit_boundary_20261002T015000Z.json",
+  "absent_predecessors": [
+    {
+      "pid": 231951,
+      "start_ticks": "31263444",
+      "command_fragment": "run_native_research_campaign.py --manifest-stem local_native_research_guard_recovery_20261001T215000Z"
+    },
+    {
+      "pid": 232027,
+      "start_ticks": "31263466"
+    }
+  ]
+}

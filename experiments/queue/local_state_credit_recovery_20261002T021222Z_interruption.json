@@ -1,0 +1,27 @@
+{
+  "status": "interrupted_no_live_processes",
+  "observed_utc": "2026-10-02T02:12:22.248144+00:00",
+  "host": "curie",
+  "original_plan": "experiments/queue/local_state_credit_boundary_20261002T015000Z.json",
+  "original_lifecycle": "experiments/queue/local_state_credit_boundary_20261002T015000Z.status.json",
+  "original_state_preserved": true,
+  "prior_process_identities": [
+    {
+      "pid": 231951,
+      "start_ticks": "31263444",
+      "command_fragment": "run_native_research_campaign.py --manifest-stem local_native_research_guard_recovery_20261001T215000Z"
+    },
+    {
+      "pid": 232027,
+      "start_ticks": "31263466"
+    }
+  ],
+  "preserved_timing_checkpoint": "experiments/results/native_event/local_native_event_timing_S4_s6_pilot_20261001T174000Z.progress.pt",
+  "recovery_plan": "experiments/queue/local_state_credit_recovery_20261002T021222Z.json",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "priority": "Integrated StateCreditEventHeads contracts/smokes/matched small fits, then exact timing recovery; carrier-only expansions deferred."
+}
