@@ -1,0 +1,274 @@
+{
+  "status": "completed",
+  "tag": "aws_replay_variance_20261002T230000Z",
+  "contract": "exhaustive fixed-critic unbiasedness and exact score-space MSE pass",
+  "results": [
+    {
+      "seed": 7,
+      "heldout_fit_rows": [
+        {
+          "races": 84,
+          "critic_r2": 0.0502507967936795,
+          "route_score_residual_ratio": 0.96140778256532,
+          "score_coordinate_mse": {
+            "critic_k1": 1.1004081873703728,
+            "critic_k2": 0.5435751287010275
+          },
+          "no_critic_k4_mse": 0.2758024265820206
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.024505858251973045,
+          "route_score_residual_ratio": 1.021952965707973,
+          "score_coordinate_mse": {
+            "critic_k1": 0.407799421034641,
+            "critic_k2": 0.20144308749903952
+          },
+          "no_critic_k4_mse": 0.09615405407935221
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.04002857373197144,
+          "route_score_residual_ratio": 1.0385279131442902,
+          "score_coordinate_mse": {
+            "critic_k1": 2.0222164041893413,
+            "critic_k2": 0.9989261755634096
+          },
+          "no_critic_k4_mse": 0.46920362474912336
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.07254312125874729,
+          "route_score_residual_ratio": 1.066634223995828,
+          "score_coordinate_mse": {
+            "critic_k1": 0.3793941540623886,
+            "critic_k2": 0.18741157007901124
+          },
+          "no_critic_k4_mse": 0.08570911755001041
+        }
+      ],
+      "critic_vs_plain_k4_mse_ratio": {
+        "1": 4.218306175026959,
+        "2": 2.0837416045313892
+      },
+      "variance_nomination_passed": {
+        "1": false,
+        "2": false
+      },
+      "replay_wall_s": 0.5767671639914624,
+      "critic_fit_wall_s": 0.03411451599095017,
+      "replay_lanes": 1344,
+      "critic_updates": 100
+    },
+    {
+      "seed": 8,
+      "heldout_fit_rows": [
+        {
+          "races": 84,
+          "critic_r2": 0.04005846402250368,
+          "route_score_residual_ratio": 0.9639224582285718,
+          "score_coordinate_mse": {
+            "critic_k1": 0.8724876057451396,
+            "critic_k2": 0.4309878534403702
+          },
+          "no_critic_k4_mse": 0.21810673202318148
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.10146799186236222,
+          "route_score_residual_ratio": 1.101325038778357,
+          "score_coordinate_mse": {
+            "critic_k1": 0.2855386920797992,
+            "critic_k2": 0.14104923343700926
+          },
+          "no_critic_k4_mse": 0.062474293866900135
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.04668973970040913,
+          "route_score_residual_ratio": 1.042022814297094,
+          "score_coordinate_mse": {
+            "critic_k1": 0.6039806620005843,
+            "critic_k2": 0.2983518932773971
+          },
+          "no_critic_k4_mse": 0.13966825574157615
+        },
+        {
+          "races": 84,
+          "critic_r2": -0.033681816851809154,
+          "route_score_residual_ratio": 1.0279313272181816,
+          "score_coordinate_mse": {
+            "critic_k1": 0.7195944843468406,
+            "critic_k2": 0.35546233564121044
+          },
+          "no_critic_k4_mse": 0.16868467444964974
+        }
+      ],
+      "critic_vs_plain_k4_mse_ratio": {
+        "1": 4.213717715793852,
+        "2": 2.081475016235517
+      },
+      "variance_nomination_passed": {
+        "1": false,
+        "2": false
+      },
+      "replay_wall_s": 0.5909888910246082,
+      "critic_fit_wall_s": 0.03375513799255714,
+      "replay_lanes": 1344,
+      "critic_updates": 100
+    }
+  ],
+  "protocol": "Fixed initial native fine-packet encoders seeds7/8; first4 FIT rows train critic, next4 FIT rows holdout;100 fixed critic updates; no producer updates; no dev quality evaluated",
+  "scope": "Exact conditional score-coordinate subsampling variance only; cross-site parameter-gradient covariance and learning quality not established",
+  "fitting_flops": "unknown; diagnostic replay and critic training are not free",
+  "provenance": {
+    "data_result": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json",
+    "data_result_sha256": "89dba01399830ba638ba5543b87d4479dcc55366f495c6105d44f5b4f5b617cb",
+    "controls": "experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json",
+    "controls_sha256": "ad592825f529682b8eb7741cac7a01f59822aa485ed65f84cfeae8aec8acde2a",
+    "data_artifact_sha256": "f1287286cd097dc8f13fd09c8dcf09131fd166dee8b2ae44c666d0769bc7e53f",
+    "protocol": {
+      "dataset": "DVS128 Gesture",
+      "fit_users": "1..19",
+      "dev_users": "20..23",
+      "official_test_read": false,
+      "observation": "first 1 second of each gesture",
+      "encoding": "4x4 cells, polarity, count packets released at 50 ms closure, explicit end marker",
+      "fit_recordings": [
+        "user01_fluorescent.aedat",
+        "user02_fluorescent.aedat",
+        "user03_fluorescent.aedat",
+        "user04_fluorescent.aedat",
+        "user05_fluorescent.aedat",
+        "user06_fluorescent.aedat",
+        "user07_fluorescent.aedat",
+        "user08_fluorescent.aedat",
+        "user09_fluorescent.aedat",
+        "user10_fluorescent.aedat",
+        "user11_fluorescent.aedat",
+        "user13_fluorescent.aedat",
+        "user14_fluorescent.aedat",
+        "user15_fluorescent.aedat",
+        "user16_fluorescent.aedat",
+        "user17_fluorescent.aedat",
+        "user18_fluorescent.aedat",
+        "user19_fluorescent.aedat",
+        "user01_fluorescent_led.aedat",
+        "user02_fluorescent_led.aedat",
+        "user03_fluorescent_led.aedat",
+        "user04_fluorescent_led.aedat",
+        "user05_fluorescent_led.aedat",
+        "user06_fluorescent_led.aedat",
+        "user07_fluorescent_led.aedat",
+        "user08_fluorescent_led.aedat",
+        "user09_fluorescent_led.aedat",
+        "user10_fluorescent_led.aedat",
+        "user11_fluorescent_led.aedat",
+        "user12_fluorescent_led.aedat",
+        "user13_fluorescent_led.aedat",
+        "user14_fluorescent_led.aedat",
+        "user15_fluorescent_led.aedat",
+        "user17_fluorescent_led.aedat",
+        "user18_fluorescent_led.aedat",
+        "user19_fluorescent_led.aedat",
+        "user01_lab.aedat",
+        "user02_lab.aedat",
+        "user05_lab.aedat",
+        "user06_lab.aedat",
+        "user07_lab.aedat",
+        "user08_lab.aedat",
+        "user09_lab.aedat",
+        "user10_lab.aedat",
+        "user13_lab.aedat",
+        "user15_lab.aedat",
+        "user16_lab.aedat",
+        "user17_lab.aedat",
+        "user18_lab.aedat",
+        "user19_lab.aedat",
+        "user01_led.aedat",
+        "user02_led.aedat",
+        "user03_led.aedat",
+        "user04_led.aedat",
+        "user05_led.aedat",
+        "user06_led.aedat",
+        "user07_led.aedat",
+        "user08_led.aedat",
+        "user09_led.aedat",
+        "user10_led.aedat",
+        "user12_led.aedat",
+        "user13_led.aedat",
+        "user14_led.aedat",
+        "user15_led.aedat",
+        "user16_led.aedat",
+        "user17_led.aedat",
+        "user18_led.aedat",
+        "user19_led.aedat",
+        "user01_natural.aedat",
+        "user02_natural.aedat",
+        "user03_natural.aedat",
+        "user04_natural.aedat",
+        "user05_natural.aedat",
+        "user06_natural.aedat",
+        "user09_natural.aedat",
+        "user11_natural.aedat",
+        "user13_natural.aedat",
+        "user14_natural.aedat",
+        "user15_natural.aedat",
+        "user16_natural.aedat",
+        "user17_natural.aedat",
+        "user19_natural.aedat"
+      ],
+      "dev_recordings": [
+        "user20_fluorescent.aedat",
+        "user21_fluorescent.aedat",
+        "user22_fluorescent.aedat",
+        "user23_fluorescent.aedat",
+        "user20_fluorescent_led.aedat",
+        "user21_fluorescent_led.aedat",
+        "user22_fluorescent_led.aedat",
+        "user23_fluorescent_led.aedat",
+        "user21_lab.aedat",
+        "user22_lab.aedat",
+        "user23_lab.aedat",
+        "user20_led.aedat",
+        "user22_led.aedat",
+        "user23_led.aedat",
+        "user21_natural.aedat",
+        "user22_natural.aedat"
+      ],
+      "raw_events_in_loaded_prefixes": {
+        "fit": 61194230,
+        "dev": 9061738
+      },
+      "time_unit": "physical seconds",
+      "scope": "small prefix-recognition screen, not full-gesture benchmark"
+    },
+    "feature_transform": "Same fit-only 640-coordinate log-count mean/std-clamp.5; native float32 content",
+    "race_noise": "Common per-pass/fitting-seed noise and fixed dev seed314159; no identity/index/label seed input",
+    "transform_sha256": "461d91eee3f742e77b75b941ed66ebdb57a920a48429529731a7555b1ef2ce32"
+  },
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "experiments/dvs_local_expectation_benchmark.py": "69dac4a86eb6afc8629f30a0b3594abbf6fce58ea50338f4aa5fa6108086d65a",
+    "experiments/dvs_critic_le_benchmark.py": "14a8a7aa4532db97ef507ac4b9f6553e2fe1bdaaf47975ebd633233f555af04e",
+    "experiments/dvs_fork_replay.py": "9773d2a15b6a1f8e867d999ffc5d019c8831bd9ae8291f25ad5f7513b1c7a822",
+    "sleeping_machines/shadow_lanes.py": "a26482f6c6f1038a35f9b6f914b0a16b9fa941195093fc9455a29e95e0d0407c",
+    "experiments/aws_replay_variance_probe.py": "b47891b61746bfcd35094e54734cdb969011a4b29ecefae0ad97ab74db265d4c",
+    "sleeping_machines/factorized_race.py": "5bbfdf41ea63770a2394dde6e39fbe4b94b79dbab95c863f6413480ae3aa5568"
+  },
+  "artifact_sha256": "684a520957f14843ea1d0c8f1675fb91281a7b9e45f10c7f12338d74ab986ce2",
+  "wall_s": 1.9033946569543332,
+  "peak_rss_kib": 443592
+}

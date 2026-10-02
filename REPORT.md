@@ -2892,3 +2892,16 @@ All selected portable encoder/head states and reusable feature arrays preserved.
 This restricts a polynomial hypothesis; it does not overturn the positive RBF
 information result or imply a general architectural impossibility. No unchanged
 polynomial escalation, test access or broad advantage claim.
+
+## AWS corrected replay critics: conditional variance gates fail
+
+Sixteen guarded numerical tests pass before two FIT-only frozen screens.
+Against plain k4, critic k2 score-coordinate MSE ratios are2.083742/2.081475
+for initial fine seeds7/8 and2.429824/2.247774 for trained coarse seeds7/8.
+All k1/k2 nominations fail; mean heldout critic R² negative. Critic fixed before
+subset sampling and first-time-preserving actual-write replay remain correct.
+Unbiasedness is not sufficient for variance reduction. This conditional
+score-space evidence does not measure shared-parameter gradient covariance,
+learning quality or supremacy. Both screens retain targets/critics/replays;
+diagnostic FLOPs unknown,not zero. No unchanged reduced-replay long fit.
+Full scope/costs: experiments/AWS_REPLAY_VARIANCE_FINDINGS_20261002.md.

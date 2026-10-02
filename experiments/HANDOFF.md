@@ -1806,3 +1806,17 @@ No optimizer/quality/sparse advantage claim; deterministic enumeration work paid
 but FLOPs unmeasured. Next bounded independent step: frozen one-site native
 multi-arrival intervention, unused-FIT examples, waiting/amplitude and actual
 write controls. No new full fit or changed core learning credit admitted yet.
+
+## AWS corrected replay variance screens complete — 2 October
+
+User-requested independent replay support:16 guarded law/clock/critic/lane/core
+tests pass. Two FIT-only frozen screens complete; every k1/k2 nomination FAILS.
+Initial fine k2 MSE ratios2.083742/2.081475 versus plaink4; trained coarse
+2.429824/2.247774. Critic R² means negative. Exact score-coordinate conditional
+variance only, not parameter-gradient variance or prediction quality. Critic
+frozen before correction sampling, first-time/actual-write laws retained.
+Artifacts/costs/protocol: AWS_REPLAY_VARIANCE_FINDINGS_20261002.md. No unchanged
+reduced-replay long fits admitted. Prioritized corrected replay quality and
+all-race shadow queues remain other-host-owned. Next gap: critic information
+sufficiency (signed messages/query), independently gated. Earlier compact
+context prototype hypothesis deferred and unrun.
