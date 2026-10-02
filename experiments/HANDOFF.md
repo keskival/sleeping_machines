@@ -1350,7 +1350,7 @@ analytic credit plus enumerated or full-support importance-sampled actual suffix
 residual. Detached LOCAL reference only; no frozen model/source substitution.
 Four tests verify polynomial expectation against finite differences, unequal
 proposal averaging, exact-affine zero residual and invalid/support rejection.
-Together with joint-clock and factorial contracts:9 tests passed.
+Together with joint-clock and factorial contracts:8 tests passed.
 The variance note records integration gaps: prefix independence, explicit
 addressed branch costs, direct derivatives and avoiding double-counted rate credit.
 Banknote worker and queued event supervisor remain active; no extra trainer.
