@@ -150,6 +150,8 @@ def results():
         tasks['dvs_practical_native'].append(r)
     tasks['dvs_practical_inference']=[r for path in sorted((RES/'diagnostics').glob('local_dvs_practical_inference_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
+    appendix=runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))
+    tasks['current_dvs_appendix']=appendix['load'](read)
     tasks['dvs_noise_covariance']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_noise_covariance_audit_*Z.json'))]
     tasks['dvs_persistent_state_probes']=[read(str(path.relative_to(RES)))
@@ -5264,6 +5266,7 @@ def blocks(M, tasks, ev):
     opening_index=next((i+1 for i,p in enumerate(pages) if p[0][1]=='Native strengths: useful time and private state'),
                        2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1)
     pages[opening_index:opening_index]=architectural_pages
+    pages.extend(runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))['pages'](tasks['current_dvs_appendix']))
     return pages
 
 
@@ -5286,7 +5289,8 @@ def markdown(pages):
                                     ["| "+" | ".join(convert(t) for t in row)+" |" for row in rows]))
             elif kind == "figure":
                 name, width = value
-                out.append(f"![{name.replace('_', ' ')}](report/figures/{name}.png)")
+                target=name if str(name).endswith(".png") else f"report/figures/{name}.png"
+                out.append(f"![{Path(name).stem.replace('_', ' ')}]({target})")
             else:
                 out.append(convert(value))
     # Editorial blocks can end with a space; generated Markdown must stay clean

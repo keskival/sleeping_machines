@@ -260,7 +260,7 @@ The current eight-block/two-head/pool2 model selects 16 commits and scores 32 ke
 
 Protected outcome state and two learned key/value races reach 96.09% on new suffixes, versus 78.12% with matched local-credit training. The query suffix and its actual count inputs are identical within each opposite-label group. Predicting the distant relation therefore requires additional observed evidence.
 
-![report/figures/local joint outcome 20261002T125700Z analysis learning.png](report/figures/report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png.png)
+![local joint outcome 20261002T125700Z analysis learning](report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png)
 
 Reserved loss:0.102 versus 0.750bits/query. All1,024 fitting presentations, complete prefix and optimizer work charged: 0.2379 versus 0.2319GFLOPs estimated. Joint training teaches the loss of candidate pairs; inference delivers only two values after scoring all occupied keys. Initial models and inference mechanisms match.
 
@@ -1705,7 +1705,7 @@ Each episode observes a bit followed by its complement, then another such pair, 
 | tapped_full | 1.0002 | 48.44% | 14 |
 | tapped_shallow | 1.0002 | 50.00% | 16 |
 
-![report/figures/local balanced joint 20261002T121500Z analysis learning.png](report/figures/report/figures/local_balanced_joint_20261002T121500Z_analysis_learning.png.png)
+![local balanced joint 20261002T121500Z analysis learning](report/figures/local_balanced_joint_20261002T121500Z_analysis_learning.png)
 
 The native and learned-delay variants fail the predeclared 75%/.8-bit dependency gate. Eight fitting suffix groups give 32 targets/pass; 16 passes,512 target presentations,64 Adam updates,64 held-out dev targets. All arms have query-only binary supervision and full 15-event credit; the target is never an input. Noise couples the quartet and variants.
 
@@ -1780,7 +1780,7 @@ Each observed token writes its observed successor at its predecessor address, ne
 | local_full | 0.933 | 0.750 | 78.12% | 13 |
 | joint_shallow | 0.062 | 0.119 | 95.31% | 16 |
 
-![report/figures/local joint outcome 20261002T125700Z analysis learning.png](report/figures/report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png.png)
+![local joint outcome 20261002T125700Z analysis learning](report/figures/local_joint_outcome_20261002T125700Z_analysis_learning.png)
 
 Reserved seed74001/32 groups/128 queries scores fixed selected weights after all fits; no retuning. Joint-minus-local loss improvement:+0.648 bits; full-minus-shallow improvement:+0.017 bits. The joint-credit gate passes; all arms remain visible.
 
@@ -2028,7 +2028,7 @@ Theory94/95. Dense all-state probing is a diagnostic, not sparse inference or a 
 
 ## Appendix B. Retained payloads, clocks, layers and regularization
 
-![report/figures/local dvs state partition probe 20261002T214000Z learning.png](report/figures/report/figures/local_dvs_state_partition_probe_20261002T214000Z_learning.png.png)
+![local dvs state partition probe 20261002T214000Z learning](report/figures/local_dvs_state_partition_probe_20261002T214000Z_learning.png)
 
 | Encoder | Added state/control | Dims | Accuracy % | NLL | Kind/C |
 | --- | --- | --- | --- | --- | --- |
@@ -2097,7 +2097,7 @@ One guarded one-thread job at a time; RSS watchdog and8GiB available-memory floo
 
 ## Appendix B. Completed matched credit pilot: terminal pairs / seed6
 
-![report/figures/local dvs credit comparison pairs 20261002T174000Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_pairs_20261002T174000Z_learning.png.png)
+![local dvs credit comparison pairs 20261002T174000Z learning](report/figures/local_dvs_credit_comparison_pairs_20261002T174000Z_learning.png)
 
 | Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2117,7 +2117,7 @@ All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC pl
 
 ## Appendix B. Completed matched credit pilot: state choice / seed6
 
-![report/figures/local dvs credit comparison state choice s6 20261002T192100Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z_learning.png.png)
+![local dvs credit comparison state choice s6 20261002T192100Z learning](report/figures/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z_learning.png)
 
 | Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2137,7 +2137,7 @@ All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC pl
 
 ## Appendix B. Completed matched credit pilot: state choice / seed7
 
-![report/figures/local dvs credit comparison state choice s7 20261002T193500Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_choice_s7_20261002T193500Z_learning.png.png)
+![local dvs credit comparison state choice s7 20261002T193500Z learning](report/figures/local_dvs_credit_comparison_state_choice_s7_20261002T193500Z_learning.png)
 
 | Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2157,7 +2157,7 @@ All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC pl
 
 ## Appendix B. Completed matched credit pilot: state clock / seed6
 
-![report/figures/local dvs credit comparison state clock 20261002T174600Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_clock_20261002T174600Z_learning.png.png)
+![local dvs credit comparison state clock 20261002T174600Z learning](report/figures/local_dvs_credit_comparison_state_clock_20261002T174600Z_learning.png)
 
 | Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2348,7 +2348,7 @@ Four contracts205000Z: zero-offset state/logit/original-gradient identity; nonze
 
 ## Appendix B. Completed coupled-time offset pilot: seed6
 
-![report/figures/local dvs evolution offset comparison s6 20261002T210100Z learning.png](report/figures/report/figures/local_dvs_evolution_offset_comparison_s6_20261002T210100Z_learning.png.png)
+![local dvs evolution offset comparison s6 20261002T210100Z learning](report/figures/local_dvs_evolution_offset_comparison_s6_20261002T210100Z_learning.png)
 
 | Schedule | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2369,7 +2369,7 @@ Preserved strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 controls have un
 
 ## Appendix B. Completed coupled-time offset pilot: seed7
 
-![report/figures/local dvs evolution offset comparison s7 20261002T210800Z learning.png](report/figures/report/figures/local_dvs_evolution_offset_comparison_s7_20261002T210800Z_learning.png.png)
+![local dvs evolution offset comparison s7 20261002T210800Z learning](report/figures/local_dvs_evolution_offset_comparison_s7_20261002T210800Z_learning.png)
 
 | Schedule | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
 | --- | --- | --- | --- | --- | --- |
@@ -2761,108 +2761,101 @@ The evidence is preserved in versioned result summaries with configurations, spl
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
 
-## AWS appendix: coarse temporal packets in the integrated native core
+## Appendix B. AWS coarse temporal screens: two seeds pass
 
-An exploratory fitting-user-selected RBF diagnostic gives4-bin77.604%/.686661
-versus20-bin74.479%/.707992 on the existing192 development gestures, using984
-fitting gestures. It selects only on fitting-user GroupKFold NLL. Solver
-FLOPs remain unknown. Coarser representation can reduce estimation/optimization
-error despite discarding information; this does not imply timing is useless.
+| Native packet/clock | Accuracy % | Dev NLL | Whole fit GF est. | Fit MF / target | Infer MF / prefix |
+| --- | --- | --- | --- | --- | --- |
+| s6 20 bins/.05 | 48.96 | 1.4242 | 2.285696 | 2.232125 | 0.591709 |
+| s6 4 bins/.05 | 57.81 | 1.2221 | 0.548517 | 0.535661 | 0.138119 |
+| s6 4 bins/.25 | 55.73 | 1.2749 | 0.548517 | 0.535661 | 0.138133 |
+| s7 20 bins/.05 | 49.48 | 1.4347 | 2.285696 | 2.232125 | 0.591695 |
+| s7 4 bins/.05 | 53.12 | 1.3233 | 0.548517 | 0.535661 | 0.137993 |
+| s7 4 bins/.25 | 55.21 | 1.2208 | 0.548517 | 0.535661 | 0.137965 |
 
-Completed integrated seed6 screen keeps p16/L2/H2/pool2, time computation,
-addressed state, separate keys/values and counterfactual learning. It coalesces
-five50ms counts into each250ms packet; within-quarter timing is lost, all raw
-counts and causal1s query retained. All three-arm numerical/recovery/accounting
-contracts and learning smokes pass. Same256 distinct fit gestures,4passes,
-1024 fitting targets,192 development,U16/Adam.003/clip1,8available receivers,
-4 selected writes per event, fixed4pass development selection:
+Same integrated p16/L2/H2/pool2 core, 256 fitting gestures, 192 subject-disjoint development gestures, four passes, 1,024 fitting presentations and U16. Coalescing five 50ms count packets into each 250ms packet preserves total causal counts and the 1s query but removes timing within each quarter second. Learned temporal computation, races, separate keys/values, sparse addressed writes and counterfactual credit remain. The two coarse arms differ only in clock initialization.
 
-|Native input/clock|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
-|---|---:|---:|---:|---:|---:|
-|20bins/.05|48.958%|1.424195|2.285696|2.232125|.591709|
-|4bins/.05|57.812%|1.222135|.548517|.535661|.138119|
-|4bins/.25|55.729%|1.274860|.548517|.535661|.138133|
+Both coarse arms pass the prespecified screen in seeds6 and7: at least .02 NLL improvement, at most 1 percentage point accuracy decline and at most .50 fitting work ratio. Work ratio .239978 means 76.002% less counted fitting work. Events 21,504 to 5,120; key scores 172,032 to 40,960; writes 86,016 to 20,480. Eight available receivers and four selected writes per event in every arm.
 
-Both coarse arms pass the frozen>=.02NLL gain/<=1pp decline/<=.50work gate.
-Fitting work ratio.239978 (76.002% lower); simulated events21504→5120,
-key scores172032→40960,selected writes86016→20480. Native stages use identical
-arithmetic+unit-special conventions including backward/Adam/clip. Input
-coalescing/normalization/loading/evaluation are included in whole-job wall,
-but NumPy preprocessing FLOPs/traffic and energy remain unmeasured. Three
-concurrent one-thread AWS jobs: fine42.846s/463736KiB,coarse14.031s/456672KiB,
-matched-clock14.046s/457148KiB. These walls are isolated observations.
+Seed6 one-thread AWS job walls are 42.846/14.031/14.046s, under the authorized three-slot scheduler. These are observations, not universal hardware speedups. The subsequent full-data matrix is complete on the next page; the earlier pending replication and full-data statuses are superseded by completed evidence.
 
-Seed7 unchanged replication is pending, not another quality result. This is
-within-family, single-seed development evidence, not a completed advantage
-over stronger984-fit gesture controls. Older full-data native/control evidence
-remains leading. Raw results/common-unit fixed-gate analysis:
-experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_analysis.json.
+Exploratory reused development set; no independent confirmation or control advantage. All passes, candidate values, backward/Adam/clip are charged in consistent arithmetic plus unit-special estimates. Whole-job wall includes preprocessing/evaluation; NumPy preprocessing FLOPs, traffic and energy remain unknown. Both completed analysis files and the verbatim pre-integration AWS appendix are retained in version control.
 
-AWS fixed seed7 coarse replication also completes:20bin/.05 49.479%/1.434727,
-4bin/.05 53.125%/1.323325,4bin/.25 55.208%/1.220806. Same256fit/192dev/four
-passes/U16, full native work2.285696/.548517/.548517GFLOPs; per-target
-2.232125/.535661/.535661MFLOPs; inference .591695/.137993/.137965MFLOPs.
-Both gates pass; source/data and all attempts preserved. This is seed replication
-on the reused development set, not independent fresh confirmation. Full984-fit,
-eight-pass seeds6/7/8 all-three-arm comparison is admitted under frozen protocol,
-with pending cells unfilled and strongest controls retained.
+## Appendix B. Full coarse matrix: positive means, failed all-seed gates
 
-## AWS full-data coarse comparison and readout diagnosis complete
+| Native packet/clock | Accuracy % | Dev NLL | Whole fit GF est. | Fit MF / target | Infer MF / prefix |
+| --- | --- | --- | --- | --- | --- |
+| s6 20 bins/.05 | 57.81 | 1.1798 | 17.573520 | 2.232409 | 0.591779 |
+| s6 4 bins/.05 | 61.46 | 1.0718 | 4.218015 | 0.535825 | 0.138035 |
+| s6 4 bins/.25 | 66.67 | 0.8910 | 4.218015 | 0.535825 | 0.138119 |
+| s7 20 bins/.05 | 55.73 | 1.1726 | 17.573520 | 2.232409 | 0.591737 |
+| s7 4 bins/.05 | 70.31 | 0.9333 | 4.218015 | 0.535825 | 0.137923 |
+| s7 4 bins/.25 | 61.98 | 1.0569 | 4.218015 | 0.535825 | 0.138007 |
+| s8 20 bins/.05 | 68.75 | 0.8986 | 17.573520 | 2.232409 | 0.591751 |
+| s8 4 bins/.05 | 60.42 | 1.0286 | 4.218015 | 0.535825 | 0.138007 |
+| s8 4 bins/.25 | 69.27 | 0.9207 | 4.218015 | 0.535825 | 0.138035 |
 
-All nine native984fit/eightpass/192dev runs complete,7872 fitting targets/seed.
-Three-seed means: fine60.764%/1.083660NLL;4bin/.05 64.062%/1.011241;
-4bin/.25 65.972%/.956220. Native fit17.573520 versus4.218015GFLOPs (ratio.240021).
-Seed8 fine68.75%/.898591 exceeds4bin/.05 60.417%/1.028562 and has lowerNLL
-than4bin/.25 69.271%/.920744. Both frozen all-seed gates FAIL. The positive
-means and76% counted work savings are preserved, with no unchanged escalation.
-Crossed3seed/development-user diagnostic intervals include zero; not fresh
-confirmation. Original full-data native65.10%/.963161 and clock66.15%/1.041987,
-and stronger4bin RBF77.604%/.686661 remain preserved alongside matched batched
-references. Do not replace them with a weaker new baseline.
+Nine completed fits: same984 fitting/192 development gestures, eight passes, 7,872 fitting presentations per run. Mean fine accuracy/NLL 60.764%/1.083660; 4-bin/.05 64.062%/1.011241; 4-bin/.25 65.972%/.956220. Coarse fitting work is 4.218015 versus 17.573520 GFLOPs per fit: ratio .240021. Every per-target column uses the same denominator across models; no whole-fit/per-target unit mixing.
 
-Completed common-unit per-seed work/quality/capacity/activity ledger and every
-curve: experiments/AWS_FULL_COARSE_FINDINGS_20261002.md. Same8available
-receivers/4updates per event; coarse5 versusfine21 events/query. Coarse native
-fitting MFLOPs/query .535825, fine2.232408 (full7872target denominator);
-inference per-seed measured in the saved ledger. NumPy preprocessing FLOPs,
-physical traffic and energy unknown; wholejobwalls include preprocessing and
-all evaluations/checkpoint writing. All computations/losing-values/Adam paid.
+Both frozen all-seed gates FAIL. Seed8 fine 68.75%/.898591 has lower NLL than 4-bin/.05 60.417%/1.028562 and 4-bin/.25 69.271%/.920744. Diagnostic crossed seed/development-user intervals include zero. Preserve positive mean quality and work savings alongside this failure; no unchanged extension follows.
 
-Frozen readout diagnosis uses ALLthree matched-clock encoders and their initial
-reservoirs. Fitted32-context RBF probes69.097%/.856456mean versus native65.972%/
-.956220; per-seed NLL improves .056455/.163228/.079610. Predeclared context
-nomination gate passes (+3.125pp/.099764NLL mean,eachseedNLL positive). Full
-resident probes additionally read all128memoryvalues/8ages/8seenflags, reaching
-72.743%/.829107; resident-over-context gain.027349NLL misses.05 gate. Initial
-context61.632%/1.036019 and resident68.75%/.886478 remain visible.
+Original stronger local references remain valid: native65.10%/.963161 and clock66.15%/1.041987. They have different fitting implementations and work totals and are not replaced by the weaker matched fine arm. Same8 receivers, four writes per event, 21 versus5 events per query. Saved full-coarse analysis retains every curve, activity ledger, result digest, wall/RSS and uncertainty scope. No official test.
 
-This is information/readout evidence, not an installed native nonlinear head
-or sparse dormant-value retrieval result. Fitting-only GroupKFold selection,
-72probeCV/12refits,6wholeprefix replays and original native fits are charged.
-Solver FLOPs unknown, model storage/replay counts/native fitwork retained in
-experiments/AWS_COARSE_READOUT_FINDINGS_20261002.md and source-hashed analysis.
-Next hypothesis is an integrated zero-nested standarddegree2 query-head map;
-no test access, dense prefix carrier, decoder advantage or quality promise.
+## Appendix B. Strong coarse controls and frozen readout evidence
 
-## AWS integrated quadratic screen fails; context evidence remains scoped
+| Native packet/clock | Accuracy % | Dev NLL | Whole fit GF est. | Fit MF / target | Infer MF / prefix |
+| --- | --- | --- | --- | --- | --- |
+| Raw RBF 1 bins | 68.75 | 0.8068 | Unknown | Unknown | Unknown |
+| Raw RBF 4 bins | 77.60 | 0.6867 | Unknown | Unknown | Unknown |
+| Raw RBF 20 bins | 74.48 | 0.7080 | Unknown | Unknown | Unknown |
 
-After positive frozen context probes, a standard degree2 residual head starts
-at zero and nests native initial logits/RNG/all old gradients exactly. Six
-independent numerical/recovery/accounting prerequisites pass;24fit/8dev/two
-passes learning smoke passes fit1.085x/inference1.459x resource admission.
-Same256fit/192dev/four-pass seed6 core,4bins/.25clock,p16/L2/H2/pool2:
+| Frozen encoder/access | Mean accuracy % | Mean dev NLL | Nomination gate |
+| --- | --- | --- | --- |
+| Initial/query32 | 61.632 | 1.036019 | Diagnostic |
+| Initial/all resident state | 68.750 | .886478 | Diagnostic |
+| Trained/query32 | 69.097 | .856456 | Pass |
+| Trained/all resident state | 72.743 | .829107 | FAIL |
 
-|Readout|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
-|---|---:|---:|---:|---:|---:|
-|Affine|55.729%|1.274860|.548517|.535661|.138133|
-|Quadratic residual|55.208%|1.441478|.594382|.580452|.201506|
+Raw controls use984 fitting/192 development examples and fitting-user GroupKFold selection. The4-bin RBF result77.604%/.686661 is a strong completed reference under that protocol; the earlier local RBF73.44%/.706478 uses different selection and remains visible. Solver FLOPs and total fit/inference work are unknown, not zero.
 
-Frozen gate FAILS: NLL worsens.166618; fitratio1.083617 and inference1.458782
-remain within fixed limits. New5808 head weights and all5 sequential head
-calls paid.8 available receivers/4writes per event and factual/key/losing-value
-activity identical. Deep state/parameter-gradient and interrupted recovery
-contracts remain valid; they do not predict quality. No unchanged seed7,
-full-fit, epoch extension or automatic promotion. Earlier full-coarse seed8
-failure and all positive frozen readout/reservoir controls remain preserved.
-A frozen affine-versus-polynomial convex-fit diagnostic can separate decoder
-fitting from encoder drift before a new learning intervention.
+All three matched-clock native encoders and their initial reservoirs are frozen. Query RBF probes improve native mean65.972%/.956220 by3.125 points/.099764 NLL; individual NLL gains .056455/.163228/.079610 pass the context nomination gate. All resident reads add128 memory values, eight ages and eight occupancy flags. Their extra mean .027349 NLL gain misses the .05 resident gate.
+
+These are information/readout diagnostics. Dense resident access does not demonstrate sparse dormant-value retrieval. Conditional fitting-only decoder selection shares label-trained encoders; it is not producer-cross-fitted validation. The next integrated quadratic head fails, as recorded on the next page.
+
+Original native fits4.218015GF each, six1,176-prefix replays, 72 fold fits and12 refits retained. Probe53.605s/516,444KiB; state/winner/probability contracts pass. Replay solver/materialization/traffic/energy totals remain unknown. Full per-seed readout outcomes and costs are preserved in AWS_COARSE_READOUT_FINDINGS_20261002.md.
+
+## Appendix B. Integrated quadratic head: contracts pass, quality fails
+
+| Native packet/clock | Accuracy % | Dev NLL | Whole fit GF est. | Fit MF / target | Infer MF / prefix |
+| --- | --- | --- | --- | --- | --- |
+| affine | 55.73 | 1.2749 | 0.548517 | 0.535661 | 0.138133 |
+| quadratic | 55.21 | 1.4415 | 0.594382 | 0.580452 | 0.201506 |
+
+Same4-bin/.25-clock native p16/L2/H2/pool2, 256 fitting/192 development gestures, seed6, four passes and1,024 fitting presentations. A standard local degree2 query residual starts at zero: initial logits/RNG and every old gradient nest the affine model exactly. Six numerical/deep-gradient/recovery/accounting contracts and24fit/8dev/two-pass learning smoke pass before this screen.
+
+The quality gate FAILS: NLL worsens .166618 and accuracy declines .521 percentage point. Fitting ratio1.083617 and inference ratio1.458782 satisfy resource admission but do not rescue prediction quality. There is no unchanged seed7/full-data/epoch extension and no replacement of the leading result.
+
+The5808 added head weights bring parameters from15,523 to21,331. Eight available receivers, candidate keys/values and four selected writes per event are unchanged. Every one of the five sequential readout calls is charged. Physical time, hard races, persistent addressed state, separate keys/values and counterfactual learning remain; positive frozen RBF information alone does not prove this coupled encoder/head optimizer can exploit it.
+
+Full-coarse seed8 failure and initial-reservoir/readout controls remain beside this negative result. The AWS team owns the separately frozen affine versus polynomial convex-fit diagnostic. No pending cell is reported as evidence; solver work, preprocessing FLOPs, traffic and energy remain separately scoped.
+
+## Appendix B. Producer-held selection: both rules agree
+
+| Seed | Selection rule | C at984 | Accuracy % | Dev NLL |
+| --- | --- | --- | --- | --- |
+| 6 | conditional cv | 0.1 | 54.17 | 1.222593 |
+| 6 | producer held | 0.1 | 54.17 | 1.222593 |
+| 7 | conditional cv | 0.1 | 53.65 | 1.177975 |
+| 7 | producer held | 0.1 | 53.65 | 1.177975 |
+
+| Seed | Original core fit GF | Feature replay GF | Port-check replay GF | Solver/grid GF |
+| --- | --- | --- | --- | --- |
+| 6 | 2.285696 | 0.888889 | 0.299717 | Unknown |
+| 7 | 2.285696 | 0.888889 | 0.299722 | Unknown |
+
+Use the two saved256-fit native pilot encoders after four fixed passes, without development checkpoint selection. Conditional three-fold decoder CV uses producer-seen fitting labels. Producer-held selection fits on those256 examples and scores728 fitting examples whose labels the producer never saw. Both rules choose the strongest nominal C.1 in both seeds; no selection disagreement or causal selection failure is demonstrated here.
+
+Three mean-L2 coefficients are invariant across fold sizes: lambda=1/(984C), solver C=1/(n lambda). The selected affine heads are then refitted on all984 fitting examples. Final54.17%/1.222593 and53.65%/1.177975 remain weak. Because the new heads see984 labels versus the original pilots256, this is neither an equal-data benchmark nor evidence of practical advantage.
+
+Four contracts include a constructed feature-selection confidence counterexample, sample-size invariant regularization, reproduction of fixed-pass native probabilities and folding scaled affine coefficients into the original native head. Every non-head parameter is bitwise preserved; batched and serial native probabilities match. Parameter count and the inference architecture remain unchanged.
+
+Theory96. The mathematical counterexample establishes a possible failure, not its occurrence in these pilots. Original encoder fits, feature replay and head-port verification replay are separate costs; solver/transformation/traffic/ energy work remains unknown. Same reused192 development examples; no official test or new main model. No guessed global regularization fit is admitted from this result.

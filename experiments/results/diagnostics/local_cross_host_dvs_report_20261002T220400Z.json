@@ -1,0 +1,32 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_cross_host_dvs_report_20261002T220400Z",
+    "analysis": [
+      "experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_analysis.json",
+      "experiments/results/diagnostics/aws_coarse_native_replication_20261002T212900Z_analysis.json",
+      "experiments/results/diagnostics/aws_full_coarse_20261002T213100Z_analysis.json",
+      "experiments/results/diagnostics/aws_coarse_readout_probe_20261002T213700Z.json",
+      "experiments/results/diagnostics/aws_quadratic_native_20261002T214600Z_analysis.json",
+      "experiments/results/diagnostics/local_dvs_producer_held_decoder_20261002T215100Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_analysis.json": "8c0428c46376e827489abe19f4046c87096f2e1a9f03c81fd0b4b6e9d2a0dfab",
+    "experiments/results/diagnostics/aws_coarse_native_replication_20261002T212900Z_analysis.json": "fc5d82ecf3bbfad8ac91d6241b3ad4dd15eb2aeff954ba0099cce325df920647",
+    "experiments/results/diagnostics/aws_full_coarse_20261002T213100Z_analysis.json": "f4f0518f3ed35675a0abce730e0ea51c00ca3f09a3b43789ee92f87950069bc3",
+    "experiments/results/diagnostics/aws_coarse_readout_probe_20261002T213700Z.json": "99063aaee73e20ba3a8229b5c4ba1c784fadb3765e15c5b49ab4e14807b9d160",
+    "experiments/results/diagnostics/aws_quadratic_native_20261002T214600Z_analysis.json": "a4cb94fbc7b3f96abfbb74b1988c548a8f0972e521a5af3faafef08c70656763",
+    "experiments/results/diagnostics/local_dvs_producer_held_decoder_20261002T215100Z.json": "8a9f738811b65e8a9a35e4fe4c0e68d71d5282df255af8a37adec4abda0a51ab"
+  },
+  "pdf_pages": 149,
+  "wall_s": 23.86866321200796,
+  "max_rss_kb": 67056,
+  "source_sha256": {
+    "experiments/publish_current_dvs_report.py": "b60fd05cb28960c8e26bca0a65e71867eced0df0de0c2d01771456c3f84e63a6",
+    "report/readable_report.py": "151ef4b6f92d34ccf1f7fe81976d799903051e6b6165d17f209428da4bb78c1f",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/current_dvs_appendix.py": "4370f1a032dbbf682276cc70a1f7fdac6f7f321d54f89c4d1043dc8ce6025e07"
+  },
+  "scope": "Completed cross-host DVS evidence, historical failures and common-unit boundaries preserved; exploratory scope retained."
+}

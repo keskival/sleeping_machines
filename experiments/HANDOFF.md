@@ -1737,3 +1737,32 @@ encoders, fit-only selection, folded equivalent native head coefficients,
 oldnativefit/replay/solver costs retained. It tests decoder adequacy versus
 coupled representation drift, not broadconvextraining or sparseRBFsupremacy.
 No architecture or additionalencoderfit promoted from pending diagnostics.
+
+## Cross-host report preserved and published — 2 October, 22:06 UTC
+
+Git autostash conflict in REPORT.md resolved on main without discarding either
+host's evidence; no active rebase remains and all four autostashes are retained.
+The former manually appended AWS coarse/full/readout/quadratic sections now
+have completed-result-backed report pages, so normal rendering preserves them.
+Their verbatim historical text is retained in
+report/appendices/aws_coarse_history_20261002T215800Z.md, including statuses
+subsequently superseded by completed results. Local noise/state/partition
+pages remain; producer-held decoder agreement is now included. Strong controls,
+positive mean work savings and failed all-seed/quality gates stay adjacent.
+
+Guarded unique queue local_cross_host_dvs_report_20261002T220400Z completes:
+149-page MD/PDF; missing-section, page bounds, orphan text, parent-result and
+source-change checks pass, 23.869s/67056KiB. No numerical fit. Current publisher
+and appendix module are now source-hashed; do not change successful numerical
+sources. Generated Markdown figure paths also corrected for explicit PNG paths.
+
+Prioritized integrated numerical credit experiment remains the other host's
+corrected first-time-preserving replay (LE); do not duplicate it or the AWS
+frozen polynomial decoder diagnosis. Local diagnostic outcomes do not justify
+another guessed normalization/head-regularization fit. Next independent gap is
+multi-arrival reception: derive complete residual-arrival/window boundary credit
+before fitting a winner-to-window substitution. Existing silence/window primitive
+contracts are not an integrated reception-window experiment. Preserve physical
+clock/readiness, actual sparse writes, query deadline and complete losing-route
+costs in any proposed extension. Current host curie remains CPU-only; one guarded
+job, 8GiB MemAvailable floor, measured ~350–460MiB diagnostics. No unguarded job.
