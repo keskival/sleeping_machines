@@ -26,6 +26,12 @@ terminal key credit initially zero. Distinct keys and a bilinear decoder
 admit a near-perfect solution. A stationary terminal symmetry is therefore
 an optimization issue, not an architectural impossibility theorem.
 
+[Bounded terminal pair credit](theory/71_bounded_terminal_pair_credit.md)
+specializes §199 to the two-read expected risk: full-support pair sampling
+keeps conditional gradients unbiased and can bound decoder pair work, while
+all key/proposal/optimizer work and variance remain paid. It does not remove
+the cold-start alias; no sampled implementation or advantage is claimed.
+
 **Calibration first (2 Oct, §§376–381):** [sufficient-statistic state, escape races and count references](theory/58_sufficient_statistic_state_and_count_references.md). Closed-form Kneser–Ney counts beat every completed fitted language model on the shared protocol at 2K–1M fitting characters, and counting over the development stream alone scores 2.884 bpc. It proves fixed learned gates cannot be consistent per-address estimators, shows hierarchical backoff is an exact cascade of escape races, derives responsibility-gated credit for a learned base measure, and proposes count-carrying receivers. [Note 59](theory/59_statistic_valued_race_memory.md) (§§382–392) extends it: learned race keys over statistic-valued receivers make counterfactual route and write credit exact and cheap.
 
 Latest empirical design update: [what the completed October 1 results change](theory/RESULTS_DESIGN_UPDATE_20261001.md).
