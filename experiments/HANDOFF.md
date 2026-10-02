@@ -1959,3 +1959,15 @@ positive48.3%/34.1% reductions, NOT a replacement of the everycasegate.
 1280TRAIN+80confirmationVJPs/2560shadowlanespaid. Artifactsfullproposal/models
 saved. No unchanged reduced-replay qualityfit. Future robust allocation needs
 state-dependent guard/conditioning and a separately fixed expected-risk protocol.
+
+## Exact query-only native inference complete — 2 October
+
+All576 paired logits/ALLstate checks bitwise identical, saved original probability
+agreement, parameter equality, target/repeat/query/training rejection pass.
+Three saved coarse native producers, no fit. Full-prefix counted operations
+138119/138007/138035 ->135259/135147/135175, exact2860saving~2.07%.
+Observed Python wrapper wall~2%SLOWER; explicitly no practicalspeedclaim.
+Every coreclock/race/key/message/write remains, only4unused affine heads removed.
+All3repeattimings/ATenauditsretained, fullcoverage.65.025s/465880KiB.
+No trainingpromotion; helperinference-onlyexplicitterminalquery. See
+AWS_QUERY_ONLY_FINDINGS_20261002.md. Originalparent4.218015GFfit paid unchanged.
