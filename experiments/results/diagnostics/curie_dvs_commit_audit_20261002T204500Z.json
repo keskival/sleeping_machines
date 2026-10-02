@@ -1,0 +1,128 @@
+{
+  "status": "completed",
+  "models": {
+    "curie_dvs_clock_p16d4pool2_s6_20261002T172500Z": {
+      "final_accuracy": 0.5729166666666666,
+      "by_depth": {
+        "0": {
+          "races": 35,
+          "surrogate_mean_cosine": 0.28517463083620276,
+          "surrogate_sign_agreement": 0.6571428571428571,
+          "surrogate_median_magnitude_ratio": 0.18642132585220028,
+          "exact_pi_mean_cosine": 0.11567847170392209,
+          "exact_pi_sign_agreement": 0.5714285714285714,
+          "exact_pi_median_magnitude_ratio": 0.13255565924489204,
+          "commit_mean_cosine": 0.20000000000000004,
+          "commit_sign_agreement": 0.6,
+          "commit_median_magnitude_ratio": 0.647800802654954,
+          "mean_commit_share": 0.30962683358640586
+        },
+        "1": {
+          "races": 36,
+          "surrogate_mean_cosine": 0.2525875504631594,
+          "surrogate_sign_agreement": 0.6666666666666666,
+          "surrogate_median_magnitude_ratio": 0.5576177077941236,
+          "exact_pi_mean_cosine": 0.16666666666666666,
+          "exact_pi_sign_agreement": 0.5833333333333334,
+          "exact_pi_median_magnitude_ratio": 0.17575346754739313,
+          "commit_mean_cosine": 0.2222222222222222,
+          "commit_sign_agreement": 0.6111111111111112,
+          "commit_median_magnitude_ratio": 1.238961929112069,
+          "mean_commit_share": 0.39957276678165426
+        },
+        "2": {
+          "races": 38,
+          "surrogate_mean_cosine": 0.058035505948128646,
+          "surrogate_sign_agreement": 0.5,
+          "surrogate_median_magnitude_ratio": 0.7361564812785024,
+          "exact_pi_mean_cosine": 0.22643730048611213,
+          "exact_pi_sign_agreement": 0.6052631578947368,
+          "exact_pi_median_magnitude_ratio": 0.11417208725422391,
+          "commit_mean_cosine": 0.021513900978898808,
+          "commit_sign_agreement": 0.5263157894736842,
+          "commit_median_magnitude_ratio": 0.9133857476238668,
+          "mean_commit_share": 0.3364946408325287
+        },
+        "3": {
+          "races": 29,
+          "surrogate_mean_cosine": -0.03521490333641207,
+          "surrogate_sign_agreement": 0.4482758620689655,
+          "surrogate_median_magnitude_ratio": 0.1482605536552192,
+          "exact_pi_mean_cosine": 0.3055582894981552,
+          "exact_pi_sign_agreement": 0.6206896551724138,
+          "exact_pi_median_magnitude_ratio": 0.06533855650679801,
+          "commit_mean_cosine": 0.08535198275792223,
+          "commit_sign_agreement": 0.5172413793103449,
+          "commit_median_magnitude_ratio": 0.477082437415251,
+          "mean_commit_share": 0.279633799729282
+        }
+      }
+    },
+    "curie_dvs_clock_p16d2pool2_s7_20261002T183000Z": {
+      "final_accuracy": 0.578125,
+      "by_depth": {
+        "0": {
+          "races": 72,
+          "surrogate_mean_cosine": 0.1386591476170035,
+          "surrogate_sign_agreement": 0.5833333333333334,
+          "surrogate_median_magnitude_ratio": 0.4623594373669452,
+          "exact_pi_mean_cosine": 0.24101873895808154,
+          "exact_pi_sign_agreement": 0.625,
+          "exact_pi_median_magnitude_ratio": 0.22146716508750497,
+          "commit_mean_cosine": 0.19482380233327629,
+          "commit_sign_agreement": 0.5972222222222222,
+          "commit_median_magnitude_ratio": 0.7586021798270934,
+          "mean_commit_share": 0.4134837199081638
+        },
+        "1": {
+          "races": 71,
+          "surrogate_mean_cosine": -0.08634199454089997,
+          "surrogate_sign_agreement": 0.4507042253521127,
+          "surrogate_median_magnitude_ratio": 2.1488413660096275,
+          "exact_pi_mean_cosine": 0.061917046240792924,
+          "exact_pi_sign_agreement": 0.5211267605633803,
+          "exact_pi_median_magnitude_ratio": 0.14012333890395096,
+          "commit_mean_cosine": 0.17712341258298547,
+          "commit_sign_agreement": 0.5915492957746479,
+          "commit_median_magnitude_ratio": 0.64198377750424,
+          "mean_commit_share": 0.32281999148354606
+        }
+      }
+    },
+    "curie_dvs_clock_p16d2pool8_s6_20261002T172500Z": {
+      "final_accuracy": 0.625,
+      "by_depth": {
+        "0": {
+          "races": 72,
+          "surrogate_mean_cosine": 0.15151743277350527,
+          "surrogate_sign_agreement": 0.5833333333333334,
+          "surrogate_median_magnitude_ratio": 0.046297196674421684,
+          "exact_pi_mean_cosine": 0.12916354798699092,
+          "exact_pi_sign_agreement": 0.5138888888888888,
+          "exact_pi_median_magnitude_ratio": 0.05290172723669634,
+          "commit_mean_cosine": 0.22293854115135125,
+          "commit_sign_agreement": 0.6388888888888888,
+          "commit_median_magnitude_ratio": 0.5105572630400392,
+          "mean_commit_share": 0.2824221620392266
+        },
+        "1": {
+          "races": 72,
+          "surrogate_mean_cosine": 0.0661667982775899,
+          "surrogate_sign_agreement": 0.5555555555555556,
+          "surrogate_median_magnitude_ratio": 0.022630835613658695,
+          "exact_pi_mean_cosine": 0.17884121026154057,
+          "exact_pi_sign_agreement": 0.5416666666666666,
+          "exact_pi_median_magnitude_ratio": 0.09155763624287114,
+          "commit_mean_cosine": 0.1237930946587405,
+          "commit_sign_agreement": 0.5138888888888888,
+          "commit_median_magnitude_ratio": 0.39028155349406657,
+          "mean_commit_share": 0.16533532854441363
+        }
+      }
+    }
+  },
+  "episodes": 6,
+  "wall_s": 321.28436736398726,
+  "max_rss_kb": 331608,
+  "scope": "Frozen read-only; exact single-race gradients by forced-winner replay; commit terms from post-event aliased slot gradients (future reads only); linearized estimators."
+}

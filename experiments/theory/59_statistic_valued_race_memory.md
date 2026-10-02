@@ -1078,3 +1078,14 @@ choice credit; forced alternatives preserve the first time and RNG consumption; 
 winner-dependent losses. The queued commit audit (which also reports surrogate and exact-π columns) and the
 §402 fits run with the corrected law. Per note 92, a §403 critic must be fixed before (or cross-fitted against) the
 races it corrects.
+
+**§401 result against the corrected target (2 October, 21:49 UTC; curie_dvs_commit_audit_20261002T204500Z.json): P401
+fails.** With first-time-preserving forced replays as the exact single-race target (note 92), on 3 models
+and 6 gestures: surrogate sign agreement .45–.67 (cosine −.09 to .29), exact-π .51–.62, commit-aware .51–.64
+(cosine .02–.22). Commit-aware credit corrects the *magnitude* (median ratio .39–1.24 against .02–.74
+for the others), and the commit term carries 17–41% of the linearized credit. It does not correct the *direction*.
+The near-chance fidelity of every linearized estimator survives the corrected target. A winner change propagates
+through later races, writes and timing in a way no first-order local expansion captures. Training credit must use
+actual counterfactual returns (§402 with the corrected law), possibly made cheap with a pre-fixed or cross-fitted
+critic (§403). Exact-π training: depth 2 58.3% / 1.054, depth 4 57.3% / 1.193 (seed 7; baseline depth 2 57.8% /
+1.105), no gain, consistent with the audit.
