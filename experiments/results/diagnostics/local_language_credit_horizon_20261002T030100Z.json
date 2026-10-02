@@ -1,0 +1,358 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_language_credit_horizon_20261002T030100Z"
+  },
+  "result": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.json",
+  "result_sha256": "410979bf0a705ccc166e215b18b4b27daba26a351412bf5884c4e2276ef9349c",
+  "checkpoint_sha256": "d779f9379eb5fd17c250168fcc74d7c87a29ac8a8f00daf074bad429abca3b35",
+  "horizons": [
+    {
+      "credit_targets": 16,
+      "prediction_bpc": 4.0161904577435665,
+      "gradient_norm": 7.082705974578857,
+      "per_layer_gradient_norms": [
+        5.425922870635986,
+        1.7584872245788574,
+        1.319071650505066,
+        1.2319585084915161,
+        1.200555682182312,
+        1.221713900566101,
+        1.2681286334991455,
+        1.4040741920471191
+      ],
+      "forward_input_tokens": 128,
+      "graph_input_tokens": 16,
+      "loss_targets": 16,
+      "backwards": 1
+    },
+    {
+      "credit_targets": 32,
+      "prediction_bpc": 4.0161904577435665,
+      "gradient_norm": 6.378523826599121,
+      "per_layer_gradient_norms": [
+        4.58006477355957,
+        1.5891838073730469,
+        1.2860504388809204,
+        1.306110143661499,
+        1.1824637651443481,
+        1.2732689380645752,
+        1.2764402627944946,
+        1.4295822381973267
+      ],
+      "forward_input_tokens": 128,
+      "graph_input_tokens": 32,
+      "loss_targets": 16,
+      "backwards": 1
+    },
+    {
+      "credit_targets": 64,
+      "prediction_bpc": 4.0161904577435665,
+      "gradient_norm": 6.663517475128174,
+      "per_layer_gradient_norms": [
+        4.727030277252197,
+        1.6721000671386719,
+        1.3827552795410156,
+        1.5138025283813477,
+        1.1899831295013428,
+        1.4162209033966064,
+        1.4284098148345947,
+        1.5274264812469482
+      ],
+      "forward_input_tokens": 128,
+      "graph_input_tokens": 64,
+      "loss_targets": 16,
+      "backwards": 1
+    }
+  ],
+  "comparisons": [
+    {
+      "short": 16,
+      "long": 32,
+      "whole_model": {
+        "short_norm": 7.082705974578857,
+        "long_norm": 6.378523826599121,
+        "difference_norm": 1.757710576057434,
+        "relative_difference_to_long": 0.2755669844373073,
+        "cosine_similarity": 0.9713084697723389
+      },
+      "per_layer": [
+        {
+          "depth": 1,
+          "short_norm": 5.425922870635986,
+          "long_norm": 4.58006477355957,
+          "difference_norm": 1.4313406944274902,
+          "relative_difference_to_long": 0.31251538246588373,
+          "cosine_similarity": 0.9731763601303101
+        },
+        {
+          "depth": 2,
+          "short_norm": 1.7584872245788574,
+          "long_norm": 1.5891838073730469,
+          "difference_norm": 0.4164309799671173,
+          "relative_difference_to_long": 0.2620407897658397,
+          "cosine_similarity": 0.9741026163101196
+        },
+        {
+          "depth": 3,
+          "short_norm": 1.319071650505066,
+          "long_norm": 1.2860504388809204,
+          "difference_norm": 0.36561319231987,
+          "relative_difference_to_long": 0.2842914875391783,
+          "cosine_similarity": 0.9609227776527405
+        },
+        {
+          "depth": 4,
+          "short_norm": 1.2319585084915161,
+          "long_norm": 1.306110143661499,
+          "difference_norm": 0.46805912256240845,
+          "relative_difference_to_long": 0.35836114192503665,
+          "cosine_similarity": 0.933633029460907
+        },
+        {
+          "depth": 5,
+          "short_norm": 1.200555682182312,
+          "long_norm": 1.1824637651443481,
+          "difference_norm": 0.226182222366333,
+          "relative_difference_to_long": 0.19128046798010934,
+          "cosine_similarity": 0.982097864151001
+        },
+        {
+          "depth": 6,
+          "short_norm": 1.221713900566101,
+          "long_norm": 1.2732689380645752,
+          "difference_norm": 0.34111639857292175,
+          "relative_difference_to_long": 0.26790600820863003,
+          "cosine_similarity": 0.9634539484977722
+        },
+        {
+          "depth": 7,
+          "short_norm": 1.2681286334991455,
+          "long_norm": 1.2764402627944946,
+          "difference_norm": 0.24525444209575653,
+          "relative_difference_to_long": 0.19213938109318493,
+          "cosine_similarity": 0.9814422130584717
+        },
+        {
+          "depth": 8,
+          "short_norm": 1.4040741920471191,
+          "long_norm": 1.4295822381973267,
+          "difference_norm": 0.34549030661582947,
+          "relative_difference_to_long": 0.2416722154099267,
+          "cosine_similarity": 0.9704297780990601
+        }
+      ]
+    },
+    {
+      "short": 16,
+      "long": 64,
+      "whole_model": {
+        "short_norm": 7.082705974578857,
+        "long_norm": 6.663517475128174,
+        "difference_norm": 2.0581448078155518,
+        "relative_difference_to_long": 0.3088676236683784,
+        "cosine_similarity": 0.9569981098175049
+      },
+      "per_layer": [
+        {
+          "depth": 1,
+          "short_norm": 5.425922870635986,
+          "long_norm": 4.727030277252197,
+          "difference_norm": 1.2749388217926025,
+          "relative_difference_to_long": 0.26971242979508037,
+          "cosine_similarity": 0.9778360724449158
+        },
+        {
+          "depth": 2,
+          "short_norm": 1.7584872245788574,
+          "long_norm": 1.6721000671386719,
+          "difference_norm": 0.5590669512748718,
+          "relative_difference_to_long": 0.3343501757233689,
+          "cosine_similarity": 0.9481208920478821
+        },
+        {
+          "depth": 3,
+          "short_norm": 1.319071650505066,
+          "long_norm": 1.3827552795410156,
+          "difference_norm": 0.5616800785064697,
+          "relative_difference_to_long": 0.40620353204719695,
+          "cosine_similarity": 0.9146286249160767
+        },
+        {
+          "depth": 4,
+          "short_norm": 1.2319585084915161,
+          "long_norm": 1.5138025283813477,
+          "difference_norm": 0.8481718897819519,
+          "relative_difference_to_long": 0.5602922930039431,
+          "cosine_similarity": 0.8284239768981934
+        },
+        {
+          "depth": 5,
+          "short_norm": 1.200555682182312,
+          "long_norm": 1.1899831295013428,
+          "difference_norm": 0.27047646045684814,
+          "relative_difference_to_long": 0.22729436556818258,
+          "cosine_similarity": 0.9744364619255066
+        },
+        {
+          "depth": 6,
+          "short_norm": 1.221713900566101,
+          "long_norm": 1.4162209033966064,
+          "difference_norm": 0.6208754777908325,
+          "relative_difference_to_long": 0.4384029894642496,
+          "cosine_similarity": 0.8995355367660522
+        },
+        {
+          "depth": 7,
+          "short_norm": 1.2681286334991455,
+          "long_norm": 1.4284098148345947,
+          "difference_norm": 0.5719196796417236,
+          "relative_difference_to_long": 0.40038907161104187,
+          "cosine_similarity": 0.9168049693107605
+        },
+        {
+          "depth": 8,
+          "short_norm": 1.4040741920471191,
+          "long_norm": 1.5274264812469482,
+          "difference_norm": 0.5887566804885864,
+          "relative_difference_to_long": 0.3854566407726164,
+          "cosine_similarity": 0.9227334260940552
+        }
+      ]
+    },
+    {
+      "short": 32,
+      "long": 64,
+      "whole_model": {
+        "short_norm": 6.378523826599121,
+        "long_norm": 6.663517475128174,
+        "difference_norm": 1.0091924667358398,
+        "relative_difference_to_long": 0.1514504119637546,
+        "cosine_similarity": 0.9889891147613525
+      },
+      "per_layer": [
+        {
+          "depth": 1,
+          "short_norm": 4.58006477355957,
+          "long_norm": 4.727030277252197,
+          "difference_norm": 0.4175790250301361,
+          "relative_difference_to_long": 0.08833855518963865,
+          "cosine_similarity": 0.9964728355407715
+        },
+        {
+          "depth": 2,
+          "short_norm": 1.5891838073730469,
+          "long_norm": 1.6721000671386719,
+          "difference_norm": 0.3159402310848236,
+          "relative_difference_to_long": 0.18894816003773404,
+          "cosine_similarity": 0.9825124740600586
+        },
+        {
+          "depth": 3,
+          "short_norm": 1.2860504388809204,
+          "long_norm": 1.3827552795410156,
+          "difference_norm": 0.3074132204055786,
+          "relative_difference_to_long": 0.22231932501289722,
+          "cosine_similarity": 0.976058840751648
+        },
+        {
+          "depth": 4,
+          "short_norm": 1.306110143661499,
+          "long_norm": 1.5138025283813477,
+          "difference_norm": 0.4668319523334503,
+          "relative_difference_to_long": 0.30838365214822056,
+          "cosine_similarity": 0.9557978510856628
+        },
+        {
+          "depth": 5,
+          "short_norm": 1.1824637651443481,
+          "long_norm": 1.1899831295013428,
+          "difference_norm": 0.15301908552646637,
+          "relative_difference_to_long": 0.1285892898251325,
+          "cosine_similarity": 0.9917007684707642
+        },
+        {
+          "depth": 6,
+          "short_norm": 1.2732689380645752,
+          "long_norm": 1.4162209033966064,
+          "difference_norm": 0.3421523869037628,
+          "relative_difference_to_long": 0.24159535146187894,
+          "cosine_similarity": 0.9732062220573425
+        },
+        {
+          "depth": 7,
+          "short_norm": 1.2764402627944946,
+          "long_norm": 1.4284098148345947,
+          "difference_norm": 0.4226485788822174,
+          "relative_difference_to_long": 0.2958874788543502,
+          "cosine_similarity": 0.9573476910591125
+        },
+        {
+          "depth": 8,
+          "short_norm": 1.4295822381973267,
+          "long_norm": 1.5274264812469482,
+          "difference_norm": 0.309268981218338,
+          "relative_difference_to_long": 0.20247716339568728,
+          "cosine_similarity": 0.9802916049957275
+        }
+      ]
+    }
+  ],
+  "same_context_targets_and_per_position_noise": true,
+  "weights_preserved": true,
+  "optimizer_steps": 0,
+  "max_target_logit_change": 0.0,
+  "protocol": {
+    "development": [
+      90000000,
+      90000129
+    ],
+    "official_test_read": false,
+    "forward_input_tokens": 384,
+    "graph_input_tokens": 112,
+    "backwards": 3,
+    "unique_loss_targets": 16,
+    "repeated_loss_target_evaluations": 48,
+    "floating_arithmetic_instrumented": false,
+    "training_surrogate_credit": true
+  },
+  "hardware": {
+    "host": "curie",
+    "device": "cpu",
+    "torch": "2.14.0+cpu",
+    "threads": 1
+  },
+  "wall_s": 11.075491948000035,
+  "max_rss_kb": 530424,
+  "source_sha256": {
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/language_credit_horizon_audit.py": "2806f7b4725f5118ac34b063fbcacd668de51a58d2602601c0c54459d7da0a8f",
+    "experiments/language_learning_audit.py": "bcb731e60b6bd7b34b963e12d1fdea2f7615b7c57f41abe8e3c38edbca060d9d",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/native_language_benchmark.py": "5d07c18c65c5a370d1a9a4d82d6e56f46cdb8d1550750c0a6cf5441343fe7ef4",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708"
+  },
+  "scope": "Fixed saved model, one 16-target slice. Credit difference is not a measured fitting-quality benefit, semantic-feature proof, unbiased route gradient or superiority result. Long64 is a comparison, not all-history truth."
+}
