@@ -1,0 +1,312 @@
+{
+  "status": "completed",
+  "source64": [
+    {
+      "shared_maps": false,
+      "mean_accuracy": 0.9739583333333334,
+      "sample_std_accuracy": 0.0207236901593711,
+      "rows": [
+        {
+          "shared_maps": false,
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s6_pilot.json",
+          "result_sha256": "086556e4481ed8d37486ffd619e3d8088cb9389b610aa500223532582d64edf5",
+          "accuracy": 0.9501953125,
+          "nll": 0.1889338493347168,
+          "parameters": 616964,
+          "cleared_state_accuracy": 0.2412109375,
+          "long_gap_accuracy": {
+            "8.0": 0.1962890625,
+            "64.0": 0.2451171875
+          },
+          "whole_fit_gflops": 1.324124432,
+          "fit_mflops_per_query": 0.6465451328125,
+          "inference_mflops_per_query": 0.1067358125,
+          "fitting_special_function_evaluations": 39563284,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3877.806918873015,
+          "max_rss_kb": 2586572
+        },
+        {
+          "shared_maps": false,
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s7_pilot.json",
+          "result_sha256": "5f7e77055c049b540b3c815140bb3832ca51417dd5c62860aa56b9c7ea06a882",
+          "accuracy": 0.9833984375,
+          "nll": 0.055758546805009246,
+          "parameters": 616964,
+          "cleared_state_accuracy": 0.248046875,
+          "long_gap_accuracy": {
+            "8.0": 0.1826171875,
+            "64.0": 0.2734375
+          },
+          "whole_fit_gflops": 1.324029504,
+          "fit_mflops_per_query": 0.64649878125,
+          "inference_mflops_per_query": 0.106734,
+          "fitting_special_function_evaluations": 39554585,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3870.2100548970047,
+          "max_rss_kb": 2586524
+        },
+        {
+          "shared_maps": false,
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps0_common1_s8_pilot.json",
+          "result_sha256": "ec1f132af1c579d8da56893089aeb5730dd174ca4bb33efb4139e58218c71fb8",
+          "accuracy": 0.98828125,
+          "nll": 0.0429660725640133,
+          "parameters": 616964,
+          "cleared_state_accuracy": 0.2412109375,
+          "long_gap_accuracy": {
+            "8.0": 0.2275390625,
+            "64.0": 0.2373046875
+          },
+          "whole_fit_gflops": 1.324129816,
+          "fit_mflops_per_query": 0.64654776171875,
+          "inference_mflops_per_query": 0.1067394375,
+          "fitting_special_function_evaluations": 39563742,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3890.8436025640112,
+          "max_rss_kb": 2586784
+        }
+      ]
+    },
+    {
+      "shared_maps": true,
+      "mean_accuracy": 0.9925130208333334,
+      "sample_std_accuracy": 0.011276372445109878,
+      "rows": [
+        {
+          "shared_maps": true,
+          "seed": 6,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s6_pilot.json",
+          "result_sha256": "b891939fa05c9c08414bca34f3f43013a7c13537729f1353ed04cc073cd87e9c",
+          "accuracy": 0.9990234375,
+          "nll": 0.027937376988120377,
+          "parameters": 14180,
+          "cleared_state_accuracy": 0.248046875,
+          "long_gap_accuracy": {
+            "8.0": 0.216796875,
+            "64.0": 0.2509765625
+          },
+          "whole_fit_gflops": 1.03414553,
+          "fit_mflops_per_query": 0.5049538720703125,
+          "inference_mflops_per_query": 0.10673490625,
+          "fitting_special_function_evaluations": 19624255,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3328.6273282139737,
+          "max_rss_kb": 2190752
+        },
+        {
+          "shared_maps": true,
+          "seed": 7,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s7_pilot.json",
+          "result_sha256": "3415e9aefa3673f8c47acd1e2fe7e3bc4f14c0400b1d2243afbd8bba62ab28b2",
+          "accuracy": 0.9990234375,
+          "nll": 0.08688295679166913,
+          "parameters": 14180,
+          "cleared_state_accuracy": 0.2421875,
+          "long_gap_accuracy": {
+            "8.0": 0.2060546875,
+            "64.0": 0.244140625
+          },
+          "whole_fit_gflops": 1.034209064,
+          "fit_mflops_per_query": 0.50498489453125,
+          "inference_mflops_per_query": 0.10674125,
+          "fitting_special_function_evaluations": 19630096,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3333.1664015050046,
+          "max_rss_kb": 2191256
+        },
+        {
+          "shared_maps": true,
+          "seed": 8,
+          "result": "experiments/results/event_variants/aws_capacity_exposure_20261002T072141Z_order_S64_maps1_common1_s8_pilot.json",
+          "result_sha256": "432d98ffde09fd2f3298c94ef5ba28960a91f4c2bb9927a46de9d81a6ca9e5dc",
+          "accuracy": 0.9794921875,
+          "nll": 0.0722883801208809,
+          "parameters": 14180,
+          "cleared_state_accuracy": 0.2685546875,
+          "long_gap_accuracy": {
+            "8.0": 0.1787109375,
+            "64.0": 0.265625
+          },
+          "whole_fit_gflops": 1.03434276,
+          "fit_mflops_per_query": 0.50505017578125,
+          "inference_mflops_per_query": 0.106752125,
+          "fitting_special_function_evaluations": 19642471,
+          "fitting_query_presentations": 2048,
+          "fit_queries_per_source_per_pass": 8,
+          "passes": 4,
+          "dev_queries": 1024,
+          "dev_populations": 16,
+          "available_receivers": 2048,
+          "selected_updates_per_event": 16,
+          "key_scores_per_event": 32,
+          "wall_s": 3347.1274385380093,
+          "max_rss_kb": 2190968
+        }
+      ]
+    }
+  ],
+  "source16_historical_rows": [
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot.json",
+      "sha256": "751ca2a6da3456eb57b98164b37ad6a588555c61b047e7f8d79a6d5fdf254cb7",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.75390625,
+      "nll": 0.7592398263514042,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274287896,
+      "fit_mflops_per_query": 0.535718546875,
+      "inference_mflops_per_query": 0.106734,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot.json",
+      "sha256": "893f251246e58e57ff0dde78c68774e4ed6f7d83f4b67043f01db1afc615ed28",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.51171875,
+      "nll": 1.031316626816988,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274295586,
+      "fit_mflops_per_query": 0.53573356640625,
+      "inference_mflops_per_query": 0.10671225,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": false,
+      "common_seed": true,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot.json",
+      "sha256": "050cdcbc2b67e63346a019358242116c573d38014404556f15142136fd2b77a2",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.69140625,
+      "nll": 0.868910439312458,
+      "parameters": 157700,
+      "whole_fit_gflops": 0.274354774,
+      "fit_mflops_per_query": 0.53584916796875,
+      "inference_mflops_per_query": 0.106737625,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 6,
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json",
+      "sha256": "b8c816502324fbc4b373546a915b8bc6a27a36c28ebefd23e83bbd1787c7de84",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.75390625,
+      "nll": 0.8327236473560333,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.256914292,
+      "fit_mflops_per_query": 0.5017857265625,
+      "inference_mflops_per_query": 0.10675575,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 7,
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s7_pilot.json",
+      "sha256": "2e240065ed94f40f4617c3eca9f7cd6bff32af8dd3879f0b20d0bb0d144a647e",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.4453125,
+      "nll": 1.3720600977540016,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.256944632,
+      "fit_mflops_per_query": 0.501844984375,
+      "inference_mflops_per_query": 0.106734,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    },
+    {
+      "maps": true,
+      "common_seed": true,
+      "seed": 8,
+      "result": "experiments/results/event_variants/aws_event_replication_20261002T005408Z_order_S16_shared_P0_observed_s8_pilot.json",
+      "sha256": "7d00df145d76ceafee9b04011a16147b4515163a97d4806d5e606cbaf3204dc1",
+      "data_sha256": {
+        "fit": "b66a28244ac99b334f0275a86115729da4b8652dbab66257e42a3b143990fc82",
+        "dev": "811c9e72c1be1f5227ed7621754270fc249e41c9f491b6e0a4af6d3c623eb0f6"
+      },
+      "accuracy": 0.703125,
+      "nll": 0.8630205504596233,
+      "parameters": 14180,
+      "whole_fit_gflops": 0.257041496,
+      "fit_mflops_per_query": 0.502034171875,
+      "inference_mflops_per_query": 0.106708625,
+      "selected_updates_per_event": 16,
+      "key_scores_per_event": 32,
+      "available_receivers": 512
+    }
+  ],
+  "source16_analysis_sha256": "3bb5d8c2a7197f8f597bbc73bf2275956cd1ae23bda9f78906ba17df3c39241b",
+  "convention": "Whole-fit GFLOPs, fitting/inference MFLOPs per query use identical units for both source counts. 2 FLOPs/MAC; specials separately saved.",
+  "scope": "Development-selected three-seed capacity diagnostic. Equal8 queries/source/pass and16 dev populations, unequal total fit/dev data and optimizer population composition. Fixed observed addresses; no iso-data, iso-quality, discovery or physical-energy supremacy claim."
+}
