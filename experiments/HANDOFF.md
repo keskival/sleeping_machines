@@ -1512,3 +1512,16 @@ Resource gate is intra-family1pp noninferiority margin and≤.85 fitting ratio;
 controls must be included before broader resource claims. Every seed/width kept.
 RSS4GiB/VMS6GiB,8GiB floor,1800s per stage,3 CPU slots. Worker publishes
 complete JSONs serially on main. No new long native fit or pending result claim.
+
+
+## Fresh history comparison publication reserved — 2 October, 12:38 UTC
+
+All control contracts/accounting smokes and native restoration checks passed;
+final comparisons are running/pushing. Prespecified analysis now executable:
+`experiments/event_history_analysis.py`, three contrasts, crossed3-seed/64
+population bootstrap,98.33% accuracy intervals, all12 quality/work rows.
+Native intra-family resource gate uses declared−1pp bound/≤.85 fit ratio.
+No best-seed/width selection, no claim from incomplete rows. Summary supervisor
+`scripts/run_aws_event_history_summary.py` waits exact worker901862 and complete
+summary, reserves host lock during analysis/publication. Session
+`aws-event-history-summary-20261002`; log `queue/aws_event_history_summary_20261002.out`.
