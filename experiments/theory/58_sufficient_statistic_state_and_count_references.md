@@ -254,3 +254,57 @@ specific, testable route by which sparse addressed temporal state could beat
 dense models on quality per unit of training work. Dense models must spend
 parameter-wide updates to memorize what counters store for free. Every
 language comparison table should carry the KN reference row from now on.
+
+## 381. Large-data calibration: the dense controls sit at count level
+
+`experiments/count_reference_scale.py` (guarded queue
+`curie_count_reference_scale_20261002T014500Z`, 315 s, under 1 GB RSS) builds
+interpolated KN tables (fixed `D = .75`, and modified KN with count-of-count
+discounts, untuned) from `text8[0:N]`. It scores them on the E64 control test
+segment `text8[95M:96M]` (999,999 targets), cold, as the AWS LSTM/Transformer
+controls were scored. Result:
+`experiments/results/count_reference/curie_count_reference_scale_20261002T014500Z.json`.
+A first queue (`…013500Z`) was stopped because of a table bug and wrote no
+result. Its queue file records why.
+
+All rows below score the same 999,999 test targets, in bits per character.
+
+| Fit chars | mKN counts, order 7 | E79 race mixer of count/copy experts (frozen / online) | AWS LSTM | AWS Transformer |
+|---:|---:|---:|---:|---:|
+| 10M | **1.788** | **1.613** / 1.593 | 1.799 | 1.908 |
+| 90M | 1.653 | **1.504** / 1.483 | 1.661 | 1.604 |
+
+E79 uses its 256-character copy window, and the online column is prequential.
+The controls are a 1.2M-parameter LSTM and a 3.2M-parameter, four-layer
+Transformer, each one seed. The count order is not tuned on test: order 7 is
+the largest order built, and the curve is still falling at 90M.
+
+**Readings.**
+
+1. The repository's dense controls are within ±.05 bpc of untuned
+   closed-form counts. They are useful matched-protocol controls, but they are
+   **not frontier bars**. Published large Transformers report about 1.1 bpc on
+   the standard text8 test split (Transformer-XL 1.08; Dai et al. 2019). The
+   E64 segment is the first million characters of that split, so the numbers
+   are approximately, not exactly, comparable.
+2. Our strongest language result remains E79 (§108(e)): addressed
+   sufficient-statistic experts mixed by a race with exact local log-loss
+   credit. It is 0.100 bpc better than the 90M Transformer control and 0.149
+   better than mKN. Sections 376–380 explain why this line works and the
+   gradient-only persistent state does not. E79 lacks learned representations
+   (§382), so the remaining gap to frontier quality, roughly 1.50 → 1.1 bpc, is
+   the generalization and retrieval gap of §380's supremacy map.
+3. **Learning sparsity grows with data.** Mean top-level responsibility of the
+   next-coarser predictive on the shared development window, at the
+   count-optimal or largest order: .75 (8K) → .51 (131K) → .39 (1M, mKN) →
+   .28 (10M, mKN-7) → .12 (90M, mKN-7). The fraction of events with
+   `r < .05` grows .03 → .16 → .33 → .46 → .73. At 90M, under the composition of
+   §379, about three-quarters of events would give a learned base less than 5%
+   of its ordinary gradient. The order caveat of §379 applies, and higher orders
+   at 90M would raise `r` somewhat.
+
+**Consequence for claims.** Beating the current AWS controls is necessary but
+not sufficient evidence of an architectural advantage. Language claims should
+be stated against three bars: closed-form counts (now measured at every
+`N`), the AWS controls, and published frontier values marked as
+non-matched references.

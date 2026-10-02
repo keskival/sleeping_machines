@@ -367,6 +367,16 @@ def language_90m_reference_text(ev):
     if pending:
         text += " and ".join(pending) + " reference results are pending. "
     text += "These are single-seed comparisons; capacities and fitting budgets are not matched. "
+    scale = sorted((RES / 'count_reference').glob('*scale*.json'))
+    if scale:
+        rows = [row for path in scale for row in json.loads(path.read_text())['rows']
+                if row['segment'] == 'e64_test_95M_1M' and row['method'] == 'mkn' and row['fit'] == 90_000_000
+                and row['order'] == 7]
+        if rows:
+            best = rows[0]
+            text += (f"Calibration (Theory §381): untuned modified Kneser–Ney counts of the same 90M characters score "
+                     f"{best['bpc']:.3f} on the same test targets, so these controls sit near count level and are not "
+                     "frontier bars. E79's race mixture of count/copy experts scores 1.504 there. ")
     return text
 
 
