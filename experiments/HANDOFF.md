@@ -1357,3 +1357,24 @@ Banknote worker and queued event supervisor remain active; no extra trainer.
 CatBoost seed8 first candidate is substantially slower than seed6/7; CPU busy
 and RSS~474MiB, guarded5400s cap retained. Do not treat pending scores as evidence.
 Supervisor lifecycle JSON is now ignored as intended; commands/plans remain tracked.
+
+
+## Other-host work reviewed and native follow-up reserved — 2 October, 01:35 UTC
+
+Pulled/rebased main through1fcb112, preserving active worker/trainers. Read
+AWS_NEXT_BATCH/native confirmation and statistic theory58/59. New count
+references beat completed neural language fits under this small-data protocol;
+retain that negative evidence and prioritize statistic-assisted integrated credit.
+Native fresh-data plan010500Z (010000Z superseded) has30 verified hashed stages,
+ten checkpoint reuses/two new private fits, fixed seed3201 confirmation and
+analysis gates. New supervisor `scripts/run_aws_native_after_replication.py`
+waits reserved chainPID774142, requires completed replication summary, then
+runs that guarded plan and publishes its prespecified analysis; no duplicate
+fits or concurrent workers. Session `aws-native-after-replication-20261002`;
+log `queue/aws_native_confirmation_20261002T010500Z.out`.
+Statistic delivery/write primitives and four new tests implement restricted
+local contracts without modifying model sources.12 relevant tests pass.
+`theory/aws_20261002_statistic_credit_contracts.md` records q dependence,
+nonfree lookup/discovery, distinct mixture objective and sequential-credit gaps.
+Banknote has only CatBoost seed8 still active; first candidate anomalously slow
+versus prior seeds. Existing5400s guard retained, result remains pending.
