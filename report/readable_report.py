@@ -76,6 +76,9 @@ def results():
     tasks['native_language'] = [r for path in sorted((RES/'native_language').glob('local_native_language_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
+    tasks['count_carrying_language'] = [r for path in sorted((RES/'count_carrying_language').glob('*Z.json'))
+        if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
+        and r['args']['fit']>=2048 and r['args']['dev']==8192]
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3042,6 +3045,40 @@ def blocks(M, tasks, ev):
                     f'{abs(delta):.4f} bpc {"worse" if delta>=0 else "better"} than native, with '
                     f'{100*abs(ratio-1):.2f}% {"more" if ratio>=1 else "less"} fitting work. '
                     'Pending allocations and waiting controls cannot establish a benefit yet.'))
+    if tasks.get('count_carrying_language'):
+        def work_cells(r):
+            w=r['work']['cpu_emulator']
+            return [f"{w['total_training_unit_special_flops']/1e9:.3f}",
+                    f"{w['total_training_unit_special_flops']/r['work']['fitting_targets']/1e6:.3f}",
+                    f"{(w['inference_arithmetic_flops_per_character']+w['inference_special_functions_per_character'])/1e6:.4f}"]
+        count_rows=[]
+        for r in tasks['count_carrying_language']:
+            N=r['args']['fit']
+            for ref in tasks.get('native_language',[]):
+                if ref['args']['fit']==N:
+                    count_rows.append([f"Native alone {N:,}",f"{N:,}/{ref['args']['epochs']}",f"{ref['final']['dev']['bpc']:.3f}",*work_cells(ref)])
+            count_rows.append([f"Count-carrying native K{r['args']['orders']} {N:,}",f"{N:,}/{r['args']['epochs']}",f"{r['final']['dev']['bpc']:.3f}",*work_cells(r)])
+            count_rows.append([f"Same, untrained base {N:,}",f"{N:,}/0",f"{r['initial_dev']['bpc']:.3f}",'Not trained','Not trained',work_cells(r)[2]])
+            refs=[row for path in sorted((RES/'count_reference').glob('*language_*.json'))
+                  for row in json.loads(path.read_text())['rows'] if row['fit']==N]
+            kn=min((row for row in refs if row['method']=='kn' and not row['adaptive']),key=lambda row:row['bpc'],default=None)
+            ad=min((row for row in refs if row['adaptive']),key=lambda row:row['bpc'],default=None)
+            for label,row in (('KN counts, frozen',kn),('Counts, stream-adaptive',ad)):
+                if row:
+                    count_rows.append([f"{label} o{row['order']}",f"{N:,}/1",f"{row['bpc']:.3f}",'Not FLOPs','Not FLOPs','Not FLOPs'])
+        pages.append([
+            ('h1','Appendix B (continued). Ours: count-carrying native receivers'),
+            ('p','The unchanged native eight-block core supplies the base predictive; addressed context-suffix '
+             'receivers of orders 1..K carry sufficient statistics and deliver by an escape-race cascade with '
+             'learned discount and concentration (Theory §§376–380, 387). Fitting counts are leave-one-out; '
+             'development counts are prequential persistent state with frozen weights. Count tables are '
+             'capacity; each target touches K addresses.'),
+            ('table',(['Model','Fit chars / passes','Dev bpc ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Infer MFLOPs / char ↓'],
+             count_rows,[44,27,20,27,28,27])),
+            ('small','Same 8,191 development targets for every row; one seed. Count increments/lookups are '
+             'integer table work reported in the result files, not FLOPs. The untrained-base row isolates '
+             'what training the native base adds. Count rows are dev-selected-order references, not neural '
+             'controls. Exploratory development evidence; no comparable-quality Transformer claim.')])
     for begin in range(0,len(tasks.get('native_language',[])),4):
         rows=tasks['native_language'][begin:begin+4]
         pages.append([

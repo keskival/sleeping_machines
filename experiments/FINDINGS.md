@@ -1,5 +1,18 @@
 # Findings log
 
+## Count-carrying native receivers, 2K — 2 October
+
+The unchanged native core composed with order-1..4 count receivers (escape-race
+cascade, learned discount/concentration) completed at **2.734 dev bpc / 3.753
+whole-fit GFLOPs**. Native alone scored 3.765 / 3.778 on the same 8,191 targets, so
+this is 1.031 bpc better at equal counted work. It is .042 better than
+stream-adaptive counts (2.776), which clears the declared gate. With the
+untrained base the composition scores 2.741, so training the native base adds
+only .007. **Learned:** almost all of the gain comes from count receivers and
+their persistent stream state. Equivalent-count-order analysis (Theory §388)
+shows the native model at 2K/8K is a bigram-level predictor. Carrier
+composition diagnostics at 131K (predeclared P1/P2) are queued. One seed.
+
 ## Count references calibrate the language protocol — 2 October
 
 On the shared development window (8,191 targets), closed-form interpolated

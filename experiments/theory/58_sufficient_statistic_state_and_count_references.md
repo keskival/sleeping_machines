@@ -244,6 +244,17 @@ integrated model beats **both** KN-alone stream-adaptive (2.699 at 8K, order 3
 WB) and native-alone by ≥ .02 bpc. Charge table increments and lookups beside
 FLOPs. Larger-N and AWS dense controls follow only after that gate.
 
+**Outcome, 2K (2 October; `curie_count_carrying_D2048_K4_H2_d16_depth8_s6_20261002T020000Z`).**
+The count-carrying native model completed at **2.734 bpc** with **3.753** whole-fit
+GFLOPs. Native alone scored 3.765 bpc with 3.778 GFLOPs, so the composition is
+1.031 bpc better at equal counted fitting work. It is .042 better than the
+stream-adaptive count reference (2.776), and it clears the declared gate. The
+same composition with the *untrained* native base scores 2.741, so training the
+native base adds only **.007 bpc**: at 2K almost all of the gain comes from the
+count receivers and their persistent stream state. Learned escape parameters
+moved little (`D` .73–.75, `θ` .94–1.13). One seed. §388 explains the small
+learned contribution.
+
 **Supremacy map.** On text8, the gap from closed-form counts (≈2.0 bpc at 1M)
 to strong Transformers (≈1.1 at 90M) has three parts:
 

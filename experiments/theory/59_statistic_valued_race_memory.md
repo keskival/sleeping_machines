@@ -261,3 +261,44 @@ whole-sequence gradient and executed skipping savings require further
 contracts. The memorization estimate is a conditional scenario rather than a
 parameter lower bound. Measured quality gaps and the proposed integrated test
 are retained. See the state/credit prerequisites in the companion AWS note.
+
+## 388. Equivalent count order: how much local context a learned model uses
+
+Map a fitted model's development bpc onto the frozen-KN curve over context
+order at the same `N`, interpolating linearly between neighbouring orders.
+The result is an *equivalent count order*: the suffix length a counting model
+needs to match the fitted model.
+
+| Fitted model | Fit chars | Dev bpc | Equivalent KN order | Count-optimal order |
+|---|---:|---:|---:|---:|
+| native H2/d16/depth8 | 2,048 | 3.765 | 0.9 | 4 |
+| best episodic (write credit) | 2,048 | 3.722 | 1.0 | 4 |
+| native H2/d16/depth8 | 8,192 | 3.557 | 1.0 | 4 |
+| episodic receiver, semantic | 8,192 | 3.311 | 2.3 | 4 |
+| full sparse p32 | 32,768 | 3.106 | 2.2 | 5 |
+| input-gated carrier w256 | 131,072 | 2.572 | 3.1 | 5 |
+| input-gated carrier w128 | 1,048,576 | 2.210 | 3.6 | 6 |
+
+**Readings.**
+
+1. The native model at 2K and 8K is a **bigram-level predictor**: it has learned
+   previous-character statistics and essentially nothing longer. Every learned
+   model uses less local context than counts of the same data, and the shortfall
+   persists to 1M. The fitted models are not yet limited by long-range
+   modelling. They are not exploiting 3–6-character contexts that a table
+   captures exactly.
+2. This is consistent with the 2K outcome (§380): the cascade already contains order-1
+   counts, so a bigram-level base supplies nothing beyond them. By §387 the
+   base's target is the residual beyond order-4 counts, and a 2K stream holds
+   almost no learnable residual.
+3. **Prediction** for the admitted 8K count-carrying fit: the native base
+   is still equivalent to order 1.0, so training it should add at most about
+   .01 bpc over the untrained composition. The composition's advantage over
+   native-alone comes from the counts.
+4. **Where learning must contribute.** In a count-carrying model, a learned
+   base helps only where its standalone predictive beats the count backoff on
+   low-evidence contexts. That requires equivalent orders well above those
+   that counts estimate reliably at that `N`, or information counts cannot
+   represent (generalization, retrieval). Equivalent order is therefore a
+   cheap acceptance metric for any learned component. It should rise with `N`
+   faster than the count-optimal order before composition can pay off.
