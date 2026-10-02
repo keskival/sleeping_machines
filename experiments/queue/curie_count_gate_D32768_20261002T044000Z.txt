@@ -1,0 +1,5 @@
+# Integrated ladder after the 8K gate passed (gate 2.601 vs scalar 2.671 vs stream-adaptive counts 2.699).
+# Same native settings, K4 kept for ladder consistency (32K count-optimal order is 5; noted, not changed).
+# Gate: beat stream-adaptive counts at 32K (2.579, o4) by >= .02; scalar 32K reference follows for the gate's gain.
+curie_count_gate_D32768_K4_s6_20261002T044000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D32768_K4_gate_s6_20261002T044000Z --fit 32768 --dev 8192 --epochs 4 --orders 4 --escape-gate
+curie_count_scalar_D32768_K4_s6_20261002T044000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D32768_K4_H2_d16_depth8_s6_20261002T044000Z --fit 32768 --dev 8192 --epochs 4 --orders 4
