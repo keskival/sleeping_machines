@@ -1,0 +1,661 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_balanced_joint_20261002T121500Z_analysis",
+    "plan": "experiments/queue/local_balanced_joint_20261002T121500Z.json"
+  },
+  "matched_protocol": {
+    "gap": 8,
+    "fit_groups": 8,
+    "dev_groups": 16,
+    "epochs": 16,
+    "payload": 8,
+    "heads": 2,
+    "pool": 2,
+    "seed": 6,
+    "lr": 0.003,
+    "update_targets": 8,
+    "fit_data_seed": 71001,
+    "dev_data_seed": 72001,
+    "fit_hash": "87ce4e515086bd3f3051d02a686b518c2c84a99b4f04a769f16997c7dcba4eeb",
+    "dev_hash": "bade80010b0aa4ced2eccce6406ef4aedbeb3e1ef953ebd0afd9cf6d9ffcf351"
+  },
+  "common_unit_ledger": [
+    {
+      "arm": "native_full",
+      "result": "experiments/results/balanced_joint/local_balanced_joint_20261002T121500Z_native_full_pilot.json",
+      "result_sha256": "24cc3840aa9e3021bf8e886bc2cabe26439c3872052ab97ebc71341670cb1d15",
+      "model": "native",
+      "depth": 4,
+      "payload": 8,
+      "parameters": 8075,
+      "query_bits": 0.9995423918478654,
+      "accuracy": 0.5,
+      "selected_epoch": 8,
+      "exploratory_dependency_gate_passed": false,
+      "fitting_targets": 512,
+      "optimizer_updates": 64,
+      "whole_fit_gflops_estimate": 0.560270272,
+      "fit_mflops_per_target_estimate": 1.094277875,
+      "inference_mflops_per_target": 0.242368,
+      "whole_fit_arithmetic_gflops_estimate": 0.548934848,
+      "fitting_special_evaluations_estimate": 11335424.0,
+      "input_events": 7680,
+      "key_scores": 122880,
+      "selected_updates": 61440,
+      "counterfactual_values": 122880,
+      "state_tensor_bytes": 720,
+      "evaluation_input_events": 17340,
+      "wall_s": 382.1060970469989,
+      "max_rss_kb": 368784,
+      "curve": [
+        {
+          "epoch": 1,
+          "query_bits": 1.0185522879161664,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0394441283265938
+        },
+        {
+          "epoch": 2,
+          "query_bits": 1.0092847642828573,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.010797928107799
+        },
+        {
+          "epoch": 3,
+          "query_bits": 1.0034265850836261,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0102419377570777
+        },
+        {
+          "epoch": 4,
+          "query_bits": 1.0017068754694558,
+          "accuracy": 0.515625,
+          "fitting_query_bits": 1.0095897284876563
+        },
+        {
+          "epoch": 5,
+          "query_bits": 1.0020880669534065,
+          "accuracy": 0.515625,
+          "fitting_query_bits": 1.0070220705059374
+        },
+        {
+          "epoch": 6,
+          "query_bits": 1.001707310800541,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0034942226355357
+        },
+        {
+          "epoch": 7,
+          "query_bits": 1.0023001806809564,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0036701152044767
+        },
+        {
+          "epoch": 8,
+          "query_bits": 0.9995423918478654,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0012209425202865
+        },
+        {
+          "epoch": 9,
+          "query_bits": 1.001447459794846,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0009929983271701
+        },
+        {
+          "epoch": 10,
+          "query_bits": 1.0001603402921746,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0006607735285948
+        },
+        {
+          "epoch": 11,
+          "query_bits": 1.0002513016474928,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0006262668220365
+        },
+        {
+          "epoch": 12,
+          "query_bits": 1.0007835194275758,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0008360722199445
+        },
+        {
+          "epoch": 13,
+          "query_bits": 1.0006752926264482,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0010756252419941
+        },
+        {
+          "epoch": 14,
+          "query_bits": 1.0004175940911182,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0015677670335825
+        },
+        {
+          "epoch": 15,
+          "query_bits": 1.0006533527459331,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0013370334968477
+        },
+        {
+          "epoch": 16,
+          "query_bits": 1.000073799428429,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0016779891021832
+        }
+      ]
+    },
+    {
+      "arm": "tapped_full",
+      "result": "experiments/results/balanced_joint/local_balanced_joint_20261002T121500Z_tapped_full_pilot.json",
+      "result_sha256": "fbab3e656020c667b9b6e6bab9fa379736da1b805c98171d3bd0f07258703c02",
+      "model": "tapped",
+      "depth": 4,
+      "payload": 8,
+      "parameters": 9103,
+      "query_bits": 1.0002308840821608,
+      "accuracy": 0.484375,
+      "selected_epoch": 14,
+      "exploratory_dependency_gate_passed": false,
+      "fitting_targets": 512,
+      "optimizer_updates": 64,
+      "whole_fit_gflops_estimate": 0.618553792,
+      "fit_mflops_per_target_estimate": 1.208112875,
+      "inference_mflops_per_target": 0.275016,
+      "whole_fit_arithmetic_gflops_estimate": 0.607037376,
+      "fitting_special_evaluations_estimate": 11516416.0,
+      "input_events": 7680,
+      "key_scores": 122880,
+      "selected_updates": 61440,
+      "counterfactual_values": 122880,
+      "state_tensor_bytes": 4560,
+      "evaluation_input_events": 17340,
+      "wall_s": 408.78163181499986,
+      "max_rss_kb": 370516,
+      "curve": [
+        {
+          "epoch": 1,
+          "query_bits": 1.0581197223683645,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0750159301597302
+        },
+        {
+          "epoch": 2,
+          "query_bits": 1.0090675790825285,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0531664775849612
+        },
+        {
+          "epoch": 3,
+          "query_bits": 1.0029123717373052,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.027239401005946
+        },
+        {
+          "epoch": 4,
+          "query_bits": 1.0053514364099136,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0126642596499018
+        },
+        {
+          "epoch": 5,
+          "query_bits": 1.0074582789711761,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0067906382896834
+        },
+        {
+          "epoch": 6,
+          "query_bits": 1.001918760782548,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.004002165333172
+        },
+        {
+          "epoch": 7,
+          "query_bits": 1.000584066579081,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0017251257846642
+        },
+        {
+          "epoch": 8,
+          "query_bits": 1.0004829233133858,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.000964408898693
+        },
+        {
+          "epoch": 9,
+          "query_bits": 1.000774974039611,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0009816179126951
+        },
+        {
+          "epoch": 10,
+          "query_bits": 1.000780997463235,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0003618999281423
+        },
+        {
+          "epoch": 11,
+          "query_bits": 1.00095357130446,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0001409290940728
+        },
+        {
+          "epoch": 12,
+          "query_bits": 1.0017148189181426,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0010131391079236
+        },
+        {
+          "epoch": 13,
+          "query_bits": 1.000722960036641,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0009136847656044
+        },
+        {
+          "epoch": 14,
+          "query_bits": 1.0002308840821608,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0013305760857536
+        },
+        {
+          "epoch": 15,
+          "query_bits": 1.0002665234557087,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0006727773801793
+        },
+        {
+          "epoch": 16,
+          "query_bits": 1.0004770974010877,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0007110784539723
+        }
+      ]
+    },
+    {
+      "arm": "tapped_shallow",
+      "result": "experiments/results/balanced_joint/local_balanced_joint_20261002T121500Z_tapped_shallow_pilot.json",
+      "result_sha256": "c3ab1f75f30254f972e2cb37108797ed32f4f17ff9932604ceee31c109179850",
+      "model": "tapped",
+      "depth": 1,
+      "payload": 8,
+      "parameters": 3160,
+      "query_bits": 1.0002430626036252,
+      "accuracy": 0.5,
+      "selected_epoch": 16,
+      "exploratory_dependency_gate_passed": false,
+      "fitting_targets": 512,
+      "optimizer_updates": 64,
+      "whole_fit_gflops_estimate": 0.199843072,
+      "fit_mflops_per_target_estimate": 0.3903185,
+      "inference_mflops_per_target": 0.097836,
+      "whole_fit_arithmetic_gflops_estimate": 0.196475904,
+      "fitting_special_evaluations_estimate": 3367168.0,
+      "input_events": 7680,
+      "key_scores": 30720,
+      "selected_updates": 15360,
+      "counterfactual_values": 30720,
+      "state_tensor_bytes": 496,
+      "evaluation_input_events": 17340,
+      "wall_s": 122.1586374690014,
+      "max_rss_kb": 340440,
+      "curve": [
+        {
+          "epoch": 1,
+          "query_bits": 1.0081176873268731,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0137954835976388
+        },
+        {
+          "epoch": 2,
+          "query_bits": 1.0105799374106015,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.003286405787028
+        },
+        {
+          "epoch": 3,
+          "query_bits": 1.0012684057010812,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0040410522228695
+        },
+        {
+          "epoch": 4,
+          "query_bits": 1.0043956589511172,
+          "accuracy": 0.484375,
+          "fitting_query_bits": 1.0020958317013702
+        },
+        {
+          "epoch": 5,
+          "query_bits": 1.0011452110348704,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.002763524783827
+        },
+        {
+          "epoch": 6,
+          "query_bits": 1.0008864658238763,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.00089635751353
+        },
+        {
+          "epoch": 7,
+          "query_bits": 1.0002929913169538,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.000709382812524
+        },
+        {
+          "epoch": 8,
+          "query_bits": 1.0007467823210143,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0004554719263563
+        },
+        {
+          "epoch": 9,
+          "query_bits": 1.0007170884414514,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0004168242000326
+        },
+        {
+          "epoch": 10,
+          "query_bits": 1.0009042485612527,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.000099814491601
+        },
+        {
+          "epoch": 11,
+          "query_bits": 1.000620117098654,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0012754099632604
+        },
+        {
+          "epoch": 12,
+          "query_bits": 1.0005529686224075,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0009351315396127
+        },
+        {
+          "epoch": 13,
+          "query_bits": 1.0033750829977648,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0009878603454756
+        },
+        {
+          "epoch": 14,
+          "query_bits": 1.0011819494850465,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0016481178655114
+        },
+        {
+          "epoch": 15,
+          "query_bits": 1.0010673969470418,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0012427547574279
+        },
+        {
+          "epoch": 16,
+          "query_bits": 1.0002430626036252,
+          "accuracy": 0.5,
+          "fitting_query_bits": 1.0006361155160275
+        }
+      ]
+    }
+  ],
+  "tapped_vs_native_bits": -0.0006884922342953459,
+  "tapped_vs_shallow_bits": 1.2178521464401015e-05,
+  "tapped_native_fitting_work_ratio": 1.1040275076383135,
+  "tapped_shallow_fitting_work_ratio": 3.095197575825896,
+  "tapped_extension_nomination_gate_passed": false,
+  "paired_groups": {
+    "native": {
+      "mean_bits": -0.0006884922342954691,
+      "group_bootstrap_95_percentile_interval": [
+        -0.0026877112101417627,
+        0.00092821337610422
+      ],
+      "groups": 16,
+      "scope": "Exploratory paired suffix-group uncertainty, conditional on one selected fitted seed; not selection-adjusted or confirmation"
+    },
+    "shallow": {
+      "mean_bits": 1.217852146421887e-05,
+      "group_bootstrap_95_percentile_interval": [
+        -0.0011926962911070667,
+        0.0009878740233270596
+      ],
+      "groups": 16,
+      "scope": "Exploratory paired suffix-group uncertainty, conditional on one selected fitted seed; not selection-adjusted or confirmation"
+    }
+  },
+  "any_integrated_dependency_gate_passed": false,
+  "restricted_query_count_lower_bound_bits": 1.0,
+  "count_controls": {
+    "rows": [
+      {
+        "order": 0,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 0,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 0,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 0,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 1,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 1,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 1,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 1,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 2,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 2,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 2,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 2,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 3,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 3,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 3,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 3,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 4,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 4,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 4,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 4,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 5,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 5,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 5,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 5,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 6,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 6,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 6,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 6,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 7,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 7,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 7,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 7,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 8,
+        "method": "wb",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 8,
+        "method": "wb",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      },
+      {
+        "order": 8,
+        "method": "ad",
+        "prefix_updates": false,
+        "query_bits": 1.0
+      },
+      {
+        "order": 8,
+        "method": "ad",
+        "prefix_updates": true,
+        "query_bits": 1.0
+      }
+    ],
+    "all_query_count_vectors_including_root_equal": true,
+    "represented_fitting_count_increments": 3456,
+    "fitting_passes": 1,
+    "wall_s": 0.08388016899698414,
+    "scope": "All 36 controls separately reported, binary answer alphabet shared with neural arms. Fitting counts reset at episode boundaries; optional observed-prefix updates reset per development episode, no previous development labels. Integer lookups/copies are separate from neural FLOPs. Bound does not cover arbitrary reads at other count addresses."
+  },
+  "wall_s": 0.024516890000086278,
+  "max_rss_kb": 39132,
+  "source_sha256": {
+    "experiments/balanced_joint_analysis.py": "6a6fa505f11f877ed232fe8a31a9477d0b95350fb80561bb46b1f566de6b72af"
+  },
+  "scope": "One-seed held-out paired dependency demonstration if gate passes. Full prefix/core/candidate/losing-value/optimizer work charged as marked estimates; no dense comparison, full count-table inspection, semantic language, iso-quality total-resource or supremacy claim. All unsuccessful arms retained."
+}
