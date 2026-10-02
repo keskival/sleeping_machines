@@ -36,11 +36,11 @@ def one_hot(i):
     return tuple(v)
 
 
-def episode(rng, label=None):
+def episode(rng, label=None, background=(2, 6)):
     label = int(rng.integers(2)) if label is None else label
     named = int(rng.integers(4))
     events, t = [], 0.
-    for _ in range(int(rng.integers(2, 6))):                       # phase A: background marks
+    for _ in range(int(rng.integers(*background))):               # phase A: background marks
         t += rng.uniform(.3, 2.); events.append(Event(0, t, one_hot(MARK0 + int(rng.integers(4)))))
     words = [str(rng.choice(FILLERS))] if rng.random() < .5 else []
     text = ' '.join(words + ['is', WORDS[named], 'recent'])
@@ -59,10 +59,11 @@ def episode(rng, label=None):
     return events
 
 
-def episodes(n, seed):
+def episodes(n, seed, background=(2, 6)):
+    """background = [low, high) count of phase-A events: the history-length knob (default = pilot data)."""
     rng = np.random.default_rng(seed)
     labels = rng.permutation(np.arange(n) % 2)                     # exactly balanced
-    return [episode(rng, int(y)) for y in labels]
+    return [episode(rng, int(y), background) for y in labels]
 
 
 def data_hash(rows):

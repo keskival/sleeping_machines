@@ -90,6 +90,7 @@ def main():
     p.add_argument('--pool', type=int, default=2); p.add_argument('--update-episodes', type=int, default=16)
     p.add_argument('--lr', type=float, default=.003); p.add_argument('--time-input', choices=('observed', 'rank'), default='observed')
     p.add_argument('--reference-core', action='store_true', help='unbatched reference training path')
+    p.add_argument('--background', type=int, nargs=2, default=[2, 6], help='[low, high) phase-A events: history length')
     a = p.parse_args()
     out = ROOT / 'experiments/results/joint_event_language' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -98,7 +99,7 @@ def main():
     if a.fit % a.update_episodes or not 1 <= a.epochs <= 32:
         raise ValueError('Whole optimizer windows and a bounded pass budget required')
     torch.set_num_threads(1); torch.manual_seed(a.seed); started = time.perf_counter()
-    fit, dev = J.episodes(a.fit, 1301), J.episodes(a.dev, 2301)
+    fit, dev = J.episodes(a.fit, 1301, tuple(a.background)), J.episodes(a.dev, 2301, tuple(a.background))
     cls = AddressedEventHeads if a.reference_core else fast_class(AddressedEventHeads)
     model = cls(sources=1, content_dim=J.WIDTH, classes=2, payload=a.payload, depth=a.depth, pool=a.pool, heads=a.heads)
     optimizer = torch.optim.Adam(model.parameters(), lr=a.lr)
@@ -147,7 +148,7 @@ def main():
     model.load_state_dict(best_state)
     result['final'] = dict(dev=evaluate(model, dev, a.time_input), rank_time=evaluate(model, dev, 'rank'),
                            cleared_text=evaluate(model, dev, a.time_input, drop_text=True),
-                           confirmation=evaluate(model, J.episodes(1024, 3301), a.time_input))
+                           confirmation=evaluate(model, J.episodes(1024, 3301, tuple(a.background)), a.time_input))
     model.eval(); box = {}
     with torch.no_grad():
         def inference():

@@ -16,3 +16,10 @@ about learning (§394). Dense controls are labelled controls, never promoted int
 
     python experiments/joint_event_dense_controls.py --tag aws_joint_event_gru_w64_s6_<ts> --model gru --seed 6
     python experiments/joint_event_dense_controls.py --tag aws_joint_event_transformer_w64_s6_<ts> --model transformer --seed 6
+
+## History-length ladder (Theory §395), after the base calibration
+
+`--background 30 40` and `--background 120 140`: same seeds and models, `--fit 256 --epochs 4` to bound cost.
+Report accuracy, per-query inference work and whole-fit work per rung. The Transformer's per-query work should
+grow ∝ history; the GRU's should stay flat. These fits begin only after the base controls pass calibration
+(≥ 20 points over the table bar).

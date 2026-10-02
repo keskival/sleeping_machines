@@ -755,3 +755,30 @@ cleared-text control (text events removed, an information ablation); a table bar
 time-blind features, fitted on the fit set); and, on AWS, a Δt-input GRU and a time-encoded Transformer with
 the same events. Calibration passes if a learned control beats the table bar by ≥ 20 points. Ours is then
 judged on accuracy, whole-fit and per-query work against those controls.
+
+## 395. Where incumbents are not optimal: streaming elapsed-time binding over long histories
+
+Pure retrieval and small-data character prediction already have near-optimal conventional solutions: nearest-
+neighbour indexes and smoothed counts. Learning-based advantage claims belong where conventional solutions pay
+a structural price. The joint task of §394 has a history-length knob: the number of background events before
+the decisive phase. Per *event* of history, the arms behave as follows.
+
+- **Causal Transformer with time encodings:** attention over all retained events. Per-query inference work
+  grows ∝ T and fitting ∝ T² per episode, but retrieval of the named mark's last event does not degrade with T.
+- **Δt-GRU (continuous-time decay):** O(1) work per event. The word and the binding must survive T distractors
+  in one dense state under learned decay; interference grows with T.
+- **Native core:** O(1) work per event (depth·heads selected updates, depth·heads·pool scored keys in
+  training). Persistent addressed state evolves analytically in physical time, so silence costs nothing. The
+  question is whether quality holds as T grows.
+
+**Claim form.** At history lengths where the Transformer's per-query work exceeds ours by a large factor, ours
+must match its accuracy within a few points, or beat the Δt-GRU at equal or lower work. Either is a point on
+the quality/work frontier that incumbents do not occupy. Ladder: background ∈ {[2,6), [30,40), [120,140)}
+events, same rule and balance (contract-tested), all three arms plus the table bar. Per-query and whole-fit
+work go in the same units. The ladder runs only after the base pilot shows learnability: native observed time
+above the table bar by ≥ 20 points.
+
+**Predictions.** (P395a) The Transformer's per-query inference work grows ≥ 10× from the shortest to the
+longest rung, while ours stays within 1.5×. (P395b) The Δt-GRU's accuracy falls by ≥ 10 points across the ladder.
+(P395c) Ours stays within 5 points of its base accuracy. P395c is the risky one: it requires the addressed
+persistent state and race selection to protect the binding from distractors.

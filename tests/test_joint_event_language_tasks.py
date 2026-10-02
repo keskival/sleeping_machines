@@ -76,3 +76,16 @@ def test_native_joint_predict_is_causal_and_fast_path_matches_reference():
         torch.manual_seed(5); z1, _, _ = B.predict(ref, row)
         torch.manual_seed(5); z2, _, _ = B.predict(ref, flipped)
     assert torch.equal(z1, z2)
+
+
+def test_history_knob_keeps_default_data_and_lengthens_history():
+    import hashlib, json
+    default = J.episodes(64, 1301)
+    assert J.data_hash(default) == J.data_hash(J.episodes(64, 1301, (2, 6)))
+    long = J.episodes(64, 1301, (60, 70))
+    assert np.mean([len(r) for r in long]) > np.mean([len(r) for r in default]) + 50
+    for row in long:  # the rule and balance are unchanged by history length
+        named = next(i for i, w in enumerate(J.WORDS) if f' {w} ' in f' {_text(row)} ')
+        last = max(e.time for e in row if e.mark[J.MARK0 + named] == 1.)
+        assert int(row[-1].time - last < J.DELTA) == row[-1].target
+    assert sum(r[-1].target for r in long) == 32

@@ -100,13 +100,14 @@ def main():
     p.add_argument('--dev', type=int, default=256); p.add_argument('--epochs', type=int, default=8)
     p.add_argument('--seed', type=int, default=6); p.add_argument('--lr', type=float, default=.003)
     p.add_argument('--update-episodes', type=int, default=16)
+    p.add_argument('--background', type=int, nargs=2, default=[2, 6], help='[low, high) phase-A events: history length')
     a = p.parse_args()
     out = ROOT / 'experiments/results/joint_event_language' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
     if Path(a.tag).name != a.tag or out.exists():
         raise ValueError('Unique unused tag required')
     torch.set_num_threads(1); torch.manual_seed(a.seed); started = time.perf_counter()
-    fit, dev = J.episodes(a.fit, 1301), J.episodes(a.dev, 2301)
+    fit, dev = J.episodes(a.fit, 1301, tuple(a.background)), J.episodes(a.dev, 2301, tuple(a.background))
     model = TimeGRU(a.width) if a.model == 'gru' else TimeTransformer(a.width)
     opt = torch.optim.Adam(model.parameters(), lr=a.lr); rng = np.random.default_rng(a.seed + 10)
     ledger = {k: [] for k in ('forward_and_loss', 'backward', 'gradient_normalization', 'gradient_clipping', 'optimizer')}
@@ -141,7 +142,7 @@ def main():
             best, best_state = score['nll'], copy.deepcopy(model.state_dict()); result['selected_epoch'] = epoch
         print(json.dumps(dict(epoch=epoch, **score)), flush=True)
     model.load_state_dict(best_state)
-    result['final'] = dict(dev=evaluate(model, dev), confirmation=evaluate(model, J.episodes(1024, 3301)))
+    result['final'] = dict(dev=evaluate(model, dev), confirmation=evaluate(model, J.episodes(1024, 3301, tuple(a.background))))
     model.eval()
     with torch.no_grad():
         inference = capture(lambda: predict(model, dev[0]))
