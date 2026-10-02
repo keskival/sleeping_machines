@@ -1,0 +1,116 @@
+{
+  "host": "curie",
+  "resource_caps": {
+    "MEM_CAP_KB": 3000000,
+    "MEM_CAP_RSS_KB": 1250000,
+    "MIN_AVAIL_MB": 8192
+  },
+  "maximum_prerequisite_rss_kb": 900000,
+  "status": "prepared",
+  "jobs": [
+    {
+      "tag": "local_joint_confirmation_20261002T131700Z_s7_joint_pilot",
+      "arm": "s7_joint",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_joint_confirmation_20261002T131700Z_s7_joint_pilot.txt",
+      "queue_sha256": "4423b4f3bf50e415703f40c883630e356ca0bc88c1b7d7648d258258e9a6f957",
+      "result": "experiments/results/balanced_joint/local_joint_confirmation_20261002T131700Z_s7_joint_pilot.json",
+      "timeout_s": 1200,
+      "requires": []
+    },
+    {
+      "tag": "local_joint_confirmation_20261002T131700Z_s7_local_pilot",
+      "arm": "s7_local",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_joint_confirmation_20261002T131700Z_s7_local_pilot.txt",
+      "queue_sha256": "ae7cf88424144c2d86671f5423104cfa2795ced445860bac0d44f4e3c86f5351",
+      "result": "experiments/results/balanced_joint/local_joint_confirmation_20261002T131700Z_s7_local_pilot.json",
+      "timeout_s": 1200,
+      "requires": []
+    },
+    {
+      "tag": "local_joint_confirmation_20261002T131700Z_s8_joint_pilot",
+      "arm": "s8_joint",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_joint_confirmation_20261002T131700Z_s8_joint_pilot.txt",
+      "queue_sha256": "35968ad13138103c6799e2c1eef903df8b6896c87991a81eafaa8adad3fea462",
+      "result": "experiments/results/balanced_joint/local_joint_confirmation_20261002T131700Z_s8_joint_pilot.json",
+      "timeout_s": 1200,
+      "requires": []
+    },
+    {
+      "tag": "local_joint_confirmation_20261002T131700Z_s8_local_pilot",
+      "arm": "s8_local",
+      "stage": "pilot",
+      "queue": "experiments/queue/local_joint_confirmation_20261002T131700Z_s8_local_pilot.txt",
+      "queue_sha256": "5b2610b517d36a82197a2e4a9b703fbce0b51b7a2228a22ae22e64d79c392eaf",
+      "result": "experiments/results/balanced_joint/local_joint_confirmation_20261002T131700Z_s8_local_pilot.json",
+      "timeout_s": 1200,
+      "requires": []
+    },
+    {
+      "tag": "local_joint_confirmation_20261002T131700Z_analysis",
+      "stage": "summary",
+      "queue": "experiments/queue/local_joint_confirmation_20261002T131700Z_analysis.txt",
+      "queue_sha256": "23014c38c0356fa478eccc1ea8b495f7ea028e37e229e0835a78678cd37b2aaf",
+      "result": "experiments/results/diagnostics/local_joint_confirmation_20261002T131700Z_analysis.json",
+      "timeout_s": 300,
+      "requires": [
+        "local_joint_confirmation_20261002T131700Z_s7_joint_pilot",
+        "local_joint_confirmation_20261002T131700Z_s7_local_pilot",
+        "local_joint_confirmation_20261002T131700Z_s8_joint_pilot",
+        "local_joint_confirmation_20261002T131700Z_s8_local_pilot"
+      ]
+    }
+  ],
+  "references": [
+    "experiments/results/diagnostics/local_joint_outcome_contracts_20261002T125300Z.json",
+    "experiments/results/diagnostics/local_joint_outcome_20261002T125700Z_analysis.json",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_joint_full_smoke.json",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_local_full_smoke.json",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_joint_shallow_smoke.json"
+  ],
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/balanced_joint_benchmark.py": "825a94aef4387346ab008f4a39bb4b4020c4a3f33d8e7950f223c2847ddac575",
+    "experiments/balanced_joint_protocol.py": "c7d05993a58fa8a9d093c40f19b0baa3c7d842beab484c9af39ccea0080b6eff",
+    "experiments/paired_parity_protocol.py": "032be06d75fd19b295b864a93d74c1f684409189608cf1ebc12d3ad42420e01e",
+    "experiments/count_reference_language.py": "dee50762fe6ad2f3b7454cc4c669fde2e79d9c40ce40eeca56b627e3c5edfcb6",
+    "sleeping_machines/dilated_delay_taps.py": "4a5c52a0f951bf319ce3f3dbbd1ff90ea3c62483c9ad436253bcbbedd51ccab4",
+    "experiments/joint_outcome_benchmark.py": "c502b24bd714698b9673bf8e74acb36c81def8345cd62f959a36c6ae8de5b53d",
+    "sleeping_machines/joint_outcome_race_query.py": "574ecfa06ee7c8576383f38ecf0c6e506da5cd4177e8756fa0a9aeb59a4fabf3",
+    "experiments/theory/68_joint_addressed_outcome_races.md": "e827dfd1fa1bf7e18bfef3508e760881889d14fb5199d9f4b4e095e712885eff",
+    "experiments/joint_outcome_analysis.py": "75649d020ac513d67e5d11e2c84ad607310bfc26394a99ecb1a01d3088c5882a",
+    "scripts/run_addressed_memory_pair.py": "7125ea4992322ed4c410f99b86ca4b0d8ffa2ed8cd6450ac9296a7175b802e62",
+    "experiments/results/diagnostics/local_joint_outcome_contracts_20261002T125300Z.json": "f7c71f171eb8c916f8a69c878771a874e61909ddf65c7aedacfa84813c6362f8",
+    "experiments/joint_outcome_replication.py": "913fd2da330342f5ac3eaae61057d5dde67283294631fd37a15a480e721568fd",
+    "experiments/theory/69_joint_credit_confirmation.md": "4da242b6379f755329efe15f9df16c04a823cd5d2ca97a342c21417c302b42c9",
+    "experiments/results/diagnostics/local_joint_outcome_20261002T125700Z_analysis.json": "033577447dfd7b137f704280831510f2ff0a242c58cb5293471bab6f032f8b5e",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_joint_full_smoke.json": "a04e9ca217683fea24fab301454a169ca1e948c80d329aec8389546227cf97a3",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_local_full_smoke.json": "d090a44f1b4745943bcb3c787029227c3d15bcf784ff4045289968e3428bd3cb",
+    "experiments/results/balanced_joint/local_joint_outcome_20261002T125700Z_joint_shallow_smoke.json": "771bc0c79b4f00e5af801e503a5f28ddb212bdfc91aa84b199c1f06e609722b9"
+  },
+  "scope": "Fixed seed7/8 joint/local confirmation after seed6 passed. Untouched suffix seed75001/64groups; no retuning or weak-seed extension; delivered-value erasure and exact restoration; scope remains synthetic and conditional."
+}

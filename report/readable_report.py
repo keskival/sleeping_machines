@@ -119,6 +119,20 @@ def results():
             if hashlib.sha256((ROOT/r['analysis_result']).read_bytes()).hexdigest()!=r['analysis_sha256']:
                 raise ValueError('Frozen value-credit analysis changed')
             tasks['value_credit_frozen'].append(r)
+    for key,pattern in [('balanced_joint','local_balanced_joint_*_analysis.json'),
+                        ('joint_readout','local_joint_readout_*_frozen.json'),
+                        ('joint_outcome','local_joint_outcome_*_analysis.json'),
+                        ('joint_replication','local_joint_confirmation_*_analysis.json')]:
+        tasks[key]=[]
+        for path in sorted((RES/'diagnostics').glob(pattern)):
+            r=read(str(path.relative_to(RES)))
+            if r.get('status')!='completed':continue
+            for entry in r['common_unit_ledger']:
+                name=entry.get('result',entry.get('parent_result'))
+                sha=entry.get('result_sha256',entry.get('parent_result_sha256'))
+                if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=sha:
+                    raise ValueError('Joint learning source result changed')
+            tasks[key].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -547,6 +561,15 @@ def figures(M, tasks, ev):
               title='Matched integrated value-credit learning; seed6,2,047 dev targets')
         a.legend(fontsize=7,ncol=2);f.tight_layout()
         save(f,r['args']['tag'].replace('local_value_credit_analysis_','value_credit_learning_'))
+    for key in ('balanced_joint','joint_outcome'):
+        for r in tasks.get(key,[]):
+            f,a=plt.subplots(figsize=(7.2,2.45))
+            for row,color in zip(r['common_unit_ledger'],[blue,orange,'#1baf7a']):
+                a.plot([x['epoch'] for x in row['curve']],[x['query_bits'] for x in row['curve']],
+                    marker='o',markersize=2,linewidth=1.5,color=color,label=row['arm'].replace('_',' '))
+            a.axhline(1,color=gray,linestyle='--',linewidth=1,label='Restricted query-count bound')
+            a.set(xlabel='Fitting passes',ylabel='Development bits / query',title='Balanced distant dependency: '+key.replace('_',' '))
+            a.legend(fontsize=7,ncol=2);f.tight_layout();save(f,r['args']['tag']+'_learning')
     banknote=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']=='banknote'
               and r['args']['tag'].startswith('aws_fast_matrix_recovery_20261001T213409Z_')
               and r['args']['clock_features']==0]
@@ -3496,6 +3519,180 @@ def blocks(M, tasks, ev):
              'it does not establish identical features or a same-quality compute advantage. No per-target '
              'order selection or official-test access. Full spectra, data/checkpoint hashes and diagnostic '
              'boundaries are retained in local_value_credit_frozen_20261002T090800Z.json.')])
+    for r in tasks.get('balanced_joint',[]):
+        quality=[];work=[]
+        for row in r['common_unit_ledger']:
+            quality.append([row['arm'],f"{row['query_bits']:.4f}",f"{100*row['accuracy']:.2f}%",str(row['selected_epoch'])])
+            work.append([row['arm'],f"{row['whole_fit_gflops_estimate']:.4f}",f"{row['fit_mflops_per_target_estimate']:.4f}",
+                f"{row['inference_mflops_per_target']:.4f}",str(row['state_tensor_bytes'])])
+        pages.append([('h1','Appendix B. Beyond query counts: balanced joint learning'),
+            ('p','Each episode observes a bit followed by its complement, then another such pair, eight shared '
+             'noise symbols and a unique query cue. The target is the relation between the earlier bits. '
+             'All four bit combinations occur for each noise suffix. Observed symbol totals and actual '
+             'order-0..8 query count vectors match; all 36 declared WB/AD controls score one bit.'),
+            ('table',(['Integrated model','Dev bits/query','Dev accuracy','Selected pass'],quality,[62,38,38,35])),
+            ('figure',('report/figures/'+r['args']['tag']+'_learning.png',173)),
+            ('p','The native and learned-delay variants fail the predeclared 75%/.8-bit dependency gate. '
+             'Eight fitting suffix groups give 32 targets/pass; 16 passes,512 target presentations,64 Adam '
+             'updates,64 held-out dev targets. All arms have query-only binary supervision and full '
+             '15-event credit; the target is never an input. Noise couples the quartet and variants.'),
+            ('small','The one-bit bound restricts the predictor to query suffix/count inputs, including root '
+             'marginals. It excludes arbitrary inspection of the full prefix or other count addresses. '
+             'Counts should lead in their supported local regime; this test asks for useful nonlocal '
+             'prediction. One selected seed/development set, not semantic language or supremacy.')])
+        pages.append([('h1','Appendix B. Balanced-core fitting and inference work'),
+            ('table',(['Model','Whole fit GFLOPs est.','Fit MFLOPs/target est.','Inference MFLOPs/query','State tensor bytes'],work,[53,29,32,32,27])),
+            ('p','All rows use 512 query-target presentations as the fitting denominator. Inference includes '
+             'all 15 episode inputs and query loss. Full prefix forward/backward, losing receiver values, '
+             'normalization/clipping and Adam are charged. First/last complete optimizer windows supply '
+             'the whole-fit estimates; routing occupancy is not exhaustively traced.2FLOPs/MAC plus '
+             'unit specials, including declared delay-index rounding. Actual keys/commits/input events '
+             'and wall/RSS are saved separately.'),
+            ('p','Delay taps add bounded per-layer input buffers, trainable delays and projections while '
+             'retaining native temporal races and private persistent receivers. Zero taps exactly nest '
+             'native prediction and parent gradients. Seven contracts include actual interrupted-driver '
+             'and full-shape Adam recovery. The same-width shallow control retains these mechanisms '
+             'but has fewer layers; initialization also changes, so this is an architecture comparison.'),
+            ('small','Memory traffic, integer/index bookkeeping, RNG, checkpoint I/O and hardware energy '
+             'remain outside floating arithmetic. More retention capacity or a valid derivative is not '
+             'a completed quality advantage. All unsuccessful arms and previous language evidence '
+             'remain preserved; full source/data/result hashes are in the completed analysis JSON.')])
+    for r in tasks.get('joint_readout',[]):
+        quality=[];work=[];bits=[]
+        for row in r['common_unit_ledger']:
+            score=row['scores']['fresh'];name=row['arm'].replace('_',' ')+' / '+str(row['degree'])
+            quality.append([name,f"{row['fitting']['fitting_bits']:.3f}",f"{score['query_bits']:.3f}",f"{100*score['accuracy']:.2f}%"])
+            work.append([name,f"{row['total_fit_gflops_estimate']:.4f}",f"{row['total_fit_gflops_estimate']*1000/32:.3f}",
+                f"{row['inference_mflops_per_query_estimate']:.4f}"])
+        for row in r['retention']:
+            bits.append([row['arm'],*[f"{100*b['scores']['fresh']['accuracy']:.2f}%" for b in row['bit_probes']]])
+        pages.append([('h1','Appendix B. Frozen retention versus interaction decoding'),
+            ('table',(['Encoder / degree','Fit bits/query','Fresh bits/query','Fresh accuracy'],quality,[72,33,35,33])),
+            ('table',(['Frozen encoder','First-bit probe accuracy','Second-bit probe accuracy'],bits,[73,50,50])),
+            ('p','Freeze the selected encoders, plus native initial weights as a reservoir control. Fit '
+             'zero-initialized affine or standard degree-2 polynomial residuals on actual query features. '
+             'Fitting standardization only; four race-noise views of the same32 fitting episodes. '
+             'Regularized full-batch L-BFGS, fixed lambda1e-5/100 iterations; reported derivatives '
+             'do not establish convergence. New seed73001 has32 paired suffix groups/128 targets '
+             'and never selects readout settings or weights.'),
+            ('p','Neither readout generalizes; polynomial heads become badly overconfident. Separate '
+             'one-bit probes also remain near chance. They use extra bit supervision only for diagnosis; '
+             'their outputs never enter the relation predictor. These failures motivate evidence-access '
+             'tests rather than assuming a larger decoder solves the current model.'),
+            ('small','Zero core optimizer steps and encoder fingerprints preserved. Eight predeclared '
+             'readout arms on one fresh synthetic distribution, not general confirmation or a semantic '
+             'claim. Failed probes do not prove all information was erased or a universal learning ceiling.')])
+        pages.append([('h1','Appendix B. Complete frozen-readout pipeline resource boundary'),
+            ('table',(['Encoder / degree','Total fitting GFLOPs est.','MFLOPs/distinct fit query','Inference MFLOPs/query est.'],work,[72,32,35,34])),
+            ('p','Every total includes the entire earlier encoder fit, four-view feature-prefix replay and '
+             'actual residual-head optimization/feature construction. Initial weights pay zero encoder '
+             'fitting. The common denominator here is32 DISTINCT fitting queries for every row, rather '
+             'than differing L-BFGS closure counts. This denominator differs explicitly from the '
+             'presentation-based table above. Closure target evaluations and exact head work are saved '
+             'separately. The same feature replay is charged once to each hypothetical standalone arm.'),
+            ('p','Every inference estimate includes processing the complete prefix plus the chosen '
+             'query head. Encoder replay/inference estimates use coupled first-quartet operation audits; '
+             'head construction, loss, backward and optimizer operations are traced directly. Separate '
+             'retention-probe supervision/work is diagnostic overhead, not free parity training. '
+             'Raw candidate/traffic/metadata/RNG costs and measured energy remain separate.'),
+            ('small','Local vector products are supporting primitives, not substitutes for the native '
+             'temporal core or evidence of learned KV routing. Numerical contracts verify polynomial '
+             'adjoints, regularized fixed-feature gradients, zero nesting, causal integrated prediction '
+             'and restored head outputs. Preserve these negative results beside the subsequent '
+             'protected-memory hypothesis; no favorable cell is inferred from unfinished training.')])
+    for r in tasks.get('joint_outcome',[]):
+        quality=[];work=[];activity=[]
+        for row in r['common_unit_ledger']:
+            d=row['development'];f=row['fresh']
+            quality.append([row['arm'],f"{d['query_bits']:.3f}",f"{f['query_bits']:.3f}",f"{100*f['accuracy']:.2f}%",str(row['selected_epoch'])])
+            work.append([row['arm'],f"{row['whole_fit_gflops_estimate']:.4f}",f"{row['fit_mflops_per_target_estimate']:.4f}",f"{row['inference_mflops_per_target']:.4f}"])
+            activity.append([row['arm'],f"{row['native_available_receivers']} / 27",f"{row['mean_occupied_outcome_addresses']:.2f}",
+                f"{row['native_selected_updates_per_target']} / {row['raw_outcome_writes_per_target']}",
+                f"{row['terminal_keys_per_target']:.2f} / 2",f"{row['terminal_counterfactual_loss_pairs_per_training_target']:.2f}"])
+        pages.append([('h1','Appendix B. Protected outcomes and joint terminal races'),
+            ('p','Each observed token writes its observed successor at its predecessor address, never a '
+             'target-derived or hand-selected bit address. All occupied addresses are candidates. '
+             'Two learned query/key exponential races deliver small interpreted symbol values to a '
+             'generic bilinear query decoder. Native temporal computation, sparse vector receivers '
+             'and earlier counterfactual learning remain. No XOR extraction enters prediction.'),
+            ('table',(['Integrated arm','Selected dev bits','Reserved bits','Reserved accuracy','Selected pass'],quality,[48,31,31,34,29])),
+            ('figure',('report/figures/'+r['args']['tag']+'_learning.png',173)),
+            ('p',f"Reserved seed74001/32 groups/128 queries scores fixed selected weights after all fits; "
+             f"no retuning. Joint-minus-local loss improvement:{r['joint_vs_local_fresh_bits']:+.3f} bits; "
+             f"full-minus-shallow improvement:{r['full_vs_shallow_fresh_bits']:+.3f} bits. The joint-credit "
+             f"gate {'passes' if r['joint_credit_gate_passed'] else 'fails'}; all arms remain visible."),
+            ('small','One fitted seed and structured generator. Sixteen fit groups/64 queries,16 passes, '
+             'U4/lr.01/p4/H2/pool2,fullL2/shallowL1. The one-bit bound applies to identical query '
+             'suffix/count inputs including root marginals, not arbitrary inspection of other count '
+             'addresses. No natural-language, dense-control or resource-supremacy claim.')])
+        pages.append([('h1','Appendix B. Joint-credit work, capacity and activity'),
+            ('table',(['Arm','Whole fit GFLOPs est.','Fit MFLOPs/query est.','Inference MFLOPs/query'],work,[51,40,40,42])),
+            ('table',(['Arm','Core / raw address capacity','Mean raw occupied','Core commits / raw writes per query','Terminal keys / values per query','Training loss pairs per query'],activity,[34,29,22,34,28,26])),
+            ('p','All fitting columns use1,024 query presentations,256 Adam updates and all15 observed '
+             'prefix events per query. Whole-fit first/last-window estimates include native candidates, '
+             'losing proposals, protected-state discovery, terminal decoder/loss, backward, clipping '
+             'and Adam. Inference scores every occupied key and delivers only two values. Available '
+             'addresses, occupied state, scored keys, commits, raw writes and value deliveries are '
+             'distinct; sparse activity does not imply zero key or learning cost.'),
+            ('p','Joint training enumerates C² terminal losses and differentiates their categorical '
+             'expected risk, giving exact conditional terminal content-choice credit. Local training '
+             'uses a sampled pair and the existing value-linearized race surrogate. Their initial '
+             'forward predictions and inference policy match; learning estimators differ. Earlier '
+             'native route surrogates, raw fixed-address writes and downstream timing credit remain '
+             'separate limitations. No exact whole-sequence gradient is claimed.'),
+            ('small',f"Joint/local whole-fitting work ratio:{r['joint_local_fitting_work_ratio_estimate']:.3f}. "
+             '2FLOPs/MAC plus unit specials; traffic, raw integer state, Python objects, RNG and energy '
+             'separate. Five contracts and three accounting smokes precede fits. The same-width shallow '
+             'comparison changes initialization too. A successful protected-state read does not prove '
+             'learned context pooling, arbitrary-distance KV retrieval or useful deep producer credit.')])
+    for r in tasks.get('joint_replication',[]):
+        quality=[];work=[];comparisons=[]
+        for row in r['common_unit_ledger']:
+            label=f"s{row['seed']} / {row['read_credit']}"
+            quality.append([label,f"{row['development']['query_bits']:.3f}",f"{row['fresh']['query_bits']:.3f}",
+                f"{100*row['fresh']['accuracy']:.2f}%",str(row['selected_epoch'])])
+            work.append([label,f"{row['whole_fit_gflops_estimate']:.4f}",f"{row['fit_mflops_per_target_estimate']:.4f}",
+                f"{row['inference_mflops_per_target']:.4f}",f"{row['wall_s']:.1f}"])
+        for pair in r['comparisons']:
+            interval=pair['paired_suffix_group_95_interval']
+            comparisons.append([str(pair['seed']),f"{pair['joint_vs_local_fresh_bits']:+.3f}",
+                f"[{interval[0]:+.3f}, {interval[1]:+.3f}]",f"{pair['joint_local_fitting_work_ratio_estimate']:.3f}"])
+        pages.append([('h1','Appendix B. Fixed joint-credit confirmation'),
+            ('table',(['Fit seed / credit','Selected dev bits','New suffix bits','New suffix accuracy','Selected pass'],quality,[48,31,31,34,29])),
+            ('table',(['Fit seed','Joint improvement bits/query','Paired suffix interval','Joint/local fitting work'],comparisons,[25,48,50,50])),
+            ('p','Two additional fitted seeds7/8 use the unchanged full p4/L2 configuration and16 passes. '
+             'All four declared fits are shown. Development seed72001 selects the minimum across fixed '
+             'passes; seed75001/64 suffix groups/256 targets is reserved for fixed selected models. '
+             'No parameter, learning rate, stopping rule or evaluation setting is retuned on this set.'),
+            ('p',f"Both declared confirmation gates {'pass' if r['confirmation_gate_passed'] else 'do not pass'}. "
+             'A seed must reach at least75%/.8bits and improve local credit by.05bits. Paired suffix '
+             'bootstrap intervals are conditional on the fitted seed and synthetic generator; they '
+             'are not a broad confidence interval over learning algorithms or tasks.'),
+            ('p','Initial predictions, race choices and probabilities match within each joint/local pair. '
+             'Inference mechanisms are identical. The differing training risk/credit objectives therefore '
+             'test this terminal learning intervention, while protecting all earlier negative evidence.'),
+            ('small','Query-suffix/count bound only. The protected bank has fixed observed predecessor '
+             'addresses and no learned writes; the standard bilinear decoder and exact terminal content '
+             'credit do not establish deep core learning, clock-gradient accuracy or natural-text gains.')])
+        pages.append([('h1','Appendix B. Confirmation fitting and inference resources'),
+            ('table',(['Seed / credit','Whole fit GFLOPs est.','Fit MFLOPs/query est.','Inference MFLOPs/query','Fit wall seconds'],work,[45,34,34,34,26])),
+            ('p','Every row fits64 distinct queries for16 passes:1,024 target presentations and256 Adam '
+             'updates, all15 prefix events per query. Whole-fit and per-target columns share that '
+             'denominator. First/last complete optimizer-window estimates include prefix/native '
+             'races, all terminal candidate values, joint pair losses where applicable, backward, '
+             'normalization/clipping and Adam. Measured wall and RSS are separate from FLOPs.'),
+            ('p','All models have8 native receivers plus27 raw outcome addresses. Each query causes '
+             '60 native state commits and14 raw outcome writes. Terminal inference scores2C keys '
+             'and delivers2 values. Joint training enumerates C² losses; both training arms inspect '
+             'C candidate values. C depends on observed occupancy and is recorded in activity traces.'),
+            ('p','Additional counterfactual arithmetic buys prediction improvement only where completed '
+             'results support it. A quality advantage at this budget is not an iso-quality compute '
+             'advantage; shorter or better-controlled local fits have not been optimized. No measured '
+             'energy, candidate-discovery latency or hardware throughput claim is inferred.'),
+            ('small','One guarded one-thread CPU job at a time, watchdog active,8GiB available-memory '
+             'floor. Unique queues, checkpoints, source/data hashes and failed results preserved. '
+             'This confirmation adds seed evidence for a small structured nonlocal relation, not '
+             'architectural supremacy or superiority to an unrestricted count-memory algorithm.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]
