@@ -626,3 +626,10 @@ test where core features earn their work by routing. (P392c) Mean pooled-level r
 residual base's (.072). If P392a holds and P392b fails, the query features, not the memory, are the bottleneck.
 The next steps are then a richer query (taps, longer credit) and write credit (§383.2). If both fail, pooling at
 M = 256 adds nothing at 8K: test at ≥ 131K before concluding.
+
+*§392 versioning note (cf. theory 63).* Statistic values have no value-version drift. Counts live in the fixed
+symbol coordinates, so a read never mixes historical projection maps W_t, and the delivery credit to the query,
+keys and temperature is exact at every read, even after chunk detachment. Staleness moves to the
+*assignment*: counts at address a were written under older keys and queries. Restarting counts at every
+fitting pass bounds that drift to one pass. Measure it as the pooled-level loss gap between end-of-pass counts
+and a frozen re-assignment replay of the same pass, before scaling M or the data.
