@@ -1,5 +1,46 @@
 # Local host: current research continuation
 
+## Deferred value-projection comparison, 2 October, 08:58 UTC
+
+Read theory63_retrieval_credit_and_value_versions.md. New concrete limitation:
+the original addressed slots cache W_t h_t and detach; old retrieval gives no
+current W credit and mixes historical W coordinates. LateProjectedContextModel
+stores raw feature sums and applies current W on read. Fixed-weight linear
+equivalence and exact fixed-feature W adjoint verified; historical core-feature
+producers still truncated, hash keys still fixed (no learned pooling/KV race).
+Native time/races/addressed receivers/key-values/unrealized-route credit retained.
+
+FullH2/d16/L8 zero nesting, actual Adam/state/RNG recovery, trained causality,
+plus8 real numerical/driver contracts pass150.618s/456692KiB:
+results/diagnostics/local_late_projection_contracts_20261002T090500Z.json.
+The first contract attempt failed only because its test requested unsupported
+U32; corrected to actual U64 and preserved failed log/unique queue. All three
+real driver interruption/resume variants recover selected parameters, Adam
+moments, predictions, RNG, cursor, fitting traces/deltas bitwise. Warm replay
+clears context history/previous address to prevent invented fit/dev outcomes.
+
+Frozen plan queue/local_value_credit_20261002T090800Z.json: three guarded
+late full/shallow/minimal192/129 smokes then five1024fit/2048dev/four-pass
+pilots: full native, full original addressed, full late addressed, late
+same-width shallow(p16/d1) and late minimal(p2/d1). H2/pool2/c16/U64/lr.002/
+warm512/s6/order3/B4096. Same core initialization and training RNG reset;
+selection minimum cold dev bpc, frozen fit replay at that checkpoint secondary
+and separately charged. Depth and width both change in minimal, so the
+same-width shallow control is mandatory. Gate: ≥.02bpc late-full gains against
+all four controls, ≤2× original-full estimated fitting work. No automatic scale.
+
+scripts/run_addressed_memory_pair.py serializes one-job queues, verifies frozen
+sources/results and900000KiB prerequisite margin, commits each completed result
+on main. Mem1250000KiB groupRSS/3000000KiB VMS/8192MiB floor,1thread/nice19;
+fullsmoke600s/shallow300s/fullpilot1800s/shallow900s. CPU-only, no GPU;
+host~11.6GiB available and no active jobs before launch. First/mature/partial
+window fitting work is an explicitly labelled estimate, same convention every
+arm; actual losing-value/optimizer arithmetic covered in samples, no energy
+claim. Report only completed ledger. AWS capacity/exposure owns its independent
+plan; local variants do not duplicate dense or AWS fits. Priority local model
+is late-projection integrated addressed core for this discrimination, with
+learned keys, old feature-producer credit and semantic generalization still open.
+
 ## Current local continuation supersedes the07:55 queue description, 08:13 UTC
 
 Read LANGUAGE_LEARNING_DIAGNOSIS_20261002.md and theory62 before redesign.

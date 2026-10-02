@@ -1,0 +1,1 @@
+local_value_credit_late_minimal_smoke_20261002T090800Z experiments/addressed_memory_language_benchmark.py --tag local_value_credit_late_minimal_smoke_20261002T090800Z --model late --fit 192 --dev 129 --epochs 1 --chunk 16 --update-targets 64 --warmup-targets 512 --payload 2 --depth 1 --heads 2 --pool 2 --seed 6 --lr .002 --order 3 --buckets 4096

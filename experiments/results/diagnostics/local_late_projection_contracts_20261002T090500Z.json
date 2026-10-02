@@ -1,0 +1,88 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_late_projection_contracts_20261002T090500Z"
+  },
+  "numerical_contract": {
+    "model": "late_projection",
+    "payload": 16,
+    "depth": 8,
+    "heads": 2,
+    "pool": 2,
+    "zero_repair_forward_and_parent_gradients_bitwise": true,
+    "actual_target_weighted_gradient_normalization": true,
+    "bitwise_next_adam_parameters_predictions_and_moments": true,
+    "trained_repair_causal_and_chunk_invariant": true,
+    "learned_repair": {
+      "read_gradient_norm": 77.5804672241211,
+      "write_gradient_norm": 5.800666809082031
+    },
+    "final_state_storage": {
+      "occupied_sources": 1,
+      "occupied_receivers": 32,
+      "persistent_tensor_bytes": 4496,
+      "scope": "Addressed live state tensors; Python metadata, parameters and graphs separate; context-slot tensors included; integer counts and Python metadata separate",
+      "context_slots": 16,
+      "context_slot_tensor_bytes": 2048,
+      "context_count_entries": 16
+    },
+    "all_added_state_detached": true,
+    "diagnostic_targets_per_replica": 127,
+    "optimizer_updates_per_replica": 2,
+    "credit_events": 16,
+    "optimizer_window": 64,
+    "partial_window": 63,
+    "scope": "Numerical prerequisite, not useful-feature or quality evidence; no long-fit driver recovery claimed."
+  },
+  "tests_passed": 8,
+  "projection_fixed_weight_equivalence_and_old_feature_adjoint_verified": true,
+  "actual_driver_interruption_recovery_verified": [
+    "native",
+    "addressed",
+    "late"
+  ],
+  "official_test_read": false,
+  "wall_s": 150.61813022600109,
+  "max_rss_kb": 456692,
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/addressed_memory_language_benchmark.py": "339d8aafeb93df4e9465e47a4399ecb6b452b774c301681946f90a15bfa20d34",
+    "sleeping_machines/context_addressed_memory.py": "8b2f031fd0aa501db41247768cbd09c4a18c7f22b419e5a5257531cf736c82dd",
+    "sleeping_machines/late_projected_context_memory.py": "7dc4a9c2b9117cb5208bfde31df6c535fbd0214ac2479471a984a128f472089b",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/late_projection_contracts.py": "b41875629af9b357a4664944dcb3cafa065f153ec89566911c98346ccbe03d46",
+    "experiments/deep_memory_optimizer_contracts.py": "2bdcdcd7adf965f1637a78534931ce5e366f4d3dae448b15ecb552aa308cd962",
+    "tests/test_late_projected_context_memory.py": "9a8518e9de43c6c44fa6e5fbff58998c3291c025c599dc98170a0dee366d77e9",
+    "tests/test_addressed_memory_driver_recovery.py": "2efdf56bd0cc61bf0f4d49ce50c549818e8e240f4e71e50e2965a5aa344430f0"
+  },
+  "hardware": {
+    "host": "curie",
+    "device": "cpu",
+    "threads": 1,
+    "torch": "2.14.0+cpu"
+  },
+  "scope": "Numerical/fixed-feature projection and recovery prerequisites, not semantic/quality evidence; core historical producer credit remains truncated."
+}

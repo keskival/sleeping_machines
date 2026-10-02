@@ -1,0 +1,1 @@
+local_value_credit_addressed_full_D1024_20261002T090800Z experiments/addressed_memory_language_benchmark.py --tag local_value_credit_addressed_full_D1024_20261002T090800Z --model addressed --fit 1024 --dev 2048 --epochs 4 --chunk 16 --update-targets 64 --warmup-targets 512 --payload 16 --depth 8 --heads 2 --pool 2 --seed 6 --lr .002 --order 3 --buckets 4096
