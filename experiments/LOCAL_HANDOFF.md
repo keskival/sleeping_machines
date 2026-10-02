@@ -1466,3 +1466,25 @@ derive their information/credit contracts and resource costs first, retain
 time/races/addressed state/key-value separation/unrealized-route credit, then
 fit integrated controls. AWS reserved comparisons and the other thread's32K
 count/minimal experiments remain independent; do not duplicate.
+
+## Reception-law and real-native controls, 2 October22:22 UTC
+
+Theory97 seven numerical contracts complete: full residual arrival law,
+physical deadline/cap, conditional expectation vs history+boundary+winner
+gradients, independent finite differences, H0 birth and actual receiver writes.
+Constructed width gradient sign reverses (-27.66249 vs+.65662 ordinary), not
+quality evidence. Theory98's44 frozen native interventions complete104.222s/
+396720KiB,12 contracts, no optimizer/DEV/test. Two fixed-pass4 seed6/7 producers
+and initial reservoirs,16 unused FIT inputs, event19/L0/head0 only. 1ms receiver
+activity is winner-only in both trained seeds; mean-vs-wait NLL gain0/0 FAILS
+predeclared smoke gate. 3ms extra receivers4/16 and7/16 with onlysmall mean
+NLL gains; no changed-gate promotion. Positive-width training refuses execution
+until actual complete native gradient/recovery/accounting contracts exist.
+Results/source notes now frozen. Preserve all44 outcomes and source lineage.
+
+Rebase conflict HANDOFF resolved retaining AWS fixed-polynomial negative study
+and local law contracts; main updated, four autostashes preserved. Generated
+149-page report remains valid; latest AWS polynomial manual appendix plus local
+reception results need the next guarded generated publication. Do not duplicate
+shared-main replay/shadow-lane or AWS compact-head jobs. No unchanged one-site
+window training admitted. Existing pure popcorn primitive is still not fitted.

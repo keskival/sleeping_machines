@@ -1827,3 +1827,37 @@ k2/plaink4 score-MSE2.143301/2.493344: BOTHFAIL. Richer features alone do not
 justify reduced-replay training. Artifacts retained in signed_variance230400Z;
 next bounded gap is utility-scale/calibration and parameter covariance, not
 extra epochs on these failed variants. No numerical AWS trainer left running.
+
+## Actual-native reception diagnostic completed — 2 October, 22:22 UTC
+
+After theory97, local_dvs_native_window_intervention_20261002T223000Z runs
+44 frozen model/configurations, two saved fixed-pass4 producers+initials,
+16 prespecified evenly spaced producer-unseen FIT prefixes. One actual site:
+event19/L0/head0, first-arrival deadline H0/1ms/3ms. Full heard sum/mean actual
+receiver commits versus matched winner gain/wait and delivery-only sum.
+Physical evolution, clocks/RNG, keys/values and later state/query preserved;
+H0 exactly nests forward, every persistent tensor and every old gradient.
+Complete-span extra-write, prefix causality, target substitution and refusal
+of uninstalled positive-width training pass:12 checks across two producers.
+104.222s/396720KiB, one thread/guarded; all outcomes/probabilities/cases and
+representative traced prefix operator coverage saved. Original trained fits
+2.285696GF/2.232125MF per presentation remain charged; total-audit FLOPs,
+traffic/energy unknown rather than zero. No DEV or test evaluation/optimizer.
+
+Prespecified 1ms mean-vs-wait nomination FAILS in both trained seeds: no second
+message is heard on any16 prefix at this site, so NLL gain exactly0. Wider3ms
+hears extras4/16 and7/16; mean NLL1.069441/1.023701 versus wait1.070734/
+1.026013 (small ~.0013/.0023), not a substituted gate. Seed6 unnormalized sum
+worsens1.104131; seed7 sum1.022673. Initial receivers hear more at this one
+site (6/1 cases at1ms,11/5 at3ms); scope is local sample, not global race gap.
+This unchanged one-site proposal is NOT admitted to a learning smoke. Its
+failure does not test learned/adaptive widths, all sites, natural-silence
+popcorn or the full multi-arrival hypothesis. Do not scale it unchanged or
+silently replace the declared width/gate after inspecting outcomes.
+
+Current prioritized integrated learning queue remains the independently owned
+corrected replay/shadow-lane credit on shared main; AWS compact context-head
+work is separately owned. Local contribution is complete arrival/boundary
+math and a real-native diagnostic with controls, not a new leading model.
+Rebase onto d112051 was resolved retaining BOTH AWS polynomial and theory97
+handoff sections, keeping four autostashes and in-progress files intact.
