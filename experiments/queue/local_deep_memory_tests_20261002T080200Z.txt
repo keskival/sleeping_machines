@@ -1,0 +1,1 @@
+local_deep_memory_tests_20261002T080200Z -m pytest -q tests/test_long_range_core.py tests/test_dilated_delay_taps.py tests/test_context_addressed_memory.py

@@ -32,6 +32,20 @@ class TappedNativeState(NativeLanguageState):
         self.taps = {d: [v.detach() for v in buf] for d, buf in self.taps.items()}
         return self
 
+    def storage(self):
+        stats = super().storage()
+        vectors = [v for buf in self.taps.values() for v in buf]
+        tap_bytes = sum(v.numel()*v.element_size() for v in vectors)
+        stats.update(tap_buffer_vectors=len(vectors), tap_buffer_tensor_bytes=tap_bytes,
+                     persistent_tensor_bytes=stats['persistent_tensor_bytes']+tap_bytes)
+        stats['scope'] += '; delay-buffer tensors included'
+        return stats
+
+    def packed_storage(self):
+        stats = super().packed_storage()
+        stats['differentiable_entries'] += sum(int(v.requires_grad) for buf in self.taps.values() for v in buf)
+        return stats
+
 
 class TappedMix(nn.Linear):
     def __init__(self, base, depth, init_delay, capacity, owner):

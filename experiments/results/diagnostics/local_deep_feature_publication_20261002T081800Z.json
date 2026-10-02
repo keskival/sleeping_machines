@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_deep_feature_publication_20261002T081800Z",
+    "plan": "experiments/queue/local_count_credit64_20261002T060000Z.json"
+  },
+  "kind": "completed_credit_pair_publication",
+  "pdf_pages": 95,
+  "analysis_result": "experiments/results/diagnostics/local_count_credit64_analysis_20261002T060000Z.json",
+  "analysis_sha256": "6e6c71ae9a8824bbac75d3f5e40a48c855dd2d1f92c0b9858d3582c7cd1b2fb0",
+  "followup_gate_passed": false,
+  "wall_s": 21.015573363998556,
+  "max_rss_kb": 65184,
+  "source_sha256": {
+    "experiments/publish_count_credit_report.py": "a05afe974115f5e62a9097157de906f1c96eea5fc184e1d87b970f617d08be2a",
+    "report/readable_report.py": "15ecd967954299ce3f97c61cf961bb5f82ca7c45fa59b0d18fbefaf1cfbf91a3",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed exploratory evidence only, with common units and raw/clockless costs separated; no pending score or automatic scale-up."
+}

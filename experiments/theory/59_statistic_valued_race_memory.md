@@ -567,3 +567,22 @@ is the learned generalization of the count table, and the place where deep featu
 that pool contexts by predictive similarity (§382) give generalization that exact-string tables cannot.
 It is a substantive change to the native receiver. It needs a nested contract (one address reproduces the
 current model) and an integrated fit against the minimal-core count composition before any long run.
+
+**2 October review of §§390–391, preserving their hypotheses.** The512-float
+count covers receiver content only: a fully occupied native H2/d16/L8 state
+also carries32 top-context floats and34 float64 arrival timestamps,2448 tensor
+bytes total before Python metadata. This is still a single conversation address,
+but "512 floats total persistent state" is not complete accounting. The fixed
+context-hash prototype does not implement learned keys or predictive-similarity
+pooling. Added slots/buffers and their graphs now appear in state diagnostics.
+The synthetic all-orders chance claim lacks its stated proof (lag copies cues,
+induction samples observed keys); the old queue was retired before launch.
+P391b remains a falsifiable prediction: detached old tap values can train a
+current reader even when their producer credit stops at a chunk boundary, so
+absence of that credit does not mathematically require a small gain. Longer
+credit alone failed the completed2K quality gate; full recurrent content helps
+one frozen slice but not yet whole-development quality versus minimal.
+Read [deep feature bottlenecks](62_deep_feature_bottlenecks.md) for measured
+responsibilities, the Adam scaling caveat, retained mechanisms and required
+matched comparisons. These qualifications do not retract the core principles
+or replace completed earlier positive/negative evidence.

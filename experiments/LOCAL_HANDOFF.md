@@ -1,5 +1,87 @@
 # Local host: current research continuation
 
+## Current local continuation supersedes the07:55 queue description, 08:13 UTC
+
+Read LANGUAGE_LEARNING_DIAGNOSIS_20261002.md and theory62 before redesign.
+Frozen full/minimal64-credit attribution completes12.850s/522736KiB:
+full recurrent content helps one32-target dev slice by.048141bpc, principally
+the source-context path; receiver erasure alone does not hurt. Full core still
+loses the completed whole-development comparison. Direct residual responsibility
+median.004530(full)/.003138(minimal); dynamic/base-only output-gradient norm
+ratios.206793/.195473, all layers reached. Proper mixture gradients, not proven
+autograd failure; Adam scaling and conditional usefulness must be distinguished.
+
+Long-range protocol audit completes.982s/271400KiB. Lag targets include cues,
+so uniform24/all-orders chance assertion is false. Tests now measure each causal
+local order without target-dependent oracle selection. Driver now separates
+credit from U64 optimizer windows (old8K×4 c16/c64 budgets2048/512updates,
+new512/512). The old MULTI-JOB curie_long_range_core_20261002T072000Z queue
+is retired before launch, commands preserved in archive/protocol_audits.
+No waiter or numerical job was alive when admitted work began; prior07:55
+tmux/wait description was stale. No actual completed long-range fit displaced.
+
+Full8layer/H2/d16 addressed/tapped optimizer contracts pass31.250s/450832KiB:
+exact zero nesting and parent gradients, target-weighted normalization, new
+state/Adam/RNG serialization and next-update bitwise recovery, learned causality
+and chunk invariance. Added state storage/detach is now counted. Numerical
+prerequisites are not evidence of useful deep features. First guarded15-test
+run passes11.71s; final driver/accounting changes require a new test tag.
+
+Native whole-operation accounting smoke completes129.923s/385284KiB,
+191targets/3updates, .088376GFLOPs including unit-weight specials, formula
+coverage complete. Addressed smoke currently active in its own one-job queue
+local_deep_addressed_smoke_20261002T080800Z.txt, tmux
+local-deep-addressed-smoke-20261002T080800Z; no concurrent numerical job.
+Same192fit/129dev/1pass/U64/c16/no-warmup/s6 and core initialization, training
+race RNG reset after construction. All operations traced; whole fit and per
+target CPU work kept together. Explicitly a prerequisite, not a quality pilot.
+Caps1250000KiB groupRSS/3000000KiB VMS/8192MiB floor,1thread/nice19,
+600s timeout, measured host availability~11.5GiB, no GPU. Source frozen.
+
+Prioritized local integrated repair diagnostic: ContextAddressedNative,
+unchanged native races/time evolution/addressed receivers/keys-values/
+counterfactual surrogate + fixed-context outcome slots. It does not add learned
+pooling or KV race attention. Native text memory remains cold at dev start,
+unlike fit-prefilled count references. Full-driver checkpoint recovery and
+quality comparison accounting/selection must precede a long fit. Taps are a
+secondary path-length control; longer credit alone already failed its gate.
+AWS unchanged common-seed capacity/exposure model and plan remain overall
+priority; no dense/local control displacement or automatic scale-up. Pending
+smoke/test/report results will be recorded below when completed.
+
+08:18 completion: both accounting smokes and completed-only ledger pass.
+Native/addressed:129.923/134.455s,385284/386652KiB RSS,191targets/3updates,
+whole fit .088376/.089829GFLOPs, per-target fit .462702/.470307MFLOPs,
+inference .097376/.101568MFLOPs (one target after127 warm tokens, a numerical
+sample). Code-derived core activity16selected/32keys/32teacher values per
+fitting target; context extra capacity4096/occupied150, one read/write except
+first write, hashing/integer/traffic outside FLOPs. Added slot tensors19200B,
+native/addressed listed state2448/21648B. Work ratio1.01644×, smoke dev gain
+.004747bpc; no quality/promotion conclusion. Original empty text filler group
+is NaN (undefined), recorded beside preserved original outputs; driver now
+uses null and strict JSON for absent groups. Equal initial predictions/core
+weights, training RNG and data/update budgets verified in
+results/diagnostics/local_deep_feature_preflight_20261002T081500Z.json.
+
+Final25 targeted tests pass11.79s under new unique guarded queue, including
+real CLI partial-window optimizer-budget matching and empty-group serialization,
+old publication/quarantine protocol checks and repair causality. Frozen full
+contracts remain exact-source. Report publication is active in a separate
+one-job queue local_deep_feature_publication_20261002T081800Z.txt; it validates
+completed ledger hashes and PDF bounds/orphans, retaining historical evidence.
+No research fit is running or automatically nominated. Next: whole-driver
+checkpoint recovery and explicit cold-versus-prefilled comparison contracts,
+then an accounted full/minimal/native/addressed small quality fit. Reserve
+learned context pooling/KV-race and new-context generalization for deeper-feature
+tests; fixed hashes alone cannot establish that claim.
+
+08:19: guarded publication completed;95-page PDF passes bounds/orphan checks,
+new frozen-state/credit and common-unit memory-smoke appendices retain previous
+results. No local numerical job or tmux session remains. Corrected §390's
+512-float statement: receiver contents only; top context32floats and34float64
+timestamps make2448 listed tensor bytes when core fully occupied. Stashes
+remain preserved, no unmerged paths or active rebase state. Commit on main.
+
 ## Deep-feature program (host curie), 2 October, 07:55 UTC
 
 Attribution (Theory §389): every count-composition gain so far is learned count smoothing. Minimal cores

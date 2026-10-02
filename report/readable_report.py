@@ -88,6 +88,22 @@ def results():
                 if hashlib.sha256(result.read_bytes()).hexdigest()!=entry['result_sha256']:
                     raise ValueError('Count-credit ledger result changed')
             tasks['count_credit_pair'].append(r)
+    tasks['deep_core_attribution']=[]
+    for path in sorted((RES/'diagnostics').glob('local_deep_core_attribution_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')=='completed' and r.get('weights_preserved') and r.get('optimizer_steps')==0:
+            for entry in r['models']:
+                if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
+                    raise ValueError('Frozen deep-core source result changed')
+            tasks['deep_core_attribution'].append(r)
+    tasks['deep_memory_preflight']=[]
+    for path in sorted((RES/'diagnostics').glob('local_deep_feature_preflight_*Z.json')):
+        r=read(str(path.relative_to(RES)))
+        if r.get('status')=='completed':
+            for entry in r['common_unit_ledger']:
+                if hashlib.sha256((ROOT/entry['result']).read_bytes()).hexdigest()!=entry['result_sha256']:
+                    raise ValueError('Integrated memory accounting result changed')
+            tasks['deep_memory_preflight'].append(r)
     tasks['delay_language'] = [r for path in sorted((RES/'clock_feature_language').glob('local_delay_feature_*Z.json'))
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
         and r['args']['fit']>=2048 and r['args']['dev']==8192]
@@ -3248,6 +3264,71 @@ def blocks(M, tasks, ev):
              'This reuses development data and is a single-seed screen, not confirmation, semantic-feature proof or supremacy. '
              'Passing requires at least.02bpc full-core credit gain AND at least.02bpc advantage over the matched '
              'minimal64 core at no more than2× full-core fitting work. No automatic larger fit.')])
+    for audit in tasks.get('deep_core_attribution',[]):
+        rows=[]; credits=[]
+        for r in audit['models']:
+            label='Full core' if '_full_' in r['result'] else 'Minimal control'
+            intact=r['interventions'][0]['composed']['bpc']
+            for arm in r['interventions'][:4]:
+                name=arm['intervention'].replace('erase_','Erase ').replace('_',' ')
+                rows.append([label+'/'+name,f"{arm['composed']['bpc']:.4f}",
+                             f"{arm['base']['bpc']:.4f}",f"{arm['composed']['bpc']-intact:+.4f}"])
+            c=r['credit']; resp=c['direct_residual_responsibility']
+            credits.append([label,f"{resp['mean']:.4f}",f"{resp['quantiles'][1]:.4f}",
+                            f"{c['dynamic_to_standalone_gradient_ratio']:.3f}"])
+        pages.append([('h1','Appendix B. Does the trained deep state contribute?'),
+            ('p','Frozen saved full/minimal64-credit models from the matched2K fits above. '
+             'Same32 development targets at positions128–159, same race noise and causal count vectors. '
+             'Erase stored content once at the slice start, retaining arrival times and absolute count cursor; '
+             'state may rebuild. The learned escape gate responds to the changed neural base.'),
+            ('table',(['Model/intervention','Composed bpc','Raw base bpc','Change in composed bpc'],rows,[72,31,31,39])),
+            ('p','Full-core stored content helps this slice by.0481bpc, mainly through the carried source context; '
+             'erasing receiver content alone does not hurt. Useful recurrence is present, but this does not '
+             'establish hierarchical semantics, generalization across slices, or a full-development lead. '
+             'Per-layer receiver erasures are preserved in the diagnostic JSON.'),
+            ('table',(['Model','Mean base responsibility','Median base responsibility','Dynamic/base-only gradient norm'],credits,[40,42,42,49])),
+            ('p','Credit diagnostic uses64 fitting targets at positions64–127. With gate values fixed, the exact '
+             'base-logit derivative is responsibility × (q−onehot); numerical errors are below5e−9. '
+             'Actual dynamic-gate gradients reach every layer. Responsibility suppression is correct mixture '
+             'credit, not a demonstrated autograd bug; Adam can compensate for uniform scaling. The distribution '
+             'and usefulness of the residual signal, information retention and retrieval remain hypotheses.'),
+            ('small','No optimizer steps or weight changes. Raw base is trained as a conditional residual, so '
+             'its standalone bpc is diagnostic. Audit12.85s/522,736KiB; no FLOP or superiority claim. '
+             'Source: local_deep_core_attribution_20261002T075000Z.json. The synthetic long-range queue was '
+             'retired before launch after unsupported chance claims and credit/update confounding were found; '
+             'repaired-driver contracts require matched optimizer windows and separately measured local controls.')])
+    for audit in tasks.get('deep_memory_preflight',[]):
+        rows=[];capacity=[]
+        for r in audit['common_unit_ledger']:
+            rows.append([r['model'],f"{r['dev_bpc']:.4f}",f"{r['cpu_whole_fit_gflops']:.5f}",
+                         f"{r['cpu_fit_mflops_per_target']:.4f}",f"{r['cpu_inference_mflops_per_target']:.4f}"])
+            capacity.append([r['model'],str(r['core_receiver_capacity']),
+                f"{r['selected_core_updates_per_target']}/{r['scored_core_keys_per_target']}/{r['admitted_counterfactual_values_per_fit_target']}",
+                f"{r['occupied_context_slots']}/{r['context_slot_capacity']}",f"{r['persistent_tensor_bytes']:,}"])
+        pages.append([('h1','Appendix B. Integrated memory repair: accounting prerequisite'),
+            ('p','Completed short accounting smokes, not quality pilots. Unchanged full native core versus '
+             'context-addressed outcome slots: H2/d16/depth8, same192 fitting characters/one pass,191 targets, '
+             'three U64 Adam updates (partial63), c16/lr.002/no warmup, seed6, same core initialization and '
+             'training race RNG. Frozen cold-state development has128 targets. Both zero-repair initial scores '
+             'match exactly; every actual fitting operation is traced.'),
+            ('table',(['Model','Smoke dev bpc','Whole fit GFLOPs','Fit MFLOPs/target','Infer MFLOPs/target'],rows,[35,32,34,36,36])),
+            ('table',(['Model','Core slots','Updates/keys/teacher values per target','Extra slots occupied/capacity','State tensor bytes'],capacity,[27,21,51,43,31])),
+            ('p',f"Addressed whole-fitting work ratio{audit['whole_fit_work_ratio']:.4f}×; "
+             f"observed smoke gain{audit['smoke_bpc_gain']:.4f}bpc. Three updates are insufficient to assess "
+             'useful deeper features. Fixed hashed addresses test memory capacity and evidence paths; they '
+             'do not implement learned context pooling or KV race attention. Native temporal races, evolving '
+             'messages, receiver key/value separation and unrealized-route surrogate credit remain.'),
+            ('p','Full-shape addressed/tapped contracts pass exact zero forward/parent gradients, trained '
+             'causality/chunk invariance, target-weighted normalization and serialized next-Adam predictions, '
+             'parameters and moments. Context-slot and tap-buffer tensors are now counted and detached. '
+             'Whole-driver recovery/selection and consistent warm-state comparisons remain admission gaps '
+             'before long fits; no automatic scale-up.'),
+            ('small','CPU emulator, 2FLOPs/MAC plus unit-weight specials, all fitting forward/loss/backward/'
+             'normalization/clipping/Adam; excludes development, RNG, hash/integer operations and traffic. '
+             'Inference is one accounted target after127 warm tokens, not throughput. Activity columns are '
+             'derived from fixed code/dimensions. Empty text filler-group NaN in original JSONs is undefined, '
+             'not a score; preserved beside correction to null in the driver. Cold neural memory differs '
+             'from fit-prefilled count references. Source: local_deep_feature_preflight_20261002T081500Z.json.')])
     composed=[r for path in sorted((RES/'count_composed_carrier').glob('*Z.json'))
               if (r:=read(str(path.relative_to(RES)))).get('status')=='completed' and 'final' in r
               and r['args']['fit']>=2048 and r['args']['dev']==8192]

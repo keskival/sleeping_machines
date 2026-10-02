@@ -1,0 +1,79 @@
+{
+  "status": "completed",
+  "common_unit_ledger": [
+    {
+      "model": "native",
+      "result": "experiments/results/long_range_core/local_deep_native_smoke_20261002T080800Z.json",
+      "result_sha256": "d43f232308ff6f04d558ea76de1aa97b2c04826265fcb98a988ff7da7dbae8eb",
+      "fit_characters": 192,
+      "passes": 1,
+      "fitting_targets": 191,
+      "optimizer_updates": 3,
+      "dev_targets": 128,
+      "dev_bpc": 4.5431827922051,
+      "parameters": 54907,
+      "core_receiver_capacity": 32,
+      "selected_core_updates_per_target": 16,
+      "scored_core_keys_per_target": 32,
+      "admitted_counterfactual_values_per_fit_target": 32,
+      "activity_source": "Fixed core dimensions/code-derived; not a separate measured activity trace",
+      "context_slot_capacity": 0,
+      "occupied_context_slots": 0,
+      "persistent_tensor_bytes": 2448,
+      "cpu_whole_fit_gflops": 0.08837613,
+      "cpu_fit_mflops_per_target": 0.4627022513089005,
+      "cpu_inference_mflops_per_target": 0.097376,
+      "inference_targets": 1,
+      "inference_warm_tokens": 127,
+      "wall_s": 129.92250140199758,
+      "max_rss_kb": 385284
+    },
+    {
+      "model": "addressed",
+      "result": "experiments/results/long_range_core/local_deep_addressed_smoke_20261002T080800Z.json",
+      "result_sha256": "455de9a7a7b66fcfd865309b59cb29373113755949018219a668a816b93d4e15",
+      "fit_characters": 192,
+      "passes": 1,
+      "fitting_targets": 191,
+      "optimizer_updates": 3,
+      "dev_targets": 128,
+      "dev_bpc": 4.5384353831106825,
+      "parameters": 56987,
+      "core_receiver_capacity": 32,
+      "selected_core_updates_per_target": 16,
+      "scored_core_keys_per_target": 32,
+      "admitted_counterfactual_values_per_fit_target": 32,
+      "activity_source": "Fixed core dimensions/code-derived; not a separate measured activity trace",
+      "context_slot_capacity": 4096,
+      "occupied_context_slots": 150,
+      "persistent_tensor_bytes": 21648,
+      "cpu_whole_fit_gflops": 0.089828641,
+      "cpu_fit_mflops_per_target": 0.47030702094240834,
+      "cpu_inference_mflops_per_target": 0.101568,
+      "inference_targets": 1,
+      "inference_warm_tokens": 127,
+      "wall_s": 134.4548137109996,
+      "max_rss_kb": 386652
+    }
+  ],
+  "source_sha256": {
+    "experiments/deep_feature_preflight_analysis.py": "f11603a4b3e9cf527c300f88d8ee6f8e130687f9247316de43da828a535c8f4e"
+  },
+  "dependencies_sha256": {
+    "experiments/results/diagnostics/local_deep_memory_contracts_20261002T080200Z.json": "68ba3e150e9226e7acb3cb8ed93eaf115c4d5292705749f1dc2995656e0b8cbf",
+    "experiments/results/diagnostics/local_deep_core_attribution_20261002T075000Z.json": "4a4aead94a5a75ddd9dd5edafe5a5710bd4424e12a94159fc97749601b343357",
+    "experiments/results/diagnostics/local_long_range_protocol_20261002T075400Z.json": "37e4c8c7de45dc84db3f871589a33e3db82779ed70add19f7fc4fee06a88f585"
+  },
+  "matched_data_optimizer_noise_and_core_initialization": true,
+  "whole_fit_work_ratio": 1.0164355578819757,
+  "smoke_bpc_gain": 0.0047474090944170655,
+  "arithmetic_convention": "2FLOPs/MAC plus unit-weight specials; CPU-emulator whole-smoke fitting, excludes dev/RNG/hash/traffic; no energy claim",
+  "historical_protocol_notes": [
+    "Original smoke JSONs have NaN for empty filler group on text, which has all positions marked targets. Defined quality/work metrics are preserved; driver now emits null and strict JSON for missing groups.",
+    "Original inference trace covers one target after127 warm tokens; denominator explicitly recorded here. This is a numerical accounting sample, not an inference-throughput measurement.",
+    "Cold dev state differs from fit-prefilled count references; no such quality comparison admitted."
+  ],
+  "scope": "Full-size integrated accounting prerequisite on192 fit characters/one pass, not a quality pilot or feature/supremacy claim. No automatic scale-up; whole-driver checkpoint recovery/selection/resource protocol still needed before long fits.",
+  "official_test_read": false,
+  "wall_s": 0.0085725579992868
+}

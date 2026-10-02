@@ -769,18 +769,18 @@ Completed integrated pilots only. Protected modes retain information during sile
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
 | Ours S16 private/P0/observed/s8 | 42.97 | 1.3150 | 0.281 | 0.548 | 0.110 |
-| Ours S16 private/P0/observed/s6 | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
-| Ours S16 private/P2/observed/s6 | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
-| Ours S16 shared/P0/observed/s6 | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
-| Ours S16 shared/P2/observed/s6 | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
+| Ours S16 private/P0/observed/s6 | 75.39 | 0.7592 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P0/observed/s7 | 51.17 | 1.0313 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P0/observed/s8 | 69.14 | 0.8689 | 0.280 | 0.548 | 0.110 |
+| Ours S16 shared/P0/observed/s6 | 40.23 | 1.2576 | 0.262 | 0.512 | 0.110 |
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
 | Ours S16 private/P0/observed/s8 | 128/256/4 | 157,940 | 512 | 16/32 |
-| Ours S16 private/P0/observed/s6 | 128/256/4 | 157,940 | 512 | 16/32 |
-| Ours S16 private/P2/observed/s6 | 128/256/4 | 155,828 | 512 | 16/32 |
-| Ours S16 shared/P0/observed/s6 | 128/256/4 | 14,180 | 512 | 16/32 |
-| Ours S16 shared/P2/observed/s6 | 128/256/4 | 13,988 | 512 | 16/32 |
+| Ours S16 private/P0/observed/s6 | 128/256/4 | 157,700 | 512 | 16/32 |
+| Ours S16 private/P0/observed/s7 | 128/256/4 | 157,700 | 512 | 16/32 |
+| Ours S16 private/P0/observed/s8 | 128/256/4 | 157,700 | 512 | 16/32 |
+| Ours S16 shared/P0/observed/s6 | 128/256/4 | 14,420 | 512 | 16/32 |
 
 Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
 
@@ -790,6 +790,29 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
 | --- | --- | --- | --- | --- | --- |
+| Ours S16 shared/P0/observed/s7 | 32.03 | 1.4567 | 0.262 | 0.512 | 0.110 |
+| Ours S16 shared/P0/observed/s8 | 25.00 | 1.5001 | 0.262 | 0.512 | 0.110 |
+| Ours S16 private/P0/observed/s6 | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P2/observed/s6 | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
+| Ours S16 shared/P0/observed/s6 | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S16 shared/P0/observed/s7 | 128/256/4 | 14,420 | 512 | 16/32 |
+| Ours S16 shared/P0/observed/s8 | 128/256/4 | 14,420 | 512 | 16/32 |
+| Ours S16 private/P0/observed/s6 | 128/256/4 | 157,940 | 512 | 16/32 |
+| Ours S16 private/P2/observed/s6 | 128/256/4 | 155,828 | 512 | 16/32 |
+| Ours S16 shared/P0/observed/s6 | 128/256/4 | 14,180 | 512 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: order
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S16 shared/P2/observed/s6 | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
 | Ours S4 private/P0/observed/s6 | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
 | Ours S4 private/P2/observed/s6 | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
 | Ours S4 shared/P0/observed/s6 | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
@@ -797,6 +820,7 @@ Completed integrated pilots only. Protected modes retain information during sile
 
 | Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
 | --- | --- | --- | --- | --- |
+| Ours S16 shared/P2/observed/s6 | 128/256/4 | 13,988 | 512 | 16/32 |
 | Ours S4 private/P0/observed/s6 | 128/256/4 | 42,932 | 128 | 16/32 |
 | Ours S4 private/P2/observed/s6 | 128/256/4 | 42,356 | 128 | 16/32 |
 | Ours S4 shared/P0/observed/s6 | 128/256/4 | 14,180 | 128 | 16/32 |
@@ -1406,6 +1430,9 @@ The unchanged native eight-block core supplies the base predictive; addressed co
 | Count-carrying native K4 + escape gate [minimal core p2/d1] 8,192 | 8,192/4 | 2.588 | 0.288 | 0.009 | 0.0031 |
 | KN counts, frozen o4 | 8,192/1 | 3.081 | Not FLOPs | Not FLOPs | Not FLOPs |
 | Counts, stream-adaptive o3 | 8,192/1 | 2.699 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Count-carrying native K4 + escape gate 32,768 | 32,768/4 | 2.447 | 60.790 | 0.464 | 0.0993 |
+| KN counts, frozen o5 | 32,768/1 | 2.704 | Not FLOPs | Not FLOPs | Not FLOPs |
+| Counts, stream-adaptive o4 | 32,768/1 | 2.579 | Not FLOPs | Not FLOPs | Not FLOPs |
 
 Same 8,191 development targets for every row; one seed. Count increments/lookups are integer table work reported in the result files, not FLOPs. The initialized-base/escape row measures whole-model fitting benefit; it does not isolate the native base. Count rows are dev-selected-order references, not neural controls. Exploratory development evidence; no comparable-quality Transformer claim.
 
@@ -1418,6 +1445,8 @@ At 2,048 fitting characters, fitting the native base and escape parameters impro
 At 2,048 fitting characters, fitting the native base and escape parameters improves 0.0381 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 2,048 fitting characters, fitting the native base and escape parameters improves -0.0032 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
+
+At 32,768 fitting characters, fitting the native base and escape parameters improves 0.1454 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
 At 8,192 fitting characters, fitting the native base and escape parameters improves 0.0108 bpc over their untrained initialization. The complete composed predictor improves over native-alone, while this smaller learning contribution is the relevant comparison for the cost of fitting the base. The integer count path remains charged separately.
 
@@ -1450,6 +1479,52 @@ Completed four-arm integrated comparison, seed6: same2K fitting characters/four 
 Full-core longer-credit gain0.0008bpc; minimal-core gain0.0001bpc. Full versus minimal advantage at64:-0.0006bpc, with1.005× full-core fitting work versus16. The predeclared follow-up gate fails.
 
 All neural fitting forward/loss/backward/normalization/clipping/Adam and admitted losing-value credit are charged in CPU emulator units; projected clockless work is a separate result ledger. Each target also looks up4 count addresses; integer counts, discovery, traffic and energy stay separate. This reuses development data and is a single-seed screen, not confirmation, semantic-feature proof or supremacy. Passing requires at least.02bpc full-core credit gain AND at least.02bpc advantage over the matched minimal64 core at no more than2× full-core fitting work. No automatic larger fit.
+
+## Appendix B. Does the trained deep state contribute?
+
+Frozen saved full/minimal64-credit models from the matched2K fits above. Same32 development targets at positions128–159, same race noise and causal count vectors. Erase stored content once at the slice start, retaining arrival times and absolute count cursor; state may rebuild. The learned escape gate responds to the changed neural base.
+
+| Model/intervention | Composed bpc | Raw base bpc | Change in composed bpc |
+| --- | --- | --- | --- |
+| Full core/intact | 3.4541 | 4.9093 | +0.0000 |
+| Full core/Erase source context | 3.4916 | 5.0308 | +0.0375 |
+| Full core/Erase receiver content | 3.4495 | 4.9933 | -0.0046 |
+| Full core/Erase all content | 3.5022 | 5.1477 | +0.0481 |
+| Minimal control/intact | 3.4904 | 4.9638 | +0.0000 |
+| Minimal control/Erase source context | 3.4885 | 4.9424 | -0.0018 |
+| Minimal control/Erase receiver content | 3.4901 | 4.9649 | -0.0002 |
+| Minimal control/Erase all content | 3.4882 | 4.9401 | -0.0022 |
+
+Full-core stored content helps this slice by.0481bpc, mainly through the carried source context; erasing receiver content alone does not hurt. Useful recurrence is present, but this does not establish hierarchical semantics, generalization across slices, or a full-development lead. Per-layer receiver erasures are preserved in the diagnostic JSON.
+
+| Model | Mean base responsibility | Median base responsibility | Dynamic/base-only gradient norm |
+| --- | --- | --- | --- |
+| Full core | 0.0717 | 0.0045 | 0.207 |
+| Minimal control | 0.0571 | 0.0031 | 0.195 |
+
+Credit diagnostic uses64 fitting targets at positions64–127. With gate values fixed, the exact base-logit derivative is responsibility × (q−onehot); numerical errors are below5e−9. Actual dynamic-gate gradients reach every layer. Responsibility suppression is correct mixture credit, not a demonstrated autograd bug; Adam can compensate for uniform scaling. The distribution and usefulness of the residual signal, information retention and retrieval remain hypotheses.
+
+No optimizer steps or weight changes. Raw base is trained as a conditional residual, so its standalone bpc is diagnostic. Audit12.85s/522,736KiB; no FLOP or superiority claim. Source: local_deep_core_attribution_20261002T075000Z.json. The synthetic long-range queue was retired before launch after unsupported chance claims and credit/update confounding were found; repaired-driver contracts require matched optimizer windows and separately measured local controls.
+
+## Appendix B. Integrated memory repair: accounting prerequisite
+
+Completed short accounting smokes, not quality pilots. Unchanged full native core versus context-addressed outcome slots: H2/d16/depth8, same192 fitting characters/one pass,191 targets, three U64 Adam updates (partial63), c16/lr.002/no warmup, seed6, same core initialization and training race RNG. Frozen cold-state development has128 targets. Both zero-repair initial scores match exactly; every actual fitting operation is traced.
+
+| Model | Smoke dev bpc | Whole fit GFLOPs | Fit MFLOPs/target | Infer MFLOPs/target |
+| --- | --- | --- | --- | --- |
+| native | 4.5432 | 0.08838 | 0.4627 | 0.0974 |
+| addressed | 4.5384 | 0.08983 | 0.4703 | 0.1016 |
+
+| Model | Core slots | Updates/keys/teacher values per target | Extra slots occupied/capacity | State tensor bytes |
+| --- | --- | --- | --- | --- |
+| native | 32 | 16/32/32 | 0/0 | 2,448 |
+| addressed | 32 | 16/32/32 | 150/4096 | 21,648 |
+
+Addressed whole-fitting work ratio1.0164×; observed smoke gain0.0047bpc. Three updates are insufficient to assess useful deeper features. Fixed hashed addresses test memory capacity and evidence paths; they do not implement learned context pooling or KV race attention. Native temporal races, evolving messages, receiver key/value separation and unrealized-route surrogate credit remain.
+
+Full-shape addressed/tapped contracts pass exact zero forward/parent gradients, trained causality/chunk invariance, target-weighted normalization and serialized next-Adam predictions, parameters and moments. Context-slot and tap-buffer tensors are now counted and detached. Whole-driver recovery/selection and consistent warm-state comparisons remain admission gaps before long fits; no automatic scale-up.
+
+CPU emulator, 2FLOPs/MAC plus unit-weight specials, all fitting forward/loss/backward/normalization/clipping/Adam; excludes development, RNG, hash/integer operations and traffic. Inference is one accounted target after127 warm tokens, not throughput. Activity columns are derived from fixed code/dimensions. Empty text filler-group NaN in original JSONs is undefined, not a score; preserved beside correction to null in the driver. Cold neural memory differs from fit-prefilled count references. Source: local_deep_feature_preflight_20261002T081500Z.json.
 
 ## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
 

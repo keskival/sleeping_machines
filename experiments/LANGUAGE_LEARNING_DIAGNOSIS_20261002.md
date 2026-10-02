@@ -204,3 +204,95 @@ terms do not imply a material fitting benefit. Information sufficient for
 long-range prediction, credit fidelity, exposure and useful learned computation
 still need discriminating integrated tests; no global impossibility theorem
 or single identified cause follows from this restricted negative result.
+
+## Frozen trained-state attribution, 08:04 UTC
+
+`results/diagnostics/local_deep_core_attribution_20261002T075000Z.json`
+completes12.850s/522736KiB with no optimizer or parameter changes. Exact saved
+full/minimal64-credit checkpoints and fitting/development hashes verified.
+On32 development targets128–159, retain count tables, absolute cursor,
+arrival timestamps and per-position race noise. Erase content once at128,
+then permit ordinary state rebuilding. Dynamic gate may respond to changed q.
+
+| Intervention | Full composed bpc | Minimal composed bpc |
+|---|---:|---:|
+|Intact|3.454094|3.490371|
+|Erase carried source context|3.491624|3.488527|
+|Erase receiver contents|3.449488|3.490132|
+|Erase both|3.502234|3.488218|
+
+Full recurrent content helps by.048141bpc here, principally through the
+top-level context path. Receiver contents alone do not improve this slice.
+Per-layer receiver interventions are saved; their small/nonmonotonic effects
+do not show individual layers are useless, since source context survives and
+memory rebuilds. A uniform base with the intact gate frozen scores3.505888
+(full) /3.491742(minimal). This is evidence against an entirely inert full
+recurrent predictor, not proof of semantic abstractions or a general full-core
+advantage: the completed whole-development comparison still favors minimal.
+
+Actual trained fitting targets64–127 have direct base responsibility mean
+.071734(full)/.057129(minimal), median.004530/.003138. With D/theta frozen at
+the actual gate's values, the output derivative matches r(q−onehot)/64 to
+9.31e−10/4.66e−9. Dynamic gate output-gradient norm ratios to standalone q
+are.206793/.195473; gate path difference norms.004102/.004259. Actual
+dynamic-gate loss sends nonzero gradients to all8(full)/1(minimal) layers.
+This establishes scarce direct residual credit for most targets, not broken
+autograd. Uniform gradient rescaling can be partly compensated by Adam;
+heterogeneous responsibilities, missing predictive information and sample
+allocation remain distinct possible bottlenecks. The base is a residual, so
+its5.14/5.01bpc standalone fitting scores do not imply broken learning.
+
+## Proposed long-range protocol repaired before fitting
+
+`results/diagnostics/local_long_range_protocol_20261002T075400Z.json`
+completes.982s/271400KiB, three stream pairs each for lag48/induction128.
+Lag dev targets include18–25 earlier cue symbols per~284targets; the asserted
+uniform24 target law is false. Induction also contains inserted queries and
+copied targets, with queries selected from observed pairs; iid fillers do not
+prove all-orders suffix independence. Individual causal add-one count orders
+1–8 score4.654–4.869bpc(lag) /4.598–4.821(induction); observed near-chance
+controls are evidence about these samples, not a proof for every order.
+Former per-target minimum over order losses used labels to select a predictor;
+tests now evaluate each causal order separately. No such bound is evidence
+for a deployable model. Only6.57–7.08% of positions are task targets; this is
+objective exposure, not measured target gradient mass.
+
+Old per-chunk Adam would give2048 updates(c16) versus512(c64) over8K×4.
+Driver now uses target-weighted accumulation with independent U64, yielding
+512 updates in either case and correct partial-window normalization. The old
+multi-job queue is retired before any launch; its commands are preserved in
+`archive/protocol_audits/curie_long_range_core_20261002T072000Z.pre_audit.txt`.
+Use new tags/one-job queues for changed settings. Cold addressed-memory
+evaluation is causal but lacks count references' preloaded fit memory; report
+that difference explicitly. Driver still lacks full fitting FLOP/recovery
+admission, so long fits await those prerequisites.
+
+Full H2/d16/depth8 memory-repair contracts complete31.250s/450832KiB:
+`results/diagnostics/local_deep_memory_contracts_20261002T080200Z.json`.
+Both addressed and tapped models exactly nest native forward/parent gradients
+at zero repair, preserve learned causal/chunk-invariant prediction, correctly
+normalize actual gradients, and recover the next Adam update, predictions and
+moments bitwise with new persistent state/RNG. The addressed read and write
+maps both receive gradients after the initial read-map update; all tap maps
+and some in-range unclamped delays receive gradients. Zero-read initialization
+stages write-map learning, rather than immediately failing it. This is a
+numerical prerequisite, not useful-feature evidence. State accounting now
+includes context slots and tap buffers (integer/Python metadata separate),
+and detach diagnostics include their differentiable entries.
+
+Paired192-character/one-pass integrated accounting smokes complete with every
+fitting floating operation traced; completed ledger
+`results/diagnostics/local_deep_feature_preflight_20261002T081500Z.json`.
+Native/addressed whole-fit .088376/.089829GFLOPs, per-target
+.462702/.470307MFLOPs over191targets/3U64 updates, inferred work ratio1.01644.
+CPU arithmetic includes unit-weight specials, loss/backward/normalization/
+clipping/Adam; excludes dev, RNG, hash/integer metadata and traffic. Native/
+addressed listed state2448/21648B, with150occupied extra slots of4096available.
+Both initial scores match bitwise under identical core initialization; training
+RNG is reset after constructors. Dev4.543183/4.538435bpc over128targets is
+only an accounting smoke, not a quality pilot or useful-feature result.
+Inference .097376/.101568MFLOPs/target is one traced target after127warm
+tokens, not throughput. Original text-only empty filler-group NaN is undefined;
+preserve those JSONs and this annotation. Driver now writes null for absent
+groups and rejects other nonfinite JSON. Final25 tests pass11.79s, including
+the real driver budget/partial-window and null serialization tests.

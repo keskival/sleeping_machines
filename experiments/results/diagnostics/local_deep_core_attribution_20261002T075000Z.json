@@ -1,0 +1,929 @@
+{
+  "status": "completed",
+  "models": [
+    {
+      "result": "experiments/results/count_carrying_language/local_count_credit64_full_D2048_20261002T060000Z.json",
+      "result_sha256": "1e780595a311882bc2df9fa285202cda8865f51b4dc9f7a3b82c412b010dab95",
+      "checkpoint_sha256": "eb10ddd79d634ffd726a3188079d6f485b1353f8493625f4cc0a64c5edec860f",
+      "model_fingerprint": "b9cf9d22b5058d18597a31645b21be8e97bb3ebfd5da4a3ada3cce4d420ef99a",
+      "development_positions": [
+        128,
+        160
+      ],
+      "interventions": [
+        {
+          "intervention": "intact",
+          "composed": {
+            "bpc": 3.4540937125185196,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 0.0,
+            "max_log_probability_change": 0.0
+          },
+          "base": {
+            "bpc": 4.909291204194606,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.0,
+            "max_log_probability_change": 0.0
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_source_context",
+          "composed": {
+            "bpc": 3.491624110555103,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 0.0013452398125082254,
+            "max_log_probability_change": 1.2666492462158203
+          },
+          "base": {
+            "bpc": 5.030778372902887,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 0.028195766732096672,
+            "max_log_probability_change": 1.3734385967254639
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_receiver_content",
+          "composed": {
+            "bpc": 3.4494880171284135,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 0.0003748518938664347,
+            "max_log_probability_change": 0.6736021041870117
+          },
+          "base": {
+            "bpc": 4.9932913144943205,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.018859755247831345,
+            "max_log_probability_change": 1.1304874420166016
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_all_content",
+          "composed": {
+            "bpc": 3.5022344082174333,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 0.0021689701825380325,
+            "max_log_probability_change": 1.5049586296081543
+          },
+          "base": {
+            "bpc": 5.147732078934424,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 0.06820797920227051,
+            "max_log_probability_change": 1.501101016998291
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_1_receiver_content",
+          "composed": {
+            "bpc": 3.451586893399543,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 6.83597318129614e-05,
+            "max_log_probability_change": 0.3575572967529297
+          },
+          "base": {
+            "bpc": 4.928878652266673,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.0052889310754835606,
+            "max_log_probability_change": 0.5244896411895752
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_2_receiver_content",
+          "composed": {
+            "bpc": 3.460257914690744,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 2.7424497602623887e-05,
+            "max_log_probability_change": 0.18281221389770508
+          },
+          "base": {
+            "bpc": 4.9271185818177425,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.0014599338173866272,
+            "max_log_probability_change": 0.1940937042236328
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_3_receiver_content",
+          "composed": {
+            "bpc": 3.448644614208582,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 7.944500976009294e-05,
+            "max_log_probability_change": 0.35378265380859375
+          },
+          "base": {
+            "bpc": 4.909995301167238,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.00488020945340395,
+            "max_log_probability_change": 0.4736785888671875
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_4_receiver_content",
+          "composed": {
+            "bpc": 3.455370167753223,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 2.1565901988651603e-05,
+            "max_log_probability_change": 0.21454334259033203
+          },
+          "base": {
+            "bpc": 4.934446418605705,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.001405029441229999,
+            "max_log_probability_change": 0.21424007415771484
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_5_receiver_content",
+          "composed": {
+            "bpc": 3.4464735052240902,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 5.430964665720239e-05,
+            "max_log_probability_change": 0.2990427017211914
+          },
+          "base": {
+            "bpc": 4.92807274156473,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.003699104767292738,
+            "max_log_probability_change": 0.30141639709472656
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_6_receiver_content",
+          "composed": {
+            "bpc": 3.4504796690932884,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 3.28197747876402e-05,
+            "max_log_probability_change": 0.21291637420654297
+          },
+          "base": {
+            "bpc": 4.908246581573265,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.0025364526081830263,
+            "max_log_probability_change": 0.3432302474975586
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_7_receiver_content",
+          "composed": {
+            "bpc": 3.450041113333588,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 2.70184718829114e-05,
+            "max_log_probability_change": 0.24366474151611328
+          },
+          "base": {
+            "bpc": 4.909163937032967,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.001940139103680849,
+            "max_log_probability_change": 0.260591983795166
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_8_receiver_content",
+          "composed": {
+            "bpc": 3.448953495049532,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 2.3185468307929114e-05,
+            "max_log_probability_change": 0.3270759582519531
+          },
+          "base": {
+            "bpc": 4.907375317463994,
+            "accuracy": 0.0625,
+            "mean_kl_from_intact": 0.0015800327528268099,
+            "max_log_probability_change": 0.33188390731811523
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        }
+      ],
+      "uniform_base_with_intact_gate": {
+        "bpc": 3.5058883516176644,
+        "accuracy": 0.34375
+      },
+      "credit": {
+        "fitting_positions": [
+          64,
+          128
+        ],
+        "targets": 64,
+        "credit_events": 64,
+        "direct_residual_responsibility": {
+          "mean": 0.07173366844654083,
+          "min": 1.4018059118825477e-05,
+          "max": 1.0,
+          "quantiles": [
+            0.0005481363623403013,
+            0.0045301662757992744,
+            0.028732025995850563
+          ]
+        },
+        "responsibility_gradient_max_error": 9.313225746154785e-10,
+        "output_logit_gradient_norms": {
+          "dynamic_gate": 0.02564014308154583,
+          "fixed_gate": 0.025408389046788216,
+          "standalone_base": 0.12398935109376907
+        },
+        "gate_path_gradient_norm": 0.00410166010260582,
+        "dynamic_to_standalone_gradient_ratio": 0.20679309964179993,
+        "fixed_to_standalone_gradient_ratio": 0.20492395758628845,
+        "fitting_bpc": {
+          "composed": 2.7965300857301307,
+          "base": 5.135601454638467
+        },
+        "actual_dynamic_gate_layer_gradients": [
+          {
+            "depth": 1,
+            "parameter_gradient_norms": {
+              "channel_mix.0.weight": 0.22511519491672516,
+              "queries.0.0.weight": 9.543106898490805e-06,
+              "queries.0.1.weight": 0.004088984802365303,
+              "units.0.0.0.0.key": 5.758278120993054e-07,
+              "units.0.0.0.0.clock_bias": 4.5294694928088575e-07,
+              "units.0.0.0.0.raw_rate": 0.00048155151307582855,
+              "units.0.0.0.0.frequency": 0.03255878761410713,
+              "units.0.0.0.0.key_read.weight": 7.947086487547494e-06,
+              "units.0.0.0.0.input.weight": 0.008825412951409817,
+              "units.0.0.0.0.output.weight": 0.013428505510091782,
+              "units.0.0.0.0.gate.weight": 0.002889294410124421,
+              "units.0.0.0.0.gate.bias": 0.0007937482441775501,
+              "units.0.0.0.0.control.weight": 0.003817776683717966,
+              "units.0.0.0.0.control.bias": 0.0008188925567083061,
+              "units.0.0.0.1.key": 4.43933060978452e-07,
+              "units.0.0.0.1.clock_bias": 3.4081182320733205e-07,
+              "units.0.0.0.1.raw_rate": null,
+              "units.0.0.0.1.frequency": null,
+              "units.0.0.0.1.key_read.weight": 0.0,
+              "units.0.0.0.1.input.weight": 0.0,
+              "units.0.0.0.1.output.weight": 0.0,
+              "units.0.0.0.1.gate.weight": 0.0,
+              "units.0.0.0.1.gate.bias": 0.0,
+              "units.0.0.0.1.control.weight": 0.0,
+              "units.0.0.0.1.control.bias": 0.0,
+              "units.0.1.0.0.key": 0.00016526943363714963,
+              "units.0.1.0.0.clock_bias": 0.00012117303413106129,
+              "units.0.1.0.0.raw_rate": 0.00011529662151588127,
+              "units.0.1.0.0.frequency": 0.0020237162243574858,
+              "units.0.1.0.0.key_read.weight": 0.0007983747636899352,
+              "units.0.1.0.0.input.weight": 0.0028463765047490597,
+              "units.0.1.0.0.output.weight": 0.002838377607986331,
+              "units.0.1.0.0.gate.weight": 0.0008491858607158065,
+              "units.0.1.0.0.gate.bias": 0.0003051109961234033,
+              "units.0.1.0.0.control.weight": 0.0010949370916932821,
+              "units.0.1.0.0.control.bias": 0.00027214319561608136,
+              "units.0.1.0.1.key": 0.00020521158876363188,
+              "units.0.1.0.1.clock_bias": 0.00020778756879735738,
+              "units.0.1.0.1.raw_rate": 0.0005362037336453795,
+              "units.0.1.0.1.frequency": 0.019561342895030975,
+              "units.0.1.0.1.key_read.weight": 0.0032226257026195526,
+              "units.0.1.0.1.input.weight": 0.007477732840925455,
+              "units.0.1.0.1.output.weight": 0.020371699705719948,
+              "units.0.1.0.1.gate.weight": 0.005241601727902889,
+              "units.0.1.0.1.gate.bias": 0.0018160673789680004,
+              "units.0.1.0.1.control.weight": 0.003350062994286418,
+              "units.0.1.0.1.control.bias": 0.0008029486634768546
+            },
+            "gradient_norm": 0.23014411738681823
+          },
+          {
+            "depth": 2,
+            "parameter_gradient_norms": {
+              "channel_mix.1.weight": 0.17042450606822968,
+              "queries.1.0.weight": 0.003030631924048066,
+              "queries.1.1.weight": 0.0044983564876019955,
+              "units.1.0.0.0.key": 0.000375882547814399,
+              "units.1.0.0.0.clock_bias": 0.00048277838504873216,
+              "units.1.0.0.0.raw_rate": 0.00014754291623830795,
+              "units.1.0.0.0.frequency": 0.00960028450936079,
+              "units.1.0.0.0.key_read.weight": 0.001258369884453714,
+              "units.1.0.0.0.input.weight": 0.0029741646721959114,
+              "units.1.0.0.0.output.weight": 0.003664941294118762,
+              "units.1.0.0.0.gate.weight": 0.0008763081859797239,
+              "units.1.0.0.0.gate.bias": 0.0002996927942149341,
+              "units.1.0.0.0.control.weight": 0.0009988527745008469,
+              "units.1.0.0.0.control.bias": 0.00024945419863797724,
+              "units.1.0.0.1.key": 0.0003737973456736654,
+              "units.1.0.0.1.clock_bias": 0.0004737726703751832,
+              "units.1.0.0.1.raw_rate": 0.0004434398142620921,
+              "units.1.0.0.1.frequency": 0.043229956179857254,
+              "units.1.0.0.1.key_read.weight": 0.003928469493985176,
+              "units.1.0.0.1.input.weight": 0.00886278972029686,
+              "units.1.0.0.1.output.weight": 0.037168581038713455,
+              "units.1.0.0.1.gate.weight": 0.006050066091120243,
+              "units.1.0.0.1.gate.bias": 0.002210252219811082,
+              "units.1.0.0.1.control.weight": 0.003227140288800001,
+              "units.1.0.0.1.control.bias": 0.0007668519974686205,
+              "units.1.1.0.0.key": 0.000849729694891721,
+              "units.1.1.0.0.clock_bias": 0.0012881584698334336,
+              "units.1.1.0.0.raw_rate": 0.0007968729478307068,
+              "units.1.1.0.0.frequency": 0.02424497902393341,
+              "units.1.1.0.0.key_read.weight": 0.003000520635396242,
+              "units.1.1.0.0.input.weight": 0.016430633142590523,
+              "units.1.1.0.0.output.weight": 0.00771855004131794,
+              "units.1.1.0.0.gate.weight": 0.002850188175216317,
+              "units.1.1.0.0.gate.bias": 0.0009200662025250494,
+              "units.1.1.0.0.control.weight": 0.004041831474751234,
+              "units.1.1.0.0.control.bias": 0.00032189078046940267,
+              "units.1.1.0.1.key": 0.0008306537056341767,
+              "units.1.1.0.1.clock_bias": 0.0012581810588017106,
+              "units.1.1.0.1.raw_rate": 0.0003006529586855322,
+              "units.1.1.0.1.frequency": 0.054959412664175034,
+              "units.1.1.0.1.key_read.weight": 0.0014115521917119622,
+              "units.1.1.0.1.input.weight": 0.014142281375825405,
+              "units.1.1.0.1.output.weight": 0.011184072121977806,
+              "units.1.1.0.1.gate.weight": 0.0028133830055594444,
+              "units.1.1.0.1.gate.bias": 0.0009759252425283194,
+              "units.1.1.0.1.control.weight": 0.004440962802618742,
+              "units.1.1.0.1.control.bias": 0.0010982160456478596
+            },
+            "gradient_norm": 0.19215672079076593
+          },
+          {
+            "depth": 3,
+            "parameter_gradient_norms": {
+              "channel_mix.2.weight": 0.13965177536010742,
+              "queries.2.0.weight": 0.0037813971284776926,
+              "queries.2.1.weight": 0.0020652355160564184,
+              "units.2.0.0.0.key": 0.0008978364057838917,
+              "units.2.0.0.0.clock_bias": 0.0011210002703592181,
+              "units.2.0.0.0.raw_rate": 0.001058480585925281,
+              "units.2.0.0.0.frequency": 0.02835465967655182,
+              "units.2.0.0.0.key_read.weight": 0.002597847254946828,
+              "units.2.0.0.0.input.weight": 0.007751977536827326,
+              "units.2.0.0.0.output.weight": 0.00974402204155922,
+              "units.2.0.0.0.gate.weight": 0.0017800347413867712,
+              "units.2.0.0.0.gate.bias": 0.0005439691012725234,
+              "units.2.0.0.0.control.weight": 0.0042501091957092285,
+              "units.2.0.0.0.control.bias": 0.0010919097112491727,
+              "units.2.0.0.1.key": 0.0008475397480651736,
+              "units.2.0.0.1.clock_bias": 0.0010511366417631507,
+              "units.2.0.0.1.raw_rate": 0.0003032931126654148,
+              "units.2.0.0.1.frequency": 0.015434330329298973,
+              "units.2.0.0.1.key_read.weight": 0.0028036925941705704,
+              "units.2.0.0.1.input.weight": 0.005751427728682756,
+              "units.2.0.0.1.output.weight": 0.00927432719618082,
+              "units.2.0.0.1.gate.weight": 0.0023207473568618298,
+              "units.2.0.0.1.gate.bias": 0.0006750067113898695,
+              "units.2.0.0.1.control.weight": 0.0018378349486738443,
+              "units.2.0.0.1.control.bias": 0.000471630715765059,
+              "units.2.1.0.0.key": 0.00027516321279108524,
+              "units.2.1.0.0.clock_bias": 0.0003876680857501924,
+              "units.2.1.0.0.raw_rate": 0.0003505756612867117,
+              "units.2.1.0.0.frequency": 0.01763729564845562,
+              "units.2.1.0.0.key_read.weight": 0.0012780375545844436,
+              "units.2.1.0.0.input.weight": 0.00843870360404253,
+              "units.2.1.0.0.output.weight": 0.010238048620522022,
+              "units.2.1.0.0.gate.weight": 0.0020586021710187197,
+              "units.2.1.0.0.gate.bias": 0.0007986375712789595,
+              "units.2.1.0.0.control.weight": 0.002801072085276246,
+              "units.2.1.0.0.control.bias": 0.0007536117336712778,
+              "units.2.1.0.1.key": 0.0002986274193972349,
+              "units.2.1.0.1.clock_bias": 0.00044015460298396647,
+              "units.2.1.0.1.raw_rate": 0.00042695915908552706,
+              "units.2.1.0.1.frequency": 0.03141602873802185,
+              "units.2.1.0.1.key_read.weight": 0.0010709352791309357,
+              "units.2.1.0.1.input.weight": 0.01038975827395916,
+              "units.2.1.0.1.output.weight": 0.010328605771064758,
+              "units.2.1.0.1.gate.weight": 0.00312223332002759,
+              "units.2.1.0.1.gate.bias": 0.0011263914639130235,
+              "units.2.1.0.1.control.weight": 0.002395127434283495,
+              "units.2.1.0.1.control.bias": 0.0006259178626351058
+            },
+            "gradient_norm": 0.15037325431586637
+          },
+          {
+            "depth": 4,
+            "parameter_gradient_norms": {
+              "channel_mix.3.weight": 0.12401897460222244,
+              "queries.3.0.weight": 0.002931673778221011,
+              "queries.3.1.weight": 0.007237417623400688,
+              "units.3.0.0.0.key": 0.0003363075666129589,
+              "units.3.0.0.0.clock_bias": 0.0006109391106292605,
+              "units.3.0.0.0.raw_rate": 0.0005108320037834346,
+              "units.3.0.0.0.frequency": 0.009235157631337643,
+              "units.3.0.0.0.key_read.weight": 0.001543992548249662,
+              "units.3.0.0.0.input.weight": 0.006587083917111158,
+              "units.3.0.0.0.output.weight": 0.008364840410649776,
+              "units.3.0.0.0.gate.weight": 0.0019398292060941458,
+              "units.3.0.0.0.gate.bias": 0.0006773378700017929,
+              "units.3.0.0.0.control.weight": 0.003075625281780958,
+              "units.3.0.0.0.control.bias": 0.0008196924463845789,
+              "units.3.0.0.1.key": 0.0002946961030829698,
+              "units.3.0.0.1.clock_bias": 0.0005298310425132513,
+              "units.3.0.0.1.raw_rate": 0.000491818122100085,
+              "units.3.0.0.1.frequency": 0.03440378978848457,
+              "units.3.0.0.1.key_read.weight": 0.001208048197440803,
+              "units.3.0.0.1.input.weight": 0.011397904716432095,
+              "units.3.0.0.1.output.weight": 0.010608835145831108,
+              "units.3.0.0.1.gate.weight": 0.004156177863478661,
+              "units.3.0.0.1.gate.bias": 0.0015079400036484003,
+              "units.3.0.0.1.control.weight": 0.002544343937188387,
+              "units.3.0.0.1.control.bias": 0.0005598569405265152,
+              "units.3.1.0.0.key": 0.000668591121211648,
+              "units.3.1.0.0.clock_bias": 0.0014040478272363544,
+              "units.3.1.0.0.raw_rate": 0.00029450355214066803,
+              "units.3.1.0.0.frequency": 0.017001749947667122,
+              "units.3.1.0.0.key_read.weight": 0.00140614144038409,
+              "units.3.1.0.0.input.weight": 0.008292022161185741,
+              "units.3.1.0.0.output.weight": 0.008834210224449635,
+              "units.3.1.0.0.gate.weight": 0.00260867434553802,
+              "units.3.1.0.0.gate.bias": 0.0010720579884946346,
+              "units.3.1.0.0.control.weight": 0.0011777592590078712,
+              "units.3.1.0.0.control.bias": 0.00025663000997155905,
+              "units.3.1.0.1.key": 0.0006510036182589829,
+              "units.3.1.0.1.clock_bias": 0.0013690186897292733,
+              "units.3.1.0.1.raw_rate": 0.0003731708275154233,
+              "units.3.1.0.1.frequency": 0.011774100363254547,
+              "units.3.1.0.1.key_read.weight": 0.0035626471508294344,
+              "units.3.1.0.1.input.weight": 0.00418491056188941,
+              "units.3.1.0.1.output.weight": 0.011057781986892223,
+              "units.3.1.0.1.gate.weight": 0.0021087066270411015,
+              "units.3.1.0.1.gate.bias": 0.0007869373657740653,
+              "units.3.1.0.1.control.weight": 0.0023849389981478453,
+              "units.3.1.0.1.control.bias": 0.0006362471031025052
+            },
+            "gradient_norm": 0.13366657668445284
+          },
+          {
+            "depth": 5,
+            "parameter_gradient_norms": {
+              "channel_mix.4.weight": 0.11989152431488037,
+              "queries.4.0.weight": 0.0018885720055550337,
+              "queries.4.1.weight": 0.0031797464471310377,
+              "units.4.0.0.0.key": 0.00048203911865130067,
+              "units.4.0.0.0.clock_bias": 0.0007649290491826832,
+              "units.4.0.0.0.raw_rate": 0.00026272961986251175,
+              "units.4.0.0.0.frequency": 0.006155432667583227,
+              "units.4.0.0.0.key_read.weight": 0.001266893115825951,
+              "units.4.0.0.0.input.weight": 0.0048894863575696945,
+              "units.4.0.0.0.output.weight": 0.0032584257423877716,
+              "units.4.0.0.0.gate.weight": 0.0018219135235995054,
+              "units.4.0.0.0.gate.bias": 0.0007042258512228727,
+              "units.4.0.0.0.control.weight": 0.0009823784930631518,
+              "units.4.0.0.0.control.bias": 0.0002602357999421656,
+              "units.4.0.0.1.key": 0.0004032455326523632,
+              "units.4.0.0.1.clock_bias": 0.0006486100610345602,
+              "units.4.0.0.1.raw_rate": 0.0004778823349624872,
+              "units.4.0.0.1.frequency": 0.011373966000974178,
+              "units.4.0.0.1.key_read.weight": 0.0010492767905816436,
+              "units.4.0.0.1.input.weight": 0.017082614824175835,
+              "units.4.0.0.1.output.weight": 0.009800605475902557,
+              "units.4.0.0.1.gate.weight": 0.002292963908985257,
+              "units.4.0.0.1.gate.bias": 0.0006091005634516478,
+              "units.4.0.0.1.control.weight": 0.0039251744747161865,
+              "units.4.0.0.1.control.bias": 0.000979916425421834,
+              "units.4.1.0.0.key": 0.0003720382519531995,
+              "units.4.1.0.0.clock_bias": 0.00043587645632214844,
+              "units.4.1.0.0.raw_rate": 8.486683509545401e-05,
+              "units.4.1.0.0.frequency": 0.02350921556353569,
+              "units.4.1.0.0.key_read.weight": 0.0005880093085579574,
+              "units.4.1.0.0.input.weight": 0.003477532882243395,
+              "units.4.1.0.0.output.weight": 0.007241550832986832,
+              "units.4.1.0.0.gate.weight": 0.000978474854491651,
+              "units.4.1.0.0.gate.bias": 0.0003818755503743887,
+              "units.4.1.0.0.control.weight": 0.00046798671246506274,
+              "units.4.1.0.0.control.bias": 7.390394603135064e-05,
+              "units.4.1.0.1.key": 0.0003709436277858913,
+              "units.4.1.0.1.clock_bias": 0.00043331284541636705,
+              "units.4.1.0.1.raw_rate": 0.0013936144532635808,
+              "units.4.1.0.1.frequency": 0.10697567462921143,
+              "units.4.1.0.1.key_read.weight": 0.003577752038836479,
+              "units.4.1.0.1.input.weight": 0.014360769651830196,
+              "units.4.1.0.1.output.weight": 0.017271114513278008,
+              "units.4.1.0.1.gate.weight": 0.0037505379877984524,
+              "units.4.1.0.1.gate.bias": 0.001517576165497303,
+              "units.4.1.0.1.control.weight": 0.0062162005342543125,
+              "units.4.1.0.1.control.bias": 0.0014225769555196166
+            },
+            "gradient_norm": 0.16627747193702525
+          },
+          {
+            "depth": 6,
+            "parameter_gradient_norms": {
+              "channel_mix.5.weight": 0.1166677325963974,
+              "queries.5.0.weight": 0.0075467475689947605,
+              "queries.5.1.weight": 0.0017248453805223107,
+              "units.5.0.0.0.key": 0.00022489276307169348,
+              "units.5.0.0.0.clock_bias": 0.0004971879534423351,
+              "units.5.0.0.0.raw_rate": 0.00033096547122113407,
+              "units.5.0.0.0.frequency": 0.0153618473559618,
+              "units.5.0.0.0.key_read.weight": 0.0030984142795205116,
+              "units.5.0.0.0.input.weight": 0.009084496647119522,
+              "units.5.0.0.0.output.weight": 0.004960095044225454,
+              "units.5.0.0.0.gate.weight": 0.0020253050606697798,
+              "units.5.0.0.0.gate.bias": 0.0006535935681313276,
+              "units.5.0.0.0.control.weight": 0.001490290160290897,
+              "units.5.0.0.0.control.bias": 0.00037753558717668056,
+              "units.5.0.0.1.key": 0.0002592478122096509,
+              "units.5.0.0.1.clock_bias": 0.0005428087315522134,
+              "units.5.0.0.1.raw_rate": 0.000484268442960456,
+              "units.5.0.0.1.frequency": 0.01374323945492506,
+              "units.5.0.0.1.key_read.weight": 0.0026483964174985886,
+              "units.5.0.0.1.input.weight": 0.004810988903045654,
+              "units.5.0.0.1.output.weight": 0.004474624525755644,
+              "units.5.0.0.1.gate.weight": 0.0011583325685933232,
+              "units.5.0.0.1.gate.bias": 0.0004449078696779907,
+              "units.5.0.0.1.control.weight": 0.0013668371830135584,
+              "units.5.0.0.1.control.bias": 0.0002915261429734528,
+              "units.5.1.0.0.key": 0.00024352542823180556,
+              "units.5.1.0.0.clock_bias": 0.0002837084757629782,
+              "units.5.1.0.0.raw_rate": 0.00029775401344522834,
+              "units.5.1.0.0.frequency": 0.03365572914481163,
+              "units.5.1.0.0.key_read.weight": 0.0011040668468922377,
+              "units.5.1.0.0.input.weight": 0.006188059691339731,
+              "units.5.1.0.0.output.weight": 0.004556214902549982,
+              "units.5.1.0.0.gate.weight": 0.0020001011434942484,
+              "units.5.1.0.0.gate.bias": 0.0007075301837176085,
+              "units.5.1.0.0.control.weight": 0.0014196723932400346,
+              "units.5.1.0.0.control.bias": 0.0003278055228292942,
+              "units.5.1.0.1.key": 0.00023250127560459077,
+              "units.5.1.0.1.clock_bias": 0.00026549617177806795,
+              "units.5.1.0.1.raw_rate": 0.0009527330985292792,
+              "units.5.1.0.1.frequency": 0.020622605457901955,
+              "units.5.1.0.1.key_read.weight": 0.0014533805660903454,
+              "units.5.1.0.1.input.weight": 0.0089848218485713,
+              "units.5.1.0.1.output.weight": 0.0055006942711770535,
+              "units.5.1.0.1.gate.weight": 0.001205334672704339,
+              "units.5.1.0.1.gate.bias": 0.00038836977910250425,
+              "units.5.1.0.1.control.weight": 0.0046977028250694275,
+              "units.5.1.0.1.control.bias": 0.0011849182192236185
+            },
+            "gradient_norm": 0.12664430867516907
+          },
+          {
+            "depth": 7,
+            "parameter_gradient_norms": {
+              "channel_mix.6.weight": 0.11844725906848907,
+              "queries.6.0.weight": 6.927473441464826e-05,
+              "queries.6.1.weight": 0.006366124376654625,
+              "units.6.0.0.0.key": 3.4822182897187304e-06,
+              "units.6.0.0.0.clock_bias": 3.453129920671927e-06,
+              "units.6.0.0.0.raw_rate": 0.00015606546367052943,
+              "units.6.0.0.0.frequency": 0.0652729868888855,
+              "units.6.0.0.0.key_read.weight": 5.4346932301996276e-05,
+              "units.6.0.0.0.input.weight": 0.008882716298103333,
+              "units.6.0.0.0.output.weight": 0.011820269748568535,
+              "units.6.0.0.0.gate.weight": 0.0033761204686015844,
+              "units.6.0.0.0.gate.bias": 0.0005750159034505486,
+              "units.6.0.0.0.control.weight": 0.000988710904493928,
+              "units.6.0.0.0.control.bias": 0.00020990235498175025,
+              "units.6.0.0.1.key": 5.712167421734193e-06,
+              "units.6.0.0.1.clock_bias": 6.316629878710955e-06,
+              "units.6.0.0.1.raw_rate": 0.0,
+              "units.6.0.0.1.frequency": 0.0,
+              "units.6.0.0.1.key_read.weight": 1.6351266822312027e-05,
+              "units.6.0.0.1.input.weight": 0.0,
+              "units.6.0.0.1.output.weight": 0.0,
+              "units.6.0.0.1.gate.weight": 0.0,
+              "units.6.0.0.1.gate.bias": 0.0,
+              "units.6.0.0.1.control.weight": 0.0,
+              "units.6.0.0.1.control.bias": 0.0,
+              "units.6.1.0.0.key": 0.00039615746936760843,
+              "units.6.1.0.0.clock_bias": 0.0010148523142561316,
+              "units.6.1.0.0.raw_rate": 0.0002820413210429251,
+              "units.6.1.0.0.frequency": 0.020738784223794937,
+              "units.6.1.0.0.key_read.weight": 0.003016775706782937,
+              "units.6.1.0.0.input.weight": 0.003834254341199994,
+              "units.6.1.0.0.output.weight": 0.013217788189649582,
+              "units.6.1.0.0.gate.weight": 0.0024347498547285795,
+              "units.6.1.0.0.gate.bias": 0.0012365689035505056,
+              "units.6.1.0.0.control.weight": 0.001907386351376772,
+              "units.6.1.0.0.control.bias": 0.0005412049940787256,
+              "units.6.1.0.1.key": 0.000367058819392696,
+              "units.6.1.0.1.clock_bias": 0.0009349218453280628,
+              "units.6.1.0.1.raw_rate": 0.0003711720637511462,
+              "units.6.1.0.1.frequency": 0.009144306182861328,
+              "units.6.1.0.1.key_read.weight": 0.0011437638895586133,
+              "units.6.1.0.1.input.weight": 0.005216494668275118,
+              "units.6.1.0.1.output.weight": 0.005049881059676409,
+              "units.6.1.0.1.gate.weight": 0.0014311966951936483,
+              "units.6.1.0.1.gate.bias": 0.0005902968696318567,
+              "units.6.1.0.1.control.weight": 0.0009254578617401421,
+              "units.6.1.0.1.control.bias": 0.0002649658708833158
+            },
+            "gradient_norm": 0.13908853886478664
+          },
+          {
+            "depth": 8,
+            "parameter_gradient_norms": {
+              "channel_mix.7.weight": 0.12949544191360474,
+              "queries.7.0.weight": 0.0006941177998669446,
+              "queries.7.1.weight": 0.0013772966340184212,
+              "units.7.0.0.0.key": 2.3955391952767968e-05,
+              "units.7.0.0.0.clock_bias": 3.1100917112780735e-05,
+              "units.7.0.0.0.raw_rate": 7.637539965799078e-06,
+              "units.7.0.0.0.frequency": 0.00048530162894167006,
+              "units.7.0.0.0.key_read.weight": 9.49611930991523e-05,
+              "units.7.0.0.0.input.weight": 0.0002422695979475975,
+              "units.7.0.0.0.output.weight": 0.00030602244078181684,
+              "units.7.0.0.0.gate.weight": 0.0001693107042228803,
+              "units.7.0.0.0.gate.bias": 6.125264189904556e-05,
+              "units.7.0.0.0.control.weight": 5.7198063586838543e-05,
+              "units.7.0.0.0.control.bias": 1.4511068911815528e-05,
+              "units.7.0.0.1.key": 6.20868377154693e-05,
+              "units.7.0.0.1.clock_bias": 8.110284397844225e-05,
+              "units.7.0.0.1.raw_rate": 0.0012512407265603542,
+              "units.7.0.0.1.frequency": 0.050818804651498795,
+              "units.7.0.0.1.key_read.weight": 0.0010588056175038218,
+              "units.7.0.0.1.input.weight": 0.009016254916787148,
+              "units.7.0.0.1.output.weight": 0.02604074589908123,
+              "units.7.0.0.1.gate.weight": 0.0036413290072232485,
+              "units.7.0.0.1.gate.bias": 0.001692177844233811,
+              "units.7.0.0.1.control.weight": 0.0027312219608575106,
+              "units.7.0.0.1.control.bias": 0.0005629371735267341,
+              "units.7.1.0.0.key": 0.00013770147052127868,
+              "units.7.1.0.0.clock_bias": 5.50271688553039e-05,
+              "units.7.1.0.0.raw_rate": 0.00045187267824076116,
+              "units.7.1.0.0.frequency": 0.01594390906393528,
+              "units.7.1.0.0.key_read.weight": 0.0006435650866478682,
+              "units.7.1.0.0.input.weight": 0.004515219479799271,
+              "units.7.1.0.0.output.weight": 0.004911256022751331,
+              "units.7.1.0.0.gate.weight": 0.001227273722179234,
+              "units.7.1.0.0.gate.bias": 0.0003767671878449619,
+              "units.7.1.0.0.control.weight": 0.0017542119603604078,
+              "units.7.1.0.0.control.bias": 0.0004628032329492271,
+              "units.7.1.0.1.key": 0.00013841065810993314,
+              "units.7.1.0.1.clock_bias": 8.892642654245719e-05,
+              "units.7.1.0.1.raw_rate": 0.00028827128699049354,
+              "units.7.1.0.1.frequency": 0.04954923689365387,
+              "units.7.1.0.1.key_read.weight": 0.0007522128289565444,
+              "units.7.1.0.1.input.weight": 0.006966266315430403,
+              "units.7.1.0.1.output.weight": 0.005958350840955973,
+              "units.7.1.0.1.gate.weight": 0.0018545673228800297,
+              "units.7.1.0.1.gate.bias": 0.0007808328373357654,
+              "units.7.1.0.1.control.weight": 0.002456628018990159,
+              "units.7.1.0.1.control.bias": 0.0006374845397658646
+            },
+            "gradient_norm": 0.1516412317489978
+          }
+        ],
+        "all_layers_receive_gradient": true
+      },
+      "weights_preserved": true,
+      "optimizer_steps": 0,
+      "forward_input_tokens": 640,
+      "output_logit_gradient_evaluations": 3,
+      "full_model_backwards": 1,
+      "scope": "One 32-target development slice; memory erased once at its start, then allowed to rebuild. Arrival timestamps, absolute count cursor and causal count vectors preserved; learned gate can respond. Uniform-base diagnostic freezes intact gate. Raw base is a trained residual, not a standalone model. Three output-logit gradient contrasts and one actual surrogate model backward on 64 fit targets; standalone-base gradient is a diagnostic, not an alternative training recommendation."
+    },
+    {
+      "result": "experiments/results/count_carrying_language/local_count_credit64_minimal_D2048_20261002T060000Z.json",
+      "result_sha256": "227aa931ab01ddbd18e1816f35fae925152008d37cbc6765caade781de77789d",
+      "checkpoint_sha256": "8cb4b2576b1ad39479c01daedaffe12f4d10bdece78333894321945834a167b5",
+      "model_fingerprint": "a96d2bf70594ffc0704287c7e0dcd17cf0469127e3278bf15fb8b410dedfe60d",
+      "development_positions": [
+        128,
+        160
+      ],
+      "interventions": [
+        {
+          "intervention": "intact",
+          "composed": {
+            "bpc": 3.4903713889262185,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 0.0,
+            "max_log_probability_change": 0.0
+          },
+          "base": {
+            "bpc": 4.963839629499366,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 0.0,
+            "max_log_probability_change": 0.0
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_source_context",
+          "composed": {
+            "bpc": 3.4885270469783656,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 1.279183470614953e-05,
+            "max_log_probability_change": 0.34096384048461914
+          },
+          "base": {
+            "bpc": 4.942404743791731,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 0.0007589999004267156,
+            "max_log_probability_change": 0.47260427474975586
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_receiver_content",
+          "composed": {
+            "bpc": 3.4901319890762177,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 3.877550170727773e-06,
+            "max_log_probability_change": 0.1251201629638672
+          },
+          "base": {
+            "bpc": 4.964886315912517,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 5.756851169280708e-05,
+            "max_log_probability_change": 0.1242513656616211
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_all_content",
+          "composed": {
+            "bpc": 3.488218166137416,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 2.8535592718981206e-05,
+            "max_log_probability_change": 0.3641643524169922
+          },
+          "base": {
+            "bpc": 4.940118750396462,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 0.0011538662947714329,
+            "max_log_probability_change": 0.5167293548583984
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        },
+        {
+          "intervention": "erase_layer_1_receiver_content",
+          "composed": {
+            "bpc": 3.4901319890762177,
+            "accuracy": 0.34375,
+            "mean_kl_from_intact": 3.877550170727773e-06,
+            "max_log_probability_change": 0.1251201629638672
+          },
+          "base": {
+            "bpc": 4.964886315912517,
+            "accuracy": 0.03125,
+            "mean_kl_from_intact": 5.756851169280708e-05,
+            "max_log_probability_change": 0.1242513656616211
+          },
+          "scored_targets": 32,
+          "count_cursor": 128
+        }
+      ],
+      "uniform_base_with_intact_gate": {
+        "bpc": 3.4917424346188968,
+        "accuracy": 0.34375
+      },
+      "credit": {
+        "fitting_positions": [
+          64,
+          128
+        ],
+        "targets": 64,
+        "credit_events": 64,
+        "direct_residual_responsibility": {
+          "mean": 0.05712936073541641,
+          "min": 1.4467153960140422e-05,
+          "max": 1.000000238418579,
+          "quantiles": [
+            0.001167295384220779,
+            0.0031378979329019785,
+            0.01869308203458786
+          ]
+        },
+        "responsibility_gradient_max_error": 4.6566128730773926e-09,
+        "output_logit_gradient_norms": {
+          "dynamic_gate": 0.024140112102031708,
+          "fixed_gate": 0.02384420856833458,
+          "standalone_base": 0.12349605560302734
+        },
+        "gate_path_gradient_norm": 0.0042588673532009125,
+        "dynamic_to_standalone_gradient_ratio": 0.19547273218631744,
+        "fixed_to_standalone_gradient_ratio": 0.19307668507099152,
+        "fitting_bpc": {
+          "composed": 2.856901843593106,
+          "base": 5.012454309384058
+        },
+        "actual_dynamic_gate_layer_gradients": [
+          {
+            "depth": 1,
+            "parameter_gradient_norms": {
+              "channel_mix.0.weight": 0.11905612796545029,
+              "queries.0.0.weight": 0.0011920597171410918,
+              "queries.0.1.weight": 0.00014512136112898588,
+              "units.0.0.0.0.key": 0.0003249996807426214,
+              "units.0.0.0.0.clock_bias": 0.0006615931051783264,
+              "units.0.0.0.0.raw_rate": 7.15209316695109e-05,
+              "units.0.0.0.0.frequency": 0.00016597448848187923,
+              "units.0.0.0.0.key_read.weight": 0.00029216482653282583,
+              "units.0.0.0.0.input.weight": 0.0008370971190743148,
+              "units.0.0.0.0.output.weight": 0.0018013535300269723,
+              "units.0.0.0.0.gate.weight": 0.0007618420640937984,
+              "units.0.0.0.0.gate.bias": 0.0008145379833877087,
+              "units.0.0.0.0.control.weight": 0.00025248838937841356,
+              "units.0.0.0.0.control.bias": 0.00027229415718466043,
+              "units.0.0.0.1.key": 0.00033950238139368594,
+              "units.0.0.0.1.clock_bias": 0.0006886656628921628,
+              "units.0.0.0.1.raw_rate": 0.0019484251970425248,
+              "units.0.0.0.1.frequency": 1.76606340573926e-06,
+              "units.0.0.0.1.key_read.weight": 0.00018941402959171683,
+              "units.0.0.0.1.input.weight": 0.023114029318094254,
+              "units.0.0.0.1.output.weight": 0.03775644302368164,
+              "units.0.0.0.1.gate.weight": 0.0014006525743752718,
+              "units.0.0.0.1.gate.bias": 0.0013458961620926857,
+              "units.0.0.0.1.control.weight": 0.0032065175473690033,
+              "units.0.0.0.1.control.bias": 0.003258918412029743,
+              "units.0.1.0.0.key": 0.00012102907203370705,
+              "units.0.1.0.0.clock_bias": 0.00016090821009129286,
+              "units.0.1.0.0.raw_rate": 3.6131226806901395e-05,
+              "units.0.1.0.0.frequency": 6.6669986154010985e-06,
+              "units.0.1.0.0.key_read.weight": 0.00015892702504061162,
+              "units.0.1.0.0.input.weight": 0.00010482307698111981,
+              "units.0.1.0.0.output.weight": 4.442014400751759e-08,
+              "units.0.1.0.0.gate.weight": 0.0010610409080982208,
+              "units.0.1.0.0.gate.bias": 0.0012392940698191524,
+              "units.0.1.0.0.control.weight": 6.627416587434709e-05,
+              "units.0.1.0.0.control.bias": 4.6863529860274866e-05,
+              "units.0.1.0.1.key": 8.568124030716717e-05,
+              "units.0.1.0.1.clock_bias": 0.0001121150708058849,
+              "units.0.1.0.1.raw_rate": 4.457274371816311e-06,
+              "units.0.1.0.1.frequency": 1.1538120816112496e-05,
+              "units.0.1.0.1.key_read.weight": 8.024855924304575e-05,
+              "units.0.1.0.1.input.weight": 8.618106949143112e-05,
+              "units.0.1.0.1.output.weight": 7.371695698310532e-09,
+              "units.0.1.0.1.gate.weight": 0.00014463640400208533,
+              "units.0.1.0.1.gate.bias": 0.00016893743304535747,
+              "units.0.1.0.1.control.weight": 8.148842425725888e-06,
+              "units.0.1.0.1.control.bias": 5.76214642933337e-06
+            },
+            "gradient_norm": 0.1271751821168844
+          }
+        ],
+        "all_layers_receive_gradient": true
+      },
+      "weights_preserved": true,
+      "optimizer_steps": 0,
+      "forward_input_tokens": 416,
+      "output_logit_gradient_evaluations": 3,
+      "full_model_backwards": 1,
+      "scope": "One 32-target development slice; memory erased once at its start, then allowed to rebuild. Arrival timestamps, absolute count cursor and causal count vectors preserved; learned gate can respond. Uniform-base diagnostic freezes intact gate. Raw base is a trained residual, not a standalone model. Three output-logit gradient contrasts and one actual surrogate model backward on 64 fit targets; standalone-base gradient is a diagnostic, not an alternative training recommendation."
+    }
+  ],
+  "optimizer_steps": 0,
+  "weights_preserved": true,
+  "official_test_read": false,
+  "arithmetic_flops_instrumented": false,
+  "source_sha256": {
+    "experiments/deep_core_attribution_audit.py": "b4b56cd36e6ca9b363297ead26a650a6dd90b4fa2cd24db2e87957f30c053b22",
+    "experiments/language_learning_audit.py": "bcb731e60b6bd7b34b963e12d1fdea2f7615b7c57f41abe8e3c38edbca060d9d",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/count_carrying_language_benchmark.py": "48f28c315b135cfe50eefa2ddec6dbf0a72e92179b53b7e3a3af20da2b45bc23",
+    "sleeping_machines/count_carrying_language.py": "745809a8ce6800c7807ea23cc9846cb2f3575db682bb651dde6d9dcb02c1f95a",
+    "tests/test_count_carrying_language.py": "373ebdedcfa342704c77187b68c28166cde9ee200745e1b4755f240d82fa242a",
+    "sleeping_machines/count_escape_gate.py": "49be8e7d3cdc5e06744db727cf63f20ab0aaec08a5bbcaf7d05f8d65448d6a50",
+    "tests/test_count_escape_gate.py": "8062cc0ee80f94c1196251dc7cbb702f275474a6ba774024e69eb6d3a46fa456",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815"
+  },
+  "hardware": {
+    "host": "curie",
+    "device": "cpu",
+    "torch": "2.14.0+cpu",
+    "threads": 1
+  },
+  "wall_s": 12.849705946999165,
+  "max_rss_kb": 522736
+}

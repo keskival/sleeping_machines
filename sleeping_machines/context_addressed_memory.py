@@ -33,6 +33,20 @@ class ContextMemoryState(NativeLanguageState):
         self.slots = {a: v.detach() for a, v in self.slots.items()}
         return self
 
+    def storage(self):
+        stats = super().storage()
+        slot_bytes = sum(v.numel()*v.element_size() for v in self.slots.values())
+        stats.update(context_slots=len(self.slots), context_slot_tensor_bytes=slot_bytes,
+                     persistent_tensor_bytes=stats['persistent_tensor_bytes']+slot_bytes,
+                     context_count_entries=len(self.counts))
+        stats['scope'] += '; context-slot tensors included; integer counts and Python metadata separate'
+        return stats
+
+    def packed_storage(self):
+        stats = super().packed_storage()
+        stats['differentiable_entries'] += sum(int(v.requires_grad) for v in self.slots.values())
+        return stats
+
 
 class _ContentWithMemory(nn.Linear):
     def __init__(self, base, owner):

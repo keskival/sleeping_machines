@@ -1,0 +1,1 @@
+local_deep_addressed_smoke_20261002T080800Z experiments/long_range_core_benchmark.py --tag local_deep_addressed_smoke_20261002T080800Z --task text --fit 192 --dev 129 --epochs 1 --chunk 16 --update-targets 64 --model addressed --order 3 --buckets 4096 --audit-work

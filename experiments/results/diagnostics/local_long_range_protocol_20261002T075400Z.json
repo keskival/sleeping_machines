@@ -1,0 +1,562 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "task": "lag",
+      "distance": 48,
+      "seed": 2,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.07032967032967033,
+      "fit_targets": 579,
+      "dev_targets": 288,
+      "observed_target_symbol_counts": [
+        5,
+        14,
+        8,
+        9,
+        7,
+        11,
+        9,
+        16,
+        11,
+        14,
+        7,
+        12,
+        7,
+        17,
+        14,
+        6,
+        9,
+        12,
+        14,
+        11,
+        8,
+        14,
+        13,
+        15,
+        25,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.5495452091753945,
+      "targets_outside_assumed_24_symbols": 25,
+      "target_only_fitted_unigram_bpc": 4.663940787864776,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.654115676879883,
+          "accuracy": 0.08680555555555555
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.861907958984375,
+          "accuracy": 0.034722222222222224
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.7794036865234375,
+          "accuracy": 0.03125
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.754329681396484,
+          "accuracy": 0.020833333333333332
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.755069255828857,
+          "accuracy": 0.017361111111111112
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.017361111111111112
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.017361111111111112
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.017361111111111112
+        }
+      ],
+      "fit_sha256": "1f8cacb971e21a743ab25cf22a2e92ebceecf2869fe1229c0859dfbd359fd7a6",
+      "dev_sha256": "63d2eaf18694d245f35f839efbb8be2b1c6a95159c3d61fa54cab012b76e8b65"
+    },
+    {
+      "task": "lag",
+      "distance": 48,
+      "seed": 3,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.06935286935286936,
+      "fit_targets": 584,
+      "dev_targets": 284,
+      "observed_target_symbol_counts": [
+        13,
+        7,
+        14,
+        14,
+        9,
+        14,
+        12,
+        6,
+        14,
+        13,
+        11,
+        15,
+        12,
+        9,
+        6,
+        7,
+        9,
+        9,
+        9,
+        13,
+        11,
+        17,
+        15,
+        7,
+        18,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.579153862806452,
+      "targets_outside_assumed_24_symbols": 18,
+      "target_only_fitted_unigram_bpc": 4.675601390578942,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.6649932861328125,
+          "accuracy": 0.06338028169014084
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.868793964385986,
+          "accuracy": 0.03873239436619718
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.772336959838867,
+          "accuracy": 0.04929577464788732
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.757097244262695,
+          "accuracy": 0.045774647887323945
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.045774647887323945
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.045774647887323945
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.045774647887323945
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.045774647887323945
+        }
+      ],
+      "fit_sha256": "604d6602646d8046b4b8ddbecdb289898ce5311b2ec996d50dda3e421cb39e17",
+      "dev_sha256": "16146b2b332388e308e028397670ab5519db870788f318804b14b14876d2246d"
+    },
+    {
+      "task": "lag",
+      "distance": 48,
+      "seed": 4,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.07081807081807082,
+      "fit_targets": 582,
+      "dev_targets": 290,
+      "observed_target_symbol_counts": [
+        3,
+        12,
+        10,
+        15,
+        9,
+        15,
+        11,
+        16,
+        12,
+        13,
+        12,
+        10,
+        8,
+        6,
+        10,
+        8,
+        16,
+        10,
+        9,
+        15,
+        16,
+        10,
+        13,
+        8,
+        23,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.557165815631641,
+      "targets_outside_assumed_24_symbols": 23,
+      "target_only_fitted_unigram_bpc": 4.670101347726088,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.65723991394043,
+          "accuracy": 0.07931034482758621
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.831398010253906,
+          "accuracy": 0.04827586206896552
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.774435997009277,
+          "accuracy": 0.013793103448275862
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.7584991455078125,
+          "accuracy": 0.010344827586206896
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.7552490234375,
+          "accuracy": 0.010344827586206896
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010344827586206896
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010344827586206896
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010344827586206896
+        }
+      ],
+      "fit_sha256": "a35953b04e594ceb0f25294e8c407b3d1cc250bd9302405a7fe1f3577cbd2b3e",
+      "dev_sha256": "2c49889c0ceffabb3c5fc3482c48696c6caaadf71bfa24207e198bbf74f1b17e"
+    },
+    {
+      "task": "induction",
+      "distance": 128,
+      "seed": 2,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.06691086691086691,
+      "fit_targets": 548,
+      "dev_targets": 274,
+      "observed_target_symbol_counts": [
+        3,
+        15,
+        11,
+        17,
+        10,
+        12,
+        10,
+        10,
+        13,
+        10,
+        10,
+        11,
+        11,
+        8,
+        16,
+        8,
+        11,
+        14,
+        15,
+        18,
+        4,
+        10,
+        12,
+        15,
+        0,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.506466590964193,
+      "targets_outside_assumed_24_symbols": 0,
+      "target_only_fitted_unigram_bpc": 4.658418580478107,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.598180294036865,
+          "accuracy": 0.040145985401459854
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.73573637008667,
+          "accuracy": 0.06569343065693431
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.776811599731445,
+          "accuracy": 0.032846715328467155
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.754875659942627,
+          "accuracy": 0.010948905109489052
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010948905109489052
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010948905109489052
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010948905109489052
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.010948905109489052
+        }
+      ],
+      "fit_sha256": "8f5b366c50ec637c0cc48a840145b63105dc905346c68562ceab4bd651c4bbdd",
+      "dev_sha256": "8b648596d7f56d503d6f992fb758728288a9d18a13325b2530134077afe6dbe5"
+    },
+    {
+      "task": "induction",
+      "distance": 128,
+      "seed": 3,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.06568986568986569,
+      "fit_targets": 554,
+      "dev_targets": 269,
+      "observed_target_symbol_counts": [
+        9,
+        12,
+        15,
+        10,
+        7,
+        11,
+        12,
+        7,
+        13,
+        8,
+        10,
+        8,
+        10,
+        10,
+        9,
+        14,
+        14,
+        14,
+        13,
+        13,
+        12,
+        11,
+        17,
+        10,
+        0,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.547520160755791,
+      "targets_outside_assumed_24_symbols": 0,
+      "target_only_fitted_unigram_bpc": 4.620493608627566,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.66117525100708,
+          "accuracy": 0.02973977695167286
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.788869857788086,
+          "accuracy": 0.048327137546468404
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.763293743133545,
+          "accuracy": 0.04460966542750929
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.754861831665039,
+          "accuracy": 0.02973977695167286
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.754887580871582,
+          "accuracy": 0.03345724907063197
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887580871582,
+          "accuracy": 0.03345724907063197
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887580871582,
+          "accuracy": 0.03345724907063197
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887580871582,
+          "accuracy": 0.03345724907063197
+        }
+      ],
+      "fit_sha256": "e2e299dc310d9c07434952366e065f08a56a447600ccf0d6e14901eb0d5b4af6",
+      "dev_sha256": "07a3b838ef115e956b0b7f83fc2601790314d71dee4f243d1dc0f7e7b41e3f2e"
+    },
+    {
+      "task": "induction",
+      "distance": 128,
+      "seed": 4,
+      "fit_tokens": 8192,
+      "dev_tokens": 4096,
+      "target_fraction": 0.06788766788766788,
+      "fit_targets": 552,
+      "dev_targets": 278,
+      "observed_target_symbol_counts": [
+        8,
+        6,
+        12,
+        14,
+        13,
+        10,
+        11,
+        12,
+        9,
+        13,
+        15,
+        14,
+        12,
+        11,
+        11,
+        11,
+        12,
+        16,
+        4,
+        14,
+        10,
+        16,
+        15,
+        9,
+        0,
+        0,
+        0
+      ],
+      "empirical_target_entropy_bits": 4.533951017151437,
+      "targets_outside_assumed_24_symbols": 0,
+      "target_only_fitted_unigram_bpc": 4.615784048693421,
+      "uniform_27_bpc": 4.754887502163468,
+      "claimed_uniform_24_bpc": 4.584962500721156,
+      "causal_prequential_add_one_controls": [
+        {
+          "order": 1,
+          "target_bpc": 4.640316009521484,
+          "accuracy": 0.007194244604316547
+        },
+        {
+          "order": 2,
+          "target_bpc": 4.820708274841309,
+          "accuracy": 0.0539568345323741
+        },
+        {
+          "order": 3,
+          "target_bpc": 4.766909599304199,
+          "accuracy": 0.050359712230215826
+        },
+        {
+          "order": 4,
+          "target_bpc": 4.756962776184082,
+          "accuracy": 0.02877697841726619
+        },
+        {
+          "order": 5,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.02877697841726619
+        },
+        {
+          "order": 6,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.02877697841726619
+        },
+        {
+          "order": 7,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.02877697841726619
+        },
+        {
+          "order": 8,
+          "target_bpc": 4.754887104034424,
+          "accuracy": 0.02877697841726619
+        }
+      ],
+      "fit_sha256": "e8d415fdb9ea1b747d4cbb2fb0dae99d3997b38cb3466f6d6c9b5892a5e466f8",
+      "dev_sha256": "800707dcb5788b8599fe05fec2b7d7f5e7e52d1db66c722f03879a10ce5c8cdd"
+    }
+  ],
+  "neural_optimizer_steps": 0,
+  "prospective_credit_comparison": {
+    "fit_tokens": 8192,
+    "passes": 4,
+    "current_driver_steps": {
+      "16": 2048,
+      "64": 512
+    },
+    "required_matched_optimizer_interval": 64,
+    "current_driver_changes_optimizer_budget_with_credit": true
+  },
+  "protocol_findings": [
+    "Lag targets copy arbitrary prior tokens, including earlier cues; iid filler does not imply iid uniform-24 targets.",
+    "Induction queries are sampled from keys observed in the window; this selection and earlier query/target insertions invalidate the asserted all-orders independence proof.",
+    "Existing per-target minimum over order losses uses the target to choose its predictor; it is an optimistic audit bound, not a deployable count control.",
+    "Whole-stream training includes predictable cues, random filler and copied targets; target fraction is recorded, not a measured gradient share.",
+    "Driver resets addressed neural memory at development start, whereas saved count experiments preload fit counts; preserve cold-state comparisons but do not treat history access as matched.",
+    "Credit length must vary independently of the optimizer interval, normalization, clipping, learning rate and target budget."
+  ],
+  "scope": "Three independent synthetic stream pairs per task; no neural fits, no semantic claim or all-orders impossibility proof. All eight causal local orders reported individually; additive smoothing over27 symbols. Target-only unigram is a fitted diagnostic with target annotations, not the integrated model.",
+  "official_test_read": false,
+  "source_sha256": {
+    "experiments/long_range_protocol_audit.py": "19bc2873840c12de4ab0a9df66587b052857d472783e67d8c1239be9132dd74a",
+    "experiments/long_range_core_benchmark.py": "787e11244b7f1fd83471a603f14c8dd6e786876395c741da2f277227f2481740",
+    "sleeping_machines/count_carrying_language.py": "745809a8ce6800c7807ea23cc9846cb2f3575db682bb651dde6d9dcb02c1f95a",
+    "tests/test_long_range_core.py": "bac82e4fde67c29f778758ca6cb3a66471ed9a027efa2fe6ad816a97e1fec235"
+  },
+  "wall_s": 0.9815810520012747,
+  "max_rss_kb": 271400
+}
