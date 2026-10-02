@@ -1135,3 +1135,17 @@ equals the sequential all-race replay credit (tests/test_dvs_batched_le.py). Spe
 window forward plus backward: depth 2, 2.25 s → 0.23 s; depth 4, 4.39 s → 0.45 s (9.8×). Replay credit for every race
 of every episode runs as one batched, gradient-free shadow pass, so exact local-expectation credit without race
 sampling is affordable at depth 2. `--route-races k` samples races, unbiased with scaling, for deeper models.
+
+## 406. The DVS native fits are generalization-limited
+
+First P402 result (batched, seed 7, depth 2): all-race exact replay credit 58.3% / 1.142, factorized clock-only credit
+56.8% / 1.116, original teacher 57.8% / 1.105. No gain, so exact route credit does not move this model. Every native
+fit shows a 20–25 point gap between fitting and development gestures (fit-subset 81–84% against dev 57–66%,
+subject-disjoint users). Better credit improves fitting and cannot close a gap set by generalization from 984
+gestures. The strong controls are explicitly regularized (RBF C; the 4-bin kernel control reaches 77.6%), and coarser
+packets helped the native model on two seeds, consistent with less overfitting. The native fits had only epoch
+selection. With batched training (§405) a fit takes about 2.5 minutes, so the next step is a regularization sweep
+(experiments/dvs_batched_reg_benchmark.py): decoupled weight decay {1e-3, 1e-2} × training-only input noise {0, .3},
+plus coarse packets with weight decay, on seeds 6–8. Prediction (P406): some arm reduces the fit/dev gap and raises
+mean dev accuracy across seeds by ≥ 3 points over the unregularized batched baseline. Remaining replay-credit seeds and
+the depth-4 runs continue first, since credit may matter more at depth 4.
