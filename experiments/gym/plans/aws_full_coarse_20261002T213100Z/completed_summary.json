@@ -1,0 +1,117 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_coarse_native_contracts_20261002T212500Z",
+      "result": "experiments/results/diagnostics/aws_coarse_native_contracts_20261002T212500Z.json",
+      "reused": true,
+      "max_rss_kb": 510372,
+      "wall_s": 21.377421606972348
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_fine_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_fine_smoke.json",
+      "reused": true,
+      "max_rss_kb": 459084,
+      "wall_s": 11.600898112985305
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_fastclock_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_fastclock_smoke.json",
+      "reused": true,
+      "max_rss_kb": 455500,
+      "wall_s": 3.5973885119892657
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_coarse_matchedclock_smoke",
+      "result": "experiments/results/dvs_native/aws_coarse_native_20261002T212600Z_coarse_matchedclock_smoke.json",
+      "reused": true,
+      "max_rss_kb": 455100,
+      "wall_s": 3.588603730953764
+    },
+    {
+      "tag": "aws_coarse_native_20261002T212600Z_admission",
+      "result": "experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_admission.json",
+      "reused": true,
+      "max_rss_kb": 0,
+      "wall_s": null
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_admission",
+      "result": "experiments/results/diagnostics/aws_full_coarse_20261002T213100Z_admission.json",
+      "reused": false,
+      "max_rss_kb": 0,
+      "wall_s": null
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_fastclock_s6",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_fastclock_s6.json",
+      "reused": false,
+      "max_rss_kb": 459332,
+      "wall_s": 39.71290910302196
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_matchedclock_s6",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_matchedclock_s6.json",
+      "reused": false,
+      "max_rss_kb": 459116,
+      "wall_s": 39.547343222016934
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_fastclock_s7",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_fastclock_s7.json",
+      "reused": false,
+      "max_rss_kb": 459216,
+      "wall_s": 40.19322518701665
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_fine_s6",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_fine_s6.json",
+      "reused": false,
+      "max_rss_kb": 470672,
+      "wall_s": 105.14898986701155
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_matchedclock_s7",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_matchedclock_s7.json",
+      "reused": false,
+      "max_rss_kb": 459524,
+      "wall_s": 39.575378222973086
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_fine_s7",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_fine_s7.json",
+      "reused": false,
+      "max_rss_kb": 470604,
+      "wall_s": 104.91744096699404
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_fastclock_s8",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_fastclock_s8.json",
+      "reused": false,
+      "max_rss_kb": 459464,
+      "wall_s": 39.81802768399939
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_coarse_matchedclock_s8",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_coarse_matchedclock_s8.json",
+      "reused": false,
+      "max_rss_kb": 459232,
+      "wall_s": 39.380828365974594
+    },
+    {
+      "tag": "aws_full_coarse_20261002T213100Z_fine_s8",
+      "result": "experiments/results/dvs_native/aws_full_coarse_20261002T213100Z_fine_s8.json",
+      "reused": false,
+      "max_rss_kb": 470724,
+      "wall_s": 105.17050676600775
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T21:29:47.753347+00:00",
+  "active_jobs": [
+    "aws_full_coarse_20261002T213100Z_fine_s8"
+  ],
+  "max_parallel_jobs": 3
+}
