@@ -621,7 +621,7 @@ gated count model exactly (contract-tested).
 
 **Predictions (8K, seed 6, K4 + gate; gate-only references: full 2.601, minimal 2.588).**
 (P392a) Pooled memory improves the minimal-core composition by ≥ .02. Pooled statistics help even with a
-weak query. (P392b) With pooled memory, the full core beats the minimal core by ≥ .02. This is the first
+weak query. (P392b) With pooled memory, the full core beats both the minimal core (p2/d1) and the same-width shallow core (p16/d1) by ≥ .02. Minimal alone changes width and depth together. This is the first
 test where core features earn their work by routing. (P392c) Mean pooled-level responsibility exceeds the
 residual base's (.072). If P392a holds and P392b fails, the query features, not the memory, are the bottleneck.
 The next steps are then a richer query (taps, longer credit) and write credit (§383.2). If both fail, pooling at
