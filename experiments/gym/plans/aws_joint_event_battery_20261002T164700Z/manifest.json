@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "status": "prepared",
+  "run_prefix": "aws_joint_event_battery_20261002T164700Z",
+  "parallel_host": "ip-172-31-47-132",
+  "jobs": [
+    {
+      "tag": "aws_joint_event_calibration_20261002T164400Z_table",
+      "domain": "joint_event",
+      "variant": "table",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_calibration_20261002T164400Z_table.txt",
+      "queue_sha256": "add8c4a11d70a1dad0403c67ba8f68705492ebc34429b9401dfce22a3300dd1f",
+      "result": "experiments/results/diagnostics/aws_joint_event_calibration_20261002T164400Z_table.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_battery_20261002T164700Z_gru_smoke",
+      "domain": "joint_event",
+      "variant": "gru",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_battery_20261002T164700Z_gru_smoke.txt",
+      "queue_sha256": "6d780cd24b4be377a4c0ef5013c8dc66fe9308db794bf448c41800769158be73",
+      "result": "experiments/results/joint_event_language/aws_joint_event_battery_20261002T164700Z_gru_smoke.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_joint_event_battery_20261002T164700Z_transformer_smoke",
+      "domain": "joint_event",
+      "variant": "transformer",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_joint_event_battery_20261002T164700Z_transformer_smoke.txt",
+      "queue_sha256": "53e0321a33dc26ad3e53648b3f66287bfd5365eec6fdf4af51bbadbbe3db4066",
+      "result": "experiments/results/joint_event_language/aws_joint_event_battery_20261002T164700Z_transformer_smoke.json",
+      "requires": [],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 6291456,
+        "MEM_CAP_RSS_KB": 2097152,
+        "MIN_AVAIL_MB": 8192
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/aws_joint_event_dense_controls.py": "55cbdcbf819ec86d71fbaad3b01b9580ed70b1b8fb9d254e8cee8d10e76c5d8f",
+    "experiments/joint_event_dense_controls.py": "87137b2f17173fe783fb9292fb153ed089e208f9ab318fa67bb3d468615effaf",
+    "experiments/joint_event_stateful_table.py": "ed2bd4aecd65dbcbde39047d450fb40a10b801a7414007c01446f355d93da8aa",
+    "experiments/joint_event_language_tasks.py": "ac3ff16c543224bbccfc26ceedd3d5ea7b2b79701ed10014b1fbc74dc00e9d46",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec"
+  }
+}

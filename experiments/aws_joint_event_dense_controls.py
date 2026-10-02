@@ -48,6 +48,7 @@ def capture(callback):
     with DenseControlAudit() as audit:
         callback()
     result = audit.result()
+    result['exponential_random_draws'] = 0  # deterministic dense controls; merge schema
     if not result['formula_coverage_complete']:
         raise ValueError(result['unsupported_floating_operators'])
     return result
