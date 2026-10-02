@@ -2033,7 +2033,7 @@ Optional pair credit enumerates the actual final-query two-head outcome losses. 
 
 One guarded one-thread job at a time; RSS watchdog and8GiB available-memory floor. Theory77; completed admission record local_dvs_batched_smoke_admission_20261002T163600Z.json. All negative full-fit results remain visible; no pending score fills an evidence table.
 
-## Appendix B. Completed matched credit pilot: terminal pairs
+## Appendix B. Completed matched credit pilot: terminal pairs / seed6
 
 ![report/figures/local dvs credit comparison pairs 20261002T174000Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_pairs_20261002T174000Z_learning.png.png)
 
@@ -2053,7 +2053,7 @@ Promotion gate FAILS: NLL improvement -0.043869, accuracy decline-2.604pp, whole
 
 All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_pairs_20261002T174000Z.json; theory77/80–84.
 
-## Appendix B. Completed matched credit pilot: state choice
+## Appendix B. Completed matched credit pilot: state choice / seed6
 
 ![report/figures/local dvs credit comparison state choice s6 20261002T192100Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z_learning.png.png)
 
@@ -2073,7 +2073,27 @@ Promotion gate PASSES: NLL improvement 0.111931, accuracy decline-4.688pp, whole
 
 All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_state_choice_s6_20261002T192100Z.json; theory77/80–84.
 
-## Appendix B. Completed matched credit pilot: state clock
+## Appendix B. Completed matched credit pilot: state choice / seed7
+
+![report/figures/local dvs credit comparison state choice s7 20261002T193500Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_choice_s7_20261002T193500Z_learning.png.png)
+
+| Credit | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
+| --- | --- | --- | --- | --- | --- |
+| local | 55.21 | 1.3065 | 2.285696 | 2.2321 | 0.5919 |
+| state choice | 55.21 | 1.3362 | 3.059796 | 2.9881 | 0.5918 |
+
+| Credit | Workflow seconds | Peak RSS MiB | Keys / fit target | Commits / fit target | Values / fit target |
+| --- | --- | --- | --- | --- | --- |
+| local | 96.754 | 338.9 | 168 | 84 | 168 |
+| state choice | 101.906 | 339.5 | 336 | 168 | 336 |
+
+Fixed256 fit/192 development gestures, four passes/1,024 target presentations/64 Adam updates; same initialization, causal packets, draws and minimum-devNLL selection. Unchanged p16/L2/H2/pool2 architecture:15,523 parameters/eight available receivers; inference168 scored keys/84 commits/168 candidate values per21-event prefix. Fitting activity includes shadow replay where present.
+
+Promotion gate FAILS: NLL improvement -0.029693, accuracy decline0.000pp, whole-fit work ratio1.3387. Required gain>=.02, decline<=1pp, work ratio<=1.50, peak RSS<900,000KiB. A failed gate stops unchanged confirmation/scale-up; all passes and negative findings retained.
+
+All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_state_choice_s7_20261002T193500Z.json; theory77/80–84.
+
+## Appendix B. Completed matched credit pilot: state clock / seed6
 
 ![report/figures/local dvs credit comparison state clock 20261002T174600Z learning.png](report/figures/report/figures/local_dvs_credit_comparison_state_clock_20261002T174600Z_learning.png.png)
 
@@ -2092,6 +2112,21 @@ Fixed256 fit/192 development gestures, four passes/1,024 target presentations/64
 Promotion gate FAILS: NLL improvement -0.144750, accuracy decline6.771pp, whole-fit work ratio1.3390. Required gain>=.02, decline<=1pp, work ratio<=1.50, peak RSS<900,000KiB. A failed gate stops unchanged confirmation/scale-up; all passes and negative findings retained.
 
 All forward/replay, backward, normalization/clipping and Adam paid;2FLOPs/MAC plus unit specials. Strong984-fit RBF73.44%/.7065 and compact66.67%/.9030 references have unequal fitting data; their solver FLOPs remain unmeasured. See common-unit full-fit tables above. One seed, no official test or superiority claim. local_dvs_credit_comparison_state_clock_20261002T174600Z.json; theory77/80–84.
+
+## Appendix B. Actual-write choice: independent-seed gate fails
+
+| Seed | NLL improvement | Accuracy gain pp | Fit work ratio | Declared gate |
+| --- | --- | --- | --- | --- |
+| 6 | +0.111931 | +4.6875 | 1.33867 | Pass |
+| 7 | -0.029693 | -0.0000 | 1.33867 | FAIL |
+
+Same256 fitting/192 development gestures, four fixed passes and1,024 presentations per arm/seed. Seed6 improves54.17%/1.305937 to58.85%/1.194006. Seed7 gives55.21%/1.306508 local versus 55.21%/1.336201 corrected credit. Every pass and both completed comparisons are retained.
+
+The unchanged method fails its independent confirmation gate. No full984-fit campaign, extra pass extension or best-seed promotion is admitted. Numerical credit correctness remains established for the isolated categorical component; repeatable predictive benefit is not. Averaging seeds does not override the predeclared gate.
+
+Next distinguish information access, branch/content credit exposure, common-clock noise and private-map dilution on fitting-only frozen probes. Alternative no-grad forwards teach choices without directly teaching losing content on that realization. Winner-sampled branch derivatives can nevertheless be correct in expectation; rare exposure and other approximate teachers require separate tests. A larger pool is not an automatic repair.
+
+Theory87/88 prioritize one diagnosed repair, numerical contracts, a tiny integrated fit and a prespecified matched-work comparison before independent confirmation. Joint versus alternating route/message updates is a conditional schedule experiment, not a change to the coupled temporal forward computation or a currently demonstrated advantage.
 
 ## Appendix B. Why actual write and joint-clock credit need a test
 
@@ -2175,6 +2210,46 @@ For Full984, the noisy joint-clock correction raises total gradient norm3.3901 t
 Write-choice credit keeps total norm3.3915, cosine.99998 and clip multiplier.2949 while correcting actual legal memory utility. Positive scaling alone cannot repair a wrong direction or manufacture useful information. Per-sample norm equalization can bias a zero-mean signal; a prefix-only clock baseline or independent calibration requires a separate matched protocol. Shared weights retain both message and timing credit.
 
 Completed auditlocal_dvs_credit_gradient_balance_20261002T191600Z.json;31.254s/356.6MiB. Every intervention's forward/replay, backward and normalization operator coverage passes. No measured expected variance, batch covariance, Adam trajectory or fitted benefit from gradient normalization follows.
+
+## Appendix B. Credit calibration: coordinates and limits
+
+Completed calibration contracts: 5 passed. Common log-rate c and relative logits u define rates exp(c)*softmax(u). The joint winner/time score pulls back to common-clock credit(1-Lambda*T)*(R-b), and categorical credit pi_i*(F_i-R). The choice component is independent of common baseline error; the clock component remains useful and noisy.
+
+Recomposing c=logsumexp(old scores) and u=old scores preserves BOTH the old forward and the old gradient. A coordinate identity does not remove clock noise. Separately learned output maps require an architectural comparison; shared incoming content can still receive both derivatives. Eligible-key normalization and discovery remain paid.
+
+A positive score-space rescaling can oppose parameter descent through coupled Jacobians. The contract gives true parameter gradient[-1,-1] versus rescaled[8,-1], dot product-7. Per-sample unit normalization also biases an explicitly zero-mean scalar estimator. RMS equalization is therefore not a universal calibration rule.
+
+Primary-paper analogues suggest variance-trained legal control variates(RELAX), conditional averaging, phasic updates with constrained route drift(PPG), exposure accounting(MoE) and event derivative jumps(EventProp). These are distinct repairs. MoE common-logit z-loss would regularize this race clock itself; higher-order optionality needs correct stochastic derivatives(DiCE), not repeated differentiation of detached first-order teachers.
+
+Theory85 mathematical contracts and theory88 linked primary papers; no fitted benefit from these normalization/alternation proposals. Parameter-space covariance and branch exposure on independent-noise fitting probes determine the next single repair. Keep coupled forward messages/races/timing, sparse addressed writes and all existing negative evidence.
+
+## Appendix B. Larger alternative pools: paired-credit readiness
+
+| Credit / pool | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
+| --- | --- | --- | --- | --- | --- |
+| Enumerated2 / readiness | 25.00 | 2.3113 | 0.143986 | 2.999703 | 0.591695 |
+| Paired8 / readiness | 12.50 | 2.2989 | 0.414378 | 8.632876 | 0.872348 |
+
+Both24 fit/eight dev/two passes/48 presentations/four Adam updates,U16+partial U8. Paired8 fitting NLL2.5170 to2.1739; 27.533s/349.6MiB peak RSS. These tiny fits establish readiness, not quality rankings, larger-pool headroom or practical superiority.
+
+Paired8 has42,091 parameters/32 available receivers versus15,523/eight for pool2. Per21-event inference prefix:672 scored keys/84 selected commits/672 candidate values; persistent state2,376 bytes. Fitting includes the full shadow: 1344 keys/168 commits/1344 values per target. More state does not mean free key discovery or training.
+
+One full alternative write/suffix forward per fitting window supplies loss-difference credit with recorded proposal propensity. Epsilon.1 gives importance multiplier at most 1/.9; eight auxiliary proposal exponentials/target are recorded separately from arithmetic. Finite2/3/8/64-candidate contracts match independent expected-risk derivatives; pool2 nests enumerated credit exactly. Pool8 legal writes, every-parameter pool2 nesting and actual Adam/cursor/RNG recovery with full/partial windows pass; all operators are covered.
+
+Contracts195800Z, smoke201100Z; theory86/87. Inference and native timing remain unchanged at each shape. No-grad alternatives do not directly teach losing payload maps. Other local teachers and future timing jumps remain approximate. The failed initial195200Z operator-accounting attempt is preserved; covered equivalent subtraction passes a fresh run.
+
+## Appendix B. Exact prefix reuse reduces integrated fitting work
+
+| Replay | Dev accuracy % | Dev NLL | Whole fit GFLOPs est. | Fit MFLOPs / target est. | Infer MFLOPs / prefix est. |
+| --- | --- | --- | --- | --- | --- |
+| full | 25.00 | 2.3113 | 0.143986 | 2.999703 | 0.591695 |
+| reuse | 25.00 | 2.3113 | 0.128525 | 2.677607 | 0.591695 |
+
+Detached causal-prefix reuse saves10.738% counted fitting work with identical entire learning curves, predictions, model weights, Adam, cursor and RNG recovery. Same24-fit/eight-dev/two-pass/48-target native p16/L2/H2/pool2 protocol. Both rows use the same full-fit and presentation denominators.
+
+Reuse skips repeated alternative-prefix computation while preserving the exact actual-write estimator. This is completed implementation advantage against its full-replay reference, not quality advantage against the strong gesture controls. Snapshot/copy memory traffic and energy remain unmeasured; all retained suffix and optimizer work is charged.
+
+Other-host evidence retained from AWS_PREFIX_REPLAY_FINDINGS_20261002.md and aws_prefix_replay_smokes_20261002T201100Z_analysis.json, with verified parent hashes. Observed13.609 versus12.653 seconds is one concurrent-host observation, not a general latency claim. Exact reuse may support future credit comparisons after matching contracts.
 
 ## Appendix B. Other-host completed native capacity comparisons
 
@@ -2506,36 +2581,3 @@ The event hazard models use sparse conditional memories and local rate/flow stat
 The evidence is preserved in versioned result summaries with configurations, split identities, learning curves and source hashes. E173/E174 support the language comparison; E61 supports retrieval; E34/E53/E54 support native composition; E41 supports the original periodic computation. E121/E124 establish consolidated arithmetic and its certificate; E123 supplies the new dense controls and E124 the operation ledger. E118/E119/E122/E125/E126 support deep speech, readout and causal-context comparisons; E127–E131 audit credit geometry, hard race boundaries and separate key/value learning; E132 checks a joint race-credit formalism, E133 supplies the language/depth screen, and E134–E135 test whole-value credit and content-selective temporal memory. E136 audits reversible augmented transport and its supervised memory boundary, including twelve-layer query/learning interventions. E137 tests compact memory queries and class-visible credit geometry. E138–E141 examine richer source messages and trainable signed temporal memory, with exact local teacher and initial-nesting contracts. E142 establishes signed-state and first-coalescing identities; E143 tests a larger nonlinear temporal residual learner, and E144 audits simultaneous state/query pooling. E171 reproduces the consolidated screens and selected speech answers, and checks causal input boundaries. E172 records complete training-step arithmetic; E175 checks the generic persistent language stream.
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
-
-## AWS appendix: exact prefix reuse reduces actual-write credit cost
-
-Completed 2 October. The integrated native actual-write learning driver can
-reuse the unchanged first nine events for its no-gradient alternative suffix.
-Matched24-fit/8-development/two-pass smoke retains bit-identical curves,
-predictions, model weights, Adam, cursor and RNG. Eight rotating-site float32/
-float64 contracts preserve all parameter gradients and actual alternate state;
-interrupted training recovery also passes. Original reference files unchanged.
-
-|Implementation|Dev accuracy|Dev NLL|Whole-fit GFLOPs|Fit MFLOPs/target|Inference MFLOPs/target|
-|---|---:|---:|---:|---:|---:|
-|Full replay|25.00%|2.311338|0.143986|2.999703|0.591695|
-|Reused prefix|25.00%|2.311338|0.128525|2.677607|0.591695|
-
-Same24 distinct real fitting gestures,48 fitting targets over two passes;
-p16/L2/H2/pool2 gives8 available receiver states and4 selected updates per
-observed event. Charged factual+shadow fitting activity is2016→1584 events,
-16128→12672 key scores and8064→6336 selected writes. Inference uses the same
-hard races, selected values, clocks and persistent state. Whole-fit and
-per-target columns use the same traced arithmetic-plus-unit-special convention
-for both implementations, including clipping/Adam and replay setup. Fitting
-work falls10.74%. Simultaneous AWS one-thread walls13.61→12.65s and peak
-RSS459616→459672KiB are observations, not repeated latency or energy claims.
-Snapshot/copy traffic is unmeasured. Small recovery/engineering fits are
-separate research work and this smoke is not a new quality benchmark.
-
-This is a resource improvement over the identical integrated learning
-implementation, with retained outputs and updates. It does not establish
-practical superiority over the stronger full-data gesture controls or a
-whole-model unbiased credit rule. Completed raw/source-hashed evidence and
-scopes: experiments/AWS_PREFIX_REPLAY_FINDINGS_20261002.md and
-experiments/results/diagnostics/aws_prefix_replay_smokes_20261002T201100Z_analysis.json.

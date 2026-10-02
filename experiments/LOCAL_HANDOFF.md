@@ -45,7 +45,10 @@ saves10.738% counted fitting work with identical curves/parameters/Adam/RNG;
 scope24fit/eightdev/two passes, not strong-control superiority. Report source
 now retains that evidence plus both credit seeds and new contracts/readiness.
 Previous canonical129-page publication192900Z passed bounds/orphans after
-the preserved192300Z orphan failure. Fresh consolidated publication pending.
+the preserved192300Z orphan failure. Fresh consolidated publication202000Z
+completes20:18:57; PDF bounds/orphans and git diff checks pass. It retains both
+credit seeds, calibration/paired contracts, larger-pool readiness, primary-paper
+inspiration and the other-host exact prefix-reuse saving with parent hashes.
 
 No numerical job remains active after the smoke. One thread/nice19,3,000,000KiB
 VMS/1,250,000KiB RSS watchdog and8GiB MemAvailable floor; host available~11.5GiB.

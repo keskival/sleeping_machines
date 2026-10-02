@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_credit_synthesis_report_20261002T202000Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z.json",
+      "experiments/results/diagnostics/local_dvs_credit_comparison_state_choice_s7_20261002T193500Z.json",
+      "experiments/results/diagnostics/local_credit_calibration_contracts_20261002T193300Z.json",
+      "experiments/results/diagnostics/local_dvs_paired_choice_contracts_20261002T195800Z.json",
+      "experiments/results/dvs_native/local_dvs_paired_choice_smoke_pool8_20261002T201100Z.json",
+      "experiments/results/diagnostics/aws_prefix_replay_smokes_20261002T201100Z_analysis.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_credit_comparison_state_choice_s6_20261002T192100Z.json": "c0b5e733a7f08c13d5470b2963dc9c5ef1a6c5b38a22aba6b8a8c63399d7c8e9",
+    "experiments/results/diagnostics/local_dvs_credit_comparison_state_choice_s7_20261002T193500Z.json": "9f8d975518e3de36698105385b5bccddd71a62e92f10fbf45691ea47245a6f90",
+    "experiments/results/diagnostics/local_credit_calibration_contracts_20261002T193300Z.json": "4724b24c3fe25d3548910f6050fa9d239ef53844414ca60299ee48abd8900ec2",
+    "experiments/results/diagnostics/local_dvs_paired_choice_contracts_20261002T195800Z.json": "af567af1bef25d21cf10c802ab8a611bce9b661718570c51610684843ba1d746",
+    "experiments/results/dvs_native/local_dvs_paired_choice_smoke_pool8_20261002T201100Z.json": "188e71b7d3dfdbb66b7f9b04fac46f05afda8c894e52f0e0b1d2b12e3b3d1883",
+    "experiments/results/diagnostics/aws_prefix_replay_smokes_20261002T201100Z_analysis.json": "4ee4a75a5007f058a1ca9f74eac5a8d239de5989e59581ef4f3f2ab17f58778f"
+  },
+  "pdf_pages": 134,
+  "wall_s": 22.040190518993768,
+  "max_rss_kb": 65588,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "f6407b567cedf84c1f2c2e1ba29924b9427fcbece06bce023f045535f5963a3e",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}

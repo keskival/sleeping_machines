@@ -51,6 +51,11 @@ omega under the ordinary summed derivative, or explicitly preregister its
 ownership on each phase. Partition clock parameters separately from relative
 choice and record every parameter's actual dependencies. Momentum/Adam state
 of inactive blocks must stay fixed, not drift via a nominal zero-gradient step.
+Freezing route-output weights does NOT freeze the effective routing law when
+their message/state arguments change. Shared omega updates can move both routes
+and clocks. The first experiment therefore alternates parameter blocks, and
+logs actual policy drift; a genuinely frozen-policy teacher would need a
+separate versioned reference/replay protocol rather than an implicit detach.
 Recompute utilities after each parameter update; historical memory features
 need source weight/version identity. Keep full-support proposals so message
 phases can teach alternatives rather than only reinforcing existing winners.
