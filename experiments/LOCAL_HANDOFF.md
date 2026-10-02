@@ -519,3 +519,26 @@ report publication are automatic after successful completion. New five
 protocol tests reject pending output, mismatched data/seed/update budgets and
 check consistent target denominators; with ten publication regressions,15pass.
 No fit-quality score is completed or promoted yet.
+
+## 64-credit comparison completed and interpretation, 2 October
+
+All stages and guarded publication complete successfully; no automatic larger
+fit admitted. Full16/64:2.695121823/2.694298280bpc,3.824211/3.842964GFLOPs.
+Minimal16/64:2.693827662/2.693725141bpc,.0719065/.0719164GFLOPs. Credit gain
+full.000823544, minimal.000102521; full64 remains.000573139bpc worse than
+minimal64. Predeclared gate fails. Whole data/pass/update budgets match. Full
+fit1164.472s/677168KiB; minimal176.753s/383768KiB. No broad long-credit or
+semantic-feature conclusion from one2K seed. Full gradient changes in the
+frozen audit did not translate into worthwhile held-out quality here.
+
+Report auto-publication completes19.340s;91 pages pass PDF
+bounds/orphan checks, completed four-arm ledger present. Preserve exact-source
+new progress checkpoints for future frozen full/minimal attribution. The next
+architectural hypothesis must address useful predictive information and
+learning allocation beyond count smoothing, rather than increasing this
+variant's data/credit automatically. Content-addressed retrieval, learned
+context pooling and conditional interactions remain candidate mechanisms;
+derive their information/credit contracts and resource costs first, retain
+time/races/addressed state/key-value separation/unrealized-route credit, then
+fit integrated controls. AWS reserved comparisons and the other thread's32K
+count/minimal experiments remain independent; do not duplicate.

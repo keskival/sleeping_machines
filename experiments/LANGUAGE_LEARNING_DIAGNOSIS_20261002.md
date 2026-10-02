@@ -188,3 +188,19 @@ versus55.078125%/.977812493, at.265264 versus.277294 whole-fitGFLOPs. The
 predeclared5-point/.02NLL/≤2× gate. Do not scale this variant automatically.
 Historical stronger timing/shared-map results and the core thesis remain;
 this small write-teacher variant has not established worthwhile improvement.
+
+## Completed longer-credit fitting test
+
+The matched four-arm2K comparison completes. Full16/64:2.695122/2.694298bpc;
+minimal16/64:2.693828/2.693725. Full-core credit gain.000824bpc, with1.00490×
+fitting work, and full64 is.000573bpc worse than minimal64. The nomination gate
+fails; longer credit alone did not resolve the quality failure in this setting.
+Source: `results/diagnostics/local_count_credit64_analysis_20261002T060000Z.json`.
+All contracts/smokes/fit/recovery/provenance/ledger stages and guarded report
+publication complete, preserving the original16-credit controls. No scale-up.
+
+This revises the frozen-gradient interpretation: material omitted gradient
+terms do not imply a material fitting benefit. Information sufficient for
+long-range prediction, credit fidelity, exposure and useful learned computation
+still need discriminating integrated tests; no global impossibility theorem
+or single identified cause follows from this restricted negative result.
