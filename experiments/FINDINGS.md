@@ -1,5 +1,18 @@
 # Findings log
 
+## Batched native-core training path: 1.84× faster, contract-equal — 2 October
+
+sleeping_machines/fast_native_core.py (FastNativeCoreMixin / fast_class, driver flag --fast-core). In training
+every unit of every head proposes, so the reference costs depth × heads × pool separate proposal calls per
+event. The mixin stacks each layer's unit parameters once per chunk and evaluates all proposals of a layer as
+batched operations. Races stay per head in the original order (identical noise), and state bookkeeping and
+evaluation are unchanged. Against the reference in double precision (tests/test_fast_native_core.py; two core
+shapes plus gated and top-pooled compositions): outputs agree within 1e-11, every parameter gradient within
+1e-9 relative, and persistent memories, arrivals and counters are identical. Training throughput at H2/d16/
+depth8/pool2 rises from 18.0 to 33.2 targets/s (1 CPU thread; backward is still 61% of time). Reference
+sources are untouched, so frozen AWS/local manifests remain valid. Default off: runs already queued stay on
+the reference path. Use it for scale-up series run entirely with the fast path.
+
 ## Gradient-propagation audit of the count-composition models — 2 October
 
 tests/test_gradient_audit_downstream.py (double precision, fixed race noise). **Downstream parameters**

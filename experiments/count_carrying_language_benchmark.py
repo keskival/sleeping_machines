@@ -33,6 +33,7 @@ from sleeping_machines.count_escape_gate import GatedCountCarryingNativeModel
 from sleeping_machines.statistic_race_memory import StatisticRaceNativeModel
 from sleeping_machines.statistic_race_sampled import SampledStatisticRaceNativeModel
 from sleeping_machines.statistic_race_top import TopStatisticRaceNativeModel
+from sleeping_machines.fast_native_core import fast_class
 
 
 def sources():
@@ -41,6 +42,7 @@ def sources():
            'sleeping_machines/statistic_race_memory.py','tests/test_statistic_race_memory.py',
            'sleeping_machines/statistic_race_sampled.py','tests/test_statistic_race_sampled.py',
            'sleeping_machines/statistic_race_top.py','tests/test_statistic_race_top.py',
+           'sleeping_machines/fast_native_core.py','tests/test_fast_native_core.py',
            'experiments/native_language_gradient_contracts.py',
            'experiments/parallel_head_gradient_accumulation.py']
     return {**baseline.source_hashes(),**{n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest() for n in names}}
@@ -77,6 +79,7 @@ def main():
     p.add_argument('--pool-addresses',type=int,default=0);p.add_argument('--pool-key-dim',type=int,default=16)
     p.add_argument('--pool-write-race',choices=('argmax','sample'),default='argmax')
     p.add_argument('--pool-position',choices=('bottom','top'),default='bottom')
+    p.add_argument('--fast-core',action='store_true',help='batched training path, contract-equal to the reference core')
     a=p.parse_args();a.memory='receiver';a.candidate_index='observed_stream_address';a.cache_storage='persistent';a.native_event_core=True
     directory=ROOT/'experiments/results/count_carrying_language';directory.mkdir(parents=True,exist_ok=True)
     out=directory/(a.tag+'.json');running=out.with_suffix('.running.json');checkpoint=out.with_suffix('.progress.pt')
@@ -106,6 +109,8 @@ def main():
             escape_gate=a.escape_gate,count_message=a.count_message)
     else:
         model=CountCarryingNativeModel(a.payload,a.depth,a.pool,heads=a.heads,orders=a.orders)
+    if a.fast_core:  # same parameters/checkpoints; equivalence contract in tests/test_fast_native_core.py
+        model.__class__=fast_class(type(model))  # the mixin adds no instance state; isinstance checks still hold
     count_started=time.perf_counter()
     model.register_stream('fit',fit_stream_counts(train.numpy(),a.orders))
     model.register_stream('dev',eval_stream_counts(train.numpy(),dev.numpy(),a.orders))
