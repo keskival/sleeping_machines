@@ -1,15 +1,19 @@
 # Bounded order task: learned-control result and exact scope
 
-All six learned history-control final scores completed on fresh4096-query seed4201. Both widths reach100% in all declared training seeds. Native fresh scores and its intra-family gate are still pending at this publication; do not fill them from development.
+All twelve final scores and the prespecified analysis are complete on fresh4096-query seed4201. Both history widths reach100% accuracy in all declared training seeds. The initial six-control publication retained pending native cells; the completed numbers below now replace those pending labels.
 
-| Control | Fresh accuracy, each seed | Fit GFLOPs | Fit MFLOPs/query | Inference MFLOPs/query |
-|---|---:|---:|---:|---:|
-| History32 | 100% | 0.006263 | 0.003058 | 0.001034 |
-| History128 | 100% | 0.024799 | 0.012109 | 0.004106 |
+| Model | Fresh mean accuracy | Fresh mean NLL | Fit GFLOPs | Fit MFLOPs/query | Inference MFLOPs/query |
+|---|---:|---:|---:|---:|---:|---:|
+| native_private | 0.976074 | 0.097618 | 1.324095 | 0.646531 | 0.106736 |
+| native_shared | 0.991374 | 0.062436 | 1.034232 | 0.504996 | 0.106743 |
+| history32 | 1.000000 | 0.831460 | 0.006263 | 0.003058 | 0.001034 |
+| history128 | 1.000000 | 0.181817 | 0.024799 | 0.012109 | 0.004106 |
 
 Whole fits include all32 Adam steps, backward, clipping, feature arithmetic and loss. Numerical-recovery steps are separate prerequisite work and included in measured whole-job wall. Special functions remain separately saved. Both decoders use the declared three-mark bound; no race/counterfactual mechanism is present. Native historical fits remain~1.034GFLOPs(shared)/~1.324GFLOPs(private) and are not reclassified as zero-cost because weights are reused.
 
-This prevents a broad resource-advantage claim on this bounded task. Preserve the strong native capacity result and completed timing/shared comparisons as mechanism evidence with this limitation beside them. No retuning from fresh scores or replacing old evidence.
+History controls achieve perfect classification at much lower work, but their NLL is worse: native predictions are more confident under this distribution. There is no quality dominance across both metrics. This prevents a broad resource-advantage claim on this bounded task. Preserve the strong native capacity result and completed timing/shared comparisons as mechanism evidence with this limitation beside them. No retuning from fresh scores or replacing old evidence.
+
+The native intra-family gate also fails: shared-minus-private mean accuracy is+1.52995pp, adjusted98.33% interval[−1.36719,4.61426]pp, exceeding the permitted−1pp lower-bound deficit. Its fitting arithmetic ratio is.7810–.78115 (about21.9% less work); the mean resource/quality improvement is preserved, but the predeclared uncertainty gate is not met. Three seeds remain limited evidence. No reinterpretation of the margin after results.
 
 ## Why this task permits such a cheap control
 

@@ -1537,3 +1537,19 @@ marks. Hence no broad resource-supremacy claim on this bounded-history task;
 no general impossibility conclusion. All positive native findings retained with
 scope. Native intra-family gate and full common-unit comparisons publish when
 all12 results complete. New architectures need a fresh confirmation protocol.
+
+
+## Fresh advantage comparison complete — 2 October, 12:41 UTC
+
+All30 guarded stages and full three-contrast analysis complete/pushed. Native
+shared/private fresh means99.1374%/97.6074%; fitting ratio~.7811. Declared
+resource gate FAILS: adjusted accuracy interval[−1.3672,4.6143]pp misses−1pp
+margin despite mean+1.53pp. History32/128 have100% accuracy at .006263/
+.024799GFLOPs, but NLL.83146/.181817 versus native shared.062436/private
+.097618. Keep both quality measures: no complete dominance/calibration win.
+AWS_HISTORY_CONTROL_FINDINGS now shows all four model families with identical
+whole-fit/per-query units and completed fresh scores; original pending state
+is described historically. No changes or retuning on seed4201. Need a fresh
+protocol for any calibration/new architecture. Stronger prior timing/capacity
+mechanism evidence stays preserved. Other hosts own ongoing harder joint/
+retrieval fits; no duplication. AWS worker and publisher exited successfully.
