@@ -1,5 +1,57 @@
 # Local host: current research continuation
 
+## Rebase recovered; real-stream evidence and next gate, 2 October16:32 UTC
+
+Rebase onto `bda9f4a` completed on main. Conflicts were generated REPORT/PDF;
+combined report source and all results retained. Guarded rebuild
+`results/diagnostics/local_git_rebase_report_20261002T163200Z.json` passes
+text-bound/orphan checks. Three stashes retained. Source SHA checks for completed
+clock full fit, batched contracts and NumPy inference contracts all match.
+Other-thread new count calibration and joint-event protocol work preserved.
+
+Original integrated DVS p16/L2/H2/pool2 fit completes eight fixed passes:
+65.1042%/.963161NLL,20.075193 whole-fit GFLOPs,2.550202 MFLOPs/target,
+.591793 MFLOPs/inference prefix,1557.590s/356144KiB. Clock-scaled initialization
+also completes:66.1458%/1.041987NLL,20.074713 GFLOPs,2.550141 MFLOPs/target,
+.591779 MFLOPs/inference prefix,1565.128s/355488KiB. Both select pass8 by
+minimum devNLL. Timescale change increases accuracy but worsens NLL; it does
+not close the control gap. Same984 fit/192 dev users,21 observed events/clip,
+7872 fit presentations/496 updates, no official-test read. Results live in
+`results/dvs_native/local_dvs_{native_full,clock_full}_20261002T*.json`.
+
+Strong selected full RBF:73.4375%/.706478NLL. Compact class-prototype33/g1/C10:
+66.6667%/.902951NLL at97476 serialized bytes versus native106354. All72 compact
+cells paid10.043s/188296KiB; solver FLOPs unknown. Original native sequential
+inference55.076ms/prefix versus full RBF.671ms, with preprocessing included.
+Compact .230ms is currently one pass only, pending repeated matched audit.
+These controls defeat current practical quality/storage/runtime advantage.
+
+Frozen native features improve fitting-selected fresh-head quality from
+initial57.81%/1.131057 to selected67.19%/.999857. This supports useful feature
+learning. Selected native's original head is65.10%/.963161; readout changes
+alone do not close the gap. Diagnostic decoder CV is conditional on an encoder
+already fitted on all fit labels, not unbiased whole-pipeline CV. Preserve
+negative gates beside these positive representation findings.
+
+Numerical inference port passes all384 original/clock dev prefixes with
+identical hard routes, float32 states/logits plus double precision contracts;
+causality and resets pass. No performance claim before a guarded repeated audit.
+`results/diagnostics/local_dvs_numpy_contracts_20261002T160600Z.json`.
+Independent-clip batched fit and optional conditional terminal pair risk pass
+all-parameter/state equivalence, explicit finite-outcome derivatives and actual
+local/pair driver Adam/cursor recovery:29.808s/393536KiB.
+`results/diagnostics/local_dvs_batched_contracts_20261002T161500Z.json`.
+Theory77 retains the integrated architecture; earlier routes still use local
+surrogates, so no exact whole-core expected gradient is claimed.
+
+Prioritized next integrated stage: batched local/pair full U16 plus partial U8
+accounting and learning smokes,24fit/8dev/two fixed passes, serial unique queues.
+Require complete operation coverage, lower fit NLL and RSS below900000KiB
+before a matched bounded local/pair fit. No bigger campaign admitted yet.
+One thread, RSS1250000KiB/VMS3000000KiB,8GiB available-memory floor. At handoff
+host has11787MiB available, no GPU or active training. AWS still owns new dense
+training; other local thread owns language/count/joint-event campaigns.
+
 ## Real-packet native full fit active, 2 October14:55 UTC
 
 Combined relation/theory/confirmation report recovered successfully:113pages,

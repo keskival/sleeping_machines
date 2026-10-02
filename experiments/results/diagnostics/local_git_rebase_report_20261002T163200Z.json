@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_git_rebase_report_20261002T163200Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json",
+      "experiments/results/diagnostics/local_dvs_practical_inference_20261002T151000Z.json",
+      "experiments/results/diagnostics/local_dvs_frozen_features_20261002T151800Z.json",
+      "experiments/results/diagnostics/local_dvs_compact_controls_20261002T152700Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_native_analysis_20261002T151000Z.json": "0fb1ed5c20f921c8ff7496aa625a4a72c5f40355dde899c769d6c1788c79517f",
+    "experiments/results/diagnostics/local_dvs_practical_inference_20261002T151000Z.json": "9f07f5e82a24421c08b735360494914b14880524bbea195906960d4592daa18d",
+    "experiments/results/diagnostics/local_dvs_frozen_features_20261002T151800Z.json": "3ccc4eddf420002576c4f9b5140606cd17095f2be7a196b8f8af20bc5829ce4c",
+    "experiments/results/diagnostics/local_dvs_compact_controls_20261002T152700Z.json": "853ea103fa8cd41e125a89b88dc0285b45d0980aea0e9109978a2cfb418710ef"
+  },
+  "pdf_pages": 119,
+  "wall_s": 21.435920985997654,
+  "max_rss_kb": 79824,
+  "source_sha256": {
+    "experiments/publish_joint_learning_report.py": "1296247b6c3f533a128dad3cdf40838fbc67abaa071574791049e0c214048278",
+    "report/readable_report.py": "28b32c7ab4f7c6559bd99f7ffd32c2efc416d89a45927de161e4854421bf60e2",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed controlled relation learning and resource evidence; conditional and synthetic scope retained."
+}
