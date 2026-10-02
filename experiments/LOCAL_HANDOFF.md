@@ -421,3 +421,11 @@ replacement for deep persistent event representations. The other thread owns
 its proposed fits; its combined queue must be split into one-job queues before
 local admission. Deferred native timing checkpoint recovery and AWS large dense
 comparisons remain separate. No new dense local training or duplicate AWS run.
+
+Prepared continuation local_language_credit_horizon_20261002T030100Z.json waits for the full credit-followthrough
+process to complete before a separate guarded300s/one-thread frozen-weight
+native8K horizon audit. Three arms retain identical128-token context, identical
+16-target loss suffix and per-position race noise; only graph reach16/32/64
+changes.384 forward tokens,112 graph tokens,3 backwards, no optimizer. This
+measures omitted surrogate credit, not proof a longer fit helps. Prepared, not
+completed; no core substitution, new fit or scaling.
