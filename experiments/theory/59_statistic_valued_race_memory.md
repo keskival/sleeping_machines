@@ -985,3 +985,39 @@ arrival-time representation of a rewritten slot is linearized.
 (P401): sign agreement with the exact single-race gradient rises above .75. If it does, commit-aware credit
 goes into training (depth 4 and the baseline, seeds 6–8). If it does not, the remaining gap is the
 nonlinear routing cascade, and multi-step replay credit over the small pools is the construction to cost.
+
+## 402. Races as stochastic computation graphs: local-expectation counterfactual credit with common random numbers
+
+**Framing.** Each race is a discrete stochastic node of a stochastic computation graph (Schulman et al. 2015).
+The winner changes the delivered value, the committed memory, later scores and later winners: a change of
+event topology, analogous to the jump terms that event-based adjoints (EventProp; Wunderlich & Pehle 2021)
+must add. The measurements in §§400–401 show that local linearizations of this dependence are near chance on
+trained DVS models. The unbiased and well-conditioned alternative uses the *actual* downstream return.
+
+**Estimator (local expectation gradient; Titsias & Lázaro-Gredilla 2015, here with common random numbers).**
+Fix all race noise ξ of an episode. For race r with probabilities π_r = softmax(s_r), let L_r(i) be the episode
+loss when race r is forced to alternative i and every other race keeps its noise; this is exactly the audit's
+"exact" quantity. Then
+
+    ∇_θ E_{w_r}[L | ξ_{-r}] = Σ_i ∇_θ π_{r,i} · L_r(i) + E_{w_r}[∇_θ L |_{realized branch}],
+
+and summing over races gives an unbiased estimate of ∇E[L]. The first term is the route credit, obtained with
+the surrogate loss Σ_i π_{r,i} · stopgrad(L_r(i)). Its gradient is π_{r,i}(L_r(i) − Σ_j π_{r,j} L_r(j))∇s_{r,i},
+which a baseline does not change. The second term is the pathwise derivative inside the realized branch: the
+winner's exact value and interior delay derivatives, the core's `credit='pathwise'` mode. Sampling k of the R races
+uniformly and scaling by R/k keeps the estimate unbiased.
+
+**Why it should work where linearizations failed.** L_r(i) contains the commit, the later races and every topology
+change. With common random numbers the only difference between alternatives is the forced winner, so variance
+is low; with pool 2 each race is an antithetic pair, as in ARM (Yin & Zhou 2019). DiCE (Foerster et al. 2018)
+warns against differentiating such surrogates twice. Only first-order gradients are used here.
+
+**Cost.** k·P forward replays per episode without gradients (each replays the episode from the start; replaying
+only the suffix from a saved state is an optimization) plus one softmax term per sampled race. For DVS gestures
+(about 21 events per episode, 4–8 races per event) with k = 4 and P = 2, the replays add roughly 2–3× the
+fitting work. That is charged, and it scales with the sampled races, not with all alternatives of all races.
+
+**Test.** DVS depth 2 and depth 4, pool 2, seed 7 (references: baseline 57.8%, the depth controls, exact-π).
+Prediction (P402): local-expectation credit beats the counterfactual-surrogate baseline at equal passes and
+narrows the depth-4 gap, with route credit faithful by construction on the sampled races. If it fails at matched
+work, the bottleneck is not route credit.
