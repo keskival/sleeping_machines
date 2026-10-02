@@ -1,0 +1,222 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 422876,
+      "wall_s": 0.6025468549923971
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 422948,
+      "wall_s": 0.6028992320061661
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 423024,
+      "wall_s": 0.6046595969819464
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437284,
+      "wall_s": 0.7348798559978604
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437016,
+      "wall_s": 0.7413204530021176
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437052,
+      "wall_s": 0.7394776029977947
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 422784,
+      "wall_s": 0.5916744730202481
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 422932,
+      "wall_s": 0.6028853630414233
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 422904,
+      "wall_s": 0.6009692049701698
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437160,
+      "wall_s": 0.7562269589980133
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437212,
+      "wall_s": 0.7600327180116437
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_smoke",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_smoke.json",
+      "reused": false,
+      "max_rss_kb": 437208,
+      "wall_s": 0.752105969004333
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s6_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 544468,
+      "wall_s": 17.243592098995578
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s7_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 544324,
+      "wall_s": 17.274335324997082
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s8_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 544508,
+      "wall_s": 17.204085493984167
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s6_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 348480,
+      "wall_s": 13.561972208030056
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s7_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s7_contracts.json",
+      "reused": false,
+      "max_rss_kb": 348552,
+      "wall_s": 13.573598966002464
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s8_contracts",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s8_contracts.json",
+      "reused": false,
+      "max_rss_kb": 348304,
+      "wall_s": 13.523254111001734
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s8_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443472,
+      "wall_s": 5.324916450015735
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s6_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443584,
+      "wall_s": 5.387998685997445
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history32_s7_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history32_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443884,
+      "wall_s": 5.3583777520107105
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s6_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443652,
+      "wall_s": 5.3086902009672485
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s7_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443864,
+      "wall_s": 5.286757102992851
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_history128_s8_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_history128_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 443972,
+      "wall_s": 5.448025444056839
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s6_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 546064,
+      "wall_s": 74.75203056703322
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s7_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 546168,
+      "wall_s": 73.96881802199641
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_private_s8_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_private_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 546068,
+      "wall_s": 73.93476644996554
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s6_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 353464,
+      "wall_s": 65.91115728602745
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s7_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s7_pilot.json",
+      "reused": false,
+      "max_rss_kb": 353540,
+      "wall_s": 66.95763843302848
+    },
+    {
+      "tag": "aws_event_history_20261002T123343Z_native_shared_s8_pilot",
+      "result": "experiments/results/event_history_comparison/aws_event_history_20261002T123343Z_native_shared_s8_pilot.json",
+      "reused": false,
+      "max_rss_kb": 353428,
+      "wall_s": 66.42881943297107
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T12:35:45.703856+00:00",
+  "active_jobs": [
+    "aws_event_history_20261002T123343Z_native_shared_s8_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
