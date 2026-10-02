@@ -1,5 +1,20 @@
 # Findings log
 
+## Protocol correction: our count references were not the strongest counting model — 2 October
+
+The §393 stratified audit showed frozen KN winning only the unseen stratum. The reason is that KN's lower orders
+use continuation statistics. Giving our own untrained cascade those statistics (uniform base, fixed discount,
+prequential development updates, i.e. stream-adaptive interpolated Kneser–Ney) gives, in a preliminary ad-hoc
+computation with order and discount selected on the development window: **2K 2.521, 8K 2.414, 32K 2.271 bpc**
+(orders 6/6/8). That is better than every count reference reported so far (stream-adaptive Witten–Bell
+2.776/2.699/2.579; frozen KN 3.615/3.083/2.704) and **better than every trained model of ours** (best 2.694 /
+2.588 / 2.401). Every "beats the count references" statement above was measured against weaker baselines.
+Against this reference the integrated model currently loses by .13–.17 bpc. Those entries remain as
+measured, with this correction beside them. The official reference file
+(experiments/adaptive_kn_reference.py, queue curie_adaptive_kn_reference_20261002T131500Z, including 131K) is
+queued. Until it completes, these numbers are preliminary and are not report-table cells. The learned components
+must next be trained and judged on top of this stronger cascade: continuation statistics, orders 6–8.
+
 ## Batched native-core training path: 1.84× faster, contract-equal — 2 October
 
 sleeping_machines/fast_native_core.py (FastNativeCoreMixin / fast_class, driver flag --fast-core). In training
