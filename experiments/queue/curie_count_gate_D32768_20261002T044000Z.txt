@@ -3,3 +3,5 @@
 # Gate: beat stream-adaptive counts at 32K (2.579, o4) by >= .02; scalar 32K reference follows for the gate's gain.
 curie_count_gate_D32768_K4_s6_20261002T044000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D32768_K4_gate_s6_20261002T044000Z --fit 32768 --dev 8192 --epochs 4 --orders 4 --escape-gate
 curie_count_scalar_D32768_K4_s6_20261002T044000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D32768_K4_H2_d16_depth8_s6_20261002T044000Z --fit 32768 --dev 8192 --epochs 4 --orders 4
+# Appended 05:10: minimal-core control (2K/8K minimal cores matched or beat the full core; gate gains were count smoothing).
+curie_count_gate_min_D32768_K4_s6_20261002T044000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D32768_K4_gate_minimal_p2_d1_s6_20261002T044000Z --fit 32768 --dev 8192 --epochs 4 --orders 4 --payload 2 --depth 1 --escape-gate
