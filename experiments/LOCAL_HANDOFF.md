@@ -1,5 +1,15 @@
 # Local host: current research continuation
 
+## curie: DVS capacity ladder blocked on the data artifact, 2 October, 16:50 UTC
+
+The ladder's smoke failed before training: curie lacks
+experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.data.npz
+(sha256 f1287286cd097dc8f13fd09c8dcf09131fd166dee8b2ae44c666d0769bc7e53f, git-ignored by
+experiments/results/**/*.npz, about 3 MB) and the raw DVS128 Gesture AEDAT tree (data/dvsgesture/DvsGesture).
+Request to the host that produced it: copy or force-add that npz (`git add -f`) so curie can run the ladder;
+the driver verifies the checksum. The joint v2 observed fit was stopped after 2 of 8 passes (46.9% / 47.7%,
+incomplete) to free the host, and its rank control was withdrawn.
+
 ## curie: DVS capacity ladder claimed (§396), 2 October, 16:40 UTC
 
 curie runs a capacity ladder on the other host's clock-calibrated DVS driver (same data, controls, seed and
