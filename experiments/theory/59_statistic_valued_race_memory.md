@@ -920,6 +920,18 @@ parent's quality and can only use the extra depth if credit can move it. This se
 
 ## 400. Race credit fidelity on trained DVS models is near chance; exact-π linearized credit
 
+**Protocol/expectation correction (2 October, [note89](89_winner_dependent_teachers_and_time_law.md)):**
+The original numbers below are retained, but the forced replay uses the individual
+candidate time, so it changes identity AND timing rather than measuring exact
+fixed-time categorical utility. The near-chance interpretation is not established
+by that protocol. Exact-π replacement preserves the old teacher's expectation
+for a fixed downstream error; the error generally depends on the winner in a
+nonlinear model. Four completed contracts204000Z include a convex quadratic
+where replacement reverses the expected direction. It remains an empirical
+candidate, with no general unchanged-expectation or zero-variance guarantee.
+The fixed-time actual-write audit and new fitting-only branch audit have separate
+scopes; do not merge their numbers. Source/results below stay preserved.
+
 **Measured** (frozen audit, results/diagnostics/curie_dvs_credit_audit_20261002T192000Z.json; 6 development
 gestures, 24 sampled races each; the exact single-race gradient comes from forced-winner replays with all other
 race noise fixed). Sign agreement of the counterfactual surrogate with the exact gradient is .714 at depth 0 of

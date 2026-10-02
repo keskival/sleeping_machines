@@ -1,0 +1,66 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_race_teacher_expectation_contracts_20261002T204000Z"
+  },
+  "contracts_passed": 4,
+  "fixed_downstream_error_old_and_exact_pi_expectations_match": true,
+  "convex_quadratic_winner_dependent_error": {
+    "probabilities": [
+      0.25,
+      0.75
+    ],
+    "values": [
+      0.0,
+      1.0
+    ],
+    "target": 0.6,
+    "legal_losses": [
+      0.18,
+      0.08000000000000002
+    ],
+    "true_categorical_gradient": [
+      0.018749999999999996,
+      -0.018749999999999996
+    ],
+    "original_teacher_expected_gradient": [
+      0.018750000000000003,
+      -0.018750000000000003
+    ],
+    "exact_pi_teacher_expected_gradient": [
+      -0.02812500000000001,
+      0.02812500000000002
+    ],
+    "expected_gradient_dot_product": -0.0010546875000000007,
+    "direction_reversed": true
+  },
+  "quadratic_mean_risk_decomposition": {
+    "mean_value_risk_gradient": [
+      -0.028125000000000004,
+      0.028125000000000004
+    ],
+    "half_value_variance_gradient": [
+      0.046875,
+      -0.046875
+    ],
+    "exact_pi_expected_gradient_equals_mean_risk_gradient": true,
+    "true_hard_outcome_risk_gradient_includes_variance_term": true
+  },
+  "time_law": {
+    "conditional_first_time_mean": 0.25,
+    "forced_candidate_time_means": [
+      1.0,
+      0.3333333333333333
+    ],
+    "scope": "Independent exponential races; conditional first time is Exp(sum rates), independent of winner. Forcing an unconditioned individual time changes the time law."
+  },
+  "source_sha256": {
+    "experiments/race_teacher_expectation_contracts.py": "50232fa80477bbe3d47836f2b5c4a250f4384725dd3beb6ef743cc94ac205c1d",
+    "sleeping_machines/exact_pi_race.py": "8a35a05eeef3303cf18364860e2f3f8210565d77313eb136a24d8c4dfe1f95a9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/dvs_credit_fidelity_audit.py": "db2db4d68aca4dcff6a7797a3ec7795b05ad93960069d381f6bdf0f9c6dca09e"
+  },
+  "wall_s": 0.5980283799872268,
+  "max_rss_kb": 282160,
+  "scope": "Finite exact categorical enumeration and analytic first-time mean against actual backward implementations; fixed-error equality and winner-dependent convex loss reversal. This disproves a general unchanged-expectation/zero-variance claim, not the empirical usefulness of the alternative teacher. Earlier fidelity audit also changes candidate time when forcing a route, so its losses are combined identity/time interventions rather than fixed-time categorical risk."
+}
