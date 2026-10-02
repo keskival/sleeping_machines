@@ -1149,3 +1149,20 @@ selection. With batched training (§405) a fit takes about 2.5 minutes, so the n
 plus coarse packets with weight decay, on seeds 6–8. Prediction (P406): some arm reduces the fit/dev gap and raises
 mean dev accuracy across seeds by ≥ 3 points over the unregularized batched baseline. Remaining replay-credit seeds and
 the depth-4 runs continue first, since credit may matter more at depth 4.
+
+## 407. Depth is the test of route credit
+
+At depth 2 a winner change reaches the readout through at most one further layer of races, so a local linear
+teacher already carries most of the useful route signal. Null results there (§406) do not test the credit
+hypothesis. With depth L, a winner change at layer d changes the inputs of every race at layers > d in the same event,
+and their commits into later events. The topology change compounds, which is where linearized teachers lose fidelity
+(§§400–401; sign agreement fell from .71 at depth 0 to .45–.59 deeper in the depth-4 audit) and where depth 4 underfit
+(fit .650 NLL against .622 at depth 2, §399).
+
+**Decision rule.** Batched, matched pairs on seeds 7 and 8: factorized clock-only against all-race replay credit at depth
+4, and factorized against replay credit with k = 8 at depth 6 (seed 7). Route credit is the depth bottleneck if replay
+credit (a) lowers the depth-4 fit-subset NLL below its factorized control on both seeds, and (b) brings depth-4 dev
+quality to at least the depth-2 level of the same seed, with the depth-6 gap behaving likewise. If replay credit fits
+deeper models better without generalizing better, the bottleneck is again generalization (§406). If it fits no better,
+depth is limited by something other than route credit (state conditioning, clock initialization, truncation within the
+episode), and growth by nesting (§399) is the next control.
