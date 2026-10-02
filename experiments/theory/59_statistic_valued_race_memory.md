@@ -848,3 +848,9 @@ is needed. Key scoring stays O(n) without a candidate index, so the honest savin
 discovery is learned. (3) Asynchrony: the converted model on timestamped text interleaved with irregular events,
 fitting only λ and a small event adapter, against the same Transformer given time encodings. This is the
 regime where an advantage is possible.
+
+*§397 status (2 October, 18:25 UTC): deprioritized by user decision.* A previous Transformer conversion attempt
+needed more compute than is available to do well. The conversion module and contracts remain as a documented
+option, and no runs are queued. The program pursues comparable expressive power within the native lean
+structure: addressed persistent state, races, time and counterfactual credit, scaled by capacity beyond
+activity (§396).

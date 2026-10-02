@@ -1,5 +1,9 @@
 # AWS: trained E64 Transformer as a race-attention stream (Theory §397), inference only
 
+**Deprioritized (user decision, 2 October 18:25 UTC):** a previous conversion attempt showed that doing this well needs
+more compute than is available. Do not queue these runs; the native lean structure remains the main line toward
+comparable expressive power. The code and contracts are kept as a documented option.
+
 Run on the host that holds the saved E64 Transformer checkpoints ({"args","state"} from experiments/e64_lm_baselines.py):
 
     python experiments/race_transformer_eval.py --tag aws_race_transformer_D10M_<ts> --checkpoint <path to D=10M transformer .pt> --chars 20000
