@@ -35,3 +35,21 @@ Utility may differ when these features agree, creating irreducible conditional
 variance. This is a candidate explanation, not measured causality. Richer
 critics need separately fixed features/conditioning and heldout variance
 contracts before reduced-replay long fits. No retuning these failed screens.
+
+## Distinct signed-message/label-aware critic also fails
+
+A separately frozen feature hypothesis adds candidate values, centered values
+and supervised labels (learning only). First32 FIT rows train, next32 holdout;
+same width32/100 updates/.003, saved trained coarse producers seeds7/8.
+Critic k1/plaink4 MSE4.524748/5.263726; k2/plaink4 2.143301/2.493344.
+Both nominations fail. Mean per-prefix R²−15.173313/−209.190677; tiny-return
+prefix denominators make that mean sensitive, so aggregate route-score MSE
+is the primary gate. Feature addition alone does not solve conditional utility
+prediction in this bounded fit. This does not prove feature insufficiency is
+or is not the root cause. No learning-quality claim or reduced-replay fit.
+3.415s/435624KiB,5120 replay lanes/200 critic updates, total FLOPs unknown.
+Artifacts and immutable feature protocol retained alongside previous failures.
+Next useful diagnostic is utility scale and heldout calibration against zero,
+with training-only shrinkage and shared-parameter covariance measured before
+further critic training. Other-host corrected replay quality gate still governs
+any long campaign.

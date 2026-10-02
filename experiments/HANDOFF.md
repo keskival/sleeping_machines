@@ -1820,3 +1820,10 @@ reduced-replay long fits admitted. Prioritized corrected replay quality and
 all-race shadow queues remain other-host-owned. Next gap: critic information
 sufficiency (signed messages/query), independently gated. Earlier compact
 context prototype hypothesis deferred and unrun.
+
+AWS signed-message/label-aware frozen critic also completes:64 FIT prefixes,
+32 critic train/32 holdout,seeds7/8; no producer update or dev quality.
+k2/plaink4 score-MSE2.143301/2.493344: BOTHFAIL. Richer features alone do not
+justify reduced-replay training. Artifacts retained in signed_variance230400Z;
+next bounded gap is utility-scale/calibration and parameter covariance, not
+extra epochs on these failed variants. No numerical AWS trainer left running.

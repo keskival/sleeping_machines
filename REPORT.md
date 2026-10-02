@@ -2905,3 +2905,10 @@ score-space evidence does not measure shared-parameter gradient covariance,
 learning quality or supremacy. Both screens retain targets/critics/replays;
 diagnostic FLOPs unknown,not zero. No unchanged reduced-replay long fit.
 Full scope/costs: experiments/AWS_REPLAY_VARIANCE_FINDINGS_20261002.md.
+
+A distinct signed-message/label-aware critic on64 FIT prefixes also fails:
+k2/plaink4 conditional score-MSE2.143301/2.493344 in seeds7/8. Labels are
+learning-only detached critic inputs; inference unchanged.32 critic train/
+32 holdout,100 fixed updates. This is a negative bounded variance screen,
+not a model-quality result. Replay lanes5120 and critic updates200 retained;
+full diagnostic FLOPs unknown. Previous norm-only evidence preserved.
