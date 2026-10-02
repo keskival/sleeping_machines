@@ -1,0 +1,366 @@
+{
+  "schema": 1,
+  "status": "prepared_not_started",
+  "run_prefix": "aws_rule_seed_20261002T055545Z",
+  "jobs": [
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts.txt",
+      "queue_sha256": "1733510d6ec3ae7a8d57ca09768b9ac03badfabb581e626e8e70123552da6a92",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke.txt",
+      "queue_sha256": "0c81692bd2b86c24d69632a2a20576f5ae60bb71d08c214e4c924eaf55d9ba9f",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot.txt",
+      "queue_sha256": "8a65da4453f37781a9f1cf0e3ff9b1b1a789e9f083d4beb0707ce64b19f8be8e",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "contracts",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts.txt",
+      "queue_sha256": "6b83d408a6353b9b3a871e4eb18e042a39b65719ba395390501127eda561e4d0",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "smoke",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke.txt",
+      "queue_sha256": "198bca93929ff898dace648ff25f9b74ebfe6756df67ea0be9bae50a84ece413",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "pilot",
+      "seed": 6,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot.txt",
+      "queue_sha256": "aadd6455b25750607c67635414ef5009cb3d58a94d79c92547d480828f72e5f2",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts.txt",
+      "queue_sha256": "da992dd532c1b820216d6834bd2181a0ca6a909dc421c2913e17a66b85e88bcb",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "smoke",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke.txt",
+      "queue_sha256": "9f71111cfe2fc245e2388efe66928edff6c48015d0894771130dc60aecb73cc7",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot.txt",
+      "queue_sha256": "f3a9f13a8141f7ff5991d47606fe08ab5deda1fe21d3a5e3c6e421e53e34de74",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s7_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "contracts",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts.txt",
+      "queue_sha256": "930f3f9635903b12435cc298f91df1445f7bbe74e729f9eb60edc94ffd7ebf60",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "smoke",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke.txt",
+      "queue_sha256": "2fdf49671ce67921063367e21aba8f449f6a428fb01cdeabd1b201d7ba9b2c7c",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "pilot",
+      "seed": 7,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot.txt",
+      "queue_sha256": "b7350ec73c6dfd5e46c96ff7118eda58da306436528ac370fa3a1337dffa2b86",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts.txt",
+      "queue_sha256": "539d98a1eaecf475e95976245a5fb6bf2e10fdcced95c47badd2609e87dc8972",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "smoke",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke.txt",
+      "queue_sha256": "b846bd67c2029d4179689b44b6dd2ee651f56debe4d1a806fae06c0cfb034e3c",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps1_common0",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot.txt",
+      "queue_sha256": "2baacc12b18336371999e7f08af529ead7b7e9f11751708d07650c9312f09291",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps1_common0_s8_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "contracts",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts.txt",
+      "queue_sha256": "e00d61c626e1321c966085f7f30e047f4d96591d77cb5c585e58f47d3c156766",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "smoke",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke.txt",
+      "queue_sha256": "beaed7e0158f8263556d07f4b6998e6a56a5cf48a67abc58e69d69ee97ea4025",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    },
+    {
+      "tag": "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_maps0_common1",
+      "stage": "pilot",
+      "seed": 8,
+      "queue": "experiments/queue/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot.txt",
+      "queue_sha256": "1c43d665c62e675845e95a0ec0af0199b91404b18ae06c5a447e7f80d3ea10c1",
+      "result": "experiments/results/event_variants/aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_pilot.json",
+      "requires": [
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_contracts",
+        "aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s8_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      }
+    }
+  ],
+  "source_sha256": {
+    "experiments/rule_seed_event_benchmark.py": "e96daaec2c61969463e9806c3bca884beeaad9ca587d1ff227a6d1150ef4185d",
+    "experiments/rule_seed_event_contracts.py": "308f419909adace5fb4256899e6d963f5f9ba40dba6a9afc9a2dfa70a6070f93",
+    "sleeping_machines/rule_seed_event_heads.py": "a8fbe3c0e7573af6e00c3d8e02e5b2cca8dd6439efee1fe6d231b48a83352817",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "max_parallel_jobs": 3,
+  "protocol": "experiments/AWS_RULE_SEED_ISOLATION.md",
+  "scope": "Six new integrated off-diagonal fits; reuse completed diagonal evidence, development attribution only. Fresh confirmation requires separately frozen protocol.",
+  "initialization": "Diagonal configurations nest old weights/RNG exactly; off-diagonal embedding is replaced after parent construction. Unchanged rule realization within each maps setting; no matched embedding realization across maps settings.",
+  "timeout_basis": "Prior S16 comparable fits813\u2013879s;3600s margin under three CPU slots"
+}

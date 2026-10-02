@@ -1444,3 +1444,21 @@ chain788298 and summary801289 before run_safe, then publishes result. Session
 `aws-decay-reference-after-chain-20261002`; log
 `queue/aws_decay_timing_reference_20261002T024100Z.out`. No concurrent extra
 trainer, no core-source changes, no pending scores treated as evidence.
+
+
+## Completed native gates and crossed-sharing attribution — 2 October, 05:56 UTC
+
+All native confirmation stages, fresh-data analysis, replication inventory and
+guarded two-trace timing diagnostic completed/pushed. Both native gates pass:
+timing+38.54pp and shared+common seed+25.81pp, adjusted intervals positive;
+shared work ratio~.934. Oracle-informed timing reference1024/1024,28 arithmetic
+FLOPs/query+6 specials; label it diagnostic, never learned supremacy.
+Next prioritized integrated plan: `experiments/gym/plans/aws_rule_seed_20261002T055545Z/manifest.json`, six off-diagonal
+shared-rules/private-seed and private-rules/common-seed fits, seeds6/7/8.
+Read `AWS_RULE_SEED_ISOLATION.md`. Original sources unchanged; diagonal
+constructor/RNG and state independence tests pass (two tests). Eighteen guarded
+stages require full optimizer/recovery contracts and accounting smokes before
+fits. Same128×4/U64/d8/H2/L8 protocol, no confirmation read or extra scale.
+Whole resource accounting and all seeds retained; source/rule initialization
+matching limitations documented. State-credit and count variants on other hosts
+remain their responsibility; no duplicated campaigns.

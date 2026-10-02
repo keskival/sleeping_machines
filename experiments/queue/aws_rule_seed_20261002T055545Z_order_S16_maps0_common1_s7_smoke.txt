@@ -1,0 +1,1 @@
+aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke experiments/rule_seed_event_benchmark.py --tag aws_rule_seed_20261002T055545Z_order_S16_maps0_common1_s7_smoke --task order --sources 16 --payload 8 --heads 2 --depth 8 --pool 2 --seed 7 --common-source-seed 1 --fit-targets 16 --dev-targets 16 --epochs 1 --update-targets 16
