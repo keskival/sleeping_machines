@@ -37,7 +37,13 @@ small fit while preserving temporal races, private state, deep content and
 counterfactual teaching. No new teacher is installed here.
 
 Read [the joint state/time derivation](theory/57_full_state_and_joint_clock_credit.md).
-On the AWS host, after the split worker releases its reservation:
+The uniquely tagged AWS audit below has now completed. Do not rerun its
+successful queue name; preserve the result and logs. Its12 probes isolate
+the persistent-write channel: mean absolute effect .012694 versus .000288
+delivered-value residual, with both earlier opposed signs explained by writes.
+Whole cost is7.107s/399,708KiB RSS,48 forwards/12 backwards/12,288 races.
+This is a conditional diagnostic, not a population expected-gradient claim.
+Historical launch command:
 
 ```bash
 MEM_CAP_KB=4000768 MEM_CAP_RSS_KB=2499584 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=300 bash experiments/queue/run_safe.sh experiments/queue/aws_route_write_decomposition_20261001T235000Z.txt

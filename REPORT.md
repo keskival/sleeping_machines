@@ -2,7 +2,7 @@
 
 Deep learning that computes with time
 
-Tero Keski-Valkama and Karoliina Salminen · Research report · 1 October 2026
+Tero Keski-Valkama and Karoliina Salminen · Research report · 2 October 2026
 
 Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, gate their updates and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
 
@@ -31,13 +31,32 @@ Left: means and recorded ranges, five event runs and two Transformer runs; 2,000
 
 ![banknote first screen](report/figures/banknote_first_screen.png)
 
-128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. This is an exploratory quality advantage; independent test and repeated seeds are pending. Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.
+128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. This is an exploratory development quality advantage. Reserved-test results and stronger controls are in Appendix B; the full three-seed analysis is pending. Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.
 
 **A near-quality language work advantage.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam.
 
 **Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
 
 This banknote comparison concerns one task. Strong synthetic order/retrieval evidence on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.
+
+## Native strengths: useful time and private state
+
+**Elapsed time carries useful information.** Ours reaches **95.31%** on paired short/long sequences with identical marks, addresses and event order but opposite labels. The refitted order-only control reaches exactly **50%**; paired noise makes that ceiling exact. Clearing persistent state also reduces ours to 50%.
+
+![native mechanism evidence](report/figures/native_mechanism_evidence.png)
+
+**Learning can be shared while memories stay private.** At 16 occupied sources, shared processing raises accuracy from **44.14% to 75.39%**, with **11.1× fewer parameters** and **6.6% less whole-fit work**. All 512 receiver slots remain available; each event commits 16 states and scores 32 keys in both constructions. Sharing also removes private source embeddings; these effects are tested together.
+
+| Construction | Dev accuracy<br/>% | Parameters | Whole fit<br/>GFLOPs | Fit/query<br/>MFLOPs | Infer/query<br/>MFLOPs |
+| --- | --- | --- | --- | --- | --- |
+| Ours: elapsed time | 95.31 | 42,898 | 0.265 | 0.518 | 0.110 |
+| Ours: order-only control | 50.00 | 42,898 | 0.265 | 0.518 | 0.110 |
+| Ours: 16-source shared rules | 75.39 | 14,180 | 0.262 | 0.511 | 0.110 |
+| Ours: 16-source private rules | 44.14 | 157,940 | 0.280 | 0.548 | 0.110 |
+
+Eight blocks, two independent heads, d8, pool 2; 128 fitting queries/pass, four passes, 256 development queries, seed 6. Timing uses 32 independent population pairs; 16-source order uses 16 populations. Exploratory population-bootstrap gains are 45.31 pp [42.97, 47.66] for time and 31.25 pp [25.39, 37.11] for shared rules; 95% intervals condition on selected checkpoints, not independent seeds or confirmation. Complete counted fitting includes losing proposals, backward, clipping and Adam; special functions have unit weight. These are synthetic mechanism advantages, not superiority over time-aware dense models or measured energy.
+
+Sources: [frozen11-pilot protocol](experiments/AWS_SPLIT_EVENT_BATTERY.md) and [validated findings](experiments/SPLIT_SCREEN_FINDINGS_20261002.md). Full variants and gap-retention diagnostics remain in Appendix B.
 
 ## A general architecture for content, time and selective activity
 
@@ -717,6 +736,83 @@ Small completed integrated pilots from the committed fast matrix. These answer m
 
 FLOPs count MAC as two and special functions once; all losing-value credit and Adam are charged. Temporal inference per query includes intervening input events; language per target is per character. Capacity/activity counts are per event, not per query. CPU simulation/audit overhead, RNG, traffic and physical energy are separate; AWS wall observations may include authorized CPU concurrency. Temporal tasks and altered source counts are explicitly named; different tasks do not form a single accuracy scaling curve. Single-seed development evidence, not supremacy. Paired independent seeds and frozen held-out confirmation precede benchmark promotion.
 
+## Appendix B. Protected state/shared rules: order
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S16 private/P0/observed | 44.14 | 1.1194 | 0.280 | 0.548 | 0.110 |
+| Ours S16 private/P2/observed | 44.92 | 1.2147 | 0.271 | 0.529 | 0.107 |
+| Ours S16 shared/P0/observed | 75.39 | 0.8327 | 0.262 | 0.511 | 0.110 |
+| Ours S16 shared/P2/observed | 56.25 | 1.0359 | 0.253 | 0.494 | 0.107 |
+| Ours S4 private/P0/observed | 54.30 | 0.9787 | 0.265 | 0.518 | 0.110 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S16 private/P0/observed | 128/256/4 | 157,940 | 512 | 16/32 |
+| Ours S16 private/P2/observed | 128/256/4 | 155,828 | 512 | 16/32 |
+| Ours S16 shared/P0/observed | 128/256/4 | 14,180 | 512 | 16/32 |
+| Ours S16 shared/P2/observed | 128/256/4 | 13,988 | 512 | 16/32 |
+| Ours S4 private/P0/observed | 128/256/4 | 42,932 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: order
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P2/observed | 47.27 | 1.1060 | 0.256 | 0.500 | 0.107 |
+| Ours S4 shared/P0/observed | 70.70 | 0.8556 | 0.261 | 0.511 | 0.110 |
+| Ours S4 shared/P2/observed | 56.64 | 1.0367 | 0.252 | 0.493 | 0.107 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S4 private/P2/observed | 128/256/4 | 42,356 | 128 | 16/32 |
+| Ours S4 shared/P0/observed | 128/256/4 | 14,180 | 128 | 16/32 |
+| Ours S4 shared/P2/observed | 128/256/4 | 13,988 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Protected state/shared rules: paired_timing
+
+Completed integrated pilots only. Protected modes retain information during silence; temporal modes still evolve. Shared learned rules retain private addressed state and remove private source embeddings. Paired timing keeps marks/order identical while labels differ; rank-only prediction has an exact 50% paired ceiling under coupled noise.
+
+| Construction | Dev accuracy% | Dev NLL | Whole fit GFLOPs | Fit MFLOPs/query | Infer MFLOPs/query |
+| --- | --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 95.31 | 0.1850 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P0/rank | 50.00 | 0.7035 | 0.265 | 0.518 | 0.110 |
+| Ours S4 private/P2/observed | 82.42 | 0.5131 | 0.256 | 0.500 | 0.106 |
+
+| Construction | Fit/dev/passes | Parameters | State slots | Updates/scores per event |
+| --- | --- | --- | --- | --- |
+| Ours S4 private/P0/observed | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P0/rank | 128/256/4 | 42,898 | 128 | 16/32 |
+| Ours S4 private/P2/observed | 128/256/4 | 42,322 | 128 | 16/32 |
+
+Exact full fitting includes producer graphs, losing proposals, backward, clipping and Adam; specials have unit weight. Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.
+
+## Appendix B. Persistent-write credit diagnosis
+
+A frozen selected native checkpoint is replayed with alternative delivered content, alternative persistent write, and both. The exact four-corner decomposition separates those effects from their interaction and the current message-linearization residual. The forward architecture and fitted weights remain unchanged.
+
+| Ours: frozen audit component | Mean absolute loss effect |
+| --- | --- |
+| Full alternative branch | 0.020980 |
+| Persistent-write effect | 0.012694 |
+| Delivered-value linearization residual | 0.000288 |
+| Delivery/write interaction | 0.000066 |
+
+The two opposed directions in the earlier audit are explained by persistent writes: at event0/block4 the value-only change is +0.001504 but the write-only change is −0.016749; at event7/block7 they are −0.001280 and +0.033918. The route chooses a memory address as well as a message. Training must teach that future state effect.
+
+Twelve fixed probes, one population/address/noise seed, fixed selected-node time. Mean absolute write effect 0.012694 versus value residual 0.000288; these absolute summaries are not additive percentages. Hybrids are diagnostic interventions, not legal proposed routes. Value residual includes nonlinear response and downstream route switches. This is conditional fidelity evidence, not an expected-gradient failure rate.
+
+Charged replay counts:48 forwards,12 backwards,12,288 races; 7.107s wall, 390.3MiB peak RSS. Arithmetic is uninstrumented. Checkpoint weights and outer RNG are preserved. Any new state-aware teacher needs integrated contracts, full accounting and a matched small fit.
+
+Source: [completed factorial audit](experiments/results/diagnostics/aws_route_write_decomposition_20261001T235000Z.json); [joint state/time theory](experiments/theory/57_full_state_and_joint_clock_credit.md).
+
 ## Appendix B. Ours and boosted trees: banknote
 
 Independent feature-ID rows, state reset between rows, train-only scaling and duplicate-feature group isolation. Ours uses eight native event blocks with parallel heads and content/state mixing; R2 adds temporal reception. Static processing coordinates are not physical asynchronous samples.
@@ -758,6 +854,30 @@ Independent feature-ID rows, state reset between rows, train-only scaling and du
 Four development checkpoints or four separately fitted tree candidates; all candidate tree fitting wall time is charged. Neural fit arithmetic is an actual forward/loss/backward/clipping/Adam trace, with specials counted once; preprocessing, evaluation and RNG are separate. Tree FLOPs are unavailable and are not manufactured. Neural wall time includes CPU simulation/audit instrumentation. These are small exploratory development results; reserved test labels are not scored. Strong tabular/frontier superiority requires larger frozen protocols and independent seeds.
 
 Reception helps this regression pilot: ours R2 RMSE0.758 versus R0 0.824 (8.0% lower), for0.919 versus0.816 whole-fit GFLOPs (12.6% more). Trees retain lower RMSE0.649. This positive within-model effect contrasts with banknote/language reception failures; it is not a cross-family win.
+
+## Appendix B. Frozen banknote confirmation
+
+Completed test scores only. Checkpoints/candidates were selected on128 development rows after fitting 128 rows. Reserved feature groups were scored after choices were frozen; all rows start with cold state. Partial publication is a snapshot, not a completed three-seed comparison.
+
+| Model/seed | Dev NLL | Test NLL | Test accuracy% | Whole fit GFLOPs | Fit MFLOPs/row | Infer MFLOPs/row |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ours native/s6 | 0.1553 | 0.1426 | 94.31 | 0.335 | 0.655 | 0.139 |
+| Boosted trees/s6 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+| Boosted trees/s7 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+| Boosted trees/s8 | 0.2319 | 0.2065 | 93.95 | Not counted | Not counted | Not counted |
+| CatBoost/s6 | 0.1023 | 0.1207 | 93.95 | Not counted | Not counted | Not counted |
+| CatBoost/s7 | 0.1042 | 0.1078 | 95.37 | Not counted | Not counted | Not counted |
+
+| Model/seed | Charged fit wall s | Test wall s | Peak RSS MiB | Fit provenance |
+| --- | --- | --- | --- | --- |
+| Ours native/s6 | 981.79 | 4.54 | 334.3 | Historical fit reused |
+| Boosted trees/s6 | 0.09 | 0.00 | 434.3 | New fit |
+| Boosted trees/s7 | 0.09 | 0.00 | 434.9 | New fit |
+| Boosted trees/s8 | 0.09 | 0.00 | 434.9 | New fit |
+| CatBoost/s6 | 0.35 | 0.00 | 461.6 | New fit |
+| CatBoost/s7 | 0.35 | 0.00 | 460.8 | New fit |
+
+Native forward/loss/backward/clipping/Adam are traced. Seed6 reuse retains its original full fitting charge; it adds no optimizer steps. Control fitting includes all four independent candidates. Their FLOPs are unavailable. Audit instrumentation, preprocessing and physical energy are separate. Repeated seeds share test rows and must not be pooled as independent observations. Paired seed/feature-group analysis and all three prespecified seeds are required for the confirmation claim.
 
 ## Appendix B (continued). Ours: language work as scaling develops
 

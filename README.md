@@ -34,12 +34,27 @@ quality and resource evidence will determine scaling, with refitted controls
 and independent seeds. The [native derivation](experiments/theory/50_native_addressed_event_learning.md)
 separates state capacity, parameter exposure and complete optimizer work.
 
-The next full-core comparison adds **content-dependent temporal reception**:
+The completed [native mechanism screen](experiments/SPLIT_SCREEN_FINDINGS_20261002.md)
+now gives two positive indications: **95.3% on paired timing versus an exact50%
+order-only ceiling**, and **75.4% versus44.1% order accuracy at16 occupied
+sources** when learned processing is shared while memories remain private.
+The latter uses **11.1× fewer parameters and6.6% less counted fitting work**.
+Both retain the full eight-block sparse temporal construction. These are
+single-seed synthetic development results; independent confirmation and strong
+time-aware controls are required for broader superiority claims.
+The [next AWS battery](experiments/AWS_NEXT_BATCH.md) fixes those replication
+tests before new holdout scores are read. The
+[theory update](experiments/theory/58_reusable_rules_and_private_predictive_state.md)
+separates shared learning, private information and task-sensitive time.
+
+The completed full-core reception comparison tested **content-dependent temporal reception**:
 each head reuses its key/query matches for several fast clock policies. Learned
 projections match incoming content/state against latched rotating clock vectors,
-then compose the gated components into the next message. Two/four-clock fits and
-a same-clock waiting control test whether this capacity earns its complete
-learning/inference cost. The [derivation and contracts](experiments/theory/51_temporal_windows_and_spike_trains.md)
+then compose the gated components into the next message. At the matched2K
+language budget, two/four-clock variants miss the declared quality gate; larger
+reception fits are deferred. Native language improves **3.765→3.557 bpc** from2K
+to8K fitting characters at fixed54,907 parameters and four passes. The
+[derivation and contracts](experiments/theory/51_temporal_windows_and_spike_trains.md)
 also construct learnable integration windows and information-bearing spike
 trains; those primitives are not yet a fitted full language model.
 [Useful capacity and mixing](experiments/theory/52_useful_capacity_and_local_mixing.md)

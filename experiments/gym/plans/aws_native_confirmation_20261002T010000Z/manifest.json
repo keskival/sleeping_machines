@@ -1,0 +1,551 @@
+{
+  "schema": 1,
+  "status": "superseded_unlaunched",
+  "run_prefix": "aws_native_confirmation_20261002T010000Z",
+  "jobs": [
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_observed",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.txt",
+      "queue_sha256": "830568c389609f7c11dca6c239250a090a812229acaaa56e1c5b4e604658abb0",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_observed",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.txt",
+      "queue_sha256": "3094dd18bcef4750a0e53316b7d32c1094029bf92c82fe3f6b08b2c356e0aa1f",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_restore",
+      "domain": "temporal",
+      "variant": "paired_timing_observed",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_restore.txt",
+      "queue_sha256": "03b4fbdd4728e3c691aba89d4c199ae6c45aae903c0daf341e3d3d468e9e57bd",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_restore.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_observed",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_pilot.txt",
+      "queue_sha256": "2986d2518bdafcc4ed362247bd3a2ef67e217ca21179c48fa0b4eb2f563a2e2c",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_pilot.json",
+      "requires": [
+        "aws_native_confirmation_20261002T010000Z_paired_timing_observed_s6_restore"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_observed_s7_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_observed",
+      "stage": "pilot",
+      "seed": 7,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s7_pilot.txt",
+      "queue_sha256": "138c10d63d38902253898a129070f744fb4406ade69441c14491d5421e8ebb99",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s7_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_observed_s8_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_observed",
+      "stage": "pilot",
+      "seed": 8,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s8_pilot.txt",
+      "queue_sha256": "7a57da4502d8f968dc757fe6d43b496022448dff676252b316e1c48d0f00fefb",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_paired_timing_observed_s8_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_rank",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.txt",
+      "queue_sha256": "427feccc37cc2df4f38bcc10a89f8ca7b06d120c400c321d0b1c6c0a05893e78",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke",
+      "domain": "temporal",
+      "variant": "paired_timing_S4_private_P0_rank",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.txt",
+      "queue_sha256": "7aee3d1b9ad741a0e67aa26b0540b81320651efac93d6fdab9d3b495fb113023",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_restore",
+      "domain": "temporal",
+      "variant": "paired_timing_rank",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_restore.txt",
+      "queue_sha256": "6fdf8ee9f788c293b8fa17370ada4e2457d754273df6fbf014b5aac49d67b505",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_restore.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_rank",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_pilot.txt",
+      "queue_sha256": "72670176e86c54b4b3285306eb77a203a6fc9d0cbd83a5f064206a9278bf2520",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_pilot.json",
+      "requires": [
+        "aws_native_confirmation_20261002T010000Z_paired_timing_rank_s6_restore"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_rank_s7_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_rank",
+      "stage": "pilot",
+      "seed": 7,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s7_pilot.txt",
+      "queue_sha256": "914f3a0ea34d71f369f03817224771cc62526ee4ec24a44ac59736d9b220555a",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s7_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_paired_timing_rank_s8_pilot",
+      "domain": "temporal",
+      "variant": "paired_timing_rank",
+      "stage": "pilot",
+      "seed": 8,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s8_pilot.txt",
+      "queue_sha256": "4218dd17dd5f1b6fd26e0fd034d700f026f5c16813f72e14a2d8538f7b324af7",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_paired_timing_rank_s8_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+        "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.txt",
+      "queue_sha256": "3400d14763ae7cdf721baff276894b384dac910071c8ff5735362e2d9a3cc32d",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_shared_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.txt",
+      "queue_sha256": "071c9754e85b74a4f4bd203fe49689b35d905649e3db7c19b5ff964b1bcd28da",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_restore",
+      "domain": "temporal",
+      "variant": "order_S16_shared",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_restore.txt",
+      "queue_sha256": "85d24fdb15688ddcc387a5662ed91c68463b3970b4bbd0022e5087d061f8cfe8",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_restore.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_pilot.txt",
+      "queue_sha256": "c75c3929e6488948b1f98ca1ba5a6c540b975a71fa62ec7196a170d4bb9a1696",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_pilot.json",
+      "requires": [
+        "aws_native_confirmation_20261002T010000Z_order_S16_shared_s6_restore"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_shared_s7_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared",
+      "stage": "pilot",
+      "seed": 7,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_shared_s7_pilot.txt",
+      "queue_sha256": "5b42dfede69949eca60065389b48c018c4582ab4c85244fe6daf59fdc75de9e3",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_order_S16_shared_s7_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_shared_s8_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_shared",
+      "stage": "pilot",
+      "seed": 8,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_shared_s8_pilot.txt",
+      "queue_sha256": "909cb96b4f38ec8d98288ba46868f31b558f12f46a7e82f800cfb2d7ebdc3102",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_order_S16_shared_s8_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.txt",
+      "queue_sha256": "8293ff503b4a43c98e017fff7159a7c30621bd3547fb6b5488a347a0c35c5aa4",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.json",
+      "requires": [],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke",
+      "domain": "temporal",
+      "variant": "order_S16_private_P0",
+      "stage": "smoke",
+      "seed": 6,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.txt",
+      "queue_sha256": "2c86ad22a0b6088087cdbb2a11cea1d516807a43158cf90317d928bd5b7beb42",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts"
+      ],
+      "timeout_s": 1800,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Protected silent retention versus temporal sensitivity; shared rules versus private addressed state"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_private_s6_restore",
+      "domain": "temporal",
+      "variant": "order_S16_private",
+      "stage": "contracts",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_private_s6_restore.txt",
+      "queue_sha256": "0aade37a27156c7edbb1a1d7873b234c49b280da5f03c9bd2158bd51821a3b7f",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_order_S16_private_s6_restore.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_private_s6_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private",
+      "stage": "pilot",
+      "seed": 6,
+      "driver": "experiments/split_event_confirmation.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_private_s6_pilot.txt",
+      "queue_sha256": "114bb97ddd25836cf9c3b0accbf5e8c86854f2fcdb7a2b0a66d73b4d14c3eed7",
+      "result": "experiments/results/event_confirmation/aws_native_confirmation_20261002T010000Z_order_S16_private_s6_pilot.json",
+      "requires": [
+        "aws_native_confirmation_20261002T010000Z_order_S16_private_s6_restore"
+      ],
+      "timeout_s": 600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_private_s7_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private",
+      "stage": "pilot",
+      "seed": 7,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_private_s7_pilot.txt",
+      "queue_sha256": "90c932ffc3c00e8a418b08c7ded6229082061aa0713f254ff2a07cdd2c273672",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_order_S16_private_s7_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    },
+    {
+      "tag": "aws_native_confirmation_20261002T010000Z_order_S16_private_s8_pilot",
+      "domain": "temporal",
+      "variant": "order_S16_private",
+      "stage": "pilot",
+      "seed": 8,
+      "driver": "experiments/split_event_benchmark.py",
+      "queue": "experiments/queue/aws_native_confirmation_20261002T010000Z_order_S16_private_s8_pilot.txt",
+      "queue_sha256": "b8e0f471dfe092e20baa65f221684768fd6debc6ae7b5decf9126381fc7b9eb9",
+      "result": "experiments/results/event_variants/aws_native_confirmation_20261002T010000Z_order_S16_private_s8_pilot.json",
+      "requires": [
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+        "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke"
+      ],
+      "timeout_s": 3600,
+      "resource_caps": {
+        "MEM_CAP_KB": 4000768,
+        "MEM_CAP_RSS_KB": 2499584,
+        "MIN_AVAIL_MB": 8192
+      },
+      "hypothesis": "Replicate useful elapsed time or shared processing/private state at fixed complete fitting budget"
+    }
+  ],
+  "source_sha256": {
+    "experiments/split_event_benchmark.py": "a078c890d5e21bac469a4f9e85f6e1cbce61633c54699b7bdf88ed0adcbe3080",
+    "experiments/paired_timing_tasks.py": "df996caed1853e63bc7f59b84b9422ef0d3084ac1d0cdbc313d641703e48b61a",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "experiments/split_event_contracts.py": "7cc951b0f12196f9c02107012cbf032253a14afa9d69af243793242014e68a40",
+    "sleeping_machines/split_event_heads.py": "335fc63abb61dc18c40bd888d62677165f9f08ef0ae48ef1dbcc6e2afe73c351",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/parallel_head_accumulated_language.py": "8c88254ee1b2d2a19d90190679054f57f0aa9e68d6350afac18e2112a08e3c5f",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.json": "b0b832ab5d715dda5e66c4862f6e96e0307d2e354aca0abc501e06f5f2feb8c7",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.json": "3b25b6c6a3c7c5bf91009277184b4e0a51acb5a37d3b60a9ee20685fcea0b4fe",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json": "b8c816502324fbc4b373546a915b8bc6a27a36c28ebefd23e83bbd1787c7de84",
+    "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot.json": "643e8702b780da5a8ed53de1d00726716b1226ceb3f956949e2f2b4356863ffe",
+    "experiments/split_event_confirmation.py": "f266d381499095cef0456c088941a09c085ceb8b52b7210d056413e79306fea9",
+    "experiments/split_confirmation_analysis.py": "97b8644f64cc1ccc1ff7232c9c93ce629c60df03dda7efacf8b062c698f7999a",
+    "scripts/plan_split_confirmation.py": "b7ca54a7e9ea30b843a0d01bc58b1d8d17b12d81228239c8f304604a764d9d57",
+    "scripts/run_aws_matrix_recovery.py": "9c526796c85af594b318ed83001c9c51cf540aadc922d389fe0b33010c09bcd2",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c"
+  },
+  "parallel_host": "ip-172-31-47-132",
+  "max_parallel_jobs": 3,
+  "protocol": "experiments/AWS_NATIVE_CONFIRMATION.md",
+  "predecessor_completed_summary": "experiments/gym/plans/aws_split_event_20261001T230029Z/completed_summary.json",
+  "admission": "Confirm prior worker has exited and ordinary host lock is free; inspect memory/GPU/processes. No second worker. Original completed contracts/smokes are validated/reused; four checkpoint restoration contracts precede all holdout scores.",
+  "confirmation": "1024 queries, seed3201, untouched until frozen protocol; seeds6/7/8, same fit/dev data and 128-query/four-pass budget. Seed6 reuses selected weights, zero new updates, original full-fit charge.",
+  "new_training_jobs": 8,
+  "checkpoint_reuse_jobs": 4,
+  "promotion": "Two predeclared accuracy contrasts with crossed seed/population97.5% intervals; timing lower gain>=25pp and every observed seed>=85%; sharing positive lower gain, all seed gains positive and each full-work ratio<=1. No automatic scaling or supremacy claim.",
+  "timeout_basis": "Observed three-slot S4/S16 pilots795\u2013879s, RSS<976MiB. Added1024-query frozen confirmation uses existing evaluator; retain3600s pilot timeout and600s checkpoint evaluation.",
+  "report_ownership": "Local host updates canonical report from completed results",
+  "superseded_by": "experiments/gym/plans/aws_native_confirmation_20261002T010500Z/manifest.json",
+  "reason": "AWS committed/reserved overlapping event replications during local preparation. Preserve this unused draft; replacement reuses six forthcoming checkpoints instead of duplicate fitting."
+}

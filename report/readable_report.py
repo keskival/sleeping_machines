@@ -143,6 +143,16 @@ def results():
         if (r.get('status')=='completed' and 'final' in r
                 and r['args']['fit_targets']>=128 and r['args']['epochs']>=4):
             tasks['split_screen'].append(r)
+    tasks['event_confirmation']=[]
+    for path in sorted((ROOT/'experiments/gym/plans').glob('aws_native_confirmation_*/manifest.json')):
+        plan=json.loads(path.read_text())
+        if plan['status']=='superseded_unlaunched':continue
+        for job in plan['jobs']:
+            result=ROOT/job['result']
+            if job['stage']!='pilot' or not result.exists():continue
+            r=json.loads(result.read_text())
+            if r.get('status')=='completed' and 'confirmation' in r.get('final',{}):
+                tasks['event_confirmation'].append(dict(job=job,result=r))
     tasks['native_tabular']=[]
     for path in sorted((RES/'native_tabular').glob('*.json')):
         if path.name.endswith('.running.json'):continue
@@ -405,6 +415,19 @@ def historical_write_groups(tasks):
         yield 'historical_write_quality_work_'+hashlib.sha256(repr(key).encode()).hexdigest()[:10], rows
 
 
+def completed_split_evidence(tasks):
+    prefix='aws_split_event_20261001T230029Z_'
+    rows={r['args']['tag'][len(prefix):-len('_s6_pilot')]:r
+          for r in tasks.get('split_screen',[]) if r['args']['tag'].startswith(prefix)
+          and r['args']['tag'].endswith('_s6_pilot')}
+    if len(rows)!=11:return {}
+    for first,second in (('paired_timing_S4_private_P0_observed','paired_timing_S4_private_P0_rank'),
+                         ('order_S16_shared_P0','order_S16_private_P0')):
+        if rows[first]['data_sha256']!=rows[second]['data_sha256']:
+            raise ValueError('Opening mechanism evidence requires identical fit/dev data')
+    return rows
+
+
 def figures(M, tasks, ev):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -432,6 +455,27 @@ def figures(M, tasks, ev):
             axis.set_ylim(0,max(values)*1.2)
             for j,value in enumerate(values):axis.text(j,value+max(values)*.025,f'{value:.2f}',ha='center',fontsize=9)
         f.tight_layout();save(f,'banknote_first_screen')
+    split=completed_split_evidence(tasks)
+    if split:
+        f,axes=plt.subplots(1,2,figsize=(7.2,2.75))
+        values=[100*split['paired_timing_S4_private_P0_'+mode]['final']['dev']['accuracy']
+                for mode in ('observed','rank')]
+        axes[0].bar([0,1],values,color=[blue,orange],width=.6)
+        axes[0].set_xticks([0,1],['Ours: elapsed time','Ours: order only'],fontsize=8)
+        axes[0].set_title('Timing makes the answer identifiable',fontsize=9)
+        for j,v in enumerate(values):axes[0].text(j,v+2,f'{v:.1f}%',ha='center',fontsize=9)
+        for j,mode in enumerate(('private','shared')):
+            values=[100*split[f'order_S{s}_{mode}_P0']['final']['dev']['accuracy'] for s in (4,16)]
+            positions=np.arange(2)+(j-.5)*.36
+            axes[1].bar(positions,values,width=.34,color=orange if j==0 else blue,label='Ours: '+mode+' rules')
+            for x,v in zip(positions,values):axes[1].text(x,v+2,f'{v:.1f}',ha='center',fontsize=8)
+        axes[1].set_xticks([0,1],['4 occupied sources','16 occupied sources'],fontsize=8)
+        axes[1].set_title('Shared rules; private memories',fontsize=9)
+        axes[1].legend(loc='upper left',fontsize=7,frameon=False)
+        for axis in axes:
+            axis.set_ylim(0,115);axis.set_yticks([0,25,50,75,100]);axis.set_ylabel('Development accuracy (%) ↑',fontsize=8)
+            axis.grid(axis='x',visible=False)
+        f.tight_layout();save(f,'native_mechanism_evidence')
     for domain in ('temporal','language'):
         records=[r for r in tasks.get('gym_screen',[]) if r['job']['domain']==domain]
         if records:
@@ -1252,7 +1296,7 @@ def blocks(M, tasks, ev):
     pages.append([
         ("title","Sleeping Machines"),
         ("sub","Deep learning that computes with time"),
-        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 1 October 2026"),
+        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 2 October 2026"),
         ("p","Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, "
          "gate their updates and compete through learned delays. Arrival order and winning races determine the computation. "
          "The goal is useful intelligence with much less active work."),
@@ -1302,7 +1346,8 @@ def blocks(M, tasks, ev):
             ('figure',('banknote_first_screen',174)),
             ('small','128 fitting rows, four passes, 128 development rows, seed6; duplicate groups isolated and scaling fitted on training data. '
              'Four neural checkpoints/four tree candidates selected on development. The accuracy lead is three examples. '
-             'This is an exploratory quality advantage; independent test and repeated seeds are pending. '
+             'This is an exploratory development quality advantage. Reserved-test results and stronger controls '
+             'are in Appendix B; the full three-seed analysis is pending. '
              'Tree FLOPs are unavailable and its CPU fits are much faster; no energy or work advantage over trees is established.'),
             ('p','<b>A near-quality language work advantage.</b> Ours native2K uses <b>3.78 whole-fit GFLOPs</b> versus '
              '<b>22.75 GFLOPs</b> for the saved KV2K construction: <b>6.02× less counted work</b>, '
@@ -1318,6 +1363,41 @@ def blocks(M, tasks, ev):
                 f'from <b>3.765 to {scaled["final"]["dev"]["bpc"]:.3f} bpc</b> when fitting data grows from2K to8K characters, '
                 f'using <b>{scaled["work"]["cpu_emulator"]["total_training_unit_special_flops"]/1e9:.2f} whole-fit GFLOPs</b>. '
                 'Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.'))
+
+    split=completed_split_evidence(tasks)
+    if split:
+        timed=split['paired_timing_S4_private_P0_observed']
+        rank=split['paired_timing_S4_private_P0_rank']
+        shared=split['order_S16_shared_P0'];private=split['order_S16_private_P0']
+        rows=[]
+        for label,r in (('Ours: elapsed time',timed),('Ours: order-only control',rank),
+                        ('Ours: 16-source shared rules',shared),('Ours: 16-source private rules',private)):
+            w=r['work']
+            rows.append([label,f'{100*r["final"]["dev"]["accuracy"]:.2f}',f'{r["parameters"]:,}',
+                         f'{w["total_training_unit_special_flops"]/1e9:.3f}',
+                         f'{w["total_training_unit_special_flops"]/w["fitting_query_targets"]/1e6:.3f}',
+                         f'{(w["inference_arithmetic_flops_per_query"]+w["inference_special_functions_per_query"])/1e6:.3f}'])
+        pages.append([
+            ('h1','Native strengths: useful time and private state'),
+            ('p',f'<b>Elapsed time carries useful information.</b> Ours reaches <b>{100*timed["final"]["dev"]["accuracy"]:.2f}%</b> '
+             'on paired short/long sequences with identical marks, addresses and event order but opposite labels. '
+             'The refitted order-only control reaches exactly <b>50%</b>; paired noise makes that ceiling exact. '
+             'Clearing persistent state also reduces ours to 50%.'),
+            ('figure',('native_mechanism_evidence',174)),
+            ('p',f'<b>Learning can be shared while memories stay private.</b> At 16 occupied sources, shared processing '
+             f'raises accuracy from <b>{100*private["final"]["dev"]["accuracy"]:.2f}% to {100*shared["final"]["dev"]["accuracy"]:.2f}%</b>, '
+             f'with <b>{private["parameters"]/shared["parameters"]:.1f}× fewer parameters</b> and '
+             f'<b>{100*(1-shared["work"]["total_training_unit_special_flops"]/private["work"]["total_training_unit_special_flops"]):.1f}% less whole-fit work</b>. '
+             'All 512 receiver slots remain available; each event commits 16 states and scores 32 keys in both constructions. '
+             'Sharing also removes private source embeddings; these effects are tested together.'),
+            ('table',(['Construction','Dev accuracy<br/>%','Parameters','Whole fit<br/>GFLOPs','Fit/query<br/>MFLOPs','Infer/query<br/>MFLOPs'],rows,[51,23,24,24,26,26])),
+            ('small','Eight blocks, two independent heads, d8, pool 2; 128 fitting queries/pass, four passes, 256 development queries, seed 6. '
+             'Timing uses 32 independent population pairs; 16-source order uses 16 populations. Exploratory population-bootstrap gains '
+             'are 45.31 pp [42.97, 47.66] for time and 31.25 pp [25.39, 37.11] for shared rules; 95% intervals condition on selected checkpoints, '
+             'not independent seeds or confirmation. Complete counted fitting includes losing proposals, backward, clipping and Adam; '
+             'special functions have unit weight. These are synthetic mechanism advantages, not superiority over time-aware dense models or measured energy.'),
+            ('small','Sources: <a href="experiments/AWS_SPLIT_EVENT_BATTERY.md">frozen11-pilot protocol</a> and '
+             '<a href="experiments/SPLIT_SCREEN_FINDINGS_20261002.md">validated findings</a>. Full variants and gap-retention diagnostics remain in Appendix B.')])
 
     reference_rows=[
         ["Ours: learned event-state model (planned)", "10M / four passes", "Pending", "Pending"],
@@ -2343,6 +2423,54 @@ def blocks(M, tasks, ev):
                  'Independent population/pair uncertainty is distinct from seed uncertainty. Protected-prefix initialization also removes faster '
                  'initial temporal modes; any timing change is not isolated spectral evidence. Scope remains synthetic pilot quality, not physical energy.')])
 
+    confirmations=tasks.get('event_confirmation',[])
+    for begin in range(0,len(confirmations),6):
+        rows=[]
+        for entry in confirmations[begin:begin+6]:
+            r,j=entry['result'],entry['job'];w=r['work']
+            rows.append(['Ours: '+j['variant'].replace('_',' ')+f'/seed {j["seed"]}',
+                f'{100*r["final"]["dev"]["accuracy"]:.2f}',f'{100*r["final"]["confirmation"]["accuracy"]:.2f}',
+                f'{r["final"]["confirmation"]["nll"]:.4f}',f'{w["total_training_unit_special_flops"]/1e9:.3f}',
+                'Reused; charged' if r.get('extra_optimizer_steps')==0 else 'New fit'])
+        pages.append([('h1','Appendix B. Native frozen confirmation'),
+            ('p','Completed 1,024-query synthetic holdout evaluations only. All fitted seeds and matched controls '
+             'remain visible; selected checkpoints use development NLL before confirmation. Existing seed6 and '
+             'AWS-replication weights are reused with their original whole fitting work charged.'),
+            ('table',(['Construction','Dev accuracy %','Holdout accuracy %','Holdout NLL','Whole fit GFLOPs','Fitting lineage'],rows,[51,23,27,22,25,26])),
+            ('small','Primary gains require the complete three-seed crossed population/pair analysis with correction '
+             'across two contrasts. Partial scores cannot pass a gate. Synthetic mechanism confirmation is distinct '
+             'from time-aware dense controls, real-data supremacy and physical energy.')])
+
+    route_path=RES/'diagnostics/aws_route_write_decomposition_20261001T235000Z.json'
+    if route_path.exists():
+        audit=json.loads(route_path.read_text())
+        if audit.get('status')=='completed':
+            s=audit['summary']
+            pages.append([('h1','Appendix B. Persistent-write credit diagnosis'),
+                ('p','A frozen selected native checkpoint is replayed with alternative delivered content, '
+                 'alternative persistent write, and both. The exact four-corner decomposition separates those '
+                 'effects from their interaction and the current message-linearization residual. '
+                 'The forward architecture and fitted weights remain unchanged.'),
+                ('table',(['Ours: frozen audit component','Mean absolute loss effect'],[
+                    ['Full alternative branch',f'{s["total_branch_loss_difference"]:.6f}'],
+                    ['Persistent-write effect',f'{s["persistent_commit_effect"]:.6f}'],
+                    ['Delivered-value linearization residual',f'{s["value_linearization_residual"]:.6f}'],
+                    ['Delivery/write interaction',f'{s["delivery_commit_interaction"]:.6f}']], [115,59])),
+                ('p','The two opposed directions in the earlier audit are explained by persistent writes: '
+                 'at event0/block4 the value-only change is +0.001504 but the write-only change is −0.016749; '
+                 'at event7/block7 they are −0.001280 and +0.033918. The route chooses a memory address as '
+                 'well as a message. Training must teach that future state effect.'),
+                ('small',f'Twelve fixed probes, one population/address/noise seed, fixed selected-node time. '
+                 f'Mean absolute write effect {s["persistent_commit_effect"]:.6f} versus value residual '
+                 f'{s["value_linearization_residual"]:.6f}; these absolute summaries are not additive percentages. '
+                 'Hybrids are diagnostic interventions, not legal proposed routes. Value residual includes nonlinear '
+                 'response and downstream route switches. This is conditional fidelity evidence, not an expected-gradient failure rate.'),
+                ('small',f'Charged replay counts:48 forwards,12 backwards,12,288 races; {audit["wall_s"]:.3f}s wall, '
+                 f'{audit["max_rss_kb"]/1024:.1f}MiB peak RSS. Arithmetic is uninstrumented. Checkpoint weights and '
+                 'outer RNG are preserved. Any new state-aware teacher needs integrated contracts, full accounting and a matched small fit.'),
+                ('small','Source: <a href="experiments/results/diagnostics/aws_route_write_decomposition_20261001T235000Z.json">'
+                 'completed factorial audit</a>; <a href="experiments/theory/57_full_state_and_joint_clock_credit.md">joint state/time theory</a>.')])
+
     for dataset in ('banknote','wine_red'):
         rows=[r for r in tasks.get('native_tabular',[]) if r['args']['dataset']==dataset]
         for begin in range(0,len(rows),6):
@@ -3309,7 +3437,8 @@ def blocks(M, tasks, ev):
          'See theory note 48, §§313–323; measured quality/work curves remain in the appendix.'),
     ]]
     # Put new completed evidence immediately after the cover, before hypotheses.
-    opening_index=2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1
+    opening_index=next((i+1 for i,p in enumerate(pages) if p[0][1]=='Native strengths: useful time and private state'),
+                       2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1)
     pages[opening_index:opening_index]=architectural_pages
     return pages
 

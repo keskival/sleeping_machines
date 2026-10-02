@@ -165,3 +165,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 - Later additions: §349 derives rotating message-space projection/composition; §§350–351 analyze persistent reception banks, cached local projection cost, and frozen versus refitted utility ablations.
 
 - [Full-state and joint-clock credit](theory/57_full_state_and_joint_clock_credit.md) — §§373–375: factorial delivery/write diagnosis; joint likelihood credit through downstream timing jumps; exact local-score residual correction and its conditional-independence/resource requirements. No frozen teacher is changed.
+
+- [Reusable rules and private predictive state](theory/58_reusable_rules_and_private_predictive_state.md) — §§376–378: exact paired-timing information ceiling, two-state generator receptor, qualified shared-rule estimation/exposure law, private-state resource boundaries, and invariant-memory versus useful-time decomposition. Motivated by completed native mechanism gains; no frozen model is changed.

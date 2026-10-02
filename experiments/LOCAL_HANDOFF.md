@@ -1,5 +1,57 @@
 # Local host: current research continuation
 
+## Validated native strengths, live AWS follow-through, 2 October, 01:12 UTC
+
+All11 split-event pilots validate source hashes, finite metrics and complete
+operator accounting. New SPLIT_SCREEN_FINDINGS_20261002.md and machine-readable
+analysis preserve the two main gains: paired timing95.3125% versus exact rank
+ceiling50%, and S16 shared/P0 order75.3906% versus private44.1406%, with11.14x
+fewer parameters and6.65% less unit-special whole fitting work. Exploratory
+paired-population95% gain intervals are[42.97,47.66] and[25.39,37.11]pp, not
+seed/confirmation uncertainty. Shared maps also remove private source embeddings.
+P2 loses ordinary timing/accuracy while improving some long gaps; appendix
+retains all variants and the initial-spectrum confound. Theory58 §§376–378
+derives the timing information witness, exact two-state generator receptor,
+qualified shared-rule exposure law and private-state/invariant-memory bounds.
+
+REPORT/PDF puts the quantitative native mechanism figure on page3, with whole
+fit/per-query/inference work together. Prior valid order/retrieval and native
+language evidence is retained; R2 losses and repair plans stay in the appendix.
+The new frozen write decomposition is completed: write effect meanabs.012694
+versus delivered-value residual.000288, with both earlier opposed signs explained
+by writes.48 forwards/12 backwards/12,288 races,7.107s/399708KiB; conditional
+one-population evidence, no expected-gradient claim. Theory57/report appendix
+now include it. No current teacher/source was modified.
+
+AWS has independently reserved seed7/8 event replications in
+aws_event_replication_20261002T005408Z after its active banknote confirmation.
+Do not duplicate that chain. New AWS_NEXT_BATCH.md identifies the prepared
+FOLLOW-UP after those replications:
+gym/plans/aws_native_confirmation_20261002T010500Z/manifest.json.
+Thirty stages, twelve final holdout scores; only TWO fresh private-S16 fits.
+Ten selected checkpoint reuses include the six forthcoming timing/shared-P0
+replication checkpoints. Original fitting work stays charged. Missing parents
+stop, never refit. Two corrected crossed-seed/population accuracy gates are
+fixed before seed3201/1024-query holdout access. The earlier010000Z draft is
+preserved superseded/unlaunched because the AWS overlapping reservation arrived
+during preparation. Only launch replacement after the existing worker exits.
+
+Four new read-only tests pass for cluster dependence and selected checkpoint
+restoration/data/protocol identity. Thirty queue/source fingerprints, unique
+tags and dependency edges validate. No optimizer/test holdout was run locally.
+Partial banknote confirmation already exists: ours seed6 test94.306%/.142593NLL
+versus original trees93.950%/.206543; CatBoost seed6.120693NLL and seed7.107803
+are stronger loss scores. Do not turn the incomplete comparison into a broad
+tabular win. The AWS supervisor will publish full prespecified analysis after
+all twelve scores; canonical appendix uses completed frozen-test JSONs only.
+
+Local native timing512-query/eight-pass fit remains healthy in its original
+guard/queue, about464MiB trainer RSS and11.7GiB available. Three recorded dev
+epochs are83.98/79.30/86.72%; these are ongoing, not completed benchmark scores.
+Its original serial order/pathwise/timing/capacity controls continue afterward.
+No second local trainer was launched. Keep checking new AWS completions during
+subsequent work; source/queue/publication lifecycles remain immutable.
+
 ## Full-state credit diagnostic and complete first wave, 2 October, 00:06 UTC
 
 All17 first-wave pilots are now completed and source fingerprints validate.

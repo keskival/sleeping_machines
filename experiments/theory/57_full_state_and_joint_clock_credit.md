@@ -18,6 +18,16 @@ nonlinear response AND downstream route switches. Hybrids are diagnostic
 interventions,not new legal routes. `route_write_decomposition.py` tests this
 on the same frozen checkpoint and predeclared probes.
 
+Completed AWS factorial replay (2 October) finds mean absolute persistent-write
+effect .012694 versus delivered-value linearization residual .000288 across
+the12 probes; these absolute summaries are not additive attribution percentages.
+The two earlier opposed signs follow actual writes: event0/block4's value-only
+effect is +.001504 while write-only is −.016749; event7/block7's are −.001280
+and +.033918. This isolates an actionable addressed-state credit path. It is
+one population/address/noise realization, not expected-gradient accuracy.
+The guarded audit paid48 forwards/12 backwards/12,288 races,7.107s wall and
+399,708KiB RSS. Weights/RNG are preserved; arithmetic remains uninstrumented.
+
 Under fixed smooth slot semantics,old states m_i and candidate writes u_i give
 the full-state linearization from winner j to alternative i:
 
