@@ -1,5 +1,16 @@
 # Findings log
 
+## 32K ladder: minimal core beats the full core with the gate — 2 October
+
+Native + K4 counts, seed 6, 8,191 dev targets (unit-special whole-fit GFLOPs). Scalar escape, full core:
+2.560 / 60.79. Escape gate, full core: 2.447 / 60.79. Escape gate, **minimal core (payload 2, depth 1):
+2.401 / 1.15**. Stream-adaptive counts 2.579. The gate's margin over the scalar cascade grows with data
+(2K .039, 8K .070, 32K .113), but the minimal core is .046 better than the full core at 1/53 of the work.
+Across 2K/8K/32K, the full temporal core contributes nothing positive in this count composition. Learned
+count smoothing carries the gains (Theory §389 attribution). Theory 62/§392 locate the likely reasons:
+residual credit starvation, a single-address state, and no retrieval. The pooled statistic-race memory
+(§392) and the other host's late-projection addressed core are the queued tests. Single seed, dev only.
+
 ## Attribution: gate gains are learned count smoothing; temporal core adds nothing yet — 2 October
 
 Minimal-core controls (same cascade and gate, seed 6, dev only; unit-special whole-fit GFLOPs):
