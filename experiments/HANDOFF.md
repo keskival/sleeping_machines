@@ -2040,3 +2040,18 @@ all four must pass before either10M job. Original bounded driver preserved.
 Language coordinator waits until gesture matrix fully completes, then takes
 its own reserved2slot guarded host lease. Protocol scope and known missing
 language replay port: theory/aws_20261002_depth8_language_10m_protocol.md.
+
+DEPTH8 SEED7 POSITIVE: private fullreplay56.771%/1.316790 versus teacher
+48.438%/1.369199 and factorized47.396%/1.399592. Sharedfullreplay52.083%/
+1.348356 versus teacher52.604%/1.410495 and factorized46.875%/1.395239.
+BOTH families PASS both .03NLL/<=1pp loss nomination gates. Allsix full cost
+rows in AWS_DEPTH8_REPLAY_FINDINGS_20261002.md; replay~52–55xtrainingwork,
+not yet resource advantage. Unchanged seed8 confirmation required, sixjobs.
+
+Language contracts both PASS; current1025-char smokes continue guarded.
+Admission coordinator deliberately suspended to insert the six seed8
+confirmation jobs BEFORE7day10M languagejobs. Replacement immutable matrix
+aws_depth8_confirm_language_20261002T234300Z/manifest.json reuses completed
+language contracts/smokes, admits confirmations as checks, then both10M
+language jobs. Recovery helper drains current smokes before releasing old
+coordinator lock; no training/watchdog killed. Old worker lifecycle retained.
