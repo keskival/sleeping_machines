@@ -1,0 +1,220 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_clock_preserving_contracts_20261002T231200Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json"
+    ]
+  },
+  "distribution_contracts": [
+    {
+      "temperature": 1.0,
+      "probability": [
+        0.07082553080085074,
+        0.35080115053160865,
+        0.5783733186675407
+      ],
+      "frequency": [
+        0.0718536376953125,
+        0.351531982421875,
+        0.5766143798828125
+      ],
+      "first_time_mean": 0.2352303561004253,
+      "expected_first_time": 0.2351490433737031,
+      "conditional_first_time": [
+        {
+          "winner": 0,
+          "count": 9418,
+          "mean_first_time": 0.23593254157713356
+        },
+        {
+          "winner": 1,
+          "count": 46076,
+          "mean_first_time": 0.23460530001708182
+        },
+        {
+          "winner": 2,
+          "count": 75578,
+          "mean_first_time": 0.23552391905891187
+        }
+      ],
+      "uniform_bins": [
+        0.05063629150390625,
+        0.0507965087890625,
+        0.050384521484375,
+        0.05022430419921875,
+        0.05063629150390625,
+        0.04978179931640625,
+        0.04999542236328125,
+        0.04938507080078125,
+        0.050048828125,
+        0.0498809814453125,
+        0.049072265625,
+        0.0506744384765625,
+        0.0491485595703125,
+        0.05001068115234375,
+        0.0509033203125,
+        0.0497894287109375,
+        0.04892730712890625,
+        0.05034637451171875,
+        0.049224853515625,
+        0.05013275146484375
+      ],
+      "common_shift_winner_preserved": true
+    },
+    {
+      "temperature": 2.0,
+      "probability": [
+        0.16438737957750496,
+        0.3658508413773641,
+        0.4697617790451308
+      ],
+      "frequency": [
+        0.16643524169921875,
+        0.3648529052734375,
+        0.46871185302734375
+      ],
+      "first_time_mean": 0.2352303561004253,
+      "expected_first_time": 0.2351490433737031,
+      "conditional_first_time": [
+        {
+          "winner": 0,
+          "count": 21815,
+          "mean_first_time": 0.234929249515829
+        },
+        {
+          "winner": 1,
+          "count": 47822,
+          "mean_first_time": 0.23512462186278324
+        },
+        {
+          "winner": 2,
+          "count": 61435,
+          "mean_first_time": 0.2354195815070419
+        }
+      ],
+      "uniform_bins": [
+        0.05063629150390625,
+        0.0507965087890625,
+        0.050384521484375,
+        0.05022430419921875,
+        0.05063629150390625,
+        0.04978179931640625,
+        0.04999542236328125,
+        0.04938507080078125,
+        0.050048828125,
+        0.0498809814453125,
+        0.049072265625,
+        0.0506744384765625,
+        0.0491485595703125,
+        0.05001068115234375,
+        0.0509033203125,
+        0.0497894287109375,
+        0.04892730712890625,
+        0.05034637451171875,
+        0.049224853515625,
+        0.05013275146484375
+      ],
+      "common_shift_winner_preserved": true
+    },
+    {
+      "temperature": 4.0,
+      "probability": [
+        0.239103826652678,
+        0.356700993901002,
+        0.4041951794463199
+      ],
+      "frequency": [
+        0.2415771484375,
+        0.355926513671875,
+        0.402496337890625
+      ],
+      "first_time_mean": 0.2352303561004253,
+      "expected_first_time": 0.2351490433737031,
+      "conditional_first_time": [
+        {
+          "winner": 0,
+          "count": 31664,
+          "mean_first_time": 0.23449680550482796
+        },
+        {
+          "winner": 1,
+          "count": 46652,
+          "mean_first_time": 0.23619743465949458
+        },
+        {
+          "winner": 2,
+          "count": 52756,
+          "mean_first_time": 0.2348154458934592
+        }
+      ],
+      "uniform_bins": [
+        0.05063629150390625,
+        0.0507965087890625,
+        0.050384521484375,
+        0.05022430419921875,
+        0.05063629150390625,
+        0.04978179931640625,
+        0.04999542236328125,
+        0.04938507080078125,
+        0.050048828125,
+        0.0498809814453125,
+        0.049072265625,
+        0.0506744384765625,
+        0.0491485595703125,
+        0.05001068115234375,
+        0.0509033203125,
+        0.0497894287109375,
+        0.04892730712890625,
+        0.05034637451171875,
+        0.049224853515625,
+        0.05013275146484375
+      ],
+      "common_shift_winner_preserved": true
+    }
+  ],
+  "native_contracts": [
+    {
+      "seed": 6,
+      "tau1_exact_logit_state_rng": true,
+      "exact_parameter_gradients": 102,
+      "three_positive_settings_exact_rng_target_invariance_sparse_activity_training_refusal": true
+    },
+    {
+      "seed": 7,
+      "tau1_exact_logit_state_rng": true,
+      "exact_parameter_gradients": 100,
+      "three_positive_settings_exact_rng_target_invariance_sparse_activity_training_refusal": true
+    }
+  ],
+  "parents": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "checkpoint_sha256": "4bc01a9c8050c17c2555dc5a77a4cb98ab2be160d59820ec35d39d3ad41fc8fb"
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "checkpoint_sha256": "4db7a20eabe435287a232c446384d99b6d43ce0383e59c0c9402c36d5ea27889"
+    }
+  ],
+  "source_sha256": {
+    "experiments/clock_preserving_temperature_contracts.py": "a7880f170cd1382fbe3e05b1252fface4d9ad34fd24bffbed8764fb94ed82246",
+    "sleeping_machines/clock_preserving_temperature.py": "a92cad3bd49747fe7e55bf17b4536de03ac048b3c0ac3d68d000100998f11f26",
+    "experiments/theory/101_clock_preserving_route_calibration.md": "2333f213add5e03cd9a735aa3242164ce5cf0df45507975543766ca1e5678957",
+    "experiments/dvs_key_score_decomposition.py": "2db0b22a11ee7939e083a2ea3ea0cc2794af1accf71da2556972a61c35142f17",
+    "experiments/dvs_native_window_intervention.py": "8d87a9430e1e08e76a99ced669db69aac47af293bd383b9b1efd2d1ca60edd99"
+  },
+  "wall_s": 29.010458664008183,
+  "max_rss_kb": 354328,
+  "hardware": {
+    "host": "curie",
+    "threads": 1
+  },
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "whole_audit_flops": null,
+  "scope": "Finite-draw six-standard-error distribution screens supplement exact exponential conditioning proof; actual native tau1 forward/state/all-gradient/RNG nesting and positive-temperature sparse writes, target invariance and training refusal. Two frozen producers. No quality or learning advantage."
+}
