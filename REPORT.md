@@ -3007,7 +3007,9 @@ At each entering state, keep the original first raw time T and total rate Lambda
 
 Separate16 unused FIT examples, four prespecified noisy histories; every initial/fixed-four-pass model and setting retained. This is mean per-history loss/accuracy, not ensemble inference. No optimizer, new decoder, DEV or test. Temperature2/all NLL gain 0.011155, accuracy change 3.125 points; fixed both-seed smoke gate FAILS.
 
-Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units/720state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units;576..720 live-state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+
+Accounting clarification,2 October:720bytes is the observed maximum, not every prefix. Completed cases retain576,648 or720 persistent tensor bytes as6,7 or8 units become occupied. Repeated receiver writes and available capacity do not imply all available units have live memory. Parameters, Python metadata and graphs are separate. Original report retained.
 
 ## Appendix B. Clock-preserving route calibration, seed7
 
@@ -3026,7 +3028,9 @@ At each entering state, keep the original first raw time T and total rate Lambda
 
 Separate16 unused FIT examples, four prespecified noisy histories; every initial/fixed-four-pass model and setting retained. This is mean per-history loss/accuracy, not ensemble inference. No optimizer, new decoder, DEV or test. Temperature2/all NLL gain 0.002257, accuracy change 0.000 points; fixed both-seed smoke gate FAILS.
 
-Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units/720state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+Theory101. Distribution screens and exact tau1 output/state/all-gradient/RNG contracts pass29.010s/354,328KiB. Positive-temperature training is refused until correct choice/common-clock gradients and optimizer/recovery/accounting exist. Each prefix scores168 keys, writes84 receivers, has8 available units;576..720 live-state bytes. Original trained fit2.285696GF/2.232125MF per presentation; table work is one traced inference prefix including calibration, not full-audit cost or benchmark advantage.
+
+Accounting clarification,2 October:720bytes is the observed maximum, not every prefix. Completed cases retain576,648 or720 persistent tensor bytes as6,7 or8 units become occupied. Repeated receiver writes and available capacity do not imply all available units have live memory. Parameters, Python metadata and graphs are separate. Original report retained.
 
 ## Appendix B. AWS frozen replay critics and parameter calibration
 

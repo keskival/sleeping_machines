@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_route_state_scope_report_20261002T232800Z",
+    "analysis": [
+      "experiments/results/diagnostics/local_dvs_clock_preserving_calibration_20261002T231600Z.json"
+    ]
+  },
+  "analysis_sha256": {
+    "experiments/results/diagnostics/local_dvs_clock_preserving_calibration_20261002T231600Z.json": "66b57f5936c6a19191b5d6a6a82d9d090334879dcf5cb0d038fa2c489ee22ff1"
+  },
+  "pdf_pages": 161,
+  "wall_s": 25.527088963004644,
+  "max_rss_kb": 68428,
+  "source_sha256": {
+    "experiments/publish_route_state_scope_report.py": "360adefe45c5c88dd0f1d1acaaf4ee58c8aa9968792c6e0b8051e49863935975",
+    "report/readable_report.py": "f487e0f9baa9bf9cc3558e479e8e377b4011224d8b9a0ce5c81ce9660df056ff",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/current_dvs_appendix.py": "4370f1a032dbbf682276cc70a1f7fdac6f7f321d54f89c4d1043dc8ce6025e07",
+    "report/reception_evidence.py": "8d42f90c8dc9d2493034987ae5079b1ab0531a013647293944c83f9871fb325d",
+    "report/route_calibration_evidence.py": "d457d5e92ed33e48b93ee61fd78572aa6c0745849414fe80c3ec2046c3f91f3d",
+    "report/route_calibration_state_scope.py": "e3e0f9a3f3db45671ea2237c5d86fc86572beb293db502f9cc68a1f746fbce69"
+  },
+  "scope": "Completed cross-host DVS evidence, historical failures and common-unit boundaries preserved; exploratory scope retained."
+}

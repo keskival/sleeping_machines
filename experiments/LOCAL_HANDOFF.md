@@ -2,6 +2,18 @@
 
 ## Clock-preserving calibration and joint information contracts, 2 October23:23 UTC
 
+23:30 continuation: safe state-scope publication232800Z passes161-page bounds/
+orphan/source validation. Original161-page REPORT/PDF preserved in appendices;
+explicit clarification on both calibration pages:720live-state bytes is maximum,
+576/648/720 correspond to6/7/8 occupied units. No numerical/source mutation.
+Concurrent automatic rebase onto a46e5d4 caused REPORT conflict; resolved by
+preserving generated evidence plus upstream exact-query appendix, then all
+remaining commits/autostash applied cleanly on main. Four earlier autostashes
+unchanged. New query-only upstream text remains in canonical Markdown and a
+versioned appendix; it is not yet a generated PDF page. Latest AWS depth4
+teacher/factorized/replay pilot summary234200Z fails both quality/work gates;
+confirmation null and no full-fit nomination. Preserve that independent result.
+
 All local jobs complete under unique one-job safe queues; no local trainer
 active. Main only, existing four autostashes preserved. New numerical sources
 and completed notes101/102 are frozen. Preserve all original and new results.
