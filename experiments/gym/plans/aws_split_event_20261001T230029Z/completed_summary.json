@@ -1,0 +1,243 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 540288,
+      "wall_s": 2.143334181018872
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553552,
+      "wall_s": 2.633400316000916
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 557084,
+      "wall_s": 2.7122390089789405
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 556864,
+      "wall_s": 9.837458135007182
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566132,
+      "wall_s": 11.105671604978852
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 570128,
+      "wall_s": 11.407110005005961
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 544284,
+      "wall_s": 2.2033438780053984
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 959720,
+      "wall_s": 9.31886976500391
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 975528,
+      "wall_s": 9.631725046987412
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 561096,
+      "wall_s": 10.193684906000271
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 861988,
+      "wall_s": 7.044606045004912
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 959852,
+      "wall_s": 43.9999651699909
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 975904,
+      "wall_s": 46.00089887398644
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 876716,
+      "wall_s": 38.01630852802191
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553432,
+      "wall_s": 2.5893069729791023
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 877792,
+      "wall_s": 7.383149169996614
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 553556,
+      "wall_s": 2.5816761949972715
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566452,
+      "wall_s": 17.02747625898337
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 566404,
+      "wall_s": 17.31338298099581
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_contracts.json",
+      "reused": false,
+      "max_rss_kb": 557232,
+      "wall_s": 2.6697233140002936
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 892856,
+      "wall_s": 39.20445475698216
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_smoke.json",
+      "reused": false,
+      "max_rss_kb": 570100,
+      "wall_s": 17.631543873023475
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P0_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 559928,
+      "wall_s": 794.9710185129952
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P0_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P0_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571384,
+      "wall_s": 806.681725789007
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_private_P2_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_private_P2_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 575020,
+      "wall_s": 851.1079477760068
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S4_shared_P2_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 564048,
+      "wall_s": 839.3748937469791
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P0_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 959968,
+      "wall_s": 856.1463949820027
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_private_P2_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_private_P2_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 975720,
+      "wall_s": 878.5055885780021
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P0_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 879536,
+      "wall_s": 833.311543496995
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_order_S16_shared_P2_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 895000,
+      "wall_s": 841.0260509430082
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_observed_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571336,
+      "wall_s": 812.2723381310061
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P0_rank_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 571520,
+      "wall_s": 797.5917771540117
+    },
+    {
+      "tag": "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot",
+      "result": "experiments/results/event_variants/aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot.json",
+      "reused": false,
+      "max_rss_kb": 575172,
+      "wall_s": 820.2944141810003
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-01T23:35:27.117938+00:00",
+  "active_jobs": [
+    "aws_split_event_20261001T230029Z_paired_timing_S4_private_P2_observed_s6_pilot"
+  ],
+  "max_parallel_jobs": 3
+}
