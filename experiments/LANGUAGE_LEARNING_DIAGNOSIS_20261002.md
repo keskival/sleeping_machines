@@ -296,3 +296,55 @@ tokens, not throughput. Original text-only empty filler-group NaN is undefined;
 preserve those JSONs and this annotation. Driver now writes null for absent
 groups and rejects other nonfinite JSON. Final25 tests pass11.79s, including
 the real driver budget/partial-window and null serialization tests.
+
+## Completed value-credit experiment and revised diagnosis, 10:16 UTC
+
+Theory Note 63 and `results/diagnostics/local_value_credit_analysis_20261002T090800Z.json`
+record five matched exploratory seed-6 fits: 1,024 fitting characters, four
+passes, 4,092 targets, 64 updates and 2,047 development targets. The standalone
+late-projection full core scores 3.942092 bpc against its same-width shallow
+control's 4.086241, a .144148 improvement. Its minimal control gives 4.539614.
+Thus added core computation earns quality in this small uncomposed setting;
+the earlier count-mixture near-equivalence does not generalize to all models.
+Different-depth initialization and unequal work prevent interpreting this as
+isolated semantic depth or iso-FLOP superiority.
+
+Original addressed memory scores 3.902970 against native full's 3.968133,
+a .065164 bpc improvement for about 1.65% additional estimated fitting work.
+Late projection restores a verified fixed-feature derivative through detached
+memory but loses .039123 bpc to original. Its predeclared gate fails. Frozen
+fitting loss is also worse (3.727163 versus 3.659509), so an explanation based
+solely on excess development overfitting is insufficient. Extra fit replay
+history hurts late full by .038790 bpc. These observations preserve useful
+memory evidence while rejecting the projection repair as a demonstrated
+quality fix under this protocol. The historical nonlinear feature producers
+remain truncated; no generic disconnected-gradient regression was identified.
+
+The frozen followthrough audit changes no weights and takes zero optimizer
+steps. Full native/original/late models preserve earlier-prefix sensitivity
+at gaps 8, 32 and 64 under identical query suffixes and actual order-1–8 count
+vectors. Full paired output KL spans .000214–.001943 nats; shallow is much
+smaller, and minimal has zero measured feature/output difference at gaps 32
+and 64. This demonstrates a retention difference, not learned parity: none
+of these text checkpoints was fitted to the probe. Balanced opposite-label
+pairs establish a 1-bit loss lower bound only for predictors restricted to
+those query suffix/count inputs. The full prefix determines the label.
+
+Same-window frozen order-4 Kneser–Ney gives 3.751541 bpc and still beats all
+neural arms. All 20 fixed-order/method/history controls remain separately
+reported; one count pass with fit-prefilled memory differs from four gradient
+passes with cold neural state, and development adaptation differs again.
+Matching average losses cannot establish that a neural model computes counts.
+Frozen head gradients are nonzero, and shallow covariance participation rank
+is higher despite worse loss. Neither gradient reach nor rank certifies useful
+deep features. Fitting is also not demonstrably at a stationary optimum.
+
+The concrete theoretical next step is in Note 65: mean plus an occupied bit
+can hide sample precision, a value-map repair cannot supply evidence from an
+unread address, and joint route utility may remain zero until an interaction
+decoder learns. These are distinct conditional limitations, not a mathematical
+barrier to improvement. Keep core temporal/race/state/counterfactual mechanisms;
+test retained evidence and joint useful credit under bounded integrated
+controls before further scaling. The 100-page report contains completed
+quality/resource tables and the frozen inference-fusion audit, preserving
+historical comparisons and the failed gate. No additional local fit is queued.

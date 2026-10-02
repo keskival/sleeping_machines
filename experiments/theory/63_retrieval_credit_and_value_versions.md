@@ -146,3 +146,73 @@ alone would not settle the deeper-feature question. A later integrated parity
 fit would need matched full/shallow controls, prefix-data generalization,
 target-only versus whole-stream supervision labelled as different objectives,
 complete prefix computation/credit work and bounded admission prerequisites.
+
+## Completed comparison and limits, 2 October 2026
+
+The frozen plan `queue/local_value_credit_20261002T090800Z.json` completed
+all three accounting smokes, five fits and its analysis. Each fit uses 1,024
+characters for four passes, 4,092 fitting targets, 64 optimizer updates and
+2,047 development targets. These are exploratory single-seed results.
+
+| Model | Cold dev bpc | Frozen-fit replay then dev bpc | Estimated whole-fit GFLOPs | Estimated MFLOPs / fitting target |
+|---|---:|---:|---:|---:|
+| Native full | 3.968133 | 3.967377 | 1.892999 | .462610 |
+| Original addressed full | 3.902970 | 3.896653 | 1.924300 | .470259 |
+| Late projection full | 3.942092 | 3.980883 | 1.932820 | .472341 |
+| Late projection same-width shallow | 4.086241 | 4.080073 | .347704 | .084972 |
+| Late projection minimal | 4.539614 | 4.527428 | .017848 | .004362 |
+
+The late variant restores the intended fixed-feature projection derivative,
+but loses .039123 bpc to the original addressed model. Its predeclared
+promotion gate fails. The repaired derivative is therefore not sufficient to
+improve this fitting outcome; do not promote or scale it on algebra alone.
+The original addressed variant improves native by .065164 bpc for about
+1.65% extra estimated fitting work, a positive result within this small protocol.
+No original-addressed shallow control was fitted, so this gain does not isolate
+its depth dependence.
+
+Preserve the separate positive depth comparison: late full improves its
+same-width shallow control by .144148 bpc and minimal by .597522 bpc. It
+earns some additional core computation here, unlike the earlier count-gated
+full/minimal near-equivalence. Depth changes later parameter initialization,
+and the fits do not establish hierarchical semantic features or advantage at
+equal fitting work. More replayed history worsens late-full dev by .038790
+bpc; historical-feature drift or poor memory calibration are hypotheses, not
+identified causes.
+
+The completed frozen audit
+`results/diagnostics/local_value_credit_frozen_20261002T090800Z.json` uses no
+optimizer steps and preserves every checkpoint. Late full's frozen fitting
+loss is 3.727163 bpc versus original addressed 3.659509; the quality deficit
+is present on fitting data too, so excess development overfitting alone does
+not explain it. Head-weight derivatives remain nonzero. Development feature
+covariance participation rank is 1.601 for late full and 4.533 for shallow,
+despite the full model's better loss. Rank is neither semantic depth nor a
+sufficient learning-quality objective.
+
+Frozen compilation agrees within 1.55e-6 logits over the coupled 256-input
+full-model sample, removes 1,024 inference parameters, and saves exactly
+10,240 counted operations across five occupied reads in the 16-target audit.
+Its one-time product costs 65,536 arithmetic FLOPs; amortization requires
+32 occupied reads. Shallow and minimal also pass. This is an algebraic
+inference saving, not a full-dev quality, throughput or energy result.
+
+All three full checkpoints preserve prefix sensitivity at gaps 8, 32 and 64
+on the balanced parity probe with identical actual query count vectors for
+orders 1–8. Their mean paired query KL values span .000214–.001943 nats;
+shallow values are about 2.90e-7–1.88e-6, and minimal has zero measured
+feature/output difference at gaps 32 and 64. The models were never trained
+on parity. This is evidence for different retention, not useful parity
+prediction. Same-window frozen count references still provide
+a demanding control: order-4 Kneser–Ney scores 3.751541 bpc, better than all
+five cold neural fits. Fit-prefilled count state, one count pass versus four
+gradient passes, and optional development adaptation have different policies;
+all 20 controls are reported separately. This calibration does not identify
+the neural features as counts or establish an iso-FLOP comparison.
+
+The 100-page report includes completed quality, learning curves, common-unit
+fitting/inference/replay work, capacity/activity and frozen diagnostics.
+`results/diagnostics/local_value_credit_publication_20261002T090800Z.json`
+records successful bounds and text validation. No pending score replaces a
+historical result. The next local question is information access and joint
+credit, rather than automatically extending this failed projection gate.

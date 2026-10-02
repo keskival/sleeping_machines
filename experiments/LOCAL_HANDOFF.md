@@ -1,5 +1,56 @@
 # Local host: current research continuation
 
+## Value-credit cycle fully closed, 2 October, 10:16 UTC
+
+Parent and followthrough statuses are completed; no local training job or
+tmux session remains. Five exploratory fits, frozen audit and guarded report
+publication are committed on main. PDF: `../report/sleeping_machines_status.pdf`,
+100 pages with bounds/text validation. Read the completed interpretation in
+`theory/63_retrieval_credit_and_value_versions.md` before extending this stage.
+The .02 bpc promotion gate fails because late projection loses to original
+addressed memory; do not automatically scale it. Full versus same-width
+shallow remains a positive .144148 bpc finding within this small protocol.
+
+Frozen fitting loss also favors original addressed (3.659509) over late full
+(3.727163), so development overfitting alone does not explain late's deficit.
+Head gradients remain nonzero. Shallow has higher feature participation rank
+yet worse loss: rank alone is not useful representation learning. All three
+full models retain measured prefix dependence at gaps 8/32/64 with identical
+query count vectors for orders 1–8; shallow dependence is much smaller and
+minimal loses measured feature/output dependence entirely at gaps 32/64.
+These checkpoints were not trained on parity. Frozen order-4 KN scores
+3.751541 bpc on the exact window, still better than the best neural arm's
+3.902970. One count pass/prefilled memory versus four gradient passes/cold
+state differ; adaptive controls have yet another policy. All 20 are preserved.
+
+Frozen reader fusion passes for all three late variants without optimizer
+steps or source checkpoint changes. Full saves exactly 10,240 counted
+operations across five occupied reads, removes 1,024 parameters and agrees
+within 1.55e-6 logits over 256 inputs. Its 65,536-FLOP matrix fold amortizes
+after 32 occupied reads. No full-dev quality, latency or energy claim follows.
+Five followthrough tests pass; audit 181.181s / 348,956 KiB, publication
+20.032s / 65,708 KiB. Host has about 12 GiB available, above the 8 GiB floor.
+
+Prioritized integrated model/queue remains the unchanged common-seed S64 AWS
+capacity/exposure comparison in
+`gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`; inspect its
+actual state on the AWS host before continuing it. Local original addressed
+full is the strongest neural arm here, a fixed-key diagnostic, not a new
+leading comparable benchmark or complete learned-key race-attention model.
+Missing mechanisms include learned context pooling/retrieval, confidence
+delivery beyond an occupied bit, historical nonlinear producer credit and
+demonstrated jointly useful deep features. No new local fit is queued.
+
+Next theory: `theory/65_evidence_access_and_joint_credit.md` derives a precise
+mean/occupancy confidence counterexample and explains why joint route
+counterfactuals can have zero immediate utility with an unlearned decoder.
+A proposed balanced-prefix integrated fit must first verify evidence access,
+decoder learning, matched full/shallow controls and fully charged joint
+candidate work. This is a proposed comparison, not a departure to dense
+models or an authorization to bypass safe-run prerequisites. Native temporal
+races, sparse state, key/value separation and unrealized-route credit remain.
+Three old stashes are preserved; no unmerged index or rebase is present.
+
 ## Five value-credit fits complete; frozen followthrough, 2 October, 09:53 UTC
 
 queue/local_value_credit_20261002T090800Z.status.json completed, all three
