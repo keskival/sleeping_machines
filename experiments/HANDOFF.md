@@ -1665,3 +1665,17 @@ Only after this replication passes may full-data comparisons be proposed.
 REPORT appendix and diagnostic findings preserve common units/allattempts.
 Prioritized AWS integrated model: native4bin p16/L2/H2/pool2 under original
 and matched clocks, exploration only. No decoder/carrier or credit substitution.
+
+## AWS coarse replication passes; full-data comparison admitted
+
+Seed7 completes:20bin/.05 49.479%/1.434727;4bin/.05 53.125%/1.323325;
+4bin/.25 55.208%/1.220806. Both gates pass, fittingratio.239978 again. Allthree
+arms/means preserved; still reused192-development evidence, no freshtestclaim.
+New frozen plan aws_full_coarse_20261002T213100Z ninefits:allthreearms seeds6/7/8,
+984fit/192dev/eightpasses/U16/Adam.003/clip1,p16/L2/H2/pool2. Explicit quality
+admission validates BOTH completed screens before full jobs. Original numerical
+and learning/accounting prerequisites cover unchanged shapes/partialU8.
+Same2GiB RSS/6GiB VMS/job,8GiBhostfloor,three1threadslots,1800sfit timeout
+from measured42.8/14s256x4 workloads. Original credits/decoder/core retained;
+only disclosed packet precision and two clockinitializations differ. See
+aws_20261002_full_coarse_protocol.md. Full quality pending, no predictions.

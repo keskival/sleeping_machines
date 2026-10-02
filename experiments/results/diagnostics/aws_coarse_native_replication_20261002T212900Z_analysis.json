@@ -1,0 +1,94 @@
+{
+  "status": "completed",
+  "args": {
+    "manifest": "experiments/gym/plans/aws_coarse_native_replication_20261002T212900Z/manifest.json"
+  },
+  "rows": [
+    {
+      "variant": "fine",
+      "seed": 7,
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_fine_s7.json",
+      "bins": 20,
+      "clock_step": 0.05,
+      "selected_epoch": 2,
+      "accuracy": 0.4947916666666667,
+      "nll": 1.434726726418982,
+      "whole_fit_gflops": 2.28569632,
+      "fit_mflops_per_target": 2.2321253125,
+      "inference_mflops_per_target": 0.591695,
+      "fit_work_ratio": 1.0,
+      "nll_improvement": 0.0,
+      "accuracy_difference": 0.0,
+      "gate_pass": false,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 21504,
+        "key_scores": 172032,
+        "selected_updates": 86016,
+        "counterfactual_values": 172032
+      },
+      "wall_s": 42.52893807599321,
+      "max_rss_kb": 463632
+    },
+    {
+      "variant": "coarse_fastclock",
+      "seed": 7,
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_coarse_fastclock_s7.json",
+      "bins": 4,
+      "clock_step": 0.05,
+      "selected_epoch": 4,
+      "accuracy": 0.53125,
+      "nll": 1.3233252952729042,
+      "whole_fit_gflops": 0.548517184,
+      "fit_mflops_per_target": 0.5356613125,
+      "inference_mflops_per_target": 0.137993,
+      "fit_work_ratio": 0.23997815422829225,
+      "nll_improvement": 0.11140143114607781,
+      "accuracy_difference": 0.036458333333333315,
+      "gate_pass": true,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 13.919716561038513,
+      "max_rss_kb": 456932
+    },
+    {
+      "variant": "coarse_matchedclock",
+      "seed": 7,
+      "result": "experiments/results/dvs_native/aws_coarse_native_replication_20261002T212900Z_coarse_matchedclock_s7.json",
+      "bins": 4,
+      "clock_step": 0.25,
+      "selected_epoch": 4,
+      "accuracy": 0.5520833333333334,
+      "nll": 1.2208060644334182,
+      "whole_fit_gflops": 0.548517184,
+      "fit_mflops_per_target": 0.5356613125,
+      "inference_mflops_per_target": 0.137965,
+      "fit_work_ratio": 0.23997815422829225,
+      "nll_improvement": 0.2139206619855638,
+      "accuracy_difference": 0.057291666666666685,
+      "gate_pass": true,
+      "available_receivers": 8,
+      "activity": {
+        "targets": 1024,
+        "events": 5120,
+        "key_scores": 40960,
+        "selected_updates": 20480,
+        "counterfactual_values": 40960
+      },
+      "wall_s": 14.183933506952599,
+      "max_rss_kb": 457096
+    }
+  ],
+  "passing_variants": [
+    "coarse_fastclock",
+    "coarse_matchedclock"
+  ],
+  "scope": "Fixed exploratory integrated screen, same data/passes/model, different packet precision. Whole fit arithmetic+unit specials estimates; coalescing/normalization/loading included in wall, NumPy preprocessing FLOPs/traffic/energy unmeasured. No strong-control superiority or fresh confirmation claim."
+}

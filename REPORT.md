@@ -2735,3 +2735,12 @@ within-family, single-seed development evidence, not a completed advantage
 over stronger984-fit gesture controls. Older full-data native/control evidence
 remains leading. Raw results/common-unit fixed-gate analysis:
 experiments/results/diagnostics/aws_coarse_native_20261002T212600Z_analysis.json.
+
+AWS fixed seed7 coarse replication also completes:20bin/.05 49.479%/1.434727,
+4bin/.05 53.125%/1.323325,4bin/.25 55.208%/1.220806. Same256fit/192dev/four
+passes/U16, full native work2.285696/.548517/.548517GFLOPs; per-target
+2.232125/.535661/.535661MFLOPs; inference .591695/.137993/.137965MFLOPs.
+Both gates pass; source/data and all attempts preserved. This is seed replication
+on the reused development set, not independent fresh confirmation. Full984-fit,
+eight-pass seeds6/7/8 all-three-arm comparison is admitted under frozen protocol,
+with pending cells unfilled and strongest controls retained.
