@@ -2368,6 +2368,10 @@ def blocks(M, tasks, ev):
                 pages[-1].append(('small','Confirmation protocol: native checkpoint reuse plus seeds7/8, original trees, '
                     'CatBoost and logistic regression; four development selection opportunities per family, then frozen '
                     'reserved-test scoring. See experiments/AWS_BANKNOTE_CONFIRMATION.md. No pending test score is reported.'))
+            if dataset=='wine_red' and any(r['args']['model']=='ours' and r['args']['clock_features']==2 for r in records):
+                pages[-1].append(('small','Reception helps this regression pilot: ours R2 RMSE0.758 versus R0 0.824 '
+                    '(8.0% lower), for0.919 versus0.816 whole-fit GFLOPs (12.6% more). Trees retain lower RMSE0.649. '
+                    'This positive within-model effect contrasts with banknote/language reception failures; it is not a cross-family win.'))
 
     confirmed=tasks.get('tabular_confirmation',[])
     labels={'ours':'Ours native','trees':'Boosted trees','catboost':'CatBoost','logistic':'Logistic'}

@@ -1,5 +1,36 @@
 # Local host: current research continuation
 
+## Full-state credit diagnostic and complete first wave, 2 October, 00:06 UTC
+
+All17 first-wave pilots are now completed and source fingerprints validate.
+Wine R2 improves native R0 RMSE8.0% (.757914 versus.823788), with12.6% more
+whole fit work(.919098 versus.816008GF); trees remain better at.648887.
+Preserve this positive reception effect beside banknote/language failures.
+The report appendix and first-screen findings now state it explicitly.
+
+AWS's frozen trained-route audit finds two opposed directions in12 probes
+with actual alternative memory commits. New ROUTE_WRITE_DIAGNOSTIC.md and
+route_write_decomposition.py prepare the next bounded factorial audit: same
+checkpoint/population/address/seed/nodes, independently replace delivered
+value and persistent commit, record their interaction and local-linearization
+residual. Hybrid combinations are diagnostic, not proposed model routes.
+Queue aws_route_write_decomposition_20261001T235000Z is prepared/unlaunched;
+do not compete with the active split-event reservation. Two read-only tests
+pass for the algebra and realized-path/time/noise/weight integrity.
+
+Theory57 §§373–375 derives sparse full-state adjoints and joint likelihood
+credit that handles downstream time jumps. Two analytical tests verify the
+linear-time surrogate and hard-threshold witness. The score-function primitive
+is prior art; the contribution under investigation is joint state/time credit
+within this sparse substrate. Current-suffix adjoints cannot become independent
+control-variate coefficients by detach alone. No frozen teacher is changed;
+the actual factorial audit and integrated contracts/matched fit are prerequisites.
+
+Native8K remains in its existing lifecycle and has recorded four epochs;
+await final validation/publication before treating it as completed quality.
+No second local trainer or optimizer diagnostic was launched. New banknote
+confirmation manifest remains frozen; all its five read-only tests passed.
+
 ## Autonomous continuation and banknote confirmation, 1 October, 23:48 UTC
 
 Native8K is running under the existing delay recovery; the completed waiting

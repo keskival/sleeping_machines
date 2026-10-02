@@ -1,16 +1,24 @@
 # What the first AWS screen teaches us
 
-Snapshot: 16 of17 pilot results published locally. Wine R2 remains pending.
+Initial snapshot:16 of17 pilot results published locally; wine R2 was pending.
 Source fingerprints of all16 completed pilots match the saved implementations.
 Source protocol: [AWS_RUN_FAST_MATRIX.md](AWS_RUN_FAST_MATRIX.md), recovery
 manifest `gym/plans/aws_fast_matrix_recovery_20261001T213409Z/manifest.json`.
 These are seed6 development screens, not independent benchmark confirmations.
 
+Update at23:38 UTC:all17 pilots completed. Wine R2 reachesRMSE.757914,
+versus nativeR0 .823788 and trees.648887. Reception improves native regression
+RMSE8.0% for12.6% more counted whole fitting work(.919098 versus.816008GF),
+while trees still lead. This positive within-model effect belongs beside the
+banknote/language reception failures; reception is not uniformly useless.
+The original matrix publication error and completed fits are reconciled in
+`gym/plans/aws_fast_matrix_recovery_20261001T213409Z/reconciled_summary.json`.
+
 | Contrast | Completed observation | Interpretation |
 |---|---|---|
 | Banknote,128 fitting/128 dev rows | Ours R0:95.3125%,NLL.155305; trees:92.96875%,NLL.231868 | Promising quality advantage: three additional correct examples and33.02% lower log loss. Four neural checkpoints/four tree candidates selected on dev; untouched test, paired seeds and stronger controls remain necessary. |
 | Banknote reception | R2:89.0625%,NLL.269967; .379 versus R0 .335 whole-fit GFLOPs | Added reception harms this fit and costs12.91% more. Static feature coordinates are not evidence of physical async timing. |
-| Wine regression | Ours R0 RMSE.823788 versus trees.648887 | Trees win this screen; ours27.0% higher RMSE. Diagnose learning/conditioning before increasing capacity. R2 pending. |
+| Wine regression | Ours R0/R2 RMSE.823788/.757914 versus trees.648887 | Trees win this screen. Reception improves native RMSE8.0% for12.6% more work; diagnose learning/conditioning before increasing capacity. |
 | Order depth | L8/L4 accuracy51.5625% each; NLL1.020832/1.186294; fit.265264/.133942GF | Deeper processing improves log loss13.95%, at1.98x fitting work. Same accuracy does not imply redundant depth. |
 | State dependence | Order51.56% falls to28.13% with state cleared; gaps8x/64x yield29.69/26.56% | Learned state matters, but useful information fails to survive silence despite invariant order labels. Protected channels are a targeted response. |
 | Capacity/exposure | S4/16/64 accuracy51.56/48.44/32.81%; .265/.280/.341GF | Updates16 and scores32 per event stay fixed while available state grows128/512/2048. Private rules get32/8/2 queries per pass. More dormant capacity has not become more useful capacity here. Shared rules/private state are the next contrast. S64 dev has only one independent population. |
