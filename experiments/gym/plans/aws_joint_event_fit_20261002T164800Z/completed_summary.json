@@ -1,0 +1,75 @@
+{
+  "status": "completed",
+  "completed": [
+    {
+      "tag": "aws_joint_event_calibration_20261002T164400Z_table",
+      "result": "experiments/results/diagnostics/aws_joint_event_calibration_20261002T164400Z_table.json",
+      "reused": true,
+      "max_rss_kb": 77892,
+      "wall_s": 0.4701774020213634
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_smoke",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_smoke.json",
+      "reused": false,
+      "max_rss_kb": 458136,
+      "wall_s": 1.7825412600068375
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_smoke",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_smoke.json",
+      "reused": false,
+      "max_rss_kb": 461032,
+      "wall_s": 4.853719328995794
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s6",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s6.json",
+      "reused": false,
+      "max_rss_kb": 468004,
+      "wall_s": 21.235199424030725
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s7",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s7.json",
+      "reused": false,
+      "max_rss_kb": 473768,
+      "wall_s": 21.769108891952783
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_gru_s8",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_gru_s8.json",
+      "reused": false,
+      "max_rss_kb": 474156,
+      "wall_s": 21.49011224100832
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s6",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s6.json",
+      "reused": false,
+      "max_rss_kb": 471704,
+      "wall_s": 8.570339516038075
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s7",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s7.json",
+      "reused": false,
+      "max_rss_kb": 471680,
+      "wall_s": 8.411797640030272
+    },
+    {
+      "tag": "aws_joint_event_fit_20261002T164800Z_transformer_s8",
+      "result": "experiments/results/joint_event_language/aws_joint_event_fit_20261002T164800Z_transformer_s8.json",
+      "reused": false,
+      "max_rss_kb": 471760,
+      "wall_s": 8.466902417945676
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-02T16:46:39.001701+00:00",
+  "active_jobs": [
+    "aws_joint_event_fit_20261002T164800Z_transformer_s8"
+  ],
+  "max_parallel_jobs": 3
+}
