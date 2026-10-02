@@ -650,3 +650,35 @@ Repair: sampled race writes (the substrate's actual race; rates π, a generator 
 early writes spread in proportion to π. Receivers then differ, the delivery gradient becomes nonzero, and
 the router can specialize (soft-to-hard EM). Use M = 64 at 8K: about 128 counts per receiver instead of 32,
 and a quarter of the lookup work. Same predictions and controls.
+
+## 393. Where counting runs out: the regime in which advantage must be shown
+
+Counting predictors are near-optimal estimators of local conditionals wherever contexts carry ample evidence.
+A learner should not be expected to beat them there; that it does not is not evidence against it. Their
+limits are structural:
+
+1. **Evidence sparsity.** Distinct order-K contexts grow roughly as A^{H_K}, while the evidence per context
+   falls. At any N, a fraction of positions sit in unseen or low-count top contexts, where counts can only back
+   off to shorter suffixes and discard the longer context. A learner can generalize from contexts that are
+   similar but not identical. That is the I(Y; Z | C) of theory 62, concentrated in these positions.
+2. **Range.** Information beyond K characters (words, topic, copies, long agreements) is invisible to an
+   order-K table at any N. Raising K multiplies the sparsity in (1).
+3. **Storage.** Table size grows with distinct contexts, close to linear in N at high order. A bounded
+   learned state does not.
+4. **Novelty and shift.** New words and changing statistics need generalization or fast adaptation,
+   not accumulated exact matches.
+
+**Evaluation consequence.** Average bpc on a window dominated by high-evidence positions mostly measures how
+close a learner gets to counts. Every count-composed comparison should also report bpc **stratified by the
+counts' own evidence**: prequential top-order context count n_K ∈ {0, 1–2, 3–9, ≥ 10}. The advantage claim
+for the integrated model is: no worse than counts in high-evidence strata, where the cascade defers to them;
+strictly better in low-evidence strata, where the learner owns the prediction; and a gap that persists or
+grows with N, since the low-evidence strata never vanish at higher K. The full-versus-minimal core
+comparison belongs in the low-evidence strata above all. A minimal core can match counts where they are
+strong. Only learned features can help where they are weak.
+
+**Queued audit** (curie_count_limit_audit_20261002T121500Z): saved 8K/32K gate full and minimal checkpoints,
+frozen, with per-position losses and stream-adaptive Witten–Bell o4 and frozen KN o5 on the same positions.
+Prediction (P393): if the full core contributes anything, it does so in the unseen and 1–2 strata. If full ≤
+minimal there too, the current core supplies no generalization beyond counts at these N, whatever the
+average says.
