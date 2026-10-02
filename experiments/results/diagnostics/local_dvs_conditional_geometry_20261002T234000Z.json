@@ -1,0 +1,3378 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_conditional_geometry_20261002T234000Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json"
+    ]
+  },
+  "parents": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "checkpoint_sha256": "4bc01a9c8050c17c2555dc5a77a4cb98ab2be160d59820ec35d39d3ad41fc8fb",
+      "original_core_fit_gflops": 2.28569632
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "checkpoint_sha256": "4db7a20eabe435287a232c446384d99b6d43ce0383e59c0c9402c36d5ea27889",
+      "original_core_fit_gflops": 2.28569632
+    }
+  ],
+  "rows": [
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        -0.06401019543409348,
+        -0.3451957702636719
+      ],
+      "probabilities": [
+        0.5698368594062087,
+        0.4301631405937914
+      ],
+      "full": {
+        "choice_sensitivity_norm": 5.934212945038534,
+        "clock_sensitivity_norm": 2.6384979259584136,
+        "cosine": -0.8555507574534884,
+        "independent_direction_fraction": 0.2680329014207622,
+        "categorical_information_trace": 8.631971250744705,
+        "clock_information_trace": 6.961671305286849,
+        "joint_nonzero_eigenvalues": [
+          1.1122468548569966,
+          14.481395701174558
+        ],
+        "information_eigenvalue_ratio": 0.07680522498026791
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7139708485746029,
+          "cosine": 0.13833089628141096,
+          "independent_direction_fraction": 0.9808645631339815,
+          "categorical_information_trace": 0.490245626136555,
+          "clock_information_trace": 0.5097543726143385,
+          "joint_nonzero_eigenvalues": [
+            0.4301631444407543,
+            0.5698368543101392
+          ],
+          "information_eigenvalue_ratio": 0.7548882477275397
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 3.099195707927089,
+          "clock_sensitivity_norm": 1.377506962229969,
+          "cosine": -0.8095781957909924,
+          "independent_direction_fraction": 0.34458314489980146,
+          "categorical_information_trace": 2.3544080600728674,
+          "clock_information_trace": 1.8975254309920373,
+          "joint_nonzero_eigenvalues": [
+            0.39961438854139186,
+            3.852319102523513
+          ],
+          "information_eigenvalue_ratio": 0.1037334597436695
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 4.858998789980218,
+          "clock_sensitivity_norm": 2.134102036379815,
+          "cosine": -0.9719912436970108,
+          "independent_direction_fraction": 0.055233022176338076,
+          "categorical_information_trace": 5.78731756453528,
+          "clock_information_trace": 4.554391501680474,
+          "joint_nonzero_eigenvalues": [
+            0.14274150481477887,
+            10.198967561400973
+          ],
+          "information_eigenvalue_ratio": 0.013995681813421838
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        -0.9199345707893372,
+        -1.1770694255828857
+      ],
+      "probabilities": [
+        0.5639318456728025,
+        0.4360681543271976
+      ],
+      "full": {
+        "choice_sensitivity_norm": 37.980102690684475,
+        "clock_sensitivity_norm": 23.03264258988192,
+        "cosine": 0.3600610856685548,
+        "independent_direction_fraction": 0.8703560145871816,
+        "categorical_information_trace": 354.7261956415784,
+        "clock_information_trace": 530.5026246732425,
+        "joint_nonzero_eigenvalues": [
+          263.390652211988,
+          621.8381681028329
+        ],
+        "information_eigenvalue_ratio": 0.42356784405107684
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.712863612436095,
+          "cosine": 0.1268310941031588,
+          "independent_direction_fraction": 0.9839138735685957,
+          "categorical_information_trace": 0.49182543821773805,
+          "clock_information_trace": 0.508174529935439,
+          "joint_nonzero_eigenvalues": [
+            0.43606814830394863,
+            0.5639318198492285
+          ],
+          "information_eigenvalue_ratio": 0.7732639531149968
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 26.412850202773082,
+          "clock_sensitivity_norm": 15.667431943109555,
+          "cosine": 0.6244887725547856,
+          "independent_direction_fraction": 0.6100137729530173,
+          "categorical_information_trace": 171.55821881162737,
+          "clock_information_trace": 245.46842369196963,
+          "joint_nonzero_eigenvalues": [
+            75.13855396111887,
+            341.8880885424781
+          ],
+          "information_eigenvalue_ratio": 0.21977529045087874
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 27.25526636378386,
+          "clock_sensitivity_norm": 16.86789928981489,
+          "cosine": 0.12272230126872206,
+          "independent_direction_fraction": 0.984939236771309,
+          "categorical_information_trace": 182.67615139173324,
+          "clock_information_trace": 284.52602645133766,
+          "joint_nonzero_eigenvalues": [
+            175.4964480441274,
+            291.70572979894354
+          ],
+          "information_eigenvalue_ratio": 0.6016215319633498
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        0.30438366532325745,
+        -0.8694610595703125
+      ],
+      "probabilities": [
+        0.7638392645834788,
+        0.2361607354165211
+      ],
+      "full": {
+        "choice_sensitivity_norm": 37.67836222074645,
+        "clock_sensitivity_norm": 27.457099277065986,
+        "cosine": 0.6971530529649534,
+        "independent_direction_fraction": 0.5139776207416449,
+        "categorical_information_trace": 256.0906400305509,
+        "clock_information_trace": 753.8923007106575,
+        "joint_nonzero_eigenvalues": [
+          110.2948549474963,
+          899.6880857937122
+        ],
+        "information_eigenvalue_ratio": 0.12259232581722285
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7995137817448887,
+          "cosine": 0.46668995256713486,
+          "independent_direction_fraction": 0.7822004881728855,
+          "categorical_information_trace": 0.36077768492809803,
+          "clock_information_trace": 0.6392222872000135,
+          "joint_nonzero_eigenvalues": [
+            0.23616073770245716,
+            0.7638392344256544
+          ],
+          "information_eigenvalue_ratio": 0.30917597193083574
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 27.96914371946848,
+          "clock_sensitivity_norm": 20.71306916709203,
+          "cosine": 0.802630140240562,
+          "independent_direction_fraction": 0.35578485797741577,
+          "categorical_information_trace": 141.1133210330856,
+          "clock_information_trace": 429.0312343207386,
+          "joint_nonzero_eigenvalues": [
+            40.68269382860824,
+            529.4618615252159
+          ],
+          "information_eigenvalue_ratio": 0.07683781738577727
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 25.206863732671906,
+          "clock_sensitivity_norm": 18.006161281703513,
+          "cosine": 0.5634077418456458,
+          "independent_direction_fraction": 0.6825717164283902,
+          "categorical_information_trace": 114.61654131253714,
+          "clock_information_trace": 324.2218441027187,
+          "joint_nonzero_eigenvalues": [
+            68.49004591883104,
+            370.3483394964248
+          ],
+          "information_eigenvalue_ratio": 0.18493412448388263
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        6.999567985534668,
+        -1.3510138988494873
+      ],
+      "probabilities": [
+        0.9997637968021331,
+        0.00023620319786698578
+      ],
+      "full": {
+        "choice_sensitivity_norm": 85.7893430913776,
+        "clock_sensitivity_norm": 76.61212084480289,
+        "cosine": 0.9627041355705739,
+        "independent_direction_fraction": 0.07320074735531412,
+        "categorical_information_trace": 1.7380003673212974,
+        "clock_information_trace": 5869.417060338681,
+        "joint_nonzero_eigenvalues": [
+          0.12718802010499752,
+          5871.027872685898
+        ],
+        "information_eigenvalue_ratio": 2.1663671653940065e-05
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9997638146953205,
+          "cosine": 0.7069397011133011,
+          "independent_direction_fraction": 0.5002362589898366,
+          "categorical_information_trace": 0.0004722948118326064,
+          "clock_information_trace": 0.9995276851741391,
+          "joint_nonzero_eigenvalues": [
+            0.00023620319786588043,
+            0.999763776788106
+          ],
+          "information_eigenvalue_ratio": 0.0002362590077275247
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 42.75385025631235,
+          "clock_sensitivity_norm": 40.5294566908732,
+          "cosine": 0.9654329067453181,
+          "independent_direction_fraction": 0.06793930257328584,
+          "categorical_information_trace": 0.4316518860231182,
+          "clock_information_trace": 1642.6368596573661,
+          "joint_nonzero_eigenvalues": [
+            0.029318946967385406,
+            1643.0391925964218
+          ],
+          "information_eigenvalue_ratio": 1.784433816277625e-05
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 74.36342969706898,
+          "clock_sensitivity_norm": 65.00600489951785,
+          "cosine": 0.9626431764075636,
+          "independent_direction_fraction": 0.07331811491595641,
+          "categorical_information_trace": 1.305876186486347,
+          "clock_information_trace": 4225.780672996138,
+          "joint_nonzero_eigenvalues": [
+            0.09571696933080132,
+            4226.990832213292
+          ],
+          "information_eigenvalue_ratio": 2.2644233955123817e-05
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            85.78934309137759,
+            73.7548055721243
+          ],
+          "finite_difference": [
+            85.7892632484436,
+            73.75470227462144
+          ],
+          "absolute_error": [
+            7.984293398521913e-05,
+            0.00010329750286075523
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            85.78934309137759,
+            73.7548055721243
+          ],
+          "finite_difference": [
+            85.78908443450928,
+            73.75429076630002
+          ],
+          "absolute_error": [
+            0.000258656868311391,
+            0.0005148058242809839
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        -0.06897957623004913,
+        -0.39869818091392517
+      ],
+      "probabilities": [
+        0.5816909074519225,
+        0.41830909254807747
+      ],
+      "full": {
+        "choice_sensitivity_norm": 6.012956937074753,
+        "clock_sensitivity_norm": 2.5312063896422283,
+        "cosine": -0.8444586980042831,
+        "independent_direction_fraction": 0.28688950736491103,
+        "categorical_information_trace": 8.797631501897,
+        "clock_information_trace": 6.407005786965644,
+        "joint_nonzero_eigenvalues": [
+          1.1506290784395228,
+          14.05400821042312
+        ],
+        "information_eigenvalue_ratio": 0.08187195148969399
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7164822459274668,
+          "cosine": 0.1612438967400723,
+          "independent_direction_fraction": 0.9740004057640769,
+          "categorical_information_trace": 0.48665319127936285,
+          "clock_information_trace": 0.513346808729267,
+          "joint_nonzero_eigenvalues": [
+            0.41830909252598236,
+            0.5816909074826474
+          ],
+          "information_eigenvalue_ratio": 0.7191260635932513
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 2.9816092156106397,
+          "clock_sensitivity_norm": 1.2921576429077086,
+          "cosine": -0.7658713242638164,
+          "independent_direction_fraction": 0.41344111467038813,
+          "categorical_information_trace": 2.1631718571699428,
+          "clock_information_trace": 1.6696713741248057,
+          "joint_nonzero_eigenvalues": [
+            0.4401388085511624,
+            3.392704422743586
+          ],
+          "information_eigenvalue_ratio": 0.12973096200205803
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 5.026495559781298,
+          "clock_sensitivity_norm": 2.055234196901066,
+          "cosine": -0.9743256359341153,
+          "independent_direction_fraction": 0.05068955516158191,
+          "categorical_information_trace": 6.147806453447696,
+          "clock_information_trace": 4.223987604111571,
+          "joint_nonzero_eigenvalues": [
+            0.12850555352298887,
+            10.243288504036277
+          ],
+          "information_eigenvalue_ratio": 0.012545341612935376
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        -1.0684012174606323,
+        -1.4881762266159058
+      ],
+      "probabilities": [
+        0.60342941027837,
+        0.3965705897216299
+      ],
+      "full": {
+        "choice_sensitivity_norm": 37.48133724850388,
+        "clock_sensitivity_norm": 23.41717464044876,
+        "cosine": 0.5137824966766726,
+        "independent_direction_fraction": 0.7360275461086849,
+        "categorical_information_trace": 336.1840699739579,
+        "clock_information_trace": 548.3640681412766,
+        "joint_nonzero_eigenvalues": [
+          197.49101509148744,
+          687.0571230237471
+        ],
+        "information_eigenvalue_ratio": 0.28744482587172226
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7220770875625709,
+          "cosine": 0.20257018752244324,
+          "independent_direction_fraction": 0.9589653191271221,
+          "categorical_information_trace": 0.47860471417893713,
+          "clock_information_trace": 0.5213953203828448,
+          "joint_nonzero_eigenvalues": [
+            0.3965705924159596,
+            0.6034294421458223
+          ],
+          "information_eigenvalue_ratio": 0.6571946357236675
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 27.03668718313405,
+          "clock_sensitivity_norm": 16.155365859463338,
+          "cosine": 0.5982354466053658,
+          "independent_direction_fraction": 0.6421143504248785,
+          "categorical_information_trace": 174.9258241946314,
+          "clock_information_trace": 260.99584605311355,
+          "joint_nonzero_eigenvalues": [
+            83.08589106991283,
+            352.83577917783214
+          ],
+          "information_eigenvalue_ratio": 0.2354803451722419
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 25.92042029168197,
+          "clock_sensitivity_norm": 16.936552977739606,
+          "cosine": 0.4315278514481778,
+          "independent_direction_fraction": 0.8137837134245194,
+          "categorical_information_trace": 160.77964106514744,
+          "clock_information_trace": 286.8468267677803,
+          "joint_nonzero_eigenvalues": [
+            111.73572980343042,
+            335.89073802949736
+          ],
+          "information_eigenvalue_ratio": 0.33265498911618685
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        -0.7158241271972656,
+        -1.3265420198440552
+      ],
+      "probabilities": [
+        0.6481045457011068,
+        0.35189545429889324
+      ],
+      "full": {
+        "choice_sensitivity_norm": 39.7840563690376,
+        "clock_sensitivity_norm": 25.00175845875583,
+        "cosine": 0.5993695210928384,
+        "independent_direction_fraction": 0.6407561771849416,
+        "categorical_information_trace": 360.9747692301015,
+        "clock_information_trace": 625.0879260299688,
+        "joint_nonzero_eigenvalues": [
+          179.1857414949485,
+          806.8769537651218
+        ],
+        "information_eigenvalue_ratio": 0.22207319301761672
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7374753653822581,
+          "cosine": 0.2840114679147647,
+          "independent_direction_fraction": 0.9193374860929006,
+          "categorical_information_trace": 0.45613008708533753,
+          "clock_information_trace": 0.5438699145456951,
+          "joint_nonzero_eigenvalues": [
+            0.35189545236123165,
+            0.648104549269801
+          ],
+          "information_eigenvalue_ratio": 0.542960935481322
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 28.635274396892868,
+          "clock_sensitivity_norm": 18.012875442990953,
+          "cosine": 0.6876715062562363,
+          "independent_direction_fraction": 0.5271078994832792,
+          "categorical_information_trace": 187.00853260621682,
+          "clock_information_trace": 324.4636817247065,
+          "joint_nonzero_eigenvalues": [
+            72.93189753405089,
+            438.5403167968724
+          ],
+          "information_eigenvalue_ratio": 0.16630602647152334
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 27.582461844248307,
+          "clock_sensitivity_norm": 17.32282812911093,
+          "cosine": 0.5047569689771404,
+          "independent_direction_fraction": 0.7452204022690101,
+          "categorical_information_trace": 173.51010653679947,
+          "clock_information_trace": 300.0803743907169,
+          "joint_nonzero_eigenvalues": [
+            105.37754067676012,
+            368.2129402507562
+          ],
+          "information_eigenvalue_ratio": 0.2861864132341386
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        4.116890907287598,
+        -1.3487305641174316
+      ],
+      "probabilities": [
+        0.9957881035220805,
+        0.004211896477919476
+      ],
+      "full": {
+        "choice_sensitivity_norm": 75.0301245269884,
+        "clock_sensitivity_norm": 65.74707138100565,
+        "cosine": 0.9619131257869202,
+        "independent_direction_fraction": 0.0747231384388366,
+        "categorical_information_trace": 23.611085636450326,
+        "clock_information_trace": 4322.677395179053,
+        "joint_nonzero_eigenvalues": [
+          1.7554189373620517,
+          4344.533061878141
+        ],
+        "information_eigenvalue_ratio": 0.0004040523831583375
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9957970048958388,
+          "cosine": 0.7041096249672694,
+          "independent_direction_fraction": 0.5042296360284513,
+          "categorical_information_trace": 0.008388312811957531,
+          "clock_information_trace": 0.9916116749595232,
+          "joint_nonzero_eigenvalues": [
+            0.004211896478651435,
+            0.9957880912928294
+          ],
+          "information_eigenvalue_ratio": 0.004229711637928045
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 35.137575298689995,
+          "clock_sensitivity_norm": 32.58516716458633,
+          "cosine": 0.9616491459612202,
+          "independent_direction_fraction": 0.07523092007205578,
+          "categorical_information_trace": 5.178311842387657,
+          "clock_information_trace": 1061.7931191440352,
+          "joint_nonzero_eigenvalues": [
+            0.3878194392173846,
+            1066.5836115472057
+          ],
+          "information_eigenvalue_ratio": 0.0003636090363837549
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 66.27873255173397,
+          "clock_sensitivity_norm": 57.0954697358736,
+          "cosine": 0.9627049804800297,
+          "independent_direction_fraction": 0.07319912055894562,
+          "categorical_information_trace": 18.424385481250713,
+          "clock_information_trace": 3259.892664360058,
+          "joint_nonzero_eigenvalues": [
+            1.341618351338841,
+            3276.9754314899697
+          ],
+          "information_eigenvalue_ratio": 0.00040940750987835035
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            75.03012452698837,
+            63.24297094343889
+          ],
+          "finite_difference": [
+            75.02993941307068,
+            63.24183794636784
+          ],
+          "absolute_error": [
+            0.00018511391769493457,
+            0.0011329970710534099
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            75.03012452698837,
+            63.24297094343889
+          ],
+          "finite_difference": [
+            75.02973079681396,
+            63.24255947031387
+          ],
+          "absolute_error": [
+            0.00039373017440880176,
+            0.00041147312501976785
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        0.1548646092414856,
+        -0.8318507075309753
+      ],
+      "probabilities": [
+        0.7284386479269316,
+        0.27156135207306836
+      ],
+      "full": {
+        "choice_sensitivity_norm": 5.9944919089515585,
+        "clock_sensitivity_norm": 1.708109532082293,
+        "cosine": -0.7047578577861783,
+        "independent_direction_fraction": 0.5033163618886369,
+        "categorical_information_trace": 7.108299182147779,
+        "clock_information_trace": 2.91763817359039,
+        "joint_nonzero_eigenvalues": [
+          1.1800386056402512,
+          8.845898750097918
+        ],
+        "information_eigenvalue_ratio": 0.13339951529822666
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7774113923956962,
+          "cosine": 0.4155599660783584,
+          "independent_direction_fraction": 0.8273099145929537,
+          "categorical_information_trace": 0.3956315682666307,
+          "clock_information_trace": 0.6043684730266152,
+          "joint_nonzero_eigenvalues": [
+            0.27156135333618636,
+            0.7284386879570596
+          ],
+          "information_eigenvalue_ratio": 0.3727991906879533
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 3.698299860353391,
+          "clock_sensitivity_norm": 0.9630522024218551,
+          "cosine": -0.7115386153388724,
+          "independent_direction_fraction": 0.4937127988816401,
+          "categorical_information_trace": 2.705609929582388,
+          "clock_information_trace": 0.9274695445895857,
+          "joint_nonzero_eigenvalues": [
+            0.3809534001639759,
+            3.2521260740079976
+          ],
+          "information_eigenvalue_ratio": 0.1171398007010472
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 4.500723429560606,
+          "clock_sensitivity_norm": 1.177200134205815,
+          "cosine": -0.9699071460138332,
+          "independent_direction_fraction": 0.05928012811130079,
+          "categorical_information_trace": 4.007057684298759,
+          "clock_information_trace": 1.3858001559741888,
+          "joint_nonzero_eigenvalues": [
+            0.061747253112392486,
+            5.331110587160555
+          ],
+          "information_eigenvalue_ratio": 0.011582437111903954
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        -0.9018177390098572,
+        6.876438617706299
+      ],
+      "probabilities": [
+        0.0004185664033441978,
+        0.9995814335966557
+      ],
+      "full": {
+        "choice_sensitivity_norm": 106.64443660470447,
+        "clock_sensitivity_norm": 100.50668601779452,
+        "cosine": -0.9934373904974747,
+        "independent_direction_fraction": 0.013082151161567968,
+        "categorical_information_trace": 4.758378183246677,
+        "clock_information_trace": 10101.593934279532,
+        "joint_nonzero_eigenvalues": [
+          0.06222089663645569,
+          10106.290091566141
+        ],
+        "information_eigenvalue_ratio": 6.156650568380182e-06
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9995815438199783,
+          "cosine": -0.7068106241501367,
+          "independent_direction_fraction": 0.5004187415884942,
+          "categorical_information_trace": 0.0008367824110203786,
+          "clock_information_trace": 0.9991632627455314,
+          "joint_nonzero_eigenvalues": [
+            0.00041856640334155323,
+            0.9995814787532102
+          ],
+          "information_eigenvalue_ratio": 0.0004187416556213467
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 43.576523784564664,
+          "clock_sensitivity_norm": 43.72842267614724,
+          "cosine": -0.9922978611416589,
+          "independent_direction_fraction": 0.015344954773689135,
+          "categorical_information_trace": 0.794488677106623,
+          "clock_information_trace": 1912.1749497437884,
+          "joint_nonzero_eigenvalues": [
+            0.012186407158501944,
+            1912.9572520137363
+          ],
+          "information_eigenvalue_ratio": 6.370454512600074e-06
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 97.32482948142318,
+          "clock_sensitivity_norm": 90.4898879503837,
+          "cosine": -0.9942510686977911,
+          "independent_direction_fraction": 0.011464812393300217,
+          "categorical_information_trace": 3.9630527237290325,
+          "clock_information_trace": 8188.419821272997,
+          "joint_nonzero_eigenvalues": [
+            0.04541392830209201,
+            8192.337460068426
+          ],
+          "information_eigenvalue_ratio": 5.543464063028563e-06
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        -0.8758012652397156,
+        8.239437103271484
+      ],
+      "probabilities": [
+        0.00010996500935290488,
+        0.9998900349906472
+      ],
+      "full": {
+        "choice_sensitivity_norm": 114.65191677352016,
+        "clock_sensitivity_norm": 108.50038467085949,
+        "cosine": -0.9942423998862246,
+        "independent_direction_fraction": 0.011482050268480593,
+        "categorical_information_trace": 1.445337913879857,
+        "clock_information_trace": 11772.33347372448,
+        "joint_nonzero_eigenvalues": [
+          0.016593428727351034,
+          11773.762218209633
+        ],
+        "information_eigenvalue_ratio": 1.4093565353041672e-06
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9998900354772061,
+          "cosine": -0.7070290113540648,
+          "independent_direction_fraction": 0.5001099771036936,
+          "categorical_information_trace": 0.0002199058340992458,
+          "clock_information_trace": 0.9997800830466086,
+          "joint_nonzero_eigenvalues": [
+            0.00010996500935321854,
+            0.9998900238713546
+          ],
+          "information_eigenvalue_ratio": 0.00010997710420937912
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 45.41201724865324,
+          "clock_sensitivity_norm": 45.583346316450324,
+          "cosine": -0.9932714089795536,
+          "independent_direction_fraction": 0.013411908103772463,
+          "categorical_information_trace": 0.22675054728899607,
+          "clock_information_trace": 2077.8414614054454,
+          "joint_nonzero_eigenvalues": [
+            0.0030408301133319493,
+            2078.065171122621
+          ],
+          "information_eigenvalue_ratio": 1.4632987240189486e-06
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 105.26542979178971,
+          "clock_sensitivity_norm": 98.4555342895258,
+          "cosine": -0.9948944812165508,
+          "independent_direction_fraction": 0.010184971244850294,
+          "categorical_information_trace": 1.2183674607567614,
+          "clock_information_trace": 9693.49223223599,
+          "joint_nonzero_eigenvalues": [
+            0.01240749394662144,
+            9694.6981922028
+          ],
+          "information_eigenvalue_ratio": 1.279822610321224e-06
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        10.210094451904297,
+        -1.8178224563598633
+      ],
+      "probabilities": [
+        0.9999940249786284,
+        5.975021371677044e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 91.05873672319376,
+        "clock_sensitivity_norm": 87.09421726749758,
+        "cosine": 0.9832341463407125,
+        "independent_direction_fraction": 0.033250613469650414,
+        "categorical_information_trace": 0.049542750050040156,
+        "clock_information_trace": 7585.402681438074,
+        "joint_nonzero_eigenvalues": [
+          0.0016473164307206078,
+          7585.450576871694
+        ],
+        "information_eigenvalue_ratio": 2.1716790769731382e-07
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.999994039553373,
+          "cosine": 0.7071025561705961,
+          "independent_direction_fraction": 0.500005975057009,
+          "categorical_information_trace": 1.1949971341593305e-05,
+          "clock_information_trace": 0.999988079142273,
+          "joint_nonzero_eigenvalues": [
+            5.975021371677325e-06,
+            0.999994054092243
+          ],
+          "information_eigenvalue_ratio": 5.975056898814488e-06
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 43.27240414554588,
+          "clock_sensitivity_norm": 40.361175201521654,
+          "cosine": 0.9693202377825579,
+          "independent_direction_fraction": 0.0604182766251653,
+          "categorical_information_trace": 0.011188166407752316,
+          "clock_information_trace": 1629.0244636479267,
+          "joint_nonzero_eigenvalues": [
+            0.0006759653709033659,
+            1629.0349758489638
+          ],
+          "information_eigenvalue_ratio": 4.1494834728830167e-07
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 80.10738151436772,
+          "clock_sensitivity_norm": 77.17109711356325,
+          "cosine": 0.9873516148261577,
+          "independent_direction_fraction": 0.02513678870017866,
+          "categorical_information_trace": 0.038342633670946265,
+          "clock_information_trace": 5955.37822971101,
+          "joint_nonzero_eigenvalues": [
+            0.0009638046314917464,
+            5955.41560854005
+          ],
+          "information_eigenvalue_ratio": 1.6183667015777255e-07
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            91.05873672319369,
+            85.63400836622046
+          ],
+          "finite_difference": [
+            91.05885028839111,
+            85.6341616418037
+          ],
+          "absolute_error": [
+            0.00011356519742378168,
+            0.00015327558324429447
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            91.05873672319369,
+            85.63400836622046
+          ],
+          "finite_difference": [
+            91.05783700942993,
+            85.63320998700962
+          ],
+          "absolute_error": [
+            0.0008997137637578589,
+            0.0007983792108348098
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        -0.03249869495630264,
+        -0.7798752188682556
+      ],
+      "probabilities": [
+        0.6786067883588661,
+        0.32139321164113377
+      ],
+      "full": {
+        "choice_sensitivity_norm": 8.199439536599883,
+        "clock_sensitivity_norm": 2.813103814269947,
+        "cosine": -0.8820279037971526,
+        "independent_direction_fraction": 0.22202677692320094,
+        "categorical_information_trace": 14.66301350696787,
+        "clock_information_trace": 7.913553069860124,
+        "joint_nonzero_eigenvalues": [
+          1.205519698719935,
+          21.371046878108057
+        ],
+        "information_eigenvalue_ratio": 0.0564090147570093
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.750866701230656,
+          "cosine": 0.3363954600474387,
+          "independent_direction_fraction": 0.886838094459472,
+          "categorical_information_trace": 0.4361992303042623,
+          "clock_information_trace": 0.5638008030170072,
+          "joint_nonzero_eigenvalues": [
+            0.3213932180533208,
+            0.6786068152679486
+          ],
+          "information_eigenvalue_ratio": 0.4736074127496322
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 4.174025920628568,
+          "clock_sensitivity_norm": 1.4642944138787033,
+          "cosine": -0.8411477872459554,
+          "independent_direction_fraction": 0.2924704000112329,
+          "categorical_information_trace": 3.799838884394801,
+          "clock_information_trace": 2.1441581305163755,
+          "joint_nonzero_eigenvalues": [
+            0.432336014700065,
+            5.511661000211111
+          ],
+          "information_eigenvalue_ratio": 0.07844024055244062
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 6.914355814410923,
+          "clock_sensitivity_norm": 2.281577116015749,
+          "cosine": -0.9863856505416465,
+          "independent_direction_fraction": 0.027043348405532797,
+          "categorical_information_trace": 10.42697539226881,
+          "clock_information_trace": 5.2055941363267415,
+          "joint_nonzero_eigenvalues": [
+            0.09446940955247696,
+            15.538100119043076
+          ],
+          "information_eigenvalue_ratio": 0.006079855891564104
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        4.621203422546387,
+        -0.5766941905021667
+      ],
+      "probabilities": [
+        0.9945022181239243,
+        0.005497781876075723
+      ],
+      "full": {
+        "choice_sensitivity_norm": 61.014601590199476,
+        "clock_sensitivity_norm": 57.189006418635984,
+        "cosine": 0.9867637012277092,
+        "independent_direction_fraction": 0.026297397939392342,
+        "categorical_information_trace": 20.354517920277374,
+        "clock_information_trace": 3270.5824551507876,
+        "joint_nonzero_eigenvalues": [
+          0.5320462115089342,
+          3290.4049268595563
+        ],
+        "information_eigenvalue_ratio": 0.00016169627244532855
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.994517442613136,
+          "cosine": 0.7031870265957508,
+          "independent_direction_fraction": 0.5055280056274268,
+          "categorical_information_trace": 0.010935112541037632,
+          "clock_information_trace": 0.9890649436617722,
+          "joint_nonzero_eigenvalues": [
+            0.005497781877718574,
+            0.9945022743250913
+          ],
+          "information_eigenvalue_ratio": 0.005528174263301295
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 28.362848320773455,
+          "clock_sensitivity_norm": 26.610465750973006,
+          "cosine": 0.9862802316375898,
+          "independent_direction_fraction": 0.0272513046809022,
+          "categorical_information_trace": 4.398382010795834,
+          "clock_information_trace": 708.1168874837074,
+          "joint_nonzero_eigenvalues": [
+            0.11914166008473792,
+            712.3961278344184
+          ],
+          "information_eigenvalue_ratio": 0.00016724074630628807
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 54.00305956465403,
+          "clock_sensitivity_norm": 50.61103143311168,
+          "cosine": 0.9870643767615095,
+          "independent_direction_fraction": 0.02570391612841283,
+          "categorical_information_trace": 15.945200796940505,
+          "clock_information_trace": 2561.476502723418,
+          "joint_nonzero_eigenvalues": [
+            0.4073829347352458,
+            2577.014320585623
+          ],
+          "information_eigenvalue_ratio": 0.00015808330263475935
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        5.992347240447998,
+        -0.8911731839179993
+      ],
+      "probabilities": [
+        0.9989765176838137,
+        0.0010234823161863742
+      ],
+      "full": {
+        "choice_sensitivity_norm": 74.0537155490931,
+        "clock_sensitivity_norm": 69.67205001820028,
+        "cosine": 0.9866743717284987,
+        "independent_direction_fraction": 0.026473684174172396,
+        "categorical_information_trace": 5.60698417134278,
+        "clock_information_trace": 4854.194553738602,
+        "joint_nonzero_eigenvalues": [
+          0.14827079237408736,
+          4859.65326711757
+        ],
+        "information_eigenvalue_ratio": 3.051057024527841e-05
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9989770529390324,
+          "cosine": 0.7063819577246635,
+          "independent_direction_fraction": 0.5010245298010717,
+          "categorical_information_trace": 0.002044869600269656,
+          "clock_information_trace": 0.9979551522987542,
+          "joint_nonzero_eigenvalues": [
+            0.0010234823161501267,
+            0.9989765395828738
+          ],
+          "information_eigenvalue_ratio": 0.0010245308829549544
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 31.293698501994914,
+          "clock_sensitivity_norm": 29.735011519597673,
+          "cosine": 0.9878400348087563,
+          "independent_direction_fraction": 0.024172065629035178,
+          "categorical_information_trace": 1.001265866228406,
+          "clock_information_trace": 884.1709100706064,
+          "joint_nonzero_eigenvalues": [
+            0.02417594759198538,
+            885.1479999892429
+          ],
+          "information_eigenvalue_ratio": 2.7312887327632427e-05
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 67.10184215572797,
+          "clock_sensitivity_norm": 63.00020387677883,
+          "cosine": 0.9865378806709476,
+          "independent_direction_fraction": 0.026743010001275103,
+          "categorical_information_trace": 4.603673435514101,
+          "clock_information_trace": 3969.025688515699,
+          "joint_nonzero_eigenvalues": [
+            0.12297725375225,
+            3973.506384697461
+          ],
+          "information_eigenvalue_ratio": 3.09493031710866e-05
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        10.445802688598633,
+        -2.6991727352142334
+      ],
+      "probabilities": [
+        0.9999980447204435,
+        1.9552795565065317e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 101.36304650265443,
+        "clock_sensitivity_norm": 95.6523230343954,
+        "cosine": 0.9608799971654629,
+        "independent_direction_fraction": 0.0767096310473,
+        "categorical_information_trace": 0.020089416382419015,
+        "clock_information_trace": 9149.366901876328,
+        "joint_nonzero_eigenvalues": [
+          0.001541048594507339,
+          9149.385450244117
+        ],
+        "information_eigenvalue_ratio": 1.6843192396777008e-07
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.999998033048634,
+          "cosine": 0.7071053985911122,
+          "independent_direction_fraction": 0.5000019552833044,
+          "categorical_information_trace": 3.910551466776775e-06,
+          "clock_information_trace": 0.9999960661011369,
+          "joint_nonzero_eigenvalues": [
+            1.955279556506148e-06,
+            0.9999980213730472
+          ],
+          "information_eigenvalue_ratio": 1.9552834252826338e-06
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 55.07661715049655,
+          "clock_sensitivity_norm": 52.75874540937635,
+          "cosine": 0.9684918792859198,
+          "independent_direction_fraction": 0.06202347975722722,
+          "categorical_information_trace": 0.0059311994133995315,
+          "clock_information_trace": 2783.48521717139,
+          "joint_nonzero_eigenvalues": [
+            0.00036787289148887056,
+            2783.490780497912
+          ],
+          "information_eigenvalue_ratio": 1.3216242499034443e-07
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 85.0825095983711,
+          "clock_sensitivity_norm": 79.78020862744619,
+          "cosine": 0.9577484092998951,
+          "independent_direction_fraction": 0.08271798448352052,
+          "categorical_information_trace": 0.014154306417552703,
+          "clock_information_trace": 6364.881688638839,
+          "joint_nonzero_eigenvalues": [
+            0.0011708133103221826,
+            6364.894672131946
+          ],
+          "information_eigenvalue_ratio": 1.8394857584187078e-07
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            101.36304650265436,
+            91.91040388615974
+          ],
+          "finite_difference": [
+            101.36300325393677,
+            91.91040123585515
+          ],
+          "absolute_error": [
+            4.3248717588539876e-05,
+            2.6503045944537007e-06
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            101.36304650265436,
+            91.91040388615974
+          ],
+          "finite_difference": [
+            101.3631820678711,
+            91.91016374206473
+          ],
+          "absolute_error": [
+            0.000135565216737632,
+            0.0002401440950166034
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        -0.015497704967856407,
+        0.09111246466636658
+      ],
+      "probabilities": [
+        0.47337267272921696,
+        0.526627327270783
+      ],
+      "full": {
+        "choice_sensitivity_norm": 4.200878084376341,
+        "clock_sensitivity_norm": 2.325220025808162,
+        "cosine": -0.8287771231384747,
+        "independent_direction_fraction": 0.31312848016231354,
+        "categorical_information_trace": 4.399331922979193,
+        "clock_information_trace": 5.406648168419311,
+        "joint_nonzero_eigenvalues": [
+          0.829741941081467,
+          8.976238150317037
+        ],
+        "information_eigenvalue_ratio": 0.09243760327951647
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7081087474579544,
+          "cosine": -0.053179279406653054,
+          "independent_direction_fraction": 0.9971719642417891,
+          "categorical_information_trace": 0.4985819708848292,
+          "clock_information_trace": 0.501417998226473,
+          "joint_nonzero_eigenvalues": [
+            0.47337266827824215,
+            0.5266273008330601
+          ],
+          "information_eigenvalue_ratio": 0.8988760505378744
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 2.2987495110654286,
+          "clock_sensitivity_norm": 1.3244012496805593,
+          "cosine": -0.856907996235847,
+          "independent_direction_fraction": 0.26570868598706565,
+          "categorical_information_trace": 1.3173157189659082,
+          "clock_information_trace": 1.7540386701554274,
+          "joint_nonzero_eigenvalues": [
+            0.21493803737976258,
+            2.856416351741573
+          ],
+          "information_eigenvalue_ratio": 0.07524744676969576
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 3.219181163769737,
+          "clock_sensitivity_norm": 1.7751595703027407,
+          "cosine": -0.9507965407647201,
+          "independent_direction_fraction": 0.09598593806984201,
+          "categorical_information_trace": 2.583434233128453,
+          "clock_information_trace": 3.1511915000374113,
+          "joint_nonzero_eigenvalues": [
+            0.13966341404429805,
+            5.594962319121567
+          ],
+          "information_eigenvalue_ratio": 0.024962351143452525
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        -0.8845134377479553,
+        -0.9378585815429688
+      ],
+      "probabilities": [
+        0.5133331242545452,
+        0.4866668757454548
+      ],
+      "full": {
+        "choice_sensitivity_norm": 38.29689881974805,
+        "clock_sensitivity_norm": 20.796153676713157,
+        "cosine": -0.3325449958962256,
+        "independent_direction_fraction": 0.8894138257043793,
+        "categorical_information_trace": 366.4023847646946,
+        "clock_information_trace": 432.4800077454702,
+        "joint_nonzero_eigenvalues": [
+          263.0035294404453,
+          535.8788630697195
+        ],
+        "information_eigenvalue_ratio": 0.4907891457667508
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7073581655344932,
+          "cosine": 0.02665677702359273,
+          "independent_direction_fraction": 0.9992894162387145,
+          "categorical_information_trace": 0.49964445559522574,
+          "clock_information_trace": 0.5003555743483235,
+          "joint_nonzero_eigenvalues": [
+            0.486666887671828,
+            0.5133331422717212
+          ],
+          "information_eigenvalue_ratio": 0.9480527314447621
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 19.618030554560335,
+          "clock_sensitivity_norm": 10.537351506766871,
+          "cosine": -0.21218050025564505,
+          "independent_direction_fraction": 0.9549794353112642,
+          "categorical_information_trace": 96.14836203386211,
+          "clock_information_trace": 111.03577677716206,
+          "joint_nonzero_eigenvalues": [
+            80.4394412813931,
+            126.74469752963108
+          ],
+          "information_eigenvalue_ratio": 0.6346572507507663
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 32.86008728488647,
+          "clock_sensitivity_norm": 17.91490651368183,
+          "cosine": -0.3754339489879036,
+          "independent_direction_fraction": 0.8590493499473482,
+          "categorical_information_trace": 269.75437827523746,
+          "clock_information_trace": 320.94387539395973,
+          "joint_nonzero_eigenvalues": [
+            181.9558429633077,
+            408.7424107058895
+          ],
+          "information_eigenvalue_ratio": 0.4451601747151068
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        -2.04384708404541,
+        -1.3824726343154907
+      ],
+      "probabilities": [
+        0.3404309281002146,
+        0.6595690718997854
+      ],
+      "full": {
+        "choice_sensitivity_norm": 40.810766673021305,
+        "clock_sensitivity_norm": 25.691063752512772,
+        "cosine": -0.4525036808086713,
+        "independent_direction_fraction": 0.7952404188546041,
+        "categorical_information_trace": 373.9717517236048,
+        "clock_information_trace": 660.0307567356757,
+        "joint_nonzero_eigenvalues": [
+          250.5451954449418,
+          783.4573130143388
+        ],
+        "information_eigenvalue_ratio": 0.319794315890643
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7422429424039347,
+          "cosine": -0.3040308647578164,
+          "independent_direction_fraction": 0.9075652332746144,
+          "categorical_information_trace": 0.44907542258608224,
+          "clock_information_trace": 0.5509245855484508,
+          "joint_nonzero_eigenvalues": [
+            0.3404309194229489,
+            0.6595690887115842
+          ],
+          "information_eigenvalue_ratio": 0.5161414099741297
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 21.676669435031442,
+          "clock_sensitivity_norm": 12.518657091203846,
+          "cosine": -0.36120513697459083,
+          "independent_direction_fraction": 0.869530849023167,
+          "categorical_information_trace": 105.50533021198656,
+          "clock_information_trace": 156.71677536714833,
+          "joint_nonzero_eigenvalues": [
+            78.07437348146132,
+            184.14773209767355
+          ],
+          "information_eigenvalue_ratio": 0.42397683963900246
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 34.549105323353324,
+          "clock_sensitivity_norm": 22.422378481842173,
+          "cosine": -0.4854959632745006,
+          "independent_direction_fraction": 0.7642936696441648,
+          "categorical_information_trace": 268.01734608903223,
+          "clock_information_trace": 502.7630567829789,
+          "joint_nonzero_eigenvalues": [
+            171.99472027078886,
+            598.7856826012222
+          ],
+          "information_eigenvalue_ratio": 0.287239199714355
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 258,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        1.0915268659591675,
+        0.05267247557640076
+      ],
+      "probabilities": [
+        0.7386288994588103,
+        0.26137110054118967
+      ],
+      "full": {
+        "choice_sensitivity_norm": 54.30906681185355,
+        "clock_sensitivity_norm": 39.57312098616164,
+        "cosine": 0.7345908603993256,
+        "independent_direction_fraction": 0.4603762678177785,
+        "categorical_information_trace": 569.4145274960123,
+        "clock_information_trace": 1566.031904585387,
+        "joint_nonzero_eigenvalues": [
+          213.61225473565608,
+          1921.8341773457432
+        ],
+        "information_eigenvalue_ratio": 0.11115020081008095
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7835097588515215,
+          "cosine": 0.4307186166579328,
+          "independent_direction_fraction": 0.8144814732642767,
+          "categorical_information_trace": 0.38611249668615394,
+          "clock_information_trace": 0.6138875422155694,
+          "joint_nonzero_eigenvalues": [
+            0.2613711033473521,
+            0.7386289355543713
+          ],
+          "information_eigenvalue_ratio": 0.3538598215776402
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 30.132489755253335,
+          "clock_sensitivity_norm": 21.31711567865714,
+          "cosine": 0.8051835278008783,
+          "independent_direction_fraction": 0.3516794865581322,
+          "categorical_information_trace": 175.28869083401534,
+          "clock_information_trace": 454.41942085725003,
+          "joint_nonzero_eigenvalues": [
+            48.170361561649514,
+            581.5377501296159
+          ],
+          "information_eigenvalue_ratio": 0.08283273364611854
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 45.16091007856158,
+          "clock_sensitivity_norm": 33.33164556672716,
+          "cosine": 0.7049088213605825,
+          "independent_direction_fraction": 0.5031035535680344,
+          "categorical_information_trace": 393.73972416531075,
+          "clock_information_trace": 1110.9985961859222,
+          "joint_nonzero_eigenvalues": [
+            164.16887029155734,
+            1340.5694500596755
+          ],
+          "information_eigenvalue_ratio": 0.12246204050394356
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            54.30906681185351,
+            29.070052993911087
+          ],
+          "finite_difference": [
+            54.30876789614558,
+            29.063279413428454
+          ],
+          "absolute_error": [
+            0.00029891570792983657,
+            0.0067735804826334345
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            54.30906681185351,
+            29.070052993911087
+          ],
+          "finite_difference": [
+            54.30910922586918,
+            29.068557777597093
+          ],
+          "absolute_error": [
+            4.2414015666736304e-05,
+            0.0014952163139945185
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        -0.020557668060064316,
+        -0.1457328349351883
+      ],
+      "probabilities": [
+        0.531252994237044,
+        0.4687470057629562
+      ],
+      "full": {
+        "choice_sensitivity_norm": 4.922911882748506,
+        "clock_sensitivity_norm": 2.421261362037305,
+        "cosine": -0.8206796884018162,
+        "independent_direction_fraction": 0.326484849044698,
+        "categorical_information_trace": 6.035093763610802,
+        "clock_information_trace": 5.862506583294746,
+        "joint_nonzero_eigenvalues": [
+          1.06649171414058,
+          10.831108632764968
+        ],
+        "information_eigenvalue_ratio": 0.09846560959737377
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7084867659644698,
+          "cosine": 0.06238421186151956,
+          "independent_direction_fraction": 0.9961082101104171,
+          "categorical_information_trace": 0.4980465007024388,
+          "clock_information_trace": 0.5019534975467934,
+          "joint_nonzero_eigenvalues": [
+            0.4687470188923773,
+            0.5312529793568549
+          ],
+          "information_eigenvalue_ratio": 0.8823423813262214
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 2.362140480815205,
+          "clock_sensitivity_norm": 1.2197413744875443,
+          "cosine": -0.7273476419991557,
+          "independent_direction_fraction": 0.470965407678268,
+          "categorical_information_trace": 1.3894769352879557,
+          "clock_information_trace": 1.487769020636764,
+          "joint_nonzero_eigenvalues": [
+            0.39170052882014456,
+            2.485545427104575
+          ],
+          "information_eigenvalue_ratio": 0.15759137795217792
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 4.0810971262885385,
+          "clock_sensitivity_norm": 1.9679390399885834,
+          "cosine": -0.9648553583778452,
+          "independent_direction_fraction": 0.0690541374095599,
+          "categorical_information_trace": 4.147570327620409,
+          "clock_information_trace": 3.8727840651111873,
+          "joint_nonzero_eigenvalues": [
+            0.1407677968045693,
+            7.879586595927027
+          ],
+          "information_eigenvalue_ratio": 0.01786487083945907
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        -1.3914453983306885,
+        -0.4956587553024292
+      ],
+      "probabilities": [
+        0.28991711249792945,
+        0.7100828875020705
+      ],
+      "full": {
+        "choice_sensitivity_norm": 47.2353078697327,
+        "clock_sensitivity_norm": 34.06390242331444,
+        "cosine": -0.8936332180491363,
+        "independent_direction_fraction": 0.20141967159914476,
+        "categorical_information_trace": 459.3211016917155,
+        "clock_information_trace": 1160.3494483050874,
+        "joint_nonzero_eigenvalues": [
+          69.23961701052951,
+          1550.4309329862733
+        ],
+        "information_eigenvalue_ratio": 0.04465830469285569
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7669873794057748,
+          "cosine": -0.38736239769076364,
+          "independent_direction_fraction": 0.8499503728552626,
+          "categorical_information_trace": 0.41173036075758473,
+          "clock_information_trace": 0.5882696401677379,
+          "joint_nonzero_eigenvalues": [
+            0.2899171118594509,
+            0.7100828890658717
+          ],
+          "information_eigenvalue_ratio": 0.4082862949152918
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 24.989501568909525,
+          "clock_sensitivity_norm": 16.836055292909528,
+          "cosine": -0.9092812541883839,
+          "independent_direction_fraction": 0.17320760078159958,
+          "categorical_information_trace": 128.55769735609246,
+          "clock_information_trace": 283.45275782590693,
+          "joint_nonzero_eigenvalues": [
+            15.935600984492325,
+            396.0748541975071
+          ],
+          "information_eigenvalue_ratio": 0.04023381140107891
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 40.05869594589795,
+          "clock_sensitivity_norm": 29.602507002600525,
+          "cosine": -0.8895782748567077,
+          "independent_direction_fraction": 0.20865049290296378,
+          "categorical_information_trace": 330.3516739748655,
+          "clock_information_trace": 876.3084208390131,
+          "joint_nonzero_eigenvalues": [
+            52.32648610697498,
+            1154.3336087069038
+          ],
+          "information_eigenvalue_ratio": 0.04533047094209762
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        -1.4638044834136963,
+        -1.1891262531280518
+      ],
+      "probabilities": [
+        0.4317589587862713,
+        0.5682410412137286
+      ],
+      "full": {
+        "choice_sensitivity_norm": 50.9942151176481,
+        "clock_sensitivity_norm": 29.928300565192597,
+        "cosine": -0.8584795817833477,
+        "independent_direction_fraction": 0.26301280766108837,
+        "categorical_information_trace": 637.9928014407909,
+        "clock_information_trace": 895.7031747205076,
+        "joint_nonzero_eigenvalues": [
+          105.21622106625387,
+          1428.4797550950445
+        ],
+        "information_eigenvalue_ratio": 0.07365608136270245
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7136621821384872,
+          "cosine": -0.13522842262588658,
+          "independent_direction_fraction": 0.9817132737141147,
+          "categorical_information_trace": 0.49068632058813233,
+          "clock_information_trace": 0.5093137102146672,
+          "joint_nonzero_eigenvalues": [
+            0.431758968488697,
+            0.5682410623141025
+          ],
+          "information_eigenvalue_ratio": 0.7598165587161257
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 27.348068999431973,
+          "clock_sensitivity_norm": 15.049712401339054,
+          "cosine": -0.8771158594710621,
+          "independent_direction_fraction": 0.23066776906434006,
+          "categorical_information_trace": 183.4962904852253,
+          "clock_information_trace": 226.49384336301853,
+          "joint_nonzero_eigenvalues": [
+            24.894414391199035,
+            385.0957194570448
+          ],
+          "information_eigenvalue_ratio": 0.06464474449702592
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 43.01735809492811,
+          "clock_sensitivity_norm": 25.859234668629977,
+          "cosine": -0.853154504593286,
+          "independent_direction_fraction": 0.2721273912921848,
+          "categorical_information_trace": 454.0058246349773,
+          "clock_information_trace": 668.7000176472745,
+          "joint_nonzero_eigenvalues": [
+            79.169408691337,
+            1043.5364335909148
+          ],
+          "information_eigenvalue_ratio": 0.07586645386103773
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 981,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        0.5001944899559021,
+        -0.2549188435077667
+      ],
+      "probabilities": [
+        0.6802918466469813,
+        0.3197081533530188
+      ],
+      "full": {
+        "choice_sensitivity_norm": 59.154265556917025,
+        "clock_sensitivity_norm": 42.93661507557537,
+        "cosine": 0.7445947981766602,
+        "independent_direction_fraction": 0.44557858652825866,
+        "categorical_information_trace": 761.0638806476834,
+        "clock_information_trace": 1843.552914148126,
+        "joint_nonzero_eigenvalues": [
+          267.4977933034602,
+          2337.119001492349
+        ],
+        "information_eigenvalue_ratio": 0.11445621431029039
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7516716503569774,
+          "cosine": 0.33920552176652524,
+          "independent_direction_fraction": 0.8849396140030994,
+          "categorical_information_trace": 0.43498970006524285,
+          "clock_information_trace": 0.5650102699503821,
+          "joint_nonzero_eigenvalues": [
+            0.3197081439863887,
+            0.6802918260292362
+          ],
+          "information_eigenvalue_ratio": 0.4699573502925624
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 31.94787913342678,
+          "clock_sensitivity_norm": 21.48615002263118,
+          "cosine": 0.8350138108273601,
+          "independent_direction_fraction": 0.30275193572756964,
+          "categorical_information_trace": 221.9898119928229,
+          "clock_information_trace": 461.65464279501384,
+          "joint_nonzero_eigenvalues": [
+            48.8791931211273,
+            634.7652616667094
+          ],
+          "information_eigenvalue_ratio": 0.07700357293148766
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 49.76504950720148,
+          "clock_sensitivity_norm": 37.16629200072508,
+          "cosine": 0.7123983740829485,
+          "independent_direction_fraction": 0.4924885566039714,
+          "categorical_information_trace": 538.6390789547954,
+          "clock_information_trace": 1381.3332610831612,
+          "joint_nonzero_eigenvalues": [
+            214.90750048178205,
+            1705.0648395561745
+          ],
+          "information_eigenvalue_ratio": 0.12604066161948546
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            59.154265556916975,
+            31.97038023658697
+          ],
+          "finite_difference": [
+            59.153612703084946,
+            31.963381572101433
+          ],
+          "absolute_error": [
+            0.0006528538320296207,
+            0.00699866448553621
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            59.154265556916975,
+            31.97038023658697
+          ],
+          "finite_difference": [
+            59.15442109107971,
+            31.968922541066867
+          ],
+          "absolute_error": [
+            0.0001555341627366147,
+            0.0014576955201022201
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        0.11185550689697266,
+        -3.279139995574951
+      ],
+      "probabilities": [
+        0.9674219342847844,
+        0.0325780657152155
+      ],
+      "full": {
+        "choice_sensitivity_norm": 18.34057543625856,
+        "clock_sensitivity_norm": 1.5508696971977602,
+        "cosine": -0.3213770138630841,
+        "independent_direction_fraction": 0.8967168149604471,
+        "categorical_information_trace": 10.601495662743353,
+        "clock_information_trace": 2.4051968176862726,
+        "joint_nonzero_eigenvalues": [
+          2.0955787838861237,
+          10.911113696543502
+        ],
+        "information_eigenvalue_ratio": 0.1920591098367874
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.9679703288924189,
+          "cosine": 0.6829077599090352,
+          "independent_direction_fraction": 0.5336369914560235,
+          "categorical_information_trace": 0.06303347069894119,
+          "clock_information_trace": 0.9369665576160975,
+          "joint_nonzero_eigenvalues": [
+            0.03257806573321072,
+            0.967421962581828
+          ],
+          "information_eigenvalue_ratio": 0.03367513555953114
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 10.10322894492756,
+          "clock_sensitivity_norm": 0.9818305428957764,
+          "cosine": -0.26210141786188723,
+          "independent_direction_fraction": 0.9313028467547884,
+          "categorical_information_trace": 3.2170781708110145,
+          "clock_information_trace": 0.963991214963015,
+          "joint_nonzero_eigenvalues": [
+            0.8731004112150391,
+            3.3079689745589906
+          ],
+          "information_eigenvalue_ratio": 0.26393851270368657
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 15.241439309312913,
+          "clock_sensitivity_norm": 0.7100979123382635,
+          "cosine": -0.6907644573639107,
+          "independent_direction_fraction": 0.522844464442742,
+          "categorical_information_trace": 7.3213840212333965,
+          "clock_information_trace": 0.5042390451071601,
+          "joint_nonzero_eigenvalues": [
+            0.2549576940521888,
+            7.570665372288367
+          ],
+          "information_eigenvalue_ratio": 0.033677052348058456
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        12.0,
+        0.018236322328448296
+      ],
+      "probabilities": [
+        0.999993742751054,
+        6.25724894600414e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 1.5038215767209302,
+        "clock_sensitivity_norm": 9.409786011679798e-06,
+        "cosine": -0.9999999999999958,
+        "independent_direction_fraction": 8.43769498715119e-15,
+        "categorical_information_trace": 1.4150550638835369e-05,
+        "clock_information_trace": 8.854407278560479e-11,
+        "joint_nonzero_eigenvalues": [
+          7.754818242684634e-25,
+          1.4150639182908155e-05
+        ],
+        "information_eigenvalue_ratio": 5.480189369856373e-20
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.0,
+          "clock_sensitivity_norm": 6.257248969632201e-06,
+          "cosine": -1.0,
+          "independent_direction_fraction": 0.0,
+          "categorical_information_trace": 6.257209792839768e-06,
+          "clock_information_trace": 3.915316466796324e-11,
+          "joint_nonzero_eigenvalues": [
+            6.462348535570529e-27,
+            6.257248946004435e-06
+          ],
+          "information_eigenvalue_ratio": 1.03277791747395e-21
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 0.956349275896192,
+          "clock_sensitivity_norm": 5.984115542621333e-06,
+          "cosine": -0.9999999999999996,
+          "independent_direction_fraction": 8.881784197001252e-16,
+          "categorical_information_trace": 5.72286871433968e-06,
+          "clock_information_trace": 3.5809638827442216e-11,
+          "joint_nonzero_eigenvalues": [
+            3.2311742677852644e-26,
+            5.722904523978508e-06
+          ],
+          "information_eigenvalue_ratio": 5.646039094740974e-21
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 0.5889612865921278,
+          "clock_sensitivity_norm": 3.6852773695068476e-06,
+          "cosine": -0.999999999999975,
+          "independent_direction_fraction": 4.9960036108132044e-14,
+          "categorical_information_trace": 2.170472131655924e-06,
+          "clock_information_trace": 1.3581269290199311e-11,
+          "joint_nonzero_eigenvalues": [
+            6.785465962349055e-25,
+            2.1704857129252146e-06
+          ],
+          "information_eigenvalue_ratio": 3.1262430901717954e-19
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": []
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        12.0,
+        0.027890412136912346
+      ],
+      "probabilities": [
+        0.9999936820508613,
+        6.3179491387390975e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 1.5373380814946636,
+        "clock_sensitivity_norm": 9.71282390397359e-06,
+        "cosine": -0.9999999999999933,
+        "independent_direction_fraction": 1.3322676295501878e-14,
+        "categorical_information_trace": 1.4931799579832515e-05,
+        "clock_information_trace": 9.433894818960075e-11,
+        "joint_nonzero_eigenvalues": [
+          1.2407709188295415e-24,
+          1.4931893918780705e-05
+        ],
+        "information_eigenvalue_ratio": 8.309534782248568e-20
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.0,
+          "clock_sensitivity_norm": 6.317949100775877e-06,
+          "cosine": -1.0,
+          "independent_direction_fraction": 0.0,
+          "categorical_information_trace": 6.3179092222577774e-06,
+          "clock_information_trace": 3.991648083999471e-11,
+          "joint_nonzero_eigenvalues": [
+            6.462348535570529e-27,
+            6.317949138738618e-06
+          ],
+          "information_eigenvalue_ratio": 1.0228554224893206e-21
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 0.9575230666424176,
+          "clock_sensitivity_norm": 6.049582009275017e-06,
+          "cosine": -0.9999999999999992,
+          "independent_direction_fraction": 1.5543122344752192e-15,
+          "categorical_information_trace": 5.79257774386486e-06,
+          "clock_information_trace": 3.659744248694395e-11,
+          "joint_nonzero_eigenvalues": [
+            5.816113682013476e-26,
+            5.792614341307346e-06
+          ],
+          "information_eigenvalue_ratio": 1.0040567763226623e-20
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 0.6682499185644498,
+          "clock_sensitivity_norm": 4.2219693109569315e-06,
+          "cosine": -0.9999999999999676,
+          "independent_direction_fraction": 6.483702463810914e-14,
+          "categorical_information_trace": 2.821312613709881e-06,
+          "clock_information_trace": 1.7825024862662148e-11,
+          "joint_nonzero_eigenvalues": [
+            1.1535292135993394e-24,
+            2.8213304387347436e-06
+          ],
+          "information_eigenvalue_ratio": 4.088600178703818e-19
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": []
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        12.0,
+        -3.9987757205963135
+      ],
+      "probabilities": [
+        0.9999998873269791,
+        1.1267302089231435e-07
+      ],
+      "full": {
+        "choice_sensitivity_norm": 35.71078024213307,
+        "clock_sensitivity_norm": 4.023641537530558e-06,
+        "cosine": -0.9999999999999817,
+        "independent_direction_fraction": 3.6637359812630166e-14,
+        "categorical_information_trace": 0.0001436873607722163,
+        "clock_information_trace": 1.6189691222541273e-11,
+        "joint_nonzero_eigenvalues": [
+          5.913048910047034e-25,
+          0.00014368737696190753
+        ],
+        "information_eigenvalue_ratio": 4.11521807626471e-21
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.0,
+          "clock_sensitivity_norm": 1.126730211353788e-07,
+          "cosine": -1.0,
+          "independent_direction_fraction": 0.0,
+          "categorical_information_trace": 1.1267300819710471e-07,
+          "clock_information_trace": 1.2695209691773519e-14,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            1.126730208923144e-07
+          ],
+          "information_eigenvalue_ratio": 0.0
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 18.693943347422444,
+          "clock_sensitivity_norm": 2.1063030941954106e-06,
+          "cosine": -0.9999999999999993,
+          "independent_direction_fraction": 1.3322676295501878e-15,
+          "categorical_information_trace": 3.9375105814303684e-05,
+          "clock_information_trace": 4.43651272461716e-12,
+          "joint_nonzero_eigenvalues": [
+            4.8467614016778965e-27,
+            3.937511025081641e-05
+          ],
+          "information_eigenvalue_ratio": 1.230920083983105e-22
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 30.410463785106625,
+          "clock_sensitivity_norm": 3.4264388639274354e-06,
+          "cosine": -0.9999999999999758,
+          "independent_direction_fraction": 4.8405723873656825e-14,
+          "categorical_information_trace": 0.00010419958194971552,
+          "clock_information_trace": 1.1740483288232334e-11,
+          "joint_nonzero_eigenvalues": [
+            5.703022582640992e-25,
+            0.0001041995936901988
+          ],
+          "information_eigenvalue_ratio": 5.4731716129306054e-21
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            35.710780242133076,
+            -4.023641537530487e-06
+          ],
+          "finite_difference": [
+            35.71087121963501,
+            -4.026456501549092e-06
+          ],
+          "absolute_error": [
+            9.097750193376442e-05,
+            2.8149640186049372e-09
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            35.710780242133076,
+            -4.023641537530487e-06
+          ],
+          "finite_difference": [
+            35.71045398712158,
+            -4.0243035570597385e-06
+          ],
+          "absolute_error": [
+            0.00032625501149396996,
+            6.620195292518337e-10
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        1,
+        1,
+        0
+      ],
+      "scores": [
+        0.07288578152656555,
+        -0.30493780970573425
+      ],
+      "probabilities": [
+        0.5933480725435746,
+        0.4066519274564255
+      ],
+      "full": {
+        "choice_sensitivity_norm": 7.231123636726944,
+        "clock_sensitivity_norm": 2.8837463291012164,
+        "cosine": -0.8782454685347476,
+        "independent_direction_fraction": 0.22868489699818162,
+        "categorical_information_trace": 12.616646799629384,
+        "clock_information_trace": 8.315992890604742,
+        "joint_nonzero_eigenvalues": [
+          1.216982341027328,
+          19.715657349206797
+        ],
+        "information_eigenvalue_ratio": 0.06172669363602476
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7193244958118861,
+          "cosine": 0.18352514038112694,
+          "independent_direction_fraction": 0.9663185228480876,
+          "categorical_information_trace": 0.48257227470479913,
+          "clock_information_trace": 0.5174277302750241,
+          "joint_nonzero_eigenvalues": [
+            0.40665191660963207,
+            0.5933480883701912
+          ],
+          "information_eigenvalue_ratio": 0.685351355435599
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 4.013424292244537,
+          "clock_sensitivity_norm": 1.6627521128751563,
+          "cosine": -0.8564803476166666,
+          "independent_direction_fraction": 0.26644141414643396,
+          "categorical_information_trace": 3.8865344451836275,
+          "clock_information_trace": 2.764744588870797,
+          "joint_nonzero_eigenvalues": [
+            0.46261805179805315,
+            6.188660982256371
+          ],
+          "information_eigenvalue_ratio": 0.07475252774783338
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 5.846501047639739,
+          "clock_sensitivity_norm": 2.2436177418310193,
+          "cosine": -0.9746609137947163,
+          "independent_direction_fraction": 0.05003610312084861,
+          "categorical_information_trace": 8.247540079740963,
+          "clock_information_trace": 5.0338205714589215,
+          "joint_nonzero_eigenvalues": [
+            0.15829616074333375,
+            13.123064490456551
+          ],
+          "information_eigenvalue_ratio": 0.012062438682553989
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "scores": [
+        12.0,
+        0.0846622958779335
+      ],
+      "probabilities": [
+        0.9999933129944917,
+        6.687005508368364e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 1.4720092225871486,
+        "clock_sensitivity_norm": 9.84333391181561e-06,
+        "cosine": -0.9999999999999959,
+        "independent_direction_fraction": 8.215650382226158e-15,
+        "categorical_information_trace": 1.4489381213663e-05,
+        "clock_information_trace": 9.689122249949921e-11,
+        "joint_nonzero_eigenvalues": [
+          7.754818242684634e-25,
+          1.4489478104885499e-05
+        ],
+        "information_eigenvalue_ratio": 5.352034204786092e-20
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.0,
+          "clock_sensitivity_norm": 6.687005679850699e-06,
+          "cosine": -1.0,
+          "independent_direction_fraction": 0.0,
+          "categorical_information_trace": 6.686960792325696e-06,
+          "clock_information_trace": 4.4716044962355514e-11,
+          "joint_nonzero_eigenvalues": [
+            6.462348535570529e-27,
+            6.687005508370658e-06
+          ],
+          "information_eigenvalue_ratio": 9.664039497920394e-22
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 0.9243714931102592,
+          "clock_sensitivity_norm": 6.18127738092734e-06,
+          "cosine": -0.9999999999999994,
+          "independent_direction_fraction": 1.1102230246251565e-15,
+          "categorical_information_trace": 5.713758287703618e-06,
+          "clock_information_trace": 3.8208190059963956e-11,
+          "joint_nonzero_eigenvalues": [
+            4.52364397489937e-26,
+            5.713796495893677e-06
+          ],
+          "information_eigenvalue_ratio": 7.917054760613837e-21
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 0.5588814669558576,
+          "clock_sensitivity_norm": 3.7372432991684897e-06,
+          "cosine": -0.999999999999974,
+          "independent_direction_fraction": 5.1958437552457326e-14,
+          "categorical_information_trace": 2.0886621336336863e-06,
+          "clock_information_trace": 1.3966987477179777e-11,
+          "joint_nonzero_eigenvalues": [
+            7.237830359838992e-25,
+            2.0886761006211633e-06
+          ],
+          "information_eigenvalue_ratio": 3.465271785168841e-19
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": []
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "scores": [
+        12.0,
+        0.09087055176496506
+      ],
+      "probabilities": [
+        0.9999932713509966,
+        6.728649003327813e-06
+      ],
+      "full": {
+        "choice_sensitivity_norm": 1.5184955236626783,
+        "clock_sensitivity_norm": 1.0217423584101467e-05,
+        "cosine": -0.999999999999993,
+        "independent_direction_fraction": 1.3988810110276972e-14,
+        "categorical_information_trace": 1.5515007288150745e-05,
+        "clock_information_trace": 1.0439574469695285e-10,
+        "joint_nonzero_eigenvalues": [
+          1.4346413748966574e-24,
+          1.5515111683895442e-05
+        ],
+        "information_eigenvalue_ratio": 9.246735725310978e-20
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.0,
+          "clock_sensitivity_norm": 6.728649168508127e-06,
+          "cosine": -1.0,
+          "independent_direction_fraction": 0.0,
+          "categorical_information_trace": 6.728603728610403e-06,
+          "clock_information_trace": 4.5274719632865113e-11,
+          "joint_nonzero_eigenvalues": [
+            6.462348535570529e-27,
+            6.728649003330036e-06
+          ],
+          "information_eigenvalue_ratio": 9.604228920801614e-22
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 0.9559344643292029,
+          "clock_sensitivity_norm": 6.432147677006985e-06,
+          "cosine": -0.9999999999999993,
+          "independent_direction_fraction": 1.3322676295501878e-15,
+          "categorical_information_trace": 6.1486700838855375e-06,
+          "clock_information_trace": 4.1372523738826353e-11,
+          "joint_nonzero_eigenvalues": [
+            5.816113682013476e-26,
+            6.148711456409276e-06
+          ],
+          "information_eigenvalue_ratio": 9.45907727699743e-21
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 0.6261133725542276,
+          "clock_sensitivity_norm": 4.2128970228646e-06,
+          "cosine": -0.9999999999999671,
+          "independent_direction_fraction": 6.572520305780927e-14,
+          "categorical_information_trace": 2.6377334756547892e-06,
+          "clock_information_trace": 1.7748501325261412e-11,
+          "joint_nonzero_eigenvalues": [
+            1.1664539106704804e-24,
+            2.6377512241561146e-06
+          ],
+          "information_eigenvalue_ratio": 4.422152855008756e-19
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": []
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "scores": [
+        -4.852081775665283,
+        -4.182543754577637
+      ],
+      "probabilities": [
+        0.3386002933210928,
+        0.6613997066789071
+      ],
+      "full": {
+        "choice_sensitivity_norm": 111.15800921082143,
+        "clock_sensitivity_norm": 46.370602589966104,
+        "cosine": -0.45906699486402525,
+        "independent_direction_fraction": 0.789257494226513,
+        "categorical_information_trace": 2767.1509336420577,
+        "clock_information_trace": 2150.232784556571,
+        "joint_nonzero_eigenvalues": [
+          1297.1976309977617,
+          3620.186087200867
+        ],
+        "information_eigenvalue_ratio": 0.35832346728915165
+      },
+      "blocks": {
+        "clock_bias": {
+          "choice_sensitivity_norm": 1.4142135623730951,
+          "clock_sensitivity_norm": 0.7430341585483237,
+          "cosine": -0.30719133468722715,
+          "independent_direction_fraction": 0.90563348389308,
+          "categorical_information_trace": 0.44790026936792543,
+          "clock_information_trace": 0.5520997607696154,
+          "joint_nonzero_eigenvalues": [
+            0.3386003030605406,
+            0.6613997270770002
+          ],
+          "information_eigenvalue_ratio": 0.5119450299094556
+        },
+        "key_query": {
+          "choice_sensitivity_norm": 57.749151394113596,
+          "clock_sensitivity_norm": 24.27699073922863,
+          "cosine": -0.0830677323069601,
+          "independent_direction_fraction": 0.9930997518493793,
+          "categorical_information_trace": 746.8657459717122,
+          "clock_information_trace": 589.3722793525926,
+          "joint_nonzero_eigenvalues": [
+            572.0023501568198,
+            764.2356751674849
+          ],
+          "information_eigenvalue_ratio": 0.7484632931215407
+        },
+        "message_state_transport": {
+          "choice_sensitivity_norm": 94.96914512078547,
+          "clock_sensitivity_norm": 39.50073930248913,
+          "cosine": -0.5996405664795462,
+          "independent_direction_fraction": 0.6404311910320889,
+          "categorical_information_trace": 2019.8372874009776,
+          "clock_information_trace": 1560.3084054432093,
+          "joint_nonzero_eigenvalues": [
+            701.0376564562212,
+            2879.1080363879655
+          ],
+          "information_eigenvalue_ratio": 0.2434912645152837
+        },
+        "classifier": {
+          "choice_sensitivity_norm": 0.0,
+          "clock_sensitivity_norm": 0.0,
+          "cosine": null,
+          "independent_direction_fraction": null,
+          "categorical_information_trace": 0.0,
+          "clock_information_trace": 0.0,
+          "joint_nonzero_eigenvalues": [
+            0.0,
+            0.0
+          ],
+          "information_eigenvalue_ratio": null
+        }
+      },
+      "analytic_clock_bias_coordinates_passed": [
+        0,
+        1
+      ],
+      "finite_difference_checks": [
+        {
+          "epsilon": 0.002,
+          "expected": [
+            111.15800921082132,
+            -21.2872131810097
+          ],
+          "finite_difference": [
+            111.15729808807373,
+            -21.196270967785203
+          ],
+          "absolute_error": [
+            0.0007111227475888882,
+            0.09094221322449769
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        },
+        {
+          "epsilon": 0.001,
+          "expected": [
+            111.15800921082132,
+            -21.2872131810097
+          ],
+          "finite_difference": [
+            111.15670204162598,
+            -21.265184446128682
+          ],
+          "absolute_error": [
+            0.0013071691953427944,
+            0.022028734881018863
+          ],
+          "relative_tolerance": 0.02,
+          "absolute_tolerance": 0.005
+        }
+      ]
+    }
+  ],
+  "primal_contracts": [
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 258,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 6,
+      "encoder": "initial",
+      "fit_index": 981,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 6,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 258,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 7,
+      "encoder": "initial",
+      "fit_index": 981,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 258,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    },
+    {
+      "seed": 7,
+      "encoder": "fixed_pass4",
+      "fit_index": 981,
+      "exact_primal_state_rng": true,
+      "target_invariance": true,
+      "parameters_bitwise_restored": true
+    }
+  ],
+  "indices": [
+    258,
+    981
+  ],
+  "sites": [
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      19,
+      0,
+      0
+    ],
+    [
+      20,
+      0,
+      0
+    ],
+    [
+      20,
+      1,
+      0
+    ]
+  ],
+  "noise_seed": 510173,
+  "score_parameter_vjps": 64,
+  "parameter_names": [
+    "transport_rate",
+    "transport_frequency",
+    "embedding.weight",
+    "content.weight",
+    "source_gate.weight",
+    "source_gate.bias",
+    "channel_mix.0.weight",
+    "channel_mix.1.weight",
+    "queries.0.0.weight",
+    "queries.0.1.weight",
+    "queries.1.0.weight",
+    "queries.1.1.weight",
+    "units.0.0.0.0.key",
+    "units.0.0.0.0.clock_bias",
+    "units.0.0.0.0.raw_rate",
+    "units.0.0.0.0.frequency",
+    "units.0.0.0.0.key_read.weight",
+    "units.0.0.0.0.input.weight",
+    "units.0.0.0.0.output.weight",
+    "units.0.0.0.0.gate.weight",
+    "units.0.0.0.0.gate.bias",
+    "units.0.0.0.0.control.weight",
+    "units.0.0.0.0.control.bias",
+    "units.0.0.0.1.key",
+    "units.0.0.0.1.clock_bias",
+    "units.0.0.0.1.raw_rate",
+    "units.0.0.0.1.frequency",
+    "units.0.0.0.1.key_read.weight",
+    "units.0.0.0.1.input.weight",
+    "units.0.0.0.1.output.weight",
+    "units.0.0.0.1.gate.weight",
+    "units.0.0.0.1.gate.bias",
+    "units.0.0.0.1.control.weight",
+    "units.0.0.0.1.control.bias",
+    "units.0.1.0.0.key",
+    "units.0.1.0.0.clock_bias",
+    "units.0.1.0.0.raw_rate",
+    "units.0.1.0.0.frequency",
+    "units.0.1.0.0.key_read.weight",
+    "units.0.1.0.0.input.weight",
+    "units.0.1.0.0.output.weight",
+    "units.0.1.0.0.gate.weight",
+    "units.0.1.0.0.gate.bias",
+    "units.0.1.0.0.control.weight",
+    "units.0.1.0.0.control.bias",
+    "units.0.1.0.1.key",
+    "units.0.1.0.1.clock_bias",
+    "units.0.1.0.1.raw_rate",
+    "units.0.1.0.1.frequency",
+    "units.0.1.0.1.key_read.weight",
+    "units.0.1.0.1.input.weight",
+    "units.0.1.0.1.output.weight",
+    "units.0.1.0.1.gate.weight",
+    "units.0.1.0.1.gate.bias",
+    "units.0.1.0.1.control.weight",
+    "units.0.1.0.1.control.bias",
+    "units.1.0.0.0.key",
+    "units.1.0.0.0.clock_bias",
+    "units.1.0.0.0.raw_rate",
+    "units.1.0.0.0.frequency",
+    "units.1.0.0.0.key_read.weight",
+    "units.1.0.0.0.input.weight",
+    "units.1.0.0.0.output.weight",
+    "units.1.0.0.0.gate.weight",
+    "units.1.0.0.0.gate.bias",
+    "units.1.0.0.0.control.weight",
+    "units.1.0.0.0.control.bias",
+    "units.1.0.0.1.key",
+    "units.1.0.0.1.clock_bias",
+    "units.1.0.0.1.raw_rate",
+    "units.1.0.0.1.frequency",
+    "units.1.0.0.1.key_read.weight",
+    "units.1.0.0.1.input.weight",
+    "units.1.0.0.1.output.weight",
+    "units.1.0.0.1.gate.weight",
+    "units.1.0.0.1.gate.bias",
+    "units.1.0.0.1.control.weight",
+    "units.1.0.0.1.control.bias",
+    "units.1.1.0.0.key",
+    "units.1.1.0.0.clock_bias",
+    "units.1.1.0.0.raw_rate",
+    "units.1.1.0.0.frequency",
+    "units.1.1.0.0.key_read.weight",
+    "units.1.1.0.0.input.weight",
+    "units.1.1.0.0.output.weight",
+    "units.1.1.0.0.gate.weight",
+    "units.1.1.0.0.gate.bias",
+    "units.1.1.0.0.control.weight",
+    "units.1.1.0.0.control.bias",
+    "units.1.1.0.1.key",
+    "units.1.1.0.1.clock_bias",
+    "units.1.1.0.1.raw_rate",
+    "units.1.1.0.1.frequency",
+    "units.1.1.0.1.key_read.weight",
+    "units.1.1.0.1.input.weight",
+    "units.1.1.0.1.output.weight",
+    "units.1.1.0.1.gate.weight",
+    "units.1.1.0.1.gate.bias",
+    "units.1.1.0.1.control.weight",
+    "units.1.1.0.1.control.bias",
+    "head.weight",
+    "head.bias"
+  ],
+  "artifact": "experiments/results/diagnostics/local_dvs_conditional_geometry_20261002T234000Z.directions.npz",
+  "artifact_sha256": "9b1ee24975e13df336422e68c07a6da91b05e3b8704af9040895bf2de4f5c20c",
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_conditional_clock_choice_geometry.py": "1d27235c08580dbe4bba455680ce033a62d67cde3f5f514d500b8697b8408ff8",
+    "experiments/theory/103_native_conditional_clock_choice_geometry.md": "d4116162cd07a453effe243ac8d20a123b1e64f1ab3f8091321c5965b36c4369",
+    "experiments/dvs_key_score_decomposition.py": "2db0b22a11ee7939e083a2ea3ea0cc2794af1accf71da2556972a61c35142f17",
+    "experiments/dvs_native_window_intervention.py": "8d87a9430e1e08e76a99ced669db69aac47af293bd383b9b1efd2d1ca60edd99"
+  },
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "whole_audit_flops": null,
+  "wall_s": 36.5363415920001,
+  "max_rss_kb": 348112,
+  "hardware": {
+    "host": "curie",
+    "device": "CPU",
+    "threads": 1
+  },
+  "scope": "Exact native primal with conditioned previous winner/time observations for parameter score sensitivities. Actual causal sparse contents/state writes retained. Two fixed-pass producers and initial reservoirs; two disjoint unused FIT inputs/four fixed sites. Conditional local information geometry, not ordinary sampled-noise time gradients, target loss/utility, expected-risk gradient, optimizer or architecture replacement. Prior fits and all VJPs/audit costs paid; full arithmetic/traffic/energy unknown, not zero."
+}
