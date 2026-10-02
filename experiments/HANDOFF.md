@@ -1525,3 +1525,15 @@ No best-seed/width selection, no claim from incomplete rows. Summary supervisor
 `scripts/run_aws_event_history_summary.py` waits exact worker901862 and complete
 summary, reserves host lock during analysis/publication. Session
 `aws-event-history-summary-20261002`; log `queue/aws_event_history_summary_20261002.out`.
+
+
+## Strong learned history controls complete — 2 October, 12:39 UTC
+
+History32/128 each score100% on fresh4096 queries for all seeds6/7/8, at
+.006263/.024799 whole-fitGFLOPs. Native fresh evaluations remain pending.
+`AWS_HISTORY_CONTROL_FINDINGS_20261002.md` places this beside native capacity
+evidence and proves order labels admit four linear scores over two retained
+marks. Hence no broad resource-supremacy claim on this bounded-history task;
+no general impossibility conclusion. All positive native findings retained with
+scope. Native intra-family gate and full common-unit comparisons publish when
+all12 results complete. New architectures need a fresh confirmation protocol.
