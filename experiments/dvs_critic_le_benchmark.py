@@ -25,6 +25,7 @@ import dvs_clock_calibrated_benchmark as C  # noqa: E402
 import dvs_local_expectation_benchmark as LE  # noqa: E402
 import dvs_native_benchmark as N  # noqa: E402
 import dvs_fork_replay as FR  # noqa: E402
+from sleeping_machines.shadow_lanes import shadow_losses  # noqa: E402
 from parallel_head_accumulated_language import merge  # noqa: E402
 from race_language_screen import capture  # noqa: E402
 
@@ -35,6 +36,7 @@ def parser():
     p = LE.parser(); p.add_argument('--critic-width', type=int, default=32); p.add_argument('--critic-lr', type=float, default=.003)
     p.add_argument('--fork', action='store_true', help='resume replays at the forced race event (§404; exact, cheaper)')
     p.add_argument('--no-critic', action='store_true', help='plain replay credit (critic output fixed at zero)')
+    p.add_argument('--lanes', action='store_true', help='all replays of an episode in one shadow-lane pass (§404.2; exact)')
     return p
 
 
@@ -98,7 +100,13 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
                 route = route + (torch.softmax(scores[r], 0) * q[r].to(scores[r].dtype)).sum()
             chosen = rng.choice(races, size=min(a.route_samples, races), replace=False)
             with torch.no_grad():
-                if snaps is not None:
+                if getattr(a, 'lanes', False):
+                    forces = [(int(r), i) for r in chosen for i in range(len(scores[int(r)]))]
+                    flat = shadow_losses(model, row, seed, forces) if forces else torch.zeros(0, dtype=torch.float64)
+                    losses, j = {}, 0
+                    for r in chosen:
+                        P = len(scores[int(r)]); losses[int(r)] = flat[j:j + P]; j += P
+                elif snaps is not None:
                     losses = {int(r): torch.tensor([float(FR.forked(model, row, snaps, (int(r), i))[0])
                                                     for i in range(len(scores[int(r)]))], dtype=torch.float64) for r in chosen}
                 else:
@@ -133,7 +141,8 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
 
 def sources():
     return {**LE.sources(), 'experiments/dvs_critic_le_benchmark.py': N.sha(ROOT / 'experiments/dvs_critic_le_benchmark.py'),
-            'experiments/dvs_fork_replay.py': N.sha(ROOT / 'experiments/dvs_fork_replay.py')}
+            'experiments/dvs_fork_replay.py': N.sha(ROOT / 'experiments/dvs_fork_replay.py'),
+            'sleeping_machines/shadow_lanes.py': N.sha(ROOT / 'sleeping_machines/shadow_lanes.py')}
 
 
 @contextmanager

@@ -56,3 +56,17 @@ def test_forked_replays_give_identical_gradients():
     a.fork = True; forked = _grads(m, a, rows, CR.train_window)
     for n in plain:
         torch.testing.assert_close(forked[n], plain[n], rtol=0, atol=1e-12, msg=n)
+
+
+def test_shadow_lanes_give_the_same_gradients_as_forked_replays():
+    a, m, rows = _setup()
+    m.__class__ = __import__('sleeping_machines.fast_native_core', fromlist=['fast_class']).fast_class(type(m))
+    with torch.no_grad():
+        for p in m.parameters():
+            p.add_(torch.randn_like(p) * .05)
+    a.route_samples = 3; a.lanes = False; a.fork = True
+    forked = _grads(m, a, rows, CR.train_window)
+    a.lanes = True
+    lanes = _grads(m, a, rows, CR.train_window)
+    for n in forked:
+        torch.testing.assert_close(lanes[n], forked[n], rtol=1e-7, atol=1e-10, msg=n)

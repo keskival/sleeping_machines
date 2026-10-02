@@ -1114,3 +1114,12 @@ suggestion: run shadow channels alongside the main signal). From exact to approx
 
 Use order: forks now (exact, free accuracy-wise); the critic control variate with forks to cut k; shadow lanes when
 a lane-batched core is written; bounded horizons only with a correction term.
+
+**§404.2 implemented: shadow lanes (sleeping_machines/shadow_lanes.py).** One lane-batched, gradient-free pass carries
+every counterfactual of an episode. Lanes have dense per-lane state, races share one noise draw in the factual
+order (common random numbers by construction), and forced lanes take their alternative at the lane's first time.
+Contracts: every lane equals its sequential forked replay (1e-10 in double; depth 2/pool 2 and depth 3/pool 3), and
+training gradients equal the forked driver's (tests/test_dvs_critic_le.py). Timing at the DVS shape (p16 d2 H2 pool 2,
+21 events, k = 4, P = 2), eight counterfactual losses: full replays 0.381 s, forked 0.135 s, **shadow lanes 0.055 s**,
+against 0.069 s for one factual forward. All counterfactuals of an episode cost less than one factual forward, which
+cuts the replay-credit overhead from about 3.6× to roughly 1.25× of baseline training.
