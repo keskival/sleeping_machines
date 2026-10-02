@@ -1,0 +1,2973 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_counterfactual_route_audit_20261002T172000Z",
+    "native": [
+      "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "experiments/results/dvs_native/local_dvs_batched_pairs_pilot_s6_20261002T164700Z.json"
+    ]
+  },
+  "models": [
+    {
+      "native": "experiments/results/dvs_native/local_dvs_native_full_20261002T145300Z.json",
+      "native_result_sha256": "b506bd3650e7410cffbe174ca2e1acc28c90972e65eba9c0dbec969b82006ebf",
+      "checkpoint_sha256": "1cb4b44c60e89772b33be04870753067538ff771902b6999db1a27a1e702ad6a",
+      "dev_prefixes": 4,
+      "sites": 32,
+      "actual_outcomes_replayed": 64,
+      "diagnostic_hybrid_outcomes_replayed": 64,
+      "nonzero_comparable_policy_gradients": 15,
+      "opposed_teacher_directions": 4,
+      "opposed_fraction": 0.26666666666666666,
+      "samples": [
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9991260371290891,
+            0.0008739628709108821
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.0831272304058075
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.5884008292991294e-07,
+            1.5884008292323705e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -7.219348399381528e-08,
+            7.219348399381528e-08
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -2.2143945662040708e-16,
+          "final_persistent_memory_difference_l2": 2.989923183396158,
+          "delivered_value_only_effect": 0.0003983154892921448,
+          "persistent_write_only_effect": -0.00023614615201950073,
+          "value_write_interaction": 1.973658800125122e-05,
+          "full_route_effect": 0.00018190592527389526
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.012400931993532531,
+            0.9875990680064675
+          ],
+          "actual_suffix_outcome_losses": [
+            0.09816195070743561,
+            0.0990954041481018
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.1432143259663211e-05,
+            1.1432143259655403e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.366225427793593e-07,
+            6.366225427793593e-07
+          ],
+          "choice_gradient_cosine": 0.9999999999999998,
+          "conditional_risk_change_after_local_policy_step": -1.455626477402233e-13,
+          "final_persistent_memory_difference_l2": 5.996597917703308,
+          "delivered_value_only_effect": 9.18656587600708e-05,
+          "persistent_write_only_effect": -0.0010344982147216797,
+          "value_write_interaction": 9.179115295410156e-06,
+          "full_route_effect": -0.0009334534406661987
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.0008711396344490629,
+            0.9991288603655508
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47768157720565796,
+            0.4991086423397064
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.864970502566496e-05,
+            1.8649705025698592e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            7.172561631486575e-07,
+            -7.172561631486575e-07
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 2.675681764227236e-13,
+          "final_persistent_memory_difference_l2": 4.142302332382048,
+          "delivered_value_only_effect": -0.0021848678588867188,
+          "persistent_write_only_effect": -0.0193021297454834,
+          "value_write_interaction": 5.9932470321655273e-05,
+          "full_route_effect": -0.021427065134048462
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.2925949535712253,
+            0.7074050464287748
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15073713660240173,
+            0.15461525321006775
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0008027047787858186,
+            0.0008027047787858138
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.00015656994282407276,
+            -0.00015656994282407276
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 2.5135872023874477e-09,
+          "final_persistent_memory_difference_l2": 1.7709263439755343,
+          "delivered_value_only_effect": 0.00018596649169921875,
+          "persistent_write_only_effect": -0.003910809755325317,
+          "value_write_interaction": -0.000153273344039917,
+          "full_route_effect": -0.0038781166076660156
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9817574089560613,
+            0.018242591043938675
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.08352656662464142
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.0409929922448046e-05,
+            1.0409929922442069e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.494357219331434e-08,
+            6.494357219331434e-08
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.3513387315418712e-14,
+          "final_persistent_memory_difference_l2": 3.793471603283477,
+          "delivered_value_only_effect": -0.0001930147409439087,
+          "persistent_write_only_effect": 0.0004464685916900635,
+          "value_write_interaction": 0.0003277882933616638,
+          "full_route_effect": 0.0005812421441078186
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            6.1683879787368555e-06,
+            0.9999938316120213
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0984603762626648,
+            0.0990954041481018
+          ],
+          "exact_conditional_choice_gradient": [
+            -3.9170742125098644e-09,
+            3.917074205706854e-09
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.270826116917178e-10,
+            6.270826116917178e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 7.616763956217613e-18,
+          "final_persistent_memory_difference_l2": 4.7700971771532785,
+          "delivered_value_only_effect": -0.0004000812768936157,
+          "persistent_write_only_effect": -0.00023247301578521729,
+          "value_write_interaction": -2.473592758178711e-06,
+          "full_route_effect": -0.0006350278854370117
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999993988992671,
+            6.011007329052496e-07
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4991086423397064,
+            0.4991137683391571
+          ],
+          "exact_conditional_choice_gradient": [
+            -3.0812556192473042e-12,
+            3.0812401745316906e-12
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.19628233856965e-11,
+            9.19628233856965e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -5.521321429122403e-19,
+          "final_persistent_memory_difference_l2": 5.100977807078332,
+          "delivered_value_only_effect": 0.0008885860443115234,
+          "persistent_write_only_effect": -0.0008960366249084473,
+          "value_write_interaction": 1.2576580047607422e-05,
+          "full_route_effect": 5.125999450683594e-06
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            5.897722813801428e-06,
+            0.9999941022771861
+          ],
+          "actual_suffix_outcome_losses": [
+            0.13867518305778503,
+            0.15461525321006775
+          ],
+          "exact_conditional_choice_gradient": [
+            -9.400956094511056e-08,
+            9.40095609689421e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            1.337465292671916e-10,
+            -1.337465292671916e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -2.1879730378296987e-18,
+          "final_persistent_memory_difference_l2": 7.7344753873639815,
+          "delivered_value_only_effect": 5.617737770080566e-06,
+          "persistent_write_only_effect": -0.0159137099981308,
+          "value_write_interaction": -3.197789192199707e-05,
+          "full_route_effect": -0.015940070152282715
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9586101212076938,
+            0.04138987879230603
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.08229908347129822
+          ],
+          "exact_conditional_choice_gradient": [
+            2.564074730972552e-05,
+            -2.5640747309708543e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.062335738466258e-06,
+            -2.062335738466258e-06
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -1.0575874072733125e-12,
+          "final_persistent_memory_difference_l2": 5.4515207949866245,
+          "delivered_value_only_effect": -0.0004553273320198059,
+          "persistent_write_only_effect": -0.00019422173500061035,
+          "value_write_interaction": 3.3080577850341797e-06,
+          "full_route_effect": -0.0006462410092353821
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.159479169463546,
+            0.8405208305364541
+          ],
+          "actual_suffix_outcome_losses": [
+            0.09595004469156265,
+            0.0990954041481018
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.00042162148224256886,
+            0.0004216214822425471
+          ],
+          "mean_local_value_teacher_gradient": [
+            1.595998759510064e-06,
+            -1.595998759510064e-06
+          ],
+          "choice_gradient_cosine": -0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": 1.3458144463376691e-11,
+          "final_persistent_memory_difference_l2": 5.404481282937666,
+          "delivered_value_only_effect": 0.0001269504427909851,
+          "persistent_write_only_effect": -0.003268614411354065,
+          "value_write_interaction": -3.6954879760742188e-06,
+          "full_route_effect": -0.003145359456539154
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.015897242483271592,
+            0.9841027575167285
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5910362005233765,
+            0.4991086423397064
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0014381625376960257,
+            -0.0014381625376961094
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.240670668486746e-06,
+            6.240670668486746e-06
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 1.795018884807827e-10,
+          "final_persistent_memory_difference_l2": 2.5358841806763777,
+          "delivered_value_only_effect": -0.010162651538848877,
+          "persistent_write_only_effect": 0.10513928532600403,
+          "value_write_interaction": -0.0030490756034851074,
+          "full_route_effect": 0.09192755818367004
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9999997705114898,
+            2.2948851026103093e-07
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.15311595797538757
+          ],
+          "exact_conditional_choice_gradient": [
+            3.4407094271365113e-10,
+            -3.440709508878701e-10
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.677295375852311e-11,
+            -4.677295375852311e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 3.283291280066176e-20,
+          "final_persistent_memory_difference_l2": 4.593179356679815,
+          "delivered_value_only_effect": -0.0012527257204055786,
+          "persistent_write_only_effect": -0.00021429359912872314,
+          "value_write_interaction": -3.2275915145874023e-05,
+          "full_route_effect": -0.0014992952346801758
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999946894775636,
+            5.310522436421044e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.08246243745088577
+          ],
+          "exact_conditional_choice_gradient": [
+            2.5643687826611482e-09,
+            -2.5643687869912245e-09
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.6239449912969423e-11,
+            -2.6239449912969423e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 2.3029017952063527e-19,
+          "final_persistent_memory_difference_l2": 6.2656496232624175,
+          "delivered_value_only_effect": -5.4970383644104004e-05,
+          "persistent_write_only_effect": -0.00042811036109924316,
+          "value_write_interaction": 1.9371509552001953e-07,
+          "full_route_effect": -0.00048288702964782715
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9900982158456866,
+            0.009901784154313443
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0990954041481018,
+            0.09882621467113495
+          ],
+          "exact_conditional_choice_gradient": [
+            2.6390633265830814e-06,
+            -2.6390633265877803e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            3.6654286797656633e-07,
+            -3.6654286797656633e-07
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -1.934934853567498e-14,
+          "final_persistent_memory_difference_l2": 6.17095651232699,
+          "delivered_value_only_effect": -0.00026022642850875854,
+          "persistent_write_only_effect": -5.505979061126709e-06,
+          "value_write_interaction": -3.4570693969726562e-06,
+          "full_route_effect": -0.0002691894769668579
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999949832877882,
+            5.016712211857698e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4991086423397064,
+            0.4944911599159241
+          ],
+          "exact_conditional_choice_gradient": [
+            2.316446421047592e-08,
+            -2.3164464253393712e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.081440732242623e-10,
+            4.081440732242623e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -2.0252249926799894e-17,
+          "final_persistent_memory_difference_l2": 8.331425405230885,
+          "delivered_value_only_effect": 0.0016560256481170654,
+          "persistent_write_only_effect": -0.006319761276245117,
+          "value_write_interaction": 4.6253204345703125e-05,
+          "full_route_effect": -0.004617482423782349
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.5,
+            0.5
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.15415462851524353
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00011515617370605469,
+            -0.00011515617370605469
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.863609888161591e-07,
+            -4.863609888161591e-07
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -1.1201494266039193e-12,
+          "final_persistent_memory_difference_l2": 2.5962113284502695,
+          "delivered_value_only_effect": 7.618963718414307e-05,
+          "persistent_write_only_effect": -0.0030481815338134766,
+          "value_write_interaction": 0.0025113672018051147,
+          "full_route_effect": -0.00046062469482421875
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9999454245956296,
+            5.4575404370301714e-05
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.0819535106420517
+          ],
+          "exact_conditional_choice_gradient": [
+            5.412568721278603e-08,
+            -5.412568720272372e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.8994083630590696e-09,
+            -2.8994083630590696e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 1.4978112558225077e-18,
+          "final_persistent_memory_difference_l2": 4.283339045595718,
+          "delivered_value_only_effect": -0.00010193139314651489,
+          "persistent_write_only_effect": -0.000852338969707489,
+          "value_write_interaction": -3.754347562789917e-05,
+          "full_route_effect": -0.000991813838481903
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.0006702863048519371,
+            0.999329713695148
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1104273796081543,
+            0.0990954041481018
+          ],
+          "exact_conditional_choice_gradient": [
+            7.590576685583107e-06,
+            -7.590576685577128e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.2027417464152864e-06,
+            -2.2027417464152864e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -3.343847764097508e-13,
+          "final_persistent_memory_difference_l2": 6.395756038343438,
+          "delivered_value_only_effect": 0.21554923057556152,
+          "persistent_write_only_effect": 0.0004790201783180237,
+          "value_write_interaction": -0.20469627529382706,
+          "full_route_effect": 0.01133197546005249
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            1.215524789783897e-06,
+            0.9999987844752103
+          ],
+          "actual_suffix_outcome_losses": [
+            0.46024057269096375,
+            0.4991086423397064
+          ],
+          "exact_conditional_choice_gradient": [
+            -4.7245044761500935e-08,
+            4.724504473621363e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.80330544361999e-09,
+            4.80330544361999e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -5.70823561047217e-17,
+          "final_persistent_memory_difference_l2": 5.374566250293783,
+          "delivered_value_only_effect": -0.033226341009140015,
+          "persistent_write_only_effect": -0.006129562854766846,
+          "value_write_interaction": 0.00048783421516418457,
+          "full_route_effect": -0.038868069648742676
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9999999987605255,
+            1.2394745443248423e-09
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.16502369940280914
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.2901013574758767e-11,
+            1.2901004085887302e-11
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.0806395448086093e-11,
+            1.0806395014405224e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -4.4329805445089826e-23,
+          "final_persistent_memory_difference_l2": 8.938064015028818,
+          "delivered_value_only_effect": 0.014095097780227661,
+          "persistent_write_only_effect": -0.0032927393913269043,
+          "value_write_interaction": -0.0003939121961593628,
+          "full_route_effect": 0.010408446192741394
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9998669821040518,
+            0.00013301789594828863
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.08985670655965805
+          ],
+          "exact_conditional_choice_gradient": [
+            -9.192152139240327e-07,
+            9.192152139196253e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -3.3884434338882556e-07,
+            3.3884434338882556e-07
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -6.233419200294648e-15,
+          "final_persistent_memory_difference_l2": 5.292066578239882,
+          "delivered_value_only_effect": 0.007141269743442535,
+          "persistent_write_only_effect": -0.0001858845353126526,
+          "value_write_interaction": -4.400312900543213e-05,
+          "full_route_effect": 0.006911382079124451
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            6.12055073080768e-06,
+            0.9999938794492691
+          ],
+          "actual_suffix_outcome_losses": [
+            0.10146991908550262,
+            0.0990954041481018
+          ],
+          "exact_conditional_choice_gradient": [
+            1.4533250183382898e-08,
+            -1.4533250177335058e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            1.3389294455627618e-08,
+            -1.3389294455627618e-08
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 9.72103397650218e-18,
+          "final_persistent_memory_difference_l2": 6.079016426462113,
+          "delivered_value_only_effect": 0.0021963492035865784,
+          "persistent_write_only_effect": 0.00017596036195755005,
+          "value_write_interaction": 2.205371856689453e-06,
+          "full_route_effect": 0.002374514937400818
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.999998919419158,
+            1.0805808420319791e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4991086423397064,
+            0.4521503150463104
+          ],
+          "exact_conditional_choice_gradient": [
+            5.0742214000048474e-08,
+            -5.0742214015987536e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            1.7958884840483475e-08,
+            -1.7958884840483475e-08
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -4.615930905761658e-17,
+          "final_persistent_memory_difference_l2": 5.471070874437775,
+          "delivered_value_only_effect": -0.04573503136634827,
+          "persistent_write_only_effect": -0.0012184083461761475,
+          "value_write_interaction": -4.887580871582031e-06,
+          "full_route_effect": -0.046958327293395996
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999402194148685,
+            5.9780585131457556e-05
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.1554943174123764
+          ],
+          "exact_conditional_choice_gradient": [
+            -5.2547830879093105e-08,
+            5.254783085424965e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.141142796334304e-08,
+            -4.141142796334304e-08
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 4.24645428477061e-17,
+          "final_persistent_memory_difference_l2": 15.82436888668232,
+          "delivered_value_only_effect": -0.0019717663526535034,
+          "persistent_write_only_effect": 0.002827197313308716,
+          "value_write_interaction": 2.3633241653442383e-05,
+          "full_route_effect": 0.0008790642023086548
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9665098842418018,
+            0.033490115758198095
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.07527859508991241
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00024816074421811176,
+            -0.0002481607442181099
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.5679373239058906e-07,
+            -4.5679373239058906e-07
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -2.267163673952984e-12,
+          "final_persistent_memory_difference_l2": 9.382267901092867,
+          "delivered_value_only_effect": -0.00744396448135376,
+          "persistent_write_only_effect": -0.0002339482307434082,
+          "value_write_interaction": 1.1183321475982666e-05,
+          "full_route_effect": -0.007666729390621185
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.06939956474018157,
+            0.9306004352598184
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0990954041481018,
+            0.0760461762547493
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0014885943966326236,
+            -0.001488594396632623
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.407062183521395e-05,
+            -4.407062183521395e-05
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -1.312065108550239e-09,
+          "final_persistent_memory_difference_l2": 5.781264856608516,
+          "delivered_value_only_effect": -0.022681839764118195,
+          "persistent_write_only_effect": -0.0005130618810653687,
+          "value_write_interaction": 0.0001456737518310547,
+          "full_route_effect": -0.02304922789335251
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.003361668314925039,
+            0.9966383316850749
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4991086423397064,
+            0.6056148409843445
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0003568349066010179,
+            0.0003568349066011674
+          ],
+          "mean_local_value_teacher_gradient": [
+            -0.00018796914187066627,
+            0.00018796914187066627
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.341481499795568e-09,
+          "final_persistent_memory_difference_l2": 9.943395889008707,
+          "delivered_value_only_effect": 0.10109123587608337,
+          "persistent_write_only_effect": 0.004662543535232544,
+          "value_write_interaction": 0.0007524192333221436,
+          "full_route_effect": 0.10650619864463806
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9999989269998775,
+            1.073000122515152e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.15808111429214478
+          ],
+          "exact_conditional_choice_gradient": [
+            -3.7188653887628463e-09,
+            3.7188653753418475e-09
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.2265063524341564e-11,
+            1.2265063524341564e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -4.157592272074904e-20,
+          "final_persistent_memory_difference_l2": 8.086889140445779,
+          "delivered_value_only_effect": 0.0063035935163497925,
+          "persistent_write_only_effect": -0.00274088978767395,
+          "value_write_interaction": -9.684264659881592e-05,
+          "full_route_effect": 0.0034658610820770264
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999948143207686,
+            5.185679231362978e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0829453244805336,
+            0.08735337853431702
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.2858635823419938e-08,
+            2.28586358192623e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.038987711005986e-10,
+            2.038987711005986e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -1.8474120237440555e-18,
+          "final_persistent_memory_difference_l2": 6.288472160658778,
+          "delivered_value_only_effect": 0.004591882228851318,
+          "persistent_write_only_effect": -0.0001715049147605896,
+          "value_write_interaction": -1.2323260307312012e-05,
+          "full_route_effect": 0.004408054053783417
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.999996494553584,
+            3.505446416019161e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.0990954041481018,
+            0.0886358842253685
+          ],
+          "exact_conditional_choice_gradient": [
+            3.666515809807196e-08,
+            -3.6665158098228884e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            3.9205121631955154e-10,
+            -3.9205121631955154e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 2.4362277985873877e-18,
+          "final_persistent_memory_difference_l2": 8.669842569542297,
+          "delivered_value_only_effect": -0.010814152657985687,
+          "persistent_write_only_effect": 0.000409737229347229,
+          "value_write_interaction": -5.510449409484863e-05,
+          "full_route_effect": -0.010459519922733307
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.999994474399434,
+            5.525600566068091e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4991086423397064,
+            0.4482754170894623
+          ],
+          "exact_conditional_choice_gradient": [
+            2.8088254609386214e-07,
+            -2.808825461644841e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.1789340464483335e-09,
+            -2.1789340464483335e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -2.8836334336400504e-18,
+          "final_persistent_memory_difference_l2": 7.756817170516207,
+          "delivered_value_only_effect": -0.04746603965759277,
+          "persistent_write_only_effect": -0.008104324340820312,
+          "value_write_interaction": 0.004737138748168945,
+          "full_route_effect": -0.05083322525024414
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999999770209119,
+            2.297908818406302e-08
+          ],
+          "actual_suffix_outcome_losses": [
+            0.15461525321006775,
+            0.15946881473064423
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.1153044897801852e-10,
+            1.1153041562523379e-10
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.977093437956537e-13,
+            9.977093437956537e-13
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -7.809043101638375e-23,
+          "final_persistent_memory_difference_l2": 12.838147643556205,
+          "delivered_value_only_effect": 0.004997164011001587,
+          "persistent_write_only_effect": -0.00011123716831207275,
+          "value_write_interaction": -3.236532211303711e-05,
+          "full_route_effect": 0.004853561520576477
+        }
+      ],
+      "mean_absolute_value_only_effect": 0.01699375850148499,
+      "mean_absolute_write_only_effect": 0.006021831417456269,
+      "mean_absolute_value_write_interaction": 0.006806247169151902,
+      "original_probabilities_reproduced": true,
+      "weights_preserved": true,
+      "optimizer_updates": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s6_20261002T164700Z.json",
+      "native_result_sha256": "77ed601f386abfadd7250622303340cb0a49231a5f04883f62f847d110bbc152",
+      "checkpoint_sha256": "4bc01a9c8050c17c2555dc5a77a4cb98ab2be160d59820ec35d39d3ad41fc8fb",
+      "dev_prefixes": 4,
+      "sites": 32,
+      "actual_outcomes_replayed": 64,
+      "diagnostic_hybrid_outcomes_replayed": 64,
+      "nonzero_comparable_policy_gradients": 24,
+      "opposed_teacher_directions": 5,
+      "opposed_fraction": 0.20833333333333334,
+      "samples": [
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9853346020685272,
+            0.014665397931472774
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.22229719161987305
+          ],
+          "exact_conditional_choice_gradient": [
+            4.781111998461816e-06,
+            -4.781111998450471e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.7153558212677412e-06,
+            1.7153558212677412e-06
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 1.640392931943632e-13,
+          "final_persistent_memory_difference_l2": 3.463320527725407,
+          "delivered_value_only_effect": 0.00040887296199798584,
+          "persistent_write_only_effect": -0.000743672251701355,
+          "value_write_interaction": 3.933906555175781e-06,
+          "full_route_effect": -0.00033086538314819336
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.047188016666020606,
+            0.9528119833339794
+          ],
+          "actual_suffix_outcome_losses": [
+            0.16206583380699158,
+            0.1619894951581955
+          ],
+          "exact_conditional_choice_gradient": [
+            3.432285481674186e-06,
+            -3.4322854816860597e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            7.727296530689041e-07,
+            -7.727296530689041e-07
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -5.304232714042038e-14,
+          "final_persistent_memory_difference_l2": 2.900981152137098,
+          "delivered_value_only_effect": 8.009374141693115e-05,
+          "persistent_write_only_effect": 5.066394805908203e-07,
+          "value_write_interaction": -4.26173210144043e-06,
+          "full_route_effect": 7.633864879608154e-05
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.20909719212177233,
+            0.7909028078782278
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4761785864830017,
+            0.4806655943393707
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0007420414206771444,
+            0.0007420414206771208
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.00011299209606785532,
+            -0.00011299209606785532
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 1.6768951007998443e-09,
+          "final_persistent_memory_difference_l2": 2.5193907597082585,
+          "delivered_value_only_effect": 0.002698928117752075,
+          "persistent_write_only_effect": -0.007255762815475464,
+          "value_write_interaction": 6.982684135437012e-05,
+          "full_route_effect": -0.0044870078563690186
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.018230524658175432,
+            0.9817694753418246
+          ],
+          "actual_suffix_outcome_losses": [
+            0.48101428151130676,
+            0.47135671973228455
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00017285270789484962,
+            -0.00017285270789485705
+          ],
+          "mean_local_value_teacher_gradient": [
+            3.100483262933779e-06,
+            -3.100483262933779e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.0718485791572052e-11,
+          "final_persistent_memory_difference_l2": 3.070463427458218,
+          "delivered_value_only_effect": 0.001314610242843628,
+          "persistent_write_only_effect": 0.00823161005973816,
+          "value_write_interaction": 0.00011134147644042969,
+          "full_route_effect": 0.009657561779022217
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9860631092503509,
+            0.01393689074964916
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.2237180769443512
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.4979766717024348e-05,
+            1.4979766717004984e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.410276088610364e-07,
+            6.410276088610364e-07
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.9207824013203006e-13,
+          "final_persistent_memory_difference_l2": 4.319194300393068,
+          "delivered_value_only_effect": 4.856288433074951e-05,
+          "persistent_write_only_effect": 0.0010540783405303955,
+          "value_write_interaction": -1.2621283531188965e-05,
+          "full_route_effect": 0.001090019941329956
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9950834376953125,
+            0.004916562304687532
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.16167040169239044
+          ],
+          "exact_conditional_choice_gradient": [
+            1.5611295917496674e-06,
+            -1.5611295917573735e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.4004413005163985e-07,
+            4.4004413005163985e-07
+          ],
+          "choice_gradient_cosine": -1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": 1.3738052364508287e-14,
+          "final_persistent_memory_difference_l2": 4.065073789150153,
+          "delivered_value_only_effect": 0.00020173192024230957,
+          "persistent_write_only_effect": -0.0005249977111816406,
+          "value_write_interaction": 4.172325134277344e-06,
+          "full_route_effect": -0.0003190934658050537
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9980162673182169,
+            0.0019837326817830603
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.4811302125453949
+          ],
+          "exact_conditional_choice_gradient": [
+            -9.198499564266678e-07,
+            9.198499564364198e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.3898282068705784e-06,
+            1.3898282068705784e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -2.558325900065588e-14,
+          "final_persistent_memory_difference_l2": 5.0585961005664295,
+          "delivered_value_only_effect": 0.001493692398071289,
+          "persistent_write_only_effect": -0.0010364651679992676,
+          "value_write_interaction": 7.3909759521484375e-06,
+          "full_route_effect": 0.0004646182060241699
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.020776381763468438,
+            0.9792236182365316
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4681508243083954,
+            0.47135671973228455
+          ],
+          "exact_conditional_choice_gradient": [
+            -6.522305668798084e-05,
+            6.522305668799319e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.890922601183067e-06,
+            4.890922601183067e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -6.379995846675203e-12,
+          "final_persistent_memory_difference_l2": 4.638055101365442,
+          "delivered_value_only_effect": -0.0007764995098114014,
+          "persistent_write_only_effect": -0.002404153347015381,
+          "value_write_interaction": -2.524256706237793e-05,
+          "full_route_effect": -0.00320589542388916
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.0733076315404773,
+            0.9266923684595227
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22410152852535248,
+            0.22262805700302124
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00010009825845489108,
+            -0.00010009825845489922
+          ],
+          "mean_local_value_teacher_gradient": [
+            5.629085743217032e-07,
+            -5.629085743217032e-07
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.1269573378055127e-12,
+          "final_persistent_memory_difference_l2": 3.766851227955577,
+          "delivered_value_only_effect": 0.0002218186855316162,
+          "persistent_write_only_effect": 0.0012462139129638672,
+          "value_write_interaction": 5.4389238357543945e-06,
+          "full_route_effect": 0.0014734715223312378
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9995104848519366,
+            0.0004895151480634594
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.1619471162557602
+          ],
+          "exact_conditional_choice_gradient": [
+            2.0734959633756775e-08,
+            -2.0734959652499142e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            5.663292987680991e-09,
+            -5.663292987680991e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -1.7417558692460526e-17,
+          "final_persistent_memory_difference_l2": 4.269460152287118,
+          "delivered_value_only_effect": -8.060038089752197e-05,
+          "persistent_write_only_effect": 4.774332046508789e-05,
+          "value_write_interaction": -9.521842002868652e-06,
+          "full_route_effect": -4.2378902435302734e-05
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9609084154627742,
+            0.039091584537225825
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.4762990474700928
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00016402248882498428,
+            -0.0001640224888249651
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.3477696301352426e-06,
+            1.3477696301352426e-06
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 4.421287199062251e-12,
+          "final_persistent_memory_difference_l2": 4.33066049054378,
+          "delivered_value_only_effect": 0.0002078711986541748,
+          "persistent_write_only_effect": -0.004591494798660278,
+          "value_write_interaction": 1.7076730728149414e-05,
+          "full_route_effect": -0.004366546869277954
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9993494155750066,
+            0.0006505844249934679
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47135671973228455,
+            0.47149407863616943
+          ],
+          "exact_conditional_choice_gradient": [
+            -8.930542500644281e-08,
+            8.930542495907576e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            7.53917158655718e-09,
+            -7.53917158655718e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 1.413021664126619e-17,
+          "final_persistent_memory_difference_l2": 4.09290733711743,
+          "delivered_value_only_effect": 4.5239925384521484e-05,
+          "persistent_write_only_effect": 0.00011727213859558105,
+          "value_write_interaction": -2.5153160095214844e-05,
+          "full_route_effect": 0.0001373589038848877
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.6279907082448334,
+            0.3720092917551666
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.22457532584667206
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.000454917789957822,
+            0.0004549177899578115
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.07286181422314e-05,
+            2.07286181422314e-05
+          ],
+          "choice_gradient_cosine": 0.9999999999999998,
+          "conditional_risk_change_after_local_policy_step": -1.8859637027368606e-10,
+          "final_persistent_memory_difference_l2": 4.309271888147874,
+          "delivered_value_only_effect": 0.0007889717817306519,
+          "persistent_write_only_effect": 0.0011148005723953247,
+          "value_write_interaction": 4.349648952484131e-05,
+          "full_route_effect": 0.0019472688436508179
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.6616448947046125,
+            0.3383551052953873
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.16164109110832214
+          ],
+          "exact_conditional_choice_gradient": [
+            7.799753796967814e-05,
+            -7.799753796964665e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.515129573164427e-06,
+            2.515129573164427e-06
+          ],
+          "choice_gradient_cosine": -0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": 3.923514203443854e-12,
+          "final_persistent_memory_difference_l2": 5.450212709378929,
+          "delivered_value_only_effect": 0.00011171400547027588,
+          "persistent_write_only_effect": -0.0004609823226928711,
+          "value_write_interaction": 8.642673492431641e-07,
+          "full_route_effect": -0.00034840404987335205
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.8092141852463823,
+            0.19078581475361772
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.47750943899154663
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00048726805421991795,
+            -0.0004872680542199264
+          ],
+          "mean_local_value_teacher_gradient": [
+            5.285970131783476e-06,
+            -5.285970131783476e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -5.1513769184249786e-11,
+          "final_persistent_memory_difference_l2": 6.047550072470193,
+          "delivered_value_only_effect": -0.00041857361793518066,
+          "persistent_write_only_effect": -0.0027402937412261963,
+          "value_write_interaction": 2.7120113372802734e-06,
+          "full_route_effect": -0.0031561553478240967
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999932087697674,
+            6.79123023269375e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47135671973228455,
+            0.4718957841396332
+          ],
+          "exact_conditional_choice_gradient": [
+            -3.6608856570903002e-09,
+            3.6608856384689774e-09
+          ],
+          "mean_local_value_teacher_gradient": [
+            9.187521419664096e-11,
+            -9.187521419664096e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 5.886148262696841e-18,
+          "final_persistent_memory_difference_l2": 7.972372335339502,
+          "delivered_value_only_effect": -0.0002561211585998535,
+          "persistent_write_only_effect": 0.0007759034633636475,
+          "value_write_interaction": 1.9282102584838867e-05,
+          "full_route_effect": 0.0005390644073486328
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9984869362948537,
+            0.0015130637051461878
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.233554407954216
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.650725068371982e-05,
+            1.6507250683725354e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.921226319478493e-06,
+            9.921226319478493e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -3.275444090758923e-12,
+          "final_persistent_memory_difference_l2": 4.463989312439217,
+          "delivered_value_only_effect": 0.011133119463920593,
+          "persistent_write_only_effect": -0.00020708143711090088,
+          "value_write_interaction": 3.129243850708008e-07,
+          "full_route_effect": 0.010926350951194763
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.003688002922821017,
+            0.996311997077179
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1570819616317749,
+            0.1619894951581955
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.8032248831796625e-05,
+            1.8032248831811827e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -3.7841884826517407e-06,
+            3.7841884826517407e-06
+          ],
+          "choice_gradient_cosine": 0.9999999999999998,
+          "conditional_risk_change_after_local_policy_step": -1.3647626771437802e-12,
+          "final_persistent_memory_difference_l2": 3.22478760421724,
+          "delivered_value_only_effect": -0.004865974187850952,
+          "persistent_write_only_effect": -3.488361835479736e-05,
+          "value_write_interaction": -6.67572021484375e-06,
+          "full_route_effect": -0.004907533526420593
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.011673574420329019,
+            0.988326425579671
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5150514245033264,
+            0.4806655943393707
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0003967197098931472,
+            -0.00039671970989315486
+          ],
+          "mean_local_value_teacher_gradient": [
+            7.74239908415776e-05,
+            -7.74239908415776e-05
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -6.143119868136342e-10,
+          "final_persistent_memory_difference_l2": 2.70065474281282,
+          "delivered_value_only_effect": 0.035085052251815796,
+          "persistent_write_only_effect": -0.0007790923118591309,
+          "value_write_interaction": 7.987022399902344e-05,
+          "full_route_effect": 0.03438583016395569
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.8076013390080512,
+            0.19239866099194874
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47135671973228455,
+            0.469795823097229
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00024253432975994096,
+            -0.00024253432975987672
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.00041129855862033656,
+            -0.00041129855862033656
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.995085426926737e-09,
+          "final_persistent_memory_difference_l2": 4.471328278566681,
+          "delivered_value_only_effect": -0.0035416781902313232,
+          "persistent_write_only_effect": 0.0015644729137420654,
+          "value_write_interaction": 0.0004163086414337158,
+          "full_route_effect": -0.001560896635055542
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999977926851841,
+            2.2073148158108016e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.24297457933425903
+          ],
+          "exact_conditional_choice_gradient": [
+            -4.491108103058473e-08,
+            4.491108105885314e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.585015104202757e-08,
+            1.585015104202757e-08
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 2.77192773675977e-17,
+          "final_persistent_memory_difference_l2": 4.661506127675246,
+          "delivered_value_only_effect": 0.020434975624084473,
+          "persistent_write_only_effect": -5.8978796005249023e-05,
+          "value_write_interaction": -2.9474496841430664e-05,
+          "full_route_effect": 0.020346522331237793
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999980162503301,
+            1.983749669943871e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.1629968285560608
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.998293341283952e-09,
+            1.998293331417098e-09
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.936519526783748e-10,
+            9.936519526783748e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -6.4261051438916795e-18,
+          "final_persistent_memory_difference_l2": 5.594245542566781,
+          "delivered_value_only_effect": 0.0011877864599227905,
+          "persistent_write_only_effect": -0.000166282057762146,
+          "value_write_interaction": -1.4171004295349121e-05,
+          "full_route_effect": 0.0010073333978652954
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999991059855854,
+            8.940144146752321e-07
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.5038020610809326
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.0684316308420214e-08,
+            2.0684316279516958e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -7.722515941976675e-09,
+            7.722515941976675e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -6.956558987124929e-17,
+          "final_persistent_memory_difference_l2": 5.418837046323491,
+          "delivered_value_only_effect": 0.024387985467910767,
+          "persistent_write_only_effect": -0.0012059807777404785,
+          "value_write_interaction": -4.553794860839844e-05,
+          "full_route_effect": 0.02313646674156189
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.017725895216096275,
+            0.9822741047839039
+          ],
+          "actual_suffix_outcome_losses": [
+            0.48087167739868164,
+            0.47135671973228455
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00016567147283974343,
+            -0.00016567147283978089
+          ],
+          "mean_local_value_teacher_gradient": [
+            7.003287340247115e-05,
+            -7.003287340247115e-05
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -2.320489009563158e-10,
+          "final_persistent_memory_difference_l2": 4.469440942955821,
+          "delivered_value_only_effect": 0.008398830890655518,
+          "persistent_write_only_effect": 0.0010549426078796387,
+          "value_write_interaction": 6.118416786193848e-05,
+          "full_route_effect": 0.009514957666397095
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.004937498288754389,
+            0.9950625017112457
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.22111226618289948
+          ],
+          "exact_conditional_choice_gradient": [
+            7.447261283777103e-06,
+            -7.447261283782829e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.5300936460227494e-06,
+            -2.5300936460227494e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -3.7687393552767673e-13,
+          "final_persistent_memory_difference_l2": 4.170411563462819,
+          "delivered_value_only_effect": -0.0014231950044631958,
+          "persistent_write_only_effect": -0.00010687112808227539,
+          "value_write_interaction": 1.4275312423706055e-05,
+          "full_route_effect": -0.0015157908201217651
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9999980322414016,
+            1.9677585985258656e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.1686563789844513
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.3118792189476123e-08,
+            1.3118792159820939e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.4058508228026385e-11,
+            2.4058508228026385e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -1.5914326587758396e-19,
+          "final_persistent_memory_difference_l2": 5.212825356481766,
+          "delivered_value_only_effect": 0.007009536027908325,
+          "persistent_write_only_effect": -0.00031048059463500977,
+          "value_write_interaction": -3.217160701751709e-05,
+          "full_route_effect": 0.006666883826255798
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9996172790285777,
+            0.00038272097142234477
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.502005398273468
+          ],
+          "exact_conditional_choice_gradient": [
+            -8.164064736547096e-06,
+            8.164064736541343e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.387805331210133e-08,
+            1.387805331210133e-08
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -2.2368938259905774e-15,
+          "final_persistent_memory_difference_l2": 5.772439764910686,
+          "delivered_value_only_effect": 0.019838064908981323,
+          "persistent_write_only_effect": 0.001460641622543335,
+          "value_write_interaction": 4.1097402572631836e-05,
+          "full_route_effect": 0.02133980393409729
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9997892367534833,
+            0.00021076324651675868
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47135671973228455,
+            0.4946073293685913
+          ],
+          "exact_conditional_choice_gradient": [
+            -4.899341151712919e-06,
+            4.899341151714691e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.197564114197492e-09,
+            9.197564114197492e-09
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -9.60684789207177e-16,
+          "final_persistent_memory_difference_l2": 6.259694649877986,
+          "delivered_value_only_effect": 0.02395331859588623,
+          "persistent_write_only_effect": -0.000672459602355957,
+          "value_write_interaction": -3.0249357223510742e-05,
+          "full_route_effect": 0.023250609636306763
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.881252754711937,
+            0.11874724528806303
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22262805700302124,
+            0.22830228507518768
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0005937871831941323,
+            0.0005937871831941488
+          ],
+          "mean_local_value_teacher_gradient": [
+            -6.034488359736012e-06,
+            6.034488359736012e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -7.166405833757876e-11,
+          "final_persistent_memory_difference_l2": 4.999128279248097,
+          "delivered_value_only_effect": 0.0059369951486587524,
+          "persistent_write_only_effect": -0.00030462443828582764,
+          "value_write_interaction": 4.1857361793518066e-05,
+          "full_route_effect": 0.005674228072166443
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.6793608612770535,
+            0.3206391387229465
+          ],
+          "actual_suffix_outcome_losses": [
+            0.1619894951581955,
+            0.16481222212314606
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0006148737155727903,
+            0.0006148737155727946
+          ],
+          "mean_local_value_teacher_gradient": [
+            -9.10789614239313e-06,
+            9.10789614239313e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -1.1200412426842213e-10,
+          "final_persistent_memory_difference_l2": 6.534472689424889,
+          "delivered_value_only_effect": 0.003303736448287964,
+          "persistent_write_only_effect": -0.00045672059059143066,
+          "value_write_interaction": -2.428889274597168e-05,
+          "full_route_effect": 0.0028227269649505615
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9986641417582501,
+            0.0013358582417498008
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4806655943393707,
+            0.4725453853607178
+          ],
+          "exact_conditional_choice_gradient": [
+            1.0832957435948346e-05,
+            -1.0832957435932798e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            1.0046935810215073e-07,
+            -1.0046935810215073e-07
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -2.1750192177895075e-14,
+          "final_persistent_memory_difference_l2": 6.18576206658037,
+          "delivered_value_only_effect": -0.008772045373916626,
+          "persistent_write_only_effect": 0.0006644725799560547,
+          "value_write_interaction": -1.2636184692382812e-05,
+          "full_route_effect": -0.008120208978652954
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999938544368987,
+            6.145563101390333e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.47135671973228455,
+            0.5044370293617249
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.0329588092142199e-07,
+            2.032958808659131e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.7511718315292675e-09,
+            1.7511718315292675e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -3.909160472076308e-18,
+          "final_persistent_memory_difference_l2": 7.185907887526613,
+          "delivered_value_only_effect": 0.033336251974105835,
+          "persistent_write_only_effect": -0.00024503469467163086,
+          "value_write_interaction": -1.0907649993896484e-05,
+          "full_route_effect": 0.03308030962944031
+        }
+      ],
+      "mean_absolute_value_only_effect": 0.006930076517164707,
+      "mean_absolute_write_only_effect": 0.0013012178242206573,
+      "mean_absolute_value_write_interaction": 3.822986036539078e-05,
+      "original_probabilities_reproduced": true,
+      "weights_preserved": true,
+      "optimizer_updates": 0
+    },
+    {
+      "native": "experiments/results/dvs_native/local_dvs_batched_pairs_pilot_s6_20261002T164700Z.json",
+      "native_result_sha256": "09f7f71b54fcb604f758d45dcfd5dce2cb397a035564c72ea9943a272c2fd05c",
+      "checkpoint_sha256": "115a31a0f50055ba1a20efcb2b5aefb1d86fe1d060cb8488e684f7890251ec7c",
+      "dev_prefixes": 4,
+      "sites": 32,
+      "actual_outcomes_replayed": 64,
+      "diagnostic_hybrid_outcomes_replayed": 64,
+      "nonzero_comparable_policy_gradients": 24,
+      "opposed_teacher_directions": 5,
+      "opposed_fraction": 0.20833333333333334,
+      "samples": [
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.8492053345585842,
+            0.1507946654414158
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.2261386513710022
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.100636867780542e-05,
+            1.1006368677822755e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -3.024273302878156e-05,
+            3.024273302878156e-05
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -6.657233161331192e-12,
+          "final_persistent_memory_difference_l2": 2.775083841888013,
+          "delivered_value_only_effect": 0.0005049854516983032,
+          "persistent_write_only_effect": -0.0004322826862335205,
+          "value_write_interaction": 1.3247132301330566e-05,
+          "full_route_effect": 8.594989776611328e-05
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.43130389561159194,
+            0.568696104388408
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19744038581848145,
+            0.19678182899951935
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00016153137319482156,
+            -0.00016153137319479882
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.772127080054648e-06,
+            -2.772127080054648e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -8.955720778816084e-12,
+          "final_persistent_memory_difference_l2": 2.479761796594793,
+          "delivered_value_only_effect": 6.276369094848633e-05,
+          "persistent_write_only_effect": 0.0005984753370285034,
+          "value_write_interaction": -2.682209014892578e-06,
+          "full_route_effect": 0.0006585568189620972
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.2613865576802081,
+            0.738613442319792
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5730323791503906,
+            0.5724843740463257
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00010579985198836966,
+            -0.00010579985198831969
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.00012488101747249483,
+            -0.00012488101747249483
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -2.6424773764089625e-10,
+          "final_persistent_memory_difference_l2": 2.6954388602633528,
+          "delivered_value_only_effect": 0.002454698085784912,
+          "persistent_write_only_effect": -0.0020179152488708496,
+          "value_write_interaction": 0.0001112222671508789,
+          "full_route_effect": 0.0005480051040649414
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.15534288931738638,
+            0.8446571106826137
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5267699360847473,
+            0.5183692574501038
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0011022654435229417,
+            -0.001102265443522992
+          ],
+          "mean_local_value_teacher_gradient": [
+            6.722457547751906e-05,
+            -6.722457547751906e-05
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -1.4819858868634786e-09,
+          "final_persistent_memory_difference_l2": 2.933849630707693,
+          "delivered_value_only_effect": 0.0026660561561584473,
+          "persistent_write_only_effect": 0.005719959735870361,
+          "value_write_interaction": 1.4662742614746094e-05,
+          "full_route_effect": 0.008400678634643555
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.856993189291626,
+            0.143006810708374
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.22926956415176392
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.00039424538107416446,
+            0.00039424538107414266
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.8626475149311057e-05,
+            -2.8626475149311057e-05
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 2.2571712670755663e-10,
+          "final_persistent_memory_difference_l2": 4.192733603254543,
+          "delivered_value_only_effect": -0.0003555119037628174,
+          "persistent_write_only_effect": 0.003582566976547241,
+          "value_write_interaction": -1.0192394256591797e-05,
+          "full_route_effect": 0.003216862678527832
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.8847071464782849,
+            0.11529285352171528
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.19645415246486664
+          ],
+          "exact_conditional_choice_gradient": [
+            3.342314135660399e-05,
+            -3.3423141356607106e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.3539100003075e-06,
+            4.3539100003075e-06
+          ],
+          "choice_gradient_cosine": -1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": 2.9104132496176137e-12,
+          "final_persistent_memory_difference_l2": 4.238060355447822,
+          "delivered_value_only_effect": 8.028745651245117e-05,
+          "persistent_write_only_effect": -0.0004120171070098877,
+          "value_write_interaction": 4.0531158447265625e-06,
+          "full_route_effect": -0.00032767653465270996
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9981351137971273,
+            0.0018648862028727816
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.5730574131011963
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.0666597116274195e-06,
+            1.0666597115953826e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.1918848536195885e-06,
+            1.1918848536195885e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -2.553061343966601e-14,
+          "final_persistent_memory_difference_l2": 5.00654688165802,
+          "delivered_value_only_effect": 0.0013526082038879395,
+          "persistent_write_only_effect": -0.0007888078689575195,
+          "value_write_interaction": 9.238719940185547e-06,
+          "full_route_effect": 0.0005730390548706055
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.2065345173741019,
+            0.7934654826258981
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5008214116096497,
+            0.5183692574501038
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.002875706065019766,
+            0.0028757060650197496
+          ],
+          "mean_local_value_teacher_gradient": [
+            -3.4419198846483994e-05,
+            3.4419198846483994e-05
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.9795903202456974e-09,
+          "final_persistent_memory_difference_l2": 4.125050099514463,
+          "delivered_value_only_effect": -0.0007916688919067383,
+          "persistent_write_only_effect": -0.01682114601135254,
+          "value_write_interaction": 6.496906280517578e-05,
+          "full_route_effect": -0.0175478458404541
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.90084984095214,
+            0.09915015904785986
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.22458846867084503
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00013078440270372489,
+            -0.00013078440270370626
+          ],
+          "mean_local_value_teacher_gradient": [
+            5.470953218991326e-06,
+            -5.470953218991326e-06
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.4310288826612428e-11,
+          "final_persistent_memory_difference_l2": 3.8040029158740585,
+          "delivered_value_only_effect": -0.0003596097230911255,
+          "persistent_write_only_effect": -0.0010951906442642212,
+          "value_write_interaction": -9.432435035705566e-06,
+          "full_route_effect": -0.0014642328023910522
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9946443080500348,
+            0.005355691949965159
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.19674217700958252
+          ],
+          "exact_conditional_choice_gradient": [
+            2.1122648798991002e-07,
+            -2.1122648797866121e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            9.598697662045352e-08,
+            -9.598697662045352e-08
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -3.867250005455525e-16,
+          "final_persistent_memory_difference_l2": 3.751640660787917,
+          "delivered_value_only_effect": -7.97957181930542e-05,
+          "persistent_write_only_effect": 4.875659942626953e-05,
+          "value_write_interaction": -8.612871170043945e-06,
+          "full_route_effect": -3.965198993682861e-05
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9263338015844489,
+            0.07366619841555114
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.565976619720459
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00044408583381218373,
+            -0.0004440858338121237
+          ],
+          "mean_local_value_teacher_gradient": [
+            6.782880758389272e-07,
+            -6.782880758389272e-07
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -6.024323040070067e-12,
+          "final_persistent_memory_difference_l2": 4.001396412616928,
+          "delivered_value_only_effect": -2.759695053100586e-05,
+          "persistent_write_only_effect": -0.00648808479309082,
+          "value_write_interaction": 7.927417755126953e-06,
+          "full_route_effect": -0.006507754325866699
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9996950783432014,
+            0.0003049216567986397
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5183692574501038,
+            0.5194935202598572
+          ],
+          "exact_conditional_choice_gradient": [
+            -3.427075477861049e-07,
+            3.427075478001248e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -3.111802362696296e-09,
+            3.111802362696296e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 4.3162593111411794e-17,
+          "final_persistent_memory_difference_l2": 3.355568698158417,
+          "delivered_value_only_effect": 0.00044471025466918945,
+          "persistent_write_only_effect": 0.0006701946258544922,
+          "value_write_interaction": 9.357929229736328e-06,
+          "full_route_effect": 0.001124262809753418
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999546770029302,
+            4.532299706989012e-05
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.22750253975391388
+          ],
+          "exact_conditional_choice_gradient": [
+            -6.570803793596312e-08,
+            6.570803792678155e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.8093687797830107e-09,
+            1.8093687797830107e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -2.1764208332378628e-17,
+          "final_persistent_memory_difference_l2": 5.749660588184928,
+          "delivered_value_only_effect": 0.0004138350486755371,
+          "persistent_write_only_effect": 0.001022934913635254,
+          "value_write_interaction": 1.3068318367004395e-05,
+          "full_route_effect": 0.0014498382806777954
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9886381557248269,
+            0.011361844275173187
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.19640998542308807
+          ],
+          "exact_conditional_choice_gradient": [
+            4.176826963098808e-06,
+            -4.1768269631056505e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.1834048673636749e-07,
+            1.1834048673636749e-07
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 9.854687738215782e-15,
+          "final_persistent_memory_difference_l2": 6.231961998581522,
+          "delivered_value_only_effect": 0.00019179284572601318,
+          "persistent_write_only_effect": -0.0005712956190109253,
+          "value_write_interaction": 7.659196853637695e-06,
+          "full_route_effect": -0.0003718435764312744
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9982862217552891,
+            0.0017137782447107551
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.5722172856330872
+          ],
+          "exact_conditional_choice_gradient": [
+            4.569458637361871e-07,
+            -4.5694586377187317e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.829998053305615e-07,
+            1.829998053305615e-07
+          ],
+          "choice_gradient_cosine": -0.9999999999999997,
+          "conditional_risk_change_after_local_policy_step": 1.7272892059637678e-15,
+          "final_persistent_memory_difference_l2": 6.908472188868376,
+          "delivered_value_only_effect": 0.001515805721282959,
+          "persistent_write_only_effect": -0.0018038749694824219,
+          "value_write_interaction": 2.09808349609375e-05,
+          "full_route_effect": -0.0002670884132385254
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 9,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.4196900187073693,
+            0.5803099812926308
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5183692574501038,
+            0.5164000988006592
+          ],
+          "exact_conditional_choice_gradient": [
+            0.00047958919341640403,
+            -0.0004795891934164523
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.0638177344566874e-05,
+            -4.0638177344566874e-05
+          ],
+          "choice_gradient_cosine": 0.9999999999999998,
+          "conditional_risk_change_after_local_policy_step": -3.8979258842352353e-10,
+          "final_persistent_memory_difference_l2": 7.117356636269093,
+          "delivered_value_only_effect": -0.001109004020690918,
+          "persistent_write_only_effect": -0.0008685588836669922,
+          "value_write_interaction": 8.404254913330078e-06,
+          "full_route_effect": -0.00196915864944458
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9882816096461052,
+            0.011718390353894837
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.2431301474571228
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.00019777509191988948,
+            0.00019777509191988316
+          ],
+          "mean_local_value_teacher_gradient": [
+            -0.00013750783624636502,
+            0.00013750783624636502
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -5.439118004203812e-10,
+          "final_persistent_memory_difference_l2": 3.4430648249854503,
+          "delivered_value_only_effect": 0.017455965280532837,
+          "persistent_write_only_effect": -0.00036093592643737793,
+          "value_write_interaction": -1.7583370208740234e-05,
+          "full_route_effect": 0.01707744598388672
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.6106331816224367,
+            0.38936681837756326
+          ],
+          "actual_suffix_outcome_losses": [
+            0.18977729976177216,
+            0.19678182899951935
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0016653989667902592,
+            0.0016653989667902525
+          ],
+          "mean_local_value_teacher_gradient": [
+            -0.0008539117069773802,
+            0.0008539117069773802
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -2.8442019751071076e-08,
+          "final_persistent_memory_difference_l2": 2.3657191988987467,
+          "delivered_value_only_effect": -0.007013604044914246,
+          "persistent_write_only_effect": 0.00013099610805511475,
+          "value_write_interaction": -0.00012192130088806152,
+          "full_route_effect": -0.007004529237747192
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.02686912914166601,
+            0.9731308708583339
+          ],
+          "actual_suffix_outcome_losses": [
+            0.6458171010017395,
+            0.5724843740463257
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0019174439412558341,
+            -0.0019174439412558426
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.00037367026842700934,
+            -0.00037367026842700934
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -1.432978509567491e-08,
+          "final_persistent_memory_difference_l2": 3.0949861970178625,
+          "delivered_value_only_effect": 0.07352125644683838,
+          "persistent_write_only_effect": -0.0003395676612854004,
+          "value_write_interaction": 0.00015103816986083984,
+          "full_route_effect": 0.07333272695541382
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 0,
+          "probabilities": [
+            0.9355227313857016,
+            0.06447726861429848
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5183692574501038,
+            0.49609094858169556
+          ],
+          "exact_conditional_choice_gradient": [
+            0.0013438264869705902,
+            -0.0013438264869705975
+          ],
+          "mean_local_value_teacher_gradient": [
+            0.000995156165654385,
+            -0.000995156165654385
+          ],
+          "choice_gradient_cosine": 0.9999999999999999,
+          "conditional_risk_change_after_local_policy_step": -2.6746576191617453e-08,
+          "final_persistent_memory_difference_l2": 4.531989066695648,
+          "delivered_value_only_effect": -0.024498015642166138,
+          "persistent_write_only_effect": 0.002165496349334717,
+          "value_write_interaction": 5.4210424423217773e-05,
+          "full_route_effect": -0.022278308868408203
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9753126399799016,
+            0.02468736002009835
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.23951537907123566
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.0003241529278675412,
+            0.0003241529278675743
+          ],
+          "mean_local_value_teacher_gradient": [
+            -0.00010049674365082296,
+            0.00010049674365082296
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -6.515256458926959e-10,
+          "final_persistent_memory_difference_l2": 6.351225249256511,
+          "delivered_value_only_effect": 0.01373077929019928,
+          "persistent_write_only_effect": -0.000260964035987854,
+          "value_write_interaction": -7.137656211853027e-06,
+          "full_route_effect": 0.013462677597999573
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.998232092688783,
+            0.001767907311217031
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.19684448838233948
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.1058013933257333e-07,
+            1.105801393373377e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.4478108756570554e-07,
+            1.4478108756570554e-07
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -3.4319751179972797e-16,
+          "final_persistent_memory_difference_l2": 5.419249140161584,
+          "delivered_value_only_effect": 0.0004038214683532715,
+          "persistent_write_only_effect": -0.0003154277801513672,
+          "value_write_interaction": -2.5734305381774902e-05,
+          "full_route_effect": 6.26593828201294e-05
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.9999990770059827,
+            9.22994017207038e-07
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.5979892015457153
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.3540781356622492e-08,
+            2.354078146381378e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -8.900439547379539e-09,
+            8.900439547379539e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 2.8866973982429944e-17,
+          "final_persistent_memory_difference_l2": 5.505130596783023,
+          "delivered_value_only_effect": 0.027254819869995117,
+          "persistent_write_only_effect": -0.0016825199127197266,
+          "value_write_interaction": -6.747245788574219e-05,
+          "full_route_effect": 0.02550482749938965
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 0,
+          "head": 1,
+          "probabilities": [
+            0.03165927437995348,
+            0.9683407256200466
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5183802843093872,
+            0.5183692574501038
+          ],
+          "exact_conditional_choice_gradient": [
+            3.380500360852421e-07,
+            -3.3805003616513226e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.8940443991962672e-06,
+            2.8940443991962672e-06
+          ],
+          "choice_gradient_cosine": -1.0,
+          "conditional_risk_change_after_local_policy_step": 1.9573830481628048e-14,
+          "final_persistent_memory_difference_l2": 4.595458575713837,
+          "delivered_value_only_effect": -0.00019633769989013672,
+          "persistent_write_only_effect": 0.00019055604934692383,
+          "value_write_interaction": 1.6808509826660156e-05,
+          "full_route_effect": 1.1026859283447266e-05
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9987827198625246,
+            0.0012172801374753998
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.2134665846824646
+          ],
+          "exact_conditional_choice_gradient": [
+            1.5302180235328893e-05,
+            -1.5302180235330685e-05
+          ],
+          "mean_local_value_teacher_gradient": [
+            2.909934253245864e-08,
+            -2.909934253245864e-08
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -8.923399349500673e-15,
+          "final_persistent_memory_difference_l2": 7.471470358361537,
+          "delivered_value_only_effect": -0.012067615985870361,
+          "persistent_write_only_effect": -0.0005394071340560913,
+          "value_write_interaction": 2.0906329154968262e-05,
+          "full_route_effect": -0.012586116790771484
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9999860886168036,
+            1.3911383196321252e-05
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.19850756227970123
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.4007002976472987e-08,
+            2.4007002979990768e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -5.247319393188796e-11,
+            5.247319393188796e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 4.080094827394238e-17,
+          "final_persistent_memory_difference_l2": 4.677780147891153,
+          "delivered_value_only_effect": 0.002100318670272827,
+          "persistent_write_only_effect": -0.0003456026315689087,
+          "value_write_interaction": -2.898275852203369e-05,
+          "full_route_effect": 0.0017257332801818848
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9896283983482564,
+            0.01037160165174356
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.5849186778068542
+          ],
+          "exact_conditional_choice_gradient": [
+            -0.00012762608586316823,
+            0.00012762608586311557
+          ],
+          "mean_local_value_teacher_gradient": [
+            -2.0337215441505393e-07,
+            2.0337215441505393e-07
+          ],
+          "choice_gradient_cosine": 1.0,
+          "conditional_risk_change_after_local_policy_step": -5.19166496357648e-13,
+          "final_persistent_memory_difference_l2": 5.358182670026659,
+          "delivered_value_only_effect": 0.01077580451965332,
+          "persistent_write_only_effect": 0.0016686320304870605,
+          "value_write_interaction": -1.0132789611816406e-05,
+          "full_route_effect": 0.012434303760528564
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 0,
+          "probabilities": [
+            0.9999983595186439,
+            1.6404813560768542e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5183692574501038,
+            0.5327152013778687
+          ],
+          "exact_conditional_choice_gradient": [
+            -2.353421493844956e-08,
+            2.353421494131809e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            -4.5131082335896315e-11,
+            4.5131082335896315e-11
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": -7.885197540552867e-19,
+          "final_persistent_memory_difference_l2": 5.670906485855715,
+          "delivered_value_only_effect": 0.015156209468841553,
+          "persistent_write_only_effect": -0.0007166266441345215,
+          "value_write_interaction": -9.363889694213867e-05,
+          "full_route_effect": 0.014345943927764893
+        },
+        {
+          "clip_index": 0,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999940400200813,
+            5.959979918666755e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.22605270147323608,
+            0.2463536560535431
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.2099256049843772e-07,
+            1.209925605108669e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            -8.038113998343612e-10,
+            8.038113998343612e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 2.6590113820583806e-17,
+          "final_persistent_memory_difference_l2": 6.578169868591671,
+          "delivered_value_only_effect": 0.020144030451774597,
+          "persistent_write_only_effect": 0.0001287311315536499,
+          "value_write_interaction": 2.8192996978759766e-05,
+          "full_route_effect": 0.020300954580307007
+        },
+        {
+          "clip_index": 1,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999917695259918,
+            8.230474008121805e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.19678182899951935,
+            0.18899250030517578
+          ],
+          "exact_conditional_choice_gradient": [
+            6.410933973243275e-08,
+            -6.41093397049149e-08
+          ],
+          "mean_local_value_teacher_gradient": [
+            5.351349747026815e-10,
+            -5.351349747026815e-10
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 1.6650219781160464e-17,
+          "final_persistent_memory_difference_l2": 7.107641231824205,
+          "delivered_value_only_effect": -0.007316559553146362,
+          "persistent_write_only_effect": -0.00048166513442993164,
+          "value_write_interaction": 8.89599323272705e-06,
+          "full_route_effect": -0.007789328694343567
+        },
+        {
+          "clip_index": 2,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            0.9999939796371682,
+            6.020362831753443e-06
+          ],
+          "actual_suffix_outcome_losses": [
+            0.5724843740463257,
+            0.48820483684539795
+          ],
+          "exact_conditional_choice_gradient": [
+            5.073903384975112e-07,
+            -5.073903385495215e-07
+          ],
+          "mean_local_value_teacher_gradient": [
+            4.381217244203807e-09,
+            -4.381217244203807e-09
+          ],
+          "choice_gradient_cosine": null,
+          "conditional_risk_change_after_local_policy_step": 3.3071178803727293e-18,
+          "final_persistent_memory_difference_l2": 7.245815159130146,
+          "delivered_value_only_effect": -0.08464732766151428,
+          "persistent_write_only_effect": 0.00043708086013793945,
+          "value_write_interaction": -6.92903995513916e-05,
+          "full_route_effect": -0.08427953720092773
+        },
+        {
+          "clip_index": 3,
+          "query_prediction_correct": true,
+          "event_index": 19,
+          "depth": 1,
+          "head": 1,
+          "probabilities": [
+            1.6986809735196073e-05,
+            0.9999830131902648
+          ],
+          "actual_suffix_outcome_losses": [
+            0.4549689292907715,
+            0.5183692574501038
+          ],
+          "exact_conditional_choice_gradient": [
+            -1.0769510173187841e-06,
+            1.0769510173469262e-06
+          ],
+          "mean_local_value_teacher_gradient": [
+            -1.6725477130873942e-06,
+            1.6725477130873942e-06
+          ],
+          "choice_gradient_cosine": 1.0000000000000002,
+          "conditional_risk_change_after_local_policy_step": -3.602336426648661e-14,
+          "final_persistent_memory_difference_l2": 16.215410420931136,
+          "delivered_value_only_effect": -0.06340506672859192,
+          "persistent_write_only_effect": 4.017353057861328e-05,
+          "value_write_interaction": -3.5434961318969727e-05,
+          "full_route_effect": -0.06340032815933228
+        }
+      ],
+      "mean_absolute_value_only_effect": 0.012253070715814829,
+      "mean_absolute_write_only_effect": 0.0016483264043927193,
+      "mean_absolute_value_write_interaction": 3.3534131944179535e-05,
+      "original_probabilities_reproduced": true,
+      "weights_preserved": true,
+      "optimizer_updates": 0
+    }
+  ],
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_counterfactual_route_audit.py": "3c7ef4a42700a5eede2f49c6feb790bba86bab4958c6f724a0c7a4c5f9256758"
+  },
+  "wall_s": 56.96575017400028,
+  "max_rss_kb": 344184,
+  "scope": "First4 previously used dev prefixes, fixed events9/19, both layers/heads, all two candidate outcomes and two value/write diagnostic hybrids. Conditional first-arrival time is held fixed; forced realized payload and persistent memory commit alter the complete suffix with unchanged future random draws. Exact conditional categorical-choice component compared with winner-averaged current value teacher; time-density/pathwise credit is separate. Hybrid messages/commits are diagnostic, not legal routes. Absolute effects are not additive attribution percentages. Conditional suffix replay is not the full expected-history gradient, independent confirmation, a refit or a causal explanation of the observed quality gap."
+}
