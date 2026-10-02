@@ -421,3 +421,18 @@ fixed, so extra memory is separated from extra graph reach. It measures missing
 surrogate credit, not fitting quality or unbiasedness. Resource guards and all
 losing-value/optimizer costs remain in force. See
 [the local evidence and planned comparisons](../LANGUAGE_LEARNING_DIAGNOSIS_20261002.md).
+
+**Result and revision, 2 October 03:20 UTC (native 2K, seed 6, dev only; scalar cascade 2.734 bpc / 3.753
+whole-fit GFLOPs, untrained 2.741).** Both repairs 2.703 / 4.053; count message only 2.744 / 4.032; escape
+gate only **2.695 / 3.824**. The gate alone gains .039 for 1.9% more counted fitting work, so P389c (gate
+alone < .02) is **falsified**. The message alone does not learn (2.746→2.744 over four passes) and slightly
+hurts in combination. P389b also failed: the bases alone score 5.05 (both), 4.61 (message) and 4.92 (gate)
+against uniform 4.75. As posed it was mis-specified. §387.1 makes the optimal base a residual, which alone may
+score worse than uniform, so this is not evidence of collapse.
+
+Revised reading: at 2K the binding constraint is the *override path* (§387.3), not the information path. A
+scalar escape forces the same trust in a table regardless of what the native state predicts. Letting the
+state and the evidence features set `D_k, θ_k` per position lets learning act where tables are confidently
+wrong. The information-path argument may still matter where residuals are context-specific at larger N.
+The 131K carrier test therefore runs gate-only and both-repairs side by side. The integrated promotion
+candidate is the gate-only native receiver, next at 8K.

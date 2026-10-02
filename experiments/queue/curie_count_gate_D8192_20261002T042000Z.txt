@@ -1,0 +1,4 @@
+# Integrated promotion candidate after the 2K ablation (theory §389 revision): native receiver + escape gate, 8K.
+# Same settings as curie_count_carrying_D8192_K4_H2_d16_depth8_s6_20261002T031500Z (scalar reference, running before this).
+# Gate: beat the scalar 8K reference and stream-adaptive counts at 8K (2.699) by >= .02 each.
+curie_count_gate_D8192_K4_s6_20261002T042000Z experiments/count_carrying_language_benchmark.py --tag curie_count_carrying_D8192_K4_gate_s6_20261002T042000Z --fit 8192 --dev 8192 --epochs 4 --orders 4 --escape-gate
