@@ -1089,3 +1089,28 @@ through later races, writes and timing in a way no first-order local expansion c
 actual counterfactual returns (§402 with the corrected law), possibly made cheap with a pre-fixed or cross-fitted
 critic (§403). Exact-π training: depth 2 58.3% / 1.054, depth 4 57.3% / 1.193 (seed 7; baseline depth 2 57.8% /
 1.105), no gain, consistent with the audit.
+
+## 404. Making replay credit cheap: forks, shadow lanes, bounded horizons
+
+A counterfactual replay agrees with the factual run up to the forced race, and only the suffix differs (user
+suggestion: run shadow channels alongside the main signal). From exact to approximate:
+
+1. **Forked replays (exact, implemented: experiments/dvs_fork_replay.py).** The factual run snapshots the detached
+   persistent state, RNG state and race counter at every event boundary. A replay resumes at the snapshot of the
+   forced race's event. Its loss equals the full replay's exactly (contract, reference and fast paths), and training
+   gradients are identical (tests/test_dvs_critic_le.py). Cost falls from the episode to the suffix: about half on
+   average, and less for late races.
+2. **Shadow lanes (exact; wall time ≈ 1×).** Fork P−1 counterfactual lanes at each sampled race and run them in
+   parallel with the factual lane, with the same events and random numbers and a different winner at the fork, vectorized
+   over a lane dimension. Sequential event steps do not grow. That matters most where per-event overhead dominates
+   (our CPU core), and it matches a substrate with parallel shadow channels that never touch the factual output. It
+   needs a lane dimension in the core.
+3. **Bounded-horizon shadows plus a critic (controlled bias).** Run each counterfactual lane H events past the fork
+   and value the resulting state with a critic (n-step / TD(λ)). Cost k·P·H instead of k·P·(T−t). Keeping a few full
+   replays as a correction preserves unbiasedness, as in §403.
+4. **Shadow lookahead inside an event (approximate).** Losing units' proposals already exist in training.
+   Propagating them one or two layers in a shadow channel gives local lookahead credit. That alone is a
+   linearization-like approximation (§401 shows its limits), so it needs the critic and occasional full replays.
+
+Use order: forks now (exact, free accuracy-wise); the critic control variate with forks to cut k; shadow lanes when
+a lane-batched core is written; bounded horizons only with a correction term.

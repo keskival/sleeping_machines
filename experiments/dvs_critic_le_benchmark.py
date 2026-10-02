@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'experiments'))
 import dvs_clock_calibrated_benchmark as C  # noqa: E402
 import dvs_local_expectation_benchmark as LE  # noqa: E402
 import dvs_native_benchmark as N  # noqa: E402
+import dvs_fork_replay as FR  # noqa: E402
 from parallel_head_accumulated_language import merge  # noqa: E402
 from race_language_screen import capture  # noqa: E402
 
@@ -32,6 +33,8 @@ CRITIC = {}
 
 def parser():
     p = LE.parser(); p.add_argument('--critic-width', type=int, default=32); p.add_argument('--critic-lr', type=float, default=.003)
+    p.add_argument('--fork', action='store_true', help='resume replays at the forced race event (§404; exact, cheaper)')
+    p.add_argument('--no-critic', action='store_true', help='plain replay credit (critic output fixed at zero)')
     return p
 
 
@@ -52,8 +55,8 @@ def critic_for(model, a):
     return CRITIC[key]
 
 
-def run_with_values(model, row, seed):
-    """realized episode recording scores and candidate values per race."""
+def run_with_values(model, row, seed, fork=False):
+    """realized episode recording scores and candidate values per race (and event snapshots when forking)."""
     record, vals = [], []
     orig = LE.PATHWISE
 
@@ -61,10 +64,13 @@ def run_with_values(model, row, seed):
         vals.append(values); return orig(scores, values)
     LE.PATHWISE = spy
     try:
-        loss, races, state = LE.run(model, row, seed, record=record)
+        if fork:
+            loss, races, state, snaps = FR.realized(model, row, seed, record)
+        else:
+            (loss, races, state), snaps = LE.run(model, row, seed, record=record), None
     finally:
         LE.PATHWISE = orig
-    return loss, races, state, record, vals
+    return loss, races, state, record, vals, snaps
 
 
 def train_window(model, optimizer, rows, a, epoch, trace=False):
@@ -80,18 +86,24 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
         box = {}
         def forward():
             model.train()
-            loss, races, state, scores, vals = run_with_values(model, row, seed)
+            loss, races, state, scores, vals, snaps = run_with_values(model, row, seed, getattr(a, 'fork', False))
             feats = [features(scores[r], vals[r], r, races, (r // model.heads) % model.depth, model.depth) for r in range(races)]
             with torch.no_grad():
                 q = [net(f)[:, 0].double() for f in feats]
                 q = [x - x.mean() for x in q]                                   # advantage form
+                if getattr(a, 'no_critic', False):
+                    q = [torch.zeros_like(x) for x in q]
             route = loss.new_zeros(())
             for r in range(races):                                              # critic credit for every race
                 route = route + (torch.softmax(scores[r], 0) * q[r].to(scores[r].dtype)).sum()
             chosen = rng.choice(races, size=min(a.route_samples, races), replace=False)
             with torch.no_grad():
-                losses = {int(r): torch.tensor([float(LE.run(model, row, seed, force=(int(r), i))[0])
-                                                for i in range(len(scores[int(r)]))], dtype=torch.float64) for r in chosen}
+                if snaps is not None:
+                    losses = {int(r): torch.tensor([float(FR.forked(model, row, snaps, (int(r), i))[0])
+                                                    for i in range(len(scores[int(r)]))], dtype=torch.float64) for r in chosen}
+                else:
+                    losses = {int(r): torch.tensor([float(LE.run(model, row, seed, force=(int(r), i))[0])
+                                                    for i in range(len(scores[int(r)]))], dtype=torch.float64) for r in chosen}
             for r, L in losses.items():                                         # exact replay correction
                 adv = L - L.mean()
                 route = route + (races / len(chosen)) * (torch.softmax(scores[r], 0) * (adv - q[r]).to(scores[r].dtype)).sum()
@@ -120,7 +132,8 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
 
 
 def sources():
-    return {**LE.sources(), 'experiments/dvs_critic_le_benchmark.py': N.sha(ROOT / 'experiments/dvs_critic_le_benchmark.py')}
+    return {**LE.sources(), 'experiments/dvs_critic_le_benchmark.py': N.sha(ROOT / 'experiments/dvs_critic_le_benchmark.py'),
+            'experiments/dvs_fork_replay.py': N.sha(ROOT / 'experiments/dvs_fork_replay.py')}
 
 
 @contextmanager

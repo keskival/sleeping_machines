@@ -44,3 +44,15 @@ def test_critic_is_cross_fitted_after_the_model_update():
     out = CR.train_window(m, opt, rows, a, epoch=1)
     net = CR.CRITIC[id(m)][0]
     assert out['route_replays'] == 2 * 2 * 2 and all(p.grad is not None for p in net.parameters())
+
+
+def test_forked_replays_give_identical_gradients():
+    a, m, rows = _setup()
+    with torch.no_grad():
+        for p in m.parameters():
+            p.add_(torch.randn_like(p) * .05)
+    a.route_samples = 3
+    a.fork = False; plain = _grads(m, a, rows, CR.train_window)
+    a.fork = True; forked = _grads(m, a, rows, CR.train_window)
+    for n in plain:
+        torch.testing.assert_close(forked[n], plain[n], rtol=0, atol=1e-12, msg=n)
