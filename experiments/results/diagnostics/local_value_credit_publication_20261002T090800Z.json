@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_value_credit_publication_20261002T090800Z",
+    "plan": "experiments/queue/local_value_credit_20261002T090800Z.json"
+  },
+  "pdf_pages": 100,
+  "analysis_result": "experiments/results/diagnostics/local_value_credit_analysis_20261002T090800Z.json",
+  "analysis_sha256": "37b1c92565548fd4d5ceab20b5d81fc786ae6f0b2266228aa114baf824742322",
+  "frozen_audit": "experiments/results/diagnostics/local_value_credit_frozen_20261002T090800Z.json",
+  "frozen_audit_sha256": "f87b237f883f8bb08b4d025ffa2ae43676e3599b5233e7aa55174bcad3635292",
+  "followup_gate_passed": false,
+  "wall_s": 20.031565649002005,
+  "max_rss_kb": 65708,
+  "source_sha256": {
+    "experiments/publish_value_credit_report.py": "009549872e434e33f41f0670fbd8f1c9135fcd62aefc3c1732ae8668984dbc5f",
+    "report/readable_report.py": "8f30157ba7f8c105ffdb89e7e3884f73f6b694ff6a13ce1c06ac864fcc0c5c68",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4"
+  },
+  "scope": "Completed exploratory paired quality/resource and frozen algebra/conditional-information evidence; no pending prediction, energy or supremacy claim."
+}

@@ -1551,6 +1551,99 @@ Full-shape addressed/tapped contracts pass exact zero forward/parent gradients, 
 
 CPU emulator, 2FLOPs/MAC plus unit-weight specials, all fitting forward/loss/backward/normalization/clipping/Adam; excludes development, RNG, hash/integer operations and traffic. Inference is one accounted target after127 warm tokens, not throughput. Activity columns are derived from fixed code/dimensions. Empty text filler-group NaN in original JSONs is undefined, not a score; preserved beside correction to null in the driver. Cold neural memory differs from fit-prefilled count references. Source: local_deep_feature_preflight_20261002T081500Z.json.
 
+## Appendix B. Restoring addressed value credit: completed fits
+
+Five matched integrated arms:1,024 fitting characters/four passes,4,092 targets/64 Adam updates,2,047 dev targets, H2/pool2/c16/U64/warm512/lr.002/seed6. Full native temporal core versus original projected-value slots, late-projected raw-feature slots and two shallow controls. Core initialization and race RNG are matched. Minimum cold dev bpc over fixed passes selects each checkpoint; frozen fit replay is secondary and never selects weights.
+
+| Model | Cold dev bpc | Fit-replay dev bpc | Selected pass |
+| --- | --- | --- | --- |
+| Native full p16/L8 | 3.9681 | 3.9674 | 4 |
+| Stored projection p16/L8 | 3.9030 | 3.8967 | 4 |
+| Late projection p16/L8 | 3.9421 | 3.9809 | 4 |
+| Late p16/L1 | 4.0862 | 4.0801 | 4 |
+| Late p2/L1 | 4.5396 | 4.5274 | 4 |
+
+![value credit learning 20261002T090800Z](report/figures/value_credit_learning_20261002T090800Z.png)
+
+Late-full gain over native:+0.0260bpc; over stored projection:-0.0391; over minimal:+0.5975; over same-width shallow:+0.1441. The predeclared nomination gate fails.
+
+Late projection preserves fixed-weight computation by linearity and restores fixed-feature projection credit from old detached slots. It does not restore historical core-producer credit or add linear-reader expressivity. Fixed hash addresses are not learned pooling/KV race attention. The same-width shallow arm isolates depth better than the width-changing minimal control. Reused dev and one seed: exploratory quality/learning evidence, not semantic proof or supremacy.
+
+## Appendix B. Value-credit resources and protocol boundaries
+
+| Model | Whole fit GFLOPs est. | Fit MFLOPs/target est. | Cold infer MFLOPs/target | Replay GFLOPs est. | Warm infer MFLOPs/target |
+| --- | --- | --- | --- | --- | --- |
+| Native full p16/L8 | 1.893 | 0.463 | 0.0974 | 0.100 | 0.0974 |
+| Stored projection p16/L8 | 1.924 | 0.470 | 0.1016 | 0.104 | 0.1016 |
+| Late projection p16/L8 | 1.933 | 0.472 | 0.0999 | 0.104 | 0.1006 |
+| Late p16/L1 | 0.348 | 0.085 | 0.0203 | 0.022 | 0.0210 |
+| Late p2/L1 | 0.018 | 0.004 | 0.0012 | 0.001 | 0.0012 |
+
+| Model | Core slots | Extra occupied/capacity | Updates/keys/teacher values per fit target | Context reads/writes per fit target |
+| --- | --- | --- | --- | --- |
+| Native full p16/L8 | 32 | 0/0 | 16/32/32 | 0.000/0.000 |
+| Stored projection p16/L8 | 32 | 757/4096 | 16/32/32 | 1.000/0.999 |
+| Late projection p16/L8 | 32 | 757/4096 | 16/32/32 | 1.000/0.999 |
+| Late p16/L1 | 4 | 757/4096 | 2/4/4 | 1.000/0.999 |
+| Late p2/L1 | 4 | 757/4096 | 2/4/4 | 1.000/0.999 |
+
+Every column uses the same unit/denominator for all five models. Whole fitting costs are representative first/mature/partial-window estimates from actual forward/loss/backward/normalization/clipping/Adam audits, with admitted losing-value work charged.2FLOPs/MAC plus unit-weight specials; CPU emulator here. Projected clockless costs are separate in the completed JSON ledger. Variable retrieval occupancy and graph reach are not fully enumerated.
+
+Warm evaluation replays all1,024 fit tokens with frozen selected weights, then carries predictive state/time into dev. Hash history and previous-address are cleared at the boundary to forbid an invented cross-split outcome. Dev race noise is coupled to cold scoring. Replay cost is extra work, estimated from first/last replay chunks; it is neither fitting FLOPs nor free access to historical data. Neural slots update causally during dev with frozen parameters.
+
+Late/original full fitting work ratio:1.004×. All direct/core and additional memory work must earn predictive value. No automatic scale-up. The nomination gate requires at least.02bpc cold gains against all four controls and no more than2× original-full fitting work under this common estimate convention.
+
+Hash/integer bookkeeping, RNG, traffic, Python metadata and physical energy remain separate. Cold/replay scores here use2,047 dev targets and cannot be directly juxtaposed with saved8,191-target count/dense references. Original-minimal projection contrast remains open; AWS integrated capacity/exposure work remains independent. Complete work/activity/storage and exact-source checkpoint provenance are retained in local_value_credit_analysis_20261002T090800Z.json.
+
+## Appendix B. Fixed-feature credit and compiled inference
+
+Frozen-reader compilation folds A=R_vW once and removes the unused W matrix. Coupled predictions and raw-slot state preserve the unfused construction within numerical tolerance. Under2FLOPs/MAC, fold2d³ replaces2d² per occupied read, breaking even after d occupied reads. This changes deployment work, not the fitting optimizer; compiled models refuse training.
+
+| Late model | Unfused infer KFLOPs/target | Fused infer KFLOPs/target | Removed weights | Fold KFLOPs | Break-even occupied reads |
+| --- | --- | --- | --- | --- | --- |
+| late_full | 100.180 | 99.540 | 1024 | 65.536 | 32 |
+| late_shallow | 20.562 | 19.922 | 1024 | 65.536 | 32 |
+| late_minimal | 1.224 | 1.214 | 16 | 0.128 | 4 |
+
+Inference samples include16 actual targets after128 warm tokens; the saved projection work equals2d² times observed occupied reads. Matrix-fold work is charged above; constructor initialization/copy/RNG are separate. This is arithmetic/weight reduction with frozen quality, not measured latency, energy or competitive superiority.
+
+| Text-trained model | Prefix-pair KL, gap8 | Prefix-pair KL, gap32 | Prefix-pair KL, gap64 |
+| --- | --- | --- | --- |
+| native_full | 2.14e-04 | 1.84e-03 | 3.46e-04 |
+| addressed_full | 1.94e-03 | 5.28e-04 | 1.10e-03 |
+| late_full | 1.87e-03 | 4.80e-04 | 5.50e-04 |
+| late_shallow | 1.88e-06 | 3.18e-07 | 2.90e-07 |
+| late_minimal | 8.10e-14 | 0.00e+00 | 0.00e+00 |
+
+Each parity diagnostic balances all four input bit pairs with identical noise/query suffix. Actual causal query count vectors are identical for orders1–8, but targets are opposite across paired prefixes. A predictor restricted to those suffix/count inputs has at least1bit target logloss; the full prefix determines parity exactly. Cue-free prefixes make the count contract explicit, replacing the retired synthetic all-orders independence assertion.
+
+These frozen text checkpoints were never trained on parity. KL and top-context differences diagnose prefix dependence/retention, not parity learning or semantic abstraction. Zero optimizer steps, parameter fingerprints unchanged. A later task fit needs matched full/shallow controls, new-prefix generalization and complete prefix computation/credit accounting. Historical feature-producer credit, learned address pooling and KV races remain open. Source: local_value_credit_frozen_20261002T090800Z.json; theory63 records exact scope.
+
+## Appendix B. Frozen feature geometry and matched count calibration
+
+| Model | Frozen fit bpc | Cold dev bpc | Fit head gradient norm | Dev feature participation rank |
+| --- | --- | --- | --- | --- |
+| native_full | 3.6920 | 3.9681 | 0.597 | 2.31 |
+| addressed_full | 3.6595 | 3.9030 | 0.536 | 1.95 |
+| late_full | 3.7272 | 3.9421 | 0.637 | 1.60 |
+| late_shallow | 3.8785 | 4.0862 | 0.249 | 4.53 |
+| late_minimal | 4.5775 | 4.5396 | 0.323 | 1.21 |
+
+At the selected weights, replay1,023 fitting and2,047 development targets from cold state with the primary evaluation RNG. Capture actual head inputs, then compute fixed-feature linear-head loss derivatives and covariance in float64. No head fitting, optimizer step or parameter changes. Frozen dev scores reproduce the primary results within1e−5bpc.
+
+The participation rank is (trace C)²/trace(C²), a measure of feature geometry. Finite joint training need not make the final head stationary; its gradient norm and covariance rank alone do not identify a bug or semantic abstraction. Frozen fitting loss helps separate training fit from development generalization without using online training scores.
+
+| Count order | Frozen KN bpc | Frozen WB bpc | Frozen AD bpc | Adaptive WB bpc | Adaptive AD bpc |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 3.8263 | 3.8008 | 3.8692 | 3.4806 | 3.5024 |
+| 2 | 3.7986 | 3.9596 | 3.9576 | 3.1259 | 3.1566 |
+| 3 | 3.7530 | 4.1254 | 4.0371 | 3.0285 | 3.0271 |
+| 4 | 3.7515 | 4.2123 | 4.0771 | 3.0873 | 3.0308 |
+
+Same1,024 fit characters and2,047 dev targets, reused count-reference implementation, fixed discount.75, all orders/methods shown separately. Count construction uses one pass; learned models use four gradient passes. Counts are fit-prefilled; adaptive variants also update from observed dev outcomes after prediction. These state/history policies differ from cold neural scoring; frozen neural fit replay is reported separately above.
+
+KN: interpolated Kneser–Ney; WB: Witten–Bell; AD: absolute discount. Integer represented count increments/lookups and measured construction/scoring wall time are in the completed audit, without conversion to neural FLOPs. Equal scalar loss calibrates prediction quality; it does not establish identical features or a same-quality compute advantage. No per-target order selection or official-test access. Full spectra, data/checkpoint hashes and diagnostic boundaries are retained in local_value_credit_frozen_20261002T090800Z.json.
+
 ## Appendix B (continued). Diagnostic: count receivers over the temporal carrier
 
 Labelled diagnostic, not the integrated native architecture. The input-gated temporal carrier supplies the base predictive to the same escape-race count cascade (Theory §§386–388). It tests whether sufficient-statistic receivers remove the memorization tax: if counts hold the exact local statistics, a small learned base should lose far less than the carrier alone does.
