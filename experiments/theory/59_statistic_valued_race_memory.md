@@ -1596,3 +1596,13 @@ credit, one pass at 90M (108,875 parameters, 65 TFLOPs, 12,361 characters/s) sco
 2.045). Pool 4 (177,019 parameters, 108 TFLOPs) scored 1.997. The capacity gain at unchanged selected writes is .048 at 90M
 against .027 at 10M, the direction the capacity–exposure law predicts: each untied unit's maps see about 1/U of the writes,
 so more data feeds more units. Single seeds. The p32/d8 90M arm is running on AWS.
+
+**§415 six passes (22:06 UTC): first native row ahead of a saved multi-pass reference.** p96/d4 pool 2 with route credit,
+6 passes (7,324 updates; 940,875 parameters; 352 TFLOPs whole fit, traced estimate; exact winner-only inference 1.32
+MFLOPs per position) scored DEV 1.811 / **test 1.8886** (T = 256 1.8885). Development on the first 50K went 2.236 / 2.107 /
+1.999 / 1.941 at windows 1,600–6,400. Against the E64 Transformer-256×4 (4 passes, 4,882 steps, 3.24M parameters, 1.908, about
+889 TFLOPs estimated, 7.41 inference MFLOPs per position): .020 better on test bpc with about 2.5× less estimated fitting work,
+3.4× fewer parameters and 5.6× less inference work, but 1.5× the optimizer updates. By the §415 criteria, which require the same
+or fewer updates and a second seed, this is **not yet a supremacy claim**. It is a better-quality, lower-work result against
+that reference, with the update count stated. Against the LSTM-512 (6 passes, 7,324 steps: the same update count, 1.799, about
+433 TFLOPs): .090 behind at 0.81× its estimated fitting work.

@@ -33,6 +33,8 @@ NATIVE = [
      'p96/d4 + route credit'),
     ('language_batched/curie_language_batched_10M_p64d4_pool2_linear_4pass_l64_lr004_cmp_s6_20261003T150000Z.json',
      'p64/d4 + route credit, 4 passes'),
+    ('language_batched/curie_language_batched_10M_p96d4_pool2_linear_6pass_l64_lr004_cmp_s6_20261003T111500Z.json',
+     'p96/d4 + route credit, 6 passes'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
 INFERENCE_MORE = ['language_batched/curie_language_batched_inference_work_20261003T120000Z.json',

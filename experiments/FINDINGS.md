@@ -40,6 +40,7 @@ common first-time clock credit only, with no term saying which alternative would
 | p64/d4 pool 4 + route credit (added 14:05; T=256 2.1795) | 689,787 | 4.41 | **2.180** |
 | p96/d4 pool 2 + route credit (added 15:06; T=256 2.1625; beats one-pass LSTM 2.171 on quality, with more work) | 940,875 | 5.87 | **2.163** |
 | p64/d4 pool 2 + route credit, **4 passes** (17:24; T=256 1.9547; Transformer-256×4 4 passes 1.908 at ~8× the work) | 422,475 | 2.68 | 1.955 |
+| p96/d4 pool 2 + route credit, **6 passes** (22:06; T=256 1.8885; beats Transformer-256×4 1.908 at ~2.5× less estimated work and 3.4× fewer parameters, with 1.5× its updates; LSTM-512 6 passes 1.799) | 940,875 | 5.87 | **1.889** |
 | p32/d8 pool 2, no route credit | 210,043 | 1.41 | 2.456 |
 | p32/d8 pool 4, no route credit | 346,331 | 2.36 | 2.498 |
 | E64 Transformer-256×2, one pass (estimate) | 1,658,907 | 11.13 | 2.427 |

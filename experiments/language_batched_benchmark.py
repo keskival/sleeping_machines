@@ -84,7 +84,7 @@ def main():
     p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
     p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps (sleeping_machines/compiled_episodes.py, §412)')
-    p.add_argument('--route-credit', choices=('none', 'linear', 'linear_rw', 'linear_rwn'), default='none',
+    p.add_argument('--route-credit', choices=('none', 'linear', 'linear_rw', 'linear_rwn', 'sampled'), default='none',
                    help='linear: linearized local-expectation value credit to the race scores; linear_rw: also the '
                         'linearized write-address credit (§413)')
     p.add_argument('--tie-pools', action='store_true', help='share each pool\'s maps (input, output, gate, control, '
@@ -138,6 +138,7 @@ def main():
                                  ('experiments/language_batched_benchmark.py', 'sleeping_machines/batched_episodes.py',
                                   'experiments/dvs_batched_large_benchmark.py',
                                   'sleeping_machines/fast_native_core.py', 'sleeping_machines/addressed_event_heads.py',
+                                  'sleeping_machines/sparse_training.py',
                                   'sleeping_machines/compiled_episodes.py')},
                   hardware=dict(platform=platform.platform(), torch=torch.__version__, device='cpu', threads=1),
                   protocol=dict(fit=[0, a.fit], dev=[90_000_000, 90_000_000 + a.dev], test=[95_000_000, 95_000_000 + a.test],
@@ -153,7 +154,9 @@ def main():
                                                   'for the read value and the write slot',
                                                   linear_rwn='factorized race plus linearized local-expectation score '
                                                   'credit for the read value and the newly written content of the write '
-                                                  'slot')[a.route_credit],
+                                                  'slot',
+                                                  sampled='winner plus one sampled alternative per race (q_j = pi_j/(1-pi_w)); '
+                                                  'unbiased estimate of the linearized credit; cached key reads (§416)')[a.route_credit],
                                 kernels='compiled layer steps (torch.compile/inductor, contract-tested against the batched path)'
                                 if a.compiled else 'eager batched path'))
     window_times = []
@@ -179,15 +182,25 @@ def main():
         box = {}
         def step(logits=None):
             model.train(); opt.zero_grad(set_to_none=True)
-            z = (logits or LOGITS)(model, rows, seed, all_logits=True,
-                                   route_credit=None if a.route_credit == 'none' else a.route_credit)
+            fn = logits or LOGITS
+            if logits is None and a.route_credit == 'sampled':
+                from sleeping_machines.sparse_training import sparse_layer_step, sparse_train_logits
+                fn = (sparse_train_logits if a.compiled else
+                      (lambda m, r, s, all_logits=False, route_credit=None: sparse_train_logits(
+                          m, r, s, all_logits=all_logits, route_credit=route_credit, step=sparse_layer_step)))
+            z = fn(model, rows, seed, all_logits=True, route_credit=None if a.route_credit == 'none' else a.route_credit)
             loss = F.cross_entropy(z.reshape(-1, 27), y.reshape(-1))
             loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip, error_if_nonfinite=True); opt.step()
             box['loss'] = float(loss.detach())
         t = time.perf_counter()
         if w < a.trace_windows:
             # traced windows run the eager batched path: fused kernels bypass the operator tracer
-            rec = capture(lambda: step(batched_logits)); ledger = merge([ledger, rec]) if ledger else rec; traced_chars += S * B
+            traced = batched_logits
+            if a.route_credit == 'sampled':     # trace the sparse path itself (eager), whose work is the claim
+                from sleeping_machines.sparse_training import sparse_layer_step, sparse_train_logits
+                traced = lambda m, r, s, all_logits=False, route_credit=None: sparse_train_logits(
+                    m, r, s, all_logits=all_logits, route_credit=route_credit, step=sparse_layer_step)
+            rec = capture(lambda: step(traced)); ledger = merge([ledger, rec]) if ledger else rec; traced_chars += S * B
         else:
             step()
         if schedule is not None:
