@@ -1928,3 +1928,25 @@ orphanchecksPASS. First015100Z rendering failed a tableheader1.39pt beyond
 pageedge and rolledback; originalqueue/log kept, newtable fits174mm content
 width. Allsuccessfulmodules/publisher/sources frozen. Precision audit117 runs
 in its ownunique guardedjob; no new quality-training arm launched locally.
+
+## Production precision audit and remote reconciliation, 3 October02:00 UTC
+
+Theory117 audit completes13.556s/374828KiB,4contracts. Production p16/L8/T16,
+SAMErepresented initialfloat32 weights/private-state promotedtodouble (no
+double reinitialization). EVERYoriginal/reuse doublegradient relativeerrors
+1.439e-15private/2.735e-15shared; factualstate/logits/endRNG exact. ALLfactual
+andshadow historiesmatch acrossfloat32/double:131328old and65792optimized
+race decisions perfamily, no branchcrossing. Float32old/reuse relativeerrors
+againstowndoubleprograms1.489e-6/1.595e-6private,2.120e-6/2.103e-6shared.
+Bothimplementationshave thisprecisionfloor; no estimatorchangeidentified,
+nor proofthat thissmallroundingexplains underfitting.116tightcoordinatefails
+remainhistoricalfacts. Allgradientvectors androutehistories saved.vectors.npz.
+Nooptimizer/quality/precisionrepair applied. Diagnosticworkunknown,notzero.
+
+Read-onlyfetch finds13newremotecommits through2d31759, including independently
+contractedAWSwinnerreuse and completedp16realtext8smokes; AWSprioritized
+matrixnow aws_language_winner_matrix_20261003T014100Z. Preserve bothmodels'
+originalfullreplay/controlrows alongsideoptimizedruns; no localduplicate.
+Sharedmanualreport additions archived in report/appendices/aws_language_replay_
+history_20261003T020000Z.md before rebase. Next reconcilemain and regenerate
+report from completedJSONs including117precision andALLAWSadmission rows.
