@@ -1,0 +1,159 @@
+{
+  "status": "completed_metadata_analysis",
+  "parent_sha256": {
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T064000Z.json": "e53f009ec946d7bfd5d6b0708b65e7cabf7f604972a9ad35343e6760f1dfbbd8",
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T120000Z.json": "853870714b3ceed5086a67f7b057c1590095e5ee0e333a0c012f6e4db253e285",
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T143000Z.json": "2ef98d05743cefac2f7cfcec9dfb84739f4ef545bb56d85dfc8c6f9b7dfea777",
+    "experiments/results/language_batched/curie_language_sparse_inference_work_20261003T120000Z.json": "f7a7b26e6e4fa30072b8ad708f71ea16b98222802a654d86b59d04b6d6dcb1fe",
+    "experiments/results/language_batched/curie_language_sparse_inference_work_20261003T143000Z.json": "714d0e4c2e1f056329a38bbd7e9d61f56b4c48c0ea9b7be1ba4b42e5fc7c0a76",
+    "experiments/results/language_batched/curie_language_batched_10M_p16d8_s6_20261003T023000Z.json": "44afb8757dd0b036408397d08d0e317aee1c853cd7c48187745d4a894f056fd1",
+    "experiments/results/language_batched/curie_language_batched_10M_p16d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "2c3388ac66d5b128dfefcee4b3bf72741bd6b0683faee0ad15a33f0c18b13979",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_l64_lr004_cmp_s6_20261003T054000Z.json": "65bf062a4d1dba72648e981fefe6e42ad0d78b5ac80ace1fcb797715e10bfa39",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "51dbe83fdd6ca96f3d936935a33e0969828d9e568c2050ff6c21ef364e69fe24",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_pool4_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "7827e0c8059c4546c691d2f640463b53543956b4c2f76a40394dcf4c93ee6d7d",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool1_l64_lr004_cmp_s6_20261003T070000Z.json": "98be20ac8d19cbd044362bd04db427d320f50d27100aa296a8f68aa481ddcb5e",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool2_linear_l64_lr004_cmp_s6_20261003T070000Z.json": "2ebb23d00897521c18ce8e569ecd78dc09db6f063aa5cb4666ab451f3abbda23",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "34a19f4ef35575152f0d9f0eecc585767cf09f62489958b7fc3d9ddc87467816",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool2_linear_rwn_l64_lr004_cmp_s6_20261003T101000Z.json": "5f7268ddf2bb7de70cb620e15a99d485ce6631ce1b2c9e49c683c69fb500f76f",
+    "experiments/results/language_batched/curie_language_batched_10M_p64d4_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "710797dd6d22a863aaa3935ef58e0d881f813490b6bb0402671b4dea2d0948f3",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "f86e7713d4ecb9893f33e3efd636fbd8b896e4dee8866efefcd04353eefbeeea",
+    "experiments/results/language_batched/curie_language_batched_10M_p64d4_pool4_linear_l64_lr004_cmp_s6_20261003T120000Z.json": "068d2893a41f4bb9f4f5f1d13cb9ad6c751d838482a6aa942494af1c40967b4f",
+    "experiments/results/language_batched/curie_language_batched_10M_p96d4_pool2_linear_l64_lr004_cmp_s6_20261003T120000Z.json": "0c84c4ab13ca0a7b93c6435b03f6b7adc5ece65f02ef3a6f3e1ed217c3f5a745",
+    "experiments/results/language_batched/curie_language_batched_10M_p64d4_pool2_linear_4pass_l64_lr004_cmp_s6_20261003T150000Z.json": "ade7907aed44ce4625b92c3476512ae5e66acd8fc67d9963789591594a08cac5",
+    "experiments/results/e64/lstm_D10000000_s256_p1.json": "d5bc1b4b65e808c381874fc5ac357479fdfc06517142a4ccbb101459640e344c",
+    "experiments/results/e64/tf_D10000000_s256_p1.json": "107e9e3c785392166b40f170b7e29c940d842cdb22dd9bfb1b402260d25cba14",
+    "experiments/results/e64/tf_D10000000_s256_L4_p4_dr0.1_v.json": "16c4397a74ef4768b20a4666c001c2491ba3310d27f2fc4e5c237cc3d3864899",
+    "experiments/results/e64/lstm_D10000000_s512_p6_dr0.1_v.json": "4b9ad878521654817ba47e60754283380a9ce690d0726a7384b13793dc6b0688",
+    "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z.json": "e319c137fc31badfb803158ff70f18a8357d804e404dad53d1ee7e85ec7a2424",
+    "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json": "67b047b3a12775d8597e2c072ba3bcd603bd1199fa3313d0f6faee8712effdfb",
+    "experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/lstm_D90000000_s512_p6_dr0.1_v.json": "2eac8692b2e33fa0bc1a188c7a764e4082be2e862c90f31ee49df1e4e0990ae0",
+    "experiments/results/aws_20260929/aws_e64_lstm_D90M_baseline_20260929/provenance.json": "72e0423152b4b4dc39e597a3e24a5a88bf454d9c23943ee894e1f17dffc6f32f",
+    "experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929/tf_D1000000_s256_L2_p20_dr0.2_v.json": "a4bf7c7a74914bad7edef861313873cb3fd053c3e03c06a1307ac8831ff99ae9",
+    "experiments/results/aws_20260929/aws_e64_tf_D1M_checkpoint_20260929/provenance.json": "2f3565da72e591efdb2f27328f56f577a94ffc10eccd937df2ebf815fafb9ced",
+    "experiments/results/aws_20260929/aws_e64_tf_D90M_baseline_rss6g_20260930/tf_D90000000_s256_L4_p4_dr0.1_v.json": "7ce45c490fda38e382ba070bbd7ae6815a0b69cb6a14d235a1d6c85b453de3b3",
+    "experiments/results/aws_20260929/aws_e64_tf_D90M_baseline_rss6g_20260930/provenance.json": "02435bfdef9360f6216754974bd2e0f414984ef53928bc5c1f9ef2cd14bcb3a2"
+  },
+  "rows": [
+    {
+      "kind": "native10M",
+      "model": "p64/d4 + route credit",
+      "parameters": 422475,
+      "updates": 1220,
+      "test_bpc_T256": 2.183314996745724,
+      "whole_fit_TF_estimate": 26.7874617492,
+      "fit_MF_per_presentation_estimate": 2.6802900219726564,
+      "inference_quality_verified_on_prepacked_backend": false
+    },
+    {
+      "kind": "native10M",
+      "model": "p64/d4 + route credit, 4 passes",
+      "parameters": 422475,
+      "updates": 4882,
+      "test_bpc_T256": 1.9547012943119024,
+      "whole_fit_TF_estimate": 107.19376086852,
+      "fit_MF_per_presentation_estimate": 2.6802900219726564,
+      "inference_quality_verified_on_prepacked_backend": false
+    },
+    {
+      "kind": "control10M",
+      "model": "LSTM-256",
+      "parameters": 338395,
+      "updates": 1220,
+      "test_bpc_T256": 2.1705974351075197,
+      "whole_fit_TF_estimate": 20.30611545338,
+      "fit_MF_per_presentation_estimate": 2.0317818516845705,
+      "inference_quality_verified_on_prepacked_backend": null
+    },
+    {
+      "kind": "control10M",
+      "model": "Transformer-256x2",
+      "parameters": 1658907,
+      "updates": 1220,
+      "test_bpc_T256": 2.426908791525532,
+      "whole_fit_TF_estimate": 111.26160200826,
+      "fit_MF_per_presentation_estimate": 11.13257256262207,
+      "inference_quality_verified_on_prepacked_backend": null
+    },
+    {
+      "kind": "control10M",
+      "model": "Transformer-256x4, 4 passes",
+      "parameters": 3238427,
+      "updates": 4882,
+      "test_bpc_T256": 1.9082528934334995,
+      "whole_fit_TF_estimate": 888.775443157778,
+      "fit_MF_per_presentation_estimate": 22.22308400012207,
+      "inference_quality_verified_on_prepacked_backend": null
+    },
+    {
+      "kind": "control10M",
+      "model": "LSTM-512, 6 passes",
+      "parameters": 1199323,
+      "updates": 7324,
+      "test_bpc_T256": 1.7993440508357954,
+      "whole_fit_TF_estimate": 432.592997479324,
+      "fit_MF_per_presentation_estimate": 7.21009863293457,
+      "inference_quality_verified_on_prepacked_backend": null
+    },
+    {
+      "kind": "native90M",
+      "model": "p32/d4/pool2 + route credit",
+      "parameters": 108875,
+      "updates": 10986,
+      "test_bpc_T256": 2.045356463608058,
+      "whole_fit_TF_estimate": 65.219569028232,
+      "fit_MF_per_presentation_estimate": 0.7246835219726563,
+      "inference_quality_verified_on_prepacked_backend": false
+    },
+    {
+      "kind": "native90M",
+      "model": "p32/d4/pool4 + route credit",
+      "parameters": 177019,
+      "updates": 10986,
+      "test_bpc_T256": 1.9984155714593377,
+      "whole_fit_TF_estimate": 107.60686829652,
+      "fit_MF_per_presentation_estimate": 1.1956675805664063,
+      "inference_quality_verified_on_prepacked_backend": false
+    },
+    {
+      "kind": "control90M",
+      "model": "LSTM-512, 6 passes",
+      "parameters": 1199323,
+      "updates": 65917,
+      "test_bpc_T256": 1.661014721714737,
+      "whole_fit_TF_estimate": 3893.396042441917,
+      "fit_MF_per_presentation_estimate": 7.21009863293457,
+      "inference_quality_verified_on_prepacked_backend": null
+    },
+    {
+      "kind": "control90M",
+      "model": "Transformer-256x4, 4 passes",
+      "parameters": 3238427,
+      "updates": 43945,
+      "test_bpc_T256": 1.6043692368067888,
+      "whole_fit_TF_estimate": 8000.253348948905,
+      "fit_MF_per_presentation_estimate": 22.22308400012207,
+      "inference_quality_verified_on_prepacked_backend": null
+    }
+  ],
+  "deltas": {
+    "p64_one_to_four_pass_bpc_improvement": 0.2286137024338215,
+    "p64_one_to_four_pass_perplexity_reduction": 0.14654541056675308,
+    "p64_four_to_one_whole_fit_work_ratio": 4.001639344262295,
+    "four_pass_native_vs_transformer_bpc_gap": 0.04644840087840296,
+    "four_pass_native_vs_transformer_perplexity_ratio": 1.0327194628763399,
+    "four_pass_transformer_to_native_whole_fit_work_ratio": 8.291298261732956,
+    "four_pass_transformer_to_native_parameter_ratio": 7.665369548493993,
+    "native90m_to_four_pass_native10m_whole_fit_ratio": 1.0038538383638456,
+    "native90m_minus_four_pass_native10m_test_bpc": 0.043714277147435254
+  },
+  "analysis_source_sha256": "f9c706e0e03bae822f585bed90448c3e9020477cac2b55e6913b7bcbb226f5bd",
+  "scope": "Saved single-seed quality and differing operation-estimate conventions; no numerical runtime. Test is reporting-only. Ratios are raw unequal-quality work gaps, not isoquality or energy advantage.",
+  "decisions": [
+    "Preserve integrated temporal races/private state/key-value separation/alternative-value credit.",
+    "Training budget is a material D4 lever with clip1 unchanged; this does not identify clipping effects in deeper models.",
+    "At approximately107TF the two native outcomes confound width, pool, data variety, presentations, update count and cosine schedule. Do not infer a scaling law or data preference.",
+    "Close actual trained sparse quality parity before advertising backend quality/resource comparisons.",
+    "Retain current AWS pool2/depth8/width64 and curie tied-pool/seeds/horizon owner chains. Stronger comparisons remain on AWS.",
+    "Further model selection uses development evidence and a reserved confirmation protocol, not these test gaps."
+  ]
+}

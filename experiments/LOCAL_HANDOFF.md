@@ -3018,3 +3018,53 @@ require new tags. Existing AWSpriority manifest90M pool2/D4->depth8->width64
 with private streaming replay/teacher, and curie tied-pool/seeds/horizons retain
 priority. Mechanism gaps remain useful long/deep credit, complete resource
 accounting, independent replication and comparable-quality modern controls.
+
+## Compact tied inference and90M capacity update — 3 October, 21:15 UTC
+
+Shared main now includes completed90M pool2 and its owner report/PDF update.
+At matched T256, p32/D4/pool2->4 improves test2.045356->1.998416 and
+DEV1.962040->1.915118, with8selected writes unchanged;16->32scored keys,
+512->1024value scalars and65.219569->107.606868TF estimated fitting work.
+Single seed, raw unequal-work comparison; different initialization/race streams,
+not a credit-by-pool factorial. New capacity metadata211500Z hashes completed
+parents AND actual final weights; broader budget inventory refreshed under a
+new211500Z tag, older snapshots preserved. No benchmark prediction replaces a
+pending cell. The owner already updated the shared PDF, so no renderer competed.
+
+Concrete runtime issue for queued tied models: old `_stacked` expands shared
+maps per receiver; prepacked146 retains those copies. New sibling
+`sleeping_machines/compact_tied_inference.py` stores one bank/head and broadcasts
+its maps, removing explicit per-lane winner-matrix gathers. Private keys/clocks/
+rates/frequencies and every memory/cache remain; all keys are scored. Same
+temporal races, delay/transport/content computation, sparse writes and original
+counterfactual learner; no frozen original code, core architecture or optimizer
+changed. Public scope is quiescent immutable one-source CPU FP32/64, one worker
+per process. No online/concurrent/GPU or cross-request state API is claimed.
+
+Stdlib actual-packer50shape fixtures/alias/private-parameter/gain/ownership/
+mutation/source-change checks pass;5bad frozen manifests reject before runtime
+imports. D4/H2/U4/P64 FP32 packed payload2404736->813248bytes, avoiding1591488
+duplicatedbytes;64-lane unit state/cache still1067008bytes. Shapes only, not
+measured kernel temporaries/DRAM/speed/energy or model quality. Theory148 gives
+ideal-program induction, exact resource equations and finite-precision limits.
+Saved check: `results/diagnostics/compact_tied_inference_stdlib_20261003T211500Z.json`.
+
+Prepared **UNRUN** one-job queue `queue/compact_tied_sparse_contracts_20261003T211000Z.txt`
+and `.sources.json`: compare original batched vs expanded prepacked AND compact
+tied worker, pools1/3/4/8,32/64precision,two seeds,variablelength13/5/9;
+every observed winner, state/cache/RNG/logits and snapshot lifecycle.32paircases,
+144forwardcalls/5616padded/3888activepositions,0backward/updates. Synthetic
+diagnostics receive no trained score. An optional actual tied-weight mode exists
+but requires a new immutable parent/weight manifest; no completed tied checkpoint
+is present here. Do not retie untied90M weights and claim learned tied quality.
+
+No Torch/NumPy/model forward, fitting, profiling, scheduler or waiting job ran
+in this container. Physical curie lock still unobservable, approximately9.7GiB
+available; free Docker lock is not admission. Use run_safe only after genuine
+physical reservation,1CPUthread/VMS3000000KiB/RSS1250000KiB/available8192MiB/
+timeout420s; recheck host resources. Keep147 completed90M sparse quality ladder
+and current owner90M depth8->width64/private streaming replay+teacher priority.
+New owner90M pool8 and10M six-pass tied/baseline queues follow their existing
+admission; curie p96six-pass/tied/seeds/horizons retain ownership. Native compact
+parity, actual tied quality, end-to-end serving benefit and replication remain
+pending. No numerical admission or queue reallocation was executed here.

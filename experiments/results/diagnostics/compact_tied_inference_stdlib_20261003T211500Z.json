@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "packing_shape_cases": 50,
+  "alias_and_lifecycle_contracts": "passed",
+  "frozen_manifest_rejections": 5,
+  "native_parity": "unrun",
+  "p64_D4_H2_U4_FP32": {
+    "available_slots": 32,
+    "selected_writes_per_position": 8,
+    "scored_keys_per_position": 32,
+    "sparse_proposals_per_position": 8,
+    "final_stacked_tensor_bytes_per_call": 2404736,
+    "parameter_payload_bytes_read_for_stacking": 2400640,
+    "minimum_stacking_payload_read_plus_final_write_bytes": 4805376,
+    "unit_memory_bytes": 524288,
+    "cached_key_read_bytes": 524288,
+    "timestamp_bytes": 16384,
+    "readiness_bytes": 2048,
+    "allocated_unit_state_and_cache_bytes": 1067008,
+    "scope": "Shape-derived tensor payloads for tied maps; state/cache and all key scoring unchanged. Not measured RSS, internal kernel temporaries, DRAM, wall time or energy.",
+    "compact_final_packed_tensor_bytes": 813248,
+    "compact_parameter_payload_bytes_read_for_stacking": 809152,
+    "compact_heavy_map_banks": 8,
+    "ordinary_heavy_map_banks": 32,
+    "avoided_duplicate_packed_tensor_bytes": 1591488,
+    "heavy_shared_scalar_elements_per_bank": 16578,
+    "private_parameter_scalar_elements": 4128,
+    "explicit_heavy_winner_map_gather_payload_bytes_per_position": 0
+  },
+  "source_sha256": {
+    "experiments/check_compact_tied_inference.py": "8756a37c55b6820fe37a1462c34b345dbf7c891b4022bbb450405bd7fd558709",
+    "sleeping_machines/compact_tied_inference.py": "c97d41b1e3c6619f9d15a8b10e79b8b4f629428dcc298b01b26fa6f2b6f36d8e",
+    "experiments/compact_tied_resource_geometry.py": "f43f840ea6143f5829e4bf6c2907c91245a4409da3d476ef2a2b8b1aa4876001",
+    "experiments/compact_tied_inference_contracts.py": "c78b83692854def9247f488864d8c96bab13524e10b1172ce12e961f08b9def8",
+    "scripts/prepare_compact_tied_contracts.py": "c1f3b2190db07624168e94aef4433a7ec3c2de0098ebf9332650ed8653ba2747",
+    "experiments/queue/compact_tied_sparse_contracts_20261003T211000Z.sources.json": "ced9f204815b887db83d68f91c87fd0650560060c9cbc433fc73cbb4dddc29dd"
+  },
+  "numerical_forward_calls": 0,
+  "wall_s": 0.11406699099461548,
+  "max_rss_kib": 19756,
+  "scope": "Standard-library packing/ownership/admission checks only; native numerical and trained-quality/traffic/speed/energy admission pending"
+}

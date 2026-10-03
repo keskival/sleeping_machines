@@ -1,0 +1,49 @@
+{
+  "status": "prepared_unrun",
+  "source_sha256": {
+    "sleeping_machines/compact_tied_inference.py": "c97d41b1e3c6619f9d15a8b10e79b8b4f629428dcc298b01b26fa6f2b6f36d8e",
+    "sleeping_machines/prepacked_sparse_inference.py": "c06fc7ff0f122133ffade2780612e123d2ff59eced4a6fbe4c615f7553221aac",
+    "sleeping_machines/sparse_inference.py": "e4005b9a3c66f06dd36ecfb18bc8be9b8455ab8046165e9af0d4b976e60e8708",
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "experiments/cached_inference_contracts.py": "4dd88a28d26a785781d41a5c3591cf3b23cd9502a587c1b75d63fce3ab090097",
+    "experiments/sparse_inference_accounting.py": "b85a59636bdbb23252cc520ff3e2d1e55a5f5d42d76c76eb3bfc8dbecdd4a211",
+    "experiments/compact_tied_resource_geometry.py": "f43f840ea6143f5829e4bf6c2907c91245a4409da3d476ef2a2b8b1aa4876001",
+    "experiments/compact_tied_inference_contracts.py": "c78b83692854def9247f488864d8c96bab13524e10b1172ce12e961f08b9def8",
+    "experiments/language_batched_benchmark.py": "0f523f8d9e8b225dbe498767d1d3bce83a8334d279175dd0d8c24f20f798cf8d",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/dvs_tied_pool_benchmark.py": "c84f9846351f817b2b5dab73c3755d6eeaef57907d179a2bafe2c30f62c6a2ae"
+  },
+  "arguments": {
+    "manifest": "experiments/queue/compact_tied_sparse_contracts_20261003T211000Z.sources.json",
+    "out": "experiments/results/diagnostics/compact_tied_sparse_contracts_20261003T211000Z.json",
+    "result": null
+  },
+  "parent_sha256": null,
+  "weights_sha256": null,
+  "queue": "experiments/queue/compact_tied_sparse_contracts_20261003T211000Z.txt",
+  "queue_sha256": "cd5acd966b9e89f77e8f3d30ba7df3ac68e5196f25ec1e094cbbb607275e31ac",
+  "preparation_source_sha256": "c1f3b2190db07624168e94aef4433a7ec3c2de0098ebf9332650ed8653ba2747",
+  "guards": {
+    "threads": 1,
+    "address_space_kib": 3000000,
+    "rss_kib": 1250000,
+    "min_available_mib": 8192,
+    "timeout_s": 420
+  },
+  "physical_reservation": "Required after owner chains or on a genuinely separate idle host; no waiter or coordinator launched",
+  "scope": "Native synthetic/tied FIT parity pending; no optimizer, training or heldout quality assignment",
+  "planned_synthetic_execution": {
+    "pair_cases": 32,
+    "worker_lifecycles": 8,
+    "forward_calls": 144,
+    "evaluated_lane_positions": 5616,
+    "active_lane_positions": 3888,
+    "backward_calls": 0,
+    "optimizer_updates": 0
+  }
+}

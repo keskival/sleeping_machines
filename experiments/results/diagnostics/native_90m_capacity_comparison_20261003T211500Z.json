@@ -1,0 +1,166 @@
+{
+  "status": "completed_metadata_analysis",
+  "parent_sha256": {
+    "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z.json": "e319c137fc31badfb803158ff70f18a8357d804e404dad53d1ee7e85ec7a2424",
+    "experiments/results/language_batched/checkpoints/aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z_final.pt": "f2a23c28e1312176c60e822aa1fb0a77dc134ecfe872732c9568f113e9e27668",
+    "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json": "67b047b3a12775d8597e2c072ba3bcd603bd1199fa3313d0f6faee8712effdfb",
+    "experiments/results/language_batched/checkpoints/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z_final.pt": "e8b386dee21470434c2cc5179c6d95d06b5138073b2dd7ee04ce70a2e5da7901"
+  },
+  "rows": [
+    {
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z.json",
+      "args": {
+        "tag": "aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z",
+        "fit": 90000000,
+        "test": 1000000,
+        "dev": 1000000,
+        "segment": 128,
+        "lanes": 64,
+        "passes": 1.0,
+        "lr": 0.004,
+        "clip": 1.0,
+        "payload": 32,
+        "depth": 4,
+        "heads": 2,
+        "pool": 2,
+        "seed": 6,
+        "eval_every": 1000,
+        "max_windows": 0,
+        "trace_windows": 2,
+        "skip_init_from": 0,
+        "skip_gate_bias": -4.0,
+        "cosine": true,
+        "eval_segment": 256,
+        "compiled": true,
+        "route_credit": "linear",
+        "tie_pools": false,
+        "tau_max": 0.0,
+        "checkpoint_every": 250,
+        "resume": false
+      },
+      "producer": {
+        "experiments/language_batched_benchmark.py": "0f523f8d9e8b225dbe498767d1d3bce83a8334d279175dd0d8c24f20f798cf8d",
+        "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+        "experiments/dvs_batched_large_benchmark.py": "a7f743ee7a3fe5a6794f73fea0638500f1b62d3dbff2578bcbd8948ca0832889",
+        "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+        "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+        "sleeping_machines/compiled_episodes.py": "354799087befa7716234e1003e11e666ef0d51fe93f91f3d32c37442683f7ff6"
+      },
+      "protocol": {
+        "fit": [
+          0,
+          90000000
+        ],
+        "dev": [
+          90000000,
+          91000000
+        ],
+        "test": [
+          95000000,
+          96000000
+        ],
+        "segment": 128,
+        "lanes": 64,
+        "state": "reset per segment",
+        "credit": "whole segment (exact BPTT within it)",
+        "race": "factorized law; shared per-step noise across lanes; per-window seed",
+        "evaluation": "E64 windows of S, stride S/2, second half scored after the first window",
+        "selection": "final weights (no development selection)",
+        "schedule": "cosine annealing over all windows",
+        "route_credit": "factorized race plus linearized local-expectation score credit pi_i g.(v_i - v_bar)",
+        "kernels": "compiled layer steps (torch.compile/inductor, contract-tested against the batched path)"
+      },
+      "parameters": 108875,
+      "test_bpc_T256": 2.045356463608058,
+      "dev_bpc_T256": 1.962039966034396,
+      "test_targets": 999936,
+      "presentations": 89997312,
+      "whole_fit_TF_estimate": 65.219569028232,
+      "fit_MF_per_presentation_estimate": 0.7246835219726563,
+      "available_slots": 16,
+      "memory_value_scalars": 512,
+      "selected_writes": 8,
+      "scored_keys": 16
+    },
+    {
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json",
+      "args": {
+        "tag": "aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z",
+        "fit": 90000000,
+        "test": 1000000,
+        "dev": 1000000,
+        "segment": 128,
+        "lanes": 64,
+        "passes": 1.0,
+        "lr": 0.004,
+        "clip": 1.0,
+        "payload": 32,
+        "depth": 4,
+        "heads": 2,
+        "pool": 4,
+        "seed": 6,
+        "eval_every": 1000,
+        "max_windows": 0,
+        "trace_windows": 2,
+        "skip_init_from": 0,
+        "skip_gate_bias": -4.0,
+        "cosine": true,
+        "eval_segment": 256,
+        "compiled": true,
+        "route_credit": "linear",
+        "tie_pools": false,
+        "tau_max": 0.0,
+        "checkpoint_every": 250,
+        "resume": false
+      },
+      "producer": {
+        "experiments/language_batched_benchmark.py": "0f523f8d9e8b225dbe498767d1d3bce83a8334d279175dd0d8c24f20f798cf8d",
+        "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+        "experiments/dvs_batched_large_benchmark.py": "a7f743ee7a3fe5a6794f73fea0638500f1b62d3dbff2578bcbd8948ca0832889",
+        "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+        "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+        "sleeping_machines/compiled_episodes.py": "354799087befa7716234e1003e11e666ef0d51fe93f91f3d32c37442683f7ff6"
+      },
+      "protocol": {
+        "fit": [
+          0,
+          90000000
+        ],
+        "dev": [
+          90000000,
+          91000000
+        ],
+        "test": [
+          95000000,
+          96000000
+        ],
+        "segment": 128,
+        "lanes": 64,
+        "state": "reset per segment",
+        "credit": "whole segment (exact BPTT within it)",
+        "race": "factorized law; shared per-step noise across lanes; per-window seed",
+        "evaluation": "E64 windows of S, stride S/2, second half scored after the first window",
+        "selection": "final weights (no development selection)",
+        "schedule": "cosine annealing over all windows",
+        "route_credit": "factorized race plus linearized local-expectation score credit pi_i g.(v_i - v_bar)",
+        "kernels": "compiled layer steps (torch.compile/inductor, contract-tested against the batched path)"
+      },
+      "parameters": 177019,
+      "test_bpc_T256": 1.9984155714593377,
+      "dev_bpc_T256": 1.9151178852861515,
+      "test_targets": 999936,
+      "presentations": 89997312,
+      "whole_fit_TF_estimate": 107.60686829652,
+      "fit_MF_per_presentation_estimate": 1.1956675805664063,
+      "available_slots": 32,
+      "memory_value_scalars": 1024,
+      "selected_writes": 8,
+      "scored_keys": 32
+    }
+  ],
+  "test_bpc_improvement_T256": 0.04694089214872044,
+  "dev_bpc_improvement_T256": 0.046922080748244444,
+  "perplexity_reduction": 0.032013315077827675,
+  "larger_to_smaller_whole_fit_ratio": 1.6499168869076635,
+  "scope": "Completed same-protocol single-seed pool comparison; different capacity/initialization/race streams and fitting work. Not iso-FLOP or a route-credit-by-pool factorial. Trained sparse quality/resources remain pending; this result uses untied maps, not the new compact tied worker."
+}

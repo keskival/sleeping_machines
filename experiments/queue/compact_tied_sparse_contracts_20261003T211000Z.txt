@@ -1,0 +1,4 @@
+# PREPARED UNRUN. Actual physical-host reservation required; never infer it from Docker-local locks.
+# run_safe only: threads1 VMS3000000KiB RSS1250000KiB available8192MiB timeout420s.
+# Preserve existing curie/AWS training chains. No quality or speed claim from synthetic cases.
+compact_tied_sparse_contracts_20261003T211000Z experiments/compact_tied_inference_contracts.py --manifest experiments/queue/compact_tied_sparse_contracts_20261003T211000Z.sources.json --out experiments/results/diagnostics/compact_tied_sparse_contracts_20261003T211000Z.json
