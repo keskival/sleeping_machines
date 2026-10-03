@@ -1,0 +1,7 @@
+14:21:32 start aws_language_90M_r2_contracts_20261003T103000Z
+14:22:33 alive aws_language_90M_r2_contracts_20261003T103000Z: process group RSS=670280KB, MemAvailable=28191MB
+14:23:33 alive aws_language_90M_r2_contracts_20261003T103000Z: process group RSS=742688KB, MemAvailable=28110MB
+14:24:33 alive aws_language_90M_r2_contracts_20261003T103000Z: process group RSS=790236KB, MemAvailable=28076MB
+14:25:34 alive aws_language_90M_r2_contracts_20261003T103000Z: process group RSS=1346988KB, MemAvailable=27366MB
+14:26:34 alive aws_language_90M_r2_contracts_20261003T103000Z: process group RSS=810680KB, MemAvailable=28199MB
+14:26:38 done aws_language_90M_r2_contracts_20261003T103000Z (exit 0)

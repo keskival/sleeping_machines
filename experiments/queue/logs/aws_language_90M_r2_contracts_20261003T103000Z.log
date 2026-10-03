@@ -1,0 +1,9 @@
+...............                                                          [100%]
+=============================== warnings summary ===============================
+tests/test_batched_episodes.py::test_batched_episodes_equal_sequential_runs_in_loss_and_summed_gradient
+  /workspace/tests/test_batched_episodes.py:31: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+    loss, _, _ = LE.run(m, r, 41); loss.backward(); seq.append(float(loss))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+15 passed, 1 warning in 300.91s (0:05:00)
