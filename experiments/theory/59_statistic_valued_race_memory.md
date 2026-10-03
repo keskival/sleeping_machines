@@ -1505,3 +1505,14 @@ per-evaluated-position and per-scored-target boundaries explicit (pool4 .164301 
 parameters, 1.42 MFLOPs fitting per character) scored DEV 2.269 / test 2.326 bpc (T = 256 2.326). Without credit the same
 model scored 2.456 (−.130), and p32/d4 with credit 2.370 (−.044). The credit gain is not specific to shallow stacks, and
 depth helps once the address learns. Width helped more per unit of work at this budget (p64/d4 2.184 at 2.68 MFLOPs/char).
+
+**§413 write credit, second failure (13:02 UTC); revision of the earlier cause.** p32/d4 pool 4 with linear_rwn
+(written-content write credit plus value credit) diverged. Training loss was about 2.7 bits before window 250, then 3.77
+(window 250), 3.39 and 5.74 (window 350), then gradients became non-finite (result absent; log and runner line retained). At
+pool 2 the same credit trained stably but did not improve on value credit (2.384 vs 2.370). The 09:52 explanation (lazy decay
+counted as content change) was therefore at most a partial cause: excluding it did not prevent divergence once there are more
+slots. Note 142 had already cautioned that the divergence did not establish that cause. Consistent with both failures is a
+feedback loop specific to the write term: its score credit flows through key_read · m into the stored memories, whose
+content is in turn shaped by the scores. The value credit has no such path to memories through the write decision. The
+linearized write-address credit is withdrawn from the queues. Value credit alone remains the default. A write-address
+signal would need either exact (replayed) consequences or a stop-gradient on the key_read memory path, and that is untested.
