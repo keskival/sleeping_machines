@@ -87,6 +87,8 @@ def main():
     p.add_argument('--route-credit', choices=('none', 'linear', 'linear_rw', 'linear_rwn'), default='none',
                    help='linear: linearized local-expectation value credit to the race scores; linear_rw: also the '
                         'linearized write-address credit (§413)')
+    p.add_argument('--tie-pools', action='store_true', help='share each pool\'s maps (input, output, gate, control, '
+                   'key_read); keys, clock biases, timescales and memories stay private (§398 capacity-exposure)')
     p.add_argument('--tau-max', type=float, default=0., help='initialize unit memory time constants log-spaced from 1 '
                    'to this many characters (default 0: the unit default, 1-100; §413 horizon)')
     p.add_argument('--checkpoint-every', type=int, default=0, help='windows between exact-resume checkpoints (0: none)')
@@ -109,6 +111,9 @@ def main():
     dev = load_text(90_000_000, a.dev)
     model = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=a.payload, depth=a.depth,
                                             heads=a.heads, pool=a.pool)
+    if a.tie_pools:
+        from dvs_tied_pool_benchmark import tie_pools
+        model = tie_pools(model)
     if a.skip_init_from:
         from dvs_batched_large_benchmark import skip_init
         model = skip_init(model, a.skip_init_from, a.skip_gate_bias)

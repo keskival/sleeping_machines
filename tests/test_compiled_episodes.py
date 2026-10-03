@@ -128,3 +128,14 @@ def test_written_content_route_credit_compiled_matches_eager():
     rw = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear_rw'))
     keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key')]
     assert any(not torch.allclose(ref[1][i], rw[1][i]) for i in keys)
+
+
+def test_tied_pool_route_credit_compiled_matches_eager():
+    import sys
+    sys.path.insert(0, 'experiments')
+    from dvs_tied_pool_benchmark import tie_pools
+    m, rows = _case(torch.float64)
+    m = tie_pools(m)
+    ref = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear'))
+    comp = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, route_credit='linear'))
+    _close(comp, ref, 1e-9)
