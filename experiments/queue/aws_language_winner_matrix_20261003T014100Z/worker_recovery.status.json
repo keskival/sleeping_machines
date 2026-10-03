@@ -1,0 +1,88 @@
+{
+  "status": "superseded_checkpoint_priority",
+  "completed": [
+    {
+      "tag": "aws_language_credit_driver_contracts_20261003T013300Z",
+      "result": "experiments/results/diagnostics/aws_language_credit_driver_contracts_20261003T013300Z.json",
+      "reused": true,
+      "max_rss_kb": 514592,
+      "wall_s": 238.01989412499825
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_private_teacher_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_private_teacher_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 472140,
+      "wall_s": 139.21880611602683
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_private_factorized_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_private_factorized_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 478448,
+      "wall_s": 179.3832027829485
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_private_replay_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_private_replay_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 510508,
+      "wall_s": 554.1224823779776
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_depth_teacher_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_depth_teacher_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 470236,
+      "wall_s": 138.28947527502896
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_depth_factorized_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_depth_factorized_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 476496,
+      "wall_s": 176.48368000501068
+    },
+    {
+      "tag": "aws_language_credit_matrix_20261003T013500Z_depth_replay_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_credit_matrix_20261003T013500Z_depth_replay_smoke_s7.json",
+      "reused": true,
+      "max_rss_kb": 508584,
+      "wall_s": 548.4071685249801
+    },
+    {
+      "tag": "aws_language_winner_reuse_contracts_20261003T013700Z",
+      "result": "experiments/results/diagnostics/aws_language_winner_reuse_contracts_20261003T013700Z.json",
+      "reused": false,
+      "max_rss_kb": 460932,
+      "wall_s": 6.109082640032284
+    },
+    {
+      "tag": "aws_language_winner_driver_contracts_20261003T014000Z",
+      "result": "experiments/results/diagnostics/aws_language_winner_driver_contracts_20261003T014000Z.json",
+      "reused": false,
+      "max_rss_kb": 497016,
+      "wall_s": 98.69500706600957
+    },
+    {
+      "tag": "aws_language_winner_matrix_20261003T014100Z_depth_replay_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_winner_matrix_20261003T014100Z_depth_replay_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 491372,
+      "wall_s": 374.3269199029892
+    },
+    {
+      "tag": "aws_language_winner_matrix_20261003T014100Z_private_replay_smoke_s7",
+      "result": "experiments/results/aws_depth8_language_credit/aws_language_winner_matrix_20261003T014100Z_private_replay_smoke_s7.json",
+      "reused": false,
+      "max_rss_kb": 493392,
+      "wall_s": 379.19670873798896
+    }
+  ],
+  "current_job": null,
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-03T01:43:31.020820+00:00",
+  "active_jobs": [],
+  "max_parallel_jobs": 3,
+  "reason": "Userautonomouspriority90M;3source-exactcheckpoints preserved/newboundedplan"
+}
