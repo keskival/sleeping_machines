@@ -1,0 +1,63 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "curie_mg_dev_t18_p16d2_k1_20261003T220000Z",
+    "tau": 18,
+    "repeats": 3,
+    "first_repeat": 0,
+    "payload": 16,
+    "depth": 2,
+    "heads": 2,
+    "pool": 2,
+    "tie_pools": false,
+    "taps": 1,
+    "segment": 64,
+    "lanes": 32,
+    "steps": 1000,
+    "lr": 0.003,
+    "clip": 1.0,
+    "warmup": 8,
+    "route_credit": "linear",
+    "compiled": false,
+    "seed": 0,
+    "closed_loop": 0,
+    "closed_from": 0.5
+  },
+  "parameters": 14169,
+  "footprint_bytes_float32": 56676,
+  "repeats": [
+    {
+      "repeat": 0,
+      "smape": 32.56287349522539,
+      "final_train_mse": 0.00014386982838914263,
+      "wall_s": 857.5152502109995
+    },
+    {
+      "repeat": 1,
+      "smape": 18.75677225598119,
+      "final_train_mse": 0.0001734810655761976,
+      "wall_s": 844.9718915949925
+    },
+    {
+      "repeat": 2,
+      "smape": 17.718784997044462,
+      "final_train_mse": 0.00015660551507608035,
+      "wall_s": 827.8455440720136
+    }
+  ],
+  "mean_smape": 23.012810249417015,
+  "protocol": "NeuroBench Mackey-Glass (neurobench 2.3.0 slices, split and SMAPE); autonomous 750-step forecast",
+  "source_sha256": {
+    "experiments/mackey_glass_native.py": "3a90d519c1e9f60238f697614bd1eb161dbf53395595854d282445b5b6644de6",
+    "sleeping_machines/sparse_inference.py": "6eb1cc4b67e0445b0c91b4096941b6f21a42529064ee9a91d5376e027fe656f7",
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "sleeping_machines/compiled_episodes.py": "f633227cedc9e7ba84d0f608972fbcd109d174a9dcfc099706ef3a9b7864885f"
+  },
+  "data_sha256": "f43853cdd3e862c30b0836e07a57a438a6f415d8f0afa91ab850f9a6d84d298b",
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.1+cpu",
+    "threads": 1
+  },
+  "wall_s": 2530.5540520550276
+}
