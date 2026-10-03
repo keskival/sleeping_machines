@@ -1244,3 +1244,11 @@ gains are reconstructed from the growth lineage (dvs_grow_depth_benchmark.lineag
 program's growth arms run −4 and legacy −20 on seeds 6 and 8, and progressive growth 4 → 6 runs with live gates and
 preserved gains. The seed-7 legacy result (60.9%) is therefore not evidence about the new message branches; its gain came
 from the other live paths.
+
+**§409 90M selection rule (fixed before the 10M results, 3 October 03:40 UTC).** The 90M one-pass run uses the best 10M arm
+by test bpc on the E64 windows: depth 8 default init, payload 32 / depth 4, and depth 8 with near-identity init from layer
+2 (gates −4, live per theory 123; intermediate transport closed). If the near-identity depth-8 arm is within .01 bpc of the
+best or better, the 90M run uses near-identity init, at payload 32 when throughput allows a single pass in about 20 h.
+Clip stays at 1 (P408 failed), with no weight decay or input noise, since one pass over 90M characters is not
+the small-data regime. Growth is DVS-only. The 90M run is scored with both the segment protocol (T = 128) and E64-matched
+windows (T = 256, stride 128), and the table states the protocol of every row.
