@@ -1,0 +1,6 @@
+# THEORY §409: integrated native language model at scale via exact segment batching (state reset per 128-character
+# segment; shared per-step race noise). E64 window evaluation on text8[95M:96M], references at 10M: frozen mKN o7 1.788,
+# LSTM 1.799, Transformer 1.908 (§381). One pass each; 90M decided after these complete.
+curie_language_batched_contracts_20261003T023000Z -m pytest -q tests/test_language_batched.py tests/test_batched_episodes.py
+curie_language_10M_p16d8_20261003T023000Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p16d8_s6_20261003T023000Z --fit 10000000 --payload 16 --depth 8 --lanes 128 --segment 128 --passes 1 --eval-every 200
+curie_language_10M_p32d4_20261003T023000Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p32d4_s6_20261003T023000Z --fit 10000000 --payload 32 --depth 4 --lanes 256 --segment 128 --passes 1 --eval-every 100

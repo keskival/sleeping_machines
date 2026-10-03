@@ -37,3 +37,25 @@ def test_batched_episodes_equal_sequential_runs_in_loss_and_summed_gradient():
     np.testing.assert_allclose(losses.detach().numpy(), seq, rtol=0, atol=1e-10)
     for n, g in g_seq.items():
         torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=1e-8, atol=1e-10, msg=n)
+
+
+def test_all_logits_equal_sequential_per_event_logits():
+    from sleeping_machines.fast_native_core import fast_class
+    from sleeping_machines.addressed_event_heads import AddressedEventHeads
+    from sleeping_machines.factorized_race import factorized_race
+    torch.manual_seed(0)
+    m = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=4, depth=2, heads=2, pool=2).double()
+    m.train()
+    rng = np.random.default_rng(1)
+    segs = [rng.integers(0, 27, 9) for _ in range(3)]
+    rows = [dict(events=[(float(t), np.eye(27)[c]) for t, c in enumerate(seg)]) for seg in segs]
+    allz = batched_logits(m, rows, 77, all_logits=True)
+    for j, r in enumerate(rows):
+        m.race = factorized_race; m._fast_layers = {}
+        try:
+            with torch.random.fork_rng():
+                torch.manual_seed(77); st = m.new_state()
+                seq = torch.stack([m.consume_event(0, t, torch.tensor(c), st)[0] for t, c in r['events']])
+        finally:
+            del m.race; m._fast_layers = None
+        torch.testing.assert_close(allz[j], seq, rtol=0, atol=1e-10)

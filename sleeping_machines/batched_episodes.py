@@ -47,9 +47,10 @@ class LaneRace(torch.autograd.Function):
         return credit.to(error_value.dtype if error_value is not None else rates.dtype), value_credit, None, None
 
 
-def batched_logits(model, rows, seed, forces=None, record=None):
+def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False):
     """rows: episodes (dict with 'events'); forces: per-lane (race, alt) or None; record: list receiving each race's
-    (n, U) scores in race order.  Returns (n, classes) final logits."""
+    (n, U) scores in race order.  Returns (n, classes) final logits, or (n, T, classes) logits after every event when
+    all_logits (positions beyond an episode's length are zero)."""
     source = 0
     layers = model._stacked(source)
     D, H, U, P = model.depth, model.heads, model.pool, model.payload
@@ -65,6 +66,7 @@ def batched_logits(model, rows, seed, forces=None, record=None):
     ctx_vals = torch.zeros(n, H * P, dtype=dtype); ctx_arr = torch.zeros(n, H, dtype=torch.float64)
     has_ctx = torch.zeros(n, dtype=torch.bool)
     out = torch.zeros(n, model.head.out_features, dtype=dtype)
+    every = []
     race = 0
     lanes = torch.arange(n)
 
@@ -136,5 +138,8 @@ def batched_logits(model, rows, seed, forces=None, record=None):
             ctx_arr = torch.where(active[:, None], arrivals, ctx_arr)
             has_ctx = has_ctx | active
             last = lengths == k + 1
-            out = torch.where(last[:, None], model.head(x), out)
-    return out
+            logits_k = model.head(x)
+            if all_logits:
+                every.append(torch.where(active[:, None], logits_k, torch.zeros_like(logits_k)))
+            out = torch.where(last[:, None], logits_k, out)
+    return torch.stack(every, 1) if all_logits else out

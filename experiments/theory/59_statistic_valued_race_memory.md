@@ -1189,3 +1189,17 @@ one (one seed). Depth 6 factorized scores 59.4% / 1.086; depth 6 with k = 8 samp
 1.336, so the race-sampling variance (scale R/k with many races) is harmful. Sampled replay credit needs the critic
 (§403) or all-race lanes. Seed replicates are queued (growth on seeds 6 and 8; depth 4 with and without all-race credit
 on seed 6), along with the §408 clip and learning-rate controls.
+
+## 409. The native language model at the scale where learning matters
+
+Small-data language only measures closeness to counts (§394). At 10–90M characters the repository's dense controls
+overtake or match counts (§381: LSTM 1.799 / 1.661, Transformer 1.908 / 1.604, frozen modified-KN o7 1.788 / 1.653 bpc at
+10M / 90M on text8[95M:96M]). The native core never reached that regime: the sequential core trains at about 33
+characters/s (about 84 h per 10M pass). Segment batching makes it reachable. Training uses independent 128-character segments with
+the state reset per segment and shared per-step race noise, run as lanes of one exact batched pass (§405, contract:
+per-event logits equal sequential runs). Credit spans each whole segment. Evaluation uses the E64 window protocol
+(windows of 128 at stride 64). Measured training throughput on one CPU thread: depth 8 / payload 16 / 128 lanes 2,130
+chars/s (1.6 GB); depth 4 / payload 32 / 256 lanes 5,340 chars/s (2.1 GB). One pass takes about 1.3 h / 31 min at 10M and
+about 12 h / 4.7 h at 90M. Queue curie_language_batched_20261003T023000Z runs both 10M configurations first. Window
+evaluation with a 64-character context is weaker than streaming state; the dense controls used the same windows (T = 256
+for theirs). The protocol differs in segment length, and this is stated beside the numbers.
