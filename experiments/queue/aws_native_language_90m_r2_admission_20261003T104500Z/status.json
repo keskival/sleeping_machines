@@ -1,0 +1,7 @@
+{
+  "status": "superseded_before_admission",
+  "completed": [],
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-03T10:11:13.790560+00:00",
+  "reason": "5c6e2fc adds pool4 first priority; new frozen plan preserves all pending arms."
+}

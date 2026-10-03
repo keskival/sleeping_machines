@@ -1,0 +1,105 @@
+{
+  "host": "ip-172-31-47-132",
+  "protocol_revision": 2,
+  "priority": "assigned p32/d4/pool4 first",
+  "jobs": [
+    {
+      "name": "aws_language_90M_r2_contracts_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_contracts_20261003T103000Z.txt",
+      "stage": "contracts"
+    },
+    {
+      "name": "aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z.txt",
+      "stage": "pilot",
+      "arm": "4",
+      "tag": "aws_language_batched_90M_r2_pilot_p32d4_pool4_linear_20261003T121000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_pilot_p32d4_pool4_linear_20261003T121000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z",
+      "queue": "experiments/queue/aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z.txt",
+      "stage": "fit",
+      "arm": "4",
+      "tag": "aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_pilot_p32d4_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d4_20261003T103000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_r2_pilot_p32d4_linear_20261003T103000Z",
+      "arm": "1",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_pilot_p32d4_linear_20261003T103000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_p32d4_linear_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p32d4_linear_20261003T103000Z.txt",
+      "stage": "fit",
+      "arm": "1",
+      "tag": "aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_linear_l64_lr004_cmp_s6_20261003T103000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_pilot_p32d8_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d8_20261003T103000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_r2_pilot_p32d8_skip2_linear_20261003T103000Z",
+      "arm": "2",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_pilot_p32d8_skip2_linear_20261003T103000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt",
+      "stage": "fit",
+      "arm": "2",
+      "tag": "aws_language_batched_90M_r2_p32d8_skip2_linear_l64_lr004_cmp_s6_20261003T103000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d8_skip2_linear_l64_lr004_cmp_s6_20261003T103000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_pilot_p64d4_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p64d4_20261003T103000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_r2_pilot_p64d4_linear_20261003T103000Z",
+      "arm": "3",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_pilot_p64d4_linear_20261003T103000Z.json"
+    },
+    {
+      "name": "aws_language_90M_r2_p64d4_linear_20261003T103000Z",
+      "queue": "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p64d4_linear_20261003T103000Z.txt",
+      "stage": "fit",
+      "arm": "3",
+      "tag": "aws_language_batched_90M_r2_p64d4_linear_l64_lr004_cmp_s6_20261003T103000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_r2_p64d4_linear_l64_lr004_cmp_s6_20261003T103000Z.json"
+    }
+  ],
+  "source_sha256": {
+    "scripts/run_aws_native_language_90m_r2.py": "d6aaf99e6c0fbfbbb0359120a2dd9bcc3f8c8fa7560cc4b1eab37f37f6fe618b",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "experiments/language_batched_benchmark.py": "d9705d6d6d00b5b59b98bf3a804fa8b128ca840932817b04bb00171ac80a7ce5",
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "experiments/dvs_batched_large_benchmark.py": "a7f743ee7a3fe5a6794f73fea0638500f1b62d3dbff2578bcbd8948ca0832889",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/compiled_episodes.py": "354799087befa7716234e1003e11e666ef0d51fe93f91f3d32c37442683f7ff6",
+    "tests/test_compiled_episodes.py": "6f5ea2911e7adb4135275eec0e09c2ab6c4e40617e82452fc6e0e8e88eb459af",
+    "tests/test_language_batched.py": "8b890f23e10198fbf8b76876cee7205ea91ad342fd262471759e11e313d4f2ec",
+    "tests/test_batched_episodes.py": "a79cca5bfa652a322ec42516c681fc79324e1edb6501988317777ca3e45c7a2f",
+    "experiments/queue/aws_native_language_90m_r2_admission_20261003T104500Z/aws_language_90M_r2_contracts_20261003T103000Z.txt": "ae1b34bbca84b26a784d4eb72ecda845146967afc64d9c561c37c087bd16363c",
+    "experiments/queue/aws_native_language_90m_r2_admission_20261003T104500Z/aws_language_90M_r2_pilot_p32d4_20261003T103000Z.txt": "0b6661276c48ee9f447e74e930c745eb9257ca2e9d712564ce8b994cf1a85977",
+    "experiments/queue/aws_native_language_90m_r2_admission_20261003T104500Z/aws_language_90M_r2_pilot_p32d8_20261003T103000Z.txt": "7fca2f294c145fa965e78ca5f50c07ed55704b9cda82772c40c826f519cf46db",
+    "experiments/queue/aws_native_language_90m_r2_admission_20261003T104500Z/aws_language_90M_r2_pilot_p64d4_20261003T103000Z.txt": "c304edb899917ca2aa0014fcac03665f1a75a027875e63a2cd7afc4d0af2b6ea",
+    "experiments/queue/aws_language_90M_r2_p32d4_linear_20261003T103000Z.txt": "b84d65b1e8fd2042c2e0cc9024b265da3a78cf36dac7c668f4c92f768b02154a",
+    "experiments/queue/aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt": "78fdc64c12f96733666268ec8e0d454b32553bf1398ac7855a24da04d6a8570d",
+    "experiments/queue/aws_language_90M_r2_p64d4_linear_20261003T103000Z.txt": "11b2d1fe00327f49e7afc02d745407a7cf903a5d12e70c17dc3434b5526c4097",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_contracts_20261003T103000Z.txt": "ae1b34bbca84b26a784d4eb72ecda845146967afc64d9c561c37c087bd16363c",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z.txt": "f6229f6f613ca72ac2bbdf6f478dbdecb13e788f96a910f3ce8d8764bb8859b6",
+    "experiments/queue/aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z.txt": "f7b645f0a5780c298aa49a8295101c4a716619a58a37c1bfb00eeb97451f4a96",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d4_20261003T103000Z.txt": "0b6661276c48ee9f447e74e930c745eb9257ca2e9d712564ce8b994cf1a85977",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p32d4_linear_20261003T103000Z.txt": "b84d65b1e8fd2042c2e0cc9024b265da3a78cf36dac7c668f4c92f768b02154a",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p32d8_20261003T103000Z.txt": "7fca2f294c145fa965e78ca5f50c07ed55704b9cda82772c40c826f519cf46db",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt": "78fdc64c12f96733666268ec8e0d454b32553bf1398ac7855a24da04d6a8570d",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_pilot_p64d4_20261003T103000Z.txt": "c304edb899917ca2aa0014fcac03665f1a75a027875e63a2cd7afc4d0af2b6ea",
+    "experiments/queue/aws_native_language_90m_r2_priority_20261003T121000Z/aws_language_90M_r2_p64d4_linear_20261003T103000Z.txt": "11b2d1fe00327f49e7afc02d745407a7cf903a5d12e70c17dc3434b5526c4097"
+  }
+}

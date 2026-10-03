@@ -2288,3 +2288,15 @@ uniquetags,derivedRSS/timecaps/8GiBfloor. FINALweightsnowrequiredandautoGit
 published togetherwithJSON,recoverycheckpoint,job+runnerlogs; pilotslabelled
 admissiononly. WaitsNORMALhostlock heldbycurrent3-slotstreaming10Mmatrix;
 90MNOTstarted. Usergoalactive, nofitstoppedandnooldqueuesrenamed.
+
+AWS12:10 pullede92debf/5c6e2fc: ownerbest10Mnativep32/d4/pool4+linearcredit
+2.343testBPC added FIRST90Mpriority. Priorr2conductor stoppedWHILEwaiting
+(completedempty), nojobinterrupted, oldstate 'superseded_before_admission'.
+Newimmutablequeue/aws_native_language_90m_r2_priority_20261003T121000Z:
+contracts -> newuniquepool4pilot -> assignedpool4fit -> eachremainingarm's
+pilot/fit. Preservesalloldqueues/tags; no successfuljobnamesreusedforchanged
+settings. Freshsourcesfrozen afterupstreamupdates. Reusesr2guardedrunner,
+finalweights/checkpoint/JSON/logpublication, pilot-derivedRSS/timecaps and8GiB
+floor. Waitsnormalhostreservation/current3slot10Mmatrix; 90MNOTstarted.
+Upstream414exactwinner-onlyinference contracts/work are separatelysupported,
+notcurrentstreamingdriverchanges; preserveestimate/quality boundaries.
