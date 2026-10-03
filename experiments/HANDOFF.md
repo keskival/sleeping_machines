@@ -2276,3 +2276,15 @@ Script/result/theory/aws_20261003_matched_language_progress.md retainprecise
 scope/values. Replay647168atinspection; teacher1Mcheckpoints published;
 threefitshealthy28GiBavailable. Revised90Massignmentnotarrived; don'trestart
 supersededfactorizedarms pending413v4evidence. Pendingdiagnosticsstayguarded.
+
+AWS10:45 pulled505b151: AWS90MREVISION2 nowAUTHORIZEDnative route-creditarms
+p32/d4,p32/d8skip2,p64/d4. Previousfactorizedrevision1retained/unrun. Completed
+owner10Mp32/d4linear2.370110testBPC versusuncredited2.507/pool1control2.439/
+onepassTransformer2.427: positivequalityscope, notisoqualityresourceclaim.
+NEW immutablequeue/aws_native_language_90m_r2_admission_20261003T104500Z and
+scripts/run_aws_native_language_90m_r2.py: contracts3testsuites,3×60window
+pilots,then3assigned90Mfits; checkscompiled/linearsettings,sourcefrozen,
+uniquetags,derivedRSS/timecaps/8GiBfloor. FINALweightsnowrequiredandautoGit
+published togetherwithJSON,recoverycheckpoint,job+runnerlogs; pilotslabelled
+admissiononly. WaitsNORMALhostlock heldbycurrent3-slotstreaming10Mmatrix;
+90MNOTstarted. Usergoalactive, nofitstoppedandnooldqueuesrenamed.
