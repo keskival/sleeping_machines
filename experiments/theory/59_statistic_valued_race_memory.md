@@ -1606,3 +1606,21 @@ MFLOPs per position) scored DEV 1.811 / **test 1.8886** (T = 256 1.8885). Develo
 or fewer updates and a second seed, this is **not yet a supremacy claim**. It is a better-quality, lower-work result against
 that reference, with the update count stated. Against the LSTM-512 (6 passes, 7,324 steps: the same update count, 1.799, about
 433 TFLOPs): .090 behind at 0.81× its estimated fitting work.
+
+## 416. Sampled route credit: training work nearly independent of stored capacity
+
+The linearized credit (§413) costs about 0.3% of the fitting work by itself, but it relies on the batched training path
+evaluating every unit's proposal, forward and in a dense backward, at every race. That is why fitting work grows with the
+pool (p32/d4: 0.72 MFLOPs per character at pool 2, 1.20 at pool 4), while exact inference is nearly flat (§414). The credit
+sum_k d pi_k / d s · (v_k − v_w) · g (the winner as baseline) is estimated without bias by one alternative j drawn among the
+losers with q_j = pi_j / (1 − pi_w): d pi_j / d s · (v_j − v_w) · g / q_j. sleeping_machines/sparse_training.py computes per race
+the winner's proposal and that one alternative, with key reads of the stored memories cached and refreshed on writes. The
+draw is an independent exponential race on a separate generator, so the main race noise is unchanged.
+
+Contracts (tests/test_sparse_training.py): without credit, logits and every parameter gradient equal batched_logits
+(1e-11 / 1e-9, float64, pools 1 and 3). With 'sampled', forward values equal on every draw, and the gradient averaged over
+400 draws matches the 'linear' gradient within Monte-Carlo error. Smoke (p8/d2/pool 4): fitting work 31.0K versus
+58.7K unit/special FLOPs per character for the linear path (−47%) at equal quality. Per race the proposal work is two
+units instead of U, and scoring is U·P. Prediction (THEORY note 92 and the credit-variance findings: Monte-Carlo noise was
+not the binding constraint): sampled credit at pool 4/8 matches the linear credit within about .01 bpc, at roughly 1/2 (pool 4)
+to 1/4 (pool 8) of the unit work. v6 tests p32/d4 pool 4 (linear: 2.343) and pool 8 (sampled and linear).
