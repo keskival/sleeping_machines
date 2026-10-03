@@ -2098,3 +2098,21 @@ run_safe queues, globalhost+slotlocks,2GBRSS/6GBvirtualeach,8GiBfloor. Newlong
 runs30daywatchdogbudget,1MfinalDEV, bounded1025charinitialdiagnostic; original
 controls retainfull1Minitialevaluationand7daybudget. This fixesstartup/new
 publishing, not an advantageclaim. Allnewqualityfitsatleast10Mchars asuserasks.
+
+Allsix actual language-driver contracts013300Z PASS (238.020s/514592KiB),
+traced/untraced and bitwise actualmodel/Adam/cursor/RNG/work recovery.
+Original production learning smokes drain normally. Concrete exact-work
+optimization identified: factual winningroute return alreadyknown; detach and
+reuse it, execute onlylosing shadows. Pool2 halveslanes/events withoutsampling
+or dropping anyalternative. Newhelper, independent allparametergrad/state/RNG/
+workcontracts013700Z, actualoptimizeddriverrecovery014000Z, thenproduction
+learning smokes beforelong use. No advantageclaim pendingthesecontracts.
+
+Admission coordinator suspended BEFORElongjobs to insertthesechecks; original
+smoke guards/trainers keep running and completedrows staypreserved. Recovery
+helper waits ALLsixoldsmokescomplete, closesoldadmissioncoordinator ONLY,
+then new immutablematrix aws_language_winner_matrix_20261003T014100Z reuses
+checks, performswinnerreuseproofs andp16smokes, resumes original73728target
+teacher controls unchanged and launches new10M correctedreplay with halfshadow
+lanes. Factorized10M controls retained. Global/slotlocks neverbypassed. New
+optimized replay tagsdistinct; originalfullreplayproductionrowsretained.
