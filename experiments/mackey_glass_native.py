@@ -86,7 +86,10 @@ def fit_and_forecast(a, z, seed):
         rows = [dict(events=[(float(i), taps_of(z, i, a.taps)) for i in range(s, s + S)]) for s in starts]
         y = torch.tensor(np.stack([z[s + 1:s + S + 1] for s in starts]), dtype=torch.float32)
         model.train(); opt.zero_grad(set_to_none=True)
-        out = logits_fn(model, rows, 1000 + step, all_logits=True, route_credit=rc)[..., 0]
+        closed = a.closed_loop and step >= a.closed_from * a.steps
+        kw = dict(feedback=(a.closed_loop, lambda prev, logits: torch.cat([logits[:, :1].to(prev.dtype), prev[:, :-1]], -1)))\
+            if closed else {}
+        out = logits_fn(model, rows, 1000 + step, all_logits=True, route_credit=rc, **kw)[..., 0]
         loss = F.mse_loss(out[:, a.warmup:], y[:, a.warmup:])
         loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip); opt.step(); schedule.step()
         losses.append(float(loss))
@@ -116,7 +119,12 @@ def main():
     p.add_argument('--clip', type=float, default=1.); p.add_argument('--warmup', type=int, default=8)
     p.add_argument('--route-credit', choices=('none', 'linear'), default='linear')
     p.add_argument('--compiled', action='store_true'); p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--closed-loop', type=int, default=0, help='closed-loop training: positions >= this use the model\'s own '
+                   'previous prediction as the newest tap (gradients through it); 0 = teacher forcing only (needs --compiled)')
+    p.add_argument('--closed-from', type=float, default=.5, help='fraction of training after which closed-loop windows start')
     a = p.parse_args()
+    if a.closed_loop and not a.compiled:
+        raise ValueError('--closed-loop needs --compiled')
     out = ROOT / 'experiments/results/neurobench_mg' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
     if Path(a.tag).name != a.tag or out.exists():

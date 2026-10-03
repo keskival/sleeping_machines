@@ -105,9 +105,11 @@ def compiled_step():
     return _COMPILED['step']
 
 
-def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit=None):
+def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit=None, feedback=None):
     """Drop-in for batched_logits(model, rows, seed, all_logits=...) without forces/record.  step: the layer function
-    (default compiled; pass layer_step for the eager reference of this formulation)."""
+    (default compiled; pass layer_step for the eager reference of this formulation).  feedback: optional
+    (start, fn); from event index start on, the content is fn(previous content, previous logits) instead of the row's
+    content (closed-loop rollout with gradients through the model's own outputs)."""
     step = step or compiled_step()
     source = 0
     layers = model._stacked(source)
@@ -141,7 +143,11 @@ def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit
         torch.manual_seed(seed)
         for k in range(T):
             active = lengths > k
-            x = model.embedding.weight[source][None] + model.content(mark_rows[:, k])
+            marks_k = mark_rows[:, k]
+            if feedback is not None and k >= feedback[0]:
+                marks_k = feedback[1](prev_marks, prev_logits)
+            prev_marks = marks_k
+            x = model.embedding.weight[source][None] + model.content(marks_k)
             arrival = stamp_rows[:, k]
             read_time = torch.where(has_ctx, torch.maximum(arrival, ctx_arr.max(-1).values), arrival)
             arrival = read_time
@@ -162,7 +168,7 @@ def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit
             ctx_arr = torch.where(active[:, None], arrivals, ctx_arr)
             has_ctx = has_ctx | active
             last = lengths == k + 1
-            logits_k = model.head(x)
+            logits_k = model.head(x); prev_logits = logits_k
             if all_logits:
                 every.append(torch.where(active[:, None], logits_k, torch.zeros_like(logits_k)))
             out = torch.where(last[:, None], logits_k, out)
