@@ -29,6 +29,20 @@ still to be demonstrated. See the [architectural argument](experiments/theory/07
 [exact delay-coded attention](experiments/theory/08_vector_memory_and_deep_stacks.md)
 and [complete resource conditions](experiments/theory/43_compute_allocation_and_frontier_scaling.md).
 
+**Completed native language evidence at 10M characters.** With route credit,
+the depth-8/payload-32 model scores **2.326 test BPC**, versus **2.427** for the
+saved one-pass Transformer, both evaluated with 256-character windows. The
+wider depth-4/payload-64 model scores **2.183**, close to the one-pass LSTM's
+**2.171**. At depth 4/payload 32, increasing the pool from two to four improves
+matched-window BPC from **2.371 to 2.345**, while selected writes remain eight
+per character; available capacity and scored keys increase. These are completed
+single-seed, separately trained native models, with 128-character training
+segments versus the controls' 256. They establish scoped quality gains over
+that Transformer control, not frontier supremacy or superiority over every
+reference: the saved count reference remains stronger at this data budget.
+See the [completed comparisons and resource accounting](REPORT.md)
+and [current 90M protocol](experiments/AWS_NATIVE_LANGUAGE_90M.md).
+
 Sleeping Machines explores models in which an event carries content and an
 arrival time. Nodes mix incoming vectors with persistent memory, gate their
 updates, transform messages and compete

@@ -1671,6 +1671,10 @@ def blocks(M, tasks, ev):
          "<b>Learned temporal computation.</b> Deep event chains, temporal rules, persistent vector "
          "representations and counterfactual route credit have completed positive tests, with their "
          "task boundaries and negative confirmations retained in this report.",
+         "<b>Native language at 10M.</b> The depth-8/payload-32 route-credit model scores "
+         "2.326 test bpc versus the saved one-pass Transformer's 2.427, at the same T256 evaluation "
+         "window. The wider depth-4 model scores 2.183 versus the one-pass LSTM's 2.171. "
+         "Single seeds, differing training segment lengths; the count reference remains stronger.",
          "<b>A Transformer-capable function class.</b> Delay-coded aggregation reproduces deterministic "
          "softmax attention under its stated conditions (theory §105); the broader event family has "
          "an in-principle emulation path. The current native streaming candidate does not yet "

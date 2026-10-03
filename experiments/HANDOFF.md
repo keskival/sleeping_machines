@@ -2318,3 +2318,13 @@ checkpoint (1003520targets/3920AdamupdatesALL3): latestinterval replay2.794892
 3.013845/3.041100. Positivelearningtrendretained at~10%planneddata, NOTheldout/
 completedquality/resourceclaim. New1m siblinganalysis/result; original500k
 artifact/sourcepreserved. Schedulingpreferencepending, allfitsunchanged.
+
+AWS14:00 pulled2ba3237: completednative10Mdepth8/p32linear T2562.326116
+vsonepassTransformer2.426909; p64/d4 T2562.183315vsonepassLSTM2.170597.
+README/reportOPENING nowprominentcompletednativequalityevidence andcapacity
+pool2->4 T2562.371491->2.345157 atsame8selectedwrites,morekeys/capacity.
+Single-seed/differingtrainsegments/countreferencelead explicitlyretained;
+no frontier/isoqualityresourceclaim. PDFregenerated206pages, ALLpriorheadings/
+layout/orphanchecksPASS; ambitionremainsfirst. Originalstreamingfullreplay
+1105920targetsatinspection; 90Mprioritywaiterunchanged, schedulingpreference
+stillpending, NOhealthyfitsinterrupted. Tests/diagnosticsremainhostlocked.
