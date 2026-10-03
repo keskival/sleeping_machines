@@ -1252,3 +1252,9 @@ best or better, the 90M run uses near-identity init, at payload 32 when throughp
 Clip stays at 1 (P408 failed), with no weight decay or input noise, since one pass over 90M characters is not
 the small-data regime. Growth is DVS-only. The 90M run is scored with both the segment protocol (T = 128) and E64-matched
 windows (T = 256, stride 128), and the table states the protocol of every row.
+
+**§409 selection correction, 3 October, before completed 10M outcomes.** The written test-bpc criterion above is superseded
+by DEV bpc on text8[90M:91M], under the same declared window protocol across all candidate arms. Retain the fixed .01-bpc
+near-identity preference and throughput constraint. text8[95M:96M] remains reporting-only after configuration selection;
+precommitting a rule does not make selection by test scores an independent test. No active fitting source, result or
+queue setting changes; the 90M selection record must bind completed DEV metrics and the fixed chosen configuration.

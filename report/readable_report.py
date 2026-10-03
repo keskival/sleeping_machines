@@ -153,10 +153,10 @@ def results():
     appendix=runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))
     tasks['current_dvs_appendix']=appendix['load'](read)
     tasks['reception_evidence']=runpy.run_path(str(ROOT/'report/reception_evidence.py'))['load'](read)
-    historical=runpy.run_path(str(ROOT/'report/deep_learning_diagnosis_evidence.py'))['history_read']
+    historical=runpy.run_path(str(ROOT/'report/depth_sampling_evidence.py'))['history_read']
     historical_read=lambda path:historical(read,path)
     tasks['route_calibration_evidence']=runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['load'](historical_read)
-    tasks['bridge_training_evidence']=runpy.run_path(str(ROOT/'report/deep_learning_diagnosis_evidence.py'))['load'](read)
+    tasks['bridge_training_evidence']=runpy.run_path(str(ROOT/'report/actual_batch_credit_evidence.py'))['load'](read)
     tasks['score_bound_evidence']=runpy.run_path(str(ROOT/'report/language_replay_driver_evidence.py'))['load_score_evidence'](historical_read)
     tasks['dvs_noise_covariance']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_noise_covariance_audit_*Z.json'))]
@@ -5310,7 +5310,7 @@ def blocks(M, tasks, ev):
     pages.extend(runpy.run_path(str(ROOT/'report/reception_evidence.py'))['pages'](tasks['reception_evidence']))
     pages.extend(runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['pages'](tasks['route_calibration_evidence']))
     pages.extend(runpy.run_path(str(ROOT/'report/score_bound_evidence.py'))['pages'](tasks['score_bound_evidence']))
-    pages.extend(runpy.run_path(str(ROOT/'report/deep_learning_diagnosis_evidence.py'))['pages'](tasks['bridge_training_evidence']))
+    pages.extend(runpy.run_path(str(ROOT/'report/actual_batch_credit_evidence.py'))['pages'](tasks['bridge_training_evidence']))
     return pages
 
 

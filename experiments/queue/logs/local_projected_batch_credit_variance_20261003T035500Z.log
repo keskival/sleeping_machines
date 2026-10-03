@@ -1,0 +1,12 @@
+{"depth": 2, "status": "projection_contract_completed", "wall_s": 1.6286616860015783}
+{"depth": 4, "status": "projection_contract_completed", "wall_s": 3.5856122679979308}
+{"depth": 6, "status": "projection_contract_completed", "wall_s": 6.817264309996972}
+{"depth": 4, "directions": 8, "status": "projection_progress", "wall_s": 15.086785031002364}
+{"depth": 4, "directions": 16, "status": "projection_progress", "wall_s": 18.457938495004782}
+{"depth": 4, "directions": 24, "status": "projection_progress", "wall_s": 21.673398939994513}
+{"depth": 4, "directions": 32, "status": "projection_progress", "wall_s": 24.84209556299902}
+{"depth": 6, "directions": 8, "status": "projection_progress", "wall_s": 40.30503795099503}
+{"depth": 6, "directions": 16, "status": "projection_progress", "wall_s": 45.330878951004706}
+{"depth": 6, "directions": 24, "status": "projection_progress", "wall_s": 50.36560875100258}
+{"depth": 6, "directions": 32, "status": "projection_progress", "wall_s": 55.42671091300144}
+{"status": "completed", "contracts": 4, "wall_s": 56.095552869999665, "max_rss_kb": 629624}

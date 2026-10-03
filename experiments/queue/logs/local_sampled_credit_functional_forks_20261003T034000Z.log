@@ -1,0 +1,4 @@
+{"depth": 2, "status": "functional_case_completed", "wall_s": 4.8321119460015325}
+{"depth": 4, "status": "functional_case_completed", "wall_s": 11.105682917012018}
+{"depth": 6, "status": "functional_case_completed", "wall_s": 20.593002678011544}
+{"status": "completed", "contracts": 4, "wall_s": 20.61551432601118, "max_rss_kb": 576664}

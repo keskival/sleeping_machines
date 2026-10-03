@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_depth_sampling_report_20261003T034800Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "0d738fba402605bd4dfe4f6c29805eb9a505cec7baaf271779953f16bad9f028",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/deep_learning_diagnosis_evidence.py": "92e65a967bb33500b29c610a836986d86544f897c49fedc49a0a4f2dca9d45d7",
+    "report/depth_sampling_evidence.py": "1a96d3297d061bd6901c0c6d2c7b270c7cc1061f98390308e905fe4cadc6844c",
+    "experiments/publish_depth_sampling_report.py": "fd95dc1801796546f07a081186597c875953da177bd23e972479530c110909ed"
+  },
+  "pdf_pages": 196,
+  "report_sha256": "3de2423872570fb59280f1c89874fdc4fbbbb374608ee6d2c13a75b636098a91",
+  "pdf_sha256": "8849b903dcb61726d814b362e840926a8cd902d99d00733eefcc015172bafba7",
+  "wall_s": 27.745436432000133,
+  "max_rss_kb": 274056,
+  "scope": "Completed conditional parameter-space depth-sampling audit,54 actual FIT functional forks and full-work quality comparisons; original diagnostic accounting correction explicit, all prior evidence retained; no new fitted quality or practical superiority."
+}

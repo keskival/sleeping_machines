@@ -1,0 +1,4 @@
+{"depth": 2, "status": "diagnostic_case_completed", "elapsed_s": 21.1981726570084}
+{"depth": 4, "status": "diagnostic_case_completed", "elapsed_s": 101.54441977500392}
+{"depth": 6, "status": "diagnostic_case_completed", "elapsed_s": 284.07532532500045}
+{"status": "completed", "contracts": 5, "wall_s": 292.5713598930015, "max_rss_kb": 866372}

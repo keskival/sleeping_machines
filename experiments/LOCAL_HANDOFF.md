@@ -2072,3 +2072,92 @@ credit, all-pool key scoring, detached losing-content gradients, common-noise
 covariance, replay fitting cost and CPU emulation. No isoquality/resource
 supremacy established. Proposed content Rao-Blackwellization needs derivation,
 contracts and charged losing-branch backward, not arbitrary stopgrad removal.
+
+## Depth-sampling and actual-batch diagnosis complete — 3 October, 03:58 UTC
+
+Three new numerical stages and two publications ran SERIAL under unique
+run_safe queues, one thread, virtual3GB/RSS1.25GB, minavailable8GiB and
+180/300s timeouts. No timeout/resource failure or Git conflict. Logged
+watchdog snapshots show over9.5GiB available;8GiB floor never fired.
+Largest diagnostic RSS866372KiB.
+No local training job remains. Four old autostashes preserved; main only.
+
+124 `local_depth_route_sampling_variance_20261003T033000Z` completes
+five contract groups,292.571s/866372KiB. Exact initialized B2 conditional
+k8 combined-gradient MSE D2/D4/D6 .017934/.084633/.305063; mean fresh
+Adam cosine .702075/.561206/.567056 despite raw cosine .991/.961/.906.
+All parameter vectors/full objectives/subset backward/actual Adam formulas
+match. Scope is conditional initialization and fresh moments, not trained
+cause or a complete risk gradient. k32 lowers variance but does not cure
+step disagreement. Every result and64-draw subset index retained.
+
+IMPORTANT ACCOUNTING CORRECTION beside immutable124 JSON/note: the bank
+is evaluated AGAIN for original-driver equivalence. Main total4032 shadow
+lanes/84672 events, tiny16/16. Original per-case lane/event fields count
+only the first bank; original wording 'paid once' is not whole diagnostic
+execution. Subset backward differentiates cachedQ, not independent sampled
+driver. Input loader reads FIT0..15; only0/1 enter124. See125/126/report.
+
+125 `local_sampled_credit_functional_forks_20261003T034000Z` completes
+four groups,20.616s/576664KiB:54 actual discarded fresh clip1 Adam.003
+forks,1824 prediction-target evaluations, no new gradients/shadows. FIRST
+EIGHT saved draws each k8/k32, full/factorized controls, original+fresh
+noise, all outcomes saved. Every fork improves FIT0/1 and worsens disjoint
+FIT2..15. Gradient examples are classes0/1, anchors not IID/heldout.
+D6 full-credit anchor NLL rises.46718/.46173, D4 .14452/.11285. Sampling
+increases deep prediction disturbance, but k32 does not consistently
+improve anchor loss. Do not nominate a sampling fit from this stage.
+
+127 `local_projected_batch_credit_variance_20261003T035500Z` completes
+four groups,56.096s/629624KiB. New artificial-cotangent mixed products
+reproduce EVERY exact124 route projection for3 signs per depth, errors
+<=1.38e-14. Actual B16 D4/D6 k8 MSE estimates.080239/.147045, descriptive
+SE .003471/.006484; k32 .017051/.033145.32 signs, unbiased raw conditional
+trace estimate, empirical relative SE~4.4%, worst-case relative RMS25%;
+not exact trace, Adam variance, convergence or trained failure cause.
+Full returns paid once:13440 lanes/282240 events,64 main+9 contract
+pullbacks plus factual/full backprops. No optimizer step or quality fit.
+Total diagnostic FLOPs/traffic/energy unknown, not zero. See127/128.
+
+Both report stages pass all source/layout/orphan checks:196pages27.745s,
+then197pages27.141s (`local_actual_batch_credit_report_20261003T040000Z`).
+Final module actual_batch_credit_evidence.py chains frozen prior modules;
+new general-purpose architectural framing from d9610ec retained.13 new
+numerical contract groups total; all numerical/protocol/producer/report
+sources now frozen. Mutable root generator and aggregate notes only.
+
+Artifact policy:124 full vector bank is228MiB and stays LOCAL per.gitignore;
+hash/reproducible source/queue/result JSON retained, no >100MiB Git blob.
+Publisher checks its hash when present and explicitly reports absence on
+other hosts.125 small predictions NPZ retained in Git. Exact archived
+growth constructor6a6ab385 restored from302b82b^ for historical publication
+bindings; original evidence/source modules unchanged. The active owner's
+constructor now defaults-4 and recurses gains, so prior121/123 commands
+are not historical reruns unless archived dependencies are restored.
+
+Cross-host cautions in126: naive recursive gain inference is wrong for an
+already legacy-grown D6 ancestor (actual .25 versus inferred .353553).
+Current first D2->D4 and next D4->D6 owner paths are fine for that lineage;
+do not generalize to arbitrary old ancestors. The deferred121-based
+queue is still NOT launched and needs a new source-bound compatibility
+contract plus its missing parent artifact.123 does not prove ALL prior
+growth gain came from other live paths; lesion/continuation attribution
+remains open. The250k AWS teacher audit rules against bias-20/second-
+moment epsilon closure there, not every feature-learning issue.
+
+Appended correction to owner's mutable §409 selects90M configuration by
+DEV[90M:91M] bpc, keeping.01 preference and throughput gate; old written
+TEST criterion preserved beside correction. Test[95M:96M] reporting-only.
+No active training source/queue/result changed. Owner must bind DEV
+selection before90M; precommitted test-based selection is still selection.
+
+PRIORITY remains AWS streaming native p16/L8/H2/pool2 corrected private
+full replay10M and matched original teacher/shared/factorized controls in
+aws_language_winner_matrix_20261003T014100Z. Other-host live-gate/gain-
+preserving DVS and reset-segment language comparisons are complementary;
+await their completed quality before another policy. Main unresolved gaps:
+useful nonlinear-depth attribution/full-FIT common-epoch continuation,
+losing-content exposure,16-token language horizon, discovery/credit cost,
+route stability and practical generalization. No architecture substitution
+or superiority promise; retain clocks/races/private keys-values/sparse
+writes/counterfactual/silence-aware direction and completed positives.

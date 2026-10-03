@@ -1,0 +1,6 @@
+03:29:32 start local_depth_route_sampling_variance_20261003T033000Z
+03:30:32 alive local_depth_route_sampling_variance_20261003T033000Z: process group RSS=423192KB, MemAvailable=9994MB
+03:31:33 alive local_depth_route_sampling_variance_20261003T033000Z: process group RSS=498368KB, MemAvailable=9909MB
+03:32:33 alive local_depth_route_sampling_variance_20261003T033000Z: process group RSS=553664KB, MemAvailable=9868MB
+03:33:34 alive local_depth_route_sampling_variance_20261003T033000Z: process group RSS=608744KB, MemAvailable=9793MB
+03:34:26 done local_depth_route_sampling_variance_20261003T033000Z (exit 0)

@@ -3646,3 +3646,97 @@ Added input maps remain live: -20 raw gradient norms.046/.139 and Adam displacem
 At -4 all measured candidate contributions are visible and gate/output steps nearly escape epsilon attenuation. This is a GATE-ONLY counterpart to the other host's pending §410; its full scratch initialization/transport/fit protocol differs. All four one-step FIT losses decrease, including -20. No DEV/test, tuning or benchmark advantage, and no inference-cost gain established.
 
 Theory123/122;6.142s/370288KiB. All four instrumented logits/EVERY gradient bitwise nest plain computation; fresh-step formulas, parent/source/RNG/kernel immutability pass. Four independent updates/64 target exposures plus verification work; total FLOPs/traffic/energy unknown, not zero. Reuse the owner's initialization comparisons before proposing another large fit.
+
+## Appendix B. Deep race sampling: preserve mixed quality and complete work
+
+| Model/credit | Seed | FIT32 NLL | DEV NLL | DEV % | Whole fit GF | Fit MF/target | Infer MF/target |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| D4 factor | 7 | 0.718192 | 1.130272 | 55.208 | 34.348 | 4.363 | 1.068 |
+| D4 sampled8 | 7 | 0.715109 | 1.330390 | 55.729 | 214.394 | 27.235 | 1.068 |
+| D4 full | 7 | 0.763093 | 1.152624 | 55.208 | 3815.207 | 484.655 | 1.068 |
+| D4 factor | 8 | 0.587894 | 1.093247 | 59.896 | 34.348 | 4.363 | 1.068 |
+| D4 sampled8 | 8 | 0.630686 | 1.101878 | 57.292 | 214.394 | 27.235 | 1.068 |
+| D4 full | 8 | 0.553204 | 1.020627 | 64.583 | 3815.207 | 484.655 | 1.068 |
+| D6 factor | 7 | 0.658653 | 1.085895 | 59.375 | 50.721 | 6.443 | 1.545 |
+| D6 sampled8 | 7 | 0.952533 | 1.336483 | 47.917 | 313.463 | 39.820 | 1.545 |
+
+Completed native p16/H2/pool2 fine20-packet models;984 FIT/192 subject-disjoint DEV gestures, eight passes/7872 presentations/496 Adam updates, U16/lr.003/clip1. All columns use identical units and target denominators. Work includes discovery, losing-value replay, backward and optimizer; first/last-window estimates, not energy. FIT32 is the first32 fitting examples at DEV-selected weights.
+
+D6 factorized learns and improves over D4 seed7, while D6 sampled8 loses11.458 accuracy points and worsens both saved losses. Thus failure of this sampled-credit variant is not a universal depth-capacity failure. D4 full credit improves seed8 by4.6875 accuracy points and.072620 NLL, but seed7 fails. Preserve this positive result with replication limits and roughly111-fold factorized fitting cost. No practical superiority established.
+
+With21 events, D2/D4/D6 have84/168/252 races per episode. Sampling eight multiplies every chosen contribution by10.5/21/31.5. That unbiased rescaling can increase variance; these counts alone do not quantify interference after the parameter Jacobian, global clipping or Adam. Theory124 computes that conditional parameter covariance directly, without a new quality fit.
+
+Common versus independent race noise is a different question. The existing trained D2 covariance audit fails both improvement gates, with ratios near one. Earlier priority experiments also show score-variance improvements can worsen parameter variance. Neither a new noise policy nor priority-allocation fit is nominated from general variance intuition.
+
+Sparse addressed persistent state, computational clocks and hard routes remain in every row. Counterfactual losses teach route choice through detached returns; they do not directly backpropagate through losing message contents. Language credit horizons and streaming/reset-segment protocols are separate from these full DVS episode graphs. No official test or pending result used.
+
+## Appendix B. Conditional race variance: actual parameters and Adam updates
+
+| Depth | k | k/R | Exact combined MSE ratio | Mean gradient cosine | Mean Adam rel error | Mean Adam cosine |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2 | 8 | 0.095 | 0.01793 | 0.99122 | 0.7707 | 0.70207 |
+| 2 | 32 | 0.381 | 0.003068 | 0.99833 | 0.6027 | 0.81773 |
+| 4 | 8 | 0.048 | 0.08463 | 0.96108 | 0.9359 | 0.56121 |
+| 4 | 32 | 0.190 | 0.01798 | 0.99159 | 0.7896 | 0.68761 |
+| 6 | 8 | 0.032 | 0.3051 | 0.90586 | 0.9288 | 0.56706 |
+| 6 | 32 | 0.127 | 0.06876 | 0.96771 | 0.8262 | 0.65810 |
+
+Initialization-only double-precision audit: same represented float32-initialized p16/H2/pool2 weights promoted to double, seed7, FIT examples0/1, fixed common history noise. Factories change gain, parameter count and RNG consumption with depth; this is not an isolated causal depth perturbation. FIT-only normalization loads examples0..15 but only0/1 enter this probe; no DEV/test arrays read.
+
+For every legal race, cache its normalized full factual-score parameter VJP of sum pi times detached alternative suffix losses. Its sum matches both the all-race objective and original driver. A fixed sampled8 cached sum matches a separately differentiated subset objective using the same returns; it does not independently execute the sampled8 driver. A tiny actual native R4/k2 case enumerates all six subsets to verify unbiasedness and covariance.
+
+Exact trace covariance for uniform k without replacement is R(R-k)/(k(R-1)) times the sum of squared centered per-race parameter vectors; independent episode subset covariances add. The displayed MSE divides by squared FULL combined factual-plus-route gradient, not only a small canceling route mean. Sixty-four cached draws per row give descriptive cosine/update means, not fitted quality or Monte Carlo estimates of the exact covariance.
+
+Fresh Adam transforms include actual clip1 normalization and epsilon1e-8; full and sampled updates are independently checked against two actual discarded Adam forks per depth. Results do not describe trained moments, convergence or heldout improvement. Kernel, original parameters and caller RNG are preserved. Sparse native inference is unchanged.
+
+Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank present and hash verified.
+
+## Appendix B. Sampled credit: finite FIT predictions after actual Adam forks
+
+| Depth/credit | Forks | Same FIT NLL delta | Anchor NLL delta | Fresh-noise anchor delta | Anchor KL vs full | Fresh-noise KL vs full |
+| --- | --- | --- | --- | --- | --- | --- |
+| D2 full | 1 | -0.80321 | +0.07646 | +0.06996 | 0.00000 | 0.00000 |
+| D2 factorized | 1 | -0.80844 | +0.07066 | +0.07961 | 0.00051 | 0.00097 |
+| D2 k8 | 8 | -0.78296 | +0.06691 | +0.07583 | 0.00076 | 0.00116 |
+| D2 k32 | 8 | -0.78837 | +0.07762 | +0.07689 | 0.00044 | 0.00070 |
+| D4 full | 1 | -1.26088 | +0.14452 | +0.11285 | 0.00000 | 0.00000 |
+| D4 factorized | 1 | -1.27601 | +0.13249 | +0.10531 | 0.00092 | 0.00089 |
+| D4 k8 | 8 | -1.20494 | +0.09725 | +0.09090 | 0.00899 | 0.00981 |
+| D4 k32 | 8 | -1.22689 | +0.11830 | +0.10728 | 0.00241 | 0.00212 |
+| D6 full | 1 | -1.41862 | +0.46718 | +0.46173 | 0.00000 | 0.00000 |
+| D6 factorized | 1 | -1.45646 | +0.50830 | +0.55700 | 0.00460 | 0.00640 |
+| D6 k8 | 8 | -1.36269 | +0.43364 | +0.46939 | 0.02407 | 0.02747 |
+| D6 k32 | 8 | -1.41032 | +0.45229 | +0.49768 | 0.01226 | 0.01884 |
+
+Same frozen initialization/parameters/gains and normalized two-example gradients as Theory124. Per depth: factual-only and full-choice controls, plus the FIRST EIGHT archived draws for k8 and k32; no selection by outcome. Every fork executes fresh clip1 Adam.003 and verifies its actual stored displacement. Parameter ordering and initial original-noise FIT NLL reproduce the source exactly.
+
+NLL deltas are relative to each depth's unchanged model under the SAME evaluation noise; negative means improvement. Same FIT uses0/1, anchors are disjoint unused FIT2..15 with the original FIT-only normalization. Fresh-noise columns use a fixed second whole-history draw171324; other columns use original171323. Anchor examples are not an IID or heldout split. Prediction KL is from full-credit fork to each arm under matching noise.
+
+All54 forks improve their two fitting examples under both noise draws, while ALL worsen these disjoint FIT anchors. AtD6 full-credit anchor NLL increases.46718/.46173 versus.14452/.11285 atD4. The tiny gradient batch covers classes0/1, whereas the anchors contain other classes and adjacent subject recordings. This exposes a first-step fitting-versus-anchor tradeoff, not a representative minibatch or trained generalization diagnosis.
+
+Eight-fork rows show means, not a selected best fit. All54 actual outcomes, losses, logits and subset indices remain in the artifacts. Large parameter-step differences do not automatically mean worse predictions: the finite forward is the relevant functional check. Conversely, a favorable first step cannot demonstrate convergence, quality advantage or rescue of a trained deep model.
+
+The conditional-choice/factorized-time surrogate need not descend every literal fixed-noise realized loss; two noises are a bounded diagnostic, not complete expected-risk integration. Detached losing contents, persistent addressed state, key/value separation and computational races remain unchanged. No DEV/test array, dense fit, architecture substitution or trained moment history was used.
+
+Theory125;four contract groups,20.616s/576664KiB. 54 executed optimizer forks,1824 prediction-target evaluations; paid parent gradients are reused with no new counterfactual bank. Total diagnostic FLOPs/traffic/energy unknown, not zero. Other-host live-branch initialization comparisons and the AWS streaming10M quality matrix remain the integrated priorities.
+
+## Appendix B. Actual training batch: contracted parameter projections
+
+| Depth | Batch | k | Combined MSE ratio estimate | Empirical SE | Relative SE % | Sign probes |
+| --- | --- | --- | --- | --- | --- | --- |
+| 4 | 16 | 8 | 0.080239 | 0.003471 | 4.33 | 32 |
+| 4 | 16 | 32 | 0.017051 | 0.000738 | 4.33 | 32 |
+| 6 | 16 | 8 | 0.147045 | 0.006484 | 4.41 | 32 |
+| 6 | 16 | 32 | 0.033145 | 0.001462 | 4.41 | 32 |
+
+p16/H2/pool2, initialized seed7, SAME original fine FIT0..15 transform and fixed common race noise. Each full16-example episode graph retains computational delays, temporal races, private addressed state and separate keys/values. No DEV/test arrays, optimizer step, fit quality or inference saving. Different depth factories are a configuration ladder, not an isolated causal depth perturbation.
+
+Pool2 conditional choice credit equals pi0*pi1*(Q0-Q1)/B times the complete parameter Jacobian of score0-score1. An artificial score cotangent gives that Jacobian times a random parameter-sign vector through reverse-over-reverse pullback. This differentiates cotangents, not a physical stochastic Hessian. Detached alternative returns and the native factorized clock/value backward remain unchanged.
+
+THREE directions per D2/D4/D6 reproduce EVERY projected race contribution against Theory124's exact vectors, maximum error1.38e-14. Main estimates use32 independent Rademacher directions with no1/sqrt(parameter-count) scaling. Exact finite-population sampling covariance is projected and centered within each legal episode; its normalized trace estimate is unbiased. All probes are saved; empirical SE is descriptive, with no guaranteed95% interval. Worst-case relative RMS bound25%.
+
+At actual B16, k8 relative raw-noise RMS is about.283/.383 for D4/D6. Compared with B2 exact MSE.08463/.30506, D4 scarcely changes while D6 about halves. Sampling interference remains measurable in this initialization history. Larger k reduces raw variance, but does not establish Adam-update precision, trained causality, heldout gain or a cure; the finite functional forks retain mixed anchor behavior.
+
+Decision: reuse owned live-gate and gain-lineage comparisons and the original streaming AWS10M quality matrix. No sampling sweep admitted. The90M configuration-selection correction uses DEV metrics, preserving the old written test-based rule beside its correction; completed test scores remain reporting-only.
+
+Theory127/128;56.096s/629624KiB. 13440 full shadow lanes/282240 shadow events,64 main mixed pullbacks plus9 contract projections and factual/full backwards; total diagnostic FLOPs/traffic/energy unknown, not zero. Randomized trace estimation is a known primitive (Avron/Toledo2011); our native conditional-covariance application is contracted, not a novelty or equivalent-work wall-speedup claim.
