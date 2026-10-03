@@ -1,5 +1,17 @@
 # Local host: current research continuation
 
+## curie: 10M language results, §413 diagnosis and v4 diagnostics, 3 October 07:45 UTC
+
+Completed (one pass, compiled, test bpc T128): p16/d8 skip2 2.719, p32/d4 2.507, p32/d8 skip2 2.456 (one-pass E64:
+LSTM-256 2.171, Transformer-256×2 2.427). FINDINGS, the report appendix (report/native_language_batched_appendix.py) and
+THEORY §413 have the table and the diagnosis. In the fast language path the race address receives only first-time
+clock credit, so pools fragment memory, and active width is small. Running: v3c p32/d8/pool4 (until about 08:35). Then
+tmux curie_reorder11 stops the DVS contracts and runs queue curie_language_batched_v4_20261003T070000Z: contracts,
+forward-only routing diagnostics of the p32/d8 pool-2/pool-4 weights, then p32/d4 pool1 / linear / linear_rw /
+pool4 / pool4+linear / pool4+linear_rw / p64d4 (predictions (a)-(e) are in §413). After that the DVS program restarts.
+AWS: 90M arms are queued (AWS_NATIVE_LANGUAGE_90M.md, revision pending on v4). Host memory: diagnostics beside a job
+breach the guard (MemAvailable baseline about 9.4-10.3 GB). Put forward-only analyses in queues.
+
 ## Credit geometry checkpoint — 3 October, 06:52 UTC
 
 **Physical-host admission is unresolved.** The curie handoff below reports
