@@ -2265,3 +2265,13 @@ fullcorrectedstreamingreplay: thatfit DOES receivewinner-choicecredit.
 Read-onlyhashaudit afterpull: ALLactive matrix+centering+compact+route-audit
 frozen sourcesmatch, no knownstale-sourceissueinremainingguards.
 Decision/provenanceJSON aws_90m_protocol_revision_20261003T071000Z committed.
+
+AWS08:30 read-onlyMATCHEDonlineprefixanalysiscomplete at253952/503808targets,
+992/1968AdamupdatesALL3, fittingdatahashsame. Latest249856-targetinterval BPC
+privatefullreplay2.949932/private teacher2.986728/sharedteacher3.009584:
+positiveonlinelearningindication. NOTheldout/completed10Mquality/generalization/
+resourceadvantage. ALL6snapshots zeroAdam-epsilon-dominatedgate/outputmoments.
+Script/result/theory/aws_20261003_matched_language_progress.md retainprecise
+scope/values. Replay647168atinspection; teacher1Mcheckpoints published;
+threefitshealthy28GiBavailable. Revised90Massignmentnotarrived; don'trestart
+supersededfactorizedarms pending413v4evidence. Pendingdiagnosticsstayguarded.

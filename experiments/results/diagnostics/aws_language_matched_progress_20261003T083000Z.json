@@ -1,0 +1,116 @@
+{
+  "status": "completed",
+  "fitting_data_sha256": "eb65df8c02a63dd84539c6fe9d292d74dd30330b39a925a9344c06f19b019d63",
+  "analysis_source_sha256": "bf5fdf1bd3c388d0c28a86bb6ec3558ea61b765bcfddf64a735274765f9e7b98",
+  "rows": [
+    {
+      "arm": "private_replay",
+      "milestone": 1,
+      "checkpoint": "experiments/results/aws_language_progress/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7_milestone001.pt",
+      "checkpoint_sha256": "22a01e1a2be9fc642e98424f4b37da014b5ebdb866d2d76509a36e4628c95476",
+      "targets": 253952,
+      "optimizer_updates": 992,
+      "interval_start_target": 0,
+      "interval_end_target": 253952,
+      "online_interval_bpc": 3.309384006369465,
+      "cumulative_online_bpc": 3.309384006369465,
+      "gate_output_coordinates": 16896,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.40153956413269043,
+        0.6928115487098694
+      ]
+    },
+    {
+      "arm": "private_replay",
+      "milestone": 2,
+      "checkpoint": "experiments/results/aws_language_progress/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7_milestone002.pt",
+      "checkpoint_sha256": "a793c59cebc8577359b8dfd62840aac58e5d919caf89b7f35b2cb76e39845014",
+      "targets": 503808,
+      "optimizer_updates": 1968,
+      "interval_start_target": 253952,
+      "interval_end_target": 503808,
+      "online_interval_bpc": 2.949932034215567,
+      "cumulative_online_bpc": 3.1311192071711904,
+      "gate_output_coordinates": 16896,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.3891099691390991,
+        0.7305002808570862
+      ]
+    },
+    {
+      "arm": "private_teacher",
+      "milestone": 1,
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_private_pilot_s7_milestone001.pt",
+      "checkpoint_sha256": "ed7787825258fbf8b0fd13467618ebb361bc4ba01717043908527069fd26c887",
+      "targets": 253952,
+      "optimizer_updates": 992,
+      "interval_start_target": 0,
+      "interval_end_target": 253952,
+      "online_interval_bpc": 3.3204476098068305,
+      "cumulative_online_bpc": 3.3204476098068305,
+      "gate_output_coordinates": 16896,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.39543694257736206,
+        0.6202684044837952
+      ]
+    },
+    {
+      "arm": "private_teacher",
+      "milestone": 2,
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_private_pilot_s7_milestone002.pt",
+      "checkpoint_sha256": "69f5bcea2263fb38dd2383cef75999102d9e000692637f8908e6fe5d11765799",
+      "targets": 503808,
+      "optimizer_updates": 1968,
+      "interval_start_target": 253952,
+      "interval_end_target": 503808,
+      "online_interval_bpc": 2.9867278514675384,
+      "cumulative_online_bpc": 3.154944315020678,
+      "gate_output_coordinates": 16896,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.38327541947364807,
+        0.6466401219367981
+      ]
+    },
+    {
+      "arm": "shared_teacher",
+      "milestone": 1,
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_depth_pilot_s7_milestone001.pt",
+      "checkpoint_sha256": "75f2125bc41f107a493829a4ae25d55da65ad1d08b09eff3c55de2b31cddb386",
+      "targets": 253952,
+      "optimizer_updates": 992,
+      "interval_start_target": 0,
+      "interval_end_target": 253952,
+      "online_interval_bpc": 3.331464121220642,
+      "cumulative_online_bpc": 3.331464121220642,
+      "gate_output_coordinates": 1056,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.4111539423465729,
+        0.5489639043807983
+      ]
+    },
+    {
+      "arm": "shared_teacher",
+      "milestone": 2,
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_depth_pilot_s7_milestone002.pt",
+      "checkpoint_sha256": "ce4c7ecccb736522ec37f5e74e20c371f6f650dacd903b26ff7ac2b3b885fda9",
+      "targets": 503808,
+      "optimizer_updates": 1968,
+      "interval_start_target": 253952,
+      "interval_end_target": 503808,
+      "online_interval_bpc": 3.0095837474402685,
+      "cumulative_online_bpc": 3.1718323911344406,
+      "gate_output_coordinates": 1056,
+      "epsilon_dominated_coordinates": 0,
+      "bias_only_sigmoid_range": [
+        0.39730316400527954,
+        0.5636129379272461
+      ]
+    }
+  ],
+  "scope": "Read-only saved equal-prefix checkpoints, identical fitting-data hash and Adam counts. Single-seed online predictions made during fitting, NOT DEV/test/generalization/completed10M quality or a statistically confirmed advantage. Initial DEV timing and implementation differ; RNG pairing not asserted. Gate bias and historical moments do not measure actual gate activity or causal usefulness of depth."
+}
