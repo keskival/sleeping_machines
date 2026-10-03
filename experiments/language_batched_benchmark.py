@@ -68,6 +68,8 @@ def main():
     p.add_argument('--trace-windows', type=int, default=2)
     p.add_argument('--skip-init-from', type=int, default=0, help='near-identity init for layers >= this index (§410)')
     p.add_argument('--skip-gate-bias', type=float, default=-4.)
+    p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
+    p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
     a = p.parse_args()
     out = ROOT / 'experiments/results/language_batched' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -87,6 +89,7 @@ def main():
     total_windows = int(a.passes * (len(fit) - 1) // (S * B))
     if a.max_windows:
         total_windows = min(total_windows, a.max_windows)
+    schedule = torch.optim.lr_scheduler.CosineAnnealingLR(opt, total_windows) if a.cosine else None
     ledger = {}; traced_chars = 0; curve = []; seen = 0
     result = dict(status='running', args=vars(a), parameters=sum(q.numel() for q in model.parameters()),
                   source_sha256={n: hashlib.sha256((ROOT / n).read_bytes()).hexdigest() for n in
@@ -98,7 +101,8 @@ def main():
                                 segment=S, lanes=B, state='reset per segment', credit='whole segment (exact BPTT within it)',
                                 race='factorized law; shared per-step noise across lanes; per-window seed',
                                 evaluation='E64 windows of S, stride S/2, second half scored after the first window',
-                                selection='final weights (no development selection)'))
+                                selection='final weights (no development selection)',
+                                schedule='cosine annealing over all windows' if a.cosine else 'constant learning rate'))
     window_times = []
     for w in range(total_windows):
         starts = rng.integers(0, len(fit) - S - 1, B)
@@ -116,6 +120,8 @@ def main():
             rec = capture(step); ledger = merge([ledger, rec]) if ledger else rec; traced_chars += S * B
         else:
             step()
+        if schedule is not None:
+            schedule.step()
         window_times.append(time.perf_counter() - t); seen += S * B
         if w % 50 == 0 or w == total_windows - 1:
             print(json.dumps(dict(window=w, chars=seen, train_bits=box['loss'] / math.log(2),
@@ -133,6 +139,11 @@ def main():
         result['dev_bpc'], result['dev_targets'] = window_scores(model, dev, S, 314159, B)
         test = np.array(text_slice(95_000_000, a.test), np.int64)
         result['test_bpc'], result['test_targets'] = window_scores(model, test, S, 314159, B)
+        if a.eval_segment and a.eval_segment != S:      # same weights, E64 windows of another length (e.g. T=256)
+            E = a.eval_segment; lanes = max(1, B * S // E)
+            result['eval_segment'] = E
+            result['dev_bpc_eval_segment'], _ = window_scores(model, dev, E, 314159, lanes)
+            result['test_bpc_eval_segment'], result['test_targets_eval_segment'] = window_scores(model, test, E, 314159, lanes)
     result.update(status='completed', wall_s=time.perf_counter() - started,
                   max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     out.write_text(json.dumps(result, indent=2) + '\n')
