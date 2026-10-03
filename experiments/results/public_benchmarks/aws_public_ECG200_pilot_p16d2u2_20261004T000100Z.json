@@ -1,0 +1,513 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "aws_public_ECG200_pilot_p16d2u2_20261004T000100Z",
+    "dataset": "ECG200",
+    "stage": "screen",
+    "epochs": 3,
+    "payload": 16,
+    "depth": 2,
+    "pool": 2,
+    "heads": 2,
+    "batch": 32,
+    "lr": 0.003,
+    "seed": 6,
+    "selection": null,
+    "resume": false
+  },
+  "source_sha256": {
+    "experiments/public_benchmarks/run.py": "4aa166323ff43c9b5aee79a414b1c30ff7ba1a49a611c9e388fb77b69bb67007",
+    "experiments/public_benchmarks/data.py": "9fccae1f26acaa16582629cc16899eef86753741b8bcc62a0de91ef1062b85ae",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/compiled_episodes.py": "f633227cedc9e7ba84d0f608972fbcd109d174a9dcfc099706ef3a9b7864885f",
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec"
+  },
+  "data_manifest_sha256": "d57fee8e92d76d9d49c8c1a3c91a443b6af34a78110c72a78b763e7c711682dc",
+  "selection_parent_sha256": null,
+  "parameters": 14234,
+  "best_epoch": 3,
+  "development": {
+    "targets": 20,
+    "accuracy": 0.7,
+    "nll": 0.5958172798156738,
+    "probabilities": [
+      [
+        0.390471488237381,
+        0.6095284819602966
+      ],
+      [
+        0.3454537093639374,
+        0.654546320438385
+      ],
+      [
+        0.38146448135375977,
+        0.6185355186462402
+      ],
+      [
+        0.37608104944229126,
+        0.6239189505577087
+      ],
+      [
+        0.3640183210372925,
+        0.6359816789627075
+      ],
+      [
+        0.3693832457065582,
+        0.6306167840957642
+      ],
+      [
+        0.38050803542137146,
+        0.6194918751716614
+      ],
+      [
+        0.3936154544353485,
+        0.6063845157623291
+      ],
+      [
+        0.32177382707595825,
+        0.6782261729240417
+      ],
+      [
+        0.3836939036846161,
+        0.6163061261177063
+      ],
+      [
+        0.4018978774547577,
+        0.5981020927429199
+      ],
+      [
+        0.35962405800819397,
+        0.6403759121894836
+      ],
+      [
+        0.3630378246307373,
+        0.6369621157646179
+      ],
+      [
+        0.3970296084880829,
+        0.6029704213142395
+      ],
+      [
+        0.3780875504016876,
+        0.6219123601913452
+      ],
+      [
+        0.42213666439056396,
+        0.5778632760047913
+      ],
+      [
+        0.35144561529159546,
+        0.6485544443130493
+      ],
+      [
+        0.4303964674472809,
+        0.5696036219596863
+      ],
+      [
+        0.3524119555950165,
+        0.6475880146026611
+      ],
+      [
+        0.3903965353965759,
+        0.6096035242080688
+      ]
+    ],
+    "identities": [
+      "TRAIN:0",
+      "TRAIN:1",
+      "TRAIN:5",
+      "TRAIN:8",
+      "TRAIN:9",
+      "TRAIN:10",
+      "TRAIN:11",
+      "TRAIN:19",
+      "TRAIN:41",
+      "TRAIN:42",
+      "TRAIN:66",
+      "TRAIN:69",
+      "TRAIN:77",
+      "TRAIN:79",
+      "TRAIN:86",
+      "TRAIN:90",
+      "TRAIN:92",
+      "TRAIN:93",
+      "TRAIN:95",
+      "TRAIN:97"
+    ]
+  },
+  "test": null,
+  "fitting_presentations": 240,
+  "curve": [
+    {
+      "epoch": 1,
+      "mean_batch_train_nll": 0.7408152023951212,
+      "dev": {
+        "targets": 20,
+        "accuracy": 0.7,
+        "nll": 0.6674295902252197,
+        "probabilities": [
+          [
+            0.1614578664302826,
+            0.8385421633720398
+          ],
+          [
+            0.15684622526168823,
+            0.8431537747383118
+          ],
+          [
+            0.15896058082580566,
+            0.8410394191741943
+          ],
+          [
+            0.15774975717067719,
+            0.8422502875328064
+          ],
+          [
+            0.156524658203125,
+            0.8434752821922302
+          ],
+          [
+            0.15753240883350372,
+            0.8424675464630127
+          ],
+          [
+            0.158774733543396,
+            0.8412252068519592
+          ],
+          [
+            0.16069990396499634,
+            0.8393000960350037
+          ],
+          [
+            0.16641052067279816,
+            0.833589494228363
+          ],
+          [
+            0.15849429368972778,
+            0.8415056467056274
+          ],
+          [
+            0.15901075303554535,
+            0.8409892320632935
+          ],
+          [
+            0.15640556812286377,
+            0.8435944318771362
+          ],
+          [
+            0.15645015239715576,
+            0.8435498476028442
+          ],
+          [
+            0.16172027587890625,
+            0.8382797241210938
+          ],
+          [
+            0.16139505803585052,
+            0.8386049270629883
+          ],
+          [
+            0.16244247555732727,
+            0.8375575542449951
+          ],
+          [
+            0.15599028766155243,
+            0.8440097570419312
+          ],
+          [
+            0.1662951558828354,
+            0.8337048292160034
+          ],
+          [
+            0.16061948239803314,
+            0.8393805623054504
+          ],
+          [
+            0.15841436386108398,
+            0.8415855765342712
+          ]
+        ],
+        "identities": [
+          "TRAIN:0",
+          "TRAIN:1",
+          "TRAIN:5",
+          "TRAIN:8",
+          "TRAIN:9",
+          "TRAIN:10",
+          "TRAIN:11",
+          "TRAIN:19",
+          "TRAIN:41",
+          "TRAIN:42",
+          "TRAIN:66",
+          "TRAIN:69",
+          "TRAIN:77",
+          "TRAIN:79",
+          "TRAIN:86",
+          "TRAIN:90",
+          "TRAIN:92",
+          "TRAIN:93",
+          "TRAIN:95",
+          "TRAIN:97"
+        ]
+      }
+    },
+    {
+      "epoch": 2,
+      "mean_batch_train_nll": 0.6511050462722778,
+      "dev": {
+        "targets": 20,
+        "accuracy": 0.7,
+        "nll": 0.5997133731842041,
+        "probabilities": [
+          [
+            0.253113329410553,
+            0.7468866109848022
+          ],
+          [
+            0.24200931191444397,
+            0.7579907178878784
+          ],
+          [
+            0.25070706009864807,
+            0.7492928504943848
+          ],
+          [
+            0.26133671402931213,
+            0.7386632561683655
+          ],
+          [
+            0.24259178340435028,
+            0.7574082016944885
+          ],
+          [
+            0.24447229504585266,
+            0.7555277347564697
+          ],
+          [
+            0.2488054633140564,
+            0.7511945366859436
+          ],
+          [
+            0.2704833447933197,
+            0.7295166254043579
+          ],
+          [
+            0.24737517535686493,
+            0.7526248097419739
+          ],
+          [
+            0.2506107985973358,
+            0.7493892908096313
+          ],
+          [
+            0.25327563285827637,
+            0.7467244267463684
+          ],
+          [
+            0.24184690415859222,
+            0.7581531405448914
+          ],
+          [
+            0.2580663859844208,
+            0.7419336438179016
+          ],
+          [
+            0.27133941650390625,
+            0.7286605834960938
+          ],
+          [
+            0.25269705057144165,
+            0.7473028898239136
+          ],
+          [
+            0.27561062574386597,
+            0.724389374256134
+          ],
+          [
+            0.23995955288410187,
+            0.7600405216217041
+          ],
+          [
+            0.28015440702438354,
+            0.7198455929756165
+          ],
+          [
+            0.25402116775512695,
+            0.745978832244873
+          ],
+          [
+            0.262092649936676,
+            0.7379074096679688
+          ]
+        ],
+        "identities": [
+          "TRAIN:0",
+          "TRAIN:1",
+          "TRAIN:5",
+          "TRAIN:8",
+          "TRAIN:9",
+          "TRAIN:10",
+          "TRAIN:11",
+          "TRAIN:19",
+          "TRAIN:41",
+          "TRAIN:42",
+          "TRAIN:66",
+          "TRAIN:69",
+          "TRAIN:77",
+          "TRAIN:79",
+          "TRAIN:86",
+          "TRAIN:90",
+          "TRAIN:92",
+          "TRAIN:93",
+          "TRAIN:95",
+          "TRAIN:97"
+        ]
+      }
+    },
+    {
+      "epoch": 3,
+      "mean_batch_train_nll": 0.6093170046806335,
+      "dev": {
+        "targets": 20,
+        "accuracy": 0.7,
+        "nll": 0.5958172798156738,
+        "probabilities": [
+          [
+            0.390471488237381,
+            0.6095284819602966
+          ],
+          [
+            0.3454537093639374,
+            0.654546320438385
+          ],
+          [
+            0.38146448135375977,
+            0.6185355186462402
+          ],
+          [
+            0.37608104944229126,
+            0.6239189505577087
+          ],
+          [
+            0.3640183210372925,
+            0.6359816789627075
+          ],
+          [
+            0.3693832457065582,
+            0.6306167840957642
+          ],
+          [
+            0.38050803542137146,
+            0.6194918751716614
+          ],
+          [
+            0.3936154544353485,
+            0.6063845157623291
+          ],
+          [
+            0.32177382707595825,
+            0.6782261729240417
+          ],
+          [
+            0.3836939036846161,
+            0.6163061261177063
+          ],
+          [
+            0.4018978774547577,
+            0.5981020927429199
+          ],
+          [
+            0.35962405800819397,
+            0.6403759121894836
+          ],
+          [
+            0.3630378246307373,
+            0.6369621157646179
+          ],
+          [
+            0.3970296084880829,
+            0.6029704213142395
+          ],
+          [
+            0.3780875504016876,
+            0.6219123601913452
+          ],
+          [
+            0.42213666439056396,
+            0.5778632760047913
+          ],
+          [
+            0.35144561529159546,
+            0.6485544443130493
+          ],
+          [
+            0.4303964674472809,
+            0.5696036219596863
+          ],
+          [
+            0.3524119555950165,
+            0.6475880146026611
+          ],
+          [
+            0.3903965353965759,
+            0.6096035242080688
+          ]
+        ],
+        "identities": [
+          "TRAIN:0",
+          "TRAIN:1",
+          "TRAIN:5",
+          "TRAIN:8",
+          "TRAIN:9",
+          "TRAIN:10",
+          "TRAIN:11",
+          "TRAIN:19",
+          "TRAIN:41",
+          "TRAIN:42",
+          "TRAIN:66",
+          "TRAIN:69",
+          "TRAIN:77",
+          "TRAIN:79",
+          "TRAIN:86",
+          "TRAIN:90",
+          "TRAIN:92",
+          "TRAIN:93",
+          "TRAIN:95",
+          "TRAIN:97"
+        ]
+      }
+    }
+  ],
+  "checkpoint": "experiments/results/public_benchmarks/aws_public_ECG200_pilot_p16d2u2_20261004T000100Z.pt",
+  "checkpoint_sha256": "66cd4130a3199ba682b85ab1ba1eba68bac522a8c1e4543c921e03b7022ad1d2",
+  "work": {
+    "fit_flops_per_presented_target_estimate": 10102883.34375,
+    "whole_fit_flops_estimate": 2424692002.5,
+    "traced_fitting_targets": 96,
+    "scope": "One full eager optimizer window per epoch extrapolated per target. Variable/padded lengths vary; shape-mean estimate, not exact whole fit. DEV/test/packing/compilation/traffic/energy separate."
+  },
+  "capacity": {
+    "receivers": 8,
+    "scored_keys_per_event": 8,
+    "selected_writes_per_event": 4
+  },
+  "protocol": {
+    "split": "Official archive TRAIN/TEST; fixed stratified20% of TRAIN for DEV; full TRAIN refit only after configuration/epoch selection.",
+    "encoding": "Synchronous real-valued channels, FIT-only centering/scaling, ordinal timestamps normalized by FIT maximum length, explicit terminal query. No claim of original physical timestamps.",
+    "credit": "Native factorized temporal races plus linear local-expectation categorical message credit; whole episode BPTT, persistent private state reset per series.",
+    "test_access": "None in screen; once after final refit.",
+    "inference_work": "Pending trained-state trace; no inference advantage claimed."
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-1006-aws-x86_64-with-glibc2.43",
+    "torch": "2.14.0+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "wall_s": 106.52434629801428,
+  "max_rss_kb": 773184
+}

@@ -1,0 +1,3 @@
+{"epoch": 1, "dev_accuracy": 0.7, "wall_s": 84.34198147297138}
+{"epoch": 2, "dev_accuracy": 0.7, "wall_s": 95.24607683101203}
+{"epoch": 3, "dev_accuracy": 0.7, "wall_s": 106.51081597298617}

@@ -1,0 +1,3 @@
+22:19:49 start aws_pub_v2_20261004T000200Z_aws_public_ECG200_pilot_p16d2u2_20261004T000100Z
+22:20:50 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_pilot_p16d2u2_20261004T000100Z: process group RSS=749592KB, MemAvailable=27212MB
+22:21:40 done aws_pub_v2_20261004T000200Z_aws_public_ECG200_pilot_p16d2u2_20261004T000100Z (exit 0)
