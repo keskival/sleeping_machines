@@ -2145,3 +2145,12 @@ completed10M quality. It serializesGit by briefly pausing admissioncoordinator,
 waiting for itsGit child to finish, andresuminginfinally; trainers/watchdogs
 continue. Beforemanualpublication coordinate /tmp/aws-language-publication.lock
 andthe exactactivecoordinator to avoid overlappingGitoperations.
+
+AWS 02:22 UTC: three10M jobs healthy; replay40960targets/private teacher139264
+(online scores only). Read-only117 saved-vector localization completed: channel
+mix accounts67–68%private/79–80%shared squaredfloat32gradienterror; failed
+coordinates32/33private,75/101shared againsteachprogram'sown double reference.
+No cause/quality inference. Derivation and required detachedreturn-centering
+comparison recorded in theory/aws_20261003_replay_return_centering.md; all
+three guardedslots occupied, no extra diagnostic/model executed oractive
+protocol changed. Preserve49.66%countedworkbenefit beside116coordinatefails.
