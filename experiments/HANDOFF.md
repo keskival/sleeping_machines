@@ -2223,3 +2223,14 @@ aws_replay_compact_wait,3GBvirtual/1.25GBRSS/8GiBfloor/600s. Even firstaudit
 PASS is insufficient: ALLshadowroutehistories, actualoptimizerrecovery,
 completework/wall/RSS/learningcontracts stillrequired before ANYqualityarm.
 Active3-slot10Mmatrix remainsprioritized andunchanged.
+
+AWS06:10: compactsuffixauditextended in NEWsibling
+experiments/aws_replay_compact_suffix_route_audit.py; originalqueued051000Z
+sources untouched. Instrumentsfactual andshadowwinnerhistories; compactsuffix
+must agree withEVERYactive prefix of fullwinnerreuselanes atEVERYabsolute
+race, withidenticalforce identity/order andexpectedactivationbatchsize.
+Uniqueonejobqueue aws_replay_compact_routes_20261003T061000Z deferredbehind
+normalhostlock (3GBvirtual/1.25GBRSS/8GiBfloor/600s). Syntax/frozenhashespass,
+no numerical/modelexecution yet; optimizerrecovery/accounting/wall/learning
+stillneeded. Replay397312targetsatinspection,28GiBavailable, all3fitshealthy.
+Otherhostcompiledlanguage/DVSwork remainsseparate; avoidduplicatefit.
