@@ -2378,3 +2378,15 @@ fullreplay/teachercontinue. README/REPORT appendcompletedquality+commonunit
 worktable, preservingunequalquality/data/estimateconventions; PDFnotrebuilt
 inthispublication. Trained90Minference work remains pending, not borrowed
 fromuntrainedsparsearithmetictrace.
+
+AWS residual-credit follow-up: source-bound protocol prepared against earliest
+immutableprivatefullreplay>=1M checkpoint(1003520targets), chosen by target
+count, notquality. New analysis/aws_residual_credit_protocol.py verifiesSHA and
+records everygradient/state/RNG/causality/warmAdam/recovery/fullwork gates.
+Theory aws_20261003_residual_counterfactual_credit.md nowincludes optimal
+anchor-scale quadratic and explicit equalvariance/work-saving thresholds.
+Metadata ONLY, no nativecontracts/trainjob executed or new queue admitted.
+Prioritized model/queue remains90M pool2/D4 in currentprioritymanifest; then
+depth8 andwidth64, with private streamingreplay/teacher slotsunchanged.
+Gaps: trainedresidualprediction/useful-longcredit, trained90Minference/cache
+contracts, replication andcomparablequality resource evidence.

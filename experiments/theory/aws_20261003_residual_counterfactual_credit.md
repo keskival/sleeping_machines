@@ -117,3 +117,41 @@ persistent-write utilities; compare zero/factual/local-message/state-aware ancho
 Use finite warm-Adam forks and disjoint FIT anchors to reject noisy harmful
 updates before a bounded integrated DEV-selected fit. No new test-driven sweep,
 no training queue admitted from the scalar fixture alone.
+
+## Calibrating an anchor without asserting that a critic helps
+
+Let cheap candidate gradient contributions u_j be fixed at the conditioned
+history. Use h_j=alpha*u_j and w_j=1/p_j-1. Conditional trace in any fixed
+linear diagnostic A is a quadratic:
+
+    V(alpha)=sum_j w_j ||A*v_j-alpha*A*u_j||^2.
+    alpha_star = sum_j w_j <A*v_j,A*u_j> / sum_j w_j ||A*u_j||^2.
+
+If the denominator vanishes, choose alpha=0. Otherwise the optimal reduction
+is numerator^2/denominator; restricting alpha to a prespecified interval
+projects the optimum onto that interval. This is an oracle fixed-state identity,
+not a free policy: computing v_j already pays actual replay. FIT-only past
+samples can estimate the moments, with proper inclusion weighting and a
+positive support floor, but their estimated optimum need not help the next
+history. Learning alpha from the same selected current returns and treating it
+as fixed would invalidate the simple conditional proof. Freeze it before fresh
+draws, or derive the dependence explicitly.
+
+For uniform probabilities, lowering p from p0 to p1 increases the noise factor
+from (1/p0-1) to (1/p1-1). Equal or lower conditional raw variance requires
+
+    sum ||v-h||^2 / sum ||v||^2 <= (1/p0-1)/(1/p1-1).
+
+For example reducing probability1/2 to1/4 needs residual squared norm at most
+one third of the original. This is a measurable threshold, not a generic claim
+that any learned predictor saves work. Let total fixed overhead increase from
+C0 to C0+Ca and full residual shadow cost be Cs. Work decreases only if
+Ca < (p0-p1)*Cs. Both variance and total-work gates must pass; alpha0 may still
+incur anchor overhead unless the implementation actually skips that computation.
+
+A prepared trained-state protocol is now source-bound to the earliest immutable
+private full-replay checkpoint above1M targets, chosen by target count rather
+than quality. analysis/aws_residual_credit_protocol.py verifies the checkpoint
+SHA and records every-gradient/factual-state/RNG/causality/warm-Adam/recovery and
+complete-resource gates in results/diagnostics/aws_residual_credit_protocol_20261003.json.
+It only prepares metadata; no native execution or new training is claimed.
