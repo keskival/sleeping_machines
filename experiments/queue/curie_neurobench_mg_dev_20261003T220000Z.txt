@@ -1,0 +1,11 @@
+# NeuroBench Mackey-Glass development (experiments/SOTA_TARGETS.md target 1): tau 18 and 19 only (the scored tau = 17
+# protocol is run once later with the chosen settings). Leaderboard: LSTM sMAPE 13.37, ESN 14.79 (tau 17).
+curie_mg_dev_contracts_20261003T220000Z -m pytest -q tests/test_sparse_inference.py tests/test_compiled_episodes.py
+curie_mg_dev_t18_p16d2_k1_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t18_p16d2_k1_20261003T220000Z --tau 18 --payload 16 --depth 2 --taps 1 --steps 1000
+curie_mg_dev_t18_p16d2_k8_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t18_p16d2_k8_20261003T220000Z --tau 18 --payload 16 --depth 2 --taps 8 --steps 1000
+curie_mg_dev_t18_p32d2_k8_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t18_p32d2_k8_20261003T220000Z --tau 18 --payload 32 --depth 2 --taps 8 --steps 1000
+curie_mg_dev_t18_p32d4_k8_s2k_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t18_p32d4_k8_s2k_20261003T220000Z --tau 18 --payload 32 --depth 4 --taps 8 --steps 2000
+curie_mg_dev_t19_p16d2_k1_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t19_p16d2_k1_20261003T220000Z --tau 19 --payload 16 --depth 2 --taps 1 --steps 1000
+curie_mg_dev_t19_p16d2_k8_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t19_p16d2_k8_20261003T220000Z --tau 19 --payload 16 --depth 2 --taps 8 --steps 1000
+curie_mg_dev_t19_p32d2_k8_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t19_p32d2_k8_20261003T220000Z --tau 19 --payload 32 --depth 2 --taps 8 --steps 1000
+curie_mg_dev_t19_p32d4_k8_s2k_20261003T220000Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --tag curie_mg_dev_t19_p32d4_k8_s2k_20261003T220000Z --tau 19 --payload 32 --depth 4 --taps 8 --steps 2000
