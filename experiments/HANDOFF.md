@@ -2311,3 +2311,10 @@ AWS_90M_PRIORITY_REALLOCATION.md preservesexactprivatefullreplay/control,
 prioritizesassignedpool4linear90M, deferssharedcontrol, retainsallstate/RNG/
 logs/evidence anddiscardedworkbounds. No newcoordinatorready/executedyet.
 ForecastJSON neverusedasqualityevidence. Current3fits/publishercontinue.
+
+AWS13:35 independent read-only progress extension through matched1M saved
+checkpoint (1003520targets/3920AdamupdatesALL3): latestinterval replay2.794892
+/privateteacher2.847557/sharedteacher2.887824 ONLINEbpc; cumulative2.978605/
+3.013845/3.041100. Positivelearningtrendretained at~10%planneddata, NOTheldout/
+completedquality/resourceclaim. New1m siblinganalysis/result; original500k
+artifact/sourcepreserved. Schedulingpreferencepending, allfitsunchanged.

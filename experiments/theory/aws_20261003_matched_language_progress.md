@@ -39,3 +39,24 @@ Completed final1MDEV with common quality/work accounting remains the deciding
 comparison. Active fits are unchanged. Future90M configurations await the
 owner's413v4 DEV evidence and revised assignment; those segment-reset models
 and their credit repairs have a distinct protocol from this full replay fit.
+
+## Extension through the matched 1M checkpoint
+
+New sibling analysis `analysis/aws_language_matched_progress_1m.py` checks all
+four milestones without changing the original 500k analysis. Result:
+`results/diagnostics/aws_language_matched_progress_1m_20261003T133500Z.json`.
+All three fourth snapshots contain 1,003,520 targets and 3,920 Adam updates,
+with matching fitting-data hashes. Latest interval targets[753664:1003520]:
+
+| Arm | Latest interval online BPC | Cumulative online BPC |
+|---|---:|---:|
+| Private corrected full replay | 2.794892 | 2.978605 |
+| Private teacher | 2.847557 | 3.013845 |
+| Depth-shared teacher | 2.887824 | 3.041100 |
+
+Replay's interval lead is .052665/.092932 BPC. This preserves a positive
+learning trend through about 10% of the planned data. ALL qualifications above
+remain: single-seed fitting predictions, no held-out generalization or
+comparable-quality resource claim, no causal proof of useful nonlinear depth.
+All snapshots and loss sums remain available; full fitting work must accompany
+any completed comparison. The ongoing fits and selection protocol are unchanged.
