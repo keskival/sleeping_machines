@@ -65,6 +65,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--result', required=True); p.add_argument('--out', required=True)
     p.add_argument('--chars', type=int, default=50_000); p.add_argument('--samples', type=int, default=4)
+    p.add_argument('--lanes', type=int, default=16, help='evaluation lanes (memory only; results do not depend on it)')
     a = p.parse_args()
     out = ROOT / a.out
     if out.exists():
@@ -74,7 +75,7 @@ def main():
     model = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=args['payload'],
                                             depth=args['depth'], heads=args['heads'], pool=args['pool'])
     model.load_state_dict(torch.load(ROOT / r['final_weights'])); model.eval()
-    text = L.load_text(90_000_000, a.chars); S, lanes = args['segment'], args['lanes']
+    text = L.load_text(90_000_000, a.chars); S, lanes = args['segment'], a.lanes
     record = []
     sampled, starts, half = probabilities(model, text, S, 314159, lanes, record)
     D, H, U = model.depth, model.heads, model.pool
