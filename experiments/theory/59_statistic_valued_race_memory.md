@@ -1463,3 +1463,21 @@ Possible reasons, none tested yet: the written-content linearization ignores the
 (note 142); the value credit already moves the same scores that decide both the read and the write, because one race
 selects both; or the write consequence needs longer horizons than one 128-character segment gives. The pool-4 linear_rwn
 arm (v5, last) tests whether more slots change this. Until then, value credit alone is the default for new arms.
+
+## 414. Exact winner-only inference: stored-memory keys make capacity nearly free at inference
+
+The race scores read key + key_read · m from the *stored* memory m. Decay and rotation are lazy and applied only when the
+slot is written, so a slot's key read changes only when that slot is written, and per race only the winner writes. Every
+other quantity of a race at inference (control gates, decay, input write, output read, gate, forwarded value) is the
+winner's. Caching each slot's key read therefore gives an exact evaluator whose per-race work is U·P for the score
+dot products plus the winner's maps and one key_read refresh (several P² terms), instead of about 4·U·P² for the
+batched emulator, which computes every proposal. sleeping_machines/sparse_inference.py implements it. Contract
+(tests/test_sparse_inference.py): logits equal batched_logits within 1e-10 in float64, with identical routes, at pools
+1, 3 and 4 on variable-length episodes.
+
+Traced (same unit/special convention; p32/d4, E64 evaluation, per evaluated position): pool 2 0.163, pool 4 0.164,
+pool 16 0.171 MFLOPs. The batched emulator charges 0.240 at pool 2 and grows with the pool. Stored capacity at fixed selected
+activity therefore costs U·P multiply-adds per race at inference, which is the claimed separation between available
+capacity, scored keys and selected work. Keys are still scored for every slot, and that cost is counted. Training is
+unchanged: the batched path still computes every candidate, which the route credit uses, and that is charged in the
+fitting work.
