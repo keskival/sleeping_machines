@@ -93,7 +93,13 @@ def main():
     for k in range(1, a.samples):
         mixture += probabilities(model, text, S, 314159 + 7919 * k, lanes)[0]
     mixture /= a.samples
-    res = dict(result=a.result, chars=a.chars, segment=S, routing=layers,
+    horizon = []
+    for d in range(D):
+        rate = torch.cat([F.softplus(u.raw_rate.detach()).flatten() + 1e-6 for h in model.units[d] for u in h[0]])
+        q = torch.quantile(math.log(2) / rate.double(), torch.tensor([.1, .5, .9], dtype=torch.float64))
+        horizon.append(dict(depth=d, half_life_p10=float(q[0]), half_life_median=float(q[1]), half_life_p90=float(q[2]),
+                            half_life_max=float((math.log(2) / rate).max())))
+    res = dict(result=a.result, chars=a.chars, segment=S, routing=layers, memory_half_life_chars_at_unit_forget=horizon,
                bpc=dict(sampled=bpc(sampled, text, starts, half, S), argmax_routing=bpc(greedy, text, starts, half, S),
                         **{f'mixture_{a.samples}_seeds': bpc(mixture, text, starts, half, S)}),
                scope='forward-only diagnostic on DEV text8[90M:90M+chars]; argmax routing also changes delays (T = 1/max rate)')
