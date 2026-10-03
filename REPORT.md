@@ -3740,3 +3740,49 @@ At actual B16, k8 relative raw-noise RMS is about.283/.383 for D4/D6. Compared w
 Decision: reuse owned live-gate and gain-lineage comparisons and the original streaming AWS10M quality matrix. No sampling sweep admitted. The90M configuration-selection correction uses DEV metrics, preserving the old written test-based rule beside its correction; completed test scores remain reporting-only.
 
 Theory127/128;56.096s/629624KiB. 13440 full shadow lanes/282240 shadow events,64 main mixed pullbacks plus9 contract projections and factual/full backwards; total diagnostic FLOPs/traffic/energy unknown, not zero. Randomized trace estimation is a known primitive (Avron/Toledo2011); our native conditional-covariance application is contracted, not a novelty or equivalent-work wall-speedup claim.
+
+## Appendix B. Live counterfactual messages: conditional content and route credit
+
+The prior replay learns route utility from detached alternative losses, while the realized winner supplies content gradients. This need not be biased, but losing message functions receive no direct payload derivative on that realization. The new training-only sibling differentiates through every alternative of ONE sampled race, including complete live prefixes and private writes.
+
+At a uniformly sampled legal race r, objective = sum stopgrad(pi_i)*L_i + R*sum pi_i*stopgrad(L_i), averaged over actual examples. The branch-content average REPLACES factual loss gradient; adding both would double-count. Only sampled choice credit gets legal-race scaling R. Native computational delays, factorized first-time gradients, sparse private state, key/value separation and inference remain unchanged.
+
+For ONE episode at fixed entering history/first time and independent future draws, the branch average is the conditional mean of the native pathwise estimator. It removes current-winner variance at that site. Conditioning on the entire candidate noise would reveal the winner. Shared noise across episodes means this is not a lower BATCH-variance theorem. Global clipping and Adam are nonlinear; their expected updates need not be preserved.
+
+| Native one-event losing output map | Gradient L2 |
+| --- | --- |
+| Factual payload gradient | 0 |
+| Joint conditional gradient | 0.0116820573 |
+| Loser selection probability | 0.481761694 |
+
+Eight contract groups cover EVERY parameter against explicit live branches/decomposition, independent pure-Torch factorized clock algebra, factual-forced-winner identity, actual first-time preservation, existing BLk1 choice credit, relabeling-invariant factual predictions, real normalized clip1 Adam, byte-serialized next-update recovery and complete operator coverage. Early/late and unequal-length native episodes are included.
+
+The independent reference holds each recorded branch topology and clock latent Z=Lambda*T fixed, then differentiates T=Z/Lambda. It does not differentiate a fixed-candidate-noise minimum or detach physical time. Future hard-choice boundaries remain scoped native derivatives; this is not exact whole-risk differentiation.
+
+Theory129;2.644s/343656KiB. Known conditional averaging and stochastic-computation-graph primitives (Schulman et al.2015); the native coupled-clock/content application is implemented and contracted, not a priority claim. Source/kernel/RNG preserved; total contract-campaign work unknown, not zero.
+
+## Appendix B. Integrated depth4 content learning: paid FIT-only admission
+
+| Credit | Initial FIT NLL | Final FIT NLL | Initial anchor | Final anchor | Learn gate |
+| --- | --- | --- | --- | --- | --- |
+| choice only | 2.674371 | 2.328692 | 2.604848 | 2.469267 | True |
+| joint content choice | 2.674371 | 2.340674 | 2.604848 | 2.470372 | True |
+
+| Model/credit | Data / passes | Eval split / NLL | Whole fit GF | Fit MF/target | Infer MF/target |
+| --- | --- | --- | --- | --- | --- |
+| choice only | 24 / 2 | FIT-anchor / 2.46927 | 0.039905 | 0.831357 | 0.162128 |
+| joint content choice | 24 / 2 | FIT-anchor / 2.47037 | 0.068115 | 1.419073 | 0.162128 |
+| Saved p16 D4 factorized | 984 / 8 | DEV / 1.13027 | 34.347614 | 4.363264 | 1.068283 |
+| Saved p16 D4 full replay | 984 / 8 | DEV / 1.02063 | 3815.206646 | 484.655316 | 1.068437 |
+
+Both pass the fixed learning gate, but joint content is worse by 0.011983 FIT NLL and 0.001105 anchor NLL, with 1.707x fitting work. No promotion or retuning. Saved factorized/full replay fitting work per presentation is 3.07x/341.53x the joint smoke; unequal width/data/quality prevent a superiority claim.
+
+SAME fresh p4/D4/H2/pool2, original fine21-event FIT0..23, fixed disjoint FIT24..31 anchors, two passes/48 presentations/12 Adam updates per arm, B4/lr.003/clip1. Identical initialization/order/sites/common noise, ordinary gates, no growth or pretrained weights. Anchors are adjacent FIT recordings, not IID or official DEV/test. Every update is fully traced; source contracts include actual real-depth4 EVERY-gradient decomposition and BLk1 identity.
+
+Each smoke keeps16 available private receivers, eight selected updates and16 key scores per event;21 events means168 selected updates/336 scores per target. Full-prefix shadows96 lanes/2016 events per fit are charged, including ALL live-branch backwards in the joint arm. Objective normalization is charged inside forward; no second scaling. Native inference is identical in structure and counted on the same32-target boundary.
+
+The saved full-data rows retain stronger quality, other widths and7872 presentations, with first/last-window work estimates. Smoke work is exact over48 presentations. EVERY table column uses common units and presentation denominators; unequal quality/data make raw work gaps admission evidence, not comparable-quality superiority. Evaluation/verification and failed-attempt work are separate unknown work, not zero.
+
+Original042000Z run hit its180s guard after choice-only completed; joint was incomplete. Preserve original source/protocol/logs and48-96 failed fitting-presentation bound. Retry changes only the timeout to420s based on measured tracing cost; same data/passes/settings, no loss-based tuning or extension. Incomplete scores are excluded from this paired table.
+
+Theory130;230.670s/469892KiB. Tiny single-seed learning/resource admission only: no useful deep-feature attribution, batch variance reduction, heldout confirmation or supremacy. Existing integrated live-gate comparisons and AWS streaming10M remain priority; no active source replaced.

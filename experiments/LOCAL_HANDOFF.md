@@ -2161,3 +2161,63 @@ losing-content exposure,16-token language horizon, discovery/credit cost,
 route stability and practical generalization. No architecture substitution
 or superiority promise; retain clocks/races/private keys-values/sparse
 writes/counterfactual/silence-aware direction and completed positives.
+
+## Live counterfactual content admission — 3 October, 04:36 UTC
+
+New training-only sibling sleeping_machines/conditional_branch_content_credit.py
+keeps native coupled time/races/private addressed state/key-values/inference.
+At ONE uniformly sampled legal race, pi-weighted LIVE branch gradients
+REPLACE factual content gradients; unchanged detached-return choice credit
+alone gets R scaling. Full prefixes remain live. No double-counting.
+Theory129 passes8 groups2.644259s/343656KiB: every parameter against
+explicit live branches/decomposition and independent factorized clock
+Z=Lambda*T reference; early/late/unequal histories, factual winner/first
+time, causal predictions, BLk1 choice, actual clip1 Adam/serialized next
+update and operator coverage. Losing output gradient0 -> .01168205729,
+pi .48176169428. Per-episode variance result, NOT shared-noise batch theorem.
+
+Theory130 retry local_conditional_content_integrated_smoke_retry_20261003T042500Z
+passes4 groups230.670498s/469892KiB. Same freshseed7 p4/D4/H2/pool2/clock.05,
+float32 B4/clip1/Adam.003, FIT0..23/twopasses48presentations12updatesPERarm,
+unusedFIT24..31 adjacent anchors (notIID or officialDEV/test). Exact same
+initialization/order/sites/noise. Choice-only FIT2.674371->2.328692,
+anchor2.604848->2.469267. Joint FIT->2.340674,anchor->2.470372: both fixed
+learning gates pass, joint slightly worse for1.706935x counted fitting work.
+Accuracy bothFIT8.33%->16.67%,anchor12.5%->0%; preserve this besideNLL.
+Every update traced: wholeFIT .039905148/.068115492GF, per-presentation
+.83135725/1.41907275MF, native inference .162127625MF/targetBOTH.
+Available16private receivers,8selected/16scoredperevent,21events⇒168/336
+per target,96fullshadowlanes/2016eventsFITeach; losing-backward paid.
+No content policy promotion, larger fit, useful-depth or superiority claim.
+Result data.fit_indices0..15 is inherited transform-verification metadata;
+actual top-level fit_indices0..23/anchors24..31/update schedule govern.
+
+Original042000Z attempt hit180s guard exit124 afterchoice-onlycompleted;
+jointincomplete/noresult. Preservearchive/failed_runs/conditional_content_20261003T042000Z,
+queue/log/runner. Failedtargetpresentations48..96, exactfailedworkunknown.
+Newunique retry onlytimeout420s+runningexecutionaccounting; sameEVERYfit
+setting/pass, safetyvirtual3GB/RSS1.25GB/8GiBavailable/onethread/hostlock.
+No concurrent numerical training and host stayed healthy.
+
+Report conditional_content_evidence.py/newpublish_conditional_content_report.py
+chain frozenprior197pages, addlive-contenttheoryandcomplete quality/work
+comparisons with savedp16references. local_conditional_content_report_20261003T043000Z
+passes199pages27.167403s/273928KiB allsource/title/layout/orphan/diffchecks.
+Sources/protocols/results/reportmodule/publisher nowfrozen, rootgenerator
+andaggregate notes mutable. See131 for full scope/negative decisions.
+Allfourautostashes and other-host changes retained, no Gitconflict present.
+
+PRIORITY still AWS integratednativep16/L8/H2/pool2 correctedprivate full
+replay10M/originalprivate/sharedteachers/sharedreplay/factorizedcontrols,
+queue/aws_language_winner_matrix_20261003T014100Z/manifest.json. Otherhost
+live-gate/gain-preserving DVS and reset-segment languagev2 batch/LR/cosine
+runs remain separateprotocols. PreserveDEV selectioncorrection, await
+completedquality; do notattributev2gainstoonechangedsettingor assume
+update-starvationfrompartialplateaualone. Nextcontentdiagnostic is total
+actualtrained-state batch/Adamvariance+cost, notanotherinitialnormclaim;
+nextdepthattribution is frozen nonlinear message lesion/commonepoch
+continuation retaining clocks/writes/routes. Neither launchedhere.
+Mechanismgaps: usefulnonlineardepthattribution,16-tokenlanguagehorizon,
+candidate/credit/optimizercost, sharednoise and generalization. No core
+substitution or blanketfix: this sibling is numerically sound but fails
+its tiny relative quality/work comparison, which is retained prominently.
