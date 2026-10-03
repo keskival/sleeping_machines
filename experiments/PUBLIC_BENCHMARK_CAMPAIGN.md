@@ -4,6 +4,15 @@ Requested by the user on 3 October 2026. Goal: reproducible wins on external
 benchmarks, with asynchronous and synchronous inputs and sparse native state
 updates. No new benchmark win has yet been established by this campaign.
 
+## Coordination
+
+The main agent's [SOTA_TARGETS.md](SOTA_TARGETS.md) leads with NeuroBench
+Mackey–Glass and primate reaching, official loaders and its curie DEV queue.
+This AWS suite complements that work; do not duplicate its queue or tune on
+its reporting test. The NeuroBench leaderboard lists Mackey–Glass LSTM
+sMAPE13.37 and ESN14.79.
+[Official leaderboard](https://github.com/NeuroBench/neurobench/blob/main/leaderboard.rst).
+
 ## Priorities and concrete public targets
 
 | Priority | Benchmark | Plausible edge to test | Public reference / initial gate |
@@ -87,3 +96,9 @@ locks, RSS watchdog, at least8GiB available. Current90M depth8/width64 and priva
 streaming jobs keep exact settings and recovery. Campaign source freezing and
 guarded scheduling must precede numerical execution; no fourth job or free-lock
 container shortcut. Prepared queues do not count as executed results.
+
+Source-exact language recovery loads archived original driver and compiled
+module bytes through frozen_language.py after upstream extensions changed
+shared files. Source aliases in results record the actual executed bytes;
+upstream changes are retained. Prepared queue parsing was corrected to exclude
+comments before any execution.
