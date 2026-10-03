@@ -75,3 +75,18 @@ work in the same units. Do not fill a cell with a pilot or curve value.
 Results go to `experiments/results/language_batched/<tag>.json` (status, curve, DEV/test at both window lengths,
 throughput, parameters, traced work per character, source hashes, hardware). Record completed numbers in FINDINGS and
 the report only from completed result files.
+
+## 10M multi-pass supremacy arms (19:30 UTC; admit after the revision-2 90M arms, when a slot is free)
+
+Target (THEORY §415): beat the saved E64 LSTM-512 (6 passes, 7,324 steps, 1.799 test bpc, about 433 TFLOPs
+estimated) with fewer estimated fitting FLOPs. curie is running p96/d4 + credit for 6 passes (about 352 TFLOPs). These two
+arms extend the search in parallel. The contracts from `aws_language_90M_contracts_20261003T103000Z` cover them; `--tie-pools`
+is covered by tests/test_compiled_episodes.py::test_tied_pool_route_credit_compiled_matches_eager.
+
+| Queue (one job each) | Arm | Estimated fitting work |
+|---|---|---:|
+| `queue/aws_language_10M_6pass_p64d4_pool4_tied_linear_20261003T193000Z.txt` | p64/d4 pool 4, shared maps with private keys, clocks, timescales and memories (§398), route credit, 6 passes | about 264 TFLOPs |
+| `queue/aws_language_10M_6pass_p64d4_pool2_linear_20261003T193000Z.txt` | p64/d4 pool 2, route credit, 6 passes (baseline for the tied arm) | about 161 TFLOPs |
+
+7,320 updates each (64 × 128 windows), cosine over all windows, checkpoints every 400 windows; set timeouts from the pilot
+throughput (p64 about 5,000 characters/s on curie; 60M characters ≈ 3.3 h plus evaluation).

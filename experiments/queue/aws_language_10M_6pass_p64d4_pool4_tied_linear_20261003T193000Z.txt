@@ -1,0 +1,3 @@
+# AWS 10M supremacy arm (experiments/AWS_NATIVE_LANGUAGE_90M.md, section 10M multi-pass). One job; resume with a new job
+# name carrying the same arguments plus --resume.
+aws_language_10M_6pass_p64d4_pool4_tied_linear_20261003T193000Z experiments/language_batched_benchmark.py --tag aws_language_batched_10M_p64d4_pool4_tied_linear_6pass_l64_lr004_cmp_s6_20261003T193000Z --payload 64 --pool 4 --tie-pools --fit 10000000 --dev 1000000 --segment 128 --lanes 64 --lr 0.004 --passes 6 --cosine --eval-segment 256 --compiled --seed 6 --depth 4 --route-credit linear --eval-every 1600 --checkpoint-every 400

@@ -6,6 +6,7 @@ credit).** Protocol and admission: [AWS_NATIVE_LANGUAGE_90M.md](AWS_NATIVE_LANGU
 (p32/d4, p32/d8, p64/d4; all `--route-credit linear`, compiled, one pass, checkpointed), plus `aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z`
 (pool 4, 2.343 at 10M). Admit the p64/d4 arm first (2.184 at 10M, .012 from the one-pass LSTM). Revision-1 queues
 (`*_20261003T063000Z`) are superseded and must not be admitted.
+Then two 10M multi-pass supremacy arms `aws_language_10M_6pass_*_20261003T193000Z` (same doc, last section).
 
 The prioritized active integrated experiment is
 `gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`:
