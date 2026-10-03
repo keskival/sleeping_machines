@@ -1225,3 +1225,11 @@ keeps its transport for context alignment. Tests: DVS depth 4 on seeds 6–8 and
 near-identity init from layer 2, against scratch and growth; and 10M language at depth 8 with the same init beside the
 default-init depth-8 run. Prediction (P410): near-identity depth 4 matches growth (≥ the depth-2 level of the same
 seed) without a trained parent, and the depth-8 language model with near-identity init beats its default-init twin.
+
+**§406 result (3 October, 03:17 UTC): P406 holds.** Batched, depth 2 / payload 16 / pool 2, 8 passes, means over seeds
+6–8 (dev accuracy / NLL; fit-subset accuracy; gap): unregularized 58.9% / 1.114 (fit 78.1%, gap 19.3 points); weight decay
+1e-3 60.2% / 1.109; weight decay 1e-2 61.3% / 1.097; weight decay 1e-3 + input noise .3 **62.8% / 1.039** (gap 15.3); weight
+decay 1e-2 + input noise .3 60.4% / 1.091; **coarse 4-bin packets + weight decay 1e-2 64.4% / .987** (gap 12.7 points, 60
+s per fit). The native DVS model was generalization-limited, and regularization plus coarser packets recover 3.9–5.5 points
+on the three-seed mean. The large program's capacity arms now use weight decay 1e-3 + noise .3, and its coarse arms add a
+noise variant. Strong controls on the same full data remain higher (4-bin control 77.6%, RBF 73.4%).
