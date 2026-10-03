@@ -1,0 +1,5 @@
+23:13:13 start aws_pub_v2_20261004T000200Z_aws_public_PenDigits_screen_p16d2u2_20261004T000100Z
+23:14:13 alive aws_pub_v2_20261004T000200Z_aws_public_PenDigits_screen_p16d2u2_20261004T000100Z: process group RSS=632924KB, MemAvailable=27608MB
+23:15:14 alive aws_pub_v2_20261004T000200Z_aws_public_PenDigits_screen_p16d2u2_20261004T000100Z: process group RSS=637420KB, MemAvailable=27592MB
+23:16:14 alive aws_pub_v2_20261004T000200Z_aws_public_PenDigits_screen_p16d2u2_20261004T000100Z: process group RSS=656792KB, MemAvailable=27584MB
+23:16:50 done aws_pub_v2_20261004T000200Z_aws_public_PenDigits_screen_p16d2u2_20261004T000100Z (exit 0)
