@@ -96,7 +96,31 @@ def check():
                          for i in range(2)) for subset in subsets)/len(subsets)
         expected = F(count*(count-k), k*(count-1))*total
         assert actual == expected
+
+    # Note140: identical messages can hide a consequential persistent write.
+    probability = .3
+    q0, q1 = math.log1p(math.exp(-1)), math.log(2)
+    exact_choice = probability*(1-probability)*(q0-q1)
+    assert exact_choice < 0
+    message_only = probability*(1-probability)*(-.5)*(3.-3.)
+    assert message_only == 0
+    score = math.log(probability/(1-probability))
+    def expected_loss(s):
+        p = 1/(1+math.exp(-s))
+        return p*q0+(1-p)*q1
+    step = 1e-5
+    choice_error = abs((expected_loss(score+step)-expected_loss(score-step))/(2*step)-exact_choice)
+    assert choice_error < 2e-8
+    for factual_memory in (0, 1):
+        memory_linear = probability*(1-probability)*(-1/(1+math.exp(factual_memory)))
+        assert memory_linear < 0
+    # Linear terminal loss: check the state coefficient against finite differences.
+    def expected_linear_loss(s):
+        return -1/(1+math.exp(-s))
+    linear_difference = (expected_linear_loss(score+step)-expected_linear_loss(score-step))/(2*step)
+    assert abs(linear_difference-probability*(1-probability)*(-1)) < 2e-8
     return dict(status='passed', maximum_finite_difference_absolute_error=max(errors),
+                private_write_choice_finite_difference_absolute_error=choice_error,
                 scope='Static ideal-arithmetic equations; no native training, tensor gradients or benchmark')
 
 

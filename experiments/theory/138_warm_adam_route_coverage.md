@@ -9,7 +9,11 @@ The other host added compiled support to the shared BL driver. Archive
 its exact pre-compilation4b163a bytes from07eaaae^ and load them explicitly,
 ROOT redirected to the workspace for imports/data. Original result/snapshot
 bytes and source hashes unchanged. New provenance maps that historical
-source to the verified archive; no current compiled driver edits. Bind
+source to the verified archive; no current compiled driver edits. Concurrent
+e096ca6 added optional linear credit in batched_episodes: also archive exact
+83265f bytes from e096ca6^ and bind BOTH the legacy driver and fixed
+prediction callback to that function, restoring the caller callback afterward.
+Bind
 132trainedweights/12-step moments and136actual cost records.
 
 Same originalFIT0..3/B4, p4/D4/H2/pool2, FLOAT32, actual clip1 Adam.003

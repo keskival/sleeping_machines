@@ -7,13 +7,18 @@ ROOT=Path(__file__).resolve().parents[1]
 NAME='experiments/dvs_batched_le_benchmark.py'
 DIGEST='4b163a25008ea8261acbee465770bad84dff3dbc1aa3c0ff74f39571fd83e8f8'
 ARCHIVE=f'experiments/archive/frozen_sources/{DIGEST}/dvs_batched_le_benchmark.py'
+BATCH_NAME='sleeping_machines/batched_episodes.py'
+BATCH_DIGEST='83265f63633a666e6bc788c80b4ebbde3ede468b15d38c2f60438427c75a3bc4'
+BATCH_ARCHIVE=f'experiments/archive/frozen_sources/{BATCH_DIGEST}/batched_episodes.py'
+BINDINGS=((NAME,DIGEST,ARCHIVE),(BATCH_NAME,BATCH_DIGEST,BATCH_ARCHIVE))
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def resolved_sources(sources):
     output=dict(sources)
-    if output.get(NAME)==DIGEST and sha(ROOT/NAME)!=DIGEST:
-        if sha(ROOT/ARCHIVE)!=DIGEST:raise ValueError('Changed archived historical driver')
-        if ARCHIVE in output and output[ARCHIVE]!=DIGEST:raise ValueError('Conflicting historical archive hash')
-        output.pop(NAME);output[ARCHIVE]=DIGEST
+    for name,digest,archive in BINDINGS:
+        if output.get(name)==digest and sha(ROOT/name)!=digest:
+            if sha(ROOT/archive)!=digest:raise ValueError('Changed archived historical source '+name)
+            if archive in output and output[archive]!=digest:raise ValueError('Conflicting historical archive hash '+name)
+            output.pop(name);output[archive]=digest
     return output
 def historical_view(row):
     result=copy.deepcopy(row)
@@ -21,5 +26,8 @@ def historical_view(row):
     return result
 def load_driver():
     if sha(ROOT/ARCHIVE)!=DIGEST:raise ValueError('Historical driver hash mismatch')
+    if sha(ROOT/BATCH_ARCHIVE)!=BATCH_DIGEST:raise ValueError('Historical batched episode hash mismatch')
+    batch_spec=importlib.util.spec_from_file_location('sleeping_machines._source_bound_batched_episodes',ROOT/BATCH_ARCHIVE);batch=importlib.util.module_from_spec(batch_spec);batch_spec.loader.exec_module(batch)
     spec=importlib.util.spec_from_file_location('_source_bound_batched_driver',ROOT/ARCHIVE);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);module.ROOT=ROOT
+    module.batched_logits=batch.batched_logits
     return module

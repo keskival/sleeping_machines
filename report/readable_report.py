@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT/"experiments/results"
 FIG = ROOT/"report/figures"
 full_bank_comparison=runpy.run_path(str(ROOT/'report/language_scaling.py'))['full_bank_comparison']
+_historical_result_view=runpy.run_path(str(ROOT/'experiments/legacy_batched_driver_binding.py'))['historical_view']
 
 
 def read(path):
@@ -26,7 +27,7 @@ def read(path):
     row = json.loads((RES/path).read_text())
     if row.get("status", "completed") != "completed":
         raise ValueError(f"Report requires completed result: {path}")
-    return row
+    return _historical_result_view(row)
 
 
 def results():

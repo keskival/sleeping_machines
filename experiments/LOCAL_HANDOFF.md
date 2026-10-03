@@ -1,5 +1,97 @@
 # Local host: current research continuation
 
+## Credit geometry checkpoint — 3 October, 06:52 UTC
+
+**Physical-host admission is unresolved.** The curie handoff below reports
+active compiled training in `curie_chain10`; this Docker execution context
+cannot see that process, tmux socket or physical-host runner lock. Its free
+`/tmp/experiments-runner.lock` is container-local and does not establish
+host idleness. No new fit or profiler was launched from this context in this
+continuation. The user has been asked for the missing host state; another
+"continue" instruction does not establish that the reported fit ended.
+Do not automatically start a waiting diagnostic on this local lock alone.
+
+Prepared [138](theory/138_warm_adam_route_coverage.md), driver
+`warm_adam_route_coverage.py`, and unique one-job queue
+`queue/local_warm_adam_route_coverage_20261003T062500Z.txt`: original k1/k8/
+full168, SAME132 actual trained weights/12-step Adam moments and all16 prior
+race seeds.48 independently restored actual updates plus3 exact recovery
+checks; raw/clipped/update vectors, masks, fixed FIT predictions, empirical
+mean shifts and same-noise full-reference errors retained. No result exists;
+the numerical driver remains unexecuted. Static syntax/source checks pass.
+Its planned command, ONLY after confirmed physical idleness/separate host
+or a coordinated host-global reservation, is:
+
+```bash
+MEM_CAP_KB=3000000 MEM_CAP_RSS_KB=1250000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=240 experiments/queue/run_safe.sh experiments/queue/local_warm_adam_route_coverage_20261003T062500Z.txt
+```
+
+[139](theory/139_clip_adam_geometry_and_host_admission.md) derives actual
+clipping and historical Adam Jacobians, nonlinear conditional bias and
+optimizer-conditioned coverage allocation. An exact convex example shows
+that clipping/fresh Adam can turn an unbiased sparse gradient into ascent;
+this is a constructed failure mode, not a measured native reversal.
+`check_credit_geometry.py` passes standard-library rational/finite-difference
+checks, maximum absolute error6.97e-12, without tensors or model fitting.
+This strengthens the reason to measure actual updates, rather than promote
+137's positive raw variance-work heuristic to a learning claim.
+
+07eaaae evolved the shared compiled-capable BL driver. Preserve that active
+source. Exact pre-compilation4b163a bytes are archived under
+`archive/frozen_sources/4b163a25008ea8261acbee465770bad84dff3dbc1aa3c0ff74f39571fd83e8f8`.
+`legacy_batched_driver_binding.py` loads that verified driver for138 and
+provides a copied publication view resolving ONLY known historical source hashes.
+Concurrent e096ca6 also changes batched_episodes: exact83265f bytes are
+archived under the corresponding frozen_sources hash directory. The binding
+resolves both known historical hashes, and138 uses that old batched function
+for fitting AND fixed predictions, restoring its caller callback afterward.
+Original result bytes/metrics/hashes and frozen producers remain unchanged.
+Root readable_report uses the view; all30 route-cost source hashes verify
+and its complete120-section loader passes. Scalar historical source hashes
+and the target-leakage quarantine remain supported. REPORT/PDF retain the
+completed203-page publication; no pending138 scores or rerender claimed.
+
+Prior134/136 wall times cannot be treated as physically isolated speed
+benchmarks: the later curie handoff reports compiled work active around
+the same period, without visibility of a shared host lock. Their numerical
+contracts, counts and positive FLOP/variance heuristic remain valid within
+their recorded scope. See the annotation beside the original evidence below.
+
+Other-host completed native10M p16/D8 compiled arm is test2.718723394 bpc
+atT128 /2.719413474 atT256, DEV2.676420348,54,907 parameters and a nominal
+one-pass9,994,240-character random-segment budget. Positive recipe progress
+from2.899 is preserved, without isolated clipping/depth attribution. Source
+inspection shows factual payload/common-clock credit here, with no added
+losing-write categorical replay objective. This leaves the distinct original/
+corrected-replay learning comparison open.
+06:49–06:50 shared updates independently identify the omitted address credit,
+add optional message-linearized eager/compiled credit and v4 diagnostics;
+p32/D4 completes about2.507 testbpc. Preserve that progress and its different
+width/work budget. V4 remains pending, not a completed exact-write teacher.
+
+Priority remains source-owned integrated native temporal/private-state
+language work and the user's AWS90M request. **The latest
+`AWS_NATIVE_LANGUAGE_90M.md` holds full-arm admission pending v4 diagnostics;
+honor that revision before starting the earlier90M arm list.** Retain the existing
+private/shared original-teacher/corrected replay10M matrix
+`queue/aws_language_winner_matrix_20261003T014100Z/manifest.json`. Preserve
+curie's active compiled language/DVS sequence.138 cannot displace them.
+Remaining gaps: actual-write categorical replay in the compiled reset-language recipe,
+useful nonlinear depth attribution, horizon, generalization and total
+discovery/losing-credit/optimizer work. No core architecture substitution.
+
+[140](theory/140_message_credit_and_private_write_gap.md) audits the new
+message-linearized operator: equal messages can leave different useful
+private writes, making its message score credit zero despite nonzero exact
+choice utility. A state/timestamp local extension is DERIVED, not installed;
+boolean seen/topology/finite curvature remain outside it. Required contracts
+and a matched trained-state utility comparison precede any fit. Also records
+concurrent diagnostic limits: mean_pi is expected mass, not winner counts;
+mixture Jensen compares against average constituent NLL, not the first seed;
+argmax's clocks change; T128/T256 similarity is not a context-usage proof;
+executed candidate proposals/keys must be charged. Preserve v4 predictions
+and negative/positive outcomes; do not overwrite source-owned diagnostics.
+
 ## curie: compiled native training and the calibrated 10M language series, 3 October 05:45 UTC
 
 Running (tmux curie_chain10): queue curie_language_batched_v2c_20261003T054000Z (compiled, §§411–412: 64 × 128
@@ -2309,6 +2401,13 @@ See134/135;132sixteen-drawFLOAT32variance isdifferentprotocol,notreplaced.
 136local_trained_route_coverage_work_20261003T054700Z passes6groups,
 60.076s/362876KiB. FIVEactual EXISTINGBLwindows same132weights+12step
 Adammoments, FIRST134noise, originalsampler: no-choice/k1/8/32/all168.
+
+**3 October06:52 timing annotation:**134/136 numerical outcomes and counted
+operations are retained. Physical-host exclusive wall timing is unestablished
+because the container-local lock cannot observe the reported curie training.
+Do not use59.326s/60.076s as isolated speed comparisons; see139. No reported
+FLOP/variance heuristic claims wall-time or measured-energy advantage.
+
 EVERYtraced/untraced nextweight ANDmoment EXACT, serializedfullrecovery,
 causalidenticalfactualCE/RNG/sources/coveragepass. Elevenupdatesdiscarded.
 STEPGF .002028565/.003327802/.012406626/.043533818/.219918762;

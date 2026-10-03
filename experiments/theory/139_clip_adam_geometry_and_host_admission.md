@@ -194,18 +194,29 @@ clipping, depth or compilation. Its saved step-work extrapolation is
 evaluation is separate. These are completed result fields, not a new fit.
 Source: [completed 10M result](../results/language_batched/curie_language_batched_10M_p16d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json).
 
-Source inspection matters for transfer: language_batched_benchmark.step
+Source inspection of the completed run matters for transfer: language_batched_benchmark.step
 backpropagates factual cross-entropy. LaneRace.backward and its compiled
 equivalent give selected-value credit and common first-time clock credit;
-this driver does not add the losing-write categorical replay term. Thus
+that recorded recipe did not add the losing-write categorical replay term. Thus
 this temporal/private-state forward model's positive fit is evidence for
 its declared learning recipe, not a completed corrected-replay comparison.
 The separately queued original-teacher/corrected private/shared replay
 matrix remains necessary. Do not treat a restricted teacher's weakness as
 a test of absent mechanisms, or edit active drivers to combine protocols.
 
+Concurrent continuation at 06:49–06:50 UTC: e096ca6/305da08 independently
+identify the missing address-credit term, add optional message-linearized
+score credit to eager/compiled language, and prepare the v4 diagnostics.
+The completed p32/D4 arm is about 2.507 test bpc, a positive width/recipe
+result with a different parameter/work budget. No v4 outcome is claimed.
+The linear surrogate is not the same teacher as actual private-write
+suffix replay; its empirical fidelity remains a separate question.
+
 The user's newly queued AWS 90M compiled language arms retain their own
-contracts/pilots, DEV-only selection and guarded admission. Current local
+contracts/pilots, DEV-only selection and guarded admission. The latest
+AWS_NATIVE_LANGUAGE_90M.md holds full-arm admission pending the v4
+diagnostics; its explicit revision takes precedence over the earlier arm
+list. Current local
 compiled language/DVS work and AWS 90M must not be displaced by note 138's job. The
 restricted p4/D4/B4 diagnostic cannot identify deep nonlinear language
 features, generalization or advantage by itself. Subsequent transfer needs
@@ -218,12 +229,19 @@ counterfactual teacher under an affordable numerical protocol.
 active source. Exact historical SHA-256 4b163a25008ea8261acbee465770bad84dff3dbc1aa3c0ff74f39571fd83e8f8
 bytes are archived from `07eaaae^` under `archive/frozen_sources/<digest>`.
 `legacy_batched_driver_binding.py` explicitly loads them for note 138 and maps
-ONLY this known historical source path to its verified archive in a copied
+ONLY known historical source hashes to verified archives in a copied
 publication view. Saved JSON, numerical fields and original source hashes
 are untouched. Root readable_report applies this view; earlier frozen
 producer modules remain unchanged. Changed or missing archive bytes fail.
 This makes historical evidence publishable after a supporting driver evolves,
 without attributing old numbers to the new compiled implementation.
+Concurrent e096ca6 evolved batched_episodes. Its exact historical
+83265f63633a666e6bc788c80b4ebbde3ede468b15d38c2f60438427c75a3bc4 bytes are
+also archived from e096ca6^, and the binding resolves this second known
+hash. Note 138 explicitly uses that archived batched function for both
+fitting and predictions, then restores its prediction callback. This
+retains the original numerical program while optional-credit core work
+continues independently.
 
 ## Physical-host admission: the container-local lock is insufficient evidence
 
