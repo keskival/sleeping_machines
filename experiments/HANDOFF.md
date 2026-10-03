@@ -2328,3 +2328,16 @@ no frontier/isoqualityresourceclaim. PDFregenerated206pages, ALLpriorheadings/
 layout/orphanchecksPASS; ambitionremainsfirst. Originalstreamingfullreplay
 1105920targetsatinspection; 90Mprioritywaiterunchanged, schedulingpreference
 stillpending, NOhealthyfitsinterrupted. Tests/diagnosticsremainhostlocked.
+
+AWS14:30 user 'now aim for supremacy/do what needs to be done/autonomous'
+interpreted as schedulingdecision: PRIORITIZEassigned90M whilepreserving private
+fullcorrectedreplay andmatchedprivateteacher. NEWsource-frozen3slotconductor
+scripts/run_aws_priority_language_allocation.py/manifestqueue/aws_priority_
+language_allocation_20261003T143000Z:90Mslot1,private replay2/private teacher3;
+sharedteacher/fullreplay/factorizedcontrols allretained for exactrecovery/later
+admission. Existingtrainingmodels/settingsUNCHANGED. Publishercoordinator
+lookup supportsnewexactmanifest/script; periodicmilestonescontinue.
+Preparedbeforeoldcohortclose; nextarchive/verifycheckpointsthenstopOLDguards
+cleanly/reacquirenormalreservation/recover. LostworkunknownNONZERO bounded
+<=4095targetsperstreamingfit. MaxRSSreservations6+2+2GB,8GiBavailablefloor,
+onethreadcompiles/noGPUjobs. No bypasses/newconcurrentfourthtrainer.
