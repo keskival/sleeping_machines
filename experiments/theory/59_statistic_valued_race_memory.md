@@ -1582,3 +1582,11 @@ Development on the first 50K went 2.166 / 2.043 / 1.990 at windows 1,600 / 3,200
 estimated fitting work and parameters. It does not meet the §415 criterion (not better on quality), and no saved
 reference lies at comparable work. The DEV–test difference (.08) is larger than at one pass (.07 for p64) and is reported as
 measured. The 6-pass p96 arm (7,320 updates against LSTM-512's 7,324; about 352 TFLOPs estimated) is now running.
+
+**First completed 90M native row (AWS, published 17:27 UTC).** p32/d4 pool 4 with route credit, one pass over
+text8[0:90M] (10,986 updates, 177,019 parameters, 108 TFLOPs whole fit, traced estimate; 8,774 characters/s on one AWS
+thread): DEV 1.914 / **test 1.997** bpc (T = 256 1.998). Development on the first 50K fell monotonically, 2.335 → 2.015, at the
+10 checkpoints. The same configuration at 10M scored 2.343: 9× the data gave −.35 bpc. It used the same fitting work as the
+10M p64 4-pass arm (1.955), so at about 107 TFLOPs, more width and passes on 10M beat more data at width 64 by .04. The AWS 90M
+references (LSTM-512 6 passes 1.661 at about 3.9 PFLOPs; Transformer-256×4 4 passes 1.604 at about 8.0 PFLOPs) are 36–74× the
+estimated work and better by .34–.39. This is a scaling observation, not a comparison win.

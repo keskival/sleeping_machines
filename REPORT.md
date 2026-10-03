@@ -2895,6 +2895,14 @@ The project theory index contains formal assumptions and proofs. Research findin
 
 ![native language frontier](report/figures/native_language_frontier.png)
 
+| Model (90M) | Params | Updates | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char |
+| --- | --- | --- | --- | --- | --- |
+| Ours p32/d4/pool4 + route credit (AWS, one pass) | 177,019 | 10,986 | 1.997 / 1.998 | 107.6 | 1.20 |
+| E64 LSTM-512, 6 passes (AWS) | 1,199,323 | 65,917 | — / 1.661 | 3893 | 7.21 |
+| E64 Transformer-256x4, 4 passes (AWS) | 3,238,427 | 43,945 | — / 1.604 | 8000 | 22.22 |
+
+90M rows: text8[0:90M], same test interval and E64 windows. The native rows are one pass of the segment-batched protocol on AWS (compiled, 64 x 128 windows, lr .004 cosine); the references are multi-pass with larger models and are listed for scale, not as matched comparisons.
+
 | Native model | Slots | Memory<br/>scalars | Writes | Keys | Emulator<br/>values | Winner<br/>values |
 | --- | --- | --- | --- | --- | --- | --- |
 | p16/d8, v1 (610 updates) | 32 | 512 | 16 | 32 | 32 | 16 |

@@ -72,7 +72,37 @@ def load(read):
         controls.append(dict(label=label, parameters=r['params'], updates=r['steps'], test=r['test_bpc'],
                              whole=w['total_training_flops'], fit=w['total_training_flops'] / w['training_token_positions'],
                              infer=w['forward_flops'] / w['training_token_positions']))
-    return dict(native=native, controls=controls)
+    native90 = []
+    for path in sorted((RES / 'language_batched').glob('aws_language_batched_90M_r*_s6_*.json')):
+        r = json.loads(path.read_text()); a = r['args']
+        if r.get('status') != 'completed' or a.get('max_windows'):
+            continue
+        w = r['work']
+        native90.append(dict(label=f"p{a['payload']}/d{a['depth']}/pool{a['pool']}" + (' + route credit' if a.get('route_credit', 'none') != 'none' else ''),
+                             parameters=r['parameters'], updates=r['windows'], passes=a['passes'], test=r['test_bpc'],
+                             test256=r.get('test_bpc_eval_segment'), whole=w['whole_fit_unit_special_flops_estimate'],
+                             fit=w['fit_unit_special_flops_per_char_estimate'], path=str(path.relative_to(ROOT))))
+    controls90 = []
+    for model, label in (('lstm', 'LSTM-512'), ('tf', 'Transformer-256x4')):
+        for prov in sorted((RES / 'aws_20260929').glob('*/provenance.json')):
+            meta = json.loads(prov.read_text()); args = meta.get('arguments', [])
+            if (meta.get('status') != 'completed' or meta.get('script') != 'experiments/e64_lm_baselines.py'
+                    or '--model' not in args or args[args.index('--model') + 1] != model
+                    or '--D' not in args or int(args[args.index('--D') + 1]) != 90_000_000):
+                continue
+            for rp in sorted(prov.parent.glob('*.json')):
+                if rp.name == 'provenance.json':
+                    continue
+                row = json.loads(rp.read_text())
+                if isinstance(row.get('test_bpc'), float) and 'params' in row and 'steps' in row:
+                    w = estimate(row['args'], row['params'], row['steps'])
+                    controls90.append(dict(label=f"{label}, {row['args']['passes']:g} passes", parameters=row['params'],
+                                           updates=row['steps'], test=row['test_bpc'], whole=w['total_training_flops'],
+                                           fit=w['total_training_flops'] / w['training_token_positions']))
+                    break
+            if controls90 and controls90[-1]['label'].startswith(label):
+                break
+    return dict(native=native, controls=controls, native90=native90, controls90=controls90)
 
 
 def pages(data):
@@ -97,6 +127,17 @@ def pages(data):
     return [[('h1', 'Appendix. Native language at 10M: the integrated core, segment-batched'),
              ('table', (columns, rows, widths)),
              ('figure', ('native_language_frontier', 172)),
+             *([('table', (['Model (90M)', 'Params', 'Updates', 'Test bpc T128/T256', 'Whole fit TF est.', 'Fit MF/char'],
+                           [[f"Ours {r['label']} (AWS, one pass)", f"{r['parameters']:,}", f"{r['updates']:,}",
+                             f"{r['test']:.3f} / {r['test256']:.3f}", f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}"]
+                            for r in data.get('native90', [])] +
+                           [[f"E64 {r['label']} (AWS)", f"{r['parameters']:,}", f"{r['updates']:,}", f"— / {r['test']:.3f}",
+                             f"{r['whole'] / 1e12:.0f}", f"{r['fit'] / 1e6:.2f}"] for r in data.get('controls90', [])],
+                           [52, 20, 20, 30, 26, 22])),
+                ('small', '90M rows: text8[0:90M], same test interval and E64 windows. The native rows are one pass of the '
+                          'segment-batched protocol on AWS (compiled, 64 x 128 windows, lr .004 cosine); the references '
+                          'are multi-pass with larger models and are listed for scale, not as matched comparisons.')]
+               if data.get('native90') else []),
              ('table', (activity_columns, activity_rows, [49, 20, 25, 20, 20, 21, 21])),
              ('small', 'Native mechanism counts per input position. Memory scalars are '
                        'available unit-value storage per lane; timestamps, readiness bits and source context are '

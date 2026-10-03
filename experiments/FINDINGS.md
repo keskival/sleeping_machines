@@ -1,5 +1,15 @@
 # Findings log
 
+## First 90M native language row (AWS): 1.997 test bpc at 108 TFLOPs — 3 October
+
+AWS completed queue aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z (AWS_NATIVE_LANGUAGE_90M.md revision 2):
+the integrated native core with route credit, p32/d4 pool 4, one pass over text8[0:90M], 10,986 updates, 177,019
+parameters, compiled, 8,774 characters/s on one thread (10,713 s). DEV 1.914, **test 1.997** (T = 256 1.998); 108
+TFLOPs whole fit (traced estimate). At 10M the same arm scored 2.343. The saved AWS 90M references are LSTM-512 6 passes
+1.661 (about 3.9 PFLOPs) and Transformer-256×4 4 passes 1.604 (about 8.0 PFLOPs): multi-pass, larger, 36–74× the estimated
+fitting work. Single seed; a scaling observation, not a matched comparison. The p32/d4 pool-2 and p64/d4 90M arms are
+in progress or queued on AWS.
+
 ## Compiled DVS coarse arms at 16 passes (partial, 3 October)
 
 Large DVS program (queue curie_dvs_large_20261003T013500Z; compiled batched training, §412). Integrated p16/d2/H2/pool2,
