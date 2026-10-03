@@ -1,3 +1,4 @@
+import pytest
 import sys
 from types import SimpleNamespace
 
@@ -63,3 +64,23 @@ def test_compiled_window_and_evaluation_match_batched_path():
             torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=0, atol=0, msg=n)
     finally:
         BL.COMPILED[0] = False
+
+
+def test_linear_route_credit_on_dvs_windows_compiled_matches_eager():
+    a, m, rows = _setup()
+    a.route_credit = False
+    opt = torch.optim.SGD(m.parameters(), lr=0.)
+    m.zero_grad(); BL.train_window(m, opt, rows, a, epoch=1)
+    plain = {n: p.grad.clone() for n, p in m.named_parameters() if p.grad is not None}
+    BL.LINEAR[0] = 'linear_rw'
+    try:
+        m.zero_grad(); eager_stats = BL.train_window(m, opt, rows, a, epoch=1)
+        eager = {n: p.grad.clone() for n, p in m.named_parameters() if p.grad is not None}
+        assert any(not torch.allclose(eager[n], plain[n]) for n in eager if n.endswith('.key'))
+        BL.COMPILED[0] = True
+        m.zero_grad(); compiled_stats = BL.train_window(m, opt, rows, a, epoch=1)
+        assert compiled_stats['loss_sum'] == pytest.approx(eager_stats['loss_sum'], rel=1e-10)
+        for n, g in eager.items():
+            torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=1e-9, atol=1e-11, msg=n)
+    finally:
+        BL.LINEAR[0] = None; BL.COMPILED[0] = False

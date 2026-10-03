@@ -25,7 +25,7 @@ from race_language_screen import capture  # noqa: E402
 from sleeping_machines.batched_episodes import batched_logits  # noqa: E402
 
 REPLAYS = [0]
-COMPILED, TRACING = [False], [False]
+COMPILED, TRACING, LINEAR = [False], [False], [None]
 
 
 def factual_logits(model, rows, seed, record=None):
@@ -34,14 +34,16 @@ def factual_logits(model, rows, seed, record=None):
     traced windows stay on the batched path, whose operators the work tracer sees."""
     if COMPILED[0] and record is None and not TRACING[0]:
         from sleeping_machines.compiled_episodes import compiled_logits
-        return compiled_logits(model, rows, seed)
-    return batched_logits(model, rows, seed, record=record)
+        return compiled_logits(model, rows, seed, route_credit=LINEAR[0])
+    return batched_logits(model, rows, seed, record=record, route_credit=LINEAR[0])
 
 
 def parser():
     p = C.parser(); p.add_argument('--route-credit', action='store_true', help='all-race local-expectation replay credit')
     p.add_argument('--route-races', type=int, default=0, help='sample this many races per episode (0 = all), scaled R/k')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps for untraced factual passes (§412)')
+    p.add_argument('--linear-credit', choices=('none', 'linear', 'linear_rw'), default='none',
+                   help='linearized local-expectation route credit on the factual pass (§413)')
     return p
 
 
@@ -116,6 +118,7 @@ def evaluate(model, rows):
 
 
 def configure_compiled(a):
+    LINEAR[0] = None if getattr(a, 'linear_credit', 'none') == 'none' else a.linear_credit
     if getattr(a, 'compiled', False):
         from torch._dynamo import config as dynamo_config
         from torch._inductor import config as inductor_config
