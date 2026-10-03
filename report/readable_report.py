@@ -477,6 +477,30 @@ def language_work_points(tasks, ev):
             inference=w['forward_flops']/w['training_token_positions']*(2 if family=='tf' else 1),
             cached_inference=w['forward_flops']/w['training_token_positions'] if family=='tf' else None,
             inference_method='Overlapping-window shape estimate' if family=='tf' else 'Recurrent shape estimate'))
+    # Keep later segment-batched native fits in Appendix B's common inventory.
+    # Preserve older point IDs by appending; current native scores use T256
+    # where completed, while the first v1 result retains its T128 score.
+    native_paths=runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['NATIVE']
+    native_rows={r['label']:r for r in tasks['native_language_batched']['native']}
+    for path,label in native_paths:
+        if label not in native_rows:continue
+        row=native_rows[label];r=read(path);a=r['args']
+        segment=r.get('eval_segment') if row['test256'] is not None else a['segment']
+        windows=len(range(0,a['test']-segment-1,segment//2))
+        scored=segment+(windows-1)*(segment//2)
+        recorded=r['test_targets_eval_segment'] if row['test256'] is not None else r['test_targets']
+        if scored!=recorded:raise ValueError('Native window accounting changed: '+path)
+        # Common inference graph charges evaluated warm positions per scored
+        # target, using the emulator throughout. Winner-only traces stay in
+        # the separate native appendix pending actual-trained parity/rescore.
+        if row['infer'] is None:raise ValueError('Missing native emulator trace: '+path)
+        rows.append(dict(model='Ours: batched native '+label,family='native_batched',
+            label='NB '+label+f"/T{segment}",parameters=row['parameters'],fit=a['fit'],passes=a['passes'],
+            split='test',bpc=row['test256'] if row['test256'] is not None else row['test'],
+            total=row['whole'],targets=r['fitting_chars'],
+            inference=row['infer']*windows*segment/scored,
+            inference_method='Emulator trace × evaluated positions/scored targets',
+            source=path,evaluation_segment=segment,evaluation_positions=windows*segment,scored_targets=scored))
     return rows
 
 
@@ -676,6 +700,7 @@ def figures(M, tasks, ev):
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
     FIG.mkdir(exist_ok=True)
     runpy.run_path(str(ROOT/'report/current_language_status.py'))['figure'](tasks['current_language_status'], FIG/'current_native_language_status.png')
+    runpy.run_path(str(ROOT/'report/current_language_status.py'))['fitting_figure'](tasks['current_language_status'], FIG/'latest_native_language_fitting.png')
     def save(fig, name):
         if name != "accomplishments":
             fig.text(.01, 1.015, "Ours = Sleeping Machines", color=blue, fontsize=8,
@@ -1495,6 +1520,7 @@ def figures(M, tasks, ev):
     points=language_work_points(tasks,ev)
     f,axes=plt.subplots(1,2,figsize=(7.2,3.2),sharey=True)
     styles={'integrated':(blue,'s','Ours: integrated'),
+            'native_batched':('#7655b2','D','Ours: later native'),
             'carrier':('#1baf7a','o','Ours: earlier carrier'),
             'lstm':(gray,'o','LSTM'),'tf':(orange,'^','Transformer')}
     for a,split,title in zip(axes,('dev','test'),('Cold development scores','Saved test scores')):
@@ -3194,35 +3220,59 @@ def blocks(M, tasks, ev):
         ('p','Each point is a completed model, not a projected scaling law. Left: ours on cold '
          'development characters, with integrated models and earlier carrier controls labelled separately. '
          'The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. '
-         'Right: saved neural test results. Lower bpc means better prediction; lower fitting work means '
+         'Right: saved neural test results INCLUDING the later segment-batched native width, depth, pool '
+         'and credit models (purple diamonds, NB labels). Lower bpc means better prediction; lower fitting work means '
          'fewer estimated operations. No curve is drawn between different model families or scoring splits.'),
         ('figure',('language_quality_vs_work',174)),
         ('table',(['Model type','Fitting budget','bpc / split ↓','Whole fit GFLOPs ↓','Fitting MFLOPs / target ↓'],[
             [r['model'],f"{r['fit']:,} / {r['passes']:g} passes",f"{r['bpc']:.3f} / {r['split']}",
              f"{r['total']/1e9:,.3f}",f"{r['total']/r['targets']/1e6:.3f}"]
-            for family in ('integrated','carrier','lstm','tf')
+            for family in ('integrated','native_batched','carrier','lstm','tf')
             for r in [max([p for p in points if p['family']==family],key=lambda p:(p['fit'],-p['bpc']))]],
             [43,33,25,33,40])),
         ('small','The table selects the largest fitting budget currently completed for each family; '
          'the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted '
          'variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory '
          '(S uses the content index); '
-         'C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer '
+         'NB = later batched native, T128/T256 evaluation shown; C = ours carrier width/data '
+         '(g means content gates); L = LSTM width/data; T = Transformer '
          'width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.'),
         ('small','Estimates include learning, clipping and Adam, with unit-weight special functions. '
          'Ours uses representative operator traces; neural controls use shape formulas and backward '
          'approximately twice forward. Scoring splits, data, passes, capacity and credit differ; '
          'these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.')])
+    recent=tasks['native_language_batched']
+    recent_names=['p32/d4 + route credit','p32/d4/pool4 + route credit','p64/d4 + route credit',
+                  'p64/d4/pool4 + route credit','p96/d4 + route credit']
+    recent_rows=[r for label in recent_names for r in recent['native'] if r['label']==label]
+    pages.append([
+        ('h1','Appendix B (continued). Later native language: quality versus fitting work'),
+        ('p','Focused view of the later credited width/depth/capacity models. Same completed T256 '
+         'scores as the common inventory; nominal10M fitting characters, one pass and saved one-pass controls. '
+         'Blue is alternative-value route credit; light blue is timing-only credit; gray is a dense control.'),
+        ('figure',('latest_native_language_fitting',174)),
+        ('table',(['Model','T256 test bpc','Whole fit TFLOPs est.','Fit MFLOPs / input position est.'],[
+            [r['label'],f"{r['test256']:.4f}",f"{r['whole']/1e12:.2f}",f"{r['fit']/1e6:.2f}"] for r in recent_rows]+[
+            [r['label'],f"{r['test']:.4f}",f"{r['whole']/1e12:.2f}",f"{r['fit']/1e6:.2f}"] for r in recent['controls']],
+            [61,29,39,45])),
+        ('small','Native quality comes from the compiled training evaluator, fitting work from representative '
+         'full-step traces; controls use shape estimates. Every column has the same units and denominator '
+         'for ours and controls. Native random-segment fitting and evaluation tail coverage differ from '
+         'controls. Single seeds; trained sparse-backend rescore and modern replications remain open. '
+         'p96 now slightly exceeds LSTM quality with more fitting work. All13 later native fits, '
+         'including timing-only/pool1/write-credit history, remain in the common graph and following ledger.')])
     pages.append([
         ('h1','Appendix B (continued). Accuracy versus inference FLOPs'),
         ('p','Inference predicts with frozen weights: no backward pass, clipping or optimizer update. '
          'These are the same completed checkpoints, quality scores and point IDs as the fitting graph. '
          'Ours uses saved forward operator traces; the integrated models read only winning values. '
+         'Later native NB points use emulator traces, charged for evaluated warm positions per scored target; '
+         'winner-only estimates remain in the native appendix pending trained parity/rescore. '
          'LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.'),
         ('figure',('language_quality_vs_inference',174)),
         ('table',(['Model type','bpc / split ↓','Inference MFLOPs / character ↓','Cost boundary'],[
             [r['model'],f"{r['bpc']:.3f} / {r['split']}",f"{r['inference']/1e6:.4f}",r['inference_method']]
-            for family in ('integrated','carrier','lstm','tf')
+            for family in ('integrated','native_batched','carrier','lstm','tf')
             for r in [max([p for p in points if p['family']==family],key=lambda p:(p['fit'],-p['bpc']))]],
             [43,27,42,62])),
         ('small','Solid Transformer points estimate its saved 256-position scorer: full windows advanced '
@@ -3242,7 +3292,7 @@ def blocks(M, tasks, ev):
         pages.append([
             ('h1','Appendix B (continued). Completed language variants and work'),
             ('table',(['Variant','Params K','Fit / passes','bpc / split ↓','Whole fit GFLOPs ↓','Fit MFLOPs / target ↓','Inference MFLOPs / char ↓'],[
-                [f"{i+1}. "+('Ours: ' if r['family'] in ('integrated','carrier') else '')+r['label'],
+                [f"{i+1}. "+('Ours: ' if r['family'] in ('integrated','native_batched','carrier') else '')+r['label'],
                  f"{r['parameters']/1e3:,.1f}",f"{r['fit']:,} / {r['passes']:g}",
                  f"{r['bpc']:.3f} / {r['split']}",f"{r['total']/1e9:,.3f}",f"{r['total']/r['targets']/1e6:.3f}",f"{r['inference']/1e6:.4f}"]
                  for i,r in enumerate(points[start:start+ledger_chunk],start=start)],
@@ -3253,7 +3303,9 @@ def blocks(M, tasks, ev):
              'Carrier and integrated development scores use frozen evaluation; integrated official scores '
              'appear only after their full test completes. Validation/test work, RNG and physical traffic '
              'are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed '
-             'parallel_language and episodic_language JSON records. The global ledger uses emulator '
+             'parallel_language, episodic_language and language_batched JSON records. Later NB rows use '
+             'T256 when completed (first v1 stays T128), actual fitting presentations and native window '
+             'overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator '
              'floating arithmetic consistently; fitting work per target divides by actual training target presentations. '
              'The separate KV page reports architectural projections. '
              'No new dense model was trained.')])

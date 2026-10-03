@@ -16,6 +16,7 @@ SELECT = [
     ('p32/d8, skip2', 'p32/D8: timing credit'),
     ('p32/d8, skip2 + route credit', 'p32/D8: value credit'),
     ('p64/d4 + route credit', 'p64/D4: value credit'),
+    ('p64/d4/pool4 + route credit', 'p64/D4/U4: value credit'),
 ]
 
 
@@ -84,6 +85,37 @@ def figure(data, path):
     fig.savefig(vector, bbox_inches='tight', facecolor='white')
     # Matplotlib emits trailing spaces in path attributes; keep generated
     # artifacts clean while retaining the separating newline/XML whitespace.
+    vector.write_text('\n'.join(line.rstrip() for line in vector.read_text().splitlines())+'\n')
+    plt.close(fig)
+
+
+def fitting_figure(data, path):
+    """Readable recent-model zoom; same saved T256 scores and whole-fit units."""
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(7.2, 3.5))
+    offsets = {'p64/d4 + route credit': (-70, 15),
+               'p64/d4/pool4 + route credit': (-35, 32),
+               'p96/d4 + route credit': (7, -14),
+               'LSTM-256': (-58, -23), 'Transformer-256x2': (-85, 12)}
+    for entry in data['selected']:
+        row = entry['row']; quality = row['test256'] if entry['ours'] else row['test']
+        color = '#2a78d6' if entry['ours'] else '#8a8984'
+        if entry['ours'] and 'route credit' not in row['label']: color = '#a9c8ef'
+        name = entry['name'].replace(': value credit', ' + value credit').replace(': timing credit', ' timing only')
+        if row['label'] == 'p96/d4 + route credit': name = 'p96/D4 + value credit'
+        ax.scatter(row['whole']/1e12, quality, s=34, color=color, zorder=3)
+        ax.annotate(name, (row['whole']/1e12, quality),
+                    xytext=offsets.get(row['label'], (7, 8)), textcoords='offset points', fontsize=7.5,
+                    arrowprops=dict(arrowstyle='-', color=color, lw=.5))
+    ax.set_xscale('log'); ax.set_xlim(4.8, 175); ax.set_ylim(2.09, 2.57)
+    ax.set_xticks([5, 10, 30, 100], ['5', '10', '30', '100'])
+    ax.set_xlabel('Whole fitting TFLOPs estimate (log scale; lower is better)')
+    ax.set_ylabel('Matched T256 test bpc (lower is better)')
+    ax.set_title('Later native models and saved one-pass controls: 10M fitting characters')
+    fig.tight_layout()
+    fig.savefig(path, dpi=190, bbox_inches='tight', facecolor='white')
+    vector = Path(path).with_suffix('.svg')
+    fig.savefig(vector, bbox_inches='tight', facecolor='white')
     vector.write_text('\n'.join(line.rstrip() for line in vector.read_text().splitlines())+'\n')
     plt.close(fig)
 

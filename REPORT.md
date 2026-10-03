@@ -1220,30 +1220,50 @@ Ours: d denotes payload width and p pool size; fixed character pools and event d
 
 ## Appendix B (continued). Ours and neural controls: accuracy versus FLOPs
 
-Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. Right: saved neural test results. Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
+Each point is a completed model, not a projected scaling law. Left: ours on cold development characters, with integrated models and earlier carrier controls labelled separately. The new 2K screens score 2,047 development targets; the earlier ladders score 8,191. Right: saved neural test results INCLUDING the later segment-batched native width, depth, pool and credit models (purple diamonds, NB labels). Lower bpc means better prediction; lower fitting work means fewer estimated operations. No curve is drawn between different model families or scoring splits.
 
 ![language quality vs work](report/figures/language_quality_vs_work.png)
 
 | Model type | Fitting budget | bpc / split ↓ | Whole fit GFLOPs ↓ | Fitting MFLOPs / target ↓ |
 | --- | --- | --- | --- | --- |
 | Ours: integrated d32/p2 | 32,768 / 4 passes | 3.106 / dev | 114.247 | 0.872 |
+| Ours: batched native p96/d4 + route credit | 10,000,000 / 1 passes | 2.162 / test | 58,647.635 | 5.868 |
 | Ours: carrier w128g | 1,048,576 / 4 passes | 2.210 / dev | 8,373.302 | 1.996 |
 | LSTM: 512 | 90,000,000 / 6 passes | 1.661 / test | 3,893,396.042 | 7.210 |
 | Transformer: 256x4 | 90,000,000 / 4 passes | 1.604 / test | 8,000,253.349 | 22.223 |
 
-The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory (S uses the content index); C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
+The table selects the largest fitting budget currently completed for each family; the best score breaks ties. Point numbers refer to the following variant ledger, which lists all plotted variants. Variant labels: I = ours integrated payload/pool/data; IKV adds per-position race memory (S uses the content index); NB = later batched native, T128/T256 evaluation shown; C = ours carrier width/data (g means content gates); L = LSTM width/data; T = Transformer width x layers/data; s denotes seed. K is 1,024 characters in ours labels; M is decimal million in neural labels.
 
 Estimates include learning, clipping and Adam, with unit-weight special functions. Ours uses representative operator traces; neural controls use shape formulas and backward approximately twice forward. Scoring splits, data, passes, capacity and credit differ; these panels are evidence inventories, not an iso-FLOP or equal-quality benchmark.
 
+## Appendix B (continued). Later native language: quality versus fitting work
+
+Focused view of the later credited width/depth/capacity models. Same completed T256 scores as the common inventory; nominal10M fitting characters, one pass and saved one-pass controls. Blue is alternative-value route credit; light blue is timing-only credit; gray is a dense control.
+
+![latest native language fitting](report/figures/latest_native_language_fitting.png)
+
+| Model | T256 test bpc | Whole fit TFLOPs est. | Fit MFLOPs / input position est. |
+| --- | --- | --- | --- |
+| p32/d4 + route credit | 2.3715 | 7.24 | 0.72 |
+| p32/d4/pool4 + route credit | 2.3452 | 11.95 | 1.20 |
+| p64/d4 + route credit | 2.1833 | 26.79 | 2.68 |
+| p64/d4/pool4 + route credit | 2.1795 | 44.07 | 4.41 |
+| p96/d4 + route credit | 2.1625 | 58.65 | 5.87 |
+| LSTM-256 | 2.1706 | 20.31 | 2.03 |
+| Transformer-256x2 | 2.4269 | 111.26 | 11.13 |
+
+Native quality comes from the compiled training evaluator, fitting work from representative full-step traces; controls use shape estimates. Every column has the same units and denominator for ours and controls. Native random-segment fitting and evaluation tail coverage differ from controls. Single seeds; trained sparse-backend rescore and modern replications remain open. p96 now slightly exceeds LSTM quality with more fitting work. All13 later native fits, including timing-only/pool1/write-credit history, remain in the common graph and following ledger.
+
 ## Appendix B (continued). Accuracy versus inference FLOPs
 
-Inference predicts with frozen weights: no backward pass, clipping or optimizer update. These are the same completed checkpoints, quality scores and point IDs as the fitting graph. Ours uses saved forward operator traces; the integrated models read only winning values. LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.
+Inference predicts with frozen weights: no backward pass, clipping or optimizer update. These are the same completed checkpoints, quality scores and point IDs as the fitting graph. Ours uses saved forward operator traces; the integrated models read only winning values. Later native NB points use emulator traces, charged for evaluated warm positions per scored target; winner-only estimates remain in the native appendix pending trained parity/rescore. LSTM and Transformer costs use shape estimates. Development and test evidence remain separate.
 
 ![language quality vs inference](report/figures/language_quality_vs_inference.png)
 
 | Model type | bpc / split ↓ | Inference MFLOPs / character ↓ | Cost boundary |
 | --- | --- | --- | --- |
 | Ours: integrated d32/p2 | 3.106 / dev | 0.0885 | Winner-only inference trace |
+| Ours: batched native p96/d4 + route credit | 2.162 / test | 3.8929 | Emulator trace × evaluated positions/scored targets |
 | Ours: carrier w128g | 2.210 / dev | 0.6389 | Saved forward operator trace |
 | LSTM: 512 | 1.661 / test | 2.4024 | Recurrent shape estimate |
 | Transformer: 256x4 | 1.604 / test | 14.8104 | Overlapping-window shape estimate |
@@ -1269,7 +1289,7 @@ Two FLOPs per multiply-add; special functions count as one operation. Ours trace
 | 11. Ours: IHR2x32/u64@0.002D8/8K/s6 | 3,819.5 | 8,192 / 4 | 3.490 / dev | 89.999 | 2.747 | 0.5058 |
 | 12. Ours: IHR4x32/u128@0.004D8/2K/s6 | 7,778.3 | 2,048 / 4 | 3.981 / dev | 48.431 | 5.915 | 1.2898 |
 
-Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language, episodic_language and language_batched JSON records. Later NB rows use T256 when completed (first v1 stays T128), actual fitting presentations and native window overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
 ## Appendix B (continued). Completed language variants and work
 
@@ -1288,7 +1308,7 @@ Each row retains its original architecture, fitting budget and score. The select
 | 23. Ours: IHR2x32/wc0.25/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.722 / dev | 23.469 | 2.866 | 0.5059 |
 | 24. Ours: IHR2x32/wc1/u64@0.002D8/2K/s6 | 3,819.5 | 2,048 / 4 | 3.724 / dev | 23.464 | 2.866 | 0.5058 |
 
-Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language, episodic_language and language_batched JSON records. Later NB rows use T256 when completed (first v1 stays T128), actual fitting presentations and native window overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
 ## Appendix B (continued). Completed language variants and work
 
@@ -1307,7 +1327,7 @@ Each row retains its original architecture, fitting budget and score. The select
 | 35. Ours: C256g/128K | 1,208.9 | 131,072 / 4 | 2.572 / dev | 4,025.494 | 7.678 | 2.4571 |
 | 36. Ours: C128g/1024K | 309.6 | 1,048,576 / 4 | 2.210 / dev | 8,373.302 | 1.996 | 0.6389 |
 
-Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language, episodic_language and language_batched JSON records. Later NB rows use T256 when completed (first v1 stays T128), actual fitting presentations and native window overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
 ## Appendix B (continued). Completed language variants and work
 
@@ -1322,8 +1342,28 @@ Each row retains its original architecture, fitting budget and score. The select
 | 43. T256x4/10M | 3,238.4 | 10,000,000 / 4 | 1.908 / test | 888,775.443 | 22.223 | 14.8104 |
 | 44. L512/90M | 1,199.3 | 90,000,000 / 6 | 1.661 / test | 3,893,396.042 | 7.210 | 2.4024 |
 | 45. T256x4/90M | 3,238.4 | 90,000,000 / 4 | 1.604 / test | 8,000,253.349 | 22.223 | 14.8104 |
+| 46. Ours: NB p16/d8, v1 (610 updates)/T128 | 54.9 | 10,000,000 / 1 | 2.899 / test | 4,042.822 | 0.405 | 0.2629 |
+| 47. Ours: NB p16/d8, skip2/T256 | 54.9 | 10,000,000 / 1 | 2.719 / test | 4,047.897 | 0.405 | 0.2629 |
+| 48. Ours: NB p32/d4/T256 | 108.9 | 10,000,000 / 1 | 2.506 / test | 7,220.754 | 0.722 | 0.4792 |
 
-Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language and episodic_language JSON records. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language, episodic_language and language_batched JSON records. Later NB rows use T256 when completed (first v1 stays T128), actual fitting presentations and native window overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
+
+## Appendix B (continued). Completed language variants and work
+
+| Variant | Params K | Fit / passes | bpc / split ↓ | Whole fit GFLOPs ↓ | Fit MFLOPs / target ↓ | Inference MFLOPs / char ↓ |
+| --- | --- | --- | --- | --- | --- | --- |
+| 49. Ours: NB p32/d8, skip2/T256 | 210.0 | 10,000,000 / 1 | 2.456 / test | 14,107.373 | 1.412 | 0.9253 |
+| 50. Ours: NB p32/d8/pool4, skip2/T256 | 346.3 | 10,000,000 / 1 | 2.498 / test | 23,603.624 | 2.362 | 1.5409 |
+| 51. Ours: NB p32/d4/pool1 (control: no selection)/T256 | 74.8 | 10,000,000 / 1 | 2.439 / test | 4,878.223 | 0.488 | 0.3253 |
+| 52. Ours: NB p32/d4 + route credit/T256 | 108.9 | 10,000,000 / 1 | 2.371 / test | 7,242.661 | 0.725 | 0.4792 |
+| 53. Ours: NB p32/d4/pool4 + route credit/T256 | 177.0 | 10,000,000 / 1 | 2.345 / test | 11,949.789 | 1.196 | 0.7870 |
+| 54. Ours: NB p32/d4 + read and write credit/T256 | 108.9 | 10,000,000 / 1 | 2.384 / test | 7,279.888 | 0.728 | 0.4792 |
+| 55. Ours: NB p64/d4 + route credit/T256 | 422.5 | 10,000,000 / 1 | 2.183 / test | 26,787.462 | 2.680 | 1.7765 |
+| 56. Ours: NB p32/d8, skip2 + route credit/T256 | 210.0 | 10,000,000 / 1 | 2.326 / test | 14,151.188 | 1.416 | 0.9253 |
+| 57. Ours: NB p64/d4/pool4 + route credit/T256 | 689.8 | 10,000,000 / 1 | 2.179 / test | 44,073.829 | 4.410 | 2.9157 |
+| 58. Ours: NB p96/d4 + route credit/T256 | 940.9 | 10,000,000 / 1 | 2.162 / test | 58,647.635 | 5.868 | 3.8929 |
+
+Each row retains its original architecture, fitting budget and score. The selected 10M LSTM/Transformer rows use the aligned 999,999-target scores; other neural rows retain their original E64 test scorers. The 90M LSTM uses its saved recurrent scoring protocol. Carrier and integrated development scores use frozen evaluation; integrated official scores appear only after their full test completes. Validation/test work, RNG and physical traffic are outside fitting totals. Sources: E64/E174, saved AWS E64 results and the completed parallel_language, episodic_language and language_batched JSON records. Later NB rows use T256 when completed (first v1 stays T128), actual fitting presentations and native window overlap charged per scored target; different tail coverage is retained. The global ledger uses emulator floating arithmetic consistently; fitting work per target divides by actual training target presentations. The separate KV page reports architectural projections. No new dense model was trained.
 
 ## Appendix B (continued). Ours: per-position race KV memory
 

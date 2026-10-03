@@ -1,5 +1,42 @@
 # Local host: current research continuation
 
+## Investment thesis and Appendix B repair — 3 October, 15:55 UTC
+
+User requested a coherent ambitious investment case for frontier-model and
+computing-substrate upside across datacenters, mobile, robotics and adjacent
+domains. investment/INVESTMENT_CASE.md and PITCH.md distinguish completed
+research from product/hardware milestones. Six-page memo and one-page pitch
+PDFs have source/evidence manifests, primary IEA/GSMA/IFR/Carta and financing
+precedents, explicit hypothetical revenue/value-capture scenarios and a
+conditional US$10M priced pre-money position (discussion5–15M). No revenue,
+customer/design-win, patent-rights, fabricated-chip or frontier-scale asset is
+invented. Shared asynchronous hardware/online-learning precedents attributed;
+defensibility concerns the integrated construction and future execution/adoption.
+Model/runtime licensing before accelerator IP/ASIC remains the proposed path.
+
+User correctly identified missing later models in Appendix B's common plots.
+language_work_points previously omitted the entire segment-batched native
+family despite its front/native appendix presence. Added all13 completed rows
+after older points, preserving older IDs; common fitting/inference figures and
+ledger now58 points. Native inference inventory uses emulator traces times
+actual evaluated-position/scored-target ratio, not winner-only estimates
+silently coupled to training-backend quality. Exact window/parent target-count
+and fitting-denominator checks pass, stdlib only. T256 where completed, first
+v1T128 preserved; control tail/data/fit differences remain labelled. Added a
+readable matched10M recent-model zoom on PDFpage64, including p64/pool4 and
+p96 alongside the same-unit LSTM/Transformer controls. Older evidence retained.
+
+Status PDF now210 validated pages, source/canonical/evidence guard, one-thread
+~397MiB peak render; previous PDF archived under
+status_appendix_b_latest_zoom_20261003T161000Z. Both investor PDFs visually
+reviewed, model/control table kept together, one-thread~36MiB render guarded
+with8GiBfloor/120stimeout. No numerical model runtime or training job here.
+Prioritized integrated model/queues unchanged: curie v8 four-pass then v6/DVS;
+AWS90M credited p32/D4/U4 and private recovery fits retain their owner slots.
+Remaining substantive gaps: actual-trained sparse parity/rescore, measured
+serving/system economics, modern scale/seed replication, stable continual
+adaptation and physical clockless learning hardware. No architectural departure.
+
 ## Datacenter value and prepared serving — 3 October, 15:20 UTC
 
 User clarified AI computing substrates/datacenters and prioritizes work that

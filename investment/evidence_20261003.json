@@ -1,0 +1,377 @@
+{
+  "date": "2026-10-03",
+  "scope": "Completed exploratory research; market context; financial scenarios are assumed, not evidence",
+  "completed_evidence_sha256": {
+    "experiments/results/language_batched/curie_language_batched_10M_p16d8_s6_20261003T023000Z.json": "44afb8757dd0b036408397d08d0e317aee1c853cd7c48187745d4a894f056fd1",
+    "experiments/results/language_batched/curie_language_batched_10M_p16d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "2c3388ac66d5b128dfefcee4b3bf72741bd6b0683faee0ad15a33f0c18b13979",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_l64_lr004_cmp_s6_20261003T054000Z.json": "65bf062a4d1dba72648e981fefe6e42ad0d78b5ac80ace1fcb797715e10bfa39",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "51dbe83fdd6ca96f3d936935a33e0969828d9e568c2050ff6c21ef364e69fe24",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_pool4_skip2_l64_lr004_cmp_s6_20261003T054000Z.json": "7827e0c8059c4546c691d2f640463b53543956b4c2f76a40394dcf4c93ee6d7d",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool1_l64_lr004_cmp_s6_20261003T070000Z.json": "98be20ac8d19cbd044362bd04db427d320f50d27100aa296a8f68aa481ddcb5e",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool2_linear_l64_lr004_cmp_s6_20261003T070000Z.json": "2ebb23d00897521c18ce8e569ecd78dc09db6f063aa5cb4666ab451f3abbda23",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "34a19f4ef35575152f0d9f0eecc585767cf09f62489958b7fc3d9ddc87467816",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d4_pool2_linear_rwn_l64_lr004_cmp_s6_20261003T101000Z.json": "5f7268ddf2bb7de70cb620e15a99d485ce6631ce1b2c9e49c683c69fb500f76f",
+    "experiments/results/language_batched/curie_language_batched_10M_p64d4_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "710797dd6d22a863aaa3935ef58e0d881f813490b6bb0402671b4dea2d0948f3",
+    "experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json": "f86e7713d4ecb9893f33e3efd636fbd8b896e4dee8866efefcd04353eefbeeea",
+    "experiments/results/language_batched/curie_language_batched_10M_p64d4_pool4_linear_l64_lr004_cmp_s6_20261003T120000Z.json": "068d2893a41f4bb9f4f5f1d13cb9ad6c751d838482a6aa942494af1c40967b4f",
+    "experiments/results/language_batched/curie_language_batched_10M_p96d4_pool2_linear_l64_lr004_cmp_s6_20261003T120000Z.json": "0c84c4ab13ca0a7b93c6435b03f6b7adc5ece65f02ef3a6f3e1ed217c3f5a745",
+    "experiments/results/e64/lstm_D10000000_s256_p1.json": "d5bc1b4b65e808c381874fc5ac357479fdfc06517142a4ccbb101459640e344c",
+    "experiments/results/e64/tf_D10000000_s256_p1.json": "107e9e3c785392166b40f170b7e29c940d842cdb22dd9bfb1b402260d25cba14",
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T064000Z.json": "e53f009ec946d7bfd5d6b0708b65e7cabf7f604972a9ad35343e6760f1dfbbd8",
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T120000Z.json": "853870714b3ceed5086a67f7b057c1590095e5ee0e333a0c012f6e4db253e285",
+    "experiments/results/language_batched/curie_language_batched_inference_work_20261003T143000Z.json": "2ef98d05743cefac2f7cfcec9dfb84739f4ef545bb56d85dfc8c6f9b7dfea777",
+    "experiments/results/language_batched/curie_language_sparse_inference_work_20261003T120000Z.json": "f7a7b26e6e4fa30072b8ad708f71ea16b98222802a654d86b59d04b6d6dcb1fe",
+    "experiments/results/language_batched/curie_language_sparse_inference_work_20261003T143000Z.json": "714d0e4c2e1f056329a38bbd7e9d61f56b4c48c0ea9b7be1ba4b42e5fc7c0a76",
+    "experiments/results/online_language/local_integrated_online_backbone_D8192_20260930T200000Z.json": "30442c4e8ffbaf08b16afb53f7813cebe17e8a63896618bdef03dc022beb68c8"
+  },
+  "native_language_rows": [
+    {
+      "label": "p16/d8, v1 (610 updates)",
+      "parameters": 54907,
+      "updates": 610,
+      "dev": 2.9213797952851124,
+      "test": 2.899379759852944,
+      "test256": null,
+      "whole": 4042821667440.0,
+      "fit": 404515.16748046875,
+      "infer": 131453.6938004032,
+      "dev_window": 200000,
+      "sparse": 87671.81361607143,
+      "available_slots": 32,
+      "state_value_scalars": 512,
+      "selected_writes": 16,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p16/d8, skip2",
+      "parameters": 54907,
+      "updates": 1220,
+      "dev": 2.6764203475952053,
+      "test": 2.7187233942479576,
+      "test256": 2.7194134736411106,
+      "whole": 4047897292000.0,
+      "fit": 405023.0224609375,
+      "infer": 131453.6938004032,
+      "dev_window": 1000000,
+      "sparse": 87671.81361607143,
+      "available_slots": 32,
+      "state_value_scalars": 512,
+      "selected_writes": 16,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p32/d4",
+      "parameters": 108875,
+      "updates": 1220,
+      "dev": 2.448971518560765,
+      "test": 2.5069248272172007,
+      "test256": 2.506385807790338,
+      "whole": 7220753668560.0,
+      "fit": 722491.5219726562,
+      "infer": 239640.0163810484,
+      "dev_window": 1000000,
+      "sparse": 163227.2421875,
+      "available_slots": 16,
+      "state_value_scalars": 512,
+      "selected_writes": 8,
+      "scored_keys": 16,
+      "computed_values": 16
+    },
+    {
+      "label": "p32/d8, skip2",
+      "parameters": 210043,
+      "updates": 1220,
+      "dev": 2.4039439029476384,
+      "test": 2.4557452617151916,
+      "test256": 2.456482692203615,
+      "whole": 14107373132000.0,
+      "fit": 1411550.3662109375,
+      "infer": 462699.8873487903,
+      "dev_window": 1000000,
+      "sparse": 309872.09933035716,
+      "available_slots": 32,
+      "state_value_scalars": 1024,
+      "selected_writes": 16,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p32/d8/pool4, skip2",
+      "parameters": 346331,
+      "updates": 1220,
+      "dev": 2.444063857713132,
+      "test": 2.4977222067954123,
+      "test256": 2.498065790392268,
+      "whole": 23603624435680.0,
+      "fit": 2361722.7958984375,
+      "infer": 770542.4679939516,
+      "dev_window": 1000000,
+      "sparse": 312018.95647321426,
+      "available_slots": 64,
+      "state_value_scalars": 2048,
+      "selected_writes": 16,
+      "scored_keys": 64,
+      "computed_values": 64
+    },
+    {
+      "label": "p32/d4/pool1 (control: no selection)",
+      "parameters": 74803,
+      "updates": 1220,
+      "dev": 2.3860655516987586,
+      "test": 2.4388690505274435,
+      "test256": 2.438881334996998,
+      "whole": 4878223450640.0,
+      "fit": 488103.49267578125,
+      "infer": 162690.5279017857,
+      "dev_window": 1000000,
+      "sparse": 162690.5279017857,
+      "available_slots": 8,
+      "state_value_scalars": 256,
+      "selected_writes": 8,
+      "scored_keys": 8,
+      "computed_values": 8
+    },
+    {
+      "label": "p32/d4 + route credit",
+      "parameters": 108875,
+      "updates": 1220,
+      "dev": 2.313940828649685,
+      "test": 2.370109976332872,
+      "test256": 2.371490662751688,
+      "whole": 7242661042640.0,
+      "fit": 724683.5219726562,
+      "infer": 239640.0163810484,
+      "dev_window": 1000000,
+      "sparse": 163227.2421875,
+      "available_slots": 16,
+      "state_value_scalars": 512,
+      "selected_writes": 8,
+      "scored_keys": 16,
+      "computed_values": 16
+    },
+    {
+      "label": "p32/d4/pool4 + route credit",
+      "parameters": 177019,
+      "updates": 1220,
+      "dev": 2.281355347945485,
+      "test": 2.343344897723174,
+      "test256": 2.345157092663773,
+      "whole": 11949788760400.0,
+      "fit": 1195667.5805664062,
+      "infer": 393572.6707589286,
+      "dev_window": 1000000,
+      "sparse": 164300.67075892858,
+      "available_slots": 32,
+      "state_value_scalars": 1024,
+      "selected_writes": 8,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p32/d4 + read and write credit",
+      "parameters": 108875,
+      "updates": 1220,
+      "dev": 2.3254244443310337,
+      "test": 2.3836495241189204,
+      "test256": 2.384040325005502,
+      "whole": 7279888181200.0,
+      "fit": 728408.3813476562,
+      "infer": 239640.0163810484,
+      "dev_window": 1000000,
+      "sparse": 163227.2421875,
+      "available_slots": 16,
+      "state_value_scalars": 512,
+      "selected_writes": 8,
+      "scored_keys": 16,
+      "computed_values": 16
+    },
+    {
+      "label": "p64/d4 + route credit",
+      "parameters": 422475,
+      "updates": 1220,
+      "dev": 2.1184441303486756,
+      "test": 2.184238948019128,
+      "test256": 2.183314996745724,
+      "whole": 26787461749200.0,
+      "fit": 2680290.0219726562,
+      "infer": 888374.9564732143,
+      "dev_window": 1000000,
+      "sparse": 604590.9564732143,
+      "available_slots": 16,
+      "state_value_scalars": 1024,
+      "selected_writes": 8,
+      "scored_keys": 16,
+      "computed_values": 16
+    },
+    {
+      "label": "p32/d8, skip2 + route credit",
+      "parameters": 210043,
+      "updates": 1220,
+      "dev": 2.2694300290397766,
+      "test": 2.325945700305123,
+      "test256": 2.326116014920207,
+      "whole": 14151187880160.0,
+      "fit": 1415934.3662109375,
+      "infer": 462699.8873487903,
+      "dev_window": 1000000,
+      "sparse": 309872.09933035716,
+      "available_slots": 32,
+      "state_value_scalars": 1024,
+      "selected_writes": 16,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p64/d4/pool4 + route credit",
+      "parameters": 689787,
+      "updates": 1220,
+      "dev": 2.113628578863816,
+      "test": 2.179993374051856,
+      "test256": 2.179497312008814,
+      "whole": 44073829336400.0,
+      "fit": 4409923.049316406,
+      "infer": 1458041.8136160714,
+      "dev_window": 1000000,
+      "sparse": 606689.8136160715,
+      "available_slots": 32,
+      "state_value_scalars": 2048,
+      "selected_writes": 8,
+      "scored_keys": 32,
+      "computed_values": 32
+    },
+    {
+      "label": "p96/d4 + route credit",
+      "parameters": 940875,
+      "updates": 1220,
+      "dev": 2.0976865906832027,
+      "test": 2.1625881021672906,
+      "test256": 2.162463485986562,
+      "whole": 58647634713040.0,
+      "fit": 5868143.521972656,
+      "infer": 1946698.6707589286,
+      "dev_window": 1000000,
+      "sparse": 1324482.6707589286,
+      "available_slots": 16,
+      "state_value_scalars": 1536,
+      "selected_writes": 8,
+      "scored_keys": 16,
+      "computed_values": 16
+    }
+  ],
+  "saved_one_pass_controls": [
+    {
+      "label": "LSTM-256",
+      "parameters": 338395,
+      "updates": 1220,
+      "test": 2.1705974351075197,
+      "whole": 20306115453380,
+      "fit": 2031781.8516845703,
+      "infer": 676999.0
+    },
+    {
+      "label": "Transformer-256x2",
+      "parameters": 1658907,
+      "updates": 1220,
+      "test": 2.426908791525532,
+      "whole": 111261602008260,
+      "fit": 11132572.56262207,
+      "infer": 3709575.0
+    }
+  ],
+  "work_boundary": {
+    "fit": "Full-step representative native traces versus control shape formulas; backward/credit/clip/Adam included, evaluation/traffic extra",
+    "inference": "MFLOPs per evaluated input position, native winner-only shape trace; actual-trained parity/rescore pending",
+    "quality": "Same text8 test region and T256 window; native tail coverage and training order differ; one seed"
+  },
+  "online": {
+    "scored_targets": 8191,
+    "bpc": {
+      "frozen": 3.190858556266436,
+      "online": 3.0957382214033093
+    }
+  },
+  "primary_market_sources": [
+    {
+      "publisher": "IEA",
+      "url": "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary",
+      "claim": "Datacenter electricity 485TWh in2025; projected950TWh in2030"
+    },
+    {
+      "publisher": "GSMA",
+      "url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-economy/wp-content/uploads/2026/02/The-Mobile-Economy-2026.pdf",
+      "claim": "2026 report:5.8Bunique mobile subscribers,8.8Bwirelessconnections"
+    },
+    {
+      "publisher": "IFR",
+      "url": "https://ifr.org/ifr-press-releases/news/five-million-robots-now-operate-in-factories-globally",
+      "publication_date": "2026-09-24",
+      "claim": "5Mindustrial robots operationalin2025;morethan600knewinstallations"
+    },
+    {
+      "publisher": "Carta",
+      "url": "https://carta.com/sg/en/data/state-of-pre-seed-2025/",
+      "claim": "2025medianpost-moneySAFEcaps10M/15Mfor250K-1M/1M-2.5Mrounds"
+    },
+    {
+      "publisher": "Carta",
+      "url": "https://carta.com/data/state-of-pre-seed-q2-2026/",
+      "publication_date": "2026-08-13",
+      "claim": "AIcaptured49%ofpreseeddollarsH12026"
+    },
+    {
+      "publisher": "Liquid AI",
+      "url": "https://www.liquid.ai/blog/we-raised-250m-to-scale-capable-and-efficient-general-purpose-ai",
+      "publication_date": "2024-12-13",
+      "claim": "250MSeriesAround; efficientgeneral-purposemodels"
+    },
+    {
+      "publisher": "Innatera",
+      "url": "https://www.innatera.com/newsroom/innatera-raises-e15m-for-neuromorphic-edge-ai/",
+      "publication_date": "2024-03-26",
+      "claim": "15MEURSeriesAround;edgeAI"
+    },
+    {
+      "publisher": "Intel",
+      "url": "https://www.intel.com/content/dam/www/central-libraries/us/en/documents/neuromorphic-computing-loihi-2-brief.pdf",
+      "claim": "Asynchronouscoresandprogrammablelearningprecedent"
+    }
+  ],
+  "accessed_date": "2026-10-03",
+  "financial_assumptions": {
+    "proposed_priced_pre_money_usd": 10000000,
+    "discussion_range_usd": [
+      5000000,
+      15000000
+    ],
+    "datacenter_eligible_spend_usd_per_year": 1000000000,
+    "net_before_fee_cost_reduction_fraction": 0.2,
+    "value_capture_fraction": [
+      0.1,
+      0.2
+    ],
+    "new_mobile_licensed_devices_per_year": 100000000,
+    "mobile_royalty_usd": [
+      0.25,
+      1.0
+    ],
+    "robotics_active_paying_units": 1000000,
+    "robotics_annual_fee_usd": [
+      20,
+      100
+    ],
+    "scaled_recurring_revenue_usd": 250000000,
+    "illustrative_enterprise_value_revenue_multiple": [
+      8,
+      15
+    ]
+  },
+  "not_established": [
+    "frontier scale supremacy",
+    "commercial total-cost leadership",
+    "current revenue/design wins",
+    "fabricated chip energy savings",
+    "patent or corporate ownership rights"
+  ]
+}
