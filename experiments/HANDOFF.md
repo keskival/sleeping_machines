@@ -2187,3 +2187,14 @@ stated; native learning/generalization/totalcost remain open, sampled attention
 is distinguished from deterministic equivalence, conditional inference-work
 opportunity from completed49.66%replayfittingwork. Report generator updated so
 framing survives regeneration; earlier evidence/negative findings retained.
+
+AWS04:00: pulledthrough6ace56e; three guarded streaming10Mfits healthy, replay
+204800targets/private teacher372736 atinspection,28GiBavailable. Newread-only
+watcher scripts/watch_aws_replay_checkpoint_plasticity.py waits untilpublisher
+hasCOMMITTEDreplaymilestone001, then analyzes immutable replayandbothteacher
+250ksnapshots, verifies/checksums and explicitlymarks equalexposure/Adamcounts.
+No forward/backward/dataevaluation/optimizersteps. Autoresultpublication uses
+samepublicationlock, admissioncoordinatorpause/finallyresume; fitskeepgoing.
+Source/scriptcommittedbeforewatcherstart. Preserve separateownersegment-batched
+v2optimizationprotocol (610oldsteps/10Mmotivatesnewwindows/lr); don't silently
+change streamingfullreplaycontrolprotocols. Resultpending, noqualityclaim.
