@@ -1,5 +1,41 @@
 # Local host: current research continuation
 
+## Current checkpoint — 3 October01:08 UTC
+
+Main is rebased with shared AWS changes and has no unresolved conflict; four
+old autostashes intact. Latest generated REPORT/PDF179pages, guarded retry
+011600Z completes25.574s with source/bounds/orphan checks. Completed sources
+and numerical artifacts stay frozen. No local training/job active; host memory
+remained~11GiB available, numerical peak470848KiB.
+
+New numerical priority accomplished: corrected causal native language
+all-target full-write replay port, private/shared L8,16EVERY-parameter/
+causality/actual Adam recovery contracts and productionp16/T16 resource
+admission.512fullshadowlanes/8192events at~67.8MF/target, actual next partial
+recovery exact, peak429912KiB. This is numerical mechanism admission, not
+a fitted language benchmark. Existing AWS10M ORIGINAL-TEACHER controls are
+independently owned and unchanged; current long-run status is in HANDOFF.
+Main fine-packet/deeper gesture queue curie_dvs_followup_20261002T183000Z.txt
+remains independently owned. No new local dense fit.
+
+Findings: hard-score clipping can erase native emitter gradients; bounded
+bridge restores rank but the matched fresh smoke never clips and shows no
+quality gain. Actual saturated-site utility is mostly unfavorable/tiny.
+Credit horizon independently changes actual text8 downstream utility: first
+frozen audit4/8site reversals, aggregate cosines-.6008/-.7926. Fresh-span
+confirmation3/24 reversals, but mean cosines+.9994/+.4552: BOTH descriptive
+aggregate-opposition gatesFAIL. No universal main-bottleneck claim or longer
+horizon fit nomination. Preserve positive observations and failed confirmation.
+
+Next useful work: complete the corrected replay BENCHMARK/accumulator adapter
+with exact actual target-weighted cursor/Adam/state recovery and realistic
+work audit before a new fixed language quality comparison. The helper port is
+installed/numerically verified, but active10M language driver still uses original
+teacher. Full replay is expensive; broader frozen longer-suffix shared-parameter
+utility/covariance/discovery accounting can inform horizon/support allocation.
+Do not launch a large unchanged bridge, offset, reception or failed confirmation
+variant, or infer any advantage from pending scores/projected work.
+
 ## Clock-preserving calibration and joint information contracts, 2 October23:23 UTC
 
 23:30 continuation: safe state-scope publication232800Z passes161-page bounds/
@@ -1765,3 +1801,27 @@ appendicesandallold/sharedqualityevidence retained. Sources/results frozen.
 No active local job afterpublication. Next: frozen actualtext8 horizon-return
 audit using saved fixed-pass4 native8192 seed6 checkpoint on producer-unseen
 FIT chars, preserving existing AWS10M runs and fullgestureownerqueue.
+
+## Actual native text8 horizon evidence, 3 October01:08 UTC
+
+Theory111 first frozen native8192 seed6 final-pass4 ONLINE checkpoint, double
+weights, two producer-unseenFIT spans8192/8320,16observedwarmup/32targets,
+(event0/8,layer0/7,head0):4/8 utility sign flips, sampled-site aggregate16/32
+parameter cosines-.600832/-.792626. No chosen scorecap. Allfactualwinner
+logits/private-state/end RNG, factualfirsttime/real alternatewrites, future
+input/targetcausality/unchangedweights contracts pass.7.026s/426172KiB,
+16forced32tokenforwards/eightVJPs; full54907coordinate arrays preserved.
+
+Theory112 unchanged fresh confirmationFIT8448/8576,3race draws withfixed
+warmup:3/24signflips, meanaggregatecosines+.999383/+.455223. Both preregistered
+descriptiveopposition gatesFAIL.20.355s/470848KiB,48forced suffixes/24VJPs.
+Omittedfutureutility is real but context/noisedependent, notuniversally
+destructive16credit. No optimizer/DEV/test/longfitquality claim. Source/result
+lineage and exact parent checkpoint are preserved for reproducibility; total
+diagnosticFLOPs/traffic/energyunknown, notzero. Full arrays include direction,
+16/32credit vectors and aggregates; savedparent original fittingwork retained.
+
+Latest179page generated report includes both first observation and failed
+confirmation. First011500Z publication failed wide lasttablecolumn, rolled
+back before corrected unused retry011600Z succeeds. Failedqueues/logs retained,
+allcompleted numerical/report modules/publishers frozen.

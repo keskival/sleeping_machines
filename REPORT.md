@@ -3362,3 +3362,39 @@ The linear contraction-mode tail fraction rho^H is large for a 100event decay. N
 Fixed execution-count alternative: fullT16/L8/H2/pool2 has512 shadow events/target plus one factual; T64/k8 uniform distinct sites has16shadow events/target plus one factual. The longer factual graph and score discovery still cost work. Horvitz scalingR/k=128 makes single-informative-route covariance127*g*g^T. Exhaustive12race/k3 subsets independently verify mean and covariance. Unbiasedness can coexist with poor learning; these counts are not FLOPs/wall/quality advantage.
 
 Theory110; .529s/282228KiB,no optimizer/DEV/test. Corrected within-chunk routing support, confidence/sensitivity and credit horizon are separate constraints. Next use exact-source saved language checkpoints for a frozen longer-suffix shared-parameter return/variance audit on unseen FIT inputs before selecting H/k. Existing10M teacher runs remain unchanged; no long sampled-credit fit or predicted benchmark gain is admitted by this synthetic witness.
+
+## Appendix B. Native text8 horizon return: four credit reversals
+
+| FIT start | Event/L/H | Q0-Q1 H16 | Q0-Q1 H32 | Late contrast | Param norm16 | Param norm32 | Flip |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 8192 | 0/0/0 | +0.119169 | -0.009301 | -0.128470 | 0.003241 | 0.000253 | YES |
+| 8192 | 0/7/0 | +0.045263 | +0.020573 | -0.024690 | 0.026251 | 0.011932 | No |
+| 8192 | 8/0/0 | +0.164192 | -0.112556 | -0.276748 | 0.043189 | 0.029606 | YES |
+| 8192 | 8/7/0 | +0.009205 | +0.007439 | -0.001766 | 0.000520 | 0.000420 | No |
+| 8320 | 0/0/0 | +0.285896 | +0.381399 | +0.095503 | 0.000551 | 0.000735 | No |
+| 8320 | 0/7/0 | -0.018730 | -0.022666 | -0.003936 | 0.000260 | 0.000315 | No |
+| 8320 | 8/0/0 | -0.040859 | +0.151710 | +0.192568 | 0.007922 | 0.029413 | YES |
+| 8320 | 8/7/0 | -0.009103 | +0.004196 | +0.013299 | 0.007070 | 0.003259 | YES |
+
+Frozen private native p16/L8/H2/pool2,54907parameters,original 8192-character/fourpass seed6 producer. Fixed final-pass4 ONLINE weights, not DEV-selected state, converted to double for numerical VJPs. Two producer-unseen FIT spans8192/8320,16observed warmup tokens and32 causal next-token targets each. Prespecified sites(event0/8,layer0/7,head0), one fixed common-noise draw. Both receivers actually write private state at the factual FIRST time, then messages/clocks/memory evolve through all32targets. Original winner recovers ALLfactual logits/state/end RNG.
+
+Four of eight sites reverse the conditional choice-credit sign when losses16..31 are included. Four-site aggregate native parameter-credit cosines -.600832/-.792626 show directional opposition on these contexts; norms .051372/.032006 and.010178/.029475 for16/32returns. None of these chosen scores is capped. This is real omitted downstream utility at this frozen point, beyond theory110 synthetic witnesses, not proof that truncation dominates global learning or longer credit improves quality.
+
+Per-site credit is pi0*pi1*(Q0-Q1)*grad(scores0-scores1), with the SAMErealized-branch native score Jacobian for both horizons. Earlier pathwise clocks remain differentiable; this is not note103 fixed-clock likelihood geometry. The shown contrasts are SUMsuffix NLL, not average prediction quality. Future observed tokens/changed target labels leave earlier factual output unchanged. Allcases/full54907coordinate arrays saved; sampling only four of512sites excludes a full-chunk gradient claim.
+
+Theory111;7.026s/426172KiB.16forced32token suffixes/two factual graphs/eightVJPs plus warmup/causality checks paid; diagnostic totalFLOPs unknown, not zero. Double live state4488..4624bytes,32available/32scores/ 16writes pertoken. No optimizer/DEV/test/changed-parent fit or benchmark advantage. The independent confirmation below FAILS aggregate-opposition replication; retain this original positive mechanism observation beside it.
+
+## Appendix B. Horizon confirmation: downstream effects vary by context
+
+| Fresh FIT | Draws | Site flips | Mean norm16 | Mean norm32 | Mean cosine | Opposition gate |
+| --- | --- | --- | --- | --- | --- | --- |
+| 8448 | 3 | 2/12 | 0.303282 | 0.536700 | +0.999383 | False |
+| 8576 | 3 | 1/12 | 0.049228 | 0.021923 | +0.455223 | False |
+
+Same frozen producer/sites/budgets,NEW FIT8448/8576 spans and three independent evaluated race draws111330/111331/111332. Warmup seed111329 stays fixed across draws.24cases/48actual forced suffix replays,24parameter VJPs,all outcomes and coordinate arrays retained. Before observing results, diagnostic replication required both span mean16/32parameter-credit cosines<0 and at least one site flip per span. Both gates FAIL: mean directions agree,despite three of24 individual site reversals. Do not replace this gate with a larger-gradient criterion.
+
+First fresh span preserves direction across all draws,with mean longer-return norm.536700 versus.303282. Second has more variable perdraw norms/angles and mean cosine+.455223. These are supported context-dependent downstream effects; universal destructive short credit is not established. Neither frozen study measures expected fullstream risk, semantic feature content or a fitted benchmark gain. Original first-audit reversals remain valid within their scope.
+
+The current mechanism priorities stay separate: corrected actual language shadow return is numerically installed; hard-score sensitivity repair has no demonstrated quality gain; full replay work is expensive; horizon changes utility but robust allocation/generalization remain open. Next broader frozen utility/covariance accounting can inform H/k; no unchanged long sampled-horizon training follows this failed diagnostic replication. Existing10M original-teacher controls continue independently.
+
+Theory112;20.355s/470848KiB,one guarded CPU job/no optimizer/ DEV/test. Earlier-loss/factual-first-time/ALLoriginal-winner-state/RNG/ future-token/target invariance and unchanged parameters pass on all three draws. Same original fit work paid; whole audit arithmetic, physical traffic and energy unknown. More counterfactual support cannot automatically repair omitted future loss, while a longer return is also not automatically a better finite-data update. No supremacy claim.

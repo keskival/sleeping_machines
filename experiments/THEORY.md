@@ -279,3 +279,6 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 
 - [Production language replay resource admission](theory/109_production_language_replay_resource_admission.md) — production p16/L8/T16 executes512 full shadow lanes, selected sequential returns, real Adam and exact next partial recovery under bounded RSS; all paid work, no fit-quality claim.
 - [Persistent capacity and credit horizon](theory/110_persistent_capacity_and_credit_horizon.md) — exact delayed encoder/race witnesses lose all original-write credit across a detached window; linear-mode tail and longer-horizon/sampled-route work-versus-variance counts distinguish capacity, support and horizon.
+
+- [Frozen native language horizon return](theory/111_frozen_native_language_horizon_return_audit.md) — eight prespecified real-text8 actual-write utilities show four16/32return credit reversals and negative sampled-site parameter aggregates, with causal/state/RNG contracts; one frozen producer/noise, not full expected-risk quality.
+- [Native horizon confirmation](theory/112_native_language_horizon_confirmation.md) — fresh FIT spans/three race draws preserve all24 outcomes but FAIL both negative-aggregate replication gates; three local reversals and context-dependent downstream utility remain supported without long-credit promotion.

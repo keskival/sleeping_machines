@@ -1,0 +1,471 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_native_language_horizon_20261003T010500Z",
+    "native": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.json"
+  },
+  "source_sha256": {
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
+    "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
+    "sleeping_machines/race_language.py": "70081a66f23f5d2db9dd6351645a91a9534562f98e8b414a64071ec60650760a",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "experiments/race_language_contracts.py": "80bba2683f45b116f3b9ce798e80e4d8a3148f0e138d7aec9bf467d41fb17a5f",
+    "sleeping_machines/selective_stream_language.py": "0b78ff0fe2d4d81ad3ca97475414c6b5bc7afec791cafd673839664a29347207",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/stream_language.py": "4409ab0d7e96a5c0c0f40420bf814e94ec7a79bbd008253e91a70e7f3f8de708",
+    "sleeping_machines/event_state.py": "6c5d077a5b15a120686eb07d21aac580357cc7b9379601c0ca7e7328215833db",
+    "sleeping_machines/event_memory.py": "98156038fa51e7be7626a0d249bf33243f56734a71190c8b225fb34983c6ef57",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "sleeping_machines/language_memory.py": "20cc1f3b2549c1997264d75410b37afe70148f46b587fc985c6210ed2e1b0300",
+    "experiments/parallel_event_language.py": "5962f8acf22c8a8fcbc58e6cf4b0ddb3347ae635b53d27675ddffee734406fc3",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/native_language_helpers.py": "795e6113b19f2a16956dbc584aff02109d5f66552e7c00fdde608c91b243e00a",
+    "experiments/native_event_contracts.py": "376f0d1efb142405e105f936cfb4407aa5f2c5adc6b0f365a44268869f279798",
+    "experiments/native_event_tasks.py": "537975264929243466eba1361155638036ef67db4d7954c4aa3c40880b491a6d",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "experiments/parallel_head_race_language_screen.py": "c596df906c1741f66de487fee8894e95315d74d26b90a9e6628915de1dac2d16",
+    "experiments/integrated_language_protocol.py": "bfe4fb180d735f9f0c624d6ba732abec608663e98a66e08863f587ebf22eb19c",
+    "experiments/native_language_benchmark.py": "5d07c18c65c5a370d1a9a4d82d6e56f46cdb8d1550750c0a6cf5441343fe7ef4",
+    "experiments/native_language_gradient_contracts.py": "54d0a50dd3f75b428134c98b58dc3dc2591bbad3f461ddc9892d0f63efb430e3",
+    "experiments/parallel_head_gradient_accumulation.py": "cad04a5287e0cbce04a01180594eff4e0e613784d988e9f63aa8b8ee8673f815",
+    "experiments/native_language_horizon_return_audit.py": "830994fd164838ddebda993e350a168e3e9c9a348b5ae3c478582ff4623fb4a1",
+    "experiments/theory/111_frozen_native_language_horizon_return_audit.md": "b89bb7e9ac785b2adce8c76a53a569648ab030ef21a22303478b1ef3fccd8cb7",
+    "experiments/causal_language_replay_helpers.py": "204be5bb298e4675f680e553c2ac4629190a8c9af1059fa63bc480b050f6ac41",
+    "experiments/causal_language_replay_contracts.py": "269724cb6573c891a283589d989d398cc15f275433cd6835d4cb1b8976b1eb78",
+    "sleeping_machines/causal_language_shadow.py": "986899a7da3a5ccddeaa0750190bedf78dfcdef19db388322fb407dd623809ee",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/factorized_race.py": "5bbfdf41ea63770a2394dde6e39fbe4b94b79dbab95c863f6413480ae3aa5568",
+    "experiments/dvs_conditional_clock_choice_geometry.py": "1d27235c08580dbe4bba455680ce033a62d67cde3f5f514d500b8697b8408ff8"
+  },
+  "parent": {
+    "result": "experiments/results/native_language/local_native_language_D8192_H2_d16_depth8_s6_20261001T174000Z.json",
+    "result_sha256": "410979bf0a705ccc166e215b18b4b27daba26a351412bf5884c4e2276ef9349c",
+    "checkpoint_sha256": "d779f9379eb5fd17c250168fcc74d7c87a29ac8a8f00daf074bad429abca3b35",
+    "encoder": "fixed final-pass4 online model, not DEV-selected",
+    "original_fit_targets": 32764
+  },
+  "rows": [
+    {
+      "fit_start": 8192,
+      "evaluated_start": 8208,
+      "site": [
+        0,
+        0,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -0.6717009970335628,
+        6.217394848204437
+      ],
+      "probabilities": [
+        0.0010177976413758409,
+        0.9989822023586242
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          35.776761791481,
+          36.44118923203415,
+          72.21795102351516
+        ],
+        [
+          35.65759285845878,
+          36.56965903308774,
+          72.22725189154653
+        ]
+      ],
+      "utility_contrast16": 0.1191689330222232,
+      "utility_contrast32": -0.00930086803137442,
+      "late_utility_contrast": -0.12846980105359052,
+      "choice_coefficient16": 0.00012116641042292683,
+      "choice_coefficient32": -9.456766663915946e-06,
+      "parameter_direction_norm": 26.748617532589776,
+      "parameter_credit_norm16": 0.003241033970199669,
+      "parameter_credit_norm32": 0.00025295543458803263,
+      "horizon_sign_reversal": true,
+      "parameter_credit_cosine": -1.0000000000000004,
+      "live_state_bytes": [
+        4624,
+        4488
+      ]
+    },
+    {
+      "fit_start": 8192,
+      "evaluated_start": 8208,
+      "site": [
+        0,
+        7,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -4.894344491234912,
+        -0.2932204236342601
+      ],
+      "probabilities": [
+        0.009940732793204668,
+        0.9900592672067954
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          35.70285542594024,
+          36.54496940396386,
+          72.2478248299041
+        ],
+        [
+          35.65759285845878,
+          36.56965903308774,
+          72.22725189154653
+        ]
+      ],
+      "utility_contrast16": 0.04526256748146551,
+      "utility_contrast32": 0.020572938357574344,
+      "late_utility_contrast": -0.024689629123876955,
+      "choice_coefficient16": 0.000445470324849061,
+      "choice_coefficient32": 0.00020247710289526022,
+      "parameter_direction_norm": 58.92926945251085,
+      "parameter_credit_norm16": 0.026251240806127868,
+      "parameter_credit_norm32": 0.011931827754478564,
+      "horizon_sign_reversal": false,
+      "parameter_credit_cosine": 1.0000000000000004,
+      "live_state_bytes": [
+        4488,
+        4488
+      ]
+    },
+    {
+      "fit_start": 8192,
+      "evaluated_start": 8208,
+      "site": [
+        8,
+        0,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -0.8125057304380361,
+        4.683607177900372
+      ],
+      "probabilities": [
+        0.0040859247337795244,
+        0.9959140752662204
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          13.536078342170173,
+          36.292911457917285,
+          49.828989800087456
+        ],
+        [
+          13.3718868131929,
+          36.56965903308774,
+          49.94154584628064
+        ]
+      ],
+      "utility_contrast16": 0.1641915289772733,
+      "utility_contrast32": -0.11255604619318405,
+      "late_utility_contrast": -0.2767475751704538,
+      "choice_coefficient16": 0.0006681330877184628,
+      "choice_coefficient32": -0.00045801643454360666,
+      "parameter_direction_norm": 64.64068908968993,
+      "parameter_credit_norm16": 0.043188583193743496,
+      "parameter_credit_norm32": 0.02960649794330146,
+      "horizon_sign_reversal": true,
+      "parameter_credit_cosine": -0.9999999999999981,
+      "live_state_bytes": [
+        4624,
+        4488
+      ]
+    },
+    {
+      "fit_start": 8192,
+      "evaluated_start": 8208,
+      "site": [
+        8,
+        7,
+        0
+      ],
+      "factual_winner": 0,
+      "scores": [
+        5.868379071082638,
+        -1.5797229605994751
+      ],
+      "probabilities": [
+        0.999417792944644,
+        0.0005822070553559843
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          13.3718868131929,
+          36.56965903308774,
+          49.94154584628064
+        ],
+        [
+          13.362681800944431,
+          36.57142550182541,
+          49.934107302769846
+        ]
+      ],
+      "utility_contrast16": 0.009205012248468591,
+      "utility_contrast32": 0.007438543510794204,
+      "late_utility_contrast": -0.0017664687376708343,
+      "choice_coefficient16": 5.356102898210769e-06,
+      "choice_coefficient32": 4.3282511072443244e-06,
+      "parameter_direction_norm": 97.10057131686102,
+      "parameter_credit_norm16": 0.0005200806514481603,
+      "parameter_credit_norm32": 0.00042027565531625895,
+      "horizon_sign_reversal": false,
+      "parameter_credit_cosine": 1.000000000000002,
+      "live_state_bytes": [
+        4488,
+        4488
+      ]
+    },
+    {
+      "fit_start": 8320,
+      "evaluated_start": 8336,
+      "site": [
+        0,
+        0,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -0.8666166289373476,
+        8.890681309464334
+      ],
+      "probabilities": [
+        5.786743264686704e-05,
+        0.9999421325673531
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          38.6516885780595,
+          36.61189083794386,
+          75.26357941600335
+        ],
+        [
+          38.36579237075723,
+          36.51638776349555,
+          74.88218013425278
+        ]
+      ],
+      "utility_contrast16": 0.2858962073022724,
+      "utility_contrast32": 0.3813992817505749,
+      "late_utility_contrast": 0.09550307444830963,
+      "choice_coefficient16": 1.6543122156651653e-05,
+      "choice_coefficient32": 2.2069320079465118e-05,
+      "parameter_direction_norm": 33.290775359786835,
+      "parameter_credit_norm16": 0.0005507333634666024,
+      "parameter_credit_norm32": 0.0007347047771087059,
+      "horizon_sign_reversal": false,
+      "parameter_credit_cosine": 1.0000000000000002,
+      "live_state_bytes": [
+        4624,
+        4624
+      ]
+    },
+    {
+      "fit_start": 8320,
+      "evaluated_start": 8336,
+      "site": [
+        0,
+        7,
+        0
+      ],
+      "factual_winner": 0,
+      "scores": [
+        8.17278026782243,
+        -0.3687970194294727
+      ],
+      "probabilities": [
+        0.9998048559297432,
+        0.00019514407025680682
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          38.36579237075723,
+          36.51638776349555,
+          74.88218013425278
+        ],
+        [
+          38.384522062823194,
+          36.520324064423534,
+          74.90484612724673
+        ]
+      ],
+      "utility_contrast16": -0.01872969206596764,
+      "utility_contrast32": -0.022665992993950113,
+      "late_utility_contrast": -0.003936300927982472,
+      "choice_coefficient16": -3.6542750951072774e-06,
+      "choice_coefficient32": -4.422270980854418e-06,
+      "parameter_direction_norm": 71.1226397831761,
+      "parameter_credit_norm16": 0.00025990169125794676,
+      "parameter_credit_norm32": 0.00031452358599490157,
+      "horizon_sign_reversal": false,
+      "parameter_credit_cosine": 1.0000000000000033,
+      "live_state_bytes": [
+        4624,
+        4624
+      ]
+    },
+    {
+      "fit_start": 8320,
+      "evaluated_start": 8336,
+      "site": [
+        8,
+        0,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -0.5295741637786433,
+        5.3073343771865975
+      ],
+      "probabilities": [
+        0.0029093600344597534,
+        0.9970906399655403
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          20.275493735122545,
+          36.708956069075036,
+          56.98444980419759
+        ],
+        [
+          20.31635232335374,
+          36.51638776349555,
+          56.832740086849284
+        ]
+      ],
+      "utility_contrast16": -0.04085858823119537,
+      "utility_contrast32": 0.15170971734830374,
+      "late_utility_contrast": 0.1925683055794849,
+      "choice_coefficient16": -0.000118526501218428,
+      "choice_coefficient32": 0.0004400940604306586,
+      "parameter_direction_norm": 66.8334437740401,
+      "parameter_credit_norm16": 0.007921534254915489,
+      "parameter_credit_norm32": 0.029413001643081402,
+      "horizon_sign_reversal": true,
+      "parameter_credit_cosine": -1.0000000000000027,
+      "live_state_bytes": [
+        4624,
+        4624
+      ]
+    },
+    {
+      "fit_start": 8320,
+      "evaluated_start": 8336,
+      "site": [
+        8,
+        7,
+        0
+      ],
+      "factual_winner": 1,
+      "scores": [
+        -4.801946781685092,
+        -0.4285437656557895
+      ],
+      "probabilities": [
+        0.012451272466914408,
+        0.9875487275330856
+      ],
+      "capped_score_proxy": false,
+      "utilities_by_candidate_early_late_total": [
+        [
+          20.307249631459587,
+          36.52968664644837,
+          56.836936277907945
+        ],
+        [
+          20.31635232335374,
+          36.51638776349555,
+          56.832740086849284
+        ]
+      ],
+      "utility_contrast16": -0.009102691894153025,
+      "utility_contrast32": 0.004196191058660759,
+      "late_utility_contrast": 0.013298882952817337,
+      "choice_coefficient16": -0.00011192886852784099,
+      "choice_coefficient32": 5.159736512934492e-05,
+      "parameter_direction_norm": 63.16220412969309,
+      "parameter_credit_norm16": 0.007069674041961077,
+      "parameter_credit_norm32": 0.003259003308853994,
+      "horizon_sign_reversal": true,
+      "parameter_credit_cosine": -1.000000000000002,
+      "live_state_bytes": [
+        4624,
+        4624
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "fit_start": 8192,
+      "selected_sites": 4,
+      "credit_norm16": 0.05137232197360688,
+      "credit_norm32": 0.03200609307232659,
+      "credit_cosine": -0.600831715749174,
+      "change_norm": 0.07509536137699091,
+      "scope": "Four prescribed sites, not full-chunk gradient"
+    },
+    {
+      "fit_start": 8320,
+      "selected_sites": 4,
+      "credit_norm16": 0.010178192903421942,
+      "credit_norm32": 0.02947463254534567,
+      "credit_cosine": -0.7926256946122384,
+      "change_norm": 0.038051578241920195,
+      "scope": "Four prescribed sites, not full-chunk gradient"
+    }
+  ],
+  "native_contracts": [
+    {
+      "start": 8192,
+      "original_winner_all_logits_state_rng_exact": true,
+      "alternate_first_time_real_state_rng": true,
+      "future_input_and_target_causality": true,
+      "parameters_unchanged": true,
+      "factual_targets": 32,
+      "actual_key_scores": 1024,
+      "actual_writes": 512,
+      "entering_state_bytes": 4352
+    },
+    {
+      "start": 8320,
+      "original_winner_all_logits_state_rng_exact": true,
+      "alternate_first_time_real_state_rng": true,
+      "future_input_and_target_causality": true,
+      "parameters_unchanged": true,
+      "factual_targets": 32,
+      "actual_key_scores": 1024,
+      "actual_writes": 512,
+      "entering_state_bytes": 4352
+    }
+  ],
+  "forced_forward_replays": 16,
+  "parameter_vjps": 8,
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "whole_audit_flops": null,
+  "artifact": "experiments/results/diagnostics/local_native_language_horizon_20261003T010500Z.credits.npz",
+  "artifact_sha256": "36a03ac20d936489d831c22af26cb981e611c088ca56364f41851484d6cfe39f",
+  "wall_s": 7.0264162860112265,
+  "max_rss_kb": 426172,
+  "hardware": {
+    "host": "curie",
+    "device": "CPU",
+    "threads": 1
+  },
+  "scope": "Two producer-unseen FIT spans, one fixed noise, eight prescribed native sites; factual-first-time actual-write utility compares16/32 suffix returns. Realized branch score-contrast parameter Jacobian includes prior pathwise times; not fixed-clock likelihood geometry, full512-site gradient, expected-risk quality or benchmark advantage."
+}
