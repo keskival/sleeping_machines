@@ -1311,3 +1311,50 @@ training loss at window 50 agrees with the eager run to 7e-5 bits. DVS depth 4, 
 per window (3.4×). Compiling once costs about 20–50 s per shape and grad mode. A 90M pass at p16/d8 is now about 4.3 h, so
 the §409 payload-32 condition (a single pass in about 20 h) is within reach. This is wall time on one CPU thread. FLOP
 counts are unchanged by construction, and energy is not measured.
+
+## 413. Why the 10M native language model lags LSTM/Transformer: an untrained address, then width
+
+**Completed evidence (one pass, 10M, E64 windows; test bpc).** Native p16/d8 2.719 (54,907 parameters, 0.405 MFLOPs
+fitting per character), p32/d4 2.507 (108,875, 0.722). The one-pass E64 controls with the same update count are
+LSTM-256 2.171 (338,395, 2.03 MFLOPs/char) and Transformer-256×2 2.427 (1.66M, 11.1). Scoring at T = 256 changes ours by
+<.001 bpc, so context beyond about 64 characters is not used yet.
+
+**1. The address is not trained (the main structural cause).** In the segment-batched driver the race is the factorized
+law: payload credit to the winner, and the common first-time clock credit dT/ds_i = −Tπ_i into the arrival delay
+(.001–.011 per event step). The scores (query, key, key_read, clock bias) reach the loss only through that delay.
+Delay enters transport and memory ages, which are tiny shifts of a per-character time step of 1. Measured at
+initialization on a real window (p16/d8, skip2): gradient-to-weight ratios are about 1e-4 for queries, keys and
+key_read, about 3e-3 for unit value maps, and 0.2–0.6 for channel mix and head. Under Adam the magnitude is normalized,
+so the routing parameters do move, but only along the timing direction. **No term tells a race which alternative
+would have predicted better.** That is the counterfactual route credit the architecture is built on (hard routes
+learn through counterfactual credit). The fast language path omitted it, and the AWS streaming runs (teacher/replay)
+keep it. At initialization routing is near-uniform (mean max-π .61 at pool 2; .02% of races above .9).
+
+*Consequence: fragmentation.* With an uninformative address, a pool of U units with winner-only writes partitions the
+stream at random. Each unit's memory integrates a random 1/U of the history, and each read sees only the winner's memory.
+The expected information carried about a given past character falls roughly as 1/U, and sampled routing adds noise at
+evaluation. Pools then cost capacity instead of adding it. Capacity beyond activity requires a learned or at least
+consistent content address. With that address, the pool becomes a content-addressed slot memory, and more units add
+state without adding selected writes.
+
+**2. Active width is small (the capacity cause).** Per character, the forward function uses the channel mix and query
+(2·W² for width W = H·P), the winner unit's four P×P maps per head, and the head. That is about 33K active weights at
+p16/d8 and about 25K at p32/d4 per layer stack, against 338K for LSTM-256, and the native fit spends 3–5× less arithmetic per
+character. The first two results show width dominates depth at this budget: doubling P with half the depth cut 0.21 bpc
+at 1.8× the work.
+
+**3. Each unit is a small linear recurrence.** A unit's memory is a decayed, rotated sum of input projections (a
+complex diagonal linear recurrence with input-dependent scalar forget and write gates), read through one nonlinear
+map. This is the selective state-space family, which is competitive when its state is wide. Here a selected unit holds
+P = 16–32 numbers, and the race chooses which of U such states to read.
+
+**Predictions, recorded before the v4 results** (p32/d4, same protocol, one seed; diagnostics are labelled):
+(a) pool 1 (no routing; diagnostic control) is not worse than pool 2 without route credit (2.507);
+(b) pool 4 without route credit is worse than pool 2;
+(c) linearized route credit, a zero-valued surrogate with score gradient π_i g·(v_i − v̄) (THEORY §403/§407 linearized
+local expectation; forward values bitwise unchanged; batched_episodes.linear_route_credit), improves pool 2, and
+improves pool 4 more if a content address can be learned;
+(d) width 128 (p64/d4, about 422K parameters) improves substantially over p32/d4, the capacity cause.
+If (c) fails, a linearized credit is insufficient (the DVS fidelity audits found linearized estimators near chance).
+The next step is then exact local-expectation credit restricted to a short horizon, or a consistent non-learned content
+address, before abandoning large pools for language.

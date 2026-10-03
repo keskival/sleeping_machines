@@ -47,10 +47,19 @@ class LaneRace(torch.autograd.Function):
         return credit.to(error_value.dtype if error_value is not None else rates.dtype), value_credit, None, None
 
 
-def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False):
+def linear_route_credit(scores, proposals):
+    """Zero-valued surrogate whose score gradient is the linearized local-expectation route credit
+    d E[L] / d s_i ~= pi_i g.(v_i - v_bar) (g: the loss gradient at the realized value).  Values get no extra credit.
+    scores (n, U), proposals (n, U, P); returns (n, P) exact zeros (THEORY §413)."""
+    pi = torch.softmax(scores.to(torch.float64), -1).to(proposals.dtype)
+    return ((pi - pi.detach())[..., None] * proposals.detach()).sum(-2)
+
+
+def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False, route_credit=None):
     """rows: episodes (dict with 'events'); forces: per-lane (race, alt) or None; record: list receiving each race's
     (n, U) scores in race order.  Returns (n, classes) final logits, or (n, T, classes) logits after every event when
-    all_logits (positions beyond an episode's length are zero)."""
+    all_logits (positions beyond an episode's length are zero).  route_credit='linear' adds the linearized value
+    credit to the race scores (forward values unchanged)."""
     source = 0
     layers = model._stacked(source)
     D, H, U, P = model.depth, model.heads, model.pool, model.payload
@@ -120,6 +129,8 @@ def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False
                     if record is not None:
                         record.append(scores[:, head])
                     value, delay, winner = LaneRace.apply(scores[:, head], proposals[:, head], noise, alt)
+                    if route_credit == 'linear':
+                        value = value + linear_route_credit(scores[:, head], proposals[:, head])
                     race += 1
                     onehot = F.one_hot(winner, U).to(torch.bool) & active[:, None]          # write only active lanes
                     sel = onehot[..., None]

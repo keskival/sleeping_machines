@@ -84,6 +84,8 @@ def main():
     p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
     p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps (sleeping_machines/compiled_episodes.py, §412)')
+    p.add_argument('--route-credit', choices=('none', 'linear'), default='none',
+                   help='linear: linearized local-expectation value credit to the race scores (§413)')
     p.add_argument('--checkpoint-every', type=int, default=0, help='windows between exact-resume checkpoints (0: none)')
     p.add_argument('--resume', action='store_true', help='continue from this tag\'s checkpoint')
     a = p.parse_args()
@@ -128,6 +130,9 @@ def main():
                                 evaluation='E64 windows of S, stride S/2, second half scored after the first window',
                                 selection='final weights (no development selection)',
                                 schedule='cosine annealing over all windows' if a.cosine else 'constant learning rate',
+                                route_credit=dict(none='factorized race: winner value credit, common first-time clock '
+                                                       'credit only', linear='factorized race plus linearized '
+                                                       'local-expectation score credit pi_i g.(v_i - v_bar)')[a.route_credit],
                                 kernels='compiled layer steps (torch.compile/inductor, contract-tested against the batched path)'
                                 if a.compiled else 'eager batched path'))
     window_times = []
@@ -153,7 +158,8 @@ def main():
         box = {}
         def step(logits=None):
             model.train(); opt.zero_grad(set_to_none=True)
-            z = (logits or LOGITS)(model, rows, seed, all_logits=True)
+            z = (logits or LOGITS)(model, rows, seed, all_logits=True,
+                                   route_credit=None if a.route_credit == 'none' else a.route_credit)
             loss = F.cross_entropy(z.reshape(-1, 27), y.reshape(-1))
             loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip, error_if_nonfinite=True); opt.step()
             box['loss'] = float(loss.detach())

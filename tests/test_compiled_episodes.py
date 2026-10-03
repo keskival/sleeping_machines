@@ -56,3 +56,32 @@ def test_compiled_step_matches_batched_episodes():
     _close(comp, ref, 2e-4)
     final = compiled_logits(m, rows, 9)
     assert torch.allclose(final, batched_logits(m, rows, 9), rtol=2e-4, atol=2e-4)
+
+
+def test_linear_route_credit_leaves_values_and_value_gradients_and_adds_score_credit():
+    from sleeping_machines.batched_episodes import linear_route_credit
+    torch.manual_seed(3)
+    s = torch.randn(4, 3, dtype=torch.float64, requires_grad=True)
+    v = torch.randn(4, 3, 5, dtype=torch.float64, requires_grad=True)
+    g = torch.randn(4, 5, dtype=torch.float64)
+    z = linear_route_credit(s, v)
+    assert torch.equal(z, torch.zeros_like(z))
+    (z * g).sum().backward()
+    pi = torch.softmax(s.detach(), -1)
+    vbar = (pi[..., None] * v.detach()).sum(1, keepdim=True)
+    expected = pi * ((v.detach() - vbar) * g[:, None]).sum(-1)
+    assert torch.allclose(s.grad, expected, atol=1e-14) and v.grad is None or torch.equal(v.grad, torch.zeros_like(v))
+
+
+def test_route_credit_forward_unchanged_and_compiled_matches_eager():
+    m, rows = _case(torch.float64)
+    plain = batched_logits(m, rows, 123, all_logits=True)
+    ref = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear'))
+    assert torch.equal(ref[0], plain.detach())
+    eager = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, step=layer_step, route_credit='linear'))
+    _close(eager, ref, 1e-10)
+    comp = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, route_credit='linear'))
+    _close(comp, ref, 1e-9)
+    base = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True))
+    keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key') or 'queries' in n]
+    assert any(not torch.allclose(ref[1][i], base[1][i]) for i in keys)        # routing now receives value credit

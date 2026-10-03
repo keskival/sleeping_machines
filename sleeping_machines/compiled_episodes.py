@@ -38,7 +38,8 @@ def _transport(value, age, rate_raw, frequency):
 
 
 def layer_step(x, arrival, m, arr_d, seen_d, active, noise, mix_w, mix_b, query, key, key_read, clock_bias, control_w,
-               control_b, rate, frequency, input_w, output_w, gate_w, gate_b, gain, transport_rate, transport_frequency):
+               control_b, rate, frequency, input_w, output_w, gate_w, gate_b, gain, transport_rate, transport_frequency,
+               linear_credit=False):
     """One layer of one event for all lanes.  noise (H, U) float64 in draw order.  Returns the next x, arrival,
     the layer's new memories/arrival stamps/written masks, the head values and their arrivals."""
     n = x.shape[0]
@@ -73,6 +74,9 @@ def layer_step(x, arrival, m, arr_d, seen_d, active, noise, mix_w, mix_b, query,
     delay = .001 + .010 * first_s / (1 + first_s)
     onehot = F.one_hot(winner, U).to(torch.bool) & active[:, None, None]      # (n, H, U); writes only active lanes
     values = torch.gather(proposals, 2, winner[:, :, None, None].expand(n, H, 1, P)).squeeze(2)   # (n, H, P)
+    if linear_credit:        # zero-valued; score gradient pi_i g.(v_i - v_bar) (batched_episodes.linear_route_credit)
+        pi = torch.softmax(s64, -1).to(proposals.dtype)
+        values = values + ((pi - pi.detach())[..., None] * proposals.detach()).sum(-2)
     new_mem = torch.where(onehot[..., None], m_new, m)
     new_arr = torch.where(onehot, arrival[:, None, None], arr_d)
     new_seen = seen_d | onehot
@@ -88,11 +92,15 @@ _COMPILED = {}
 
 def compiled_step():
     if 'step' not in _COMPILED:
+        from torch._dynamo import config as dynamo_config
+        for name in ('cache_size_limit', 'recompile_limit'):   # lane counts, dtypes, grad modes and credit specialize
+            if hasattr(dynamo_config, name):
+                setattr(dynamo_config, name, max(getattr(dynamo_config, name), 64))
         _COMPILED['step'] = torch.compile(layer_step, dynamic=False, fullgraph=True)
     return _COMPILED['step']
 
 
-def compiled_logits(model, rows, seed, all_logits=False, step=None):
+def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit=None):
     """Drop-in for batched_logits(model, rows, seed, all_logits=...) without forces/record.  step: the layer function
     (default compiled; pass layer_step for the eager reference of this formulation)."""
     step = step or compiled_step()
@@ -142,7 +150,7 @@ def compiled_logits(model, rows, seed, all_logits=False, step=None):
                     x, arrival, mem[depth], arr[depth], seen[depth], active, noise, mix.weight, mix.bias, Lp['query'],
                     Lp['key'], Lp['key_read'], Lp['clock_bias'], Lp['control_w'], Lp['control_b'], Lp['rate'],
                     Lp['frequency'], Lp['input'], Lp['output'], Lp['gate_w'], Lp['gate_b'], Lp['gain'],
-                    model.transport_rate[depth], model.transport_frequency[depth])
+                    model.transport_rate[depth], model.transport_frequency[depth], route_credit == 'linear')
             ctx_vals = torch.where(active[:, None], values.reshape(n, H * P), ctx_vals)
             ctx_arr = torch.where(active[:, None], arrivals, ctx_arr)
             has_ctx = has_ctx | active
