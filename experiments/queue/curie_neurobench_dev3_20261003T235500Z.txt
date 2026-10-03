@@ -1,0 +1,10 @@
+# NeuroBench development v3: primate reaching arms, then the MG one-step-precision diagnostics (dev2 closed-loop arms
+# withdrawn: tau 18 closed-loop 24.5 / 26.3 vs teacher-forced 22.5 / 23.0).
+curie_nb3_contracts_20261003T235500Z -m pytest -q tests/test_mackey_glass_native.py tests/test_sparse_inference.py tests/test_sparse_training.py
+curie_pr_dev_p32d2_20261003T235500Z experiments/primate_reaching_native.py --sessions indy_20170131_02 --compiled --steps 2000 --lanes 32 --segment 250 --tag curie_pr_dev_indy0131_p32d2_20261003T235500Z --payload 32 --depth 2 --pool 2
+curie_pr_dev_p64d2_20261003T235500Z experiments/primate_reaching_native.py --sessions indy_20170131_02 --compiled --steps 2000 --lanes 32 --segment 250 --tag curie_pr_dev_indy0131_p64d2_20261003T235500Z --payload 64 --depth 2 --pool 2
+curie_pr_dev_p32d2_pool4tied_20261003T235500Z experiments/primate_reaching_native.py --sessions indy_20170131_02 --compiled --steps 2000 --lanes 32 --segment 250 --tag curie_pr_dev_indy0131_p32d2_pool4tied_20261003T235500Z --payload 32 --depth 2 --pool 4 --tie-pools
+curie_mg3_t18_p16_delta_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_delta_20261003T231500Z --payload 16 --steps 1500 --delta
+curie_mg3_t18_p16_delta_argmax_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_delta_argmax_20261003T231500Z --payload 16 --steps 1500 --delta --argmax
+curie_mg3_t18_p16_pool1_delta_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_pool1_delta_20261003T231500Z --payload 16 --steps 1500 --delta --pool 1
+curie_mg3_t18_p32_delta_argmax_3k_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p32_delta_argmax_3k_20261003T231500Z --payload 32 --steps 3000 --delta --argmax
