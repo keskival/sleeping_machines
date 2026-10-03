@@ -1574,3 +1574,11 @@ count. It uses 2.8× the parameters, about 2.9× the estimated fitting work and 
 this is a quality win, not supremacy: the work is higher and there is one seed. The development curve (2.555 / 2.278 /
 2.189) crossed p64 between windows 800 and 1200, so wider models gain late in one pass. The lr .002/.003 arms test whether
 a scaled lr removes the slow start.
+
+**§415 four passes (17:24 UTC).** p64/d4 pool 2 with route credit, 4 passes (4,882 updates, the Transformer-256×4 step
+count; 422,475 parameters; 107 TFLOPs whole fit, traced estimate) scored DEV 1.876 / **test 1.955** bpc (T = 256 1.9547).
+Development on the first 50K went 2.166 / 2.043 / 1.990 at windows 1,600 / 3,200 / 4,800. The E64 Transformer-256×4 (4 passes,
+4,882 steps, 3.24M parameters, about 889 TFLOPs estimated) scores 1.908: ours is .047 behind at about one eighth of the
+estimated fitting work and parameters. It does not meet the §415 criterion (not better on quality), and no saved
+reference lies at comparable work. The DEV–test difference (.08) is larger than at one pass (.07 for p64) and is reported as
+measured. The 6-pass p96 arm (7,320 updates against LSTM-512's 7,324; about 352 TFLOPs estimated) is now running.

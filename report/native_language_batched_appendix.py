@@ -31,13 +31,17 @@ NATIVE = [
      'p64/d4/pool4 + route credit'),
     ('language_batched/curie_language_batched_10M_p96d4_pool2_linear_l64_lr004_cmp_s6_20261003T120000Z.json',
      'p96/d4 + route credit'),
+    ('language_batched/curie_language_batched_10M_p64d4_pool2_linear_4pass_l64_lr004_cmp_s6_20261003T150000Z.json',
+     'p64/d4 + route credit, 4 passes'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
 INFERENCE_MORE = ['language_batched/curie_language_batched_inference_work_20261003T120000Z.json',
                   'language_batched/curie_language_batched_inference_work_20261003T143000Z.json']
 SPARSE = ['language_batched/curie_language_sparse_inference_work_20261003T120000Z.json',      # §414 winner-only, exact
           'language_batched/curie_language_sparse_inference_work_20261003T143000Z.json']
-CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2')]
+CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2'),
+            ('e64/tf_D10000000_s256_L4_p4_dr0.1_v.json', 'Transformer-256x4, 4 passes'),
+            ('e64/lstm_D10000000_s512_p6_dr0.1_v.json', 'LSTM-512, 6 passes')]
 
 
 def load(read):
@@ -72,7 +76,7 @@ def load(read):
 
 
 def pages(data):
-    columns = ['Model (10M, one pass)', 'Params', 'Steps', 'Test bpc T128/T256', 'Whole fit TF est.',
+    columns = ['Model (10M)', 'Params', 'Steps', 'Test bpc T128/T256', 'Whole fit TF est.',
                'Fit MF/char', 'Infer MF/pos. emulator', 'Infer MF/pos. winner-only']
     widths = [40, 20, 15, 25, 18, 16, 21, 21]
     rows = []
