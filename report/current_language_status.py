@@ -80,7 +80,11 @@ def figure(data, path):
         axis.grid(axis='y', visible=False)
     fig.tight_layout(w_pad=1.2)
     fig.savefig(path, dpi=190, bbox_inches='tight', facecolor='white')
-    fig.savefig(Path(path).with_suffix('.svg'), bbox_inches='tight', facecolor='white')
+    vector = Path(path).with_suffix('.svg')
+    fig.savefig(vector, bbox_inches='tight', facecolor='white')
+    # Matplotlib emits trailing spaces in path attributes; keep generated
+    # artifacts clean while retaining the separating newline/XML whitespace.
+    vector.write_text('\n'.join(line.rstrip() for line in vector.read_text().splitlines())+'\n')
     plt.close(fig)
 
 

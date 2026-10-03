@@ -93,5 +93,14 @@
   "scope": "Saved-evidence publication only; no model forward/backward/training or Torch import",
   "published_utc": "2026-10-03T13:35:46.325101+00:00",
   "previous_pdf_archive": "report/archive/status_refresh_20261003T133000Z_previous.pdf",
-  "previous_pdf_archive_sha256": "fb967d4ad6cbc28d4dc6c4ed9d254dd07508a03dfb64d40c02b79e97cdaa2dd8"
+  "previous_pdf_archive_sha256": "fb967d4ad6cbc28d4dc6c4ed9d254dd07508a03dfb64d40c02b79e97cdaa2dd8",
+  "postpublication_asset_formatting": {
+    "asset": "report/figures/current_native_language_status.svg",
+    "before_sha256": "72d2bf66f1f34a6379e1601de5bde45282d2b33a804012e838ba010548c8fd25",
+    "after_sha256": "127946f1346c20132c99ffd91553111a879e4f000178fb7798eff82b372d2338",
+    "generator_source": "report/current_language_status.py",
+    "generator_at_render_sha256": "4d8466f889d1713cc4c797e0eb5bfaaddd0f56205431a6e0884d84b6741c0bfa",
+    "generator_after_formatting_sha256": "7126a02ae68cad1cb91aef8536b0c50d36c231501bb0c0fb79e5e994044d9c50",
+    "scope": "SVG trailing whitespace normalized; XML drawing instructions verified unchanged. Original render/source hashes retained; PDF, PNG and Markdown bytes unchanged."
+  }
 }
