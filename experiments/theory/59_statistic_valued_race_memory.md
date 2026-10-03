@@ -1394,3 +1394,11 @@ address that is not aligned with prediction accumulates a mixture of unrelated c
 optimizer prefers fast forgetting, so the short horizon is consistent with the address diagnosis. The test is again the
 v4 route-credit arms: if value credit aligns the address, longer half-lives should survive training, and the route
 diagnostics plus a horizon readout on their saved weights will show it.
+
+**§413 prediction (a) holds (09:15 UTC).** p32/d4 pool 1 (diagnostic control: no selection, one unit per head; 74,803
+parameters, 0.49 MFLOPs fitting per character, 9,130 characters/s) scored DEV 2.386 / test 2.439 bpc. Pool 2 scored
+2.449 / 2.507 (108,875 parameters, 0.72 MFLOPs). Pool 1 also beats the depth-8 pool-2 arm (2.456). With the address
+trained by timing alone, the sparse pool costs about .07 bpc at depth 4 and .04 at depth 8 (pool 4 against pool 2), with
+more parameters and work. This is evidence about the current credit, not about addressed memory: the architecture's
+claim needs the address to learn from value. The remaining v4 arms test that. Pool 1 stays a labelled control, and it
+is not promoted.
