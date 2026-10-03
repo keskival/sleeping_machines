@@ -3841,3 +3841,51 @@ All32 discarded updates are evaluated on fixed FIT0..3 and FIT24..31 anchors und
 Reconstruction48 presentations/12 updates; ensemble64 factual targets,128 full shadow lanes/2688 events and48 component reverse calls; extra two isolated paid updates and two recovery forks, plus admissions/evaluation. Total campaign FLOPs/traffic/energy remain unknown, not zero. Variance-times-work is a declared optimization heuristic, not a convergence theorem for clipping, Adam or nonlinear sparse temporal models.
 
 Preserve the tiny paired-fit negative result and these trained-state measurements together. No long content fit is admitted. Priority remains completed AWS corrected full replay10M and matched teachers/controls; other-host live-gate and calibrated reset-segment language runs use distinct protocols.
+
+## Appendix B. Separate site sampling from native race history
+
+| Sites per episode | Mean site trace | History mean trace | Total raw trace | Site share % |
+| --- | --- | --- | --- | --- |
+| 1 | 7.046586 | 0.341525 | 7.388111 | 95.38 |
+| 8 | 0.843903 | 0.341525 | 1.185427 | 71.19 |
+| 32 | 0.179329 | 0.341525 | 0.520854 | 34.43 |
+| 168 | 0.000000 | 0.341525 | 0.341525 | 0.00 |
+
+SAME source-bound12-step trained p4/D4/H2/pool2 and original FIT0..3/B4, FIRST FOUR prior noise histories, with represented weights promoted to DOUBLE. Each history pays complete detached returns for ALL168 races per episode; the original native full-site teacher is the conditional mean. Uniform without-replacement site sampling is the only random axis in each conditional covariance.
+
+At fixed E, v_jr=pi0*pi1*(Q0-Q1)/B times the COMPLETE parameter Jacobian of score0-score1. Site covariance trace S_k=sum_j R_j*(R_j-k)/(k*(R_j-1))*sum_r ||v_jr-mean_r(v_jr)||^2. Full-site sampling has zero such variance. Across histories, mu(E)=factual+all-site credit; Var(G)=E[Var_sites(G|E)]+Var(mu(E)). Native computational clock/content coupling remains in the Jacobian.
+
+Here about95% of estimated k1 total variance is site sampling. k8 reduces estimated total raw trace by about84%. These are FOUR-history descriptive estimates, not an attribution of all deep training failure.32 Rademacher parameter signs per history estimate conditional traces without dimension scaling; all probes saved, empirical SE descriptive, worst-case relative RMS25%, no guaranteed interval or actual Adam variance.
+
+Same TRAINED model short2/1-event contract matches EVERY route VJP under three projection signs, full original teacher and explicit subset mean/covariance. Maximum error4.58e-16. All128 main projected sums match actual full gradients. Float32 factual CE reproduces prior draws exactly; all2688 factual winners agree with double, max logit error2.85e-7. This does not prove forced-branch cross-precision equivalence.
+
+Theory134; 59.326s/390920KiB. Main5376 full-return lanes/112896 events and128 projections; tiny equivalence evaluates returns TWICE,96 lanes/160 events. No optimizer step; total FLOPs/traffic/energy unknown, not zero. Stored gradients/returns/signs/projections retain scope; no policy or benchmark promotion from raw variance alone.
+
+## Appendix B. Existing route coverage: actual fitting cost versus variance
+
+| Sites | Actual step GF | Fit MF/presentation | Infer MF/target | Shadow lanes |
+| --- | --- | --- | --- | --- |
+| No choice | 0.002028565 | 0.507141 | 0.162245 | 0 |
+| 1 | 0.003327802 | 0.831951 | 0.162245 | 8 |
+| 8 | 0.012406626 | 3.101656 | 0.162245 | 64 |
+| 32 | 0.043533818 | 10.883454 | 0.162245 | 256 |
+| 168 | 0.219918762 | 54.979690 | 0.162245 | 1344 |
+
+| Sites | Raw variance ratio | Actual work ratio | Variance x work |
+| --- | --- | --- | --- |
+| 1 | 1.000000 | 1.000000 | 1.000000 |
+| 8 | 0.160451 | 3.728174 | 0.598188 |
+| 32 | 0.070499 | 13.081853 | 0.922257 |
+| 168 | 0.046226 | 66.085291 | 3.054878 |
+
+FIVE EXISTING BL windows, four targets/one update each, SAME trained weights/history, FIRST noise seed and original sampler. Sampled1/8/32, all168 and factorized no-choice. All forward/loss/return/backward/normalization/clip1/Adam.003 work traced. EVERY traced/untraced next weight/moment and serialized full recovery agrees. All updates discarded.
+
+All five use2379 parameters,16 available private receivers, 168 selected updates/336 key scores per target. Losing full returns still compute candidate keys and values; optimizer work is charged. Native inference uses the same12-target boundary. Whole-step and per-presentation work share units/denominators across ALL rows. No choice changes the mean teacher and is not a k0 point on the same route-variance curve.
+
+With equal R, V(k)=a+b/k; approximately affine C(k)=C0+c*k. The interior variance-work optimum is sqrt(C0*b/(c*a)) when a>0, bounded by1..R. Here it is about6.09 sites; k8 is the best MEASURED heuristic point. This is fixed-state estimation math, not a validated adaptive policy or sustained learning guarantee.
+
+Variance-times-work pairs four-history DOUBLE projected raw variance with one-window FLOAT32 actual work. It is an optimization HEURISTIC, not an actual Adam-variance, convergence or quality guarantee. Broader site support buys less sampling noise but costs additional full returns; the remaining race history floor prevents unlimited benefit. No larger fit is selected from local FIT predictions.
+
+Eleven discarded updates: five traced, five exact untraced verifications and one serialized full recovery. Fixed FIT0..3 and adjacent unused FIT24..31 predictions saved for every arm; not IID, DEV or test. Inference traces/reconstruction/admission/verification/evaluation remain additional work. Total campaign FLOPs/traffic/energy unknown, not zero; measured step work is not the campaign total. Earlier negative content evidence retained.
+
+Theory136; 60.076s/362876KiB. Numerically admitted cost/variance tradeoff only. Temporal races, private sparse state/key-values and counterfactual learning retained. AWS corrected replay10M plus exact teachers/controls and other-host live-gate/calibrated language quality remain priority.

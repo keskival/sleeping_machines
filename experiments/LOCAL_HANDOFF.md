@@ -2265,3 +2265,73 @@ allnoise toonesite sampling. Keepdouble-promotion/traceuncertainty/costscope.
 AWSoriginalprivate/sharedreplay10Mmatrixstillqualitypriority. Otherhost
 reset-segmentv1completed2.899testbpc;v2calibration/v3capacityarmsuse distinct
 protocols. Selectedwritecountisnotcandidate-scoring/value/optimizercost.
+
+## Route-site coverage and measured budget — 3 October, 05:55 UTC
+
+134local_trained_route_site_noise_20261003T054100Z completes5groups,
+59.326s/390920KiB.132source-boundtrainedp4D4/B4/originalFIT0..3, represented
+float32weights promotedDOUBLE, FIRSTFOUR132noisehistories. All168races
+perrow fullreturns;32Rademacherparameter signs perhistory,128projections.
+Trainedtiny EVERY-route VJP/projected errors<=4.58e-16; fullsum/originalBL
+andexplicitk2mean/covarianceagree. All128mainprojectedsums matchfull
+parametergradients. Float32factualCEexactly132, all2688factualwinnersagree
+withDOUBLE, maxlogiterror2.85e-7. Forcedbranchprecisionequivalencenotproved.
+Originalsources/state/RNG/helperseed/replaycounterretained; sourcefrozen.
+
+Law-of-total-covariance estimates mean SITEtrace k1/8/32/168 =
+7.046586/.843903/.179329/0; fullmeanbetweenHISTORYtrace .341525 SAME.
+Total7.388111/1.185427/.520854/.341525; k1site share95.38%, k8totalratio
+.160451. FOURhistories and32signs descriptive, notalltrainingcausality,
+actualAdamvariance orguaranteedinterval; worstrelativeRMS25% tracebound.
+Main5376fullshadowlanes112896events, tiny96lanes160events becausebank
+ANDoriginalBLequivalence bothpaid;128+3projectedpullbacks24tinyrouteVJPs/
+fullbackwards,16mainfactualtargets+32precisiontargets, nooptimizer.
+SmallprojectionsNPZ retained; totalFLOPs/traffic/energyunknown/notzero.
+See134/135;132sixteen-drawFLOAT32variance isdifferentprotocol,notreplaced.
+
+136local_trained_route_coverage_work_20261003T054700Z passes6groups,
+60.076s/362876KiB. FIVEactual EXISTINGBLwindows same132weights+12step
+Adammoments, FIRST134noise, originalsampler: no-choice/k1/8/32/all168.
+EVERYtraced/untraced nextweight ANDmoment EXACT, serializedfullrecovery,
+causalidenticalfactualCE/RNG/sources/coveragepass. Elevenupdatesdiscarded.
+STEPGF .002028565/.003327802/.012406626/.043533818/.219918762;
+per-presentationMF .50714125/.8319505/3.1016565/10.8834545/54.9796905;
+same12-targetnativeinfer .162245333MF/target. Capacity16private receivers,
+168selected/336scoredpertarget unchanged. No-choice isdifferentteacher,
+NOTk0onthisvariancecurve. Countcandidate/losing/normalization/optimizerwork.
+
+k1/8/32/full rawVARratio1/.160451/.070499/.046226 paired withactualWORK
+ratio1/3.728174/13.081853/66.085291 yieldsheuristic1/.598188/.922257/3.054878.
+k8bestMEASUREDfixed-state variance-work point(~40%better), NOTquality,
+actualAdam/convergence orsupremacy. AlllocalFIT/anchorpredictionssaved,
+fullforkbestanchorwhileheuristicfavors8: noprediction-basednomination.
+Traced1672shadowlanes35112events, verification3016lanes63336events,
+extraevaluation72predictiontargets/inferencetraces/admission. Totalcampaign
+FLOPs/traffic/energyunknown/notzero. No longfit oradaptiveschedulerlaunched.
+
+137derives V(k)=a+b/k fromfinitepopulation+historyfloor andaffine C(k),
+fixed-state averaging optimumsqrt(Cfixed*b/(c*a)) ifa>0, clipped1..R;
+a<=0 favorsfullunderheuristic. Hereestimatedoptimum6.0895, NOTtestedk6.
+Heterogeneousallocationk_j∝sqrt(b_j/c_j) withbounds; mean-preservinguniform
+coveragechosenBEFOREsampling; stoppingbasedonsamesubsetreturnscanbias
+R/kcredit. Independentpilot/properinclusionprobabilitiesneededandpaid.
+No claimthecalculus proves actuallearningadvantage. NextACTUALwarm-Adam
+coverageensemble beforepolicy, notanothercostlycontentfit orblindksweep.
+
+Reporttrained_route_coverage_evidence.py/newpublisherchainsfrozen201pages.
+055000Zfirstpublicationfailsorphanfooterpage204, previousreportrestored;
+exactfailedproducer/publisherarchived, queue/log/runner retained, failed
+PDFlocal.git/report-validation. Textonlyshortened; newunique055400Zretry
+passes203pages27.498s/274068KiB, allsource/history/title/layout/orphan/diff
+checks. Numericalresultsunchanged, producer/publishernowfrozen. Rootreport
+andaggregatehandoff/indexmutable. Otherhost§412compiledlayer2.7x andv2c
+queuespreserved; separatefromeageroriginalAWSprivate/sharedreplaymatrix.
+
+PRIORITY still integratedAWSnativep16/L8/H2/pool2 correctedprivatefull
+replay10M/exactoriginalprivate/sharedteachers/sharedreplay/factorizedcontrols
+queue/aws_language_winner_matrix_20261003T014100Z/manifest.json. Preserve
+otherhost live-gate/gain-preservingDVS andcalibrated/compiledresetlanguage
+protocols. Maingapsusefulnonlineardepthattribution, horizon, totaldiscovery/
+credit/optimizercost andgeneralization. No corearchitecturedeparture:
+clocks/timecomputation/hardlearnedraces/sparseprivatepersistentvalues/
+separatekeys-value/counterfactual/silence-aware direction retained.

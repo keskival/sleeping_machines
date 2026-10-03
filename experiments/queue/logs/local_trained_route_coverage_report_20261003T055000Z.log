@@ -1,0 +1,9 @@
+wrote /workspace/report/sleeping_machines_status.pdf and REPORT.md
+Traceback (most recent call last):
+  File "/workspace/experiments/publish_trained_route_coverage_report.py", line 92, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/workspace/experiments/publish_trained_route_coverage_report.py", line 73, in main
+    if len(page.get_text())<400:raise ValueError('Orphan page '+str(idx+1))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Orphan page 204

@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_trained_route_coverage_report_retry_20261003T055400Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "0862fb493576a1427e08f8813b41c963cc2403937ce9f0a30d8bb71677dd57ca",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/deep_learning_diagnosis_evidence.py": "92e65a967bb33500b29c610a836986d86544f897c49fedc49a0a4f2dca9d45d7",
+    "report/depth_sampling_evidence.py": "1a96d3297d061bd6901c0c6d2c7b270c7cc1061f98390308e905fe4cadc6844c",
+    "report/actual_batch_credit_evidence.py": "4090d29ee42b6baad76d75ece8417dd2a39d7ec94cbb97134e19c52877b8ca85",
+    "report/conditional_content_evidence.py": "e1ccd753a87f811140e50612aa101a668d36bd7d8741d7a20e59bb9616455216",
+    "report/trained_content_variance_evidence.py": "5d201d7558faaa582797900734f7f986cb41d3bf10da923a9bfb1b02d963aff8",
+    "report/trained_route_coverage_evidence.py": "7787ac101b7f2bd0a7923bfbf794293f1512048389cae5c6d8f7e2c9a7fc424d",
+    "experiments/publish_trained_route_coverage_report.py": "a85e603f12118609b7ab4feea3035d94efc5e9eea86e4600a7aa5c1ae85a690f"
+  },
+  "pdf_pages": 203,
+  "report_sha256": "f85ec112b772baac6274488dc7d0ddfbfc608ad310c9b3d6ad99f3ac522c1955",
+  "pdf_sha256": "153e83651cf08145f291eb3b8bbf86def74e0a68316c613f9df9922f0a66ec39",
+  "wall_s": 27.49838734700461,
+  "max_rss_kb": 274068,
+  "scope": "Completed four-history source-bound conditional site covariance,128 contracted projections and five exactly counted existing-teacher coverage updates; measured variance/work heuristic and its scope retained, all earlier evidence preserved, no quality or supremacy claim."
+}
