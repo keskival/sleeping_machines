@@ -1524,3 +1524,10 @@ message Jacobian. That distinction makes write-specific feedback plausible, but 
 has no score-memory path is too broad. [144](144_trained_write_factorial_and_residual_calibration.md) records the
 two Jacobians and prepares a same-cotangent, fixed-time actual-write utility audit. Divergence attribution, any
 stop-gradient repair and its effect on useful memory learning remain untested. Value credit remains the default.
+
+**§413/§398 width × untied capacity (14:05 UTC).** p64/d4 pool 4 with route credit (689,787 parameters; 4.41 MFLOPs
+fitting per character; 8 selected writes) scored DEV 2.114 / test 2.180 bpc (T = 256 2.1795), against 2.118 / 2.184 for pool 2
+(422,475; 2.68 MFLOPs). That is .004 better at 1.65× the fitting work, and .008 behind the one-pass LSTM-256 (2.171). At
+width 64, credited pool 4 gained .027. At width 128 the untied gain nearly vanishes, as the capacity–exposure law (§398)
+predicts: each untied unit's P×P maps see about 1/U of the writes, and P² grows with width. The v6 tied-pool arms (shared
+maps, private keys, clocks, timescales and memories) test the prescribed fix.
