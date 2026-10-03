@@ -2209,3 +2209,17 @@ andnegativecontent-creditadmission131. Compactcausalreplayschedulederived in
 versus4096winnerreuse,16loopsratherthan136groupedcacheloops. Combinatorial
 countsONLY; no kernel/speed/work/qualitymeasurement. Retainsallalternatives,
 privateclocks/state, source/RNGcontracts; no activefitrestart/corechange.
+
+AWS05:10 compact causal suffix prototype now implemented in NEWsiblings:
+sleeping_machines/causal_language_shadow_compact_suffix.py and experiments/
+aws_replay_compact_suffix.py. Only active growinglane-prefix enters model
+arithmetic; all losingidentities retained, detached pre-tokenstates/RNG,
+absolute forced-raceindex. Firstaudit private/shared×T1/T3/T16×float32/double
+checks EVERYgradient, factualstate/logits/RNG and exacteventcounts. Strict
+coordinatefailures recorded; doubleagreement required. No modelrunyet: syntax
+andfrozen119dependencychecks passed ONLY. Uniqueguardedqueue
+aws_replay_compact_suffix_audit_20261003T051000Z waits NORMALhostlock in tmux
+aws_replay_compact_wait,3GBvirtual/1.25GBRSS/8GiBfloor/600s. Even firstaudit
+PASS is insufficient: ALLshadowroutehistories, actualoptimizerrecovery,
+completework/wall/RSS/learningcontracts stillrequired before ANYqualityarm.
+Active3-slot10Mmatrix remainsprioritized andunchanged.
