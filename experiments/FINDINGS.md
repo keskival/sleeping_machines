@@ -1,5 +1,29 @@
 # Findings log
 
+## Calibrated 10M native language arms: width dominates depth; still behind the one-pass LSTM — 3 October
+
+Compiled segment-batched native core (§§411–412), one pass over text8[0:10M], 64 × 128 windows (1,220 Adam updates),
+lr .004 cosine, clip 1, seed 6; DEV text8[90M:91M]; test text8[95M:96M]; E64 windows at T = 128 / T = 256 with the same
+weights. Single seed each, exploratory. Work: ours traced unit/special operations (fitting: first windows,
+extrapolated; inference: batched-emulator evaluation per evaluated position, all proposals computed), controls the
+lm_training_flops shape estimate; the same units in every column.
+
+| Model (one pass, 10M) | Parameters | Updates | DEV bpc | Test bpc (T=128 / 256) | Whole-fit TFLOPs | Fitting MFLOPs/char | Inference MFLOPs/position |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Ours p16/d8/pool2, skip2 | 54,907 | 1,220 | 2.676 | 2.719 / 2.719 | 4.05 | 0.41 | 0.13 |
+| Ours p32/d4/pool2 | 108,875 | 1,220 | 2.449 | 2.507 / 2.506 | 7.22 | 0.72 | 0.24 |
+| Ours p32/d8/pool2, skip2 | 210,043 | 1,220 | 2.404 | 2.456 / 2.456 | 14.11 | 1.41 | 0.46 |
+| LSTM-256 (E64) | 338,395 | 1,220 | — | 2.171 (T=256) | 20.3 | 2.03 | 0.68 |
+| Transformer-256×2 (E64) | 1,658,907 | 1,220 | — | 2.427 (T=256) | 111.3 | 11.13 | 3.71 |
+
+The calibration (§411) alone moved p16/d8 from 2.899 to 2.719. Width beats depth at this budget: p32/d4 2.507 vs p16/d8
+2.719. Depth helps at width 64: p32/d8 2.456. T = 256 scoring changes nothing (<.001), so context beyond about 64
+characters is unused. The native arms remain behind the one-pass LSTM-256 (2.171) with fewer parameters and less
+fitting work. The best is .03 bpc behind the one-pass Transformer-256×2 (2.427) with 1/8 of its parameters and 1/8 of its
+fitting work; the work estimates use different conventions, so the work comparison is estimated. THEORY §413 diagnoses
+the gap: in this path the race address receives only first-time clock credit, so pools fragment memory, and active width
+is small. The v4 diagnostics (pool 1/2/4, linearized read and read+write route credit, width 128) test it.
+
 ## Compiled layer steps: 4.1× language and 3.4× DVS training throughput, contract-equal — 3 October
 
 THEORY §412. The batched native core was dispatch-bound: a 64-lane language window cost nearly as much as a 128-lane
