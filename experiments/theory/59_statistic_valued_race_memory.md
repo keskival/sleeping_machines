@@ -1531,3 +1531,26 @@ fitting per character; 8 selected writes) scored DEV 2.114 / test 2.180 bpc (T =
 width 64, credited pool 4 gained .027. At width 128 the untied gain nearly vanishes, as the capacity–exposure law (§398)
 predicts: each untied unit's P×P maps see about 1/U of the writes, and P² grows with width. The v6 tied-pool arms (shared
 maps, private keys, clocks, timescales and memories) test the prescribed fix.
+
+## 415. Toward supremacy at 10M: levers ranked by completed evidence, criteria fixed before the multi-pass results
+
+**Where we stand (one pass, 10M, test bpc, single seeds).** The best native model is p64/d4 with route credit:
+2.184 at pool 2 and 2.180 at pool 4 (T = 256 2.1795). Exact winner-only inference is 0.61 MFLOPs per position. The matched
+one-pass LSTM-256 scores 2.171 (0.68 inference, estimated) and the Transformer-256×2 2.427. The strongest saved 10M
+references are multi-pass: Transformer-256×4, 4 passes, 1.908 (about 889 TFLOPs estimated); LSTM-512, 6 passes, 1.799
+(about 433 TFLOPs).
+
+**Levers, by measured effect.** (1) Route credit: .137 at p32/d4, .130 at p32/d8. It is the architecture's own
+mechanism and now the default. (2) Width: p32 → p64 with credit gave .186. p96 starts slower at the same lr (DEV first 50K
+2.555 vs 2.490 at window 400), so lr is probably mis-scaled for width, which is the next sweep. (3) Credited capacity: +.027
+at p32, +.004 at p64 untied. Tied maps with private state (§398) are queued to remove the exposure dilution. (4) Depth: +.044
+with credit at p32. (5) Passes: untested for the native model. Every completed native row is one pass, and the references
+gain about .37 (LSTM) and .52 (Transformer) from more passes and size. (6) Horizon: learned half-lives under 30 characters;
+the v6 horizon arms test it. The write-address credit is withdrawn (two divergences, no gain).
+
+**Criteria, fixed now.** A 10M supremacy claim needs a completed native row that is better on test bpc than a saved
+reference at the same or fewer optimizer updates, with lower whole-fit and inference work under the stated conventions. It
+also needs a second seed within the reported margin. v8 runs p64/d4 pool 2 + credit for 4 passes (4,880 updates, the
+Transformer-256×4 step count; about 107 TFLOPs estimated). If it scores below 1.908, it beats that Transformer at the same
+update count with about one eighth of its estimated fitting work. Against LSTM-512 (1.799) the claim needs a wider or tied
+model and more passes. Pending cells stay empty.
