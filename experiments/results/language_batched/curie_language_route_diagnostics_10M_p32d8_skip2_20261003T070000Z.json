@@ -1,0 +1,101 @@
+{
+  "result": "experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json",
+  "chars": 50000,
+  "segment": 128,
+  "routing": [
+    {
+      "depth": 0,
+      "mean_max_pi": 0.8169251651508672,
+      "mean_entropy_bits": 0.48277043118254215,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.5170673131942749,
+      "mean_pi_per_unit": [
+        0.4576573580783948,
+        0.5423426419216052
+      ]
+    },
+    {
+      "depth": 1,
+      "mean_max_pi": 0.9160865467727973,
+      "mean_entropy_bits": 0.2637727762724884,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.7453475594520569,
+      "mean_pi_per_unit": [
+        0.5400852814510673,
+        0.4599147185489328
+      ]
+    },
+    {
+      "depth": 2,
+      "mean_max_pi": 0.9092524408867252,
+      "mean_entropy_bits": 0.29495775201946045,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.7140124440193176,
+      "mean_pi_per_unit": [
+        0.474358948759303,
+        0.5256410512406969
+      ]
+    },
+    {
+      "depth": 3,
+      "mean_max_pi": 0.8936407744186136,
+      "mean_entropy_bits": 0.3196154442571254,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.6894931793212891,
+      "mean_pi_per_unit": [
+        0.5285866766605082,
+        0.47141332333949176
+      ]
+    },
+    {
+      "depth": 4,
+      "mean_max_pi": 0.9162664376290501,
+      "mean_entropy_bits": 0.27126539678251116,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.7388771772384644,
+      "mean_pi_per_unit": [
+        0.3907154810603317,
+        0.6092845189396683
+      ]
+    },
+    {
+      "depth": 5,
+      "mean_max_pi": 0.9546333054269126,
+      "mean_entropy_bits": 0.14194860161890913,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.8655748963356018,
+      "mean_pi_per_unit": [
+        0.348599680214901,
+        0.651400319785099
+      ]
+    },
+    {
+      "depth": 6,
+      "mean_max_pi": 0.936637144854808,
+      "mean_entropy_bits": 0.1986064642741669,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.8115935325622559,
+      "mean_pi_per_unit": [
+        0.4201025822260517,
+        0.5798974177739483
+      ]
+    },
+    {
+      "depth": 7,
+      "mean_max_pi": 0.8884666303129654,
+      "mean_entropy_bits": 0.28494827314423465,
+      "max_entropy_bits": 1.0,
+      "frac_max_pi_above_0_9": 0.7236177921295166,
+      "mean_pi_per_unit": [
+        0.5887805542670193,
+        0.41121944573298064
+      ]
+    }
+  ],
+  "bpc": {
+    "sampled": 2.4699645361856004,
+    "argmax_routing": 2.4609848764232383,
+    "mixture_4_seeds": 2.447766779897233
+  },
+  "scope": "forward-only diagnostic on DEV text8[90M:90M+chars]; argmax routing also changes delays (T = 1/max rate)"
+}

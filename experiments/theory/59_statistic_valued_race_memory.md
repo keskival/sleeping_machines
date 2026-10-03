@@ -1374,3 +1374,13 @@ bpc. The pool-2 arm at the same width and depth (210,043 parameters, 1.41 MFLOPs
 stored capacity at unchanged selected activity made the model worse when the address has no value credit, as the
 fragmentation argument predicts. Single seed, depth 8. The v4 queue tests the same at depth 4 with and without route
 credit.
+
+**§413 revision from the routing diagnostics (08:50 UTC; experiments/language_route_diagnostics.py, forward only, DEV
+first 50K).** The statement "routing is near-uniform" holds at initialization only. After the one-pass fit, the p32/d8 pool-2
+races are sharp and balanced: mean max π .82–.96 per layer, 52–87% of races above .9, unit usage 35/65–54/46. At pool 4,
+mean max π is .69–.84, usage 15–35% per unit, entropy .47–1.0 of 2 bits. The timing credit sharpens races (shorter delays),
+so the address is decisive but trained by timing, not by predictive value. Fragmentation needs an address that is not
+aligned with prediction, not a random one, so the pool-4 loss stays consistent with it. Routing noise is a small part of
+the gap: argmax routing is .009 (pool 2) / .006 (pool 4) bpc better than sampled, and a four-seed probability mixture
+.022 / .019 better. These are diagnostics, not reported scores. The decisive test remains whether value credit (linear,
+linear_rw) changes what the address encodes and improves quality.
