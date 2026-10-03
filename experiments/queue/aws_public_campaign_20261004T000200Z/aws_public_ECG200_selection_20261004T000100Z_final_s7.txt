@@ -1,0 +1,1 @@
+aws_public_ECG200_selection_20261004T000100Z_final_s7 experiments/public_benchmarks/run.py --stage final --tag aws_public_ECG200_selection_20261004T000100Z_final_s7 --dataset ECG200 --selection experiments/results/public_benchmarks/aws_public_ECG200_screen_p32d4u4_20261004T000100Z.json --seed 7 --epochs 13 --payload 32 --depth 4 --pool 4 --heads 2 --lr 0.003 --batch 32
