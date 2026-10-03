@@ -2,7 +2,9 @@
 
 ## Current checkpoint — 3 October01:08 UTC
 
-Main is rebased with shared AWS changes and has no unresolved conflict; four
+Main is rebased with shared AWS changes and has no unresolved conflict.
+Direct HTTPS push is unavailable (terminal credentials absent); completed
+commits remain on main for the host/application sync. HTTPS fetch succeeds. Four
 old autostashes intact. Latest generated REPORT/PDF180pages, guarded stateful-accumulator
 publication012500Z completes25.769s with source/bounds/orphan checks. Completed sources
 and numerical artifacts stay frozen. No local training/job active; host memory
