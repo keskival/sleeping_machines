@@ -6,7 +6,9 @@ driver (exact batched training, §405):
   --weight-decay w   decoupled weight decay (AdamW) on all model parameters;
   --input-noise s    training-only Gaussian noise (std s) on the normalized packet contents (query flag untouched),
                      drawn from a dedicated generator seeded by (seed, epoch, window) so race noise is unchanged;
-  --bins 4           coarse 250 ms packets through the AWS coarse loader (aws_coarse_native.load).
+  --bins 4           coarse 250 ms packets through the AWS coarse loader (aws_coarse_native.load);
+  --clip c           global gradient-norm clip (base 1); depth-4 gradients are ~3x larger than depth 2, so a fixed clip
+                     shrinks deep updates more (§408).
 Evaluation is unchanged (no noise).
 """
 from contextlib import contextmanager
@@ -27,6 +29,7 @@ import dvs_native_benchmark as N  # noqa: E402
 def parser():
     p = BL.parser(); p.add_argument('--weight-decay', type=float, default=0.)
     p.add_argument('--input-noise', type=float, default=0.); p.add_argument('--bins', type=int, choices=(4, 20), default=20)
+    p.add_argument('--clip', type=float, default=1., help='global gradient-norm clip (base driver uses 1)')
     return p
 
 
@@ -47,7 +50,15 @@ def noisy(rows, std, seed):
 
 def train_window(model, optimizer, rows, a, epoch, trace=False):
     window_seed = (a.seed * 1_000_003 + epoch * 10_007 + rows[0]['index']) % 2 ** 32
-    return BL.train_window(model, optimizer, noisy(rows, a.input_noise, window_seed), a, epoch, trace)
+    clip = getattr(a, 'clip', 1.)
+    if clip == 1.:
+        return BL.train_window(model, optimizer, noisy(rows, a.input_noise, window_seed), a, epoch, trace)
+    original = torch.nn.utils.clip_grad_norm_
+    torch.nn.utils.clip_grad_norm_ = lambda params, max_norm, **kw: original(params, clip, **kw)
+    try:
+        return BL.train_window(model, optimizer, noisy(rows, a.input_noise, window_seed), a, epoch, trace)
+    finally:
+        torch.nn.utils.clip_grad_norm_ = original
 
 
 def load(a):
@@ -82,6 +93,6 @@ if __name__ == '__main__':
     out = ROOT / 'experiments/results/dvs_native' / (args.tag + '.json')
     result = json.loads(out.read_text())
     if result.get('status') == 'completed':
-        result['regularization'] = dict(weight_decay=args.weight_decay, input_noise=args.input_noise, bins=args.bins,
+        result['regularization'] = dict(weight_decay=args.weight_decay, input_noise=args.input_noise, bins=args.bins, clip=args.clip,
                                         optimizer='AdamW (decoupled)' if args.weight_decay > 0 else 'Adam')
         out.write_text(json.dumps(result, indent=2) + '\n')

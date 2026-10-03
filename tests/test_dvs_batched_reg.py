@@ -44,3 +44,16 @@ def test_zero_options_equal_the_batched_driver_and_adamw_patch_is_restored():
     with RG.activate(SimpleNamespace(weight_decay=.01)):
         assert torch.optim.Adam is not original
     assert torch.optim.Adam is original
+
+
+def test_clip_option_changes_the_clip_and_restores_it():
+    a = SimpleNamespace(payload=8, depth=2, heads=2, pool=2, clock_step=.05, seed=6, route_credit=False, route_races=0,
+                        weight_decay=0., input_noise=0., bins=20, clip=1e-6)
+    rows = _rows(); torch.manual_seed(0); m = BL.make_model(a).double()
+    before = [p.detach().clone() for p in m.parameters()]
+    opt = torch.optim.SGD(m.parameters(), lr=1.)
+    original = torch.nn.utils.clip_grad_norm_
+    RG.train_window(m, opt, rows, a, epoch=1)
+    assert torch.nn.utils.clip_grad_norm_ is original
+    moved = sum(float((p.detach() - b).norm()) for p, b in zip(m.parameters(), before))
+    assert moved < 1e-5   # a tiny clip scales the SGD step to almost nothing

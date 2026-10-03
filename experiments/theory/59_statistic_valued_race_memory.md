@@ -1166,3 +1166,16 @@ quality to at least the depth-2 level of the same seed, with the depth-6 gap beh
 deeper models better without generalizing better, the bottleneck is again generalization (§406). If it fits no better,
 depth is limited by something other than route credit (state conditioning, clock initialization, truncation within the
 episode), and growth by nesting (§399) is the next control.
+
+## 408. Depth-4 underfitting is not route credit; a candidate is the fixed gradient clip
+
+Batched results, seed 7: depth 4 factorized 55.2% dev (fit .688 / .718 NLL) and depth 4 with k = 8 replay credit 55.7%
+(fit .719 / .715), against depth 2 at 56.8–58.3%. Sampled replay credit does not improve depth-4 fitting. A frozen
+diagnostic on the trained depth-2 and depth-4 checkpoints rules out inter-layer transport: each layer's transport
+costs about 3% decay and .11 rad rotation over a typical delay, identical at both depths. It finds larger, not vanishing,
+gradients at depth 4 (per-layer norms 3.0–4.1 against 1.3–1.5). With a global clip of 1, the total norm (about 6.6
+against about 2) scales each depth-4 update about 3× more than at depth 2: slower learning per step, consistent with
+underfitting. Controls (queue curie_dvs_depth_opt_20261003T004500Z): clip 4 at depth 4 (seeds 7 and 8), double the
+learning rate at depth 4, and clip 4 at depth 2 as a control. Prediction (P408): a looser clip lowers the depth-4 fit NLL
+and closes at least half the dev gap to depth 2. The all-race replay-credit depth-4 runs continue as the matched
+credit test.
