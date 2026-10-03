@@ -1,0 +1,16 @@
+22:31:02 start aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z
+22:32:03 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=853052KB, MemAvailable=26760MB
+22:33:03 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949700KB, MemAvailable=27262MB
+22:34:03 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939388KB, MemAvailable=27329MB
+22:35:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939388KB, MemAvailable=27334MB
+22:36:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939464KB, MemAvailable=27339MB
+22:37:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939408KB, MemAvailable=27335MB
+22:38:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939468KB, MemAvailable=27337MB
+22:39:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949848KB, MemAvailable=27329MB
+22:40:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949692KB, MemAvailable=27315MB
+22:41:06 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949696KB, MemAvailable=27322MB
+22:42:06 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949864KB, MemAvailable=27317MB
+22:43:06 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=949760KB, MemAvailable=27322MB
+22:44:07 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939528KB, MemAvailable=27336MB
+22:45:07 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z: process group RSS=939520KB, MemAvailable=27335MB
+22:46:05 done aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p32d4u2_20261004T000100Z (exit 0)
