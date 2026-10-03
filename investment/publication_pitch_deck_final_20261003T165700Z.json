@@ -1,0 +1,138 @@
+{
+  "status": "completed",
+  "published_utc": "2026-10-03T16:50:38.721308+00:00",
+  "source_sha256": {
+    "investment/PITCH_DECK.json": "942c8c593f08fb90211bbe39b1967d746972bc628960c4e461a8524ca5175703",
+    "investment/pitch_deck_evidence_20261003.json": "388bf0eb4b36180728575c3ccb97a3e5630d8d1e2afd13480ef7cfbe735b3598",
+    "scripts/build_pitch_deck.py": "53aee2a99b32ecae110de9fff39c119a0921538dada62fe516396a27a7cb2ca9",
+    "investment/PITCH_DECK_NOTES.md": "693bb1476896e752a29dd3e1fd6082738bb02acf9e965b2e23d1cf1d24457d7c",
+    "investment/pitch_deck_benchmarks.csv": "597793e88ca215295fbb711540f01ac56998bf6419257f973347f9cfa4c36e2b",
+    "investment/pitch_deck_financial_sensitivity.csv": "4f5fe183b12569554662910de922059f98945358e147b8bf0a137f0fdbed84fd"
+  },
+  "previous_sha256": "1a516fc7a3291a2e55cf56796b5b3f11591dcd7e8e3f61cd4301e3d64a8abea0",
+  "output_sha256": "4b49c4f1270b5aa097613e55da90ee3532287edaf30f507d5a02f6c9712817af",
+  "slides": [
+    {
+      "slide": 1,
+      "characters": 438
+    },
+    {
+      "slide": 2,
+      "characters": 689
+    },
+    {
+      "slide": 3,
+      "characters": 717
+    },
+    {
+      "slide": 4,
+      "characters": 832
+    },
+    {
+      "slide": 5,
+      "characters": 725
+    },
+    {
+      "slide": 6,
+      "characters": 861
+    },
+    {
+      "slide": 7,
+      "characters": 762
+    },
+    {
+      "slide": 8,
+      "characters": 554
+    },
+    {
+      "slide": 9,
+      "characters": 766
+    },
+    {
+      "slide": 10,
+      "characters": 644
+    },
+    {
+      "slide": 11,
+      "characters": 985
+    },
+    {
+      "slide": 12,
+      "characters": 787
+    },
+    {
+      "slide": 13,
+      "characters": 859
+    },
+    {
+      "slide": 14,
+      "characters": 808
+    },
+    {
+      "slide": 15,
+      "characters": 664
+    },
+    {
+      "slide": 16,
+      "characters": 943
+    },
+    {
+      "slide": 17,
+      "characters": 806
+    },
+    {
+      "slide": 18,
+      "characters": 946
+    },
+    {
+      "slide": 19,
+      "characters": 617
+    },
+    {
+      "slide": 20,
+      "characters": 764
+    },
+    {
+      "slide": 21,
+      "characters": 808
+    },
+    {
+      "slide": 22,
+      "characters": 583
+    },
+    {
+      "slide": 23,
+      "characters": 1073
+    },
+    {
+      "slide": 24,
+      "characters": 1010
+    },
+    {
+      "slide": 25,
+      "characters": 1016
+    },
+    {
+      "slide": 26,
+      "characters": 660
+    },
+    {
+      "slide": 27,
+      "characters": 1438
+    },
+    {
+      "slide": 28,
+      "characters": 1677
+    }
+  ],
+  "guards": {
+    "threads": 1,
+    "rss_kib": 300000,
+    "address_space_kib": 1000000,
+    "min_available_mib": 8192,
+    "timeout_s": 120
+  },
+  "render_wall_s": 1.1349224949954078,
+  "peak_render_rss_kib": 39764,
+  "scope": "Saved evidence, public-source research and financial scenarios only; no numerical model runtime"
+}

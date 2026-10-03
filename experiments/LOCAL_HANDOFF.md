@@ -1,5 +1,47 @@
 # Local host: current research continuation
 
+## Private pitch deck and €3M proposal — 3 October, 16:55 UTC
+
+User requested a full pitch deck, public founder research, strategic fit with
+AMD/Intel/Google, a €3M initial raise, and controlled future disclosure after
+making the GitHub repository private. No external publication or outreach was
+performed. Treat subsequent public progress disclosure as a deliberate founder
+decision; automatic repository work remains inside the now-private repository.
+Sole founder is Tero Keski-Valkama; preserve research co-author Karoliina
+Salminen's credit and leave contribution/employer/IP ownership diligence open.
+
+investment/sleeping_machines_pitch_deck.pdf is a reviewed 28-slide, 16:9 private
+deck with editable PITCH_DECK.json, ~3,950-word speaker/diligence notes, complete
+15-row same-unit CSV, frozen raw-parent hashes, financial sensitivities and a
+curated 34-member private diligence ZIP. The newest completed 10M p96 quality,
+credit ablations, fixed-write pool expansion, backend boundary and costed online
+pilot are prominent. No pending 90M quality, chip-energy claim or customer
+interest is invented. Public founder roles are labelled self-reported; primary
+EPO EP4148389A2 confirms named inventorship with HERE as applicant, not venture IP.
+
+Proposed €3M / 18-month allocation: team1.35M, compute0.90M, hardware feasibility
+0.25M, IP/legal/ops0.20M, reserve0.30M. Average six FTE at150k fully loaded/year
+is an explicit budget assumption. €50M priced pre-money is the bullish
+negotiating thesis, €100M a stretch; new-investor stakes5.6604%/2.9126% before
+other terms. Reverse-underwriting requires6.7426%/13.4852% success odds under
+assumed10Bexit/30%retention/10years/15%discount/zero failure. These are conditions,
+not inferred probabilities or appraised prices. Old $10M memo retained as history;
+investment/README.md directs current discussions to the new full deck.
+
+AMD's primary2024 acquisition releases establish the~$665M Silo AI transaction,
+Poro/Viking on AMD-powered LUMI, team/software/enterprise strategic rationale.
+Liquid AI financing, Intel Hala Point and Google TPU co-design are scoped
+precedents, not project interest or direct pre-seed comparables. LUMI is a
+supercomputer rather than a model; chip use is not established as the sole cause.
+
+Bounded one-thread/nice19 ReportLab build peaked~39MiB RSS;8GiBavailable floor,
+120s timeout,1GBaddress cap. All28page bounds/pagination,49clickable links,
+zero word-overlap candidates, financial inversions and private-pack member/hash
+checks pass. Visual review corrected wrapped metrics/title collisions and table
+footnotes. No Torch/NumPy/model runtime or training here. Existing integrated
+owner queue priorities and remaining trained sparse-parity/system-economics/
+scale/continual-learning/hardware gaps remain unchanged from previous handoff.
+
 ## Investment thesis and Appendix B repair — 3 October, 15:55 UTC
 
 User requested a coherent ambitious investment case for frontier-model and
