@@ -2390,3 +2390,14 @@ Prioritized model/queue remains90M pool2/D4 in currentprioritymanifest; then
 depth8 andwidth64, with private streamingreplay/teacher slotsunchanged.
 Gaps: trainedresidualprediction/useful-longcredit, trained90Minference/cache
 contracts, replication andcomparablequality resource evidence.
+
+AWS second90M pool2/D4 COMPLETED: T128test2.04538051/T2562.04535646,
+DEV1.96343293/1.96203997;108875params;65219.569GFfitestimate;
+.72468352MF/presentation;wholewall7642.345s. Pool4 T256gain.04694089BPC
+at1.649917xfitwork,same8writesbut16->32keys. Single seed, NOisoFLOPadvantage.
+Depth8skip2/linear90M nowRUNNING(~30Mtargets), width64next; sameprivate
+streamingreplay/teachercontinue. New source-driven report/aws_90m_language_
+evidence.py incorporatescompletedtwoarms+savedcontrols. PDF213pages rebuilt;
+ALL306priorheadinglinesretained, metrics/unitstablepass,nofooteronlypages or
+horizontaloverflow. Preservestrainedinferencependingratherthanborrowedtrace.
+Residual-credittrainedstateprotocolremains prepared,notexecuted; hostreserved.

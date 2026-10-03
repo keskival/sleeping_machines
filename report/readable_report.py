@@ -5384,6 +5384,7 @@ def blocks(M, tasks, ev):
     opening_index=next((i+1 for i,p in enumerate(pages) if p[0][1]=='Native strengths: useful time and private state'),
                        2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1)
     pages[opening_index:opening_index]=architectural_pages
+    pages.extend(runpy.run_path(str(ROOT/'report/aws_90m_language_evidence.py'))['pages']())
     pages.extend(runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['pages'](tasks['native_language_batched']))
     pages.extend(runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))['pages'](tasks['current_dvs_appendix']))
     pages.extend(runpy.run_path(str(ROOT/'report/reception_evidence.py'))['pages'](tasks['reception_evidence']))

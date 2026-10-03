@@ -2870,6 +2870,37 @@ The evidence is preserved in versioned result summaries with configurations, spl
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
 
+## Completed AWS 90M native language comparisons
+
+**Native pool4 reaches 1.998 test BPC at T256, versus 2.045 for pool2.** Both use payload32/depth4, two heads, linear local value-informed route credit and eight selected addressed writes per character. Pool4 doubles scored keys from16 to32; available receiver capacity increases. These are single-seed results, not replicated advantage.
+
+| Model | Params | Test BPC | Fit GFLOPs | Fit MF/target |
+| --- | --- | --- | --- | --- |
+| p32/D4/pool2 | 108875 | 2.045356 | 65,219.6 | 0.724684 |
+| p32/D4/pool4 | 177019 | 1.998416 | 107,606.9 | 1.195668 |
+| LSTM (6 passes) | 1199323 | 1.661015 | 3,893,396.0 | 7.210099 |
+| Transformer (4 passes) | 3238427 | 1.604369 | 8,000,253.3 | 22.223084 |
+
+Both native fits use FIT[0,90M), 89,997,312 presentations, 10,986 Adam windows, 64 lanes of128-character reset segments, cosine lr0.004, seed6. DEV[90M,91M) and test[95M,96M), 999,936 targets each; T256 is an additional scorer of the same final weights. Random segments with replacement constitute a pass-equivalent budget, not full unique coverage.
+
+Pool4 improves its matched-window10M score2.345157 to1.998416, a0.346742BPC scaling gain. At90M its0.046941BPC gain over pool2 costs1.649917x estimated fitting work. This is useful capacity with unchanged selected activity, not unchanged total work or an iso-FLOP gain.
+
+All work columns share units and divide by each model’s actual fitting presentations. Native estimates extrapolate two complete traced optimizer windows; controls use shape-based forward, 2x-forward backward and approximate clip/Adam. Validation/test, traffic and energy are excluded. Unequal parameters/passes/quality and different estimate conventions prevent comparable-quality supremacy claims.
+
+## 90M protocol, resource boundaries and next decisions
+
+Native pool4 final DEV is1.913993(T128)/1.915118(T256), test1.997194/1.998416. Pool2 DEV is1.963433/1.962040, test2.045381/2.045356. Configuration decisions use DEV; test is reporting-only. Final weights, immutable recovery milestones, source hashes and guarded logs are saved.
+
+Pool4 took10,712.749s, pool2 took7,642.345s, with fitting rates8773.50 and12361.17 targets/s. PeakRSS is recorded in their JSONs. These wall times include their own evaluation and do not establish a paired wall/energy comparison with older dense runs. The saved controls remain better in quality.
+
+Pool4 fitting work is107,606.868GF, or1.195668MF/presentation. Saved LSTM and Transformer whole-fit estimates are36.18x and74.35x greater, but their test scores are1.661 and1.604. These are raw unequal-quality/data work gaps, not achieved quality-matched savings.
+
+Inference work for these trained90M weights remains pending. A prior same-shape winner-only arithmetic trace is a separate diagnostic: trained winner/state/cache/RNG contracts and complete scoring work are required before assigning it to this quality result. Candidate scoring, cache creation and optimizer work cannot be inferred away from selected-write counts.
+
+The active90M depth8 fit and queued width64 fit test remaining scale choices. Original streaming private full replay and teacher fits continue separately: they preserve chronological state and a different counterfactual estimator. No pending score is predicted. Full causal replay, useful distant-state credit, replication and comparable-quality resources remain open.
+
+Sources: experiments/results/language_batched/aws_language_batched_90M_r2_*.json (completed full fits only), and saved aws_20260929 LSTM/Transformer90M results. The temporal-race, persistent private-state and key/value architectural case is retained.
+
 ## Appendix. Native language at 10M: the integrated core, segment-batched
 
 | Model (10M) | Params | Steps | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char | Infer MF/pos. emulator | Infer MF/pos. winner-only |
