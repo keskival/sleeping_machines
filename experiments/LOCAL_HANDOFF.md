@@ -1,5 +1,15 @@
 # Local host: current research continuation
 
+## curie: supremacy ordering, 3 October 15:10 UTC
+
+Prioritized model: native core with route credit (`--route-credit linear`, compiled). One pass at 10M: p96/d4 2.1626
+(T = 256 2.1625) is the first native row ahead of the matched one-pass LSTM-256 (2.171), with more parameters and work;
+p64/d4 2.184 / pool 4 2.180. Chain (tmux curie_reorder14; the old reorder12/chain13 were stopped at a job boundary):
+v8 (p64/d4 + credit, 4 passes, the Transformer-256×4 step count; claim criteria in §415) → v6 (routing diagnostics,
+tied pools p64/p32 pool 4 and p32 pool 8, p96 lr .002/.003, seed replicates s7/s8, horizon arms) → DVS large program
+(resumes at coarse wd0.01 s8) → DVS credit twins. AWS 90M revision 2 (route credit, p64/d4 first) awaits a push from
+the user's host.
+
 ## Status PDF reviewed and published — 3 October, 13:35 UTC
 
 At the user's request, regenerated `report/sleeping_machines_status.pdf`
