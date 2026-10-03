@@ -2300,3 +2300,14 @@ finalweights/checkpoint/JSON/logpublication, pilot-derivedRSS/timecaps and8GiB
 floor. Waitsnormalhostreservation/current3slot10Mmatrix; 90MNOTstarted.
 Upstream414exactwinner-onlyinference contracts/work are separatelysupported,
 notcurrentstreamingdriverchanges; preserveestimate/quality boundaries.
+
+AWS13:30 read-onlycheckpointthroughputforecast completed: currentteachers
+~61h each/replay~93h remainingtraining at recent rates, excludingfinalDEV;
+THREEadditional10Mfits queued. Existing90Mnormal-lockwaiter thereforecannot
+start merelywhenfirstslotfrees: reservationlastswholeimmutablematrix. Async
+schedulingpreference requested (prioritize90M via preservedcheckpoints orfinish
+10Mmatrix); nointerruptionsperformed. Concreteallocationproposal in
+AWS_90M_PRIORITY_REALLOCATION.md preservesexactprivatefullreplay/control,
+prioritizesassignedpool4linear90M, deferssharedcontrol, retainsallstate/RNG/
+logs/evidence anddiscardedworkbounds. No newcoordinatorready/executedyet.
+ForecastJSON neverusedasqualityevidence. Current3fits/publishercontinue.

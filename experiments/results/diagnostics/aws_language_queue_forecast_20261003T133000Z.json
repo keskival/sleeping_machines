@@ -1,0 +1,36 @@
+{
+  "recorded_utc": "2026-10-03T12:38:46.253941+00:00",
+  "active": [
+    {
+      "tag": "aws_depth8_language_20261002T234100Z_private_pilot_s7",
+      "first_checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_private_pilot_s7_milestone001.json",
+      "latest_checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_private_pilot_s7_milestone006.json",
+      "saved_targets": 1503232,
+      "measured_checkpoint_interval_targets_per_s": 38.31066586403804,
+      "projected_remaining_training_hours": 61.60720526058701
+    },
+    {
+      "tag": "aws_depth8_language_20261002T234100Z_depth_pilot_s7",
+      "first_checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_depth_pilot_s7_milestone001.json",
+      "latest_checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_depth_pilot_s7_milestone006.json",
+      "saved_targets": 1503232,
+      "measured_checkpoint_interval_targets_per_s": 38.45729305787927,
+      "projected_remaining_training_hours": 61.37231375082409
+    },
+    {
+      "tag": "aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7",
+      "first_checkpoint": "experiments/results/aws_language_progress/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7_milestone001.json",
+      "latest_checkpoint": "experiments/results/aws_language_progress/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7_milestone004.json",
+      "saved_targets": 1003520,
+      "measured_checkpoint_interval_targets_per_s": 26.838351053505555,
+      "projected_remaining_training_hours": 93.11384069246046
+    }
+  ],
+  "additional_pending_10m_fits": [
+    "aws_language_credit_matrix_20261003T013500Z_private_factorized_10m_s7",
+    "aws_language_winner_matrix_20261003T014100Z_depth_replay_10m_s7",
+    "aws_language_credit_matrix_20261003T013500Z_depth_factorized_10m_s7"
+  ],
+  "projected_minimum_host_reservation_delay_hours": 93.11384069246046,
+  "scope": "Operational projection at saved checkpoints, assuming measured throughput persists. Final DEV, failures/recovery, pending fits and admission overhead excluded; full90M queue delay can be longer. No projected quality, speedup or completed benchmark claim. Read-only metadata; no model/data execution."
+}
