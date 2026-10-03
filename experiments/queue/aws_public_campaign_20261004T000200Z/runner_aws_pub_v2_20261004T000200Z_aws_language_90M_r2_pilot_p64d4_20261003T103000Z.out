@@ -1,0 +1,4 @@
+23:29:02 start aws_pub_v2_20261004T000200Z_aws_language_90M_r2_pilot_p64d4_20261003T103000Z
+23:30:02 alive aws_pub_v2_20261004T000200Z_aws_language_90M_r2_pilot_p64d4_20261003T103000Z: process group RSS=1660540KB, MemAvailable=26460MB
+23:31:02 alive aws_pub_v2_20261004T000200Z_aws_language_90M_r2_pilot_p64d4_20261003T103000Z: process group RSS=1696952KB, MemAvailable=27009MB
+23:31:27 done aws_pub_v2_20261004T000200Z_aws_language_90M_r2_pilot_p64d4_20261003T103000Z (exit 0)
