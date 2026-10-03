@@ -1771,6 +1771,21 @@ def blocks(M, tasks, ev):
              'are shown in Appendix B as calibration (Theory §§393–394).'),
             ('small','This banknote comparison concerns one task. Strong synthetic order/retrieval evidence '
              'on the preceding page remains valid under its own protocols. Appendix B retains the full cross-domain comparisons and resource ledgers.')])
+        nlb={r['label']:r for r in tasks.get('native_language_batched',{}).get('native',[])}
+        ctl={r['label']:r for r in tasks.get('native_language_batched',{}).get('controls',[])}
+        credited=[r for k,r in nlb.items() if 'route credit' in k and r.get('sparse')]
+        best=min(credited,key=lambda r:r['test']) if credited else None
+        if best and 'p32/d4' in nlb and 'p32/d4 + route credit' in nlb and 'LSTM-256' in ctl:
+            pages[-1].insert(-1,('p','<b>Learned native language at 10M, one pass (THEORY §413).</b> With route credit '
+                '(the race address learns which alternative predicts better; forward values unchanged) the integrated '
+                f'native core improves from <b>{nlb["p32/d4"]["test"]:.3f} to {nlb["p32/d4 + route credit"]["test"]:.3f}</b> '
+                f'test bpc at the same size and work, and at width 128 reaches <b>{best["test"]:.3f}</b> '
+                f'(T256 {best["test256"]:.3f}) versus <b>{ctl["LSTM-256"]["test"]:.3f}</b> for the matched one-pass LSTM-256 and '
+                f'<b>{ctl["Transformer-256x2"]["test"]:.3f}</b> for the one-pass Transformer, with '
+                f'<b>{best["sparse"]/1e6:.2f}</b> MFLOPs exact winner-only inference per position versus '
+                f'{ctl["LSTM-256"]["infer"]/1e6:.2f} for the LSTM estimate. Fitting work is higher '
+                f'({best["fit"]/1e6:.2f} vs {ctl["LSTM-256"]["fit"]/1e6:.2f} MFLOPs/char, different conventions). Single seeds; '
+                'the native appendix lists every arm, including the failed write-address credit.'))
         native8=[r for r in tasks.get('native_language',[]) if r['args']['fit']==8192
                  and r['args']['seed']==6 and (r['args']['heads'],r['args']['payload'],r['args']['depth'])==(2,16,8)]
         if native8:
