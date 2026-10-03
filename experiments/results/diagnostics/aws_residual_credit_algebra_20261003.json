@@ -1,0 +1,96 @@
+{
+  "scope": "Constructed exact conditional-gradient estimator contracts, not trained-model evidence. Anchor computation cost excluded here and must be added in admission.",
+  "source_sha256": "b80940faf85b592f1c71123f7db2680ed0431b018e3baf872042ef3fe81c6817",
+  "no_anchor": {
+    "mean": [
+      1.5,
+      2.0
+    ],
+    "target": [
+      1.5,
+      2.0
+    ],
+    "covariance": [
+      [
+        13.083333333333332,
+        2.6666666666666665
+      ],
+      [
+        2.6666666666666665,
+        13.333333333333332
+      ]
+    ],
+    "covariance_trace": 26.416666666666664,
+    "incremental_expected_cost": 4.25,
+    "max_error": 1.7763568394002505e-15
+  },
+  "accurate_anchor": {
+    "mean": [
+      1.5,
+      2.0
+    ],
+    "target": [
+      1.5,
+      2.0
+    ],
+    "covariance": [
+      [
+        0.1308333333333333,
+        0.026666666666666665
+      ],
+      [
+        0.026666666666666665,
+        0.13333333333333322
+      ]
+    ],
+    "covariance_trace": 0.26416666666666655,
+    "incremental_expected_cost": 4.25,
+    "max_error": 2.7755575615628914e-17
+  },
+  "poor_anchor": {
+    "mean": [
+      1.5,
+      2.0
+    ],
+    "target": [
+      1.5,
+      2.0
+    ],
+    "covariance": [
+      [
+        1059.75,
+        216.0
+      ],
+      [
+        216.0,
+        1080.0
+      ]
+    ],
+    "covariance_trace": 2139.75,
+    "incremental_expected_cost": 4.25,
+    "max_error": 0.0
+  },
+  "exact_anchor": {
+    "mean": [
+      1.5,
+      2.0
+    ],
+    "target": [
+      1.5,
+      2.0
+    ],
+    "covariance": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "covariance_trace": 0.0,
+    "incremental_expected_cost": 4.25,
+    "max_error": 0.0
+  }
+}
