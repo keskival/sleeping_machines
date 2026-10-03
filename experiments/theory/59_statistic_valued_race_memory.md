@@ -1258,3 +1258,22 @@ by DEV bpc on text8[90M:91M], under the same declared window protocol across all
 near-identity preference and throughput constraint. text8[95M:96M] remains reporting-only after configuration selection;
 precommitting a rule does not make selection by test scores an independent test. No active fitting source, result or
 queue setting changes; the 90M selection record must bind completed DEV metrics and the fixed chosen configuration.
+
+## 411. Optimizer-step calibration of the 10M native language arms
+
+**Failure.** The first 10M arm (payload 16, depth 8, 128 lanes × 128 characters) takes 16,384 characters per Adam update,
+about 610 updates per pass. At 3.3M characters it scores 3.21 bpc on the first 50K development characters, and its training
+loss is flat near 3.06 bits between 4.9M and 5.8M characters. Earlier trained native models reached about 2.4 bpc at 32K
+characters with thousands of 16-target updates. The 10M arm is therefore update-starved, not data-starved.
+
+**Calibration.** The saved E64 controls (experiments/e64_lm_baselines.py) use batch 32 × context 256 = 8,192 characters
+per step, which gives about 1,220 steps per 10M pass, and they anneal the learning rate with a cosine schedule over all
+steps (Transformer lr 1e-3, LSTM 2e-3), for four or six passes. The v2 arms take 64 lanes × 128 = 8,192 characters per
+update (the same step count per pass), lr .004 and the controls' cosine schedule (`--cosine`), for one pass. They are
+selected by DEV bpc on text8[90M:91M] (`--dev 1000000`, per the §409 correction), and scored with E64 windows at both the
+training length T = 128 and the controls' T = 256 (`--eval-segment 256`, same weights). Mechanisms are unchanged: the
+integrated core, factorized races, sparse addressed writes, near-identity init (gates −4) on the depth-8 arms.
+
+**Scope.** One pass against the controls' four to six passes is still fewer total updates; a completed v2 arm is a
+statement about one-pass learning at this size, not an iso-update comparison. If the best v2 arm is still update-limited
+(training loss falling at the end), the 90M run inherits the step-size calibration, not the v1 one.
