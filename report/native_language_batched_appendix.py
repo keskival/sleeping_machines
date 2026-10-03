@@ -31,16 +31,18 @@ NATIVE = [
      'p64/d4/pool4 + route credit'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
-INFERENCE_MORE = 'language_batched/curie_language_batched_inference_work_20261003T120000Z.json'
-SPARSE = 'language_batched/curie_language_sparse_inference_work_20261003T120000Z.json'      # §414 winner-only, exact
+INFERENCE_MORE = ['language_batched/curie_language_batched_inference_work_20261003T120000Z.json',
+                  'language_batched/curie_language_batched_inference_work_20261003T143000Z.json']
+SPARSE = ['language_batched/curie_language_sparse_inference_work_20261003T120000Z.json',      # §414 winner-only, exact
+          'language_batched/curie_language_sparse_inference_work_20261003T143000Z.json']
 CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2')]
 
 
 def load(read):
     inference = {(r['payload'], r['depth'], r['pool']): r['unit_special_flops_per_evaluated_position']
-                 for path in (INFERENCE, INFERENCE_MORE) for r in read(path)['rows']}
+                 for path in [INFERENCE, *INFERENCE_MORE] for r in read(path)['rows']}
     sparse = {(r['payload'], r['depth'], r['pool']): r['unit_special_flops_per_evaluated_position']
-              for r in read(SPARSE)['rows']}
+              for path in SPARSE for r in read(path)['rows']}
     native = []
     for path, label in NATIVE:
         if not (RES / path).exists():

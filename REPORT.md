@@ -98,7 +98,7 @@ Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fi
 
 **Work between two learned language models.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam. This compares two learned models with each other. Near-optimal count references for this small-data regime are shown in Appendix B as calibration (Theory §§393–394).
 
-**Learned native language at 10M, one pass (THEORY §413).** With route credit (the race address learns which alternative predicts better; forward values unchanged) the integrated native core improves from **2.507 to 2.370** test bpc at the same size and work, and at width 128 reaches **2.184** (T256 2.183) versus **2.171** for the matched one-pass LSTM-256 and **2.427** for the one-pass Transformer, with **0.60** MFLOPs exact winner-only inference per position versus 0.68 for the LSTM estimate. Fitting work is higher (2.68 vs 2.03 MFLOPs/char, different conventions). Single seeds; the native appendix lists every arm, including the failed write-address credit.
+**Learned native language at 10M, one pass (THEORY §413).** With route credit (the race address learns which alternative predicts better; forward values unchanged) the integrated native core improves from **2.507 to 2.370** test bpc at the same size and work, and at width 128 reaches **2.180** (T256 2.179) versus **2.171** for the matched one-pass LSTM-256 and **2.427** for the one-pass Transformer, with **0.61** MFLOPs exact winner-only inference per position versus 0.68 for the LSTM estimate. Fitting work is higher (4.41 vs 2.03 MFLOPs/char, different conventions). Single seeds; the native appendix lists every arm, including the failed write-address credit.
 
 **Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
 
@@ -2841,7 +2841,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 | Ours p32/d4 + read and write credit | 108,875 | 1,220 | 2.384 / 2.384 | 7.28 | 0.73 | 0.24 | 0.16 |
 | Ours p64/d4 + route credit | 422,475 | 1,220 | 2.184 / 2.183 | 26.79 | 2.68 | 0.89 | 0.60 |
 | Ours p32/d8, skip2 + route credit | 210,043 | 1,220 | 2.326 / 2.326 | 14.15 | 1.42 | 0.46 | 0.31 |
-| Ours p64/d4/pool4 + route credit | 689,787 | 1,220 | 2.180 / 2.179 | 44.07 | 4.41 | — | — |
+| Ours p64/d4/pool4 + route credit | 689,787 | 1,220 | 2.180 / 2.179 | 44.07 | 4.41 | 1.46 | 0.61 |
 | E64 LSTM-256 | 338,395 | 1,220 | — / 2.171 | 20.3 | 2.03 | 0.68 | 0.68 |
 | E64 Transformer-256x2 | 1,658,907 | 1,220 | — / 2.427 | 111.3 | 11.13 | 3.71 | 3.71 |
 

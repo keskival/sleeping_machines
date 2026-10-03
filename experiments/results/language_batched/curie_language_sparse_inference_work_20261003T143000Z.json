@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "payload": 64,
+      "depth": 4,
+      "heads": 2,
+      "pool": 4,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 606689.8136160715,
+      "unit_special_flops_per_scored_target": 1132487.6520833333,
+      "key_scores_per_position": 32,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 96,
+      "depth": 4,
+      "heads": 2,
+      "pool": 2,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 1324482.6707589286,
+      "unit_special_flops_per_scored_target": 2472367.652083333,
+      "key_scores_per_position": 16,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    }
+  ]
+}
