@@ -36,7 +36,12 @@ def load(read):
         native.append(dict(label=label, parameters=r['parameters'], updates=updates, dev=r.get('dev_bpc'),
                            test=r['test_bpc'], test256=r.get('test_bpc_eval_segment'),
                            whole=w['whole_fit_unit_special_flops_estimate'], fit=w['fit_unit_special_flops_per_char_estimate'],
-                           infer=inference.get((a['payload'], a['depth'], a['pool'])), dev_window=a['dev']))
+                           infer=inference.get((a['payload'], a['depth'], a['pool'])), dev_window=a['dev'],
+                           available_slots=a['depth']*a['heads']*a['pool'],
+                           state_value_scalars=a['depth']*a['heads']*a['pool']*a['payload'],
+                           selected_writes=a['depth']*a['heads'],
+                           scored_keys=a['depth']*a['heads']*a['pool'],
+                           computed_values=a['depth']*a['heads']*a['pool']))
     estimate = runpy.run_path(str(ROOT / 'experiments/lm_training_flops.py'))['estimate_training_flops']
     controls = []
     for path, label in CONTROLS:
@@ -59,8 +64,19 @@ def pages(data):
     for r in data['controls']:
         rows.append([f"E64 {r['label']}", f"{r['parameters']:,}", f"{r['updates']:,}", f"— / {r['test']:.3f}",
                      f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}"])
+    activity_columns = ['Native model', 'State slots', 'Memory scalars', 'Writes/char', 'Keys/char', 'Values/char']
+    activity_rows = [[r['label'], str(r['available_slots']), str(r['state_value_scalars']),
+                      str(r['selected_writes']), str(r['scored_keys']), str(r['computed_values'])]
+                     for r in data['native']]
     return [[('h1', 'Appendix. Native language at 10M: the integrated core, segment-batched'),
              ('table', (columns, rows, widths)),
+             ('table', (activity_columns, activity_rows, [58, 22, 26, 22, 22, 24])),
+             ('small', 'Native mechanism counts per input position in the batched reference. Memory scalars are '
+                       'available unit-value storage per lane; timestamps, readiness bits and source context are '
+                       'additional. One value is delivered per selected head/layer write. Every candidate key and '
+                       'proposal value is computed before selection in this reference; selected activity does not '
+                       'make discovery or losing-candidate computation free. These are shape counts, not traffic '
+                       'or energy measurements.'),
              ('p', 'Integrated native core only: temporal races (factorized law), sparse addressed writes into persistent '
                    'rotating memories, transport between layers; no dense carrier and no count statistics. One pass over '
                    'text8[0:10M] in 64 lanes x 128 characters (state reset per segment, exact credit within it), lr .004 '
@@ -76,8 +92,9 @@ def pages(data):
                    'then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only '
                    'through first-time clock credit (THEORY §413), and more units then cost quality: pool 4 is worse than pool 2 '
                    '(2.498 vs 2.456), and the no-selection pool-1 control beats pool 2 at depth 4 (2.439 vs 2.507). With the '
-                   'linearized local-expectation route credit (forward values unchanged, the same work) the same p32/d4 '
+                   'linearized local-expectation route credit (forward values unchanged, about 0.3% more counted fitting work) the same p32/d4 '
                    'pool-2 model scores 2.370: .137 better than without it, .069 better than the control, and .057 better '
-                   'than the one-pass Transformer with about 1/15 of its parameters and estimated fitting work. It remains '
+                   'than the one-pass Transformer; at the matched T256 window it scores 2.371 versus 2.427, a .0554 bpc '
+                   'advantage, with about 1/15 of its parameters and estimated fitting work. It remains '
                    '.199 behind the one-pass LSTM. A write-address variant diverged and is being corrected. Single seeds; '
                    'pending arms are not filled.')]]

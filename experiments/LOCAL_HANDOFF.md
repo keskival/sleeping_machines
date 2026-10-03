@@ -1,5 +1,62 @@
 # Local host: current research continuation
 
+## Successful route credit and lazy-write audit — 3 October, 10:30 UTC
+
+**Prioritized integrated reference:** completed compiled10M p32/D4/H2/pool2
+with `--route-credit linear`, test2.370110(T128)/2.371491(T256), DEV2.313941,
+108875parameters,1220updates,9994240sampled fitting positions. It improves
+the same uncredited recipe2.506925 by.136815bpc. At matchedT256 it beats
+the saved one-pass Transformer2.427 by.0554bpc; LSTM2.171 still leads.
+Counted fitting work7.242661TF/.724684MF perposition, about.3% above the
+uncredited native7.220754TF/.722492MF. Native tracing and dense shape
+estimates retain different conventions; single-seed exploration is labelled.
+
+**Existing queues retain priority:** curie
+`queue/curie_language_batched_v5_20261003T101000Z.txt` carries value credit
+to pool4/width64perhead/depth8 and tests written-only `linear_rwn`; shared
+v6 horizon queue follows the current chain. AWSr2 native90M admission uses
+the new103000Z route-credit arms after contracts/pilots; revision1 is
+superseded without running. Preserve active sources, reservations and
+their completed results. No native job/forward/backward/profiler was
+launched from this Docker context; the physical lock remains inaccessible.
+Its roughly10.4GiB MemAvailable does not establish physical-host admission.
+
+New [142](theory/142_lazy_write_coordinates_and_credit_scope.md) and
+`check_lazy_write_geometry.py` distinguish missing stamp cancellation
+from real homogeneous-state utility. Six stdlib scalar/complex contract
+classes pass, score finite-difference maxerror2.419e-12: pure coordinate
+refresh has zero true credit but nonzero stored-only credit; raw stored-key
+read has real credit omitted by written-only; changing forget produces a
+true/stored-only sign reversal. Full finite endpoint memory+stamp Taylor
+terms still need not cancel exactly. These witnesses do not attribute
+the reported failed linear_rw fit or establish native gradients/quality.
+Enumerating both factual outcomes preserves the constructed opposite sign
+in expectation; merely attenuating that isolated component leaves ascent.
+The newly written value is not uniformly bounded by normalized control
+inputs; read/write operands use unnormalized mixed content. Conditional
+norm/error bounds and a fixed-FIT actual-write suffix/real-Adam plan are
+recorded. No replacement model or additional training queue introduced.
+
+Added dated scope corrections beside the original §413/FINDINGS statements,
+preserving the positive2.370fit and failed-write history. Report appendix
+now counts available unit slots/value scalars, selected writes/deliveries,
+all scored keys and computed candidate values for every completed native
+row; same-unit whole-fit/perposition work and existing controls remain.
+The matched-T256 advantage is explicit and the small actual work increase
+is stated. Rendered artifacts remain the publisher's responsibility;
+this turn prepares/verifies the report source, not a new PDF.
+Verification passes all199 editorial blocks, seven completed native
+mechanism-count rows/two dense controls, all30 historical136source hashes
+and quarantine. Paired recipe checks confirm shared settings,1220updates
+and9994240positions; actual work increase.3033946%, estimated whole-fit
+Transformer/native gap15.36198×, matched-T256 bpc gain.05541813.
+Existing139/141 stdlib checks pass too. Full assembly loads NumPy for
+saved evidence summaries, no Torch; no additional model test is claimed.
+
+Pending138/141 diagnostics remain behind the integrated queues. The141
+producer checkpoint/physical runner logs are still unavailable here;
+do not reconstruct weights or infer an idle host from the local lock.
+
 ## Routing measurement and horizon checkpoint — 3 October, 09:20 UTC
 
 **Physical curie remains reserved for the existing queue.** New shared

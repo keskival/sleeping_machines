@@ -1434,3 +1434,13 @@ decay and rotation as a content change, while the stamp reset that accompanies i
 grows with the gap and feeds back through key_read on memory. The corrected variant linear_rwn uses Δ_j = the newly
 written content write_j·(Input x), which is bounded through layer-normed inputs. At trained weights it adds about 10% to the
 route-gradient norm over the value credit, against 46% for linear_rw. Queued in v5.
+
+**§413 write-credit scope correction (10:30 UTC; failed attempt retained).** The derivation above identifies a
+plausible missing memory/stamp cancellation, not a measured cause of the nonfinite-gradient fit. A homogeneous
+refresh is a pure coordinate change only with matching transport generators and covariant reads. This native
+path scores stored m before age transport, and its future forget gate can differ; therefore part of m_new−m can
+carry real predictive utility. Written-only linear_rwn removes that component as well as potential coordinate noise.
+Its gate is bounded, but x_u is the unnormalized mixed input and Input is trainable, so newly-written content has
+no uniform LayerNorm norm bound. [142](142_lazy_write_coordinates_and_credit_scope.md) provides exact static
+cancellation/real-key/changing-forget/sign witnesses, the coefficient-error identity and a bounded actual-suffix
+audit plan. The successful linear arm remains the valid reference, v5 retains priority, and no new fit is launched.

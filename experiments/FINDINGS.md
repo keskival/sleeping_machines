@@ -26,6 +26,19 @@ A write-address credit computed in stored coordinates (linear_rw) diverged at wi
 as a content change. The corrected linear_rwn credits only newly written content. v5 (running) carries the credit to
 pool 4, width 128, depth 8 and linear_rwn; DVS twins with route credit follow the DVS program.
 
+**3 October, 10:30 credit-scope clarification (original evidence retained).** The completed route-credit gain
+persists at the controls' matched T256 window: native2.371491 versus Transformer2.427, .0554bpc better.
+The lazy-coordinate explanation of the failed linear_rw fit above is a hypothesis, not a causal attribution from
+its divergence alone. [142](theory/142_lazy_write_coordinates_and_credit_scope.md) and `check_lazy_write_geometry.py`
+give six static contract classes: memory-only credit can be spurious when memory/stamp changes cancel; native
+stored-key reads and input-dependent forget can instead make homogeneous refreshes have real utility, omitted
+by written-only credit. A changing-forget witness reverses the stored-only gradient sign. The write gate is bounded,
+but its incoming vector/input map are not uniformly bounded by LayerNorm. Preserve linear_rwn as the proposed
+restricted stabilizing approximation and keep its integrated v5 tests; no native quality or attribution result is
+claimed by these scalar/complex witnesses. The earlier routing/noise/maximum-horizon shorthand above also has
+the dated measurement correction beside §413 and in141: expected mass is not counted occupancy, greedy changes
+clocks, first-seed mixture gains are not the Jensen baseline, and unit-forget base half-lives do not bound context.
+
 ## Calibrated 10M native language arms: width dominates depth; still behind the one-pass LSTM — 3 October
 
 Compiled segment-batched native core (§§411–412), one pass over text8[0:10M], 64 × 128 windows (1,220 Adam updates),
