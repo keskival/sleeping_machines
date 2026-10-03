@@ -3413,3 +3413,15 @@ Ten double L8/H2/p4/pool2 private/shared contracts pass. Every factual predictio
 Target labels change pending gradients but leave both chunks' pre-update factual predictions/state/RNG identical. Target-weighted normalization,clip1,warmup total3/4,partial lr.0015 and Adam match independently summed sequential credit. Complete actual shadow/backward plus normalize/clip/warmup/optimizer operation coverage.96shadow lanes/ 160shadow events across the2+1chunks are paid; this is not the288 events of one unbroken three-target credit chunk. Different boundaries are explicitly different training objectives.
 
 Theory113;14.510s/345160KiB. Correctness-test optimizer steps, no trained data/DEV/test/quality claim. Successfully contracted note108 seeded sources are preserved; new stateful siblings are frozen too. Existing AWS10M original-teacher drivers and checkpoints unchanged. A new fitted driver must use this credit in BOTH traced and untraced windows, save replay counters and preserve accounting/chronological controls; merely swapping an accumulator into an old traced loop would omit replay in traced windows. No fitted comparator launched here.
+
+## Production causal depth8 replay driver: numerical admission complete
+
+Six private/shared×teacher/factorized/full-replay actual drivers pass
+bitwise interrupted/resumed model/Adam/cursor/RNG/counter/work recovery,
+including an UNTRACED third credit chunk. Full replay executes1536lanes/
+24576events per48-target diagnostic fit, controlszero, all operators covered.
+Upstream sequential double allparametergradient/state/firsttime contracts
+remain frozen. Tiny character fits are admission only; no languageadvantage
+claim. Original10M teacher learning savedat73728characters/288updates each.
+Full common-unit validation table and source/protocol correction:
+experiments/AWS_LANGUAGE_REPLAY_DRIVER_FINDINGS_20261003.md.
