@@ -1,0 +1,13 @@
+{"epoch": 1, "dev_accuracy": null, "wall_s": 60.60971010499634}
+{"epoch": 2, "dev_accuracy": null, "wall_s": 81.56997671502177}
+{"epoch": 3, "dev_accuracy": null, "wall_s": 102.33800349500962}
+{"epoch": 4, "dev_accuracy": null, "wall_s": 123.48567829100648}
+{"epoch": 5, "dev_accuracy": null, "wall_s": 144.4410554789938}
+{"epoch": 6, "dev_accuracy": null, "wall_s": 165.46466948802117}
+{"epoch": 7, "dev_accuracy": null, "wall_s": 186.7658696420258}
+{"epoch": 8, "dev_accuracy": null, "wall_s": 207.8006430150126}
+{"epoch": 9, "dev_accuracy": null, "wall_s": 228.9735342230415}
+{"epoch": 10, "dev_accuracy": null, "wall_s": 249.97512215399183}
+{"epoch": 11, "dev_accuracy": null, "wall_s": 271.2249542660429}
+{"epoch": 12, "dev_accuracy": null, "wall_s": 292.5429442070308}
+{"epoch": 13, "dev_accuracy": null, "wall_s": 313.5953618300264}
