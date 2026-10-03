@@ -1,0 +1,1 @@
+aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z experiments/public_benchmarks/run.py --dataset JapaneseVowels --tag aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z --epochs 40 --payload 32 --depth 4 --pool 4

@@ -1,0 +1,3 @@
+aws_language_90M_r2_p64d4_linear_20261003T103000Z AWS 90M native language arm, revision 2 (experiments/AWS_NATIVE_LANGUAGE_90M.md). One job. Resume after interruption
+# with a new job name carrying the same arguments plus --resume.
+aws_language_90M_r2_p64d4_linear_20261003T103000Z experiments/language_batched_benchmark.py --tag aws_language_batched_90M_r2_p64d4_linear_l64_lr004_cmp_s6_20261003T103000Z --payload 64 --depth 4 --fit 90000000 --dev 1000000 --segment 128 --lanes 64 --lr 0.004 --passes 1 --cosine --eval-segment 256 --compiled --seed 6 --route-credit linear --eval-every 1000 --checkpoint-every 250

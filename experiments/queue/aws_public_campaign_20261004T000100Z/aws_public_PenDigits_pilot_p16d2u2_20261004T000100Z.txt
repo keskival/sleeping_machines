@@ -1,0 +1,1 @@
+aws_public_PenDigits_pilot_p16d2u2_20261004T000100Z experiments/public_benchmarks/run.py --dataset PenDigits --tag aws_public_PenDigits_pilot_p16d2u2_20261004T000100Z --epochs 3 --payload 16 --depth 2 --pool 2

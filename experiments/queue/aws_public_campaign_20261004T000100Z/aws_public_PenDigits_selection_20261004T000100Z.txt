@@ -1,0 +1,1 @@
+aws_public_PenDigits_selection_20261004T000100Z experiments/public_benchmarks/select.py --manifest experiments/queue/aws_public_campaign_20261004T000100Z/manifest.json --dataset PenDigits --tag aws_public_PenDigits_selection_20261004T000100Z

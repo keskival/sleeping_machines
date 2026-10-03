@@ -1,0 +1,20 @@
+[
+  {
+    "dataset": "JapaneseVowels",
+    "url": "https://www.timeseriesclassification.com/aeon-toolkit/JapaneseVowels.zip",
+    "sha256": "431b1f69a7298e2545fe7ce7ddddd44adc23f705983ad7a26d29cef27b956fef",
+    "size_bytes": 2187082
+  },
+  {
+    "dataset": "ECG200",
+    "url": "https://www.timeseriesclassification.com/aeon-toolkit/ECG200.zip",
+    "sha256": "755937ea37849346ea20033666b19d17345bb039971e8fa33458b16b62c09380",
+    "size_bytes": 298857
+  },
+  {
+    "dataset": "PenDigits",
+    "url": "https://www.timeseriesclassification.com/aeon-toolkit/PenDigits.zip",
+    "sha256": "4a9a706463eb98b8773fb6c2bb24038f2855ce1f0c55d1d0109e9f0bd0052842",
+    "size_bytes": 650057
+  }
+]
