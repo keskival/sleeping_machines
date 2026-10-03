@@ -1,0 +1,132 @@
+{
+  "status": "completed",
+  "args": {
+    "dataset": "ECG200",
+    "tag": "aws_public_ECG200_nearest_20261004T000100Z"
+  },
+  "model": "1NN resampled Euclidean diagnostic control",
+  "development": {
+    "targets": 20,
+    "accuracy": 0.8,
+    "nll": 2.763103111592355,
+    "probabilities": [
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        0.9999990000010001,
+        9.99999000001e-07
+      ],
+      [
+        9.99999000001e-07,
+        0.9999990000010001
+      ]
+    ],
+    "identities": [
+      "TRAIN:0",
+      "TRAIN:1",
+      "TRAIN:5",
+      "TRAIN:8",
+      "TRAIN:9",
+      "TRAIN:10",
+      "TRAIN:11",
+      "TRAIN:19",
+      "TRAIN:41",
+      "TRAIN:42",
+      "TRAIN:66",
+      "TRAIN:69",
+      "TRAIN:77",
+      "TRAIN:79",
+      "TRAIN:86",
+      "TRAIN:90",
+      "TRAIN:92",
+      "TRAIN:93",
+      "TRAIN:95",
+      "TRAIN:97"
+    ]
+  },
+  "test": null,
+  "test_access": "None",
+  "training_examples": 80,
+  "stored_feature_bytes": 62080,
+  "work": {
+    "distance_arithmetic_flops_per_query_estimate": 23040,
+    "scope": "Subtract/square/reduction estimate only; normalization/resampling/selection not counted. Whole-fit FLOPs unknown; no complete resource claim."
+  },
+  "source_sha256": {
+    "experiments/public_benchmarks/baseline.py": "4502e60fa167cb93102fec898f005d58af35d96bab696508495a647db3069ee2",
+    "experiments/public_benchmarks/data.py": "9fccae1f26acaa16582629cc16899eef86753741b8bcc62a0de91ef1062b85ae"
+  },
+  "data_manifest_sha256": "d57fee8e92d76d9d49c8c1a3c91a443b6af34a78110c72a78b763e7c711682dc",
+  "wall_s": 0.006470188964158297,
+  "max_rss_kb": 44984
+}
