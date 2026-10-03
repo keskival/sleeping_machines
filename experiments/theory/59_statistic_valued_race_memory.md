@@ -1414,3 +1414,14 @@ also does not prove that distant history is unused. Interference and shortened e
 hypotheses. [141](141_streaming_routing_and_horizon_measurements.md) gives the derivation and a pending bounded
 streaming diagnostic with actual winners, separate head buckets, clock-preserving identity interventions and the
 correct mixture baseline. Existing completed results and the prioritized v4 credit comparisons remain unchanged.
+
+**§413 prediction (c) holds (09:45 UTC): value credit to the address turns the pool from a cost into a gain.** p32/d4
+pool 2 with the linearized local-expectation score credit π_i g·(v_i − v̄) (forward values unchanged; 108,875
+parameters; 0.725 MFLOPs fitting per character against 0.722 without it) scored **DEV 2.314 / test 2.370 bpc** (T = 256:
+2.371). That is .137 below the same model without route credit (2.507) and .069 below the no-selection pool-1 control
+(2.439). Development on the first 50K was 2.610 / 2.435 / 2.384 at windows 400/800/1200, against 2.720 / 2.558 / 2.516
+uncredited. At the same one-pass, 1,220-update protocol it is .057 below the E64 Transformer-256×2 (2.427; 1.66M
+parameters, 11.1 MFLOPs/char estimated) and .199 above LSTM-256 (2.171; 338K, 2.03). Single seed. The core claim that hard
+routes learn through counterfactual credit is now supported in language at 10M: removing that credit (the fast path's
+factorized law) cost .137 bpc. The deficit to the LSTM remains, and width, the write address (linear_rw) and memory
+horizon are the next levers.
