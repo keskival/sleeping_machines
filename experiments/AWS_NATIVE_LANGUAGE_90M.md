@@ -90,3 +90,12 @@ is covered by tests/test_compiled_episodes.py::test_tied_pool_route_credit_compi
 
 7,320 updates each (64 × 128 windows), cosine over all windows, checkpoints every 400 windows; set timeouts from the pilot
 throughput (p64 about 5,000 characters/s on curie; 60M characters ≈ 3.3 h plus evaluation).
+
+## Revision 3 (20:55 UTC): credited capacity scaling at 90M
+
+Completed on AWS: pool 2 2.045, pool 4 1.997 (route credit, p32/d4, one pass). The pool-4 gain grew from .027 at 10M to
+.048 at 90M. `queue/aws_language_90M_r3_p32d4_pool8_linear_20261003T205500Z.txt` runs pool 8 (8 selected writes per
+character unchanged; about 2.1 MFLOPs fitting per character, about 190 TFLOPs, estimate; exact winner-only inference stays
+about 0.17 MFLOPs per position). Admit it after the running revision-2 arms, before the 10M multi-pass section. RSS is
+larger than at pool 4 (curie pool 4 at p64: 2.3 GB), so set the cap from its pilot.
+
