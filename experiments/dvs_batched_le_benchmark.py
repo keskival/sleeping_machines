@@ -42,7 +42,7 @@ def parser():
     p = C.parser(); p.add_argument('--route-credit', action='store_true', help='all-race local-expectation replay credit')
     p.add_argument('--route-races', type=int, default=0, help='sample this many races per episode (0 = all), scaled R/k')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps for untraced factual passes (§412)')
-    p.add_argument('--linear-credit', choices=('none', 'linear', 'linear_rw'), default='none',
+    p.add_argument('--linear-credit', choices=('none', 'linear', 'linear_rw', 'linear_rwn'), default='none',
                    help='linearized local-expectation route credit on the factual pass (§413)')
     return p
 

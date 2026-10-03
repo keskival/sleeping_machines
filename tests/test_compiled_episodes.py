@@ -114,3 +114,17 @@ def test_read_write_route_credit_compiled_matches_eager():
     lin = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear'))
     keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key') or 'queries' in n]
     assert any(not torch.allclose(ref[1][i], lin[1][i]) for i in keys)          # write credit adds score credit
+
+
+def test_written_content_route_credit_compiled_matches_eager():
+    m, rows = _case(torch.float64)
+    plain = batched_logits(m, rows, 123, all_logits=True)
+    ref = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear_rwn'))
+    assert torch.equal(ref[0], plain.detach())
+    eager = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, step=layer_step, route_credit='linear_rwn'))
+    _close(eager, ref, 1e-10)
+    comp = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, route_credit='linear_rwn'))
+    _close(comp, ref, 1e-9)
+    rw = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear_rw'))
+    keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key')]
+    assert any(not torch.allclose(ref[1][i], rw[1][i]) for i in keys)

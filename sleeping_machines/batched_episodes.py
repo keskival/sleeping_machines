@@ -67,7 +67,8 @@ def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False
     """rows: episodes (dict with 'events'); forces: per-lane (race, alt) or None; record: list receiving each race's
     (n, U) scores in race order.  Returns (n, classes) final logits, or (n, T, classes) logits after every event when
     all_logits (positions beyond an episode's length are zero).  route_credit='linear' adds the linearized value
-    credit to the race scores, 'linear_rw' also the linearized write-address credit (forward values unchanged)."""
+    credit to the race scores, 'linear_rw' also the linearized write-address credit with D_j = m_new_j - m_j, and
+    'linear_rwn' with D_j = the newly written content (forward values unchanged)."""
     source = 0
     layers = model._stacked(source)
     D, H, U, P = model.depth, model.heads, model.pool, model.payload
@@ -125,7 +126,8 @@ def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False
                 age = (arrival[:, None, None] - prev).clamp_min(0)
                 decay = torch.exp(-age.to(dtype)[..., None] * Lp['rate'].view(H, U, P // 2) * forget[..., None]).repeat_interleave(2, -1)
                 m_new = precise_rotate(m * decay, age[..., None] * Lp['frequency'].view(H, U, P // 2))
-                m_new = m_new + write[..., None] * torch.einsum('hupq,lhuq->lhup', Lp['input'].view(H, U, P, P), x_u)
+                written = write[..., None] * torch.einsum('hupq,lhuq->lhup', Lp['input'].view(H, U, P, P), x_u)
+                m_new = m_new + written
                 y = F.layer_norm(torch.einsum('hupq,lhuq->lhup', Lp['output'].view(H, U, P, P), m_new) + x_u, (P,))
                 gate = torch.einsum('hupq,lhuq->lhup', Lp['gate_w'].view(H, U, P, P), F.gelu(y)) + Lp['gate_b'].view(H, U, P)
                 proposals = x_u + Lp['gain'] * y * torch.sigmoid(gate)
@@ -137,14 +139,17 @@ def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False
                     if record is not None:
                         record.append(scores[:, head])
                     value, delay, winner = LaneRace.apply(scores[:, head], proposals[:, head], noise, alt)
-                    if route_credit in ('linear', 'linear_rw'):
+                    if route_credit in ('linear', 'linear_rw', 'linear_rwn'):
                         value = value + linear_route_credit(scores[:, head], proposals[:, head])
                     race += 1
                     onehot = F.one_hot(winner, U).to(torch.bool) & active[:, None]          # write only active lanes
                     sel = onehot[..., None]
                     head_mem = torch.where(sel, m_new[:, head], new_mem[:, head])
-                    if route_credit == 'linear_rw':
+                    if route_credit == 'linear_rw':      # stored-coordinate change (diverged at 10M; §413)
                         head_mem = head_mem + linear_write_credit(scores[:, head], m[:, head], m_new[:, head], active)
+                    elif route_credit == 'linear_rwn':   # newly written content only (lazy decay is not a change)
+                        head_mem = head_mem + linear_write_credit(scores[:, head], torch.zeros_like(written[:, head]),
+                                                                  written[:, head], active)
                     new_mem = torch.cat([new_mem[:, :head], head_mem[:, None], new_mem[:, head + 1:]], 1)
                     new_arr = new_arr.clone(); new_arr[:, head] = torch.where(onehot, arrival[:, None], new_arr[:, head])
                     new_seen = new_seen.clone(); new_seen[:, head] = new_seen[:, head] | onehot

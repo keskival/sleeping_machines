@@ -39,7 +39,7 @@ def _transport(value, age, rate_raw, frequency):
 
 def layer_step(x, arrival, m, arr_d, seen_d, active, noise, mix_w, mix_b, query, key, key_read, clock_bias, control_w,
                control_b, rate, frequency, input_w, output_w, gate_w, gate_b, gain, transport_rate, transport_frequency,
-               linear_credit=False, write_credit=False):
+               linear_credit=False, write_credit=False, written_only=False):
     """One layer of one event for all lanes.  noise (H, U) float64 in draw order.  Returns the next x, arrival,
     the layer's new memories/arrival stamps/written masks, the head values and their arrivals."""
     n = x.shape[0]
@@ -60,7 +60,8 @@ def layer_step(x, arrival, m, arr_d, seen_d, active, noise, mix_w, mix_b, query,
     age = (arrival[:, None, None] - prev).clamp_min(0)
     decay = torch.exp(-age.to(m.dtype)[..., None] * rate.view(H, U, P // 2) * forget[..., None]).repeat_interleave(2, -1)
     m_new = _rotate(m * decay, age[..., None] * frequency.view(H, U, P // 2))
-    m_new = m_new + write[..., None] * torch.einsum('hupq,lhuq->lhup', input_w.view(H, U, P, P), x_u)
+    written = write[..., None] * torch.einsum('hupq,lhuq->lhup', input_w.view(H, U, P, P), x_u)
+    m_new = m_new + written
     y = F.layer_norm(torch.einsum('hupq,lhuq->lhup', output_w.view(H, U, P, P), m_new) + x_u, (P,))
     gate = torch.einsum('hupq,lhuq->lhup', gate_w.view(H, U, P, P), F.gelu(y)) + gate_b.view(H, U, P)
     proposals = x_u + gain * y * torch.sigmoid(gate)
@@ -80,7 +81,8 @@ def layer_step(x, arrival, m, arr_d, seen_d, active, noise, mix_w, mix_b, query,
     new_mem = torch.where(onehot[..., None], m_new, m)
     if write_credit:         # zero-valued write-address credit (batched_episodes.linear_write_credit)
         pi_w = torch.softmax(s64, -1).to(m.dtype)
-        new_mem = new_mem + (pi_w - pi_w.detach())[..., None] * (m_new - m).detach() * active[:, None, None, None].to(m.dtype)
+        delta = written if written_only else m_new - m
+        new_mem = new_mem + (pi_w - pi_w.detach())[..., None] * delta.detach() * active[:, None, None, None].to(m.dtype)
     new_arr = torch.where(onehot, arrival[:, None, None], arr_d)
     new_seen = seen_d | onehot
     arrivals = arrival[:, None] + delay                                        # (n, H)
@@ -154,7 +156,8 @@ def compiled_logits(model, rows, seed, all_logits=False, step=None, route_credit
                     Lp['key'], Lp['key_read'], Lp['clock_bias'], Lp['control_w'], Lp['control_b'], Lp['rate'],
                     Lp['frequency'], Lp['input'], Lp['output'], Lp['gate_w'], Lp['gate_b'], Lp['gain'],
                     model.transport_rate[depth], model.transport_frequency[depth],
-                    route_credit in ('linear', 'linear_rw'), route_credit == 'linear_rw')
+                    route_credit in ('linear', 'linear_rw', 'linear_rwn'), route_credit in ('linear_rw', 'linear_rwn'),
+                    route_credit == 'linear_rwn')
             ctx_vals = torch.where(active[:, None], values.reshape(n, H * P), ctx_vals)
             ctx_arr = torch.where(active[:, None], arrivals, ctx_arr)
             has_ctx = has_ctx | active
