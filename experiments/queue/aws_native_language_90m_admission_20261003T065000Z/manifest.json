@@ -1,0 +1,78 @@
+{
+  "host": "ip-172-31-47-132",
+  "jobs": [
+    {
+      "name": "aws_language_90M_contracts_20261003T063000Z",
+      "queue": "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_contracts_20261003T063000Z.txt",
+      "stage": "contracts"
+    },
+    {
+      "name": "aws_language_90M_pilot_p16d8_20261003T063000Z",
+      "queue": "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p16d8_20261003T063000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_pilot_p16d8_skip2_20261003T063000Z",
+      "arm": "1",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_pilot_p16d8_skip2_20261003T063000Z.json"
+    },
+    {
+      "name": "aws_language_90M_pilot_p32d8_20261003T063000Z",
+      "queue": "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p32d8_20261003T063000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_pilot_p32d8_skip2_20261003T063000Z",
+      "arm": "2",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_pilot_p32d8_skip2_20261003T063000Z.json"
+    },
+    {
+      "name": "aws_language_90M_pilot_p32d8_pool4_20261003T063000Z",
+      "queue": "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p32d8_pool4_20261003T063000Z.txt",
+      "stage": "pilot",
+      "tag": "aws_language_batched_90M_pilot_p32d8_pool4_skip2_20261003T063000Z",
+      "arm": "3",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_pilot_p32d8_pool4_skip2_20261003T063000Z.json"
+    },
+    {
+      "name": "aws_language_90M_p16d8_skip2_20261003T063000Z",
+      "queue": "experiments/queue/aws_language_90M_p16d8_skip2_20261003T063000Z.txt",
+      "stage": "fit",
+      "arm": "1",
+      "tag": "aws_language_batched_90M_p16d8_skip2_l64_lr004_cmp_s6_20261003T063000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_p16d8_skip2_l64_lr004_cmp_s6_20261003T063000Z.json"
+    },
+    {
+      "name": "aws_language_90M_p32d8_skip2_20261003T063000Z",
+      "queue": "experiments/queue/aws_language_90M_p32d8_skip2_20261003T063000Z.txt",
+      "stage": "fit",
+      "arm": "2",
+      "tag": "aws_language_batched_90M_p32d8_skip2_l64_lr004_cmp_s6_20261003T063000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_p32d8_skip2_l64_lr004_cmp_s6_20261003T063000Z.json"
+    },
+    {
+      "name": "aws_language_90M_p32d8_pool4_skip2_20261003T063000Z",
+      "queue": "experiments/queue/aws_language_90M_p32d8_pool4_skip2_20261003T063000Z.txt",
+      "stage": "fit",
+      "arm": "3",
+      "tag": "aws_language_batched_90M_p32d8_pool4_skip2_l64_lr004_cmp_s6_20261003T063000Z",
+      "result": "experiments/results/language_batched/aws_language_batched_90M_p32d8_pool4_skip2_l64_lr004_cmp_s6_20261003T063000Z.json"
+    }
+  ],
+  "source_sha256": {
+    "scripts/run_aws_native_language_90m.py": "8673b54e6a43183262dccd8cc03e6a79b26b597d4f4301ec56364fb103350509",
+    "experiments/queue/run_safe.sh": "7b63af673d1c9b606334a408eaaa712da8f335d30e333d196dc9e795af73b32c",
+    "experiments/language_batched_benchmark.py": "34cdbffe09f4c73190034b9b81cbe22feee2f157b21fe34510da9b39ce83541c",
+    "sleeping_machines/batched_episodes.py": "83265f63633a666e6bc788c80b4ebbde3ede468b15d38c2f60438427c75a3bc4",
+    "experiments/dvs_batched_large_benchmark.py": "a7f743ee7a3fe5a6794f73fea0638500f1b62d3dbff2578bcbd8948ca0832889",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/compiled_episodes.py": "0823966cdd7d2983aec0bfb138a84db2f976f67a4985443d0bb3393c0a8e5c23",
+    "tests/test_compiled_episodes.py": "3ed48a63ace7888f78d5f9fd72867bc3ebb5e880b2b783fcf7ccdd3d5a2ef753",
+    "tests/test_language_batched.py": "dc7e384e13e492346fae20db5a666434cd6d01303d3b2c8213ebd1c7781bb4fb",
+    "tests/test_batched_episodes.py": "a79cca5bfa652a322ec42516c681fc79324e1edb6501988317777ca3e45c7a2f",
+    "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_contracts_20261003T063000Z.txt": "a5d63b7a5f4866f115a902879c27d9db926e7d53877cc31334309cc7305c88bf",
+    "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p16d8_20261003T063000Z.txt": "d374db6d2339c71b98a7a6dce1e4746ecade48cfbc5f9f7320e89ce1c9424996",
+    "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p32d8_20261003T063000Z.txt": "bd774c84860e9f736685eba2ef76ab24de12b4ea7bd676bbdc7b665817344a8c",
+    "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/aws_language_90M_pilot_p32d8_pool4_20261003T063000Z.txt": "48de3e5903ab5d1f6a47f2b6d18fe31c4e7ba44f6344bdaa3fe921991089e0c3",
+    "experiments/queue/aws_language_90M_p16d8_skip2_20261003T063000Z.txt": "3474b8511e6560e100c6a20099064439f5470b170784c9f9eb57b3793b9537dd",
+    "experiments/queue/aws_language_90M_p32d8_skip2_20261003T063000Z.txt": "94b1b31c7947f2141f2d707dcce9bdde01da7b14adda76d514c1d5fb25de173b",
+    "experiments/queue/aws_language_90M_p32d8_pool4_skip2_20261003T063000Z.txt": "c4d95906bce086ed08049567f13293360bd2a3b38b8beee666654cb97daa073b"
+  }
+}

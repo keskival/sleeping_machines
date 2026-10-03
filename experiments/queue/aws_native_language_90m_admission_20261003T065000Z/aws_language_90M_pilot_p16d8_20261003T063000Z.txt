@@ -1,0 +1,1 @@
+aws_language_90M_pilot_p16d8_20261003T063000Z experiments/language_batched_benchmark.py --tag aws_language_batched_90M_pilot_p16d8_skip2_20261003T063000Z --payload 16 --depth 8 --skip-init-from 2 --fit 90000000 --dev 1000000 --segment 128 --lanes 64 --lr 0.004 --passes 1 --cosine --eval-segment 256 --compiled --seed 6 --max-windows 60 --trace-windows 2

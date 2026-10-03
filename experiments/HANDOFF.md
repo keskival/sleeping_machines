@@ -2238,3 +2238,17 @@ normalhostlock (3GBvirtual/1.25GBRSS/8GiBfloor/600s). Syntax/frozenhashespass,
 no numerical/modelexecution yet; optimizerrecovery/accounting/wall/learning
 stillneeded. Replay397312targetsatinspection,28GiBavailable, all3fitshealthy.
 Otherhostcompiledlanguage/DVSwork remainsseparate; avoidduplicatefit.
+
+AWS06:50 pulled565b7ac: user-assigned three90Mcompilednativearms nowpresent.
+ReadAWS_NATIVE_LANGUAGE_90M.md. Compiler/usr/bin/g++ andPython3.14Python.h
+exist. NEWserialadmissionrunner scripts/run_aws_native_language_90m.py with
+manifest queue/aws_native_language_90m_admission_20261003T065000Z splits
+contracts/pilots intoONEjobqueues, then threeexisting90Monejobqueues. Waits
+normalhostreservation (currentimmutable3slot10Mmatrix holdsit), no lockbypass.
+Pilots60windows/491520presentations ADMISSIONONLY; longtimeouts derivefrom
+90M+4Mevaluation/speed×1.5+3600s;RSSmax(2GB,1.5×pilotpeak),reject>6GB.
+Initialcontracts/pilots6GBRSS/24GBvirtual/8GiBfloor/1200s,compilethreads1;
+longRSSwatchdogretained. Eachcompletedpilot/fit autoGitpublish underpublication
+lock; sourcefrozen andfailclosed. Separate resetsegment/nativefactorizedprotocol,
+notfullcorrectedstreamingreplay. 90MNOTstarteduntilcurrentreservationreleased;
+queuewait can dominate prior4.3htraining-onlyestimate. No currentfits stopped.
