@@ -1,5 +1,22 @@
 # Local host: current research continuation
 
+## curie: compiled native training and the calibrated 10M language series, 3 October 05:45 UTC
+
+Running (tmux curie_chain10): queue curie_language_batched_v2c_20261003T054000Z (compiled, §§411–412: 64 × 128
+windows ≈ 1,220 updates per pass, lr .004, cosine, one pass, DEV text8[90M:91M], E64 windows at T = 128 and 256):
+p16/d8 skip2 → p32/d4 → p32/d8 skip2 → declared capacity arm p32/d8/pool4 skip2 (346,331 parameters ≈ one-pass
+LSTM-256's 338,395, same 16 selected writes per character). Then the large DVS program
+curie_dvs_large_20261003T013500Z, all arms --compiled. First compiled arm: 5,800 characters/s (eager 1,424);
+dev50k 2.894 at 3.3M characters (v1 3.210 at the same point; v1 final test 2.899).
+
+Pending decision: the 90M run per §409 (DEV selection among the completed 10M arms, near-identity preferred within
+.01 bpc, payload 32 if one pass fits about 20 h; compiled; 64-128 lanes). Matched one-pass references:
+e64 lstm_D10000000_s256_p1 2.171 / tf_D10000000_s256_p1 2.427 test bpc.
+
+Host notes: MemAvailable baseline is about 12 GB (other tenants), so the 8 GiB floor leaves about 4 GB. Never profile
+beside a job: a torch.profiler pass stopped every queue at 04:44. python3.13-dev was installed (sudo apt) for inductor's
+C++ kernels.
+
 ## Current checkpoint — 3 October01:08 UTC
 
 Main is rebased with shared AWS changes and has no unresolved conflict.
