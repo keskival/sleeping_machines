@@ -1,5 +1,17 @@
 # Local host: current research continuation
 
+## curie: route credit closes the 10M language gap, 3 October 12:05 UTC
+
+Prioritized integrated model: the native core with linearized local-expectation route credit
+(`--route-credit linear`), compiled, segment-batched. One-pass 10M test bpc: p32/d4 pool 2 2.370, pool 4 2.343 (credited
+capacity beyond activity), p64/d4 pool 2 **2.184** (T = 256 2.183; one-pass LSTM-256 2.171, Transformer-256×2 2.427).
+Exact winner-only inference (§414) costs 0.16–0.60 MFLOPs per position, nearly flat in pool size. Running chain
+(tmux curie_reorder12): v5 remaining arms (p32/d8 + credit, pool 4 + linear_rwn, routing diagnostics), then the DVS
+large queue, which now starts with language v7 (p64/d4 pool 4, p96/d4 pool 2, both with credit), then the DVS credit
+twins, then (tmux curie_chain13) v6 horizon arms. AWS: 90M revision 2 with route credit, p64/d4 first (needs a push
+from the user's host). Open gaps: write-address credit (linear_rwn did not help), the memory horizon (v6), multiple
+seeds, and 90M.
+
 ## Successful route credit and lazy-write audit — 3 October, 10:30 UTC
 
 **Prioritized integrated reference:** completed compiled10M p32/D4/H2/pool2
