@@ -1,5 +1,10 @@
 # Current AWS work
 
+**Queued by the user's request (3 October 06:30 UTC): native language at 90M characters.** Protocol and admission:
+[AWS_NATIVE_LANGUAGE_90M.md](AWS_NATIVE_LANGUAGE_90M.md). Contracts and pilots
+`queue/aws_language_90M_contracts_20261003T063000Z.txt`, then three one-job arms (p16/d8, p32/d8, p32/d8/pool4; all
+compiled, near-identity init, one pass, checkpointed). Admit them into free guarded slots as the current fits finish.
+
 The prioritized active integrated experiment is
 `gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`:
 common-source-seed native H2/d8/depth8, occupied sources64, private/shared

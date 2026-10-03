@@ -3,6 +3,10 @@
 Current local state: [LOCAL_HANDOFF.md](LOCAL_HANDOFF.md). Future local progress
 updates belong there; keep this shared history and AWS notes intact.
 
+**AWS, queued 3 October 06:30 UTC at the user's request:** 90M native language arms, compiled and checkpointed;
+protocol and admission steps in [AWS_NATIVE_LANGUAGE_90M.md](AWS_NATIVE_LANGUAGE_90M.md) (also listed first in
+AWS_NEXT_BATCH.md). Admit into free guarded slots after the current fits; contracts and pilots first.
+
 ## Active priority — 1 October, 07:55 UTC
 
 The corrected 64-credit smoke completed under the guard and published in 2b0d04d;

@@ -48,3 +48,38 @@ def test_language_driver_compiled_smoke(tmp_path):
         assert r['work']['fit_unit_special_flops_per_char_estimate'] > 0
     finally:
         out.unlink(missing_ok=True)
+
+
+def test_language_driver_resume_is_exact(tmp_path):
+    import torch
+    base = Path('experiments/results/language_batched')
+    tags = ['pytest_language_resume_a_tmp', 'pytest_language_resume_b_tmp']
+    paths = [base / f'{t}.json' for t in tags] + [base / 'checkpoints' / f'{t}.pt' for t in tags]
+    for q in paths:
+        q.unlink(missing_ok=True)
+    common = ['--fit', '20000', '--test', '3000', '--dev', '3000', '--segment', '32', '--lanes', '16', '--passes', '.5',
+              '--depth', '2', '--payload', '8', '--cosine', '--checkpoint-every', '5', '--eval-every', '4']
+    try:
+        subprocess.run([sys.executable, 'experiments/language_batched_benchmark.py', '--tag', tags[0], *common],
+                       check=True, capture_output=True, timeout=600)
+        state = torch.load(base / 'checkpoints' / f'{tags[0]}.pt', weights_only=False)
+        assert state['window'] == 15
+        state['args']['tag'] = tags[1]
+        torch.save(state, base / 'checkpoints' / f'{tags[1]}.pt')
+        subprocess.run([sys.executable, 'experiments/language_batched_benchmark.py', '--tag', tags[1], *common, '--resume'],
+                       check=True, capture_output=True, timeout=600)
+        a, b = (json.loads((base / f'{t}.json').read_text()) for t in tags)
+        assert a['test_bpc'] == b['test_bpc'] and a['dev_bpc'] == b['dev_bpc'] and a['curve'] == b['curve']
+        assert b['resumed_from_window'] == [15] and a['work'] == b['work']
+    finally:
+        for q in paths:
+            q.unlink(missing_ok=True)
+
+
+def test_chunked_uint8_loader_equals_text_slice():
+    import numpy as np
+    sys.path.insert(0, 'experiments')
+    from e120_shared_tasks import text_slice
+    from language_batched_benchmark import load_text
+    x = load_text(89_999_000, 25_001, chunk=7_000)
+    assert x.dtype == np.uint8 and np.array_equal(x.astype(np.int64), text_slice(89_999_000, 25_001))

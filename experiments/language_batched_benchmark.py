@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import platform
 import resource
@@ -34,6 +35,15 @@ from sleeping_machines.fast_native_core import fast_class  # noqa: E402
 EYE = np.eye(27, dtype=np.float32)
 
 
+def load_text(start, n, chunk=10_000_000):
+    """text8[start:start+n] as uint8 symbols (0-26), read in chunks: 90M characters need 90 MB, not the int64
+    temporaries of one text_slice call.  Values equal text_slice's."""
+    out = np.empty(n, np.uint8)
+    for b in range(0, n, chunk):
+        out[b:b + chunk] = text_slice(start + b, min(chunk, n - b))
+    return out
+
+
 def rows_of(text, starts, S):
     return [dict(events=[(float(t), EYE[c]) for t, c in enumerate(text[s:s + S])]) for s in starts]
 
@@ -49,7 +59,7 @@ def window_scores(model, text, S, seed, lanes):
         for b in range(0, len(starts), lanes):
             chunk = starts[b:b + lanes]
             z = LOGITS(model, rows_of(text, chunk, S), seed, all_logits=True)
-            y = torch.tensor(np.stack([text[s + 1:s + S + 1] for s in chunk]))
+            y = torch.tensor(np.stack([text[s + 1:s + S + 1] for s in chunk])).long()
             ce = F.cross_entropy(z.reshape(-1, 27), y.reshape(-1), reduction='none').view(len(chunk), S)
             for i, s in enumerate(chunk):
                 part = ce[i] if s == 0 else ce[i, half:]
@@ -74,6 +84,8 @@ def main():
     p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
     p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps (sleeping_machines/compiled_episodes.py, §412)')
+    p.add_argument('--checkpoint-every', type=int, default=0, help='windows between exact-resume checkpoints (0: none)')
+    p.add_argument('--resume', action='store_true', help='continue from this tag\'s checkpoint')
     a = p.parse_args()
     out = ROOT / 'experiments/results/language_batched' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -88,8 +100,8 @@ def main():
         inductor_config.compile_threads = 1                 # no compile-worker pool (memory floor)
         dynamo_config.cache_size_limit = 64                 # train/eval lane counts and grad modes each specialize
         LOGITS = compiled_logits
-    fit = np.array(text_slice(0, a.fit), np.int64)
-    dev = np.array(text_slice(90_000_000, a.dev), np.int64)
+    fit = load_text(0, a.fit)
+    dev = load_text(90_000_000, a.dev)
     model = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=a.payload, depth=a.depth,
                                             heads=a.heads, pool=a.pool)
     if a.skip_init_from:
@@ -119,9 +131,24 @@ def main():
                                 kernels='compiled layer steps (torch.compile/inductor, contract-tested against the batched path)'
                                 if a.compiled else 'eager batched path'))
     window_times = []
-    for w in range(total_windows):
+    checkpoint = out.parent / 'checkpoints' / f'{a.tag}.pt'
+    first, prior_wall = 0, 0.
+    if a.resume:
+        state = torch.load(checkpoint, weights_only=False)
+        if state['args'] != {k: v for k, v in vars(a).items() if k != 'resume'}:
+            raise ValueError('Checkpoint arguments differ')
+        model.load_state_dict(state['model']); opt.load_state_dict(state['optimizer'])
+        if schedule is not None:
+            schedule.load_state_dict(state['schedule'])
+        rng.bit_generator.state = state['rng']; torch.set_rng_state(state['torch_rng'])
+        first, seen, curve, ledger, traced_chars = state['window'], state['seen'], state['curve'], state['ledger'], state['traced_chars']
+        window_times, prior_wall = state['window_times'], state['wall_s']
+        result['resumed_from_window'] = result.get('resumed_from_window', []) + state.get('resumed_from_window', []) + [first]
+    elif checkpoint.exists():
+        raise ValueError('Checkpoint exists: explicit --resume required')
+    for w in range(first, total_windows):
         starts = rng.integers(0, len(fit) - S - 1, B)
-        rows = rows_of(fit, starts, S); y = torch.tensor(np.stack([fit[s + 1:s + S + 1] for s in starts]))
+        rows = rows_of(fit, starts, S); y = torch.tensor(np.stack([fit[s + 1:s + S + 1] for s in starts])).long()
         seed = 100000 + a.seed * 1000 + w
         box = {}
         def step(logits=None):
@@ -145,6 +172,15 @@ def main():
         if a.eval_every and (w + 1) % a.eval_every == 0:
             bpc, n = window_scores(model, dev[:50_000], S, 314159, B)
             curve.append(dict(window=w + 1, chars=seen, dev50k_bpc=bpc)); print(json.dumps(curve[-1]), flush=True)
+        if a.checkpoint_every and (w + 1) % a.checkpoint_every == 0 and w + 1 < total_windows:
+            checkpoint.parent.mkdir(exist_ok=True); tmp = checkpoint.with_suffix('.tmp')
+            torch.save(dict(args={k: v for k, v in vars(a).items() if k != 'resume'}, window=w + 1, seen=seen,
+                            curve=curve, ledger=ledger, traced_chars=traced_chars, window_times=window_times,
+                            wall_s=prior_wall + time.perf_counter() - started, model=model.state_dict(),
+                            optimizer=opt.state_dict(), schedule=schedule.state_dict() if schedule is not None else None,
+                            rng=rng.bit_generator.state, torch_rng=torch.get_rng_state(),
+                            resumed_from_window=result.get('resumed_from_window', [])), tmp)
+            os.replace(tmp, checkpoint)
     work_per_char = (ledger['arithmetic_flops'] + ledger['special_function_evaluations']) / traced_chars if traced_chars else None
     result.update(curve=curve, fitting_chars=seen, windows=total_windows,
                   train_chars_per_s=float(S * B / np.mean(window_times[a.trace_windows:] or window_times)),
@@ -153,14 +189,14 @@ def main():
                             scope='first windows fully traced, extrapolated per character; evaluation separate'))
     if not a.max_windows:
         result['dev_bpc'], result['dev_targets'] = window_scores(model, dev, S, 314159, B)
-        test = np.array(text_slice(95_000_000, a.test), np.int64)
+        test = load_text(95_000_000, a.test)
         result['test_bpc'], result['test_targets'] = window_scores(model, test, S, 314159, B)
         if a.eval_segment and a.eval_segment != S:      # same weights, E64 windows of another length (e.g. T=256)
             E = a.eval_segment; lanes = max(1, B * S // E)
             result['eval_segment'] = E
             result['dev_bpc_eval_segment'], _ = window_scores(model, dev, E, 314159, lanes)
             result['test_bpc_eval_segment'], result['test_targets_eval_segment'] = window_scores(model, test, E, 314159, lanes)
-    result.update(status='completed', wall_s=time.perf_counter() - started,
+    result.update(status='completed', wall_s=prior_wall + time.perf_counter() - started,
                   max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     out.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: result.get(k) for k in ('dev_bpc', 'test_bpc', 'train_chars_per_s', 'wall_s')}), flush=True)
