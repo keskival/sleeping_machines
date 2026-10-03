@@ -1,0 +1,39 @@
+{
+  "status": "recorded",
+  "args": {
+    "tag": "aws_language_coordinator_recovery_20261003T012500Z"
+  },
+  "reason": "Shared DVS-reg dependency changed on upstream; completed gesture hashes must not prevent unrelated exact-source language publication. Original language drivers untouched and learned checkpoints retained.",
+  "controls": [
+    {
+      "family": "private",
+      "checkpoint": "experiments/results/aws_depth8_language/aws_depth8_language_20261002T234100Z_private_pilot_s7.progress.pt",
+      "checkpoint_sha256": "06bda016d3407e1f979c3c8f4c3a39edc0ee855d52357db270f4fafcdae6abcf",
+      "cursor": {
+        "epoch": 1,
+        "next_target": 73728,
+        "total_loss": 185937.55387115479
+      },
+      "optimizer_updates": 288,
+      "trained_targets": 73728,
+      "initial_full_1m_dev_bpc": 5.207303356288328,
+      "source_exact": true,
+      "status": "paused_for_source_scoped_coordinator_recovery"
+    },
+    {
+      "family": "depth",
+      "checkpoint": "experiments/results/aws_depth8_language/aws_depth8_language_20261002T234100Z_depth_pilot_s7.progress.pt",
+      "checkpoint_sha256": "73848151e3377e4f648c256ad4cfb190b37156f170d1479bc19fc6dfab76ef38",
+      "cursor": {
+        "epoch": 1,
+        "next_target": 73728,
+        "total_loss": 185743.44005966187
+      },
+      "optimizer_updates": 288,
+      "trained_targets": 73728,
+      "initial_full_1m_dev_bpc": 5.13650912309516,
+      "source_exact": true,
+      "status": "paused_for_source_scoped_coordinator_recovery"
+    }
+  ]
+}
