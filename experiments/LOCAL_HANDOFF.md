@@ -2221,3 +2221,47 @@ Mechanismgaps: usefulnonlineardepthattribution,16-tokenlanguagehorizon,
 candidate/credit/optimizercost, sharednoise and generalization. No core
 substitution or blanketfix: this sibling is numerically sound but fails
 its tiny relative quality/work comparison, which is retained prominently.
+
+## Trained content/route covariance — 3 October, 05:30 UTC
+
+132local_trained_content_batch_variance_20261003T052200Z passes5groups,
+65.156873s/430804KiB. Reproduces130choice-onlyEXACT12steps48presentations:
+EVERYsavedfactual/conditionalstep loss, finalFIT/anchorpredictions and
+parameter-groupmovement match. Saves small .state.pt actualweights+warm
+12stepAdammoments and .vectors.npz allactualraw/clipped/updatevectors.
+These are reconstructedtrainedp4D4, notnewbenchmark orseed. Double EVERY-
+gradient contract, float32globalerror<=3.251e-7, actualwarmupdateerror
+<=8.665e-7, byte-recoveredNEXTweights/moments,source/state/RNG andoperator
+coveragepass. Allnew numerical/protocol/producerbytesfrozen.
+
+16pairednoise/uniform-one-site draws onoriginalFIT0..3/B4, sharednoise
+retained, SAMEchoiceA forC+A/Cbar+A;32discardedwarmclip1Adam.003updates.
+Factual/jointrawtrace7.868724/7.852481 (ratio.997936), clipped.395247/.396003
+(1.001913), actualAdam.000346709/.000345469 (.996424). Leave-one-pair-out
+ranges descriptive, noguaranteedinterval. Contenttrace.320772/.300850
+(-6.21%), choice7.571728 SAME (96.23%oftotalraw), signedcross-.023776/-.020097.
+Exposure smoothsa smallterm; choicecreditalsoreachescontents/clocks/earlier
+histories, notonlykeys. TWOactual isolated four-target steps cost
+.003325429/.005835553GF, .83135725/1.45888825MFperpresentation, nativeinfer
+.162245333MF/targetBOTH on12targets. Ratio1.754827; variance-times-work
+raw/clipped/actualAdam1.751205/1.758184/1.748551: nocomputejustification.
+Earlier48-targetwhole-fit1.706935 preserved asdifferentaccountingboundary.
+
+All32forkpredictions savedFIT0..3/adjacentunusedFIT24..31 anchors (notIID,
+DEV/test). MeanFITNLLdelta-.03524996/-.03524798, anchor-.00865158/-.00864847;
+FIT16/16improve/anchors14/16BOTH, noselection. Reconstructedoriginalscore
+exact;132baselineanchor2.38e-7differentonlynew12-targetbatchboundary.
+Totalcampaignworkunknown/notzero: reconstructed48targets, ensemble64factual/
+128fullshadowlanes2688events48componentpullbacks32discardedupdates,
+2isolatedupdates+2recoveryforks/admission/evaluation. See132/133.
+
+Reporttrained_content_variance_evidence.py/newpublisherchainspriorfrozen
+199pages. local_trained_content_variance_report_20261003T052700Z completes
+201pages35.990s, allsources/history/titles/bounds/orphans/diffchecks.
+No newcontentlongrun. Nextdistinguish conditional SITE-sampling variance
+from race-history variance using trained-state fullreturns and contracted
+native parameterprojections;16draws132varies BOTH and cannotattribute
+allnoise toonesite sampling. Keepdouble-promotion/traceuncertainty/costscope.
+AWSoriginalprivate/sharedreplay10Mmatrixstillqualitypriority. Otherhost
+reset-segmentv1completed2.899testbpc;v2calibration/v3capacityarmsuse distinct
+protocols. Selectedwritecountisnotcandidate-scoring/value/optimizercost.

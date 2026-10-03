@@ -1,0 +1,17 @@
+{"draw": 0, "raw_norm_factual": 3.8102619647979736, "raw_norm_joint": 3.8323047161102295}
+{"draw": 1, "raw_norm_factual": 3.3436551094055176, "raw_norm_joint": 3.3725645542144775}
+{"draw": 2, "raw_norm_factual": 3.1371073722839355, "raw_norm_joint": 3.13212251663208}
+{"draw": 3, "raw_norm_factual": 3.2206215858459473, "raw_norm_joint": 3.2147574424743652}
+{"draw": 4, "raw_norm_factual": 7.094079494476318, "raw_norm_joint": 7.0697174072265625}
+{"draw": 5, "raw_norm_factual": 3.3919734954833984, "raw_norm_joint": 3.392115592956543}
+{"draw": 6, "raw_norm_factual": 3.816561222076416, "raw_norm_joint": 3.8195626735687256}
+{"draw": 7, "raw_norm_factual": 6.112934112548828, "raw_norm_joint": 6.0690999031066895}
+{"draw": 8, "raw_norm_factual": 3.251073122024536, "raw_norm_joint": 3.2510886192321777}
+{"draw": 9, "raw_norm_factual": 3.2314767837524414, "raw_norm_joint": 3.2365305423736572}
+{"draw": 10, "raw_norm_factual": 3.9846959114074707, "raw_norm_joint": 4.010440826416016}
+{"draw": 11, "raw_norm_factual": 3.2716994285583496, "raw_norm_joint": 3.273132085800171}
+{"draw": 12, "raw_norm_factual": 3.222588062286377, "raw_norm_joint": 3.2189061641693115}
+{"draw": 13, "raw_norm_factual": 3.434026002883911, "raw_norm_joint": 3.413729190826416}
+{"draw": 14, "raw_norm_factual": 3.2143473625183105, "raw_norm_joint": 3.210261344909668}
+{"draw": 15, "raw_norm_factual": 3.551126003265381, "raw_norm_joint": 3.519026756286621}
+{"status": "completed", "contracts": 5, "wall_s": 65.15687312299269, "estimates": {"raw": {"factual": {"draws": 16, "sample_covariance_trace": 7.8687244138592725, "empirical_mean_squared_norm": 8.39753277138931, "noise_to_mean_squared_ratio": 0.9370281281507223}, "joint": {"draws": 16, "sample_covariance_trace": 7.852480808350441, "empirical_mean_squared_norm": 8.367171239679784, "noise_to_mean_squared_ratio": 0.9384869250806631}, "joint_to_factual_variance_ratio": 0.9979356748750506, "leave_one_pair_out_ratio_range": [0.9967303978289741, 1.0002530472261586], "empirical_mean_difference_L2": 0.023631286177092314, "scope": "16 paired draws; empirical ratio/range, no guaranteed interval or convergence claim"}, "clipped": {"factual": {"draws": 16, "sample_covariance_trace": 0.3952472626141204, "empirical_mean_squared_norm": 0.6294551584047539, "noise_to_mean_squared_ratio": 0.6279196497742695}, "joint": {"draws": 16, "sample_covariance_trace": 0.39600328143254565, "empirical_mean_squared_norm": 0.6287463716685525, "noise_to_mean_squared_ratio": 0.6298299271002413}, "joint_to_factual_variance_ratio": 1.0019127743312504, "leave_one_pair_out_ratio_range": [1.0002120384514486, 1.0028988588280603], "empirical_mean_difference_L2": 0.0056740546016, "scope": "16 paired draws; empirical ratio/range, no guaranteed interval or convergence claim"}, "update": {"factual": {"draws": 16, "sample_covariance_trace": 0.00034670906930326723, "empirical_mean_squared_norm": 0.0018323057537882105, "noise_to_mean_squared_ratio": 0.18922009527419847}, "joint": {"draws": 16, "sample_covariance_trace": 0.0003454690771454644, "empirical_mean_squared_norm": 0.0018319196251151597, "noise_to_mean_squared_ratio": 0.18858309742915014}, "joint_to_factual_variance_ratio": 0.9964235370009366, "leave_one_pair_out_ratio_range": [0.9957896360557122, 0.9974472022308694], "empirical_mean_difference_L2": 0.0003534488917648936, "scope": "16 paired draws; empirical ratio/range, no guaranteed interval or convergence claim"}}}

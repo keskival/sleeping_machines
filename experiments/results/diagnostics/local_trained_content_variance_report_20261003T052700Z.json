@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_trained_content_variance_report_20261003T052700Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "743f9b49870deebbf17a4028239423a406910b85d97de9c22fce958308db703b",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/deep_learning_diagnosis_evidence.py": "92e65a967bb33500b29c610a836986d86544f897c49fedc49a0a4f2dca9d45d7",
+    "report/depth_sampling_evidence.py": "1a96d3297d061bd6901c0c6d2c7b270c7cc1061f98390308e905fe4cadc6844c",
+    "report/actual_batch_credit_evidence.py": "4090d29ee42b6baad76d75ece8417dd2a39d7ec94cbb97134e19c52877b8ca85",
+    "report/conditional_content_evidence.py": "e1ccd753a87f811140e50612aa101a668d36bd7d8741d7a20e59bb9616455216",
+    "report/trained_content_variance_evidence.py": "5d201d7558faaa582797900734f7f986cb41d3bf10da923a9bfb1b02d963aff8",
+    "experiments/publish_trained_content_variance_report.py": "597ac1251b5a1c0511c89c9748c4f4f6308f0b108847262563af234851bb2296"
+  },
+  "pdf_pages": 201,
+  "report_sha256": "fe37d5b671f80e858d2a9238ed27bba0c246949bbd5b1723c60f034280cb0bb4",
+  "pdf_sha256": "d170216ef81a5263d4a40865a2801393480ac7aa695d01d66ceaea3856c97158",
+  "wall_s": 35.98955676499463,
+  "max_rss_kb": 273868,
+  "scope": "Completed source-bound12-step trained-state reconstruction,16 paired batch draws and32 actual warm-Adam forks; total/cross variance and isolated work retained, all earlier evidence preserved, no heldout or practical superiority."
+}
