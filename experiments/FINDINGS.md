@@ -1,5 +1,30 @@
 # Findings log
 
+## First 10M native language arm (update-starved v1) and the matched one-pass controls — 3 October
+
+Segment-batched native core (experiments/language_batched_benchmark.py; integrated AddressedEventHeads, factorized
+races, sparse addressed writes, 16 selected writes per character), payload 16 / depth 8 / heads 2 / pool 2, **54,907
+parameters**, one pass over text8[0:10M], 128 lanes × 128 characters = 16,384 characters per Adam update (~610 updates),
+lr .002 constant, clip 1, seed 6, one CPU thread, 4,619 s (2,426 fitting characters/s), RSS 1.69 GB. E64 windows at
+T = 128: **dev (text8[90M:90.2M]) 2.921, test 2.899 bpc**. Development on the first 50K characters fell 3.210 → 3.010 →
+2.911 at 3.3M/6.6M/9.8M characters, so the arm was still improving when the pass ended. Single seed, exploratory.
+
+The saved one-pass E64 controls (experiments/results/e64/*_D10000000_s256_p1.json; 1,220 steps of 32 × 256, cosine)
+are the matched-pass references. Work uses each model's saved convention (ours: traced unit/special operations on the
+first windows, extrapolated per character; controls: lm_training_flops shape estimate), the same units in every column:
+
+| Model (one pass, 10M) | Parameters | Updates | Test bpc | Whole-fit TFLOPs | Fitting MFLOPs/char |
+|---|---:|---:|---:|---:|---:|
+| Ours v1 p16/d8/pool2 (T=128 windows) | 54,907 | 610 | 2.899 | 4.04 (estimate) | 0.40 (estimate) |
+| LSTM 256 (T=256 windows) | 338,395 | 1,220 | 2.171 | 20.3 (estimate) | 2.03 (estimate) |
+| Transformer 256×2 (T=256 windows) | 1,658,907 | 1,220 | 2.427 | 111.3 (estimate) | 11.1 (estimate) |
+
+The v1 arm loses on quality with 6× fewer parameters than the LSTM, half its updates, 5× less fitting work, and a
+shorter scoring window. It is not a capacity- or update-matched comparison. §411 records the diagnosis (update
+starvation) and the v2 calibration (64 × 128 windows ≈ 1,220 updates, lr .004, cosine, DEV text8[90M:91M], scoring
+at T = 128 and 256). A v3 arm, declared before any v2 outcome, tests capacity beyond activity: p32/d8/pool4,
+346,331 parameters (≈ the LSTM's), with the same 16 selected writes per character as the pool-2 arm.
+
 ## Protocol correction: our count references were not the strongest counting model — 2 October
 
 The §393 stratified audit showed frozen KN winning only the unseen stratum. The reason is that KN's lower orders

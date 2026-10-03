@@ -1,0 +1,90 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "curie_language_batched_10M_p16d8_s6_20261003T023000Z",
+    "fit": 10000000,
+    "test": 1000000,
+    "dev": 200000,
+    "segment": 128,
+    "lanes": 128,
+    "passes": 1.0,
+    "lr": 0.002,
+    "clip": 1.0,
+    "payload": 16,
+    "depth": 8,
+    "heads": 2,
+    "pool": 2,
+    "seed": 6,
+    "eval_every": 200,
+    "max_windows": 0,
+    "trace_windows": 2,
+    "skip_init_from": 0,
+    "skip_gate_bias": -4.0
+  },
+  "parameters": 54907,
+  "source_sha256": {
+    "experiments/language_batched_benchmark.py": "b745bf999eac97d78ccf5ac118642ca29b85a469e430749d1dfbc881ac1140cf",
+    "sleeping_machines/batched_episodes.py": "83265f63633a666e6bc788c80b4ebbde3ede468b15d38c2f60438427c75a3bc4",
+    "experiments/dvs_batched_large_benchmark.py": "a7f743ee7a3fe5a6794f73fea0638500f1b62d3dbff2578bcbd8948ca0832889",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3"
+  },
+  "hardware": {
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.41",
+    "torch": "2.14.1+cpu",
+    "device": "cpu",
+    "threads": 1
+  },
+  "protocol": {
+    "fit": [
+      0,
+      10000000
+    ],
+    "dev": [
+      90000000,
+      90200000
+    ],
+    "test": [
+      95000000,
+      96000000
+    ],
+    "segment": 128,
+    "lanes": 128,
+    "state": "reset per segment",
+    "credit": "whole segment (exact BPTT within it)",
+    "race": "factorized law; shared per-step noise across lanes; per-window seed",
+    "evaluation": "E64 windows of S, stride S/2, second half scored after the first window",
+    "selection": "final weights (no development selection)"
+  },
+  "curve": [
+    {
+      "window": 200,
+      "chars": 3276800,
+      "dev50k_bpc": 3.2100622494960422
+    },
+    {
+      "window": 400,
+      "chars": 6553600,
+      "dev50k_bpc": 3.0100297796789937
+    },
+    {
+      "window": 600,
+      "chars": 9830400,
+      "dev50k_bpc": 2.9114433183544595
+    }
+  ],
+  "fitting_chars": 9994240,
+  "windows": 610,
+  "train_chars_per_s": 2426.4782969332987,
+  "work": {
+    "fit_unit_special_flops_per_char_estimate": 404515.16748046875,
+    "whole_fit_unit_special_flops_estimate": 4042821667440.0,
+    "scope": "first windows fully traced, extrapolated per character; evaluation separate"
+  },
+  "dev_bpc": 2.9213797952851124,
+  "dev_targets": 199936,
+  "test_bpc": 2.899379759852944,
+  "test_targets": 999936,
+  "wall_s": 4619.420778184998,
+  "max_rss_kb": 1687500
+}

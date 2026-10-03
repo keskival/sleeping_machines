@@ -1277,3 +1277,10 @@ integrated core, factorized races, sparse addressed writes, near-identity init (
 **Scope.** One pass against the controls' four to six passes is still fewer total updates; a completed v2 arm is a
 statement about one-pass learning at this size, not an iso-update comparison. If the best v2 arm is still update-limited
 (training loss falling at the end), the 90M run inherits the step-size calibration, not the v1 one.
+
+**v1 outcome (3 October 04:34 UTC).** The update-starved arm finished at dev 2.921 / test 2.899 bpc (T = 128; 54,907
+parameters; 4.04 TFLOPs whole fit, estimate), still improving at the end of the pass. The matched one-pass E64 controls
+score 2.171 (LSTM 256, 338K parameters, 20.3 TFLOPs) and 2.427 (Transformer 256×2, 1.66M, 111 TFLOPs) at T = 256 with
+1,220 cosine steps. Capacity and update count both differ, so the v2 arms fix the step count and the v3 arm
+p32/d8/pool4 (346,331 parameters) matches the LSTM's parameter count. The v3 arm keeps 16 selected writes per character,
+so it isolates stored capacity from selected activity.
