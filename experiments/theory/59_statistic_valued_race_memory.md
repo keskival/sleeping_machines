@@ -1179,3 +1179,13 @@ underfitting. Controls (queue curie_dvs_depth_opt_20261003T004500Z): clip 4 at d
 learning rate at depth 4, and clip 4 at depth 2 as a control. Prediction (P408): a looser clip lowers the depth-4 fit NLL
 and closes at least half the dev gap to depth 2. The all-race replay-credit depth-4 runs continue as the matched
 credit test.
+
+**§407 interim (3 October, 02:20 UTC; batched, 8 passes).** Depth 4 factorized against all-race replay credit: seed 7
+55.2% / 1.130 against 55.2% / 1.153; seed 8 59.9% / 1.093 against **64.6% / 1.021** (fit NLL .588 → .553). Mixed: a
+gain on one seed, none on the other. **Growth by nesting** (seed-7 depth-2 parent → depth 4, factorized) reaches
+**60.9%** / 1.109, the best seed-7 depth-4 result (scratch 55.2%; depth 2 at 56.8–57.8%). Depth adds something when it
+starts from a trained shallow model, which supports an optimization or initialization explanation over a pure credit
+one (one seed). Depth 6 factorized scores 59.4% / 1.086; depth 6 with k = 8 sampled replay credit collapses to 47.9% /
+1.336, so the race-sampling variance (scale R/k with many races) is harmful. Sampled replay credit needs the critic
+(§403) or all-race lanes. Seed replicates are queued (growth on seeds 6 and 8; depth 4 with and without all-race credit
+on seed 6), along with the §408 clip and learning-rate controls.
