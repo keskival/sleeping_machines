@@ -2116,3 +2116,10 @@ checks, performswinnerreuseproofs andp16smokes, resumes original73728target
 teacher controls unchanged and launches new10M correctedreplay with halfshadow
 lanes. Factorized10M controls retained. Global/slotlocks neverbypassed. New
 optimized replay tagsdistinct; originalfullreplayproductionrowsretained.
+
+WINNER-REUSE PROOF013700Z PASS: all four private/shared×T1/T3 double cases,
+EVERYparametergradientmaxerror3.26e-15, factualstate/logits/RNG bitwise same;
+shadowlanes/events exactlyHALVED, allalternativereturnsretained/no sampling.
+Measuredforward+backwork4.387707MF→2.269611MF per3targetcall (ratio.517266,
+48.2734%less). Optimizer/traffic/energy/inference excluded andnotzero. Actual
+optimizeddriverrecovery014000Z andp16learning/workchecks before10M use.

@@ -39,3 +39,28 @@ Next admissible optimization reuses factual winning-route returns, preserving
 all alternatives but halving pool2 shadow lanes/events. Independent gradient/
 state/RNG/work and actual driver recovery plus production learning smokes are
 required before long use. No winner-reuse measured gain yet.
+
+## Factual winner return reuse: equivalent gradients, less work
+
+Completed013700Z proof: all four private/shared ×1/3-token cases match EVERY
+parameter gradient to at most3.25955e-15 absolute error in double precision.
+Factual logits, private state and factual end RNG bitwise identical. All
+categorical candidate returns remain present. At pool2 the factual winner's
+detached return replaces its redundant shadow; only the losing shadow executes.
+Lanes/events exactly halve in every case. No route sampling or architecture
+substitution. Actual forced losing writes and firsttime preservation retained.
+
+Same private p4/L8/H2/pool2 three-token diagnostic; complete operator coverage,
+2FLOPs/MAC plus unit-special conventions for BOTH rows:
+
+| Replay implementation | Targets | Forward+backward GFLOPs | Forward+backward MFLOPs/target | Shadow lanes | Shadow events |
+|---|---:|---:|---:|---:|---:|
+| Original all-lane replay | 3 | 0.004387707 | 1.462569 | 96 | 288 |
+| Factual winner return reused | 3 | 0.002269611 | 0.756537 | 48 | 144 |
+
+Measured work ratio0.517266:48.2734% less forward-plus-backward work.
+These rows exclude normalization/clipping/Adam, inference and traffic/RNG/
+energy; those costs are not zero. This is an isolated implementation-work
+reduction with gradient/state equivalence, not completed language quality or
+whole-fit supremacy. Actual optimized driver recovery and p16 full fitting
+work/learning checks precede10M use. Original full replay evidence retained.
