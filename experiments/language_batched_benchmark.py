@@ -38,6 +38,9 @@ def rows_of(text, starts, S):
     return [dict(events=[(float(t), EYE[c]) for t, c in enumerate(text[s:s + S])]) for s in starts]
 
 
+LOGITS = batched_logits
+
+
 def window_scores(model, text, S, seed, lanes):
     """E64 protocol: windows of S at stride S/2; first window scored whole, later windows on their second half."""
     half = S // 2; starts = list(range(0, len(text) - S - 1, half)); bits = 0.; n = 0
@@ -45,7 +48,7 @@ def window_scores(model, text, S, seed, lanes):
     with torch.no_grad():
         for b in range(0, len(starts), lanes):
             chunk = starts[b:b + lanes]
-            z = batched_logits(model, rows_of(text, chunk, S), seed, all_logits=True)
+            z = LOGITS(model, rows_of(text, chunk, S), seed, all_logits=True)
             y = torch.tensor(np.stack([text[s + 1:s + S + 1] for s in chunk]))
             ce = F.cross_entropy(z.reshape(-1, 27), y.reshape(-1), reduction='none').view(len(chunk), S)
             for i, s in enumerate(chunk):
@@ -70,12 +73,21 @@ def main():
     p.add_argument('--skip-gate-bias', type=float, default=-4.)
     p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
     p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
+    p.add_argument('--compiled', action='store_true', help='compiled layer steps (sleeping_machines/compiled_episodes.py, §412)')
     a = p.parse_args()
     out = ROOT / 'experiments/results/language_batched' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
     if Path(a.tag).name != a.tag or out.exists():
         raise ValueError('Unique unused tag required')
     torch.set_num_threads(1); torch.manual_seed(a.seed); started = time.perf_counter()
+    global LOGITS
+    if a.compiled:
+        from torch._dynamo import config as dynamo_config
+        from torch._inductor import config as inductor_config
+        from sleeping_machines.compiled_episodes import compiled_logits
+        inductor_config.compile_threads = 1                 # no compile-worker pool (memory floor)
+        dynamo_config.cache_size_limit = 64                 # train/eval lane counts and grad modes each specialize
+        LOGITS = compiled_logits
     fit = np.array(text_slice(0, a.fit), np.int64)
     dev = np.array(text_slice(90_000_000, a.dev), np.int64)
     model = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=a.payload, depth=a.depth,
@@ -95,29 +107,33 @@ def main():
                   source_sha256={n: hashlib.sha256((ROOT / n).read_bytes()).hexdigest() for n in
                                  ('experiments/language_batched_benchmark.py', 'sleeping_machines/batched_episodes.py',
                                   'experiments/dvs_batched_large_benchmark.py',
-                                  'sleeping_machines/fast_native_core.py', 'sleeping_machines/addressed_event_heads.py')},
+                                  'sleeping_machines/fast_native_core.py', 'sleeping_machines/addressed_event_heads.py',
+                                  'sleeping_machines/compiled_episodes.py')},
                   hardware=dict(platform=platform.platform(), torch=torch.__version__, device='cpu', threads=1),
                   protocol=dict(fit=[0, a.fit], dev=[90_000_000, 90_000_000 + a.dev], test=[95_000_000, 95_000_000 + a.test],
                                 segment=S, lanes=B, state='reset per segment', credit='whole segment (exact BPTT within it)',
                                 race='factorized law; shared per-step noise across lanes; per-window seed',
                                 evaluation='E64 windows of S, stride S/2, second half scored after the first window',
                                 selection='final weights (no development selection)',
-                                schedule='cosine annealing over all windows' if a.cosine else 'constant learning rate'))
+                                schedule='cosine annealing over all windows' if a.cosine else 'constant learning rate',
+                                kernels='compiled layer steps (torch.compile/inductor, contract-tested against the batched path)'
+                                if a.compiled else 'eager batched path'))
     window_times = []
     for w in range(total_windows):
         starts = rng.integers(0, len(fit) - S - 1, B)
         rows = rows_of(fit, starts, S); y = torch.tensor(np.stack([fit[s + 1:s + S + 1] for s in starts]))
         seed = 100000 + a.seed * 1000 + w
         box = {}
-        def step():
+        def step(logits=None):
             model.train(); opt.zero_grad(set_to_none=True)
-            z = batched_logits(model, rows, seed, all_logits=True)
+            z = (logits or LOGITS)(model, rows, seed, all_logits=True)
             loss = F.cross_entropy(z.reshape(-1, 27), y.reshape(-1))
             loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip, error_if_nonfinite=True); opt.step()
             box['loss'] = float(loss.detach())
         t = time.perf_counter()
         if w < a.trace_windows:
-            rec = capture(step); ledger = merge([ledger, rec]) if ledger else rec; traced_chars += S * B
+            # traced windows run the eager batched path: fused kernels bypass the operator tracer
+            rec = capture(lambda: step(batched_logits)); ledger = merge([ledger, rec]) if ledger else rec; traced_chars += S * B
         else:
             step()
         if schedule is not None:
