@@ -1853,3 +1853,37 @@ New reportmodule/publisher012500Z publication completed25.769s/
 275940KiB with180pages; source/layout checks pass. Numerical and
 publishing sources frozen. No local job active; no benchmark quality/10M
 replayfit promoted.
+
+## Restartable replay driver and coordinated AWS matrix, 3 October01:37 UTC
+
+Theory114 new sibling native_language_replay_benchmark.py passes12actual
+private/shared p4/L8 numerical driver contracts:83.791s/346016KiB. Synthetic
+eight targets/twoupdates;256shadowlanes/512shadowevents. EVERYweight/Adam/
+pendinggradient/state/RNG/counter/cursor, DEVselection/curve/work reproduces
+bitwise from partlyfilledtwo-target gradients and completedoneupdate. Traced
+anduntracedlearning identical; source/settings/data mismatches and completed
+overwrite refuse. No real-data fitting result or benchmark advantage.
+
+Report181pages publication retry2_013800Z completes24.038s. First013200Z and
+retry013700Z fail sourcevalidation/rollback because otherhost legitimately
+changed dvs_batched_reg_benchmark.py (configurableclip). Exact historicalbytes
+ee3d8ada... recovered from bb7125e^ and preserved in archive/frozen_sources;
+new publication wrapper resolves only this knownoriginalbinding to matching
+archivedbytes. OriginalJSONsourcekeys/hashes/metrics and olderfrozenreport
+modules unchanged. Bothfailedqueues/logs preserved; currentreport checks pass.
+
+AWS has independently completed actualsix-mode driver contracts and queued
+aws_language_credit_matrix_20261003T013500Z. PRIORITIZEDintegrated models:
+native p16/L8/H2/pool2/private fullreplay10M alongside EXACToriginalteacher
+continuations; factorized/private and depth-shared variants as slotsexit.
+Source/contracts reused from108/109/113; longnewfits remain onAWS. No duplicate
+local1025smoke or10M training is needed. Read sharedHANDOFF/theory AWScredit
+protocol for currentcoordinator state. Remaining coverage gaps:16token
+detachedcredit, allpoolkeyscoring, exhaustivewholechunkshadows and CPUemulation;
+neither whole-stream exactgradient nor isoquality/resourceadvantage established.
+
+Next complementary work: eliminate duplicate factual-winner shadow lanes by
+reusing alreadycomputed factual downstreamreturn. Samefirsttime/write outcome,
+so exact categoricalobjective/credit should be preserved; verify EVERYgradient,
+causality/RNG/state/recovery and chargedproductionwork in new frozen siblings.
+Existing AWS sources/queuedruns remain untouched. No corearchitecturedeparture.

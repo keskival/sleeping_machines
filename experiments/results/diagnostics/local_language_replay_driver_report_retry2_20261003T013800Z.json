@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_language_replay_driver_report_retry2_20261003T013800Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "91b089955337af500ca53cfcffdb1c24a52edff68ee74e1c04f90a2bfa7e5071",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/language_replay_driver_evidence.py": "745668ea3e2b2f50008a7666fcd24a5cc1da605af28e8764f7daa38b982de506",
+    "experiments/publish_language_replay_driver_report.py": "b7eefa86e571b0c689dd6fac4e6a8949ec3434cbfabee747da8eeb6b71bc3fcf"
+  },
+  "pdf_pages": 181,
+  "report_sha256": "df08ed7906db96c00510f04734d21a176ff9bdc3c9038e87b4bce0e66873536d",
+  "pdf_sha256": "b8c9510e86379573958fe97eeb774e2930a0f22436b99e745ec0dea6191d45a5",
+  "wall_s": 24.038191753003048,
+  "max_rss_kb": 275932,
+  "scope": "Completed restartable full-credit language driver numerical contracts; prior evidence retained; no fitted benchmark advantage."
+}

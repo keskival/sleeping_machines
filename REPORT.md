@@ -3476,3 +3476,18 @@ work is unknown, notzero. Final successful-work estimates must be presented
 with this <=0.041%-of10M extra-target bound, alongside raw observed lifecycle
 wall. Original full1M initialDEV versus new1025-char initialdiagnostic also
 makes startupwall unequal; final1MDEV quality/data remain matched.
+
+## Appendix B. Replay fitting driver: interrupted learning recovers exactly
+
+| L8/p4 family | Params | Targets | Updates | Whole fit GF | Fit MF/target | Infer MF/target |
+| --- | --- | --- | --- | --- | --- | --- |
+| private | 4411 | 8 | 2 | 0.008089 | 1.011185 | 0.009850 |
+| depth | 2071 | 8 | 2 | 0.008013 | 1.001668 | 0.009810 |
+
+New sibling benchmark driver ALWAYS calls the stateful full-write ReplayAccumulator. Operation tracing wraps that same call, preserving all-target shadow returns in both audited and ordinary windows. Twelve end-to-end private/shared depth8 contracts pass. Synthetic eight-target fits use two-target credit chunks, four-target optimizer windows, target-weighted normalization, clipping and warmup. This closes the traced-loop omission hazard identified in Theory114; the existing AWS original-teacher controls remain unchanged.
+
+Interrupt after the first microchunk: two targets of pending gradients, zero updates, live private memory and an unfinished work trace. Interrupt separately after the first completed update. Both resumptions reproduce EVERY learned weight, Adam field, remaining gradient, state, RNG, counter and cursor bitwise, together with all output curves, DEV selection and fitting work. Tracing and untraced learning also agree bitwise; untraced runs explicitly carry no whole-fitting work estimate.
+
+Changed source hashes, settings or input data refuse recovery; completed outputs refuse overwrite. All factual/shadow forward and backward, normalization, clipping and optimizer operations have complete numerical accounting coverage. The eight-target row pays 256 shadow lanes and512 shadow events across four detached chunks. Inference is the original cold native selected-value prefix. Whole-fit and per-target columns use the SAME actual eight-target denominator for both families; synthetic correctness fits provide no text8 quality comparison or benchmark advantage.
+
+Theory114;83.791s/346016KiB. All numerical arms ran serially inside one guarded job with an8GiB host-memory floor. Original races, score clamp, key/value separation, deep persistent state and chronological noise are retained. No larger credit horizon, new timing operator or Transformer fit is admitted by these contracts; a real-data replay fit still requires its own frozen protocol and measured throughput budget. Older AWS DVS results retain their exact original source hashes: the shared regularization driver later evolved, so publication validates its archived original bytes from Git rather than requiring the current driver. Stored results and frozen report modules are unchanged.
