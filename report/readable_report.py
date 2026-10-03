@@ -701,6 +701,8 @@ def figures(M, tasks, ev):
     FIG.mkdir(exist_ok=True)
     runpy.run_path(str(ROOT/'report/current_language_status.py'))['figure'](tasks['current_language_status'], FIG/'current_native_language_status.png')
     runpy.run_path(str(ROOT/'report/current_language_status.py'))['fitting_figure'](tasks['current_language_status'], FIG/'latest_native_language_fitting.png')
+    if tasks.get('native_language_batched'):
+        runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['figure'](tasks['native_language_batched'], FIG/'native_language_frontier.png')
     def save(fig, name):
         if name != "accomplishments":
             fig.text(.01, 1.015, "Ours = Sleeping Machines", color=blue, fontsize=8,

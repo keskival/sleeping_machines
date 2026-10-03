@@ -96,6 +96,7 @@ def pages(data):
                      for r in data['native']]
     return [[('h1', 'Appendix. Native language at 10M: the integrated core, segment-batched'),
              ('table', (columns, rows, widths)),
+             ('figure', ('native_language_frontier', 172)),
              ('table', (activity_columns, activity_rows, [49, 20, 25, 20, 20, 21, 21])),
              ('small', 'Native mechanism counts per input position. Memory scalars are '
                        'available unit-value storage per lane; timestamps, readiness bits and source context are '
@@ -138,3 +139,33 @@ def pages(data):
                    'variant trained stably at pool 2 without improving on value credit (2.384 vs 2.370) and diverged at pool 4, '
                    'so write-address credit is withdrawn. Single seeds; '
                    'pending arms are not filled.')]]
+
+
+def figure(data, out):
+    """Quality against whole-fit and inference work for every completed native row and the saved E64 references."""
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.2))
+    for ax, key, xlabel in ((axes[0], 'whole', 'Whole-fit work, TFLOPs (estimate, log scale)'),
+                            (axes[1], 'infer', 'Inference work per position, MFLOPs (log scale)')):
+        for r in data['native']:
+            x = (r['whole'] / 1e12) if key == 'whole' else ((r.get('sparse') or r['infer'] or 0) / 1e6)
+            if not x:
+                continue
+            y = r['test256'] if r['test256'] is not None else r['test']
+            credit = 'route credit' in r['label']
+            ax.scatter(x, y, color='#1f5fa8' if credit else '#9db8d9', s=34, zorder=3)
+            if credit or 'v1' in r['label']:
+                ax.annotate(r['label'].replace(' + route credit', '+c'), (x, y), fontsize=6.5, xytext=(4, 2),
+                            textcoords='offset points', color='#1f5fa8')
+        for r in data['controls']:
+            x = (r['whole'] / 1e12) if key == 'whole' else r['infer'] / 1e6
+            ax.scatter(x, r['test'], color='#d2691e', marker='s', s=34, zorder=3)
+            ax.annotate(r['label'], (x, r['test']), fontsize=6.5, xytext=(4, -9), textcoords='offset points',
+                        color='#d2691e')
+        ax.set_xscale('log'); ax.set_xlabel(xlabel); ax.set_ylabel('Test bpc (T256 where scored) — lower is better')
+        ax.grid(alpha=.25)
+    axes[0].set_title('Native core (blue; dark = route credit) vs E64 controls (orange)', fontsize=9)
+    axes[1].set_title('Native inference: exact winner-only evaluator where traced', fontsize=9)
+    fig.tight_layout()
+    fig.savefig(out, dpi=190, bbox_inches='tight', facecolor='white')
+    plt.close(fig)
