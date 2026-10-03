@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_bridge_training_report_20261003T003200Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "a12fbf9666383220d10bb9a15264b6198b0945ec4d68b36b0fbae4235d77a31d",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/bridge_training_evidence.py": "5b4e0cb26594092c002998825bcd1094ee9ac767b42ff42adc3f889ae5569f27",
+    "experiments/publish_bridge_training_report.py": "287c093f4b8bcae28dc3421b8581535e5d259c9412c24b12e959689aadb08ce9"
+  },
+  "pdf_pages": 171,
+  "report_sha256": "41dd4ef4c3c0d8272117b87f72c0dd7c7f5744294ae6afdcc49069418848fcb6",
+  "pdf_sha256": "fdf96fbd1e659987f5704aa8d25b3ae9cd0c44880cf88b2feb102d44f4d4721c",
+  "wall_s": 23.106253509002272,
+  "max_rss_kb": 273592,
+  "scope": "Completed integrated bridge contracts, matched restricted smokes and native conditional utility; prior evidence retained."
+}

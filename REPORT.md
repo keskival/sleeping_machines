@@ -3298,3 +3298,38 @@ Three saved coarse4/.25-clock native producers,984FIT/eightpasses/7872 fitting p
 2860 counted operations per prefix,2.07%, are saved under full ATen coverage. Three counterbalanced wall repeats show the Python wrapper about2% SLOWER. Arithmetic saving is supported; practical speed/supremacy is not. This explicit-query inference-only helper cannot replace ongoing-label or silence-supervised streams without a separate contract.
 
 65.025s/465,880KiB; target/repeat/query/parameter/training-rejection checks pass.8available units,4writes/event,all core scoring still paid. Same fit denominators/units and first11-prefix inference convention for both implementations.2FLOPs/MAC plus unit specials; raw preprocessing, traffic, RNG and measured energy remain separate. Verbatim former manual section preserved in appendices/aws_query_only_history_20261002T233000Z.md.
+
+## Appendix B. Bounded score bridge: integrated training contracts
+
+Eight double-precision contracts pass before fitting: alpha0 logits and all parameter/content gradients exactly nest the old batched path; positive bridge matches independent sequential factual and full first-time alternative replays; real addressed writes differ; full-route gradients, normalization, clipping and Adam agree. Partial-window model/Adam/RNG/cursor continuation is bitwise exact. Full/partial fitting stages and selected-value native inference have complete operation coverage. Explicit zero gradients in batch and absent unused sequential gradients are equivalent; any nonzero mismatch fails.
+
+| Variant | Dev acc % | Dev NLL | Whole fit GF | Fit MF/presentation | Infer MF/prefix | Presentations |
+| --- | --- | --- | --- | --- | --- | --- |
+| Hard | 31.25 | 2.281937 | 9.769170 | 152.643283 | 0.333083 | 64 |
+| Bridge .1 | 31.25 | 2.281964 | 9.827467 | 153.554179 | 0.335771 | 64 |
+| Saved p16/L2/all | 58.33 | 1.141794 | 1040.396781 | 132.164225 | 0.591779 | 7872 |
+| Saved p16/L4/k8 | 55.73 | 1.330390 | 214.394078 | 27.235020 | 1.068297 | 7872 |
+
+Matched smoke arms: seed7,p8/L4/H2/pool2,32FIT/16DEV,two passes/64 presentations,U8/lr.003,eight Adam updates,all168 races and336 alternative shadow lanes per21-event prefix.7899 parameters,16available receivers, 16key scores/eight actual writes per event,720live state bytes in the 11audited DEV prefixes. Keys/values, temporal computation, source carry and sparse persistent writes remain; fitting computes all candidate values.
+
+Both arms learn on FIT: initial/final NLL2.829119/2.037279 hard and 2.829112/2.039687 bridge. Equal31.25% small DEV accuracy; bridge NLL is worse by.00002646. Bridge adds.5967% counted fitting and.8070% inference work. Crucially, neither initial nor selected smoke model saturates a single one of5376 FIT races (max raw score2.59 initially/2.30 selected). This is integration evidence; it does not test saturation repair or nominate a larger fit.
+
+Contracts9.065s/344424KiB; first missing-versus-zero comparison failure retained. Smokes61.158/64.604s,373200/374120KiB under one-host guard. Saved references use984FIT/192DEV/eightpasses/7872presentations: different width/data/quality; raw whole-fit gaps106.498x/21.947x versus hard smoke are unsupported as efficiency advantages. Same units and target denominators within each column;2FLOPs/MAC plus unit specials, first11 DEV inference convention. Preprocessing/traffic/RNG/energy separate; no official test.
+
+## Appendix B. Restored native sensitivity has small, mixed route utility
+
+| FIT | Event/layer/head | Raw capped score | L0 minus L1 | Hard emitter credit | Bridge emitter credit |
+| --- | --- | --- | --- | --- | --- |
+| 258 | 19/0/0 | 13.9539 | +0.003911 | 0.00e+00 | +9.07e-10 |
+| 258 | 20/0/0 | 15.0771 | -0.001274 | 0.00e+00 | -2.52e-10 |
+| 258 | 20/1/0 | 15.9095 | -0.019186 | 0.00e+00 | -6.14e-11 |
+| 981 | 19/0/0 | 14.6482 | -0.007041 | 0.00e+00 | -1.57e-09 |
+| 981 | 20/0/0 | 17.8833 | -0.037535 | 0.00e+00 | -5.36e-09 |
+
+Five prespecified strictly saturated seed7 histories from theory104, fixed-pass4 producer, FIT258/981. For each, both actual alternatives write persistent receiver state at the factual FIRST arrival. Prefix winners/times are fixed; suffix clocks, messages and memory evolve with the original hard map. Original-winner replays recover all original logits/state/end RNG. Ten alternative plus five factual native forwards are paid;168additional raw dot products per diagnostic forward. These FIT labels are revealed for utility diagnosis and are no longer label-unused. No optimizer/DEV quality/test selection.
+
+L0-L1 is positive in one case, so its alternative improves NLL; four negative gaps mean the factual winner is better. Every previously blocked emitter has nonzero bridge choice sensitivity, confirmed by double analytic derivatives and finite-difference gradcheck. Absolute restored derivatives are only6.14e-11 to5.36e-9: alternative probabilities remain1.46e-7 to 8.77e-6. Restoring rank does not by itself make those routes useful or their contribution to expected risk substantial.
+
+Conditional choice risk is sum pi_i*L_i, so dR/draw0= pi0*pi1*(L0-L1)*f'(raw0). Utilities and first time are held fixed; this tests choice credit only. The bridge is applied to the current conditional score map in this derivative, not the suffix law. These numbers are not a full positive-bridge risk, joint time/content update or learning result.
+
+Audit18.432s/328716KiB; diagnostic whole arithmetic/traffic/energy unknown, not zero. Conditional two-score Fisher determinant is pi0*pi1*d0^2*d1^2 times the raw-gradient Gram determinant. Positive slopes preserve existing raw rank; confidence and nearly parallel raw directions can still suppress useful learning. Theory106/107 retain exact scopes. No automatic bridge scale-up; independently owned integrated deeper replay and reserved AWS comparisons remain the quality priority.

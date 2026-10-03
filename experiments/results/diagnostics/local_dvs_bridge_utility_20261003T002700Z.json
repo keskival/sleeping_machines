@@ -1,0 +1,508 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_dvs_bridge_utility_20261003T002700Z",
+    "bridge": "experiments/results/diagnostics/local_dvs_bounded_score_sensitivity_20261002T234600Z.json",
+    "hard_smoke": "experiments/results/dvs_native/local_dvs_score_hard_smoke_20261003T002200Z.json",
+    "bridge_smoke": "experiments/results/dvs_native/local_dvs_score_bridge_smoke_20261003T002200Z.json"
+  },
+  "source_sha256": {
+    "experiments/dvs_native_benchmark.py": "7d96e2ab4653bd036c565db7ef8ac33153e6afd8ebb34f3bc1ed3c6254b8d8a3",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_head_race_language.py": "dc478d9b2b19e4f68f61f81da3f877dc9c6a8eadebb3102824d8860a20d0fdd3",
+    "sleeping_machines/native_stream_language.py": "e344b6f3d421800d08c15cbbd8c67a4b7fd04d7d281669514c2d7690f2a1cfd9",
+    "sleeping_machines/sparse_race_language.py": "ca0b90e64fd8b3395cb91f257cb743cd778da0bda86f1f2b66835b2ad970438a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/theory/73_real_gesture_integrated_admission.md": "165e143f8ca53081143644b56d0b676788b716ca6fb561729c902d9d14e8df67",
+    "sleeping_machines/batched_addressed_fit.py": "db22bc8594c40e86955dd4be79121240586c105feb2eaae12e28d5e08092e246",
+    "experiments/dvs_batched_benchmark.py": "16e30945607fc514ae1854def295c2cc588963b3cf43580aeefd00632b7cf031",
+    "experiments/dvs_batched_contracts.py": "5e279f043137219853f206bbcd954cde4b6a1470345814e6f0aad6cadc801760",
+    "experiments/theory/77_batched_fit_and_terminal_risk.md": "98a192800116cde42dec93a183f1514e937f2fd0b3427e5642f3af16da44f665",
+    "experiments/dvs_conditional_clock_choice_geometry.py": "1d27235c08580dbe4bba455680ce033a62d67cde3f5f514d500b8697b8408ff8",
+    "experiments/theory/103_native_conditional_clock_choice_geometry.md": "d4116162cd07a453effe243ac8d20a123b1e64f1ab3f8091321c5965b36c4369",
+    "experiments/dvs_key_score_decomposition.py": "2db0b22a11ee7939e083a2ea3ea0cc2794af1accf71da2556972a61c35142f17",
+    "experiments/dvs_native_window_intervention.py": "8d87a9430e1e08e76a99ced669db69aac47af293bd383b9b1efd2d1ca60edd99",
+    "sleeping_machines/bounded_score_sensitivity.py": "58f16f55906967025d839d030d48107c77e88385b16a37a2e716e608c714366f",
+    "sleeping_machines/native_bounded_score_diagnostic.py": "c088fad3407358c0d3cdfef1a7a35967fabc10d263d0713eb188c87b1397506f",
+    "experiments/dvs_bounded_score_sensitivity.py": "65a76d2171d094231f0b139c03ce1d73c15067c5fc1f5b73e8f3bfb47e31bbb1",
+    "experiments/theory/104_hard_score_clamps_and_bounded_sensitivity.md": "fa2778b990cadc41581c393e24711efd9b6672374bcb80d8db83398f3cd3630a",
+    "experiments/dvs_clock_calibrated_benchmark.py": "25fddc4beadd4052d74a458bf1b11707131049af01a996cfaf1a4cf3723ee89e",
+    "experiments/dvs_clock_calibrated_contracts.py": "2aa7d5b238d18614f39340bab36f01689f64b172a04c879169592a76aa2d56e2",
+    "experiments/theory/76_packet_scale_temporal_initialization.md": "b1f1a3cf65834c173124974434224c2e0097d67161b507857cfad329180f9d27",
+    "experiments/dvs_batched_le_benchmark.py": "4b163a25008ea8261acbee465770bad84dff3dbc1aa3c0ff74f39571fd83e8f8",
+    "sleeping_machines/batched_episodes.py": "8f93f5f0ec60544cce8ddad3379113578ed5f6d90f17a1abf30edd0b9629c4c8",
+    "experiments/dvs_bridge_batched_benchmark.py": "569d9cc93073e3b6d73a6cbd146c451aea688f39739defafc6ad11e72f3c216a",
+    "sleeping_machines/bridge_addressed_events.py": "f0145418baf6e8f5fcf0c9baad2831d49195fadf7212ce7ec51b9d3454a5480f",
+    "sleeping_machines/bridge_batched_episodes.py": "b78c648022d4c9fb282e87f12a675a614fb57ab402adc8ce7115b952667fe958",
+    "sleeping_machines/factorized_race.py": "5bbfdf41ea63770a2394dde6e39fbe4b94b79dbab95c863f6413480ae3aa5568",
+    "experiments/theory/106_integrated_bounded_score_learning_contract.md": "af38d82494b1ba21cd0b91fbdfe3825cfcdee1c5370af8506211cd6b41313bf8",
+    "experiments/dvs_bridge_utility_and_smoke_audit.py": "e47d52817454fb2271b8336acbaae4a5f9918f4905ab728e349167b3c04fb2e4",
+    "experiments/theory/107_bounded_information_and_native_route_utility.md": "54518eb2efbd38d9525b404863bba9b9960b3f4e08cb122eafef6eead63074f1",
+    "experiments/dvs_bridge_training_contracts.py": "c6eddbb9ca97f100c09dac4bb368e6d39f9b9e9e5c2cd3ad1ea64a3341cdc4da"
+  },
+  "parents": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_hard_smoke_20261003T002200Z.json",
+      "result_sha256": "b40bc2917fe23a5bf682cca4a66d6fcfd2a069598f464146ac5ed85ca5a81bd8"
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_bridge_smoke_20261003T002200Z.json",
+      "result_sha256": "8d5b1b4c6736652d31c2850e2ab14b1e264fd445933bc2d1b2c97193cfe4fb22"
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_batched_local_pilot_s7_20261002T192400Z.json",
+      "result_sha256": "f4e4da3598496f47f278e182a5b04260d9dca0273de098e9b391a50e6e009117",
+      "checkpoint_sha256": "4db7a20eabe435287a232c446384d99b6d43ce0383e59c0c9402c36d5ea27889",
+      "original_core_fit_gflops": 2.28569632
+    }
+  ],
+  "utility_rows": [
+    {
+      "fit_index": 258,
+      "target": 6,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "raw_scores": [
+        13.953872680664062,
+        0.018236322328448296
+      ],
+      "factual_winner": 0,
+      "first_delay": 0.0010000973106889777,
+      "actual_suffix_losses": [
+        1.0634677410125732,
+        1.0595570802688599
+      ],
+      "utility_gap": 0.003910660743713379,
+      "conditional_choice": [
+        {
+          "alpha": 0.0,
+          "probabilities": [
+            0.999993742751054,
+            6.25724894600414e-06
+          ],
+          "conditional_risk": 1.0634677165425954,
+          "raw_score_choice_derivative": [
+            0.0,
+            -2.446982470203737e-08
+          ],
+          "analytic_derivative": [
+            0.0,
+            -2.4469824702037404e-08
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "probabilities": [
+            0.9999916362605863,
+            8.36373941363585e-06
+          ],
+          "conditional_risk": 1.0634677083048258,
+          "raw_score_choice_derivative": [
+            9.066666267016701e-10,
+            -3.270746250597905e-08
+          ],
+          "analytic_derivative": [
+            9.066666265954675e-10,
+            -3.2707462505979086e-08
+          ]
+        }
+      ],
+      "live_state_bytes": [
+        576,
+        648
+      ]
+    },
+    {
+      "fit_index": 258,
+      "target": 6,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "raw_scores": [
+        15.077147483825684,
+        0.027890412136912346
+      ],
+      "factual_winner": 0,
+      "first_delay": 0.0010000342934585406,
+      "actual_suffix_losses": [
+        1.0634677410125732,
+        1.064741849899292
+      ],
+      "utility_gap": -0.00127410888671875,
+      "conditional_choice": [
+        {
+          "alpha": 0.0,
+          "probabilities": [
+            0.9999936820508613,
+            6.3179491387390975e-06
+          ],
+          "conditional_risk": 1.0634677490623283,
+          "raw_score_choice_derivative": [
+            0.0,
+            8.049704285561352e-09
+          ],
+          "analytic_derivative": [
+            -0.0,
+            8.049704285560981e-09
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "probabilities": [
+            0.9999917971777106,
+            8.20282228945402e-06
+          ],
+          "conditional_risk": 1.0634677514638622,
+          "raw_score_choice_derivative": [
+            -2.5239855122355985e-10,
+            1.0451194576690005e-08
+          ],
+          "analytic_derivative": [
+            -2.523985471126988e-10,
+            1.0451194576691402e-08
+          ]
+        }
+      ],
+      "live_state_bytes": [
+        576,
+        648
+      ]
+    },
+    {
+      "fit_index": 258,
+      "target": 6,
+      "site": [
+        20,
+        1,
+        0
+      ],
+      "raw_scores": [
+        15.909503936767578,
+        -3.9987757205963135
+      ],
+      "factual_winner": 0,
+      "first_delay": 0.0010000390947964856,
+      "actual_suffix_losses": [
+        1.0634677410125732,
+        1.082653522491455
+      ],
+      "utility_gap": -0.019185781478881836,
+      "conditional_choice": [
+        {
+          "alpha": 0.0,
+          "probabilities": [
+            0.9999998873269791,
+            1.1267302089231435e-07
+          ],
+          "conditional_risk": 1.0634677431742932,
+          "raw_score_choice_derivative": [
+            0.0,
+            2.161719713837918e-09
+          ],
+          "analytic_derivative": [
+            -0.0,
+            2.161719713837913e-09
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "probabilities": [
+            0.9999998535089797,
+            1.4649102020778484e-07
+          ],
+          "conditional_risk": 1.063467743823118,
+          "raw_score_choice_derivative": [
+            -6.137113219333559e-11,
+            2.769480372417029e-09
+          ],
+          "analytic_derivative": [
+            -6.137113255261039e-11,
+            2.769480372417026e-09
+          ]
+        }
+      ],
+      "live_state_bytes": [
+        576,
+        576
+      ]
+    },
+    {
+      "fit_index": 981,
+      "target": 8,
+      "site": [
+        19,
+        0,
+        0
+      ],
+      "raw_scores": [
+        14.648197174072266,
+        0.0846622958779335
+      ],
+      "factual_winner": 0,
+      "first_delay": 0.0010000973106889777,
+      "actual_suffix_losses": [
+        1.3596116304397583,
+        1.3666529655456543
+      ],
+      "utility_gap": -0.007041335105895996,
+      "conditional_choice": [
+        {
+          "alpha": 0.0,
+          "probabilities": [
+            0.9999933129944917,
+            6.687005508368364e-06
+          ],
+          "conditional_risk": 1.3596116775252052,
+          "raw_score_choice_derivative": [
+            0.0,
+            4.708513177875145e-08
+          ],
+          "analytic_derivative": [
+            -0.0,
+            4.7085131778753026e-08
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "probabilities": [
+            0.9999912251943447,
+            8.774805655197308e-06
+          ],
+          "conditional_risk": 1.3596116922261052,
+          "raw_score_choice_derivative": [
+            -1.5724328191365896e-09,
+            6.178534365788855e-08
+          ],
+          "analytic_derivative": [
+            -1.5724328237097194e-09,
+            6.178534365788698e-08
+          ]
+        }
+      ],
+      "live_state_bytes": [
+        576,
+        648
+      ]
+    },
+    {
+      "fit_index": 981,
+      "target": 8,
+      "site": [
+        20,
+        0,
+        0
+      ],
+      "raw_scores": [
+        17.883319854736328,
+        0.09087055176496506
+      ],
+      "factual_winner": 0,
+      "first_delay": 0.0010000342934585406,
+      "actual_suffix_losses": [
+        1.3596116304397583,
+        1.397146224975586
+      ],
+      "utility_gap": -0.03753459453582764,
+      "conditional_choice": [
+        {
+          "alpha": 0.0,
+          "probabilities": [
+            0.9999932713509966,
+            6.728649003327813e-06
+          ],
+          "conditional_risk": 1.3596118829968702,
+          "raw_score_choice_derivative": [
+            0.0,
+            2.52555412745651e-07
+          ],
+          "analytic_derivative": [
+            -0.0,
+            2.5255541274564947e-07
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "probabilities": [
+            0.9999917524417475,
+            8.247558252474691e-06
+          ],
+          "conditional_risk": 1.3596119400085132,
+          "raw_score_choice_derivative": [
+            -5.355286621054666e-09,
+            3.095635391825449e-07
+          ],
+          "analytic_derivative": [
+            -5.355286622172091e-09,
+            3.095635391825444e-07
+          ]
+        }
+      ],
+      "live_state_bytes": [
+        576,
+        648
+      ]
+    }
+  ],
+  "forced_suffix_replays": 10,
+  "factual_native_forwards": 5,
+  "additional_raw_dot_products_per_native_forward": 168,
+  "smoke_checks": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_hard_smoke_20261003T002200Z.json",
+      "source_and_budget_and_all_stage_coverage": true,
+      "small_fit_learning_passed": true
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_bridge_smoke_20261003T002200Z.json",
+      "source_and_budget_and_all_stage_coverage": true,
+      "small_fit_learning_passed": true
+    }
+  ],
+  "common_unit_ledger": [
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_hard_smoke_20261003T002200Z.json",
+      "result_sha256": "b40bc2917fe23a5bf682cca4a66d6fcfd2a069598f464146ac5ed85ca5a81bd8",
+      "checkpoint_sha256": "7fc8feed0c5cc771935d7cd50b270c24572d56480b87a498a88d05f0e38a9866",
+      "alpha": 0.0,
+      "parameters": 7899,
+      "fit_inputs": 32,
+      "dev_inputs": 16,
+      "passes": 2,
+      "fitting_presentations": 64,
+      "optimizer_updates": 8,
+      "available_receivers": 16,
+      "selected_writes_per_event": 8,
+      "key_scores_per_event": 16,
+      "initial_fit_nll": 2.8291192054748535,
+      "final_fit_nll": 2.0372791290283203,
+      "dev_accuracy": 0.3125,
+      "dev_nll": 2.28193736076355,
+      "selected_epoch": 2,
+      "whole_fit_gflops": 9.769170096,
+      "fit_mflops_per_presentation": 152.64328275,
+      "inference_mflops_per_prefix": 0.333083,
+      "wall_s": 61.15766731399344,
+      "max_rss_kb": 373200,
+      "initial_cap_exposure": {
+        "races": 5376,
+        "candidates": 10752,
+        "capped_races": 0,
+        "capped_candidates": 0,
+        "max_abs_raw_score": 2.587374210357666
+      },
+      "final_cap_exposure": {
+        "races": 5376,
+        "candidates": 10752,
+        "capped_races": 0,
+        "capped_candidates": 0,
+        "max_abs_raw_score": 2.295825719833374
+      },
+      "native_live_state_bytes_range": [
+        720,
+        720
+      ],
+      "selected_writes_per_prefix_range": [
+        168,
+        168
+      ],
+      "key_scores_per_prefix_range": [
+        336,
+        336
+      ]
+    },
+    {
+      "result": "experiments/results/dvs_native/local_dvs_score_bridge_smoke_20261003T002200Z.json",
+      "result_sha256": "8d5b1b4c6736652d31c2850e2ab14b1e264fd445933bc2d1b2c97193cfe4fb22",
+      "checkpoint_sha256": "648696949f1bcfe47f3f85c5e1e8c461a249ab60092c2047caf8fb2a661b29ec",
+      "alpha": 0.1,
+      "parameters": 7899,
+      "fit_inputs": 32,
+      "dev_inputs": 16,
+      "passes": 2,
+      "fitting_presentations": 64,
+      "optimizer_updates": 8,
+      "available_receivers": 16,
+      "selected_writes_per_event": 8,
+      "key_scores_per_event": 16,
+      "initial_fit_nll": 2.8291115760803223,
+      "final_fit_nll": 2.039686679840088,
+      "dev_accuracy": 0.3125,
+      "dev_nll": 2.28196382522583,
+      "selected_epoch": 2,
+      "whole_fit_gflops": 9.82746744,
+      "fit_mflops_per_presentation": 153.55417875,
+      "inference_mflops_per_prefix": 0.335771,
+      "wall_s": 64.60377586100367,
+      "max_rss_kb": 374120,
+      "initial_cap_exposure": {
+        "races": 5376,
+        "candidates": 10752,
+        "capped_races": 0,
+        "capped_candidates": 0,
+        "max_abs_raw_score": 2.5873892307281494
+      },
+      "final_cap_exposure": {
+        "races": 5376,
+        "candidates": 10752,
+        "capped_races": 0,
+        "capped_candidates": 0,
+        "max_abs_raw_score": 2.29789400100708
+      },
+      "native_live_state_bytes_range": [
+        720,
+        720
+      ],
+      "selected_writes_per_prefix_range": [
+        168,
+        168
+      ],
+      "key_scores_per_prefix_range": [
+        336,
+        336
+      ]
+    }
+  ],
+  "saved_references": [
+    {
+      "result": "experiments/results/dvs_native/curie_dvs_batched_p16d2pool2_leall_s7_20261002T224500Z.json",
+      "result_sha256": "a335eb48a6a20f685d3d047187c1d133a2065be904b311024e33a455910814db",
+      "dev_accuracy": 0.5833333134651184,
+      "dev_nll": 1.1417943239212036,
+      "fitting_presentations": 7872,
+      "whole_fit_gflops": 1040.396780672,
+      "fit_mflops_per_presentation": 132.16422518699187,
+      "inference_mflops_per_prefix": 0.591779,
+      "scope": "Unequal width/data/passes/quality, raw work comparison only; not advantage"
+    },
+    {
+      "result": "experiments/results/dvs_native/curie_dvs_batched_p16d4pool2_le8_s7_20261002T224500Z.json",
+      "result_sha256": "d145848014e4cefbabd359361aca938ffb838e5ff2b8b0d48a5083f11756e683",
+      "dev_accuracy": 0.5572916865348816,
+      "dev_nll": 1.3303903341293335,
+      "fitting_presentations": 7872,
+      "whole_fit_gflops": 214.394078048,
+      "fit_mflops_per_presentation": 27.235020077235774,
+      "inference_mflops_per_prefix": 1.068297,
+      "scope": "Unequal width/data/passes/quality, raw work comparison only; not advantage"
+    }
+  ],
+  "optimizer_steps": 0,
+  "development_quality_evaluations": 0,
+  "wall_s": 18.431663062990992,
+  "max_rss_kb": 328716,
+  "hardware": {
+    "host": "curie",
+    "device": "CPU",
+    "threads": 1
+  },
+  "whole_audit_flops": null,
+  "scope": "Actual hard-map suffix utilities at five old saturated histories; bridge only in conditional choice derivative, factual first time held, suffix hard maps retained. Revealed FIT labels258/981, no longer label-unused. Smoke initial/final cap and native state audit; no optimizer, official test or practical advantage claim."
+}

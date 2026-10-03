@@ -1651,3 +1651,48 @@ training/recovery/accounting contracts, then only a tiny matched integrated
 learning smoke. Other owners retain full fine-packet/deeper replay and AWS
 comparison priority; do not duplicate their queues. No native or practical
 advantage established by local rank restoration.
+
+## Integrated bounded bridge learning and utility, 3 October00:29 UTC
+
+The production/reference and batched sibling bridge paths retain physical
+races, key/value separation, sparse actual receiver writes and factorized
+clock plus all-route first-time replay credit. Zero bridge exactly nests old
+batched outputs and all gradients. Eight double training/reference/full-route
+Adam/recovery/partial-window/accounting contracts pass (9.065s/344424KiB).
+First attempt failed on absent-vs-explicit-zero unused gradients; corrected
+comparison still rejects every unmatched nonzero gradient. Failed queue retained.
+
+Matched restricted p8/L4/H2/pool2 seed7 smokes32FIT/16DEV/twopasses/64
+presentations,U8/eightupdates,all-route: hard31.25%/2.281937DEV versus
+bridge31.25%/2.281964; FIT NLL2.829119→2.037279 /2.829112→2.039687.
+Hard9.769170GF/152.643283MF per presentation/.333083MF inference;
+bridge9.827467GF/153.554179MF/.335771MF.16available receivers,16key
+scores/eightwrites per event,720live bytes in audited prefixes. Both learn,
+no superiority; bridge smoke does not improve.61.158/64.604s,peak373200/
+374120KiB. Initial AND selected models have0cap exposures across5376
+FIT races each; max raw2.59/2.30. Thus this smoke does not test saturation.
+
+Fixed-pass4 seed7 FIT258/981 labels now revealed for diagnosis. Five
+strictly saturated old sites: actual hard-map suffix alternative is better
+in one case, worse in four. Forced original winners recover ALL original
+logits/state/end RNG. All emitter choice sensitivities restore but are only
+6.14e-11..5.36e-9 because alternate probabilities remain~1e-7..1e-5.
+Ten forced plus five factual forwards; extra168raw dots/forward paid.
+Conditional utility derivatives pass analytic/finite-difference checks, not
+whole positive-bridge risk. Audit18.432s/328716KiB,full auditFLOPs unknown.
+Theory107 derives positive-slope/raw-gradient/probability determinant;
+rank repair alone does not establish meaningful predictive utility.
+
+No larger bridge fit admitted; its main-obstruction hypothesis is unsupported
+by these measured sites. Preserve this low-cost contracted architectural
+option and its limits. Prioritized main integrated p16 deeper replay/growth
+queue remains curie_dvs_followup_20261002T183000Z.txt, owned separately;
+AWS dense comparisons remain reserved. Missing coverage: fitted multi-arrival/
+popcorn, affordable larger associative support, comparable-quality total work
+and deeper credit generalization. No departure to a dense carrier.
+
+Guarded report publication003200Z completed with171 pages and passed all
+source/layout checks. Its module/publisher and completed numerical sources
+are frozen; report and common-unit ledgers are committed on main. Four old autostashes
+preserved; no unresolved index entries. One guarded job at a time throughout,
+minimum8GiB available; local MemAvailable stayed~11GiB.
