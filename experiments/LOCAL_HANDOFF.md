@@ -1887,3 +1887,44 @@ reusing alreadycomputed factual downstreamreturn. Samefirsttime/write outcome,
 so exact categoricalobjective/credit should be preserved; verify EVERYgradient,
 causality/RNG/state/recovery and chargedproductionwork in new frozen siblings.
 Existing AWS sources/queuedruns remain untouched. No corearchitecturedeparture.
+
+## Exact winner-return reuse and paid cost, 3 October01:51 UTC
+
+Theory115 winner-recording kernel + reuse helper + accumulator are new siblings;
+28private/shared p4/L8 U1/U2/U4 double contracts pass25.026s/377000KiB. EVERY
+gradient/objective matches oldbatched ANDindependentsequential fullenumeration;
+allfactualwinnerforced outcomes match, newrecording primal/state/RNG/pathwise
+gradients exact, causalinput/label and pendinggradient/Adammoment recovery pass.
+Initial014300Z fails auditunsupported flip/cumsum; corrected reductions use
+alreadyauditedsuffix sums, unique014400Zretry passes. Failedqueue/log retained.
+
+Theory116 productionp16/L8/H2/pool2/T16 completewhole fittingwork falls
+49.6174658%private/49.6410936%shared.512->256lanes,8192->4096shadowevents;
+candidate scoring32 and selectedwrites16/target, nativeinference unchanged.
+Original/reuse SAMEsynthetic16targets/nonempty state/parameters/RNG and
+actualtargetnormalize/clip1/Adam/warmup16of32. Globalpreclipgradientrelative
+errors9.960e-7/9.730e-7, actualAdamupdate relativeerrors.00025652/.00059413
+(0.026%/0.059%); both global<=3e-5/update<=.005 limitsPASS. BUTthreeparameter
+tensors perfamilymiss tightcoordinate rtol3e-4/atol3e-6: BOTHproductionnumerical
+admissiongatesFAIL. DoNOTsilentlyloosen/adopt into currentqualityruns.
+
+Strict014500Zrun abortedat privatekey_read mismatch; unique014800Zfullaudit
+keeps originalthresholds, recordsfailedtensors plusALLstagework and actual
+updates. Completed98.060s/399744KiB; optimizednonemptyAdam/state/pending3target
+andnext1targetpartialupdate recoverbitwise. Extra recovery optimizersteps paid
+outsidefirst-step comparison table. Firstpositivework saving preserved beside
+numericlimitation; no trainedtext8quality/isoqualitysupremacy, no physical
+projection/energy claim. Source/result paths nowfrozen. Newreportmodule adds
+both proofs/work/gates without touching priorfrozenmodules.
+
+Next: production double precision reference to distinguish differing float32
+batch-shape/categorical cancellation from a changed route estimator. Verify
+actualbranch agreement, EVERYgradient and unchangedRNG before proposing any
+precision/centering repair. ExistingAWS10M fullreplay controls stay unchanged;
+no duplicate fit is needed. Host peak~391MiB/available>11GiB thisstage.
+
+Winner-reuse182page publication retry015500Z completes26.801s, source/layout/
+orphanchecksPASS. First015100Z rendering failed a tableheader1.39pt beyond
+pageedge and rolledback; originalqueue/log kept, newtable fits174mm content
+width. Allsuccessfulmodules/publisher/sources frozen. Precision audit117 runs
+in its ownunique guardedjob; no new quality-training arm launched locally.

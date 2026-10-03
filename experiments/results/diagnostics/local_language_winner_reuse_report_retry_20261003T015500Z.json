@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_language_winner_reuse_report_retry_20261003T015500Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "01d5787134644579d00e98ed3321f38f01269d954f1572523470831214d9b1a7",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/language_winner_reuse_evidence.py": "64d2a16b453397d1f397e740a74b150095e4e979fa21d97b48880e356c09062b",
+    "experiments/publish_language_winner_reuse_report.py": "7316a4cfe90ed9bd05974b46a7d52c2bd6c7775aefdad6931d5c046c0a947475"
+  },
+  "pdf_pages": 182,
+  "report_sha256": "17012381123ddb676dedab64d52cd9bab88636e331669a5a61cc6d71f50834c3",
+  "pdf_sha256": "93c306fd1b309d5d24d3839c8265e1909ab6a818e87ddbf4e543768926241cab",
+  "wall_s": 26.800541885007988,
+  "max_rss_kb": 273612,
+  "scope": "Completed equivalent winner-return reuse and measured production work; strict float32 coordinate gates fail; prior evidence retained; no fitted benchmark advantage."
+}
