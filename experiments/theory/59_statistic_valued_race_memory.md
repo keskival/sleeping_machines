@@ -1565,3 +1565,12 @@ also needs a second seed within the reported margin. v8 runs p64/d4 pool 2 + cre
 Transformer-256×4 step count; about 107 TFLOPs estimated). If it scores below 1.908, it beats that Transformer at the same
 update count with about one eighth of its estimated fitting work. Against LSTM-512 (1.799) the claim needs a wider or tied
 model and more passes. Pending cells stay empty.
+
+**§415 first native row ahead of the matched one-pass LSTM (15:06 UTC).** p96/d4 pool 2 with route credit (940,875
+parameters; 5.87 MFLOPs fitting per character; exact winner-only inference 1.32 MFLOPs per position) scored DEV 2.098 /
+**test 2.1626** bpc (T = 256 **2.1625**), against 2.171 for the one-pass E64 LSTM-256 at T = 256 (338,395 parameters, 2.03
+fitting / 0.68 inference MFLOPs estimated). It wins on quality by .0085 bpc at the matched window with the same update
+count. It uses 2.8× the parameters, about 2.9× the estimated fitting work and about 1.9× the inference work. By the §415 criteria
+this is a quality win, not supremacy: the work is higher and there is one seed. The development curve (2.555 / 2.278 /
+2.189) crossed p64 between windows 800 and 1200, so wider models gain late in one pass. The lr .002/.003 arms test whether
+a scaled lr removes the slow start.

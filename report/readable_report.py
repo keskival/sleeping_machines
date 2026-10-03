@@ -1779,12 +1779,13 @@ def blocks(M, tasks, ev):
             pages[-1].insert(-1,('p','<b>Learned native language at 10M, one pass (THEORY §413).</b> With route credit '
                 '(the race address learns which alternative predicts better; forward values unchanged) the integrated '
                 f'native core improves from <b>{nlb["p32/d4"]["test"]:.3f} to {nlb["p32/d4 + route credit"]["test"]:.3f}</b> '
-                f'test bpc at the same size and work, and at width 128 reaches <b>{best["test"]:.3f}</b> '
+                f'test bpc at the same size and work, and with more width reaches <b>{best["test"]:.3f}</b> '
                 f'(T256 {best["test256"]:.3f}) versus <b>{ctl["LSTM-256"]["test"]:.3f}</b> for the matched one-pass LSTM-256 and '
                 f'<b>{ctl["Transformer-256x2"]["test"]:.3f}</b> for the one-pass Transformer, with '
                 f'<b>{best["sparse"]/1e6:.2f}</b> MFLOPs exact winner-only inference per position versus '
                 f'{ctl["LSTM-256"]["infer"]/1e6:.2f} for the LSTM estimate. Fitting work is higher '
-                f'({best["fit"]/1e6:.2f} vs {ctl["LSTM-256"]["fit"]/1e6:.2f} MFLOPs/char, different conventions). Single seeds; '
+                f'({best["fit"]/1e6:.2f} vs {ctl["LSTM-256"]["fit"]/1e6:.2f} MFLOPs/char, different conventions), so this is a '
+                'quality result, not a work advantage. Single seeds; '
                 'the native appendix lists every arm, including the failed write-address credit.'))
         native8=[r for r in tasks.get('native_language',[]) if r['args']['fit']==8192
                  and r['args']['seed']==6 and (r['args']['heads'],r['args']['payload'],r['args']['depth'])==(2,16,8)]

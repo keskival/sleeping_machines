@@ -23,7 +23,7 @@ Race selection has the exact softmax winner probabilities, but one winning value
 
 ## Current language evidence — 3 October 2026
 
-**The integrated native learner now reaches 2.179 bpc at the controls’ T256 test window.** The saved one-pass LSTM scores 2.171 and Transformer 2.427. These are completed single-seed comparisons; replication and large-data advantage remain open.
+**The integrated native learner now reaches 2.162 bpc at the controls’ T256 test window.** The saved one-pass LSTM scores 2.171 and Transformer 2.427. These are completed single-seed comparisons; replication and large-data advantage remain open.
 
 ![current native language status](report/figures/current_native_language_status.png)
 
@@ -35,7 +35,7 @@ Blue: native temporal races, sparse addressed persistent writes and learned mess
 - At eight selected writes per position, doubling p32 slots improves 2.371→2.345 bpc. Fitting work rises 1.65×; unchanged selected activity is not unchanged total cost.
 - The credited depth-8 model reaches 2.326 versus 2.456 without that credit. The gain survives a deeper stack; width, initialization and capacity still need controlled comparisons.
 
-The best native model remains 0.009 bpc behind the LSTM, using 44.07 versus 20.31 estimated fitting TFLOPs. This is substantial progress, not comparable-quality superiority in total resources.
+The best native model remains -0.008 bpc behind the LSTM, using 58.65 versus 20.31 estimated fitting TFLOPs. This is substantial progress, not comparable-quality superiority in total resources.
 
 ## Learning diagnosis and the next decisive checks
 
@@ -98,7 +98,7 @@ Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fi
 
 **Work between two learned language models.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam. This compares two learned models with each other. Near-optimal count references for this small-data regime are shown in Appendix B as calibration (Theory §§393–394).
 
-**Learned native language at 10M, one pass (THEORY §413).** With route credit (the race address learns which alternative predicts better; forward values unchanged) the integrated native core improves from **2.507 to 2.370** test bpc at the same size and work, and at width 128 reaches **2.180** (T256 2.179) versus **2.171** for the matched one-pass LSTM-256 and **2.427** for the one-pass Transformer, with **0.61** MFLOPs exact winner-only inference per position versus 0.68 for the LSTM estimate. Fitting work is higher (4.41 vs 2.03 MFLOPs/char, different conventions). Single seeds; the native appendix lists every arm, including the failed write-address credit.
+**Learned native language at 10M, one pass (THEORY §413).** With route credit (the race address learns which alternative predicts better; forward values unchanged) the integrated native core improves from **2.507 to 2.370** test bpc at the same size and work, and with more width reaches **2.163** (T256 2.162) versus **2.171** for the matched one-pass LSTM-256 and **2.427** for the one-pass Transformer, with **1.32** MFLOPs exact winner-only inference per position versus 0.68 for the LSTM estimate. Fitting work is higher (5.87 vs 2.03 MFLOPs/char, different conventions), so this is a quality result, not a work advantage. Single seeds; the native appendix lists every arm, including the failed write-address credit.
 
 **Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
 
@@ -2842,6 +2842,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 | Ours p64/d4 + route credit | 422,475 | 1,220 | 2.184 / 2.183 | 26.79 | 2.68 | 0.89 | 0.60 |
 | Ours p32/d8, skip2 + route credit | 210,043 | 1,220 | 2.326 / 2.326 | 14.15 | 1.42 | 0.46 | 0.31 |
 | Ours p64/d4/pool4 + route credit | 689,787 | 1,220 | 2.180 / 2.179 | 44.07 | 4.41 | 1.46 | 0.61 |
+| Ours p96/d4 + route credit | 940,875 | 1,220 | 2.163 / 2.162 | 58.65 | 5.87 | 1.95 | 1.32 |
 | E64 LSTM-256 | 338,395 | 1,220 | — / 2.171 | 20.3 | 2.03 | 0.68 | 0.68 |
 | E64 Transformer-256x2 | 1,658,907 | 1,220 | — / 2.427 | 111.3 | 11.13 | 3.71 | 3.71 |
 
@@ -2859,6 +2860,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 | p64/d4 + route credit | 16 | 1024 | 8 | 16 | 16 | 8 |
 | p32/d8, skip2 + route credit | 32 | 1024 | 16 | 32 | 32 | 16 |
 | p64/d4/pool4 + route credit | 32 | 2048 | 8 | 32 | 32 | 8 |
+| p96/d4 + route credit | 16 | 1536 | 8 | 16 | 16 | 8 |
 
 Native mechanism counts per input position. Memory scalars are available unit-value storage per lane; timestamps, readiness bits and source context are additional. One value is delivered per selected head/layer write. Every candidate key and proposal value is computed before selection in the emulator; the winner-only evaluator computes only selected proposals and also caches one key-read vector per slot. Every key is still scored. These are shape counts, not traffic or energy measurements.
 
