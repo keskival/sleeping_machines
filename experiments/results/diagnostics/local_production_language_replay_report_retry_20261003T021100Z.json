@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_production_language_replay_report_retry_20261003T021100Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "5fcb90b89bb6cafa8d64a42b1e8d4a206ce47daf9353fd00fadd565ce56afd42",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/production_language_replay_evidence.py": "412da9771c06eb1ed0f2a1ede9eca70cb3a942c31e1239c4a8a0493146090e4c",
+    "experiments/publish_production_language_replay_report.py": "b731ea191fbf4d4cacdb036e49f4d966559c1524b7d87d9467a22aa7be0b2d75"
+  },
+  "pdf_pages": 185,
+  "report_sha256": "1a295f345f425f1d30dc1e9689a3d34e11f56519860bdec524effd5e09d14a5f",
+  "pdf_sha256": "7e5d75b89aaeb381fc7b56e53c5b80eb52e4975c037e76bd9db9826247ef28ca",
+  "wall_s": 26.484210130991414,
+  "max_rss_kb": 273704,
+  "scope": "Production double every-gradient/route precision proof, all completed AWS actual-driver/learning/work admissions; historical positives/failures retained; ten-million-character quality pending."
+}

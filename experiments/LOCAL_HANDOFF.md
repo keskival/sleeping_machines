@@ -1950,3 +1950,36 @@ originalfullreplay/controlrows alongsideoptimizedruns; no localduplicate.
 Sharedmanualreport additions archived in report/appendices/aws_language_replay_
 history_20261003T020000Z.md before rebase. Next reconcilemain and regenerate
 report from completedJSONs including117precision andALLAWSadmission rows.
+
+## Shared main conflict resolved and185page report complete, 3 October02:12 UTC
+
+Integrated13remotecommits, then an automatic pull/rebase againstb147583
+raised anotherREPORT conflict while publishing. BOTHtimes resolved by keeping
+eachhost's additions, completed rebase onmain; currentautostash restoredcleanly,
+fourolderautostashes leftuntouched. Source/result bytes remainexact. Additional
+AWSproduction manualhistory archived at report/appendices/aws_language_replay_
+history_20261003T021000Z.md. No unresolvedindex entries.
+
+New frozen production_language_replay_evidence.py adds117precision, allsix
+AWSactualdriver contracts/common-unit48target tables, independentAWSwinner
+gradient/work proof and allEIGHTproduction-p16 real1025FIT/129DEV smokes.
+Actualfull-fit1024targets old/reuse private69.349421GF/34.913923GF, shared
+69.347356GF/34.911858GF;49.6565%/49.6580%saving includesAdam/norm/clip.
+FinalBPCold/reuseprivate4.730271625/4.730271969, shared4.695410914/4.695410570,
+differences<=3.44e-7. Alllearn/<1GB; tinyadmission, not10M qualityadvantage.
+Newactualoptimizeddriverrecovery and independentdoubleproofpass; our116
+strictcoordinatefails and117precisionfloors retainedbeside positive evidence.
+
+Publicationretry021100Z completes26.484s/185pages withsource/layout/orphan
+checksPASS. First020600Z failed becauseindependentAWSworkaudits include a
+scalar total beside stagedicts; explicitschemafilter/sum-totalassert fixed
+the renderer only, unusedretry kept. Allfailedqueues/logs preserved.
+
+PRIORITYaws_language_winner_matrix_20261003T014100Z: exactoriginalprivate/
+shared10Mteachercontinuations plusprivateoptimizedfullreplay10M active per
+sharedHANDOFF; sharedreplay/factorizedcontrols queued. Teacherdiscardedwork
+unknown<=4095extra targets each; original1MinitialDEV versusnew1025diagnostic
+makesstartupwallunequal, final1MDEV matched. No pendingcellfilledwithonline
+score. Next complementary cost reduction: cache causal factual token-boundary
+state/RNG and replay only target suffixes, retainingfullconditionalwritecredit.
+Deriveandcontract innew siblings before any proposal to change activeAWSruns.

@@ -3414,69 +3414,6 @@ Target labels change pending gradients but leave both chunks' pre-update factual
 
 Theory113;14.510s/345160KiB. Correctness-test optimizer steps, no trained data/DEV/test/quality claim. Successfully contracted note108 seeded sources are preserved; new stateful siblings are frozen too. Existing AWS10M original-teacher drivers and checkpoints unchanged. A new fitted driver must use this credit in BOTH traced and untraced windows, save replay counters and preserve accounting/chronological controls; merely swapping an accumulator into an old traced loop would omit replay in traced windows. No fitted comparator launched here.
 
-## Production causal depth8 replay driver: numerical admission complete
-
-Six private/shared×teacher/factorized/full-replay actual drivers pass
-bitwise interrupted/resumed model/Adam/cursor/RNG/counter/work recovery,
-including an UNTRACED third credit chunk. Full replay executes1536lanes/
-24576events per48-target diagnostic fit, controlszero, all operators covered.
-Upstream sequential double allparametergradient/state/firsttime contracts
-remain frozen. Tiny character fits are admission only; no languageadvantage
-claim. Original10M teacher learning savedat73728characters/288updates each.
-Full common-unit validation table and source/protocol correction:
-experiments/AWS_LANGUAGE_REPLAY_DRIVER_FINDINGS_20261003.md.
-
-## Full corrected language replay: avoid the redundant winning shadow
-
-The factual winning-route return is already known. Detached reuse retains ALL
-candidate returns, actual losing writes, firsttime-preserving clocks and deep
-state; at pool2 it halves shadow lanes/events without route sampling. Four
-private/shared×1/3-token double contracts match every parameter gradient within
-3.3e-15, with bitwise factual logits/private-state/end-RNG equality. Same
-private p4/L8/H2/pool2 three-target forward+backward diagnostic: original
-.004387707GF/1.462569MF pertarget versus reuse.002269611GF/.756537MF pertarget:
-48.2734% LESS measured work. Excludes optimizer, inference, traffic/RNG/energy;
-no whole-fit or languagequality supremacy claim. Full common-unit table,
-source/result lineage and integrated admission stages:
-experiments/AWS_LANGUAGE_REPLAY_DRIVER_FINDINGS_20261003.md.
-
-## Production-p16 integrated fitting work: approximately halved
-
-Both optimized actual-driver recovery contracts014000Z pass (98.695s/
-497016KiB); both production-p16 learning smokes complete/learn under494MiB.
-Same1024 fitting targets/onepass, p16/L8/H2/pool2, lr.002/U256/warmup4096,
-seed7,129-char disjointDEV. Tiny fits are numerical/resource admission ONLY;
-language quality comparisons require completed10M fits. Full fitting work
-includes factual/loss/backward, all actual shadows, normalization/clip/Adam.
-Same2FLOPs/MAC+unit-special conventions for allcolumns; inference percharacter.
-No physicalprojection, traffic/RNG/energy separate.
-
-| Family/implementation | Fitting targets | Whole-fit GFLOPs | Per-target MFLOPs | Inference MFLOPs/char | Shadow lanes | Observed smoke wall s |
-|---|---:|---:|---:|---:|---:|---:|
-| private/all-lane | 1024 | 69.349421 | 67.724044 | 0.097376 | 32768 | 554.12 |
-| private/winner-reuse | 1024 | 34.913923 | 34.095628 | 0.097376 | 16384 | 379.20 |
-| depth/all-lane | 1024 | 69.347356 | 67.722027 | 0.097376 | 32768 | 548.41 |
-| depth/winner-reuse | 1024 | 34.911858 | 34.093611 | 0.097376 | 16384 | 374.33 |
-
-Private full work drops49.6565%, shared49.6580%; lanes32768→16384 and
-shadowevents524288→262144 perfit. FinalBPC differences between implementations
-are <=3.44e-7, as expected from shape-dependent floating arithmetic. New
-implementation recovery is bitwise exact; old/new optimizer trajectories are
-mathematically equivalent within measured numerical tolerance, not declared
-bitwise equal. Observedsmoke wall drops~32%, under differing slot occupancy;
-this is not a paired hardware speed/energy benchmark. Reference fullreplay
-rows remain available. No claim of superiority to dense language controls.
-
-Both saved original10M teachers now resume exactly from73728targets/288steps,
-and private optimized full replay starts10M training with1M finalDEV. Shared
-replay and both factorized10M controls stay queued, max3guardedCPUslots.
-Restart accounting for teachers: at most4095 extra uncheckpointed targets
-may have been computed before the controlled interruption; exact discarded
-work is unknown, notzero. Final successful-work estimates must be presented
-with this <=0.041%-of10M extra-target bound, alongside raw observed lifecycle
-wall. Original full1M initialDEV versus new1025-char initialdiagnostic also
-makes startupwall unequal; final1MDEV quality/data remain matched.
-
 ## Appendix B. Replay fitting driver: interrupted learning recovers exactly
 
 | L8/p4 family | Params | Targets | Updates | Whole fit GF | Fit MF/target | Infer MF/target |
@@ -3508,3 +3445,63 @@ Theory115:28private/shared double depth8 contracts for pools1/2/4 match EVERY pa
 private: counted fitting work -49.617%; gradient relative L2 9.96e-07, max absolute 1.44e-05; 3 parameter tensors miss the coordinate tolerance; actual Adam-update relative difference 0.000257. Production numerical gate FAILS. depth: counted fitting work -49.641%; gradient relative L2 9.73e-07, max absolute 1.79e-05; 3 parameter tensors miss the coordinate tolerance; actual Adam-update relative difference 0.000594. Production numerical gate FAILS.
 
 Theory116;98.060s/399744KiB. Predeclared float32 coordinate rtol3e-4/atol3e-6, global gradient relative error<=3e-5 and Adam-update relative error<=.005 are retained. Initial strict run stopped at a key-read coordinate mismatch; the completed audit reports all gates without weakening them. Nonempty Adam/private state/pending three-target recovery and next partial update are bitwise exact. Tables use the SAME16target denominator and2FLOPs/MAC+unit-special convention for all arms. Extra recovery steps are separately paid diagnostic work. No data-fit BPC, energy, physical projection or benchmark superiority claim; existing AWS10M teacher/factorized/full-replay sources and queues remain untouched.
+
+## Appendix B. Production precision: equivalent gradients and every shadow route agree
+
+| Family | Double reuse error | Float32 old error | Float32 reuse error | Old/new decisions | Mismatches |
+| --- | --- | --- | --- | --- | --- |
+| private | 1.44e-15 | 1.49e-06 | 1.6e-06 | 131328/65792 | 0 |
+| depth | 2.73e-15 | 2.12e-06 | 2.1e-06 | 131328/65792 | 0 |
+
+Same represented float32 p16/L8/H2/pool2 weights and nonempty private memory as Theory116, promoted to double without reinitializing the model. Same synthetic sixteen-target chunk and entering RNG. Compare EVERY native parameter gradient of original full enumeration and winner reuse at both precisions. In double the complete production gradients agree to1.44e-15/2.73e-15 relative error; factual logits/state are bitwise identical. All caller and factual-end RNG states match.
+
+The table compares each float32 implementation against its OWN double program. Both show roughly one-to-two parts per million global gradient error. ALL131328 original and65792 optimized factual/shadow race decisions per family agree across precisions; there is no branch crossing to explain away the comparison. The prior tight-coordinate failure therefore coexists with exact mathematical estimator equivalence and floating arithmetic error in BOTH implementations. Prior failed gates remain recorded, and this diagnostic applies no optimizer or precision repair.
+
+Different batch shapes can round contractions and return reductions differently despite representing the same trajectory. For local categorical credit g_i=pi_i(Q_i-mean_pi(Q)), a return error bounded by delta gives score-credit error at most2pi_i delta, before the score Jacobian pullback and its own rounding. A large common loss can amplify cancellation relative to a tiny advantage. A detached baseline leaves exact credit unchanged, but its numerical benefit must be measured before any fitted-rule change.
+
+Theory117;13.556s/374828KiB, four contracts. Full gradient vectors and actual factual/shadow winner histories are preserved in the source-hashed vectors artifact. Total audit arithmetic/traffic/energy are unknown, not zero. No trained text8, DEV/test or Adam step. This small rounding floor does not establish a cause of underfitting or absent deep features; larger utility, horizon, exposure and resource questions remain separate.
+
+## Appendix B. Production causal depth8 replay driver: numerical admission complete
+
+| L8/p4 family/credit | Whole fit GF | Fit MF/target | Infer MF/char | Shadow lanes |
+| --- | --- | --- | --- | --- |
+| private/teacher | 0.002514 | 0.052384 | 0.010616 | 0 |
+| private/factorized | 0.002687 | 0.055975 | 0.010616 | 0 |
+| private/replay | 0.364215 | 7.587809 | 0.010616 | 1536 |
+| depth/teacher | 0.002400 | 0.050005 | 0.010616 | 0 |
+| depth/factorized | 0.002573 | 0.053596 | 0.010616 | 0 |
+| depth/replay | 0.364101 | 7.585430 | 0.010616 | 1536 |
+
+All SIX actual private/shared teacher/factorized/full-replay drivers pass bitwise interrupted/resumed model/Adam/private state/cursor/RNG/counter/work recovery, including an UNTRACED third credit chunk. Each row is the SAME48 text8 fitting targets, one pass, credit16/U16/lr.002/warmup32,33 disjoint DEV characters. Every stage covers actual shadows/backward/normalize/clip/Adam; the accumulator includes backward in its combined work bucket. None of these tiny correctness fits is a language quality comparison.
+
+### Full corrected language replay: avoid the redundant winning shadow
+
+| p4/L8 private replay | Fwd+back GF | Fwd+back MF/target | Shadow lanes |
+| --- | --- | --- | --- |
+| full | 0.004387707 | 1.462569 | 96 |
+| reuse | 0.002269611 | 0.756537 | 48 |
+
+Independent AWS winner-reuse proof: four private/shared one/three target double cases agree for EVERY gradient within3.26e-15 absolute error and have bitwise factual logits/state/end RNG. The second table uses the SAMEthree-target denominator and includes only forward+backward:48.2734% less work, optimizer/inference/traffic/RNG/energy excluded and not zero. Its subsequent TWO actual optimized driver recovery contracts pass, with768lanes/12288shadowevents per48-target fit. No candidate sampling or inference substitution.
+
+All columns use2FLOPs/MAC+unit-special and consistent denominators within their table; whole actual fit and per-target work appear together. The isolated three-target audit is explicitly separate from full 48-target driver fits. Original teacher10M checkpoints were preserved at73728targets/288updates each for exact continuation. Original failed object-comparison test and source-scoped coordinator recovery remain historical; no learned weights were discarded. Source-backed AWS findings/manual report history are retained alongside these pages.
+
+## Appendix B. AWS deep language smokes: same learning with half the replay work
+
+| L8/p16 family/credit | Final DEV BPC | Whole fit GF | Fit MF/target | Infer MF/char |
+| --- | --- | --- | --- | --- |
+| private/teacher | 4.735412 | 0.463355 | 0.452495 | 0.097376 |
+| private/factorized | 4.737501 | 0.476965 | 0.465786 | 0.097376 |
+| private/replay | 4.730272 | 69.349421 | 67.724044 | 0.097376 |
+| private/reuse | 4.730272 | 34.913923 | 34.095628 | 0.097376 |
+| depth/teacher | 4.706595 | 0.461288 | 0.450477 | 0.097376 |
+| depth/factorized | 4.698587 | 0.474900 | 0.463769 | 0.097376 |
+| depth/replay | 4.695411 | 69.347356 | 67.722027 | 0.097376 |
+| depth/reuse | 4.695411 | 34.911858 | 34.093611 | 0.097376 |
+
+ALL eight completed real causal text8 learning/RSS admissions: 1025 observed FIT characters/1024 next-character targets, one pass, 129 disjoint DEV characters at90M/128targets, seed7, p16/L8/H2/pool2, credit16/U256/lr.002/warmup4096/clip1. Same chronological persistent sparse state, native computational delays, key/value separation and receiver maps. Private54907/shared22687parameters; 32available/32scored/16selected receiver writes pertarget. Original teacher, factorized clock/content and full-write choice credit are different learning estimators of this integrated model.
+
+private: original→reuse BPC difference +3.44e-07; counted whole-fit work -49.655%; measured wall 554.1→379.2s. depth: original→reuse BPC difference -3.44e-07; counted whole-fit work -49.657%; measured wall 548.4→374.3s. Full replay pays32768shadow lanes/524288 shadow events; reuse pays16384/262144, retaining ALLalternative write returns and unchanged sparse inference. All fitting stages are counted together; inference is the same warm selected-value native prefix including next-character loss. The measured wall comparison spans separate same-host admitted jobs, not a controlled throughput or energy benchmark.
+
+Every smoke lowers its initial DEV BPC and stays below1GBRSS. Private initial5.209543, shared5.134375; replay/reuse final scores agree within3.44e-7 BPC. These small fits demonstrate learning and implementation admission. They do not satisfy the user's10M character quality protocol, establish generalization advantage against counts/Transformers, or imply full replay's total training work is competitive with the much cheaper teacher/factorized controls.
+
+Prioritized matrix aws_language_winner_matrix_20261003T014100Z: exact original10M teacher continuations, private and depth-shared optimized full-write replay10M, and factorized10M controls as slots permit. Long outcomes remain PENDING; no predicted BPC is entered. Three bounded one-thread CPU slots on the authorized AWS host, host+slot locks/RSS watchdogs/min8GiB and serialized publication. All earlier positive/failed depth8 gesture evidence and original full replay learning rows are retained. CPU arithmetic estimates include clock simulation/gradients/optimizer; DEV passes/RNG/traffic/energy separate, no physical cost projection or supremacy claim. Original teacher recovery may discard at most4095 uncheckpointed targets each (<=.041% extra relative to10M); exact discarded work is unknown. Original1M initial DEV versus new1025-character initial diagnostics also makes startup wall unequal; final1M DEV is matched.
