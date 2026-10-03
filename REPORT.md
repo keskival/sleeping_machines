@@ -4028,3 +4028,48 @@ Variance-times-work pairs four-history DOUBLE projected raw variance with one-wi
 Eleven discarded updates: five traced, five exact untraced verifications and one serialized full recovery. Fixed FIT0..3 and adjacent unused FIT24..31 predictions saved for every arm; not IID, DEV or test. Inference traces/reconstruction/admission/verification/evaluation remain additional work. Total campaign FLOPs/traffic/energy unknown, not zero; measured step work is not the campaign total. Earlier negative content evidence retained.
 
 Theory136; 60.076s/362876KiB. Numerically admitted cost/variance tradeoff only. Temporal races, private sparse state/key-values and counterfactual learning retained. AWS corrected replay10M plus exact teachers/controls and other-host live-gate/calibrated language quality remain priority.
+
+
+## Appendix B. First completed AWS native 90M language fit
+
+Completed source-frozen p32/D4/H2/pool4 linear value-credit model: 177,019
+parameters, 32 available/scored receiver keys and eight selected writes per
+character. FIT[0,90M), DEV[90M,91M), reporting test[95M,96M). One seed6;
+128-character reset-state training segments, 64 lanes, 10,986 Adam windows,
+89,997,312 target presentations. Random segments with replacement; this is one
+pass equivalent, not complete unique coverage. All temporal races, separate
+keys/values and private persistent state within segments remain; this is the
+linear local credit surrogate, not full causal counterfactual replay.
+
+| Completed model | Parameters | Presentations | Test BPC | Whole fit GFLOPs estimate | Fit MFLOPs/presentation | Inference MFLOPs/scored target |
+|---|---:|---:|---:|---:|---:|---|
+| Native p32/D4/pool4 | 177,019 | 89,997,312 | 1.997194 (T128); 1.998416 (T256) | 107,606.868 | 1.195668 | Pending trained-weight trace |
+| Saved LSTM | 1,199,323 | 539,992,064 | 1.661015 | 3,893,396.042 | 7.210099 | Not measured in this comparison |
+| Saved Transformer256x4 | 3,238,427 | 359,997,440 | 1.604369 | 8,000,253.349 | 22.223084 | Not measured in this comparison |
+
+Native final DEV is1.913993 at T128 and1.915118 at T256; each scorer has999,936
+targets. Final weights, JSON and guard logs are preserved. Whole wall time
+10,712.749s (2.976h), mean fitting throughput8773.50 targets/s and peakRSS
+1,611,736KiB. Wall/energy ratios against older controls are not paired claims.
+
+Same-family10M pool4 T2562.345157 improves to1.998416: a supported0.346742BPC
+scaling gain with the same177,019-parameter architecture. Nine times the fitting
+presentations and a longer cosine schedule are changed together; no separate
+causal attribution to data or optimizer duration. The saved multipass controls
+remain substantially better in quality. Their whole-fit work estimates exceed
+this run by36.18x and74.35x respectively; these are unequal-quality/unequal-pass
+raw estimated work gaps, not isoquality superiority or energy advantages.
+
+Native fitting arithmetic plus unit-weight special functions is extrapolated
+from two fully traced optimizer windows including backward/clip/Adam. Dense
+controls use shape-based forward plus2x-forward backward and approximate
+clip/Adam. These distinct estimate conventions exclude evaluation, traffic and
+energy; no measured complete-system resource conclusion follows. Prior pool4
+inference arithmetic on a separate diagnostic is not silently assigned to
+these trained weights; trained winner/state/cache admission and an actual
+trained scoring trace are required. All prior valid results remain in place.
+
+Source: experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json.
+Next assigned pool2/D4 90M fit is running; depth8 and width64 arms remain queued.
+No pending cell is filled from online scores. Configuration selection uses DEV,
+with reporting test scores excluded from selecting new arms or coefficients.

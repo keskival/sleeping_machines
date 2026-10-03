@@ -43,6 +43,13 @@ reference: the saved count reference remains stronger at this data budget.
 See the [completed comparisons and resource accounting](REPORT.md)
 and [current 90M protocol](experiments/AWS_NATIVE_LANGUAGE_90M.md).
 
+**First completed native 90M language fit.** The payload-32/depth-4/pool-4
+model reaches **1.997 test BPC** (1.998 with 256-character evaluation windows),
+using 177,019 parameters and one pass-equivalent budget. This improves its
+10M result by about 0.347 BPC. The saved larger multipass LSTM and Transformer
+remain ahead at 1.661 and 1.604; comparable-quality advantage is still open.
+[Completed run and work accounting](experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json).
+
 Sleeping Machines explores models in which an event carries content and an
 arrival time. Nodes mix incoming vectors with persistent memory, gate their
 updates, transform messages and compete

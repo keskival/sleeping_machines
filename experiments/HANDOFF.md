@@ -2369,3 +2369,12 @@ NEW scripts/publish_aws_90m_progress.py archives immutable optimizer/model/
 cursor/RNG checkpoints at10M-presentation milestones, serializedGit commit/
 pull/rebase/push alongside existing250k streaming publisher. Partialmetadata
 explicitly excludes completedDEV/test and unique-data-coverage claims.
+
+AWS continuation: FIRST90M pool4 completed, testT1281.99719358/T2561.99841557,
+DEV1.91399283/1.91511789; 177019params/89997312presentations/107606.868GF
+fit estimate,1.195668MF/presentation. Wholewall10712.749s; finalweights/result
+already automaticallyPUSHED. Next90M pool2/D4fitRUNNING; streamingprivate
+fullreplay/teachercontinue. README/REPORT appendcompletedquality+commonunit
+worktable, preservingunequalquality/data/estimateconventions; PDFnotrebuilt
+inthispublication. Trained90Minference work remains pending, not borrowed
+fromuntrainedsparsearithmetictrace.
