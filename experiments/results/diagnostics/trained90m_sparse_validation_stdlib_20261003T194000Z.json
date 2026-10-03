@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "window_enumerations": 100,
+  "invalid_contracts_rejected": 18,
+  "native_runtime": "unrun",
+  "missing_native_admission_rejected": true,
+  "source_sha256": {
+    "experiments/check_sparse_rescore_protocol.py": "635d932ae1f09232601416a2cc884e306e4d497e6e5bbe9f83d24be129bff0a7",
+    "experiments/sparse_rescore_protocol.py": "ab53bde136a25b66eb68121f384a1a180f4232b36bc21db085fa25aad6165910",
+    "experiments/trained_sparse_rescore.py": "a0009fbe07acaf679c1fac782884c2dc8974dfbee98d7d6d354b7036f255b308",
+    "scripts/prepare_trained_sparse_validation.py": "892b1e8acd8b7072f254d8cba88f4f31ea9c4a53271845f8523ab1aff437a29d",
+    "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.sources.json": "73f51b940a34750f42a3881d734ebc959a6a8f3938c75a8904706cd3a2a6481e"
+  },
+  "all_seven_queue_source_bindings_checked": true,
+  "numerical_forward_calls": 0,
+  "wall_s": 2.6335383009864017,
+  "max_rss_kib": 214736,
+  "scope": "Stdlib metadata/import-boundary verification only; native contracts and all heldout rescores pending physical-host admission"
+}

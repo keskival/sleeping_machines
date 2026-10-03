@@ -1,0 +1,3 @@
+# PREPARED UNRUN; physical-host reservation required, never use a container-local free lock as admission.
+# One thread; VMS3000000KiB RSS1250000KiB MIN_AVAIL8192MiB timeout420s; run_safe only.
+trained90m_sparse_validation_20261003T192500Z_contracts experiments/prepacked_sparse_contracts.py --result experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json --out experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_contracts.json --manifest experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_contracts.sources.json

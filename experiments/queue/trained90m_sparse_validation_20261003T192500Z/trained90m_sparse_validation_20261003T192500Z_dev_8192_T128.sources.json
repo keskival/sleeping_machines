@@ -1,0 +1,52 @@
+{
+  "status": "prepared_unrun",
+  "parent": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json",
+  "parent_sha256": "67b047b3a12775d8597e2c072ba3bcd603bd1199fa3313d0f6faee8712effdfb",
+  "weights_sha256": "e8b386dee21470434c2cc5179c6d95d06b5138073b2dd7ee04ce70a2e5da7901",
+  "source_sha256": {
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/prepacked_sparse_inference.py": "c06fc7ff0f122133ffade2780612e123d2ff59eced4a6fbe4c615f7553221aac",
+    "sleeping_machines/sparse_inference.py": "e4005b9a3c66f06dd36ecfb18bc8be9b8455ab8046165e9af0d4b976e60e8708",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "experiments/prepacked_sparse_contracts.py": "25cf53ce17bed2e3b2c0cc92a189719e9f8cec2e6ad241582a0e17ab9c7525e9",
+    "experiments/cached_inference_contracts.py": "4dd88a28d26a785781d41a5c3591cf3b23cd9502a587c1b75d63fce3ab090097",
+    "experiments/sparse_inference_accounting.py": "b85a59636bdbb23252cc520ff3e2d1e55a5f5d42d76c76eb3bfc8dbecdd4a211",
+    "experiments/language_batched_benchmark.py": "0f523f8d9e8b225dbe498767d1d3bce83a8334d279175dd0d8c24f20f798cf8d",
+    "experiments/e120_shared_tasks.py": "40049870698d79fff8afbfb5446a91fd3b4596c9ac973938ceefac2dcf24be26",
+    "experiments/sparse_rescore_protocol.py": "ab53bde136a25b66eb68121f384a1a180f4232b36bc21db085fa25aad6165910",
+    "experiments/trained_sparse_rescore.py": "a0009fbe07acaf679c1fac782884c2dc8974dfbee98d7d6d354b7036f255b308"
+  },
+  "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.txt",
+  "queue_sha256": "4ec2b951d3647686aff69bbb05ca545740612e88444c5ccf26f4897cfbed822d",
+  "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.json",
+  "split": "dev",
+  "length": 8192,
+  "segment": 128,
+  "execution_plan": {
+    "windows": 126,
+    "backend_calls": 2,
+    "scored_targets": 8128,
+    "evaluated_positions_per_backend": 16128,
+    "warm_context_positions_per_backend": 8000,
+    "paired_evaluated_positions": 32256,
+    "first_target": 1,
+    "last_target": 8128,
+    "omitted_target_positions": 63
+  },
+  "required_contracts": {
+    "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_contracts.sources.json",
+    "manifest_sha256": "9130f039bdb11939b58d9e5086d7246a647211b738819fa1b13389ebe6adf09c",
+    "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_contracts.json"
+  },
+  "guards": {
+    "threads": 1,
+    "address_space_kib": 3000000,
+    "rss_kib": 1250000,
+    "min_available_mib": 8192,
+    "timeout_s": 600
+  },
+  "physical_reservation": "Required outside Docker; no auto-admission or running-chain displacement",
+  "timeout_scope": "Conservative ceiling, not a throughput forecast. Reassess physical resources and measured prefix workload before full admission; new settings require new tags."
+}

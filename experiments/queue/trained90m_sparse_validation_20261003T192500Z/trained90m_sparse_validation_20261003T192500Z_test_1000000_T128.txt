@@ -1,0 +1,4 @@
+# PREPARED UNRUN; physical-host reservation required, never use a container-local free lock as admission.
+# Paired quality only; full jobs require passed DEV prefix. run_safe only.
+# One thread; VMS3000000KiB RSS1250000KiB MIN_AVAIL8192MiB timeout21600s.
+trained90m_sparse_validation_20261003T192500Z_test_1000000_T128 experiments/trained_sparse_rescore.py --manifest experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_test_1000000_T128.sources.json

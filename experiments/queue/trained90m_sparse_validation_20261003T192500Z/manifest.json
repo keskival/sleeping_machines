@@ -1,0 +1,179 @@
+{
+  "status": "prepared_unrun",
+  "parent": "experiments/results/language_batched/aws_language_batched_90M_r2_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T110000Z.json",
+  "parent_sha256": "67b047b3a12775d8597e2c072ba3bcd603bd1199fa3313d0f6faee8712effdfb",
+  "weights_sha256": "e8b386dee21470434c2cc5179c6d95d06b5138073b2dd7ee04ce70a2e5da7901",
+  "jobs": [
+    {
+      "stage": "contracts",
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_contracts.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_contracts.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_contracts.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 420
+      }
+    },
+    {
+      "stage": "prefix",
+      "split": "dev",
+      "segment": 128,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_dev_8192_T128.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 600
+      },
+      "execution_plan": {
+        "windows": 126,
+        "backend_calls": 2,
+        "scored_targets": 8128,
+        "evaluated_positions_per_backend": 16128,
+        "warm_context_positions_per_backend": 8000,
+        "paired_evaluated_positions": 32256,
+        "first_target": 1,
+        "last_target": 8128,
+        "omitted_target_positions": 63
+      }
+    },
+    {
+      "stage": "prefix",
+      "split": "dev",
+      "segment": 256,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T256.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_8192_T256.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_dev_8192_T256.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 600
+      },
+      "execution_plan": {
+        "windows": 62,
+        "backend_calls": 2,
+        "scored_targets": 8064,
+        "evaluated_positions_per_backend": 15872,
+        "warm_context_positions_per_backend": 7808,
+        "paired_evaluated_positions": 31744,
+        "first_target": 1,
+        "last_target": 8064,
+        "omitted_target_positions": 127
+      }
+    },
+    {
+      "stage": "full",
+      "split": "dev",
+      "segment": 128,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T128.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T128.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T128.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 21600
+      },
+      "execution_plan": {
+        "windows": 15623,
+        "backend_calls": 245,
+        "scored_targets": 999936,
+        "evaluated_positions_per_backend": 1999744,
+        "warm_context_positions_per_backend": 999808,
+        "paired_evaluated_positions": 3999488,
+        "first_target": 1,
+        "last_target": 999936,
+        "omitted_target_positions": 63
+      }
+    },
+    {
+      "stage": "full",
+      "split": "dev",
+      "segment": 256,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T256.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T256.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_dev_1000000_T256.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 21600
+      },
+      "execution_plan": {
+        "windows": 7811,
+        "backend_calls": 245,
+        "scored_targets": 999936,
+        "evaluated_positions_per_backend": 1999616,
+        "warm_context_positions_per_backend": 999680,
+        "paired_evaluated_positions": 3999232,
+        "first_target": 1,
+        "last_target": 999936,
+        "omitted_target_positions": 63
+      }
+    },
+    {
+      "stage": "full",
+      "split": "test",
+      "segment": 128,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_test_1000000_T128.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_test_1000000_T128.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_test_1000000_T128.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 21600
+      },
+      "execution_plan": {
+        "windows": 15623,
+        "backend_calls": 245,
+        "scored_targets": 999936,
+        "evaluated_positions_per_backend": 1999744,
+        "warm_context_positions_per_backend": 999808,
+        "paired_evaluated_positions": 3999488,
+        "first_target": 1,
+        "last_target": 999936,
+        "omitted_target_positions": 63
+      }
+    },
+    {
+      "stage": "full",
+      "split": "test",
+      "segment": 256,
+      "queue": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_test_1000000_T256.txt",
+      "manifest": "experiments/queue/trained90m_sparse_validation_20261003T192500Z/trained90m_sparse_validation_20261003T192500Z_test_1000000_T256.sources.json",
+      "output": "experiments/results/diagnostics/trained90m_sparse_validation_20261003T192500Z_test_1000000_T256.json",
+      "guards": {
+        "threads": 1,
+        "address_space_kib": 3000000,
+        "rss_kib": 1250000,
+        "min_available_mib": 8192,
+        "timeout_s": 21600
+      },
+      "execution_plan": {
+        "windows": 7811,
+        "backend_calls": 245,
+        "scored_targets": 999936,
+        "evaluated_positions_per_backend": 1999616,
+        "warm_context_positions_per_backend": 999680,
+        "paired_evaluated_positions": 3999232,
+        "first_target": 1,
+        "last_target": 999936,
+        "omitted_target_positions": 63
+      }
+    }
+  ],
+  "producer_sha256": "892b1e8acd8b7072f254d8cba88f4f31ea9c4a53271845f8523ab1aff437a29d",
+  "scope": "Contracts -> two DEV prefixes -> full DEV/test T128/T256. Each is one guarded job; no scheduler started. Preserve original pilot queue and active owner chains."
+}

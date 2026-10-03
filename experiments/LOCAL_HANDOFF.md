@@ -2972,3 +2972,49 @@ pilot throughput is not a quality result. New owner manifest is
 queue/aws_priority_language_allocation_20261003T143000Z. Preserve its sources,
 locks/RSS reservations and serialized publishers.145 decision paragraph now
 reflects that transition; earlier shared scheduling history remains intact.
+
+## Completed-model sparse validation prepared — 3 October, 19:21 UTC
+
+Read shared HANDOFF/current results and preserved the physical-host restriction.
+No Torch/NumPy/model execution, profiling, training, scheduler, waiter or AWS
+reallocation was launched here. Container-visible processes do not establish
+physical curie idleness; MemAvailable was approximately9.7GiB, with8GiB floor
+still mandatory. Git main had no conflict at inspection.
+
+New completed owner evidence: p64/D4/pool2 four-pass T2561.954701 at107.193761TF,
+versus2.183315 one-pass. Saved four-layer/four-pass Transformer1.908253 at
+888.775443TF: native0.046448BPC worse and8.2913x less estimated fitting work.
+Clipping remains1.0; budget matters atD4, without identifying a deeper-model
+clipping cause. First90M p32/D4/pool4 T2561.998416 at107.606868TF is completed.
+Different widths/pools/data/updates/schedules prevent causal scaling attribution.
+All single-seed, different arithmetic estimate conventions; no isoquality claim.
+New metadata audit194000Z binds original result/control parents and retains
+the initial193500Z record with its missing-control-provenance annotation in147.
+
+Actual final90M weights are now present and producer hashes match. Curie
+four-pass final weights are absent here. New source-frozen deferred ladder:
+`queue/trained90m_sparse_validation_20261003T192500Z/manifest.json`.
+Seven separate one-job queues: unchanged prepacked FP32/64 contracts on actual
+completed90M weights, DEV8192 T128/T256 paired prefixes, then full DEV/test
+T128/T256 paired rescores. Sources/parent/weights/queues are hash-bound; full
+stages reject missing/failed matching prefix and native contracts before runtime
+imports. Original pilot queue150000Z stays preserved. No pending score is filled.
+
+New `trained_sparse_rescore.py` retains original window range, target exclusions,
+seed, lane grouping and FP32 values; checks all paired logits and saved full-split
+quality, owns one immutable packed snapshot, charges both backends/warm context,
+and retains diagnostic failures. Full split scores999936 targets; actual calls/
+positions are separate from planned work. No learner or core-model change.
+100std lib window enumerations/18invalid contract rejections/all7source and
+queue bindings pass; actual missing native admission rejects before imports.
+See147 and `check_sparse_rescore_protocol.py`. Native contracts/quality/speed/
+traffic/energy remain UNRUN, not silently inferred from the completed producer.
+
+Run only after genuine physical reservation through run_safe:1CPUthread,
+VMS3000000KiB/groupRSS1250000KiB/available8192MiB. Contracts420s/prefixes600s;
+full-stage21600s is a conservative ceiling, not a measured workload estimate.
+Recheck live host and prefix RSS/work before full admission; changedsettings
+require new tags. Existing AWSpriority manifest90M pool2/D4->depth8->width64
+with private streaming replay/teacher, and curie tied-pool/seeds/horizons retain
+priority. Mechanism gaps remain useful long/deep credit, complete resource
+accounting, independent replication and comparable-quality modern controls.
