@@ -1,0 +1,4 @@
+{"window": 0, "chars": 8192, "train_bits": 5.283319073291042, "chars_per_s": 351.20043012818996}
+{"window": 50, "chars": 417792, "train_bits": 3.513782699257569, "chars_per_s": 12070.767124538057}
+{"window": 59, "chars": 491520, "train_bits": 3.494718766374729, "chars_per_s": 12176.751447672306}
+{"dev_bpc": null, "test_bpc": null, "train_chars_per_s": 6515.1127598147095, "wall_s": 121.50268774700817}
