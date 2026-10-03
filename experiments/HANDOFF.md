@@ -2358,3 +2358,14 @@ ManualGitmust nowpause exact scripts/run_aws_priority_language_allocation.py
 with manifestqueue/aws_priority_language_allocation_20261003T143000Z;
 commonpublishercoordinatorlookup supportsit. First90MfitNOTstarteduntil
 compiledcontracts and its491520-targetpilot PASS. Slot1 pool4first asassigned.
+
+AWS14:32 90M admission PASSED: 15 contracts in300.91s; priority pool4
+491520-presentation pilot completed, measured5235.10 training targets/s.
+First90M pool4 fit STARTED14:29UTC in slot1; watchdog2.303GiB RSS and
+30534s timeout (8.48h). Pilot-based training estimate4.78h, approximately
+19:16UTC; compilation/evaluation/host contention can extend completion.
+Two recovered private depth8 fits continue in slots2/3; ~27GiB available.
+NEW scripts/publish_aws_90m_progress.py archives immutable optimizer/model/
+cursor/RNG checkpoints at10M-presentation milestones, serializedGit commit/
+pull/rebase/push alongside existing250k streaming publisher. Partialmetadata
+explicitly excludes completedDEV/test and unique-data-coverage claims.
