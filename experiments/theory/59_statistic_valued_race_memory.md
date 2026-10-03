@@ -894,6 +894,17 @@ private, since they are cheap and few. **Test (P398):** DVS pool 8 with maps tie
 biases and timescales private. Prediction: it is no worse than untied pool 8 at equal passes, it beats the pool 2
 baseline mean across seeds 6/7/8, and its parameter count stays near pool 2 while available receivers are 4×.
 
+**398 scope correction, 3 October14:30 UTC (original derivation/evidence retained).** The substitution in398.1 is
+valid under its assumed c*parameter-count/effective-examples estimation model; it is not a generalization theorem
+for recurrent, endogenously routed data. In the current native `linear` learner, candidate proposal maps receive
+direct content credit only on winning branches, but all unsaturated candidate key-read maps can receive score
+credit, including losers: dL/dK_i = gamma_i q m_i^T/sqrt(P), with gamma_i the total score cotangent. Thus the
+earlier blanket statement that every listed theta_u learns only on wins is too broad. Conversely, all-event score
+support does not imply equal effective information per unit: probability, utility contrasts, state/query excitation
+and saturation matter. Retain the shared-map hypothesis and its queued integrated test; a small untied-pool gain
+does not isolate this mechanism. [145](145_write_credit_feedback_gain_and_decisions.md) separates these parameter
+groups and the independent question of persistent-write surrogate stability.
+
 ## 399. DVS scale-up failures separate into generalization (width) and optimization (depth)
 
 Seed-6 results, clock-calibrated driver; fit-subset numbers are on 32 fitting gestures, so they are indicative:

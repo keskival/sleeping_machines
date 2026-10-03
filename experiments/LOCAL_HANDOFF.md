@@ -2728,3 +2728,64 @@ protocols. Maingapsusefulnonlineardepthattribution, horizon, totaldiscovery/
 credit/optimizercost andgeneralization. No corearchitecturedeparture:
 clocks/timecomputation/hardlearnedraces/sparseprivatepersistentvalues/
 separatekeys-value/counterfactual/silence-aware direction retained.
+## Write-feedback gain and current decisions — 3 October, 14:30 UTC
+
+Read shared HANDOFF and latest results through3c71068. Producer integrated
+chain remains reserved; no Torch/model job, profiling, training or new queue
+was launched here. Actual p64/U2 and p32/U4 checkpoints are still unavailable
+in this container; native143/144 and warm-Adam138 remain pending, not passed.
+
+New145 derives the partial write-surrogate H=alpha*B*Jpi*S and its adjoint,
+block-reduced U-by-U singular geometry/Frobenius/bounds, exact U2 norm and
+bounded-write/nonnormal amplification witnesses. A physical selected decay.5
+with unit writes can coexist with local surrogate gain1.353553; repeating the
+fixed witness16times amplifies126.94, NOT an observed native trajectory.
+Winner averaging also amplifies in the fixed-coefficient witness. A nilpotent
+addition has unit eigenvalues but transient growth. These identify what to
+measure; they do not attribute the failed fits or prescribe a new learner.
+
+`write_credit_feedback_geometry.py` and its stdlib check pass adjoint,
+fixed-anchor finite differences(maxerror1.81855e-12), dense-block Frobenius,
+U2 exact norm, U1/alpha0/no-score-read/gauge and amplification contracts.
+No NumPy/Torch imports. Partial fixed-input/clock/winner geometry excludes
+full recurrent/query/message/time paths and rounding-certified enclosures.
+Normalizing loss does not change H; end-of-backward clipping cannot fix an
+intermediate nonfinite adjoint. Actual fidelity and adjoint/update effects
+are separate admission requirements before another write-credit fit.
+
+Corrected398 beside its original evidence: winner-only direct proposal-map
+learning does NOT mean all parameter groups learn only on wins. Unsaturated
+losing key-read maps receive score credit gamma_i*q*m_i^T/sqrt(P). All-event
+support does not guarantee equal information, and the c*parameter-count/
+effective-examples model is an assumption rather than a generalization
+theorem for endogenous recurrent routing. Tied maps remain a useful test.
+
+Latest completed p64/D4/U4/linear T2562.179497 improves U2 by.00381768 at
+1.6453156x fitting work(44.0738 vs26.7875TF). It remains behind saved one-pass
+LSTM2.1706. Native language mechanism gains are real and scoped; broader
+advantage needs replication, complete resources and stronger scale controls.
+The shared PDF already incorporates the new completed row and inference
+traces. This continuation changes no report/benchmark/source evidence.
+
+Priority: successful integrated value-credit p64/D4/U2 reference; finish
+producer width arm, current v6 tied-pool and independent seeds, then horizon
+arms. Queue `curie_language_batched_v6_20261003T111500Z.txt` stays untouched.
+Run143 cached actual winners/state admission and144 actual write factorial
+only after physical reservation/producer checkpoints. A gain follow-up must
+capture actual d/k/unclamped-score/decay operands, contract isolated native
+surrogate VJPs, then compare adjoint histories/finite warm-Adam forks; no new
+gain queue admitted. Assigned AWS90M priority and original full-replay/control
+fits remain owner-managed; no reallocation is executed by this container.
+Core temporal races/private persistent state/separate keys-values/deep credit/
+silence-aware direction retained; no architectural substitution.
+
+14:35 concurrent owner update8141aff/5c9cba7: AWS reallocation is now EXECUTED
+by owner, source-exact checkpoints archived and two private streaming fits
+recovered. Fifteen compiled/driver contracts passed and491520-presentation
+pool4 admission pilot completed. First assigned90M/p32/D4/U4/linear fit started
+14:29UTC in bounded slot1, with recovered private replay/teacher in slots2/3.
+Shared teacher deferred with recovery intact. No completed90MDEV/test exists;
+pilot throughput is not a quality result. New owner manifest is
+queue/aws_priority_language_allocation_20261003T143000Z. Preserve its sources,
+locks/RSS reservations and serialized publishers.145 decision paragraph now
+reflects that transition; earlier shared scheduling history remains intact.
