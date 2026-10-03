@@ -1,5 +1,65 @@
 # Local host: current research continuation
 
+## Public benchmark campaign and native speech admission — 3 October
+
+User requested systematic benchmark selection and autonomous work towards real
+advantage. PUBLIC_EVENT_BENCHMARK_ADMISSION.md adds continued text8 quality/work,
+later SHD speech admission, gated DVS refinement and contingent SSC. Public
+references include EventSSM (pinned a12766788413665cd3dcf8eaa010d551d8841eb7)
+and S7. No verified public benchmark win is asserted. Strong causal statistical
+language controls remain required; quarantined E63/E79 never qualify. Selection
+uses DEV, full official test/resource comparisons and three seeds for promotion.
+
+Theory149 decomposes excess log loss into adapter information loss and learning
+error. New public_speech_packets.py keeps all700 SHD channels with log-counts
+and channel timing centroids, emits nonempty causal16ms packets and a fixed2s
+query. It is lossy within packets; no raw-spike, zero-projection-cost or energy
+claim. Core AddressedEventHeads/fast/batched/compiled sources are untouched;
+deep sparse temporal races/private commits/keys-values/linear alternative-value
+credit retained. Persistent-write credit and long useful context remain gaps.
+
+public_speech_admission.py prepares float32/64 eager/compiled every-gradient,
+forward-credit invariance and actual eager/compiled Adam/RNG recovery contracts,
+then8-fit/8-DEV one-epoch resource smoke and64-fit/64-DEV four-epoch native fit.
+Every update/checkpoint retains protocol/source/data identity. All proposal work,
+backward/mean-loss/clip/Adam and both logical/padded activity are charged; work
+is an eager-window estimate, not measured chip work. No official test is opened.
+Historical E51 accessed official SHD test; the project's test is not untouched.
+
+Frozen current queue directory: public_speech_admission_20261003T222000Z,
+manifest SHA ec69309c32880eafcfb31d45270cf1506296dd13874a309277ca7fb6f46253b3,
+40 source hashes and exact official TRAIN hash. Three unique one-job queues are
+UNRUN. Missing/changed prerequisites/data/sources reject before numerical imports;
+pilot uses smoke-derived RSS/time gates. The optional serial owner conductor
+run_public_speech_admission.py is prepared, requires tmux/physical host, uses
+run_safe for every stage and records status. Earlier221000Z/221500Z drafts are
+preserved/unrun/superseded and reject current sources. No waiting job or
+coordinator was launched in this container.
+
+11 standard-library input/split/pre-import admission tests pass. AST/source,
+unique one-job command/hash and pending-output checks pass. No Torch/NumPy/HDF5,
+model execution/profiling or training occurred. Dataset hashing is stdlib only.
+Physical curie trainer/lock visibility remains absent; Docker-local lock cannot
+admit jobs. Initial physical-owner guard caps: one thread, VMS6000000KiB,
+RSS2000000KiB,8GiBavailable floor,600s contracts/smoke and1800s pilot; recheck
+real host resources/occupancy, preserve all existing reservations.
+
+Prioritized integrated model remains the credited native core. Preserve last
+published AWS90M D8→width64/private replay+teacher and curie p96six-pass/tied/
+seed/horizon/DVS owners, plus147 trained sparse-quality ladder and148 compact
+tied parity. New SHD admission is the next *new* real-event stage after existing
+owned slots, not a replacement/restart. Full SHD training/reference rescores,
+official quality, numerical/backend proof, resource advantage and SSC remain
+pending. Status PDF/deck receives no invented score from this readiness work.
+
+Concurrent origin progress reconciled before publishing: SOTA_TARGETS.md owns
+curie NeuroBench Mackey–Glass/primate reaching; PUBLIC_BENCHMARK_CAMPAIGN.md owns
+the AWS ECG200/JapaneseVowels/PenDigits fixed archive suite. Those existing
+public owners lead immediate allocation, ahead of this deferred SHD admission.
+No shared core or frozen active source was overwritten. New completed p96
+six-pass1.8886BPC is ahead of saved four-pass Transformer1.908 under our partial
+test protocol, with unequal steps/data presentations; no public record claim.
+
 ## Investor-reading revision — 3 October, 18:25 UTC
 
 User requested an investor-oriented read-through/improvement and explicitly

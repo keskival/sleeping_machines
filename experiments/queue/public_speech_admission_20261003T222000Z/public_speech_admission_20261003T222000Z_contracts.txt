@@ -1,0 +1,4 @@
+# UNRUN: owning physical host admission only; no container waiter.
+# One job, one CPU thread, watchdog and 8GiB availability floor required.
+# Guards: MEM_CAP_KB=6000000 MEM_CAP_RSS_KB=2000000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=600
+public_speech_admission_20261003T222000Z_contracts experiments/public_speech_admission.py --manifest experiments/queue/public_speech_admission_20261003T222000Z/manifest.json --manifest-sha256 ec69309c32880eafcfb31d45270cf1506296dd13874a309277ca7fb6f46253b3 --stage contracts

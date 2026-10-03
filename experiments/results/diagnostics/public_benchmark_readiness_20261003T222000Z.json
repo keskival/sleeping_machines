@@ -1,0 +1,31 @@
+{
+  "status": "completed_metadata_verification",
+  "created_utc": "2026-10-03T22:21:08.254340+00:00",
+  "manifest": "experiments/queue/public_speech_admission_20261003T222000Z/manifest.json",
+  "manifest_sha256": "ec69309c32880eafcfb31d45270cf1506296dd13874a309277ca7fb6f46253b3",
+  "frozen_sources": 40,
+  "passed_stdlib_tests": 11,
+  "one_job_queues": 3,
+  "numerical_stages": {
+    "contracts": "prepared_unrun",
+    "smoke": "prepared_unrun",
+    "pilot": "prepared_unrun"
+  },
+  "memory_kib": {
+    "MemTotal": 32803176,
+    "MemAvailable": 11562796,
+    "SwapTotal": 0
+  },
+  "physical_host_reservation_visible": false,
+  "numerical_modules_imported": false,
+  "test_output": "test_default_or_weakened_memory_guard_rejects (__main__.AdmissionContracts.test_default_or_weakened_memory_guard_rejects) ... ok\ntest_missing_prerequisite_and_bad_stage_reject (__main__.AdmissionContracts.test_missing_prerequisite_and_bad_stage_reject) ... ok\ntest_mutated_manifest_and_source_reject_without_numerical_imports (__main__.AdmissionContracts.test_mutated_manifest_and_source_reject_without_numerical_imports) ... ok\ntest_unshared_container_rejects_before_any_numerical_import (__main__.AdmissionContracts.test_unshared_container_rejects_before_any_numerical_import) ... ok\ntest_causal_prefix_is_invariant_to_future_spikes (__main__.PacketContracts.test_causal_prefix_is_invariant_to_future_spikes) ... ok\ntest_centroid_distinguishes_timing_but_not_higher_moments (__main__.PacketContracts.test_centroid_distinguishes_timing_but_not_higher_moments) ... ok\ntest_every_channel_and_count_are_preserved (__main__.PacketContracts.test_every_channel_and_count_are_preserved) ... ok\ntest_no_empty_periodic_packets_or_sample_dependent_deadline (__main__.PacketContracts.test_no_empty_periodic_packets_or_sample_dependent_deadline) ... ok\ntest_no_silent_crop_or_channel_coalescing (__main__.PacketContracts.test_no_silent_crop_or_channel_coalescing) ... ok\ntest_official_test_and_changed_training_file_reject_before_hdf5_import (__main__.PacketContracts.test_official_test_and_changed_training_file_reject_before_hdf5_import) ... ok\ntest_train_speaker_separation_and_fixed_sampling (__main__.PacketContracts.test_train_speaker_separation_and_fixed_sampling) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.009s\n\nOK\n",
+  "official_test_read": false,
+  "superseded_drafts_reject_current_sources": true,
+  "additional_sources": {
+    "experiments/PUBLIC_BENCHMARK_CAMPAIGN.md": "b7aa44cf6fb2a53e1012ce2dc312a4631a3ae2fb59a963546c303895569eae51",
+    "experiments/LOCAL_HANDOFF.md": "eec0b653f50274995cc319df928d00aa65c23934b2ec4984e9afdb8898bb0397",
+    "experiments/README.md": "e6b55f9dc8df2f769978918528cc8fa5ff71cac501f79e8764de4d87e5058fb0",
+    "experiments/THEORY.md": "ba420867f1c34c2011a4ca2a78854776f833afdd13af9293358d9a9e68d03435"
+  },
+  "scope": "Readiness and standard-library contracts only; no model/quality/resource execution or benchmark win"
+}
