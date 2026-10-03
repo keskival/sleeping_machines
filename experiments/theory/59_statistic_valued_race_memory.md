@@ -1384,3 +1384,13 @@ aligned with prediction, not a random one, so the pool-4 loss stays consistent w
 the gap: argmax routing is .009 (pool 2) / .006 (pool 4) bpc better than sampled, and a four-seed probability mixture
 .022 / .019 better. These are diagnostics, not reported scores. The decisive test remains whether value credit (linear,
 linear_rw) changes what the address encodes and improves quality.
+
+**§413 memory horizon (saved p32/d8 pool-2 weights; state-dict only).** Unit memory half-lives ln2/rate at forget = 1
+(the input-dependent forget multiplies this) are p10 1.0–1.4, median 5.8–7.5 and maximum 16–27 characters at every layer.
+Initialization spans time constants 1–100 (half-lives 0.7–69), so one pass shortened the longest memories. Transport
+half-lives span .5–62. The native model is therefore a short-horizon model (about 6 characters typical, under 30
+maximum), which explains why T = 256 scoring changes nothing. The LSTM uses hundreds of characters. A slot written by an
+address that is not aligned with prediction accumulates a mixture of unrelated contexts. Under that interference the
+optimizer prefers fast forgetting, so the short horizon is consistent with the address diagnosis. The test is again the
+v4 route-credit arms: if value credit aligns the address, longer half-lives should survive training, and the route
+diagnostics plus a horizon readout on their saved weights will show it.
