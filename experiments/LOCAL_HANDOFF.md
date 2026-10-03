@@ -1719,3 +1719,23 @@ priority is a small all-target causal language replay numerical port: current
 language models still lack corrected full-write replay credit. Read
 theory/aws_20261002_depth8_language_replay_cost.md before implementation.
 No changed long source, no additional dense fit or language qualityclaim.
+
+## Corrected causal language credit port, 3 October00:42 UTC
+
+New sibling causal_language_shadow.py and causal_language_replay_helpers.py
+return every-token prediction from real nonempty detached entering state.
+Full first-time-preserving alternative writes credit downstream token losses,
+with factorized common-clock/winner-content derivatives. Original hard score
+map remains; no bridge/calibration or changed active10M source.
+
+Depth8/H2/p4/pool2 private/shared double models pass16 contracts,23.973s/
+361084KiB. Every one of384/174 parameter gradients matches independent
+sequential all-target full-write return; actual states/arrivals/context agree.
+Original teacher/factorized primal state/output exactly nests. Variable2/3
+token lanes from2event nonempty states, future input/target causality, losing
+identity at factual FIRST time, global/end RNG, partial gradient accumulation/
+Adam/private-state/cursor recovery exact, all operation coverage.96full shadow
+lanes/288shadow events per3target case paid. Not a learned benchmark, not
+full-stream gradient across detached boundaries. Sources/results frozen.
+Next bounded production-width/T16 resource/recovery admission only; full
+quality comparison needs its own fixed protocol and AWS resource allocation.
