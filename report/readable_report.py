@@ -154,6 +154,7 @@ def results():
     tasks['current_dvs_appendix']=appendix['load'](read)
     tasks['reception_evidence']=runpy.run_path(str(ROOT/'report/reception_evidence.py'))['load'](read)
     tasks['route_calibration_evidence']=runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['load'](read)
+    tasks['score_bound_evidence']=runpy.run_path(str(ROOT/'report/score_bound_evidence.py'))['load'](read)
     tasks['dvs_noise_covariance']=[read(str(path.relative_to(RES)))
         for path in sorted((RES/'diagnostics').glob('local_dvs_noise_covariance_audit_*Z.json'))]
     tasks['dvs_persistent_state_probes']=[read(str(path.relative_to(RES)))
@@ -5271,6 +5272,7 @@ def blocks(M, tasks, ev):
     pages.extend(runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))['pages'](tasks['current_dvs_appendix']))
     pages.extend(runpy.run_path(str(ROOT/'report/reception_evidence.py'))['pages'](tasks['reception_evidence']))
     pages.extend(runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['pages'](tasks['route_calibration_evidence']))
+    pages.extend(runpy.run_path(str(ROOT/'report/score_bound_evidence.py'))['pages'](tasks['score_bound_evidence']))
     return pages
 
 

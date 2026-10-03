@@ -1622,3 +1622,32 @@ negative study. Guarded publication222500Z passes all layout/source checks.
 Verbatim historical AWS appendices preserved. No local active training/job;
 next integrated numerical priority is independently owned replay/shadow-lane,
 not an unchanged failed reception smoke. Read HANDOFF before admitting work.
+
+## Native score sensitivity, 3 October00:04 UTC
+
+Completed notes103–105 identify a real local gradient obstruction without
+claiming a quality repair. Conditional native parameter geometry (36.536s/
+348112KiB) has five selected seed7 histories where one pre-clamp score exceeds
+12 and clock/choice score pullbacks become collinear. The fixed alpha=.1
+bounded smooth sensitivity bridge restores the missing local direction at
+those same histories (37.961s/371992KiB); alpha0 nests all original gradients.
+Positive training remains refused by that frozen diagnostic prototype.
+
+Saved all-site cap occupancy is9.533/7.431% of trained races; a separate raw
+score cohort confirms8.557/6.994% strictly outside the bound. No saved case
+has BOTH candidates saturated. A constructed two-saturated-emitter exact-risk
+example verifies a flat hard-clamp trap and a bridge escape, not a native
+quality result. All exposure, scope and failed nomination gates are retained.
+
+The169-page report publication retry000400Z passes source/layout checks
+(26.434s/136916KiB); first235800Z attempt failed on an unsupported figure block
+and rolled back. Report includes all completed fine-packet/deeper AWS replay,
+priority allocation, tied-map and query-only evidence, with common work units.
+Sources/results for completed diagnostics and publishers are frozen. Main has
+no unresolved conflict; four old autostashes remain intact. No local job active.
+
+Next: separate production/reference bridge implementation, alpha0 and positive
+training/recovery/accounting contracts, then only a tiny matched integrated
+learning smoke. Other owners retain full fine-packet/deeper replay and AWS
+comparison priority; do not duplicate their queues. No native or practical
+advantage established by local rank restoration.

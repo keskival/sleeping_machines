@@ -3175,3 +3175,126 @@ learning checks pass (private5.311638→4.832740BPC; shared5.273659→4.807838BP
 These small fits are admission only, not language advantage evidence. Separate
 private/shared original-teacher models proceed to10,000,000-character FIT and
 1M disjointDEV; corrected full replay is not yet installed in language.
+
+## Appendix B. Native conditional choice-clock parameter geometry
+
+| Seed | Encoder | Median |cos| | Min info ratio | Max info ratio | Capped sites |
+| --- | --- | --- | --- | --- | --- |
+| 6 | initial | 0.7708 | 2.17e-05 | 4.24e-01 | 0/8 |
+| 6 | fixed_pass4 | 0.9850 | 1.68e-07 | 1.33e-01 | 0/8 |
+| 7 | initial | 0.7826 | 4.47e-02 | 4.91e-01 | 0/8 |
+| 7 | fixed_pass4 | 1.0000 | 4.12e-21 | 3.58e-01 | 5/8 |
+
+At a fixed observed earlier winner/time history, differentiate entering score contrast u=grad(s0-s1) and common log-rate v=grad(logsumexp(s)). The local winner/time metric is pi0*pi1*u*u^T+v*v^T; its two eigenvalues come from a2x2 Gram matrix, avoiding a dense15523-coordinate matrix. Past physical times are held fixed for conditional likelihood geometry; real earlier message/memory maps and sparse writes still receive derivatives.
+
+Four prespecified sites, two unused FIT inputs258/981, four frozen initial/ fixed-four-pass encoders:32 Jacobian pairs/64 VJPs. Native primal outputs, ALLstate and end-RNG reproduce exactly. Four-block direction arrays retain clock-bias, key/query, message/state/transport and classifier contributions. Directional finite differences use eps .002/.001, relative2%/absolute.005 tolerance; every error is retained rather than reported as exact algebra.
+
+Five of sixteen selected trained cases pin a score at12 and leave local choice/clock sensitivities collinear. Other confident trained cases are poorly conditioned without clipping. Negative cosine alone is not harmful credit: no target utility or proposed update is evaluated. Single-site bias control also does not imply independent control over all shared histories.
+
+Theory103;36.536s/348,112KiB. Exact originals/weights restored, no optimizer/DEV/test or replaced time-learning path. Original core fit2.285696GF each /2.232125MF per1024 presentations retained. Conditional diagnostic is not full expected-risk credit, parameter covariance or advantage. Full audit FLOPs, traffic and energy unknown, not zero.
+
+## Appendix B. Bounded emitter bridge restores the missing direction
+
+| FIT index | Site/head0 | Raw max | Min slope | Hard info ratio | Bridge info ratio |
+| --- | --- | --- | --- | --- | --- |
+| 258 | e19/L0 | 13.9539 | 0.02772 | 5.48e-20 | 1.45e-06 |
+| 258 | e20/L0 | 15.0771 | 0.02415 | 8.31e-20 | 1.70e-06 |
+| 258 | e20/L1 | 15.9095 | 0.02184 | 4.12e-21 | 1.92e-05 |
+| 981 | e19/L0 | 14.6482 | 0.02545 | 5.35e-20 | 2.09e-06 |
+| 981 | e20/L0 | 17.8833 | 0.01730 | 9.25e-20 | 3.28e-06 |
+
+![local score bound evidence 20261002T235800Z geometry](report/figures/local_score_bound_evidence_20261002T235800Z_geometry.png)
+
+Fixed alpha.1 bridge: .9*clip(raw,-12,12)+.1*raw/sqrt(1+(raw/12)^2). It remains bounded, odd and monotone, with positive mathematical sensitivity beyond the hard clamp. On these same conditioned histories it restores the missing local direction. Ratios remain small because choices are rare; this is not measured noise reduction, useful-route credit or model-quality improvement. The hard-map near-zero ratios are numerical roundoff around theoretical rank1, not meaningful residual information.
+
+Theory104; five primitive contracts and eight native comparisons pass 37.961s/371,992KiB. Alpha0 outputs/state/RNG and all parameter gradients exactly nest the old model. Positive complete native inference retains coupled clocks/ routes/real writes and target invariance; training refuses. Each prefix scores 168 logical keys/writes84; diagnostic hooks RECOMPUTE168 extra dot products, paid work. Live state576..720bytes,8available units. Prior fits paid; audit FLOPs unknown. No automatic fit, free scoring or hardware/quality advantage.
+
+## Appendix B. Score-bound exposure and an exact gradient trap
+
+| Seed | Encoder | Evidence | Capped races % | Expected capped winner % | Query races % |
+| --- | --- | --- | --- | --- | --- |
+| 6 | initial | Cap proxy | 0.00 | 0.00 | 0.00 |
+| 6 | fixed_pass4 | Cap proxy | 9.53 | 9.53 | 32.62 |
+| 7 | initial | Cap proxy | 0.00 | 0.00 | 0.00 |
+| 7 | fixed_pass4 | Cap proxy | 7.43 | 7.43 | 25.78 |
+| 6 | initial | Raw-confirmed | 0.00 | 0.00 | 0.00 |
+| 6 | fixed_pass4 | Raw-confirmed | 8.56 | 8.56 | 34.38 |
+| 7 | initial | Raw-confirmed | 0.00 | 0.00 | 0.00 |
+| 7 | fixed_pass4 | Raw-confirmed | 6.99 | 6.99 | 25.00 |
+
+![local score bound evidence 20261002T235800Z trap](report/figures/local_score_bound_evidence_20261002T235800Z_trap.png)
+
+The43,008-race eight-history profile gives cap-occupancy proxies; the5,376 one-history score-pair decomposition independently confirms raw saturation using a2e-5 margin. Cohorts/noise scopes stay separate. No sampled race has both candidates saturated: the two-bound trap below is a mathematical witness, not an observed native condition. Late query cap exposure is stronger than all sites.
+
+Theory105 exact conditional utility+bounded computational-latency risk: two raw emitters13/13,400 updates/step1. Hard remains .600003; bridge .600004 to.103999. A finite hard-map hop improves risk, proving an optimization flat cell rather than a representational impossibility. No stochastic estimator noise/native fitting/quality gate;800 scalar updates paid. Saved-array study .332s/245,116KiB; original fits retained, total audit FLOPs unknown.
+
+## Appendix B. Completed fine-packet replay confirmations
+
+| Seed | Credit/depth | Dev acc % | Dev NLL | Whole fit GF | Fit MF/presentation | Infer MF/prefix |
+| --- | --- | --- | --- | --- | --- | --- |
+| 6 | L2/all | 61.46 | 1.119163 | 1040.397 | 132.164 | 0.591737 |
+| 7 | L2/all | 58.33 | 1.141794 | 1040.397 | 132.164 | 0.591779 |
+| 8 | L2/all | 66.67 | 0.941821 | 1040.397 | 132.164 | 0.591849 |
+| 7 | L4/k8 | 55.73 | 1.330390 | 214.394 | 27.235 | 1.068297 |
+| 8 | L4/k8 | 57.29 | 1.101878 | 214.394 | 27.235 | 1.068297 |
+
+Full984 FIT/192 DEV,20 observed packets plus query,8passes/7872 fitting presentations,U16/lr.003. All-race depth2 now has three completed seeds; depth4 sampled8 has seeds7/8. Original/factorized controls remain on the preceding replay ledger; missing matched deeper controls are not filled with predictions. Seed8 depth2 reaches66.667%/.941821; preserve it as a completed result with its1040.397GF fitting cost, not an isolated practical advantage.
+
+Depth4 sampled8 is worse than same-seed depth2 on development loss in these runs. This is a restricted eight-site credit variant, not a test of all-race deeper credit or proof that depth cannot learn. The owner has queued matched depth4 all-race, depth6 sampled and growth-by-nesting comparisons.
+
+Every column uses consistent units/denominators; core whole-fit and per-presentation work include replay, backward and Adam. Inference mean first11 DEV prefixes,2FLOPs/MAC plus unit specials. L2:8available units/168key scores/ 84writes per prefix;L4:16/336/168. FIT diagnostic scores use only32 fitting examples, not whole-FIT risk. DEV epoch selection and one-seed comparisons remain exploratory. Raw preprocessing, RNG, traffic and energy separate.
+
+## Appendix B. AWS deeper all-race pilot: matched gates fail
+
+| Coarse L4 seed7 | Dev acc % | Dev NLL | Whole fit GF | Fit MF/presentation | Infer MF/prefix |
+| --- | --- | --- | --- | --- | --- |
+| Original teacher | 56.77 | 1.342018 | 1.039740 | 1.015371 | 0.250529 |
+| Factorized control | 55.73 | 1.368549 | 1.082407 | 1.057038 | 0.250487 |
+| All40-race replay | 56.77 | 1.374384 | 28.968062 | 28.289123 | 0.250473 |
+
+Coarse4/.25-clock,p16/L4/H2/pool2,256FIT/192DEV,fourpasses/1024 presentations,U16/lr.003. Every-parameter sequential/forked replay contracts and three actual recovery/accounting smokes precede these pilots. Full40 race sites/80shadow lanes preserve factual first time and actual forced writes. Teacher/factorized/replay share data and observation protocol; no weight decay or input noise is mixed into this comparison.
+
+Replay NLL is worse by.032366 versus teacher and.005835 versus factorized, at27.861x/26.763x counted fitting work. Both fixed gates fail, confirmation is absent and no larger fit is nominated. This is a first small coarse/deep pilot; it does not replace the independently owned full-data fine-depth tests.
+
+Completed summary234200Z,108.202s total campaign. Same common-unit denominator in every fitting column.16available receivers,8writes/event, 40factual races/prefix. Full replay/optimizer paid despite parallel wall execution. Inference first11 DEV prefixes; raw input preprocessing/traffic/ RNG/energy separate. No official test, comparable-quality work supremacy or claim that all deep counterfactual learning must fail.
+
+## Appendix B. Parameter-targeted allocation retains a scoped positive gain
+
+| Seed | Score variance/k4 | Parameter FIT96 ratio | Parameter FIT97 ratio | Each-case gate |
+| --- | --- | --- | --- | --- |
+| 7 | 0.906188 | 0.599166 | 0.486158 | True |
+| 8 | 0.958262 | 0.614246 | 1.137133 | False |
+
+Frozen priority predictor trains on true shared-parameter route norms on FIT0..31 and confirms on new FIT96..127. Exact distinct weighted sampling and inclusion correction remain. Both aggregate score ratios pass; one seed8 parameter case fails. Combined nomination stays FAIL. The two-case weighted parameter aggregates .516746/.658755 support48.3%/34.1% reductions and are preserved as diagnostics, not replacements of the every-case gate.
+
+This is materially better allocation evidence than isolated score-space improvement, but four parameter examples cannot establish robustness or quality. No unchanged reduced-replay fit follows. Producer FIT labels were already seen; only priority supervision is held out. Every expensive training utility remains paid.
+
+11.439s/531,560KiB;1280 training plus80confirmation VJPs,2560diagnostic shadow lanes, saved predictors/proposals. Whole fitting/diagnostic FLOPs unknown, not zero. No inference change, DEV/test quality or6-versus8 execution-lane work advantage. Main deeper replay/growth remains independently owned.
+
+## Appendix B. AWS private state and shared maps: pilot gates fail
+
+| Variant | Params | Available | Dev acc % | Dev NLL | Fit GF | Fit MF/target | Infer MF |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Untied pool2 | 15523 | 8 | 55.73 | 1.274860 | 0.548517 | 0.535661 | 0.138133 |
+| Shared pool2 | 11227 | 8 | 53.12 | 1.276615 | 0.544113 | 0.531360 | 0.138105 |
+| Shared pool8 | 12019 | 32 | 54.69 | 1.233413 | 1.554905 | 1.518462 | 0.204447 |
+
+Same256FIT/192DEV,fourpasses/1024presentations,seed6,coarse4/.25-clock, p16/L2/H2. Shared input/output/gate maps retain private keys, clock biases, timescales and receiver memories. Delays perform computation, hard addressed races select four real writes/event and separate keys/values remain. Pool8 adds32available receivers while keeping four selected writes.
+
+Both fixed quality/resource nominations FAIL: tied2 loses.001754NLL and2.604accuracy points; tied8 improves NLL.041447 but misses.05 and loses 1.042points. Lower parameters and positive tied8 loss improvement remain supported. Pool growth also changes total hazard and per-unit exposure, so this is not isolated proof of capacity beyond scored work. No confirmation/full fit.
+
+Every-parameter/state/batch and actual Adam/cursor/RNG/operator contracts pass before both learning smokes and pilots. Historical failed coalesce-adapter contract remains beside corrected admission. Campaign56.762s; all candidate keys/proposals/losing credit/optimizer work paid, same fitting denominator. Inference first11prefixes/2FLOPs perMAC plus unit specials; raw preprocessing, physical traffic/RNG/energy separate. Deeper replay owns the next integrated comparison; no unchanged shallow expansion.
+
+## Appendix B. Query-only native admission: exact arithmetic saving
+
+| Seed | Dev acc % | Dev NLL | Whole fit GF | Fit MF/presentation | Old infer MF | Query infer MF |
+| --- | --- | --- | --- | --- | --- | --- |
+| 6 | 66.67 | 0.890983 | 4.218015 | 0.535825 | 0.138119 | 0.135259 |
+| 7 | 61.98 | 1.056934 | 4.218015 | 0.535825 | 0.138007 | 0.135147 |
+| 8 | 69.27 | 0.920744 | 4.218015 | 0.535825 | 0.138035 | 0.135175 |
+
+Three saved coarse4/.25-clock native producers,984FIT/eightpasses/7872 fitting presentations and192DEV. All576 paired prefix logits and ALLstate checks are bitwise identical. Only four unused intermediate affine classifiers are removed; clocks, races, keys, messages, persistent writes and terminal query remain. Original weights/fitting work and predictions are retained.
+
+2860 counted operations per prefix,2.07%, are saved under full ATen coverage. Three counterbalanced wall repeats show the Python wrapper about2% SLOWER. Arithmetic saving is supported; practical speed/supremacy is not. This explicit-query inference-only helper cannot replace ongoing-label or silence-supervised streams without a separate contract.
+
+65.025s/465,880KiB; target/repeat/query/parameter/training-rejection checks pass.8available units,4writes/event,all core scoring still paid. Same fit denominators/units and first11-prefix inference convention for both implementations.2FLOPs/MAC plus unit specials; raw preprocessing, traffic, RNG and measured energy remain separate. Verbatim former manual section preserved in appendices/aws_query_only_history_20261002T233000Z.md.
