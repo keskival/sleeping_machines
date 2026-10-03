@@ -25,11 +25,23 @@ from race_language_screen import capture  # noqa: E402
 from sleeping_machines.batched_episodes import batched_logits  # noqa: E402
 
 REPLAYS = [0]
+COMPILED, TRACING = [False], [False]
+
+
+def factual_logits(model, rows, seed, record=None):
+    """--compiled (§412): untraced factual passes without recorded scores use compiled layer steps
+    (sleeping_machines/compiled_episodes; contract-tested against batched_logits).  Route credit, shadow lanes and
+    traced windows stay on the batched path, whose operators the work tracer sees."""
+    if COMPILED[0] and record is None and not TRACING[0]:
+        from sleeping_machines.compiled_episodes import compiled_logits
+        return compiled_logits(model, rows, seed)
+    return batched_logits(model, rows, seed, record=record)
 
 
 def parser():
     p = C.parser(); p.add_argument('--route-credit', action='store_true', help='all-race local-expectation replay credit')
     p.add_argument('--route-races', type=int, default=0, help='sample this many races per episode (0 = all), scaled R/k')
+    p.add_argument('--compiled', action='store_true', help='compiled layer steps for untraced factual passes (§412)')
     return p
 
 
@@ -59,6 +71,7 @@ def route_term(model, rows, seed, scores, k=0, rng=None):
 
 
 def train_window(model, optimizer, rows, a, epoch, trace=False):
+    TRACING[0] = trace
     optimizer.zero_grad(set_to_none=True); stages = {}; box = {}
     seed = 100000 + a.seed + 10000 * epoch
     def traced(name, fn):
@@ -67,7 +80,7 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
     def forward():
         model.train(); scores = []
         if hasattr(model, '_fast_layers'): model._fast_layers = {}
-        logits = batched_logits(model, rows, seed, record=scores)
+        logits = factual_logits(model, rows, seed, record=scores if a.route_credit else None)
         losses = F.cross_entropy(logits, torch.tensor([r['target'] for r in rows]), reduction='none')
         objective = losses.sum(); replays = 0
         if a.route_credit:
@@ -92,7 +105,8 @@ def train_window(model, optimizer, rows, a, epoch, trace=False):
 @torch.no_grad()
 def evaluate(model, rows):
     model.eval()
-    logits = batched_logits(model, rows, 314159)
+    TRACING[0] = False
+    logits = factual_logits(model, rows, 314159)
     targets = torch.tensor([r['target'] for r in rows])
     losses = F.cross_entropy(logits, targets, reduction='none')
     events = sum(len(r['events']) for r in rows); races = events * model.depth * model.heads
@@ -101,12 +115,23 @@ def evaluate(model, rows):
                 key_scores=races * model.pool, selected_updates=races, max_state_tensor_bytes=None)
 
 
+def configure_compiled(a):
+    if getattr(a, 'compiled', False):
+        from torch._dynamo import config as dynamo_config
+        from torch._inductor import config as inductor_config
+        COMPILED[0] = True
+        inductor_config.compile_threads = 1          # no compile-worker pool (memory floor)
+        dynamo_config.cache_size_limit = 64          # lane counts, grad modes and per-layer gains each specialize
+
+
 def make_model(a, fast=True):
+    configure_compiled(a)
     return C.make_model(a, True)          # batched path needs the fast mixin's stacked parameters
 
 
 def sources():
-    names = ['experiments/dvs_batched_le_benchmark.py', 'sleeping_machines/batched_episodes.py']
+    names = ['experiments/dvs_batched_le_benchmark.py', 'sleeping_machines/batched_episodes.py',
+             'sleeping_machines/compiled_episodes.py']
     return {**C.sources(), **{n: N.sha(ROOT / n) for n in names}}
 
 

@@ -1284,3 +1284,30 @@ score 2.171 (LSTM 256, 338K parameters, 20.3 TFLOPs) and 2.427 (Transformer 256�
 1,220 cosine steps. Capacity and update count both differ, so the v2 arms fix the step count and the v3 arm
 p32/d8/pool4 (346,331 parameters) matches the LSTM's parameter count. The v3 arm keeps 16 selected writes per character,
 so it isolates stored capacity from selected activity.
+
+## 412. Compiled layer steps: the batched native core is dispatch-bound
+
+**Failure.** At language sizes the exact batched path (§405) costs about the same per window at 64 and 128 lanes
+(6.1 s versus 6.8 s at p16/d8). Backward is about 60% of the time. The arithmetic per operation is tiny (payload 16, pool 2),
+so the time goes to dispatching hundreds of small operators per event and layer in forward and in autograd. Fewer
+characters per update (§411) therefore cost throughput almost one-for-one: 1,424 versus 2,426 characters/s.
+
+**Change.** sleeping_machines/compiled_episodes.py evaluates one (event, layer) step for all lanes as a single
+torch.compile'd function (inductor CPU kernels, one compile thread). The model, state bookkeeping and race-noise draw
+order are unchanged. The factorized race is written so it can be traced: the payload is gathered at the winner (winner-only
+value credit), and the first time T is held fixed plus the exactly-zero term −T(lse(s) − stopgrad lse(s)). Its score
+gradient is −Tπ_i, the common first-time clock credit dT/ds_i of LaneRace. No mechanism is removed. Sparse addressed
+writes, temporal races, transport and the factorized credit are the same functions. Forced replays (shadow lanes) and
+recorded race scores remain on the batched path.
+
+**Contracts.** tests/test_compiled_episodes.py: the traceable formulation equals batched_logits within 1e-10 in float64
+(including near-identity init), the compiled step within 1e-9 in float64 and 2e-4 in float32, on variable-length
+episodes. tests/test_dvs_batched_le.py: a compiled DVS training window's gradients and evaluation equal the batched path
+within 1e-9, and traced windows stay bitwise on the batched path. Work tracing sees only dispatched operators, so traced
+windows always run the batched path, and FLOP estimates keep their convention.
+
+**Measured.** Language p16/d8, 64 lanes × 128: 5,800 characters/s in the running arm against 1,424 eager (4.1×). The
+training loss at window 50 agrees with the eager run to 7e-5 bits. DVS depth 4, 16 episodes × 21 events: 0.15 s versus 0.52 s
+per window (3.4×). Compiling once costs about 20–50 s per shape and grad mode. A 90M pass at p16/d8 is now about 4.3 h, so
+the §409 payload-32 condition (a single pass in about 20 h) is within reach. This is wall time on one CPU thread. FLOP
+counts are unchanged by construction, and energy is not measured.

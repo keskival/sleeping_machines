@@ -21,6 +21,7 @@ def parser():
 
 
 def make_model(a, fast=True):
+    BL.configure_compiled(a)
     return G.make_model(a, True)
 
 

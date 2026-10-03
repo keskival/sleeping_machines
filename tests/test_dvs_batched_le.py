@@ -42,3 +42,24 @@ def test_batched_all_race_credit_equals_sequential_all_race_credit():
     m.zero_grad(); BL.train_window(m, opt, rows, a, epoch=1)
     for n, g in seq.items():
         torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=1e-7, atol=1e-9, msg=n)
+
+
+def test_compiled_window_and_evaluation_match_batched_path():
+    a, m, rows = _setup()
+    a.route_credit = False
+    opt = torch.optim.SGD(m.parameters(), lr=0.)
+    reference = BL.evaluate(m, rows)
+    m.zero_grad(); BL.train_window(m, opt, rows, a, epoch=1)
+    eager = {n: p.grad.clone() for n, p in m.named_parameters() if p.grad is not None}
+    BL.COMPILED[0] = True
+    try:
+        compiled = BL.evaluate(m, rows)
+        m.zero_grad(); BL.train_window(m, opt, rows, a, epoch=1)
+        for n, g in eager.items():
+            torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=1e-9, atol=1e-11, msg=n)
+        assert compiled['accuracy'] == reference['accuracy'] and abs(compiled['nll'] - reference['nll']) < 1e-10
+        m.zero_grad(); BL.train_window(m, opt, rows, a, epoch=1, trace=True)        # traced windows stay eager
+        for n, g in eager.items():
+            torch.testing.assert_close(dict(m.named_parameters())[n].grad, g, rtol=0, atol=0, msg=n)
+    finally:
+        BL.COMPILED[0] = False

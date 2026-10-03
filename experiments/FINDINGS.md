@@ -1,5 +1,18 @@
 # Findings log
 
+## Compiled layer steps: 4.1× language and 3.4× DVS training throughput, contract-equal — 3 October
+
+THEORY §412. The batched native core was dispatch-bound: a 64-lane language window cost nearly as much as a 128-lane
+one. sleeping_machines/compiled_episodes.py compiles one (event, layer) step for all lanes (torch.compile/inductor, CPU,
+one thread), with the factorized race written in a traceable form that has the same value and the same credit (winner
+payload credit; clock credit −Tπ_i). Contracts: within 1e-9 of batched_logits in float64 (logits and every parameter
+gradient), 2e-4 in float32; DVS training window and evaluation within 1e-9; traced work windows stay on the batched path.
+Measured: language p16/d8/64 lanes 5,800 versus 1,424 characters/s; DVS depth 4 0.15 versus 0.52 s per 16-episode
+window. Same model, same FLOP convention; wall time only. The 10M language queue (v2c, with the declared p32/d8/pool4
+capacity arm v3c) and the large DVS program now run compiled. The first eager v2 arm was stopped twice before any
+outcome. At 04:44 an operator profiler pushed host MemAvailable below the 8 GiB floor and the watchdog stopped it
+correctly. At 05:25 it was withdrawn for the compiled queue.
+
 ## First 10M native language arm (update-starved v1) and the matched one-pass controls — 3 October
 
 Segment-batched native core (experiments/language_batched_benchmark.py; integrated AddressedEventHeads, factorized
