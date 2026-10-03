@@ -1,0 +1,15 @@
+{
+  "status": "superseded_recovery_v2",
+  "active": {},
+  "completed": [
+    "aws_public_contracts_20261004T000100Z"
+  ],
+  "started_utc": "2026-10-03T22:16:37.168408+00:00",
+  "errors": [
+    {
+      "slot": 1,
+      "error": "Command '['bash', 'experiments/queue/run_safe.sh', 'experiments/queue/aws_public_campaign_20261004T000100Z/aws_public_recover_20261004T000100Z_aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt']' returned non-zero exit status 2."
+    }
+  ],
+  "reason": "Wrapper argparse abbreviation rejected --compiled before model execution. Contracts passed; exact replay checkpoint preserved; unique v2 retry."
+}

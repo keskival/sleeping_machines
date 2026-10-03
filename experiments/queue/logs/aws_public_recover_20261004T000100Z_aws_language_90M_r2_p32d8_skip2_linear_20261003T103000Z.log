@@ -1,0 +1,6 @@
+usage: frozen_language.py [-h] --compiled-source COMPILED_SOURCE
+                          --compiled-sha COMPILED_SHA
+                          --driver-source DRIVER_SOURCE
+                          --driver-sha DRIVER_SHA
+                          driver
+frozen_language.py: error: ambiguous option: --compiled could match --compiled-source, --compiled-sha

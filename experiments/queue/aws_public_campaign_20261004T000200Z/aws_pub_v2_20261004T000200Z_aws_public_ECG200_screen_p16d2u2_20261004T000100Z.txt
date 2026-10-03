@@ -1,0 +1,1 @@
+aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z experiments/public_benchmarks/run.py --dataset ECG200 --tag aws_public_ECG200_screen_p16d2u2_20261004T000100Z --epochs 40 --payload 16 --depth 2 --pool 2

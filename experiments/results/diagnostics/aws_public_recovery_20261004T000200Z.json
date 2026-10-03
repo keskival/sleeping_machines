@@ -1,0 +1,9 @@
+{
+  "status": "prepared_exact_recovery",
+  "checkpoint": "experiments/results/aws_depth8_language_credit/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7.progress.public_retry_20261004T000200Z.pt",
+  "checkpoint_sha256": "3108ff74e4b7b8b4345c5900f9f207c4914ea4d237524cbcfa60c09b3402cbe3",
+  "trained_targets": 1957888,
+  "discarded_work": "Unknown, not zero; <=4095 replay targets. Language wrapper failed before training. Public numerical contracts completed and preserved.",
+  "new_manifest": "experiments/queue/aws_public_campaign_20261004T000200Z/manifest.json",
+  "recorded_utc": "2026-10-03T22:19:42.998809+00:00"
+}

@@ -1,0 +1,1 @@
+aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_selection_20261004T000100Z experiments/public_benchmarks/select.py --manifest experiments/queue/aws_public_campaign_20261004T000200Z/manifest.json --dataset JapaneseVowels --tag aws_public_JapaneseVowels_selection_20261004T000100Z
