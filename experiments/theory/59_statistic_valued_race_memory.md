@@ -1500,3 +1500,8 @@ per race, while the current evaluator also stacks all unit matrices on every cal
 is outside FLOP counts. The p32/pool4 final stack alone is 612,736 bytes per invocation; cache/state for eight lanes
 adds 67,840 bytes, with raw model/context/temporaries extra. No traffic or energy measurement follows. Keep both
 per-evaluated-position and per-scored-target boundaries explicit (pool4 .164301 versus .306695 MFLOPs, respectively).
+
+**§413 depth with credit (13:0x UTC).** p32/d8 pool 2 (near-identity init from layer 2) with route credit (210,043
+parameters, 1.42 MFLOPs fitting per character) scored DEV 2.269 / test 2.326 bpc (T = 256 2.326). Without credit the same
+model scored 2.456 (−.130), and p32/d4 with credit 2.370 (−.044). The credit gain is not specific to shallow stacks, and
+depth helps once the address learns. Width helped more per unit of work at this budget (p64/d4 2.184 at 2.68 MFLOPs/char).
