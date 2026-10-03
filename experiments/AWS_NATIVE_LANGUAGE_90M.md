@@ -4,11 +4,27 @@ User request (3 October 2026): run the 90M native language variants on the AWS h
 Read `AGENTS.md`, `experiments/HANDOFF.md` and THEORY §§409–412 (experiments/theory/59_statistic_valued_race_memory.md)
 first.
 
-**Revision pending (06:50 UTC).** THEORY §413 diagnoses an untrained race address in these runs. The factorized race
-gives scores only first-time clock credit, so pools fragment memory. Width dominates depth at 10M (p32/d4 2.507 versus
-p16/d8 2.719). The curie v4 queue (pool 1/2/4 with and without linearized route credit, width 128) finishes in about
-4 h. Before admitting the 90M arms, re-read this file: the arm list may be replaced by the v4 winners (new job names
-and tags; nothing that has run will be renamed). Contracts and pilots may run now.
+## Revision 2 (10:30 UTC): run these arms, with route credit
+
+THEORY §413 found that the fast language path trained the race address by timing alone. Adding the linearized
+local-expectation route credit (`--route-credit linear`; forward values unchanged, same work) improved p32/d4 pool 2
+at 10M from 2.507 to **2.370** test bpc. That beats the no-selection pool-1 control (2.439) and the one-pass
+Transformer-256×2 (2.427). Without credit, pool 4 was worse than pool 2. **Revision 1 (below) is superseded before it
+ran. Do not admit its queues** (`aws_language_90M_*_20261003T063000Z.txt`; files kept for the record). Admit instead:
+
+| Queue (one job each) | Arm | Parameters |
+|---|---|---:|
+| `queue/aws_language_90M_contracts_20261003T103000Z.txt` | contracts, then 60-window pilots of the three arms | — |
+| `queue/aws_language_90M_r2_p32d4_linear_20261003T103000Z.txt` | payload 32, depth 4, pool 2, route credit | 108,875 |
+| `queue/aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt` | payload 32, depth 8, pool 2, near-identity init from layer 2, route credit | 210,043 |
+| `queue/aws_language_90M_r2_p64d4_linear_20261003T103000Z.txt` | payload 64, depth 4, pool 2, route credit | about 422K |
+
+All other settings, the evaluation, the references and the admission steps below are unchanged. curie throughput at
+10M: p32/d4 about 7,760 characters/s with credit (90M about 3.3 h), p32/d8 about 4,400 (about 5.7 h), p64/d4 not yet
+measured (curie v5 arm). The curie v5 queue also tests the credit at pool 4, at depth 8 and in its write-address variant.
+A later revision may add a pool-4 or write-credit arm, always under new names.
+
+## Revision 1 (06:30 UTC; superseded, not run)
 
 ## What runs
 

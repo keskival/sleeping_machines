@@ -1,9 +1,10 @@
 # Current AWS work
 
-**Queued by the user's request (3 October 06:30 UTC): native language at 90M characters.** Protocol and admission:
-[AWS_NATIVE_LANGUAGE_90M.md](AWS_NATIVE_LANGUAGE_90M.md). Contracts and pilots
-`queue/aws_language_90M_contracts_20261003T063000Z.txt`, then three one-job arms (p16/d8, p32/d8, p32/d8/pool4; all
-compiled, near-identity init, one pass, checkpointed). Admit them into free guarded slots as the current fits finish.
+**Queued by the user's request (3 October): native language at 90M characters, revision 2 (10:30 UTC, with route
+credit).** Protocol and admission: [AWS_NATIVE_LANGUAGE_90M.md](AWS_NATIVE_LANGUAGE_90M.md). Contracts and pilots
+`queue/aws_language_90M_contracts_20261003T103000Z.txt`, then three one-job arms `aws_language_90M_r2_*_20261003T103000Z`
+(p32/d4, p32/d8, p64/d4; all `--route-credit linear`, compiled, one pass, checkpointed). Revision-1 queues
+(`*_20261003T063000Z`) are superseded and must not be admitted.
 
 The prioritized active integrated experiment is
 `gym/plans/aws_capacity_exposure_20261002T072141Z/manifest.json`:
