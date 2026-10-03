@@ -1,0 +1,4 @@
+# PENDING: physical curie queue remains reserved; do not use a container-local free lock as idle evidence.
+# Retain the current v4 training queue first. Run only with a physical-host reservation via run_safe.sh.
+# MEM_CAP_KB=3000000 MEM_CAP_RSS_KB=1250000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=420
+local_language_routing_measurements_20261003T092000Z experiments/language_routing_measurements.py --result experiments/results/language_batched/curie_language_batched_10M_p32d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json --out experiments/results/diagnostics/local_language_routing_measurements_20261003T092000Z.json --chars 2048 --samples 4 --lanes 8

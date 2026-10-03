@@ -1,5 +1,65 @@
 # Local host: current research continuation
 
+## Routing measurement and horizon checkpoint — 3 October, 09:20 UTC
+
+**Physical curie remains reserved for the existing queue.** New shared
+results completed the original D8/pool4 arm (test2.498),50K routing diagnoses
+and the D4/pool1 diagnostic control (test2.439). The other v4 credit arms
+retain priority; this container cannot reserve their physical lock or
+infer host idleness from its local process table. No model runtime,
+training, forward diagnostic or profiler was launched here in this turn.
+The last visible MemAvailable was about10.9GiB, not proof of admission.
+
+Prepared `language_routing_measurements.py`, stdlib summaries/checks and
+[141](theory/141_streaming_routing_and_horizon_measurements.md). Original
+saved p32/D8/pool2 weights and verified83265f archived batched body; actual
+winner counts separate from probability mass; depth/head buckets; local
+post-clamp clock sensitivity/boundary hits; sampled-first-time argmax
+identity versus the older unit-noise/clocks policy; every component NLL
+and the true mean-seed Jensen gap. Streaming target log probabilities
+replace retained all-span trajectories. No changes to the existing driver,
+v4 queue, model core or saved results.
+The loader also verifies the relative temporal dependency7237331f against
+both archive producer anchors; the original language parent did not hash
+that dependency separately, so this provenance check is explicit.
+
+Unique **pending**, one-job queue:
+`queue/local_language_routing_measurements_20261003T092000Z.txt`.
+It uses2048DEV chars, T128, four sampled/two greedy production passes,
+30windows/1984scored targets per arm. Planned capsVMS3000000KiB,
+RSS1250000KiB, minimum8192MiB available, timeout420s, oneCPU thread via
+run_safe, ONLY after a physical-host reservation. Native contracts are
+first in that guarded job and remain unexecuted; no output/log exists.
+`check_routing_measurement_summary.py`, static syntax and `--help` pass
+without NumPy/Torch; these are measurement/math checks, not native tests.
+Keep138's actual-warm-Adam comparison pending too, behind the integrated
+v4 priority and physical-host admission.
+
+The parent JSON points to its producer's untracked final `.pt`; it is not
+available in this execution context. The driver rejects absence before
+runtime imports. Its queue must execute on the producer with those actual
+weights, or after a verified transfer. No reconstruction from reported
+scores is allowed. The pending queue's source/argument shape verifies
+locally; actual-checkpoint admission does not.
+
+Full report assembly verifies199 editorial blocks and all30 historical136
+source hashes; frozen archive collision/tamper guards and target-leakage
+quarantine pass. This read-only check used NumPy for existing evidence
+summaries, loaded no Torch and rendered no Markdown/PDF. Existing publication
+artifacts and completed result bytes are preserved.
+
+Updated140's dated status: the shared8bcea13 now implements `linear_rw`
+memory-content credit, while timestamp/seen/topology/curvature remain
+outside that surrogate. Preserve the original derivation and historical
+"unimplemented" scope. Added a correction beside §413's original numbers:
+unit-forget ln2/rate does not bound effective retention when forget is
+input dependent; dormant stored memory also enters key scoring before
+candidate decay. Sharp probabilities are measured, winner balance and
+predictive specialization are different questions. The original .022/.019
+mixture gains are against first seed, not a saved Jensen baseline; greedy
+changes clocks. Do not silently erase these valid scoped results or treat
+them as isolated noise/maximum-context proofs.
+
 ## curie: 10M language results, §413 diagnosis and v4 diagnostics, 3 October 07:45 UTC
 
 Completed (one pass, compiled, test bpc T128): p16/d8 skip2 2.719, p32/d4 2.507, p32/d8 skip2 2.456 (one-pass E64:

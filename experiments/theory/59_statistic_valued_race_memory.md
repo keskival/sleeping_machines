@@ -1402,3 +1402,15 @@ trained by timing alone, the sparse pool costs about .07 bpc at depth 4 and .04 
 more parameters and work. This is evidence about the current credit, not about addressed memory: the architecture's
 claim needs the address to learn from value. The remaining v4 arms test that. Pool 1 stays a labelled control, and it
 is not promoted.
+
+**§413 measurement scope correction (09:20 UTC; original numbers retained).** The routing diagnostic's
+`mean_pi_per_unit` above is expected probability mass, not counted winner occupancy; sharpness remains supported.
+Its greedy improvement changes both identity and delay, and the .022/.019 mixture improvements are against the
+first seed, not the Jensen baseline (mean constituent loss). Those differences remain valid within their stated
+policies, without isolating a pure routing-noise contribution. Likewise, ln2/rate is a base half-life **at unit forget**:
+the actual candidate uses rate×input-dependent forget, and stored memory enters keys before candidate decay.
+The reported base-rate maximum16–27 therefore does not bound actual retention/context use; T128/T256 similarity
+also does not prove that distant history is unused. Interference and shortened effective memory remain testable
+hypotheses. [141](141_streaming_routing_and_horizon_measurements.md) gives the derivation and a pending bounded
+streaming diagnostic with actual winners, separate head buckets, clock-preserving identity interventions and the
+correct mixture baseline. Existing completed results and the prioritized v4 credit comparisons remain unchanged.

@@ -153,3 +153,24 @@ carry information even about nonselected slots. Neither a 1/U heuristic
 nor a poor restricted-teacher fit proves a mathematical barrier to the
 complete temporal/addressed substrate. Keep supported gains and equally
 demanding negative controls, with the learning mechanism and cost explicit.
+
+## 3 October, 09:20 UTC: shared implementation and measurement update
+
+The historical "unimplemented" statement above applied before8bcea13.
+That shared change implements the memory-content part as `linear_rw` in
+both eager and compiled paths, adding `(pi-stopgrad(pi))*stopgrad(m_new-m)`
+to the already hard-updated slot, masked by active lanes. It retains the
+same forward writes and delays and extends the v4 contracts/queue. Timestamp
+and boolean-seen changes, finite return curvature and future routing
+topology remain outside this local surrogate; do not equate it with actual
+suffix replay. The current v4 arms remain the integrated priority.
+
+Completed50K diagnostics now show sharp trained probability distributions,
+so near-uniform trained routing is no longer a supported description.
+They still record probability mass rather than actual winner occupancy,
+and their greedy policy changes clocks. [141](141_streaming_routing_and_horizon_measurements.md)
+prepares a source-bound, bounded streaming measurement of actual decisions,
+post-clamp common-clock sensitivity, identity-only and unit-clock argmax
+policies and the correct mean-seed mixture Jensen gap. Its native contracts
+and forward job remain pending physical-host admission. It also derives
+why unit-forget base half-lives do not establish the actual context horizon.
