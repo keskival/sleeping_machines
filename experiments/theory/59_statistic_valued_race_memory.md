@@ -1367,3 +1367,10 @@ the future reads of that slot within the segment. The implementation is the same
 (batched_episodes.linear_write_credit; `--route-credit linear_rw` adds it to the value credit), with forward values
 bitwise unchanged and the compiled path within 1e-9 of eager in float64. **Prediction (e):** linear_rw ≤ linear in bpc, with
 the larger gain at pool 4, where addressing matters more.
+
+**§413 first outcome (08:41 UTC): more units without address credit hurt.** The declared capacity arm p32/d8/pool4
+(346,331 parameters, 16 selected writes per character, 2.36 MFLOPs fitting per character) scored DEV 2.444 / test 2.498
+bpc. The pool-2 arm at the same width and depth (210,043 parameters, 1.41 MFLOPs) scored DEV 2.404 / test 2.456. Adding
+stored capacity at unchanged selected activity made the model worse when the address has no value credit, as the
+fragmentation argument predicts. Single seed, depth 8. The v4 queue tests the same at depth 4 with and without route
+credit.
