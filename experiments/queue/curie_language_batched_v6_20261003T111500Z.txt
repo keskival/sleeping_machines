@@ -3,6 +3,12 @@
 # (32 lanes, same 8,192 characters per update); (iii) both. Prediction: if the horizon limits quality, T=256 scoring
 # improves over T=128 and test bpc falls; if not, the horizon is not the binding constraint at 10M one pass.
 curie_language_v6_contracts_20261003T111500Z -m pytest -q tests/test_compiled_episodes.py tests/test_language_batched.py
+# 23:15 UTC NeuroBench MG diagnostics (closed-loop 24.5 did not beat teacher forcing 23.0 on tau 18): one-step precision
+# decides chaotic rollouts; test increment targets, deterministic routing at inference and the no-routing pool-1 control.
+curie_mg3_t18_p16_delta_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_delta_20261003T231500Z --payload 16 --steps 1500 --delta
+curie_mg3_t18_p16_delta_argmax_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_delta_argmax_20261003T231500Z --payload 16 --steps 1500 --delta --argmax
+curie_mg3_t18_p16_pool1_delta_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p16_pool1_delta_20261003T231500Z --payload 16 --steps 1500 --delta --pool 1
+curie_mg3_t18_p32_delta_argmax_3k_20261003T231500Z experiments/mackey_glass_native.py --repeats 3 --lanes 32 --segment 64 --compiled --tau 18 --taps 8 --depth 2 --tag curie_mg3_t18_p32_delta_argmax_3k_20261003T231500Z --payload 32 --steps 3000 --delta --argmax
 # 22:20 UTC: sampled route credit ablation (§416; winner + one sampled alternative, unbiased for the linear credit,
 # fewer fitting FLOPs at pool > 2), then the §415 update-matched and second-seed checks of the 6-pass p96 row (1.8886).
 curie_language_v6_10M_p32d4_pool4_sampled_20261003T111500Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p32d4_pool4_sampled_l64_lr004_cmp_s6_20261003T111500Z --pool 4 --route-credit sampled --fit 10000000 --dev 1000000 --segment 128 --lanes 64 --lr 0.004 --passes 1 --eval-every 400 --cosine --eval-segment 256 --compiled --depth 4 --payload 32

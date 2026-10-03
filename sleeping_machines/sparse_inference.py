@@ -23,7 +23,7 @@ class SparseStepper:
     seeded like batched_logits' forked global stream, so a full replay equals batched_logits (and sparse_logits)."""
 
     @torch.no_grad()
-    def __init__(self, model, lanes, seed):
+    def __init__(self, model, lanes, seed, deterministic=False):
         self.model, self.n = model, lanes
         self.layers = model._stacked(0)
         D, H, U, P = model.depth, model.heads, model.pool, model.payload
@@ -36,6 +36,7 @@ class SparseStepper:
         self.ctx_arr = torch.zeros(lanes, H, dtype=torch.float64)
         self.has_ctx = torch.zeros(lanes, dtype=torch.bool)
         self.generator = torch.Generator().manual_seed(seed)
+        self.deterministic = deterministic          # every clock noise 1: the highest score wins (a labelled variant)
 
     def _transport(self, value, age, depth, head):
         model = self.model
@@ -71,6 +72,8 @@ class SparseStepper:
             values, arrivals = [], []
             for head in range(H):
                 noise = torch.empty(U, dtype=torch.float64).exponential_(generator=self.generator)   # batched draw order
+                if self.deterministic:
+                    noise = torch.ones_like(noise)
                 times = noise[None, :] / scores[:, head].to(torch.float64).exp()
                 first, w = times.min(-1)
                 idx = head * U + w

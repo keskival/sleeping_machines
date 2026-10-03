@@ -85,24 +85,33 @@ def fit_and_forecast(a, z, seed):
         starts = rng.integers(0, TRAIN - S + 1, B)
         rows = [dict(events=[(float(i), taps_of(z, i, a.taps)) for i in range(s, s + S)]) for s in starts]
         y = torch.tensor(np.stack([z[s + 1:s + S + 1] for s in starts]), dtype=torch.float32)
+        if a.delta:                                    # predict the increment z[t+1] - z[t]
+            y = y - torch.tensor(np.stack([z[s:s + S] for s in starts]), dtype=torch.float32)
         model.train(); opt.zero_grad(set_to_none=True)
         closed = a.closed_loop and step >= a.closed_from * a.steps
         kw = dict(feedback=(a.closed_loop, lambda prev, logits: torch.cat([logits[:, :1].to(prev.dtype), prev[:, :-1]], -1)))\
             if closed else {}
+        if closed and a.delta:
+            kw = dict(feedback=(a.closed_loop, lambda prev, logits: torch.cat([prev[:, :1] + logits[:, :1].to(prev.dtype),
+                                                                             prev[:, :-1]], -1)))
         out = logits_fn(model, rows, 1000 + step, all_logits=True, route_credit=rc, **kw)[..., 0]
         loss = F.mse_loss(out[:, a.warmup:], y[:, a.warmup:])
         loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip); opt.step(); schedule.step()
         losses.append(float(loss))
     model.eval()
-    stepper = SparseStepper(model, 1, 777)
+    stepper = SparseStepper(model, 1, 777, deterministic=a.argmax)
     with torch.no_grad():
         for i in range(TRAIN):                            # teacher-forced warm pass over the training inputs
             pred = stepper.step(torch.tensor([float(i)]), torch.tensor(taps_of(z, i, a.taps))[None])
+        if a.delta:
+            pred = pred + float(z[TRAIN - 1])
         history = list(z[:TRAIN])
         preds = []
         for i in range(TRAIN, TRAIN + TEST):              # autonomous: the newest input is the previous prediction
             history.append(float(pred[0, 0]))
             pred = stepper.step(torch.tensor([float(i)]), torch.tensor(taps_of(np.array(history), i, a.taps))[None])
+            if a.delta:
+                pred = pred + history[-1]
             preds.append(float(pred[0, 0]))
     return np.array(preds), losses, sum(p.numel() for p in model.parameters())
 
@@ -121,6 +130,8 @@ def main():
     p.add_argument('--compiled', action='store_true'); p.add_argument('--seed', type=int, default=0)
     p.add_argument('--closed-loop', type=int, default=0, help='closed-loop training: positions >= this use the model\'s own '
                    'previous prediction as the newest tap (gradients through it); 0 = teacher forcing only (needs --compiled)')
+    p.add_argument('--delta', action='store_true', help='predict the increment z[t+1] - z[t]')
+    p.add_argument('--argmax', action='store_true', help='deterministic routing at inference (highest score wins)')
     p.add_argument('--closed-from', type=float, default=.5, help='fraction of training after which closed-loop windows start')
     a = p.parse_args()
     if a.closed_loop and not a.compiled:
