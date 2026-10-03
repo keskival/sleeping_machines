@@ -93,6 +93,8 @@ def pages(data):
     p2, p4 = native['p32/d4 + route credit'], native['p32/d4/pool4 + route credit']
     p8, no8 = native['p32/d8, skip2 + route credit'], native['p32/d8, skip2']
     tf, lstm = controls['Transformer-256x2'], controls['LSTM-256']
+    gap = best['test256']-lstm['test']
+    relative_quality = 'behind' if gap >= 0 else 'ahead of'
     replay, private, shared = data['progress']
     progress_rows = [[r['label'], f"{r['online_interval_bpc']:.6f}", f"{r['cumulative_online_bpc']:.6f}"] for r in data['progress']]
     return [[
@@ -114,7 +116,7 @@ def pages(data):
             f"The credited depth-8 model reaches {p8['test256']:.3f} versus {no8['test256']:.3f} without that credit. "
             'The gain survives a deeper stack; width, initialization and capacity still need controlled comparisons.'
         ]),
-        ('p', f"The best native model remains {best['test256']-lstm['test']:.3f} bpc behind the LSTM, "
+        ('p', f"The best native model is {abs(gap):.3f} bpc {relative_quality} the LSTM, "
               f"using {best['whole']/1e12:.2f} versus {lstm['whole']/1e12:.2f} estimated fitting TFLOPs. "
               'This is substantial progress, not comparable-quality superiority in total resources.')
     ], [
@@ -139,12 +141,14 @@ def pages(data):
                   'These are training predictions, not completed heldout scores or useful-depth/iso-FLOP proof.'),
         ('h2', 'Prioritize discriminating evidence'),
         ('bullets', [
-            'Finish credited width/capacity comparisons and independent seeds before the horizon arms; retain the provisioned AWS90M protocol.',
+            'Complete current multi-pass/width and queued tied-pool/seed comparisons. AWS90M pool4 has started after '
+            '15 contracts and its throughput pilot; completed90M quality is pending.',
             'Prepared, unrun trained-FIT factorial checks separate message effects, private commit effects and their interaction at fixed first time/future noise.',
-            'Calibrate an optional write term against the utility left unexplained by value credit. A per-case oracle scale is not a validated learner; '
-            'check shared scales, parameter coupling and actual optimizer effects before another fit.'
+            'Calibrate optional write credit against unexplained value utility; check shared scales, feedback and actual updates before another fit.',
+            'Datacenter serving: a prepared worker reuses one packed matrix stack. Standard-library lifecycle checks pass; '
+            'trained parity, measured runtime and quality rescore remain pending. Snapshot/setup/residency costs are charged.'
         ]),
-        ('small', 'Theory143/144. No proof of a mathematical barrier or general supremacy; neither follows from this evidence. '
+        ('small', 'Theory143–146; DATACENTER_VALUE_MILESTONES.md. No proof of a mathematical barrier or general supremacy; neither follows from this evidence. '
                   'Counts remain strong references in their established region. Current gains retain time as computation, hard-route credit, '
                   'deep persistent state, separate keys/values and capacity beyond selected activity.')
     ]]

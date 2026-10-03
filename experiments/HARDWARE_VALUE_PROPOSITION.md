@@ -8,6 +8,18 @@ scheduling; global clock removal does not remove causal ordering, communication,
 arbitration, handshakes or time references. No FPGA/ASIC implementation or
 Sleeping Machines hardware joule measurement is claimed.
 
+**Datacenter commercialization priority, 3 October2026.** The target includes
+AI training/inference infrastructure in datacenters. Establish useful quality
+per total execution cost, throughput, latency and resident capacity before
+claiming a hardware/system advantage. Software execution, compiler/runtime and
+event-processor IP are possible adoption paths within the substrate vision.
+[DATACENTER_VALUE_MILESTONES.md](DATACENTER_VALUE_MILESTONES.md) orders the
+technical proof points. [146](theory/146_prepacked_serving_and_datacenter_admission.md)
+prepares an immutable-weight worker that avoids repeated unit-matrix assembly;
+native parity and speed/traffic/energy remain pending. Fully occupied datacenter
+workloads need measured active-work/traffic gains as well as idle behavior;
+periodic-work savings during silence alone do not characterize those workloads.
+
 ## What clock removal alone can save
 
 At equal completed task, quality, throughput and latency, let f be the fraction

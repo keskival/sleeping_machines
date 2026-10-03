@@ -1,0 +1,5 @@
+# PREPARED, UNRUN. Requires physical host reservation; a Docker-local lock is insufficient.
+# Does not displace curie integrated v8/v6/DVS or AWS90M/recovered private fits.
+# Actual checkpoint is the 491520-presentation AWS admission pilot, NOT completed 90M quality.
+# One CPU thread, run_safe only. MEM_CAP_KB=3000000 MEM_CAP_RSS_KB=1250000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=420
+local_prepacked_sparse_contracts_20261003T150000Z experiments/prepacked_sparse_contracts.py --result experiments/results/language_batched/aws_language_batched_90M_r2_pilot_p32d4_pool4_linear_20261003T121000Z.json --out experiments/results/diagnostics/local_prepacked_sparse_contracts_20261003T150000Z.json --manifest experiments/queue/local_prepacked_sparse_contracts_20261003T150000Z.sources.json

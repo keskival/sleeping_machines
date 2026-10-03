@@ -26,7 +26,13 @@ def sha(path):
 def sources():
     paths = list((ROOT/'report').glob('*.py'))
     paths += [ROOT/'experiments/legacy_batched_driver_binding.py', ROOT/'experiments/lm_training_flops.py',
-              Path(__file__).resolve(), ROOT/'experiments/analysis/aws_language_matched_progress_1m.py']
+              Path(__file__).resolve(), ROOT/'experiments/analysis/aws_language_matched_progress_1m.py',
+              ROOT/'sleeping_machines/prepacked_sparse_inference.py',
+              ROOT/'experiments/prepacked_sparse_contracts.py', ROOT/'experiments/check_prepacked_sparse_worker.py',
+              ROOT/'experiments/prepacked_resource_geometry.py', ROOT/'experiments/check_prepacked_resource_geometry.py',
+              ROOT/'experiments/DATACENTER_VALUE_MILESTONES.md',
+              ROOT/'experiments/theory/146_prepacked_serving_and_datacenter_admission.md',
+              ROOT/'experiments/queue/local_prepacked_sparse_contracts_20261003T150000Z.sources.json']
     return {str(path.relative_to(ROOT)): sha(path) for path in paths}
 
 
@@ -34,7 +40,9 @@ def evidence_hashes():
     native = runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))
     current = runpy.run_path(str(ROOT/'report/current_language_status.py'))
     paths = [ROOT/'experiments/results'/name for name, _ in native['NATIVE']+native['CONTROLS']]
-    paths += [ROOT/'experiments/results'/native[key] for key in ('INFERENCE', 'INFERENCE_MORE', 'SPARSE')]
+    for key in ('INFERENCE', 'INFERENCE_MORE', 'SPARSE'):
+        names = native[key] if isinstance(native[key], list) else [native[key]]
+        paths.extend(ROOT/'experiments/results'/name for name in names)
     paths.append(ROOT/current['PROGRESS'])
     progress = json.loads(paths[-1].read_text())
     for row in progress['rows']:

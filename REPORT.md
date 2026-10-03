@@ -35,7 +35,7 @@ Blue: native temporal races, sparse addressed persistent writes and learned mess
 - At eight selected writes per position, doubling p32 slots improves 2.371→2.345 bpc. Fitting work rises 1.65×; unchanged selected activity is not unchanged total cost.
 - The credited depth-8 model reaches 2.326 versus 2.456 without that credit. The gain survives a deeper stack; width, initialization and capacity still need controlled comparisons.
 
-The best native model remains -0.008 bpc behind the LSTM, using 58.65 versus 20.31 estimated fitting TFLOPs. This is substantial progress, not comparable-quality superiority in total resources.
+The best native model is 0.008 bpc ahead of the LSTM, using 58.65 versus 20.31 estimated fitting TFLOPs. This is substantial progress, not comparable-quality superiority in total resources.
 
 ## Learning diagnosis and the next decisive checks
 
@@ -59,11 +59,12 @@ Saved matched checkpoints: 1,003,520 targets / 3,920 Adam updates; latest interv
 
 ### Prioritize discriminating evidence
 
-- Finish credited width/capacity comparisons and independent seeds before the horizon arms; retain the provisioned AWS90M protocol.
+- Complete current multi-pass/width and queued tied-pool/seed comparisons. AWS90M pool4 has started after 15 contracts and its throughput pilot; completed90M quality is pending.
 - Prepared, unrun trained-FIT factorial checks separate message effects, private commit effects and their interaction at fixed first time/future noise.
-- Calibrate an optional write term against the utility left unexplained by value credit. A per-case oracle scale is not a validated learner; check shared scales, parameter coupling and actual optimizer effects before another fit.
+- Calibrate optional write credit against unexplained value utility; check shared scales, feedback and actual updates before another fit.
+- Datacenter serving: a prepared worker reuses one packed matrix stack. Standard-library lifecycle checks pass; trained parity, measured runtime and quality rescore remain pending. Snapshot/setup/residency costs are charged.
 
-Theory143/144. No proof of a mathematical barrier or general supremacy; neither follows from this evidence. Counts remain strong references in their established region. Current gains retain time as computation, hard-route credit, deep persistent state, separate keys/values and capacity beyond selected activity.
+Theory143–146; DATACENTER_VALUE_MILESTONES.md. No proof of a mathematical barrier or general supremacy; neither follows from this evidence. Counts remain strong references in their established region. Current gains retain time as computation, hard-route credit, deep persistent state, separate keys/values and capacity beyond selected activity.
 
 ## Deep learning that computes with time
 
@@ -98,7 +99,7 @@ Means and individual seeds6/7/8 on281 reserved rows (270 feature groups). 128 fi
 
 **Work between two learned language models.** Ours native2K uses **3.78 whole-fit GFLOPs** versus **22.75 GFLOPs** for the saved KV2K construction: **6.02× less counted work**, at 3.765 versus 3.733 development bpc (0.032 worse). Both use four passes and 8,191 scored development targets; width, capacity and memory construction differ. Complete CPU fitting traces include counterfactual learning and Adam. This compares two learned models with each other. Near-optimal count references for this small-data regime are shown in Appendix B as calibration (Theory §§393–394).
 
-**Learned native language at 10M, one pass (THEORY §413).** With route credit (the race address learns which alternative predicts better; forward values unchanged) the integrated native core improves from **2.507 to 2.370** test bpc at the same size and work, and with more width reaches **2.163** (T256 2.162) versus **2.171** for the matched one-pass LSTM-256 and **2.427** for the one-pass Transformer, with **1.32** MFLOPs exact winner-only inference per position versus 0.68 for the LSTM estimate. Fitting work is higher (5.87 vs 2.03 MFLOPs/char, different conventions), so this is a quality result, not a work advantage. Single seeds; the native appendix lists every arm, including the failed write-address credit.
+**Learned native language at 10M, one pass (THEORY §413).** Alternative-value credit (forward values unchanged) improves the integrated native core from **2.507 to 2.370** test bpc at the same size. More width reaches **2.163** (T256 2.162) versus **2.171** for LSTM-256 and **2.427** for Transformer. Winner-only trace: **1.32** versus 0.68 MFLOPs/position; fitting 5.87 versus 2.03 MFLOPs/character. Traced/estimated conventions differ; single seeds, more work than LSTM, trained sparse parity pending. The native appendix retains every arm and failed write credit.
 
 **Native data scaling.** The same 54,907-parameter construction improves from **3.765 to 3.557 bpc** when fitting data grows from2K to8K characters, using **15.12 whole-fit GFLOPs**. Both use four passes and the same 8,191 development targets; this is one-seed completed data-scaling evidence.
 
@@ -3780,7 +3781,7 @@ Exact trace covariance for uniform k without replacement is R(R-k)/(k(R-1)) time
 
 Fresh Adam transforms include actual clip1 normalization and epsilon1e-8; full and sampled updates are independently checked against two actual discarded Adam forks per depth. Results do not describe trained moments, convergence or heldout improvement. Kernel, original parameters and caller RNG are preserved. Sparse native inference is unchanged.
 
-Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank absent on this rendering host; vector-byte verification not rerun.
+Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank present and hash verified.
 
 ## Appendix B. Sampled credit: finite FIT predictions after actual Adam forks
 

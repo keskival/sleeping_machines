@@ -1,5 +1,60 @@
 # Local host: current research continuation
 
+## Datacenter value and prepared serving — 3 October, 15:20 UTC
+
+User clarified AI computing substrates/datacenters and prioritizes work that
+strengthens valuation. New DATACENTER_VALUE_MILESTONES.md maps learned quality,
+scaling, actual sparse-backend correctness, setup/residency, service resources
+and hardware proof points. Financial estimates are not research evidence.
+Retain core temporal races, addressed deep persistent state, separate keys/
+values, counterfactual learning and silence-aware direction; no core replacement.
+
+146 and sleeping_machines/prepacked_sparse_inference.py prepare a fixed-weight
+CPU worker retaining one _stacked result across calls to UNCHANGED sparse_logits.
+Private deep-copy isolates caller updates after preparation; source versions
+checked across construction, private parameter/buffer/layer versions/gains/modes/
+shape checked before calls. Snapshot starts at quiescent weight boundary,
+creates versioned tensors inside inference_mode(False), remains no-grad.
+One worker/process; global RNG fork and episode reset semantics retained.
+Model copies, metadata traversal, gathers, all key scores, state/cache setup,
+resident stack and per-version preparation remain charged. No GPU/concurrent
+serving/persistent cross-request/online-learning implementation is claimed.
+
+Standard-library fake lifecycle and payload-amortization contracts PASS,
+including changed source during preparation and private mutation rejection.
+No Torch/NumPy import or model runtime here. Shape-only p32/U4 ten-call
+assembly ledger12,234,240 versus2,639,576bytes INCLUDING private model copy;
+first positive payload count3calls. NOT measured DRAM, wall, energy or dollars.
+This closes our repeated-stack gap; optimized controls can also prepack.
+
+Native admission driver/frozen one-job queue:
+queue/local_prepacked_sparse_contracts_20261003T150000Z.txt and .sources.json.
+Uses actual AWS491520-presentation admission pilot .pt now present (878271B),
+three original producer hashes match. Parent has NO completedDEV/test quality.
+Twelve synthetic pool1/3/4 FP32/64+four actual-trained FIT cases check EVERY
+winner/final-state/cache/RNG/output plus lifecycle isolation/version rejection.
+80forward calls3540padded/2600active positions; backward/optimizer0.
+Runtime is UNRUN. Changed source/arguments/parent/weights/queue reject BEFORE
+Torch import. run_safe only, oneCPUthread, VMS3000000KiB/RSS1250000KiB,
+minimum8192MiBavailable/420s, actual physical reservation after current chains.
+Free Docker-local lock is NOT admission.143 completed-fit/144p64 weights still
+absent; those prepared diagnostics remain pending, no benchmark score attached
+to prepared backend. Current driver/helper sources are frozen by manifest.
+
+Active prioritized integrated model stays credited native core. Owner curie
+v8 p64/D4/U2/linear four-pass before v6 tied/width-LR/seeds and horizon, then
+DVS chain; AWS90M/p32/D4/U4/linear running with recovered private full replay/
+teacher. Shared controls recoverable; no new trainer/queue execution here.
+New owner p96/D4/U2 completed2.1625T256 ahead of saved one-pass LSTM2.1706,
+with more work, not a comparable-quality resource win. Report front refreshed
+with that quality direction and explicitly pending serving milestone. Reviewed
+208-page PDF published under status_datacenter_milestones_20261003T153500Z;
+previous PDF retained in report/archive and provenance in results/publication.
+Isolated render took31.19s at405840KiB peak RSS, one thread/nice19, enforced
+8GiB available floor. All-page text/layout checks and source/evidence/canonical
+hash guards passed; front, evidence summary and native tables visually reviewed.
+No model runtime or new training job; active owner chains undisturbed.
+
 ## curie: supremacy ordering, 3 October 15:10 UTC
 
 Prioritized model: native core with route credit (`--route-credit linear`, compiled). One pass at 10M: p96/d4 2.1626
