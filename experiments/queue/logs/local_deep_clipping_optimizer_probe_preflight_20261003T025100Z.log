@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/deep_clipping_optimizer_probe.py", line 224, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/workspace/experiments/deep_clipping_optimizer_probe.py", line 112, in main
+    assert not differences, 'saved data protocol mismatch '+json.dumps(differences)
+           ^^^^^^^^^^^^^^^
+AssertionError: saved data protocol mismatch {"transform_sha256": ["a0496fe9be7efb322d649b18432195e628654d577c929ea81d7ab8cdd1ec4f06", "3fefa1805603bb1fb40b82c53e633a4600089e63f02efa71542772f1bc98480a"]}

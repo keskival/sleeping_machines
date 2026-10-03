@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "/workspace/report/make_pdf.py", line 2244, in <module>
+    build()
+    ~~~~~^^
+  File "/workspace/report/make_pdf.py", line 2240, in build
+    build_readable(globals())
+    ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/workspace/report/readable_report.py", line 5316, in build
+    tasks, ev = results(), evidence(M)
+                ~~~~~~~^^
+  File "/workspace/report/readable_report.py", line 156, in results
+    tasks['route_calibration_evidence']=runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['load'](read)
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/report/route_calibration_state_scope.py", line 10, in load
+    data=ORIGINAL['load'](read)
+  File "/workspace/report/route_calibration_evidence.py", line 30, in load
+    raise ValueError('Changed route numerical source: '+name)
+ValueError: Changed route numerical source: sleeping_machines/batched_episodes.py
+Traceback (most recent call last):
+  File "/workspace/experiments/publish_deep_learning_diagnosis_report.py", line 78, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/workspace/experiments/publish_deep_learning_diagnosis_report.py", line 31, in main
+    subprocess.run([sys.executable,'report/make_pdf.py','report/deep_learning_diagnosis_evidence.py'],
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        cwd=ROOT,check=True,timeout=120)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/workspace/.venv-docker/bin/python', 'report/make_pdf.py', 'report/deep_learning_diagnosis_evidence.py']' returned non-zero exit status 1.

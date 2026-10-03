@@ -1,0 +1,4 @@
+/workspace/experiments/dvs_grow_depth_lineage_contracts.py:145: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  assert all(float(u.gate.bias.mean()) == G.CLOSED_GATE
+{"status": "completed", "contracts_passed": 12, "wall_s": 1.559659392994945, "max_rss_kb": 261216}

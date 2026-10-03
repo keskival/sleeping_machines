@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_deep_learning_diagnosis_report_retry_20261003T031200Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "e5231731379302cbc653a161a5136ce16883c00fb29dbfab9551798d9c688cf5",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/deep_learning_diagnosis_evidence.py": "92e65a967bb33500b29c610a836986d86544f897c49fedc49a0a4f2dca9d45d7",
+    "experiments/publish_deep_learning_diagnosis_report.py": "c9564b5e2072fb7b365d86cc47010a52f75ba3a5779fe90f65e66c068261f8dc"
+  },
+  "pdf_pages": 191,
+  "report_sha256": "064b77fe7daf039f6d1f076c0c75f474531a527db38cecfc66f0bf597ab73cff",
+  "pdf_sha256": "0c7bac3f4a4ed8a6793b892086472b4ebaccef637e0f8670cba1f64d6d55e738",
+  "wall_s": 24.582355935010128,
+  "max_rss_kb": 274012,
+  "scope": "Completed cached-prefix proofs/work/negative wall, deep cap controls, actual-moment forks and source-bound growth repair; all earlier evidence retained; quality advantage pending."
+}

@@ -1,0 +1,4 @@
+# Deferred replacement for the externally owned legacy D4->D6 growth arm.
+# Do not duplicate its fit. Coordinate parent result/checkpoint and perform a
+# learning/accounting smoke first. Parent checkpoint is absent locally.
+local_corrected_progressive_depth6_deferred_20261003T030000Z experiments/dvs_grow_depth_lineage_benchmark.py --data experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_data.json --controls experiments/results/dvs_calibration/local_dvs_calibration_20261002T141400Z_controls.json --contracts experiments/results/diagnostics/local_depth_growth_lineage_contracts_20261003T025000Z.json --update-targets 16 --lr 0.003 --clock-step 0.05 --heads 2 --payload 16 --pool 2 --epochs 8 --depth 6 --seed 7 --parent experiments/results/dvs_native/curie_dvs_batched_p16d4pool2_grown_factorized_s7_20261002T233000Z.json --tag local_corrected_progressive_depth6_s7_20261003T030000Z

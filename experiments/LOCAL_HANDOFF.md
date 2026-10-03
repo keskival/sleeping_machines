@@ -1983,3 +1983,92 @@ makesstartupwallunequal, final1MDEV matched. No pendingcellfilledwithonline
 score. Next complementary cost reduction: cache causal factual token-boundary
 state/RNG and replay only target suffixes, retainingfullconditionalwritecredit.
 Deriveandcontract innew siblings before any proposal to change activeAWSruns.
+
+## Systematic depth diagnosis complete — 3 October, 03:08 UTC
+
+The user explicitly requested divide-and-conquer. Three agents audited completed
+experiments/protocol, Adam/clipping, and architecture/transport. All numerical
+work stayed serial through unique run_safe queues: one thread, 3GB virtual,
+1.25GB RSS, 8GiB available floor, 180s timeout. Host remains healthy with over
+11GiB available; no GPU. No unresolved Git conflicts; four old autostashes intact.
+
+Read [Theory122](theory/122_deep_learning_systematic_diagnosis.md) for the full
+synthesis, equations, experiment sources, primary papers and next decision order.
+The 191-page report now includes every completed stage below, with same-unit
+work columns, and retains all earlier positive/negative evidence. Publication
+`local_deep_learning_diagnosis_report_retry_20261003T031200Z` completed in
+24.582s; source/layout/orphan checks pass. First publication failed after the
+shared batched kernel evolved; exact archived historical source bindings now
+resolve on publication copies only. Original JSONs and earlier modules unchanged.
+
+Clipping is not a demonstrated sufficient cure. D4 clip4 FIT32 worsens on both
+seeds; completed D4 lr.006 and D2 clip4 also worsen FIT32. FIT32 is the first32
+fitting gestures at DEV-selected weights, not whole-FIT/common-epoch loss.
+D4 all-race seed8 improves to64.583%/1.020627, but seed7 fails, at roughly111x
+factorized counted fitting cost. Preserve both findings. Small physical transport
+decay does not exclude poor full recurrent Jacobian conditioning; DVS graphs
+retain full episodes, unlike the detached language16-token horizon.
+
+[Probe120](theory/120_deep_clipping_optimizer_probe.md) completed five checks,
+100.552s/382576KiB, eight gradients/48 discarded Adam forks. Result:
+`diagnostics/local_deep_clipping_optimizer_probe_current_inputs_20261003T025400Z.json`.
+Fresh cap scaling nearly cancels in Adam (.019%/.190% step difference). Changing
+only the current cap against stored moments changes direction and step1.36–1.47x
+in the D4 probe and improves three FIT anchors; an entire cap4 training history
+is different and fails the completed FIT32 comparison. Protocols differ between
+D2/D4, so no causal cross-depth conclusion. D4 coarse transform byte hash differs
+(original a0496fe9 versus current3fefa180); label this a controlled CURRENT-FIT
+input probe at genuine online weights/moments, not exact historical input replay.
+The original batched kernel8f93f5 is archived from155fbca^ and loaded explicitly.
+D2 data metadata matches exactly. All four failed probe attempts/queues/logs
+remain. Exact historical preprocessing is an artifact gap, not a proven bug.
+
+IMPORTANT FOR THE OTHER HOST: legacy progressive growth resets non-tensor
+`unit.gain`. D2->D4 has [.353553,.353553,.25,.25]; legacy D4->D6 resets every
+old gain to.25, reducing the oldest residual amplitude29.29%. New
+`dvs_grow_depth_lineage_benchmark.py` preserves the ACTUAL parent's vector and
+records source-bound ancestry/gains in EVERY snapshot. [Theory121](theory/121_depth_growth_lineage_contract.md)
+passes12 contracts in1.560s/261216KiB, including direct bitwise legacy nesting,
+heterogeneous D6/D8 recovery and invalid-lineage rejection. The pending legacy
+D6 arm in `curie_dvs_large_20261003T013500Z` is affected; do not describe it as
+preserving parent gains. Original queue untouched. New
+`local_corrected_progressive_depth6_deferred_20261003T030000Z` is reviewable but
+NOT launched: its parent checkpoint is absent locally, and the owner must
+coordinate the replacement and learning/accounting smoke first. Keep old evidence.
+
+[Plasticity123](theory/123_depth_growth_plasticity_probe.md) completed6.142s/
+370288KiB on fixed FIT0..15, no DEV/test arrays read. Four prespecified gate
+biases -20/-8/-4/0, each one fresh normalized clip1 Adam.003 step;64 target
+exposures, plus independent backward/instrumentation checks. ALL logits/EVERY
+gradient bitwise nest plain computation; formulas/parent/source/RNG/kernel checks
+pass. At-20, about99.7% of added candidate nonlinear messages round away in
+float32 and ALL active gate/output gradients are below Adam epsilon after clip.
+Gate steps receive about.007% of an unattenuated sign step. Input memory maps
+remain live through key/timing paths (raw norms.046/.139, step~.096): added
+layers are not entirely frozen. At-4, every measured candidate contribution is
+visible and gate/output updates are near full sign steps. This is a gate-only
+counterpart to owner §410, not its complete scratch protocol or a heldout gain.
+Reuse that owner's queued initialization controls rather than duplicate fits.
+
+[Cache118](theory/118_causal_prefix_reuse_credit_contract.md)/
+[119](theory/119_cached_prefix_production_admission.md) pass36+6 contracts.
+EVERY double gradient and pending Adam recovery agree. Same synthetic T4 total
+fit arithmetic private full/winner/cache .069989/.036360/.023758GF; shared
+.069473/.035844/.023242GF, all shadow/backward/norm/clip/Adam paid. T16 median
+wall private1.654/1.221/2.579s, shared1.632/1.218/2.616s. Fewer shadow events
+8192/4096/2176 but more kernel iterations16->136; grouped cache NOT promoted.
+Keep negative wall beside positive operation savings. No T4-to-T16 projection.
+
+Prioritized integrated quality model remains AWS native p16/L8/H2/pool2 private
+corrected full replay10M, exact original private/shared teacher continuations,
+and shared replay/factorized controls in
+`aws_language_winner_matrix_20261003T014100Z`. Sources/protocols unchanged;
+partial online scores are not completed quality. Complementary local priority:
+useful live nonlinear depth, full-FIT/common-epoch and lesion/equal-pass shallow
+continuation, actual functional update and exposure calibration. Retain all
+computational clocks/races, sparse private memory, separate keys/values and
+counterfactual/silence-aware principles. Outstanding gaps: language16-token
+credit, all-pool key scoring, detached losing-content gradients, common-noise
+covariance, replay fitting cost and CPU emulation. No isoquality/resource
+supremacy established. Proposed content Rao-Blackwellization needs derivation,
+contracts and charged losing-branch backward, not arbitrary stopgrad removal.

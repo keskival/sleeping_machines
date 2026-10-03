@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/experiments/causal_language_cached_prefix_contracts.py", line 139, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/workspace/experiments/causal_language_cached_prefix_contracts.py", line 63, in main
+    assert frame['state'].storage()['differentiable_entries']==0
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'differentiable_entries'
