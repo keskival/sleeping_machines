@@ -1,0 +1,4 @@
+23:52:39 start aws_public_JapaneseVowels_selection_20261004T000100Z_final_s8
+23:53:40 alive aws_public_JapaneseVowels_selection_20261004T000100Z_final_s8: process group RSS=692456KB, MemAvailable=27096MB
+23:54:40 alive aws_public_JapaneseVowels_selection_20261004T000100Z_final_s8: process group RSS=692972KB, MemAvailable=27094MB
+23:54:54 done aws_public_JapaneseVowels_selection_20261004T000100Z_final_s8 (exit 0)
