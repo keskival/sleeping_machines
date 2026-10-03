@@ -1,0 +1,5 @@
+# PENDING: actual producer checkpoint and a reservation on physical curie required.
+# Preserve the current integrated v5/v7/DVS/v6 chain; a free Docker-local lock is not admission.
+# Run only through experiments/queue/run_safe.sh with one CPU thread and the RSS watchdog.
+# MEM_CAP_KB=3000000 MEM_CAP_RSS_KB=1250000 MIN_AVAIL_MB=8192 JOB_TIMEOUT_S=420
+local_cached_inference_p64_contracts_20261003T123000Z experiments/cached_inference_contracts.py --result experiments/results/language_batched/curie_language_batched_10M_p64d4_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json --out experiments/results/diagnostics/local_cached_inference_p64_contracts_20261003T123000Z.json

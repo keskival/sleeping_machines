@@ -76,19 +76,21 @@ def pages(data):
     for r in data['controls']:
         rows.append([f"E64 {r['label']}", f"{r['parameters']:,}", f"{r['updates']:,}", f"— / {r['test']:.3f}",
                      f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}"])
-    activity_columns = ['Native model', 'State slots', 'Memory scalars', 'Writes/char', 'Keys/char', 'Values/char']
+    activity_columns = ['Native model', 'State slots', 'Memory scalars', 'Writes/pos.', 'Keys/pos.',
+                        'Emulator values/pos.', 'Winner values/pos.']
     activity_rows = [[r['label'], str(r['available_slots']), str(r['state_value_scalars']),
-                      str(r['selected_writes']), str(r['scored_keys']), str(r['computed_values'])]
+                      str(r['selected_writes']), str(r['scored_keys']), str(r['computed_values']),
+                      str(r['selected_writes'])]
                      for r in data['native']]
     return [[('h1', 'Appendix. Native language at 10M: the integrated core, segment-batched'),
              ('table', (columns, rows, widths)),
-             ('table', (activity_columns, activity_rows, [58, 22, 26, 22, 22, 24])),
-             ('small', 'Native mechanism counts per input position in the batched reference. Memory scalars are '
+             ('table', (activity_columns, activity_rows, [49, 20, 25, 20, 20, 21, 21])),
+             ('small', 'Native mechanism counts per input position. Memory scalars are '
                        'available unit-value storage per lane; timestamps, readiness bits and source context are '
                        'additional. One value is delivered per selected head/layer write. Every candidate key and '
-                       'proposal value is computed before selection in this reference; selected activity does not '
-                       'make discovery or losing-candidate computation free. These are shape counts, not traffic '
-                       'or energy measurements.'),
+                       'proposal value is computed before selection in the emulator; the winner-only evaluator '
+                       'computes only selected proposals and also caches one key-read vector per slot. Every key '
+                       'is still scored. These are shape counts, not traffic or energy measurements.'),
              ('p', 'Integrated native core only: temporal races (factorized law), sparse addressed writes into persistent '
                    'rotating memories, transport between layers; no dense carrier and no count statistics. One pass over '
                    'text8[0:10M] in 64 lanes x 128 characters (state reset per segment, exact credit within it), lr .004 '
@@ -99,9 +101,14 @@ def pages(data):
              ('p', 'The E64 rows are the matched one-pass controls (1,220 steps of 32 x 256, cosine). Work: ours traced '
                    'unit/special operations (fitting extrapolated from traced windows). Inference is traced twice: the '
                    'batched emulator, which computes every proposal, and the exact winner-only evaluator (THEORY §414), '
-                   'whose logits equal the emulator\'s within 1e-10 in float64. It caches each slot\'s key read of the '
-                   'stored memory, refreshed only on that slot\'s write, so stored capacity costs U.P multiply-adds per race. '
-                   'Every key is still scored and that is counted. Control columns repeat their single shape estimate. '
+                   'whose small random float64 fixtures match emulator logits within 1e-10. Direct winner/state/cache '
+                   'contracts on the actual trained float32 weights are prepared and pending (note 143); the saved '
+                   'test scores use the compiled training evaluator. For fixed weights, cached stored-memory key reads '
+                   'need refreshing only on a slot\'s write: arithmetic scales as U.P plus winner maps per race. '
+                   'The present implementation also stacks every unit\'s matrices at each call, an O(U.P²) '
+                   'parameter-copy/allocation cost outside these FLOP counts. Cache storage, traffic and wall time '
+                   'must be measured before claiming total-resource scaling. Every key is scored and counted. '
+                   'Control columns repeat their single shape estimate. '
                    'The conventions differ, so work comparisons are estimates.'),
              ('p', 'Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth '
                    'then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only '

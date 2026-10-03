@@ -1488,3 +1488,15 @@ character, traced; exact winner-only inference 0.60 MFLOPs per position, §414) 
 0.68 inference MFLOPs, estimated) scores 2.171 at T = 256: the gap is .012 bpc, from .336 before §§411–413. Width remains
 the strongest lever at this budget (p32 → p64 with credit: 2.370 → 2.184). Work conventions differ (estimates), and this is
 a single seed. v7 (width × credited capacity: p64/d4 pool 4, p96/d4 pool 2) runs next.
+
+**§414 route/resource scope addendum (12:30 UTC; original evidence retained).** The fixed-weight stored-key cache
+identity and measured sparse arithmetic gain above remain valid. The small float64 prototype tests compare logits;
+their code does not directly observe every winner or final private state. Real-arithmetic equivalence is therefore
+distinct from an actual trained float32 route/state contract, especially near race ties. [143](143_cached_inference_admission_and_resource_scope.md)
+derives a sufficient local margin certificate and prepares bounded original-weight winner/state/cache/RNG checks for
+the completed p32/pool4 and p64/pool2 fits; these native jobs remain pending on the producer, not run in this container.
+The reported test scores still use the original compiled evaluator. Winner-only arithmetic costs U·P plus winner maps
+per race, while the current evaluator also stacks all unit matrices on every call: O(U·P²) tensor copying/allocation
+is outside FLOP counts. The p32/pool4 final stack alone is 612,736 bytes per invocation; cache/state for eight lanes
+adds 67,840 bytes, with raw model/context/temporaries extra. No traffic or energy measurement follows. Keep both
+per-evaluated-position and per-scored-target boundaries explicit (pool4 .164301 versus .306695 MFLOPs, respectively).

@@ -1,5 +1,52 @@
 # Local host: current research continuation
 
+## Sparse inference contracts prepared — 3 October, 12:30 UTC
+
+**Current integrated priority remains the credited compiled native core.** The
+shared p64/D4/H2/U2 fit completed at test2.184239(T128)/2.183315(T256),
+DEV2.118444,422475parameters,1220updates,9994240sampled positions. The saved
+one-pass LSTM is about2.171 at matchedT256; this narrows the deficit to.012.
+The credited p32/U4 fit's2.345157(T256) improves p32/U2 by.026334 at the same
+eight selected writes, with1.649917× total fitting work. These are positive
+single-seed integrated results, not a claim of comparable-quality supremacy.
+Preserve the v5/v7/DVS/v6 curie chain and AWSr2 p64-first90M priority below.
+
+[143](theory/143_cached_inference_admission_and_resource_scope.md) proves the
+fixed-weight cache invariant and separates winning proposal arithmetic from
+all-key discovery, per-call all-parameter stacking and additional cached
+state. Completed shape traces show p32/U2→U4 winner-only arithmetic.163227→
+.164301MFLOPs per input position (.66% increase); pool4 emulator.393573.
+Per-scored-target work differs because evaluation overlaps. Current U4 final
+stack612736bytes/invocation and eight-lane unit/cache67840bytes are tensor
+payload counts, not RSS/DRAM/energy measurements. No architecture, active
+trainer, producer source or completed result was changed by this audit.
+
+Prepared `cached_inference_contracts.py`: source/checkpoint admission before
+runtime imports;12 synthetic float32/64 cases gate four actual-trained FIT
+cases. Direct actual winners, final state, reconstructed cache, unchanged
+parameters/gains/RNG and observer-output nesting. Failed route/state contracts
+are preserved as failed results. It does not fit or rescore DEV/test, and
+does not expose every intermediate payload. Original p64/pool2 and p32/pool4
+final checkpoints are unavailable here. Two unique **pending one-job queues**:
+`queue/local_cached_inference_{p64,pool4}_contracts_20261003T123000Z.txt`.
+Admission requires the actual producer and physical-host reservation;
+run_safe only, one thread, VMS3000000KiB/RSS1250000KiB,
+minimum8192MiB available,timeout420s, after the existing integrated chain.
+No additional model runtime/forward/profile/training was launched here.
+
+Standard-library accounting/margin witnesses and fake-runtime observer
+recovery pass; native Torch contracts are explicitly unexecuted. Added a
+dated §414 scope addendum beside the original positive evidence and separate
+emulator/winner proposal counts in the report appendix. Actual float32 full
+DEV/test parity and total-resource timings remain subsequent steps, not
+claims inferred from small float64 output fixtures. Older138/141 diagnostics
+and archives remain intact. Rendered publication stays with its publisher.
+Read-only full report assembly passes all199 editorial blocks, ten completed
+native rows/two dense controls, seven mechanism-count columns and all30
+historical136 source hashes. Both queue manifests contain exactly one job;
+current producer hashes match and checkpoint-absence guards reject before
+Torch/NumPy imports. No pending result or job log was created.
+
 ## curie: route credit closes the 10M language gap, 3 October 12:05 UTC
 
 Prioritized integrated model: the native core with linearized local-expectation route credit
