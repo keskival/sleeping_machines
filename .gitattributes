@@ -10,3 +10,5 @@
 /experiments/results/diagnostics/local_native_language_horizon_confirmation_20261003T011000Z.credits.npz filter=lfs diff=lfs merge=lfs -text
 /experiments/results/public_benchmarks/aws_public_PenDigits_screen_p16d2u2_20261004T000100Z.json filter=lfs diff=lfs merge=lfs -text
 /experiments/results/public_benchmarks/aws_public_PenDigits_screen_p32d4u2_20261004T000100Z.json filter=lfs diff=lfs merge=lfs -text
+/experiments/results/public_benchmarks/aws_public_PenDigits_screen_p32d4u4_20261004T000100Z.json filter=lfs diff=lfs merge=lfs -text
+/experiments/results/public_benchmarks/aws_public_PenDigits_screen_p32d4u4_20261004T000100Z.pt filter=lfs diff=lfs merge=lfs -text
