@@ -1,0 +1,4 @@
+# PHYSICAL-HOST ADMISSION PENDING: curie handoff reports compiled curie_chain10 training.
+# This container-local lock/process list cannot establish physical-host idleness.
+# Do not launch until confirmed idle/separate or a coordinated host-global reservation is held.
+local_warm_adam_route_coverage_20261003T062500Z experiments/warm_adam_route_coverage.py --tag local_warm_adam_route_coverage_20261003T062500Z

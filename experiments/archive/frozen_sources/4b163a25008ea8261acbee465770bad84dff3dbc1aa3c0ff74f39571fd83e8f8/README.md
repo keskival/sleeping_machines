@@ -1,0 +1,1 @@
+Exact pre-compilation batched driver bytes from 07eaaae^. Historical numerical/report sources remain unchanged; new callers resolve this hash explicitly. The current compiled-capable driver stays active.
