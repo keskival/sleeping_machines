@@ -33,6 +33,7 @@ def package(tag):
     paths.update(['investment/README.md', 'investment/PITCH_DECK.json', 'investment/PITCH_DECK_NOTES.md',
                   'investment/pitch_deck_evidence_20261003.json', 'investment/pitch_deck_benchmarks.csv',
                   'investment/pitch_deck_financial_sensitivity.csv', 'investment/sleeping_machines_pitch_deck.pdf',
+                  'investment/sleeping_machines_pitch_deck_main.pdf', 'investment/INVESTOR_READING_REVIEW.md',
                   'report/sleeping_machines_status.pdf', 'scripts/build_pitch_deck.py',
                   'scripts/package_pitch_diligence.py'])
     deck_sha = sha(ROOT / 'investment/sleeping_machines_pitch_deck.pdf')

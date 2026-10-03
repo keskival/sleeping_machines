@@ -1,8 +1,10 @@
 # Private investment materials
 
-The current discussion draft is the **[28-slide pitch deck](sleeping_machines_pitch_deck.pdf)**:
-a proposed **€3M raise**, with **€50M priced pre-money as the bullish negotiating
-case** and €100M as a separate stretch scenario. Neither price is an independent
+Start with the **[16-slide investor pitch](sleeping_machines_pitch_deck_main.pdf)**.
+The **[full 32-slide deck](sleeping_machines_pitch_deck.pdf)** adds 16 optional
+technical and financial diligence slides. The current discussion draft proposes
+a **€3M raise**, with **€50M priced pre-money as the bullish negotiating
+case** and €100M as a separate appendix stretch scenario. Neither price is an independent
 appraisal or an investor offer. The numerical results do not estimate the odds
 of platform success. No customer interest has been reported.
 
@@ -14,11 +16,12 @@ part of IP diligence.
 
 - [Editable slide narrative and source registry](PITCH_DECK.json)
 - [Slide-by-slide speaker and diligence notes](PITCH_DECK_NOTES.md)
+- [Investor-reading review and rationale for the revision](INVESTOR_READING_REVIEW.md)
 - [Frozen evidence hashes, derived metrics, budget and financial assumptions](pitch_deck_evidence_20261003.json)
 - [Complete same-unit benchmark ledger](pitch_deck_benchmarks.csv)
 - [Valuation sensitivity calculations](pitch_deck_financial_sensitivity.csv)
 - [Detailed research status report](../report/sleeping_machines_status.pdf)
-- [Private diligence bundle: deck, notes, CSVs, report and completed parents](sleeping_machines_private_diligence_20261003T165600Z.zip)
+- [Private diligence bundle: both PDFs, notes, CSVs, report and completed parents](sleeping_machines_private_diligence_20261003T182500Z.zip)
 
 The older investment memo and one-page pitch retain the earlier $10M discussion
 position for historical continuity. Use the new full deck for the current
@@ -30,6 +33,14 @@ strategic fit. Precedents do not establish interest in this project or provide
 direct pre-seed valuation comparables. Sole-founder status does not establish
 sole research authorship or exclusive IP ownership: preserve Karoliina Salminen's
 existing research credit and resolve contributions and employer assignments.
+
+The investor-reading revision uses the same frozen research evidence. Internal
+configurations are translated into readable labels and defined in the appendix.
+It introduces a specific product hypothesis, annual per-customer economics,
+three commercial proof gates and a budget tied to those gates. Conditional exit
+arithmetic is retained in the appendix rather than carrying the main pitch.
+Previous PDFs, source snapshots and diligence bundles remain in the historical
+record; use the current links above for review.
 
 To deliberately refresh the frozen evidence and render with bounded resources:
 

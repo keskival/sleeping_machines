@@ -1,5 +1,44 @@
 # Local host: current research continuation
 
+## Investor-reading revision — 3 October, 18:25 UTC
+
+User requested an investor-oriented read-through/improvement and explicitly
+asked to remove conversational corrections (e.g. LUMI/model wording) and internal
+model labels investors cannot understand. Reviewed narrative, notes and all PDF
+pages. Main pitch shortened22→16slides; full deck32slides includes16optional
+diligence slides. Added standalone sleeping_machines_pitch_deck_main.pdf, PDF
+bookmarks, meaningful section pagination and model-definition appendix. Editable
+PITCH_DECK.json, notes, README, review rationale and private36-member diligence
+bundle refreshed. All earlier versions/source snapshots preserved.
+
+Main flow: economic problem → temporal message/race/state/alternative learning
+→ three completed language facts → readable quality/work chart → explicit
+low-batch local/on-prem language model/runtime PRODUCT HYPOTHESIS → platform
+expansion → strategic fit → annual customer economics → founder/team/rights
+→ quality/economics/adoption gates →18-month plan/budget →€3M/€50Mproposal.
+Labels now small/more-memory/deeper/medium/best-quality, with record configurations
+and widths/layers/slots defined in appendix. Prediction error explained as bits/
+character; main credit improvement uses same units. Technical inference/online/
+negative evidence and conditional exit/probability arithmetic remain in appendix.
+Main economics assumes1Meligible annual cost,20%saving,20%capture:40klicense,
+160kbuyer benefit before transition;25deployments→1Mannual revenue. Assumptions,
+not a customer need, measured serving gain, contract or forecast. No new customer
+interest, partner relationship, source exclusivity or IP right is asserted.
+
+Completed parent hashes, all15row benchmark records and ALL numerical metrics
+are byte/field equivalent to the previous frozen deck snapshot. Editorial work
+does not add research evidence or change the current owner's queue priorities.
+Same3Mbudget/50Mproposal and5.6604%ownership;100Mstretch and reverse odds moved
+out of main pitch. Private disclosure policy retained; no external distribution.
+
+32/16page text identity, bounds, pagination and bookmarks34/17 pass;54source
+links, zero word-overlap candidates and zero internal configuration codes on
+main pages. Reviewed all contact sheets and changed pages visually. Validation
+record investor_readability_validation_20261003T182500Z.json hashes both PDFs.
+One-thread/nice19 render~40MiBRSS,8GiBfloor/120stimeout. No numerical model
+imports, training or queue launch. Prioritized integrated queues and the sparse
+parity/system economics/scale/retention/hardware gaps remain as recorded below.
+
 ## Private pitch deck and €3M proposal — 3 October, 16:55 UTC
 
 User requested a full pitch deck, public founder research, strategic fit with

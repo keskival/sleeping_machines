@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "reviewed_utc": "2026-10-03T18:26:22.530618+00:00",
+  "full_slides": 32,
+  "main_slides": 16,
+  "bookmarks_full": 34,
+  "bookmarks_main": 17,
+  "clickable_links_full": 54,
+  "word_overlap_candidates": 0,
+  "overlap_threshold_fraction": 0.15,
+  "internal_configuration_codes_on_main": 0,
+  "main_page_text_matches_full_prefix": true,
+  "frozen_completed_evidence_unchanged": true,
+  "derived_metrics_unchanged": true,
+  "checks": "PyMuPDF all-page text bounds/pagination, word rectangles and outline/link counts; stdlib frozen metric/parent equality; visual review of all contact sheets and changed slides",
+  "output_sha256": {
+    "sleeping_machines_pitch_deck.pdf": "05680b36356cbdb9a6d5567c0a7dc756c9df8408b25a31661c10be305438381c",
+    "sleeping_machines_pitch_deck_main.pdf": "0b26d3ce10929752081150e135fd582e4d715988f18027c7bea670d575992927"
+  }
+}

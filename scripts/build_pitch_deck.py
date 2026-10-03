@@ -24,6 +24,7 @@ INV = ROOT / 'investment'
 CONTENT = INV / 'PITCH_DECK.json'
 EVIDENCE = INV / 'pitch_deck_evidence_20261003.json'
 OUTPUT = INV / 'sleeping_machines_pitch_deck.pdf'
+MAIN_OUTPUT = INV / 'sleeping_machines_pitch_deck_main.pdf'
 
 
 def sha(path):
@@ -126,7 +127,8 @@ def prepare():
              '\nProposed raise: €3M. Bullish negotiating case: €50M priced pre-money; €100M stretch scenario.',
              '\nThis supersedes the pricing proposal in the older $10M discussion memo; it does not add new benchmark evidence.',
              '\nAll financial outcomes, budgets and milestone timelines are assumptions. No customer interest has been reported. Repository is private by founder instruction on 3 October 2026. This deck is a private review artifact; distribution and any future publication require a considered disclosure decision.',
-             '\nResearch cut-off: completed records available on 3 October 2026. No pending training scores enter the deck.']
+            '\nResearch cut-off: completed records available on 3 October 2026. No pending training scores enter the deck.',
+            f"\nReading guide: slides 1–{content.get('main_slide_count', len(content['slides']))} form the investor pitch; the remaining slides are optional technical and financial diligence."]
     for i, slide in enumerate(content['slides'], 1):
         notes.extend([f"\n## {i}. {slide['title'].format_map(metrics)}", slide.get('subtitle', '').format_map(metrics),
                       slide.get('notes', '').format_map(metrics)])
@@ -226,6 +228,13 @@ def render(stage):
     native = {r['model']:r for r in data['benchmark_ledger']}
     for index,s in enumerate(content['slides'],1):
         layout.append(dict(slide=index,title=s['title'].format_map(metrics),text_boxes=[]))
+        main_count=content.get('main_slide_count',len(content['slides']))
+        c.bookmarkPage(f'slide_{index}')
+        if index==1:
+            c.addOutlineEntry(f'Investor pitch ({main_count} slides)',f'slide_{index}',level=0)
+        elif index==main_count+1:
+            c.addOutlineEntry('Optional diligence appendix',f'slide_{index}',level=0)
+        c.addOutlineEntry(s['title'].format_map(metrics),f'slide_{index}',level=1)
         c.setFillColor(HexColor(bg)); c.rect(0,0,W,H,fill=1,stroke=0)
         p(s.get('section','INVESTOR PRESENTATION').upper(),52,28,1176,12,cyan,True)
         kind=s['kind']
@@ -236,7 +245,7 @@ def render(stage):
         if kind=='cover':
             p(s['hero'],52,287,740,29,maxh=155)
             p('Tero Keski-Valkama | Sole founder',52,470,850,21,cyan,True)
-            p('Proposed raise €3M · Bullish case €50M pre-money\nResearch-stage deep tech · 3 October 2026',52,521,790,20,muted)
+            p(s.get('funding_line','Raising €3M to scale research and engineering\nResearch-stage deep tech · 3 October 2026'),52,521,790,20,muted)
             for layer in range(4):
                 for slot in range(4):
                     x=930+layer*65; yy=257+slot*78
@@ -273,26 +282,26 @@ def render(stage):
                 xx,_=point(tick,2.1); line(xx,y0,xx,y0+ph,'#213349'); p(str(tick),xx-13,y0+ph+10,50,13,muted)
             for tick in [2.1,2.2,2.3,2.4,2.5]:
                 _,yy=point(0,tick); line(x0,yy,x0+pw,yy,'#213349'); p(f'{tick:.1f}',60,yy-10,50,13,muted)
-            p('Test bits per character ↓',115,174,590,15,muted)
-            p('Whole fitting TFLOPs, estimated ↓',247,570,565,15,muted)
-            positions=[('p32/d4 + route credit',128,250,cyan,'Ours p32 / D4'),
-                ('p32/d4/pool4 + route credit',290,315,green,'Ours p32 / pool4'),
-                ('p32/d8, skip2 + route credit',340,395,cyan,'Ours p32 / D8'),
-                ('p96/d4 + route credit',500,445,green,'Ours p96 / D4'),
-                ('LSTM-256',118,505,violet,'LSTM-256'),('Transformer-256x2',543,239,pink,'Transformer-256×2')]
+            p('Prediction error (bits per character) ↓',115,174,650,15,muted)
+            p('Training arithmetic (trillion estimated ops) ↓',247,570,650,15,muted)
+            positions=[('p32/d4 + route credit',128,250,cyan,'Small model'),
+                ('p32/d4/pool4 + route credit',290,315,green,'More memory'),
+                ('p32/d8, skip2 + route credit',340,395,cyan,'Deeper model'),
+                ('p96/d4 + route credit',500,445,green,'Best quality'),
+                ('LSTM-256',118,505,violet,'Recurrent baseline'),('Transformer-256x2',543,239,pink,'Small Transformer control')]
             for label,lx,ly,color,short in positions:
                 r=native[label]; xx,yy=point(r['whole_fit_TFLOPs_est'],r['test_bpc_T256'])
                 c.setFillColor(HexColor(color)); c.circle(xx,H-yy,6,fill=1,stroke=0)
                 line(xx,yy,lx+8,ly+44 if yy>ly+18 else ly-7,color,.8)
-                p(short,lx,ly,260,14,color,True); p(f"{r['test_bpc_T256']:.3f} bpc · {r['whole_fit_TFLOPs_est']:.2f} TF",lx,ly+20,250,12,muted)
-            card_text(870,205,358,190,'QUALITY FRONTIER','Ahead of saved LSTM; {best_lstm_fit_ratio:.2f}× fitting work.','{best_bpc:.3f}',green)
-            card_text(870,409,358,190,'SMALL TRANSFORMER CONTROL','p32 / D4: less estimated fitting work and better quality.','{transformer_fit_ratio:.1f}×',cyan)
+                p(short,lx,ly,300,14,color,True); p(f"{r['test_bpc_T256']:.3f} bits/char · {r['whole_fit_TFLOPs_est']:.2f}T ops",lx,ly+20,300,12,muted)
+            card_text(870,205,358,190,'QUALITY CHECK','Near recurrent baseline ({lstm_bpc:.3f}); {best_lstm_fit_ratio:.2f}× training work.','{best_bpc:.3f}',green)
+            card_text(870,409,358,190,'TRAINING ARITHMETIC','Small model versus saved Transformer control; better prediction error.','{transformer_fit_ratio:.1f}× less',cyan)
             p(s['caveat'],52,620,1176,13,muted,maxh=35)
 
         elif kind=='credit':
             for i,(metric,label,body) in enumerate(s['stats']):
                 card_text(52+i*400,205,376,236,label,body,metric,[cyan,green,amber][i])
-            p('Same p32 / D4 model; hard forward routes retained',52,473,1120,23,text,True)
+            p('Same small model; hard selection retained',52,473,1120,23,text,True)
             p(s['detail'],52,520,1176,19,muted,maxh=62)
             banner(s['banner'],600)
 
@@ -308,7 +317,7 @@ def render(stage):
             banner(s['banner'])
 
         elif kind=='inference':
-            series=[('Ours p32 / pool4','p32/d4/pool4 + route credit'),('Ours p64 / pool2','p64/d4 + route credit'),('LSTM-256','LSTM-256')]
+            series=[('Small, more memory','p32/d4/pool4 + route credit'),('Medium model','p64/d4 + route credit'),('Recurrent baseline','LSTM-256')]
             p('Estimated MFLOPs per evaluated input position',52,184,820,17,muted)
             for i,(short,label) in enumerate(series):
                 y=237+i*106; r=native[label]; p(short,52,y+10,260,18,text,True)
@@ -365,8 +374,15 @@ def render(stage):
             p('Assumptions: €10B exit; 30% stake retention; 10 years; 15% discount; failure value zero.',52,523,1176,18,muted)
             banner(s['banner'])
 
+        elif kind=='terms':
+            card_text(52,201,376,235,'CAPITAL TO RAISE','18 months of research, systems engineering and staged validation.','€3M',green)
+            card_text(452,201,376,235,'PROPOSED PRE-MONEY','A premium research-stage proposal for the model/runtime/substrate opportunity.','€50M',cyan)
+            card_text(852,201,376,235,'INITIAL OWNERSHIP','€53M post-money, before option-pool changes, preferences and later dilution.','{new_investor_pct:.2f}%',amber)
+            p(s['detail'],52,480,1176,21,muted,maxh=95)
+            banner(s['banner'],600)
+
         elif kind=='upside':
-            table(s['headers'],s['rows'],y=202,widths=s['widths'],rowh=79,size=16)
+            table(s['headers'],s['rows'],y=202,widths=s['widths'],rowh=s.get('rowh',79),size=16)
             p(s['detail'],52,449,1176,20,muted,maxh=112)
             banner(s['banner'])
 
@@ -387,14 +403,16 @@ def render(stage):
                     f"{r['inference_emulator_MFLOPs_per_evaluated_position_est']:.3f}",
                     f"{r['inference_winner_MFLOPs_per_evaluated_position_est']:.3f}"])
             table(['Model','Test bpc','Params K','Fit total TF','Fit MF/pos','Emul MF/pos','Winner MF/pos'],rows,
-                  y=188,widths=[315,100,120,150,150,170,171],rowh=43,size=13)
+                  y=200,widths=[315,100,120,150,150,170,171],rowh=41,size=13)
             p(s['caveat'],52,626,1176,13,muted,maxh=35)
 
         elif kind=='sensitivity':
             rows=[]
             for r in data['financial_sensitivity']:
+                def probability(value):
+                    return f'{value:.1%} (infeasible)' if value>1 else f'{value:.2%}'
                 rows.append([f"€{r['exit_equity_eur']/1e9:.0f}B",f"{r['retention']:.0%}",
-                             f"{r['required_probability_50']:.2%}",f"{r['required_probability_100']:.2%}"])
+                             probability(r['required_probability_50']),probability(r['required_probability_100'])])
             table(['Exit equity','Stake retention','Required p: €50M','Required p: €100M'],rows,
                   y=188,widths=[294]*4,rowh=39,size=14)
             p(s['caveat'],52,601,1176,14,muted,maxh=58)
@@ -419,7 +437,10 @@ def render(stage):
             if xx+width>1170: raise ValueError('Footer sources overflow')
             c.setFont('Deck',9); c.setFillColor(HexColor(muted)); c.drawString(xx,H-695,label)
             c.linkURL(src['url'],(xx,H-700,xx+width,H-683),relative=0,thickness=0); xx+=width
-        c.setFont('DeckB',11); c.setFillColor(HexColor(cyan)); c.drawRightString(1228,25,f'{index:02d} / {len(content["slides"]):02d}')
+        c.setFont('DeckB',11); c.setFillColor(HexColor(cyan))
+        page_label=(f'PITCH {index:02d} / {main_count:02d}' if index<=main_count else
+                    f'APPENDIX {index-main_count:02d} / {len(content["slides"])-main_count:02d}')
+        c.drawRightString(1228,25,page_label)
         c.showPage()
     c.save()
     (stage / 'layout.json').write_text(json.dumps(layout,indent=2)+'\n')
@@ -442,6 +463,7 @@ def publish(tag):
             INV/'pitch_deck_benchmarks.csv',INV/'pitch_deck_financial_sensitivity.csv']
     hashes={str(x.relative_to(ROOT)):sha(x) for x in inputs}
     previous=sha(OUTPUT) if OUTPUT.exists() else None
+    previous_main=sha(MAIN_OUTPUT) if MAIN_OUTPUT.exists() else None
     stage.mkdir(parents=True)
     env=dict(os.environ,OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
     start=time.monotonic(); peak=0
@@ -465,13 +487,16 @@ def publish(tag):
                 except subprocess.TimeoutExpired: child.kill(); child.wait()
     import pymupdf
     pages=[]
+    content=json.loads(CONTENT.read_text()); main_count=content.get('main_slide_count',len(content['slides']))
     with pymupdf.open(stage/OUTPUT.name) as doc:
         for i,page in enumerate(doc,1):
             value=page.get_text()
             if len(value.strip())<160: raise ValueError('Sparse slide '+str(i))
             for x0,y0,x1,y1,*_ in page.get_text('blocks'):
                 if min(x0,y0)<0 or x1>page.rect.width or y1>page.rect.height: raise ValueError('Out-of-bounds slide '+str(i))
-            if f'{i:02d} / {len(doc):02d}' not in value: raise ValueError('Slide pagination mismatch')
+            label=(f'PITCH {i:02d} / {main_count:02d}' if i<=main_count else
+                   f'APPENDIX {i-main_count:02d} / {len(doc)-main_count:02d}')
+            if label not in value: raise ValueError('Slide pagination mismatch')
             page.get_pixmap(matrix=pymupdf.Matrix(.75,.75)).save(str(stage/f'slide_{i:02d}.png'))
             pages.append(dict(slide=i,characters=len(value)))
         # A bounded contact sheet for visual review; no image-processing dependency.
@@ -483,17 +508,30 @@ def publish(tag):
                 grid.show_pdf_page(box,doc,offset+j)
             grid.get_pixmap().save(str(stage/f'contact_{offset//8+1}.png'))
         contact.close()
+        main_doc=pymupdf.open()
+        main_doc.insert_pdf(doc,from_page=0,to_page=main_count-1)
+        main_doc.set_toc([entry for entry in doc.get_toc() if entry[2]<=main_count])
+        main_doc.set_metadata(dict(doc.metadata,title='Sleeping Machines | investor pitch | 16-slide main presentation'))
+        main_doc.save(stage/MAIN_OUTPUT.name,garbage=3,deflate=True)
+        main_doc.close()
     verify()
     if hashes!={str(x.relative_to(ROOT)):sha(x) for x in inputs}: raise ValueError('Concurrent deck-source change')
     if previous!=(sha(OUTPUT) if OUTPUT.exists() else None): raise ValueError('Concurrent deck publication')
+    if previous_main!=(sha(MAIN_OUTPUT) if MAIN_OUTPUT.exists() else None): raise ValueError('Concurrent main-pitch publication')
     if OUTPUT.exists():
         archive=INV/'archive'/(tag+'_previous_'+OUTPUT.name)
         archive.parent.mkdir(exist_ok=True)
         if archive.exists(): raise ValueError('Preserve existing archive')
         shutil.copy2(OUTPUT,archive)
     temporary=OUTPUT.with_suffix('.publishing'); shutil.copy2(stage/OUTPUT.name,temporary); temporary.replace(OUTPUT)
+    if MAIN_OUTPUT.exists():
+        archive=INV/'archive'/(tag+'_previous_'+MAIN_OUTPUT.name)
+        if archive.exists(): raise ValueError('Preserve previous main pitch')
+        shutil.copy2(MAIN_OUTPUT,archive)
+    temporary=MAIN_OUTPUT.with_suffix('.publishing'); shutil.copy2(stage/MAIN_OUTPUT.name,temporary); temporary.replace(MAIN_OUTPUT)
     record.write_text(json.dumps(dict(status='completed',published_utc=datetime.now(timezone.utc).isoformat(),
         source_sha256=hashes,previous_sha256=previous,output_sha256=sha(OUTPUT),slides=pages,
+        previous_main_sha256=previous_main,main_output_sha256=sha(MAIN_OUTPUT),main_slides=main_count,
         guards=dict(threads=1,rss_kib=300000,address_space_kib=1000000,min_available_mib=8192,timeout_s=120),
         render_wall_s=time.monotonic()-start,peak_render_rss_kib=peak,
         scope='Saved evidence, public-source research and financial scenarios only; no numerical model runtime'),indent=2)+'\n')

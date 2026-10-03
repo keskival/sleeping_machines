@@ -117,146 +117,403 @@
       "kind": "cover",
       "section": "Research-to-platform investment thesis",
       "title": "Sleeping Machines",
-      "subtitle": "A trainable substrate for intelligence through time and sparse events.",
+      "subtitle": "AI that learns what to compute, when to compute it, and what to remember.",
       "sources": [],
       "notes": "Private review deck. The founder proposes a €3M raise. €50M priced pre-money is the central bullish negotiating thesis developed here; €100M is a stretch scenario, neither an independent fair-value appraisal nor an investor offer. The research evidence is exploratory and single-seed. No customer interest has been reported. No investor, vendor or customer has been contacted in preparing this deck.",
-      "hero": "Build useful capacity faster than active computation.\nFrom datacenters to mobile devices and robotics."
+      "hero": "More useful capacity.\nLess active computation.\nA path from models to silicon.",
+      "funding_line": "Raising €3M to scale research and engineering\nPrivate investor presentation · October 2026"
     },
     {
       "kind": "cards",
-      "section": "Vision",
-      "title": "A new model family. A new computing substrate.",
-      "subtitle": "The goal: useful intelligence with less active work, persistent state and adaptation.",
+      "section": "The problem",
+      "title": "Model capacity and the cost of using it must scale differently.",
+      "subtitle": "The opportunity: preserve useful intelligence while reducing the work paid for each prediction.",
+      "notes": "This is the problem definition and investment hypothesis. It is not a claim that all existing architectures perform dense work or lack memory. MoE already separates available parameters from selected computation; recurrent and selective-state models already retain state. Our proposed contribution is a temporal race/state/alternative-credit construction and its tested consequences. Software and hardware benefits must be evaluated with tuned incumbents under the same workload boundaries.",
       "sources": [
-        "R3"
+        "R3",
+        "S6"
       ],
-      "notes": "Core mechanisms remain explicit: computational delays and temporal races; sparse addressed memory updates; small messages that mix input and persistent state; separate keys and values; credit to unrealized routes; silence-aware supervision where applicable. The newest language core implements a factorized temporal law, hard selection, deep local memories and route credit. It does not yet cover every general event-substrate mechanism. Future clockless hardware is a proposed implementation route, not a fabricated asset.",
       "cards": [
         {
-          "label": "CAPACITY BEYOND ACTIVITY",
-          "metric": "More memory",
-          "body": "Grow available learned state while selecting a small amount of computation for each event."
+          "label": "MODEL CAPACITY",
+          "metric": "Know more",
+          "body": "Larger models and richer memory can improve capability. Accessing that capacity still costs computation and data movement."
         },
         {
-          "label": "TIME COMPUTES",
-          "metric": "Learned races",
-          "body": "Message content, delays and local state determine which computation happens and when."
+          "label": "DEPLOYMENT ECONOMICS",
+          "metric": "Do less work",
+          "body": "Serving cost, latency and memory determine whether capability can be deployed in constrained environments."
         },
         {
-          "label": "CLOUD TO EMBODIMENT",
-          "metric": "One substrate",
-          "body": "Pursue models and runtimes first; extend the same principles to edge systems and future clockless silicon."
+          "label": "OUR APPROACH",
+          "metric": "Select + retain",
+          "body": "Learn which local computations to activate; retain local state and train the alternatives that were not selected."
         }
       ],
-      "banner": "The investment thesis is an architecture–runtime–hardware platform, with staged proof."
-    },
-    {
-      "kind": "market",
-      "section": "Why now",
-      "title": "The constraints reach from power grids to robot batteries.",
-      "subtitle": "Economic context for efficient intelligence; these figures are not our revenue market.",
-      "sources": [
-        "M1",
-        "M2",
-        "M3"
-      ],
-      "notes": "IEA projects all datacenter electricity, not only AI demand; GSMA subscribers are not annual device shipments; IFR reports industrial-robot installed stock, not all robotics. These denominators cannot be summed into a TAM. The thesis is an inference about potential demand for verified efficient computation. Incumbents are also improving rapidly, which raises the threshold for a commercially useful alternative.",
-      "cards": [
-        {
-          "label": "DATACENTERS",
-          "metric": "485 → 950",
-          "body": "TWh/year, 2025 → 2030 central IEA projection. Power and data movement make system efficiency economically important."
-        },
-        {
-          "label": "MOBILE",
-          "metric": "5.8B",
-          "body": "Unique mobile subscribers in GSMA’s 2026 report. On-device inference creates a prospective route to broad distribution."
-        },
-        {
-          "label": "ROBOTICS",
-          "metric": "5M",
-          "body": "Industrial robots operating in 2025. Sparse sensing, persistent state and adaptation are prospective use cases."
-        }
-      ],
-      "banner": "Select one measurable initial workload; expand only after quality and system gains hold."
+      "banner": "We are developing a model family and execution substrate around this separation."
     },
     {
       "kind": "architecture",
-      "section": "Technology",
-      "title": "Hard sparse computation that can learn its alternatives.",
-      "subtitle": "Conceptual event path; the trained language core is implemented in a synchronous software emulator.",
+      "section": "The insight",
+      "title": "Messages race. Selected memories update. Alternatives learn.",
+      "subtitle": "A simple event loop connects representation, timing and sparse computation.",
       "sources": [
         "R3"
       ],
       "notes": "This construction combines familiar vector operations with temporal computation and sparse state. Separate keys determine addressing; values determine delivered content. Counterfactual credit gives unrealized alternatives a learning signal without softening the hard forward route. The present implementation is not a physical asynchronous machine: autograd, shared training windows, clipping and Adam remain. Winner-only inference still scores all candidate keys.",
       "steps": [
         {
-          "label": "01 / MESSAGE",
-          "metric": "Content + time",
-          "body": "Encode incoming signal. Content and persistent memory influence the emission delay."
+          "label": "01 / ENCODE",
+          "metric": "Signal + delay",
+          "body": "A learned function produces a message and its arrival time from input and local memory."
         },
         {
-          "label": "02 / RACE",
-          "metric": "Hard winner",
-          "body": "Score candidate keys. A temporal race selects an addressed receiver."
+          "label": "02 / SELECT",
+          "metric": "Temporal race",
+          "body": "Arrival times select a receiver. Separate address keys and delivered values support sparse execution."
         },
         {
-          "label": "03 / MEMORY",
-          "metric": "Local update",
-          "body": "Deliver the selected value and evolve local persistent state through deep layers."
+          "label": "03 / REMEMBER",
+          "metric": "Local state",
+          "body": "Update the selected memory and propagate a new message into deeper computation."
         },
         {
-          "label": "04 / LEARNING",
-          "metric": "Route credit",
-          "body": "Train contents and timings using selected and unrealized alternatives; charge the credit work."
+          "label": "04 / LEARN",
+          "metric": "Alternatives",
+          "body": "Use errors to improve message content and timing, including paths that were not selected."
         }
       ],
-      "banner": "Inference selects values sparsely; current training still computes losing alternatives."
+      "banner": "Implemented language core: hard selection and persistent local state in a synchronous emulator."
     },
     {
       "kind": "cards",
-      "section": "Evidence at a glance",
-      "title": "Three results make the architecture worth scaling.",
-      "subtitle": "Completed text8 experiments; all numbers remain exploratory single-seed evidence.",
+      "section": "Early proof",
+      "title": "The language experiments establish three useful facts.",
+      "subtitle": "10M-character text8 training budget; held-out prediction error. Lower bits per character is better.",
       "sources": [
         "R1"
       ],
-      "notes": "T256 test values come from completed held-out evaluations; training scores and pending 90M results are excluded. One nominal pass uses about 9.994M training positions. A single seed and differing native/control training order limit generalization. The p96 improvement over LSTM is only {best_lstm_gain:.4f} bpc, with {best_lstm_fit_ratio:.2f} times fitting work; it establishes a promising quality direction, not an iso-quality resource win.",
+      "notes": "T256 test values come from completed held-out evaluations; training scores and pending 90M results are excluded. One nominal pass uses about 9.994M training positions. A single seed and differing native/control training order limit generalization. The p96 improvement over LSTM is {best_lstm_gain:.4f} bpc, with {best_lstm_fit_ratio:.2f} times fitting work; it establishes a promising quality direction, not an iso-quality resource win.",
       "cards": [
         {
-          "label": "LANGUAGE QUALITY",
-          "metric": "{best_bpc:.3f} bpc",
-          "body": "Best p96 / D4 result is slightly ahead of saved one-pass LSTM at {lstm_bpc:.3f}; it uses more work."
+          "label": "IT CAN LEARN REAL TEXT",
+          "metric": "{best_bpc:.3f} bits/char",
+          "body": "Best model reaches the saved recurrent baseline’s quality ({lstm_bpc:.3f}). It uses {best_lstm_fit_ratio:.2f}× estimated training work."
         },
         {
-          "label": "CAUSAL MECHANISM ABLATION",
-          "metric": "−{credit_gain:.3f} bpc",
-          "body": "Adding value-based route credit improves the same p32 / D4 model with +{credit_fit_increase_pct:.2f}% estimated fitting work."
+          "label": "ALTERNATIVE CREDIT HELPS",
+          "metric": "−{credit_gain:.3f} bits/char",
+          "body": "In the same small model, learning from unchosen paths improves prediction error; estimated training work rises 0.30%."
         },
         {
-          "label": "CAPACITY / SELECTION",
-          "metric": "8 writes",
-          "body": "Doubling the credited p32 memory pool improves quality while keeping selected writes per input position fixed."
+          "label": "CAPACITY AND SELECTED WORK",
+          "metric": "16 → 32 slots",
+          "body": "More available memory improves prediction while retaining eight selected writes per input. Key scoring and learning costs also grow."
         }
       ],
-      "banner": "Distinctive mechanisms affect learning; scale, modern controls and serving economics remain open."
+      "banner": "Exploratory single-seed results. The next proof is replicated quality plus a measured system-cost advantage."
     },
     {
       "kind": "scatter",
       "section": "Language evaluation",
-      "title": "A promising quality–work frontier at small scale.",
-      "subtitle": "Same text8 held-out region and T256 windows; saved one-pass controls, not optimized frontier baselines.",
+      "title": "A language-model foothold for a new architecture.",
+      "subtitle": "Held-out prediction error versus estimated training arithmetic; 10M characters, one pass.",
       "sources": [
         "R1"
       ],
       "notes": "p32 / D4 credited: {credit_bpc:.6f} bpc, 7.243 estimated whole-fit TFLOPs, 108,875 parameters. Saved Transformer-256×2: {transformer_bpc:.6f}, 111.262 TFLOPs, 1,658,907 parameters. This gives {transformer_fit_ratio:.2f}× lower fitting arithmetic and {transformer_parameter_ratio:.2f}× fewer parameters for this saved control, with {transformer_credit_gain:.4f} lower bpc. The strong one-pass LSTM is {lstm_bpc:.6f} at 20.306 TFLOPs. Best native p96 is {best_bpc:.6f} at 58.648 TFLOPs. A modern tuned Transformer/MoE/SSM and larger-data matched protocol are still needed.",
-      "caveat": "BPC ↓ is better. Fitting includes credit/backward/clip/Adam estimates; conventions and training order differ. One seed. No wall-time or energy claim."
+      "caveat": "Saved one-pass controls; same test region and window length. Training order and work conventions differ. One seed. Arithmetic estimates are not service cost."
+    },
+    {
+      "kind": "cards",
+      "section": "First product hypothesis",
+      "title": "Start with low-batch language inference on existing hardware.",
+      "subtitle": "Product hypothesis for local and on-premise text applications; no customer interest reported yet.",
+      "notes": "This is a product hypothesis chosen to make the research investable and testable, not a confirmed customer need. The present character-language fits do not establish a production-quality token model, application task performance or persistent cross-request serving. Low-batch inference is a proposed test venue for stateful sparse execution, not a measured region of advantage. Tune recurrent, modern Transformer/MoE and selective-state controls; include setup, memory, warmup, traffic, latency and energy. The ≥20% threshold is a proposed economic screen, not a forecast. No customer interest has been reported; demand interviews and evaluation partners remain future work.",
+      "sources": [
+        "R3"
+      ],
+      "cards": [
+        {
+          "label": "WHO WOULD EVALUATE IT",
+          "metric": "Platform teams",
+          "body": "Teams deploying small language models under latency, memory or cost constraints. Demand validation is a next step."
+        },
+        {
+          "label": "WHAT WE WOULD SUPPLY",
+          "metric": "Model + runtime",
+          "body": "A trained model, sparse inference runtime and a reproducible quality-and-cost evaluation on the intended workload."
+        },
+        {
+          "label": "WHY THEY WOULD ADOPT",
+          "metric": "Verified savings",
+          "body": "Adoption depends on equivalent useful quality, service reliability and a measured reduction in complete deployment cost."
+        }
+      ],
+      "banner": "Commercial gate: target ≥20% full-system cost reduction at matched quality on one selected workload."
+    },
+    {
+      "kind": "cards",
+      "section": "Platform expansion",
+      "title": "Software establishes the advantage. Hardware can amplify it.",
+      "subtitle": "One research program, with staged routes to deployment.",
+      "sources": [
+        "R3"
+      ],
+      "notes": "The first commercial workload is a selection hypothesis rather than a confirmed customer request. A staged software route lowers dependency on new silicon and permits independent benchmarking. A clockless implementation could benefit from less global synchronization and local state, but clock precision, signal fanout, memory, interconnect and fabrication overhead may dominate. Hardware economic claims require measurements. Costs for an ASIC tapeout are not estimated or funded here.",
+      "cards": [
+        {
+          "label": "01 / MODELS + RUNTIME",
+          "metric": "First product",
+          "body": "Validate the language workload on existing hardware. License a model/runtime with auditable deployment economics."
+        },
+        {
+          "label": "02 / ACCELERATOR INTEGRATION",
+          "metric": "Co-design",
+          "body": "Optimize supported hardware, compilers and memory access. Pursue joint evaluations and platform-specific licensing."
+        },
+        {
+          "label": "03 / EVENT-DRIVEN SILICON",
+          "metric": "Clockless path",
+          "body": "Translate learned timing and local state into hardware feasibility work. Expand to mobile, robotics and persistent agents."
+        }
+      ],
+      "banner": "The €3M round funds scale, execution and feasibility; later silicon investment follows measured proof."
+    },
+    {
+      "kind": "cards",
+      "section": "Strategic distribution",
+      "title": "A useful alternative could strengthen a hardware ecosystem.",
+      "subtitle": "Potential evaluation and licensing routes; no partner interest or relationship is claimed.",
+      "sources": [
+        "S1",
+        "S5",
+        "S6"
+      ],
+      "notes": "AMD is the strongest identified public fit precedent, not a presumed buyer. Its Ventures page lists Series A–C focus, so a €3M research-stage round may need angels/specialist deep-tech leads before strategic institutional investment. Intel’s system is a research prototype; Google has substantial internal alternatives and could build rather than license. Possible routes are benchmark collaboration, co-development, licensing, investment or eventual acquisition; none is a current pipeline asset. No company logos or implied endorsements are used.",
+      "cards": [
+        {
+          "label": "AMD",
+          "metric": "Model + platform",
+          "body": "Its ~$665M Silo AI acquisition and Liquid AI collaboration show the value of model/software capability on AMD hardware."
+        },
+        {
+          "label": "INTEL",
+          "metric": "Event execution",
+          "body": "Hala Point and Loihi 2 provide a relevant research environment for expressive event models and continuous learning."
+        },
+        {
+          "label": "GOOGLE",
+          "metric": "Full-stack design",
+          "body": "TPU model–hardware co-design creates a demanding evaluation venue for quality, memory and execution improvements."
+        }
+      ],
+      "banner": "Partner proposition: demonstrate a differentiated workload advantage that improves platform adoption."
+    },
+    {
+      "kind": "upside",
+      "section": "Commercial economics",
+      "title": "Price the runtime against verified customer value.",
+      "subtitle": "Illustrative annual license economics; assumptions to test with an evaluation partner.",
+      "notes": "This example brings the commercial argument to an auditable customer denominator rather than treating global electricity, capex or subscriber counts as company TAM. All amounts are annual EUR. €1M eligible workload spend × 20% reduction = €200k gross saving; a 20% capture yields a €40k annual license and €160k buyer benefit before migration and other costs. Twenty-five equivalent licenses produce €1M annual revenue. None of these assumptions is established by current FLOP estimates or customers. Customer-count, scope, quality, reliability and adoption must be validated. This replaces the main-deck €1B spend/100M devices illustration; platform-scale scenarios remain explicitly hypothetical in the appendix.",
+      "sources": [],
+      "headers": [
+        "Per-customer assumption",
+        "Calculation",
+        "Annual amount"
+      ],
+      "widths": [
+        390,
+        470,
+        316
+      ],
+      "rows": [
+        [
+          "Eligible workload cost",
+          "Existing deployment cost we can actually influence",
+          "€1.00M"
+        ],
+        [
+          "Gross savings",
+          "20% complete-cost reduction at matched quality",
+          "€200k"
+        ],
+        [
+          "Runtime license",
+          "20% of verified gross savings",
+          "€40k"
+        ]
+      ],
+      "detail": "Customer retains €160k/year before migration and other costs. At the same assumed price, 25 deployments would generate €1M annual license revenue.",
+      "banner": "Validate pricing through matched quality, reliable operation and measured customer benefit.",
+      "rowh": 64
+    },
+    {
+      "kind": "founder",
+      "section": "Founder and team",
+      "title": "AI research and software architecture in one founder.",
+      "subtitle": "Tero Keski-Valkama · Sole founder · Public career and invention record.",
+      "sources": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "notes": "The XING timeline lists Cybercom December 2012–June 2018, HERE July 2018–April 2022, Alloy May 2022–August 2023, and Kaiko September 2023–December 2025. The founder’s portfolio lists Sleeping Machines and FAS Simulator. The primary EPO application EP4148389A2, published 15 March 2023, names Tero Juhani Keski-Valkama as inventor and HERE Global B.V. as applicant. It supports relevant invention experience, not a patent grant or an asset owned by this venture. Public personal biography and university links have availability/staleness issues; no degree or current-employment claim is inferred from them. Founder availability and references remain diligence items.",
+      "summary": "Experience spans applied ML, multimodal foundation models and software architecture. The round adds specialist capacity around the founder.",
+      "roles": [
+        {
+          "date": "2012–2018",
+          "role": "Cybercom · Software Architect",
+          "detail": "Historical role in public professional profile."
+        },
+        {
+          "date": "2018–2022",
+          "role": "HERE · Lead ML & AI Engineer",
+          "detail": "Self-reported research and applied ML leadership."
+        },
+        {
+          "date": "2022–2025",
+          "role": "Alloy.ai → Kaiko.ai",
+          "detail": "Staff engineering; multimodal foundation-model work."
+        },
+        {
+          "date": "2023 publication",
+          "role": "EP4148389A2 · Named inventor",
+          "detail": "Maps from geospatial observations; applicant HERE."
+        }
+      ],
+      "caveat": "Historical roles are self-reported; inventorship is documented. Planned hiring: learning research, runtime engineering, evaluation and measurement."
+    },
+    {
+      "kind": "cards",
+      "section": "Defensibility",
+      "title": "Build defensibility across the model and its execution.",
+      "subtitle": "The strongest potential asset is an integrated stack that is difficult to reproduce and deploy.",
+      "sources": [
+        "R3",
+        "F2"
+      ],
+      "notes": "Tero instructed on 3 October 2026 that the GitHub repository was made private. This deck is a local private artifact and no public publication is authorized. Earlier public disclosure cannot be undone by repository privacy. README credits Tero Keski-Valkama and Karoliina Salminen as research authors; sole-founder status does not establish sole authorship, inventorship or IP ownership. Contributor agreements, intended licenses and employment-related rights must be resolved before presenting an exclusive technology asset. No granted patent portfolio, customer integration or defensible legal monopoly is claimed.",
+      "cards": [
+        {
+          "label": "MODEL + LEARNING",
+          "metric": "Research know-how",
+          "body": "Timing, state and alternative-credit methods, supported by retained ablations and numerical contracts."
+        },
+        {
+          "label": "RUNTIME + HARDWARE",
+          "metric": "Execution know-how",
+          "body": "Sparse kernels, memory management, measurement and hardware mapping can reinforce the model advantage."
+        },
+        {
+          "label": "RIGHTS + INTEGRATION",
+          "metric": "Company assets",
+          "body": "Establish contribution rights and licensing, then develop tooling and partner-specific deployment expertise."
+        }
+      ],
+      "banner": "Private development supports controlled disclosure. IP ownership and commercial integrations remain diligence items."
+    },
+    {
+      "kind": "cards",
+      "section": "What the round must prove",
+      "title": "Three gates determine whether this becomes a business.",
+      "subtitle": "Each gate has a falsifiable result and a consequence for further spending.",
+      "notes": "The principal investor risks are scalable prediction quality, economical execution and commercial adoption. Technical gaps include the trained float32 sparse-backend contract, longer memory/credit horizons, stable adaptation and hardware timing/precision. Corporate rights, team hiring and founder availability remain diligence items. The program preserves its architectural thesis while allowing a narrower viable product. No probability of success is assigned to these gates, and the €50M proposal is not inferred from benchmark scores.",
+      "sources": [
+        "R1",
+        "R3"
+      ],
+      "cards": [
+        {
+          "label": "01 / QUALITY AT SCALE",
+          "metric": "Replicate",
+          "body": "Repeat across seeds and larger data with tuned controls. Small text8 results establish a foothold, not frontier capability."
+        },
+        {
+          "label": "02 / COMPLETE ECONOMICS",
+          "metric": "Measure",
+          "body": "Validate trained sparse execution, then charge traffic, latency, residency and energy. Arithmetic estimates alone do not establish savings."
+        },
+        {
+          "label": "03 / ADOPTION",
+          "metric": "Evaluate",
+          "body": "Identify a use case and an evaluator willing to test it. Confirm useful quality, integration effort and willingness to pay."
+        }
+      ],
+      "banner": "If a gate fails, diagnose or narrow the workload before committing more compute or new silicon."
+    },
+    {
+      "kind": "roadmap",
+      "section": "Execution plan",
+      "title": "The next 18 months produce evidence investors can underwrite.",
+      "subtitle": "Proposed milestones measured from funding; spending advances with completed gates.",
+      "sources": [
+        "R3"
+      ],
+      "notes": "The timing is a planning assumption measured from funding. Three seeds and tuned modern controls are validation targets, not present assets. The ≥20% complete-cost gate is a proposed commercial screen and should be adapted to actual service requirements before experiments. Model quality and resource accounting must stay jointly comparable. Current owner queues retain priority; no new training or unguarded compute is launched to prepare this deck. Continued funding depends on completed results, measurable economics and a credible next workload rather than predictions entered as benchmark evidence.",
+      "stages": [
+        {
+          "label": "MONTHS 0–3",
+          "metric": "Team + proofs",
+          "body": "Hire the initial team. Establish company/IP rights. Complete trained sparse execution checks and larger-data, multi-seed evaluation."
+        },
+        {
+          "label": "MONTHS 3–6",
+          "metric": "One workload",
+          "body": "Run tuned controls and measure total cost, latency, memory and energy. Select a workload only if quality and economics hold."
+        },
+        {
+          "label": "MONTHS 6–12",
+          "metric": "External trial",
+          "body": "Seek independent reproduction and prospective customer evaluations. Test pricing, integration effort and willingness to pay."
+        },
+        {
+          "label": "MONTHS 12–18",
+          "metric": "Product + scale",
+          "body": "Turn a validated workload into a deployable runtime. Expand models and assess hardware mapping for the next financing stage."
+        }
+      ],
+      "banner": "Next-round objective: replicated quality, a measured cost advantage and a credible evaluation pathway."
+    },
+    {
+      "kind": "budget",
+      "section": "Use of funds",
+      "title": "€3M funds an 18-month research and engineering program.",
+      "subtitle": "A proposed six-person average team, staged compute and hardware feasibility.",
+      "sources": [],
+      "notes": "The proposed allocation totals exactly €3M: team €1.35M, compute/replication €0.90M, hardware feasibility/measurement €0.25M, legal/IP/operations €0.20M, reserve €0.30M. Average six FTE × €150k/year fully loaded × 1.5 years equals €1.35M; this is a staffing assumption, not an actual hiring plan or salary survey. Operating burn excludes reserve; total budget consumption would average about €166.7k/month over 18 months if reserve is spent. Stage compute purchases by quality/system gates. Allocate founder plus representation/credit, systems/compiler, evaluation and hardware-measurement skills; exact staffing mix and ramp remain open.",
+      "banner": "€2.70M operating plan + €0.30M reserve · Planned operating burn averages €150k/month.",
+      "caveat": "Budget assumptions: six average FTE including founder at €150k/year fully loaded; compute and hiring quotes remain to be obtained."
+    },
+    {
+      "kind": "terms",
+      "section": "Financing proposal",
+      "title": "Raise €3M to establish a commercially valuable platform.",
+      "subtitle": "Proposed priced round; terms remain subject to company formation and investor diligence.",
+      "notes": "€3M at €50M priced pre-money yields €53M post-money and {new_investor_pct:.4f}% initial ownership before option-pool changes, fees, preferences and subsequent financing. This is a proposed negotiating price, not an independent appraisal, market-clearing estimate or investor offer. The main pitch explains the use of capital and proof points; it does not use arbitrary success odds to establish price. The appendix preserves transparent sensitivity arithmetic for investor discussion. A small ownership stake at a premium research-stage price may narrow the compatible investor pool; the round structure and lead investor fit are open commercial questions.",
+      "sources": [],
+      "detail": "The proposal reflects three potential assets: a model family, a sparse runtime and a hardware substrate. This round funds the evidence needed to turn them into a scalable business.",
+      "banner": "Valuation sensitivities and conditional exit scenarios are in the appendix."
+    },
+    {
+      "kind": "closing",
+      "section": "The raise",
+      "title": "Build the model. Prove the economics. Open the hardware path.",
+      "subtitle": "€3M proposed raise · €50M proposed pre-money · Private investor discussion.",
+      "sources": [],
+      "notes": "Requested financing is €3M. The financing purpose is an aggressive but gated increase in experiment throughput and engineering capacity. The key next investor asset is replicated quality plus a measured service-level advantage; a clockless-chip thesis adds upside after mapping is credible. This private deck includes an appendix for diligence rather than presenting pending work as completed. Contact details, company identity, jurisdiction, cap table and legal terms should be supplied by the founder before distribution. No outbound messages or public release were made.",
+      "hero": "A new architecture is becoming trainable.\nThis round tests whether its advantage scales.",
+      "items": [
+        "Replicated language quality and learning mechanisms.",
+        "A deployable runtime with measured system economics.",
+        "External evaluation and a credible path to hardware."
+      ]
     },
     {
       "kind": "credit",
-      "section": "Mechanism validation",
-      "title": "Learning the alternatives changes the result.",
-      "subtitle": "The same p32 / D4 model, data budget, seed and evaluation window.",
+      "section": "Appendix / learning mechanism",
+      "title": "The same model improves when unchosen paths receive credit.",
+      "subtitle": "Controlled small-model comparison; held-out error and estimated complete training work.",
       "sources": [
         "R1",
         "R3"
@@ -279,14 +536,14 @@
           "Derived from the BPC difference; one controlled seed."
         ]
       ],
-      "detail": "Depth-8 also improves by {depth_credit_gain:.3f} bpc with route credit. This supports the credit mechanism across two depths; replication is next.",
+      "detail": "A deeper variant also improves by {depth_credit_gain:.3f} bits per character. Both are single-seed comparisons; numerical details and model definitions follow.",
       "banner": "A falsifiable architectural mechanism, with a small counted arithmetic increment."
     },
     {
       "kind": "capacity",
-      "section": "Capacity beyond activity",
+      "section": "Appendix / capacity and activity",
       "title": "More available state. The same eight selected writes.",
-      "subtitle": "Matched credited p32 / D4 pool expansion: 16 → 32 slots.",
+      "subtitle": "Small model with alternative credit: available memory doubles; selected updates stay fixed.",
       "sources": [
         "R1"
       ],
@@ -295,9 +552,9 @@
     },
     {
       "kind": "inference",
-      "section": "Execution",
+      "section": "Appendix / sparse execution",
       "title": "The sparse path is implemented; system proof is next.",
-      "subtitle": "Traced arithmetic per input position. Only selected proposal values are computed in the winner path.",
+      "subtitle": "Estimated arithmetic per evaluated input position. Green bars show the implemented winner-only path.",
       "sources": [
         "R1",
         "R3"
@@ -307,9 +564,9 @@
     },
     {
       "kind": "online",
-      "section": "Learning",
+      "section": "Appendix / adaptation",
       "title": "An adaptation signal exists. Its work is accounted for.",
-      "subtitle": "An earlier integrated CPU model, on a new development stream; separate from the latest language fits.",
+      "subtitle": "Predict-before-update experiment on a new text stream; separate from the latest model family.",
       "sources": [
         "R2",
         "R3"
@@ -319,7 +576,7 @@
     },
     {
       "kind": "table",
-      "section": "Competition",
+      "section": "Appendix / competing approaches",
       "title": "The contribution is the complete construction.",
       "subtitle": "Established alternatives already address parts of this problem; they remain essential controls.",
       "sources": [
@@ -366,65 +623,7 @@
     },
     {
       "kind": "cards",
-      "section": "Product strategy",
-      "title": "Enter through software. Earn the hardware expansion.",
-      "subtitle": "Proposed commercialization sequence; no customers or partner interest yet.",
-      "sources": [
-        "R3"
-      ],
-      "notes": "The first commercial workload is a selection hypothesis rather than a confirmed customer request. A staged software route lowers dependency on new silicon and permits independent benchmarking. A clockless implementation could benefit from less global synchronization and local state, but clock precision, signal fanout, memory, interconnect and fabrication overhead may dominate. Hardware economic claims require measurements. Costs for an ASIC tapeout are not estimated or funded here.",
-      "cards": [
-        {
-          "label": "01 / MODEL + RUNTIME",
-          "metric": "First wedge",
-          "body": "License a validated model/runtime for a chosen persistent sequence workload. Demonstrate quality and complete serving cost."
-        },
-        {
-          "label": "02 / ACCELERATOR CO-DESIGN",
-          "metric": "Partner path",
-          "body": "Port verified kernels, profile memory and event execution, then pursue a joint platform or IP license."
-        },
-        {
-          "label": "03 / CLOCKLESS SUBSTRATE",
-          "metric": "Long-term upside",
-          "body": "Explore delay precision, sparse local state and event scheduling in FPGA/ASIC feasibility work after software gates pass."
-        }
-      ],
-      "banner": "The €3M round funds evidence and feasibility; a full advanced-node tapeout is outside this budget."
-    },
-    {
-      "kind": "cards",
-      "section": "Strategic fit",
-      "title": "Incumbents have reasons to evaluate a new substrate.",
-      "subtitle": "Potential counterparties only. Strategic relevance is an inference; no relationship is claimed.",
-      "sources": [
-        "S1",
-        "S5",
-        "S6"
-      ],
-      "notes": "AMD is the strongest identified public fit precedent, not a presumed buyer. Its Ventures page lists Series A–C focus, so a €3M research-stage round may need angels/specialist deep-tech leads before strategic institutional investment. Intel’s system is a research prototype; Google has substantial internal alternatives and could build rather than license. Possible routes are benchmark collaboration, co-development, licensing, investment or eventual acquisition; none is a current pipeline asset. No company logos or implied endorsements are used.",
-      "cards": [
-        {
-          "label": "AMD",
-          "metric": "Models + silicon",
-          "body": "Silo AI acquisition and Liquid AI collaboration show appetite for model/software capabilities. Earn attention with AMD-compatible scale and measured gains."
-        },
-        {
-          "label": "INTEL",
-          "metric": "Event systems",
-          "body": "Hala Point and Loihi 2 establish event-computing research. Offer a credible expressive model and hardware mapping experiment."
-        },
-        {
-          "label": "GOOGLE",
-          "metric": "Full-stack co-design",
-          "body": "TPU 8t/8i embody model–hardware optimization. Offer independently validated improvements that complement a large existing research stack."
-        }
-      ],
-      "banner": "A measured advantage could become strategic leverage against incumbent economics; interest must be established."
-    },
-    {
-      "kind": "cards",
-      "section": "Strategic precedent",
+      "section": "Appendix / AMD strategic precedent",
       "title": "AMD’s Silo AI deal supports the strategic logic.",
       "subtitle": "Announced approximately $665M all-cash acquisition in 2024; a mature-company precedent.",
       "sources": [
@@ -442,7 +641,7 @@
         {
           "label": "THE LUMI CONNECTION",
           "metric": "Poro / Viking",
-          "body": "AMD highlighted multilingual models and training on AMD-powered LUMI. LUMI is the supercomputer, not the model name."
+          "body": "AMD highlighted multilingual Poro and Viking models trained on AMD-powered LUMI, with university and supercomputer collaborators."
         },
         {
           "label": "OUR LESSON",
@@ -453,157 +652,38 @@
       "banner": "Efficient models can matter to a chip ecosystem; training on its chips is one part of the value case."
     },
     {
-      "kind": "upside",
-      "section": "Business model",
-      "title": "Capture a fraction of verified value created.",
-      "subtitle": "Illustrative annual economics, contingent on quality and complete system savings.",
-      "sources": [],
-      "notes": "Eligible spend is the subset of workload cost we can actually influence; it is not total hyperscaler capex or global electricity spend. Savings must be measured at equivalent quality, latency and service conditions. Capture share is a pricing assumption. €1B × 20% × 20% yields €40M annual license revenue, leaving €160M buyer benefit before transition overhead. 100M new devices × €0.50 is €50M device-cycle revenue, not subscriber-stock recurring ARR. A robotics illustration of one million paying systems at €50/year gives €50M/year, but assumes a large unsupported adoption level. These routes may overlap and should not be summed.",
-      "headers": [
-        "Scenario input",
-        "Arithmetic",
-        "Potential annual revenue"
-      ],
-      "widths": [
-        374,
-        460,
-        342
-      ],
-      "rows": [
-        [
-          "Datacenter license",
-          "€1B eligible spend × 20% savings × 20% capture",
-          "€40M"
-        ],
-        [
-          "Mobile deployment",
-          "100M licensed new devices × €0.50 royalty",
-          "€50M"
-        ]
-      ],
-      "detail": "Datacenter customer retains €160M of the assumed €200M gross savings before migration and other costs. Robot fleets could support per-system adaptation licenses after validation.",
-      "banner": "These are assumptions for value-capture design, not booked revenue, forecasts or an additive TAM."
-    },
-    {
-      "kind": "founder",
-      "section": "Founder",
-      "title": "A founder at the intersection of models and systems.",
-      "subtitle": "Public professional record and a primary published invention document.",
+      "kind": "market",
+      "section": "Appendix / long-term reach",
+      "title": "The constraints reach from power grids to robot batteries.",
+      "subtitle": "Economic context for efficient intelligence; these figures are not our revenue market.",
       "sources": [
-        "F1",
-        "F2",
-        "F3"
+        "M1",
+        "M2",
+        "M3"
       ],
-      "notes": "The XING timeline lists Cybercom December 2012–June 2018, HERE July 2018–April 2022, Alloy May 2022–August 2023, and Kaiko September 2023–December 2025. The founder’s portfolio lists Sleeping Machines and FAS Simulator. The primary EPO application EP4148389A2, published 15 March 2023, names Tero Juhani Keski-Valkama as inventor and HERE Global B.V. as applicant. It supports relevant invention experience, not a patent grant or an asset owned by this venture. Public personal biography and university links have availability/staleness issues; no degree or current-employment claim is inferred from them. Founder availability and references remain diligence items.",
-      "summary": "Public work spans machine learning, software architecture and industrial applications. The relevant founder case is sustained technical execution across these layers.",
-      "roles": [
-        {
-          "date": "2012–2018",
-          "role": "Cybercom · Software Architect",
-          "detail": "Historical role in public professional profile."
-        },
-        {
-          "date": "2018–2022",
-          "role": "HERE · Lead ML & AI Engineer",
-          "detail": "Self-reported research and applied ML leadership."
-        },
-        {
-          "date": "2022–2025",
-          "role": "Alloy.ai → Kaiko.ai",
-          "detail": "Staff engineering; multimodal foundation-model work."
-        },
-        {
-          "date": "2023 publication",
-          "role": "EP4148389A2 · Named inventor",
-          "detail": "Maps from geospatial observations; applicant HERE."
-        }
-      ],
-      "caveat": "Career dates are self-reported. No PhD, current employer or ownership of HERE inventions is asserted. Sole-founder status supplied by Tero."
-    },
-    {
-      "kind": "cards",
-      "section": "Defensibility",
-      "title": "Build a moat around evidence, execution and integration.",
-      "subtitle": "The repository is now private; future progress disclosure needs a deliberate policy.",
-      "sources": [
-        "R3",
-        "F2"
-      ],
-      "notes": "Tero instructed on 3 October 2026 that the GitHub repository was made private. This deck is a local private artifact and no public publication is authorized. Earlier public disclosure cannot be undone by repository privacy. README credits Tero Keski-Valkama and Karoliina Salminen as research authors; sole-founder status does not establish sole authorship, inventorship or IP ownership. Contributor agreements, intended licenses and employment-related rights must be resolved before presenting an exclusive technology asset. No granted patent portfolio, customer integration or defensible legal monopoly is claimed.",
+      "notes": "IEA projects all datacenter electricity, not only AI demand; GSMA subscribers are not annual device shipments; IFR reports industrial-robot installed stock, not all robotics. These denominators cannot be summed into a TAM. The thesis is an inference about potential demand for verified efficient computation. Incumbents are also improving rapidly, which raises the threshold for a commercially useful alternative.",
       "cards": [
         {
-          "label": "RESEARCH + DATA ROOM",
-          "metric": "Auditable",
-          "body": "Versioned results, ablations, numerical contracts and retained negative findings support credible technical diligence."
+          "label": "DATACENTERS",
+          "metric": "485 → 950",
+          "body": "TWh/year, 2025 → 2030 central IEA projection. Power and data movement make system efficiency economically important."
         },
         {
-          "label": "RUNTIME + CO-DESIGN",
-          "metric": "Compound",
-          "body": "Model, credit estimator, sparse execution, measurement and hardware mapping can become mutually reinforcing know-how."
+          "label": "MOBILE",
+          "metric": "5.8B",
+          "body": "Unique mobile subscribers in GSMA’s 2026 report. On-device inference creates a prospective route to broad distribution."
         },
         {
-          "label": "IP + ADOPTION",
-          "metric": "To establish",
-          "body": "Clarify contribution rights, licensing and employer assignments; then build deployment tooling and partner-specific integration."
+          "label": "ROBOTICS",
+          "metric": "5M",
+          "body": "Industrial robots operating in 2025. Sparse sensing, persistent state and adaptation are prospective use cases."
         }
       ],
-      "banner": "Private source control helps disclosure discipline; exclusive IP and adoption still require proof."
-    },
-    {
-      "kind": "roadmap",
-      "section": "18-month proposed plan",
-      "title": "Use capital to retire the decisive uncertainties.",
-      "subtitle": "Milestones are proposed gates, not completed deliverables or guaranteed dates.",
-      "sources": [
-        "R3"
-      ],
-      "notes": "The timing is a planning assumption measured from funding. Three seeds and tuned modern controls are validation targets, not present assets. The ≥20% complete-cost gate is a proposed commercial screen and should be adapted to actual service requirements before experiments. Model quality and resource accounting must stay jointly comparable. Current owner queues retain priority; no new training or unguarded compute is launched to prepare this deck. Continued funding depends on completed results, measurable economics and a credible next workload rather than predictions entered as benchmark evidence.",
-      "stages": [
-        {
-          "label": "MONTHS 0–3",
-          "metric": "Reproduce",
-          "body": "Hire initial team. Admit trained sparse parity, complete 90M evidence and three-seed comparisons. Resolve IP and data-room rights."
-        },
-        {
-          "label": "MONTHS 3–6",
-          "metric": "Measure",
-          "body": "Benchmark latency, traffic, memory and joules on one chosen workload with tuned controls. Target ≥20% full-system cost reduction at matched quality."
-        },
-        {
-          "label": "MONTHS 6–12",
-          "metric": "Demonstrate",
-          "body": "Pursue independent reproduction and prospective design-partner trials. Validate willingness to pay and a deployable runtime."
-        },
-        {
-          "label": "MONTHS 12–18",
-          "metric": "Expand",
-          "body": "Scale a winning workload; test drift/retention and a hardware feasibility path. Raise the next round only on stronger evidence."
-        }
-      ],
-      "banner": "If a gate fails, diagnose or narrow the wedge before increasing compute or committing to silicon."
-    },
-    {
-      "kind": "budget",
-      "section": "Use of funds",
-      "title": "€3M to scale research and engineering aggressively.",
-      "subtitle": "Proposed 18-month budget; assumptions to refine with hiring and compute quotes.",
-      "sources": [],
-      "notes": "The proposed allocation totals exactly €3M: team €1.35M, compute/replication €0.90M, hardware feasibility/measurement €0.25M, legal/IP/operations €0.20M, reserve €0.30M. Average six FTE × €150k/year fully loaded × 1.5 years equals €1.35M; this is a staffing assumption, not an actual hiring plan or salary survey. Operating burn excludes reserve; total budget consumption would average about €166.7k/month over 18 months if reserve is spent. Stage compute purchases by quality/system gates. Allocate founder plus representation/credit, systems/compiler, evaluation and hardware-measurement skills; exact staffing mix and ramp remain open.",
-      "banner": "€2.70M operating plan + €0.30M reserve · Average planned operating burn €150k/month.",
-      "caveat": "Team assumption: average six FTE including founder at €150k/year fully loaded. No full advanced-node tapeout allocation."
-    },
-    {
-      "kind": "valuation",
-      "section": "Valuation thesis",
-      "title": "Price the platform option with explicit assumptions.",
-      "subtitle": "€50M is a bullish negotiating case; €100M is a stretch case requiring substantially stronger conviction.",
-      "sources": [],
-      "notes": "The illustrative model discounts the retained fraction of a successful future equity outcome to today and assigns zero failure value. It is not a complete corporate DCF, does not model all cash flows, and assumes the retained cohort benefits from an exit equity value after future financing. €10B exit × 30% retention / 1.15^10 is the conditional present value; €50M requires {required_probability_50_pct:.4f}% and €100M requires {required_probability_100_pct:.4f}%. These are neither forecasts nor inferred from small benchmarks. A €3M priced round at €50M pre-money gives {new_investor_pct:.4f}% initial investor ownership before option-pool changes, fees, preferences or future rounds; at €100M it gives {stretch_new_investor_pct:.4f}%. An investor must independently accept technology scalability, commercial value capture, rights and execution to support a premium price.",
-      "banner": "Required odds are reverse-calculated conditions. The benchmarks do not estimate those probabilities."
+      "banner": "Select one measurable initial workload; expand only after quality and system gains hold."
     },
     {
       "kind": "upside",
-      "section": "Long-term upside",
+      "section": "Appendix / conditional platform upside",
       "title": "Successful platform adoption can support very large outcomes.",
       "subtitle": "Conditional commercial arithmetic illustrates the scale required; no forecast or market multiple claim.",
       "sources": [],
@@ -634,24 +714,10 @@
       "banner": "The upside is large if the platform works and wins adoption. Its probability remains unmeasured."
     },
     {
-      "kind": "closing",
-      "section": "The raise",
-      "title": "Fund the evidence that makes a new substrate investable.",
-      "subtitle": "Private discussion draft · €50M pre-money bullish case · No customer interest reported.",
-      "sources": [],
-      "notes": "Requested financing is €3M. The financing purpose is an aggressive but gated increase in experiment throughput and engineering capacity. The key next investor asset is replicated quality plus a measured service-level advantage; a clockless-chip thesis adds upside after mapping is credible. This private deck includes an appendix for diligence rather than presenting pending work as completed. Contact details, company identity, jurisdiction, cap table and legal terms should be supplied by the founder before distribution. No outbound messages or public release were made.",
-      "hero": "Scale the integrated architecture.\nProve the economics. Build the platform.",
-      "items": [
-        "Replicate quality and counterfactual learning at meaningful scale.",
-        "Demonstrate sparse serving gains with complete resource boundaries.",
-        "Turn verified advantages into partnerships and a hardware roadmap."
-      ]
-    },
-    {
       "kind": "benchmark",
       "section": "Appendix A / benchmark ledger",
-      "title": "Quality and work, in the same units for every model.",
-      "subtitle": "Completed one-pass 10M text8 fits; T256 held-out evaluation; estimated operation counts.",
+      "title": "The completed comparisons, using consistent resource units.",
+      "subtitle": "Frozen 10M-character, one-pass evidence. Model definitions are on the next slide.",
       "sources": [
         "R1"
       ],
@@ -668,15 +734,85 @@
         "Transformer-256x2"
       ],
       "short_labels": {
-        "p32/d4": "p32 / D4 timing-only",
-        "p32/d4 + route credit": "p32 / D4 credited",
-        "p32/d4/pool4 + route credit": "p32 / D4 pool4 credited",
-        "p32/d8, skip2 + route credit": "p32 / D8 credited",
-        "p64/d4 + route credit": "p64 / D4 credited",
-        "p64/d4/pool4 + route credit": "p64 / D4 pool4 credited",
-        "p96/d4 + route credit": "p96 / D4 credited"
+        "p32/d4": "Small: timing-only credit",
+        "p32/d4 + route credit": "Small: alternative credit",
+        "p32/d4/pool4 + route credit": "Small: more memory",
+        "p32/d8, skip2 + route credit": "Deeper: alternative credit",
+        "p64/d4 + route credit": "Medium: alternative credit",
+        "p64/d4/pool4 + route credit": "Medium: more memory",
+        "p96/d4 + route credit": "Best quality: wider model",
+        "LSTM-256": "Recurrent baseline (LSTM)",
+        "Transformer-256x2": "Small Transformer control"
       },
       "caveat": "Fit MF/pos = per training position. Inference MF/pos = per evaluated input position. Native quality uses training evaluator; winner-only trained parity/rescore pending. Native overlap warmup adds work per scored target. Full 15-row CSV retains older models."
+    },
+    {
+      "kind": "table",
+      "section": "Appendix / model definitions",
+      "title": "Plain-language labels map to reproducible model records.",
+      "subtitle": "Message width counts scalars; available memory counts local state slots.",
+      "notes": "These names are editorial labels for the frozen completed configurations, not new models, products or a production-version series. Each native configuration has two heads per layer. Selected writes per input position are eight at four layers and sixteen at eight layers. Available slots equal layers × heads × pool size. Credit means the local linearized alternative-value estimator. The small timing-only row and alternative-credit row share forward parameters and architecture. Full filenames, source/parent hashes, exact operation counts and seed/protocol fields are retained in the private evidence ledger.",
+      "sources": [
+        "R1"
+      ],
+      "headers": [
+        "Deck label",
+        "Width / layers",
+        "Memory slots",
+        "Record configuration"
+      ],
+      "widths": [
+        310,
+        236,
+        200,
+        430
+      ],
+      "rowh": 55,
+      "size": 15,
+      "rows": [
+        [
+          "Small model",
+          "32 / 4",
+          "16",
+          "p32 / d4 / pool2"
+        ],
+        [
+          "Small: more memory",
+          "32 / 4",
+          "32",
+          "p32 / d4 / pool4"
+        ],
+        [
+          "Deeper model",
+          "32 / 8",
+          "32",
+          "p32 / d8 / pool2 / skip2"
+        ],
+        [
+          "Medium model",
+          "64 / 4",
+          "16",
+          "p64 / d4 / pool2"
+        ],
+        [
+          "Medium: more memory",
+          "64 / 4",
+          "32",
+          "p64 / d4 / pool4"
+        ],
+        [
+          "Best quality",
+          "96 / 4",
+          "16",
+          "p96 / d4 / pool2"
+        ],
+        [
+          "Saved controls",
+          "256 hidden width",
+          "Conventional architectures",
+          "LSTM-256; Transformer-256 × 2 layers"
+        ]
+      ]
     },
     {
       "kind": "table",
@@ -769,13 +905,22 @@
       ]
     },
     {
+      "kind": "valuation",
+      "section": "Appendix / valuation assumptions",
+      "title": "Reverse-underwriting shows the assumptions behind a price.",
+      "subtitle": "This arithmetic is a sensitivity tool; the research does not estimate platform-success probabilities.",
+      "sources": [],
+      "notes": "The illustrative model discounts the retained fraction of a successful future equity outcome to today and assigns zero failure value. It is not a complete corporate DCF, does not model all cash flows, and assumes the retained cohort benefits from an exit equity value after future financing. €10B exit × 30% retention / 1.15^10 is the conditional present value; €50M requires {required_probability_50_pct:.4f}% and €100M requires {required_probability_100_pct:.4f}%. These are neither forecasts nor inferred from small benchmarks. A €3M priced round at €50M pre-money gives {new_investor_pct:.4f}% initial investor ownership before option-pool changes, fees, preferences or future rounds; at €100M it gives {stretch_new_investor_pct:.4f}%. An investor must independently accept technology scalability, commercial value capture, rights and execution to support a premium price.",
+      "banner": "Required odds are reverse-calculated conditions. The benchmarks do not estimate those probabilities."
+    },
+    {
       "kind": "sensitivity",
       "section": "Appendix D / financial sensitivity",
       "title": "The price depends on dilution, exit scale and time.",
       "subtitle": "Required platform-success odds at 10 years and 15% discount; zero failure value.",
       "sources": [],
       "notes": "This table is generated from the frozen financial model, not entered by hand. At a €3B outcome and 10% retained equity, the required probabilities are much higher than at a €30B exit with 50% retention. A lower discount rate increases the present value, while delays and dilution reduce it. In the €3M/€50M round, an investor retains 1.6981% at exit if 30% of its initial stake survives, giving €{conditional_proceeds_m_eur:.2f}M or {conditional_moic:.2f}× gross MOIC in the assumed €10B success outcome. That conditional upside is not expected return; failure is zero and cash-flow timing/preferences are omitted.",
-      "caveat": "Sensitivity analysis, not observed probabilities. No preferred-stock waterfall, intermediate distributions, follow-on investment cash flows or option-pool adjustment modeled."
+      "caveat": "Sensitivity assumptions only. Probabilities above 100% are infeasible in this model. Preferences, option pools and intermediate financing cash flows are omitted."
     },
     {
       "kind": "sources",
@@ -811,5 +956,7 @@
         "F2"
       ]
     }
-  ]
+  ],
+  "editorial_revision": "Investor-readability review, 3 October 2026",
+  "main_slide_count": 16
 }
