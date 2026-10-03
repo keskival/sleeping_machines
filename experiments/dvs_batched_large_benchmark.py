@@ -18,11 +18,32 @@ import dvs_tied_pool_benchmark as T  # noqa: E402
 
 def parser():
     p = RG.parser(); p.add_argument('--tie-pools', action='store_true')
+    p.add_argument('--skip-init-from', type=int, default=0, help='near-identity init for layers >= this index (0: off)')
+    p.add_argument('--skip-gate-bias', type=float, default=-4.)
     return p
+
+
+def skip_init(model, start, gate_bias):
+    """§410: layers >= start begin near identity, as in growth by nesting but learnable from scratch (ReZero/SkipInit
+    idea): unit gates nearly closed (sigmoid(gate_bias)); intermediate layers transport with zero frequency and negligible
+    decay; the top layer keeps its transport, which also aligns the carried context."""
+    import torch
+    with torch.no_grad():
+        for depth in range(start, model.depth):
+            for head in model.units[depth]:
+                for pool in head:
+                    for unit in pool:
+                        unit.gate.bias.fill_(gate_bias)
+        if start < model.depth - 1:
+            model.transport_rate[start:-1] = -20.
+            model.transport_frequency[start:-1] = 0.
+    return model
 
 
 def make_model(a, fast=True):
     model = BL.make_model(a)
+    if getattr(a, 'skip_init_from', 0):
+        model = skip_init(model, a.skip_init_from, a.skip_gate_bias)
     return T.tie_pools(model) if a.tie_pools else model
 
 
@@ -41,5 +62,6 @@ if __name__ == '__main__':
     result = json.loads(out.read_text())
     if result.get('status') == 'completed':
         result['regularization'] = dict(weight_decay=args.weight_decay, input_noise=args.input_noise, bins=args.bins,
-                                        clip=args.clip, tie_pools=args.tie_pools)
+                                        clip=args.clip, tie_pools=args.tie_pools, skip_init_from=args.skip_init_from,
+                                        skip_gate_bias=args.skip_gate_bias)
         out.write_text(json.dumps(result, indent=2) + '\n')

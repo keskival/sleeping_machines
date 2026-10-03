@@ -4,3 +4,4 @@
 curie_language_batched_contracts_20261003T023000Z -m pytest -q tests/test_language_batched.py tests/test_batched_episodes.py
 curie_language_10M_p16d8_20261003T023000Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p16d8_s6_20261003T023000Z --fit 10000000 --payload 16 --depth 8 --lanes 128 --segment 128 --passes 1 --eval-every 200
 curie_language_10M_p32d4_20261003T023000Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p32d4_s6_20261003T023000Z --fit 10000000 --payload 32 --depth 4 --lanes 256 --segment 128 --passes 1 --eval-every 100
+curie_language_10M_p16d8_skip2_20261003T023000Z experiments/language_batched_benchmark.py --tag curie_language_batched_10M_p16d8_skip2_s6_20261003T023000Z --fit 10000000 --payload 16 --depth 8 --lanes 128 --segment 128 --passes 1 --eval-every 200 --skip-init-from 2

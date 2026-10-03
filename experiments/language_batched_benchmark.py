@@ -66,6 +66,8 @@ def main():
     p.add_argument('--eval-every', type=int, default=0, help='windows between dev evaluations (0: end only)')
     p.add_argument('--max-windows', type=int, default=0, help='stop after this many windows (throughput smoke)')
     p.add_argument('--trace-windows', type=int, default=2)
+    p.add_argument('--skip-init-from', type=int, default=0, help='near-identity init for layers >= this index (§410)')
+    p.add_argument('--skip-gate-bias', type=float, default=-4.)
     a = p.parse_args()
     out = ROOT / 'experiments/results/language_batched' / f'{a.tag}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -76,6 +78,9 @@ def main():
     dev = np.array(text_slice(90_000_000, a.dev), np.int64)
     model = fast_class(AddressedEventHeads)(sources=1, content_dim=27, classes=27, payload=a.payload, depth=a.depth,
                                             heads=a.heads, pool=a.pool)
+    if a.skip_init_from:
+        from dvs_batched_large_benchmark import skip_init
+        model = skip_init(model, a.skip_init_from, a.skip_gate_bias)
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
     S, B = a.segment, a.lanes
     rng = np.random.default_rng(a.seed + 10)
@@ -86,6 +91,7 @@ def main():
     result = dict(status='running', args=vars(a), parameters=sum(q.numel() for q in model.parameters()),
                   source_sha256={n: hashlib.sha256((ROOT / n).read_bytes()).hexdigest() for n in
                                  ('experiments/language_batched_benchmark.py', 'sleeping_machines/batched_episodes.py',
+                                  'experiments/dvs_batched_large_benchmark.py',
                                   'sleeping_machines/fast_native_core.py', 'sleeping_machines/addressed_event_heads.py')},
                   hardware=dict(platform=platform.platform(), torch=torch.__version__, device='cpu', threads=1),
                   protocol=dict(fit=[0, a.fit], dev=[90_000_000, 90_000_000 + a.dev], test=[95_000_000, 95_000_000 + a.test],

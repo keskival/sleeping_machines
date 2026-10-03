@@ -1213,3 +1213,15 @@ intervention that helped is growth by nesting from a trained depth-2 model (seed
 loss-landscape or initialization difficulty for hard-routed deep stacks trained from scratch, which starting from a working
 shallow solution avoids. Growth replicates (seeds 6 and 8) and progressive growth to depth 6 are queued in the large
 program. The language runs keep clip 1.
+
+## 410. Near-identity initialization for deep native stacks (ReZero/SkipInit idea)
+
+Growth by nesting gave the best depth-4 result (§408) by starting new layers near identity. A unit's value is
+x + gain·y·sigmoid(gate), so a nearly closed gate passes the input through. The from-scratch equivalent
+(experiments/dvs_batched_large_benchmark.skip_init): layers ≥ k start with unit gate bias −4 (sigmoid ≈ .018: near
+identity but learnable; growth's −20 effectively froze the new units, so its gains came from the channel mixes and
+queries of the new layers), and intermediate layers transport with zero frequency and negligible decay. The top layer
+keeps its transport for context alignment. Tests: DVS depth 4 on seeds 6–8 and depth 6 on seed 7 from scratch with
+near-identity init from layer 2, against scratch and growth; and 10M language at depth 8 with the same init beside the
+default-init depth-8 run. Prediction (P410): near-identity depth 4 matches growth (≥ the depth-2 level of the same
+seed) without a trained parent, and the depth-8 language model with near-identity init beats its default-init twin.
