@@ -1,0 +1,117 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_credit_horizon_contracts_20261003T005700Z"
+  },
+  "contracts_passed": 7,
+  "delayed_content": {
+    "rho": 0.9900498337491681,
+    "delay": 32,
+    "credit_horizon": 16,
+    "theta": 0.3,
+    "loss": 0.3058834479598295,
+    "full_encoder_gradient": -0.5679613098607772,
+    "truncated_encoder_gradient": 0.0,
+    "finite_step_theta": 0.31,
+    "finite_step_loss": 0.300230199482424
+  },
+  "delayed_race": {
+    "logit": 0.2,
+    "utilities": [
+      0.037497174947833015,
+      0.5
+    ],
+    "full_choice_gradient": -0.11447711412646536,
+    "truncated_choice_gradient": 0.0
+  },
+  "geometric_tail": [
+    {
+      "horizon": 16,
+      "geometric_tail_fraction": 0.8521437889662121,
+      "absolute_geometric_tail": 85.64116090974538
+    },
+    {
+      "horizon": 32,
+      "geometric_tail_fraction": 0.7261490370736922,
+      "absolute_geometric_tail": 72.97858334909547
+    },
+    {
+      "horizon": 64,
+      "geometric_tail_fraction": 0.5272924240430503,
+      "absolute_geometric_tail": 52.99332802594786
+    },
+    {
+      "horizon": 128,
+      "geometric_tail_fraction": 0.278037300453196,
+      "absolute_geometric_tail": 27.942980392910567
+    }
+  ],
+  "distinct_sampling": {
+    "races": 12,
+    "k": 3,
+    "exhaustive_subsets": 220,
+    "true_gradient": [
+      0.2,
+      -0.4,
+      0.1
+    ],
+    "mean": [
+      0.2,
+      -0.4,
+      0.1
+    ],
+    "covariance": [
+      [
+        0.11999999999999987,
+        -0.23999999999999974,
+        0.059999999999999935
+      ],
+      [
+        -0.23999999999999974,
+        0.4799999999999995,
+        -0.11999999999999987
+      ],
+      [
+        0.059999999999999935,
+        -0.11999999999999987,
+        0.029999999999999968
+      ]
+    ],
+    "variance_multiplier": 3.0
+  },
+  "execution_counts": [
+    {
+      "horizon": 16,
+      "races": 256,
+      "selected_credit_races": 256,
+      "selection_probability": 1.0,
+      "shadow_lanes": 512,
+      "shadow_events": 8192,
+      "shadow_events_per_target": 512.0,
+      "factual_events": 16,
+      "all_factual_plus_shadow_events_per_target": 513.0,
+      "single_informative_route_variance_multiplier": 0.0
+    },
+    {
+      "horizon": 64,
+      "races": 1024,
+      "selected_credit_races": 8,
+      "selection_probability": 0.0078125,
+      "shadow_lanes": 16,
+      "shadow_events": 1024,
+      "shadow_events_per_target": 16.0,
+      "factual_events": 64,
+      "all_factual_plus_shadow_events_per_target": 17.0,
+      "single_informative_route_variance_multiplier": 127.0
+    }
+  ],
+  "source_sha256": {
+    "experiments/credit_horizon_contracts.py": "0d23637714266cb5ef39f623cbf7c31c5405d69c98c8de86669dc4003995178b",
+    "experiments/theory/110_persistent_capacity_and_credit_horizon.md": "87edd61f68a07698a36b133828d1bcfe624283414af5e416923b3ea71608dc59"
+  },
+  "wall_s": 0.5293235200078925,
+  "max_rss_kb": 282228,
+  "optimizer_steps": 0,
+  "development_evaluations": 0,
+  "scope": "Exact synthetic truncation/counterfactual utility and allocation-count witnesses; not an empirical native/text8 horizon diagnosis, native Jacobian bound or efficiency advantage."
+}

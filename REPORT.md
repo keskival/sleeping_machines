@@ -3311,3 +3311,54 @@ Private BPC5.311638 to4.832740,shared5.273659 to4.807838 are admission checks, n
 The corrected language choice return must sum ALL downstream token losses after the forced route, actually changing private memory at the factual FIRST time. A detached chunk omits later-chunk credit. Full replay at T16/L8/H2/pool2 costs512shadow lanes/8192shadow events perchunk; causal suffix snapshots can reduce about2x, not erase the quadratic work. A future language port needs full-parameter sequential/batched sum-return contracts, causal intervention, actual recovery and complete paid work.
 
 Completed smokes250.174/251.253s,peak<534MiB; bounded long jobs stay in AWS tmux/coordinator with reserved2CPU slots and8GiB floor. Table uses CPU emulator arithmetic plus unit-special convention for both models; projected physical-event numbers remain separate. Credit graph freed each16target microchunk, persistent state crosses updates. DEV passes/ RNG/traffic/energy outside fitting FLOPs, not zero. Source snapshots frozen; all pending runs retained as pending and independently owned.
+
+## Appendix B. Corrected causal language replay: sixteen contracts pass
+
+| L8/p4 family | Params | Entering events | Entering bytes | Final bytes | Parameter grads | Shadow lanes |
+| --- | --- | --- | --- | --- | --- | --- |
+| private | 4411 | 2 | 1040 | 1320 | 384 | 96 |
+| depth | 2071 | 2 | 1000 | 1320 | 174 | 96 |
+
+A new sibling language helper emits EVERY token prediction from nonempty detached native receiver memories/arrivals/source context. For each race at event t, replay each alternative at the factual FIRST time with common future randomness, real private memory writes and coupled suffix clocks/messages; stopped-gradient utility sums losses t..T-1. Categorical local-expectation credit is added to factorized common-clock and realized-content derivatives. Original hard score map retained, no bounded bridge/calibration, token target in input or per-position KV bank.
+
+Both private and depth-shared L8/H2/p4/pool2 double models pass EVERY-parameter sum-return gradient comparison with independent sequential full-write replays, all private state/arrivals/context comparisons, original-teacher/factorized exact forward-state parity and variable2/3 token lanes. Losing routes preserve factual first time, change actual suffix predictions and preserve preceding predictions. Future observed tokens and changed target labels cannot affect earlier factual output.
+
+Actual partly accumulated gradients, native state, Adam, cursor and RNG recover bitwise exactly; independent sequential summed gradients agree after target normalization/clipping/Adam. All factual/shadow/backward and optimizer operations covered.96shadow lanes/288shadow events per three-target case are charged. The port closes a numerical mechanism gap; no benchmark fit or deep-feature advantage is inferred.
+
+Theory108;23.973s/361084KiB,16contracts. State bytes are actual double-precision numerical states, not the production float ledger. Truncating/detaching entering credit still omits later-chunk derivatives and gives no whole expected-stream gradient theorem. Existing AWS10M original-teacher controls and their immutable sources stay distinct; no new10M quality cell or claimed language replay gain.
+
+## Appendix B. Production-size language replay: paid resource admission
+
+| p16/L8 case | Targets | Whole step/fit GF | Fit MF/target | Infer MF/target | Shadow lanes |
+| --- | --- | --- | --- | --- | --- |
+| private/full16 | 16 | 1.084409 | 67.775587 | 0.097256 | 512 |
+| private/partial3 | 3 | 0.040100 | 13.366694 | 0.097256 | 96 |
+| depth/full16 | 16 | 1.083893 | 67.743327 | 0.097247 | 512 |
+| depth/partial3 | 3 | 0.039584 | 13.194644 | 0.097247 | 96 |
+| private/teacher smoke | 1024 | 0.463220 | 0.452363 | 0.097376 | 0 |
+| depth/teacher smoke | 1024 | 0.461066 | 0.450260 | 0.097376 | 0 |
+
+Private54907/depth-shared22687 parameters,H2/pool2,32available receivers,32key scores/16actual writes per observed token. A full16target chunk executes512shadow lanes/8192shadow events; partial3 executes96/288. Actual original temporal state and hard races remain. Both full factual primal outputs/state match independent sequential native computation. Four prespecified suffix returns per family match sequential alternatives at factual first time; all eight earlier-loss/end-RNG checks pass.
+
+After each real full-step Adam update, save model/nonempty optimizer/ private state/cursor/RNG and recover the next actual three-target partial update bitwise exactly. Total four test updates plus two recovery repeats are paid. First-state2376/2304bytes, final2448bytes, float32. Every factual/shadow/backward/normalization/clipping/Adam/native-inference operation has complete coverage. Numerical admission succeeds86.859s/ 429912KiB under guarded one-thread tmux,~11GiB host memory available.
+
+Full replay costs67.78/67.74MF per target here versus saved original teacher smoke about.45MF. Tables show whole executed-step or whole fit work and the corresponding actual target denominator in the SAME units. Synthetic16/3target correctness strings and saved1024target text8 smokes have unequal data/quality/update context; raw work gaps are not efficiency claims. Native sparse inference stays~.097MF/target but does not remove counterfactual learning work. No DEV/test/BPC or fitted replay gain.
+
+Theory109; production tests cover full execution and selected returns/recovery. Full EVERY-parameter sequential-return comparison is the prior T3/p4 double contract, not relabelled full T16 equality. TwoFLOPs/MAC plus unit specials; shadow-state export and taps are paid diagnostic execution/traffic. Development passes, physical traffic/RNG/ energy remain separate. Whole diagnostic-audit FLOPs unknown, not zero. No unchanged language training promotion follows from resource admission.
+
+## Appendix B. Persistent representation and missing delayed credit
+
+| Credit horizon H | Geometric weighting after H (%) | Absolute geometric tail |
+| --- | --- | --- |
+| 16 | 85.214 | 85.641161 |
+| 32 | 72.615 | 72.978583 |
+| 64 | 52.729 | 52.993328 |
+| 128 | 27.804 | 27.942980 |
+
+Exact constructed encoder: observe x,write theta*x,transport by rho^32 with rho=exp(-.01),predict delayed label x. At theta.3,full encoder gradient -.567961,credit16 with detached future state0; theta.31 reduces loss.305883 to.300230. Race writes x or0; delayed conditional choice gradient -.114477,within-chunk return gradient0 despite replaying both choices. Seven analytic/autograd/finite-difference and exhaustive-sampling contracts pass. This proves a training-credit obstruction with representational capacity retained, not a measured text8 failure.
+
+The linear contraction-mode tail fraction rho^H is large for a 100event decay. Native whole-state contraction is NOT established: fixed-input unit damping/orthogonal rotation do not bound learned source carry, gates, clock history and addressed interactions. Shared parameters can get other later derivatives; that is not automatic recovery of the omitted original-write path. Decoder adaptation is also not proof of learning new long-range representations.
+
+Fixed execution-count alternative: fullT16/L8/H2/pool2 has512 shadow events/target plus one factual; T64/k8 uniform distinct sites has16shadow events/target plus one factual. The longer factual graph and score discovery still cost work. Horvitz scalingR/k=128 makes single-informative-route covariance127*g*g^T. Exhaustive12race/k3 subsets independently verify mean and covariance. Unbiasedness can coexist with poor learning; these counts are not FLOPs/wall/quality advantage.
+
+Theory110; .529s/282228KiB,no optimizer/DEV/test. Corrected within-chunk routing support, confidence/sensitivity and credit horizon are separate constraints. Next use exact-source saved language checkpoints for a frozen longer-suffix shared-parameter return/variance audit on unseen FIT inputs before selecting H/k. Existing10M teacher runs remain unchanged; no long sampled-credit fit or predicted benchmark gain is admitted by this synthetic witness.

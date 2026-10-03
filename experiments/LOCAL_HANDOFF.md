@@ -1739,3 +1739,29 @@ lanes/288shadow events per3target case paid. Not a learned benchmark, not
 full-stream gradient across detached boundaries. Sources/results frozen.
 Next bounded production-width/T16 resource/recovery admission only; full
 quality comparison needs its own fixed protocol and AWS resource allocation.
+
+## Production language replay and horizon contracts, 3 October00:54 UTC
+
+Private/shared p16/L8/H2/pool2 production T16 numerical admission PASSES,
+86.859s/429912KiB in tmux/one-job guard.512shadow lanes/8192shadowevents;
+eight prespecified suffix returns match independent sequential native replays
+with factual first times/earlier losses/end RNG. Full primal state/logits match;
+actual nonempty Adam/private-state/cursor/RNG next3target recovery bitwise
+exact. Full16 step1.084409/1.083893GF,67.775587/67.743327MF pertarget;
+partial3 .040100/.039584GF,13.366694/13.194644MF; nativeinference
+.097256/.097247MF/target.32available/32scores/16writes pertoken,final2448
+livebytes. Synthetic correctness strings, no DEV/test/BPC/fitclaim. Small
+T3/p4 EVERY-parameter contracts remain distinct from selected fullT16 checks.
+
+Theory110 seven exact delayed-label/sampling contracts pass.529s/282228KiB.
+For constructed32delay/rhoexp(-.01),fullencodergradient-.567961 versus0
+under16creditdetach; finite change improves loss. Delayedroutegradient-.114477
+versus0withtruncatedutilitydespiteallcandidatecoverage. Nottext8diagnosis.
+Longer64/k8 is16shadowevents/target vsfull16's512,butsingleinformative-route
+variancefactor127 andlargerfactualgraph remain; counts notmeasuredadvantage.
+
+177page publication010000Z PASSES26.000s, completedresourceandhorizon
+appendicesandallold/sharedqualityevidence retained. Sources/results frozen.
+No active local job afterpublication. Next: frozen actualtext8 horizon-return
+audit using saved fixed-pass4 native8192 seed6 checkpoint on producer-unseen
+FIT chars, preserving existing AWS10M runs and fullgestureownerqueue.

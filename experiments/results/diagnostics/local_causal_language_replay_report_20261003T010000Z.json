@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "args": {
+    "tag": "local_causal_language_replay_report_20261003T010000Z"
+  },
+  "source_sha256": {
+    "report/readable_report.py": "26a2f89cf69410ced41d2a9660e9ae3a60b32dc6252abdab273a7f90435a4beb",
+    "report/make_pdf.py": "0c4e34e2ca4fccf3aa0446819a41eacb9cc86ce4665d7a98b4eb14d4b2ad0dd4",
+    "report/causal_language_replay_evidence.py": "d8aeaa9c50ab26c8892642b3a3755d1161a08bef7944180188784f30aab43d57",
+    "experiments/publish_causal_language_replay_report.py": "22a478aa4da4e02d517e837f5455a72c3f41fc534d91c64e00a4dec5a0c01657"
+  },
+  "pdf_pages": 177,
+  "report_sha256": "f0253f16347b90b59df3c2d9c56c362930a9b328fe4472632553f2affe43a380",
+  "pdf_sha256": "7ce205b272c35ab0cf6f929290fe7da13428b3644bc84e7cb6568a62b84d14d6",
+  "wall_s": 25.99941797700012,
+  "max_rss_kb": 276240,
+  "scope": "Completed integrated bridge contracts, matched restricted smokes and native conditional utility; prior evidence retained."
+}
