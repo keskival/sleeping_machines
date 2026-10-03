@@ -43,11 +43,11 @@ def test_language_driver_compiled_smoke(tmp_path):
     try:
         subprocess.run([sys.executable, 'experiments/language_batched_benchmark.py', '--tag', tag, '--fit', '20000',
                         '--test', '3000', '--dev', '3000', '--segment', '32', '--lanes', '16', '--passes', '.5',
-                        '--depth', '2', '--payload', '8', '--compiled', '--route-credit', 'linear'],
+                        '--depth', '2', '--payload', '8', '--compiled', '--route-credit', 'linear_rw'],
                        check=True, capture_output=True, timeout=900)
         r = json.loads(out.read_text())
         assert r['protocol']['kernels'].startswith('compiled') and 0 < r['test_bpc'] < 6
-        assert r['protocol']['route_credit'].startswith('factorized race plus linearized')
+        assert 'write slot' in r['protocol']['route_credit']
         assert r['work']['fit_unit_special_flops_per_char_estimate'] > 0
     finally:
         out.unlink(missing_ok=True)

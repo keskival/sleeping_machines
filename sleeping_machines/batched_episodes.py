@@ -55,11 +55,19 @@ def linear_route_credit(scores, proposals):
     return ((pi - pi.detach())[..., None] * proposals.detach()).sum(-2)
 
 
+def linear_write_credit(scores, old, new, active):
+    """Zero-valued surrogate for the write address: slot j's expected content is m_j + pi_j (m_new_j - m_j), so the
+    score gradient is pi_i (G_i.D_i - sum_j pi_j G_j.D_j), with G_j the gradient on slot j's stored memory and
+    D_j = m_new_j - m_j.  scores (n, U); old/new (n, U, P); active (n,).  Returns (n, U, P) exact zeros (THEORY §413)."""
+    pi = torch.softmax(scores.to(torch.float64), -1).to(new.dtype)
+    return (pi - pi.detach())[..., None] * (new - old).detach() * active[:, None, None].to(new.dtype)
+
+
 def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False, route_credit=None):
     """rows: episodes (dict with 'events'); forces: per-lane (race, alt) or None; record: list receiving each race's
     (n, U) scores in race order.  Returns (n, classes) final logits, or (n, T, classes) logits after every event when
     all_logits (positions beyond an episode's length are zero).  route_credit='linear' adds the linearized value
-    credit to the race scores (forward values unchanged)."""
+    credit to the race scores, 'linear_rw' also the linearized write-address credit (forward values unchanged)."""
     source = 0
     layers = model._stacked(source)
     D, H, U, P = model.depth, model.heads, model.pool, model.payload
@@ -129,12 +137,14 @@ def batched_logits(model, rows, seed, forces=None, record=None, all_logits=False
                     if record is not None:
                         record.append(scores[:, head])
                     value, delay, winner = LaneRace.apply(scores[:, head], proposals[:, head], noise, alt)
-                    if route_credit == 'linear':
+                    if route_credit in ('linear', 'linear_rw'):
                         value = value + linear_route_credit(scores[:, head], proposals[:, head])
                     race += 1
                     onehot = F.one_hot(winner, U).to(torch.bool) & active[:, None]          # write only active lanes
                     sel = onehot[..., None]
                     head_mem = torch.where(sel, m_new[:, head], new_mem[:, head])
+                    if route_credit == 'linear_rw':
+                        head_mem = head_mem + linear_write_credit(scores[:, head], m[:, head], m_new[:, head], active)
                     new_mem = torch.cat([new_mem[:, :head], head_mem[:, None], new_mem[:, head + 1:]], 1)
                     new_arr = new_arr.clone(); new_arr[:, head] = torch.where(onehot, arrival[:, None], new_arr[:, head])
                     new_seen = new_seen.clone(); new_seen[:, head] = new_seen[:, head] | onehot

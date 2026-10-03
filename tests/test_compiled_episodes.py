@@ -85,3 +85,32 @@ def test_route_credit_forward_unchanged_and_compiled_matches_eager():
     base = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True))
     keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key') or 'queries' in n]
     assert any(not torch.allclose(ref[1][i], base[1][i]) for i in keys)        # routing now receives value credit
+
+
+def test_linear_write_credit_is_zero_and_has_the_expected_score_gradient():
+    from sleeping_machines.batched_episodes import linear_write_credit
+    torch.manual_seed(4)
+    s = torch.randn(4, 3, dtype=torch.float64, requires_grad=True)
+    old, new = torch.randn(4, 3, 5, dtype=torch.float64), torch.randn(4, 3, 5, dtype=torch.float64)
+    G = torch.randn(4, 3, 5, dtype=torch.float64)
+    active = torch.tensor([True, True, False, True])
+    z = linear_write_credit(s, old, new, active)
+    assert torch.equal(z, torch.zeros_like(z))
+    (z * G).sum().backward()
+    pi = torch.softmax(s.detach(), -1); gd = (G * (new - old)).sum(-1)
+    expected = pi * (gd - (pi * gd).sum(-1, keepdim=True)) * active[:, None]
+    assert torch.allclose(s.grad, expected, atol=1e-14)
+
+
+def test_read_write_route_credit_compiled_matches_eager():
+    m, rows = _case(torch.float64)
+    plain = batched_logits(m, rows, 123, all_logits=True)
+    ref = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear_rw'))
+    assert torch.equal(ref[0], plain.detach())
+    eager = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, step=layer_step, route_credit='linear_rw'))
+    _close(eager, ref, 1e-10)
+    comp = _run(m, rows, lambda m, r, s: compiled_logits(m, r, s, all_logits=True, route_credit='linear_rw'))
+    _close(comp, ref, 1e-9)
+    lin = _run(m, rows, lambda m, r, s: batched_logits(m, r, s, all_logits=True, route_credit='linear'))
+    keys = [i for i, (n, _) in enumerate(m.named_parameters()) if n.endswith('.key') or 'queries' in n]
+    assert any(not torch.allclose(ref[1][i], lin[1][i]) for i in keys)          # write credit adds score credit

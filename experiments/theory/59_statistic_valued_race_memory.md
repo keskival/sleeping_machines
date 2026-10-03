@@ -1358,3 +1358,12 @@ improves pool 4 more if a content address can be learned;
 If (c) fails, a linearized credit is insufficient (the DVS fidelity audits found linearized estimators near chance).
 The next step is then exact local-expectation credit restricted to a short horizon, or a consistent non-learned content
 address, before abandoning large pools for language.
+
+**§413 addendum (07:25 UTC, before any v4 result): the write address.** g·(v_i − v̄) credits only the value forwarded
+in this step. It ignores where the write goes, so it cannot teach a content-addressed slot memory. Writing slot j changes
+only that slot, Δ_j = m_new,j − m_j, so the slot's expected content is m_j + π_j Δ_j. The linearized write-address
+credit is ∂E[L]/∂s_i ≈ π_i (G_i·Δ_i − Σ_j π_j G_j·Δ_j), where G_j is the BPTT gradient on slot j's stored memory. It sees
+the future reads of that slot within the segment. The implementation is the same kind of zero-valued surrogate
+(batched_episodes.linear_write_credit; `--route-credit linear_rw` adds it to the value credit), with forward values
+bitwise unchanged and the compiled path within 1e-9 of eager in float64. **Prediction (e):** linear_rw ≤ linear in bpc, with
+the larger gain at pool 4, where addressing matters more.

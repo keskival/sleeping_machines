@@ -84,8 +84,9 @@ def main():
     p.add_argument('--cosine', action='store_true', help='cosine-annealed learning rate over all windows (E64 controls)')
     p.add_argument('--eval-segment', type=int, default=0, help='also score dev/test with E64 windows of this length')
     p.add_argument('--compiled', action='store_true', help='compiled layer steps (sleeping_machines/compiled_episodes.py, §412)')
-    p.add_argument('--route-credit', choices=('none', 'linear'), default='none',
-                   help='linear: linearized local-expectation value credit to the race scores (§413)')
+    p.add_argument('--route-credit', choices=('none', 'linear', 'linear_rw'), default='none',
+                   help='linear: linearized local-expectation value credit to the race scores; linear_rw: also the '
+                        'linearized write-address credit (§413)')
     p.add_argument('--checkpoint-every', type=int, default=0, help='windows between exact-resume checkpoints (0: none)')
     p.add_argument('--resume', action='store_true', help='continue from this tag\'s checkpoint')
     a = p.parse_args()
@@ -132,7 +133,9 @@ def main():
                                 schedule='cosine annealing over all windows' if a.cosine else 'constant learning rate',
                                 route_credit=dict(none='factorized race: winner value credit, common first-time clock '
                                                        'credit only', linear='factorized race plus linearized '
-                                                       'local-expectation score credit pi_i g.(v_i - v_bar)')[a.route_credit],
+                                                       'local-expectation score credit pi_i g.(v_i - v_bar)',
+                                                  linear_rw='factorized race plus linearized local-expectation score credit '
+                                                  'for the read value and the write slot')[a.route_credit],
                                 kernels='compiled layer steps (torch.compile/inductor, contract-tested against the batched path)'
                                 if a.compiled else 'eager batched path'))
     window_times = []
