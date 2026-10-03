@@ -1,0 +1,6 @@
+23:38:35 start aws_public_ECG200_selection_20261004T000100Z_final_s7
+23:39:35 alive aws_public_ECG200_selection_20261004T000100Z_final_s7: process group RSS=975440KB, MemAvailable=26866MB
+23:40:36 alive aws_public_ECG200_selection_20261004T000100Z_final_s7: process group RSS=975416KB, MemAvailable=26865MB
+23:41:36 alive aws_public_ECG200_selection_20261004T000100Z_final_s7: process group RSS=975364KB, MemAvailable=26863MB
+23:42:36 alive aws_public_ECG200_selection_20261004T000100Z_final_s7: process group RSS=975484KB, MemAvailable=26861MB
+23:42:52 done aws_public_ECG200_selection_20261004T000100Z_final_s7 (exit 0)
