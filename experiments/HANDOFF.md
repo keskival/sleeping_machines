@@ -2401,3 +2401,41 @@ evidence.py incorporatescompletedtwoarms+savedcontrols. PDF213pages rebuilt;
 ALL306priorheadinglinesretained, metrics/unitstablepass,nofooteronlypages or
 horizontaloverflow. Preservestrainedinferencependingratherthanborrowedtrace.
 Residual-credittrainedstateprotocolremains prepared,notexecuted; hostreserved.
+
+AWS public-benchmark request EXECUTED: canonicallead SOTA_TARGETS.md keeps
+NeuroBench MackeyGlass/primate ownerwork; AWS complementaryfixedsuite ECG200/
+JapaneseVowels/PenDigits downloaded+hashed, TRAIN-only80/20splitseed20261004.
+New PUBLIC_BENCHMARK_CAMPAIGN.md and public_benchmarks/{data,fetch,run,contracts,
+baseline,select,status}. Numericaltask-shape allgradient/twoAdam port checks
+PASSED37.14s, completedresult+logsPUSHED. Three matched1NN DEV controls and
+ECG/Japanese3epochlearningpilotscompleted/pushed; NOofficialTESTyet/no win.
+Current manifestqueue/aws_public_campaign_20261004T000200Z; tmuxaws_public_
+campaign_v2, exactcoordinator scripts/run_aws_public_campaign_v2.py. Slot1
+original90Mdepth8resumedat63488000/7750window, thenassignedwidth64; slot2
+privatefullreplay exactresume; slot3 publiccontracts(passed)/pilots/nine40epoch
+DEV-onlyscreens, threefixedDEVselectors, ninefullTRAINseed6/7/8finalrefits,
+THEN originalteacherresume(2867200targets) andsharedteacher/factorizedarms.
+Everyfituniqueonejobqueue/run_safe/inheritednormalFD+slots/max3threads; max
+RSS6GBpublic+2.9GBlanguage+2GBreplay,8GiBfloor/~27GiBavailable.
+
+Historicalerrorspreserved: upstreamcompiledfeedback+language-creditsampling
+extensions changedsharedfiles; originaldriver/kernelarchived andloadedthrough
+frozen_language_v2.py with ACTUALexecutionaliasesincompletedresults. Otherhost
+changesretained. Firstwrapper --compiled hit argparseabbreviation BEFOREmodel
+execution; failedlog/lifecyclePUSHED, siblingv2 allow_abbrev=False/stdfixture
+passed, source-frozennewrecoveryqueues running. Initialguardterminationleft
+oneverified90Mprocessgroup; explicitlyclosedbeforehostreservationhandoff.
+Immutableall3transitioncheckpoints+decisionPUSHED7e47d61; languageunknown
+discardedwork<=2047999targets, streams<=4095each; extra replayrecovery<=4095
+retainedbesidehistory. No zerooverhead/exactglobalworkpairingclaimed.
+
+Newpartialpublishers aws_language_progress_public/aws_90m_progress_public
+monitornewmanifest; commoncoordinatorlookup supportsnewv2script. Source/queue
+hashesallPASS. status.py isreadonly no-model/no-data-scoring inventory; seed
+spreadnotindependentTESTconfidence. Nativepublicpilotsremainbelowcontrols at
+3epochs; publicaccuracyresourceadvantage pending40epoch/finalfits. Preserve
+negatives andallreferences. Deferredcentering/compactqueuesremainprepared;
+normalhostreservationholds, nofourthtrainer. Prioritizedintegratedpublicarm
+p16D2H2U2linearmessagecredit,40epochscreen beforep32D4capacityarms. Gaps:
+fullreplaycredit/silence-awarepublicevaluation/physicalasynchronouspublic
+frontier/strongmatchedbaseline/completeinferenceandenergyaccounting.
