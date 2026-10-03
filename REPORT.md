@@ -21,6 +21,50 @@ Tero Keski-Valkama and Karoliina Salminen · Research report · 3 October 2026
 
 Race selection has the exact softmax winner probabilities, but one winning value matches attention only in expectation; subsequent nonlinear layers do not generally commute with that expectation. Exact delay-coded aggregation instead pays deliveries, normalization, latency and precision. Roughly halving attention aggregation arithmetic is a conditional inference opportunity, not a demonstrated halving of complete-model inference. The completed approximately 49.66% saving concerns replay fitting work, a separate result. The target is better prediction at a fully counted resource budget (§§280,317).
 
+## Current language evidence — 3 October 2026
+
+**The integrated native learner now reaches 2.183 bpc at the controls’ T256 test window.** The saved one-pass LSTM scores 2.171 and Transformer 2.427. These are completed single-seed comparisons; replication and large-data advantage remain open.
+
+![current native language status](report/figures/current_native_language_status.png)
+
+Blue: native temporal races, sparse addressed persistent writes and learned messages; light blue: timing-only route credit. Gray: saved dense controls. Same text8 test[95M:96M], T256 evaluation, nominal one-pass 10M fitting budget, 1,220 updates. Native training samples random segments; order differs from the controls. Work is traced/extrapolated for native and shape-estimated for controls. Both panels use the same denominator for every model. Full resource table is in the native appendix.
+
+### The gains are about learned routing and useful capacity
+
+- Value-informed categorical credit improves p32/D4 by 0.135 bpc with about 0.3% extra counted fitting work. The successful rule keeps hard forward choices and messages unchanged.
+- At eight selected writes per position, doubling p32 slots improves 2.371→2.345 bpc. Fitting work rises 1.65×; unchanged selected activity is not unchanged total cost.
+- The credited depth-8 model reaches 2.326 versus 2.456 without that credit. The gain survives a deeper stack; width, initialization and capacity still need controlled comparisons.
+
+The best native model remains 0.013 bpc behind the LSTM, using 26.79 versus 20.31 estimated fitting TFLOPs. This is substantial progress, not comparable-quality superiority in total resources.
+
+## Learning diagnosis and the next decisive checks
+
+### Keep the successful value credit; withdraw failed write credit
+
+The earlier fast law taught the winner’s content and first-time clocks without an explicit alternative-value choice term. Adding that term helped both depth-4 and depth-8 language models. Stored-memory write credit diverged. Written-only credit trained stably but worse at pool2 and also diverged at pool4, so it is withdrawn. Removing lazy transport from the coefficient was insufficient; memory norms, cotangents, timestamp/seen effects and feedback remain to be measured.
+
+### Inference arithmetic is promising; the practical boundary is wider
+
+Winner-only inference computes selected proposals and refreshes their cached stored-memory key reads. The saved shape traces give 0.163→0.164 MFLOPs per input position when p32 capacity doubles, and 0.605 for p64/D4. All keys are scored. Every call still stacks all unit matrices; copying, extra cache state and wall time are outside these arithmetic counts. Small float64 output contracts passed; actual trained float32 winner/state/cache parity and full rescoring remain pending. The reported test scores use the compiled training evaluator, not a completed sparse-backend rescore.
+
+### AWS depth-8 replay: supported online progress, a separate protocol
+
+| Ongoing fitting arm | Latest interval online bpc | Cumulative online bpc |
+| --- | --- | --- |
+| Private full replay | 2.794892 | 2.978605 |
+| Private teacher | 2.847557 | 3.013845 |
+| Depth-shared teacher | 2.887824 | 3.041100 |
+
+Saved matched checkpoints: 1,003,520 targets / 3,920 Adam updates; latest interval[753,664:1,003,520]. Full replay’s interval lead is 0.052666/0.092933 bpc. Identical fitting-data hash/exposure; single seed, changing parameters and no asserted RNG pairing. Full replay costs much more learning work. These are training predictions, not completed heldout scores or useful-depth/iso-FLOP proof.
+
+### Prioritize discriminating evidence
+
+- Finish credited width/capacity comparisons and independent seeds before the horizon arms; retain the provisioned AWS90M protocol.
+- Prepared, unrun trained-FIT factorial checks separate message effects, private commit effects and their interaction at fixed first time/future noise.
+- Calibrate an optional write term against the utility left unexplained by value credit. A per-case oracle scale is not a validated learner; check shared scales, parameter coupling and actual optimizer effects before another fit.
+
+Theory143/144. No proof of a mathematical barrier or general supremacy; neither follows from this evidence. Counts remain strong references in their established region. Current gains retain time as computation, hard-route credit, deep persistent state, separate keys/values and capacity beyond selected activity.
+
 ## Deep learning that computes with time
 
 Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, gate their updates and compete through learned delays. Arrival order and winning races determine the computation. The goal is useful intelligence with much less active work.
@@ -2782,7 +2826,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 
 ## Appendix. Native language at 10M: the integrated core, segment-batched
 
-| Model (10M, one pass) | Params | Updates | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char | Infer MF/pos. emulator | Infer MF/pos. winner-only |
+| Model (10M, one pass) | Params | Steps | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char | Infer MF/pos. emulator | Infer MF/pos. winner-only |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Ours p16/d8, v1 (610 updates) | 54,907 | 610 | 2.899 / — | 4.04 | 0.40 | 0.13 | 0.09 |
 | Ours p16/d8, skip2 | 54,907 | 1,220 | 2.719 / 2.719 | 4.05 | 0.41 | 0.13 | 0.09 |
@@ -2798,7 +2842,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 | E64 LSTM-256 | 338,395 | 1,220 | — / 2.171 | 20.3 | 2.03 | 0.68 | 0.68 |
 | E64 Transformer-256x2 | 1,658,907 | 1,220 | — / 2.427 | 111.3 | 11.13 | 3.71 | 3.71 |
 
-| Native model | State slots | Memory scalars | Writes/pos. | Keys/pos. | Emulator values/pos. | Winner values/pos. |
+| Native model | Slots | Memory<br/>scalars | Writes | Keys | Emulator<br/>values | Winner<br/>values |
 | --- | --- | --- | --- | --- | --- | --- |
 | p16/d8, v1 (610 updates) | 32 | 512 | 16 | 32 | 32 | 16 |
 | p16/d8, skip2 | 32 | 512 | 16 | 32 | 32 | 16 |
@@ -3730,7 +3774,7 @@ Exact trace covariance for uniform k without replacement is R(R-k)/(k(R-1)) time
 
 Fresh Adam transforms include actual clip1 normalization and epsilon1e-8; full and sampled updates are independently checked against two actual discarded Adam forks per depth. Results do not describe trained moments, convergence or heldout improvement. Kernel, original parameters and caller RNG are preserved. Sparse native inference is unchanged.
 
-Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank absent on this rendering host; vector-byte verification not rerun.
+Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank present and hash verified.
 
 ## Appendix B. Sampled credit: finite FIT predictions after actual Adam forks
 

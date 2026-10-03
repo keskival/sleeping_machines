@@ -66,9 +66,9 @@ def load(read):
 
 
 def pages(data):
-    columns = ['Model (10M, one pass)', 'Params', 'Updates', 'Test bpc T128/T256', 'Whole fit TF est.',
+    columns = ['Model (10M, one pass)', 'Params', 'Steps', 'Test bpc T128/T256', 'Whole fit TF est.',
                'Fit MF/char', 'Infer MF/pos. emulator', 'Infer MF/pos. winner-only']
-    widths = [40, 17, 15, 26, 19, 17, 21, 21]
+    widths = [40, 20, 15, 25, 18, 16, 21, 21]
     rows = []
     for r in data['native']:
         t = f"{r['test']:.3f} / {r['test256']:.3f}" if r['test256'] is not None else f"{r['test']:.3f} / —"
@@ -78,8 +78,8 @@ def pages(data):
     for r in data['controls']:
         rows.append([f"E64 {r['label']}", f"{r['parameters']:,}", f"{r['updates']:,}", f"— / {r['test']:.3f}",
                      f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}"])
-    activity_columns = ['Native model', 'State slots', 'Memory scalars', 'Writes/pos.', 'Keys/pos.',
-                        'Emulator values/pos.', 'Winner values/pos.']
+    activity_columns = ['Native model', 'Slots', 'Memory<br/>scalars', 'Writes', 'Keys',
+                        'Emulator<br/>values', 'Winner<br/>values']
     activity_rows = [[r['label'], str(r['available_slots']), str(r['state_value_scalars']),
                       str(r['selected_writes']), str(r['scored_keys']), str(r['computed_values']),
                       str(r['selected_writes'])]

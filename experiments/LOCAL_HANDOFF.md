@@ -1,5 +1,40 @@
 # Local host: current research continuation
 
+## Status PDF reviewed and published — 3 October, 13:35 UTC
+
+At the user's request, regenerated `report/sleeping_machines_status.pdf`
+and REPORT.md from saved evidence: 208 validated PDF pages / 201 editorial
+blocks. New front pages plot completed matched-T256 language quality and
+whole fitting TFLOPs together, foreground p64/D4 2.183 and the credited
+D8 2.326, preserve the stronger count calibration and explain capacity/work
+tradeoffs. Readable tables retain all11 native rows/two dense controls,
+whole-fit/per-input-position work, scored keys and emulator/winner proposals.
+The p64 model still trails LSTM and consumes more estimated fitting work;
+no comparable-quality supremacy claim. Both write-credit failures and their
+withdrawal are explicit. AWS matched1M online evidence is separated from
+completed heldout quality; all143/144 native diagnostics remain pending.
+
+Rendered to an isolated copy, reviewed the cover/new front pages/native
+appendix visually, checked every page for sparse/orphan content and text
+bounds, and verified source/evidence/canonical hashes before replacement.
+The first preview was deliberately not published after another host's source
+and PDF update; the refreshed publication incorporates its changes.
+The previous canonical PDF is preserved byte-for-byte in
+`report/archive/status_refresh_20261003T133000Z_previous.pdf`.
+Publication provenance/guards/hashes:
+`results/publication/status_refresh_20261003T133000Z.json`.
+One thread at nice19; ~396MiB peak renderer RSS, ~31s, VMS2000000KiB,
+RSS750000KiB watchdog,420s timeout and8192MiB available-memory floor.
+No Torch import, model runtime/forward/backward or training job. Existing
+curie and AWS integrated queues stay reserved and unchanged.
+
+Added a dated feedback-path scope correction beside the failed-write history:
+both value/write score teachers can reach memories through keys. The write
+auxiliary additionally alters the persistent-update Jacobian; value credit
+alters the emitted-message Jacobian. This distinction is derived, not a
+measured cause of either divergence. Keep value-only credit, current widths/
+capacity comparisons, independent seeds, horizon arms and AWS90M priority.
+
 ## Actual write-fidelity audit prepared — 3 October, 12:55 UTC
 
 Prioritized model stays the credited compiled integrated native core, current

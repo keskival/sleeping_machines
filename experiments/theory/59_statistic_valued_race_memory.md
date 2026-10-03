@@ -1516,3 +1516,11 @@ feedback loop specific to the write term: its score credit flows through key_rea
 content is in turn shaped by the scores. The value credit has no such path to memories through the write decision. The
 linearized write-address credit is withdrawn from the queues. Value credit alone remains the default. A write-address
 signal would need either exact (replayed) consequences or a stop-gradient on the key_read memory path, and that is untested.
+
+**§413 feedback-path scope correction (13:30 UTC; failures retained).** Both value and write choice teachers
+differentiate the same memory-conditioned scores, so both can send score credit through key_read into memories.
+The write auxiliary additionally modifies the persistent-update Jacobian; the value auxiliary modifies the emitted
+message Jacobian. That distinction makes write-specific feedback plausible, but the claim above that value credit
+has no score-memory path is too broad. [144](144_trained_write_factorial_and_residual_calibration.md) records the
+two Jacobians and prepares a same-cotangent, fixed-time actual-write utility audit. Divergence attribution, any
+stop-gradient repair and its effect on useful memory learning remain untested. Value credit remains the default.

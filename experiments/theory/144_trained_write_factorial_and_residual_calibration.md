@@ -190,3 +190,24 @@ whether useful write utility is large, whether the cheap term explains the
 choose between better state/time utility, independent scalar calibration
 or leaving value-only credit unchanged. A cheap terminal local-loss repair
 would not substitute for memory-sensitive suffix utility if that is the gap.
+
+## 13:30 UTC update: pool4 failure and the shared memory score path
+
+The shared pool4 linear_rwn fit also diverged (2e62072/b99f2c7); the earlier
+stable-but-worse U2 result is retained. Write-address credit is withdrawn
+from the active queues; value credit and independent-seed confirmations
+remain priority. This strengthens the need for actual utility/stability
+measurements; it does not prove a particular feedback cause.
+
+Both value and write choice coefficients pull back through the same score
+read of memory: holding incoming q fixed, `d s_i/d m_i = K_i^T q/sqrt(P)`
+inside the clamp. Thus both transmit route-score gradients to memories.
+The write addition is distinct because it also changes the effective
+**persistent-update** Jacobian. Let S be the local score Jacobian, B map
+one probability coordinate into its slot's detached delta, and Jpi be
+the softmax Jacobian. The zero-valued write auxiliary adds `B Jpi S` to
+the factual memory-update Jacobian. Value auxiliary instead changes the
+emitted-message Jacobian. These are different feedback locations, not
+presence versus absence of the shared score-memory path. Neither identity
+attributes the measured divergence; both mechanisms require trained-state
+measurements, and the actual forward state remains unchanged by auxiliaries.

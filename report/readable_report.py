@@ -154,6 +154,7 @@ def results():
     appendix=runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))
     tasks['current_dvs_appendix']=appendix['load'](read)
     tasks['native_language_batched']=runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['load'](read)
+    tasks['current_language_status']=runpy.run_path(str(ROOT/'report/current_language_status.py'))['load'](tasks['native_language_batched'])
     tasks['reception_evidence']=runpy.run_path(str(ROOT/'report/reception_evidence.py'))['load'](read)
     historical=runpy.run_path(str(ROOT/'report/depth_sampling_evidence.py'))['history_read']
     historical_read=lambda path:historical(read,path)
@@ -674,6 +675,7 @@ def figures(M, tasks, ev):
     from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
     blue, orange, gray = M["BLUE"], M["ORANGE"], M["GRAY"]
     FIG.mkdir(exist_ok=True)
+    runpy.run_path(str(ROOT/'report/current_language_status.py'))['figure'](tasks['current_language_status'], FIG/'current_native_language_status.png')
     def save(fig, name):
         if name != "accomplishments":
             fig.text(.01, 1.015, "Ours = Sleeping Machines", color=blue, fontsize=8,
@@ -1691,6 +1693,7 @@ def blocks(M, tasks, ev):
          "opportunity, not a demonstrated halving of complete-model inference. The completed "
          "approximately 49.66% saving concerns replay fitting work, a separate result. "
          "The target is better prediction at a fully counted resource budget (§§280,317).")])
+    pages.extend(runpy.run_path(str(ROOT/'report/current_language_status.py'))['pages'](tasks['current_language_status']))
     pages.append([
         ("h1", "Deep learning that computes with time"),
         ("p","Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, "
