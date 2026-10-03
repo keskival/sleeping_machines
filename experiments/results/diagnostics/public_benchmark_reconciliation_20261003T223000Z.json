@@ -1,0 +1,90 @@
+{
+  "status": "completed_metadata_reconciliation",
+  "created_utc": "2026-10-03T22:25:01.769056+00:00",
+  "head_at_analysis": "9b7b32b0606ce43ec7bd7f4c6b505c5c2462a69d",
+  "parent_sha256": {
+    "experiments/results/diagnostics/public_benchmark_readiness_20261003T222000Z.json": "8f81ee9681df8d6b0a1f126bd3fa65d7fad32db4f2bd77b926ffe35aeb716e35",
+    "experiments/queue/public_speech_admission_20261003T222000Z/manifest.json": "ec69309c32880eafcfb31d45270cf1506296dd13874a309277ca7fb6f46253b3",
+    "experiments/PUBLIC_BENCHMARK_CAMPAIGN.md": "68021386713149b0fe84b6ffec4f77ad838ac5c9912379180ea18d7b1881810e",
+    "experiments/SOTA_TARGETS.md": "63146ee695c13fd080bad486793814d9c28c57fc7bfb397917651134d3234586",
+    "experiments/PUBLIC_EVENT_BENCHMARK_ADMISSION.md": "c4aa44e7d74b614105e1920d6f0581f93abb54f3fad0298625462580fe5b3d1f",
+    "experiments/results/public_benchmarks/aws_public_ECG200_nearest_20261004T000100Z.json": "8ce62c9614dfb09b66b14808cddd95a8d2dc2f3fc914edafcf6e600a73f68daa",
+    "experiments/results/public_benchmarks/aws_public_ECG200_pilot_p16d2u2_20261004T000100Z.json": "0aba06f668c1cb03a7af5c0500e3d1908243c0d28c06074bc051225e75532fc6",
+    "experiments/results/public_benchmarks/aws_public_JapaneseVowels_nearest_20261004T000100Z.json": "3131e39a74583c74106078588ad0a1ded7f586b3c3ad3e7a7031e3264707303d",
+    "experiments/results/public_benchmarks/aws_public_JapaneseVowels_pilot_p16d2u2_20261004T000100Z.json": "df0b7e7260592834d75a6cbb30aa7f50d74adad2982154a06bef79ab15ba5a30",
+    "experiments/results/public_benchmarks/aws_public_PenDigits_nearest_20261004T000100Z.json": "6f992acd73b3d6a1abe825179c520fb83b15df07e7c14aebe85bae5fdfb1acc3",
+    "experiments/results/public_benchmarks/aws_public_PenDigits_pilot_p16d2u2_20261004T000100Z.json": "69f456d861bf77b511abd3ea3807164553d3def31e73de8550be33022f26664a",
+    "experiments/results/public_benchmarks/aws_public_contracts_20261004T000100Z.json": "e071b124e2898ac0b670e9e269a01ab17817b48109104a126975f24cf9f5af0c",
+    "experiments/results/language_batched/curie_language_batched_10M_p96d4_pool2_linear_6pass_l64_lr004_cmp_s6_20261003T111500Z.json": "d2552e2f4ab711b78cc5e7d2c3e497e517c5dc47723109d9690cfdcbaefde158"
+  },
+  "priority": [
+    "Existing curie NeuroBench Mackey-Glass and primate reaching",
+    "Existing AWS ECG200/JapaneseVowels/PenDigits fixed suite",
+    "Preserve ongoing language/source-exact recovery",
+    "Deferred native SHD admission",
+    "Gated DVS and contingent SSC"
+  ],
+  "public_saved_stages": [
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_ECG200_nearest_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 20,
+      "development_accuracy": 0.8,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_ECG200_pilot_p16d2u2_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 20,
+      "development_accuracy": 0.7,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_JapaneseVowels_nearest_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 54,
+      "development_accuracy": 0.9444444444444444,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_JapaneseVowels_pilot_p16d2u2_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 54,
+      "development_accuracy": 0.7222222222222222,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_nearest_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 1500,
+      "development_accuracy": 0.9946666666666667,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_pilot_p16d2u2_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": 1500,
+      "development_accuracy": 0.928,
+      "official_test_scored": false
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_contracts_20261004T000100Z.json",
+      "status": "completed",
+      "development_targets": null,
+      "development_accuracy": null,
+      "official_test_scored": false
+    }
+  ],
+  "language_new_completed": {
+    "path": "experiments/results/language_batched/curie_language_batched_10M_p96d4_pool2_linear_6pass_l64_lr004_cmp_s6_20261003T111500Z.json",
+    "test_bpc": 1.8886002990537336,
+    "whole_fit_flops_estimate": 352078095605168.0,
+    "public_leaderboard_win": false
+  },
+  "speech_frozen_sources_match_after_rebase": true,
+  "speech_numerical_stages": "prepared_unrun",
+  "previous_readiness_note": "Earlier metadata record preserves its original pre-reconciliation document hashes. Portfolio subsequently incorporates concurrent public campaign; supplemental speech document renamed. Numerical admission sources remain exactly frozen.",
+  "public_win_confirmed": false,
+  "numerical_modules_imported": false,
+  "scope": "Saved artifacts and stdlib only; contracts/pilot/DEV are not official benchmark test wins"
+}
