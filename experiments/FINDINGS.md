@@ -1,5 +1,15 @@
 # Findings log
 
+## Compiled DVS coarse arms at 16 passes (partial, 3 October)
+
+Large DVS program (queue curie_dvs_large_20261003T013500Z; compiled batched training, §412). Integrated p16/d2/H2/pool2,
+4 coarse 250 ms packets, clock step .25, 16 passes, selected epoch on development; dev accuracy % (NLL): wd 0 — s6 70.8
+(.931), s7 64.6 (.977), s8 66.7 (.951), mean 67.4; wd 1e-2 — s6 68.8 (.878), s7 69.3 (1.020), mean 69.0 (s8 pending); wd
+1e-2 + input noise .3 — s6 68.2 (.817), s7 67.7 (.879), mean 68.0 (s8 pending). The earlier 3-seed means (fewer passes,
+§406) were 58.9% (none) and 64.4% (coarse + wd 1e-2). The strong controls on the same full data remain higher (4-bin
+control 77.6%, RBF 73.4%). Wall time is 74–168 s per fit on one thread. The remaining arms (s8, capacity, growth,
+skip-init) and the route-credit twins (curie_dvs_credit_20261003T101000Z) run after the language supremacy queues.
+
 ## Route credit is the missing piece in the fast native language path — 3 October
 
 THEORY §413. The segment-batched native language driver used the factorized race law: winner value credit and the
