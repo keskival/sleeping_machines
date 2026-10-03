@@ -87,6 +87,8 @@ def main():
     p.add_argument('--route-credit', choices=('none', 'linear', 'linear_rw', 'linear_rwn'), default='none',
                    help='linear: linearized local-expectation value credit to the race scores; linear_rw: also the '
                         'linearized write-address credit (§413)')
+    p.add_argument('--tau-max', type=float, default=0., help='initialize unit memory time constants log-spaced from 1 '
+                   'to this many characters (default 0: the unit default, 1-100; §413 horizon)')
     p.add_argument('--checkpoint-every', type=int, default=0, help='windows between exact-resume checkpoints (0: none)')
     p.add_argument('--resume', action='store_true', help='continue from this tag\'s checkpoint')
     a = p.parse_args()
@@ -110,6 +112,14 @@ def main():
     if a.skip_init_from:
         from dvs_batched_large_benchmark import skip_init
         model = skip_init(model, a.skip_init_from, a.skip_gate_bias)
+    if a.tau_max:
+        with torch.no_grad():
+            for layer in model.units:
+                for head in layer:
+                    for pool in head:
+                        for unit in pool:
+                            tau = torch.logspace(0, math.log10(a.tau_max), unit.raw_rate.numel(), dtype=unit.raw_rate.dtype)
+                            unit.raw_rate.copy_(torch.expm1(1 / tau).log())
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
     S, B = a.segment, a.lanes
     rng = np.random.default_rng(a.seed + 10)
