@@ -2341,3 +2341,20 @@ Preparedbeforeoldcohortclose; nextarchive/verifycheckpointsthenstopOLDguards
 cleanly/reacquirenormalreservation/recover. LostworkunknownNONZERO bounded
 <=4095targetsperstreamingfit. MaxRSSreservations6+2+2GB,8GiBavailablefloor,
 onethreadcompiles/noGPUjobs. No bypasses/newconcurrentfourthtrainer.
+
+AWS14:21 executiontransition COMPLETE. Originalcoordinator/admissionwaiters
+closed BEFORE hostreservationrelease; original3run_safe guards SIGTERMclean,
+trainersclosedandFDsreleased, no directPythonlaunch/lockbypass. Actualcheckpoint
+archives+decision PUSHED0dc17b1: private teacher1794048targets/7008updates,
+shared teacher1798144/7024,privatefullreplay1200128/4688. Allsavedsourcehashes/
+cursorcheckspass; archivesimmutable; discardedworkunknown<=4095targetsEACH.
+NEWtmuxaws_priority_language_allocation active with NORMALhostreservation;
+90Mcompiled/drivercontractsRUNNINGslot1,exactprivatefullreplayresume2/private
+teacherresume3. Sharedteacherdeferredunderexacttag/argscheckpoint. NEWtmux
+aws_language_progress_priority runs250kmilestonepublisheragainstnewmanifest.
+All3 deferrednumericaldiagnosticwaiters restarted behindglobalreservation;
+unchangedqueues/sources. Host~27GiBavailable/contractsRSS~710MiB atinspection.
+ManualGitmust nowpause exact scripts/run_aws_priority_language_allocation.py
+with manifestqueue/aws_priority_language_allocation_20261003T143000Z;
+commonpublishercoordinatorlookup supportsit. First90MfitNOTstarteduntil
+compiledcontracts and its491520-targetpilot PASS. Slot1 pool4first asassigned.
