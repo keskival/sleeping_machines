@@ -1454,3 +1454,12 @@ quality. This is the architecture's capacity-beyond-activity claim, now supporte
 batched reference still computes every candidate's key and proposal, so discovery and losing-candidate work is charged
 in the fitting FLOPs). Against the matched one-pass E64 controls: Transformer-256×2 2.427 (pool 4 is .082 better at T = 256),
 LSTM-256 2.171 (.174 behind).
+
+**§413 prediction (e) fails at pool 2 (11:16 UTC).** p32/d4 pool 2 with linear_rwn (value credit plus write-address
+credit on newly written content) trained stably: no divergence, development 2.636 / 2.443 / 2.398. It scored DEV
+2.325 / test 2.384 bpc against 2.314 / 2.370 for value credit alone, at the same parameters and 0.73 versus 0.72 MFLOPs per
+character. The linearized write term does not help here and may slightly hurt (single seed, a .011–.014 difference).
+Possible reasons, none tested yet: the written-content linearization ignores the stamp and forget-gate coupling
+(note 142); the value credit already moves the same scores that decide both the read and the write, because one race
+selects both; or the write consequence needs longer horizons than one 128-character segment gives. The pool-4 linear_rwn
+arm (v5, last) tests whether more slots change this. Until then, value credit alone is the default for new arms.
