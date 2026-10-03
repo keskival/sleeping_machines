@@ -23,12 +23,16 @@ NATIVE = [
      'p32/d4/pool4 + route credit'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
+INFERENCE_MORE = 'language_batched/curie_language_batched_inference_work_20261003T120000Z.json'
+SPARSE = 'language_batched/curie_language_sparse_inference_work_20261003T120000Z.json'      # §414 winner-only, exact
 CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2')]
 
 
 def load(read):
     inference = {(r['payload'], r['depth'], r['pool']): r['unit_special_flops_per_evaluated_position']
-                 for r in read(INFERENCE)['rows']}
+                 for path in (INFERENCE, INFERENCE_MORE) for r in read(path)['rows']}
+    sparse = {(r['payload'], r['depth'], r['pool']): r['unit_special_flops_per_evaluated_position']
+              for r in read(SPARSE)['rows']}
     native = []
     for path, label in NATIVE:
         if not (RES / path).exists():
@@ -39,6 +43,7 @@ def load(read):
                            test=r['test_bpc'], test256=r.get('test_bpc_eval_segment'),
                            whole=w['whole_fit_unit_special_flops_estimate'], fit=w['fit_unit_special_flops_per_char_estimate'],
                            infer=inference.get((a['payload'], a['depth'], a['pool'])), dev_window=a['dev'],
+                           sparse=sparse.get((a['payload'], a['depth'], a['pool'])),
                            available_slots=a['depth']*a['heads']*a['pool'],
                            state_value_scalars=a['depth']*a['heads']*a['pool']*a['payload'],
                            selected_writes=a['depth']*a['heads'],
@@ -56,16 +61,17 @@ def load(read):
 
 def pages(data):
     columns = ['Model (10M, one pass)', 'Params', 'Updates', 'Test bpc T128/T256', 'Whole fit TF est.',
-               'Fit MF/char', 'Infer MF/position']
-    widths = [44, 20, 18, 30, 22, 20, 22]
+               'Fit MF/char', 'Infer MF/pos. emulator', 'Infer MF/pos. winner-only']
+    widths = [40, 17, 15, 26, 19, 17, 21, 21]
     rows = []
     for r in data['native']:
         t = f"{r['test']:.3f} / {r['test256']:.3f}" if r['test256'] is not None else f"{r['test']:.3f} / —"
         rows.append([f"Ours {r['label']}", f"{r['parameters']:,}", f"{r['updates']:,}", t, f"{r['whole'] / 1e12:.2f}",
-                     f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}" if r['infer'] else '—'])
+                     f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}" if r['infer'] else '—',
+                     f"{r['sparse'] / 1e6:.2f}" if r.get('sparse') else '—'])
     for r in data['controls']:
         rows.append([f"E64 {r['label']}", f"{r['parameters']:,}", f"{r['updates']:,}", f"— / {r['test']:.3f}",
-                     f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}"])
+                     f"{r['whole'] / 1e12:.1f}", f"{r['fit'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}", f"{r['infer'] / 1e6:.2f}"])
     activity_columns = ['Native model', 'State slots', 'Memory scalars', 'Writes/char', 'Keys/char', 'Values/char']
     activity_rows = [[r['label'], str(r['available_slots']), str(r['state_value_scalars']),
                       str(r['selected_writes']), str(r['scored_keys']), str(r['computed_values'])]
@@ -87,9 +93,12 @@ def pages(data):
                    'on E64 windows, scored at the training length and at the controls\' 256 with the same weights. '
                    'Single seed per row; exploratory, not a benchmark claim.'),
              ('p', 'The E64 rows are the matched one-pass controls (1,220 steps of 32 x 256, cosine). Work: ours traced '
-                   'unit/special operations (fitting extrapolated from traced windows; inference is the batched emulator, '
-                   'which computes every proposal); controls are shape estimates. The conventions differ, so work '
-                   'comparisons are estimates.'),
+                   'unit/special operations (fitting extrapolated from traced windows). Inference is traced twice: the '
+                   'batched emulator, which computes every proposal, and the exact winner-only evaluator (THEORY §414), '
+                   'whose logits equal the emulator\'s within 1e-10 in float64. It caches each slot\'s key read of the '
+                   'stored memory, refreshed only on that slot\'s write, so stored capacity costs U.P multiply-adds per race. '
+                   'Every key is still scored and that is counted. Control columns repeat their single shape estimate. '
+                   'The conventions differ, so work comparisons are estimates.'),
              ('p', 'Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth '
                    'then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only '
                    'through first-time clock credit (THEORY §413), and more units then cost quality: pool 4 is worse than pool 2 '

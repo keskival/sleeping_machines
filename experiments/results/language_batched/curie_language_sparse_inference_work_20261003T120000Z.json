@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "payload": 16,
+      "depth": 8,
+      "heads": 2,
+      "pool": 2,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 87671.81361607143,
+      "unit_special_flops_per_scored_target": 163654.05208333334,
+      "key_scores_per_position": 32,
+      "selected_writes_per_position": 16,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 32,
+      "depth": 4,
+      "heads": 2,
+      "pool": 1,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 162690.5279017857,
+      "unit_special_flops_per_scored_target": 303688.98541666666,
+      "key_scores_per_position": 8,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 32,
+      "depth": 4,
+      "heads": 2,
+      "pool": 2,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 163227.2421875,
+      "unit_special_flops_per_scored_target": 304690.85208333336,
+      "key_scores_per_position": 16,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 32,
+      "depth": 4,
+      "heads": 2,
+      "pool": 4,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 164300.67075892858,
+      "unit_special_flops_per_scored_target": 306694.58541666664,
+      "key_scores_per_position": 32,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 32,
+      "depth": 8,
+      "heads": 2,
+      "pool": 2,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 309872.09933035716,
+      "unit_special_flops_per_scored_target": 578427.91875,
+      "key_scores_per_position": 32,
+      "selected_writes_per_position": 16,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 32,
+      "depth": 8,
+      "heads": 2,
+      "pool": 4,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 312018.95647321426,
+      "unit_special_flops_per_scored_target": 582435.3854166666,
+      "key_scores_per_position": 64,
+      "selected_writes_per_position": 16,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    },
+    {
+      "payload": 64,
+      "depth": 4,
+      "heads": 2,
+      "pool": 2,
+      "segment": 128,
+      "scored_targets": 960,
+      "evaluated_positions": 1792,
+      "unit_special_flops_per_evaluated_position": 604590.9564732143,
+      "unit_special_flops_per_scored_target": 1128569.7854166667,
+      "key_scores_per_position": 16,
+      "selected_writes_per_position": 8,
+      "scope": "winner-only evaluation with cached key reads (exactly equal outputs to the batched path); E64 windows overlap, so each scored target costs about two evaluated positions"
+    }
+  ]
+}
