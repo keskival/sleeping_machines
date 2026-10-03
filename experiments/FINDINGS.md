@@ -13,6 +13,7 @@ common first-time clock credit only, with no term saying which alternative would
 | pool 2 + linearized local-expectation route credit | 108,875 | 0.72 | **2.370** |
 | pool 4 + route credit (added 10:47) | 177,019 | 1.20 | **2.343** |
 | pool 2 + value and written-content route credit (linear_rwn, added 11:16) | 108,875 | 0.73 | 2.384 |
+| pool 4 + linear_rwn (13:02) | 177,019 | — | diverged at window ~350 (no result) |
 | p64/d4 pool 2 + route credit (added 12:01; T=256 2.183) | 422,475 | 2.68 | **2.184** |
 | p32/d8 pool 2 + route credit (added 13:05) | 210,043 | 1.42 | 2.326 |
 | p32/d8 pool 2, no route credit | 210,043 | 1.41 | 2.456 |

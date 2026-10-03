@@ -125,5 +125,6 @@ def pages(data):
                    'p64/d4 with credit scores 2.184 (T256 2.183), .012 behind the one-pass LSTM, with exact winner-only '
                    'inference of 0.60 MFLOPs per position against the LSTM estimate of 0.68 and more estimated fitting work '
                    '(2.68 vs 2.03 MFLOPs per character). A write-address credit on stored coordinates diverged; the corrected '
-                   'variant trains stably but did not improve on value credit (2.384 vs 2.370). Single seeds; '
+                   'variant trained stably at pool 2 without improving on value credit (2.384 vs 2.370) and diverged at pool 4, '
+                   'so write-address credit is withdrawn. Single seeds; '
                    'pending arms are not filled.')]]
