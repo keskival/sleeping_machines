@@ -2897,6 +2897,7 @@ The project theory index contains formal assumptions and proofs. Research findin
 
 | Model (90M) | Params | Updates | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char |
 | --- | --- | --- | --- | --- | --- |
+| Ours p32/d4/pool2 + route credit (AWS, one pass) | 108,875 | 10,986 | 2.045 / 2.045 | 65.2 | 0.72 |
 | Ours p32/d4/pool4 + route credit (AWS, one pass) | 177,019 | 10,986 | 1.997 / 1.998 | 107.6 | 1.20 |
 | E64 LSTM-512, 6 passes (AWS) | 1,199,323 | 65,917 | — / 1.661 | 3893 | 7.21 |
 | E64 Transformer-256x4, 4 passes (AWS) | 3,238,427 | 43,945 | — / 1.604 | 8000 | 22.22 |

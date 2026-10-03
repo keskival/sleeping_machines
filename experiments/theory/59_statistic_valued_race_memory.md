@@ -1590,3 +1590,9 @@ thread): DEV 1.914 / **test 1.997** bpc (T = 256 1.998). Development on the firs
 10M p64 4-pass arm (1.955), so at about 107 TFLOPs, more width and passes on 10M beat more data at width 64 by .04. The AWS 90M
 references (LSTM-512 6 passes 1.661 at about 3.9 PFLOPs; Transformer-256×4 4 passes 1.604 at about 8.0 PFLOPs) are 36–74× the
 estimated work and better by .34–.39. This is a scaling observation, not a comparison win.
+
+**§398/§413 at 90M: credited capacity gains more with data (AWS, published 20:4x UTC).** p32/d4 pool 2 with route
+credit, one pass at 90M (108,875 parameters, 65 TFLOPs, 12,361 characters/s) scored DEV 1.963 / test 2.045 (T = 256
+2.045). Pool 4 (177,019 parameters, 108 TFLOPs) scored 1.997. The capacity gain at unchanged selected writes is .048 at 90M
+against .027 at 10M, the direction the capacity–exposure law predicts: each untied unit's maps see about 1/U of the writes,
+so more data feeds more units. Single seeds. The p32/d8 90M arm is running on AWS.
