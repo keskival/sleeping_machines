@@ -1,0 +1,8 @@
+22:24:03 start aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z
+22:25:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=686204KB, MemAvailable=27578MB
+22:26:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=686516KB, MemAvailable=27588MB
+22:27:04 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=687000KB, MemAvailable=27596MB
+22:28:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=687020KB, MemAvailable=27594MB
+22:29:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=687084KB, MemAvailable=27592MB
+22:30:05 alive aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z: process group RSS=687592KB, MemAvailable=27596MB
+22:31:00 done aws_pub_v2_20261004T000200Z_aws_public_ECG200_screen_p16d2u2_20261004T000100Z (exit 0)
