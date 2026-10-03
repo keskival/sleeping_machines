@@ -1203,3 +1203,13 @@ chars/s (1.6 GB); depth 4 / payload 32 / 256 lanes 5,340 chars/s (2.1 GB). One p
 about 12 h / 4.7 h at 90M. Queue curie_language_batched_20261003T023000Z runs both 10M configurations first. Window
 evaluation with a 64-character context is weaker than streaming state; the dense controls used the same windows (T = 256
 for theirs). The protocol differs in segment length, and this is stated beside the numbers.
+
+**§408 result (3 October, 02:33 UTC): P408 fails; step size is not the depth bottleneck.** Fit-subset NLL, batched, 8
+passes. Depth 4 with clip 4: .945 (seed 7) and .711 (seed 8), against .718 and .588 with clip 1. Depth 4 with double the
+learning rate: .960 (seed 7). Depth 2 with clip 4: .683 against .576. Larger effective steps make fitting *worse* at both
+depths. The deep native model is not under-stepped; larger updates destabilize the hard-routed stack. Inter-layer
+transport (§408), the global clip and, so far, route credit (§407) are excluded as the depth-4 bottleneck. The one depth
+intervention that helped is growth by nesting from a trained depth-2 model (seed 7: 60.9%). That suggests a
+loss-landscape or initialization difficulty for hard-routed deep stacks trained from scratch, which starting from a working
+shallow solution avoids. Growth replicates (seeds 6 and 8) and progressive growth to depth 6 are queued in the large
+program. The language runs keep clip 1.
