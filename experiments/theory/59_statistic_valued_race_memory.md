@@ -1481,3 +1481,10 @@ activity therefore costs U·P multiply-adds per race at inference, which is the 
 capacity, scored keys and selected work. Keys are still scored for every slot, and that cost is counted. Training is
 unchanged: the batched path still computes every candidate, which the route credit uses, and that is charged in the
 fitting work.
+
+**§413 width with credit (12:01 UTC).** p64/d4 pool 2 with route credit (422,475 parameters; 2.68 MFLOPs fitting per
+character, traced; exact winner-only inference 0.60 MFLOPs per position, §414) scored **DEV 2.118 / test 2.184 bpc**
+(T = 256: 2.183). Development 2.490 / 2.262 / 2.201. The matched one-pass E64 LSTM-256 (338,395 parameters, 2.03 fitting /
+0.68 inference MFLOPs, estimated) scores 2.171 at T = 256: the gap is .012 bpc, from .336 before §§411–413. Width remains
+the strongest lever at this budget (p32 → p64 with credit: 2.370 → 2.184). Work conventions differ (estimates), and this is
+a single seed. v7 (width × credited capacity: p64/d4 pool 4, p96/d4 pool 2) runs next.

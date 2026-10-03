@@ -21,6 +21,10 @@ NATIVE = [
      'p32/d4 + route credit'),
     ('language_batched/curie_language_batched_10M_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T101000Z.json',
      'p32/d4/pool4 + route credit'),
+    ('language_batched/curie_language_batched_10M_p32d4_pool2_linear_rwn_l64_lr004_cmp_s6_20261003T101000Z.json',
+     'p32/d4 + read and write credit'),
+    ('language_batched/curie_language_batched_10M_p64d4_pool2_linear_l64_lr004_cmp_s6_20261003T101000Z.json',
+     'p64/d4 + route credit'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
 INFERENCE_MORE = 'language_batched/curie_language_batched_inference_work_20261003T120000Z.json'
@@ -108,6 +112,9 @@ def pages(data):
                    'than the one-pass Transformer; at the matched T256 window it scores 2.371 versus 2.427, a .0554 bpc '
                    'advantage, with about 1/15 of its parameters and estimated fitting work. It remains '
                    '.199 behind the one-pass LSTM. With credit, pool 4 at the same 8 selected writes per character scores 2.343 '
-                   '(T256 2.345): more stored units now improve quality instead of costing it. A write-address variant '
-                   'diverged and is being corrected. Single seeds; '
+                   '(T256 2.345): more stored units now improve quality instead of costing it. Width is the strongest lever: '
+                   'p64/d4 with credit scores 2.184 (T256 2.183), .012 behind the one-pass LSTM, with exact winner-only '
+                   'inference of 0.60 MFLOPs per position against the LSTM estimate of 0.68 and more estimated fitting work '
+                   '(2.68 vs 2.03 MFLOPs per character). A write-address credit on stored coordinates diverged; the corrected '
+                   'variant trains stably but did not improve on value credit (2.384 vs 2.370). Single seeds; '
                    'pending arms are not filled.')]]
