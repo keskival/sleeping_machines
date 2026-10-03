@@ -3101,81 +3101,6 @@ All-race replay58.333%/1.141794 versus factorized56.771%/1.116189 and original57
 
 Whole fitting and per-presentation fitting columns share units and7872 denominator. Inference mean first11 DEV prefixes;2FLOPs/MAC plus unit specials. Eight available receivers,168 scored keys/84 writes per21-event prefix. Candidate discovery, replay, backward and Adam charged; preprocessing, traffic, RNG and energy separate. Source/class/estimator variants and one-seed exploratory scope retained. Other host owns remaining replay/regularization comparisons.
 
-## Exact native terminal-query admission: arithmetic saving, wall loss
-
-All576 paired full-prefix logits/ALLstate checks are bitwise identical across
-three saved coarse native seeds. Skip four unused affine classifiers, preserve
-all clocks/races/keys/messages/writes. Original full-prefix arithmetic+special
-operations .138119/.138007/.138035MF ->.135259/.135147/.135175MF (2.07%less).
-Original quality and4.218015GFwholefit/.535825MFperfit-target unchanged. Complete
-ATenaudit, query/target/parameter/training-rejection checks pass. Observed Python
-wall is~2%SLOWER, so no practicalspeed or supremacyclaim. Full common-unit table
-and counterbalanced timings: experiments/AWS_QUERY_ONLY_FINDINGS_20261002.md.
-
-## Depth4 corrected full replay: stronger fitting, heldout gate fails
-
-Same256FIT/192DEV/fourpasses/seed7/p16/L4/H2/pool2; threecredit controls, full
-operator/deepgradient/recovery contracts pass. Originalteacher56.771%/1.342018
-NLL,FITsubset.856196,1.039740GF/1.015371MF per fittingtarget;
-factorized55.729%/1.368549,FITsubset.890972,1.082407GF; correctedall40race
-replay56.771%/1.374384,FITsubset.807254,28.968062GF. Supported deep-fitting
-NLLgains.048942/.083718, BOTHheldoutgatesFAIL.81920actualshadowlanes paid.
-No unchanged fullfit or supremacyclaim; shallow failure does not establish deep
-impossibility. Full common-unit work/data/activity/quality table and next shared
-DEEP-family hypothesis: experiments/AWS_DEEP_REPLAY_FINDINGS_20261002.md.
-
-## Depth8 corrected replay: both seed7 quality nominations pass
-
-Matched256FIT/192DEV/fourpasses (1024 fitting presentations), p16/L8/H2/pool2,
-coarse4/.25clock, fixedAdam/window/seed7. Completed results only; full
-gradient/recovery/accounting contracts and allsix learning smokes pass.
-
-| Family/credit | DEV accuracy | DEV NLL | Parameters | Available/selected per event | Whole-fit GFLOPs | Per-fit-target MFLOPs | Inference MFLOPs/target |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| private/teacher | 48.438% | 1.369199 | 54571 | 32/16 | 2.022431 | 1.975030 | 0.475853 |
-| private/factorized | 47.396% | 1.399592 | 54571 | 32/16 | 2.124006 | 2.074225 | 0.475713 |
-| private/replay | 56.771% | 1.316790 | 54571 | 32/16 | 109.118229 | 106.560770 | 0.475769 |
-| depth/teacher | 52.604% | 1.410495 | 22351 | 32/16 | 1.989397 | 1.942771 | 0.475699 |
-| depth/factorized | 46.875% | 1.395239 | 22351 | 32/16 | 2.090973 | 2.041966 | 0.475909 |
-| depth/replay | 52.083% | 1.348356 | 22351 | 32/16 | 109.085195 | 106.528511 | 0.475923 |
-
-Private replay improves NLL .052409 versus teacher and .082802 versus
-factorized, with higher accuracy. Shared replay improves .062138/.046883;
-its accuracy decline versus teacher is .521pp, within the1pp gate. BOTH
-families pass predeclared .03NLL gates and receive unchanged seed8 confirmation.
-Each fullreplay fit pays163840shadowlanes/819200events; roughly52–55x control
-trainingwork prevents a resource-advantage claim. Private replay is the
-strongest completed depth8 quality. ReusedDEV epoch selection, single-seed
-evidence, officialtest untouched; confirmation pending. Data preprocessing,
-traffic/RNG andenergy separate; same2FLOPs/MAC+unit-special conventions for
-ALL columns. Full result lineage: experiments/AWS_DEPTH8_REPLAY_FINDINGS_20261002.md.
-
-## Unchanged seed8 confirmation: both gates fail
-
-Same256FIT/192DEV/fourpasses/1024targets and settings as seed7.
-
-| Family/credit | DEV accuracy | DEV NLL | Whole-fit GFLOPs | Per-fit-target MFLOPs | Inference MFLOPs/target |
-|---|---:|---:|---:|---:|---:|
-| private/teacher | 55.729% | 1.331247 | 2.022431 | 1.975030 | 0.475909 |
-| private/factorized | 48.438% | 1.270459 | 2.124006 | 2.074225 | 0.475993 |
-| private/replay | 54.167% | 1.282510 | 109.118229 | 106.560770 | 0.475699 |
-| depth/teacher | 48.438% | 1.283150 | 1.989397 | 1.942771 | 0.475825 |
-| depth/factorized | 50.000% | 1.271398 | 2.090973 | 2.041966 | 0.475783 |
-| depth/replay | 48.958% | 1.270943 | 109.085195 | 106.528511 | 0.475811 |
-
-Private replay retains .048736NLL improvement versus teacher, but loses
-1.5625pp accuracy and is .012051NLL worse than factorized control: confirmation
-FAILS. Shared replay gains only .012207/.000455NLL (teacher/factorized) and
-misses both .03NLL gates; factorized accuracy drops1.0417pp: FAILS. Preserve
-the positive depth8 seed7 results, with limited robustness beside them.
-No unchanged full984FIT gesture promotion and no supremacy claim.
-
-Both independent native language causal/recovery contracts and1025-char
-learning checks pass (private5.311638→4.832740BPC; shared5.273659→4.807838BPC).
-These small fits are admission only, not language advantage evidence. Separate
-private/shared original-teacher models proceed to10,000,000-character FIT and
-1M disjointDEV; corrected full replay is not yet installed in language.
-
 ## Appendix B. Native conditional choice-clock parameter geometry
 
 | Seed | Encoder | Median |cos| | Min info ratio | Max info ratio | Capped sites |
@@ -3333,3 +3258,56 @@ L0-L1 is positive in one case, so its alternative improves NLL; four negative ga
 Conditional choice risk is sum pi_i*L_i, so dR/draw0= pi0*pi1*(L0-L1)*f'(raw0). Utilities and first time are held fixed; this tests choice credit only. The bridge is applied to the current conditional score map in this derivative, not the suffix law. These numbers are not a full positive-bridge risk, joint time/content update or learning result.
 
 Audit18.432s/328716KiB; diagnostic whole arithmetic/traffic/energy unknown, not zero. Conditional two-score Fisher determinant is pi0*pi1*d0^2*d1^2 times the raw-gradient Gram determinant. Positive slopes preserve existing raw rank; confidence and nearly parallel raw directions can still suppress useful learning. Theory106/107 retain exact scopes. No automatic bridge scale-up; independently owned integrated deeper replay and reserved AWS comparisons remain the quality priority.
+
+## Appendix B. AWS depth8 replay: seed7 positive pilot
+
+| Family/credit | Params | Dev acc % | Dev NLL | Whole fit GF | Fit MF/target | Infer MF |
+| --- | --- | --- | --- | --- | --- | --- |
+| private/teacher | 54571 | 48.438 | 1.369199 | 2.022431 | 1.975030 | 0.475853 |
+| private/factorized | 54571 | 47.396 | 1.399592 | 2.124006 | 2.074225 | 0.475713 |
+| private/replay | 54571 | 56.771 | 1.316790 | 109.118229 | 106.560770 | 0.475769 |
+| depth/teacher | 22351 | 52.604 | 1.410495 | 1.989397 | 1.942771 | 0.475699 |
+| depth/factorized | 22351 | 46.875 | 1.395239 | 2.090973 | 2.041966 | 0.475909 |
+| depth/replay | 22351 | 52.083 | 1.348356 | 109.085195 | 106.528511 | 0.475923 |
+
+Both families retain native computational delays/races, key/value separation, source carry, sparse writes and private persistent receiver state. Private maps differ perdepth/receiver; depth-shared maps are shared acrossdepth/pool perhead, with private keys/clocks/timescales. p16/L8/H2/pool2,256FIT/192DEV,fourpasses/1024presentations,U16/lr.003, coarse4/.25clock.32available units,32key scores/16writes per event; five-event prefix80factual races/160full shadow lanes. All163840 shadow lanes and819200 replay events perfit are charged.
+
+Both seed7 families pass the predeclared .03NLL gain versus BOTH matched controls and at most1pp accuracy loss. Private replay improves NLL .052409/.082802 versus teacher/factorized and accuracy8.333/9.375pp. Depth-shared replay improves .062138/.046883NLL; teacher accuracy declines .521pp within the gate. These positive heldout results are preserved. The unchanged seed8 confirmation below subsequently fails both family gates: nomination is not robust, and no full984FIT promotion follows.
+
+Original teacher, factorized clock/content control and corrected all-race first-time-preserving actual-write replay share data/order/noise/ optimizer budgets. Full every-parameter/recovery/state/shared-alias contracts and allsix learning smokes pass before pilot/confirmation. Replay costs about52–55x the controls in complete fitting arithmetic; equal sparse inference does not remove that expense. No comparable-quality total-resource advantage, officialtest or unchanged fullfit is claimed.
+
+Same fitting denominator and units for every row/column; 2FLOPs/MAC plus unit specials, first11 DEV prefix inference mean. Reused DEV epoch selection, two seeds and fixed nomination scope. Input preprocessing, candidate index/RNG, traffic and measured energy separate. Verbatim shared report evidence preserved in appendices/ aws_depth8_history_20261003T003500Z.md. Source/result hashes checked; historical depth4 failed gate and local bridge evidence retained.
+
+## Appendix B. AWS depth8 replay: seed8 confirmation fails
+
+| Family/credit | Params | Dev acc % | Dev NLL | Whole fit GF | Fit MF/target | Infer MF |
+| --- | --- | --- | --- | --- | --- | --- |
+| private/teacher | 54571 | 55.729 | 1.331247 | 2.022431 | 1.975030 | 0.475909 |
+| private/factorized | 54571 | 48.438 | 1.270459 | 2.124006 | 2.074225 | 0.475993 |
+| private/replay | 54571 | 54.167 | 1.282510 | 109.118229 | 106.560770 | 0.475699 |
+| depth/teacher | 22351 | 48.438 | 1.283150 | 1.989397 | 1.942771 | 0.475825 |
+| depth/factorized | 22351 | 50.000 | 1.271398 | 2.090973 | 2.041966 | 0.475783 |
+| depth/replay | 22351 | 48.958 | 1.270943 | 109.085195 | 106.528511 | 0.475811 |
+
+Both families retain native computational delays/races, key/value separation, source carry, sparse writes and private persistent receiver state. Private maps differ perdepth/receiver; depth-shared maps are shared acrossdepth/pool perhead, with private keys/clocks/timescales. p16/L8/H2/pool2,256FIT/192DEV,fourpasses/1024presentations,U16/lr.003, coarse4/.25clock.32available units,32key scores/16writes per event; five-event prefix80factual races/160full shadow lanes. All163840 shadow lanes and819200 replay events perfit are charged.
+
+Both unchanged seed8 confirmation gates FAIL. Private replay preserves .048736NLL improvement over teacher, but loses1.5625pp accuracy and is .012051NLL worse than factorized. Depth-shared replay improves only .012207/.000455NLL versus teacher/factorized, below .03, and declines 1.0417pp versus factorized accuracy. Keep the earlier positive seed7 result beside this failure; neither establishes broad failure of deep representation learning or practical advantage.
+
+Original teacher, factorized clock/content control and corrected all-race first-time-preserving actual-write replay share data/order/noise/ optimizer budgets. Full every-parameter/recovery/state/shared-alias contracts and allsix learning smokes pass before pilot/confirmation. Replay costs about52–55x the controls in complete fitting arithmetic; equal sparse inference does not remove that expense. No comparable-quality total-resource advantage, officialtest or unchanged fullfit is claimed.
+
+Same fitting denominator and units for every row/column; 2FLOPs/MAC plus unit specials, first11 DEV prefix inference mean. Reused DEV epoch selection, two seeds and fixed nomination scope. Input preprocessing, candidate index/RNG, traffic and measured energy separate. Verbatim shared report evidence preserved in appendices/ aws_depth8_history_20261003T003500Z.md. Source/result hashes checked; historical depth4 failed gate and local bridge evidence retained.
+
+## Appendix B. Deep causal language: admission only; ten-million fits pending
+
+| Family | Params | Fit targets | Initial BPC | Final BPC | Whole fit GF | Fit MF/char | Infer MF/char |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| private | 54907 | 1024 | 5.311638 | 4.832740 | 0.463220 | 0.452363 | 0.097376 |
+| depth | 22687 | 1024 | 5.273659 | 4.807838 | 0.461066 | 0.450260 | 0.097376 |
+
+Both integrated native depth8 families pass causal token/teacher parity and actual private-state/Adam/cursor/RNG/partial-window recovery contracts. These1025-character/1024target,513character/512target DEV,onepass,credit16/ U256 learning smokes use the ORIGINAL counterfactual teacher, not corrected full replay. Model key/value separation, sparse receiver writes and physical time evolution remain.32available units,32scored keys/16writes perchar; 512target DEV retains2448bytes addressed state in both families. Four optimizer updates, all core fitting work charged.
+
+Private BPC5.311638 to4.832740,shared5.273659 to4.807838 are admission checks, not language advantage or evidence that deeper features generalize. AWS reserved coordinator now owns private/shared first10M-character FIT models,onepass,disjoint1M DEV at90M,seed7,credit16/U256/lr.002/warmup4096. No completed10M quality cell is filled here. Gesture replay nominations failed confirmation; language teacher runs remain distinct controls.
+
+The corrected language choice return must sum ALL downstream token losses after the forced route, actually changing private memory at the factual FIRST time. A detached chunk omits later-chunk credit. Full replay at T16/L8/H2/pool2 costs512shadow lanes/8192shadow events perchunk; causal suffix snapshots can reduce about2x, not erase the quadratic work. A future language port needs full-parameter sequential/batched sum-return contracts, causal intervention, actual recovery and complete paid work.
+
+Completed smokes250.174/251.253s,peak<534MiB; bounded long jobs stay in AWS tmux/coordinator with reserved2CPU slots and8GiB floor. Table uses CPU emulator arithmetic plus unit-special convention for both models; projected physical-event numbers remain separate. Credit graph freed each16target microchunk, persistent state crosses updates. DEV passes/ RNG/traffic/energy outside fitting FLOPs, not zero. Source snapshots frozen; all pending runs retained as pending and independently owned.

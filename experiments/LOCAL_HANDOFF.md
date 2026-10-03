@@ -1696,3 +1696,26 @@ source/layout checks. Its module/publisher and completed numerical sources
 are frozen; report and common-unit ledgers are committed on main. Four old autostashes
 preserved; no unresolved index entries. One guarded job at a time throughout,
 minimum8GiB available; local MemAvailable stayed~11GiB.
+
+## Shared-main conflict and depth8 update, 3 October00:36 UTC
+
+Fetched30 AWS commits, rebased six local commits on main. REPORT additive
+conflict resolved preserving both evidence sets; shared manual additions
+archived verbatim at report/appendices/aws_depth8_history_20261003T003500Z.md.
+No unresolved entries, four old autostashes intact. The174-page guarded
+generated report now includes all12 depth8 pilot/confirmation rows and causal
+language admission/common-unit costs. First004000Z publication failed on a
+wide table header and rolled back; retry004100Z passes24.187s/layout/source checks.
+
+Positive depth8 seed7 private replay NLL1.316790 versus1.369199/1.399592;
+shared1.348356 versus1.410495/1.395239, both nominationgatesPASS. Seed8 BOTH
+confirmationgatesFAIL: private1.282510 vs1.331247/1.270459; shared1.270943
+vs1.283150/1.271398. Preserve positive learning and failed robustness together.
+Replay~52–55x fittingwork; no full gesturepromotion/resourceadvantage.
+
+AWS independently owns long10M-character original-teacher native L8 private
+and shared runs, protocol and guards in HANDOFF; do not duplicate. New local
+priority is a small all-target causal language replay numerical port: current
+language models still lack corrected full-write replay credit. Read
+theory/aws_20261002_depth8_language_replay_cost.md before implementation.
+No changed long source, no additional dense fit or language qualityclaim.
