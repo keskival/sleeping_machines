@@ -2069,3 +2069,32 @@ models now10M-char causal native depth8 private versusdepth-shared maps,
 ORIGINALteacher credit, guarded2CPUjobs in replacementmatrix3-slotreservation.
 Missingmechanism: corrected fullreplay language shadowport; theory records
 all-targetcausalreturn and scalingcontracts, notinstalledqualityevidence.
+
+## AWS causal replay production driver and control recovery — 3 October
+
+Pulled through6afbcba: reuse contracted stateful chronological replay kernel/
+accumulator (notes108/109/113). Original10M teacher controls actually trained
+73728targets/288updates each. Source-exact paused checkpoints/RNG/Adam/private
+state archived and pushed; rawcontinuation files retained onAWS, untouched
+originaldriver. Mixed old coordinator frozen DVS-reg hash changed upstream,
+so replace with language-only source scope instead of discarding training.
+
+New aws_depth8_language_credit.py applies identical actual accumulator to
+TRACED and UNTRACED teacher/factorized/replay windows, fixes known omission
+risk in naïveold-driver swap. All-target shadow losses, actual alternative
+writes, firsttimepreservation, chronologicalrealstreamRNG, depthsharedmaps
+and fullwork accounting. No physical projection: all simulatedclock arithmetic
+charged. First012500Z driver-contract attempt failed in test objectcomparison
+(native dataclass tensor == ambiguity) AFTERactualteacherfull/recovery runs
+matchedDEV; original failedscript/log kept. Retry013300Z fieldwisecomparison
+checks allsix actualdriver modes, three16target chunks including untracedthird,
+bitwise model/Adam/cursor/RNG/work recovery and1536actualreplaylanes/24576events.
+
+Prioritized immutablematrix aws_language_credit_matrix_20261003T013500Z:
+contracts, six production-p16 learning/RSSsmokes (ADMISSIONONLY), resume BOTH
+original10M teachers EXACTLY, newprivatefullreplay10M, thenprivatefactorized/
+sharedfullreplay/sharedfactorized10M as slotsfree. ThreeCPUslots, unique
+run_safe queues, globalhost+slotlocks,2GBRSS/6GBvirtualeach,8GiBfloor. Newlong
+runs30daywatchdogbudget,1MfinalDEV, bounded1025charinitialdiagnostic; original
+controls retainfull1Minitialevaluationand7daybudget. This fixesstartup/new
+publishing, not an advantageclaim. Allnewqualityfitsatleast10Mchars asuserasks.
