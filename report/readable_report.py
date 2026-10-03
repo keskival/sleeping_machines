@@ -153,6 +153,7 @@ def results():
         if (r:=read(str(path.relative_to(RES)))).get('status')=='completed']
     appendix=runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))
     tasks['current_dvs_appendix']=appendix['load'](read)
+    tasks['native_language_batched']=runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['load'](read)
     tasks['reception_evidence']=runpy.run_path(str(ROOT/'report/reception_evidence.py'))['load'](read)
     historical=runpy.run_path(str(ROOT/'report/depth_sampling_evidence.py'))['history_read']
     historical_read=lambda path:historical(read,path)
@@ -5307,6 +5308,7 @@ def blocks(M, tasks, ev):
     opening_index=next((i+1 for i,p in enumerate(pages) if p[0][1]=='Native strengths: useful time and private state'),
                        2 if len(pages)>1 and pages[1][0][1]=='New evidence: quality and complete work' else 1)
     pages[opening_index:opening_index]=architectural_pages
+    pages.extend(runpy.run_path(str(ROOT/'report/native_language_batched_appendix.py'))['pages'](tasks['native_language_batched']))
     pages.extend(runpy.run_path(str(ROOT/'report/current_dvs_appendix.py'))['pages'](tasks['current_dvs_appendix']))
     pages.extend(runpy.run_path(str(ROOT/'report/reception_evidence.py'))['pages'](tasks['reception_evidence']))
     pages.extend(runpy.run_path(str(ROOT/'report/route_calibration_state_scope.py'))['pages'](tasks['route_calibration_evidence']))

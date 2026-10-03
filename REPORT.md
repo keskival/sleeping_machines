@@ -2779,6 +2779,23 @@ The evidence is preserved in versioned result summaries with configurations, spl
 
 The project theory index contains formal assumptions and proofs. Research findings retain detailed analyses and the full experimental record. The model documentation describes reproducible configurations and operational procedures. This report presents the project, its evidence and its potential.
 
+## Appendix. Native language at 10M: the integrated core, segment-batched
+
+| Model (10M, one pass) | Params | Updates | Test bpc T128/T256 | Whole fit TF est. | Fit MF/char | Infer MF/position |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ours p16/d8, v1 (610 updates) | 54,907 | 610 | 2.899 / — | 4.04 | 0.40 | 0.13 |
+| Ours p16/d8, skip2 | 54,907 | 1,220 | 2.719 / 2.719 | 4.05 | 0.41 | 0.13 |
+| Ours p32/d4 | 108,875 | 1,220 | 2.507 / 2.506 | 7.22 | 0.72 | 0.24 |
+| Ours p32/d8, skip2 | 210,043 | 1,220 | 2.456 / 2.456 | 14.11 | 1.41 | 0.46 |
+| E64 LSTM-256 | 338,395 | 1,220 | — / 2.171 | 20.3 | 2.03 | 0.68 |
+| E64 Transformer-256x2 | 1,658,907 | 1,220 | — / 2.427 | 111.3 | 11.13 | 3.71 |
+
+Integrated native core only: temporal races (factorized law), sparse addressed writes into persistent rotating memories, transport between layers; no dense carrier and no count statistics. One pass over text8[0:10M] in 64 lanes x 128 characters (state reset per segment, exact credit within it), lr .004 with cosine annealing, compiled layer steps (contract-tested against the batched path). The v1 row used 128 lanes, about 610 updates and a constant lr; it is kept as measured. Test text8[95M:96M] on E64 windows, scored at the training length and at the controls' 256 with the same weights. Single seed per row; exploratory, not a benchmark claim.
+
+The E64 rows are the matched one-pass controls (1,220 steps of 32 x 256, cosine). Work: ours traced unit/special operations (fitting extrapolated from traced windows; inference is the batched emulator, which computes every proposal); controls are shape estimates. The conventions differ, so work comparisons are estimates.
+
+Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth then helped at width 64 (p32/d8 2.456). The best native row is .03 bpc behind the one-pass Transformer with about 1/8 of its parameters and estimated fitting work, and .29 bpc behind the one-pass LSTM. THEORY §413: in this fast path the race address receives only first-time clock credit, so pools fragment memory. The counterfactual route credit of the architecture is absent there. Diagnostics with linearized read and write-address credit and with wider units are queued; no pending cell is filled.
+
 ## Appendix B. AWS coarse temporal screens: two seeds pass
 
 | Native packet/clock | Accuracy % | Dev NLL | Whole fit GF est. | Fit MF / target | Infer MF / prefix |
@@ -3689,7 +3706,7 @@ Exact trace covariance for uniform k without replacement is R(R-k)/(k(R-1)) time
 
 Fresh Adam transforms include actual clip1 normalization and epsilon1e-8; full and sampled updates are independently checked against two actual discarded Adam forks per depth. Results do not describe trained moments, convergence or heldout improvement. Kernel, original parameters and caller RNG are preserved. Sparse native inference is unchanged.
 
-Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank present and hash verified.
+Five contract groups;292.571s/866372KiB. Accounting correction beside original artifact scope: every alternative forward bank is evaluated TWICE, once for vectors and once for full-driver equivalence; shadow_lanes/events in each case counts only the first bank. Tiny contracts add their own work. Cached draws add vector/Adam computation; total diagnostic FLOPs/traffic/energy unknown, not zero. Full per-race vectors are a228MiB generated local artifact with an immutable SHA and reproducible source/queue; report tables use the completed JSON. Local bank absent on this rendering host; vector-byte verification not rerun.
 
 ## Appendix B. Sampled credit: finite FIT predictions after actual Adam forks
 
