@@ -1233,3 +1233,14 @@ decay 1e-2 + input noise .3 60.4% / 1.091; **coarse 4-bin packets + weight decay
 s per fit). The native DVS model was generalization-limited, and regularization plus coarser packets recover 3.9–5.5 points
 on the three-seed mean. The large program's capacity arms now use weight decay 1e-3 + noise .3, and its coarse arms add a
 noise variant. Strong controls on the same full data remain higher (4-bin control 77.6%, RBF 73.4%).
+
+**Growth construction update (3 October, 03:35 UTC; theory 122/123 by the other host).** Their plasticity probe shows
+that at appended gate bias −20 about 99.7% of the new branches' nonlinear contributions round away in float32, and gate and
+output gradients fall below Adam's ε. The new message branches are effectively silent, while input maps, keys and time stay
+live. At −4 every contribution is visible and the gates learn. They also found that unit.gain is a Python float absent from
+the state_dict, so progressive growth from a grown parent reset the inherited gains. Changes for newly starting
+experiments: appended gates default to −4 (`--appended-gate-bias`, −20 reproduces the legacy construction), and per-layer
+gains are reconstructed from the growth lineage (dvs_grow_depth_benchmark.lineage_gains; contract-tested). The large
+program's growth arms run −4 and legacy −20 on seeds 6 and 8, and progressive growth 4 → 6 runs with live gates and
+preserved gains. The seed-7 legacy result (60.9%) is therefore not evidence about the new message branches; its gain came
+from the other live paths.

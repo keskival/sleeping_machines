@@ -16,6 +16,7 @@ import dvs_native_benchmark as N  # noqa: E402
 
 def parser():
     p = BL.parser(); p.add_argument('--parent', required=True)
+    p.add_argument('--appended-gate-bias', type=float, default=G.APPENDED_GATE_BIAS, help='-20 reproduces the legacy growth')
     return p
 
 

@@ -24,15 +24,26 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'experiments'))
 import dvs_clock_calibrated_benchmark as C  # noqa: E402
 import dvs_native_benchmark as N  # noqa: E402
 
-CLOSED_GATE = -20.
+CLOSED_GATE = -20.          # transport decay closing for intermediate appended layers
+APPENDED_GATE_BIAS = -4.    # live near-identity gates (note 122/123: at -20 99.7% of branch contributions round away in FP32)
+
+
+def lineage_gains(result_path):
+    """per-layer unit gains of a saved (possibly grown) model: unit.gain is a Python float absent from state_dict, so it is
+    reconstructed from the growth lineage (note 122 construction bug): inherited layers keep their gains, appended layers
+    use 0.5/sqrt(depth) of the model they were appended to."""
+    r = json.loads((ROOT / result_path).read_text()); depth = r['args']['depth']; parent = r['args'].get('parent')
+    gains = lineage_gains(parent) if parent else []
+    return gains + [.5 / depth ** .5] * (depth - len(gains))
 
 
 def parser():
     p = C.parser(); p.add_argument('--parent', required=True, help='completed shallower DVS result (.json with .progress.pt)')
+    p.add_argument('--appended-gate-bias', type=float, default=APPENDED_GATE_BIAS, help='-20 reproduces the legacy growth')
     return p
 
 
-def grow(model, parent_state, parent_depth):
+def grow(model, parent_state, parent_depth, parent_gains=None, appended_gate_bias=APPENDED_GATE_BIAS):
     own = model.state_dict()
     for name, value in parent_state.items():
         parts = name.split('.')
@@ -43,7 +54,7 @@ def grow(model, parent_state, parent_depth):
         elif name in own and own[name].shape == value.shape:
             own[name] = value
     model.load_state_dict(own)
-    gain = .5 / parent_depth ** .5
+    parent_gains = parent_gains or [.5 / parent_depth ** .5] * parent_depth
     with torch.no_grad():
         model.transport_rate[parent_depth:-1] = CLOSED_GATE    # softplus(-20) ~ 2e-9: no decay across intermediate new layers
         model.transport_frequency[parent_depth:-1] = 0.         # no rotation across intermediate new layers
@@ -56,9 +67,9 @@ def grow(model, parent_state, parent_depth):
                 for pool in head:
                     for unit in pool:
                         if depth < parent_depth:
-                            unit.gain = gain
+                            unit.gain = parent_gains[depth]
                         else:
-                            unit.gate.bias.fill_(CLOSED_GATE)
+                            unit.gate.bias.fill_(appended_gate_bias)
     return model
 
 
@@ -71,7 +82,8 @@ def make_model(a, fast=True):
     if a.depth <= pa['depth']:
         raise ValueError('growth requires a deeper model')
     ck = torch.load(ROOT / a.parent.replace('.json', '.progress.pt'), weights_only=False)
-    return grow(C.make_model(a, fast), ck['best_state'], pa['depth'])
+    return grow(C.make_model(a, fast), ck['best_state'], pa['depth'], lineage_gains(a.parent),
+                getattr(a, 'appended_gate_bias', APPENDED_GATE_BIAS))
 
 
 def sources():
