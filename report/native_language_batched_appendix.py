@@ -19,6 +19,8 @@ NATIVE = [
      'p32/d4/pool1 (control: no selection)'),
     ('language_batched/curie_language_batched_10M_p32d4_pool2_linear_l64_lr004_cmp_s6_20261003T070000Z.json',
      'p32/d4 + route credit'),
+    ('language_batched/curie_language_batched_10M_p32d4_pool4_linear_l64_lr004_cmp_s6_20261003T101000Z.json',
+     'p32/d4/pool4 + route credit'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
 CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2')]
@@ -96,5 +98,7 @@ def pages(data):
                    'pool-2 model scores 2.370: .137 better than without it, .069 better than the control, and .057 better '
                    'than the one-pass Transformer; at the matched T256 window it scores 2.371 versus 2.427, a .0554 bpc '
                    'advantage, with about 1/15 of its parameters and estimated fitting work. It remains '
-                   '.199 behind the one-pass LSTM. A write-address variant diverged and is being corrected. Single seeds; '
+                   '.199 behind the one-pass LSTM. With credit, pool 4 at the same 8 selected writes per character scores 2.343 '
+                   '(T256 2.345): more stored units now improve quality instead of costing it. A write-address variant '
+                   'diverged and is being corrected. Single seeds; '
                    'pending arms are not filled.')]]

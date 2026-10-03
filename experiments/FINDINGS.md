@@ -11,6 +11,7 @@ common first-time clock credit only, with no term saying which alternative would
 | pool 2, no route credit | 108,875 | 0.72 | 2.507 |
 | pool 1 (control: no selection) | 74,803 | 0.49 | 2.439 |
 | pool 2 + linearized local-expectation route credit | 108,875 | 0.72 | **2.370** |
+| pool 4 + route credit (added 10:47) | 177,019 | 1.20 | **2.343** |
 | p32/d8 pool 2, no route credit | 210,043 | 1.41 | 2.456 |
 | p32/d8 pool 4, no route credit | 346,331 | 2.36 | 2.498 |
 | E64 Transformer-256×2, one pass (estimate) | 1,658,907 | 11.13 | 2.427 |
@@ -20,7 +21,8 @@ Without address credit, more units cost quality: pool 4 is worse than pool 2, an
 The route credit (a zero-valued surrogate with score gradient π_i g·(v_i − v̄), forward values bitwise unchanged,
 contract-tested eager versus compiled) improves the same model by .137 bpc at the same work. That beats the control by
 .069 and the one-pass Transformer by .057 with about 1/15 of its parameters and estimated fitting work. The one-pass LSTM
-stays .199 ahead. Routing diagnostics on the uncredited weights show sharp, balanced, timing-trained addresses. Routing
+stays .199 ahead. With credit, pool 4 at the same selected writes improves further, to 2.343 (capacity beyond
+activity); without credit, pool 4 was worse than pool 2. Routing diagnostics on the uncredited weights show sharp, balanced, timing-trained addresses. Routing
 noise costs about .01–.02 bpc, and the learned memory half-lives are short (median about 6, maximum about 27 characters).
 A write-address credit computed in stored coordinates (linear_rw) diverged at window about 250: lazy decay was counted
 as a content change. The corrected linear_rwn credits only newly written content. v5 (running) carries the credit to

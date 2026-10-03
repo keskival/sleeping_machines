@@ -1444,3 +1444,13 @@ Its gate is bounded, but x_u is the unnormalized mixed input and Input is traina
 no uniform LayerNorm norm bound. [142](142_lazy_write_coordinates_and_credit_scope.md) provides exact static
 cancellation/real-key/changing-forget/sign witnesses, the coefficient-error identity and a bounded actual-suffix
 audit plan. The successful linear arm remains the valid reference, v5 retains priority, and no new fit is launched.
+
+**§413 capacity beyond activity, with credit (10:47 UTC).** p32/d4 pool 4 with the linearized route credit (177,019
+parameters, 8 selected writes per character as at pool 2, 32 scored keys and computed proposals per character, 1.20
+MFLOPs fitting per character) scored **DEV 2.281 / test 2.343 bpc** (T = 256: 2.345). Pool 2 with credit scored 2.314 / 2.370
+(0.72 MFLOPs/char). Development on the first 50K was 2.584 / 2.397 / 2.344 against 2.610 / 2.435 / 2.384. Without credit,
+pool 4 was worse than pool 2 (depth 8: 2.498 vs 2.456). With credit, more stored units at unchanged selected writes improve
+quality. This is the architecture's capacity-beyond-activity claim, now supported in language at 10M (single seed; the
+batched reference still computes every candidate's key and proposal, so discovery and losing-candidate work is charged
+in the fitting FLOPs). Against the matched one-pass E64 controls: Transformer-256×2 2.427 (pool 4 is .082 better at T = 256),
+LSTM-256 2.171 (.174 behind).

@@ -2790,14 +2790,28 @@ The project theory index contains formal assumptions and proofs. Research findin
 | Ours p32/d8/pool4, skip2 | 346,331 | 1,220 | 2.498 / 2.498 | 23.60 | 2.36 | 0.77 |
 | Ours p32/d4/pool1 (control: no selection) | 74,803 | 1,220 | 2.439 / 2.439 | 4.88 | 0.49 | — |
 | Ours p32/d4 + route credit | 108,875 | 1,220 | 2.370 / 2.371 | 7.24 | 0.72 | 0.24 |
+| Ours p32/d4/pool4 + route credit | 177,019 | 1,220 | 2.343 / 2.345 | 11.95 | 1.20 | — |
 | E64 LSTM-256 | 338,395 | 1,220 | — / 2.171 | 20.3 | 2.03 | 0.68 |
 | E64 Transformer-256x2 | 1,658,907 | 1,220 | — / 2.427 | 111.3 | 11.13 | 3.71 |
+
+| Native model | State slots | Memory scalars | Writes/char | Keys/char | Values/char |
+| --- | --- | --- | --- | --- | --- |
+| p16/d8, v1 (610 updates) | 32 | 512 | 16 | 32 | 32 |
+| p16/d8, skip2 | 32 | 512 | 16 | 32 | 32 |
+| p32/d4 | 16 | 512 | 8 | 16 | 16 |
+| p32/d8, skip2 | 32 | 1024 | 16 | 32 | 32 |
+| p32/d8/pool4, skip2 | 64 | 2048 | 16 | 64 | 64 |
+| p32/d4/pool1 (control: no selection) | 8 | 256 | 8 | 8 | 8 |
+| p32/d4 + route credit | 16 | 512 | 8 | 16 | 16 |
+| p32/d4/pool4 + route credit | 32 | 1024 | 8 | 32 | 32 |
+
+Native mechanism counts per input position in the batched reference. Memory scalars are available unit-value storage per lane; timestamps, readiness bits and source context are additional. One value is delivered per selected head/layer write. Every candidate key and proposal value is computed before selection in this reference; selected activity does not make discovery or losing-candidate computation free. These are shape counts, not traffic or energy measurements.
 
 Integrated native core only: temporal races (factorized law), sparse addressed writes into persistent rotating memories, transport between layers; no dense carrier and no count statistics. One pass over text8[0:10M] in 64 lanes x 128 characters (state reset per segment, exact credit within it), lr .004 with cosine annealing, compiled layer steps (contract-tested against the batched path). The v1 row used 128 lanes, about 610 updates and a constant lr; it is kept as measured. Test text8[95M:96M] on E64 windows, scored at the training length and at the controls' 256 with the same weights. Single seed per row; exploratory, not a benchmark claim.
 
 The E64 rows are the matched one-pass controls (1,220 steps of 32 x 256, cosine). Work: ours traced unit/special operations (fitting extrapolated from traced windows; inference is the batched emulator, which computes every proposal); controls are shape estimates. The conventions differ, so work comparisons are estimates.
 
-Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only through first-time clock credit (THEORY §413), and more units then cost quality: pool 4 is worse than pool 2 (2.498 vs 2.456), and the no-selection pool-1 control beats pool 2 at depth 4 (2.439 vs 2.507). With the linearized local-expectation route credit (forward values unchanged, the same work) the same p32/d4 pool-2 model scores 2.370: .137 better than without it, .069 better than the control, and .057 better than the one-pass Transformer with about 1/15 of its parameters and estimated fitting work. It remains .199 behind the one-pass LSTM. A write-address variant diverged and is being corrected. Single seeds; pending arms are not filled.
+Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only through first-time clock credit (THEORY §413), and more units then cost quality: pool 4 is worse than pool 2 (2.498 vs 2.456), and the no-selection pool-1 control beats pool 2 at depth 4 (2.439 vs 2.507). With the linearized local-expectation route credit (forward values unchanged, about 0.3% more counted fitting work) the same p32/d4 pool-2 model scores 2.370: .137 better than without it, .069 better than the control, and .057 better than the one-pass Transformer; at the matched T256 window it scores 2.371 versus 2.427, a .0554 bpc advantage, with about 1/15 of its parameters and estimated fitting work. It remains .199 behind the one-pass LSTM. With credit, pool 4 at the same 8 selected writes per character scores 2.343 (T256 2.345): more stored units now improve quality instead of costing it. A write-address variant diverged and is being corrected. Single seeds; pending arms are not filled.
 
 ## Appendix B. AWS coarse temporal screens: two seeds pass
 
