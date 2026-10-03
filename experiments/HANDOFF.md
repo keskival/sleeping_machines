@@ -2198,3 +2198,14 @@ samepublicationlock, admissioncoordinatorpause/finallyresume; fitskeepgoing.
 Source/scriptcommittedbeforewatcherstart. Preserve separateownersegment-batched
 v2optimizationprotocol (610oldsteps/10Mmotivatesnewwindows/lr); don't silently
 change streamingfullreplaycontrolprotocols. Resultpending, noqualityclaim.
+
+AWS04:45: replay250kcheckpoint andequalexposureAdamanalysis autoPUSHED;
+253952targets/992updatesall3. ReplayZEROepsilon-dominatedgate/outputmoments,
+bias-onlysigmoid.402–.693 (not actualgateactivity/quality). Teachers500k
+checkpoints published too; replay323584atinspection. Pulled8833c48 including
+completedowner10Mv1/resetsegment2.899bpc (separateprotocol, no streamingclaim)
+andnegativecontent-creditadmission131. Compactcausalreplayschedulederived in
+ theory/aws_20261003_compact_causal_replay_schedule.md: T16shadowevents2176
+versus4096winnerreuse,16loopsratherthan136groupedcacheloops. Combinatorial
+countsONLY; no kernel/speed/work/qualitymeasurement. Retainsallalternatives,
+privateclocks/state, source/RNGcontracts; no activefitrestart/corechange.
