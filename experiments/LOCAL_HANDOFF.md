@@ -1,5 +1,59 @@
 # Local host: current research continuation
 
+## Actual write-fidelity audit prepared — 3 October, 12:55 UTC
+
+Prioritized model stays the credited compiled integrated native core, current
+completed p64/D4/H2/U2 test2.183315 at T256, with the v5/v7/DVS/v6 curie chain
+unchanged. Existing AWS fits and revision2 contracts/pilots/90M allocation
+retain their separate ownership. Shared87cfb1c preserves a positive matched
+AWS full-replay online trend through1M targets (.052665/.092932bpc interval
+lead over private/shared teachers); that is fitting evidence, not completed
+heldout quality or a reason to overwrite any report comparison.
+
+[144](theory/144_trained_write_factorial_and_residual_calibration.md) and
+`language_route_fidelity.py` prepare the missing actual-trained write-utility
+diagnosis from142. Four fixed-time branches separate delivery, commit and
+interaction, with every future race-noise vector checked. An independent
+zero memory probe measures G under unchanged message-only backward credit;
+EVERY parameter gradient/logit/loss must match the ordinary pass. Compare
+value, stored-memory and written-only coefficients using the SAME factual
+cotangents, preserving gaps/forget/memory norms and actual loss differences.
+Native tiny contracts also check causal prefixes and final-event writes.
+No model/active source/optimizer/protocol was changed; no fitting occurred.
+
+Formal calibration refinement: an extra write term should explain residual
+Q-a_value. Its oracle nonnegative scale is
+max(0,Cov_pi(Q-a_value,a_write)/Var_pi(a_write)), keeping useful value credit
+fixed. A term opposed to Q can correct an overestimated base; a Q-aligned
+term can worsen it. This is a local score-metric diagnostic, not an installed
+scale, a full parameter-gradient claim or a clipping/warm-Adam repair.
+Standard-library metric/baseline/interaction/residual witnesses and fake
+callback inheritance/exception recovery pass. Native contracts are UNRUN.
+With two candidates the centered score space is one-dimensional, so a
+perfect per-site oracle scale can be automatic. The driver also reports
+one shared alpha across eight local metrics and its residual error; these
+are reused-case diagnostics, never an installed or validated training scale.
+
+Unique pending one-job queue:
+`queue/local_language_route_fidelity_20261003T125500Z.txt`.
+Actual p64 producer checkpoint remains absent here; admission rejects before
+runtime imports. After actual physical-host reservation and the existing
+integrated chain: run_safe only, one thread, VMS3000000KiB/RSS1250000KiB,
+minimum8192MiB available,timeout420s. Eight sites use FIT[0:33], two seeds,
+events7/23, first/last depth,head0. Total actual-model34forward/10backward
+passes,1088forward positions,8704forward races; tiny admission adds9/3.
+No optimizer, DEV/test rescore or FLOP/energy claim. Original final weights
+contain no historical Adam moments; none are invented. Other138/141/143
+pending diagnostics retain their existing scope. No native runtime job,
+forward, backward or profiler was launched from this Docker context.
+Syntax/help, one-job manifest, actual producer hashes and missing-checkpoint
+admission guards pass without NumPy/Torch. The diagnostic result/log remain
+absent. Shared b648a5e subsequently completed the credited p32/D8 arm at
+test2.326; shared68a89f4 prioritizes independent seeds before the v6 horizon
+arms. Preserve those completed results and amended queue order. The user
+has now requested a review/regeneration of the canonical status PDF; that
+publication is the next authorized continuation, with old evidence retained.
+
 ## Sparse inference contracts prepared — 3 October, 12:30 UTC
 
 **Current integrated priority remains the credited compiled native core.** The
