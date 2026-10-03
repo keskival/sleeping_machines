@@ -282,3 +282,5 @@ Read §0 for the prior-work boundary and the synthesis above for the project's w
 
 - [Frozen native language horizon return](theory/111_frozen_native_language_horizon_return_audit.md) — eight prespecified real-text8 actual-write utilities show four16/32return credit reversals and negative sampled-site parameter aggregates, with causal/state/RNG contracts; one frozen producer/noise, not full expected-risk quality.
 - [Native horizon confirmation](theory/112_native_language_horizon_confirmation.md) — fresh FIT spans/three race draws preserve all24 outcomes but FAIL both negative-aggregate replication gates; three local reversals and context-dependent downstream utility remain supported without long-credit promotion.
+
+- [Stateful language replay accumulation](theory/113_stateful_language_replay_accumulation.md) — new RNG-state helpers advance the native stream only once per factual chunk, keeping all shadows forked; target-weighted full-return accumulation, partially filled gradient/state/Adam/cursor/RNG/replay-counter recovery, label-independent pre-update predictions and stage accounting pass10contracts.

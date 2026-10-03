@@ -3,8 +3,8 @@
 ## Current checkpoint — 3 October01:08 UTC
 
 Main is rebased with shared AWS changes and has no unresolved conflict; four
-old autostashes intact. Latest generated REPORT/PDF179pages, guarded retry
-011600Z completes25.574s with source/bounds/orphan checks. Completed sources
+old autostashes intact. Latest generated REPORT/PDF180pages, guarded stateful-accumulator
+publication012500Z completes25.769s with source/bounds/orphan checks. Completed sources
 and numerical artifacts stay frozen. No local training/job active; host memory
 remained~11GiB available, numerical peak470848KiB.
 
@@ -27,11 +27,13 @@ confirmation3/24 reversals, but mean cosines+.9994/+.4552: BOTH descriptive
 aggregate-opposition gatesFAIL. No universal main-bottleneck claim or longer
 horizon fit nomination. Preserve positive observations and failed confirmation.
 
-Next useful work: complete the corrected replay BENCHMARK/accumulator adapter
-with exact actual target-weighted cursor/Adam/state recovery and realistic
-work audit before a new fixed language quality comparison. The helper port is
+Next useful work: complete the corrected replay BENCHMARK driver after
+the now-passed stateful accumulator contracts. The helper/accumulator are
 installed/numerically verified, but active10M language driver still uses original
-teacher. Full replay is expensive; broader frozen longer-suffix shared-parameter
+teacher. Its traced path bypasses learner.accumulate and calls original forward
+directly; a new driver must implement corrected replay in BOTH traced/untraced
+windows, preserve stream RNG/replay counters and audit real Adam/cursor/state
+recovery before a fixed language quality comparison. Full replay is expensive; broader frozen longer-suffix shared-parameter
 utility/covariance/discovery accounting can inform horizon/support allocation.
 Do not launch a large unchanged bridge, offset, reception or failed confirmation
 variant, or infer any advantage from pending scores/projected work.
@@ -1825,3 +1827,27 @@ Latest179page generated report includes both first observation and failed
 confirmation. First011500Z publication failed wide lasttablecolumn, rolled
 back before corrected unused retry011600Z succeeds. Failedqueues/logs retained,
 allcompleted numerical/report modules/publishers frozen.
+
+## Stateful replay training-loop adapter, 3 October01:15 UTC
+
+Theory113 siblingRNGkernel/helpers and ReplayAccumulator pass10double
+private/shared L8/p4 contracts,14.510s/345160KiB. Original chronological
+teacher primal/private-state match and exact end RNG before delayedupdates;
+no extra seed draw or replayadvancingrealstream. ALLaccumulated parameter
+gradients agree with sequential full-write returns,2+1targetchunks. Pending
+gradient/Adam/private-state/cursor/RNG/replay-counter continuation and actual
+partial warmup/normalization/clip/Adam update bitwise recover. Labelchanges
+leave bothpreupdatechunks predictions/state/RNG exact. Allshadow andupdate
+workcovered;96lanes/160shadowevents across2+1chunks paid,notfull3's288.
+
+Important next-driver pitfall observed: aws_depth8_language.py's TRACED loop
+performs original forward/backward directly and bypasses its accumulator.
+Simply aliasing ReplayAccumulator would therefore OMITreplay in audited
+windows and invalidate the comparison. Build a new sibling driver with
+consistent traced/untraced fullobjective and explicit replay activity/counters
+before quality runs. Existing longoriginal-teacher source unaffected.
+
+New reportmodule/publisher012500Z publication completed25.769s/
+275940KiB with180pages; source/layout checks pass. Numerical and
+publishing sources frozen. No local job active; no benchmark quality/10M
+replayfit promoted.

@@ -3398,3 +3398,18 @@ First fresh span preserves direction across all draws,with mean longer-return no
 The current mechanism priorities stay separate: corrected actual language shadow return is numerically installed; hard-score sensitivity repair has no demonstrated quality gain; full replay work is expensive; horizon changes utility but robust allocation/generalization remain open. Next broader frozen utility/covariance accounting can inform H/k; no unchanged long sampled-horizon training follows this failed diagnostic replication. Existing10M original-teacher controls continue independently.
 
 Theory112;20.355s/470848KiB,one guarded CPU job/no optimizer/ DEV/test. Earlier-loss/factual-first-time/ALLoriginal-winner-state/RNG/ future-token/target invariance and unchanged parameters pass on all three draws. Same original fit work paid; whole audit arithmetic, physical traffic and energy unknown. More counterfactual support cannot automatically repair omitted future loss, while a longer return is also not automatically a better finite-data update. No supremacy claim.
+
+## Appendix B. Stateful language replay accumulator: chronological RNG retained
+
+| L8/p4 family | Params | Targets | Chunks | Shadow lanes | Shadow events | Partial LR | Live bytes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| private | 4411 | 3 | 2 | 96 | 160 | 0.0015 | 1320 |
+| depth | 2071 | 3 | 2 | 96 | 160 | 0.0015 | 1360 |
+
+New sibling RNG-state kernel/helper and ReplayAccumulator preserve the original native stream randomness cadence: enter a chunk from its actual Torch RNG state, replay all alternatives from that SAMEstate, and advance the real stream only to the factual end RNG. No extra seed draw, repeated chunk seed or input/label/index randomness channel. Private addressed state crosses chunks/optimizer updates while its credit graph detaches each microchunk. Physical races/message evolution and original hard score map remain; numerical shadows are fully charged.
+
+Ten double L8/H2/p4/pool2 private/shared contracts pass. Every factual prediction and ALLstate match original chronological-teacher forward before a delayed optimizer update; end RNG is exact. Independent sequential actual-write all-target returns match every accumulated parameter gradient over two-plus-one target microchunks. Save partly filled gradients/private state/Adam/cursor/RNG and all replay counters: recovered predictions/state/gradients and next actual update are bitwise exact.
+
+Target labels change pending gradients but leave both chunks' pre-update factual predictions/state/RNG identical. Target-weighted normalization,clip1,warmup total3/4,partial lr.0015 and Adam match independently summed sequential credit. Complete actual shadow/backward plus normalize/clip/warmup/optimizer operation coverage.96shadow lanes/ 160shadow events across the2+1chunks are paid; this is not the288 events of one unbroken three-target credit chunk. Different boundaries are explicitly different training objectives.
+
+Theory113;14.510s/345160KiB. Correctness-test optimizer steps, no trained data/DEV/test/quality claim. Successfully contracted note108 seeded sources are preserved; new stateful siblings are frozen too. Existing AWS10M original-teacher drivers and checkpoints unchanged. A new fitted driver must use this credit in BOTH traced and untraced windows, save replay counters and preserve accounting/chronological controls; merely swapping an accumulator into an old traced loop would omit replay in traced windows. No fitted comparator launched here.
