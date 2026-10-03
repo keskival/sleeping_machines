@@ -196,6 +196,9 @@ def main():
             result['eval_segment'] = E
             result['dev_bpc_eval_segment'], _ = window_scores(model, dev, E, 314159, lanes)
             result['test_bpc_eval_segment'], result['test_targets_eval_segment'] = window_scores(model, test, E, 314159, lanes)
+    weights = out.parent / 'checkpoints' / f'{a.tag}_final.pt'      # final weights for inference/continuation analyses
+    weights.parent.mkdir(exist_ok=True); torch.save(model.state_dict(), weights)
+    result['final_weights'] = str(weights.relative_to(ROOT))
     result.update(status='completed', wall_s=prior_wall + time.perf_counter() - started,
                   max_rss_kb=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     out.write_text(json.dumps(result, indent=2) + '\n')

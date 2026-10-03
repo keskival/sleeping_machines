@@ -16,6 +16,7 @@ def test_language_driver_smoke_end_to_end(tmp_path):
         assert r['status'] == 'completed' and 0 < r['test_bpc'] < 6 and r['work']['fit_unit_special_flops_per_char_estimate'] > 0
     finally:
         out.unlink(missing_ok=True)
+        (out.parent / 'checkpoints' / f'{tag}_final.pt').unlink(missing_ok=True)
 
 
 def test_language_driver_cosine_and_eval_segment(tmp_path):
@@ -32,6 +33,7 @@ def test_language_driver_cosine_and_eval_segment(tmp_path):
         assert 0 < r['test_bpc_eval_segment'] < 6
     finally:
         out.unlink(missing_ok=True)
+        (out.parent / 'checkpoints' / f'{tag}_final.pt').unlink(missing_ok=True)
 
 
 def test_language_driver_compiled_smoke(tmp_path):
@@ -48,13 +50,15 @@ def test_language_driver_compiled_smoke(tmp_path):
         assert r['work']['fit_unit_special_flops_per_char_estimate'] > 0
     finally:
         out.unlink(missing_ok=True)
+        (out.parent / 'checkpoints' / f'{tag}_final.pt').unlink(missing_ok=True)
 
 
 def test_language_driver_resume_is_exact(tmp_path):
     import torch
     base = Path('experiments/results/language_batched')
     tags = ['pytest_language_resume_a_tmp', 'pytest_language_resume_b_tmp']
-    paths = [base / f'{t}.json' for t in tags] + [base / 'checkpoints' / f'{t}.pt' for t in tags]
+    paths = ([base / f'{t}.json' for t in tags] + [base / 'checkpoints' / f'{t}.pt' for t in tags]
+             + [base / 'checkpoints' / f'{t}_final.pt' for t in tags])
     for q in paths:
         q.unlink(missing_ok=True)
     common = ['--fit', '20000', '--test', '3000', '--dev', '3000', '--segment', '32', '--lanes', '16', '--passes', '.5',
@@ -71,6 +75,8 @@ def test_language_driver_resume_is_exact(tmp_path):
         a, b = (json.loads((base / f'{t}.json').read_text()) for t in tags)
         assert a['test_bpc'] == b['test_bpc'] and a['dev_bpc'] == b['dev_bpc'] and a['curve'] == b['curve']
         assert b['resumed_from_window'] == [15] and a['work'] == b['work']
+        wa, wb = (torch.load(base / 'checkpoints' / f'{t}_final.pt') for t in tags)
+        assert all(torch.equal(wa[k], wb[k]) for k in wa)
     finally:
         for q in paths:
             q.unlink(missing_ok=True)
