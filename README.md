@@ -2,6 +2,33 @@
 
 **Deep learning that computes with time.**
 
+**Our ambition: a universal, general-purpose learning architecture that combines
+content, time and selective computation.** One substrate should learn from
+language, dense synchronous observations and sparse asynchronous streams,
+including their joint arrival into a shared persistent world state. Small-data
+statistical memory, deep learned representations and Transformer-capable
+retrieval are complementary parts of this ambition.
+
+This ambition is already partly supported: completed statistical-memory language
+comparisons compete with strong counting and dense references; temporal rules,
+deep event representations and counterfactual routes learn; and delay-coded
+aggregation has an exact deterministic softmax identity under its stated
+conditions. The broader family has an in-principle path to Transformer
+expressivity while offering additional choices of memory, timing and activity.
+The current native streaming model tests persistent event state; it does not yet
+implement that complete Transformer-equivalent path.
+
+**We know of no mathematical obstruction to this direction.** Efficient native
+learning at scale and the resulting quality/resource frontier remain open
+research questions. A sampled race matches the attention mean, not an entire
+nonlinear Transformer exactly. Roughly half the attention aggregation work is a
+conditional inference opportunity, not a demonstrated halving of complete-model
+inference. The completed approximately 49.66% reduction concerns replay fitting
+work. Joint multimodal learning and end-to-end comparable-quality advantage are
+still to be demonstrated. See the [architectural argument](experiments/theory/07_transformer_attention_and_training.md),
+[exact delay-coded attention](experiments/theory/08_vector_memory_and_deep_stacks.md)
+and [complete resource conditions](experiments/theory/43_compute_allocation_and_frontier_scaling.md).
+
 Sleeping Machines explores models in which an event carries content and an
 arrival time. Nodes mix incoming vectors with persistent memory, gate their
 updates, transform messages and compete

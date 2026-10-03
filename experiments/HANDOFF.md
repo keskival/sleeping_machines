@@ -2177,3 +2177,13 @@ ornewdataread. theory/aws_20261003_language_checkpoint_plasticity.md records
 scope/script/result. Awaitreplay250ksnapshot for sameexposureanalysis. Pulled
 de59783/e405765; upstreamcausalprefixcacheLOWERarithmeticbutSLOWERCPUwall,
 notpromoted. All3trainingjobs and250kpublishercontinue unchanged.
+
+User-requested architectural ambition now leads README and report/PDF: one
+universal/general-purpose substrate for content, time, selective computation,
+dense synchronous and asynchronous inputs, with joint persistent state as a
+learning target. Supporting statistical-memory, temporal/deep-credit and exact
+conditional delay-softmax evidence prominent. No known mathematical obstruction
+stated; native learning/generalization/totalcost remain open, sampled attention
+is distinguished from deterministic equivalence, conditional inference-work
+opportunity from completed49.66%replayfittingwork. Report generator updated so
+framing survives regeneration; earlier evidence/negative findings retained.

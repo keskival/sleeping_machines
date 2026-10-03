@@ -1650,9 +1650,43 @@ def blocks(M, tasks, ev):
                          else 'The full four-family confirmation remains incomplete. ')
     else:banknote_scope+='Independent confirmation is pending. '
     pages.append([
-        ("title","Sleeping Machines"),
-        ("sub","Deep learning that computes with time"),
-        ("small","Tero Keski-Valkama and Karoliina Salminen · Research report · 2 October 2026"),
+        ("title", "Sleeping Machines"),
+        ("sub", "A general-purpose architecture that computes with time"),
+        ("small", "Tero Keski-Valkama and Karoliina Salminen · Research report · 3 October 2026"),
+        ("h1", "Our ambition: a universal learning substrate"),
+        ("p", "<b>One architecture for content, time and selective computation.</b> "
+         "The ambition is a broadly capable learner that combines language, dense synchronous observations "
+         "and sparse asynchronous streams, including their joint arrival into shared persistent state. "
+         "Statistical memory, deep learned representations and Transformer-capable retrieval belong "
+         "to the same family. Time performs computation; hard routes learn from unrealized alternatives; "
+         "small messages mix incoming content with private memory; keys and values remain distinct. "
+         "Useful stored capacity can exceed the work recruited for an observation."),
+        ("h1", "Already partly demonstrated"),
+        ("bullets", [
+         "<b>Statistical prediction.</b> Completed count/copy race language comparisons are competitive "
+         "with strong counting and dense references. Counts are particularly strong where evidence "
+         "supports local statistics; this is family evidence, not a result of the native deep learner.",
+         "<b>Learned temporal computation.</b> Deep event chains, temporal rules, persistent vector "
+         "representations and counterfactual route credit have completed positive tests, with their "
+         "task boundaries and negative confirmations retained in this report.",
+         "<b>A Transformer-capable function class.</b> Delay-coded aggregation reproduces deterministic "
+         "softmax attention under its stated conditions (theory §105); the broader event family has "
+         "an in-principle emulation path. The current native streaming candidate does not yet "
+         "implement the complete Transformer-equivalent stack."]),
+        ("h1", "The opportunity and the remaining bridge"),
+        ("p", "<b>We know of no mathematical obstruction to this architectural direction.</b> "
+         "The research question is whether native learning realizes this breadth efficiently at scale. "
+         "Expressivity alone does not guarantee optimization, generalization or lower total resource use. "
+         "Joint multimodal learning and comparable-quality large-data advantage remain to be demonstrated."),
+        ("p", "Race selection has the exact softmax winner probabilities, but one winning value matches "
+         "attention only in expectation; subsequent nonlinear layers do not generally commute with that "
+         "expectation. Exact delay-coded aggregation instead pays deliveries, normalization, latency and "
+         "precision. Roughly halving attention aggregation arithmetic is a conditional inference "
+         "opportunity, not a demonstrated halving of complete-model inference. The completed "
+         "approximately 49.66% saving concerns replay fitting work, a separate result. "
+         "The target is better prediction at a fully counted resource budget (§§280,317).")])
+    pages.append([
+        ("h1", "Deep learning that computes with time"),
         ("p","Messages carry content and an arrival time. Nodes mix incoming vectors with persistent memory, "
          "gate their updates and compete through learned delays. Arrival order and winning races determine the computation. "
          "The goal is useful intelligence with much less active work."),
