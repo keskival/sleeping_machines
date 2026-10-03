@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "contracts": [
+    "TRAIN-only split deterministic, disjoint and stratified",
+    "JapaneseVowels: eager/compiled terminal logits, every gradient and two actual Adam updates agree",
+    "ECG200: eager/compiled terminal logits, every gradient and two actual Adam updates agree",
+    "PenDigits: eager/compiled terminal logits, every gradient and two actual Adam updates agree"
+  ],
+  "source_sha256": {
+    "experiments/public_benchmarks/run.py": "4aa166323ff43c9b5aee79a414b1c30ff7ba1a49a611c9e388fb77b69bb67007",
+    "experiments/public_benchmarks/data.py": "9fccae1f26acaa16582629cc16899eef86753741b8bcc62a0de91ef1062b85ae",
+    "sleeping_machines/addressed_event_heads.py": "aa43bad6c8e79e7a4e05752a96d183f05d6e40e22f5a8d2cd97e203056ca76f3",
+    "sleeping_machines/compiled_episodes.py": "f633227cedc9e7ba84d0f608972fbcd109d174a9dcfc099706ef3a9b7864885f",
+    "sleeping_machines/batched_episodes.py": "0d9a0309f614cb6f081ee24027a45f5961626d4db1da8fa455e612e4c65396b2",
+    "sleeping_machines/fast_native_core.py": "33ed9a6a16d711575aaeac239d575c6c27d4b85dd9bb10d31da4d661b920386a",
+    "sleeping_machines/parallel_stream_language.py": "7237331f34b4b7802fe98896511a301480a17ebb647297dd47df94246d6ae5ce",
+    "sleeping_machines/operation_audit.py": "2c75019b7350bc19433b0ba55d759d807f87b9a0989567dca425dcadfd37278b",
+    "experiments/race_language_screen.py": "3308aca20b4cf64f70550a03ae7763361e823800ba22f449d127210c65141cec"
+  },
+  "wall_s": 37.14068510197103,
+  "scope": "Numerical port admission only; no public test scores or benchmark advantage."
+}
