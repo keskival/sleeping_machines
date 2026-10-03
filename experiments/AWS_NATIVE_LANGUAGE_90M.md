@@ -18,6 +18,7 @@ ran. Do not admit its queues** (`aws_language_90M_*_20261003T063000Z.txt`; files
 | `queue/aws_language_90M_r2_p32d4_linear_20261003T103000Z.txt` | payload 32, depth 4, pool 2, route credit | 108,875 |
 | `queue/aws_language_90M_r2_p32d8_skip2_linear_20261003T103000Z.txt` | payload 32, depth 8, pool 2, near-identity init from layer 2, route credit | 210,043 |
 | `queue/aws_language_90M_r2_p64d4_linear_20261003T103000Z.txt` | payload 64, depth 4, pool 2, route credit | about 422K |
+| `queue/aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z.txt` (added 11:00; **first priority**) | payload 32, depth 4, pool 4, route credit: the best 10M arm (2.343) | 177,019 |
 
 All other settings, the evaluation, the references and the admission steps below are unchanged. curie throughput at
 10M: p32/d4 about 7,760 characters/s with credit (90M about 3.3 h), p32/d8 about 4,400 (about 5.7 h), p64/d4 not yet
