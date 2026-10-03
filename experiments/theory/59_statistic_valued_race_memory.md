@@ -1425,3 +1425,12 @@ parameters, 11.1 MFLOPs/char estimated) and .199 above LSTM-256 (2.171; 338K, 2.
 routes learn through counterfactual credit is now supported in language at 10M: removing that credit (the fast path's
 factorized law) cost .137 bpc. The deficit to the LSTM remains, and width, the write address (linear_rw) and memory
 horizon are the next levers.
+
+**§413 write credit, first attempt failed (09:52 UTC).** p32/d4 pool 2 with linear_rw diverged: training loss went from
+2.99 to 3.99 bits between windows 200 and 250, then gradients became non-finite (result absent; log and runner line
+retained). Cause by derivation: memories decay lazily. A slot not selected stores (m_j, t_j), and its decay over the
+gap is applied at its next selection with that moment's forget gate. Δ_j = m_new,j − m_j therefore counts the pending
+decay and rotation as a content change, while the stamp reset that accompanies it is ignored. The fictitious component
+grows with the gap and feeds back through key_read on memory. The corrected variant linear_rwn uses Δ_j = the newly
+written content write_j·(Input x), which is bounded through layer-normed inputs. At trained weights it adds about 10% to the
+route-gradient norm over the value credit, against 46% for linear_rw. Queued in v5.

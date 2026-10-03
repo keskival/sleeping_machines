@@ -15,6 +15,10 @@ NATIVE = [
     ('language_batched/curie_language_batched_10M_p32d8_skip2_l64_lr004_cmp_s6_20261003T054000Z.json', 'p32/d8, skip2'),
     ('language_batched/curie_language_batched_10M_p32d8_pool4_skip2_l64_lr004_cmp_s6_20261003T054000Z.json',
      'p32/d8/pool4, skip2'),
+    ('language_batched/curie_language_batched_10M_p32d4_pool1_l64_lr004_cmp_s6_20261003T070000Z.json',
+     'p32/d4/pool1 (control: no selection)'),
+    ('language_batched/curie_language_batched_10M_p32d4_pool2_linear_l64_lr004_cmp_s6_20261003T070000Z.json',
+     'p32/d4 + route credit'),
 ]
 INFERENCE = 'language_batched/curie_language_batched_inference_work_20261003T064000Z.json'
 CONTROLS = [('e64/lstm_D10000000_s256_p1.json', 'LSTM-256'), ('e64/tf_D10000000_s256_p1.json', 'Transformer-256x2')]
@@ -69,8 +73,11 @@ def pages(data):
                    'which computes every proposal); controls are shape estimates. The conventions differ, so work '
                    'comparisons are estimates.'),
              ('p', 'Reading: update calibration took p16/d8 from 2.899 to 2.719. Width beat depth (p32/d4 2.507), and depth '
-                   'then helped at width 64 (p32/d8 2.456). The best native row is .03 bpc behind the one-pass Transformer '
-                   'with about 1/8 of its parameters and estimated fitting work, and .29 bpc behind the one-pass LSTM. '
-                   'THEORY §413: in this fast path the race address receives only first-time clock credit, so pools fragment '
-                   'memory. The counterfactual route credit of the architecture is absent there. Diagnostics with '
-                   'linearized read and write-address credit and with wider units are queued; no pending cell is filled.')]]
+                   'then helped at width 64 (p32/d8 2.456). Without route credit the fast path trains the race address only '
+                   'through first-time clock credit (THEORY §413), and more units then cost quality: pool 4 is worse than pool 2 '
+                   '(2.498 vs 2.456), and the no-selection pool-1 control beats pool 2 at depth 4 (2.439 vs 2.507). With the '
+                   'linearized local-expectation route credit (forward values unchanged, the same work) the same p32/d4 '
+                   'pool-2 model scores 2.370: .137 better than without it, .069 better than the control, and .057 better '
+                   'than the one-pass Transformer with about 1/15 of its parameters and estimated fitting work. It remains '
+                   '.199 behind the one-pass LSTM. A write-address variant diverged and is being corrected. Single seeds; '
+                   'pending arms are not filled.')]]
