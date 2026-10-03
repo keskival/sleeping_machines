@@ -1,0 +1,16 @@
+{
+  "status": "superseded_public_campaign",
+  "completed": [
+    "aws_language_90M_r2_contracts_20261003T103000Z",
+    "aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z",
+    "aws_language_90M_r2_p32d4_pool4_linear_20261003T110000Z",
+    "aws_language_90M_r2_pilot_p32d4_20261003T103000Z",
+    "aws_language_90M_r2_p32d4_linear_20261003T103000Z",
+    "aws_language_90M_r2_pilot_p32d8_20261003T103000Z"
+  ],
+  "current": null,
+  "active_streaming": {},
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-03T14:21:32.877382+00:00",
+  "reason": "User prioritizes public benchmark wins; exact depth8 language/replay recovery, teacher deferred behind fixed public battery."
+}

@@ -12,7 +12,7 @@ def coordinator(manifest):
         if not path.name.isdigit():continue
         try:args=(path/'cmdline').read_bytes().split(b'\0')
         except OSError:continue
-        if any(name in args for name in (b'scripts/run_aws_depth8_replay_matrix.py',b'scripts/run_aws_priority_language_allocation.py')) and str(manifest).encode() in args:candidates.append(int(path.name))
+        if any(name in args for name in (b'scripts/run_aws_depth8_replay_matrix.py',b'scripts/run_aws_priority_language_allocation.py',b'scripts/run_aws_public_campaign.py')) and str(manifest).encode() in args:candidates.append(int(path.name))
     if len(candidates)!=1:raise RuntimeError('One exact matching coordinator required')
     return candidates[0]
 def git_children(pid):

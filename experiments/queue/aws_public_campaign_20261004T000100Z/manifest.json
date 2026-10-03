@@ -680,7 +680,7 @@
     "experiments/sparse_language_contracts.py": "b64ea885625907efa85e1faf1443b696f92869c5c6f679a89afaeeb71236e417",
     "experiments/sparse_language_screen.py": "4dba08de30387da355f478ea2effc80f2c401e62164abf47c9c01c44a338f879",
     "experiments/theory/113_stateful_language_replay_accumulation.md": "95cdd7ee890ed9e7a65b6fbc4a55ab0cc82c83f33c6d788fe4a292c647238344",
-    "scripts/publish_aws_language_progress.py": "1abf4ac175c602132d45ff9edf99a58111996b25121b2a45371392eb76b1a686",
+    "scripts/publish_aws_language_progress.py": "38e0b067d09842c4625dc39196de2e3005316c8a58f47e99619901e636e1ccd7",
     "scripts/run_aws_depth8_replay_matrix.py": "fabccb1c22256ac91aa783cae178a358e7abbcf8b43efb6cdf48d5c0ed5da311",
     "scripts/run_aws_native_language_90m_r2.py": "d6aaf99e6c0fbfbbb0359120a2dd9bcc3f8c8fa7560cc4b1eab37f37f6fe618b",
     "scripts/run_aws_priority_language_allocation.py": "ed5bf712abb29b82868ecdc2db454ca211da2773a83e85243d91af5d870ff680",

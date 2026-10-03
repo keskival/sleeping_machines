@@ -1,0 +1,38 @@
+{
+  "status": "checkpoints_preserved",
+  "new_manifest": "experiments/queue/aws_public_campaign_20261004T000100Z/manifest.json",
+  "archives": [
+    {
+      "tag": "aws_language_batched_90M_r2_p32d8_skip2_linear_l64_lr004_cmp_s6_20261003T103000Z",
+      "kind": "language",
+      "archive": "experiments/results/language_batched/checkpoints/aws_language_batched_90M_r2_p32d8_skip2_linear_l64_lr004_cmp_s6_20261003T103000Z.public_20261004T000100Z.pt",
+      "sha256": "191a004ad21c6815caec578465fd0c1f9f9e8372a13f6229cf6db3f019789cb7",
+      "trained_targets": 63488000,
+      "updates": 7750,
+      "discarded_uncheckpointed_targets_bound": 2047999,
+      "discarded_work": "Unknown, not zero. Archive is last recoverable checkpoint; charge the bounded discarded work separately."
+    },
+    {
+      "tag": "aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7",
+      "kind": "streaming",
+      "archive": "experiments/results/aws_depth8_language_credit/aws_language_winner_matrix_20261003T014100Z_private_replay_10m_s7.progress.public_20261004T000100Z.pt",
+      "sha256": "86a694ac9e5315af2dc9e775a72a3fe4a3b688693f07194326a586abc7d27341",
+      "trained_targets": 1953792,
+      "updates": 7632,
+      "discarded_uncheckpointed_targets_bound": 4095,
+      "discarded_work": "Unknown, not zero. Archive is last recoverable checkpoint; charge the bounded discarded work separately."
+    },
+    {
+      "tag": "aws_depth8_language_20261002T234100Z_private_pilot_s7",
+      "kind": "streaming",
+      "archive": "experiments/results/aws_depth8_language/aws_depth8_language_20261002T234100Z_private_pilot_s7.progress.public_20261004T000100Z.pt",
+      "sha256": "bbea0630d6f88c3ffbadd7b6c99aa0ff008cdf6346a27468d078788cf66e7eaf",
+      "trained_targets": 2867200,
+      "updates": 11200,
+      "discarded_uncheckpointed_targets_bound": 4095,
+      "discarded_work": "Unknown, not zero. Archive is last recoverable checkpoint; charge the bounded discarded work separately."
+    }
+  ],
+  "recorded_utc": "2026-10-03T22:16:33.913216+00:00",
+  "scope": "Allocation only. Settings/seed/data/credit unchanged for exact recovered runs; teacher checkpoint preserved and deferred behind public campaign."
+}
