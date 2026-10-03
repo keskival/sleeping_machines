@@ -1,0 +1,178 @@
+{
+  "status": "data_prepared",
+  "url": "https://huggingface.co/datasets/NeuroBench/mackey_glass/resolve/main/data.tar.gz",
+  "archive_sha256": "5e7c2b62a5135b744e7b49f103f58a2d74c70fe2dae67890cd5f93a6110fdf7c",
+  "files": [
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_23.npy",
+      "sha256": "01d0069db4cedcd060979af2e984e708ec2f4c9a6d2f716185a70682c1e97379",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_25.npy",
+      "sha256": "661bb643eafa49282cb82e432b40abb167d8047a39a348e009b8cd5478e6fb4f",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_30.npy",
+      "sha256": "9ddd5311028f66cf54b67e3529eb765f4472ef75476f5cd65081b340132f026a",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_21.npy",
+      "sha256": "11087f595ca3e964a236f944e246ad2ebe227896177d5652d03fba8c21d0469e",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_17.npy",
+      "sha256": "5a38b38eca91667c120a3fbbe1a27859ef6071c521a03753ef1cace39d3ce745",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_19.npy",
+      "sha256": "1de21d6bf519d0286b618b3563a60f00e220e641815b491d1d524eacd6f67afd",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_20.npy",
+      "sha256": "699311e052410184db0f123335eb25bb076bd6beccd32e00fa981690dbc391f6",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_28.npy",
+      "sha256": "ed680acfb0b08f6f2fd3a26332a9fa1ceeb064fd36c72279898b4814fbdf1692",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_27.npy",
+      "sha256": "0196d4820df10c6cea0de1e107c764b0e5efcb4ef055059d45a142b02a35c119",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_22.npy",
+      "sha256": "49d214dd59611ae1573ff37d215b2a61d53721b770a8143b8eb2331e9a6a9a12",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_18.npy",
+      "sha256": "f43853cdd3e862c30b0836e07a57a438a6f415d8f0afa91ab850f9a6d84d298b",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_26.npy",
+      "sha256": "cde16f2fec2621e54f678c86c06c80f86ddff6ec636e2541ffb0e071647da838",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_29.npy",
+      "sha256": "b34f4e1a69f54605106e89da941160b29dd3762a28274c2b2ba8cc4741cc8cd0",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    },
+    {
+      "path": "data/neurobench/mackey_glass/data/mg_24.npy",
+      "sha256": "bd5f911a0c5348f5cd56bc3c2081d8eac8a551d0a7d9d9f462634b08491b8d2a",
+      "header": {
+        "descr": "<f8",
+        "fortran_order": false,
+        "shape": [
+          3751
+        ]
+      },
+      "size_bytes": 30136
+    }
+  ],
+  "official_loader": "experiments/vendor/neurobench_2_3_0/neurobench/datasets/mackey_glass.py",
+  "official_loader_sha256": "815e18d0d9523364e1e40dc9ba3b5cc47ddb54c4ff2cd9efe415c4b237e996d4",
+  "scope": "Official downloaded bytes and NPY shape headers only; no numeric array parsing, model execution, development selection or TEST score. tau17 remains unscored on AWS."
+}

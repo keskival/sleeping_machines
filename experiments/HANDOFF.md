@@ -2439,3 +2439,15 @@ normalhostreservationholds, nofourthtrainer. Prioritizedintegratedpublicarm
 p16D2H2U2linearmessagecredit,40epochscreen beforep32D4capacityarms. Gaps:
 fullreplaycredit/silence-awarepublicevaluation/physicalasynchronouspublic
 frontier/strongmatchedbaseline/completeinferenceandenergyaccounting.
+
+AWS NeuroBenchdata support: official MG data.tar.gz downloaded from vendor
+loaderURL; archiveSHA5e7c2b62a5135b744e7b49f103f58a2d74c70fe2dae67890cd5f93a6110fdf7c.
+14provided .npy series nowatdata/neurobench/mackey_glass/data; shapeheaders+
+eachSHA recordedpublic_benchmarks/neurobench_mg_data_manifest.json. Stdlib
+fetch_neurobench_mg.py reproducesdownload, no regeneration or arraynumeric
+parsing/selection/score. Officialtau17UNSCOREDonAWS. MainagentcurieMGDEVqueue
+remainsowner-managed; no duplicate numericalrun admitted here.
+All3publicnative3epochpilotscompleted/pushed: ECG70%,Japanese72.22%,Pen92.8%
+DEV only; matched1NN80/94.44/99.47%. First40epochECGnativefitRUNNING,~90%DEV
+at14epochs, no publicTESTwin inferred. Futurefixedscreens/DEVselection/
+seed6/7/8fullTRAINrefits automatic; all negativespreserved.
