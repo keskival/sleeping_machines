@@ -102,3 +102,38 @@ module bytes through frozen_language.py after upstream extensions changed
 shared files. Source aliases in results record the actual executed bytes;
 upstream changes are retained. Prepared queue parsing was corrected to exclude
 comments before any execution.
+
+## Claim cards and phase decisions
+
+Each final benchmark card must identify the dataset variant, immutable data
+hashes, official split/metric, fixed configuration/epoch selection, every seed,
+per-example predictions, paired comparator and uncertainty. Report seed spread
+on the same examples separately from a test-sampling interval; repeated seeds
+do not multiply TEST sample size. ECG200 has only100 TEST cases: a one-case
+lead is descriptive and does not establish a statistically reliable difference.
+JapaneseVowels' small remaining accuracy margin means a measured comparable-
+quality deployment-resource win is more meaningful than an isolated accuracy
+rounding difference. PenDigits' matched DEV1NN already reaches99.47%, so it
+is a demanding control, not a deliberately weak target.
+
+A public point-score comparison requires a completed official test under the
+verified reference protocol. An efficiency comparison additionally requires
+trained-state forward equivalence, identical scoring/quality boundary, all
+candidate discovery and preprocessing, and compatible MAC/FLOP conventions.
+Historical reference means and our three seeds are not a paired statistical
+comparison. A leaderboard submission is prepared only from completed certified
+evidence; this campaign does not post submissions or contact maintainers.
+
+Initial40epoch screens remain fixed. Weak outcomes are retained and diagnosed
+from TRAIN/DEV. They do not justify retuning on the same official TEST after
+final refits. Future architecture hypotheses require a revised confirmation
+policy or independent target; no automatic never-ending sweep on reporting
+test labels. All incomplete/failed admissions have their queues/logs preserved.
+
+Reproduction: python3 experiments/public_benchmarks/fetch.py reconstructs the
+exact hashed archive bytes; committed data_manifest.json fixes splits. Numerical
+queues live under queue/aws_public_campaign_20261004T000200Z/manifest.json, run
+only through the guarded scheduler. status.py inventories completed evidence
+without model execution. The current coordinator publishes each completed
+result/checkpoint/guard log directly to main, independently of partial language
+checkpoint publishers.
