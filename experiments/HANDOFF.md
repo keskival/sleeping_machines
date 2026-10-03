@@ -2154,3 +2154,16 @@ No cause/quality inference. Derivation and required detachedreturn-centering
 comparison recorded in theory/aws_20261003_replay_return_centering.md; all
 three guardedslots occupied, no extra diagnostic/model executed oractive
 protocol changed. Preserve49.66%countedworkbenefit beside116coordinatefails.
+
+AWS detachedreturn-centering diagnostic prepared in siblinghelpers; syntax and
+frozen117dependency hashes pass (no model execution yet). Unique onejobqueue
+aws_replay_centering_audit_20261003T031000Z waits in tmux aws_replay_centering_wait
+for NORMALglobalhostlock; active3slotmatrix keepsreservation. 3GBvirtual/
+1.25GBRSS/8GiBavailablefloor/300sjobwatchdog. Compares allraw/centered private/
+shared original/reuse float32/double, everygradient underoriginalthresholds,
+bitwisefactualstate/logits/RNG and ALLroutehistories; fullreplaycentersusing
+itsown winnerreturn, not factual-lanerounding. No activefit/source changed,
+no centeredqualityarm admitted. Result pending; diagnosticcostunknownnotzero.
+Pulledupstream through0fb5097 withadmissioncoordinator paused underpublication
+lock; trainerscontinued. Newsegment-batched/skip-init languageprotocols differ
+from streamingreplay; retainseparatecomparison scopes andavoidduplicatework.
