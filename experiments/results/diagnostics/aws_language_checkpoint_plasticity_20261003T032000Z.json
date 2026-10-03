@@ -1,0 +1,3945 @@
+{
+  "scope": "Read-only immutable 250k teacher checkpoints. No new training or data reads. Sigmoid bias is NOT the input-dependent gate. Stored-moment direction is NOT a prospective or actual functional optimizer update. No replay-vs-teacher quality comparison.",
+  "analysis_source_sha256": "fcc877fa59601b2c6f4f06f73c22674f82b17b9ec7b985a4bd86e718c88bd678",
+  "families": [
+    {
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_private_pilot_s7_milestone001.pt",
+      "checkpoint_sha256": "ed7787825258fbf8b0fd13467618ebb361bc4ba01717043908527069fd26c887",
+      "targets": 253952,
+      "updates": 992,
+      "family": "private",
+      "unique_parameters": 384,
+      "aliases": {},
+      "rows": [
+        {
+          "parameter": "units.0.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4651848077774048,
+            "median": 0.0028402030002325773,
+            "maximum": 0.44018611311912537,
+            "l2": 2.5997668993555956
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00017513651839935925,
+            "median": 0.0006933132266401118,
+            "maximum": 0.012154160211578943,
+            "l2": 0.029874983261074243
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999429049455771,
+            "median": 0.9999855767128292,
+            "maximum": 0.9999991772371272,
+            "l2": 15.999727265365024
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1502473160834603,
+            "median": 0.019553535289462326,
+            "maximum": 0.9419580515819359,
+            "l2": 4.668026118894946
+          },
+          "lr_times_stored_direction_norm": 0.009336052237789891
+        },
+        {
+          "parameter": "units.0.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.36327216029167175,
+            "median": -0.008494713343679905,
+            "maximum": 0.4177756905555725,
+            "l2": 2.6570980312546397
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.4116044574562088e-05,
+            "median": 0.00011934686460633869,
+            "maximum": 0.0021476404363912726,
+            "l2": 0.006388402275670488
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9992920877498852,
+            "median": 0.9999162176383154,
+            "maximum": 0.9999953437487635,
+            "l2": 15.998104592856508
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.6525057685436904,
+            "median": -0.008051191683239417,
+            "maximum": 0.8667977689127003,
+            "l2": 3.892240670075644
+          },
+          "lr_times_stored_direction_norm": 0.007784481340151288
+        },
+        {
+          "parameter": "units.0.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2647070586681366,
+            "median": 0.08820249885320663,
+            "maximum": 0.2283736765384674,
+            "l2": 0.5462062157658226
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00014376696039744574,
+            "median": 0.00033571706127852227,
+            "maximum": 0.0012163839409499856,
+            "l2": 0.0024889122128227475
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999304478271599,
+            "median": 0.9999702138994637,
+            "maximum": 0.9999917789791093,
+            "l2": 3.99989386239205
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.4029094521131348,
+            "median": -0.09569207665420164,
+            "maximum": 0.32803669893437254,
+            "l2": 0.7723922697663498
+          },
+          "lr_times_stored_direction_norm": 0.0015447845395326996,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4342069923877716,
+            "median": 0.5220363140106201,
+            "maximum": 0.556846559047699,
+            "l2": 2.0439570362686363
+          }
+        },
+        {
+          "parameter": "units.0.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.2967846393585205,
+            "median": -0.011680967174470425,
+            "maximum": 0.2654808759689331,
+            "l2": 2.3700624248743662
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.531667659592891e-06,
+            "median": 1.3241068544794704e-05,
+            "maximum": 7.230581654535688e-05,
+            "l2": 0.00029137262718544087
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9977981656189928,
+            "median": 0.999245343878028,
+            "maximum": 0.9998617176645759,
+            "l2": 15.987066895136687
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.00018684945937858788,
+            "median": 6.730296005268965e-06,
+            "maximum": 0.00016845765499537822,
+            "l2": 0.001012168769188161
+          },
+          "lr_times_stored_direction_norm": 2.024337538376322e-06
+        },
+        {
+          "parameter": "units.0.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.27178171277046204,
+            "median": -0.013809332624077797,
+            "maximum": 0.35410359501838684,
+            "l2": 2.452452665538965
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.1666261154066586e-07,
+            "median": 2.810901116843328e-06,
+            "maximum": 4.1058711643561346e-05,
+            "l2": 0.00010850586438939739
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9765622772431587,
+            "median": 0.9964550334854735,
+            "maximum": 0.9997565056316645,
+            "l2": 15.92376717287182
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.0003000593436147339,
+            "median": 4.771047007065095e-07,
+            "maximum": 0.0002279393901685427,
+            "l2": 0.0009307578227371069
+          },
+          "lr_times_stored_direction_norm": 1.861515645474214e-06
+        },
+        {
+          "parameter": "units.0.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2730523347854614,
+            "median": 0.012180350720882416,
+            "maximum": 0.2060835361480713,
+            "l2": 0.5413167751313295
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 3.3448015003031616e-06,
+            "median": 8.975438589338766e-06,
+            "maximum": 1.947517186823557e-05,
+            "l2": 4.088218502753408e-05
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9970191977083901,
+            "median": 0.9988870882705865,
+            "maximum": 0.9994867892329806,
+            "l2": 3.99483282378246
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.00018152055950357778,
+            "median": -1.7349735643651414e-06,
+            "maximum": 9.523999144230804e-05,
+            "l2": 0.0002701964953140461
+          },
+          "lr_times_stored_direction_norm": 5.403929906280922e-07,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.43215787410736084,
+            "median": 0.5030450224876404,
+            "maximum": 0.551339328289032,
+            "l2": 1.9804159333153906
+          }
+        },
+        {
+          "parameter": "units.0.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.2961016893386841,
+            "median": 0.0037592772860080004,
+            "maximum": 0.33186882734298706,
+            "l2": 2.391784837749797
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.809745817557681e-05,
+            "median": 0.00016096311586754993,
+            "maximum": 0.0008708682325017483,
+            "l2": 0.0038421762638508063
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9997921320231988,
+            "median": 0.9999378778254611,
+            "maximum": 0.9999885173384443,
+            "l2": 15.998825005292229
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.23973667433330517,
+            "median": -0.0007027884442405102,
+            "maximum": 0.29544421794455145,
+            "l2": 0.996638445520965
+          },
+          "lr_times_stored_direction_norm": 0.00199327689104193
+        },
+        {
+          "parameter": "units.0.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.3473966717720032,
+            "median": -0.0207924023270607,
+            "maximum": 0.35987234115600586,
+            "l2": 2.413554991479625
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 9.230480507040168e-06,
+            "median": 3.826397212540703e-05,
+            "maximum": 0.00043255648592411226,
+            "l2": 0.0012852195285082823
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9989178051950457,
+            "median": 0.9997387258378295,
+            "maximum": 0.9999768821664984,
+            "l2": 15.99491746640905
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.46209786698001687,
+            "median": 0.003138762430467007,
+            "maximum": 0.2504636563621996,
+            "l2": 1.3457670965267496
+          },
+          "lr_times_stored_direction_norm": 0.002691534193053499
+        },
+        {
+          "parameter": "units.0.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.30888521671295166,
+            "median": 0.0028758032713085413,
+            "maximum": 0.2333943247795105,
+            "l2": 0.6070668973497857
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 6.56177379196644e-05,
+            "median": 0.00010612433897861993,
+            "maximum": 0.00018245016748870047,
+            "l2": 0.00046453229844761626
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.999847625404791,
+            "median": 0.9999057797872373,
+            "maximum": 0.9999451935173708,
+            "l2": 3.9996141357969495
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.1260962151552258,
+            "median": -0.027640244376005492,
+            "maximum": 0.12882150904553843,
+            "l2": 0.24486116061376903
+          },
+          "lr_times_stored_direction_norm": 0.0004897223212275381,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4233868718147278,
+            "median": 0.5007189512252808,
+            "maximum": 0.5580851435661316,
+            "l2": 1.9949972672716105
+          }
+        },
+        {
+          "parameter": "units.0.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4351978003978729,
+            "median": 0.021883999928832054,
+            "maximum": 0.396085262298584,
+            "l2": 2.6593375670866872
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00021050348700908151,
+            "median": 0.0011563634596660406,
+            "maximum": 0.006053103873367089,
+            "l2": 0.024717251379237415
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999524971053301,
+            "median": 0.9999913522747202,
+            "maximum": 0.9999983479577274,
+            "l2": 15.99981214129529
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9731343547610507,
+            "median": 0.01597766881556295,
+            "maximum": 1.1625252953021639,
+            "l2": 5.162253809902399
+          },
+          "lr_times_stored_direction_norm": 0.010324507619804798
+        },
+        {
+          "parameter": "units.0.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.6081996560096741,
+            "median": -0.04450080543756485,
+            "maximum": 0.8161515593528748,
+            "l2": 3.684502083712851
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 7.299987999244069e-05,
+            "median": 0.00022955080380468597,
+            "maximum": 0.0017155990902736641,
+            "l2": 0.006262132796399713
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998630322361709,
+            "median": 0.9999564385564336,
+            "maximum": 0.9999941711663475,
+            "l2": 15.99927796905942
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8637285208473086,
+            "median": -0.023729304648856055,
+            "maximum": 0.9219372147729357,
+            "l2": 5.505114460746903
+          },
+          "lr_times_stored_direction_norm": 0.011010228921493805
+        },
+        {
+          "parameter": "units.0.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.36930203437805176,
+            "median": -0.08163648098707199,
+            "maximum": 0.2044660449028015,
+            "l2": 0.7576928192442709
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00032173919910667047,
+            "median": 0.0005509257400187533,
+            "maximum": 0.0012181684679258723,
+            "l2": 0.0025750352190418778
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.999968919891556,
+            "median": 0.9999818490628332,
+            "maximum": 0.9999917910221997,
+            "l2": 3.999928618595825
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.8985634845267475,
+            "median": 0.003880530860598969,
+            "maximum": 0.3929353550428646,
+            "l2": 1.295348894745066
+          },
+          "lr_times_stored_direction_norm": 0.002590697789490132,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.40870970487594604,
+            "median": 0.47960221767425537,
+            "maximum": 0.55093914270401,
+            "l2": 1.9295877619788058
+          }
+        },
+        {
+          "parameter": "units.1.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5620969533920288,
+            "median": 0.004537113942205906,
+            "maximum": 0.5257348418235779,
+            "l2": 2.987956833874023
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00014843279903571709,
+            "median": 0.0004167445290295153,
+            "maximum": 0.001399700309327223,
+            "l2": 0.008464209515449926
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999326339838311,
+            "median": 0.9999760050598051,
+            "maximum": 0.9999928556645377,
+            "l2": 15.999566539759597
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8929551476778697,
+            "median": 0.0019658925166047133,
+            "maximum": 0.7960018253874337,
+            "l2": 4.421775452559745
+          },
+          "lr_times_stored_direction_norm": 0.00884355090511949
+        },
+        {
+          "parameter": "units.1.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.46814587712287903,
+            "median": 0.003919329959899187,
+            "maximum": 0.6039245128631592,
+            "l2": 3.1536889138946274
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.3455813739480324e-05,
+            "median": 7.334048850264429e-05,
+            "maximum": 0.0009721126618843207,
+            "l2": 0.0029956331179137167
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9992573787077805,
+            "median": 0.9998636682562839,
+            "maximum": 0.9999897132322986,
+            "l2": 15.997420722232526
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.6804861652894296,
+            "median": -0.004963487329488229,
+            "maximum": 0.7890092930249043,
+            "l2": 5.647395592889747
+          },
+          "lr_times_stored_direction_norm": 0.011294791185779493
+        },
+        {
+          "parameter": "units.1.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.30217796564102173,
+            "median": -0.10285317897796631,
+            "maximum": 0.2723608911037445,
+            "l2": 0.7084488887350543
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 8.232348175573036e-05,
+            "median": 0.00019731255249466693,
+            "maximum": 0.0004346203449559417,
+            "l2": 0.0010989199723061066
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998785427290727,
+            "median": 0.9999493215556278,
+            "maximum": 0.9999769919424264,
+            "l2": 3.999796961963536
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.8861886303347227,
+            "median": 0.14185502169688255,
+            "maximum": 0.6122799643450015,
+            "l2": 1.343602252184987
+          },
+          "lr_times_stored_direction_norm": 0.002687204504369974,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.42502516508102417,
+            "median": 0.4743093252182007,
+            "maximum": 0.5676724314689636,
+            "l2": 1.9598519266261687
+          }
+        },
+        {
+          "parameter": "units.1.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4311845302581787,
+            "median": 0.020302122458815575,
+            "maximum": 0.3768472969532013,
+            "l2": 2.52015047869585
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00016016787455186562,
+            "median": 0.0005189402950536944,
+            "maximum": 0.0016116866110767033,
+            "l2": 0.009889874169320974
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999375694050882,
+            "median": 0.999980730331796,
+            "maximum": 0.9999937953583006,
+            "l2": 15.99964149721185
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8800538741697497,
+            "median": -0.028043795754113858,
+            "maximum": 0.8259214532693736,
+            "l2": 4.9152074620112325
+          },
+          "lr_times_stored_direction_norm": 0.009830414924022465
+        },
+        {
+          "parameter": "units.1.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5564972162246704,
+            "median": 0.002954325405880809,
+            "maximum": 0.5787127017974854,
+            "l2": 3.209106243957619
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 2.1271257522832015e-05,
+            "median": 9.738948402769154e-05,
+            "maximum": 0.0014822747382125085,
+            "l2": 0.003359215197541949
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9995301029561212,
+            "median": 0.999897330051593,
+            "maximum": 0.9999932536578552,
+            "l2": 15.997999906096442
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.099193711112411,
+            "median": -0.012129685440912101,
+            "maximum": 0.7564241834184798,
+            "l2": 4.972769102509882
+          },
+          "lr_times_stored_direction_norm": 0.009945538205019764
+        },
+        {
+          "parameter": "units.1.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2746952474117279,
+            "median": -0.012094915844500065,
+            "maximum": 0.19992384314537048,
+            "l2": 0.5160774112490253
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00011877224011027949,
+            "median": 0.00025566473309592686,
+            "maximum": 0.000575953123067773,
+            "l2": 0.0012066777114171684
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999158123302717,
+            "median": 0.9999608878050682,
+            "maximum": 0.9999826377773168,
+            "l2": 3.999821087819521
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.4641784070905425,
+            "median": -0.12672818576249262,
+            "maximum": 0.34216490553175416,
+            "l2": 1.139487798450499
+          },
+          "lr_times_stored_direction_norm": 0.002278975596900998,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4317547678947449,
+            "median": 0.4969762861728668,
+            "maximum": 0.5498151779174805,
+            "l2": 1.9751637859158437
+          }
+        },
+        {
+          "parameter": "units.1.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.49123579263687134,
+            "median": 0.0051296246238052845,
+            "maximum": 0.5453476905822754,
+            "l2": 2.922476876937375
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0002751454353046408,
+            "median": 0.0005825751151936127,
+            "maximum": 0.0015302958362175885,
+            "l2": 0.011456554761759103
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999636569054544,
+            "median": 0.9999828351261657,
+            "maximum": 0.9999934653585164,
+            "l2": 15.999720031221445
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.0275929610710366,
+            "median": -0.017849379147301475,
+            "maximum": 0.9738716016551977,
+            "l2": 5.785083565234227
+          },
+          "lr_times_stored_direction_norm": 0.011570167130468453
+        },
+        {
+          "parameter": "units.1.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.7275184392929077,
+            "median": 0.03660748898983002,
+            "maximum": 0.6590905785560608,
+            "l2": 3.5910349741663943
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.0479490572249954e-05,
+            "median": 0.0001258440129484466,
+            "maximum": 0.0006261588323895741,
+            "l2": 0.002513976862292718
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999753022331013,
+            "median": 0.9999205428594153,
+            "maximum": 0.9999840298662552,
+            "l2": 15.99869488611673
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9632545296637534,
+            "median": -0.0466659431261801,
+            "maximum": 0.8134764138541999,
+            "l2": 4.4631218096381575
+          },
+          "lr_times_stored_direction_norm": 0.008926243619276315
+        },
+        {
+          "parameter": "units.1.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.4058533310890198,
+            "median": 0.048362333327531815,
+            "maximum": 0.4166562259197235,
+            "l2": 0.8610135065478645
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00017169468761200337,
+            "median": 0.000222610297317342,
+            "maximum": 0.00035342444380958036,
+            "l2": 0.000999558414767109
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999417604717782,
+            "median": 0.9999550804660648,
+            "maximum": 0.9999717062098074,
+            "l2": 3.9998293788690207
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.31888850016842857,
+            "median": -0.11536355370380942,
+            "maximum": 0.07567425488693265,
+            "l2": 0.6541806258574986
+          },
+          "lr_times_stored_direction_norm": 0.0013083612517149972,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.39990681409835815,
+            "median": 0.5120882391929626,
+            "maximum": 0.6026828289031982,
+            "l2": 2.0602068344300726
+          }
+        },
+        {
+          "parameter": "units.1.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4629514515399933,
+            "median": -0.02086561918258667,
+            "maximum": 0.5023232102394104,
+            "l2": 2.795188562651771
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0001775082290688189,
+            "median": 0.0007077546480757555,
+            "maximum": 0.0036527876084165843,
+            "l2": 0.017259066798259837
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999436677570949,
+            "median": 0.9999858710094842,
+            "maximum": 0.9999972623722768,
+            "l2": 15.999728904431842
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8517174071115875,
+            "median": -0.007971884521857025,
+            "maximum": 0.7741765884266566,
+            "l2": 4.607999745226589
+          },
+          "lr_times_stored_direction_norm": 0.009215999490453179
+        },
+        {
+          "parameter": "units.1.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4317913055419922,
+            "median": -0.023869337514042854,
+            "maximum": 0.39869028329849243,
+            "l2": 2.869533149939126
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 6.749491655532875e-05,
+            "median": 0.00016977213238886756,
+            "maximum": 0.0009955173286833035,
+            "l2": 0.0038988969266243578
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998518626418595,
+            "median": 0.999941100987134,
+            "maximum": 0.9999899550723402,
+            "l2": 15.998984122557074
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9044728348454707,
+            "median": 0.03282069962639003,
+            "maximum": 0.8641338662117362,
+            "l2": 4.380405547504008
+          },
+          "lr_times_stored_direction_norm": 0.008760811095008016
+        },
+        {
+          "parameter": "units.1.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3800780773162842,
+            "median": -0.14560960233211517,
+            "maximum": 0.1113896518945694,
+            "l2": 0.7513295740012044
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.0002655666906844407,
+            "median": 0.00033385203323403666,
+            "maximum": 0.0005840031963931044,
+            "l2": 0.0015216102508697523
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999623460930467,
+            "median": 0.9999700475076392,
+            "maximum": 0.9999828770992474,
+            "l2": 3.9998872388211737
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5262608775376135,
+            "median": 0.0007717815260708641,
+            "maximum": 0.632851038599383,
+            "l2": 1.3635847759736528
+          },
+          "lr_times_stored_direction_norm": 0.0027271695519473058,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4061080515384674,
+            "median": 0.463661789894104,
+            "maximum": 0.5278186202049255,
+            "l2": 1.86718779330246
+          }
+        },
+        {
+          "parameter": "units.2.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4673697352409363,
+            "median": -0.019892144948244095,
+            "maximum": 0.6455574631690979,
+            "l2": 2.807095049870335
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00010414348197843769,
+            "median": 0.00029189025207072963,
+            "maximum": 0.0009288638213299611,
+            "l2": 0.005778215398814809
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999039878474532,
+            "median": 0.9999657417219442,
+            "maximum": 0.9999892342751293,
+            "l2": 15.999442667997405
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7688053069885196,
+            "median": 0.00959574897964931,
+            "maximum": 0.8143317031097924,
+            "l2": 4.623409446664063
+          },
+          "lr_times_stored_direction_norm": 0.009246818893328125
+        },
+        {
+          "parameter": "units.2.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.6634912490844727,
+            "median": 0.0591629222035408,
+            "maximum": 0.7578686475753784,
+            "l2": 4.181399326164343
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 7.928240373679051e-06,
+            "median": 4.507690537263882e-05,
+            "maximum": 0.00043989401117782757,
+            "l2": 0.001489020582799096
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9987402749817004,
+            "median": 0.9997782061128979,
+            "maximum": 0.9999772677680906,
+            "l2": 15.995939866395783
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1544348683553796,
+            "median": -0.04750037435000041,
+            "maximum": 0.868505243855808,
+            "l2": 5.832292298205712
+          },
+          "lr_times_stored_direction_norm": 0.011664584596411424
+        },
+        {
+          "parameter": "units.2.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2610481083393097,
+            "median": 0.08436910808086395,
+            "maximum": 0.4906877279281616,
+            "l2": 0.9581315452447353
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 3.5008945085798115e-05,
+            "median": 0.00011748675177259736,
+            "maximum": 0.0002534252845493336,
+            "l2": 0.0005576708616461044
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9997144402843803,
+            "median": 0.9999148912642338,
+            "maximum": 0.9999605421951494,
+            "l2": 3.999599548505838
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.629172099741076,
+            "median": -0.09291860997277082,
+            "maximum": 0.561248765034698,
+            "l2": 1.2141794496374456
+          },
+          "lr_times_stored_direction_norm": 0.0024283588992748914,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4351060390472412,
+            "median": 0.5210797786712646,
+            "maximum": 0.6202684044837952,
+            "l2": 2.1147479544370045
+          }
+        },
+        {
+          "parameter": "units.2.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.430853933095932,
+            "median": -0.007710376754403114,
+            "maximum": 0.41830259561538696,
+            "l2": 2.783693005566735
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00013926808981118397,
+            "median": 0.0005295315741008438,
+            "maximum": 0.002167896334381937,
+            "l2": 0.011806761474808811
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999282011979519,
+            "median": 0.9999811157414467,
+            "maximum": 0.9999953872545869,
+            "l2": 15.999638684102782
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.6960878570273161,
+            "median": 0.006712163886526527,
+            "maximum": 0.7904638595430734,
+            "l2": 4.080914239153525
+          },
+          "lr_times_stored_direction_norm": 0.008161828478307051
+        },
+        {
+          "parameter": "units.2.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4888545572757721,
+            "median": 0.006807041820138693,
+            "maximum": 0.44755396246910095,
+            "l2": 3.0413622873276713
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.4511017427005262e-05,
+            "median": 8.357982168707195e-05,
+            "maximum": 0.0011151801173086152,
+            "l2": 0.003355409244108922
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9993113430205378,
+            "median": 0.9998803682099308,
+            "maximum": 0.9999910329191007,
+            "l2": 15.99770441973116
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8941216807044756,
+            "median": -0.023470718653564097,
+            "maximum": 1.0666102146485652,
+            "l2": 4.091047620546972
+          },
+          "lr_times_stored_direction_norm": 0.008182095241093944
+        },
+        {
+          "parameter": "units.2.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2883335053920746,
+            "median": -0.00893736258149147,
+            "maximum": 0.2637791633605957,
+            "l2": 0.6461471579989394
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00010002180849063087,
+            "median": 0.000232758602252722,
+            "maximum": 0.0005386056686616553,
+            "l2": 0.0012338139077210477
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.999900031798376,
+            "median": 0.9999570388793712,
+            "maximum": 0.9999814338858264,
+            "l2": 3.999830258713056
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.4452704927938117,
+            "median": -0.07702517033560718,
+            "maximum": 0.22902507597073218,
+            "l2": 0.7581631792360245
+          },
+          "lr_times_stored_direction_norm": 0.001516326358472049,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4284118711948395,
+            "median": 0.4977656900882721,
+            "maximum": 0.5655650496482849,
+            "l2": 1.996264662624866
+          }
+        },
+        {
+          "parameter": "units.2.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4386826455593109,
+            "median": 0.0013851500116288662,
+            "maximum": 0.5107839107513428,
+            "l2": 2.4537561945413886
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00018082808440661013,
+            "median": 0.0004625594156996518,
+            "maximum": 0.0015285031191764268,
+            "l2": 0.009838584512785383
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999447019136881,
+            "median": 0.9999783816230373,
+            "maximum": 0.9999934576943603,
+            "l2": 15.999614888458343
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8617064116945063,
+            "median": 0.022916323430775352,
+            "maximum": 0.761472666106635,
+            "l2": 4.194667938537918
+          },
+          "lr_times_stored_direction_norm": 0.008389335877075837
+        },
+        {
+          "parameter": "units.2.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.45566266775131226,
+            "median": -0.004510886967182159,
+            "maximum": 0.5965480804443359,
+            "l2": 3.3751495455846054
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.715652916862885e-05,
+            "median": 0.00011949822183577023,
+            "maximum": 0.0007498306220001075,
+            "l2": 0.002768968499927042
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999787985247669,
+            "median": 0.999916323748723,
+            "maximum": 0.9999866638326778,
+            "l2": 15.998585073903543
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7208508504684683,
+            "median": -0.03415452589204459,
+            "maximum": 1.1196289733377265,
+            "l2": 3.90749962960848
+          },
+          "lr_times_stored_direction_norm": 0.00781499925921696
+        },
+        {
+          "parameter": "units.2.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.33654582500457764,
+            "median": -0.16803620755672455,
+            "maximum": 0.16548317670822144,
+            "l2": 0.7162353014399058
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.0001628309692423245,
+            "median": 0.00023096637870839056,
+            "maximum": 0.0004870136819044913,
+            "l2": 0.001079323056712825
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999385903925374,
+            "median": 0.9999567055295614,
+            "maximum": 0.9999794671175725,
+            "l2": 3.9998354437818344
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.3859162527114243,
+            "median": -0.0702859009987557,
+            "maximum": 0.2936041357274038,
+            "l2": 0.7599954336891249
+          },
+          "lr_times_stored_direction_norm": 0.0015199908673782499,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4166487753391266,
+            "median": 0.4580895006656647,
+            "maximum": 0.5412766337394714,
+            "l2": 1.8935475378363928
+          }
+        },
+        {
+          "parameter": "units.2.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5615339875221252,
+            "median": 0.01343432068824768,
+            "maximum": 0.5587542057037354,
+            "l2": 2.7808113952100704
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00012733774142860915,
+            "median": 0.0005135842193297747,
+            "maximum": 0.0015324044142999802,
+            "l2": 0.010358616230981528
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999214748539094,
+            "median": 0.9999805293758697,
+            "maximum": 0.9999934743500801,
+            "l2": 15.999612588857307
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.3068643200948697,
+            "median": -0.007999893258662592,
+            "maximum": 1.0644992627930172,
+            "l2": 6.585610070949916
+          },
+          "lr_times_stored_direction_norm": 0.013171220141899833
+        },
+        {
+          "parameter": "units.2.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.48988574743270874,
+            "median": -0.021054428070783615,
+            "maximum": 0.5654217004776001,
+            "l2": 3.220217493563353
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.1173349273856494e-05,
+            "median": 0.0001329464483139437,
+            "maximum": 0.0006435665404503545,
+            "l2": 0.0026465177439221857
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9997571834205736,
+            "median": 0.9999247874012369,
+            "maximum": 0.9999844618326313,
+            "l2": 15.99862032901004
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1116215065788657,
+            "median": -0.0664693543334254,
+            "maximum": 1.0157851129442423,
+            "l2": 6.052112051469951
+          },
+          "lr_times_stored_direction_norm": 0.012104224102939903
+        },
+        {
+          "parameter": "units.2.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.28918835520744324,
+            "median": -0.07919958978891373,
+            "maximum": 0.23619191348552704,
+            "l2": 0.5937534662795583
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00017837860530561166,
+            "median": 0.00024634735607064514,
+            "maximum": 0.000450012007173653,
+            "l2": 0.0010514677345471535
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999439426078652,
+            "median": 0.9999594085593404,
+            "maximum": 0.9999777788644987,
+            "l2": 3.999836279440946
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5725749332080987,
+            "median": -0.10422610573050464,
+            "maximum": 0.37014912545410383,
+            "l2": 1.3245413041081566
+          },
+          "lr_times_stored_direction_norm": 0.0026490826082163133,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4282025694847107,
+            "median": 0.48021045327186584,
+            "maximum": 0.558775007724762,
+            "l2": 1.9879047844627522
+          }
+        },
+        {
+          "parameter": "units.3.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5223183035850525,
+            "median": -0.027033938094973564,
+            "maximum": 0.5681118369102478,
+            "l2": 2.87715585957121
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 5.646838650025519e-05,
+            "median": 0.0003206799569093289,
+            "maximum": 0.001268237940163141,
+            "l2": 0.007536669257550536
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998229411174847,
+            "median": 0.999968817233641,
+            "maximum": 0.9999921151064526,
+            "l2": 15.999327271092664
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7696264164643869,
+            "median": 0.01424893420093025,
+            "maximum": 0.8630735487457979,
+            "l2": 4.411593509863459
+          },
+          "lr_times_stored_direction_norm": 0.008823187019726918
+        },
+        {
+          "parameter": "units.3.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.479031503200531,
+            "median": -1.6896286979317665e-05,
+            "maximum": 0.45032811164855957,
+            "l2": 2.725259818463256
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.5070954606000782e-05,
+            "median": 5.672899321827735e-05,
+            "maximum": 0.0007406170541445391,
+            "l2": 0.0021945161027841866
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9993369120018423,
+            "median": 0.9998237543630439,
+            "maximum": 0.9999864979277436,
+            "l2": 15.996642005283027
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.0687362304616994,
+            "median": -0.03875767459235467,
+            "maximum": 0.8271118280149246,
+            "l2": 4.577328295212377
+          },
+          "lr_times_stored_direction_norm": 0.009154656590424753
+        },
+        {
+          "parameter": "units.3.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.37874066829681396,
+            "median": -0.05296162888407707,
+            "maximum": 0.2616897523403168,
+            "l2": 0.7253451834417994
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 8.659007703229933e-05,
+            "median": 0.00015852922619187466,
+            "maximum": 0.0003461130737594789,
+            "l2": 0.0008269423224151268
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998845266616072,
+            "median": 0.9999369241276106,
+            "maximum": 0.9999711085427175,
+            "l2": 3.999734859790634
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.6556664156761872,
+            "median": -0.08706886204612192,
+            "maximum": 0.4503916507442215,
+            "l2": 1.2032547989463
+          },
+          "lr_times_stored_direction_norm": 0.0024065095978926003,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4064306616783142,
+            "median": 0.486762672662735,
+            "maximum": 0.5650516152381897,
+            "l2": 1.937311373795844
+          }
+        },
+        {
+          "parameter": "units.3.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.535140335559845,
+            "median": 0.0008748010732233524,
+            "maximum": 0.5948949456214905,
+            "l2": 3.057801016744699
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0001317817118738584,
+            "median": 0.0003616091673630793,
+            "maximum": 0.0011610585494093522,
+            "l2": 0.006852217920133988
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999241226943804,
+            "median": 0.9999723465985697,
+            "maximum": 0.9999913872440994,
+            "l2": 15.999509326385574
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9746545167346078,
+            "median": 0.028000991581750602,
+            "maximum": 0.898111770256098,
+            "l2": 5.4039852156668955
+          },
+          "lr_times_stored_direction_norm": 0.010807970431333792
+        },
+        {
+          "parameter": "units.3.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4149620532989502,
+            "median": 0.0716543197631836,
+            "maximum": 0.8128295540809631,
+            "l2": 4.0403875831810385
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.4230213019135943e-05,
+            "median": 6.868802674805465e-05,
+            "maximum": 0.0007958231003038819,
+            "l2": 0.0021434194858108028
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9992977633138941,
+            "median": 0.9998544354114177,
+            "maximum": 0.9999874345512945,
+            "l2": 15.997331682733629
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.999567706381903,
+            "median": -0.04841909097916353,
+            "maximum": 0.6915501987554195,
+            "l2": 4.785944255813523
+          },
+          "lr_times_stored_direction_norm": 0.009571888511627047
+        },
+        {
+          "parameter": "units.3.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3165065050125122,
+            "median": 0.07867267727851868,
+            "maximum": 0.3740047514438629,
+            "l2": 0.7751223684197892
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 7.080169153379028e-05,
+            "median": 0.00017530666264499925,
+            "maximum": 0.00035688568800411167,
+            "l2": 0.0008111081198116482
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998587803824003,
+            "median": 0.99994296035614,
+            "maximum": 0.9999719806085192,
+            "l2": 3.9997378991631587
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.9657815859694018,
+            "median": -0.15328692188971912,
+            "maximum": 0.3953950352907761,
+            "l2": 1.3299327190768697
+          },
+          "lr_times_stored_direction_norm": 0.0026598654381537394,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4215273857116699,
+            "median": 0.5196580290794373,
+            "maximum": 0.5924263000488281,
+            "l2": 2.087512108886735
+          }
+        },
+        {
+          "parameter": "units.3.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.39719924330711365,
+            "median": 0.012755553238093853,
+            "maximum": 0.41127854585647583,
+            "l2": 2.4249166026527003
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00011511065720831143,
+            "median": 0.00029911285626057935,
+            "maximum": 0.0008223181028431189,
+            "l2": 0.0056198647208604915
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999913134616823,
+            "median": 0.9999665689204597,
+            "maximum": 0.9999878394038031,
+            "l2": 15.999386777290805
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.0164772568443656,
+            "median": 0.02524900994276221,
+            "maximum": 0.9349440107871484,
+            "l2": 5.354713917160252
+          },
+          "lr_times_stored_direction_norm": 0.010709427834320504
+        },
+        {
+          "parameter": "units.3.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.40719589591026306,
+            "median": -0.015415643341839314,
+            "maximum": 0.4157286286354065,
+            "l2": 2.8004067712637335
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 3.2789733935789754e-05,
+            "median": 7.84348102827122e-05,
+            "maximum": 0.00036881114187421927,
+            "l2": 0.001828220695389586
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999695119478116,
+            "median": 0.9998725218409739,
+            "maximum": 0.9999728865868448,
+            "l2": 15.997906880724427
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9133309877739064,
+            "median": -0.012861824629988434,
+            "maximum": 1.041175276557087,
+            "l2": 5.112935456730008
+          },
+          "lr_times_stored_direction_norm": 0.010225870913460016
+        },
+        {
+          "parameter": "units.3.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3689142167568207,
+            "median": -0.03473510220646858,
+            "maximum": 0.16259726881980896,
+            "l2": 0.6223307344606155
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 9.745631859879858e-05,
+            "median": 0.00015585534278818398,
+            "maximum": 0.00026567850893909674,
+            "l2": 0.000700353066119821
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998974004543953,
+            "median": 0.9999358420555775,
+            "maximum": 0.9999623619401534,
+            "l2": 3.9997431139434863
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5806317653863636,
+            "median": -0.14601523520008666,
+            "maximum": 0.5653155437023649,
+            "l2": 1.3533386409204842
+          },
+          "lr_times_stored_direction_norm": 0.0027066772818409683,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.40880340337753296,
+            "median": 0.4913170635700226,
+            "maximum": 0.5405600070953369,
+            "l2": 1.950183911260752
+          }
+        },
+        {
+          "parameter": "units.3.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5091668367385864,
+            "median": 0.006990528665482998,
+            "maximum": 0.43468403816223145,
+            "l2": 2.6970396150048463
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00019152092446399278,
+            "median": 0.00046279808791092013,
+            "maximum": 0.0012196935988608056,
+            "l2": 0.009563057061866024
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999477891101504,
+            "median": 0.9999783927717315,
+            "maximum": 0.9999918012867969,
+            "l2": 15.999632879164453
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9150538899622509,
+            "median": -0.004123735554802803,
+            "maximum": 0.8461053942009965,
+            "l2": 5.137612756348592
+          },
+          "lr_times_stored_direction_norm": 0.010275225512697184
+        },
+        {
+          "parameter": "units.3.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4495309591293335,
+            "median": -0.01890553906559944,
+            "maximum": 0.6868734955787659,
+            "l2": 3.6035509379016766
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 4.838860626034963e-05,
+            "median": 0.00012853712452731301,
+            "maximum": 0.0006120721887354466,
+            "l2": 0.002611223198551098
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9997933824799373,
+            "median": 0.9999222075169961,
+            "maximum": 0.9999836623247922,
+            "l2": 15.998676983575956
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.6933744415710774,
+            "median": 0.01752376109373449,
+            "maximum": 0.8920280379139982,
+            "l2": 4.265540305897918
+          },
+          "lr_times_stored_direction_norm": 0.008531080611795836
+        },
+        {
+          "parameter": "units.3.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.31091758608818054,
+            "median": -0.09590417891740799,
+            "maximum": 0.27032968401908875,
+            "l2": 0.7215749405453593
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00015849538520242,
+            "median": 0.0002345904615158432,
+            "maximum": 0.00039341994036727303,
+            "l2": 0.0010304076611500636
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999369106608761,
+            "median": 0.9999573743379047,
+            "maximum": 0.9999745825140033,
+            "l2": 3.999833504927885
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5986105907034293,
+            "median": 0.05111176425200101,
+            "maximum": 0.3897729812115765,
+            "l2": 1.0519517803659102
+          },
+          "lr_times_stored_direction_norm": 0.0021039035607318206,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4228907823562622,
+            "median": 0.4760423004627228,
+            "maximum": 0.5671738386154175,
+            "l2": 1.9133736775045196
+          }
+        },
+        {
+          "parameter": "units.4.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4707582890987396,
+            "median": 0.01135383453220129,
+            "maximum": 0.4637247920036316,
+            "l2": 2.7740614865299276
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 8.954475962473466e-05,
+            "median": 0.0005180161438970395,
+            "maximum": 0.001677044881105939,
+            "l2": 0.009885537127074212
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998883364765658,
+            "median": 0.9999806959549863,
+            "maximum": 0.9999940371659195,
+            "l2": 15.999540945902869
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7099884319632939,
+            "median": 0.0156860126208948,
+            "maximum": 0.720668798252787,
+            "l2": 4.457565363084742
+          },
+          "lr_times_stored_direction_norm": 0.008915130726169484
+        },
+        {
+          "parameter": "units.4.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5202076435089111,
+            "median": 0.032540444284677505,
+            "maximum": 0.5930572748184204,
+            "l2": 3.0835343053137487
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.3891159446180281e-05,
+            "median": 7.289595230108701e-05,
+            "maximum": 0.0013758957328107756,
+            "l2": 0.0027342020027475307
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9992806355441993,
+            "median": 0.9998628369881419,
+            "maximum": 0.9999927320602267,
+            "l2": 15.997363506524769
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8835782855017432,
+            "median": -0.02488444040755252,
+            "maximum": 0.8034436810390186,
+            "l2": 4.505410946024194
+          },
+          "lr_times_stored_direction_norm": 0.009010821892048387
+        },
+        {
+          "parameter": "units.4.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.29702553153038025,
+            "median": -0.09072528779506683,
+            "maximum": 0.1732582002878189,
+            "l2": 0.5964912261695041
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 8.042589058780015e-05,
+            "median": 0.00020417095014310527,
+            "maximum": 0.0005620255898490227,
+            "l2": 0.0009827947145654844
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998756773882043,
+            "median": 0.9999510238345302,
+            "maximum": 0.9999822075324398,
+            "l2": 3.99977672095115
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.48556942411816745,
+            "median": -0.04835027882644421,
+            "maximum": 0.5913710348658663,
+            "l2": 1.3140344938572337
+          },
+          "lr_times_stored_direction_norm": 0.0026280689877144674,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4262847900390625,
+            "median": 0.477334201335907,
+            "maximum": 0.543206512928009,
+            "l2": 1.9424377065262097
+          }
+        },
+        {
+          "parameter": "units.4.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.39315515756607056,
+            "median": -0.0027800030075013638,
+            "maximum": 0.5338544249534607,
+            "l2": 2.6185278446385696
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 5.5572034632930214e-05,
+            "median": 0.0001613615757628807,
+            "maximum": 0.00047987545950624983,
+            "l2": 0.0030574333924119953
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998200857513395,
+            "median": 0.9999380312179966,
+            "maximum": 0.9999791616941045,
+            "l2": 15.998897100608628
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.0129830444074446,
+            "median": 0.012254472848256759,
+            "maximum": 0.9605488434496737,
+            "l2": 5.612565117821015
+          },
+          "lr_times_stored_direction_norm": 0.01122513023564203
+        },
+        {
+          "parameter": "units.4.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5236971974372864,
+            "median": 0.02912699058651924,
+            "maximum": 0.6558449864387512,
+            "l2": 3.4719695925404555
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 5.620003767665672e-06,
+            "median": 2.8109977927013997e-05,
+            "maximum": 0.0002710232756936708,
+            "l2": 0.0008580843418148003
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9982238022543729,
+            "median": 0.999644380944183,
+            "maximum": 0.9999631041613823,
+            "l2": 15.993150025445306
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9667229815291237,
+            "median": -0.0040198269221808905,
+            "maximum": 1.0726516277069382,
+            "l2": 4.803753399251037
+          },
+          "lr_times_stored_direction_norm": 0.009607506798502074
+        },
+        {
+          "parameter": "units.4.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3284461796283722,
+            "median": 0.14939062297344208,
+            "maximum": 0.4369693100452423,
+            "l2": 0.9534244350677032
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 3.423754466276346e-05,
+            "median": 6.489328825610306e-05,
+            "maximum": 0.00012947207525992486,
+            "l2": 0.0003160186506263024
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9997080082645786,
+            "median": 0.9998459246015312,
+            "maximum": 0.9999227692328848,
+            "l2": 3.9993722102127793
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.6782388099165118,
+            "median": -0.06514168252753554,
+            "maximum": 0.4104139396528255,
+            "l2": 1.2476658163901406
+          },
+          "lr_times_stored_direction_norm": 0.0024953316327802812,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.41861873865127563,
+            "median": 0.5372783541679382,
+            "maximum": 0.6075366139411926,
+            "l2": 2.125353831739305
+          }
+        },
+        {
+          "parameter": "units.4.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4290860891342163,
+            "median": -0.013312868773937225,
+            "maximum": 0.482709139585495,
+            "l2": 2.8089289848121544
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00010951496910683898,
+            "median": 0.00025407649355773385,
+            "maximum": 0.0006068495061325926,
+            "l2": 0.004788509770501633
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999086966188483,
+            "median": 0.9999606433232244,
+            "maximum": 0.9999835217214216,
+            "l2": 15.999323839184244
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9392482122954258,
+            "median": 0.01219880670286194,
+            "maximum": 0.9159549764282533,
+            "l2": 5.622577994554186
+          },
+          "lr_times_stored_direction_norm": 0.011245155989108373
+        },
+        {
+          "parameter": "units.4.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4752725660800934,
+            "median": 0.0026045730337500572,
+            "maximum": 0.6351762413978577,
+            "l2": 3.2833368135896346
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 2.8902966716797845e-05,
+            "median": 6.0957771224630625e-05,
+            "maximum": 0.00047112169261519086,
+            "l2": 0.001507711210176653
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9996541344201046,
+            "median": 0.9998359789147752,
+            "maximum": 0.9999787745121869,
+            "l2": 15.997477809474509
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8807791366832513,
+            "median": 0.08129759041893654,
+            "maximum": 1.3925833557316252,
+            "l2": 5.321951152803692
+          },
+          "lr_times_stored_direction_norm": 0.010643902305607383
+        },
+        {
+          "parameter": "units.4.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.35684913396835327,
+            "median": 0.01832273229956627,
+            "maximum": 0.2618580758571625,
+            "l2": 0.6859130281061067
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 9.609657855352695e-05,
+            "median": 0.00012671476952176973,
+            "maximum": 0.0002863951706126427,
+            "l2": 0.0005919370256859199
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998959488502192,
+            "median": 0.999921088828666,
+            "maximum": 0.9999650844292419,
+            "l2": 3.9996950102413216
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.509436449048737,
+            "median": 0.1196866917721594,
+            "maximum": 0.7278222048539061,
+            "l2": 1.420191069314151
+          },
+          "lr_times_stored_direction_norm": 0.002840382138628302,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4117225408554077,
+            "median": 0.504580557346344,
+            "maximum": 0.5650930404663086,
+            "l2": 2.007339250886675
+          }
+        },
+        {
+          "parameter": "units.4.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4819835424423218,
+            "median": 0.0030603862833231688,
+            "maximum": 0.5256161093711853,
+            "l2": 2.9744955265876096
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0002281733944696903,
+            "median": 0.0005136458558954063,
+            "maximum": 0.0016051867335520281,
+            "l2": 0.010626735898749965
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999561756015453,
+            "median": 0.9999805317122636,
+            "maximum": 0.9999937702340213,
+            "l2": 15.99967107106071
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.0377893004127754,
+            "median": 0.01651638405541143,
+            "maximum": 1.2197357786840402,
+            "l2": 5.011778016852916
+          },
+          "lr_times_stored_direction_norm": 0.010023556033705833
+        },
+        {
+          "parameter": "units.4.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.42422792315483093,
+            "median": 0.007588409818708897,
+            "maximum": 0.6024870872497559,
+            "l2": 3.236527781349703
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 3.847181344988373e-05,
+            "median": 0.00011840235063706307,
+            "maximum": 0.0005180509709747186,
+            "l2": 0.00240451484038468
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9997401369867087,
+            "median": 0.9999155493498255,
+            "maximum": 0.9999806972527168,
+            "l2": 15.998566704093216
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9302259706372908,
+            "median": -0.0043676713116003185,
+            "maximum": 0.9763703257206504,
+            "l2": 4.682408121641098
+          },
+          "lr_times_stored_direction_norm": 0.009364816243282196
+        },
+        {
+          "parameter": "units.4.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.30624279379844666,
+            "median": 0.0006743191624991596,
+            "maximum": 0.281208872795105,
+            "l2": 0.653673085464428
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00012599747799951365,
+            "median": 0.00023862029716807792,
+            "maximum": 0.0003208208235131061,
+            "l2": 0.0009476953430340192
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999206396306096,
+            "median": 0.9999580941727908,
+            "maximum": 0.9999688309250012,
+            "l2": 3.9998150819351386
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.30325303825484157,
+            "median": -0.0634270843172843,
+            "maximum": 0.18438488361467853,
+            "l2": 0.6368133126405127
+          },
+          "lr_times_stored_direction_norm": 0.0012736266252810254,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4240320920944214,
+            "median": 0.5001685619354248,
+            "maximum": 0.5698425769805908,
+            "l2": 2.0067523442768787
+          }
+        },
+        {
+          "parameter": "units.5.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.428501695394516,
+            "median": -0.018658358603715897,
+            "maximum": 0.5918058156967163,
+            "l2": 2.7555418451266647
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 3.920377995811102e-05,
+            "median": 0.00018676222079030443,
+            "maximum": 0.000587498220712254,
+            "l2": 0.003953285676791324
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999744987603575,
+            "median": 0.999946458847265,
+            "maximum": 0.9999829789615745,
+            "l2": 15.998975067206146
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.603943123611827,
+            "median": -0.00041541833732782173,
+            "maximum": 0.7346093424322737,
+            "l2": 3.9203443315367617
+          },
+          "lr_times_stored_direction_norm": 0.007840688663073523
+        },
+        {
+          "parameter": "units.5.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5430317521095276,
+            "median": -0.005447276867926121,
+            "maximum": 0.6623581051826477,
+            "l2": 3.3275687419621205
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 9.927983169470494e-06,
+            "median": 5.0385421159076824e-05,
+            "maximum": 0.0006649863217368877,
+            "l2": 0.0017051006263625007
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9989937596160637,
+            "median": 0.9998015692741522,
+            "maximum": 0.9999849623228382,
+            "l2": 15.996221444134509
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8370915425174944,
+            "median": -0.03312155284662882,
+            "maximum": 0.6023139483147091,
+            "l2": 4.192398272510337
+          },
+          "lr_times_stored_direction_norm": 0.008384796545020674
+        },
+        {
+          "parameter": "units.5.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.4245145618915558,
+            "median": -0.0818755179643631,
+            "maximum": 0.12423675507307053,
+            "l2": 0.7514193161021283
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 6.668599068713887e-05,
+            "median": 0.0001318861324310839,
+            "maximum": 0.0002874005743196687,
+            "l2": 0.0006285004248405927
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998500659500373,
+            "median": 0.9999241827655165,
+            "maximum": 0.9999652065689523,
+            "l2": 3.9996848348064633
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.4678105133245427,
+            "median": -0.1193818106266129,
+            "maximum": 0.39780394148054815,
+            "l2": 1.0229002148649773
+          },
+          "lr_times_stored_direction_norm": 0.0020458004297299547,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.39543694257736206,
+            "median": 0.4795425534248352,
+            "maximum": 0.5310192704200745,
+            "l2": 1.9037900812208055
+          }
+        },
+        {
+          "parameter": "units.5.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.39852774143218994,
+            "median": 0.020103750750422478,
+            "maximum": 0.4271738827228546,
+            "l2": 2.6493468486577845
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 6.528827581329961e-05,
+            "median": 0.000250955343943442,
+            "maximum": 0.0006170798032087654,
+            "l2": 0.0048393465715508704
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998468565995742,
+            "median": 0.9999601538609162,
+            "maximum": 0.9999837949031923,
+            "l2": 15.99924608637693
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8465586337328405,
+            "median": -0.01633136935259822,
+            "maximum": 0.8494230643547401,
+            "l2": 4.0870459896091145
+          },
+          "lr_times_stored_direction_norm": 0.008174091979218229
+        },
+        {
+          "parameter": "units.5.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5873690843582153,
+            "median": 0.01696501486003399,
+            "maximum": 0.6055540442466736,
+            "l2": 3.2068838411580805
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.556983118183905e-05,
+            "median": 5.4631318986725874e-05,
+            "maximum": 0.0006297310987737544,
+            "l2": 0.001550727079396071
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9993581445213824,
+            "median": 0.9998169883124082,
+            "maximum": 0.9999841204583606,
+            "l2": 15.996665901072666
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7624651124950794,
+            "median": -0.04357203218209575,
+            "maximum": 0.6895218355820476,
+            "l2": 3.66942040435806
+          },
+          "lr_times_stored_direction_norm": 0.00733884080871612
+        },
+        {
+          "parameter": "units.5.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.21375711262226105,
+            "median": 0.010220863856375217,
+            "maximum": 0.23200777173042297,
+            "l2": 0.501912071578909
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 7.802576540635603e-05,
+            "median": 0.00011792506682797587,
+            "maximum": 0.00027551816476273935,
+            "l2": 0.0005712551997237683
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998718536308586,
+            "median": 0.9999152075776191,
+            "maximum": 0.9999637060697275,
+            "l2": 3.999673318586046
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.37827188157322583,
+            "median": 0.01149010370691446,
+            "maximum": 0.36737808998077165,
+            "l2": 0.666976279826821
+          },
+          "lr_times_stored_direction_norm": 0.001333952559653642,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.446763277053833,
+            "median": 0.5025551915168762,
+            "maximum": 0.5577431917190552,
+            "l2": 1.9921461052652776
+          }
+        },
+        {
+          "parameter": "units.5.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4838380813598633,
+            "median": 0.01836237497627735,
+            "maximum": 0.39646100997924805,
+            "l2": 2.679208328850209
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00010894828210788442,
+            "median": 0.00024462564617429587,
+            "maximum": 0.000612869041417817,
+            "l2": 0.004750820441171693
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999082217541747,
+            "median": 0.9999591228827182,
+            "maximum": 0.9999836835667003,
+            "l2": 15.999322516868046
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1530792108667338,
+            "median": 0.0034680619620745937,
+            "maximum": 0.9414245095511624,
+            "l2": 5.7528590251301415
+          },
+          "lr_times_stored_direction_norm": 0.011505718050260284
+        },
+        {
+          "parameter": "units.5.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4608033299446106,
+            "median": -0.002583479043096304,
+            "maximum": 0.5967054963111877,
+            "l2": 3.256796997696302
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 2.048602304632024e-05,
+            "median": 6.334264000999791e-05,
+            "maximum": 0.0004215450066691266,
+            "l2": 0.0014315124535330282
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9995121004705448,
+            "median": 0.9998421533814784,
+            "maximum": 0.9999762783033251,
+            "l2": 15.99724752437366
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8714592422206231,
+            "median": -0.013447811451395083,
+            "maximum": 1.070364178792131,
+            "l2": 5.764969432377469
+          },
+          "lr_times_stored_direction_norm": 0.011529938864754938
+        },
+        {
+          "parameter": "units.5.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.29640066623687744,
+            "median": 0.006043132860213518,
+            "maximum": 0.28391769528388977,
+            "l2": 0.7131661002485027
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 6.976160930154344e-05,
+            "median": 0.00012873330888379082,
+            "maximum": 0.00020346624820671898,
+            "l2": 0.0005561260512062598
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998566752279315,
+            "median": 0.9999223260603857,
+            "maximum": 0.9999508542147394,
+            "l2": 3.9996720944992785
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5711468627262268,
+            "median": -0.007744034736301886,
+            "maximum": 0.4812495805957777,
+            "l2": 1.2263858171704647
+          },
+          "lr_times_stored_direction_norm": 0.0024527716343409295,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4264376163482666,
+            "median": 0.501510739326477,
+            "maximum": 0.5705064535140991,
+            "l2": 2.006737574071924
+          }
+        },
+        {
+          "parameter": "units.5.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.41517990827560425,
+            "median": 0.0070726266130805016,
+            "maximum": 0.3810734152793884,
+            "l2": 2.663088067026203
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00012591255905311941,
+            "median": 0.00037135356634623786,
+            "maximum": 0.0014565539469906074,
+            "l2": 0.008288748235581603
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999205861120105,
+            "median": 0.9999730722103453,
+            "maximum": 0.9999931345273095,
+            "l2": 15.999550327697847
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.5666253788149433,
+            "median": -0.03449982097596204,
+            "maximum": 0.7357035238666062,
+            "l2": 4.049713090424933
+          },
+          "lr_times_stored_direction_norm": 0.008099426180849866
+        },
+        {
+          "parameter": "units.5.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.562221348285675,
+            "median": -0.0029580153059214354,
+            "maximum": 0.6359944939613342,
+            "l2": 3.2490925195309606
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 2.2398158721286973e-05,
+            "median": 9.550418161172319e-05,
+            "maximum": 0.0006571103983405654,
+            "l2": 0.0022061756565947624
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9995537339714351,
+            "median": 0.9998953035053931,
+            "maximum": 0.9999847820886015,
+            "l2": 15.998047737193213
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.208302560785505,
+            "median": -0.02797281154604273,
+            "maximum": 0.7417087756993247,
+            "l2": 3.7583393359499384
+          },
+          "lr_times_stored_direction_norm": 0.007516678671899877
+        },
+        {
+          "parameter": "units.5.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.23537804186344147,
+            "median": -0.07142876833677292,
+            "maximum": 0.1575745940208435,
+            "l2": 0.5263411889654971
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.0001234023581673843,
+            "median": 0.0001880679788015201,
+            "maximum": 0.00040622374428234825,
+            "l2": 0.0008964327083484382
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999189708376982,
+            "median": 0.9999468305643026,
+            "maximum": 0.9999753836303834,
+            "l2": 3.99980035410531
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.4361625523124052,
+            "median": -0.05836664609098612,
+            "maximum": 0.1180642137200636,
+            "l2": 0.680165177483004
+          },
+          "lr_times_stored_direction_norm": 0.001360330354966008,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4414256811141968,
+            "median": 0.4821504056453705,
+            "maximum": 0.5393123030662537,
+            "l2": 1.9594539322512263
+          }
+        },
+        {
+          "parameter": "units.6.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5670024752616882,
+            "median": -0.0151671739295125,
+            "maximum": 0.511424720287323,
+            "l2": 3.014619398003921
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 7.89655571619724e-05,
+            "median": 0.00023821352215975684,
+            "maximum": 0.0009234574551483591,
+            "l2": 0.0051875850876804686
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998733785444592,
+            "median": 0.9999580226171231,
+            "maximum": 0.9999891712480561,
+            "l2": 15.999315704929815
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.996075353743291,
+            "median": 0.001902977114706444,
+            "maximum": 1.1822761768054888,
+            "l2": 5.5166593652931635
+          },
+          "lr_times_stored_direction_norm": 0.011033318730586328
+        },
+        {
+          "parameter": "units.6.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.41568994522094727,
+            "median": 0.044364362955093384,
+            "maximum": 0.665233314037323,
+            "l2": 3.3151753066349614
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.4721611515810261e-05,
+            "median": 5.369011057816504e-05,
+            "maximum": 0.0003877313912231702,
+            "l2": 0.0013631040645224592
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9993211876386187,
+            "median": 0.9998137806441675,
+            "maximum": 0.9999742096143812,
+            "l2": 15.996570918966672
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9042177431367169,
+            "median": -0.0061289369777438735,
+            "maximum": 0.7878156564605842,
+            "l2": 3.987569097447294
+          },
+          "lr_times_stored_direction_norm": 0.007975138194894588
+        },
+        {
+          "parameter": "units.6.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3676449656486511,
+            "median": 0.03624329715967178,
+            "maximum": 0.32295194268226624,
+            "l2": 0.782180722913536
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 6.548801984978163e-05,
+            "median": 0.00012931059799725525,
+            "maximum": 0.00020949917766011227,
+            "l2": 0.0005313791827410707
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998473236286696,
+            "median": 0.9999226727980317,
+            "maximum": 0.9999522693940587,
+            "l2": 3.9996464754851813
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5955963975331364,
+            "median": 0.01213808234190473,
+            "maximum": 0.23939718450224032,
+            "l2": 1.0831744974283442
+          },
+          "lr_times_stored_direction_norm": 0.002166348994856688,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4091101884841919,
+            "median": 0.5090598464012146,
+            "maximum": 0.5800434947013855,
+            "l2": 2.039710026324059
+          }
+        },
+        {
+          "parameter": "units.6.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.6338172554969788,
+            "median": 0.0028519711922854185,
+            "maximum": 0.45040813088417053,
+            "l2": 2.8192835058632078
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 7.234706579502521e-05,
+            "median": 0.00028636633237878896,
+            "maximum": 0.0006866110170053743,
+            "l2": 0.005130483793691259
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998617964964428,
+            "median": 0.9999650809132272,
+            "maximum": 0.9999854359249828,
+            "l2": 15.999351792687154
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.2682548320179803,
+            "median": -0.025487309461512116,
+            "maximum": 1.3012537312868044,
+            "l2": 6.639868176408367
+          },
+          "lr_times_stored_direction_norm": 0.013279736352816734
+        },
+        {
+          "parameter": "units.6.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.48162907361984253,
+            "median": 0.02819533459842205,
+            "maximum": 0.4868238568305969,
+            "l2": 3.327907562659807
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.1788064216215068e-05,
+            "median": 5.485415421988206e-05,
+            "maximum": 0.0006119390330768105,
+            "l2": 0.0015447001315831016
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9991524033250933,
+            "median": 0.9998177316292907,
+            "maximum": 0.9999836587698329,
+            "l2": 15.996507306100009
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.2618945683733755,
+            "median": -0.047601436550179434,
+            "maximum": 1.0980051167476954,
+            "l2": 6.154181293512223
+          },
+          "lr_times_stored_direction_norm": 0.012308362587024446
+        },
+        {
+          "parameter": "units.6.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3267521858215332,
+            "median": 0.03460940718650818,
+            "maximum": 0.2444818764925003,
+            "l2": 0.6394514672766725
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 7.840448201369475e-05,
+            "median": 0.00011900155122212557,
+            "maximum": 0.0002719971409696385,
+            "l2": 0.0005910316062365878
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998724725364092,
+            "median": 0.9999159745428297,
+            "maximum": 0.999963236259297,
+            "l2": 3.999676570701935
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.7531644794094868,
+            "median": -0.13870030954424126,
+            "maximum": 0.37860756584503785,
+            "l2": 1.4069694567595998
+          },
+          "lr_times_stored_direction_norm": 0.0028139389135191997,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4190310537815094,
+            "median": 0.5086514949798584,
+            "maximum": 0.5608178377151489,
+            "l2": 2.0589997652493706
+          }
+        },
+        {
+          "parameter": "units.6.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4496513605117798,
+            "median": 0.018325310200452805,
+            "maximum": 0.4531361758708954,
+            "l2": 2.8747115749346803
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0001376285012946345,
+            "median": 0.0004209318665398787,
+            "maximum": 0.0009152680239656673,
+            "l2": 0.007649703196960625
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999273459104397,
+            "median": 0.9999762437505155,
+            "maximum": 0.9999890743580221,
+            "l2": 15.999555075979215
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8429904586027128,
+            "median": 0.010214475628340724,
+            "maximum": 0.897828436076036,
+            "l2": 4.229181486727585
+          },
+          "lr_times_stored_direction_norm": 0.00845836297345517
+        },
+        {
+          "parameter": "units.6.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4411545991897583,
+            "median": -0.0027577055152505636,
+            "maximum": 0.338647723197937,
+            "l2": 2.800638970401646
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 2.680611321681461e-05,
+            "median": 9.281740002668714e-05,
+            "maximum": 0.0004225498205325234,
+            "l2": 0.0018566332270538533
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999627089879911,
+            "median": 0.9998922731866117,
+            "maximum": 0.9999763347116454,
+            "l2": 15.998090978084054
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9072776206465278,
+            "median": 0.01142672135756653,
+            "maximum": 0.800067993552585,
+            "l2": 4.189085821731138
+          },
+          "lr_times_stored_direction_norm": 0.008378171643462275
+        },
+        {
+          "parameter": "units.6.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2567623257637024,
+            "median": -0.07328717410564423,
+            "maximum": 0.25952205061912537,
+            "l2": 0.6418163686982783
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.00013591257464238765,
+            "median": 0.00017974551973578157,
+            "maximum": 0.00026546609585423943,
+            "l2": 0.000751656618165699
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999264287037948,
+            "median": 0.9999443688849461,
+            "maximum": 0.9999623318251393,
+            "l2": 3.999776461712725
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.32111262428095405,
+            "median": 0.008675643670945834,
+            "maximum": 0.38175153710217513,
+            "l2": 0.768298836139544
+          },
+          "lr_times_stored_direction_norm": 0.0015365976722790879,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.43615972995758057,
+            "median": 0.48168638348579407,
+            "maximum": 0.5645188093185425,
+            "l2": 1.9720940870207202
+          }
+        },
+        {
+          "parameter": "units.6.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5139766931533813,
+            "median": -0.009276995435357094,
+            "maximum": 0.4870264232158661,
+            "l2": 2.947953123581816
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00011728821003764203,
+            "median": 0.0002794743235251241,
+            "maximum": 0.0007012094872220675,
+            "l2": 0.005437355889702613
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999147472071672,
+            "median": 0.9999642198178637,
+            "maximum": 0.9999857391299268,
+            "l2": 15.999407148971116
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.118138750377818,
+            "median": -0.004075570994047449,
+            "maximum": 1.2107701413894176,
+            "l2": 6.699884828742261
+          },
+          "lr_times_stored_direction_norm": 0.013399769657484522
+        },
+        {
+          "parameter": "units.6.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.6083804965019226,
+            "median": 0.015918146818876266,
+            "maximum": 0.6709845066070557,
+            "l2": 3.5426518220318135
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.5715348587252096e-05,
+            "median": 5.8406355346485685e-05,
+            "maximum": 0.0003515075185097028,
+            "l2": 0.001348364500219583
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999364084049106,
+            "median": 0.9998288150648789,
+            "maximum": 0.9999715519156985,
+            "l2": 15.997097653150117
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.2284414072745053,
+            "median": -0.00799839483721492,
+            "maximum": 0.9023496251789037,
+            "l2": 5.35754954705433
+          },
+          "lr_times_stored_direction_norm": 0.01071509909410866
+        },
+        {
+          "parameter": "units.6.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2845417857170105,
+            "median": 0.09487421065568924,
+            "maximum": 0.42648041248321533,
+            "l2": 0.7987970637867682
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 5.999665355593699e-05,
+            "median": 0.00011851208772096426,
+            "maximum": 0.0001872363619039743,
+            "l2": 0.0005209851202187291
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998333518133838,
+            "median": 0.9999156275408889,
+            "maximum": 0.9999465944229927,
+            "l2": 3.9996559104468576
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.7379067725672098,
+            "median": -0.01492479477197021,
+            "maximum": 0.34095315675694776,
+            "l2": 1.2809119578424824
+          },
+          "lr_times_stored_direction_norm": 0.002561823915684965,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.429340660572052,
+            "median": 0.5237007737159729,
+            "maximum": 0.6050329208374023,
+            "l2": 2.09003498238193
+          }
+        },
+        {
+          "parameter": "units.7.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4640945494174957,
+            "median": 0.006471917033195496,
+            "maximum": 0.47358688712120056,
+            "l2": 2.7907681587108106
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 5.9787126746001636e-05,
+            "median": 0.0001554379842278234,
+            "maximum": 0.0007617221467603912,
+            "l2": 0.00381830957019307
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998327678846096,
+            "median": 0.999935669799453,
+            "maximum": 0.9999868720257605,
+            "l2": 15.998925674344818
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1322436128025717,
+            "median": -0.008555963899493644,
+            "maximum": 0.9016850500474455,
+            "l2": 5.7289106329586055
+          },
+          "lr_times_stored_direction_norm": 0.011457821265917212
+        },
+        {
+          "parameter": "units.7.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5354528427124023,
+            "median": -0.0012229274725541472,
+            "maximum": 0.715988039970398,
+            "l2": 3.629021235731001
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 9.620491609645317e-06,
+            "median": 3.632408439893423e-05,
+            "maximum": 0.0003010561646102501,
+            "l2": 0.0009802420092691133
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9989616314093474,
+            "median": 0.9997247763314961,
+            "maximum": 0.9999667847098894,
+            "l2": 15.994809473370935
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.08379619516044,
+            "median": 0.02564317957429177,
+            "maximum": 0.8741998361357634,
+            "l2": 3.458085015677794
+          },
+          "lr_times_stored_direction_norm": 0.0069161700313555875
+        },
+        {
+          "parameter": "units.7.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.2668602466583252,
+            "median": 0.09812773764133453,
+            "maximum": 0.3767540156841278,
+            "l2": 0.8136196069223176
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 4.9885846534676e-05,
+            "median": 7.912090765746964e-05,
+            "maximum": 0.00015691364282714886,
+            "l2": 0.00038260599596657484
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9997995825164916,
+            "median": 0.999873627128817,
+            "maximum": 0.9999362747396132,
+            "l2": 3.9995002977490723
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.36246117711124703,
+            "median": 0.0810723517813351,
+            "maximum": 0.3490958645166652,
+            "l2": 0.8202081308612983
+          },
+          "lr_times_stored_direction_norm": 0.0016404162617225965,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4336780607700348,
+            "median": 0.5245122909545898,
+            "maximum": 0.5930899977684021,
+            "l2": 2.076824432127772
+          }
+        },
+        {
+          "parameter": "units.7.0.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4284031093120575,
+            "median": -0.01412281859666109,
+            "maximum": 0.39388424158096313,
+            "l2": 2.577077572333843
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.00014604056017056657,
+            "median": 0.00030697192721586915,
+            "maximum": 0.0008495221943193956,
+            "l2": 0.005941447228435573
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999315305604558,
+            "median": 0.9999674247924277,
+            "maximum": 0.999988228815733,
+            "l2": 15.999454962041167
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.063399660712846,
+            "median": 0.0011064478593102941,
+            "maximum": 0.9144844517408406,
+            "l2": 5.65815362532851
+          },
+          "lr_times_stored_direction_norm": 0.01131630725065702
+        },
+        {
+          "parameter": "units.7.0.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.5371086597442627,
+            "median": 0.011842664331197739,
+            "maximum": 0.673552393913269,
+            "l2": 3.169867347955909
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.4633971160462001e-05,
+            "median": 5.2750491587097846e-05,
+            "maximum": 0.0005748127371642744,
+            "l2": 0.0017389483914874238
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9993171251233409,
+            "median": 0.9998104642375537,
+            "maximum": 0.999982603332552,
+            "l2": 15.996716270913458
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.028606507178114,
+            "median": -0.03067576433592738,
+            "maximum": 1.1301636920550093,
+            "l2": 5.535828429352649
+          },
+          "lr_times_stored_direction_norm": 0.011071656858705299
+        },
+        {
+          "parameter": "units.7.0.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.22667917609214783,
+            "median": -0.06495204567909241,
+            "maximum": 0.2847377061843872,
+            "l2": 0.594529937189822
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 6.816161939188536e-05,
+            "median": 0.00011217808232173977,
+            "maximum": 0.0003875244790518369,
+            "l2": 0.0007039287138201663
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998533113913209,
+            "median": 0.9999108639724198,
+            "maximum": 0.9999741958443944,
+            "l2": 3.9996810294989156
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5953650815065104,
+            "median": -0.08906767362117461,
+            "maximum": 0.8002254181228227,
+            "l2": 1.4812435105031159
+          },
+          "lr_times_stored_direction_norm": 0.0029624870210062317,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4435715973377228,
+            "median": 0.4837677478790283,
+            "maximum": 0.5707073211669922,
+            "l2": 1.9712046224042705
+          }
+        },
+        {
+          "parameter": "units.7.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.40175101161003113,
+            "median": -0.009071367792785168,
+            "maximum": 0.4489433169364929,
+            "l2": 2.7056750771513993
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 8.639656805388943e-05,
+            "median": 0.0002683868312673192,
+            "maximum": 0.0011671163437789493,
+            "l2": 0.005970212753053008
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9998842680571024,
+            "median": 0.9999627417359855,
+            "maximum": 0.9999914319473181,
+            "l2": 15.999345956358198
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8441262806442325,
+            "median": -0.0052228208090075575,
+            "maximum": 0.7907732975805016,
+            "l2": 4.424685691675596
+          },
+          "lr_times_stored_direction_norm": 0.008849371383351193
+        },
+        {
+          "parameter": "units.7.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.47686123847961426,
+            "median": -0.002915073186159134,
+            "maximum": 0.46913883090019226,
+            "l2": 2.963166472587377
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.6422111391085395e-05,
+            "median": 7.935160246834293e-05,
+            "maximum": 0.0002668781753389995,
+            "l2": 0.0016300173497286396
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.999391435478862,
+            "median": 0.9998739944798369,
+            "maximum": 0.9999625311238038,
+            "l2": 15.997517263974617
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.729915681860656,
+            "median": -0.022698707177962747,
+            "maximum": 0.6830747542153796,
+            "l2": 3.8509943075768565
+          },
+          "lr_times_stored_direction_norm": 0.0077019886151537134
+        },
+        {
+          "parameter": "units.7.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.35286858677864075,
+            "median": -0.021877238526940346,
+            "maximum": 0.14484578371047974,
+            "l2": 0.5541479554357484
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.0001000296354626698,
+            "median": 0.00017179402576210864,
+            "maximum": 0.00023435907362853966,
+            "l2": 0.0006901869423581122
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999000396197593,
+            "median": 0.9999417941462335,
+            "maximum": 0.999957332254443,
+            "l2": 3.9997436654722875
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.44299171315430763,
+            "median": -0.05462734372839033,
+            "maximum": 0.3373009427992047,
+            "l2": 0.9350365172901333
+          },
+          "lr_times_stored_direction_norm": 0.0018700730345802665,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4126869738101959,
+            "median": 0.49453088641166687,
+            "maximum": 0.5361482501029968,
+            "l2": 1.9723413818521132
+          }
+        },
+        {
+          "parameter": "units.7.1.0.1.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.43455132842063904,
+            "median": -0.017059607431292534,
+            "maximum": 0.44183334708213806,
+            "l2": 2.6113776762448553
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 5.7665098594163566e-05,
+            "median": 0.00017542643370531787,
+            "maximum": 0.0007782463952870043,
+            "l2": 0.005126160118721699
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.99982661494746,
+            "median": 0.9999429992973022,
+            "maximum": 0.9999871507641176,
+            "l2": 15.999061799571429
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.058776050587112,
+            "median": -0.03088271857299657,
+            "maximum": 1.1820492221504721,
+            "l2": 6.180542457705539
+          },
+          "lr_times_stored_direction_norm": 0.012361084915411078
+        },
+        {
+          "parameter": "units.7.1.0.1.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.48698654770851135,
+            "median": 0.002255005994811654,
+            "maximum": 0.5925688147544861,
+            "l2": 2.9144674211024024
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 1.9013736698851624e-05,
+            "median": 6.275737695172456e-05,
+            "maximum": 0.00037814271418276174,
+            "l2": 0.0015146797760475623
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9994743409163876,
+            "median": 0.9998406815692221,
+            "maximum": 0.9999735556572121,
+            "l2": 15.99719130658557
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8261916650807104,
+            "median": -0.04555466330216007,
+            "maximum": 0.9735289007010003,
+            "l2": 5.088418965413669
+          },
+          "lr_times_stored_direction_norm": 0.010176837930827338
+        },
+        {
+          "parameter": "units.7.1.0.1.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.22764454782009125,
+            "median": -0.09194069355726242,
+            "maximum": 0.14127695560455322,
+            "l2": 0.5541419573660169
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 9.092578337519013e-05,
+            "median": 0.00012675331551263022,
+            "maximum": 0.00024454023741721936,
+            "l2": 0.0006089006851455006
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9998900322884036,
+            "median": 0.9999211128238517,
+            "maximum": 0.999959108606454,
+            "l2": 3.999703261171124
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5407041979150878,
+            "median": -0.21830870501419203,
+            "maximum": 0.6263643727538176,
+            "l2": 1.4639402497404355
+          },
+          "lr_times_stored_direction_norm": 0.002927880499480871,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.44333332777023315,
+            "median": 0.47703105211257935,
+            "maximum": 0.5352606177330017,
+            "l2": 1.945490386102333
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "experiments/results/aws_language_progress/aws_depth8_language_20261002T234100Z_depth_pilot_s7_milestone001.pt",
+      "checkpoint_sha256": "75f2125bc41f107a493829a4ae25d55da65ad1d08b09eff3c55de2b31cddb386",
+      "targets": 253952,
+      "updates": 992,
+      "family": "depth",
+      "unique_parameters": 174,
+      "aliases": {
+        "units.0.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.0.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.0.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.0.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.0.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.0.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.0.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.0.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.0.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.0.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.0.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.0.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.0.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.0.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.1.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.1.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.1.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.1.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.1.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.1.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.1.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.1.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.1.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.1.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.1.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.1.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.1.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.1.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.1.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.1.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.1.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.1.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.1.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.1.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.1.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.1.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.1.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.1.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.1.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.1.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.1.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.1.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.2.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.2.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.2.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.2.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.2.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.2.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.2.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.2.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.2.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.2.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.2.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.2.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.2.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.2.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.2.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.2.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.2.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.2.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.2.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.2.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.2.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.2.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.2.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.2.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.2.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.2.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.2.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.2.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.3.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.3.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.3.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.3.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.3.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.3.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.3.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.3.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.3.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.3.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.3.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.3.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.3.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.3.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.3.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.3.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.3.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.3.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.3.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.3.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.3.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.3.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.3.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.3.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.3.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.3.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.3.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.3.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.4.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.4.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.4.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.4.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.4.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.4.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.4.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.4.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.4.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.4.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.4.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.4.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.4.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.4.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.4.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.4.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.4.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.4.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.4.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.4.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.4.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.4.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.4.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.4.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.4.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.4.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.4.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.4.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.5.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.5.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.5.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.5.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.5.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.5.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.5.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.5.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.5.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.5.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.5.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.5.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.5.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.5.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.5.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.5.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.5.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.5.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.5.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.5.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.5.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.5.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.5.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.5.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.5.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.5.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.5.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.5.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.6.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.6.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.6.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.6.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.6.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.6.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.6.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.6.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.6.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.6.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.6.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.6.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.6.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.6.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.6.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.6.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.6.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.6.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.6.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.6.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.6.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.6.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.6.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.6.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.6.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.6.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.6.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.6.1.0.1.control.bias": "units.0.1.0.0.control.bias",
+        "units.7.0.0.0.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.7.0.0.0.input.weight": "units.0.0.0.0.input.weight",
+        "units.7.0.0.0.output.weight": "units.0.0.0.0.output.weight",
+        "units.7.0.0.0.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.7.0.0.0.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.7.0.0.0.control.weight": "units.0.0.0.0.control.weight",
+        "units.7.0.0.0.control.bias": "units.0.0.0.0.control.bias",
+        "units.7.0.0.1.key_read.weight": "units.0.0.0.0.key_read.weight",
+        "units.7.0.0.1.input.weight": "units.0.0.0.0.input.weight",
+        "units.7.0.0.1.output.weight": "units.0.0.0.0.output.weight",
+        "units.7.0.0.1.gate.weight": "units.0.0.0.0.gate.weight",
+        "units.7.0.0.1.gate.bias": "units.0.0.0.0.gate.bias",
+        "units.7.0.0.1.control.weight": "units.0.0.0.0.control.weight",
+        "units.7.0.0.1.control.bias": "units.0.0.0.0.control.bias",
+        "units.7.1.0.0.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.7.1.0.0.input.weight": "units.0.1.0.0.input.weight",
+        "units.7.1.0.0.output.weight": "units.0.1.0.0.output.weight",
+        "units.7.1.0.0.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.7.1.0.0.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.7.1.0.0.control.weight": "units.0.1.0.0.control.weight",
+        "units.7.1.0.0.control.bias": "units.0.1.0.0.control.bias",
+        "units.7.1.0.1.key_read.weight": "units.0.1.0.0.key_read.weight",
+        "units.7.1.0.1.input.weight": "units.0.1.0.0.input.weight",
+        "units.7.1.0.1.output.weight": "units.0.1.0.0.output.weight",
+        "units.7.1.0.1.gate.weight": "units.0.1.0.0.gate.weight",
+        "units.7.1.0.1.gate.bias": "units.0.1.0.0.gate.bias",
+        "units.7.1.0.1.control.weight": "units.0.1.0.0.control.weight",
+        "units.7.1.0.1.control.bias": "units.0.1.0.0.control.bias"
+      },
+      "rows": [
+        {
+          "parameter": "units.0.0.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.462993860244751,
+            "median": 0.01035308837890625,
+            "maximum": 0.40545862913131714,
+            "l2": 2.5503977570374157
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0009522176467589199,
+            "median": 0.0024266247742859505,
+            "maximum": 0.015582896212809496,
+            "l2": 0.056095372833465655
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999894983095333,
+            "median": 0.9999958790667199,
+            "maximum": 0.999999358271181,
+            "l2": 15.999931384300304
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.7265996371039877,
+            "median": 0.004298217425320197,
+            "maximum": 0.6639048821320482,
+            "l2": 3.6204728383806866
+          },
+          "lr_times_stored_direction_norm": 0.007240945676761373
+        },
+        {
+          "parameter": "units.0.0.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.8059645295143127,
+            "median": 0.003051869571208954,
+            "maximum": 1.0409917831420898,
+            "l2": 3.927488394029007
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0001225092465963448,
+            "median": 0.0004805757992021547,
+            "maximum": 0.01268067134587306,
+            "l2": 0.024039571797520906
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999183801706442,
+            "median": 0.9999791920609876,
+            "maximum": 0.9999992113988415,
+            "l2": 15.999619444758634
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.8139041903078074,
+            "median": -0.04143757377699238,
+            "maximum": 0.672758165957158,
+            "l2": 4.27241230139273
+          },
+          "lr_times_stored_direction_norm": 0.008544824602785462
+        },
+        {
+          "parameter": "units.0.0.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.27625301480293274,
+            "median": 0.036240510642528534,
+            "maximum": 0.17426788806915283,
+            "l2": 0.5035596943611618
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.000748345898846112,
+            "median": 0.0017073384979103927,
+            "maximum": 0.005354243282896437,
+            "l2": 0.008872491456885553
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999866373739882,
+            "median": 0.999994142964947,
+            "maximum": 0.9999981323259338,
+            "l2": 3.999974625865772
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.35787479043127446,
+            "median": -0.07796610333153202,
+            "maximum": 0.25077257833829303,
+            "l2": 0.7027047251063543
+          },
+          "lr_times_stored_direction_norm": 0.0014054094502127085,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.43137261271476746,
+            "median": 0.5090591311454773,
+            "maximum": 0.54345703125,
+            "l2": 2.0147324298650875
+          }
+        },
+        {
+          "parameter": "units.0.1.0.0.output.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.4333210289478302,
+            "median": 0.019895272329449654,
+            "maximum": 0.4208890199661255,
+            "l2": 2.510355680617494
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0013326222328016372,
+            "median": 0.0033129723216554032,
+            "maximum": 0.010619021709527013,
+            "l2": 0.06336608014014405
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999924960542348,
+            "median": 0.9999969815715783,
+            "maximum": 0.9999990582945533,
+            "l2": 15.999948342506856
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -0.9206876809992646,
+            "median": -0.013735730733411935,
+            "maximum": 0.8857033789744964,
+            "l2": 4.241649431124514
+          },
+          "lr_times_stored_direction_norm": 0.008483298862249028
+        },
+        {
+          "parameter": "units.0.1.0.0.gate.weight",
+          "moments_present": true,
+          "weight": {
+            "count": 256,
+            "minimum": -0.8375062346458435,
+            "median": -0.0613565519452095,
+            "maximum": 1.0351072549819946,
+            "l2": 4.012522150403918
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 256,
+            "minimum": 0.0002716793242320029,
+            "median": 0.0009824399257394036,
+            "maximum": 0.007620687503018479,
+            "l2": 0.02476188537141213
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 256,
+            "minimum": 0.9999631932538083,
+            "median": 0.9999898213641857,
+            "maximum": 0.9999986877841568,
+            "l2": 15.99982137313683
+          },
+          "stored_moment_direction": {
+            "count": 256,
+            "minimum": -1.1212763573772468,
+            "median": -0.058832371207596636,
+            "maximum": 0.9028201614392248,
+            "l2": 5.449569397848795
+          },
+          "lr_times_stored_direction_norm": 0.01089913879569759
+        },
+        {
+          "parameter": "units.0.1.0.0.gate.bias",
+          "moments_present": true,
+          "weight": {
+            "count": 16,
+            "minimum": -0.3591969311237335,
+            "median": -0.12481538951396942,
+            "maximum": 0.19648537039756775,
+            "l2": 0.6650198912279844
+          },
+          "bias_corrected_rms_gradient": {
+            "count": 16,
+            "minimum": 0.0010969777584188295,
+            "median": 0.002251817784591746,
+            "maximum": 0.004896875731130835,
+            "l2": 0.010278821779548617
+          },
+          "epsilon_dominated_coordinates": 0,
+          "epsilon_retention": {
+            "count": 16,
+            "minimum": 0.9999908841279921,
+            "median": 0.9999955591630637,
+            "maximum": 0.9999979578857771,
+            "l2": 3.9999806203864687
+          },
+          "stored_moment_direction": {
+            "count": 16,
+            "minimum": -0.5341152093323572,
+            "median": -0.11947242501655432,
+            "maximum": 0.15797324040475152,
+            "l2": 0.9840486747614285
+          },
+          "lr_times_stored_direction_norm": 0.001968097349522857,
+          "sigmoid_bias_only": {
+            "count": 16,
+            "minimum": 0.4111539423465729,
+            "median": 0.46883657574653625,
+            "maximum": 0.5489639043807983,
+            "l2": 1.9417251147854608
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2167,3 +2167,13 @@ no centeredqualityarm admitted. Result pending; diagnosticcostunknownnotzero.
 Pulledupstream through0fb5097 withadmissioncoordinator paused underpublication
 lock; trainerscontinued. Newsegment-batched/skip-init languageprotocols differ
 from streamingreplay; retainseparatecomparison scopes andavoidduplicatework.
+
+AWS03:20: first250kteachercheckpoints publishedautomatically(main56e6939/
+be9d535), both253952targets/992updates. Read-onlysavedweight/Adamanalysis
+complete: private16896/shared1056uniquegate-outputcoordinates, ZEROsecond-
+moment epsilon-dominatedcoordinates; bias-onlysigmoid.395–.620/.411–.549.
+No actualinput-dependentgate/functionalupdate/qualityclaim; no forward/backward
+ornewdataread. theory/aws_20261003_language_checkpoint_plasticity.md records
+scope/script/result. Awaitreplay250ksnapshot for sameexposureanalysis. Pulled
+de59783/e405765; upstreamcausalprefixcacheLOWERarithmeticbutSLOWERCPUwall,
+notpromoted. All3trainingjobs and250kpublishercontinue unchanged.
