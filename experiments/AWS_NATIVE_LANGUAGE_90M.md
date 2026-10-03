@@ -4,6 +4,12 @@ User request (3 October 2026): run the 90M native language variants on the AWS h
 Read `AGENTS.md`, `experiments/HANDOFF.md` and THEORY §§409–412 (experiments/theory/59_statistic_valued_race_memory.md)
 first.
 
+**Revision pending (06:50 UTC).** THEORY §413 diagnoses an untrained race address in these runs. The factorized race
+gives scores only first-time clock credit, so pools fragment memory. Width dominates depth at 10M (p32/d4 2.507 versus
+p16/d8 2.719). The curie v4 queue (pool 1/2/4 with and without linearized route credit, width 128) finishes in about
+4 h. Before admitting the 90M arms, re-read this file: the arm list may be replaced by the v4 winners (new job names
+and tags; nothing that has run will be renamed). Contracts and pilots may run now.
+
 ## What runs
 
 The integrated native core (AddressedEventHeads: factorized temporal races, sparse addressed writes into persistent
