@@ -2123,3 +2123,25 @@ shadowlanes/events exactlyHALVED, allalternativereturnsretained/no sampling.
 Measuredforward+backwork4.387707MF→2.269611MF per3targetcall (ratio.517266,
 48.2734%less). Optimizer/traffic/energy/inference excluded andnotzero. Actual
 optimizeddriverrecovery014000Z andp16learning/workchecks before10M use.
+
+PRODUCTION winnerreuse admissionCOMPLETE: both actualdriver recovery014000Z
+bitwisePASS, p16smokesbothlearn/<494MiB. Full1024-targetfitwork/private
+69.349421GF→34.913923GF, shared69.347356GF→34.911858GF (~49.66%less including
+Adam/normalization/clip), BPCdrift<=3.44e-7. Lanes32768→16384, events524288→
+262144. Observedwall554/548s→379/374s (~32%lower; notpairedenergybenchmark).
+Common-unit table/reportappendix updated. This is exact-conditional-replay
+implementation advantage, not10M languagequality/supremacy evidence.
+
+ACTIVE: originalprivate/shared10M teachercontrols resumedEXACTLY at73728targets,
+plus optimizedprivate10M correctedfullreplay; all guarded3slots. Sharedreplay
+andbothfactorized10M controlsqueued. Preserveoriginalsourceandcheckpoint
+archives. Restartoverheadactual discardedtargets unknown, <=4095perteacher;
+showthat <=.041% extra-targetbound alongside final nominal successfulfitwork.
+InitialDEVwallunequal (original1M vsnew1025), final1M DEV/10M FIT matched.
+
+New progress publisher archives complete source/RNG/cursor/Adam checkpoints
+at250k-targetmilestones, labels ONLINE/checkpoint evidence as partial, never
+completed10M quality. It serializesGit by briefly pausing admissioncoordinator,
+waiting for itsGit child to finish, andresuminginfinally; trainers/watchdogs
+continue. Beforemanualpublication coordinate /tmp/aws-language-publication.lock
+andthe exactactivecoordinator to avoid overlappingGitoperations.
