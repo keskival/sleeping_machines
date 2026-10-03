@@ -1,0 +1,6 @@
+23:08:16 start aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z
+23:09:17 alive aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z: process group RSS=759736KB, MemAvailable=26933MB
+23:10:17 alive aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z: process group RSS=764908KB, MemAvailable=27477MB
+23:11:17 alive aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z: process group RSS=765104KB, MemAvailable=27477MB
+23:12:18 alive aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z: process group RSS=765108KB, MemAvailable=27482MB
+23:13:10 done aws_pub_v2_20261004T000200Z_aws_public_JapaneseVowels_screen_p32d4u4_20261004T000100Z (exit 0)
