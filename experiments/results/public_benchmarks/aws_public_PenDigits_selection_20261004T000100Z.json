@@ -1,0 +1,44 @@
+{
+  "status": "completed",
+  "args": {
+    "manifest": "experiments/queue/aws_public_campaign_20261004T000200Z/manifest.json",
+    "dataset": "PenDigits",
+    "tag": "aws_public_PenDigits_selection_20261004T000100Z"
+  },
+  "source_sha256": {
+    "experiments/public_benchmarks/select.py": "9c04553521dfcb0496000e261d299c1b2b597548cc817ebeb5ac8521bb26ecec"
+  },
+  "selected_screen": "experiments/results/public_benchmarks/aws_public_PenDigits_screen_p16d2u2_20261004T000100Z.json",
+  "selected_screen_sha256": "2d676a6c518915624a526a917d8859a940fdc49281dc107d0f8e5759468d0f42",
+  "rule": "Minimum fixed TRAIN-only DEV NLL, then estimated fitting work, then parameters, then path; no TEST access.",
+  "candidates": [
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_screen_p16d2u2_20261004T000100Z.json",
+      "sha256": "2d676a6c518915624a526a917d8859a940fdc49281dc107d0f8e5759468d0f42",
+      "dev_nll": 0.052560642806250446,
+      "work": 229050183037.5,
+      "parameters": 14530
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_screen_p32d4u2_20261004T000100Z.json",
+      "sha256": "927972f875f27aae0d3ac0cb9114c0e7fdd9d16773aaebb0eea042b737b8f0ff",
+      "dev_nll": 0.08007016469972829,
+      "work": 1547974873102.5,
+      "parameters": 106234
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_screen_p32d4u4_20261004T000100Z.json",
+      "sha256": "e175de39815107a8b87eb7a5312eb3c0731426f928fd43cc63277a20ad593985",
+      "dev_nll": 0.079982959382236,
+      "work": 2571053570302.5,
+      "parameters": 174378
+    }
+  ],
+  "final_epochs": 36,
+  "final_seeds": [
+    6,
+    7,
+    8
+  ],
+  "test": null
+}
