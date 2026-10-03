@@ -2451,3 +2451,10 @@ All3publicnative3epochpilotscompleted/pushed: ECG70%,Japanese72.22%,Pen92.8%
 DEV only; matched1NN80/94.44/99.47%. First40epochECGnativefitRUNNING,~90%DEV
 at14epochs, no publicTESTwin inferred. Futurefixedscreens/DEVselection/
 seed6/7/8fullTRAINrefits automatic; all negativespreserved.
+
+AWS22:31 first full40epochpublicscreen COMPLETED/pushed1f975e5: ECG200
+p16D2U2DEV0.900/NLL0.291996, selectedepoch25
+versusmatched1NNDEV.800. TRAIN80cases/DEV20, noTESTaccess, exploratory
+DEVleadnotpublishedbenchmarkwin. Nextp32D4U2ECGscreenRUNNING. Latestreadonly
+inventory001100Z retainsallcontrols/pilots/completedscreenandnoautomaticclaim.
+All3guardedslots+partialpublishershealthy; source/queuehashesremainbound.

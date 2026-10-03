@@ -1,0 +1,135 @@
+{
+  "status": "inventory",
+  "rows": [
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_ECG200_nearest_20261004T000100Z.json",
+      "sha256": "8ce62c9614dfb09b66b14808cddd95a8d2dc2f3fc914edafcf6e600a73f68daa",
+      "dataset": "ECG200",
+      "stage": "baseline",
+      "epochs": null,
+      "dev_accuracy": 0.8,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": null,
+      "fitting_presentations": null,
+      "work": {
+        "distance_arithmetic_flops_per_query_estimate": 23040,
+        "scope": "Subtract/square/reduction estimate only; normalization/resampling/selection not counted. Whole-fit FLOPs unknown; no complete resource claim."
+      },
+      "wall_s": 0.006470188964158297
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_ECG200_pilot_p16d2u2_20261004T000100Z.json",
+      "sha256": "0aba06f668c1cb03a7af5c0500e3d1908243c0d28c06074bc051225e75532fc6",
+      "dataset": "ECG200",
+      "stage": "screen",
+      "epochs": 3,
+      "dev_accuracy": 0.7,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": 14234,
+      "fitting_presentations": 240,
+      "work": {
+        "fit_flops_per_presented_target_estimate": 10102883.34375,
+        "whole_fit_flops_estimate": 2424692002.5,
+        "traced_fitting_targets": 96,
+        "scope": "One full eager optimizer window per epoch extrapolated per target. Variable/padded lengths vary; shape-mean estimate, not exact whole fit. DEV/test/packing/compilation/traffic/energy separate."
+      },
+      "wall_s": 106.52434629801428
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_ECG200_screen_p16d2u2_20261004T000100Z.json",
+      "sha256": "f5e98231bac8bf4e8feb25829907aa72d54033fabaec0fd01f69c52f374ef8bc",
+      "dataset": "ECG200",
+      "stage": "screen",
+      "epochs": 40,
+      "dev_accuracy": 0.9,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": 14234,
+      "fitting_presentations": 3200,
+      "work": {
+        "fit_flops_per_presented_target_estimate": 10102883.34375,
+        "whole_fit_flops_estimate": 32329226700.0,
+        "traced_fitting_targets": 1280,
+        "scope": "One full eager optimizer window per epoch extrapolated per target. Variable/padded lengths vary; shape-mean estimate, not exact whole fit. DEV/test/packing/compilation/traffic/energy separate."
+      },
+      "wall_s": 413.2452803789638
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_JapaneseVowels_nearest_20261004T000100Z.json",
+      "sha256": "3131e39a74583c74106078588ad0a1ded7f586b3c3ad3e7a7031e3264707303d",
+      "dataset": "JapaneseVowels",
+      "stage": "baseline",
+      "epochs": null,
+      "dev_accuracy": 0.9444444444444444,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": null,
+      "fitting_presentations": null,
+      "work": {
+        "distance_arithmetic_flops_per_query_estimate": 202176,
+        "scope": "Subtract/square/reduction estimate only; normalization/resampling/selection not counted. Whole-fit FLOPs unknown; no complete resource claim."
+      },
+      "wall_s": 0.046514660003595054
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_JapaneseVowels_pilot_p16d2u2_20261004T000100Z.json",
+      "sha256": "df0b7e7260592834d75a6cbb30aa7f50d74adad2982154a06bef79ab15ba5a30",
+      "dataset": "JapaneseVowels",
+      "stage": "screen",
+      "epochs": 3,
+      "dev_accuracy": 0.7222222222222222,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": 14817,
+      "fitting_presentations": 648,
+      "work": {
+        "fit_flops_per_presented_target_estimate": 2711484.7916666665,
+        "whole_fit_flops_estimate": 1757042145.0,
+        "traced_fitting_targets": 96,
+        "scope": "One full eager optimizer window per epoch extrapolated per target. Variable/padded lengths vary; shape-mean estimate, not exact whole fit. DEV/test/packing/compilation/traffic/energy separate."
+      },
+      "wall_s": 59.45778166200034
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_nearest_20261004T000100Z.json",
+      "sha256": "6f992acd73b3d6a1abe825179c520fb83b15df07e7c14aebe85bae5fdfb1acc3",
+      "dataset": "PenDigits",
+      "stage": "baseline",
+      "epochs": null,
+      "dev_accuracy": 0.9946666666666667,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": null,
+      "fitting_presentations": null,
+      "work": {
+        "distance_arithmetic_flops_per_query_estimate": 287712,
+        "scope": "Subtract/square/reduction estimate only; normalization/resampling/selection not counted. Whole-fit FLOPs unknown; no complete resource claim."
+      },
+      "wall_s": 0.5001578429946676
+    },
+    {
+      "path": "experiments/results/public_benchmarks/aws_public_PenDigits_pilot_p16d2u2_20261004T000100Z.json",
+      "sha256": "69f456d861bf77b511abd3ea3807164553d3def31e73de8550be33022f26664a",
+      "dataset": "PenDigits",
+      "stage": "screen",
+      "epochs": 3,
+      "dev_accuracy": 0.928,
+      "test_accuracy": null,
+      "test_targets": null,
+      "parameters": 14530,
+      "fitting_presentations": 17982,
+      "work": {
+        "fit_flops_per_presented_target_estimate": 955331.09375,
+        "whole_fit_flops_estimate": 17178763727.8125,
+        "traced_fitting_targets": 96,
+        "scope": "One full eager optimizer window per epoch extrapolated per target. Variable/padded lengths vary; shape-mean estimate, not exact whole fit. DEV/test/packing/compilation/traffic/energy separate."
+      },
+      "wall_s": 60.672493054007646
+    }
+  ],
+  "final_datasets": {},
+  "claims": [],
+  "scope": "Inventory only. DEV/pilot values are not public TEST scores. No new benchmark win certified; published variant, baseline and resource parity must be verified."
+}
