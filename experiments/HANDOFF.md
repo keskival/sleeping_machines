@@ -2252,3 +2252,16 @@ longRSSwatchdogretained. Eachcompletedpilot/fit autoGitpublish underpublication
 lock; sourcefrozen andfailclosed. Separate resetsegment/nativefactorizedprotocol,
 notfullcorrectedstreamingreplay. 90MNOTstarteduntilcurrentreservationreleased;
 queuewait can dominate prior4.3htraining-onlyestimate. No currentfits stopped.
+
+AWS07:10 upstream236104b/305da08 changes90Madmissiondirection: originalarm
+listREVISIONPENDING after413v4route-credit/widthdiagnostics. Removed ONLY
+waiting90Mconductor (verifiedstatuswaiting_host_lock/completedempty); NO
+training orpilotinterrupted/started. Priorstatus preserved as
+'deferred_protocol_revision', originalqueues/proposalremain. Re-read
+AWS_NATIVE_LANGUAGE_90M.md afterv4DEVresults; newarmsettings requireNEWtags/
+queues/manifest, sourcefreeze andcontracts/pilots beforefits. Avoidrunning
+obsoletefactorizedchoice-creditsettingsat90M. This is NOT a failure ofactive
+fullcorrectedstreamingreplay: thatfit DOES receivewinner-choicecredit.
+Read-onlyhashaudit afterpull: ALLactive matrix+centering+compact+route-audit
+frozen sourcesmatch, no knownstale-sourceissueinremainingguards.
+Decision/provenanceJSON aws_90m_protocol_revision_20261003T071000Z committed.

@@ -1,0 +1,7 @@
+{
+  "status": "deferred_protocol_revision",
+  "completed": [],
+  "host": "ip-172-31-47-132",
+  "started_utc": "2026-10-03T06:28:44.829341+00:00",
+  "reason": "Upstream236104b requires rereading revised90M arm list after413v4 diagnostics; no stage or training started."
+}

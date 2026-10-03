@@ -1,0 +1,32 @@
+{
+  "status": "deferred_protocol_revision",
+  "recorded_utc": "2026-10-03T06:56:45.464180+00:00",
+  "upstream_revision": "236104b815af956c5b1f6788aea88c42f29c4645",
+  "reason": "Upstream413v4 diagnostics can revise original90M arm list. Removed waiting runner before any job started. Existing source-frozen active streaming replay and queued diagnostics remain unchanged.",
+  "previous_lifecycle": "experiments/queue/aws_native_language_90m_admission_20261003T065000Z/status.json",
+  "training_jobs_interrupted": 0,
+  "admission_jobs_started": 0,
+  "source_integrity_checks": [
+    {
+      "plan": "experiments/queue/aws_language_winner_matrix_20261003T014100Z/manifest.json",
+      "source_files": 44,
+      "mismatches": []
+    },
+    {
+      "plan": "experiments/queue/aws_replay_centering_audit_20261003T031000Z.sources.json",
+      "source_files": 44,
+      "mismatches": []
+    },
+    {
+      "plan": "experiments/queue/aws_replay_compact_suffix_audit_20261003T051000Z.sources.json",
+      "source_files": 48,
+      "mismatches": []
+    },
+    {
+      "plan": "experiments/queue/aws_replay_compact_routes_20261003T061000Z.sources.json",
+      "source_files": 49,
+      "mismatches": []
+    }
+  ],
+  "next": "Await completed413v4 DEV evidence and revisedAWS_NATIVE_LANGUAGE_90M.md, then create new immutable one-job queues/manifest with distinct tags and frozen current driver. Contracts/pilots precede scaling; preserve original proposal/history."
+}
