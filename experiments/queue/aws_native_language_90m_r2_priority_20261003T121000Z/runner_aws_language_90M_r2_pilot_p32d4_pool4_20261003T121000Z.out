@@ -1,0 +1,4 @@
+14:26:41 start aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z
+14:27:41 alive aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z: process group RSS=1562156KB, MemAvailable=26998MB
+14:28:41 alive aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z: process group RSS=1600140KB, MemAvailable=27563MB
+14:29:05 done aws_language_90M_r2_pilot_p32d4_pool4_20261003T121000Z (exit 0)
